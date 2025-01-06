@@ -133,25 +133,6 @@ include_social <- function(output = NULL,
 
     # * Prepare main output table ##############################################
 
-    ## ALTERNATIVE LAYOUT
-    # social_results_alt <-
-    #   social_calculation |>
-    #   ## Filter for relevant rows
-    #   dplyr::filter(
-    #     parameter %in% c("exp_mean",
-    #                      "bhd_rate",
-    #                      "pop_fraction_mean",
-    #                      "impact_rate")) |>
-    #   dplyr::rename(
-    #     first_quantile = first,
-    #     last_quantile = last,
-    #     first_minus_last = absolute_quantile,
-    #     first_minus_last_then_divided_by_overall = relative_quantile,
-    #     overall_minus_last = absolute_overall,
-    #     overall_minus_last_then_divided_by_overall = relative_overall
-    #   )
-
-    ### ORIGINAL LAYOUT
     social_results <-
       social_calculation |>
       ## Filter for relevant rows
@@ -201,12 +182,7 @@ include_social <- function(output = NULL,
       ## (just in case some users have interest on this)
       dplyr::filter(parameter == "impact_rate")
 
-    # output[["social_main"]][["alternative_layout"]] <-
-    #   social_results_alt |>
-    #   dplyr::filter(parameter == "impact_rate")
-
     output[["social_detailed"]][["results_detailed"]] <- social_results
-    # output[["social_detailed"]][["results_detailed_alternative_layout"]] <- social_results_alt
     output[["social_detailed"]][["overview_quantiles"]] <- output_social_by_quantile
 
     return(output)
@@ -306,7 +282,6 @@ include_social <- function(output = NULL,
 
     # * Prepare main output table ##############################################
 
-    ### ORIGINAL LAYOUT
     social_results <-
       social_calculation |>
       ## Filter for relevant rows
