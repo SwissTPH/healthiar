@@ -2496,6 +2496,7 @@ check_bestcost(result_list_bestcost = comparison_daly_lifetable_pif_geo ,
                result_vector_alternative = c(66275, 34671, 97702)) # Result on 20 August 2024
 
 ```
+
 # Cost
 
 ```{r Monetize a simple case}
@@ -2542,6 +2543,22 @@ check_general(bestcost_pm_yll_lifetable_geluft_discount[["cost_main"]]$cost_roun
 # Result on 13 Dec 2025. Same result as discouting in attribute() (deprecated).
 
 ```
+
+```{r only discounting}
+
+# Discounting without valuation
+bestcost_pm_copd_discount <- 
+  healthiar::include_discount(
+    approach_discount = "direct",
+    impact = 2E4,
+    discount_shape = "exponential",
+    corrected_discount_rate = 0.03,
+    time_period = 20)
+
+```
+
+
+
 
 # Export 
 
