@@ -4,26 +4,10 @@
 \alias{get_daly}
 \title{Get DALY}
 \usage{
-get_daly(
-  outcome_metric,
-  pop_impact,
-  year_of_analysis,
-  time_horizon,
-  min_age = NULL,
-  max_age = NULL,
-  input_with_risk_and_pop_fraction
-)
+get_daly(pop_impact, input_with_risk_and_pop_fraction)
 }
 \arguments{
 \item{outcome_metric}{\code{String} with the metric of the health outcome to be assessed. Options: "deaths", "yll" or "yld".}
-
-\item{year_of_analysis}{\code{Numeric value} of the year of analysis, which corresponds to the first year of the life table.}
-
-\item{time_horizon}{\code{Numeric value} corresponding to time horizon (number of years) for which the impacts should be considered. For example, would be 10 if one is interested in the impacts of an intervention during the next 10 years.}
-
-\item{min_age}{\code{Numberic value} of the minimal age to be considered for adults (by default 30, i.e. 30+).}
-
-\item{max_age}{\code{Numberic value} of the maximal age to be considered for infants/children (by default 0, i.e. below 1 year old).}
 }
 \value{
 This function returns a \code{List}

@@ -4,26 +4,10 @@
 \alias{get_impact}
 \title{Attributable health cases based on relative risk}
 \usage{
-get_impact(
-  input,
-  year_of_analysis = NULL,
-  time_horizon = NULL,
-  min_age = NULL,
-  max_age = NULL,
-  pop_fraction_type,
-  population = NULL
-)
+get_impact(input, pop_fraction_type, population = NULL)
 }
 \arguments{
 \item{input}{\code{Data frame} containing all input data.}
-
-\item{year_of_analysis}{\code{Numeric value} of the year of analysis, which corresponds to the first year of the life table.}
-
-\item{time_horizon}{\code{Numeric value} corresponding to time horizon (number of years) for which the impacts should be considered. For example, would be 10 if one is interested in the impacts of an intervention during the next 10 years.}
-
-\item{min_age}{\code{Numberic value} of the minimal age to be considered for adults (by default 30, i.e. 30+).}
-
-\item{max_age}{\code{Numberic value} of the maximal age to be considered for infants/children (by default 0, i.e. below 1 year old).}
 
 \item{population}{code{Vector} with numeric values referring to the population in the geographical unit}
 }
