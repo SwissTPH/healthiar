@@ -7,7 +7,7 @@
 #' @param valuation \code{Numberic value} referring to unit value of a health impact
 #' @param time_period \code{Numeric value} referring to the period of time to be considered in the discounting.
 #' @param valuation \code{Numeric value} showing the value of statistical life which will be used in the health impact monetization
-#' @inheritParams include_cost
+#' @inheritParams include_monetization
 #'
 #' @return Description of the return value.
 #' @examples
