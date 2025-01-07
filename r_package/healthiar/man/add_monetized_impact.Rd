@@ -29,7 +29,7 @@ add_monetized_impact(
 Description of the return value.
 }
 \description{
-Function to calculate and add the cost of the health impacts
+Function to calculate and add the monetization of the health impacts
 }
 \examples{
 # Example of how to use the function

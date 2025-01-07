@@ -1,4 +1,4 @@
-#' include_cost
+#' include_monetization
 
 #' @description Monetize health impacts
 #'
@@ -16,7 +16,7 @@
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)
 #' @export
-include_cost <- function(approach_discount = "direct",
+include_monetization <- function(approach_discount = "direct",
                          output = NULL,
                          impact = NULL,
                          valuation,
@@ -41,7 +41,7 @@ include_cost <- function(approach_discount = "direct",
       # Store the original data (they refer to health)
       output_health <- output
 
-      # Output will be adapted according to costs
+      # Output will be adapted according to monetized impacts
       #TODO The names health are kept just provisionally until we adapt get_output()
       impact_detailed <-
         output[["health_detailed"]][["raw"]] |>
@@ -112,13 +112,13 @@ include_cost <- function(approach_discount = "direct",
         # Round results
         dplyr::mutate(
           impact_rounded = round(impact, 0),
-          cost = impact * valuation,
-          cost_before_discount = impact_before_discount * valuation,
-          cost_after_discount = impact_after_discount * valuation,
-          # Round costs
-          cost_rounded = round(cost),
-          cost_before_discount_rounded = round(cost_before_discount),
-          cost_after_discount_rounded = round(cost_after_discount))
+          monetized_impact = impact * valuation,
+          monetized_impact_before_discount = impact_before_discount * valuation,
+          monetized_impact_after_discount = impact_after_discount * valuation,
+          # Round monetized_impacts
+          monetized_impact_rounded = round(monetized_impact),
+          monetized_impact_before_discount_rounded = round(monetized_impact_before_discount),
+          monetized_impact_after_discount_rounded = round(monetized_impact_after_discount))
 
 
 
@@ -136,18 +136,19 @@ include_cost <- function(approach_discount = "direct",
 
 
       # Get the main and detailed output by aggregating and/or filtering cases (rows)
-      output_cost <-
+      output_monetization <-
         healthiar:::get_output(impact_detailed) |>
-        # Rename the list elements (not anymore health but health including cost)
-        setNames(c("cost_main", "cost_detailed"))
+        # Rename the list elements (not anymore health but health including monetization)
+        setNames(c("monetization_main", "monetization_detailed"))
 
-      # Keep only the main detailed data frame (raw) for cost
-      output_cost[["cost_detailed"]] <- output_cost[["cost_detailed"]][["raw"]]
+      # Keep only the main detailed data frame (raw) for monetization
+      output_monetization[["monetization_detailed"]] <-
+        output_monetization[["monetization_detailed"]][["raw"]]
 
       # Add the list elements health_main and health_detailed
-      output_cost <-
+      output_monetization <-
         c(output_health,
-          output_cost)
+          output_monetization)
 
 
     # Direct approach #######
@@ -155,19 +156,19 @@ include_cost <- function(approach_discount = "direct",
     } else if(approach_discount == "direct"){
 
 
-      # Duplicate output to work with costs
-      output_cost <-
+      # Duplicate output to work with monetization
+      output_monetization <-
         output
 
       # Apply the function in main and detailed results
-      output_cost[["cost_main"]] <-
+      output_monetization[["monetization_main"]] <-
         healthiar:::add_monetized_impact(df = output[["health_main"]],
                                          valuation = valuation,
                                          corrected_discount_rate = corrected_discount_rate,
                                          time_period = {{time_period}},
                                          discount_shape = discount_shape)
 
-      output_cost[["cost_detailed"]]<-
+      output_monetization[["monetization_detailed"]]<-
         healthiar:::add_monetized_impact(df = output[["health_detailed"]][["raw"]],
                                          valuation = valuation,
                                          corrected_discount_rate = corrected_discount_rate,
@@ -183,14 +184,14 @@ include_cost <- function(approach_discount = "direct",
         paste0("impact", c("", "_before_discount", "_after_discount")),
         "corrected_discount_rate", "discount_shape", "approach_discount",
         "valuation",
-        paste0("cost", c("", "_before_discount", "_after_discount")),
-        paste0("cost", c("", "_before_discount", "_after_discount"), "_rounded"))
+        paste0("monetized_impact", c("", "_before_discount", "_after_discount")),
+        paste0("monetized_impact", c("", "_before_discount", "_after_discount"), "_rounded"))
 
 
     # Keep only relevant columns for monetization
-    output_cost[c("cost_main", "cost_detailed")]<-
+    output_monetization[c("monetization_main", "monetization_detailed")]<-
       purrr::map(
-        .x = output_cost[c("cost_main", "cost_detailed")],
+        .x = output_monetization[c("monetization_main", "monetization_detailed")],
         ~ dplyr::select(
           .x,
           # The columns containing "_ci" are the uncertainties that define the rows
@@ -208,7 +209,7 @@ include_cost <- function(approach_discount = "direct",
 
       # The approach cannot be indirect
       # Apply the function in main and detailed results
-      output_cost <-
+      output_monetization <-
         healthiar:::add_monetized_impact(
           df = data.frame(impact = impact),
           valuation = valuation,
@@ -221,6 +222,6 @@ include_cost <- function(approach_discount = "direct",
 
 
 
-  return(output_cost)
+  return(output_monetization)
 
 }
