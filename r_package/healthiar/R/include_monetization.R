@@ -9,6 +9,7 @@
 #' @param corrected_discount_rate \code{Numeric value} showing the discount rate for future years including correction from inflation rate
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
 #' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting.
+#' @param discount_overtime \code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".
 #' @param valuation \code{Numeric value} showing the value of statistical life which will be used in the health impact monetization
 #'
 #' @return Description of the return value.
@@ -21,8 +22,9 @@ include_monetization <- function(approach_discount = "direct",
                          impact = NULL,
                          valuation,
                          corrected_discount_rate = NULL,
+                         discount_shape = NULL,
                          discount_years = 1,
-                         discount_shape = NULL) {
+                         discount_overtime = "all_years") {
 
 
 
@@ -166,14 +168,16 @@ include_monetization <- function(approach_discount = "direct",
                                          valuation = valuation,
                                          corrected_discount_rate = corrected_discount_rate,
                                          discount_years = {{discount_years}},
-                                         discount_shape = discount_shape)
+                                         discount_shape = discount_shape,
+                                         discount_overtime = discount_overtime)
 
       output_monetization[["monetization_detailed"]]<-
         healthiar:::add_monetized_impact(df = output[["health_detailed"]][["raw"]],
                                          valuation = valuation,
                                          corrected_discount_rate = corrected_discount_rate,
                                          discount_years = {{discount_years}},
-                                         discount_shape = discount_shape)
+                                         discount_shape = discount_shape,
+                                         discount_overtime = discount_overtime)
     }
 
 
@@ -215,7 +219,8 @@ include_monetization <- function(approach_discount = "direct",
           valuation = valuation,
           corrected_discount_rate = corrected_discount_rate,
           discount_years = discount_years,
-          discount_shape = discount_shape)
+          discount_shape = discount_shape,
+          discount_overtime = discount_overtime)
   }
 
 
