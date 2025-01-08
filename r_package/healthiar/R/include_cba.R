@@ -25,6 +25,8 @@ include_cba <-
            discount_years_cost = 1,
            discount_overtime = "all_years") {
 
+    # Define vectors that are relevant below
+
     relevant_columns <-
         c("monetized_impact", "monetized_impact_rounded")
 
@@ -37,8 +39,7 @@ include_cba <-
         rep(suffix, each = length(relevant_columns))
       )
 
-
-
+    # Run include_monetization for benefit and cost separately
     cba_detailed_benefit <-
       healthiar::include_monetization(
         approach_discount = approach_discount,
@@ -50,6 +51,7 @@ include_cba <-
         discount_overtime = discount_overtime,
         valuation = valuation)
 
+    # For cost, assume 1 impact with full valuation to make use of include_monetization
     cba_detailed_cost <-
       healthiar::include_monetization(
         approach_discount = approach_discount,
@@ -60,29 +62,34 @@ include_cba <-
         discount_shape = discount_shape,
         discount_overtime = discount_overtime)
 
-
+    # Build the detailed output list
     cba_detailed <-
       list(
         benefit = cba_detailed_benefit,
         cost = cba_detailed_cost)
 
-
+    # Get main output
     cba_main <-
+      # Join benefit and cost into one df
       dplyr::left_join(
         cba_detailed_benefit,
         cba_detailed_cost,
         by = all_of(c("discount_shape", "discount_overtime")),
         suffix = suffix)|>
+      # Keep only relevant columns (results)
       dplyr::select(all_of(relevant_columns_with_suffix))|>
+      # Rename columns to make them shorter
+      # Moreover, cost is not actually a monetized impact
       dplyr::rename(benefit = monetized_impact_benefit,
                     cost = monetized_impact_cost,
                     benefit_rounded = monetized_impact_rounded_benefit,
                     cost_rounded = monetized_impact_rounded_cost) |>
+      # Calculate the difference between benefit and cost
       dplyr::mutate(benefit_minus_cost = benefit - cost,
                     benefit_minus_cost_rounded = round(benefit_minus_cost))
 
 
-
+    # Build the output list with main and detailed
 
     if(!is.null(positive_impact) & is.null(output)){
 
