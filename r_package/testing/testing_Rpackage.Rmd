@@ -2542,7 +2542,7 @@ bestcost_pm_copd_cost_discount_single_value <-
                           discount_shape = "exponential",
                           corrected_discount_rate = 0.03,
                           discount_years = 5,
-                          discount_for_each_year = FALSE,
+                          discount_overtime = "last_year",
                           valuation = 20)
 check_general(bestcost_pm_copd_cost_discount_single_value$monetized_impact_rounded,
               863) # As indicated by University of Port in Excel file
@@ -2581,6 +2581,26 @@ check_general(bestcost_pm_copd_discount$monetized_impact_rounded,
 ```
 
 
+```{r cba}
+
+## Discounting only one specific year
+bestcost_pm_copd_cba <-
+  healthiar::include_cba(
+    approach_discount = "direct",
+    positive_impact = 50,
+    valuation = 20,
+    cost = 100,
+    discount_shape = "exponential",
+    corrected_discount_rate_benefit = 0.03,
+    corrected_discount_rate_cost = 0.03,
+    discount_years_benefit = 5,
+    discount_years_cost = 5,
+    discount_overtime = "last_year")
+check_general(bestcost_pm_copd_cba[["cba_main"]]$benefit_minus_cost_rounded,
+              776) # As indicated by University of Port in Excel file
+
+
+```
 
 
 # Export 
