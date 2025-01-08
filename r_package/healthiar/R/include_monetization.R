@@ -71,7 +71,7 @@ include_monetization <- function(approach_discount = "direct",
                   discount_factor =
                     healthiar::get_discount_factor(
                       corrected_discount_rate = corrected_discount_rate,
-                      discount_years = discount_years,
+                      discount_year = discount_years,
                       discount_shape = discount_shape)) |>
 
                 # Calculate life years discounted
