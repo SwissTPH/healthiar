@@ -4,9 +4,6 @@
 #'
 #' @param df \code{Data frame} including the column "impact" (health impact)
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function).
-#' @param valuation \code{Numberic value} referring to unit value of a health impact
-#' @param time_period \code{Numeric value} referring to the period of time to be considered in the discounting.
-#' @param valuation \code{Numeric value} showing the value of statistical life which will be used in the health impact monetization
 #' @inheritParams include_monetization
 #'
 #' @return Description of the return value.
@@ -17,8 +14,23 @@
 add_monetized_impact  <- function(df,
                                   valuation,
                                   corrected_discount_rate,
-                                  time_period,
-                                  discount_shape) {
+                                  discount_years,
+                                  discount_shape,
+                                  discount_overtime) {
+
+  # If the discounting has to be applied in all years of the period
+  if(discount_overtime == "all_years"){
+    #Build a vector starting with 1
+    discount_years_vector <- 1 : discount_years
+    discount_period_length <- discount_years
+  }else{
+    # Otherwise (discount_overtime == "all_years",
+    # i.e. if the discounting has to be applied only the last year)
+    # only consider the last year of the period
+    discount_years_vector <- discount_years
+    discount_period_length <- 1
+  }
+
 
   df_with_input <-
     df |>
@@ -26,14 +38,15 @@ add_monetized_impact  <- function(df,
     # Use {{}} to clarify the it refers to the argument and not to the column
     # with the same name
     dplyr::mutate(corrected_discount_rate = {{corrected_discount_rate}},
-                  time_period = {{time_period}},
-                  discount_shape = {{discount_shape}})
+                  discount_years = {{discount_years}},
+                  discount_shape = {{discount_shape}},
+                  discount_overtime = {{discount_overtime}})
 
   df_with_discount_factor <-
     dplyr::cross_join(x = df_with_input,
-                      y = dplyr::tibble(year = 1:{{time_period}})) |>
-    # rowwise() because time_period becomes a vecto below 1:time_period
-    # otherwise vectors from columns and vectors from time_period cannot be digested
+                      y = dplyr::tibble(discount_year = discount_years_vector)) |>
+    # rowwise() because discount_years is a vector
+    # otherwise vectors from columns and vectors from discount_years cannot be digested
     # better step by step
     dplyr::rowwise() |>
     # Calculate discount factor
@@ -43,7 +56,7 @@ add_monetized_impact  <- function(df,
       discount_factor =
         healthiar::get_discount_factor(
           corrected_discount_rate = corrected_discount_rate,
-          time_period = year,
+          discount_year = discount_year,
           discount_shape = discount_shape))
 
   sum_of_discount_factors <-
@@ -64,7 +77,7 @@ add_monetized_impact  <- function(df,
     dplyr::mutate(
       # Calculate impact after discounting
       impact_before_discount = impact,
-      impact_after_discount = sum(impact/time_period * discount_factor_overtime),
+      impact_after_discount = impact / discount_period_length * discount_factor_overtime,
       impact = impact_after_discount,
       # Add column for valuation
       valuation = valuation,

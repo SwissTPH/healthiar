@@ -2504,33 +2504,53 @@ check_bestcost(result_list_bestcost = comparison_daly_lifetable_pif_geo ,
 bestcost_pm_copd_costs <- 
   healthiar::include_monetization(output = bestcost_pm_copd, 
                                   valuation = 1000)
+check_general(bestcost_pm_copd_costs[["monetization_main"]]$monetized_impact_rounded,
+              round(bestcost_pm_copd[["health_main"]]$impact * 1000))
 
 
-
-# Monetize with all arguments (including discount)
-bestcost_pm_copd_cost_discount <- 
+# Direct discounting
+## Monetize with all arguments (including discount)
+bestcost_pm_copd_costs_discount <- 
   healthiar::include_monetization(approach_discount = "direct",
                           output = bestcost_pm_copd, 
                           discount_shape = "exponential",
                           corrected_discount_rate = 0.01,
-                          time_period = 5,
+                          discount_years = 5,
                           valuation = 1000)
 
-# Monetize with all arguments (including discount)
+check_general(bestcost_pm_copd_costs_discount[["monetization_main"]]$monetized_impact_rounded,
+              c(3399306, 1313402, 5313428)) # Result on 8 Jan 2025
+
+## Monetize with impact (without output of attribute)
 bestcost_pm_copd_cost_discount_single_value <- 
   healthiar::include_monetization(approach_discount = "direct",
                           impact = 2E4, 
                           discount_shape = "exponential",
                           corrected_discount_rate = 0.03,
-                          time_period = 20,
+                          discount_years = 20,
                           valuation = 1)
 check_general(bestcost_pm_copd_cost_discount_single_value$monetized_impact_rounded,
               14877)
-# According to ChatGPT, the result should be 14877. 5 Dec 2024
+## According to ChatGPT, the result should be 14877. 5 Dec 2024
 
 
 
-# Discounting without valuation (=1)
+## Discounting only one specific year
+bestcost_pm_copd_cost_discount_single_value <-
+  healthiar::include_monetization(approach_discount = "direct",
+                          impact = 50,
+                          discount_shape = "exponential",
+                          corrected_discount_rate = 0.03,
+                          discount_years = 5,
+                          discount_for_each_year = FALSE,
+                          valuation = 20)
+check_general(bestcost_pm_copd_cost_discount_single_value$monetized_impact_rounded,
+              863) # As indicated by University of Port in Excel file
+
+
+
+# Indirect approach. 
+## Discounting without monetization (valuation=1) to compare results
 bestcost_pm_yll_lifetable_geluft_discount <- 
   healthiar::include_monetization(approach_discount = "indirect",
                           output = bestcost_pm_yll_exposure_single_year_lifetable_geluft, 
@@ -2540,7 +2560,7 @@ bestcost_pm_yll_lifetable_geluft_discount <-
 
 check_general(bestcost_pm_yll_lifetable_geluft_discount[["monetization_main"]]$monetized_impact_rounded,
               c(26493, 13877, 39006))
-# Result on 13 Dec 2025. Same result as discouting in attribute() (deprecated).
+# Result on 13 Dec 2025. Same result as discounting in attribute() (deprecated).
 
 ```
 
@@ -2553,7 +2573,10 @@ bestcost_pm_copd_discount <-
     impact = 2E4,
     discount_shape = "exponential",
     corrected_discount_rate = 0.03,
-    time_period = 20)
+    discount_years = 20)
+
+check_general(bestcost_pm_copd_discount$monetized_impact_rounded,
+              14877)
 
 ```
 
