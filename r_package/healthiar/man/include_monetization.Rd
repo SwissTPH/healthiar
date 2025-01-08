@@ -10,8 +10,9 @@ include_monetization(
   impact = NULL,
   valuation,
   corrected_discount_rate = NULL,
+  discount_shape = NULL,
   discount_years = 1,
-  discount_shape = NULL
+  discount_overtime = "all_years"
 )
 }
 \arguments{
@@ -25,9 +26,11 @@ include_monetization(
 
 \item{corrected_discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
 
+\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
+
 \item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
 
-\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
+\item{discount_overtime}{\code{String} that refers to the year(s) where the discounting has to be applied. Options: "all-years" (default) or "last_year". Only applicable if approach_discount = "direct".}
 }
 \value{
 Description of the return value.
