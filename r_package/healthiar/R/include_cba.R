@@ -49,7 +49,7 @@ include_cba <-
         discount_years = discount_years_benefit,
         discount_shape = discount_shape,
         discount_overtime = discount_overtime,
-        valuation = valuation)
+        valuation = valuation)[["monetization_main"]]
 
     # For cost, assume 1 impact with full valuation to make use of include_monetization
     cba_detailed_cost <-
@@ -60,7 +60,7 @@ include_cba <-
         corrected_discount_rate = corrected_discount_rate_cost,
         discount_years = discount_years_cost,
         discount_shape = discount_shape,
-        discount_overtime = discount_overtime)
+        discount_overtime = discount_overtime)[["monetization_main"]]
 
     # Build the detailed output list
     cba_detailed <-
@@ -89,16 +89,16 @@ include_cba <-
                     benefit_minus_cost_rounded = round(benefit_minus_cost))
 
 
+
     # Build the output list with main and detailed
 
-    if(!is.null(positive_impact) & is.null(output)){
-
-      output_cba <-
-        list(cba_main = cba_main,
-             cba_detailed = cba_detailed)
+    output_cba <-
+      list(cba_main = cba_main,
+           cba_detailed = cba_detailed)
 
 
-    }
+
+    return(output_cba)
 
 
 
