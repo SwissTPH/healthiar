@@ -2561,7 +2561,7 @@ bestcost_pm_copd_cost_discount_single_value <-
                           corrected_discount_rate = 0.03,
                           discount_years = 20,
                           valuation = 1)
-check_general(bestcost_pm_copd_cost_discount_single_value$monetized_impact_rounded,
+check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
               14877)
 ## According to ChatGPT, the result should be 14877. 5 Dec 2024
 
@@ -2576,7 +2576,7 @@ bestcost_pm_copd_cost_discount_single_value <-
                           discount_years = 5,
                           discount_overtime = "last_year",
                           valuation = 20)
-check_general(bestcost_pm_copd_cost_discount_single_value$monetized_impact_rounded,
+check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
               863) # As indicated by University of Port in Excel file
 
 
@@ -2607,7 +2607,7 @@ bestcost_pm_copd_discount <-
     corrected_discount_rate = 0.03,
     discount_years = 20)
 
-check_general(bestcost_pm_copd_discount$monetized_impact_rounded,
+check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_rounded,
               14877)
 
 ```
@@ -2630,6 +2630,25 @@ bestcost_pm_copd_cba <-
     discount_overtime = "last_year")
 check_general(bestcost_pm_copd_cba[["cba_main"]]$benefit_minus_cost_rounded,
               776) # As indicated by University of Port in Excel file
+
+
+## Discounting only one specific year
+bestcost_pm_copd_cba <-
+  healthiar::include_cba(
+    approach_discount = "direct",
+    output = bestcost_pm_copd,
+    valuation = 20,
+    cost = 100,
+    discount_shape = "exponential",
+    corrected_discount_rate_benefit = 0.03,
+    corrected_discount_rate_cost = 0.03,
+    discount_years_benefit = 5,
+    discount_years_cost = 5,
+    discount_overtime = "last_year")
+check_general(bestcost_pm_copd_cba[["cba_main"]]$benefit_minus_cost_rounded,
+              776) # As indicated by University of Port in Excel file
+
+
 
 
 ```
