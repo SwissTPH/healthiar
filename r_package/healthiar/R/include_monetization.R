@@ -185,7 +185,7 @@ include_monetization <- function(approach_discount = "direct",
     relevant_columns <-
       c("info", "geo_id_raw", "geo_id_aggregated",
         paste0("impact", c("", "_before_discount", "_after_discount")),
-        "corrected_discount_rate", "discount_shape", "approach_discount",
+        "corrected_discount_rate", "discount_shape", "discount_overtime", "approach_discount",
         "valuation",
         paste0("monetized_impact", c("", "_before_discount", "_after_discount")),
         paste0("monetized_impact", c("", "_before_discount", "_after_discount"), "_rounded"))
@@ -211,15 +211,20 @@ include_monetization <- function(approach_discount = "direct",
 
 
       # The approach cannot be indirect
-      # Apply the function in main and detailed results
+      # The output is data frame but we put it in an output list
+      # to keep consistency with the approach of using the output of attribute/compare
       output_monetization <-
-        healthiar:::add_monetized_impact(
-          df = data.frame(impact = impact),
-          valuation = valuation,
-          corrected_discount_rate = corrected_discount_rate,
-          discount_years = discount_years,
-          discount_shape = discount_shape,
-          discount_overtime = discount_overtime)
+        list(
+          monetization_main =
+            healthiar:::add_monetized_impact(
+              df = data.frame(impact = impact),
+              valuation = valuation,
+              corrected_discount_rate = corrected_discount_rate,
+              discount_years = discount_years,
+              discount_shape = discount_shape,
+              discount_overtime = discount_overtime)
+        )
+
   }
 
 
