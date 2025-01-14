@@ -1116,7 +1116,7 @@ bestcost_pm_deaths_lifetable_airqplus <-
 # View(bestcost_pm_deaths_lifetable_airqplus)
 
 check_bestcost(result_list_bestcost = bestcost_pm_deaths_lifetable_airqplus,
-                result_vector_alternative = c(2600.9, 1371, 3804))
+                result_vector_alternative = c(2601, 1371, 3804)) # Rounded impacts from "airqplus_deaths_yll_lifetable_adults.xlsx" (the YLL impacts were multiplied by 2 to obtain the total premature deaths deaths)
 ```
 
 
