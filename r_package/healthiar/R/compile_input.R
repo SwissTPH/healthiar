@@ -385,9 +385,11 @@ compile_input <-
         input <-
           dplyr::left_join(input_wo_lifetable,
                            lifetable_with_pop,
-                           by = "geo_id_raw") |>
+                           by = "geo_id_raw",
+                           relationship = "many-to-many") |>
           dplyr::left_join(population,
-                           by = "geo_id_raw")
+                           by = "geo_id_raw",
+                           relationship = "many-to-many")
 
       } else {
       # If no lifetable, only use input_wo_lifetable

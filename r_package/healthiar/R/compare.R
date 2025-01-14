@@ -47,6 +47,7 @@
 #'  \item And many more.
 #' }
 #' @author Alberto Castro
+#' @importFrom stringr str_detect
 #' @note Experimental function
 #' @export
 compare <-
@@ -309,13 +310,24 @@ compare <-
           by = joining_columns_input,
           suffix = c("_1", "_2"))
 
-# browser()
-      # Calculate the health impacts for each case (uncertainty, category, geo area...)
-      impact_raw <-
-        healthiar:::get_impact(
-          input = input |> rename(year_of_analysis = year_of_analysis_1),
-          pop_fraction_type = "pif")
+      # browser()
+
+      ## Added if statement below to avoid error in the non-lifetable cases
+      if( stringr::str_detect(health_metric, "lifetable") ) {
+        # Calculate the health impacts for each case (uncertainty, category, geo area...)
+        impact_raw <-
+          healthiar:::get_impact(
+            input = input |> rename(year_of_analysis = year_of_analysis_1),
+            pop_fraction_type = "pif")
+      } else { # Non-lifetable cases
+        impact_raw <-
+          healthiar:::get_impact(
+            input = input,
+            pop_fraction_type = "pif")
       }
+
+      }
+
 
 
       # Organize output
