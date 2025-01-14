@@ -22,7 +22,7 @@ test_that("results correct lifetable yld single exposure and one year exposure w
         population_midyear_female = lifetable_withPopulation[["female"]]$population,
         year_of_analysis = 2019,
         info = input_data_mortality$pollutant[2],
-        min_age = input_data_mortality$min_age[2], # min_age = 20,
+        min_age = input_data_mortality$min_age[2],
         duration_central = 100,
         duration_lower = 50, duration_upper = 100,
         dw_central = 0.5, dw_lower = 0.1, dw_upper = 10
@@ -62,7 +62,7 @@ test_that("no error lifetable yld exposure distribution and one year exposure wi
         population_midyear_female = lifetable_withPopulation[["female"]]$population,
         year_of_analysis = 2019,
         info = input_data_mortality$pollutant[2],
-        min_age = input_data_mortality$min_age[2], # min_age = 20,
+        min_age = input_data_mortality$min_age[2],
         duration_central = 100,
         duration_lower = 50, duration_upper = 100,
         dw_central = 0.5, dw_lower = 0.1, dw_upper = 10

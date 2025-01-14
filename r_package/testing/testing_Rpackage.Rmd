@@ -1358,7 +1358,7 @@ bestcost_pm_yld_lifetable_geluft  <-
     min_age = input_data_mortality$min_age[2], # min_age = 20,
     duration_central = 100, 
     duration_lower = 50, duration_upper = 100, 
-    dw_central = 1 #, dw_lower = 0.1, dw_upper = 10
+    dw_central = 0.5 #, dw_lower = 0.1, dw_upper = 10
 )
 
 # View(bestcost_pm_yld_lifetable_geluft)
