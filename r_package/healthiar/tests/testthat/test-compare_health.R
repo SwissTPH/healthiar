@@ -84,7 +84,7 @@ test_that("results correct pif comparison rr single exposure", {
 
   testthat::expect_equal(
     object =
-      healthiar::compare(
+      healthiar::compare_health(
         approach_comparison = "pif",
         exp_central_1 = 8.85,
         exp_central_2 = 6,
