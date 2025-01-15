@@ -1,4 +1,4 @@
-#' include_monetization
+#' include_cost
 
 #' @description Monetize health impacts
 #'
@@ -16,7 +16,7 @@
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)
 #' @export
-include_monetization <- function(approach_discount = "direct",
+include_cost <- function(approach_discount = "direct",
                          output = NULL,
                          impact = NULL,
                          valuation,

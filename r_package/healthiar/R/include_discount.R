@@ -2,7 +2,7 @@
 
 #' @description It calculates discounted health impacts (without valuation).
 
-#' @inheritParams include_monetization
+#' @inheritParams include_cost
 
 #' @return
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
@@ -30,7 +30,7 @@ include_discount <-
            discount_shape = NULL) {
 
     output <-
-      healthiar::include_monetization(
+      healthiar::include_cost(
         approach_discount = approach_discount,
         output = output,
         impact = impact,
