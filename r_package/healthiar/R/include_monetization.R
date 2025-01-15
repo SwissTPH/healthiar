@@ -185,7 +185,7 @@ include_monetization <- function(approach_discount = "direct",
     relevant_columns <-
       c("info", "geo_id_raw", "geo_id_aggregated",
         paste0("impact", c("", "_before_discount", "_after_discount")),
-        "corrected_discount_rate", "discount_shape", "discount_overtime", "approach_discount",
+        "corrected_discount_rate", "discount_shape", "approach_discount",
         "valuation",
         paste0("monetized_impact", c("", "_before_discount", "_after_discount")),
         paste0("monetized_impact", c("", "_before_discount", "_after_discount"), "_rounded"))

@@ -2546,13 +2546,12 @@ bestcost_pm_copd_costs_discount <-
   healthiar::include_monetization(approach_discount = "direct",
                           output = bestcost_pm_copd, 
                           discount_shape = "exponential",
-                          corrected_discount_rate = 0.03,
+                          corrected_discount_rate = 0.01,
                           discount_years = 5,
-                          valuation = 20,
-                          discount_overtime = "last_year")
+                          valuation = 1000)
 
 check_general(bestcost_pm_copd_costs_discount[["monetization_main"]]$monetized_impact_rounded,
-              c(60416, 23343, 94436)) # Result on 9 Jan 2025
+              c(3399306, 1313402, 5313428)) # Result on 8 Jan 2025
 
 ## Monetize with impact (without output of attribute)
 bestcost_pm_copd_cost_discount_single_value <- 
@@ -2583,8 +2582,8 @@ check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]
 
 
 # Indirect approach. 
-## valuation=1 to compare results with only discounting
-bestcost_pm_yll_lifetable_geluft_indirect <- 
+## Discounting without monetization (valuation=1) to compare results
+bestcost_pm_yll_lifetable_geluft_discount <- 
   healthiar::include_monetization(approach_discount = "indirect",
                           output = bestcost_pm_yll_exposure_single_year_lifetable_geluft, 
                           discount_shape = "exponential",
@@ -2634,7 +2633,7 @@ check_general(bestcost_pm_copd_cba[["cba_main"]]$benefit_minus_cost_rounded,
 
 
 ## Discounting only one specific year
-bestcost_pm_copd_cba_output <-
+bestcost_pm_copd_cba <-
   healthiar::include_cba(
     approach_discount = "direct",
     output = bestcost_pm_copd,
@@ -2646,8 +2645,8 @@ bestcost_pm_copd_cba_output <-
     discount_years_benefit = 5,
     discount_years_cost = 5,
     discount_overtime = "last_year")
-check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_rounded,
-              c(60416, 23343, 94436) - 86) # As indicated by University of Porto in Excel file
+check_general(bestcost_pm_copd_cba[["cba_main"]]$benefit_minus_cost_rounded,
+              776) # As indicated by University of Port in Excel file
 
 
 
