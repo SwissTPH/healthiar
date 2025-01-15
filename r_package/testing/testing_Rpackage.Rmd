@@ -2612,7 +2612,7 @@ bestcost_pm_copd_discount <-
     discount_years = 20)
 
 check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_rounded,
-              14877)
+              14877)# Results on 2025-01-15
 
 ```
 

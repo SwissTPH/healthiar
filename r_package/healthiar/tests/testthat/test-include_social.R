@@ -1,4 +1,4 @@
-test_that("multiplication works", {
+test_that("results correct", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -23,7 +23,6 @@ test_that("multiplication works", {
         approach = "quantile"
         ) |>
       purrr::pluck("social_main") |>
-      purrr::pluck("original_layout") |>
       dplyr::select(difference_value)  |>
       base::unlist() |>
       base::as.numeric(),
