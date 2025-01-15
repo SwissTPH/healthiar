@@ -783,6 +783,8 @@ rr_data_allCauseMortality <-
 rr_data_morbidities <- 
    dplyr::filter(rr_data,
     !outcome_metric %in% "premature deaths")
+
+mrbrt_stroke <- readRDS(file = "../testing/input/MRBRT_stroke.RDS")
 ```
 
 ## Population data 
@@ -812,6 +814,8 @@ total_population <-
   sum(
     sum(population_byAge[["male"]]$population),
     sum(population_byAge[["female"]]$population))
+
+pop_data_norway <- readRDS(file = "../testing/input/pop_data.RDS")
 ```
 
 ## Baseline morbidity data
@@ -1198,7 +1202,9 @@ rm(list=setdiff(ls(),
                   "runif_with_seed",
                   "social_data",
                   "social_per_decile", 
-                  "social_results"
+                  "social_results",
+                  "mrbrt_stroke",
+                  "pop_data_norway"
                   )))
 save.image(file = "../testing/input/data/input_data_for_testing_Rpackage.RData")
 ```

@@ -429,29 +429,27 @@ bestcost_noise_ihd_expDist_geo <-
 ```
 
 ```{r exposure distribution and user-defined points for relative risk}
-MRBRT_stroke <- readRDS(file = "../testing/input/MRBRT_stroke.RDS")
-pop_data <- readRDS(file = "../testing/input/pop_data.RDS")
 
 bestcost_pm_stroke_mr_brt <-
   healthiar::attribute_health(
     approach_risk = "relative_risk",
-    exp_central = pop_data$Concentration,
-    prop_pop_exp = pop_data$Viken,
+    exp_central = pop_data_norway$Concentration,
+    prop_pop_exp = pop_data_norway$Viken,
     cutoff_central = 5,
     # cutoff_central = 0,
     bhd_central = 4500,
     erf_eq_central = 
       stats::splinefun(
-        x = MRBRT_stroke$exposure,
-        y = MRBRT_stroke$mean,
+        x = mrbrt_stroke$exposure,
+        y = mrbrt_stroke$mean,
         method = "natural"),
     erf_eq_lower = stats::splinefun(
-        x = MRBRT_stroke$exposure,
-        y = MRBRT_stroke$mean,
+        x = mrbrt_stroke$exposure,
+        y = mrbrt_stroke$mean,
         method = "natural"),
     erf_eq_upper = stats::splinefun(
-        x = MRBRT_stroke$exposure,
-        y = MRBRT_stroke$mean + 0.01,
+        x = mrbrt_stroke$exposure,
+        y = mrbrt_stroke$mean + 0.01,
         method = "natural")
     )
 
