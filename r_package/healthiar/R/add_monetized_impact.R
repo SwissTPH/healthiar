@@ -1,6 +1,6 @@
 #' add_monetized_impact
 
-#' @description Function to calculate and add the monetization of the health impacts
+#' @description Function to calculate and add the cost of the health impacts
 #'
 #' @param df \code{Data frame} including the column "impact" (health impact)
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function).
@@ -54,7 +54,7 @@ add_monetized_impact  <- function(df,
     dplyr::summarise(discount_factor_overtime = sum(discount_factor),
                      .groups = "keep")
 
-  df_with_monetization <-
+  df_with_cost <-
     # Join the sum of discount factors with the original data
     dplyr::left_join(
       df_with_input,
@@ -73,19 +73,19 @@ add_monetized_impact  <- function(df,
       # (one for each year of the period)
       # The default value 1 for time period enables that the calculation below
       # is not affected if no discount is demanded by the user
-      monetized_impact_before_discount = impact_before_discount * valuation,
-      monetized_impact_after_discount = impact_after_discount * valuation,
-      monetized_impact = monetized_impact_after_discount,
+      cost_before_discount = impact_before_discount * valuation,
+      cost_after_discount = impact_after_discount * valuation,
+      cost = cost_after_discount,
       .after = impact) |>
 
-    # Round monetized impacts
+    # Round costs
     dplyr::mutate(
-      monetized_impact_before_discount_rounded = round(monetized_impact_before_discount),
-      monetized_impact_after_discount_rounded = round(monetized_impact_after_discount),
-      monetized_impact_rounded = round(monetized_impact),
-      .after = monetized_impact)
+      cost_before_discount_rounded = round(cost_before_discount),
+      cost_after_discount_rounded = round(cost_after_discount),
+      cost_rounded = round(cost),
+      .after = cost)
 
-  return(df_with_monetization)
+  return(df_with_cost)
 
 }
 
