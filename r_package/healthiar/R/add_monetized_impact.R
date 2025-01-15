@@ -20,32 +20,19 @@ add_monetized_impact  <- function(df,
                                   discount_years,
                                   discount_shape) {
 
-  discount_years_string <-
-    paste0(first(discount_years), "-",
-           last(discount_years))
-
-  discount_years_length <-
-    length(discount_years)
-
-  # Just in case that the user enter years such as 2021:2024 instead of 1:4
-  discount_years_number <-
-    1:discount_years_length
-
-
   df_with_input <-
     df |>
     # Add columns for input data in the table
     # Use {{}} to clarify the it refers to the argument and not to the column
     # with the same name
     dplyr::mutate(corrected_discount_rate = {{corrected_discount_rate}},
-                  discount_years_string = discount_years_string,
-                  discount_years_length = discount_years_length,
+                  discount_years = {{discount_years}},
                   discount_shape = {{discount_shape}})
 
   df_with_discount_factor <-
     dplyr::cross_join(x = df_with_input,
-                      y = dplyr::tibble(discount_year = discount_years_number)) |>
-    # rowwise() because discount_years is a vector
+                      y = dplyr::tibble(year = 1:{{discount_years}})) |>
+    # rowwise() because discount_years becomes a vecto below 1:discount_years
     # otherwise vectors from columns and vectors from discount_years cannot be digested
     # better step by step
     dplyr::rowwise() |>
@@ -56,7 +43,7 @@ add_monetized_impact  <- function(df,
       discount_factor =
         healthiar::get_discount_factor(
           corrected_discount_rate = corrected_discount_rate,
-          discount_year = discount_year,
+          discount_years = year,
           discount_shape = discount_shape))
 
   sum_of_discount_factors <-
@@ -77,7 +64,7 @@ add_monetized_impact  <- function(df,
     dplyr::mutate(
       # Calculate impact after discounting
       impact_before_discount = impact,
-      impact_after_discount = impact / discount_years_length * discount_factor_overtime,
+      impact_after_discount = sum(impact/discount_years * discount_factor_overtime),
       impact = impact_after_discount,
       # Add column for valuation
       valuation = valuation,

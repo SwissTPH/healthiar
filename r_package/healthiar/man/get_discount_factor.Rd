@@ -6,7 +6,7 @@
 \usage{
 get_discount_factor(
   corrected_discount_rate,
-  discount_year,
+  discount_years,
   discount_shape = "exponential"
 )
 }
