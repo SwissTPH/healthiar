@@ -39,10 +39,7 @@ include_discount <-
         discount_years = discount_years,
         discount_shape = discount_shape,
         discount_overtime = discount_overtime,
-        valuation = 1)
-
-    output[["monetization_main"]] <-
-      output[["monetization_main"]] |>
+        valuation = 1) |>
       dplyr::select(-contains("cost"))
 
 
