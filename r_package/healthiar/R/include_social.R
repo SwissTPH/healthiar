@@ -200,7 +200,7 @@ include_social <- function(output = NULL,
         geo_id_raw = geo_id_raw,
         impact = impact,
         social_indicator = social_indicator,
-        population = if ( !is.null({{population}}) ) { population } else { NA }
+        population = if ( !is.null(population) ) { population } else { NA }
       )
 
     # * Create quantiles and add rank based on social indicator ################
@@ -220,18 +220,16 @@ include_social <- function(output = NULL,
       output_social |>
       dplyr::summarize(
         ## Sum of population in the overall data set
-        population_sum = if ( !is.null({{population}}) ) {
-          sum(population, na.rm = TRUE)
-          } else { NA },
+        population_sum = sum(population, na.rm = TRUE),
         ## Average impact in the overall data set
         impact_mean = mean(impact, na.rm = TRUE),
         ## Absolute impact and population (sum across all geo units),
         impact_sum = sum(impact, na.rm = TRUE),
         ## Impact rate in all geographical units (without stratification by quantile)
         ## per 100'000 inhabitants
-        impact_rate = if ( !is.null({{population}}) ) {
+        impact_rate = if ( !is.null(population) ) {
           (impact_sum / population_sum) * 1e5
-        } else { NA }
+        } else {NA}
       )  |>
       ## Pivot longer to prepare data to be joined below
       tidyr::pivot_longer(
@@ -247,15 +245,10 @@ include_social <- function(output = NULL,
       ## keeping uncertainties
       dplyr::group_by(quantile) |>
       dplyr::summarize(
-        population_sum = if ( !is.null( {{population}} ) ) {
-          sum(population, na.rm = TRUE)
-          } else { NA },
+        population_sum = sum(population, na.rm = TRUE),
         impact_mean = mean(impact, na.rm = TRUE),
         impact_sum = sum(impact, na.rm = TRUE),
-        impact_rate = if ( !is.null( {{population}} ) ) {
-          (impact_sum / population_sum) * 1e5
-        } else {NA}
-        )
+        impact_rate = impact_sum * 1e5 / population_sum)
 
     # * Determine differences in statistics between quantiles ##################
 
@@ -330,7 +323,6 @@ include_social <- function(output = NULL,
       ## This is the most relevant result.
       ## The other paramenters can be stored in detailed
       ## (just in case some users have interest on this)
-      ## NOTE: if the population argument is not specified (i.e. it is NULL), then this table is full of NA's 3 ####
       dplyr::filter(parameter == "impact_rate")
 
     output[["impact_per_quantile"]] <- output_social_by_quantile

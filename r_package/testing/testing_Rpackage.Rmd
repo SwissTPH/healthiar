@@ -598,7 +598,7 @@ check_general(
 
 ```
 
-```{r Social analysis using impact vector, eval=FALSE, include=FALSE}
+```{r Social analysis using impact vector}
 # Take into account social aspects
 
 # First calculate attributable deahts based on total mortality as provide by Sciensano
