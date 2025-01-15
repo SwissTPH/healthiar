@@ -587,7 +587,7 @@ bestcost_pm_death_social_decile <-
                             n_quantile = 10,
                             approach = "quantile")
 
-View(bestcost_pm_death_social_decile)
+# View(bestcost_pm_death_social_decile)
 
 # Check that results did not change over time
 check_general(
@@ -617,15 +617,12 @@ bestcost_pm_death <-
 bestcost_pm_death_social_decile_impact_vector <- 
   healthiar::include_social(impact = bestcost_pm_death[["health_main"]]$impact,
                             population = bestcost_pm_death[["health_main"]]$population,
-                            bhd = bestcost_pm_death[["health_main"]]$bhd,
-                            exp = bestcost_pm_death[["health_main"]]$exp,
-                            pop_fraction = bestcost_pm_death[["health_main"]]$pop_fraction,
                             geo_id_raw = social_data$CS01012020,
                             social_indicator = social_data$score,
                             n_quantile = 10,
                             approach = "quantile")
 
-View(bestcost_pm_death_social_decile_impact_vector)
+# View(bestcost_pm_death_social_decile_impact_vector)
 
 # Check that results did not change over time
 check_general(
