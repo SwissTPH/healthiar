@@ -9,7 +9,7 @@ include_discount(
   output = NULL,
   impact = NULL,
   corrected_discount_rate = NULL,
-  discount_years = 1,
+  time_period = 1,
   discount_shape = NULL
 )
 }
@@ -21,8 +21,6 @@ include_discount(
 \item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function).}
 
 \item{corrected_discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
-
-\item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 }
