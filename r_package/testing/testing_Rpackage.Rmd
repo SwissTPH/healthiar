@@ -2553,7 +2553,7 @@ bestcost_pm_copd_costs_discount <-
 check_general(bestcost_pm_copd_costs_discount[["monetization_main"]]$monetized_impact_rounded,
               c(3399306, 1313402, 5313428)) # Result on 8 Jan 2025
 
-## Monetize with all arguments (including discount)
+# Monetize with all arguments (including discount)
 bestcost_pm_copd_cost_discount_single_value <- 
   healthiar::include_monetization(approach_discount = "direct",
                           impact = 2E4, 
@@ -2568,15 +2568,16 @@ check_general(bestcost_pm_copd_cost_discount_single_value$monetized_impact_round
 
 
 ## Discounting only one specific year
-# bestcost_pm_copd_cost_discount_single_value <- 
-#   healthiar::include_monetization(approach_discount = "direct",
-#                           impact = 50, 
-#                           discount_shape = "exponential",
-#                           corrected_discount_rate = 0.025,
-#                           discount_years = 5,
-#                           valuation = 20)
-# check_general(bestcost_pm_copd_cost_discount_single_value$monetized_impact_rounded,
-#               863)
+# Monetize with all arguments (including discount)
+bestcost_pm_copd_cost_discount_single_value <- 
+  healthiar::include_monetization(approach_discount = "direct",
+                          impact = 50, 
+                          discount_shape = "exponential",
+                          corrected_discount_rate = 0.025,
+                          discount_years = 5,
+                          valuation = 20)
+check_general(bestcost_pm_copd_cost_discount_single_value$monetized_impact_rounded,
+              863)
 
 
 
