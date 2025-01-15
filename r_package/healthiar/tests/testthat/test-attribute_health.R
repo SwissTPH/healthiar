@@ -140,6 +140,70 @@ test_that("number of rows in detailed results correct rr single exposure value w
 
 })
 
+test_that("results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & with cutoff of 5", {
+
+  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        exp_central = pop_data_norway$Concentration,
+        prop_pop_exp = pop_data_norway$Viken,
+        cutoff_central = 5,
+        bhd_central = 4500,
+        erf_eq_central =
+          stats::splinefun(
+            x = mrbrt_stroke$exposure,
+            y = mrbrt_stroke$mean,
+            method = "natural"),
+        erf_eq_lower = stats::splinefun(
+          x = mrbrt_stroke$exposure,
+          y = mrbrt_stroke$mean,
+          method = "natural"),
+        erf_eq_upper = stats::splinefun(
+          x = mrbrt_stroke$exposure,
+          y = mrbrt_stroke$mean + 0.01,
+          method = "natural")
+      ) |>
+      helper_extract_main_results(),
+    expected =
+      c(32,32,76) # Results on 19 Dec 2024
+  )
+})
+
+test_that("results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & no cutoff", {
+
+  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        exp_central = pop_data_norway$Concentration,
+        prop_pop_exp = pop_data_norway$Viken,
+        cutoff_central = 0,
+        bhd_central = 4500,
+        erf_eq_central =
+          stats::splinefun(
+            x = mrbrt_stroke$exposure,
+            y = mrbrt_stroke$mean,
+            method = "natural"),
+        erf_eq_lower = stats::splinefun(
+          x = mrbrt_stroke$exposure,
+          y = mrbrt_stroke$mean,
+          method = "natural"),
+        erf_eq_upper = stats::splinefun(
+          x = mrbrt_stroke$exposure,
+          y = mrbrt_stroke$mean + 0.01,
+          method = "natural")
+      ) |>
+      helper_extract_main_results(),
+    expected =
+      c(249,249,289) # Results on 15 Jan 2024
+  )
+})
+
 test_that("results correct rr iteration with exposure distribution and uncertainties in rr and exp", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))

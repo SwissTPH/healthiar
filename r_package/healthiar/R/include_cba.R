@@ -77,7 +77,8 @@ include_cba <-
         by = all_of(c("discount_shape", "discount_overtime")),
         suffix = suffix)|>
       # Keep only relevant columns (results)
-      dplyr::select(all_of(relevant_columns_with_suffix))|>
+      # dplyr::select(all_of(relevant_columns_with_suffix))|> # This line resulted in a warning: Using `all_of()` outside of a selecting function was deprecated in tidyselect 1.2.0.
+      dplyr::select(relevant_columns_with_suffix)|>
       # Rename columns to make them shorter
       # Moreover, cost is not actually a monetized impact
       dplyr::rename(benefit = monetized_impact_benefit,
