@@ -2545,7 +2545,7 @@ bestcost_pm_copd_cost_discount <-
                           output = bestcost_pm_copd, 
                           discount_shape = "exponential",
                           corrected_discount_rate = 0.01,
-                          discount_years = 5,
+                          time_period = 5,
                           valuation = 1000)
 
 # Monetize with all arguments (including discount)
@@ -2554,7 +2554,7 @@ bestcost_pm_copd_cost_discount_single_value <-
                           impact = 2E4, 
                           discount_shape = "exponential",
                           corrected_discount_rate = 0.03,
-                          discount_years = 20,
+                          time_period = 20,
                           valuation = 1)
 check_general(bestcost_pm_copd_cost_discount_single_value$monetized_impact_rounded,
               14877)
@@ -2585,7 +2585,7 @@ bestcost_pm_copd_discount <-
     impact = 2E4,
     discount_shape = "exponential",
     corrected_discount_rate = 0.03,
-    discount_years = 20)
+    time_period = 20)
 
 ```
 

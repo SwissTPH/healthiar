@@ -22,6 +22,8 @@ include_discount(
 
 \item{corrected_discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
 
+\item{time_period}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
+
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 }
 \value{

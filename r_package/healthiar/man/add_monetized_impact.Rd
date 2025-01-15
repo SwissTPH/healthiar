@@ -8,7 +8,7 @@ add_monetized_impact(
   df,
   valuation,
   corrected_discount_rate,
-  discount_years,
+  time_period,
   discount_shape
 )
 }
@@ -19,7 +19,7 @@ add_monetized_impact(
 
 \item{corrected_discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
 
-\item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
+\item{time_period}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 

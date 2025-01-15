@@ -8,7 +8,7 @@
 #' @param valuation \code{Numberic value} referring to unit value of a health impact
 #' @param corrected_discount_rate \code{Numeric value} showing the discount rate for future years including correction from inflation rate
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
-#' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting.
+#' @param time_period \code{Numeric value} referring to the period of time to be considered in the discounting.
 #' @param valuation \code{Numeric value} showing the value of statistical life which will be used in the health impact monetization
 #'
 #' @return Description of the return value.
@@ -21,7 +21,7 @@ include_monetization <- function(approach_discount = "direct",
                          impact = NULL,
                          valuation,
                          corrected_discount_rate = NULL,
-                         discount_years = 1,
+                         time_period = 1,
                          discount_shape = NULL) {
 
 
@@ -58,10 +58,10 @@ include_monetization <- function(approach_discount = "direct",
                 .x |>
                 # Convert year to numeric
                 dplyr::mutate(year = as.numeric(year),
-                              # Ignore user defined discount_years
+                              # Ignore user defined time_period
                               # Here the difference between year of analysis and
                               # last year of mortality data is to be used
-                              discount_years = year - {{year_of_analysis}},
+                              time_period = year - {{year_of_analysis}},
                               corrected_discount_rate = {{corrected_discount_rate}},
                               discount_shape = {{discount_shape}})|>
 
@@ -71,7 +71,7 @@ include_monetization <- function(approach_discount = "direct",
                   discount_factor =
                     healthiar::get_discount_factor(
                       corrected_discount_rate = corrected_discount_rate,
-                      discount_years = discount_years,
+                      time_period = time_period,
                       discount_shape = discount_shape)) |>
 
                 # Calculate life years discounted
@@ -165,14 +165,14 @@ include_monetization <- function(approach_discount = "direct",
         healthiar:::add_monetized_impact(df = output[["health_main"]],
                                          valuation = valuation,
                                          corrected_discount_rate = corrected_discount_rate,
-                                         discount_years = {{discount_years}},
+                                         time_period = {{time_period}},
                                          discount_shape = discount_shape)
 
       output_monetization[["monetization_detailed"]]<-
         healthiar:::add_monetized_impact(df = output[["health_detailed"]][["raw"]],
                                          valuation = valuation,
                                          corrected_discount_rate = corrected_discount_rate,
-                                         discount_years = {{discount_years}},
+                                         time_period = {{time_period}},
                                          discount_shape = discount_shape)
     }
 
@@ -214,7 +214,7 @@ include_monetization <- function(approach_discount = "direct",
           df = data.frame(impact = impact),
           valuation = valuation,
           corrected_discount_rate = corrected_discount_rate,
-          discount_years = discount_years,
+          time_period = time_period,
           discount_shape = discount_shape)
   }
 

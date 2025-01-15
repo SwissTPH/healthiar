@@ -6,12 +6,12 @@
 \usage{
 get_discount_factor(
   corrected_discount_rate,
-  discount_years,
+  time_period,
   discount_shape = "exponential"
 )
 }
 \arguments{
-\item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
+\item{time_period}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
 }
 \description{
 Get discount factor based on discount rate (already corrected for inflation)
