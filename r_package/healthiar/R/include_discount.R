@@ -26,7 +26,7 @@ include_discount <-
            output = NULL,
            impact = NULL,
            corrected_discount_rate = NULL,
-           discount_years = 1,
+           time_period = 1,
            discount_shape = NULL) {
 
     output <-
@@ -35,7 +35,7 @@ include_discount <-
         output = output,
         impact = impact,
         corrected_discount_rate = corrected_discount_rate,
-        discount_years = discount_years,
+        time_period = time_period,
         discount_shape = discount_shape,
         valuation = 1) |>
       dplyr::select(-contains("cost"))
