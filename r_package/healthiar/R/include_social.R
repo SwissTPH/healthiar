@@ -18,6 +18,9 @@
 include_social <- function(output = NULL,
                            impact = NULL,
                            population = NULL,
+                           bhd = NULL,
+                           exp = NULL,
+                           pop_fraction = NULL,
                            geo_id_raw,
                            social_indicator,
                            n_quantile = 10, ## by default: decile
@@ -53,15 +56,15 @@ include_social <- function(output = NULL,
     overall <-
       output_social |>
       dplyr::summarize(
-        # Sum of baseline health data in the overall data set
+        ## Sum of baseline health data in the overall data set
         bhd_sum = sum(bhd, na.rm = TRUE),
-        # Sum of population in the overall data set
+        ## Sum of population in the overall data set
         population_sum = sum(population, na.rm = TRUE),
-        # Baseline health data per 100k inhab.
+        ## Baseline health data per 100k inhab.
         bhd_rate = bhd_sum * 1e5 / population_sum,
-        # Average baseline health data in the overall data set
+        ## Average baseline health data in the overall data set
         bhd_mean = mean(bhd, na.rm = TRUE),
-        # Average exposure in the overall data set
+        ## Average exposure in the overall data set
         exp_mean = mean(exp, na.rm = TRUE),
         ## Standard deviation of exposure
         exp_sd = sd(exp, na.rm = TRUE),
@@ -174,7 +177,7 @@ include_social <- function(output = NULL,
       dplyr::select(-is_paf_from_deprivation, -is_attributable_from_deprivation,
                     -parameter_string)
 
-    output[["social_main"]][["original_layout"]] <-
+    output[["social_main"]] <-
       social_results |>
       ## Keep only impact as parameter
       ## This is the most relevant result.
@@ -200,7 +203,10 @@ include_social <- function(output = NULL,
         geo_id_raw = geo_id_raw,
         impact = impact,
         social_indicator = social_indicator,
-        population = if ( !is.null({{population}}) ) { population } else { NA }
+        population = if ( !is.null({{ population }}) ) { population } else { NA },
+        bhd = if ( !is.null({{ bhd }}) ) { bhd } else { NA },
+        exp = if ( !is.null({{ exp }}) ) { exp } else { NA },
+        pop_fraction = if ( !is.null({{ pop_fraction }}) ) { pop_fraction } else { NA }
       )
 
     # * Create quantiles and add rank based on social indicator ################
@@ -219,10 +225,34 @@ include_social <- function(output = NULL,
     overall <-
       output_social |>
       dplyr::summarize(
+        ## Sum of baseline health data in the overall data set
+        bhd_sum = if ( !is.null({{ bhd }}) ) {
+          sum(bhd, na.rm = TRUE)
+        } else { NA },
         ## Sum of population in the overall data set
         population_sum = if ( !is.null({{population}}) ) {
           sum(population, na.rm = TRUE)
           } else { NA },
+        ## Baseline health data per 100k inhab.
+        bhd_rate = if ( !is.na( bhd_sum ) & !is.na( population_sum ) ) {
+          bhd_sum * 1e5 / population_sum
+        } else { NA },
+        ## Average baseline health data in the overall data set
+        bhd_mean = if ( !is.null({{ bhd }})) {
+          mean(bhd, na.rm = TRUE)
+        } else { NA },
+        ## Average exposure in the overall data set
+        exp_mean = if ( !is.null({{ exp }})) {
+          mean(exp, na.rm = TRUE)
+        } else { NA },
+        ## Standard deviation of exposure
+        exp_sd = if ( !is.na( exp_mean ) ) {
+          sd(exp, na.rm = TRUE)
+          } else { NA },
+        ## Average attributable fraction in the overall data set
+        pop_fraction_mean = if ( !is.null({{ pop_fraction }})) {
+          mean(pop_fraction, na.rm = TRUE)
+        } else { NA },
         ## Average impact in the overall data set
         impact_mean = mean(impact, na.rm = TRUE),
         ## Absolute impact and population (sum across all geo units),
@@ -247,12 +277,23 @@ include_social <- function(output = NULL,
       ## keeping uncertainties
       dplyr::group_by(quantile) |>
       dplyr::summarize(
+        bhd_sum = if ( !is.null( {{ bhd }} ) ) {
+          sum(bhd, na.rm = TRUE) } else { NA },
         population_sum = if ( !is.null( {{population}} ) ) {
-          sum(population, na.rm = TRUE)
-          } else { NA },
+          sum(population, na.rm = TRUE) } else { NA },
+        bhd_rate = if ( !is.null( {{ bhd }} ) ) {
+          bhd_sum * 1e5 / population_sum } else { NA },
+        bhd_mean = if ( !is.null({{ bhd }})) {
+          mean(bhd, na.rm = TRUE) } else { NA },
+        exp_mean = if ( !is.null({{ exp }})) {
+          mean(exp, na.rm = TRUE) } else { NA },
+        exp_sd = if ( !is.na( exp_mean ) ) {
+          sd(exp, na.rm = TRUE) } else { NA },
+        pop_fraction_mean = if ( !is.null({{ pop_fraction }})) {
+          mean(pop_fraction, na.rm = TRUE) } else { NA },
         impact_mean = mean(impact, na.rm = TRUE),
         impact_sum = sum(impact, na.rm = TRUE),
-        impact_rate = if ( !is.null( {{population}} ) ) {
+        impact_rate = if ( !is.null( {{ population }} ) ) {
           (impact_sum / population_sum) * 1e5
         } else {NA}
         )
@@ -288,12 +329,15 @@ include_social <- function(output = NULL,
         relative_overall = absolute_overall / overall)
 
     # * Prepare main output table ##############################################
-
+    # browser()
     social_results <-
       social_calculation |>
       ## Filter for relevant rows
       dplyr::filter(
-        parameter %in% c("impact_rate")) |>
+        parameter %in% c("exp_mean",
+                         "bhd_rate",
+                         "pop_fraction_mean",
+                         "impact_rate")) |>
       ## Long instead of wide layout
       tidyr::pivot_longer(
         cols = contains("_"),
@@ -304,6 +348,9 @@ include_social <- function(output = NULL,
       dplyr::mutate(
         parameter_string =
           dplyr::case_when(
+            grepl("exp_", parameter) ~ "exposure",
+            grepl("bhd_", parameter) ~ "baseline health data",
+            grepl("pop_fraction_", parameter) ~ "population attributable fraction",
             grepl("impact_", parameter) ~ "impact"),
         ## Replace "quantile" with "bottom_quantile"
         difference_compared_with =
@@ -333,7 +380,8 @@ include_social <- function(output = NULL,
       ## NOTE: if the population argument is not specified (i.e. it is NULL), then this table is full of NA's 3 ####
       dplyr::filter(parameter == "impact_rate")
 
-    output[["impact_per_quantile"]] <- output_social_by_quantile
+    output[["socia_detailed"]][["results_detailed"]] <- social_results
+    output[["socia_detailed"]][["impact_per_quantile"]] <- output_social_by_quantile
     output[["input"]] <- output_social
 
     return(output)
