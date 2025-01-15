@@ -10,8 +10,7 @@ include_discount(
   impact = NULL,
   corrected_discount_rate = NULL,
   discount_years = 1,
-  discount_shape = NULL,
-  discount_overtime = "all_years"
+  discount_shape = NULL
 )
 }
 \arguments{
@@ -26,8 +25,6 @@ include_discount(
 \item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
-
-\item{discount_overtime}{\code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".}
 }
 \value{
 TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
