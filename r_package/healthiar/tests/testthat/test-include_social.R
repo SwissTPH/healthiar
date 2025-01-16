@@ -1,4 +1,4 @@
-test_that("results correct", {
+testthat::test_that("results correct", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -13,7 +13,7 @@ test_that("results correct", {
       population = social_data$POPULATION,
       geo_id_raw = social_data$CS01012020)
 
-  expect_equal(
+  testthat::expect_equal(
     object =
       healthiar::include_social(
         output = bestcost_pm_death,

@@ -1,8 +1,8 @@
-test_that("results correct cba with direct discounting and exponential discounting shape", {
+testthat::test_that("results correct cba with direct discounting and exponential discounting shape", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
-  expect_equal(
+  testthat::expect_equal(
     object =
       healthiar::include_cba(
         approach_discount = "direct",
@@ -24,7 +24,7 @@ test_that("results correct cba with direct discounting and exponential discounti
   )
 })
 
-test_that("results correct cba discounting only one specific year with direct discounting and exponential discounting shape", {
+testthat::test_that("results correct cba discounting only one specific year with direct discounting and exponential discounting shape", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -40,7 +40,7 @@ test_that("results correct cba discounting only one specific year with direct di
       erf_shape = "log_linear",
       info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
 
-  expect_equal(
+  testthat::expect_equal(
     object =
       healthiar::include_cba(
         approach_discount = "direct",

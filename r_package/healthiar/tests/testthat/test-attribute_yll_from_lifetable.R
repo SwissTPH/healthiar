@@ -1,4 +1,4 @@
-test_that("results correct lifetable yll single exposure and one year exposure and without newborns", {
+testthat::test_that("results correct lifetable yll single exposure and one year exposure and without newborns", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -34,7 +34,7 @@ test_that("results correct lifetable yll single exposure and one year exposure a
   )
 })
 
-test_that("results correct lifetable yll single exposure and constant exposure and without newborns", {
+testthat::test_that("results correct lifetable yll single exposure and constant exposure and without newborns", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -70,7 +70,7 @@ test_that("results correct lifetable yll single exposure and constant exposure a
   )
 })
 
-test_that("results correct lifetable yll single exposure and constant exposure and with newborns", {
+testthat::test_that("results correct lifetable yll single exposure and constant exposure and with newborns", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -105,7 +105,7 @@ test_that("results correct lifetable yll single exposure and constant exposure a
   )
 })
 
-test_that("results correct lifetable yll exposure distribution and one year exposure and without newborns", {
+testthat::test_that("results correct lifetable yll exposure distribution and one year exposure and without newborns", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 

@@ -1,4 +1,4 @@
-test_that("results correct ar yld with uncertainties in dw and duration", {
+testthat::test_that("results correct ar yld with uncertainties in dw and duration", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -6,7 +6,7 @@ test_that("results correct ar yld with uncertainties in dw and duration", {
     niph_noise_ha_excel |>
     dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean))
 
-  expect_equal(
+  testthat::expect_equal(
     object = healthiar::attribute_yld(
       approach_risk = "absolute_risk",
       exp_central = niph_noise_ha_input$exposure_mean,

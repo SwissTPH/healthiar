@@ -1,4 +1,4 @@
-test_that("result correct rr with single exposure and rr CIs", {
+testthat::test_that("result correct rr with single exposure and rr CIs", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -25,7 +25,7 @@ test_that("result correct rr with single exposure and rr CIs", {
     )
 })
 
-test_that("result correct rr with single exposure value and only rr_central", {
+testthat::test_that("result correct rr with single exposure value and only rr_central", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -49,7 +49,7 @@ test_that("result correct rr with single exposure value and only rr_central", {
 })
 
 
-test_that("no error rr single exposure value with with uncertainties in 4 input variables", {
+testthat::test_that("no error rr single exposure value with with uncertainties in 4 input variables", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -75,7 +75,7 @@ test_that("no error rr single exposure value with with uncertainties in 4 input 
     )
 })
 
-test_that("main result correct rr single exposure value with uncertainties in 4 input variables", {
+testthat::test_that("main result correct rr single exposure value with uncertainties in 4 input variables", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -108,7 +108,7 @@ test_that("main result correct rr single exposure value with uncertainties in 4 
   )
 })
 
-test_that("number of rows in detailed results correct rr single exposure value with uncertainties in 4 input variables", {
+testthat::test_that("number of rows in detailed results correct rr single exposure value with uncertainties in 4 input variables", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -140,7 +140,7 @@ test_that("number of rows in detailed results correct rr single exposure value w
 
 })
 
-test_that("results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & with cutoff of 5", {
+testthat::test_that("results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & with cutoff of 5", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -173,7 +173,7 @@ test_that("results correct user-defined erf (mrbrt) with splinefun and uncertain
   )
 })
 
-test_that("results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & no cutoff", {
+testthat::test_that("results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & no cutoff", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -206,7 +206,7 @@ test_that("results correct user-defined erf (mrbrt) with splinefun and uncertain
   )
 })
 
-test_that("results correct rr iteration with exposure distribution and uncertainties in rr and exp", {
+testthat::test_that("results correct rr iteration with exposure distribution and uncertainties in rr and exp", {
 
   testthat::expect_equal(
     object =
@@ -231,7 +231,7 @@ test_that("results correct rr iteration with exposure distribution and uncertain
   )
 })
 
-test_that("results correct rr single exposure value and user-defined ERF (using stats::approxfun) and cutoff equals 5", {
+testthat::test_that("results correct rr single exposure value and user-defined ERF (using stats::approxfun) and cutoff equals 5", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -253,7 +253,7 @@ test_that("results correct rr single exposure value and user-defined ERF (using 
   )
 })
 
-test_that("results correct rr single exposure value and user-defined ERF (using stats::splinefun) and cutoff equals 0", {
+testthat::test_that("results correct rr single exposure value and user-defined ERF (using stats::splinefun) and cutoff equals 0", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -275,7 +275,7 @@ test_that("results correct rr single exposure value and user-defined ERF (using 
   )
 })
 
-test_that("results correct rr single exposure value and user-defined ERF (using stats::approxfun) and cutoff equals 0", {
+testthat::test_that("results correct rr single exposure value and user-defined ERF (using stats::approxfun) and cutoff equals 0", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -297,29 +297,26 @@ test_that("results correct rr single exposure value and user-defined ERF (using 
   )
 })
 
-test_that("results correct rr exposure distribution", {
+testthat::test_that("results correct rr exposure distribution", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
-
-  ## Extract rows that contain input data (others may contain results)
-  niph_noise_ihd_input <-
-    niph_noise_ihd_excel |>
-    dplyr::filter(!is.na(niph_noise_ihd_excel$exposure_mean))
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        exp_central = niph_noise_ihd_input$exposure_mean,
-        prop_pop_exp = niph_noise_ihd_input$prop_exposed,
-        cutoff_central = min(niph_noise_ihd_input$exposure_mean),
-        bhd_central = niph_noise_ihd_input$gbd_daly[1],
+        exp_central = data$exposure_mean,
+        prop_pop_exp = data$prop_exposed,
+        cutoff_central = min(data$exposure_mean),
+        bhd_central = data$gbd_daly[1],
         rr_central = 1.08,
         erf_increment = 10,
         erf_shape = "log_linear",
         info = data.frame(pollutant = "road_noise", outcome = "YLD")) |>
       helper_extract_main_results(),
     expected =
-      niph_noise_ihd_excel |>
+      data_raw |>
       dplyr::filter(exposure_category %in% "Total exposed")|>
       dplyr::select(daly)|>
       dplyr::pull() |>
@@ -327,7 +324,7 @@ test_that("results correct rr exposure distribution", {
     )
 })
 
-test_that("results correct ar", {
+testthat::test_that("results correct ar", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -355,7 +352,7 @@ test_that("results correct ar", {
   )
 })
 
-test_that("no error ar iteration", {
+testthat::test_that("no error ar iteration", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -378,7 +375,7 @@ test_that("no error ar iteration", {
 )
 })
 
-test_that("results correct rr yld", {
+testthat::test_that("results correct rr yld", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -401,7 +398,7 @@ test_that("results correct rr yld", {
   )
 })
 
-test_that("results correct rr multiple exposure additive approach", {
+testthat::test_that("results correct rr multiple exposure additive approach", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -421,7 +418,7 @@ test_that("results correct rr multiple exposure additive approach", {
   )
 })
 
-test_that("results correct rr multiple exposure multiplicative approach", {
+testthat::test_that("results correct rr multiple exposure multiplicative approach", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -441,7 +438,7 @@ test_that("results correct rr multiple exposure multiplicative approach", {
   )
 })
 
-test_that("results correct rr multiple exposure combined approach", {
+testthat::test_that("results correct rr multiple exposure combined approach", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 

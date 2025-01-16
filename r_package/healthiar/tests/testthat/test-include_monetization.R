@@ -1,4 +1,4 @@
-test_that("results correct simple monetization", {
+testthat::test_that("results correct simple monetization", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -14,7 +14,7 @@ test_that("results correct simple monetization", {
       erf_shape = "log_linear",
       info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
 
-  expect_equal(
+  testthat::expect_equal(
     object =
       healthiar::include_monetization(output = bestcost_pm_copd,
                                       valuation = 1000) |>
@@ -27,7 +27,7 @@ test_that("results correct simple monetization", {
   )
 })
 
-test_that("results correct direct discounting with discount factor and exponential discount shape", {
+testthat::test_that("results correct direct discounting with discount factor and exponential discount shape", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -43,7 +43,7 @@ test_that("results correct direct discounting with discount factor and exponenti
       erf_shape = "log_linear",
       info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
 
-  expect_equal(
+  testthat::expect_equal(
     object =
       healthiar::include_monetization(approach_discount = "direct",
                                       output = bestcost_pm_copd,
@@ -61,11 +61,11 @@ test_that("results correct direct discounting with discount factor and exponenti
   )
 })
 
-test_that("results correct direct discounting with impact vector with discount factor and exponential discount shape", {
+testthat::test_that("results correct direct discounting with impact vector with discount factor and exponential discount shape", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
-  expect_equal(
+  testthat::expect_equal(
     object =
       healthiar::include_monetization(approach_discount = "direct",
                                       impact = 2E4,
@@ -82,11 +82,11 @@ test_that("results correct direct discounting with impact vector with discount f
   )
 })
 
-test_that("results correct direct discounting with impact vector discounting only one specific year and exponential discount shape", {
+testthat::test_that("results correct direct discounting with impact vector discounting only one specific year and exponential discount shape", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
-  expect_equal(
+  testthat::expect_equal(
     object =
       healthiar::include_monetization(approach_discount = "direct",
                                       impact = 50,
@@ -104,7 +104,7 @@ test_that("results correct direct discounting with impact vector discounting onl
   )
 })
 
-test_that("results correct indirect discounting with exponential discount shape", {
+testthat::test_that("results correct indirect discounting with exponential discount shape", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -129,7 +129,7 @@ test_that("results correct indirect discounting with exponential discount shape"
       info = input_data_mortality$pollutant[2],
       min_age = if(is.na(input_data_mortality$min_age[2])) NULL else input_data_mortality$min_age[2])
 
-  expect_equal(
+  testthat::expect_equal(
     object =
       healthiar::include_monetization(approach_discount = "indirect",
                                       output = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
@@ -145,11 +145,11 @@ test_that("results correct indirect discounting with exponential discount shape"
   )
 })
 
-test_that("results correct direct discounting without valuation with exponential discount shape", {
+testthat::test_that("results correct direct discounting without valuation with exponential discount shape", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
-  expect_equal(
+  testthat::expect_equal(
     object =
       healthiar::include_discount(
         approach_discount = "direct",

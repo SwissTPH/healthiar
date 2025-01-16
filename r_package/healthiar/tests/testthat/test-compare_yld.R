@@ -1,4 +1,4 @@
-test_that("results correct delta comparison yld rr single exposure", {
+testthat::test_that("results correct delta comparison yld rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -26,7 +26,7 @@ test_that("results correct delta comparison yld rr single exposure", {
   )
 })
 
-test_that("results from scenario 1 match those calculated by attribute call with same input data", {
+testthat::test_that("results from scenario 1 match those calculated by attribute call with same input data", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -69,7 +69,7 @@ test_that("results from scenario 1 match those calculated by attribute call with
   )
 })
 
-test_that("results correct delta comparison yld iteration rr single exposure", {
+testthat::test_that("results correct delta comparison yld iteration rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -99,7 +99,7 @@ test_that("results correct delta comparison yld iteration rr single exposure", {
   )
 })
 
-test_that("results correct pif comparison yld rr single exposure", {
+testthat::test_that("results correct pif comparison yld rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -127,7 +127,7 @@ test_that("results correct pif comparison yld rr single exposure", {
   )
 })
 
-test_that("results correct pif comparison yld iteration rr single exposure", {
+testthat::test_that("results correct pif comparison yld iteration rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 

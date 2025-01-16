@@ -1,4 +1,4 @@
-test_that("results correct lifetable premature deaths single year exposure with newborns", {
+testthat::test_that("results correct lifetable premature deaths single year exposure with newborns", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -28,7 +28,7 @@ test_that("results correct lifetable premature deaths single year exposure with 
   )
 })
 
-test_that("results correct lifetable premature deaths exposure distribution with constant exposure and without newborns", {
+testthat::test_that("results correct lifetable premature deaths exposure distribution with constant exposure and without newborns", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 

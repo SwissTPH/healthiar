@@ -1,4 +1,4 @@
-test_that("linear rescaling works", {
+testthat::test_that("linear rescaling works", {
   testthat::expect_equal(
     object = healthiar::get_risk(
       rr = 1.1,

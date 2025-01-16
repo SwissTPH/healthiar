@@ -1,4 +1,4 @@
-test_that("results correct delta comparison lifetable daly rr single exposure", {
+testthat::test_that("results correct delta comparison lifetable daly rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -41,7 +41,7 @@ test_that("results correct delta comparison lifetable daly rr single exposure", 
   )
 })
 
-test_that("results correct delta comparison lifetable daly iteration rr single exposure", {
+testthat::test_that("results correct delta comparison lifetable daly iteration rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -84,7 +84,7 @@ test_that("results correct delta comparison lifetable daly iteration rr single e
   )
 })
 
-test_that("results correct pif comparison lifetable daly rr single exposure", {
+testthat::test_that("results correct pif comparison lifetable daly rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -127,7 +127,7 @@ test_that("results correct pif comparison lifetable daly rr single exposure", {
   )
 })
 
-test_that("results correct pif comparison lifetable daly iteration rr single exposure", {
+testthat::test_that("results correct pif comparison lifetable daly iteration rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 

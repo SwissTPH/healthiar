@@ -1,4 +1,4 @@
-test_that("results correct delta comparison lifetable rr single exposure", {
+testthat::test_that("results correct delta comparison lifetable rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -39,7 +39,7 @@ test_that("results correct delta comparison lifetable rr single exposure", {
   )
 })
 
-test_that("results from scenario 1 match those calculated by attribute call with same input data", {
+testthat::test_that("results from scenario 1 match those calculated by attribute call with same input data", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -102,7 +102,7 @@ test_that("results from scenario 1 match those calculated by attribute call with
   )
 })
 
-test_that("results correct delta comparison lifetable iteration rr single exposure", {
+testthat::test_that("results correct delta comparison lifetable iteration rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -143,7 +143,7 @@ test_that("results correct delta comparison lifetable iteration rr single exposu
   )
 })
 
-test_that("results correct pif comparison lifetable rr single exposure", {
+testthat::test_that("results correct pif comparison lifetable rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -184,7 +184,7 @@ test_that("results correct pif comparison lifetable rr single exposure", {
   )
 })
 
-test_that("results correct pif comparison lifetable iteration rr single exposure", {
+testthat::test_that("results correct pif comparison lifetable iteration rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 

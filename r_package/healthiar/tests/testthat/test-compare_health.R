@@ -1,4 +1,4 @@
-test_that("results correct delta comparison rr single exposure", {
+testthat::test_that("results correct delta comparison rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -24,7 +24,7 @@ test_that("results correct delta comparison rr single exposure", {
   )
 })
 
-test_that("results correct delta comparison when two scenarios are identical", {
+testthat::test_that("results correct delta comparison when two scenarios are identical", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -50,7 +50,7 @@ test_that("results correct delta comparison when two scenarios are identical", {
   )
 })
 
-test_that("results correct delta comparison iteration rr single exposures", {
+testthat::test_that("results correct delta comparison iteration rr single exposures", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -78,7 +78,7 @@ test_that("results correct delta comparison iteration rr single exposures", {
   )
 })
 
-test_that("results correct pif comparison rr single exposure", {
+testthat::test_that("results correct pif comparison rr single exposure", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -104,7 +104,7 @@ test_that("results correct pif comparison rr single exposure", {
   )
 })
 
-test_that("results correct pif comparison iteration rr single exposures", {
+testthat::test_that("results correct pif comparison iteration rr single exposures", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -133,7 +133,7 @@ test_that("results correct pif comparison iteration rr single exposures", {
 })
 
 ## Commented out because test takes a while
-# test_that("results correct delta comparison iteration (high number of geo units) rr single exposures", {
+# testthat::test_that("results correct delta comparison iteration (high number of geo units) rr single exposures", {
 #
 #   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 #
@@ -169,7 +169,7 @@ test_that("results correct pif comparison iteration rr single exposures", {
 #   )
 # })
 
-test_that("results correct delta comparison ar exposure distribution", {
+testthat::test_that("results correct delta comparison ar exposure distribution", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
@@ -194,7 +194,7 @@ test_that("results correct delta comparison ar exposure distribution", {
   )
 })
 
-test_that("results correct delta comparison iteration ar exposure distribution", {
+testthat::test_that("results correct delta comparison iteration ar exposure distribution", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
