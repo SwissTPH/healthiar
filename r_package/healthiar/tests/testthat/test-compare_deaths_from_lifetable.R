@@ -1,6 +1,8 @@
-test_that("results correct delta comparison lifetable rr single exposure", {
+testthat::test_that("results correct delta comparison lifetable rr single exposure", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
   testthat::expect_equal(
     object =
@@ -18,20 +20,20 @@ test_that("results correct delta comparison lifetable rr single exposure", {
         erf_shape = "log_linear",
         first_age_pop_1 = 0,
         last_age_pop_1 = 99,
-        deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-        deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-        population_midyear_male_1 = lifetable_withPopulation[["male"]]$population,
-        population_midyear_female_1 = lifetable_withPopulation[["female"]]$population,
+        deaths_male_1 = data[["pop"]]$number_of_deaths_male,
+        deaths_female_1 = data[["pop"]]$number_of_deaths_female,
+        population_midyear_male_1 = data_lifetable[["male"]]$population,
+        population_midyear_female_1 = data_lifetable[["female"]]$population,
         year_of_analysis_1 = 2019,
         first_age_pop_2 = 0,
         last_age_pop_2 = 99,
-        deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-        deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-        population_midyear_male_2 = lifetable_withPopulation[["male"]]$population,
-        population_midyear_female_2 = lifetable_withPopulation[["female"]]$population,
+        deaths_male_2 = data[["pop"]]$number_of_deaths_male,
+        deaths_female_2 = data[["pop"]]$number_of_deaths_female,
+        population_midyear_male_2 = data_lifetable[["male"]]$population,
+        population_midyear_female_2 = data_lifetable[["female"]]$population,
         year_of_analysis_2 = 2019,
-        info_1 = input_data_mortality$pollutant[2],
-        info_2 = input_data_mortality$pollutant[2],
+        info_1 = data_mort$pollutant[2],
+        info_2 = data_mort$pollutant[2],
         min_age = 20) |>
       helper_extract_main_results(),
     expected =
@@ -39,9 +41,11 @@ test_that("results correct delta comparison lifetable rr single exposure", {
   )
 })
 
-test_that("results from scenario 1 match those calculated by attribute call with same input data", {
+testthat::test_that("results from scenario 1 match those calculated by attribute call with same input data", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
   testthat::expect_equal(
     object =
@@ -59,20 +63,20 @@ test_that("results from scenario 1 match those calculated by attribute call with
         erf_shape = "log_linear",
         first_age_pop_1 = 0,
         last_age_pop_1 = 99,
-        deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-        deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-        population_midyear_male_1 = lifetable_withPopulation[["male"]]$population,
-        population_midyear_female_1 = lifetable_withPopulation[["female"]]$population,
+        deaths_male_1 = data[["pop"]]$number_of_deaths_male,
+        deaths_female_1 = data[["pop"]]$number_of_deaths_female,
+        population_midyear_male_1 = data_lifetable[["male"]]$population,
+        population_midyear_female_1 = data_lifetable[["female"]]$population,
         year_of_analysis_1 = 2019,
         first_age_pop_2 = 0,
         last_age_pop_2 = 99,
-        deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-        deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-        population_midyear_male_2 = lifetable_withPopulation[["male"]]$population,
-        population_midyear_female_2 = lifetable_withPopulation[["female"]]$population,
+        deaths_male_2 = data[["pop"]]$number_of_deaths_male,
+        deaths_female_2 = data[["pop"]]$number_of_deaths_female,
+        population_midyear_male_2 = data_lifetable[["male"]]$population,
+        population_midyear_female_2 = data_lifetable[["female"]]$population,
         year_of_analysis_2 = 2019,
-        info_1 = input_data_mortality$pollutant[2],
-        info_2 = input_data_mortality$pollutant[2],
+        info_1 = data_mort$pollutant[2],
+        info_2 = data_mort$pollutant[2],
         min_age = 20) |>
       purrr::pluck("health_main") |>
       dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
@@ -83,28 +87,30 @@ test_that("results from scenario 1 match those calculated by attribute call with
       healthiar::attribute_deaths_from_lifetable(
         approach_exposure = "single_year",
         approach_newborns = "with_newborns",
-        exp_central = airqplus_pm_deaths_yll[["input"]]$mean_concentration,
-        cutoff_central = airqplus_pm_deaths_yll[["input"]]$cut_off_value,
-        rr_central = airqplus_pm_deaths_yll[["input"]]$relative_risk,
-        rr_lower = airqplus_pm_deaths_yll[["input"]]$relative_risk_lower,
-        rr_upper = airqplus_pm_deaths_yll[["input"]]$relative_risk_upper,
+        exp_central = data[["input"]]$mean_concentration,
+        cutoff_central = data[["input"]]$cut_off_value,
+        rr_central = data[["input"]]$relative_risk,
+        rr_lower = data[["input"]]$relative_risk_lower,
+        rr_upper = data[["input"]]$relative_risk_upper,
         erf_increment = 10,
-        erf_shape = gsub("-", "_", airqplus_pm_deaths_yll[["input"]]$calculation_method),
-        first_age_pop = first(airqplus_pm_deaths_yll[["pop"]]$age_from...),
-        last_age_pop = last(airqplus_pm_deaths_yll[["pop"]]$age_from...),
-        deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-        deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-        population_midyear_male = airqplus_pm_deaths_yll[["pop"]]$midyear_population_male,
-        population_midyear_female = airqplus_pm_deaths_yll[["pop"]]$midyear_population_female,
-        year_of_analysis =  airqplus_pm_deaths_yll[["input"]]$start_year,
-        min_age = airqplus_pm_deaths_yll[["input"]]$apply_rr_from_age) |>
+        erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
+        first_age_pop = first(data[["pop"]]$age_from...),
+        last_age_pop = last(data[["pop"]]$age_from...),
+        deaths_male = data[["pop"]]$number_of_deaths_male,
+        deaths_female = data[["pop"]]$number_of_deaths_female,
+        population_midyear_male = data[["pop"]]$midyear_population_male,
+        population_midyear_female = data[["pop"]]$midyear_population_female,
+        year_of_analysis =  data[["input"]]$start_year,
+        min_age = data[["input"]]$apply_rr_from_age) |>
       helper_extract_main_results()
   )
 })
 
-test_that("results correct delta comparison lifetable iteration rr single exposure", {
+testthat::test_that("results correct delta comparison lifetable iteration rr single exposure", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
   testthat::expect_equal(
     object =
@@ -120,20 +126,20 @@ test_that("results correct delta comparison lifetable iteration rr single exposu
         erf_shape = "log_linear",
         first_age_pop_1 = 0,
         last_age_pop_1 = 99,
-        deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-        deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-        population_midyear_male_1 = lifetable_withPopulation[["male"]]$population,
-        population_midyear_female_1 = lifetable_withPopulation[["female"]]$population,
+        deaths_male_1 = data[["pop"]]$number_of_deaths_male,
+        deaths_female_1 = data[["pop"]]$number_of_deaths_female,
+        population_midyear_male_1 = data_lifetable[["male"]]$population,
+        population_midyear_female_1 = data_lifetable[["female"]]$population,
         year_of_analysis_1 = 2019,
         first_age_pop_2 = 0,
         last_age_pop_2 = 99,
-        deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-        deaths_female_2= airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-        population_midyear_male_2 = lifetable_withPopulation[["male"]]$population,
-        population_midyear_female_2 = lifetable_withPopulation[["female"]]$population,
+        deaths_male_2 = data[["pop"]]$number_of_deaths_male,
+        deaths_female_2= data[["pop"]]$number_of_deaths_female,
+        population_midyear_male_2 = data_lifetable[["male"]]$population,
+        population_midyear_female_2 = data_lifetable[["female"]]$population,
         year_of_analysis_2 = 2019,
-        info_1 = input_data_mortality$pollutant[2],
-        info_2 = input_data_mortality$pollutant[2],
+        info_1 = data_mort$pollutant[2],
+        info_2 = data_mort$pollutant[2],
         min_age = 20,
         geo_id_raw = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
@@ -143,9 +149,11 @@ test_that("results correct delta comparison lifetable iteration rr single exposu
   )
 })
 
-test_that("results correct pif comparison lifetable rr single exposure", {
+testthat::test_that("results correct pif comparison lifetable rr single exposure", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
   testthat::expect_equal(
     object =
@@ -164,18 +172,18 @@ test_that("results correct pif comparison lifetable rr single exposure", {
         first_age_pop_1 = 0,
         last_age_pop_1 = 99,
         approach_exposure_1 = "single_year",
-        deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-        deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-        population_midyear_male_1 = lifetable_withPopulation[["male"]]$population,
-        population_midyear_female_1 = lifetable_withPopulation[["female"]]$population,
+        deaths_male_1 = data[["pop"]]$number_of_deaths_male,
+        deaths_female_1 = data[["pop"]]$number_of_deaths_female,
+        population_midyear_male_1 = data_lifetable[["male"]]$population,
+        population_midyear_female_1 = data_lifetable[["female"]]$population,
         year_of_analysis_1 = 2019,
         first_age_pop_2 = 0,
         last_age_pop_2 = 99,
         approach_exposure_2 = "single_year",
-        deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-        deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-        population_midyear_male_2 = lifetable_withPopulation[["male"]]$population,
-        population_midyear_female_2 = lifetable_withPopulation[["female"]]$population,
+        deaths_male_2 = data[["pop"]]$number_of_deaths_male,
+        deaths_female_2 = data[["pop"]]$number_of_deaths_female,
+        population_midyear_male_2 = data_lifetable[["male"]]$population,
+        population_midyear_female_2 = data_lifetable[["female"]]$population,
         year_of_analysis_2 = 2019,
         min_age = 20) |>
       helper_extract_main_results(),
@@ -184,9 +192,11 @@ test_that("results correct pif comparison lifetable rr single exposure", {
   )
 })
 
-test_that("results correct pif comparison lifetable iteration rr single exposure", {
+testthat::test_that("results correct pif comparison lifetable iteration rr single exposure", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
   testthat::expect_equal(
     object =
@@ -202,20 +212,20 @@ test_that("results correct pif comparison lifetable iteration rr single exposure
         erf_shape = "log_linear",
         first_age_pop_1 = 0,
         last_age_pop_1 = 99,
-        deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-        deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-        population_midyear_male_1 = lifetable_withPopulation[["male"]]$population,
-        population_midyear_female_1 = lifetable_withPopulation[["female"]]$population,
+        deaths_male_1 = data[["pop"]]$number_of_deaths_male,
+        deaths_female_1 = data[["pop"]]$number_of_deaths_female,
+        population_midyear_male_1 = data_lifetable[["male"]]$population,
+        population_midyear_female_1 = data_lifetable[["female"]]$population,
         year_of_analysis_1 = 2019,
         first_age_pop_2 = 0,
         last_age_pop_2 = 99,
-        deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-        deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-        population_midyear_male_2 = lifetable_withPopulation[["male"]]$population,
-        population_midyear_female_2 = lifetable_withPopulation[["female"]]$population,
+        deaths_male_2 = data[["pop"]]$number_of_deaths_male,
+        deaths_female_2 = data[["pop"]]$number_of_deaths_female,
+        population_midyear_male_2 = data_lifetable[["male"]]$population,
+        population_midyear_female_2 = data_lifetable[["female"]]$population,
         year_of_analysis_2 = 2019,
-        info_1 = input_data_mortality$pollutant[2],
-        info_2 = input_data_mortality$pollutant[2],
+        info_1 = data_mort$pollutant[2],
+        info_2 = data_mort$pollutant[2],
         min_age = 20,
         geo_id_raw = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
