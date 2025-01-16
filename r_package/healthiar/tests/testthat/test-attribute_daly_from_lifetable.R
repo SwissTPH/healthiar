@@ -11,7 +11,7 @@ test_that("results correct lifetable yld single exposure and one year exposure w
         rr_central = input_data_mortality[2,"rr_central"],
         rr_lower = input_data_mortality[2,"rr_lower"],
         rr_upper =input_data_mortality[2,"rr_upper"],
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         first_age_pop = 0,
         last_age_pop = 99,

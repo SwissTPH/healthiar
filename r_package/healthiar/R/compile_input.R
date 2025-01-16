@@ -30,7 +30,7 @@ compile_input <-
            prop_pop_exp = NULL,
            cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
            rr_central, rr_lower = NULL, rr_upper = NULL,
-           erf_increment = NULL,
+           rr_increment = NULL,
            erf_shape = NULL,
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
@@ -84,7 +84,7 @@ compile_input <-
       erf_data <- # 1 x 6 tibble
         dplyr::tibble(
           exposure_name = names(rr_central),
-          erf_increment = erf_increment,
+          rr_increment = rr_increment,
           erf_shape = erf_shape,
           rr_central = rr_central,
           rr_lower =  rr_lower,
@@ -242,7 +242,7 @@ compile_input <-
 
       input_wo_lifetable <-
         tidyr::pivot_longer(data = input_wo_lifetable,
-                            cols = starts_with("rr_"),
+                            cols = c(rr_central, rr_lower, rr_upper),
                             names_to = "erf_ci",
                             names_prefix = "rr_",
                             values_to = "rr")

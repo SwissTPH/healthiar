@@ -9,7 +9,7 @@
 #' @param prop_pop_exp \code{Numeric value} or {Numeric vector} Fraction (values between 0 & 1) of the total population exposed to (one or more) exposure categories, i.e., a exposure distribution, respectively. If a exposure distribution is used, the dimension of this input variable should be the same as "exp". By default, 1 for single exposure value will be assigned to this input variable assuming a single exposure value, but users can change this value.
 #' @param cutoff_central,cutoff_lower,cutoff,upper \code{Numeric value} showing the central exposure cut-off in ug/m3 and (optionally) the lower and upper bounds of the 95\% confidence interval. The cut-off level refers to the exposure level below which no health effects occur.
 #' @param rr_central,rr_lower,rr_upper \code{Numeric values} referring to the central estimate of the relative risk and the corresponding lower and upper 95\% confidence interval bounds.
-#' @param erf_increment \code{Numeric value} showing the increment of the exposure-response function in ug/m3 (usually 10 or 5).
+#' @param rr_increment \code{Numeric value} showing the increment of the exposure-response function in ug/m3 (usually 10 or 5).
 #' @param erf_shape \code{String} showing the shape of the exposure-response function to be assumed using the relative risk from the literature as support point. Options: "linear", log_linear", "linear_log", "log_log".
 #' @param erf_eq_central,erf_eq_lower,erf_eq_upper \code{String} or \code{function} referring to the equation of the user-defined exposure-response function. If a \code{string} is entered, the function must contains only one variable: x (exposure). E.g. "3+x+x^2". If a \code{function} is entered, it has to have a function class. If only the values of the x-axis (exposure) and y axis (relative risk) of the dots in the exposure-response function are available, a cubic spline natural interpolation can be assumed to get the function using, e.g., \code{stats::splinefun(x, y, method="natural")}
 #' @param approach_exposure \code{String} showing whether air pollution is constant or only in one year. Options: "single_year" (default), "constant"
@@ -47,7 +47,7 @@ attribute <-
            exp_central, exp_lower = NULL, exp_upper = NULL,
            cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
            rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           erf_increment = NULL, erf_shape = NULL,
+           rr_increment = NULL, erf_shape = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
            # Arguments for advanced use
            prop_pop_exp = 1,
@@ -86,7 +86,7 @@ attribute <-
         prop_pop_exp = prop_pop_exp,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
         rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
-        erf_increment = erf_increment,
+        rr_increment = rr_increment,
         erf_shape = erf_shape,
         erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
         bhd_central = bhd_central, bhd_lower = bhd_lower, bhd_upper = bhd_upper,

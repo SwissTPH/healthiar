@@ -8,7 +8,7 @@ test_that("results correct", {
       cutoff_central = 0,
       rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
       erf_shape = "log_linear",
-      erf_increment = 10,
+      rr_increment = 10,
       bhd_central = as.list(social_data$MORTALITY_TOTAL),
       population = social_data$POPULATION,
       geo_id_disaggregated = social_data$CS01012020)

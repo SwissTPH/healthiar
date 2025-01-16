@@ -178,9 +178,9 @@ include_summary_uncertainty <- function(
               each = n_sim),
         rr =
           rep(NA, times = n_sim*n_geo),
-        erf_increment =
+        rr_increment =
           rep(results[["health_detailed"]][["raw"]] |>
-                dplyr::pull(erf_increment) |>
+                dplyr::pull(rr_increment) |>
                 dplyr::first(),
               times = n_sim*n_geo),
         erf_shape =
@@ -763,13 +763,13 @@ include_summary_uncertainty <- function(
     dat <- dat |>
       dplyr::mutate(
         rr_conc = purrr::pmap(
-          list(rr = rr, exp = exp, cutoff = cutoff, erf_increment = erf_increment, erf_shape = erf_shape),
-          function(rr, exp, cutoff, erf_increment, erf_shape){
+          list(rr = rr, exp = exp, cutoff = cutoff, rr_increment = rr_increment, erf_shape = erf_shape),
+          function(rr, exp, cutoff, rr_increment, erf_shape){
             rr_conc <- healthiar::get_risk(
               rr = rr,
               exp = exp,
               cutoff = cutoff,
-              erf_increment = erf_increment,
+              rr_increment = rr_increment,
               erf_shape = erf_shape,
               erf_eq = NULL)
             return(rr_conc)
@@ -797,7 +797,7 @@ include_summary_uncertainty <- function(
                 get_risk(rr = dat$rr,
                          exp = dat[[!!paste0("exp_", .x)]], # Selects xth element of the vector
                          cutoff = dat$cutoff[1],
-                         erf_increment = dat$erf_increment[1],
+                         rr_increment = dat$rr_increment[1],
                          erf_shape = dat$erf_shape[1],
                          erf_eq = NULL)
               )

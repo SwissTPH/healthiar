@@ -10,7 +10,7 @@ test_that("results correct simple monetization", {
       rr_central = airqplus_pm_copd$relative_risk,
       rr_lower = airqplus_pm_copd$relative_risk_lower,
       rr_upper = airqplus_pm_copd$relative_risk_upper,
-      erf_increment = 10,
+      rr_increment = 10,
       erf_shape = "log_linear",
       info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
 
@@ -39,7 +39,7 @@ test_that("results correct direct discounting with discount factor and exponenti
       rr_central = airqplus_pm_copd$relative_risk,
       rr_lower = airqplus_pm_copd$relative_risk_lower,
       rr_upper = airqplus_pm_copd$relative_risk_upper,
-      erf_increment = 10,
+      rr_increment = 10,
       erf_shape = "log_linear",
       info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
 
@@ -117,7 +117,7 @@ test_that("results correct indirect discounting with exponential discount shape"
       rr_central = input_data_mortality[2,"rr_central"],
       rr_lower = input_data_mortality[2,"rr_lower"],
       rr_upper =input_data_mortality[2,"rr_upper"],
-      erf_increment = 10,
+      rr_increment = 10,
       erf_shape = "log_linear",
       first_age_pop = 0,
       last_age_pop = 99,

@@ -31,14 +31,14 @@ get_risk_and_pif <-
           healthiar::get_risk(rr = rr,
                              exp = exp_1,
                              cutoff_central = cutoff_central,
-                             erf_increment = erf_increment,
+                             rr_increment = rr_increment,
                              erf_shape = unique(erf_shape)
                              ),
         rr_conc_2 =
           healthiar::get_risk(rr = rr,
                              exp = exp_2,
                              cutoff_central = cutoff_central,
-                             erf_increment = erf_increment,
+                             rr_increment = rr_increment,
                              erf_shape = unique(erf_shape)
           )) |>
       dplyr::ungroup()

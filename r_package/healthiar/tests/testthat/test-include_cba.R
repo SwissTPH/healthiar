@@ -36,7 +36,7 @@ test_that("results correct cba discounting only one specific year with direct di
       rr_central = airqplus_pm_copd$relative_risk,
       rr_lower = airqplus_pm_copd$relative_risk_lower,
       rr_upper = airqplus_pm_copd$relative_risk_upper,
-      erf_increment = 10,
+      rr_increment = 10,
       erf_shape = "log_linear",
       info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
 

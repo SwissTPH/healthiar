@@ -11,7 +11,7 @@ test_that("result correct rr with single exposure and rr CIs", {
         rr_central = airqplus_pm_copd$relative_risk,
         rr_lower = airqplus_pm_copd$relative_risk_lower,
         rr_upper = airqplus_pm_copd$relative_risk_upper,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)
       ) |>
@@ -36,7 +36,7 @@ test_that("result correct rr with single exposure value and only rr_central", {
         cutoff_central = airqplus_pm_copd$cut_off_value,
         bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
         rr_central = airqplus_pm_copd$relative_risk,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)
         ) |>
@@ -68,7 +68,7 @@ test_that("no error rr single exposure value with with uncertainties in 4 input 
         rr_central = airqplus_pm_copd$relative_risk,
         rr_lower = airqplus_pm_copd$relative_risk_lower,
         rr_upper = airqplus_pm_copd$relative_risk_upper,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)
         )
@@ -94,7 +94,7 @@ test_that("main result correct rr single exposure value with uncertainties in 4 
         rr_central = airqplus_pm_copd$relative_risk,
         rr_lower = airqplus_pm_copd$relative_risk_lower,
         rr_upper = airqplus_pm_copd$relative_risk_upper,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)
         ) |>
@@ -127,7 +127,7 @@ test_that("number of rows in detailed results correct rr single exposure value w
         rr_central = airqplus_pm_copd$relative_risk,
         rr_lower = airqplus_pm_copd$relative_risk_lower,
         rr_upper = airqplus_pm_copd$relative_risk_upper,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)
         ) |>
@@ -219,7 +219,7 @@ test_that("results correct rr iteration with exposure distribution and uncertain
         rr_central = 1.369,
         rr_lower = 1.124,
         rr_upper = 1.664,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         population = as.list(rep(1E6, 1E4)),
         geo_id_disaggregated = 1:1E4,
@@ -314,7 +314,7 @@ test_that("results correct rr exposure distribution", {
         cutoff_central = min(niph_noise_ihd_input$exposure_mean),
         bhd_central = niph_noise_ihd_input$gbd_daly[1],
         rr_central = 1.08,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         info = data.frame(pollutant = "road_noise", outcome = "YLD")) |>
       helper_extract_main_results(),
@@ -391,7 +391,7 @@ test_that("results correct rr yld", {
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
         duration_central = 1, duration_lower = 0.5, duration_upper = 10) |>
@@ -413,7 +413,7 @@ test_that("results correct rr multiple exposure additive approach", {
         cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
         bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
         rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-        erf_increment = setNames(c(10, 10), c("pm2.5", "no2")),
+        rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
         erf_shape = "log_linear") |>
       helper_extract_main_results(),
     expected =
@@ -433,7 +433,7 @@ test_that("results correct rr multiple exposure multiplicative approach", {
         cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
         bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
         rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-        erf_increment = setNames(c(10, 10), c("pm2.5", "no2")),
+        rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
         erf_shape = "log_linear") |>
       helper_extract_main_results(),
     expected =
@@ -453,7 +453,7 @@ test_that("results correct rr multiple exposure combined approach", {
         cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
         bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
         rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-        erf_increment = setNames(c(10, 10), c("pm2.5", "no2")),
+        rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
         erf_shape = "log_linear") |>
       helper_extract_main_results(),
     expected =

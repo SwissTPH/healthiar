@@ -10,7 +10,7 @@
 #' @param pop_exp_2 \code{Numeric value} or {vector} showing the population exposed for each of the exposure categories for the scenario 2. The length of this input variable must be the same as "exp".
 #' @param cutoff \code{Numeric value} showing the cut-off exposure in ug/m3 (i.e. the exposure level below which no health effects occur).
 #' @param rr_central,rr_lower,rr_upper \code{Numeric values} referring to the central estimate of the relative risk and the corresponding lower and upper 95\% confidence interval bounds.
-#' @param erf_increment \code{Numeric value} showing the increment of the concentration-response function in ug/m3 (usually 10 or 5).
+#' @param rr_increment \code{Numeric value} showing the increment of the concentration-response function in ug/m3 (usually 10 or 5).
 #' @param erf_shape \code{String} showing the shape of the exposure-response function to be assumed using the relative risk from the literature as support point. Options: "linear", log_linear", "linear_log", "log_log".
 #' @param erf_eq_central,erf_eq_lower,erf_eq_upper Equation of the user-defined exposure-response function that puts the relative risk (y) in relation with exposure (x). If the function is provided as \code{string}, it can only contains one variable: x (exposure). E.g. "3+x+x^2". If the function is provided as a \code{function}, the object should have a function class. If only the values of the x-axis (exposure) and y axis (relative risk) of the dots in the exposure-response function are available, a cubic spline natural interpolation can be assumed to get the function using, e.g., \code{stats::splinefun(x, y, method="natural")}
 #' @param approach_exposure_1 \code{String} showing whether air pollution is constant or only in one year. Options: "single_year" (default), "constant"
@@ -61,7 +61,7 @@ compare <-
            prop_pop_exp_2 = 1,
            cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
            rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           erf_increment = NULL,
+           rr_increment = NULL,
            erf_shape = NULL,
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            bhd_central_1 = NULL, bhd_lower_1 = NULL, bhd_upper_1 = NULL,
@@ -100,7 +100,7 @@ compare <-
         prop_pop_exp = prop_pop_exp_1,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
         rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
-        erf_increment = erf_increment,
+        rr_increment = rr_increment,
         erf_shape = erf_shape,
         erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
         bhd_central = bhd_central_1, bhd_lower = bhd_lower_1, bhd_upper = bhd_upper_1,
@@ -132,7 +132,7 @@ compare <-
         prop_pop_exp = prop_pop_exp_2,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
         rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
-        erf_increment = erf_increment,
+        rr_increment = rr_increment,
         erf_shape = erf_shape,
         erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
         bhd_central = bhd_central_2, bhd_lower = bhd_lower_2, bhd_upper = bhd_upper_2,
@@ -224,7 +224,7 @@ compare <-
           rr_central = rr_central,
           rr_lower = rr_lower,
           rr_upper = rr_upper,
-          erf_increment = erf_increment,
+          rr_increment = rr_increment,
           erf_shape = erf_shape,
           erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
           min_age = min_age,
@@ -259,7 +259,7 @@ compare <-
           rr_central = rr_central,
           rr_lower = rr_lower,
           rr_upper = rr_upper,
-          erf_increment = erf_increment,
+          rr_increment = rr_increment,
           erf_shape = erf_shape,
           erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
           min_age = min_age,

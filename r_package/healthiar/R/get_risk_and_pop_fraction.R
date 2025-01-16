@@ -73,7 +73,7 @@ get_risk_and_pop_fraction <-
                         healthiar::get_risk(rr = rr,
                                            exp = exp,
                                            cutoff = cutoff,
-                                           erf_increment = erf_increment,
+                                           rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq)) |>
         dplyr::ungroup()
@@ -86,14 +86,14 @@ get_risk_and_pop_fraction <-
                         healthiar::get_risk(rr = rr,
                                            exp = exp_1,
                                            cutoff = cutoff,
-                                           erf_increment = erf_increment,
+                                           rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq),
                       rr_conc_2 =
                         healthiar::get_risk(rr = rr,
                                            exp = exp_2,
                                            cutoff = cutoff,
-                                           erf_increment = erf_increment,
+                                           rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq)) |>
         dplyr::ungroup()

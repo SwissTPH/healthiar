@@ -22,7 +22,7 @@ compare_health(
   rr_central = NULL,
   rr_lower = NULL,
   rr_upper = NULL,
-  erf_increment = NULL,
+  rr_increment = NULL,
   erf_shape = NULL,
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
@@ -54,7 +54,7 @@ compare_health(
 
 \item{rr_central, rr_lower, rr_upper}{\code{Numeric values} referring to the central estimate of the relative risk and the corresponding lower and upper 95\% confidence interval bounds.}
 
-\item{erf_increment}{\code{Numeric value} showing the increment of the concentration-response function in ug/m3 (usually 10 or 5).}
+\item{rr_increment}{\code{Numeric value} showing the increment of the concentration-response function in ug/m3 (usually 10 or 5).}
 
 \item{erf_shape}{\code{String} showing the shape of the exposure-response function to be assumed using the relative risk from the literature as support point. Options: "linear", log_linear", "linear_log", "log_log".}
 
