@@ -78,7 +78,7 @@ test_that("results correct delta comparison lifetable yll iteration rr single ex
         info_1 = input_data_mortality$pollutant[2],
         info_2 = input_data_mortality$pollutant[2],
         min_age = 20,
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
@@ -162,7 +162,7 @@ test_that("results correct pif comparison lifetable yll iteration rr single expo
         info_1 = input_data_mortality$pollutant[2],
         info_2 = input_data_mortality$pollutant[2],
         min_age = 20,
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =

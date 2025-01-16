@@ -11,13 +11,13 @@ test_that("results correct", {
       erf_increment = 10,
       bhd_central = as.list(social_data$MORTALITY_TOTAL),
       population = social_data$POPULATION,
-      geo_id_raw = social_data$CS01012020)
+      geo_id_disaggregated = social_data$CS01012020)
 
   expect_equal(
     object =
       healthiar::include_social(
         output = bestcost_pm_death,
-        geo_id_raw = social_data$CS01012020,
+        geo_id_disaggregated = social_data$CS01012020,
         social_indicator = social_data$score,
         n_quantile = 10,
         approach = "quantile"

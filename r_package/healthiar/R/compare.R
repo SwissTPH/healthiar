@@ -31,7 +31,7 @@
 #' @param max_age \code{Numberic value} of the maximal age to be considered for infants/children (by default 0, i.e. below 1 year old).
 #' @param dw_central,dw_lower,dw_upper Three \code{Numeric value} showing the disability weights (central estimate, lower and upper 95% confidence intervals) associated with the morbidity health outcome
 #' @param duration \code{Numeric value} showing the disease duration
-#' @param geo_id_raw \code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.
+#' @param geo_id_disaggregated \code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.
 #' @param info_1 \code{String} or {data frame} showing additional information or id of the scenario 1. The suffix "info" will be added to the column name. Default value = NULL.
 #' @param info_2 \code{String} or {data frame} showing additional information or id of the scenario 1. The suffix "info" will be added to the column name. Default value = NULL.
 
@@ -86,7 +86,7 @@ compare <-
            dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
            duration_central = NULL, duration_lower = NULL, duration_upper = NULL,
            # Iteration
-           geo_id_raw = NULL,
+           geo_id_disaggregated = NULL,
            geo_id_aggregated = NULL,
            info_1 = NULL, info_2 = NULL){
 
@@ -117,7 +117,7 @@ compare <-
         min_age = min_age,
         max_age = max_age,
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
-        geo_id_raw = geo_id_raw,
+        geo_id_disaggregated = geo_id_disaggregated,
         geo_id_aggregated = geo_id_aggregated,
         duration_central = duration_central, duration_lower = duration_lower, duration_upper = duration_upper,
         info = info_1)
@@ -150,7 +150,7 @@ compare <-
         max_age = max_age,
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
         duration_central = duration_central, duration_lower = duration_lower, duration_upper = duration_upper,
-        geo_id_raw = geo_id_raw,
+        geo_id_disaggregated = geo_id_disaggregated,
         geo_id_aggregated = geo_id_aggregated,
         info = info_2)
 
@@ -230,7 +230,7 @@ compare <-
           min_age = min_age,
           max_age = max_age,
           info = info_1,
-          geo_id_raw = geo_id_raw,
+          geo_id_disaggregated = geo_id_disaggregated,
           geo_id_aggregated = geo_id_aggregated,
           population = population_1,
           # YLD
@@ -265,7 +265,7 @@ compare <-
           min_age = min_age,
           max_age = max_age,
           info = info_2,
-          geo_id_raw = geo_id_raw,
+          geo_id_disaggregated = geo_id_disaggregated,
           geo_id_aggregated = geo_id_aggregated,
           population = population_2,
           # YLD

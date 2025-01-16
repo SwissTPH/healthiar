@@ -36,7 +36,7 @@ compile_input <-
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
            min_age = NULL,
            max_age = NULL,
-           geo_id_raw = NULL,
+           geo_id_disaggregated = NULL,
            geo_id_aggregated = NULL,
            info = NULL,
            population = population,
@@ -63,16 +63,16 @@ compile_input <-
     # PROCESS MULTIPLE EXPOSURE #########################################################
     # If multiple exposures are considered at the same time
     # if(!is.null(approach_multiexposure)){
-    #   geo_id_raw <-
+    #   geo_id_disaggregated <-
     #     as.character(ifelse(is.list({{exp_central}}), 1:length({{exp_central}}), 1))
     # }
 
 
     # PROCESS GEO ID ###################################################################
-    # If no geo_id_raw is provided (if is NULL) then assign some value.
-    ## geo_id_raw is needed to group results in case of multiple geo_ids
-    if(is.null(geo_id_raw)){
-      geo_id_raw <-
+    # If no geo_id_disaggregated is provided (if is NULL) then assign some value.
+    ## geo_id_disaggregated is needed to group results in case of multiple geo_ids
+    if(is.null(geo_id_disaggregated)){
+      geo_id_disaggregated <-
         as.character(ifelse(is.list({{exp_central}}), 1:length({{exp_central}}), 1))
     }
 
@@ -149,7 +149,7 @@ compile_input <-
       dplyr::tibble(
         ## First compile input data that are geo-dependent
         ## Use rep() match dimensions
-        geo_id_raw = rep(geo_id_raw, each = length_exp_dist),
+        geo_id_disaggregated = rep(geo_id_disaggregated, each = length_exp_dist),
         geo_id_aggregated = rep(geo_id_aggregated, each = length_exp_dist),
         bhd_central = rep(unlist(bhd_central), each = length_exp_dist),
         bhd_lower = rep(unlist(bhd_lower), each = length_exp_dist),
@@ -314,7 +314,7 @@ compile_input <-
       # Use crossing to enable all combination of the vectors
       lifetable_with_pop_template <-
         tidyr::crossing(
-          geo_id_raw,
+          geo_id_disaggregated,
           age = age_sequence) |>
         # Add age end with mutate instead of crossing
         # because no additional combinations are needed (already included in age)
@@ -378,17 +378,17 @@ compile_input <-
         # Calculate total population for impacts per 100k inhab.
         population <-
           lifetable_with_pop_total %>%
-          dplyr::group_by(geo_id_raw) %>%
+          dplyr::group_by(geo_id_disaggregated) %>%
           dplyr::summarize(population = sum(population, rm.na = TRUE))
 
         # Join the input without and with lifetable variable into one tibble
         input <-
           dplyr::left_join(input_wo_lifetable,
                            lifetable_with_pop,
-                           by = "geo_id_raw",
+                           by = "geo_id_disaggregated",
                            relationship = "many-to-many") |>
           dplyr::left_join(population,
-                           by = "geo_id_raw",
+                           by = "geo_id_disaggregated",
                            relationship = "many-to-many")
 
       } else {

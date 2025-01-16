@@ -60,7 +60,7 @@ attribute_deaths_from_lifetable <-
         population_midyear_male = population_midyear_male, population_midyear_female = population_midyear_female,
         year_of_analysis = year_of_analysis,
         min_age = min_age, max_age = max_age,
-        geo_id_raw = NULL, geo_id_aggregated = NULL,
+        geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
         info = info)
 
     return(output)

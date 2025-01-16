@@ -52,7 +52,7 @@ compare_daly_from_lifetable(
   duration_central,
   duration_lower = NULL,
   duration_upper = NULL,
-  geo_id_raw = NULL,
+  geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
   info_1 = NULL,
   info_2 = NULL
@@ -111,7 +111,7 @@ compare_daly_from_lifetable(
 
 \item{dw_central, dw_lower, dw_upper}{Three \code{Numeric value} showing the disability weights (central estimate, lower and upper 95% confidence intervals) associated with the morbidity health outcome}
 
-\item{geo_id_raw}{\code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.}
+\item{geo_id_disaggregated}{\code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.}
 
 \item{info_1}{\code{String} or {data frame} showing additional information or id of the scenario 1. The suffix "info" will be added to the column name. Default value = NULL.}
 

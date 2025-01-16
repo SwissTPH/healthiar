@@ -25,8 +25,8 @@
 #' @param dw_central,dw_lower,dw_upper \code{Numeric value} showing the disability weights (central estimate, lower and upper 95\% confidence intervals) associated with the morbidity health outcome
 #' @param duration_central,duration_lower,duration_upper \code{Numeric value} showing the central estimate of the disease duration and (optionally) the lower and upper bounds of the 95\% confidence interval.
 #' @param population code{Vector} with numeric values referring to the population in the geographical unit
-#' @param geo_id_raw \code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.
-#' @param geo_id_aggregated \code{Vector} showing the id code of the geographic area for which raw geo ids have to be aggregated. The vector has to have the same length as geo_id_raw. Therefore, geo_id_aggregated should have duplicated values for those geo_id_r
+#' @param geo_id_disaggregated \code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.
+#' @param geo_id_aggregated \code{Vector} showing the id code of the geographic area for which raw geo ids have to be aggregated. The vector has to have the same length as geo_id_disaggregated. Therefore, geo_id_aggregated should have duplicated values for those geo_id_r
 #' @param info \code{String} or {data frame} showing additional information or id. The suffix "info" will be added to the column name. Default value = NULL.
 #' @return
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
@@ -64,7 +64,7 @@ attribute <-
            approach_newborns = NULL,
            time_horizon = NULL,
            # Iteration arguments
-           geo_id_raw = NULL,
+           geo_id_disaggregated = NULL,
            geo_id_aggregated = NULL,
            # Meta-information
            population = NULL,
@@ -90,7 +90,7 @@ attribute <-
         erf_shape = erf_shape,
         erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
         bhd_central = bhd_central, bhd_lower = bhd_lower, bhd_upper = bhd_upper,
-        geo_id_raw = geo_id_raw,
+        geo_id_disaggregated = geo_id_disaggregated,
         geo_id_aggregated = geo_id_aggregated,
         info = info,
         health_metric = health_metric,

@@ -183,7 +183,7 @@ include_monetization <- function(approach_discount = "direct",
     # For both direct and indirect approach
     # Identify the relevant columns for monetization that are in the output
     relevant_columns <-
-      c("info", "geo_id_raw", "geo_id_aggregated",
+      c("info", "geo_id_disaggregated", "geo_id_aggregated",
         paste0("impact", c("", "_before_discount", "_after_discount")),
         "discount_rate", "discount_shape", "discount_overtime", "approach_discount",
         "valuation",

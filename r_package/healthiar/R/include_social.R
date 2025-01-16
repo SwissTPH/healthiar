@@ -2,8 +2,8 @@
 
 #' @description Consider socio-economic aspects in the results
 #' @param output \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results
-#' @param impact \code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_raw}.
-#' @param population \code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_raw}.
+#' @param impact \code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_disaggregated}.
+#' @param population \code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.
 #' @param social_indicator \code{Vector} with numeric values showing the deprivation score (indicator of economic wealth) of the fine geographical area (it should match with those used in \code{attribute} or \code{compare})
 #' @param n_quantile \code{Integer value} specifying to the number quantiles in the analysis
 #' @param approach \code{String} referring the approach to include the social aspects. To choose between "quantile" and ?
@@ -21,7 +21,7 @@ include_social <- function(output = NULL,
                            bhd = NULL,
                            exp = NULL,
                            pop_fraction = NULL,
-                           geo_id_raw,
+                           geo_id_disaggregated,
                            social_indicator,
                            n_quantile = 10, ## by default: decile
                            approach = "quantile") {
@@ -36,9 +36,9 @@ include_social <- function(output = NULL,
       output[["health_detailed"]][["raw"]] |>
       dplyr::left_join(
         x = _,
-        y = dplyr::tibble(geo_id_raw = geo_id_raw,
+        y = dplyr::tibble(geo_id_disaggregated = geo_id_disaggregated,
                           social_indicator = social_indicator),
-        by = "geo_id_raw")
+        by = "geo_id_disaggregated")
 
     # * Create quantiles and add rank based on social indicator ################
 
@@ -194,13 +194,13 @@ include_social <- function(output = NULL,
 
     # Using user-entered impacts in vector format ##############################
 
-    # * Merge social_indicator, geo_id_raw and impacts #########################
+    # * Merge social_indicator, geo_id_disaggregated and impacts #########################
 
     # browser()
 
     output_social <-
       tibble::tibble(
-        geo_id_raw = geo_id_raw,
+        geo_id_disaggregated = geo_id_disaggregated,
         impact = impact,
         social_indicator = social_indicator,
         population = if ( !is.null({{ population }}) ) { population } else { NA },

@@ -34,7 +34,7 @@ attribute_health <-
            erf_shape = NULL,
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
-           geo_id_raw = NULL, geo_id_aggregated = NULL,
+           geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
            approach_multiexposure = NULL,
            population = NULL,
            info = NULL){
@@ -61,7 +61,7 @@ attribute_health <-
         min_age = NULL, max_age = NULL,
         dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
         duration_central = NULL,
-        geo_id_raw = geo_id_raw , geo_id_aggregated = geo_id_aggregated,
+        geo_id_disaggregated = geo_id_disaggregated , geo_id_aggregated = geo_id_aggregated,
         info = info)
 
     return(output)

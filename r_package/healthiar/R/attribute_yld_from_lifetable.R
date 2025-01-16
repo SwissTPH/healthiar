@@ -55,7 +55,7 @@ attribute_yld_from_lifetable <-
         min_age = min_age, max_age = max_age,
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
         duration_central = duration_central, duration_lower = duration_lower, duration_upper = duration_upper,
-        geo_id_raw = NULL , geo_id_aggregated = NULL,
+        geo_id_disaggregated = NULL , geo_id_aggregated = NULL,
         info = info)
 
     return(output)

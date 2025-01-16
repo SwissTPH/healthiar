@@ -66,7 +66,7 @@ get_output <-
         # not summing rounded results ("too rounded")
         dplyr::select(-all_of(intersect(paste0("impact_rounded", c("", "_1", "_2")),
                                         names(output_last)))) |>
-        dplyr::group_by(geo_id_raw) |>
+        dplyr::group_by(geo_id_disaggregated) |>
         # Collapse the exposure categories to have only a vector
         dplyr::mutate(across(all_of(intersect(c(paste0("exp", c("", "_1", "_2")),
                                                 paste0("pop_exp", c("", "_1", "_2")),
@@ -80,7 +80,7 @@ get_output <-
         # Sum columns to summarize
         dplyr::group_by(
           across(all_of(setdiff(names(output[["health_detailed"]][["agg_exp_cat"]]),
-                                c("geo_id_raw",
+                                c("geo_id_disaggregated",
                                   paste0("exp", c("", "_1", "_2")),
                                   paste0("population", c("", "_1", "_2")),
                                   paste0("prop_pop_exp", c("", "_1", "_2")),
@@ -188,7 +188,7 @@ get_output <-
     # Order columns ############################################################
     # putting first (on the left) those that determine different results across rows
 
-    id_columns <- c("geo_id_aggregated", "geo_id_raw",
+    id_columns <- c("geo_id_aggregated", "geo_id_disaggregated",
                     "sex",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
 

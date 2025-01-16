@@ -222,7 +222,7 @@ test_that("results correct rr iteration with exposure distribution and uncertain
         erf_increment = 10,
         erf_shape = "log_linear",
         population = as.list(rep(1E6, 1E4)),
-        geo_id_raw = 1:1E4,
+        geo_id_disaggregated = 1:1E4,
         geo_id_aggregated = rep("CH", 1E4),
         info = "PM2.5_copd") |>
       helper_extract_main_results(),
@@ -373,7 +373,7 @@ test_that("no error ar iteration", {
                             runif_with_seed(5,0,1,2),
                             runif_with_seed(5,0,1,3)),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        geo_id_raw = 1:3,
+        geo_id_disaggregated = 1:3,
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
 )
 })

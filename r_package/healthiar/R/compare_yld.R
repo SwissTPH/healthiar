@@ -36,7 +36,7 @@ compare_yld <-
            bhd_central_2, bhd_lower_2 = NULL, bhd_upper_2 = NULL,
            dw_central, dw_lower = NULL, dw_upper = NULL,
            duration_central, duration_lower = NULL, duration_upper = NULL,
-           geo_id_raw = NULL,
+           geo_id_disaggregated = NULL,
            geo_id_aggregated = NULL,
            info_1 = NULL, info_2 = NULL){
 
@@ -66,7 +66,7 @@ compare_yld <-
         population_midyear_male_2 = NULL, population_midyear_female_2 = NULL,
         year_of_analysis_2 = NULL,
         min_age = NULL, max_age = NULL,
-        geo_id_raw = geo_id_raw,
+        geo_id_disaggregated = geo_id_disaggregated,
         geo_id_aggregated = geo_id_aggregated,
         info_1 = info_1, info_2 = info_2)
 

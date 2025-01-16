@@ -70,7 +70,7 @@ test_that("results correct delta comparison iteration rr single exposures", {
         erf_shape = "log_linear",
         info_1 = "PM2.5_mortality_2010",
         info_2 = "PM2.5_mortality_2020",
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
@@ -124,7 +124,7 @@ test_that("results correct pif comparison iteration rr single exposures", {
         erf_shape = "log_linear",
         info_1 = "PM2.5_mortality_2010",
         info_2 = "PM2.5_mortality_2020",
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
@@ -159,7 +159,7 @@ test_that("results correct pif comparison iteration rr single exposures", {
 #         rr_upper = 1.664,
 #         erf_increment = 10,
 #         erf_shape = "log_linear",
-#         geo_id_raw = 1:1E4,
+#         geo_id_disaggregated = 1:1E4,
 #         geo_id_aggregated = rep("CH", 1E4),
 #         info_1 = "PM2.5_mortality_2010",
 #         info_2 = "PM2.5_mortality_2020") |>
@@ -214,7 +214,7 @@ test_that("results correct delta comparison iteration ar exposure distribution",
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         info_1 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2020),
         info_2 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2022),
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =

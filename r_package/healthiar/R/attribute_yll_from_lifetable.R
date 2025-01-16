@@ -60,7 +60,7 @@ attribute_yll_from_lifetable <-
         deaths_male = deaths_male, deaths_female = deaths_female,
         year_of_analysis = year_of_analysis,
         min_age = min_age, max_age = max_age,
-        geo_id_raw = NULL, geo_id_aggregated = NULL,
+        geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
         time_horizon = time_horizon,
         info = info)
 

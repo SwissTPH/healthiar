@@ -51,7 +51,7 @@ compare_deaths_from_lifetable <-
            population_midyear_male_2, population_midyear_female_2,
            year_of_analysis_2,
            min_age = NULL, max_age = NULL,
-           geo_id_raw = NULL,
+           geo_id_disaggregated = NULL,
            geo_id_aggregated = NULL,
            info_1 = NULL, info_2 = NULL){
 
@@ -91,7 +91,7 @@ compare_deaths_from_lifetable <-
         min_age = min_age, max_age = max_age,
         dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
         duration_central = NULL,
-        geo_id_raw = geo_id_raw,
+        geo_id_disaggregated = geo_id_disaggregated,
         geo_id_aggregated = geo_id_aggregated,
         info_1 = info_1 , info_2 = info_2)
 

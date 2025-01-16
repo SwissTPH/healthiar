@@ -24,7 +24,7 @@ attribute_health(
   bhd_central = NULL,
   bhd_lower = NULL,
   bhd_upper = NULL,
-  geo_id_raw = NULL,
+  geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
   approach_multiexposure = NULL,
   population = NULL,
@@ -48,9 +48,9 @@ attribute_health(
 
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} showing the central estimate and (optionally) the lower bound and the upper bound of the confidence interval of the baseline health data (e.g. incidence of the health outcome in the population).}
 
-\item{geo_id_raw}{\code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.}
+\item{geo_id_disaggregated}{\code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.}
 
-\item{geo_id_aggregated}{\code{Vector} showing the id code of the geographic area for which raw geo ids have to be aggregated. The vector has to have the same length as geo_id_raw. Therefore, geo_id_aggregated should have duplicated values for those geo_id_r}
+\item{geo_id_aggregated}{\code{Vector} showing the id code of the geographic area for which raw geo ids have to be aggregated. The vector has to have the same length as geo_id_disaggregated. Therefore, geo_id_aggregated should have duplicated values for those geo_id_r}
 
 \item{approach_multiexposure}{\code{String} showing the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined".}
 

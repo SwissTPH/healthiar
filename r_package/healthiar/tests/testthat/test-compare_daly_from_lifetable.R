@@ -74,7 +74,7 @@ test_that("results correct delta comparison lifetable daly iteration rr single e
         info_1 = input_data_mortality$pollutant[2],
         info_2 = input_data_mortality$pollutant[2],
         min_age = 20,
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2),
         duration_central = 100,
         dw_central = 1) |>
@@ -160,7 +160,7 @@ test_that("results correct pif comparison lifetable daly iteration rr single exp
         info_1 = input_data_mortality$pollutant[2],
         info_2 = input_data_mortality$pollutant[2],
         min_age = 20,
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2),
         duration_central = 100,
         dw_central = 1) |>

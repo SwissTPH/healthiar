@@ -28,7 +28,7 @@ compile_input(
   bhd_upper = NULL,
   min_age = NULL,
   max_age = NULL,
-  geo_id_raw = NULL,
+  geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
   info = NULL,
   population = population,
@@ -75,9 +75,9 @@ compile_input(
 
 \item{max_age}{\code{Numberic value} of the maximal age to be considered for infants/children (by default 0, i.e. below 1 year old).}
 
-\item{geo_id_raw}{\code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.}
+\item{geo_id_disaggregated}{\code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.}
 
-\item{geo_id_aggregated}{\code{Vector} showing the id code of the geographic area for which raw geo ids have to be aggregated. The vector has to have the same length as geo_id_raw. Therefore, geo_id_aggregated should have duplicated values for those geo_id_r}
+\item{geo_id_aggregated}{\code{Vector} showing the id code of the geographic area for which raw geo ids have to be aggregated. The vector has to have the same length as geo_id_disaggregated. Therefore, geo_id_aggregated should have duplicated values for those geo_id_r}
 
 \item{info}{\code{String} or {data frame} showing additional information or id. The suffix "info" will be added to the column name. Default value = NULL.}
 

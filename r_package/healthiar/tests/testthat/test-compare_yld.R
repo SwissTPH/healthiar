@@ -91,7 +91,7 @@ test_that("results correct delta comparison yld iteration rr single exposure", {
         duration_central = 1,
         info_1 = "PM2.5_yld_before",
         info_2 = "PM2.5_yld_after",
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
@@ -149,7 +149,7 @@ test_that("results correct pif comparison yld iteration rr single exposure", {
         duration_central = 1,
         info_1 = "PM2.5_yld_before",
         info_2 = "PM2.5_yld_after",
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =

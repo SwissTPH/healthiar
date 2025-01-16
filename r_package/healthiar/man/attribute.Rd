@@ -42,7 +42,7 @@ attribute(
   approach_exposure = NULL,
   approach_newborns = NULL,
   time_horizon = NULL,
-  geo_id_raw = NULL,
+  geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
   population = NULL,
   health_metric = "same_input_output",
@@ -91,9 +91,9 @@ attribute(
 
 \item{time_horizon}{\code{Numeric value} corresponding to time horizon (number of years) for which the impacts should be considered. For example, would be 10 if one is interested in the impacts of an intervention during the next 10 years.}
 
-\item{geo_id_raw}{\code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.}
+\item{geo_id_disaggregated}{\code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.}
 
-\item{geo_id_aggregated}{\code{Vector} showing the id code of the geographic area for which raw geo ids have to be aggregated. The vector has to have the same length as geo_id_raw. Therefore, geo_id_aggregated should have duplicated values for those geo_id_r}
+\item{geo_id_aggregated}{\code{Vector} showing the id code of the geographic area for which raw geo ids have to be aggregated. The vector has to have the same length as geo_id_disaggregated. Therefore, geo_id_aggregated should have duplicated values for those geo_id_r}
 
 \item{population}{code{Vector} with numeric values referring to the population in the geographical unit}
 
