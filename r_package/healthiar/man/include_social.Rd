@@ -20,11 +20,13 @@ include_social(
 \arguments{
 \item{output_healthiar}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results}
 
+
 \item{impact}{\code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_disaggregated}.}
 
 \item{population}{\code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.}
 
 \item{geo_id_disaggregated}{\code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.}
+
 
 \item{social_indicator}{\code{Vector} with numeric values showing the deprivation score (indicator of economic wealth) of the fine geographical area (it should match with those used in \code{attribute} or \code{compare})}
 

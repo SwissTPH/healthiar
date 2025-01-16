@@ -18,7 +18,7 @@ attribute_yld(
   rr_lower = NULL,
   rr_upper = NULL,
   rr_increment,
-  erf_shape,
+  erf_shape = NULL,
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
   erf_eq_upper = NULL,
