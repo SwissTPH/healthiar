@@ -5,7 +5,12 @@
 \title{include_social}
 \usage{
 include_social(
-  output,
+  output = NULL,
+  impact = NULL,
+  population = NULL,
+  bhd = NULL,
+  exp = NULL,
+  pop_fraction = NULL,
   geo_id_raw,
   social_indicator,
   n_quantile = 10,
@@ -15,13 +20,17 @@ include_social(
 \arguments{
 \item{output}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results}
 
+\item{impact}{\code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_raw}.}
+
+\item{population}{\code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_raw}.}
+
 \item{geo_id_raw}{\code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.}
 
 \item{social_indicator}{\code{Vector} with numeric values showing the deprivation score (indicator of economic wealth) of the fine geographical area (it should match with those used in \code{attribute} or \code{compare})}
 
-\item{n_quantile}{code{Numeric value} referring the number of groups in the quantile}
+\item{n_quantile}{\code{Integer value} specifying to the number quantiles in the analysis}
 
-\item{approach}{code{String} referring the approach to include the social aspects. To choose between "quantile" and ?}
+\item{approach}{\code{String} referring the approach to include the social aspects. To choose between "quantile" and ?}
 }
 \value{
 Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
