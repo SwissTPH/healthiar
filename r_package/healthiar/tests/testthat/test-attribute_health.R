@@ -327,24 +327,22 @@ testthat::test_that("results correct rr exposure distribution", {
 testthat::test_that("results correct ar", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
-
-  ## Extract rows that contain input data (others may contain results)
-  niph_noise_ha_input <-
-    niph_noise_ha_excel |>
-    dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean))
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
         approach_risk = "absolute_risk",
-        exp_central = niph_noise_ha_input$exposure_mean,
-        population = sum(niph_noise_ha_input$population_exposed_total),
-        prop_pop_exp = niph_noise_ha_input$population_exposed_total/sum(niph_noise_ha_input$population_exposed_total),
+        exp_central = data$exposure_mean,
+        population = sum(data$population_exposed_total),
+        prop_pop_exp = data$population_exposed_total/sum(data$population_exposed_total),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")) |>
       helper_extract_main_results(),
     expected =
-      niph_noise_ha_excel |>
+      data_raw |>
       dplyr::filter(exposure_category %in% "Total exposed")|>
       dplyr::select(number)|>
       dplyr::pull() |>
@@ -353,8 +351,6 @@ testthat::test_that("results correct ar", {
 })
 
 testthat::test_that("no error ar iteration", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
   testthat::expect_no_error(
     object =
@@ -377,8 +373,6 @@ testthat::test_that("no error ar iteration", {
 
 testthat::test_that("results correct rr yld", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
-
   testthat::expect_equal(
     object =
       healthiar::attribute_yld(
@@ -400,8 +394,6 @@ testthat::test_that("results correct rr yld", {
 
 testthat::test_that("results correct rr multiple exposure additive approach", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
-
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
@@ -414,13 +406,11 @@ testthat::test_that("results correct rr multiple exposure additive approach", {
         erf_shape = "log_linear") |>
       helper_extract_main_results(),
     expected =
-      c(0.081 * 1000)
+      c(0.081 * 1000) # Unsure whether numbers from a study...; Results on 16 Jan 2025
   )
 })
 
 testthat::test_that("results correct rr multiple exposure multiplicative approach", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
   testthat::expect_equal(
     object =
@@ -434,13 +424,11 @@ testthat::test_that("results correct rr multiple exposure multiplicative approac
         erf_shape = "log_linear") |>
       helper_extract_main_results(),
     expected =
-      c(0.079 * 1000)
+      c(0.079 * 1000) # Unsure whether numbers from a study...; Results on 16 Jan 2025
   )
 })
 
 testthat::test_that("results correct rr multiple exposure combined approach", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
   testthat::expect_equal(
     object =
@@ -454,7 +442,7 @@ testthat::test_that("results correct rr multiple exposure combined approach", {
         erf_shape = "log_linear") |>
       helper_extract_main_results(),
     expected =
-      c(0.079 * 1000)
+      c(0.079 * 1000) # Unsure whether numbers from a study...; Results on 16 Jan 2025
   )
 })
 

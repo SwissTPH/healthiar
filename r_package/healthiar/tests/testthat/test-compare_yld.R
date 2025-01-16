@@ -1,7 +1,5 @@
 testthat::test_that("results correct delta comparison yld rr single exposure", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
-
   testthat::expect_equal(
     object =
       healthiar::compare_yld(
@@ -27,8 +25,6 @@ testthat::test_that("results correct delta comparison yld rr single exposure", {
 })
 
 testthat::test_that("results from scenario 1 match those calculated by attribute call with same input data", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
   testthat::expect_equal(
     object =
@@ -71,8 +67,6 @@ testthat::test_that("results from scenario 1 match those calculated by attribute
 
 testthat::test_that("results correct delta comparison yld iteration rr single exposure", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
-
   testthat::expect_equal(
     object =
       healthiar::compare_yld(
@@ -101,8 +95,6 @@ testthat::test_that("results correct delta comparison yld iteration rr single ex
 
 testthat::test_that("results correct pif comparison yld rr single exposure", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
-
   testthat::expect_equal(
     object =
       healthiar::compare_yld(
@@ -128,8 +120,6 @@ testthat::test_that("results correct pif comparison yld rr single exposure", {
 })
 
 testthat::test_that("results correct pif comparison yld iteration rr single exposure", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
   testthat::expect_equal(
     object =

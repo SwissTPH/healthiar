@@ -1,18 +1,18 @@
 testthat::test_that("results correct simple monetization", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <-
     healthiar::attribute_health(
-      exp_central = airqplus_pm_copd$mean_concentration,
-      cutoff_central = airqplus_pm_copd$cut_off_value,
-      bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
-      rr_central = airqplus_pm_copd$relative_risk,
-      rr_lower = airqplus_pm_copd$relative_risk_lower,
-      rr_upper = airqplus_pm_copd$relative_risk_upper,
+      exp_central = data$mean_concentration,
+      cutoff_central = data$cut_off_value,
+      bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+      rr_central = data$relative_risk,
+      rr_lower = data$relative_risk_lower,
+      rr_upper = data$relative_risk_upper,
       erf_increment = 10,
       erf_shape = "log_linear",
-      info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
+      info = paste0(data$pollutant,"_", data$evaluation_name))
 
   testthat::expect_equal(
     object =
@@ -29,19 +29,19 @@ testthat::test_that("results correct simple monetization", {
 
 testthat::test_that("results correct direct discounting with discount factor and exponential discount shape", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <-
     healthiar::attribute_health(
-      exp_central = airqplus_pm_copd$mean_concentration,
-      cutoff_central = airqplus_pm_copd$cut_off_value,
-      bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
-      rr_central = airqplus_pm_copd$relative_risk,
-      rr_lower = airqplus_pm_copd$relative_risk_lower,
-      rr_upper = airqplus_pm_copd$relative_risk_upper,
+      exp_central = data$mean_concentration,
+      cutoff_central = data$cut_off_value,
+      bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+      rr_central = data$relative_risk,
+      rr_lower = data$relative_risk_lower,
+      rr_upper = data$relative_risk_upper,
       erf_increment = 10,
       erf_shape = "log_linear",
-      info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
+      info = paste0(data$pollutant,"_", data$evaluation_name))
 
   testthat::expect_equal(
     object =
@@ -63,8 +63,6 @@ testthat::test_that("results correct direct discounting with discount factor and
 
 testthat::test_that("results correct direct discounting with impact vector with discount factor and exponential discount shape", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
-
   testthat::expect_equal(
     object =
       healthiar::include_monetization(approach_discount = "direct",
@@ -83,8 +81,6 @@ testthat::test_that("results correct direct discounting with impact vector with 
 })
 
 testthat::test_that("results correct direct discounting with impact vector discounting only one specific year and exponential discount shape", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
   testthat::expect_equal(
     object =
@@ -106,28 +102,30 @@ testthat::test_that("results correct direct discounting with impact vector disco
 
 testthat::test_that("results correct indirect discounting with exponential discount shape", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
   bestcost_pm_yll_exposure_single_year_lifetable_geluft <-
     healthiar::attribute_yll_from_lifetable(
       approach_exposure = "single_year",
-      exp_central = input_data_mortality$exp[2], #exp CH 2019
+      exp_central = data_mort$exp[2], #exp CH 2019
       prop_pop_exp = 1,
-      cutoff_central = input_data_mortality$cutoff[2], # WHO AQG 2021
-      rr_central = input_data_mortality[2,"rr_central"],
-      rr_lower = input_data_mortality[2,"rr_lower"],
-      rr_upper =input_data_mortality[2,"rr_upper"],
+      cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
+      rr_central = data_mort[2,"rr_central"],
+      rr_lower = data_mort[2,"rr_lower"],
+      rr_upper =data_mort[2,"rr_upper"],
       erf_increment = 10,
       erf_shape = "log_linear",
       first_age_pop = 0,
       last_age_pop = 99,
-      population_midyear_male = lifetable_withPopulation[["male"]]$population,
-      population_midyear_female = lifetable_withPopulation[["female"]]$population,
-      deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-      deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
+      population_midyear_male = data_lifetable[["male"]]$population,
+      population_midyear_female = data_lifetable[["female"]]$population,
+      deaths_male = data[["pop"]]$number_of_deaths_male,
+      deaths_female = data[["pop"]]$number_of_deaths_female,
       year_of_analysis = 2019,
-      info = input_data_mortality$pollutant[2],
-      min_age = if(is.na(input_data_mortality$min_age[2])) NULL else input_data_mortality$min_age[2])
+      info = data_mort$pollutant[2],
+      min_age = if(is.na(data_mort$min_age[2])) NULL else input_data_mortality$min_age[2])
 
   testthat::expect_equal(
     object =
@@ -146,8 +144,6 @@ testthat::test_that("results correct indirect discounting with exponential disco
 })
 
 testthat::test_that("results correct direct discounting without valuation with exponential discount shape", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
   testthat::expect_equal(
     object =

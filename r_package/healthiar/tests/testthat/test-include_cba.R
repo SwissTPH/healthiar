@@ -1,7 +1,5 @@
 testthat::test_that("results correct cba with direct discounting and exponential discounting shape", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
-
   testthat::expect_equal(
     object =
       healthiar::include_cba(
@@ -26,19 +24,19 @@ testthat::test_that("results correct cba with direct discounting and exponential
 
 testthat::test_that("results correct cba discounting only one specific year with direct discounting and exponential discounting shape", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <-
     healthiar::attribute_health(
-      exp_central = airqplus_pm_copd$mean_concentration,
-      cutoff_central = airqplus_pm_copd$cut_off_value,
-      bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
-      rr_central = airqplus_pm_copd$relative_risk,
-      rr_lower = airqplus_pm_copd$relative_risk_lower,
-      rr_upper = airqplus_pm_copd$relative_risk_upper,
+      exp_central = data$mean_concentration,
+      cutoff_central = data$cut_off_value,
+      bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+      rr_central = data$relative_risk,
+      rr_lower = data$relative_risk_lower,
+      rr_upper = data$relative_risk_upper,
       erf_increment = 10,
       erf_shape = "log_linear",
-      info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
+      info = paste0(data$pollutant,"_", data$evaluation_name))
 
   testthat::expect_equal(
     object =
