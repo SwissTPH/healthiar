@@ -24,10 +24,10 @@ attribute_daly_from_lifetable <-
            deaths_female = NULL,
            population_midyear_male, population_midyear_female,
            year_of_analysis,
-           corrected_discount_rate = NULL,
            min_age = NULL, max_age = NULL,
            dw_central, dw_lower = NULL, dw_upper = NULL,
            duration_central, duration_lower = NULL, duration_upper = NULL,
+           time_horizon = NULL,
            info = NULL){
 
     output<-
@@ -51,9 +51,9 @@ attribute_daly_from_lifetable <-
         population_midyear_male = population_midyear_male, population_midyear_female = population_midyear_female,
         year_of_analysis = year_of_analysis,
         min_age = min_age, max_age = max_age,
-        corrected_discount_rate = corrected_discount_rate,
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
         duration_central = duration_central, duration_lower = duration_lower, duration_upper = duration_upper,
+        time_horizon = time_horizon,
         geo_id_raw = NULL , geo_id_aggregated = NULL,
         info = info)
 

@@ -4,18 +4,12 @@
 \alias{get_impact}
 \title{Attributable health cases based on relative risk}
 \usage{
-get_impact(
-  input,
-  year_of_analysis = NULL,
-  min_age = NULL,
-  max_age = NULL,
-  corrected_discount_rate = NULL,
-  pop_fraction_type,
-  population = NULL
-)
+get_impact(input, pop_fraction_type, population = NULL)
 }
 \arguments{
 \item{input}{\code{Data frame} containing all input data.}
+
+\item{population}{code{Vector} with numeric values referring to the population in the geographical unit}
 }
 \value{
 TBD. E.g. This function returns a \code{data.frame} with one row for each value of the

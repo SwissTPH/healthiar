@@ -31,7 +31,6 @@
 #' @param max_age \code{Numberic value} of the maximal age to be considered for infants/children (by default 0, i.e. below 1 year old).
 #' @param dw_central,dw_lower,dw_upper Three \code{Numeric value} showing the disability weights (central estimate, lower and upper 95% confidence intervals) associated with the morbidity health outcome
 #' @param duration \code{Numeric value} showing the disease duration
-#' @param corrected_discount_rate \code{Numeric value} showing the discount rate for future years including correction from inflation rate
 #' @param geo_id_raw \code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.
 #' @param info_1 \code{String} or {data frame} showing additional information or id of the scenario 1. The suffix "info" will be added to the column name. Default value = NULL.
 #' @param info_2 \code{String} or {data frame} showing additional information or id of the scenario 1. The suffix "info" will be added to the column name. Default value = NULL.
@@ -48,6 +47,7 @@
 #'  \item And many more.
 #' }
 #' @author Alberto Castro
+#' @importFrom stringr str_detect
 #' @note Experimental function
 #' @export
 compare <-
@@ -85,7 +85,6 @@ compare <-
            min_age = NULL, max_age = NULL,
            dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
            duration_central = NULL, duration_lower = NULL, duration_upper = NULL,
-           corrected_discount_rate = NULL,
            # Iteration
            geo_id_raw = NULL,
            geo_id_aggregated = NULL,
@@ -117,7 +116,6 @@ compare <-
         year_of_analysis = year_of_analysis_1,
         min_age = min_age,
         max_age = max_age,
-        corrected_discount_rate = corrected_discount_rate,
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
         geo_id_raw = geo_id_raw,
         geo_id_aggregated = geo_id_aggregated,
@@ -150,7 +148,6 @@ compare <-
         year_of_analysis = year_of_analysis_2,
         min_age = min_age,
         max_age = max_age,
-        corrected_discount_rate = corrected_discount_rate,
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
         duration_central = duration_central, duration_lower = duration_lower, duration_upper = duration_upper,
         geo_id_raw = geo_id_raw,
@@ -181,18 +178,16 @@ compare <-
           df2 = impact_raw_2[["health_detailed"]][["raw"]],
           except = scenario_specific_arguments)
 
-        # Merge the result tables by common columns
-        impact_raw_main <-
-          dplyr::left_join(
-            impact_raw_1[["health_detailed"]][["raw"]],
-            impact_raw_2[["health_detailed"]][["raw"]],
-            by = joining_columns_output,
-            suffix = c("_1", "_2")) |>
-          # Calculate the delta (difference) between scenario 1 and 2
-          dplyr::mutate(impact = impact_1 - impact_2,
-                        impact_rounded = round(impact, 0))
-
-        impact_raw <- list(health_main =  impact_raw_main)
+      # Merge the result tables by common columns
+      impact_raw <-
+        dplyr::left_join(
+          impact_raw_1[["health_detailed"]][["raw"]],
+          impact_raw_2[["health_detailed"]][["raw"]],
+          by = joining_columns_output,
+          suffix = c("_1", "_2")) |>
+        # Calculate the delta (difference) between scenario 1 and 2
+        dplyr::mutate(impact = impact_1 - impact_2,
+                      impact_rounded = round(impact, 0))
     }
 
 
@@ -244,6 +239,7 @@ compare <-
           # Lifetable data
           approach_exposure = approach_exposure_1,
           approach_newborns = approach_newborns_1,
+          year_of_analysis =  year_of_analysis_1,
           first_age_pop =  first_age_pop_1,
           last_age_pop = last_age_pop_1,
           deaths_male = deaths_male_1,
@@ -278,6 +274,7 @@ compare <-
           # Lifetable data
           approach_exposure = approach_exposure_2,
           approach_newborns = approach_newborns_2,
+          year_of_analysis = year_of_analysis_2,
           first_age_pop =  first_age_pop_2,
           last_age_pop = last_age_pop_2,
           deaths_male = deaths_male_2,
@@ -301,7 +298,9 @@ compare <-
         healthiar:::find_joining_columns(
           df1 = input_1,
           df2 = input_2,
-          except =  scenario_specific_arguments_excluding_bhd)
+          except =  c(scenario_specific_arguments_excluding_bhd,
+                      ## Keep year_of_analysis in the table so it can be accessed in the get_impact script
+                      "year_of_analysis"))
 
       # Merge the input tables by common columns
       input <-
@@ -311,17 +310,24 @@ compare <-
           by = joining_columns_input,
           suffix = c("_1", "_2"))
 
+      # browser()
 
-      # Calculate the health impacts for each case (uncertainty, category, geo area...)
-      impact_raw <-
-        healthiar:::get_impact(
-          input = input,
-          year_of_analysis = year_of_analysis,
-          min_age = min_age,
-          max_age = max_age,
-          corrected_discount_rate = corrected_discount_rate,
-          pop_fraction_type = "pif")
+      ## Added if statement below to avoid error in the non-lifetable cases
+      if( stringr::str_detect(health_metric, "lifetable") ) {
+        # Calculate the health impacts for each case (uncertainty, category, geo area...)
+        impact_raw <-
+          healthiar:::get_impact(
+            input = input |> rename(year_of_analysis = year_of_analysis_1),
+            pop_fraction_type = "pif")
+      } else { # Non-lifetable cases
+        impact_raw <-
+          healthiar:::get_impact(
+            input = input,
+            pop_fraction_type = "pif")
       }
+
+      }
+
 
 
       # Organize output
@@ -332,7 +338,8 @@ compare <-
         healthiar:::get_output(impact_raw = impact_raw)
 
       output[["health_detailed"]][["scenario_1"]] <- impact_raw_1
-      output[["health_detailed"]][["scenario_2"]] <- impact_raw_2
+      output[["health_detailed"]][["scenario_2"]] <- impact_raw_1
+
 
 
 

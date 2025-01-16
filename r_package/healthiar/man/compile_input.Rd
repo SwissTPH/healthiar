@@ -31,7 +31,6 @@ compile_input(
   geo_id_raw = NULL,
   geo_id_aggregated = NULL,
   info = NULL,
-  corrected_discount_rate = NULL,
   population = population,
   duration_central = NULL,
   duration_lower = NULL,
@@ -41,6 +40,8 @@ compile_input(
   dw_upper = NULL,
   approach_exposure = NULL,
   approach_newborns = NULL,
+  year_of_analysis = NULL,
+  time_horizon = NULL,
   first_age_pop = NULL,
   last_age_pop = NULL,
   population_midyear_male = NULL,
@@ -80,8 +81,6 @@ compile_input(
 
 \item{info}{\code{String} or {data frame} showing additional information or id. The suffix "info" will be added to the column name. Default value = NULL.}
 
-\item{corrected_discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
-
 \item{population}{code{Vector} with numeric values referring to the population in the geographical unit}
 
 \item{duration_central, duration_lower, duration_upper}{\code{Numeric value} showing the central estimate of the disease duration and (optionally) the lower and upper bounds of the 95\% confidence interval.}
@@ -91,6 +90,10 @@ compile_input(
 \item{approach_exposure}{\code{String} showing whether air pollution is constant or only in one year. Options: "single_year" (default), "constant"}
 
 \item{approach_newborns}{\code{String} showing whether newborns are considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns"}
+
+\item{year_of_analysis}{\code{Numeric value} of the year of analysis, which corresponds to the first year of the life table.}
+
+\item{time_horizon}{\code{Numeric value} corresponding to time horizon (number of years) for which the impacts should be considered. For example, would be 10 if one is interested in the impacts of an intervention during the next 10 years.}
 
 \item{first_age_pop}{\code{Numeric value} starting age of the youngest age group from population and life table data (age interval = 1 year)}
 

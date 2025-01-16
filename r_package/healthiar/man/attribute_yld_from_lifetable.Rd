@@ -30,7 +30,7 @@ attribute_yld_from_lifetable(
   population_midyear_male,
   population_midyear_female,
   year_of_analysis,
-  corrected_discount_rate = NULL,
+  time_horizon = NULL,
   min_age = NULL,
   max_age = NULL,
   dw_central,
@@ -69,7 +69,7 @@ attribute_yld_from_lifetable(
 
 \item{year_of_analysis}{\code{Numeric value} of the year of analysis, which corresponds to the first year of the life table.}
 
-\item{corrected_discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
+\item{time_horizon}{\code{Numeric value} corresponding to time horizon (number of years) for which the impacts should be considered. For example, would be 10 if one is interested in the impacts of an intervention during the next 10 years.}
 
 \item{min_age}{\code{Numberic value} of the minimal age to be considered for adults (by default 30, i.e. 30+).}
 

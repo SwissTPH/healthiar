@@ -1,6 +1,7 @@
 #' Attributable health cases based on relative risk
 
 #' @description Calculates the health impacts for each uncertainty and geo area.
+#' @inheritParams attribute
 #' @param input \code{Data frame} containing all input data.
 #' @return
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
@@ -20,26 +21,23 @@
 #' @keywords internal
 get_impact <-
   function(input,
-           year_of_analysis = NULL,
-           min_age = NULL,
-           max_age = NULL,
-           corrected_discount_rate = NULL,
            pop_fraction_type,
            population = NULL){
 
     # Relative risk ############################################################
+
     if(unique(input$approach_risk) == "relative_risk"){
       # Get pop_fraction and add to the input data frame
       input_with_risk_and_pop_fraction <-
         healthiar:::get_risk_and_pop_fraction(input = input,
-                                             pop_fraction_type = pop_fraction_type)
+                                              pop_fraction_type = pop_fraction_type)
 
       # * Same input as output #################################################
 
       if(unique(input$health_metric) %in% "same_input_output") {
 
         # Get pop_fraction and add it to the input data frame
-        impact_raw_main <-
+        impact_raw <-
           input_with_risk_and_pop_fraction |>
           # Build the result table adding the impact to the input table
           dplyr::mutate(impact = pop_fraction * bhd) |>
@@ -48,14 +46,12 @@ get_impact <-
                         pop_fraction, impact,
                         everything())
 
-        impact_raw <- list(health_main = impact_raw_main)
-
         # * YLD ################################################################
       } else if (unique(input$health_metric) %in% "yld") {
 
         # Add impact
-        impact_raw_main <-
-          # impact_raw_main |> # Line for commented out code above
+        impact_raw <-
+          # impact_raw |> # Line for commented out code above
           input_with_risk_and_pop_fraction |>
           dplyr::mutate(impact = pop_fraction * bhd) |>
           dplyr::mutate(impact = impact * dw * duration)  |>
@@ -63,8 +59,6 @@ get_impact <-
           dplyr::select(exp_ci, bhd_ci, erf_ci,
                         pop_fraction, impact,
                         everything())
-
-        impact_raw <- list(health_main = impact_raw_main)
 
         # * Lifetable ##########################################################
         } else if (unique(input$health_metric) %in% c("deaths_from_lifetable",
@@ -75,41 +69,30 @@ get_impact <-
 
           pop_impact <-
             healthiar:::get_pop_impact(
-              year_of_analysis = year_of_analysis,
               input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction,
-              outcome_metric = outcome_metric,
-              min_age = min_age)
+              outcome_metric = outcome_metric
+              )
 
 
           impact_raw <-
             healthiar:::get_deaths_yll_yld(
-              outcome_metric = outcome_metric,
               pop_impact = pop_impact,
-              year_of_analysis = year_of_analysis,
-              min_age = min_age,
-              max_age = max_age,
-              corrected_discount_rate = corrected_discount_rate,
               input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
     } else if (unique(input$health_metric) %in% "daly_from_lifetable"){
 
       pop_impact <-
         healthiar:::get_pop_impact(
-          year_of_analysis = year_of_analysis,
           input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction,
-          outcome_metric = "daly",
-          min_age = min_age)
+          outcome_metric = "daly"
+          )
 
 
       impact_raw <-
         healthiar:::get_daly(
-          outcome_metric = outcome_metric,
           pop_impact = pop_impact,
-          year_of_analysis = year_of_analysis,
-          min_age = min_age,
-          max_age = max_age,
-          corrected_discount_rate = corrected_discount_rate,
-          input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
+          input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction
+        )
     }
 
 
@@ -117,33 +100,44 @@ get_impact <-
 
     } else if (
       unique(input$approach_risk) == "absolute_risk" &
-      unique(input$health_metric) == "same_input_output"
-      ){
+      ( unique(input$health_metric) == "same_input_output" | unique(input$health_metric) == "yld" )
+      ) {
 
       # Calculate absolute risk for each exposure category
-      impact_raw_main <-
+      impact_raw <-
         input |>
+        dplyr::rowwise() |>
         dplyr::mutate(
           absolute_risk_as_percent = healthiar::get_risk(exp = exp, erf_eq = erf_eq),
           pop_exp = population * prop_pop_exp,
-          impact = absolute_risk_as_percent/100 * pop_exp) |>
-        dplyr::mutate(impact_rounded = round(impact, 0))
+          impact = absolute_risk_as_percent/100 * pop_exp,
+          impact_rounded = round(impact, 0)) |>
+          ungroup()
 
-      impact_raw <- list(health_main = impact_raw_main)
+      # * YLD ##################################################################
+
+      if ( unique(input$health_metric) == "yld" ) {
+
+        impact_raw <-
+          impact_raw |>
+          dplyr::mutate(impact = impact * dw * duration)
+
+      }
 
     }
 
 
     # Store results ############################################################
 
-    # Note: column is called prop_pop_exp (rr case) or pop_exp (ar case)
-    # * Single geo unit ########################################################
-    if ( ( unique(impact_raw[["health_main"]]$approach_risk) == "relative_risk" ) &
-         ( unique(impact_raw[["health_main"]]$exposure_type) == "exposure_distribution" ) &
-         ( !grepl("from_lifetable", impact_raw[["health_main"]]$health_metric[1]) ) &
-         ( max(impact_raw[["health_main"]]$geo_id_raw) == 1 ) ) {
+    ## Note: column is called prop_pop_exp (rr case) or pop_exp (ar case)
 
-      impact_raw[["health_main"]] <- impact_raw[["health_main"]] |>
+    # * Single geo unit ########################################################
+    if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) &
+         ( unique(impact_raw$exposure_type) == "exposure_distribution" ) &
+         ( !grepl("from_lifetable", impact_raw$health_metric[1]) ) &
+         ( max(impact_raw$geo_id_raw) == 1 ) ) {
+
+      impact_raw <- impact_raw |>
         dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
         dplyr::left_join(
           x = _,
@@ -158,14 +152,14 @@ get_impact <-
         )|>
         dplyr::mutate(exposure_type = input$exposure_type |> dplyr::first())
 
-      # * Multiple geo units####################################################
+      # * Multiple geo units ###################################################
 
-    } else if ( ( unique(impact_raw[["health_main"]]$approach_risk) == "relative_risk" ) &
-                ( unique(impact_raw[["health_main"]]$exposure_type) == "exposure_distribution" ) &
-                ( !grepl("from_lifetable", impact_raw[["health_main"]]$health_metric[1]) ) &
-                ( max(impact_raw[["health_main"]]$geo_id_raw) > 1 ) ) {
+    } else if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) &
+                ( unique(impact_raw$exposure_type) == "exposure_distribution" ) &
+                ( !grepl("from_lifetable", impact_raw$health_metric[1]) ) &
+                ( max(impact_raw$geo_id_raw) > 1 ) ) {
 
-      impact_raw[["health_main"]] <- impact_raw[["health_main"]] |>
+      impact_raw <- impact_raw |>
         dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
         dplyr::left_join(
           x = _,
@@ -182,16 +176,16 @@ get_impact <-
 
     }
 
-    if ( ( unique(impact_raw[["health_main"]]$approach_risk) == "relative_risk" ) ) {
-      impact_raw[["health_main"]] <- impact_raw[["health_main"]] |>
+    if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) ) {
+      impact_raw <- impact_raw |>
         dplyr::mutate(impact_rounded = round(impact, 0))
     }
 
-    # Calculate impact per 100K inhab.
+    # * Calculate impact per 100K inhabitants ##################################
 
-    if("population" %in% colnames(impact_raw[["health_main"]])){
-      impact_raw[["health_main"]] <-
-        impact_raw[["health_main"]] |>
+    if("population" %in% colnames(impact_raw)){
+      impact_raw <-
+        impact_raw |>
         dplyr::mutate(
           impact_per_100k_inhab = (impact / population) *1E5
         )

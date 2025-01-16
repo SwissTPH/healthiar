@@ -30,11 +30,11 @@ attribute_yll_from_lifetable(
   deaths_male = NULL,
   deaths_female = NULL,
   year_of_analysis,
-  corrected_discount_rate = NULL,
   min_age = NULL,
   max_age = NULL,
   info = NULL,
-  duration_central = 100
+  duration_central = NULL,
+  time_horizon = NULL
 )
 }
 \arguments{
@@ -64,13 +64,13 @@ attribute_yll_from_lifetable(
 
 \item{year_of_analysis}{\code{Numeric value} of the year of analysis, which corresponds to the first year of the life table.}
 
-\item{corrected_discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
-
 \item{min_age}{\code{Numberic value} of the minimal age to be considered for adults (by default 30, i.e. 30+).}
 
 \item{max_age}{\code{Numberic value} of the maximal age to be considered for infants/children (by default 0, i.e. below 1 year old).}
 
 \item{info}{\code{String} or {data frame} showing additional information or id. The suffix "info" will be added to the column name. Default value = NULL.}
+
+\item{time_horizon}{\code{Numeric value} corresponding to time horizon (number of years) for which the impacts should be considered. For example, would be 10 if one is interested in the impacts of an intervention during the next 10 years.}
 }
 \value{
 TBD. E.g. This function returns a \code{data.frame} with one row for each value of the

@@ -18,12 +18,12 @@
 #' @param last_age_pop \code{Numeric value} ending age of the oldest age group from population and life table data (age interval = 1 year)
 #' @param population_midyear_male,population_midyear_female \code{Numeric vector} containing the mid-year male population for the year of analysis for male and female respectively.
 #' @param year_of_analysis \code{Numeric value} of the year of analysis, which corresponds to the first year of the life table.
+#' @param time_horizon \code{Numeric value} corresponding to time horizon (number of years) for which the impacts should be considered. For example, would be 10 if one is interested in the impacts of an intervention during the next 10 years.
 #' @param min_age \code{Numberic value} of the minimal age to be considered for adults (by default 30, i.e. 30+).
 #' @param max_age \code{Numberic value} of the maximal age to be considered for infants/children (by default 0, i.e. below 1 year old).
 #' @param bhd_central,bhd_lower,bhd_upper \code{Numeric value} showing the central estimate and (optionally) the lower bound and the upper bound of the confidence interval of the baseline health data (e.g. incidence of the health outcome in the population).
 #' @param dw_central,dw_lower,dw_upper \code{Numeric value} showing the disability weights (central estimate, lower and upper 95\% confidence intervals) associated with the morbidity health outcome
 #' @param duration_central,duration_lower,duration_upper \code{Numeric value} showing the central estimate of the disease duration and (optionally) the lower and upper bounds of the 95\% confidence interval.
-#' @param corrected_discount_rate \code{Numeric value} showing the discount rate for future years including correction from inflation rate
 #' @param population code{Vector} with numeric values referring to the population in the geographical unit
 #' @param geo_id_raw \code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.
 #' @param geo_id_aggregated \code{Vector} showing the id code of the geographic area for which raw geo ids have to be aggregated. The vector has to have the same length as geo_id_raw. Therefore, geo_id_aggregated should have duplicated values for those geo_id_r
@@ -60,9 +60,9 @@ attribute <-
            year_of_analysis = NULL,
            dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
            duration_central = NULL, duration_lower = NULL, duration_upper = NULL,
-           corrected_discount_rate = NULL,
            approach_exposure = NULL,
            approach_newborns = NULL,
+           time_horizon = NULL,
            # Iteration arguments
            geo_id_raw = NULL,
            geo_id_aggregated = NULL,
@@ -101,6 +101,10 @@ attribute <-
         # Lifetable arguments if needed
         approach_exposure = approach_exposure,
         approach_newborns = approach_newborns,
+        year_of_analysis = year_of_analysis,
+        time_horizon = time_horizon,
+        min_age = min_age,
+        max_age = max_age,
         first_age_pop =  first_age_pop,
         last_age_pop = last_age_pop,
         population_midyear_male = population_midyear_male,
@@ -108,14 +112,9 @@ attribute <-
         deaths_male = deaths_male,
         deaths_female = deaths_female)
 
-
     # Calculate the health impacts for each case (uncertainty, category, geo area...)
     impact_raw <-
       healthiar:::get_impact(input = input,
-                             year_of_analysis = year_of_analysis,
-                             min_age = min_age,
-                             max_age = max_age,
-                             corrected_discount_rate = corrected_discount_rate,
                              pop_fraction_type = "paf")
 
     # Get the main and detailed output by aggregating and/or filtering cases (rows)

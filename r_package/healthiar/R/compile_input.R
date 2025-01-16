@@ -14,9 +14,7 @@
 #' }
 #' @import dplyr
 #' @import purrr
-#' @importFrom tidyr pivot_longer
-#' @importFrom tidyr crossing
-#' @importFrom tidyr nest
+#' @importFrom tidyr pivot_longer crossing nest
 #' @examples
 #' TBD
 #' @author Alberto Castro
@@ -41,7 +39,6 @@ compile_input <-
            geo_id_raw = NULL,
            geo_id_aggregated = NULL,
            info = NULL,
-           corrected_discount_rate = NULL,
            population = population,
            # YLD
            duration_central = NULL, duration_lower = NULL, duration_upper = NULL,
@@ -49,6 +46,8 @@ compile_input <-
            # Lifetable data
            approach_exposure = NULL,
            approach_newborns = NULL,
+           year_of_analysis = NULL,
+           time_horizon = NULL,
            first_age_pop = NULL, last_age_pop = NULL,
            population_midyear_male = NULL, population_midyear_female = NULL,
            deaths_male = NULL, deaths_female = NULL){
@@ -109,13 +108,17 @@ compile_input <-
         erf_data <- # 1 x 3 tibble
           dplyr::tibble(
             exposure_name = names(erf_eq_central),
-            erf_eq_central = list(erf_eq_central))}
+            ## Functions can't be saved raw in column -> save as list
+            erf_eq_central = list(erf_eq_central))
+        }
 
-        # If a confidence interval for the erf is provided, add the erf columns
-        if (!is.null(erf_eq_lower) & !is.null(erf_eq_upper)){
-            dplyr::mutate(
-              erf_eq_lower = list(erf_eq_lower),
-              erf_eq_upper = list(erf_eq_upper))}
+    # If a confidence interval for the erf is provided, add the erf columns
+    if (!is.null(erf_eq_lower) & !is.null(erf_eq_upper) & is.function(erf_eq_central)){
+      erf_data <-
+        erf_data |>
+         dplyr::mutate(
+           erf_eq_lower = list(erf_eq_lower),
+           erf_eq_upper = list(erf_eq_upper))}
 
     # If there exist no column with name "exposure_name" because the vectors were not named,
     # then the column has to be added as NA
@@ -128,7 +131,7 @@ compile_input <-
 
 
 
-    # (NON-LIFETABLE) ARGUMENTS #################################################
+    # ARGUMENTS ################################################################
 
     # Store the length of the exposure argument (to be used below)
     length_exp_dist <-
@@ -140,40 +143,65 @@ compile_input <-
       ifelse(is.list(exp_central),
              length(exp_central),      # If exposure distribution
              1)                        # If single exposure
-
+# browser()
     input_wo_lifetable <-
       # Tibble converts NULL into NA: if variable is NULL, column not initiated
       dplyr::tibble(
-        # First compile input data that are geo-dependent
-        # Use rep() to ensure that there is dimension match
+        ## First compile input data that are geo-dependent
+        ## Use rep() match dimensions
         geo_id_raw = rep(geo_id_raw, each = length_exp_dist),
         geo_id_aggregated = rep(geo_id_aggregated, each = length_exp_dist),
         bhd_central = rep(unlist(bhd_central), each = length_exp_dist),
         bhd_lower = rep(unlist(bhd_lower), each = length_exp_dist),
         bhd_upper = rep(unlist(bhd_upper), each = length_exp_dist),
-        min_age = rep(min_age, each = length_exp_dist),
-        max_age = rep(max_age, each = length_exp_dist),
+        # min_age = rep(min_age, each = length_exp_dist),
+        # max_age = rep(max_age, each = length_exp_dist),
         approach_multiexposure = rep(approach_multiexposure, each = length_exp_dist),
-        approach_exposure = rep(approach_exposure, each = length_exp_dist),
-        approach_newborns = rep(approach_newborns, each = length_exp_dist),
+        # approach_exposure = rep(approach_exposure, each = length_exp_dist),
+        # approach_newborns = rep(approach_newborns, each = length_exp_dist),
         population = rep(unlist(population), each = length_exp_dist),
-        # Second those variables with length = 1 (non-problematic)
+
+        ## Second those variables with length = 1 (non-problematic)
         cutoff_central = cutoff_central,
         cutoff_lower = cutoff_lower,
         cutoff_upper = cutoff_upper,
+        approach_exposure = approach_exposure,
+        approach_newborns = approach_newborns,
+        year_of_analysis = year_of_analysis,
+        time_horizon = time_horizon,
+        min_age = ifelse(
+          test = !is.null( min_age ),
+          yes = min_age,
+          no = ifelse(
+            test = ( is.null ( min_age ) & grepl("lifetable", health_metric) ),
+            yes = first_age_pop,
+            # no = NULL)
+          no = NA)
+      ),
+        max_age = ifelse(
+          test = !is.null( max_age ),
+          yes = max_age,
+          no = ifelse(
+            test = ( is.null ( max_age ) & grepl("lifetable", health_metric) ),
+            yes = last_age_pop,
+            # no = NULL)
+          no = NA)
+      ),
         duration_central = duration_central,
         duration_lower = duration_lower,
         duration_upper = duration_upper,
         dw_central = dw_central,
         dw_lower = dw_lower,
         dw_upper = dw_upper,
-        corrected_discount_rate = corrected_discount_rate,
 
-        # Finally, those variables that are multi-dimensional (exposure distribution)
+        ## Finally, those variables that are multi-dimensional (exposure distribution)
         exp_central = unlist(exp_central),
         exp_lower = unlist(exp_lower),
         exp_upper = unlist(exp_upper),
-        prop_pop_exp = unlist(prop_pop_exp))
+        prop_pop_exp = unlist(prop_pop_exp)) |>
+
+      ## Remove min_age & max_age columns if they are NA
+      select(-where(~ all(is.na(x = .))))
 
       # Add erf data
     input_wo_lifetable <-
@@ -182,10 +210,6 @@ compile_input <-
       healthiar:::add_info(info = info) |>
       # Information derived from input data
       dplyr::mutate(
-        # Add age_max and age_min (not needed without life table)
-        age_range = ifelse(!is.null(max_age) & is.null(min_age), paste0("below", max_age + 1),
-                           ifelse(!is.null(min_age) & is.null(max_age), paste0("from", min_age),
-                                  NA)),
         approach_risk = approach_risk, # RR or AR
         health_metric = health_metric,
         exposure_dimension =
@@ -212,7 +236,6 @@ compile_input <-
                           names_to = "exp_ci",
                           names_prefix = "exp_",
                           values_to = "exp")
-
 
     if (is.null(erf_eq_central)) {
       ## Exposure response function
@@ -271,7 +294,7 @@ compile_input <-
 
     # CREATE LIFETABLES ##########################################################
     # As nested tibble
-    if(grepl("lifetable", health_metric)){
+    if ( grepl("lifetable", health_metric) ) {
 
       # Build the data set for lifetable-related data
       # The life table has to be provided (by sex)
@@ -362,15 +385,16 @@ compile_input <-
         input <-
           dplyr::left_join(input_wo_lifetable,
                            lifetable_with_pop,
-                           by = "geo_id_raw") |>
+                           by = "geo_id_raw",
+                           relationship = "many-to-many") |>
           dplyr::left_join(population,
-                           by = "geo_id_raw")
+                           by = "geo_id_raw",
+                           relationship = "many-to-many")
 
       } else {
       # If no lifetable, only use input_wo_lifetable
       input <- input_wo_lifetable}
 
-
-
+  return(input)
 
   }

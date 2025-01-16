@@ -1,8 +1,7 @@
 #' Get population impact over time
 
 #' @description Get population impact over time
-#' @param year_of_analysis \code{Numeric value} of the year of analysis, which corresponds to the first year of the life table
-#' @param input_with_risk_and_pop_fraction \code{Tibble} showing the input data and the PAF (population attributable fraction) or PIF (population impact fraction)
+#' @inheritParams attribute
 #' @param outcome_metric \code{String} to define the outcome metric. Choose between "death", "yll" and "yld"
 #'
 #' @return
@@ -25,10 +24,9 @@
 #' @keywords internal
 
 get_pop_impact <-
-  function(year_of_analysis,
-           input_with_risk_and_pop_fraction,
-           outcome_metric,
-           min_age){
+  function(input_with_risk_and_pop_fraction,
+           outcome_metric
+           ){
 
     user_options <- options()
     options(digits = 15)
@@ -59,14 +57,14 @@ get_pop_impact <-
                         }
                       )
       )
-
+# browser()
     # Store variables for population_year
     # Year Of Analysis (YOA)
-    population_yoa <- paste0("population_",year_of_analysis)
+    population_yoa <- paste0("population_", input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first())
     population_yoa_entry <- paste0(population_yoa,"_entry")
-    population_yoa_plus_1_entry <- paste0("population_",year_of_analysis+1,"_entry")
-    population_yoa_end <- paste0("population_",year_of_analysis,"_end")
-    deaths_yoa <- paste0("deaths_",year_of_analysis)
+    population_yoa_plus_1_entry <- paste0("population_", input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first()+1,"_entry")
+    population_yoa_end <- paste0("population_", input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first(),"_end")
+    deaths_yoa <- paste0("deaths_", input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first())
 
 
     # ADD ENTRY POPULATION OF YOA & SURVIVAL PROBABILITIES
@@ -122,7 +120,7 @@ get_pop_impact <-
               # Calculate modified hazard rate = modification factor * hazard rate = mod factor * (deaths / mid-year pop)
               dplyr::mutate(
                 hazard_rate_mod =
-                  dplyr::if_else(age_end > c(rep_len(min_age, length.out = length(age_end))), # This makes sure comparators are of same length
+                  dplyr::if_else(age_end > c(rep_len(input_with_risk_and_pop_fraction |>  pull(min_age) |> first(), length.out = length(age_end))), # This makes sure comparators are of same length
                                  modification_factor * hazard_rate,
                                  hazard_rate),
                 .after = deaths) |>
@@ -131,14 +129,14 @@ get_pop_impact <-
               # ( 2 - modified hazard rate ) / ( 2 + modified hazard rate )
               dplyr::mutate(
                 prob_survival_mod =
-                  dplyr::if_else(age_end > c(rep_len(min_age, length.out = length(age_end))), # This makes sure comparators are of same length
+                  dplyr::if_else(age_end > c(rep_len(input_with_risk_and_pop_fraction |>  pull(min_age) |> first(), length.out = length(age_end))), # This makes sure comparators are of same length
                                  (2 - hazard_rate_mod) / (2 + hazard_rate_mod),
                                  prob_survival),
                 .after = deaths) |>
 
               dplyr::mutate(
                 prob_survival_until_mid_year_mod =
-                  dplyr::if_else(age_end > c(rep_len(min_age, length.out = length(age_end))), # This makes sure comparators are of same length
+                  dplyr::if_else(age_end > c(rep_len(input_with_risk_and_pop_fraction |>  pull(min_age) |> first(), length.out = length(age_end))), # This makes sure comparators are of same length
                                  1 - ((1 - prob_survival_mod) / 2),
                                  prob_survival_until_mid_year),
                 .after = deaths)
@@ -254,7 +252,7 @@ get_pop_impact <-
         # Define the years based on number_years
         # e.g. 2020 to 2118
         years_projection <-
-          (year_of_analysis + 1) : (year_of_analysis + number_years)
+          (input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first() + 1) : (input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first() + number_years)
 
         # Initialize matrices for entry population, mid-year population, and deaths
         pop_entry <- matrix(NA, nrow = 100, ncol = number_years)
@@ -274,7 +272,7 @@ get_pop_impact <-
           paste0("deaths_", years_projection)
 
         # Set initial population for the first year (2020)
-        pop_entry[, 1] <- df[[paste0("population_", year_of_analysis + 1, "_entry")]]
+        pop_entry[, 1] <- df[[paste0("population_", input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first() + 1, "_entry")]]
         pop_mid[, 1] <- pop_entry[, 1] * prob_survival_until_mid_year
         deaths[, 1] <- pop_entry[, 1] * (1 - prob_survival)
 
