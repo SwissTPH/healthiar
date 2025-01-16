@@ -140,6 +140,7 @@ testthat::test_that("number of rows in detailed results correct rr single exposu
 
 })
 
+
 testthat::test_that("results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & with cutoff of 5", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))

@@ -61,6 +61,7 @@ testthat::test_that("results correct direct discounting with discount factor and
   )
 })
 
+
 testthat::test_that("results correct direct discounting with impact vector with discount factor and exponential discount shape", {
 
   testthat::expect_equal(
@@ -99,6 +100,7 @@ testthat::test_that("results correct direct discounting with impact vector disco
     expect = c(863) # Excel file from University of Porto "WP2_Examples.xlsx"
   )
 })
+
 
 testthat::test_that("results correct indirect discounting with exponential discount shape", {
 
