@@ -6,7 +6,7 @@
 \usage{
 include_discount(
   approach_discount = "direct",
-  output = NULL,
+  output_healthiar = NULL,
   impact = NULL,
   discount_rate = NULL,
   discount_years = 1,
@@ -17,7 +17,7 @@ include_discount(
 \arguments{
 \item{approach_discount}{\code{String} referring to the method to be used for the discounting choosing between the default "direct" (after obtaining the health impacts) and the alternative "indirect" (before the health impacts).}
 
-\item{output}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
+\item{output_healthiar}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
 
 \item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function).}
 

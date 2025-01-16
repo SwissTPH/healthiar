@@ -5,7 +5,7 @@
 \title{include_social}
 \usage{
 include_social(
-  output = NULL,
+  output_healthiar = NULL,
   impact = NULL,
   population = NULL,
   bhd = NULL,
@@ -18,7 +18,7 @@ include_social(
 )
 }
 \arguments{
-\item{output}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results}
+\item{output_healthiar}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results}
 
 \item{impact}{\code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_disaggregated}.}
 

@@ -16,7 +16,7 @@ test_that("results correct simple monetization", {
 
   expect_equal(
     object =
-      healthiar::include_monetization(output = bestcost_pm_copd,
+      healthiar::include_monetization(output_healthiar = bestcost_pm_copd,
                                       valuation = 1000) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
@@ -46,7 +46,7 @@ test_that("results correct direct discounting with discount factor and exponenti
   expect_equal(
     object =
       healthiar::include_monetization(approach_discount = "direct",
-                                      output = bestcost_pm_copd,
+                                      output_healthiar = bestcost_pm_copd,
                                       discount_shape = "exponential",
                                       discount_rate = 0.03,
                                       discount_years = 5,
@@ -132,7 +132,7 @@ test_that("results correct indirect discounting with exponential discount shape"
   expect_equal(
     object =
       healthiar::include_monetization(approach_discount = "indirect",
-                                      output = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
+                                      output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
                                       discount_shape = "exponential",
                                       discount_rate = 0.01,
                                       valuation = 1) |>

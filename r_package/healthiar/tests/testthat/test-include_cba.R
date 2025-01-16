@@ -44,7 +44,7 @@ test_that("results correct cba discounting only one specific year with direct di
     object =
       healthiar::include_cba(
         approach_discount = "direct",
-        output = bestcost_pm_copd,
+        output_healthiar = bestcost_pm_copd,
         valuation = 20,
         cost = 100,
         discount_shape = "exponential",

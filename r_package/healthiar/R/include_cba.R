@@ -14,7 +14,7 @@
 #' @export
 include_cba <-
   function(approach_discount = "direct",
-           output = NULL,
+           output_healthiar = NULL,
            positive_impact = NULL,
            valuation,
            cost,
@@ -43,7 +43,7 @@ include_cba <-
     cba_detailed_benefit <-
       healthiar::include_monetization(
         approach_discount = approach_discount,
-        output = output,
+        output_healthiar = output_healthiar,
         impact = positive_impact,
         discount_rate = discount_rate_benefit,
         discount_years = discount_years_benefit,

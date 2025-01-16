@@ -23,17 +23,17 @@
 
 include_discount <-
   function(approach_discount = "direct",
-           output = NULL,
+           output_healthiar = NULL,
            impact = NULL,
            discount_rate = NULL,
            discount_years = 1,
            discount_shape = NULL,
            discount_overtime = "all_years") {
 
-    output <-
+    output_discounting <-
       healthiar::include_monetization(
         approach_discount = approach_discount,
-        output = output,
+        output_healthiar = output_healthiar,
         impact = impact,
         discount_rate = discount_rate,
         discount_years = discount_years,
@@ -41,12 +41,13 @@ include_discount <-
         discount_overtime = discount_overtime,
         valuation = 1)
 
-    output[["monetization_main"]] <-
-      output[["monetization_main"]] |>
+
+    output_discounting[["monetization_main"]] <-
+      output_discounting[["monetization_main"]] |>
       dplyr::select(-contains("cost"))
 
 
-    return(output)
+    return(output_discounting)
 
 
   }

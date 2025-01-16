@@ -16,7 +16,7 @@ test_that("results correct", {
   expect_equal(
     object =
       healthiar::include_social(
-        output = bestcost_pm_death,
+        output_healthiar = bestcost_pm_death,
         geo_id_disaggregated = social_data$CS01012020,
         social_indicator = social_data$score,
         n_quantile = 10,

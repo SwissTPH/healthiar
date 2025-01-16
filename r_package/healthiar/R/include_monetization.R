@@ -3,7 +3,7 @@
 #' @description Monetize health impacts
 #'
 #' @param approach_discount \code{String} referring to the method to be used for the discounting choosing between the default "direct" (after obtaining the health impacts) and the alternative "indirect" (before the health impacts).
-#' @param output \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.
+#' @param output_healthiar \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function).
 #' @param valuation \code{Numberic value} referring to unit value of a health impact
 #' @param discount_rate \code{Numeric value} showing the discount rate for future years including correction from inflation rate
@@ -16,20 +16,21 @@
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)
 #' @export
-include_monetization <- function(approach_discount = "direct",
-                         output = NULL,
-                         impact = NULL,
-                         valuation,
-                         discount_rate = NULL,
-                         discount_shape = NULL,
-                         discount_years = 1,
-                         discount_overtime = "all_years") {
+include_monetization <-
+  function(approach_discount = "direct",
+           output_healthiar = NULL,
+           impact = NULL,
+           valuation,
+           discount_rate = NULL,
+           discount_shape = NULL,
+           discount_years = 1,
+           discount_overtime = "all_years") {
 
 
 
 
   # Using the output of attribute ####
-  if(!is.null(output) & is.null(impact)){
+  if(!is.null(output_healthiar) & is.null(impact)){
 
     # Indirect approach #######
     # This means applying the discount within the lifetable method
@@ -37,15 +38,15 @@ include_monetization <- function(approach_discount = "direct",
     if(approach_discount == "indirect"){
 
       outcome_metric <-
-        unique(output[["health_detailed"]][["raw"]]$outcome_metric)
+        unique(output_healthiar[["health_detailed"]][["raw"]]$outcome_metric)
 
       # Store the original data (they refer to health)
-      output_health <- output
+      output_health <- output_healthiar
 
       # Output will be adapted according to monetized impacts
       #TODO The names health are kept just provisionally until we adapt get_output()
       impact_detailed <-
-        output[["health_detailed"]][["raw"]] |>
+        output_health[["health_detailed"]][["raw"]] |>
 
         ## Calculate total, discounted life years (single value) per sex & ci
         dplyr::mutate(
@@ -159,11 +160,11 @@ include_monetization <- function(approach_discount = "direct",
 
       # Duplicate output to work with monetization
       output_monetization <-
-        output
+        output_healthiar
 
       # Apply the function in main and detailed results
       output_monetization[["monetization_main"]] <-
-        healthiar:::add_monetized_impact(df = output[["health_main"]],
+        healthiar:::add_monetized_impact(df = output_healthiar[["health_main"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
@@ -171,7 +172,7 @@ include_monetization <- function(approach_discount = "direct",
                                          discount_overtime = discount_overtime)
 
       output_monetization[["monetization_detailed"]]<-
-        healthiar:::add_monetized_impact(df = output[["health_detailed"]][["raw"]],
+        healthiar:::add_monetized_impact(df = output_healthiar[["health_detailed"]][["raw"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
@@ -207,7 +208,7 @@ include_monetization <- function(approach_discount = "direct",
 
     # Using user input ####
     # If the user only provide a number of the impact (not based on output of attribute)
-    }else if(!is.null(impact) & is.null(output)){
+    }else if(!is.null(impact) & is.null(output_healthiar)){
 
 
       # The approach cannot be indirect
