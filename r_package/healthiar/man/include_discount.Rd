@@ -8,7 +8,7 @@ include_discount(
   approach_discount = "direct",
   output = NULL,
   impact = NULL,
-  corrected_discount_rate = NULL,
+  discount_rate = NULL,
   discount_years = 1,
   discount_shape = NULL,
   discount_overtime = "all_years"
@@ -21,7 +21,7 @@ include_discount(
 
 \item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function).}
 
-\item{corrected_discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
+\item{discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
 
 \item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
 

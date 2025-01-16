@@ -9,7 +9,7 @@ include_monetization(
   output = NULL,
   impact = NULL,
   valuation,
-  corrected_discount_rate = NULL,
+  discount_rate = NULL,
   discount_shape = NULL,
   discount_years = 1,
   discount_overtime = "all_years"
@@ -24,7 +24,7 @@ include_monetization(
 
 \item{valuation}{\code{Numberic value} referring to unit value of a health impact}
 
-\item{corrected_discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
+\item{discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 

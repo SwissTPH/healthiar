@@ -10,8 +10,8 @@ test_that("results correct cba with direct discounting and exponential discounti
         valuation = 20,
         cost = 100,
         discount_shape = "exponential",
-        corrected_discount_rate_benefit = 0.03,
-        corrected_discount_rate_cost = 0.03,
+        discount_rate_benefit = 0.03,
+        discount_rate_cost = 0.03,
         discount_years_benefit = 5,
         discount_years_cost = 5,
         discount_overtime = "last_year") |>
@@ -48,8 +48,8 @@ test_that("results correct cba discounting only one specific year with direct di
         valuation = 20,
         cost = 100,
         discount_shape = "exponential",
-        corrected_discount_rate_benefit = 0.03,
-        corrected_discount_rate_cost = 0.03,
+        discount_rate_benefit = 0.03,
+        discount_rate_cost = 0.03,
         discount_years_benefit = 5,
         discount_years_cost = 5,
         discount_overtime = "last_year") |>
