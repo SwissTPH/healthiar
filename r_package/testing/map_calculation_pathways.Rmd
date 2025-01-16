@@ -1,0 +1,80 @@
+---
+title: "map_calculation_pathtways"
+author: "Axel Luyten"
+output: html_document
+---
+
+To limit the number of possible pathways there is one pathway per major calculation group:
+- rr
+- ar
+- lifetable
+- social analysis
+- monetization
+
+```{r Example}
+library(DiagrammeR) ; library(data.tree)
+knitr::opts_knit$set(root.dir = getwd()) 
+
+steps <- list(
+  ERF_shape = c("linear", "log-linear"),
+  cutoff = c(0, 5),
+  exposure_metric = c("mean", "median", "P95"),
+  population_subgroup = c("all", "adults", "children")
+)
+
+## Get all possible combinations: each row is a unique pathway
+pathways <- expand.grid(steps)
+
+pathways <- pathways |> 
+  dplyr::mutate(pathway_id = seq_len(nrow(pathways)))
+
+DiagrammeR::grViz("
+  digraph pathways {
+    rankdir=LR;
+    node [shape = rectangle];
+    A [label = 'ERF Shape'];
+    B [label = 'Cutoff'];
+    C [label = 'Exposure Metric'];
+    D [label = 'Population Subgroup'];
+
+    A -> B -> C -> D;
+  }
+")
+
+## Build tree with {data.tree}
+create_tree <- function(steps, current_node) {
+  step_name <- names(steps)[1]  # Get the current step name
+  options <- steps[[1]]        # Get the options for the current step
+  remaining_steps <- steps[-1] # Remove the current step from the list
+  
+  for (option in options) {
+    child <- current_node$AddChild(option)  # Add child node for each option
+    if (length(remaining_steps) > 0) {
+      create_tree(remaining_steps, child)  # Recursive call for remaining steps
+    }
+  }
+}
+root <- Node$new("Start")
+create_tree(steps, root)
+print(root, "level")
+plot(root)
+```
+
+
+```{r Pathways rr non-lifetable}
+ov_rr <- list(
+  erf = c("lin", "log-lin", "user-defined"),
+  cutoff = c(0, 5),
+  exposure_metric = c("mean", "median", "P95"),
+  population_subgroup = c("all", "adults", "children")
+)
+```
+
+```{r Pathways ar}
+
+```
+
+```{r Pathways lifetable}
+
+```
+
