@@ -7,7 +7,7 @@
 add_monetized_impact(
   df,
   valuation,
-  corrected_discount_rate,
+  discount_rate,
   discount_years,
   discount_shape,
   discount_overtime
@@ -18,7 +18,7 @@ add_monetized_impact(
 
 \item{valuation}{\code{Numberic value} referring to unit value of a health impact}
 
-\item{corrected_discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
+\item{discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
 
 \item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
 

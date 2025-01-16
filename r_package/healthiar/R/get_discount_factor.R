@@ -8,32 +8,32 @@
 #' @export
 
 get_discount_factor <-
-  function(corrected_discount_rate,
+  function(discount_rate,
            discount_year,
            discount_shape = "exponential"){
 
 
-    # If no corrected_discount_rate is provided,
+    # If no discount_rate is provided,
     # then assume discount_factor = 1
     # This does not change the results
 
-    if(any(is.null(corrected_discount_rate),
+    if(any(is.null(discount_rate),
            is.null(discount_shape))){
 
       discount_factor <- 1
     } else{
-      # If there is a corrected_discount_rate,
+      # If there is a discount_rate,
       # apply the function get_discount_factor()
 
 
       discount_factor <-
         ifelse(
           discount_shape == "exponential",
-          1/((1 + corrected_discount_rate) ^ discount_year),
+          1/((1 + discount_rate) ^ discount_year),
           ifelse(discount_shape == "hyperbolic_harvey_1986",
-                 1/((1 + discount_year) ^ corrected_discount_rate),
+                 1/((1 + discount_year) ^ discount_rate),
                  ifelse(discount_shape == "hyperbolic_mazur_1987",
-                        1/(1 + corrected_discount_rate * discount_year),
+                        1/(1 + discount_rate * discount_year),
                         NA)))
 
     }

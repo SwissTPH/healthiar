@@ -120,7 +120,7 @@ library(healthiar)
 #     rr_central = data$relative_risk,                            # 1.36
 #     rr_lower = data$relative_risk_lower,                        # 1.124
 #     rr_upper = data$relative_risk_upper,                        # 1.664
-#     erf_increment = 10,                                           
+#     rr_increment = 10,                                           
 #     erf_shape = "log_linear", 
 #     info = "pm_copd_assessment_1")
 
@@ -141,7 +141,7 @@ library(healthiar)
   #   rr_central = data$relative_risk,                            # 1.36
   #   rr_lower = data$relative_risk_lower,                        # 1.124
   #   rr_upper = data$relative_risk_upper,                        # 1.664
-  #   erf_increment = 10,                                           
+  #   rr_increment = 10,                                           
   #   erf_shape = "log_linear", 
   #   info = "pm_copd_assessment_1",
   #   population = 1E6)
@@ -183,7 +183,7 @@ bestcost_pm_copd <-
     rr_central = airqplus_pm_copd$relative_risk, 
     rr_lower = airqplus_pm_copd$relative_risk_lower,
     rr_upper = airqplus_pm_copd$relative_risk_upper,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
 
@@ -222,7 +222,7 @@ bestcost_pm_copd_multiple <-
     rr_central = airqplus_pm_copd$relative_risk, 
     rr_lower = airqplus_pm_copd$relative_risk_lower,
     rr_upper = airqplus_pm_copd$relative_risk_upper,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
 
@@ -248,10 +248,10 @@ system.time(
       rr_central = 1.369, 
       rr_lower = 1.124,
       rr_upper = 1.664,
-      erf_increment = 10, 
+      rr_increment = 10, 
       erf_shape = "log_linear", 
       population = as.list(rep(1E6, 1E4)),
-      geo_id_raw = 1:1E4, 
+      geo_id_disaggregated = 1:1E4, 
       geo_id_aggregated = rep("CH", 1E4),
       info = "PM2.5_copd")
   )
@@ -273,9 +273,9 @@ system.time(bestcost_pm_copd_geo_short <-
     rr_central = 1.369, 
     rr_lower = 1.124,
     rr_upper = 1.664,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
-    geo_id_raw = 1:1E1, 
+    geo_id_disaggregated = 1:1E1, 
     geo_id_aggregated = rep("CH", 1E1),
     info = "PM2.5_copd"))
 
@@ -349,7 +349,7 @@ bestcost_pm_copd_1rr <-
     cutoff_upper = airqplus_pm_copd$cut_off_value + 1,
     bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
     rr_central = airqplus_pm_copd$relative_risk,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
 
@@ -396,7 +396,7 @@ bestcost_noise_ihd_expDist <-
     rr_central = 1.08,
     # rr_lower = 1.08 - 0.02,
     # rr_upper = 1.08 + 0.02,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     info = data.frame(pollutant = "road_noise", outcome = "YLD"))
 
@@ -419,9 +419,9 @@ bestcost_noise_ihd_expDist_geo <-
                         runif_with_seed(5,0.1,1,3)),
     bhd_central = list(runif_with_seed(3,1E4,1E5,1)),
     rr_central = 1.08,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
-    geo_id_raw = 1:3,
+    geo_id_disaggregated = 1:3,
     geo_id_aggregated = rep("ch", 3),
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
 
@@ -532,7 +532,7 @@ bestcost_noise_ha_ar_geo <-
                         runif_with_seed(5,0,1,2), 
                         runif_with_seed(5,0,1,3)), 
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-    geo_id_raw = 1:3,
+    geo_id_disaggregated = 1:3,
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
 
 ```
@@ -548,7 +548,7 @@ bestcost_pm_yld_singlebhd  <-
     rr_central = 1.118,
     rr_lower = 1.060, 
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
     duration_central = 1, duration_lower = 0.5, duration_upper = 10)
@@ -572,15 +572,15 @@ bestcost_pm_death <-
     cutoff_central = 0,
     rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10) 
     erf_shape = "log_linear", 
-    erf_increment = 10,
+    rr_increment = 10,
     bhd_central = as.list(social_data$MORTALITY_TOTAL),
     population = social_data$POPULATION,
-    geo_id_raw = social_data$CS01012020)
+    geo_id_disaggregated = social_data$CS01012020)
 
 # Then include social indicators of deprivation 
 bestcost_pm_death_social_decile <- 
   healthiar::include_social(output = bestcost_pm_death,
-                            geo_id_raw = social_data$CS01012020,
+                            geo_id_disaggregated = social_data$CS01012020,
                             social_indicator = social_data$score,
                             n_quantile = 10,
                             approach = "quantile")
@@ -589,8 +589,7 @@ View(bestcost_pm_death_social_decile)
 
 # Check that results did not change over time
 check_general(
-  # a = bestcost_pm_death_social_decile[["social_main"]]$difference_value,
-  a = bestcost_pm_death_social_decile[["social_main"]][["original_layout"]]$difference_value,
+  a = bestcost_pm_death_social_decile[["social_main"]]$difference_value,
   b = c(22.52416423, 0.32236823, 14.5680866,0.17252793)  # Results on 21 Nov 2024
   )
 
@@ -606,10 +605,10 @@ bestcost_pm_death <-
     cutoff_central = 0,
     rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10) 
     erf_shape = "log_linear", 
-    erf_increment = 10,
+    rr_increment = 10,
     bhd_central = as.list(social_data$MORTALITY_TOTAL),
     population = social_data$POPULATION,
-    geo_id_raw = social_data$CS01012020)
+    geo_id_disaggregated = social_data$CS01012020)
 
 # Then include social indicators of deprivation 
 bestcost_pm_death_social_decile_impact_vector <- 
@@ -618,7 +617,7 @@ bestcost_pm_death_social_decile_impact_vector <-
                             bhd = bestcost_pm_death[["health_main"]]$bhd,
                             exp = bestcost_pm_death[["health_main"]]$exp,
                             pop_fraction = bestcost_pm_death[["health_main"]]$pop_fraction,
-                            geo_id_raw = social_data$CS01012020,
+                            geo_id_disaggregated = social_data$CS01012020,
                             social_indicator = social_data$score,
                             n_quantile = 10,
                             approach = "quantile")
@@ -651,7 +650,7 @@ bestcost_pm_copd_with_summary_uncertainty <-
     rr_central = 1.118,
     rr_lower = 1.060, 
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear"
     )
 
@@ -688,9 +687,9 @@ bestcost_pm_copd_geo_short <-
     rr_central = 1.369, 
     rr_lower = 1.124,
     rr_upper = 1.664,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
-    geo_id_raw = 1:1E1, 
+    geo_id_disaggregated = 1:1E1, 
     geo_id_aggregated = rep("CH", 1E1),
     info = "PM2.5_copd")
 
@@ -737,7 +736,7 @@ bestcost_noise_ihd_expDist <-
     rr_central = 1.08,
     rr_lower = 1.08 - 0.02,
     rr_upper = 1.08 + 0.02,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     info = data.frame(pollutant = "road_noise", outcome = "YLD"))
 
@@ -786,9 +785,9 @@ bestcost_noise_ihd_expDist_iteration <-
     rr_central = 1.08,
     # rr_lower = 1.08 - 0.02,
     # rr_upper = 1.08 + 0.02,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
-    geo_id_raw = 1:3, 
+    geo_id_disaggregated = 1:3, 
     geo_id_aggregated = rep("CH", 3),
     info = data.frame(pollutant = "road_noise", outcome = "YLD"))
 # View(bestcost_noise_ihd_expDist_iteration)
@@ -836,7 +835,7 @@ bestcost_pm_yld_singlebhd_with_summary_uncertainty  <-
     rr_central = 1.118,
     rr_lower = 1.060, 
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     # dw_central = 0.9, dw_lower = 0.88, dw_upper = 0.93,
     dw_central = 0.5, dw_lower = 0.25, dw_upper = 0.75,
@@ -916,7 +915,7 @@ bestcost_noise_ha_ar_iteration <-
                         runif_with_seed(1,5E3,1E4,2), 
                         runif_with_seed(1,5E3,1E4,3)),
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-    geo_id_raw = 1:3, 
+    geo_id_disaggregated = 1:3, 
     geo_id_aggregated = rep("CH", 3),
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"),
     )
@@ -1036,7 +1035,7 @@ bestcost_noise_ha_ar_iteration_with_erf_eq <-
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
     erf_eq_lower = "78.9270-3.1162*c+0.034*c^2",
     erf_eq_upper = "78.9270-3.1162*c+0.04*c^2",
-    geo_id_raw = 1:3, 
+    geo_id_disaggregated = 1:3, 
     geo_id_aggregated = rep("CH", 3),
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"),
     )
@@ -1069,7 +1068,7 @@ bestcost_pm_no2_mortality_additive <-
     cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
     bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
     rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-    erf_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
+    rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
     erf_shape = "log_linear")
 
 # View(bestcost_pm_copd_1rr)
@@ -1088,7 +1087,7 @@ bestcost_pm_no2_mortality_multiplicative <-
     cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
     bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
     rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-    erf_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
+    rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
     erf_shape = "log_linear")
 
 # View(bestcost_pm_copd_1rr)
@@ -1107,7 +1106,7 @@ bestcost_pm_no2_mortality_multiplicative <-
     cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
     bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
     rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-    erf_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
+    rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
     erf_shape = "log_linear")
 
 # View(bestcost_pm_copd_1rr)
@@ -1135,7 +1134,7 @@ bestcost_pm_deaths_lifetable_airqplus <-
     rr_central = airqplus_pm_deaths_yll[["input"]]$relative_risk,
     rr_lower = airqplus_pm_deaths_yll[["input"]]$relative_risk_lower,
     rr_upper = airqplus_pm_deaths_yll[["input"]]$relative_risk_upper,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = gsub("-", "_", airqplus_pm_deaths_yll[["input"]]$calculation_method),
     first_age_pop = first(airqplus_pm_deaths_yll[["pop"]]$age_from...),
     last_age_pop = last(airqplus_pm_deaths_yll[["pop"]]$age_from...),
@@ -1165,7 +1164,7 @@ bestcost_pm_deaths_lifetable_expDistribution <-
       rr_central = airqplus_pm_deaths_yll[["input"]]$relative_risk,
       rr_lower = airqplus_pm_deaths_yll[["input"]]$relative_risk_lower,
       rr_upper = airqplus_pm_deaths_yll[["input"]]$relative_risk_upper,
-      erf_increment = 10, 
+      rr_increment = 10, 
       erf_shape = "log_linear",
       first_age_pop = 0,
       last_age_pop = 99,
@@ -1201,7 +1200,7 @@ bestcost_pm_yll_exposure_single_year_lifetable_geluft <-
     rr_central = input_data_mortality[2,"rr_central"], 
     rr_lower = input_data_mortality[2,"rr_lower"], 
     rr_upper =input_data_mortality[2,"rr_upper"], 
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop = 0,
     last_age_pop = 99,
@@ -1236,7 +1235,7 @@ bestcost_pm_yll_lifetable_airqplus <-
     rr_central = airqplus_pm_deaths_yll[["input"]]$relative_risk,
     rr_lower = airqplus_pm_deaths_yll[["input"]]$relative_risk_lower,
     rr_upper = airqplus_pm_deaths_yll[["input"]]$relative_risk_upper,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = gsub("-", "_", airqplus_pm_deaths_yll[["input"]]$calculation_method),
     first_age_pop = first(airqplus_pm_deaths_yll[["pop"]]$age_from...),
     last_age_pop = last(airqplus_pm_deaths_yll[["pop"]]$age_from...),
@@ -1271,7 +1270,7 @@ bestcost_pm_yll_lifetable_airqplus_with_newborns <-
     rr_central = airqplus_pm_deaths_yll[["input"]]$relative_risk,
     rr_lower = airqplus_pm_deaths_yll[["input"]]$relative_risk_lower,
     rr_upper = airqplus_pm_deaths_yll[["input"]]$relative_risk_upper,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = gsub("-", "_", airqplus_pm_deaths_yll[["input"]]$calculation_method),
     first_age_pop = first(airqplus_pm_deaths_yll[["pop"]]$age_from...),
     last_age_pop = last(airqplus_pm_deaths_yll[["pop"]]$age_from...),
@@ -1302,7 +1301,7 @@ bestcost_pm_yll_lifetable_1rr_geluft <-
       prop_pop_exp = 1,
       cutoff_central = input_data_mortality$cutoff[2], 
       rr_central = input_data_mortality[2,"rr_central"], 
-      erf_increment = 10, 
+      rr_increment = 10, 
       erf_shape = "log_linear",
       first_age_pop = 0,
       last_age_pop = 99,
@@ -1336,7 +1335,7 @@ bestcost_pm_yll_lifetable_expDistribution_geluft <-
       rr_central = input_data_mortality[2,"rr_central"], 
       rr_lower = input_data_mortality[2,"rr_lower"], 
       rr_upper =input_data_mortality[2,"rr_upper"], 
-      erf_increment = 10,
+      rr_increment = 10,
       erf_shape = "log_linear",
       first_age_pop = 0,
       last_age_pop = 99,
@@ -1377,7 +1376,7 @@ bestcost_pm_yld_lifetable_geluft  <-
     rr_central = input_data_mortality[2,"rr_central"], 
     rr_lower = input_data_mortality[2,"rr_lower"], 
     rr_upper = input_data_mortality[2,"rr_upper"], 
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     approach_exposure = "single_year",
     first_age_pop = 0,
@@ -1422,7 +1421,7 @@ bestcost_pm_daly_lifetable_geluft  <-
     rr_central = input_data_mortality[2,"rr_central"], 
     rr_lower = input_data_mortality[2,"rr_lower"], 
     rr_upper =input_data_mortality[2,"rr_upper"], 
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop = 0,
     last_age_pop = 99,
@@ -1471,7 +1470,7 @@ comparison_singlebhd_rr_delta <-
     rr_central = 1.118, 
     rr_lower = 1.060, 
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     info_1 = "PM2.5_mortality_2010",
     info_2 = "PM2.5_mortality_2020")
@@ -1496,7 +1495,7 @@ comparison_singlebhd_rr_delta_same_impact <-
     rr_central = 1.118, 
     rr_lower = 1.060, 
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     info_1 = "PM2.5_mortality_2010",
     info_2 = "PM2.5_mortality_2020")
@@ -1515,11 +1514,11 @@ comparison_singlebhd_rr_delta_geo <-
     rr_central = 1.118, 
     rr_lower = 1.060, 
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     info_1 = "PM2.5_mortality_2010",
     info_2 = "PM2.5_mortality_2020",
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
 # View(comparison_singlebhd_rr_delta_geo)
@@ -1542,7 +1541,7 @@ comparison_singlebhd_rr_pif <-
     rr_central = 1.118, 
     rr_lower = 1.060, 
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     info_1 = "PM2.5_mortality_2010",
     info_2 = "PM2.5_mortality_2020")
@@ -1566,11 +1565,11 @@ comparison_singlebhd_rr_pif_geo <-
     rr_central = 1.118, 
     rr_lower = 1.060, 
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     info_1 = "PM2.5_mortality_2010",
     info_2 = "PM2.5_mortality_2020",
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
 # View(comparison_singlebhd_rr_pif_geo)
@@ -1603,9 +1602,9 @@ comparison_singlebhd_rr_geo <-
     rr_central = 1.369, 
     rr_lower = 1.124,
     rr_upper = 1.664,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
-    geo_id_raw = 1:1E4, 
+    geo_id_disaggregated = 1:1E4, 
     geo_id_aggregated = rep("CH", 1E4),
     info_1 = "PM2.5_mortality_2010",
     info_2 = "PM2.5_mortality_2020")
@@ -1660,7 +1659,7 @@ comparison_singlebhd_ar_delta_geo <-
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
     info_1 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2020),
     info_2 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2022),
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
 # View(comparison_singlebhd_ar_delta_geo)
@@ -1684,7 +1683,7 @@ comparison_yld_singlebhd_rr_delta <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     dw_central = 0.5,
     duration_central = 1,
@@ -1714,13 +1713,13 @@ comparison_yld_singlebhd_rr_delta_geo <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     dw_central = 0.5,
     duration_central = 1,
     info_1 = "PM2.5_yld_before",
     info_2 = "PM2.5_yld_after",
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
 # View(comparison_yld_singlebhd_rr_delta_geo)
@@ -1744,7 +1743,7 @@ comparison_yld_singlebhd_rr_pif <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     dw_central = 0.5,
     duration_central = 1,
@@ -1774,13 +1773,13 @@ comparison_yld_singlebhd_rr_pif_geo <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear", 
     dw_central = 0.5,
     duration_central = 1,
     info_1 = "PM2.5_yld_before",
     info_2 = "PM2.5_yld_after",
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
 # View(comparison_yld_singlebhd_rr_pif_geo)
@@ -1810,7 +1809,7 @@ comparison_deaths_lifetable_delta <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -1852,7 +1851,7 @@ comparison_deaths_lifetable_delta_geo <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -1871,7 +1870,7 @@ comparison_deaths_lifetable_delta_geo <-
     info_1 = input_data_mortality$pollutant[2],
     info_2 = input_data_mortality$pollutant[2], 
     min_age = 20,
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
 # View(comparison_deaths_lifetable_delta_geo)
@@ -1884,15 +1883,15 @@ check_bestcost(result_list_bestcost = comparison_deaths_lifetable_delta_geo ,
 
 
 # Additionally check that it produces the first scenario produce the same results as above
-# comparison_deaths_lifetable_delta_geo[["health_detailed"]][["scenario_1"]][["health_detailed"]][["raw"]] |>  dplyr::filter(., geo_id_raw %in% "a") |> select(., impact)  |> pull(.) == bestcost_pm_deaths_lifetable_geluft[["health_main"]]$impact 
+# comparison_deaths_lifetable_delta_geo[["health_detailed"]][["scenario_1"]][["health_detailed"]][["raw"]] |>  dplyr::filter(., geo_id_disaggregated %in% "a") |> select(., impact)  |> pull(.) == bestcost_pm_deaths_lifetable_geluft[["health_main"]]$impact 
 round(comparison_deaths_lifetable_delta_geo[["health_detailed"]][["scenario_1"]][["health_detailed"]][["raw"]] |>  
-        dplyr::filter(geo_id_raw %in% "a") |> 
+        dplyr::filter(geo_id_disaggregated %in% "a") |> 
         select(impact)  |> 
         pull(), digits = 0) == 
   round(bestcost_pm_deaths_lifetable_airqplus[["health_main"]]$impact)
 # Absolute differences
 abs(comparison_deaths_lifetable_delta_geo[["health_detailed"]][["scenario_1"]][["health_detailed"]][["raw"]] |>  
-      dplyr::filter(geo_id_raw %in% "a") |> select(impact)  |> pull() 
+      dplyr::filter(geo_id_disaggregated %in% "a") |> select(impact)  |> pull() 
     - bestcost_pm_deaths_lifetable_airqplus[["health_main"]]$impact)
 # Absolute differences are negligeable (< 0.01, or < 0.0001%)
       
@@ -1909,7 +1908,7 @@ comparison_deaths_lifetable_pif  <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -1952,7 +1951,7 @@ comparison_deaths_lifetable_pif_geo <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -1971,7 +1970,7 @@ comparison_deaths_lifetable_pif_geo <-
     info_1 = input_data_mortality$pollutant[2],
     info_2 = input_data_mortality$pollutant[2], 
     min_age = 20,
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
 # View(comparison_deaths_lifetable_pif_geo)
@@ -1999,7 +1998,7 @@ comparison_yll_lifetable_delta  <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     approach_exposure_1 = "single_year",
     approach_newborns_1 = "without_newborns",
@@ -2047,7 +2046,7 @@ comparison_yll_lifetable_delta_geo <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     approach_exposure_1 = "single_year",
     first_age_pop_1 = 0,
@@ -2068,7 +2067,7 @@ comparison_yll_lifetable_delta_geo <-
     info_1 = input_data_mortality$pollutant[2],
     info_2 = input_data_mortality$pollutant[2], 
     min_age = 20,
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
 # View(comparison_yll_lifetable_delta_geo)
@@ -2091,7 +2090,7 @@ comparison_yll_lifetable_pif <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     approach_exposure_1 = "single_year",
     first_age_pop_1 = 0,
@@ -2136,7 +2135,7 @@ comparison_yll_lifetable_pif_geo <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -2155,7 +2154,7 @@ comparison_yll_lifetable_pif_geo <-
     info_1 = input_data_mortality$pollutant[2],
     info_2 = input_data_mortality$pollutant[2], 
     min_age = 20,
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
 # View(comparison_yll_lifetable_pif_geo)
@@ -2183,7 +2182,7 @@ comparison_yld_lifetable_delta  <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -2227,7 +2226,7 @@ comparison_yld_lifetable_delta_geo <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -2246,7 +2245,7 @@ comparison_yld_lifetable_delta_geo <-
     info_1 = input_data_mortality$pollutant[2],
     info_2 = input_data_mortality$pollutant[2], 
     min_age = 20,
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2),
     duration_central = 100,
     dw_central = 1)
@@ -2271,7 +2270,7 @@ comparison_yld_lifetable_pif <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -2315,7 +2314,7 @@ comparison_yld_lifetable_pif_geo <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -2334,7 +2333,7 @@ comparison_yld_lifetable_pif_geo <-
     info_1 = input_data_mortality$pollutant[2],
     info_2 = input_data_mortality$pollutant[2], 
     min_age = 20,
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2),
     duration_central = 100,
     dw_central = 1)
@@ -2364,7 +2363,7 @@ comparison_daly_lifetable_delta  <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -2408,7 +2407,7 @@ comparison_daly_lifetable_delta_geo <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -2427,7 +2426,7 @@ comparison_daly_lifetable_delta_geo <-
     info_1 = input_data_mortality$pollutant[2],
     info_2 = input_data_mortality$pollutant[2], 
     min_age = 20,
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2),
     duration_central = 100,
     dw_central = 1)
@@ -2452,7 +2451,7 @@ comparison_daly_lifetable_pif <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -2496,7 +2495,7 @@ comparison_daly_lifetable_pif_geo <-
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
-    erf_increment = 10, 
+    rr_increment = 10, 
     erf_shape = "log_linear",
     first_age_pop_1 = 0,
     last_age_pop_1 = 99,
@@ -2515,7 +2514,7 @@ comparison_daly_lifetable_pif_geo <-
     info_1 = input_data_mortality$pollutant[2],
     info_2 = input_data_mortality$pollutant[2], 
     min_age = 20,
-    geo_id_raw = c("a", "b"),
+    geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2),
     duration_central = 100,
     dw_central = 1)
@@ -2535,7 +2534,7 @@ check_bestcost(result_list_bestcost = comparison_daly_lifetable_pif_geo ,
 ```{r Monetize a simple case}
 # Monetize only with valuation
 bestcost_pm_copd_costs <- 
-  healthiar::include_monetization(output = bestcost_pm_copd, 
+  healthiar::include_monetization(output_healthiar = bestcost_pm_copd, 
                                   valuation = 1000)
 check_general(bestcost_pm_copd_costs[["monetization_main"]]$monetized_impact_rounded,
               round(bestcost_pm_copd[["health_main"]]$impact * 1000))
@@ -2544,25 +2543,28 @@ check_general(bestcost_pm_copd_costs[["monetization_main"]]$monetized_impact_rou
 # Direct discounting
 ## Monetize with all arguments (including discount)
 bestcost_pm_copd_costs_discount <- 
-  healthiar::include_monetization(approach_discount = "direct",
-                          output = bestcost_pm_copd, 
-                          discount_shape = "exponential",
-                          corrected_discount_rate = 0.03,
-                          discount_years = 5,
-                          valuation = 20,
-                          discount_overtime = "last_year")
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    output_healthiar = bestcost_pm_copd,
+    discount_shape = "exponential",
+    discount_rate = 0.03,
+    discount_years = 5,
+    valuation = 20,
+    discount_overtime = "last_year")
 
 check_general(bestcost_pm_copd_costs_discount[["monetization_main"]]$monetized_impact_rounded,
               c(60416, 23343, 94436)) # Result on 9 Jan 2025
 
 ## Monetize with impact (without output of attribute)
 bestcost_pm_copd_cost_discount_single_value <- 
-  healthiar::include_monetization(approach_discount = "direct",
-                          impact = 2E4, 
-                          discount_shape = "exponential",
-                          corrected_discount_rate = 0.03,
-                          discount_years = 20,
-                          valuation = 1)
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    impact = 2E4, 
+    discount_shape = "exponential",
+    discount_rate = 0.03,
+    discount_years = 20,
+    valuation = 1)
+
 check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
               14877)
 ## According to ChatGPT, the result should be 14877. 5 Dec 2024
@@ -2571,13 +2573,15 @@ check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]
 
 ## Discounting only one specific year
 bestcost_pm_copd_cost_discount_single_value <-
-  healthiar::include_monetization(approach_discount = "direct",
-                          impact = 50,
-                          discount_shape = "exponential",
-                          corrected_discount_rate = 0.03,
-                          discount_years = 5,
-                          discount_overtime = "last_year",
-                          valuation = 20)
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    impact = 50,
+    discount_shape = "exponential",
+    discount_rate = 0.03,
+    discount_years = 5,
+    discount_overtime = "last_year",
+    valuation = 20)
+
 check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
               863) # As indicated by University of Port in Excel file
 
@@ -2586,11 +2590,12 @@ check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]
 # Indirect approach. 
 ## valuation=1 to compare results with only discounting
 bestcost_pm_yll_lifetable_geluft_indirect <- 
-  healthiar::include_monetization(approach_discount = "indirect",
-                          output = bestcost_pm_yll_exposure_single_year_lifetable_geluft, 
-                          discount_shape = "exponential",
-                          corrected_discount_rate = 0.01,
-                          valuation = 1)
+  healthiar::include_monetization(
+    approach_discount = "indirect",
+    output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft, 
+    discount_shape = "exponential",
+    discount_rate = 0.01,
+    valuation = 1)
 
 check_general(bestcost_pm_yll_lifetable_geluft_discount[["monetization_main"]]$monetized_impact_rounded,
               c(26493, 13877, 39006))
@@ -2606,7 +2611,7 @@ bestcost_pm_copd_discount <-
     approach_discount = "direct",
     impact = 2E4,
     discount_shape = "exponential",
-    corrected_discount_rate = 0.03,
+    discount_rate = 0.03,
     discount_years = 20)
 
 check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_rounded,
@@ -2625,8 +2630,8 @@ bestcost_pm_copd_cba <-
     valuation = 20,
     cost = 100,
     discount_shape = "exponential",
-    corrected_discount_rate_benefit = 0.03,
-    corrected_discount_rate_cost = 0.03,
+    discount_rate_benefit = 0.03,
+    discount_rate_cost = 0.03,
     discount_years_benefit = 5,
     discount_years_cost = 5,
     discount_overtime = "last_year")
@@ -2638,12 +2643,12 @@ check_general(bestcost_pm_copd_cba[["cba_main"]]$benefit_minus_cost_rounded,
 bestcost_pm_copd_cba_output <-
   healthiar::include_cba(
     approach_discount = "direct",
-    output = bestcost_pm_copd,
+    output_healthiar = bestcost_pm_copd,
     valuation = 20,
     cost = 100,
     discount_shape = "exponential",
-    corrected_discount_rate_benefit = 0.03,
-    corrected_discount_rate_cost = 0.03,
+    discount_rate_benefit = 0.03,
+    discount_rate_cost = 0.03,
     discount_years_benefit = 5,
     discount_years_cost = 5,
     discount_overtime = "last_year")

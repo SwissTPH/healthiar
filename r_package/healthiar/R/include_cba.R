@@ -3,7 +3,7 @@
 #' @description Perform cost-benefit analysis assuming that the monitized health impact is a benefit
 #'
 #' @inheritParams include_monetization
-#' @param corrected_discount_rate_benefit,corrected_discount_rate_cost \code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates)
+#' @param discount_rate_benefit,discount_rate_cost \code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates)
 #' @param benefit \code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure
 #' @param cost \code{Numeric value} referring to the investment cost to achive the reduction of exposure
 #'
@@ -14,12 +14,12 @@
 #' @export
 include_cba <-
   function(approach_discount = "direct",
-           output = NULL,
+           output_healthiar = NULL,
            positive_impact = NULL,
            valuation,
            cost,
-           corrected_discount_rate_benefit = NULL,
-           corrected_discount_rate_cost = NULL,
+           discount_rate_benefit = NULL,
+           discount_rate_cost = NULL,
            discount_shape = NULL,
            discount_years_benefit = 1,
            discount_years_cost = 1,
@@ -43,9 +43,9 @@ include_cba <-
     cba_detailed_benefit <-
       healthiar::include_monetization(
         approach_discount = approach_discount,
-        output = output,
+        output_healthiar = output_healthiar,
         impact = positive_impact,
-        corrected_discount_rate = corrected_discount_rate_benefit,
+        discount_rate = discount_rate_benefit,
         discount_years = discount_years_benefit,
         discount_shape = discount_shape,
         discount_overtime = discount_overtime,
@@ -57,7 +57,7 @@ include_cba <-
         approach_discount = approach_discount,
         impact = 1,
         valuation = cost,
-        corrected_discount_rate = corrected_discount_rate_cost,
+        discount_rate = discount_rate_cost,
         discount_years = discount_years_cost,
         discount_shape = discount_shape,
         discount_overtime = discount_overtime)[["monetization_main"]]

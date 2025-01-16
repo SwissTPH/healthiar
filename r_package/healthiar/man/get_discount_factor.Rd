@@ -5,7 +5,7 @@
 \title{Get discount factor}
 \usage{
 get_discount_factor(
-  corrected_discount_rate,
+  discount_rate,
   discount_year,
   discount_shape = "exponential"
 )

@@ -10,13 +10,13 @@ testthat::test_that("results correct simple monetization", {
       rr_central = data$relative_risk,
       rr_lower = data$relative_risk_lower,
       rr_upper = data$relative_risk_upper,
-      erf_increment = 10,
+      rr_increment = 10,
       erf_shape = "log_linear",
       info = paste0(data$pollutant,"_", data$evaluation_name))
 
   testthat::expect_equal(
     object =
-      healthiar::include_monetization(output = bestcost_pm_copd,
+      healthiar::include_monetization(output_healthiar = bestcost_pm_copd,
                                       valuation = 1000) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
@@ -39,16 +39,16 @@ testthat::test_that("results correct direct discounting with discount factor and
       rr_central = data$relative_risk,
       rr_lower = data$relative_risk_lower,
       rr_upper = data$relative_risk_upper,
-      erf_increment = 10,
+      rr_increment = 10,
       erf_shape = "log_linear",
       info = paste0(data$pollutant,"_", data$evaluation_name))
 
   testthat::expect_equal(
     object =
       healthiar::include_monetization(approach_discount = "direct",
-                                      output = bestcost_pm_copd,
+                                      output_healthiar = bestcost_pm_copd,
                                       discount_shape = "exponential",
-                                      corrected_discount_rate = 0.03,
+                                      discount_rate = 0.03,
                                       discount_years = 5,
                                       valuation = 20,
                                       discount_overtime = "last_year") |>
@@ -69,7 +69,7 @@ testthat::test_that("results correct direct discounting with impact vector with 
       healthiar::include_monetization(approach_discount = "direct",
                                       impact = 2E4,
                                       discount_shape = "exponential",
-                                      corrected_discount_rate = 0.03,
+                                      discount_rate = 0.03,
                                       discount_years = 20,
                                       valuation = 1) |>
       purrr::pluck("monetization_main") |>
@@ -88,7 +88,7 @@ testthat::test_that("results correct direct discounting with impact vector disco
       healthiar::include_monetization(approach_discount = "direct",
                                       impact = 50,
                                       discount_shape = "exponential",
-                                      corrected_discount_rate = 0.03,
+                                      discount_rate = 0.03,
                                       discount_years = 5,
                                       discount_overtime = "last_year",
                                       valuation = 20) |>
@@ -117,7 +117,7 @@ testthat::test_that("results correct indirect discounting with exponential disco
       rr_central = data_mort[2,"rr_central"],
       rr_lower = data_mort[2,"rr_lower"],
       rr_upper =data_mort[2,"rr_upper"],
-      erf_increment = 10,
+      rr_increment = 10,
       erf_shape = "log_linear",
       first_age_pop = 0,
       last_age_pop = 99,
@@ -132,9 +132,9 @@ testthat::test_that("results correct indirect discounting with exponential disco
   testthat::expect_equal(
     object =
       healthiar::include_monetization(approach_discount = "indirect",
-                                      output = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
+                                      output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
                                       discount_shape = "exponential",
-                                      corrected_discount_rate = 0.01,
+                                      discount_rate = 0.01,
                                       valuation = 1) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
@@ -153,7 +153,7 @@ testthat::test_that("results correct direct discounting without valuation with e
         approach_discount = "direct",
         impact = 2E4,
         discount_shape = "exponential",
-        corrected_discount_rate = 0.03,
+        discount_rate = 0.03,
         discount_years = 20) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>

@@ -8,7 +8,7 @@ get_risk(
   rr = NULL,
   exp,
   cutoff = NULL,
-  erf_increment = NULL,
+  rr_increment = NULL,
   erf_shape = NULL,
   erf_eq = NULL
 )
@@ -20,7 +20,7 @@ get_risk(
 
 \item{cutoff}{\code{Numeric value} showing the cut-off exposure level in ug/m3 (i.e. the exposure level below which no health effects occur).}
 
-\item{erf_increment}{\code{Numeric value} showing the increment of the exposure-response function in ug/m3 (usually 10 or 5).}
+\item{rr_increment}{\code{Numeric value} showing the increment of the exposure-response function in ug/m3 (usually 10 or 5).}
 
 \item{erf_shape}{\code{String} showing the shape of the exposure-response function to be assumed using the relative risk from the literature as support point. Options: "linear", log_linear", "linear_log", "log_log".}
 
