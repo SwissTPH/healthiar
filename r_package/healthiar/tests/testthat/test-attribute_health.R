@@ -1,23 +1,23 @@
 test_that("result correct rr with single exposure and rr CIs", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        exp_central = airqplus_pm_copd$mean_concentration,
-        cutoff_central = airqplus_pm_copd$cut_off_value,
-        bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
-        rr_central = airqplus_pm_copd$relative_risk,
-        rr_lower = airqplus_pm_copd$relative_risk_lower,
-        rr_upper = airqplus_pm_copd$relative_risk_upper,
+        exp_central = data$mean_concentration,
+        cutoff_central = data$cut_off_value,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+        rr_central = data$relative_risk,
+        rr_lower = data$relative_risk_lower,
+        rr_upper = data$relative_risk_upper,
         erf_increment = 10,
         erf_shape = "log_linear",
-        info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)
+        info = paste0(data$pollutant,"_", data$evaluation_name)
       ) |>
       helper_extract_main_results(),
     expected =
-      airqplus_pm_copd |>
+      data |>
       dplyr::select(estimated_number_of_attributable_cases_central,
                     estimated_number_of_attributable_cases_lower,
                     estimated_number_of_attributable_cases_upper)|>
@@ -27,22 +27,22 @@ test_that("result correct rr with single exposure and rr CIs", {
 
 test_that("result correct rr with single exposure value and only rr_central", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        exp_central = airqplus_pm_copd$mean_concentration,
-        cutoff_central = airqplus_pm_copd$cut_off_value,
-        bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
-        rr_central = airqplus_pm_copd$relative_risk,
+        exp_central = data$mean_concentration,
+        cutoff_central = data$cut_off_value,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+        rr_central = data$relative_risk,
         erf_increment = 10,
         erf_shape = "log_linear",
-        info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)
+        info = paste0(data$pollutant,"_", data$evaluation_name)
         ) |>
       helper_extract_main_results(),
     expected =
-      airqplus_pm_copd |>
+      data |>
       dplyr::select(estimated_number_of_attributable_cases_central)|>
       base::as.numeric()
     )
@@ -51,56 +51,56 @@ test_that("result correct rr with single exposure value and only rr_central", {
 
 test_that("no error rr single exposure value with with uncertainties in 4 input variables", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
   testthat::expect_no_error(
     object =
       healthiar::attribute_health(
-        exp_central = airqplus_pm_copd$mean_concentration,
+        exp_central = data$mean_concentration,
         exp_lower = 8,
         exp_upper = 9,
-        cutoff_central = airqplus_pm_copd$cut_off_value,
-        cutoff_lower = airqplus_pm_copd$cut_off_value - 1,
-        cutoff_upper = airqplus_pm_copd$cut_off_value + 1,
-        bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+        cutoff_central = data$cut_off_value,
+        cutoff_lower = data$cut_off_value - 1,
+        cutoff_upper = data$cut_off_value + 1,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
         bhd_lower = 25000,
         bhd_upper = 35000,
-        rr_central = airqplus_pm_copd$relative_risk,
-        rr_lower = airqplus_pm_copd$relative_risk_lower,
-        rr_upper = airqplus_pm_copd$relative_risk_upper,
+        rr_central = data$relative_risk,
+        rr_lower = data$relative_risk_lower,
+        rr_upper = data$relative_risk_upper,
         erf_increment = 10,
         erf_shape = "log_linear",
-        info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)
+        info = paste0(data$pollutant,"_", data$evaluation_name)
         )
     )
 })
 
 test_that("main result correct rr single exposure value with uncertainties in 4 input variables", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        exp_central = airqplus_pm_copd$mean_concentration,
+        exp_central = data$mean_concentration,
         exp_lower = 8,
         exp_upper = 9,
-        cutoff_central = airqplus_pm_copd$cut_off_value,
-        cutoff_lower = airqplus_pm_copd$cut_off_value - 1,
-        cutoff_upper = airqplus_pm_copd$cut_off_value + 1,
-        bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+        cutoff_central = data$cut_off_value,
+        cutoff_lower = data$cut_off_value - 1,
+        cutoff_upper = data$cut_off_value + 1,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
         bhd_lower = 25000,
         bhd_upper = 35000,
-        rr_central = airqplus_pm_copd$relative_risk,
-        rr_lower = airqplus_pm_copd$relative_risk_lower,
-        rr_upper = airqplus_pm_copd$relative_risk_upper,
+        rr_central = data$relative_risk,
+        rr_lower = data$relative_risk_lower,
+        rr_upper = data$relative_risk_upper,
         erf_increment = 10,
         erf_shape = "log_linear",
-        info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)
+        info = paste0(data$pollutant,"_", data$evaluation_name)
         ) |>
       helper_extract_main_results(),
   expected =
-    airqplus_pm_copd |>
+    data |>
     dplyr::select(estimated_number_of_attributable_cases_central,
                   estimated_number_of_attributable_cases_lower,
                   estimated_number_of_attributable_cases_upper)|>
@@ -110,26 +110,26 @@ test_that("main result correct rr single exposure value with uncertainties in 4 
 
 test_that("number of rows in detailed results correct rr single exposure value with uncertainties in 4 input variables", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        exp_central = airqplus_pm_copd$mean_concentration,
+        exp_central = data$mean_concentration,
         exp_lower = 8,
         exp_upper = 9,
-        cutoff_central = airqplus_pm_copd$cut_off_value,
-        cutoff_lower = airqplus_pm_copd$cut_off_value - 1,
-        cutoff_upper = airqplus_pm_copd$cut_off_value + 1,
-        bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+        cutoff_central = data$cut_off_value,
+        cutoff_lower = data$cut_off_value - 1,
+        cutoff_upper = data$cut_off_value + 1,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
         bhd_lower = 25000,
         bhd_upper = 35000,
-        rr_central = airqplus_pm_copd$relative_risk,
-        rr_lower = airqplus_pm_copd$relative_risk_lower,
-        rr_upper = airqplus_pm_copd$relative_risk_upper,
+        rr_central = data$relative_risk,
+        rr_lower = data$relative_risk_lower,
+        rr_upper = data$relative_risk_upper,
         erf_increment = 10,
         erf_shape = "log_linear",
-        info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)
+        info = paste0(data$pollutant,"_", data$evaluation_name)
         ) |>
       purrr::pluck("health_detailed") |>
       purrr::pluck("raw") |>
@@ -142,28 +142,29 @@ test_that("number of rows in detailed results correct rr single exposure value w
 
 test_that("results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & with cutoff of 5", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
+  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
         approach_risk = "relative_risk",
-        exp_central = pop_data_norway$Concentration,
-        prop_pop_exp = pop_data_norway$Viken,
+        exp_central = data_pop$Concentration,
+        prop_pop_exp = data_pop$Viken,
         cutoff_central = 5,
         bhd_central = 4500,
         erf_eq_central =
           stats::splinefun(
-            x = mrbrt_stroke$exposure,
-            y = mrbrt_stroke$mean,
+            x = data_erf$exposure,
+            y = data_erf$mean,
             method = "natural"),
         erf_eq_lower = stats::splinefun(
-          x = mrbrt_stroke$exposure,
-          y = mrbrt_stroke$mean,
+          x = data_erf$exposure,
+          y = data_erf$mean,
           method = "natural"),
         erf_eq_upper = stats::splinefun(
-          x = mrbrt_stroke$exposure,
-          y = mrbrt_stroke$mean + 0.01,
+          x = data_erf$exposure,
+          y = data_erf$mean + 0.01,
           method = "natural")
       ) |>
       helper_extract_main_results(),
@@ -174,28 +175,29 @@ test_that("results correct user-defined erf (mrbrt) with splinefun and uncertain
 
 test_that("results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & no cutoff", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
+  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
         approach_risk = "relative_risk",
-        exp_central = pop_data_norway$Concentration,
-        prop_pop_exp = pop_data_norway$Viken,
+        exp_central = data_pop$Concentration,
+        prop_pop_exp = data_pop$Viken,
         cutoff_central = 0,
         bhd_central = 4500,
         erf_eq_central =
           stats::splinefun(
-            x = mrbrt_stroke$exposure,
-            y = mrbrt_stroke$mean,
+            x = data_erf$exposure,
+            y = data_erf$mean,
             method = "natural"),
         erf_eq_lower = stats::splinefun(
-          x = mrbrt_stroke$exposure,
-          y = mrbrt_stroke$mean,
+          x = data_erf$exposure,
+          y = data_erf$mean,
           method = "natural"),
         erf_eq_upper = stats::splinefun(
-          x = mrbrt_stroke$exposure,
-          y = mrbrt_stroke$mean + 0.01,
+          x = data_erf$exposure,
+          y = data_erf$mean + 0.01,
           method = "natural")
       ) |>
       helper_extract_main_results(),
@@ -205,8 +207,6 @@ test_that("results correct user-defined erf (mrbrt) with splinefun and uncertain
 })
 
 test_that("results correct rr iteration with exposure distribution and uncertainties in rr and exp", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
 
   testthat::expect_equal(
     object =
@@ -233,42 +233,42 @@ test_that("results correct rr iteration with exposure distribution and uncertain
 
 test_that("results correct rr single exposure value and user-defined ERF (using stats::approxfun) and cutoff equals 5", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        exp_central = airqplus_pm_copd$mean_concentration,
-        cutoff_central = airqplus_pm_copd$cut_off_value,
-        bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+        exp_central = data$mean_concentration,
+        cutoff_central = data$cut_off_value,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
         erf_eq_central = # GBD2019 ERF for PM and lower respiratory infections
           stats::splinefun(
             x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
             y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
             method = "natural"),
-        info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)) |>
+        info = paste0(data$pollutant,"_", data$evaluation_name)) |>
       helper_extract_main_results(),
     expected =
-      c(1057) # Results on 10 October 2024 (with cutoff = 5 = airqplus_pm_copd$cut_off_value); no study to compare bestcost results
+      c(1057) # Results on 10 October 2024 (with cutoff = 5 = data$cut_off_value); no study to compare bestcost results
   )
 })
 
 test_that("results correct rr single exposure value and user-defined ERF (using stats::splinefun) and cutoff equals 0", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        exp_central = airqplus_pm_copd$mean_concentration,
+        exp_central = data$mean_concentration,
         cutoff_central = 0,
-        bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
         erf_eq_central = # GBD2019 ERF for PM and lower respiratory infections
           stats::splinefun(
             x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
             y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
             method = "natural"),
-        info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)) |>
+        info = paste0(data$pollutant,"_", data$evaluation_name)) |>
       helper_extract_main_results(),
     expected =
       c(2263) # Results on 10 October 2024 (with cutoff = 0); no study to compare bestcost results
@@ -277,20 +277,20 @@ test_that("results correct rr single exposure value and user-defined ERF (using 
 
 test_that("results correct rr single exposure value and user-defined ERF (using stats::approxfun) and cutoff equals 0", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        exp_central = airqplus_pm_copd$mean_concentration,
-        cutoff_central = airqplus_pm_copd$cut_off_value,
-        bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+        exp_central = data$mean_concentration,
+        cutoff_central = data$cut_off_value,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
         erf_eq_central = # GBD2019 ERF for PM and lower respiratory infections
           stats::approxfun(
             x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
             y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
             method = "linear"),
-        info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name)) |>
+        info = paste0(data$pollutant,"_", data$evaluation_name)) |>
       helper_extract_main_results(),
     expected =
       c(1052) # Results on 10 October 2024 (with cutoff = 5); no study to compare bestcost results
