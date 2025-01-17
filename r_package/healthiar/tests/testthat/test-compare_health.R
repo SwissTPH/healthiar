@@ -18,7 +18,7 @@ testthat::test_that("results correct delta comparison rr single exposure", {
         info_2 = "PM2.5_mortality_2020") |>
       helper_extract_main_results(),
     expected =
-      c(774, 409, 1127) # Result on 16 May 2024; no study to compare bestcost results to
+      c(774, 409, 1127) # Result on 16 May 2024; no comparison study to
   )
 })
 
@@ -68,7 +68,7 @@ testthat::test_that("results correct delta comparison iteration rr single exposu
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
-      c(1100, 582, 1603) # Result on 16 May 2024; no study to compare bestcost results to
+      c(1100, 582, 1603) # Result on 16 May 2024; no comparison study to
   )
 })
 
@@ -92,7 +92,7 @@ testthat::test_that("results correct pif comparison rr single exposure", {
         info_2 = "PM2.5_mortality_2020") |>
       helper_extract_main_results(),
     expected =
-      c(782, 412, 1146) # Result on 16 May 2024; no study to compare bestcost results to
+      c(782, 412, 1146) # Result on 16 May 2024; no comparison study to
   )
 })
 
@@ -118,7 +118,7 @@ testthat::test_that("results correct pif comparison iteration rr single exposure
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
-      c(1114, 586, 1634) # Result on 19 June 2024; no study to compare bestcost results to
+      c(1114, 586, 1634) # Result on 19 June 2024; no comparison study to
   )
 })
 
@@ -153,7 +153,7 @@ testthat::test_that("results correct pif comparison iteration rr single exposure
 #         info_2 = "PM2.5_mortality_2020") |>
 #       helper_extract_main_results(),
 #     expected =
-#       c(211111, 84203, 319618) # Result on 19 December 2024; no study to compare bestcost results to
+#       c(211111, 84203, 319618) # Result on 19 December 2024; no comparison study to
 #   )
 # })
 
@@ -176,7 +176,7 @@ testthat::test_that("results correct delta comparison ar exposure distribution",
       ) |>
       helper_extract_main_results(),
     expected =
-      c(62531) # Result on 23 May 2024; no study to compare bestcost results to
+      c(62531) # Result on 23 May 2024; no comparison study to
   )
 })
 
@@ -202,7 +202,7 @@ testthat::test_that("results correct delta comparison iteration ar exposure dist
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
-      c(115869) # Result on 19 June 2024; no study to compare bestcost results to
+      c(115869) # Result on 19 June 2024; no comparison study to
   )
 })
 

@@ -56,7 +56,7 @@ testthat::test_that("results correct lifetable premature deaths exposure distrib
         min_age = 20) |>
       helper_extract_main_results(),
     expected =
-      c(2900, 1531, 4239) # Result on 20 August 2024; no study to compare bestcost results
+      c(2900, 1531, 4239) # Result on 20 August 2024; no comparison study
   )
 })
 

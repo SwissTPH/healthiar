@@ -39,7 +39,7 @@ testthat::test_that("results correct delta comparison lifetable daly rr single e
         dw_central = 1) |>
       helper_extract_main_results(),
     expected =
-      c(43288, 22679, 63720) # Result on 20 August 2024; no study to compare bestcost results to
+      c(43288, 22679, 63720) # Result on 20 August 2024; no comparison study to
   )
 })
 
@@ -84,7 +84,7 @@ testthat::test_that("results correct delta comparison lifetable daly iteration r
         dw_central = 1) |>
       helper_extract_main_results(),
     expected =
-      c(66082, 34618, 97279) # Result on 20 August 2024; no study to compare bestcost results to
+      c(66082, 34618, 97279) # Result on 20 August 2024; no comparison study to
   )
 })
 
@@ -128,7 +128,7 @@ testthat::test_that("results correct pif comparison lifetable daly rr single exp
         dw_central = 1) |>
       helper_extract_main_results(),
     expected =
-      c(43396, 22708, 63957) # Result on 20 August 2024; no study to compare bestcost results to
+      c(43396, 22708, 63957) # Result on 20 August 2024; no comparison study to
   )
 })
 
@@ -173,6 +173,6 @@ testthat::test_that("results correct pif comparison lifetable daly iteration rr 
         dw_central = 1) |>
       helper_extract_main_results(),
     expected =
-      c(66275, 34671, 97702) # Result on 20 August 2024; no study to compare bestcost results to
+      c(66275, 34671, 97702) # Result on 20 August 2024; no comparison study to
   )
 })

@@ -20,7 +20,7 @@ testthat::test_that("results correct delta comparison yld rr single exposure", {
         info_2 = "PM2.5_yld_after") |>
       helper_extract_main_results(),
     expected =
-      c(387, 205, 564) # Result on 16 May 2024; no study to compare bestcost results to
+      c(387, 205, 564) # Result on 16 May 2024; no comparison study to
   )
 })
 
@@ -89,7 +89,7 @@ testthat::test_that("results correct delta comparison yld iteration rr single ex
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
-      c(591, 313, 861) # Result on 26 June 2024; no study to compare bestcost results to
+      c(591, 313, 861) # Result on 26 June 2024; no comparison study to
   )
 })
 
@@ -115,7 +115,7 @@ testthat::test_that("results correct pif comparison yld rr single exposure", {
         info_2 = "PM2.5_yld_after") |>
       helper_extract_main_results(),
     expected =
-      c(391,206,573) # Result on 16 May 2024; no study to compare bestcost results to
+      c(391,206,573) # Result on 16 May 2024; no comparison study to
   )
 })
 
@@ -143,7 +143,7 @@ testthat::test_that("results correct pif comparison yld iteration rr single expo
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
-      c(599, 315, 878) # Result on 20 June 2024; no study to compare bestcost results to
+      c(599, 315, 878) # Result on 20 June 2024; no comparison study to
   )
 })
 

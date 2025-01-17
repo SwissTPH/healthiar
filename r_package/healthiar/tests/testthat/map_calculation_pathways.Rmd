@@ -77,6 +77,41 @@ pathways_rr_ar <- pathways_rr_ar |>
   as_tibble() |> 
   dplyr::mutate(implemented = "FALSE") |> 
   dplyr::mutate(test_name = "NULL")
+
+pathways_rr_ar <- pathways_rr_ar |> 
+  mutate(test_name = case_when(
+    ( erf == "log_lin" & 
+      exp == "pop_weighted" & 
+      cutoff == "TRUE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      variable_uncertainty == "FALSE") 
+    ~ "result correct rr with single exposure value and only rr_central", TRUE ~ test_name)) |> 
+  mutate(test_name = case_when(
+    ( erf == "log_lin" & 
+      exp == "pop_weighted" & 
+      cutoff == "TRUE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      variable_uncertainty == "TRUE") 
+    ~ "result correct rr with single exposure and variable uncertainty", TRUE ~ test_name)) |> 
+  mutate(test_name = case_when(
+    ( erf == "point_pairs" & 
+      exp == "pop_weighted" & 
+      cutoff == "TRUE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      variable_uncertainty == "FALSE") 
+    ~ "results correct user-defined erf (mrbrt) with splinefun with cutoff of 5", TRUE ~ test_name)) |> 
+  mutate(test_name = case_when(
+    ( erf == "log_lin" & 
+      exp == "pop_weighted" & 
+      cutoff == "FALSE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      variable_uncertainty == "TRUE") 
+    ~ "results correct user-defined erf (mrbrt) with splinefun with no cutoff", TRUE ~ test_name))
+
 ```
 
 

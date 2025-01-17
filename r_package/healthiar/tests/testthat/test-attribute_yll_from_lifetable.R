@@ -139,7 +139,7 @@ testthat::test_that("results correct lifetable yll exposure distribution and one
       base::unlist() |>
       base::as.numeric(),
     expected =
-      c(32704.07, 17121.94, 48173.38), # Result on 20 August 2024 (AirQ+ approach); no study to compare bestcost results to
+      c(32704.07, 17121.94, 48173.38), # Result on 20 August 2024 (AirQ+ approach); no comparison study to
     tolerance = 0.1
   )
 })

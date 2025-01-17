@@ -37,7 +37,7 @@ testthat::test_that("results correct delta comparison lifetable rr single exposu
         min_age = 20) |>
       helper_extract_main_results(),
     expected =
-      c(1915, 1013, 2795) # Result on 20 August 2024; no study to compare bestcost results to
+      c(1915, 1013, 2795) # Result on 20 August 2024; no comparison study to
   )
 })
 
@@ -145,7 +145,7 @@ testthat::test_that("results correct delta comparison lifetable iteration rr sin
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
-      c(2925, 1546, 4269) # Result on 20 August 2024; no study to compare bestcost results to
+      c(2925, 1546, 4269) # Result on 20 August 2024; no comparison study to
   )
 })
 
@@ -188,7 +188,7 @@ testthat::test_that("results correct pif comparison lifetable rr single exposure
         min_age = 20) |>
       helper_extract_main_results(),
     expected =
-      c(1935, 1018, 2837) # Result on 20 August 2024; no study to compare bestcost results to
+      c(1935, 1018, 2837) # Result on 20 August 2024; no comparison study to
   )
 })
 
@@ -231,7 +231,7 @@ testthat::test_that("results correct pif comparison lifetable iteration rr singl
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
-      c(2961, 1556, 4346) # Result on 20 AUgust 2024; no study to compare bestcost results to
+      c(2961, 1556, 4346) # Result on 20 AUgust 2024; no comparison study to
   )
 })
 

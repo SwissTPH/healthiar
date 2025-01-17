@@ -1,30 +1,3 @@
-testthat::test_that("result correct rr with single exposure and rr CIs", {
-
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        exp_central = data$mean_concentration,
-        cutoff_central = data$cut_off_value,
-        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
-        rr_central = data$relative_risk,
-        rr_lower = data$relative_risk_lower,
-        rr_upper = data$relative_risk_upper,
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        info = paste0(data$pollutant,"_", data$evaluation_name)
-      ) |>
-      helper_extract_main_results(),
-    expected =
-      data |>
-      dplyr::select(estimated_number_of_attributable_cases_central,
-                    estimated_number_of_attributable_cases_lower,
-                    estimated_number_of_attributable_cases_upper)|>
-      base::as.numeric()
-    )
-})
-
 testthat::test_that("result correct rr with single exposure value and only rr_central", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
@@ -39,15 +12,43 @@ testthat::test_that("result correct rr with single exposure value and only rr_ce
         rr_increment = 10,
         erf_shape = "log_linear",
         info = paste0(data$pollutant,"_", data$evaluation_name)
-        ) |>
+      ) |>
       helper_extract_main_results(),
     expected =
       data |>
       dplyr::select(estimated_number_of_attributable_cases_central)|>
       base::as.numeric()
-    )
+  )
 })
 
+testthat::test_that("result correct rr with single exposure and variable uncertainty", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$mean_concentration,
+        exp_lower = data$mean_concentration - 1,
+        exp_upper = data$mean_concentration + 1,
+        cutoff_central = data$cut_off_value,
+        cutoff_lower = data$cut_off_value - 1,
+        cutoff_upper = data$cut_off_value + 1,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+        bhd_lower = data$incidents_per_100_000_per_year/1E5*data$population_at_risk - 1,
+        bhd_upper = data$incidents_per_100_000_per_year/1E5*data$population_at_risk + 1,
+        rr_central = data$relative_risk,
+        rr_lower = data$relative_risk_lower,
+        rr_upper = data$relative_risk_upper,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        info = paste0(data$pollutant,"_", data$evaluation_name)
+      ) |>
+      helper_extract_detailed_results(),
+    expected = # Results on 2025-01-17; no comparison study
+      c(3502, 4344, 2633, 3502, 4344, 2633, 3502, 4345, 2633, 1353, 1695, 1007, 1353, 1695, 1007, 1353, 1695, 1007, 5474, 6729, 4154, 5474, 6728, 4153, 5474, 6729, 4154, 2633, 3502, 1736, 2633, 3502, 1736, 2633, 3502, 1736, 1007, 1353, 658, 1007, 1353, 658, 1007, 1353, 658, 4154, 5474, 2764, 4153, 5474, 2764, 4154, 5474, 2764, 4344, 5161, 3502, 4344, 5161, 3502, 4345, 5161, 3502, 1695, 2032, 1353, 1695, 2032, 1353, 1695, 2032, 1353, 6729, 7921, 5474, 6728, 7921, 5474, 6729, 7921, 5474)
+    )
+})
 
 testthat::test_that("no error rr single exposure value with with uncertainties in 4 input variables", {
 
@@ -140,6 +141,79 @@ testthat::test_that("number of rows in detailed results correct rr single exposu
 
 })
 
+testthat::test_that("results correct user-defined erf (mrbrt) with splinefun with cutoff of 5", {
+
+  data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
+  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        exp_central = data_pop$Concentration,
+        prop_pop_exp = data_pop$Viken,
+        cutoff_central = 5,
+        bhd_central = 4500,
+        erf_eq_central =
+          stats::splinefun(
+            x = data_erf$exposure,
+            y = data_erf$mean,
+            method = "natural")
+      ) |>
+      helper_extract_main_results(),
+    expected =
+      c(32) # Results on 19 Dec 2024
+  )
+})
+
+testthat::test_that("results correct user-defined erf (mrbrt) with splinefun with no cutoff", {
+
+  data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
+  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        exp_central = data_pop$Concentration,
+        prop_pop_exp = data_pop$Viken,
+        bhd_central = 4500,
+        erf_eq_central =
+          stats::splinefun(
+            x = data_erf$exposure,
+            y = data_erf$mean,
+            method = "natural")
+      ) |>
+      helper_extract_main_results(),
+    expected =
+      c(249) # Results on 2025-01-17; no comparison study
+  )
+})
+
+testthat::test_that("results correct user-defined erf (mrbrt) with splinefun with cutoff = 0", {
+
+  data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
+  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        exp_central = data_pop$Concentration,
+        prop_pop_exp = data_pop$Viken,
+        cutoff_central = 0,
+        bhd_central = 4500,
+        erf_eq_central =
+          stats::splinefun(
+            x = data_erf$exposure,
+            y = data_erf$mean,
+            method = "natural")
+      ) |>
+      helper_extract_main_results(),
+    expected =
+      c(249) # Results on 2025-01-17; no comparison study
+  )
+})
 
 testthat::test_that("results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & with cutoff of 5", {
 
@@ -250,7 +324,7 @@ testthat::test_that("results correct rr single exposure value and user-defined E
         info = paste0(data$pollutant,"_", data$evaluation_name)) |>
       helper_extract_main_results(),
     expected =
-      c(1057) # Results on 10 October 2024 (with cutoff = 5 = data$cut_off_value); no study to compare bestcost results
+      c(1057) # Results on 10 October 2024 (with cutoff = 5 = data$cut_off_value); no comparison study
   )
 })
 
@@ -272,7 +346,7 @@ testthat::test_that("results correct rr single exposure value and user-defined E
         info = paste0(data$pollutant,"_", data$evaluation_name)) |>
       helper_extract_main_results(),
     expected =
-      c(2263) # Results on 10 October 2024 (with cutoff = 0); no study to compare bestcost results
+      c(2263) # Results on 10 October 2024 (with cutoff = 0); no comparison study
   )
 })
 
@@ -294,7 +368,7 @@ testthat::test_that("results correct rr single exposure value and user-defined E
         info = paste0(data$pollutant,"_", data$evaluation_name)) |>
       helper_extract_main_results(),
     expected =
-      c(1052) # Results on 10 October 2024 (with cutoff = 5); no study to compare bestcost results
+      c(1052) # Results on 10 October 2024 (with cutoff = 5); no comparison study
   )
 })
 
@@ -389,7 +463,7 @@ testthat::test_that("results correct rr yld", {
         duration_central = 1, duration_lower = 0.5, duration_upper = 10) |>
       helper_extract_main_results(),
     expected =
-      c(525, 277, 768) # Result on 16 May 2024; no study to compare bestcost results
+      c(525, 277, 768) # Result on 16 May 2024; no comparison study
   )
 })
 
