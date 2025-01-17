@@ -1,6 +1,4 @@
-test_that("results correct delta comparison yld rr single exposure", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+testthat::test_that("results correct delta comparison yld rr single exposure", {
 
   testthat::expect_equal(
     object =
@@ -14,7 +12,7 @@ test_that("results correct delta comparison yld rr single exposure", {
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         dw_central = 0.5,
         duration_central = 1,
@@ -26,9 +24,7 @@ test_that("results correct delta comparison yld rr single exposure", {
   )
 })
 
-test_that("results from scenario 1 match those calculated by attribute call with same input data", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+testthat::test_that("results from scenario 1 match those calculated by attribute call with same input data", {
 
   testthat::expect_equal(
     object =
@@ -42,7 +38,7 @@ test_that("results from scenario 1 match those calculated by attribute call with
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         dw_central = 0.5,
         duration_central = 1,
@@ -61,7 +57,7 @@ test_that("results from scenario 1 match those calculated by attribute call with
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
         duration_central = 1, duration_lower = 0.5, duration_upper = 10) |>
@@ -69,9 +65,7 @@ test_that("results from scenario 1 match those calculated by attribute call with
   )
 })
 
-test_that("results correct delta comparison yld iteration rr single exposure", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+testthat::test_that("results correct delta comparison yld iteration rr single exposure", {
 
   testthat::expect_equal(
     object =
@@ -85,13 +79,13 @@ test_that("results correct delta comparison yld iteration rr single exposure", {
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         dw_central = 0.5,
         duration_central = 1,
         info_1 = "PM2.5_yld_before",
         info_2 = "PM2.5_yld_after",
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
@@ -99,9 +93,7 @@ test_that("results correct delta comparison yld iteration rr single exposure", {
   )
 })
 
-test_that("results correct pif comparison yld rr single exposure", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+testthat::test_that("results correct pif comparison yld rr single exposure", {
 
   testthat::expect_equal(
     object =
@@ -115,7 +107,7 @@ test_that("results correct pif comparison yld rr single exposure", {
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         dw_central = 0.5,
         duration_central = 1,
@@ -127,9 +119,7 @@ test_that("results correct pif comparison yld rr single exposure", {
   )
 })
 
-test_that("results correct pif comparison yld iteration rr single exposure", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+testthat::test_that("results correct pif comparison yld iteration rr single exposure", {
 
   testthat::expect_equal(
     object =
@@ -143,13 +133,13 @@ test_that("results correct pif comparison yld iteration rr single exposure", {
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         dw_central = 0.5,
         duration_central = 1,
         info_1 = "PM2.5_yld_before",
         info_2 = "PM2.5_yld_after",
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =

@@ -6,10 +6,10 @@
 \usage{
 include_monetization(
   approach_discount = "direct",
-  output = NULL,
+  output_healthiar = NULL,
   impact = NULL,
   valuation,
-  corrected_discount_rate = NULL,
+  discount_rate = NULL,
   discount_shape = NULL,
   discount_years = 1,
   discount_overtime = "all_years"
@@ -18,13 +18,13 @@ include_monetization(
 \arguments{
 \item{approach_discount}{\code{String} referring to the method to be used for the discounting choosing between the default "direct" (after obtaining the health impacts) and the alternative "indirect" (before the health impacts).}
 
-\item{output}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
+\item{output_healthiar}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
 
 \item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function).}
 
 \item{valuation}{\code{Numberic value} referring to unit value of a health impact}
 
-\item{corrected_discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
+\item{discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 

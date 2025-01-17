@@ -13,7 +13,7 @@
 #' @export
 add_monetized_impact  <- function(df,
                                   valuation,
-                                  corrected_discount_rate,
+                                  discount_rate,
                                   discount_years,
                                   discount_shape,
                                   discount_overtime) {
@@ -37,7 +37,7 @@ add_monetized_impact  <- function(df,
     # Add columns for input data in the table
     # Use {{}} to clarify the it refers to the argument and not to the column
     # with the same name
-    dplyr::mutate(corrected_discount_rate = {{corrected_discount_rate}},
+    dplyr::mutate(discount_rate = {{discount_rate}},
                   discount_years = {{discount_years}},
                   discount_shape = {{discount_shape}},
                   discount_overtime = {{discount_overtime}})
@@ -50,12 +50,12 @@ add_monetized_impact  <- function(df,
     # better step by step
     dplyr::rowwise() |>
     # Calculate discount factor
-    # If any arguments "corrected_discount_rate" and "discount_shape" are NULL,
+    # If any arguments "discount_rate" and "discount_shape" are NULL,
     # no discount (i.e. discount_factor=1)
     dplyr::mutate(
       discount_factor =
         healthiar::get_discount_factor(
-          corrected_discount_rate = corrected_discount_rate,
+          discount_rate = discount_rate,
           discount_year = discount_year,
           discount_shape = discount_shape))
 

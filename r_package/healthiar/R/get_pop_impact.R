@@ -525,7 +525,7 @@ get_pop_impact <-
     } else { # YLD case
 
       pop <- pop |>
-        select(geo_id_raw, contains("exp"), contains("prop_pop_exp"), rr, erf_ci, sex, # Variables to merge by
+        select(geo_id_disaggregated, contains("exp"), contains("prop_pop_exp"), rr, erf_ci, sex, # Variables to merge by
                -contains("_2"), # Remove all "..._2" variables (e.g. "exp_2"); relevant in "compare_..." function calls
                contains("_nest"),
                -contains("approach_exposure"),
@@ -535,11 +535,11 @@ get_pop_impact <-
 
       if( is_empty((grep("_1", names(pop))))){
         pop_impact <- input_backup |>
-        dplyr::left_join(pop, by = c("geo_id_raw", "exp", "prop_pop_exp", "rr", "erf_ci", "sex", "exposure_name"))
+        dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp", "prop_pop_exp", "rr", "erf_ci", "sex", "exposure_name"))
         }else{
           pop_impact <- input_backup |>
           # attribute_... cases
-          dplyr::left_join(pop, by = c("geo_id_raw", "exp_1", "prop_pop_exp_1", "rr", "erf_ci", "sex", "exposure_name")) # compare_... cases
+          dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp_1", "prop_pop_exp_1", "rr", "erf_ci", "sex", "exposure_name")) # compare_... cases
         }
 
     }

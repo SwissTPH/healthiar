@@ -135,7 +135,7 @@ get_impact <-
     if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) &
          ( unique(impact_raw$exposure_type) == "exposure_distribution" ) &
          ( !grepl("from_lifetable", impact_raw$health_metric[1]) ) &
-         ( max(impact_raw$geo_id_raw) == 1 ) ) {
+         ( max(impact_raw$geo_id_disaggregated) == 1 ) ) {
 
       impact_raw <- impact_raw |>
         dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
@@ -157,20 +157,20 @@ get_impact <-
     } else if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) &
                 ( unique(impact_raw$exposure_type) == "exposure_distribution" ) &
                 ( !grepl("from_lifetable", impact_raw$health_metric[1]) ) &
-                ( max(impact_raw$geo_id_raw) > 1 ) ) {
+                ( max(impact_raw$geo_id_disaggregated) > 1 ) ) {
 
       impact_raw <- impact_raw |>
         dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
         dplyr::left_join(
           x = _,
           y = input |>
-            dplyr::group_by(exp_ci, erf_ci, bhd_ci, cutoff_ci, geo_id_raw) |>
+            dplyr::group_by(exp_ci, erf_ci, bhd_ci, cutoff_ci, geo_id_disaggregated) |>
             dplyr::summarize(exp = list(exp),
                              prop_pop_exp = list(prop_pop_exp), # Introduced error in ar pathway
                              exposure_dimension = list(exposure_dimension),
                              .groups = "drop") |>
-            dplyr::select(c(exp_ci, erf_ci, exp, prop_pop_exp, exposure_dimension, geo_id_raw)),
-          by = c("exp_ci", "erf_ci", "geo_id_raw")
+            dplyr::select(c(exp_ci, erf_ci, exp, prop_pop_exp, exposure_dimension, geo_id_disaggregated)),
+          by = c("exp_ci", "erf_ci", "geo_id_disaggregated")
         )|>
         dplyr::mutate(exposure_type = input$exposure_type |> dplyr::first())
 

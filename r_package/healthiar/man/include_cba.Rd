@@ -6,12 +6,12 @@
 \usage{
 include_cba(
   approach_discount = "direct",
-  output = NULL,
+  output_healthiar = NULL,
   positive_impact = NULL,
   valuation,
   cost,
-  corrected_discount_rate_benefit = NULL,
-  corrected_discount_rate_cost = NULL,
+  discount_rate_benefit = NULL,
+  discount_rate_cost = NULL,
   discount_shape = NULL,
   discount_years_benefit = 1,
   discount_years_cost = 1,
@@ -21,13 +21,13 @@ include_cba(
 \arguments{
 \item{approach_discount}{\code{String} referring to the method to be used for the discounting choosing between the default "direct" (after obtaining the health impacts) and the alternative "indirect" (before the health impacts).}
 
-\item{output}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
+\item{output_healthiar}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
 
 \item{valuation}{\code{Numberic value} referring to unit value of a health impact}
 
 \item{cost}{\code{Numeric value} referring to the investment cost to achive the reduction of exposure}
 
-\item{corrected_discount_rate_benefit, corrected_discount_rate_cost}{\code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates)}
+\item{discount_rate_benefit, discount_rate_cost}{\code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates)}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 

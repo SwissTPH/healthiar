@@ -6,9 +6,9 @@
 \usage{
 include_discount(
   approach_discount = "direct",
-  output = NULL,
+  output_healthiar = NULL,
   impact = NULL,
-  corrected_discount_rate = NULL,
+  discount_rate = NULL,
   discount_years = 1,
   discount_shape = NULL,
   discount_overtime = "all_years"
@@ -17,11 +17,11 @@ include_discount(
 \arguments{
 \item{approach_discount}{\code{String} referring to the method to be used for the discounting choosing between the default "direct" (after obtaining the health impacts) and the alternative "indirect" (before the health impacts).}
 
-\item{output}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
+\item{output_healthiar}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
 
 \item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function).}
 
-\item{corrected_discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
+\item{discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
 
 \item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
 
