@@ -66,13 +66,14 @@ get_risk_and_pop_fraction <-
       ## If PAF
     if ( {{pop_fraction_type}} == "paf" ) {
 
+      # browser()
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         ## Obtain the relative risk for the relevant concentration
         rowwise() |>
         dplyr::mutate(rr_conc =
                         healthiar::get_risk(rr = rr,
                                            exp = exp,
-                                           cutoff = cutoff,
+                                           cutoff = if ( "cutoff" %in% names(input_with_risk_and_pop_fraction) ) cutoff else 0, # if cutoff argument not specified in attribute argument call (and therefore not present in the tibble) then input 0 to the healthiar::get_risk function to avoid error
                                            rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq)) |>
