@@ -10,7 +10,7 @@ To limit the number of possible pathways there is one pathway per major calculat
 - social analysis
 - monetization
 
-```{r Example}
+```{r Example, eval=FALSE, include=FALSE}
 library(DiagrammeR) ; library(data.tree)
 knitr::opts_knit$set(root.dir = getwd()) 
 
@@ -62,55 +62,75 @@ plot(root)
 
 ```{r Pathways non-lifetable}
 ov_rr_ar <- list(
-  # erf = c("lin-lin", "log-lin", "lin-log", "log-log", "formula", "point-pairs"),
-  erf = c("log-lin", "lin-lin", "formula", "point-pairs"),
-  exp = c("pop-weighted", "exp_dist"), # prop_pop_exp linked with this
-  cutoff = c("NULL", "num"),
+  # erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"),
+  erf = c("log_lin", "lin_lin", "formula", "point_pairs"),
+  exp = c("pop_weighted", "exp_dist"), # prop_pop_exp linked with this
+  cutoff = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE"),
-  multiexp = c("NULL", "additive", "multiplicative", "combined"),
+  multiexp = c("FALSE", "additive", "multiplicative", "combined"),
   variable_uncertainty = c("TRUE", "FALSE")
 )
 
 pathways_rr_ar <- expand.grid(ov_rr_ar)
+
+pathways_rr_ar <- pathways_rr_ar |> 
+  as_tibble() |> 
+  dplyr::mutate(implemented = "FALSE") |> 
+  dplyr::mutate(test_name = "NULL")
 ```
 
 
 ```{r Pathways lifetable}
 
 ov_lifetable <- list(
-  exp = c("pop-weighted", "exp_dist"), # prop_pop_exp linked with this
+  exp = c("pop_weighted", "exp_dist"), # prop_pop_exp linked with this
   exp_time = c("single_year", "constant"),
-  newborns = c("with", "without"),
-  min_age = c("NULL", "num"),
-  max_age = c("NULL", "num"),
-  time_horizon = c("NULL", "num"),
+  newborns = c("TRUE", "FALSE"),
+  min_age = c("TRUE", "FALSE"),
+  max_age = c("TRUE", "FALSE"),
+  time_horizon = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE"),
   variable_uncertainty = c("TRUE", "FALSE")
 )
 
 pathways_lifetable <- expand.grid(ov_lifetable)
+
+pathways_lifetable <- pathways_lifetable |> 
+  as_tibble() |> 
+  dplyr::mutate(implemented = "FALSE") |> 
+  dplyr::mutate(test_name = "NULL")
 ```
 
 ```{r Pathways summary uncertainty}
 
 ov_uncertainty <- list(
-  exp = c("pop-weighted", "exp_dist"),
+  exp = c("pop_weighted", "exp_dist"),
   erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
   iteration = c("TRUE", "FALSE")
 )
 
 pathways_uncertainty <- expand.grid(ov_uncertainty)
+
+pathways_uncertainty <- pathways_uncertainty |> 
+  as_tibble() |> 
+  dplyr::mutate(implemented = "FALSE") |> 
+  dplyr::mutate(test_name = "NULL")
 ```
 
 ```{r Pathways cba,discount,monetization}
 
 ov_economic <- list(
   discount_appr = c("direct", "indirect"),
-  discount_rate = c("NULL", "num"),
+  discount_rate = c("TRUE", "FALSE"),
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
   discount_overtime = c("all_years", "last_year")
 )
 
 pathways_economic <- expand.grid(ov_economic)
+
+pathways_economic <- pathways_economic |> 
+  as_tibble() |> 
+  dplyr::mutate(implemented = "FALSE") |> 
+  dplyr::mutate(test_name = "NULL")
 ```
 
