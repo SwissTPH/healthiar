@@ -225,7 +225,7 @@ get_deaths_yll_yld <-
     id_columns <-
       c("sex",
         "exposure_name",
-        "geo_id_raw",
+        "geo_id_disaggregated",
         "erf_ci", "bhd_ci", "exp_ci", "dw_ci", "cutoff_ci", "duration_ci")
 
     id_columns_in_df <-

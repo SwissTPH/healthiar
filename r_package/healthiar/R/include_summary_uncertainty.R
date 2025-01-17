@@ -45,7 +45,7 @@ include_summary_uncertainty <- function(
   ## Determine number of geographic units
   if ( length(grep("geo_id", names(results[["health_detailed"]][["raw"]]))) > 0 ) {
 
-    n_geo <- as.numeric(max(results[["health_detailed"]][["raw"]]$geo_id_raw))
+    n_geo <- as.numeric(max(results[["health_detailed"]][["raw"]]$geo_id_disaggregated))
 
   } else {
 
@@ -173,14 +173,14 @@ include_summary_uncertainty <- function(
     ## Create empty tibble to store simulated values & results in
     dat <-
       tibble::tibble(
-        geo_id_raw =
+        geo_id_disaggregated =
           rep(1:n_geo,
               each = n_sim),
         rr =
           rep(NA, times = n_sim*n_geo),
-        erf_increment =
+        rr_increment =
           rep(results[["health_detailed"]][["raw"]] |>
-                dplyr::pull(erf_increment) |>
+                dplyr::pull(rr_increment) |>
                 dplyr::first(),
               times = n_sim*n_geo),
         erf_shape =
@@ -262,7 +262,7 @@ include_summary_uncertainty <- function(
     if (
       ( length(grep("lower", results[["health_detailed"]][["raw"]][["exp_ci"]])) > 0 ) &
       ( unique(results[["health_detailed"]][["raw"]]$exposure_type == "population_weighted_mean") ) &
-      ( max(dat$geo_id_raw) == 1 )
+      ( max(dat$geo_id_disaggregated) == 1 )
       ) {
 
       ## Determine standard deviation (sd) based on the formula:
@@ -286,7 +286,7 @@ include_summary_uncertainty <- function(
     } else if (
       !( length(grep("lower", results[["health_detailed"]][["raw"]][["exp_ci"]])) > 0 ) &
       ( unique(results[["health_detailed"]][["raw"]]$exposure_type == "population_weighted_mean" ) ) &
-      ( max(dat$geo_id_raw) == 1 )
+      ( max(dat$geo_id_disaggregated) == 1 )
       ) {
 
       ## Assign central value to all rows as no CI's present for exp variable
@@ -299,13 +299,13 @@ include_summary_uncertainty <- function(
     # * * * * exp CIs, multiple geo units ######################################
     } else if ( ( length(grep("lower", results[["health_detailed"]][["raw"]][["exp_ci"]])) > 0 ) &
                 ( unique(results[["health_detailed"]][["raw"]]$exposure_type == "population_weighted_mean" ) ) &
-                ( max(dat$geo_id_raw) > 1 ) ) {
+                ( max(dat$geo_id_disaggregated) > 1 ) ) {
 
       ## For each geo unit, fit a normal distribution and assign to dat
       ## Fit distribution based on each geo units central, lower and upper bhd values
 
       dat_with_exp_ci <- results[["health_detailed"]][["raw"]] |>
-        dplyr::select(geo_id_raw, exp_ci, exp) |>
+        dplyr::select(geo_id_disaggregated, exp_ci, exp) |>
         dplyr::distinct() |>
         tidyr::pivot_wider(
           names_from = exp_ci,
@@ -327,13 +327,13 @@ include_summary_uncertainty <- function(
         ## Expand each row so each simulated value has its own row
         tidyr::unnest(exp) %>%
         ## Keep only relevant columns
-        dplyr::select(geo_id_raw, exp)
+        dplyr::select(geo_id_disaggregated, exp)
 
       ## Add simulated exposure values to dat tibble
       dat <- dat |>
         dplyr::select(-exp) |>
         dplyr::bind_cols(
-          simulated_data |> dplyr::select(-geo_id_raw)
+          simulated_data |> dplyr::select(-geo_id_disaggregated)
           ) |>
         dplyr::relocate(exp, .after = erf_shape)
 
@@ -343,7 +343,7 @@ include_summary_uncertainty <- function(
     } else if (
       !( length(grep("lower", results[["health_detailed"]][["raw"]][["exp_ci"]])) > 0 ) &
       ( unique(results[["health_detailed"]][["raw"]]$exposure_type == "population_weighted_mean" ) ) &
-      ( max(dat$geo_id_raw) > 1 )
+      ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
       ## Add central exposure value of each geo unit to dat tibble using left_join
@@ -352,9 +352,9 @@ include_summary_uncertainty <- function(
         dplyr::left_join(
           x = _,
           y = results[["health_detailed"]][["raw"]] |>
-            dplyr::select(exp, geo_id_raw) |>
+            dplyr::select(exp, geo_id_disaggregated) |>
             dplyr::distinct(),
-          by = "geo_id_raw"
+          by = "geo_id_disaggregated"
         ) |>
         dplyr::relocate(exp, .after = erf_shape)
 
@@ -366,7 +366,7 @@ include_summary_uncertainty <- function(
     if (
       ( length(grep("lower", results[["health_detailed"]][["raw"]][["exp_ci"]])) > 0 ) &
       ( unique(results[["health_detailed"]][["raw"]]$exposure_type == "exposure_distribution") ) &
-      ( max(dat$geo_id_raw) == 1 )
+      ( max(dat$geo_id_disaggregated) == 1 )
       ) {
 
       ## Vectors needed for simulation below
@@ -417,7 +417,7 @@ include_summary_uncertainty <- function(
       # * * * * No exp CIs, single geo unit ####################################
     } else if ( !( length(grep("lower", results[["health_detailed"]][["raw"]][["exp_ci"]])) > 0 ) &
                 ( unique(results[["health_detailed"]][["raw"]]$exposure_type == "exposure_distribution") ) &
-                ( max(dat$geo_id_raw) == 1 ) ) {
+                ( max(dat$geo_id_disaggregated) == 1 ) ) {
 
       # Vectors needed for simulation below (exp_central & prop_pop_exp)
       exp_central <- results[["health_detailed"]][["raw"]] |>
@@ -455,25 +455,25 @@ include_summary_uncertainty <- function(
     } else if (
       !( length(grep("lower", results[["health_detailed"]][["raw"]][["exp_ci"]])) > 0 ) &
       ( unique(results[["health_detailed"]][["raw"]]$exposure_type == "exposure_distribution") ) &
-      ( max(dat$geo_id_raw) > 1 )
+      ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
       # Vectors needed for simulation below (exp_central & prop_pop_exp)
-      # Extract exposure values per geo_id_raw and save in a sub-list
+      # Extract exposure values per geo_id_disaggregated and save in a sub-list
 
       dat <- dat %>%
         select(-exp, -prop_pop_exp) |>
         left_join(results[["health_detailed"]][["raw"]] |>
                     dplyr::filter(erf_ci == "central") |>
-                    dplyr::select(geo_id_raw, exp, prop_pop_exp),
-                  by = "geo_id_raw") %>%
+                    dplyr::select(geo_id_disaggregated, exp, prop_pop_exp),
+                  by = "geo_id_disaggregated") %>%
         tidyr::unnest_wider(c(exp, prop_pop_exp), names_sep = "_")
 
       # * * * *  Exp CIs, multiple geo units ###################################
     } else if (
       ( length(grep("lower", results[["health_detailed"]][["raw"]][["exp_ci"]])) > 0 ) &
       ( unique(results[["health_detailed"]][["raw"]]$exposure_type == "exposure_distribution") ) &
-      ( max(dat$geo_id_raw) > 1 )
+      ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
       # browser()
@@ -484,29 +484,29 @@ include_summary_uncertainty <- function(
       ### Pull exposures for all geo id's
       exp_central <- results[["health_detailed"]][["raw"]] |>
         dplyr::filter(exp_ci == "central") |>
-        dplyr::select(geo_id_raw, exp_central = exp)
+        dplyr::select(geo_id_disaggregated, exp_central = exp)
       exp_lower <- results[["health_detailed"]][["raw"]] |>
         dplyr::filter(exp_ci == "lower") |>
-        dplyr::select(geo_id_raw, exp_lower = exp)
+        dplyr::select(geo_id_disaggregated, exp_lower = exp)
       exp_upper <- results[["health_detailed"]][["raw"]] |>
         dplyr::filter(exp_ci == "upper") |>
-        dplyr::select(geo_id_raw, exp_upper = exp)
+        dplyr::select(geo_id_disaggregated, exp_upper = exp)
       dat_exp <- cbind(exp_central,
-                       exp_lower |> select(-geo_id_raw),
-                       exp_upper |> select(-geo_id_raw)
+                       exp_lower |> select(-geo_id_disaggregated),
+                       exp_upper |> select(-geo_id_disaggregated)
                        )
       prop_pop_exp <- results[["health_detailed"]][["raw"]] |>
-        dplyr::select(geo_id_raw, prop_pop_exp) |>
-        distinct(geo_id_raw, .keep_all = TRUE)
+        dplyr::select(geo_id_disaggregated, prop_pop_exp) |>
+        distinct(geo_id_disaggregated, .keep_all = TRUE)
 
       ## Create vectors of column names
       exp_columns <- paste0("exp_", dat_exp |>
-                              filter(geo_id_raw == 1) |>
+                              filter(geo_id_disaggregated == 1) |>
                               pull(exp_central) |>
                               unlist() |>
                               seq_along())
       prop_columns <- paste0("prop_pop_exp_", dat_exp |>
-                               filter(geo_id_raw == 1) |>
+                               filter(geo_id_disaggregated == 1) |>
                                pull(exp_central) |>
                                unlist() |>
                                seq_along())
@@ -515,7 +515,7 @@ include_summary_uncertainty <- function(
       ### @ AC: sorry for the loop : /
       ###  I tried to avoid it, but failed. To be changed.
       dat_sim <- tibble(
-        geo_id_raw = numeric(0)  # Initialize geo_id_raw as numeric
+        geo_id_disaggregated = numeric(0)  # Initialize geo_id_disaggregated as numeric
       ) |>
         bind_cols(
           set_names(rep(list(numeric(0)), length(exp_columns)), exp_columns),
@@ -523,17 +523,17 @@ include_summary_uncertainty <- function(
         )
 
       ## Loop through geo ID's
-      for (i in exp_central$geo_id_raw){
+      for (i in exp_central$geo_id_disaggregated){
 
         ## Create temp tibble to store simulated values in
         temp <- tibble::tibble(
-          geo_id_raw = rep(i, times = n_sim)) |>
+          geo_id_disaggregated = rep(i, times = n_sim)) |>
           bind_cols(
             purrr::map(
               ## .x will take the values 1, 2, ..., (nr. of exposure categories)
               .x = seq_along(
                 dat_exp |>
-                  dplyr::filter(geo_id_raw == i) |>
+                  dplyr::filter(geo_id_disaggregated == i) |>
                   dplyr::pull(exp_central) |>
                   base::unlist(x = _)
               ),
@@ -542,11 +542,11 @@ include_summary_uncertainty <- function(
                   ## For each exposure category generate n_sim simulated values
                   rnorm(
                     n_sim,
-                    mean = dat_exp |> filter(geo_id_raw == i) |> pull(exp_central) |> unlist(x = _) |> nth(.x) ,
-                    sd = ( dat_exp |> filter(geo_id_raw == i) |> pull(exp_upper) |> unlist(x = _) |> nth(.x) -
-                             dat_exp |> filter(geo_id_raw == i) |> pull(exp_lower) |> unlist(x = _) |> nth(.x) ) / (2 * 1.96) # Formula: exp_upper - exp_lower) / (2 * 1.96)
+                    mean = dat_exp |> filter(geo_id_disaggregated == i) |> pull(exp_central) |> unlist(x = _) |> nth(.x) ,
+                    sd = ( dat_exp |> filter(geo_id_disaggregated == i) |> pull(exp_upper) |> unlist(x = _) |> nth(.x) -
+                             dat_exp |> filter(geo_id_disaggregated == i) |> pull(exp_lower) |> unlist(x = _) |> nth(.x) ) / (2 * 1.96) # Formula: exp_upper - exp_lower) / (2 * 1.96)
                   ),
-                !!paste0("prop_pop_exp_", .x) := prop_pop_exp|> filter(geo_id_raw == i) |> pull(prop_pop_exp) |> unlist(x = _) |> nth(.x)
+                !!paste0("prop_pop_exp_", .x) := prop_pop_exp|> filter(geo_id_disaggregated == i) |> pull(prop_pop_exp) |> unlist(x = _) |> nth(.x)
               )) |>
               purrr::reduce(bind_cols)
           )
@@ -559,7 +559,7 @@ include_summary_uncertainty <- function(
 
       # Add simulated values of all geo units to dat tibble
       dat <- dat |>
-        bind_cols(dat_sim |> select(-geo_id_raw)) |>
+        bind_cols(dat_sim |> select(-geo_id_disaggregated)) |>
         select(-exp)
 
     }
@@ -599,7 +599,7 @@ include_summary_uncertainty <- function(
 
     # * * * bhd CIs & single geo unit ##########################################
     if ( (length(grep("lower", results[["health_detailed"]][["raw"]][["bhd_ci"]])) > 0) &
-      ( max(dat$geo_id_raw) == 1 ) ) {
+      ( max(dat$geo_id_disaggregated) == 1 ) ) {
 
       ## Determine standard deviation (sd) based on the formula:
       ## (bhd_upper - bhd_lower) / (2 * 1.96)
@@ -618,7 +618,7 @@ include_summary_uncertainty <- function(
 
     # * * * No bhd CIs & single geo unit ##########################################
     } else if ( !(length(grep("lower", results[["health_detailed"]][["raw"]][["bhd_ci"]])) > 0) &
-                ( max(dat$geo_id_raw) == 1 ) ) {
+                ( max(dat$geo_id_disaggregated) == 1 ) ) {
 
       dat <- dat |>
         dplyr::mutate(bhd = results[["health_detailed"]][["raw"]] |>
@@ -629,14 +629,14 @@ include_summary_uncertainty <- function(
     # * * * bhd CIs & multiple geo units ##########################################
     } else if (
       (length(grep("lower", results[["health_detailed"]][["raw"]][["bhd_ci"]])) > 0) &
-      ( max(dat$geo_id_raw) > 1 )
+      ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
       ## For each geo unit, fit a normal distribution and assign to dat
       ## Fit distribution based on each geo units central, lower and upper bhd values
 
       dat_with_bhd_ci <- results[["health_detailed"]][["raw"]] |>
-        dplyr::select(geo_id_raw, bhd_ci, bhd) |>
+        dplyr::select(geo_id_disaggregated, bhd_ci, bhd) |>
         dplyr::distinct() |>
         tidyr::pivot_wider(
           names_from = bhd_ci,
@@ -658,20 +658,20 @@ include_summary_uncertainty <- function(
         ## Expand each row so each simulated value has its own row
         tidyr::unnest(bhd) %>%
         ## Keep only relevant columns
-        dplyr::select(geo_id_raw, bhd)
+        dplyr::select(geo_id_disaggregated, bhd)
 
       ## Add simulated exposure values to dat tibble
       dat <- dat |>
         dplyr::select(-bhd) |>
         dplyr::bind_cols(
-          simulated_data |> dplyr::select(-geo_id_raw)
+          simulated_data |> dplyr::select(-geo_id_disaggregated)
         ) |>
         dplyr::relocate(bhd, .after = cutoff)
 
     # * * * No bhd CI's & multiple geo units ######################################
     } else if (
       !(length(grep("lower", results[["health_detailed"]][["raw"]][["bhd_ci"]])) > 0) &
-      ( max(dat$geo_id_raw) > 1 )
+      ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
       ## Add central exposure value of each geo unit to dat tibble using left_join
@@ -680,9 +680,9 @@ include_summary_uncertainty <- function(
         dplyr::left_join(
           x = _,
           y = results[["health_detailed"]][["raw"]] |>
-            dplyr::select(bhd, geo_id_raw) |>
+            dplyr::select(bhd, geo_id_disaggregated) |>
             dplyr::distinct(),
-          by = "geo_id_raw"
+          by = "geo_id_disaggregated"
         ) |>
         dplyr::relocate(bhd, .after = cutoff)
 
@@ -692,7 +692,7 @@ include_summary_uncertainty <- function(
 
     # * * * dw CIs, both single and multiple geo unit case #####################
     if ( (length(grep("lower", results[["health_detailed"]][["raw"]][["dw_ci"]])) > 0) &
-         ( max(dat$geo_id_raw) == 1 ) ) {
+         ( max(dat$geo_id_disaggregated) == 1 ) ) {
 
       ## beta distribution using prevalence::betaExpert()
       ### Determine the alpha and beta parameters needed to fit beta distribution using the (source code of the) prevalence::betaExpert() function
@@ -739,7 +739,7 @@ include_summary_uncertainty <- function(
 
     # * * * No dw CIs, both single and multiple geo unit case ##################
     } else if ( ("dw" %in% names(results[["health_detailed"]][["raw"]])) &
-                ( max(dat$geo_id_raw) == 1 ) ) {
+                ( max(dat$geo_id_disaggregated) == 1 ) ) {
       dat <- dat |>
         dplyr::mutate(dw = results[["health_detailed"]][["raw"]] |>
                         dplyr::filter(dw_ci == "central") |>
@@ -763,13 +763,13 @@ include_summary_uncertainty <- function(
     dat <- dat |>
       dplyr::mutate(
         rr_conc = purrr::pmap(
-          list(rr = rr, exp = exp, cutoff = cutoff, erf_increment = erf_increment, erf_shape = erf_shape),
-          function(rr, exp, cutoff, erf_increment, erf_shape){
+          list(rr = rr, exp = exp, cutoff = cutoff, rr_increment = rr_increment, erf_shape = erf_shape),
+          function(rr, exp, cutoff, rr_increment, erf_shape){
             rr_conc <- healthiar::get_risk(
               rr = rr,
               exp = exp,
               cutoff = cutoff,
-              erf_increment = erf_increment,
+              rr_increment = rr_increment,
               erf_shape = erf_shape,
               erf_eq = NULL)
             return(rr_conc)
@@ -797,7 +797,7 @@ include_summary_uncertainty <- function(
                 get_risk(rr = dat$rr,
                          exp = dat[[!!paste0("exp_", .x)]], # Selects xth element of the vector
                          cutoff = dat$cutoff[1],
-                         erf_increment = dat$erf_increment[1],
+                         rr_increment = dat$rr_increment[1],
                          erf_shape = dat$erf_shape[1],
                          erf_eq = NULL)
               )
@@ -895,7 +895,7 @@ include_summary_uncertainty <- function(
     ## Create (empty) tibble to store simulated values & results in
     dat <- tibble::tibble(
       row_id = 1:(n_sim*n_geo),
-      geo_id_raw = rep(1:n_geo, each = n_sim))
+      geo_id_disaggregated = rep(1:n_geo, each = n_sim))
 
     # * * exp ##################################################################
 
@@ -903,7 +903,7 @@ include_summary_uncertainty <- function(
 
     if (
       (length(grep("lower", results[["health_detailed"]][["raw"]][["exp_ci"]])) > 0) &
-      ( max(dat$geo_id_raw) == 1 )
+      ( max(dat$geo_id_disaggregated) == 1 )
     ) {
 
       # browser()
@@ -964,7 +964,7 @@ include_summary_uncertainty <- function(
     # * * * exp CI's & multiple geo units ######################################
     } else if (
       ( length(grep("lower", results[["health_detailed"]][["raw"]][["exp_ci"]])) > 0 ) &
-      ( max(dat$geo_id_raw) > 1 )
+      ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
       ## Create exp vectors needed for simulation below
@@ -973,47 +973,47 @@ include_summary_uncertainty <- function(
         (\(x) if ("duration_ci" %in% colnames(x)) filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) filter(x, dw_ci == "central") else x)() |>
         dplyr::filter(erf_ci == "central") |>
-        select(geo_id_raw, exposure_dimension, exp) |>
-        group_by(geo_id_raw) %>%
+        select(geo_id_disaggregated, exposure_dimension, exp) |>
+        group_by(geo_id_disaggregated) %>%
         summarize(exp_central = list(exp), .groups = "drop")
       exp_lower <- results[["health_detailed"]][["raw"]] |>
         dplyr::filter(exp_ci == "lower") |>
         (\(x) if ("duration_ci" %in% colnames(x)) filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) filter(x, dw_ci == "central") else x)() |>
         dplyr::filter(erf_ci == "central") |>
-        select(geo_id_raw, exposure_dimension, exp) |>
-        group_by(geo_id_raw) %>%
+        select(geo_id_disaggregated, exposure_dimension, exp) |>
+        group_by(geo_id_disaggregated) %>%
         summarize(exp_lower = list(exp), .groups = "drop")
       exp_upper <- results[["health_detailed"]][["raw"]] |>
         dplyr::filter(exp_ci == "upper") |>
         (\(x) if ("duration_ci" %in% colnames(x)) filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) filter(x, dw_ci == "central") else x)() |>
         dplyr::filter(erf_ci == "central") |>
-        select(geo_id_raw, exposure_dimension, exp) |>
-        group_by(geo_id_raw) %>%
+        select(geo_id_disaggregated, exposure_dimension, exp) |>
+        group_by(geo_id_disaggregated) %>%
         summarize(exp_upper = list(exp), .groups = "drop")
       ## Bind vectors
       dat_exp <- cbind(exp_central,
-                       exp_lower |> select(-geo_id_raw),
-                       exp_upper |> select(-geo_id_raw))
+                       exp_lower |> select(-geo_id_disaggregated),
+                       exp_upper |> select(-geo_id_disaggregated))
       ## Create vector with populations exposed
       pop_exp <- results[["health_detailed"]][["raw"]] |>
         dplyr::filter(exp_ci == "central") |>
         (\(x) if ("duration_ci" %in% colnames(x)) filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) filter(x, dw_ci == "central") else x)() |>
         dplyr::filter(erf_ci == "central") |>
-        select(geo_id_raw, pop_exp) |>
-        group_by(geo_id_raw) %>%
+        select(geo_id_disaggregated, pop_exp) |>
+        group_by(geo_id_disaggregated) %>%
         summarize(pop_exp = list(pop_exp), .groups = "drop")
 
       ## Create vectors of column names
       exp_columns <- paste0("exp_", dat_exp |>
-                              filter(geo_id_raw == 1) |>
+                              filter(geo_id_disaggregated == 1) |>
                               pull(exp_central) |>
                               unlist() |>
                               seq_along())
       pop_columns <- paste0("pop_exp_", dat_exp |>
-                               filter(geo_id_raw == 1) |>
+                               filter(geo_id_disaggregated == 1) |>
                                pull(exp_central) |>
                                unlist() |>
                                seq_along())
@@ -1021,24 +1021,24 @@ include_summary_uncertainty <- function(
       ## Create empty tibble to be filled in loop below
       ## @ AC: sorry for the loop (again) : P
       dat_sim <- tibble(
-        geo_id_raw = numeric(0)  # Initialize geo_id_raw as numeric
+        geo_id_disaggregated = numeric(0)  # Initialize geo_id_disaggregated as numeric
       ) |>
         bind_cols(
           set_names(rep(list(numeric(0)), length(exp_columns)), exp_columns),
           set_names(rep(list(numeric(0)), length(pop_columns)), pop_columns)
         )
 
-      for (i in exp_central$geo_id_raw){
+      for (i in exp_central$geo_id_disaggregated){
 
         ## Create temp tibble to store simulated values in
         temp <- tibble::tibble(
-          geo_id_raw = rep(i, times = n_sim)) |>
+          geo_id_disaggregated = rep(i, times = n_sim)) |>
           bind_cols(
             purrr::map(
               # .x will take the values 1, 2, ..., (nr. of exposure categories)
               .x = seq_along(
                 dat_exp |>
-                  dplyr::filter(geo_id_raw == i) |>
+                  dplyr::filter(geo_id_disaggregated == i) |>
                   dplyr::pull(exp_central) |>
                   base::unlist(x = _)
               ),
@@ -1047,12 +1047,12 @@ include_summary_uncertainty <- function(
                   ## For each exposure category generate n_sim simulated values
                   rnorm(
                     n_sim,
-                    mean = dat_exp |> filter(geo_id_raw == i) |> pull(exp_central) |> unlist(x = _) |> nth(.x) ,
+                    mean = dat_exp |> filter(geo_id_disaggregated == i) |> pull(exp_central) |> unlist(x = _) |> nth(.x) ,
                     # Formula for standard deviation (sd): exp_upper - exp_lower) / (2 * 1.96)
-                    sd = ( dat_exp |> filter(geo_id_raw == i) |> pull(exp_upper) |> unlist(x = _) |> nth(.x) -
-                             dat_exp |> filter(geo_id_raw == i) |> pull(exp_lower) |> unlist(x = _) |> nth(.x) ) / (2 * 1.96)
+                    sd = ( dat_exp |> filter(geo_id_disaggregated == i) |> pull(exp_upper) |> unlist(x = _) |> nth(.x) -
+                             dat_exp |> filter(geo_id_disaggregated == i) |> pull(exp_lower) |> unlist(x = _) |> nth(.x) ) / (2 * 1.96)
                   ),
-                !!paste0("pop_exp_", .x) := pop_exp|> filter(geo_id_raw == i) |> pull(pop_exp) |> unlist(x = _) |> nth(.x)
+                !!paste0("pop_exp_", .x) := pop_exp|> filter(geo_id_disaggregated == i) |> pull(pop_exp) |> unlist(x = _) |> nth(.x)
               )) |>
               purrr::reduce(bind_cols)
           )
@@ -1065,12 +1065,12 @@ include_summary_uncertainty <- function(
 
       # Add simulated values of all geo units to dat tibble
       dat <- dat |>
-        bind_cols(dat_sim |> select(-geo_id_raw))
+        bind_cols(dat_sim |> select(-geo_id_disaggregated))
 
       # * * * no exp CI's & single geo unit case ###############################
     } else if (
       ( !length(grep("lower", results[["health_detailed"]][["raw"]][["exp_ci"]])) > 0 ) &
-      ( max(dat$geo_id_raw) == 1  )
+      ( max(dat$geo_id_disaggregated) == 1  )
     ) {
 
 
@@ -1114,7 +1114,7 @@ include_summary_uncertainty <- function(
       # * * * no exp CI's & multiple geo unit case #############################
     }  else if (
     ( !length(grep("lower", results[["health_detailed"]][["raw"]][["exp_ci"]])) > 0 ) &
-    ( max(dat$geo_id_raw) > 1 )
+    ( max(dat$geo_id_disaggregated) > 1 )
     ) {
 
     ## Create exp and prop_exp vectors
@@ -1123,8 +1123,8 @@ include_summary_uncertainty <- function(
       (\(x) if ("duration_ci" %in% colnames(x)) filter(x, duration_ci == "central") else x)() |>
       (\(x) if ("dw_ci" %in% colnames(x)) filter(x, dw_ci == "central") else x)() |>
       dplyr::filter(erf_ci == "central") |>
-      select(geo_id_raw, exposure_dimension, exp) |>
-      group_by(geo_id_raw) %>%
+      select(geo_id_disaggregated, exposure_dimension, exp) |>
+      group_by(geo_id_disaggregated) %>%
       summarize(exp_central = list(exp), .groups = "drop")
 
     pop_exp <- results[["health_detailed"]][["raw"]] |>
@@ -1132,18 +1132,18 @@ include_summary_uncertainty <- function(
       (\(x) if ("duration_ci" %in% colnames(x)) filter(x, duration_ci == "central") else x)() |>
       (\(x) if ("dw_ci" %in% colnames(x)) filter(x, dw_ci == "central") else x)() |>
       dplyr::filter(erf_ci == "central") |>
-      select(geo_id_raw, pop_exp) |>
-      group_by(geo_id_raw) %>%
+      select(geo_id_disaggregated, pop_exp) |>
+      group_by(geo_id_disaggregated) %>%
       summarize(pop_exp = list(pop_exp), .groups = "drop")
 
     ## Create vectors of column names
     exp_columns <- paste0("exp_", exp_central |>
-                            filter(geo_id_raw == 1) |>
+                            filter(geo_id_disaggregated == 1) |>
                             pull(exp_central) |>
                             unlist() |>
                             seq_along())
     pop_columns <- paste0("pop_exp_", exp_central |>
-                            filter(geo_id_raw == 1) |>
+                            filter(geo_id_disaggregated == 1) |>
                             pull(exp_central) |>
                             unlist() |>
                             seq_along())
@@ -1151,30 +1151,30 @@ include_summary_uncertainty <- function(
     ## Create empty tibble to be filled in loop below
     ## @ AC: sorry for the loop (again) : P
     dat_sim <- tibble(
-      geo_id_raw = numeric(0)  # Initialize geo_id_raw as numeric
+      geo_id_disaggregated = numeric(0)  # Initialize geo_id_disaggregated as numeric
     ) |>
       bind_cols(
         set_names(rep(list(numeric(0)), length(exp_columns)), exp_columns),
         set_names(rep(list(numeric(0)), length(pop_columns)), pop_columns)
       )
 
-    for (i in exp_central$geo_id_raw){
+    for (i in exp_central$geo_id_disaggregated){
 
       ## Create temp tibble to store simulated values in
       temp <- tibble::tibble(
-        geo_id_raw = rep(i, times = n_sim)) |>
+        geo_id_disaggregated = rep(i, times = n_sim)) |>
         bind_cols(
           purrr::map(
             # .x will take the values 1, 2, ..., (nr. of exposure categories)
             .x = seq_along(
               exp_central |>
-                dplyr::filter(geo_id_raw == i) |>
+                dplyr::filter(geo_id_disaggregated == i) |>
                 dplyr::pull(exp_central) |>
                 base::unlist(x = _)
             ),
             .f = ~ tibble::tibble(
-              !!paste0("exp_", .x) := exp_central |> filter(geo_id_raw == i) |> pull(exp_central) |> unlist(x = _) |> nth(.x),
-              !!paste0("pop_exp_", .x) := pop_exp |> filter(geo_id_raw == i) |> pull(pop_exp) |> unlist(x = _) |> nth(.x)
+              !!paste0("exp_", .x) := exp_central |> filter(geo_id_disaggregated == i) |> pull(exp_central) |> unlist(x = _) |> nth(.x),
+              !!paste0("pop_exp_", .x) := pop_exp |> filter(geo_id_disaggregated == i) |> pull(pop_exp) |> unlist(x = _) |> nth(.x)
             )) |>
             purrr::reduce(bind_cols)
         )
@@ -1189,7 +1189,7 @@ include_summary_uncertainty <- function(
 
     # Add simulated values of all geo units to dat tibble
     dat <- dat |>
-      bind_cols(dat_sim |> select(-geo_id_raw))
+      bind_cols(dat_sim |> select(-geo_id_disaggregated))
 
     }
 
@@ -1199,7 +1199,7 @@ include_summary_uncertainty <- function(
 
     # * * * dw CIs, both single and multiple geo unit case #####################
     if ( (length(grep("lower", results[["health_detailed"]][["raw"]][["dw_ci"]])) > 0) &
-         ( max(dat$geo_id_raw) == 1 ) ) {
+         ( max(dat$geo_id_disaggregated) == 1 ) ) {
 
       ## beta distribution using prevalence::betaExpert()
       ### Determine the alpha and beta parameters needed to fit beta distribution using the (source code of the) prevalence::betaExpert() function
@@ -1347,7 +1347,7 @@ include_summary_uncertainty <- function(
 
   # * Single geo unit ##########################################################
 
-  if ( ( max(dat$geo_id_raw) == 1 ) ) {
+  if ( ( max(dat$geo_id_disaggregated) == 1 ) ) {
 
     ## CI of aggregated impact
     ### Because there's only 1 geo unit the aggregated impact is the same as the geo unit impact
@@ -1360,13 +1360,13 @@ include_summary_uncertainty <- function(
                  upper_estimate = ci[3])
 
   # * Multiple geo units ###################################################
-  } else if ( max(dat$geo_id_raw) > 1 ) {
+  } else if ( max(dat$geo_id_disaggregated) > 1 ) {
 
     # browser()
 
     ## CIs of impact per geo unit
     impact_per_geo_unit <- dat |>
-      group_by(geo_id_raw) |>
+      group_by(geo_id_disaggregated) |>
       summarize(
         impact_central = quantile(
           x = impact_total,

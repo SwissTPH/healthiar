@@ -1,27 +1,29 @@
-test_that("results correct lifetable yld single exposure and one year exposure without newborns", {
+testthat::test_that("results correct lifetable yld single exposure and one year exposure without newborns", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data_airqplus <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
 
   testthat::expect_equal(
     object =
       attribute_daly_from_lifetable(
-        exp_central = input_data_mortality$exp[2],
+        exp_central = data$exp[2],
         prop_pop_exp = 1,
-        cutoff_central = input_data_mortality$cutoff[2],
-        rr_central = input_data_mortality[2,"rr_central"],
-        rr_lower = input_data_mortality[2,"rr_lower"],
-        rr_upper =input_data_mortality[2,"rr_upper"],
-        erf_increment = 10,
+        cutoff_central = data$cutoff[2],
+        rr_central = data[2,"rr_central"],
+        rr_lower = data[2,"rr_lower"],
+        rr_upper =data[2,"rr_upper"],
+        rr_increment = 10,
         erf_shape = "log_linear",
         first_age_pop = 0,
         last_age_pop = 99,
-        deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-        deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-        population_midyear_male = lifetable_withPopulation[["male"]]$population,
-        population_midyear_female = lifetable_withPopulation[["female"]]$population,
+        deaths_male = data_airqplus[["pop"]]$number_of_deaths_male,
+        deaths_female = data_airqplus[["pop"]]$number_of_deaths_female,
+        population_midyear_male = data_lifetable[["male"]]$population,
+        population_midyear_female = data_lifetable[["female"]]$population,
         year_of_analysis = 2019,
-        info = input_data_mortality$pollutant[2],
-        min_age = input_data_mortality$min_age[2],
+        info = data$pollutant[2],
+        min_age = data$min_age[2],
         duration_central = 100,
         dw_central = 1) |>
       purrr::pluck("health_main") |>

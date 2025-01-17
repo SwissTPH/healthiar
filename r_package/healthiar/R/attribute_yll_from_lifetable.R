@@ -25,7 +25,7 @@ attribute_yll_from_lifetable <-
            prop_pop_exp = 1,
            cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
            rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           erf_increment = NULL, erf_shape = NULL,
+           rr_increment = NULL, erf_shape = NULL,
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            approach_exposure = "single_year",
            approach_newborns = "without_newborns",
@@ -47,7 +47,7 @@ attribute_yll_from_lifetable <-
         prop_pop_exp = prop_pop_exp,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
         rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
-        erf_increment = erf_increment,
+        rr_increment = rr_increment,
         erf_shape = erf_shape,
         erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
         bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
@@ -60,7 +60,7 @@ attribute_yll_from_lifetable <-
         deaths_male = deaths_male, deaths_female = deaths_female,
         year_of_analysis = year_of_analysis,
         min_age = min_age, max_age = max_age,
-        geo_id_raw = NULL, geo_id_aggregated = NULL,
+        geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
         time_horizon = time_horizon,
         info = info)
 

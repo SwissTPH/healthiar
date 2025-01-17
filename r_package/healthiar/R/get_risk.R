@@ -21,15 +21,15 @@ get_risk <-
   function(rr = NULL,
            exp,
            cutoff = NULL,
-           erf_increment = NULL,
+           rr_increment = NULL,
            erf_shape = NULL,
            erf_eq = NULL){
 
     # The function assumes that the user of the package does not define the function entirely,
-    # but using arguments such as exp, cutoff, erf_increment and erf_shape
+    # but using arguments such as exp, cutoff, rr_increment and erf_shape
     # Therefore, the default value of the argument erf_eq should be NULL
     # If the user enter a TRUE, erf_eq is read. Otherwise the arguments
-    # exp, cutoff, erf_increment and erf_shape.
+    # exp, cutoff, rr_increment and erf_shape.
 
     # Let's write the exposure-response function (erf)
     # based on c (concentration) as single data
@@ -44,7 +44,7 @@ get_risk <-
       if ( erf_shape == "linear" ) {
         erf <-
           function(c){
-            1+( (rr-1) * (c-cutoff)/erf_increment )
+            1+( (rr-1) * (c-cutoff)/rr_increment )
           }
         rr_c <- erf(exp)
         return(rr_c)
@@ -54,7 +54,7 @@ get_risk <-
       if ( erf_shape == "log_linear" ) {
         erf <-
           function(c){
-            exp(log(rr) *(c-cutoff)/erf_increment)
+            exp(log(rr) *(c-cutoff)/rr_increment)
           }
         rr_c <- erf(exp)
         return(rr_c)
@@ -64,7 +64,7 @@ get_risk <-
       if ( erf_shape == "linear_log" ) {
         erf <-
           function(c){
-            1+( (rr-1) * (log(c)-log(cutoff))/log(erf_increment) )
+            1+( (rr-1) * (log(c)-log(cutoff))/log(rr_increment) )
           }
         rr_c <- erf(exp)
         return(rr_c)
@@ -73,7 +73,7 @@ get_risk <-
       if ( erf_shape == "log_log" ) {
         erf <-
           function(c){
-            exp( log(rr) *(log(c)-log(cutoff))/log(erf_increment) )
+            exp( log(rr) *(log(c)-log(cutoff))/log(rr_increment) )
           }
         rr_c <- erf(exp)
         return(rr_c)

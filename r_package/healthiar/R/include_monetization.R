@@ -3,10 +3,10 @@
 #' @description Monetize health impacts
 #'
 #' @param approach_discount \code{String} referring to the method to be used for the discounting choosing between the default "direct" (after obtaining the health impacts) and the alternative "indirect" (before the health impacts).
-#' @param output \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.
+#' @param output_healthiar \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function).
 #' @param valuation \code{Numberic value} referring to unit value of a health impact
-#' @param corrected_discount_rate \code{Numeric value} showing the discount rate for future years including correction from inflation rate
+#' @param discount_rate \code{Numeric value} showing the discount rate for future years including correction from inflation rate
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
 #' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting.
 #' @param discount_overtime \code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".
@@ -16,20 +16,21 @@
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)
 #' @export
-include_monetization <- function(approach_discount = "direct",
-                         output = NULL,
-                         impact = NULL,
-                         valuation,
-                         corrected_discount_rate = NULL,
-                         discount_shape = NULL,
-                         discount_years = 1,
-                         discount_overtime = "all_years") {
+include_monetization <-
+  function(approach_discount = "direct",
+           output_healthiar = NULL,
+           impact = NULL,
+           valuation,
+           discount_rate = NULL,
+           discount_shape = NULL,
+           discount_years = 1,
+           discount_overtime = "all_years") {
 
 
 
 
   # Using the output of attribute ####
-  if(!is.null(output) & is.null(impact)){
+  if(!is.null(output_healthiar) & is.null(impact)){
 
     # Indirect approach #######
     # This means applying the discount within the lifetable method
@@ -37,15 +38,15 @@ include_monetization <- function(approach_discount = "direct",
     if(approach_discount == "indirect"){
 
       outcome_metric <-
-        unique(output[["health_detailed"]][["raw"]]$outcome_metric)
+        unique(output_healthiar[["health_detailed"]][["raw"]]$outcome_metric)
 
       # Store the original data (they refer to health)
-      output_health <- output
+      output_health <- output_healthiar
 
       # Output will be adapted according to monetized impacts
       #TODO The names health are kept just provisionally until we adapt get_output()
       impact_detailed <-
-        output[["health_detailed"]][["raw"]] |>
+        output_health[["health_detailed"]][["raw"]] |>
 
         ## Calculate total, discounted life years (single value) per sex & ci
         dplyr::mutate(
@@ -63,7 +64,7 @@ include_monetization <- function(approach_discount = "direct",
                               # Here the difference between year of analysis and
                               # last year of mortality data is to be used
                               discount_years = year - {{year_of_analysis}},
-                              corrected_discount_rate = {{corrected_discount_rate}},
+                              discount_rate = {{discount_rate}},
                               discount_shape = {{discount_shape}})|>
 
 
@@ -71,7 +72,7 @@ include_monetization <- function(approach_discount = "direct",
                 dplyr::mutate(
                   discount_factor =
                     healthiar::get_discount_factor(
-                      corrected_discount_rate = corrected_discount_rate,
+                      discount_rate = discount_rate,
                       discount_year = discount_years,
                       discount_shape = discount_shape)) |>
 
@@ -159,21 +160,21 @@ include_monetization <- function(approach_discount = "direct",
 
       # Duplicate output to work with monetization
       output_monetization <-
-        output
+        output_healthiar
 
       # Apply the function in main and detailed results
       output_monetization[["monetization_main"]] <-
-        healthiar:::add_monetized_impact(df = output[["health_main"]],
+        healthiar:::add_monetized_impact(df = output_healthiar[["health_main"]],
                                          valuation = valuation,
-                                         corrected_discount_rate = corrected_discount_rate,
+                                         discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
                                          discount_shape = discount_shape,
                                          discount_overtime = discount_overtime)
 
       output_monetization[["monetization_detailed"]]<-
-        healthiar:::add_monetized_impact(df = output[["health_detailed"]][["raw"]],
+        healthiar:::add_monetized_impact(df = output_healthiar[["health_detailed"]][["raw"]],
                                          valuation = valuation,
-                                         corrected_discount_rate = corrected_discount_rate,
+                                         discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
                                          discount_shape = discount_shape,
                                          discount_overtime = discount_overtime)
@@ -183,9 +184,9 @@ include_monetization <- function(approach_discount = "direct",
     # For both direct and indirect approach
     # Identify the relevant columns for monetization that are in the output
     relevant_columns <-
-      c("info", "geo_id_raw", "geo_id_aggregated",
+      c("info", "geo_id_disaggregated", "geo_id_aggregated",
         paste0("impact", c("", "_before_discount", "_after_discount")),
-        "corrected_discount_rate", "discount_shape", "discount_overtime", "approach_discount",
+        "discount_rate", "discount_shape", "discount_overtime", "approach_discount",
         "valuation",
         paste0("monetized_impact", c("", "_before_discount", "_after_discount")),
         paste0("monetized_impact", c("", "_before_discount", "_after_discount"), "_rounded"))
@@ -207,7 +208,7 @@ include_monetization <- function(approach_discount = "direct",
 
     # Using user input ####
     # If the user only provide a number of the impact (not based on output of attribute)
-    }else if(!is.null(impact) & is.null(output)){
+    }else if(!is.null(impact) & is.null(output_healthiar)){
 
 
       # The approach cannot be indirect
@@ -219,7 +220,7 @@ include_monetization <- function(approach_discount = "direct",
             healthiar:::add_monetized_impact(
               df = data.frame(impact = impact),
               valuation = valuation,
-              corrected_discount_rate = corrected_discount_rate,
+              discount_rate = discount_rate,
               discount_years = discount_years,
               discount_shape = discount_shape,
               discount_overtime = discount_overtime)

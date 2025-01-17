@@ -1,6 +1,4 @@
-test_that("results correct delta comparison rr single exposure", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+testthat::test_that("results correct delta comparison rr single exposure", {
 
   testthat::expect_equal(
     object =
@@ -14,7 +12,7 @@ test_that("results correct delta comparison rr single exposure", {
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         info_1 = "PM2.5_mortality_2010",
         info_2 = "PM2.5_mortality_2020") |>
@@ -24,9 +22,7 @@ test_that("results correct delta comparison rr single exposure", {
   )
 })
 
-test_that("results correct delta comparison when two scenarios are identical", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+testthat::test_that("results correct delta comparison when two scenarios are identical", {
 
   testthat::expect_equal(
     object =
@@ -40,7 +36,7 @@ test_that("results correct delta comparison when two scenarios are identical", {
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         info_1 = "PM2.5_mortality_2010",
         info_2 = "PM2.5_mortality_2020") |>
@@ -50,9 +46,7 @@ test_that("results correct delta comparison when two scenarios are identical", {
   )
 })
 
-test_that("results correct delta comparison iteration rr single exposures", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+testthat::test_that("results correct delta comparison iteration rr single exposures", {
 
   testthat::expect_equal(
     object =
@@ -66,11 +60,11 @@ test_that("results correct delta comparison iteration rr single exposures", {
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         info_1 = "PM2.5_mortality_2010",
         info_2 = "PM2.5_mortality_2020",
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
@@ -78,9 +72,7 @@ test_that("results correct delta comparison iteration rr single exposures", {
   )
 })
 
-test_that("results correct pif comparison rr single exposure", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+testthat::test_that("results correct pif comparison rr single exposure", {
 
   testthat::expect_equal(
     object =
@@ -94,7 +86,7 @@ test_that("results correct pif comparison rr single exposure", {
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         info_1 = "PM2.5_mortality_2010",
         info_2 = "PM2.5_mortality_2020") |>
@@ -104,9 +96,7 @@ test_that("results correct pif comparison rr single exposure", {
   )
 })
 
-test_that("results correct pif comparison iteration rr single exposures", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+testthat::test_that("results correct pif comparison iteration rr single exposures", {
 
   testthat::expect_equal(
     object =
@@ -120,11 +110,11 @@ test_that("results correct pif comparison iteration rr single exposures", {
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         info_1 = "PM2.5_mortality_2010",
         info_2 = "PM2.5_mortality_2020",
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
@@ -133,9 +123,7 @@ test_that("results correct pif comparison iteration rr single exposures", {
 })
 
 ## Commented out because test takes a while
-# test_that("results correct delta comparison iteration (high number of geo units) rr single exposures", {
-#
-#   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+# testthat::test_that("results correct delta comparison iteration (high number of geo units) rr single exposures", {
 #
 #   testthat::expect_equal(
 #     object =
@@ -157,9 +145,9 @@ test_that("results correct pif comparison iteration rr single exposures", {
 #         rr_central = 1.369,
 #         rr_lower = 1.124,
 #         rr_upper = 1.664,
-#         erf_increment = 10,
+#         rr_increment = 10,
 #         erf_shape = "log_linear",
-#         geo_id_raw = 1:1E4,
+#         geo_id_disaggregated = 1:1E4,
 #         geo_id_aggregated = rep("CH", 1E4),
 #         info_1 = "PM2.5_mortality_2010",
 #         info_2 = "PM2.5_mortality_2020") |>
@@ -169,9 +157,7 @@ test_that("results correct pif comparison iteration rr single exposures", {
 #   )
 # })
 
-test_that("results correct delta comparison ar exposure distribution", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+testthat::test_that("results correct delta comparison ar exposure distribution", {
 
   testthat::expect_equal(
     object =
@@ -194,9 +180,7 @@ test_that("results correct delta comparison ar exposure distribution", {
   )
 })
 
-test_that("results correct delta comparison iteration ar exposure distribution", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+testthat::test_that("results correct delta comparison iteration ar exposure distribution", {
 
   testthat::expect_equal(
     object =
@@ -214,7 +198,7 @@ test_that("results correct delta comparison iteration ar exposure distribution",
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         info_1 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2020),
         info_2 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2022),
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =

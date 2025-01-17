@@ -30,13 +30,13 @@ compare_health <-
            prop_pop_exp_2 = 1,
            cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
            rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           erf_increment = NULL,
+           rr_increment = NULL,
            erf_shape = NULL,
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            bhd_central_1 = NULL, bhd_lower_1 = NULL, bhd_upper_1 = NULL,
            bhd_central_2 = NULL, bhd_lower_2 = NULL, bhd_upper_2 = NULL,
            population_1 = NULL, population_2 = NULL,
-           geo_id_raw = NULL,
+           geo_id_disaggregated = NULL,
            geo_id_aggregated = NULL,
            info_1 = NULL, info_2 = NULL){
 
@@ -54,7 +54,7 @@ compare_health <-
         prop_pop_exp_2 = prop_pop_exp_2,
         cutoff_central = cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,,
         rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
-        erf_increment = erf_increment,
+        rr_increment = rr_increment,
         erf_shape = erf_shape,
         erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
         bhd_central_1 = bhd_central_1, bhd_lower_1 = bhd_lower_1, bhd_upper_1 = bhd_upper_1,
@@ -72,7 +72,7 @@ compare_health <-
         min_age = NULL, max_age = NULL,
         dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
         duration_central = NULL,
-        geo_id_raw = geo_id_raw,
+        geo_id_disaggregated = geo_id_disaggregated,
         geo_id_aggregated = geo_id_aggregated,
         population_1 = population_1, population_2 = population_2,
         info_1 = info_1 , info_2 = info_2)
