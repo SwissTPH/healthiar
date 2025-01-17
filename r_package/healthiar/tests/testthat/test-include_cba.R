@@ -8,8 +8,8 @@ testthat::test_that("results correct cba with direct discounting and exponential
         valuation = 20,
         cost = 100,
         discount_shape = "exponential",
-        corrected_discount_rate_benefit = 0.03,
-        corrected_discount_rate_cost = 0.03,
+        discount_rate_benefit = 0.03,
+        discount_rate_cost = 0.03,
         discount_years_benefit = 5,
         discount_years_cost = 5,
         discount_overtime = "last_year") |>
@@ -34,7 +34,7 @@ testthat::test_that("results correct cba discounting only one specific year with
       rr_central = data$relative_risk,
       rr_lower = data$relative_risk_lower,
       rr_upper = data$relative_risk_upper,
-      erf_increment = 10,
+      rr_increment = 10,
       erf_shape = "log_linear",
       info = paste0(data$pollutant,"_", data$evaluation_name))
 
@@ -42,12 +42,12 @@ testthat::test_that("results correct cba discounting only one specific year with
     object =
       healthiar::include_cba(
         approach_discount = "direct",
-        output = bestcost_pm_copd,
+        output_healthiar = bestcost_pm_copd,
         valuation = 20,
         cost = 100,
         discount_shape = "exponential",
-        corrected_discount_rate_benefit = 0.03,
-        corrected_discount_rate_cost = 0.03,
+        discount_rate_benefit = 0.03,
+        discount_rate_cost = 0.03,
         discount_years_benefit = 5,
         discount_years_cost = 5,
         discount_overtime = "last_year") |>

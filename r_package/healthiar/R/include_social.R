@@ -1,9 +1,9 @@
 #' include_social
 
 #' @description Consider socio-economic aspects in the results
-#' @param output \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results
-#' @param impact \code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_raw}.
-#' @param population \code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_raw}.
+#' @param output_healthiar \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results
+#' @param impact \code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_disaggregated}.
+#' @param population \code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.
 #' @param social_indicator \code{Vector} with numeric values showing the deprivation score (indicator of economic wealth) of the fine geographical area (it should match with those used in \code{attribute} or \code{compare})
 #' @param n_quantile \code{Integer value} specifying to the number quantiles in the analysis
 #' @param approach \code{String} referring the approach to include the social aspects. To choose between "quantile" and ?
@@ -15,30 +15,30 @@
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)
 #' @export
-include_social <- function(output = NULL,
+include_social <- function(output_healthiar = NULL,
                            impact = NULL,
                            population = NULL,
                            bhd = NULL,
                            exp = NULL,
                            pop_fraction = NULL,
-                           geo_id_raw,
+                           geo_id_disaggregated,
                            social_indicator,
                            n_quantile = 10, ## by default: decile
                            approach = "quantile") {
 
   # Using the output of attribute ##############################################
 # browser()
-  if ( is.null(impact) & !is.null(output) ) {
+  if ( is.null(impact) & !is.null(output_healthiar) ) {
 
     # * Add social_indicator to detailed output ################################
 
     output_social <-
-      output[["health_detailed"]][["raw"]] |>
+      output_healthiar[["health_detailed"]][["raw"]] |>
       dplyr::left_join(
         x = _,
-        y = dplyr::tibble(geo_id_raw = geo_id_raw,
+        y = dplyr::tibble(geo_id_disaggregated = geo_id_disaggregated,
                           social_indicator = social_indicator),
-        by = "geo_id_raw")
+        by = "geo_id_disaggregated")
 
     # * Create quantiles and add rank based on social indicator ################
 
@@ -177,7 +177,7 @@ include_social <- function(output = NULL,
       dplyr::select(-is_paf_from_deprivation, -is_attributable_from_deprivation,
                     -parameter_string)
 
-    output[["social_main"]] <-
+    output_healthiar[["social_main"]] <-
       social_results |>
       ## Keep only impact as parameter
       ## This is the most relevant result.
@@ -185,22 +185,22 @@ include_social <- function(output = NULL,
       ## (just in case some users have interest on this)
       dplyr::filter(parameter == "impact_rate")
 
-    output[["social_detailed"]][["results_detailed"]] <- social_results
-    output[["social_detailed"]][["overview_quantiles"]] <- output_social_by_quantile
+    output_healthiar[["social_detailed"]][["results_detailed"]] <- social_results
+    output_healthiar[["social_detailed"]][["overview_quantiles"]] <- output_social_by_quantile
 
     return(output)
 
-  } else if ( !is.null(impact) & is.null(output) ) {
+  } else if ( !is.null(impact) & is.null(output_healthiar) ) {
 
     # Using user-entered impacts in vector format ##############################
 
-    # * Merge social_indicator, geo_id_raw and impacts #########################
+    # * Merge social_indicator, geo_id_disaggregated and impacts #########################
 
     # browser()
 
     output_social <-
       tibble::tibble(
-        geo_id_raw = geo_id_raw,
+        geo_id_disaggregated = geo_id_disaggregated,
         impact = impact,
         social_indicator = social_indicator,
         population = if ( !is.null({{ population }}) ) { population } else { NA },
@@ -371,7 +371,10 @@ include_social <- function(output = NULL,
       dplyr::select(-is_paf_from_deprivation, -is_attributable_from_deprivation,
                     -parameter_string)
 
-    output[["social_main"]] <-
+    output_social <-
+      output_healthiar
+
+    output_social[["social_main"]] <-
       social_results |>
       ## Keep only impact as parameter
       ## This is the most relevant result.
@@ -380,11 +383,11 @@ include_social <- function(output = NULL,
       ## NOTE: if the population argument is not specified (i.e. it is NULL), then this table is full of NA's 3 ####
       dplyr::filter(parameter == "impact_rate")
 
-    output[["socia_detailed"]][["results_detailed"]] <- social_results
-    output[["socia_detailed"]][["impact_per_quantile"]] <- output_social_by_quantile
-    output[["input"]] <- output_social
+    output_social[["social_detailed"]][["results_detailed"]] <- social_results
+    output_social[["social_detailed"]][["impact_per_quantile"]] <- output_social_by_quantile
+    output_social[["input"]] <- output_social
 
-    return(output)
+    return(output_social)
 
   }
 

@@ -16,7 +16,7 @@ testthat::test_that("results correct delta comparison lifetable yll rr single ex
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         approach_exposure_1 = "single_year",
         approach_newborns_1 = "without_newborns",
@@ -61,7 +61,7 @@ testthat::test_that("results correct delta comparison lifetable yll iteration rr
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         approach_exposure_1 = "single_year",
         first_age_pop_1 = 0,
@@ -82,7 +82,7 @@ testthat::test_that("results correct delta comparison lifetable yll iteration rr
         info_1 = data_mort$pollutant[2],
         info_2 = data_mort$pollutant[2],
         min_age = 20,
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =
@@ -108,7 +108,7 @@ testthat::test_that("results correct pif comparison lifetable yll rr single expo
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         approach_exposure_1 = "single_year",
         first_age_pop_1 = 0,
@@ -151,7 +151,7 @@ testthat::test_that("results correct pif comparison lifetable yll iteration rr s
         rr_central = 1.118,
         rr_lower = 1.060,
         rr_upper = 1.179,
-        erf_increment = 10,
+        rr_increment = 10,
         erf_shape = "log_linear",
         first_age_pop_1 = 0,
         last_age_pop_1 = 99,
@@ -170,7 +170,7 @@ testthat::test_that("results correct pif comparison lifetable yll iteration rr s
         info_1 = data_mort$pollutant[2],
         info_2 = data_mort$pollutant[2],
         min_age = 20,
-        geo_id_raw = c("a", "b"),
+        geo_id_disaggregated = c("a", "b"),
         geo_id_aggregated = rep("ch", 2)) |>
       helper_extract_main_results(),
     expected =

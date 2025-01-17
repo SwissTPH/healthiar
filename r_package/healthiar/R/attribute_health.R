@@ -30,11 +30,11 @@ attribute_health <-
            prop_pop_exp = 1,
            cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
            rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           erf_increment = NULL,
+           rr_increment = NULL,
            erf_shape = NULL,
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
-           geo_id_raw = NULL, geo_id_aggregated = NULL,
+           geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
            approach_multiexposure = NULL,
            population = NULL,
            info = NULL){
@@ -48,7 +48,7 @@ attribute_health <-
         prop_pop_exp = prop_pop_exp,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
         rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
-        erf_increment = erf_increment,
+        rr_increment = rr_increment,
         erf_shape = erf_shape,
         erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
         bhd_central = bhd_central, bhd_lower = bhd_lower, bhd_upper = bhd_upper,
@@ -61,7 +61,7 @@ attribute_health <-
         min_age = NULL, max_age = NULL,
         dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
         duration_central = NULL,
-        geo_id_raw = geo_id_raw , geo_id_aggregated = geo_id_aggregated,
+        geo_id_disaggregated = geo_id_disaggregated , geo_id_aggregated = geo_id_aggregated,
         info = info)
 
     return(output)

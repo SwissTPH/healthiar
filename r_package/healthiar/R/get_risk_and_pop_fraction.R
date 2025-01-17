@@ -73,7 +73,7 @@ get_risk_and_pop_fraction <-
                         healthiar::get_risk(rr = rr,
                                            exp = exp,
                                            cutoff = cutoff,
-                                           erf_increment = erf_increment,
+                                           rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq)) |>
         dplyr::ungroup()
@@ -86,14 +86,14 @@ get_risk_and_pop_fraction <-
                         healthiar::get_risk(rr = rr,
                                            exp = exp_1,
                                            cutoff = cutoff,
-                                           erf_increment = erf_increment,
+                                           rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq),
                       rr_conc_2 =
                         healthiar::get_risk(rr = rr,
                                            exp = exp_2,
                                            cutoff = cutoff,
-                                           erf_increment = erf_increment,
+                                           rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq)) |>
         dplyr::ungroup()
@@ -134,7 +134,7 @@ get_risk_and_pop_fraction <-
           dplyr::mutate(exposure_name = paste(unique(exposure_name), collapse = ", ")) |>
           collapse_df_by_columns(
             columns_for_group = c(
-              "geo_id_raw",
+              "geo_id_disaggregated",
               "sex",
               "lifetable_with_pop_nest",
               "erf_ci",
@@ -153,7 +153,7 @@ get_risk_and_pop_fraction <-
 
     ## Calculate population (attributable or impact) fraction (PAF or PIF)
     likely_columns_to_group_input <-
-      c("geo_id_raw",
+      c("geo_id_disaggregated",
         "exposure_name",
         "exp_ci",
         "erf_ci",
@@ -170,11 +170,11 @@ get_risk_and_pop_fraction <-
       ## Group by exp_ci and cutoff_ci in case that there are different exposure or cutoff categories
       dplyr::group_by(across(all_of(available_columns_to_group_input)))
       ## Alternative coding if one of the grouping variables is NULL
-      ## dplyr::group_by(across(all_of(intersect(c("geo_id_raw", "exp_ci", "erf_ci"), names(input))))) |>
+      ## dplyr::group_by(across(all_of(intersect(c("geo_id_disaggregated", "exp_ci", "erf_ci"), names(input))))) |>
       ## Alternative coding with if statement within group_by
       ## Using if statement as below because otherwise (e.g. with if_else or case_when)
       ## the FALSE condition is evaluate and results in an error because the names do not match
-      ## dplyr::group_by(if("geo_id_raw" %in% names(input)){geo_id_raw}, exp_ci, erf_ci)|>
+      ## dplyr::group_by(if("geo_id_disaggregated" %in% names(input)){geo_id_disaggregated}, exp_ci, erf_ci)|>
 
     # * PAF ####################################################################
 
@@ -221,7 +221,7 @@ get_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
           dplyr::mutate(exposure_name = paste(unique(exposure_name), collapse = ", ")) |>
           collapse_df_by_columns(columns_for_group = c(
-            "geo_id_raw",
+            "geo_id_disaggregated",
             "sex",
             "lifetable_with_pop_nest",
             "erf_ci",
@@ -243,7 +243,7 @@ get_risk_and_pop_fraction <-
     input_with_risk_and_pop_fraction <-
       collapse_df_by_columns(df = input_with_risk_and_pop_fraction,
                              columns_for_group = c(
-                               "geo_id_raw",
+                               "geo_id_disaggregated",
                                "exposure_name",
                                "sex",
                                "lifetable_with_pop_nest",

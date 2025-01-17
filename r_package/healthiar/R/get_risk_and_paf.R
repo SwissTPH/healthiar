@@ -32,7 +32,7 @@ get_risk_and_paf <-
           healthiar::get_risk(rr = rr,
                              exp = exp,
                              cutoff_central = cutoff_central,
-                             erf_increment = erf_increment,
+                             rr_increment = rr_increment,
                              erf_shape = erf_shape)) |>
       dplyr::ungroup()
 

@@ -5,7 +5,7 @@ testthat::test_that("linear rescaling works", {
       erf_shape = "linear",
       cutoff = 5,
       exp = 10,
-      erf_increment = 10
+      rr_increment = 10
     ),
     expected = 1.05
     )
