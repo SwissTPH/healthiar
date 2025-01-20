@@ -10,6 +10,205 @@ To limit the number of possible pathways there is one pathway per major calculat
 - social analysis
 - monetization
 
+```{r setup}
+
+pacman::p_load(dplyr, tibble, )
+
+```
+
+```{r Pathways non-lifetable}
+ov_rr_ar <- list(
+  # erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"),
+  erf = c("log_lin", "lin_lin", "formula", "point_pairs"),
+  exp = c("pop_weighted", "exp_dist"), # prop_pop_exp linked with this
+  cutoff = c("TRUE", "FALSE"),
+  iteration = c("TRUE", "FALSE"),
+  multiexp = c("FALSE", "additive", "multiplicative", "combined"),
+  var_uncer = c("TRUE", "FALSE")
+)
+
+pathways_rr_ar <- expand.grid(ov_rr_ar)
+
+pathways_rr_ar <- pathways_rr_ar |> 
+  tibble::as_tibble() |> 
+  dplyr::mutate(implemented = "FALSE") |> 
+  dplyr::mutate(test_name = "NULL")
+
+pathways_rr_ar <- pathways_rr_ar |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "log_lin" & 
+      exp == "pop_weighted" & 
+      cutoff == "TRUE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "FALSE") 
+    ~ "result correct rr with single exposure value and only rr_central", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "log_lin" & 
+      exp == "pop_weighted" & 
+      cutoff == "TRUE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "TRUE") 
+    ~ "result correct rr with single exposure and variable uncertainty", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "point_pairs" & 
+      exp == "pop_weighted" & 
+      cutoff == "TRUE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "FALSE") 
+    ~ "results correct user-defined erf (mrbrt) with splinefun with cutoff of 5", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "point_pairs" & 
+      exp == "pop_weighted" & 
+      cutoff == "TRUE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "TRUE") 
+    ~ "results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & with cutoff of 5", TRUE ~ test_name))  |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "point_pairs" & 
+      exp == "pop_weighted" & 
+      cutoff == "FALSE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "TRUE") 
+    ~ "results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & with cutoff of 5", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "point_pairs" & 
+      exp == "exp_dist" & 
+      cutoff == "TRUE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "TRUE") 
+    ~ "results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & no cutoff", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "point_pairs" & 
+      exp == "exp_dist" & 
+      cutoff == "TRUE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "TRUE") 
+    ~ "results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & with cutoff", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "log_lin" & 
+      exp == "exp_dist" & 
+      cutoff == "TRUE" & 
+      iteration == "TRUE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "TRUE") 
+    ~ "results correct rr iteration with exposure distribution and uncertainties in rr and exp", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "log_lin" & 
+      exp == "exp_dist" & 
+      cutoff == "FALSE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "FALSE") 
+    ~ "results correct rr exposure distribution", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "formula" & 
+      exp == "exp_dist" & 
+      cutoff == "FALSE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "FALSE") 
+    ~ "results correct ar without cutoff", TRUE ~ test_name)) |> 
+  ## FIX EXAMPLE IN TEST SCRIPT ####
+  # dplyr::mutate(test_name = case_when(
+  #   ( erf == "formula" & 
+  #     exp == "exp_dist" & 
+  #     cutoff == "FALSE" & 
+  #     iteration == "FALSE" & 
+  #     multiexp == "FALSE" & 
+  #     var_uncer == "FALSE") 
+  #   ~ "results correct ar with cutoff", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "formula" & exp == "exp_dist" & cutoff == "FALSE" & iteration == "TRUE" &  multiexp == "FALSE" & var_uncer == "FALSE" ) ~
+      "results correct ar iteration no variable uncertainties", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "formula" & exp == "exp_dist" & cutoff == "FALSE" & iteration == "FALSE" &  multiexp == "FALSE" & var_uncer == "TRUE" ) ~
+      "results correct ar iteration with variable uncertainties", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "log_lin" & exp == "pop_weighted" & cutoff == "TRUE" & iteration == "FALSE" &  multiexp == "additive" & var_uncer == "FALSE" ) ~
+      "results correct rr multiple exposure additive approach no variable uncertainties", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "log_lin" & exp == "pop_weighted" & cutoff == "TRUE" & iteration == "FALSE" &  multiexp == "additive" & var_uncer == "TRUE" ) ~
+      "detailed results correct rr multiple exposure additive approach with variable uncertainties", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "log_lin" & exp == "pop_weighted" & cutoff == "TRUE" & iteration == "FALSE" &  multiexp == "multiplicative" & var_uncer == "FALSE" ) ~
+      "results correct rr multiple exposure multiplicative approach", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "log_lin" & exp == "pop_weighted" & cutoff == "FALSE" & iteration == "FALSE" &  multiexp == "multiplicative" & var_uncer == "FALSE" ) ~
+      "results correct rr multiple exposure multiplicative approach without cutoff", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "log_lin" & exp == "pop_weighted" & cutoff == "TRUE" & iteration == "FALSE" &  multiexp == "combined" & var_uncer == "FALSE" ) ~
+      "results correct rr multiple exposure combined approach", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( erf == "log_lin" & exp == "pop_weighted" & cutoff == "FALSE" & iteration == "FALSE" &  multiexp == "combined" & var_uncer == "FALSE" ) ~
+      "results correct rr multiple exposure combined approach without cutoff", TRUE ~ test_name))
+  
+  
+
+
+```
+
+
+```{r Pathways lifetable}
+
+ov_lifetable <- list(
+  exp = c("pop_weighted", "exp_dist"), # prop_pop_exp linked with this
+  exp_time = c("single_year", "constant"),
+  newborns = c("TRUE", "FALSE"),
+  min_age = c("TRUE", "FALSE"),
+  max_age = c("TRUE", "FALSE"),
+  time_horizon = c("TRUE", "FALSE"),
+  iteration = c("TRUE", "FALSE"),
+  var_uncer = c("TRUE", "FALSE")
+)
+
+pathways_lifetable <- expand.grid(ov_lifetable)
+
+pathways_lifetable <- pathways_lifetable |> 
+  as_tibble() |> 
+  dplyr::mutate(implemented = "FALSE") |> 
+  dplyr::mutate(test_name = "NULL")
+```
+
+```{r Pathways summary uncertainty}
+
+ov_uncertainty <- list(
+  exp = c("pop_weighted", "exp_dist"),
+  erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
+  iteration = c("TRUE", "FALSE")
+)
+
+pathways_uncertainty <- expand.grid(ov_uncertainty)
+
+pathways_uncertainty <- pathways_uncertainty |> 
+  as_tibble() |> 
+  dplyr::mutate(implemented = "FALSE") |> 
+  dplyr::mutate(test_name = "NULL")
+```
+
+```{r Pathways cba,discount,monetization}
+
+ov_economic <- list(
+  discount_appr = c("direct", "indirect"),
+  discount_rate = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("all_years", "last_year")
+)
+
+pathways_economic <- expand.grid(ov_economic)
+
+pathways_economic <- pathways_economic |> 
+  as_tibble() |> 
+  dplyr::mutate(implemented = "FALSE") |> 
+  dplyr::mutate(test_name = "NULL")
+```
+
 ```{r Example, eval=FALSE, include=FALSE}
 library(DiagrammeR) ; library(data.tree)
 knitr::opts_knit$set(root.dir = getwd()) 
@@ -57,115 +256,5 @@ root <- Node$new("Start")
 create_tree(steps, root)
 print(root, "level")
 plot(root)
-```
-
-
-```{r Pathways non-lifetable}
-ov_rr_ar <- list(
-  # erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"),
-  erf = c("log_lin", "lin_lin", "formula", "point_pairs"),
-  exp = c("pop_weighted", "exp_dist"), # prop_pop_exp linked with this
-  cutoff = c("TRUE", "FALSE"),
-  iteration = c("TRUE", "FALSE"),
-  multiexp = c("FALSE", "additive", "multiplicative", "combined"),
-  variable_uncertainty = c("TRUE", "FALSE")
-)
-
-pathways_rr_ar <- expand.grid(ov_rr_ar)
-
-pathways_rr_ar <- pathways_rr_ar |> 
-  as_tibble() |> 
-  dplyr::mutate(implemented = "FALSE") |> 
-  dplyr::mutate(test_name = "NULL")
-
-pathways_rr_ar <- pathways_rr_ar |> 
-  mutate(test_name = case_when(
-    ( erf == "log_lin" & 
-      exp == "pop_weighted" & 
-      cutoff == "TRUE" & 
-      iteration == "FALSE" & 
-      multiexp == "FALSE" & 
-      variable_uncertainty == "FALSE") 
-    ~ "result correct rr with single exposure value and only rr_central", TRUE ~ test_name)) |> 
-  mutate(test_name = case_when(
-    ( erf == "log_lin" & 
-      exp == "pop_weighted" & 
-      cutoff == "TRUE" & 
-      iteration == "FALSE" & 
-      multiexp == "FALSE" & 
-      variable_uncertainty == "TRUE") 
-    ~ "result correct rr with single exposure and variable uncertainty", TRUE ~ test_name)) |> 
-  mutate(test_name = case_when(
-    ( erf == "point_pairs" & 
-      exp == "pop_weighted" & 
-      cutoff == "TRUE" & 
-      iteration == "FALSE" & 
-      multiexp == "FALSE" & 
-      variable_uncertainty == "FALSE") 
-    ~ "results correct user-defined erf (mrbrt) with splinefun with cutoff of 5", TRUE ~ test_name)) |> 
-  mutate(test_name = case_when(
-    ( erf == "log_lin" & 
-      exp == "pop_weighted" & 
-      cutoff == "FALSE" & 
-      iteration == "FALSE" & 
-      multiexp == "FALSE" & 
-      variable_uncertainty == "TRUE") 
-    ~ "results correct user-defined erf (mrbrt) with splinefun with no cutoff", TRUE ~ test_name))
-
-```
-
-
-```{r Pathways lifetable}
-
-ov_lifetable <- list(
-  exp = c("pop_weighted", "exp_dist"), # prop_pop_exp linked with this
-  exp_time = c("single_year", "constant"),
-  newborns = c("TRUE", "FALSE"),
-  min_age = c("TRUE", "FALSE"),
-  max_age = c("TRUE", "FALSE"),
-  time_horizon = c("TRUE", "FALSE"),
-  iteration = c("TRUE", "FALSE"),
-  variable_uncertainty = c("TRUE", "FALSE")
-)
-
-pathways_lifetable <- expand.grid(ov_lifetable)
-
-pathways_lifetable <- pathways_lifetable |> 
-  as_tibble() |> 
-  dplyr::mutate(implemented = "FALSE") |> 
-  dplyr::mutate(test_name = "NULL")
-```
-
-```{r Pathways summary uncertainty}
-
-ov_uncertainty <- list(
-  exp = c("pop_weighted", "exp_dist"),
-  erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
-  iteration = c("TRUE", "FALSE")
-)
-
-pathways_uncertainty <- expand.grid(ov_uncertainty)
-
-pathways_uncertainty <- pathways_uncertainty |> 
-  as_tibble() |> 
-  dplyr::mutate(implemented = "FALSE") |> 
-  dplyr::mutate(test_name = "NULL")
-```
-
-```{r Pathways cba,discount,monetization}
-
-ov_economic <- list(
-  discount_appr = c("direct", "indirect"),
-  discount_rate = c("TRUE", "FALSE"),
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("all_years", "last_year")
-)
-
-pathways_economic <- expand.grid(ov_economic)
-
-pathways_economic <- pathways_economic |> 
-  as_tibble() |> 
-  dplyr::mutate(implemented = "FALSE") |> 
-  dplyr::mutate(test_name = "NULL")
 ```
 
