@@ -188,7 +188,7 @@ include_social <- function(output_healthiar = NULL,
     output_healthiar[["social_detailed"]][["results_detailed"]] <- social_results
     output_healthiar[["social_detailed"]][["overview_quantiles"]] <- output_social_by_quantile
 
-    return(output)
+    return(output_healthiar)
 
   } else if ( !is.null(impact) & is.null(output_healthiar) ) {
 

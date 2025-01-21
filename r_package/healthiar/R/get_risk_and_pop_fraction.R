@@ -104,6 +104,7 @@ get_risk_and_pop_fraction <-
 
       # * * Multiplicative approach ############################################
 
+
       if ( unique(input$approach_multiexposure) %in% "multiplicative" ) {
 
         ## In the multiplicative approach, relative risks have to be merged
@@ -111,6 +112,17 @@ get_risk_and_pop_fraction <-
         if({{pop_fraction_type}} == "paf"){
           input_with_risk_and_pop_fraction <-
             input_with_risk_and_pop_fraction |>
+            ## group by columns that define diversity
+            ## Only combine pm2.5 and no2 for rr_conc in the same ci
+            dplyr::group_by(
+              across(any_of(c(
+                "erf_ci",
+                "exp_ci",
+                "bhd_ci",
+                "cutoff_ci",
+                "dw_ci",
+                "duration_ci",
+                "erf_eq_ci")))) |>
             # prod() multiplies all elements in a vector
             dplyr::mutate(
               rr_conc_before_multiplying = rr_conc,
@@ -119,6 +131,17 @@ get_risk_and_pop_fraction <-
           } else { ## if PIF
           input_with_risk_and_pop_fraction <-
             input_with_risk_and_pop_fraction |>
+            ## group by columns that define diversity
+            ## Only combine pm2.5 and no2 for rr_conc in the same ci
+            dplyr::group_by(
+              across(any_of(c(
+                "erf_ci",
+                "exp_ci",
+                "bhd_ci",
+                "cutoff_ci",
+                "dw_ci",
+                "duration_ci",
+                "erf_eq_ci")))) |>
             ## prod() multiplies all elements in a vector
             dplyr::mutate(
               rr_conc_1_before_multiplying = rr_conc_1,
@@ -137,14 +160,7 @@ get_risk_and_pop_fraction <-
               "geo_id_disaggregated",
               "sex",
               "lifetable_with_pop_nest",
-              "erf_ci",
-              "exp_ci",
-              "bhd_ci",
-              "cutoff_ci",
-              "dw_ci",
-              "duration_ci",
-              "erf_eq"
-              ),
+              "rr_conc"),
             sep = ", ")
       }
     }
@@ -210,6 +226,17 @@ get_risk_and_pop_fraction <-
 
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
+          ## group by columns that define diversity
+          ## Only combine pm2.5 and no2 for rr_conc in the same ci
+          dplyr::group_by(
+            across(any_of(c(
+              "erf_ci",
+              "exp_ci",
+              "bhd_ci",
+              "cutoff_ci",
+              "dw_ci",
+              "duration_ci",
+              "erf_eq_ci")))) |>
           dplyr::mutate(pop_fraction_before_combining = pop_fraction,
                         ## Multiply with prod() across all pollutants
                         pop_fraction = 1-(prod(1-pop_fraction)))
@@ -224,13 +251,7 @@ get_risk_and_pop_fraction <-
             "geo_id_disaggregated",
             "sex",
             "lifetable_with_pop_nest",
-            "erf_ci",
-            "exp_ci",
-            "bhd_ci",
-            "cutoff_ci",
-            "dw_ci",
-            "duration_ci",
-            "erf_eq"),
+            "rr_conc"),
             sep = ", ")
         }
       }
