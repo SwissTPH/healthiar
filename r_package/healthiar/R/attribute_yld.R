@@ -26,7 +26,6 @@ attribute_yld <-
            cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
            rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
            rr_increment,
-           erf_shape,
            erf_shape = NULL,
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
