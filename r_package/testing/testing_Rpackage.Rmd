@@ -1094,12 +1094,34 @@ bestcost_pm_no2_mortality_multiplicative <-
 
 check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative,
                result_vector_alternative = 0.079 * 1000)
+
+
+# Assess attributable cases using the BEST-COST task 1.4 report
+# Attention fake rr and exp conficence interval data (only for testing purposes)
+bestcost_pm_no2_mortality_multiplicative_ci <-
+  healthiar::attribute_health(
+    approach_multiexposure = "multiplicative",
+    exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
+    exp_lower = c("pm2.5" = 7, "no2" =  9),
+    exp_upper = c("pm2.5" = 9, "no2" =  12),
+    cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
+    bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
+    rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
+    rr_lower = setNames(c(1.05, 1.02), c("pm2.5", "no2")),
+    rr_upper = setNames(c(1.07, 1.04), c("pm2.5", "no2")),
+    rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
+    erf_shape = "log_linear")
+
+# View(bestcost_pm_copd_1rr)
+
+check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative_ci,
+               result_vector_alternative = c(79,59,93)) # Results on 21.01.2025
 ```
 
 
 ```{r combined approach}
 # Assess attributable cases using the BEST-COST task 1.4 report
-bestcost_pm_no2_mortality_multiplicative <-
+bestcost_pm_no2_mortality_combined <-
   healthiar::attribute_health(
     approach_multiexposure = "combined",
     exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
@@ -1113,6 +1135,27 @@ bestcost_pm_no2_mortality_multiplicative <-
 
 check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative,
                result_vector_alternative = 0.079 * 1000)
+
+# Assess attributable cases using the BEST-COST task 1.4 report
+# Attention fake rr and exp conficence interval data (only for testing purposes)
+bestcost_pm_no2_mortality_combined_ci <-
+  healthiar::attribute_health(
+    approach_multiexposure = "combined",
+    exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
+    exp_lower = c("pm2.5" = 7, "no2" =  9),
+    exp_upper = c("pm2.5" = 9, "no2" =  12),
+    cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
+    bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
+    rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
+    rr_lower = setNames(c(1.05, 1.02), c("pm2.5", "no2")),
+    rr_upper = setNames(c(1.07, 1.04), c("pm2.5", "no2")),
+    rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
+    erf_shape = "log_linear")
+
+# View(bestcost_pm_copd_1rr)
+
+check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_combined_ci,
+               result_vector_alternative = c(79,59,93)) # Results on 21.01.2025
 ```
 
 
