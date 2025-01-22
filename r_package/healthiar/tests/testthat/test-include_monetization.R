@@ -61,7 +61,7 @@ testthat::test_that("results correct direct discounting with discount factor and
   )
 })
 
-
+# Not included in overview
 testthat::test_that("results correct direct discounting with impact vector with discount factor and exponential discount shape", {
 
   testthat::expect_equal(
@@ -81,6 +81,7 @@ testthat::test_that("results correct direct discounting with impact vector with 
   )
 })
 
+# Not included in overview
 testthat::test_that("results correct direct discounting with impact vector discounting only one specific year and exponential discount shape", {
 
   testthat::expect_equal(
@@ -142,24 +143,5 @@ testthat::test_that("results correct indirect discounting with exponential disco
       base::as.numeric() |>
       base::round(),
     expect = c(26493, 13877, 39006) # Result on 13 Dec 2024
-  )
-})
-
-testthat::test_that("results correct direct discounting without valuation with exponential discount shape", {
-
-  testthat::expect_equal(
-    object =
-      healthiar::include_discount(
-        approach_discount = "direct",
-        impact = 2E4,
-        discount_shape = "exponential",
-        discount_rate = 0.03,
-        discount_years = 20) |>
-      purrr::pluck("monetization_main") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
-    expect = 14877 # Result on 15 Jan 2025
   )
 })

@@ -1,4 +1,4 @@
-testthat::test_that("results correct lifetable yld single exposure and one year exposure without newborns", {
+testthat::test_that("results correct lifetable daly single exposure and one year exposure without newborns", {
 
   data <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))

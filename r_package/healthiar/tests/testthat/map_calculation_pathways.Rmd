@@ -31,7 +31,6 @@ pathways_rr_ar <- expand.grid(ov_rr_ar)
 
 pathways_rr_ar <- pathways_rr_ar |> 
   tibble::as_tibble() |> 
-  dplyr::mutate(implemented = "FALSE") |> 
   dplyr::mutate(test_name = "NULL")
 
 pathways_rr_ar <- pathways_rr_ar |> 
@@ -172,8 +171,32 @@ pathways_lifetable <- expand.grid(ov_lifetable)
 
 pathways_lifetable <- pathways_lifetable |> 
   as_tibble() |> 
-  dplyr::mutate(implemented = "FALSE") |> 
-  dplyr::mutate(test_name = "NULL")
+  dplyr::mutate(test_name = "NULL") |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "pop_weighted" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& var_uncer == "FALSE") ~
+      "results correct lifetable daly single exposure and one year exposure without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "pop_weighted" & exp_time == "single_year" & newborns == "TRUE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& var_uncer == "FALSE") ~
+      "results correct lifetable premature deaths single year exposure with newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "exp_dist" & exp_time == "constant" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& var_uncer == "FALSE") ~
+      "results correct lifetable premature deaths exposure distribution with constant exposure and without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "pop_weighted" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& var_uncer == "FALSE") ~
+      "results correct lifetable yld single exposure and one year exposure without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "pop_weighted" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& var_uncer == "FALSE") ~
+      "results correct lifetable yll single exposure and one year exposure and without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "pop_weighted" & exp_time == "constant" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& var_uncer == "FALSE") ~
+      "results correct lifetable yll single exposure and constant exposure and without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "pop_weighted" & exp_time == "constant" & newborns == "TRUE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& var_uncer == "FALSE") ~
+      "results correct lifetable yll single exposure and constant exposure and with newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "exp_dist" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& var_uncer == "FALSE") ~
+      "results correct lifetable yll exposure distribution and one year exposure and without newborns", TRUE ~ test_name))
+
 ```
 
 ```{r Pathways summary uncertainty}
@@ -188,26 +211,156 @@ pathways_uncertainty <- expand.grid(ov_uncertainty)
 
 pathways_uncertainty <- pathways_uncertainty |> 
   as_tibble() |> 
-  dplyr::mutate(implemented = "FALSE") |> 
+
   dplyr::mutate(test_name = "NULL")
 ```
 
-```{r Pathways cba,discount,monetization}
+Both the functions include_cba and include_discount call the 
+function include_monetization in the background --> created only ov_monetization 
+instead of creating an overview tibble for all 3 functions
+```{r Pathways monetization}
 
-ov_economic <- list(
-  discount_appr = c("direct", "indirect"),
+ov_monetization <- list(
+  discount_appr = c("direct", "indirect"), # direct is the default
   discount_rate = c("TRUE", "FALSE"),
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("all_years", "last_year")
+  discount_overtime = c("all_years", "last_year") # all_years is default
 )
 
-pathways_economic <- expand.grid(ov_economic)
+pathways_monetization <- expand.grid(ov_monetization)
 
-pathways_economic <- pathways_economic |> 
+pathways_monetization <- pathways_monetization |> 
   as_tibble() |> 
-  dplyr::mutate(implemented = "FALSE") |> 
-  dplyr::mutate(test_name = "NULL")
+  dplyr::mutate(test_name = "NULL") |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "direct" & discount_rate == "FALSE" & discount_shape == "FALSE" & discount_overtime == "all_years" ) ~
+      "results correct simple monetization", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "direct" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "last_year" ) ~
+      "results correct direct discounting with discount factor and exponential discount shape", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "indirect" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "all_years" ) ~
+      "results correct indirect discounting with exponential discount shape", TRUE ~ test_name))  
+  
 ```
+
+```{r Pathways non-lifetable compare}
+
+ov_rr_ar_compare <- list(
+  comp_appr = c("delta", "pif"),
+  # erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"), # all options
+  erf = c("log_lin", "lin_lin", "formula", "point_pairs"), # more relevant options
+  exp = c("pop_weighted", "exp_dist"), # prop_pop_exp linked with this
+  cutoff = c("TRUE", "FALSE"),
+  iteration = c("TRUE", "FALSE"),
+  multiexp = c("FALSE", "additive", "multiplicative", "combined"),
+  var_uncer = c("TRUE", "FALSE")
+)
+
+pathways_rr_ar_compare <- expand.grid(ov_rr_ar_compare)
+
+pathways_rr_ar_compare <- pathways_rr_ar_compare |> 
+  tibble::as_tibble() |> 
+  dplyr::mutate(test_name = "NULL")
+
+pathways_rr_ar_compare <- pathways_rr_ar_compare |> 
+  dplyr::mutate(test_name = case_when(
+    ( comp_appr = "delta" &
+      erf == "log_lin" & 
+      exp == "pop_weighted" & 
+      cutoff == "TRUE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "FALSE") 
+    ~ "results correct delta comparison rr single exposure", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( comp_appr = "delta" &
+      erf == "log_lin" & 
+      exp == "pop_weighted" & 
+      cutoff == "TRUE" & 
+      iteration == "TRUE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "FALSE") 
+    ~ "results correct delta comparison iteration rr single exposures", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( comp_appr = "pif" &
+      erf == "log_lin" & 
+      exp == "pop_weighted" & 
+      cutoff == "TRUE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "FALSE") 
+    ~ "results correct pif comparison rr single exposure", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( comp_appr = "pif" &
+      erf == "log_lin" & 
+      exp == "pop_weighted" & 
+      cutoff == "TRUE" & 
+      iteration == "iteration" & 
+      multiexp == "FALSE" & 
+      var_uncer == "FALSE") 
+    ~ "results correct pif comparison iteration rr single exposures", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( comp_appr = "delta" &
+      erf == "formula" & 
+      exp == "exp_dist" & 
+      cutoff == "TRUE" & 
+      iteration == "FALSE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "FALSE") 
+    ~ "results correct delta comparison ar exposure distribution", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( comp_appr = "delta" &
+      erf == "formula" & 
+      exp == "exp_dist" & 
+      cutoff == "TRUE" & 
+      iteration == "TRUE" & 
+      multiexp == "FALSE" & 
+      var_uncer == "FALSE") 
+    ~ "results correct delta comparison rr single exposure", TRUE ~ test_name)) 
+```
+
+
+
+```{r Pathways lifetable compare}
+
+ov_lifetable_compare <- list(
+  comp_appr = c("delta", "pif"),
+  exp = c("pop_weighted", "exp_dist"), # prop_pop_exp linked with this
+  exp_time = c("single_year", "constant"),
+  newborns = c("TRUE", "FALSE"),
+  min_age = c("TRUE", "FALSE"),
+  max_age = c("TRUE", "FALSE"),
+  time_horizon = c("TRUE", "FALSE"),
+  iteration = c("TRUE", "FALSE"),
+  var_uncer = c("TRUE", "FALSE")
+)
+
+pathways_lifetable_compare <- expand.grid(ov_lifetable_compare)
+
+pathways_lifetable_compare <- pathways_lifetable_compare |> 
+  tibble::as_tibble() |> 
+  dplyr::mutate(test_name = "NULL")
+
+pathways_lifetable_compare <- pathways_lifetable_compare |> 
+  dplyr::mutate(test_name = case_when(
+    ( comp_appr == "delta" & exp == "pop_weighted" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE" & var_uncer == "FALSE") ~
+      "results correct delta comparison lifetable daly rr single exposure", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( comp_appr == "delta" & exp == "pop_weighted" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "TRUE" & var_uncer == "FALSE") ~
+      "results correct delta comparison lifetable daly iteration rr single exposure", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( comp_appr == "pif " & exp == "pop_weighted" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE" & var_uncer == "FALSE") ~
+      "results correct pif comparison lifetable daly rr single exposure", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( comp_appr == "pif " & exp == "pop_weighted" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE" & var_uncer == "FALSE") ~
+      "results correct pif comparison lifetable daly iteration rr single exposure", TRUE ~ test_name))
+  
+  
+```
+
+
+
 
 ```{r Example, eval=FALSE, include=FALSE}
 library(DiagrammeR) ; library(data.tree)
