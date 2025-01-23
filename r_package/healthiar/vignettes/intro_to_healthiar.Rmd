@@ -14,6 +14,67 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+Hi there!
+
+This vignette will 1) tell you about the `healthiar`, 2) help you install the `healthiar` package, and 3) show you how to use `healthiar` with the help of examples.
+
+*NOTE*: the development of `healthiar` is still ongoing. Any feedback regarding bugs, unclear documentation, ... is welcome and highly appreciated. Please provide feedback via a [GitHub issue](https://github.com/best-cost/best-cost_WPs/issues).
+
+# About `healthiar`
+
+blablabla
+
+# How to install `healthiar`
+
+## Initial installation
+
+Prerequisite: access to the [BEST-COST GitHub repository](https://github.com/best-cost/best-cost_WPs) with your GitHub account
+
+For initial installation follow the detailed steps in the [README](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme). The main steps are:
+
+1.  Generate a GitHub personal access token (PAT)
+2.  Use your PAT to connect RStudio with your GitHub profile
+3.  Install the newest version of `healhtiar` by running code below
+
+```{r setup, eval=FALSE, include=TRUE}
+credentials::set_github_pat() # Paste GitHub PAT if prompted
+
+devtools::install_github(
+  repo = "best-cost/best-cost_WPs",
+  subdir = "/r_package/healthiar",
+  ref = "HEAD", # By default "HEAD"; branch name to install package from  
+  force = TRUE
+)
+
 library(healthiar)
+```
+
+## Updating `healthiar`
+
+After the initial installation we recommend to regularly update `healthiar` by running the code provided in step 3 above.
+
+# How to use `healthiar`
+
+## Attribute health impacts to population-weighted mean exposure
+
+```{r, eval=TRUE, include=TRUE}
+getwd()
+knitr::opts_knit$set(root.dir = getwd())
+load("../testing/input/data/input_data_for_testing_Rpackage.RData")
+print(airqplus_pm_copd$analysis_name)
+```
+
+```{r, eval=FALSE, include=TRUE}
+bestcost_pm_copd <-
+  healthiar::attribute_health(
+    exp_central = airqplus_pm_copd$mean_concentration,
+    cutoff_central = airqplus_pm_copd$cut_off_value,
+    bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+    rr_central = airqplus_pm_copd$relative_risk, 
+    rr_lower = airqplus_pm_copd$relative_risk_lower,
+    rr_upper = airqplus_pm_copd$relative_risk_upper,
+    rr_increment = 10, 
+    erf_shape = "log_linear", 
+    info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
+
 ```
