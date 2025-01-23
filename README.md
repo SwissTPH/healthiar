@@ -3,6 +3,7 @@ Install healthiar package from GitHub
 Requirements:
 - GitHub account
 - Access to the best-cost GitHub page (https://github.com/best-cost)
+
 If you encounter any difficulties let Alberto or Axel know.
 
 Step 1 – Generate a GitHub personal access token (PAT)
