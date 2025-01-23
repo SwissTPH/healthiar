@@ -62,6 +62,7 @@ test_pw <- pathways_rr_ar |>
 
 ```
 
+
 ```{r Pathways non-lifetable}
 ov_rr_ar <- list(
   # erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"),
@@ -193,9 +194,6 @@ pathways_rr_ar <- pathways_rr_ar |>
   dplyr::mutate(test_name = case_when(
     ( erf == "log_lin" & exp == "pop_weighted" & cutoff == "FALSE" & iteration == "FALSE" &  multiexp == "combined" & varuncer == "FALSE" ) ~
       "results correct rr multiple exposure combined approach without cutoff", TRUE ~ test_name))
-  
-  
-
 
 ```
 
@@ -242,7 +240,6 @@ pathways_lifetable <- pathways_lifetable |>
   dplyr::mutate(test_name = case_when(
     ( exp == "exp_dist" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
       "results correct lifetable yll exposure distribution and one year exposure and without newborns", TRUE ~ test_name))
-
 ```
 
 ```{r Pathways summary uncertainty}
@@ -257,7 +254,6 @@ pathways_uncertainty <- expand.grid(ov_uncertainty)
 
 pathways_uncertainty <- pathways_uncertainty |> 
   as_tibble() |> 
-
   dplyr::mutate(test_name = "NULL")
 ```
 
@@ -455,5 +451,6 @@ root <- Node$new("Start")
 create_tree(steps, root)
 print(root, "level")
 plot(root)
+
 ```
 
