@@ -142,7 +142,7 @@ get_impact <-
         dplyr::left_join(
           x = _,
           y = input |>
-            dplyr::group_by(exp_ci, erf_ci, bhd_ci, cutoff_ci) |>
+            dplyr::group_by(across(any_of(c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")))) |> # if cutoff argument not specified in attribute argument call then "cutoff_ci" is not used to group
             dplyr::summarize(exp = list(exp),
                              prop_pop_exp = list(prop_pop_exp),
                              exposure_dimension = list(exposure_dimension),
@@ -164,7 +164,7 @@ get_impact <-
         dplyr::left_join(
           x = _,
           y = input |>
-            dplyr::group_by(exp_ci, erf_ci, bhd_ci, cutoff_ci, geo_id_disaggregated) |>
+            dplyr::group_by(across(any_of(c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")))) |> # if cutoff argument not specified in attribute argument call then "cutoff_ci" is not used to group
             dplyr::summarize(exp = list(exp),
                              prop_pop_exp = list(prop_pop_exp), # Introduced error in ar pathway
                              exposure_dimension = list(exposure_dimension),
