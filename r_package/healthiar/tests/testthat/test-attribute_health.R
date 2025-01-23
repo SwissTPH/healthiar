@@ -1,4 +1,5 @@
 testthat::test_that("result correct rr with single exposure value and only rr_central", {
+# testthat::test_that("result correct pw_erf_log_lin pw_exp_pop_weighted pw_cutoff_TRUE pw_iteration_TRUE pw_multiexp_FALSE pw_varuncer_FALSE", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 

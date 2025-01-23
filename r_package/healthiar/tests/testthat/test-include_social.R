@@ -40,16 +40,16 @@ testthat::test_that("results from use cases with attribute result and with vecto
       cutoff_central = 0,
       rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
       erf_shape = "log_linear",
-      erf_increment = 10,
+      rr_increment = 10,
       bhd_central = as.list(data$MORTALITY_TOTAL),
       population = data$POPULATION,
-      geo_id_raw = data$CS01012020)
+      geo_id_disaggregated = data$CS01012020)
 
   testthat::expect_equal(
     object =
       healthiar::include_social(
         output = bestcost_pm_death,
-        geo_id_raw = data$CS01012020,
+        geo_id_disaggregated = data$CS01012020,
         social_indicator = data$score,
         n_quantile = 10,
         approach = "quantile"
@@ -64,7 +64,7 @@ testthat::test_that("results from use cases with attribute result and with vecto
       bhd = bestcost_pm_death[["health_main"]]$bhd,
       exp = bestcost_pm_death[["health_main"]]$exp,
       pop_fraction = bestcost_pm_death[["health_main"]]$pop_fraction,
-      geo_id_raw = data$CS01012020,
+      geo_id_disaggregated = data$CS01012020,
       social_indicator = data$score,
       n_quantile = 10,
       approach = "quantile") |>
