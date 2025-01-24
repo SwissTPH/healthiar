@@ -71,7 +71,6 @@ knitr::kable(package_data, caption = "Overview of Package Example Data")
 ```{r, eval=TRUE, include=TRUE}
 library(healthiar)
 print(exdat_pm_copd$analysis_name)
-
 ```
 
 ```{r, eval=FALSE, include=TRUE}
