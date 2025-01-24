@@ -12,11 +12,14 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(healthiar)
 ```
 
 Hi there!
 
-This vignette will 1) tell you about the `healthiar`, 2) help you install the `healthiar` package, and 3) show you how to use `healthiar` with the help of examples.
+This vignette will 1) tell you about `healthiar`, 2) help you install the `healthiar` package, and 3) show you how to use `healthiar` with the help of examples.
+
+*NOTE*: By using healthiar you agree to the [terms of use](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme) and confirm you have read the [disclaimer](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme).
 
 *NOTE*: the development of `healthiar` is still ongoing. Any feedback regarding bugs, unclear documentation, ... is welcome and highly appreciated. Please provide feedback via a [GitHub issue](https://github.com/best-cost/best-cost_WPs/issues).
 
@@ -55,13 +58,19 @@ After the initial installation we recommend to regularly update `healthiar` by r
 
 # How to use `healthiar`
 
+\`healthiar\` comes with some example data that start with `exdat_` that allow you to test functions.
+
+```{r eval=FALSE, include=FALSE}
+package_data <- data(package = "healthiar")
+package_data <- as.data.frame(package_data$results[1, c("Item", "Title")])
+knitr::kable(package_data, caption = "Overview of Package Example Data")
+```
+
 ## Attribute health impacts to population-weighted mean exposure
 
 ```{r, eval=TRUE, include=TRUE}
-getwd()
-knitr::opts_knit$set(root.dir = getwd())
-load("../testing/input/data/input_data_for_testing_Rpackage.RData")
-print(airqplus_pm_copd$analysis_name)
+library(healthiar)
+print(exdat_pm_copd$analysis_name)
 ```
 
 ```{r, eval=FALSE, include=TRUE}
