@@ -12,7 +12,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(healthiar)
+library(pacman)
+pacman::p_load(healthiar, tibble, dplyr, purrr, tidyr, stringr, pillar, knitr)
 ```
 
 Hi there!
@@ -22,10 +23,6 @@ This vignette will 1) tell you about `healthiar`, 2) help you install the `healt
 *NOTE*: By using healthiar you agree to the [terms of use](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme) and confirm you have read the [disclaimer](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme).
 
 *NOTE*: the development of `healthiar` is still ongoing. Any feedback regarding bugs, unclear documentation, ... is welcome and highly appreciated. Please provide feedback via a [GitHub issue](https://github.com/best-cost/best-cost_WPs/issues).
-
-# About `healthiar`
-
-blablabla
 
 # How to install `healthiar`
 
@@ -56,35 +53,130 @@ library(healthiar)
 
 After the initial installation we recommend to regularly update `healthiar` by running the code provided in step 3 above.
 
+# About `healthiar`
+
+The main function family of `healthiar` is the attribute family, used to attribute health impacts to a risk factor, e.g. noise or air pollution. The core function `attribute_health` can be used for most (non-lifetable) assessments. For lifetable assessments the functions ending in `..._from_lifetable` are used.
+
 # How to use `healthiar`
 
 \`healthiar\` comes with some example data that start with `exdat_` that allow you to test functions.
 
-```{r eval=FALSE, include=FALSE}
-package_data <- data(package = "healthiar")
-package_data <- as.data.frame(package_data$results[1, c("Item", "Title")])
-knitr::kable(package_data, caption = "Overview of Package Example Data")
+```{r, eval=TRUE, echo=FALSE, include=TRUE}
+package_data <- data(package = "healthiar")[["results"]] |> 
+  as_tibble() |> 
+  select(Item) |> 
+  filter(str_detect(Item, "exdat")) |> 
+  mutate(Item = stringr::str_replace(Item, " \\(example_data\\)", "")) |> 
+  rename(example_variables = Item) |> 
+  # print()
+  pull(example_variables) |>
+  print()
+  # cat(paste(collapse = "\n"), "\n")
 ```
 
-## Attribute health impacts to population-weighted mean exposure
+## Example: attribute COPD cases to pop-weighted mean exposure
 
-```{r, eval=TRUE, include=TRUE}
-library(healthiar)
-print(exdat_pm_copd$analysis_name)
+### Function call
 
+We call the `attribute_health` with input data from the package example data. Note that we provide input data to the function argument using the `$` operator.
+
+```{r Calculate prevalence, include=FALSE, eval=TRUE}
+# Remove this chunk once the prevalence column is added to the example data
+exdat_pm_copd <- exdat_pm_copd |> 
+  mutate(prevalence = incidents_per_100_000_per_year/1E5*population_at_risk)
 ```
 
-```{r, eval=FALSE, include=TRUE}
-bestcost_pm_copd <-
+```{r, eval=TRUE, include=TRUE, echo=TRUE}
+results_pm_copd <-
   healthiar::attribute_health(
-    exp_central = airqplus_pm_copd$mean_concentration,
-    cutoff_central = airqplus_pm_copd$cut_off_value,
-    bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
-    rr_central = airqplus_pm_copd$relative_risk, 
-    rr_lower = airqplus_pm_copd$relative_risk_lower,
-    rr_upper = airqplus_pm_copd$relative_risk_upper,
+    exp_central = exdat_pm_copd$mean_concentration,
+    cutoff_central = exdat_pm_copd$cut_off_value,
+    bhd_central = exdat_pm_copd$prevalence,
+    rr_central = exdat_pm_copd$relative_risk, 
+    rr_lower = exdat_pm_copd$relative_risk_lower,
+    rr_upper = exdat_pm_copd$relative_risk_upper,
     rr_increment = 10, 
-    erf_shape = "log_linear", 
-    info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
+    erf_shape = "log_linear")
 
+```
+
+### Results inspection
+
+Every attribute output consists of two lists
+
+-   `health_main` contains the main results
+
+-   `health_detailed` detailed results (saved in the tibble `raw)` and (in some cases) even more information about the assessment/calculation
+
+Let's inspect the main results
+
+```{r, include=TRUE, eval=TRUE, echo=TRUE}
+results_pm_copd[["health_main"]]
+```
+
+It is a tibble of 3 rows and 22 columns. Let's zoom in on some relevant aspects
+
+```{r Alternative printing ways (NOT SHOWN), include=FALSE, eval=FALSE}
+# options(pillar.bold = TRUE)
+# getOption("pillar.bold")
+options(tibble.print_min = Inf)
+options(tibble.print_max = Inf)
+
+results_pm_copd |> 
+  pluck("health_main") |>
+  select(exp, bhd, rr, erf_ci, pop_fraction, impact_rounded) |> 
+  print()
+
+results_pm_copd |> 
+  pluck("health_main") |>
+  select(exp, bhd, rr, erf_ci, pop_fraction, impact_rounded) |> 
+  as.data.frame() |> 
+  print()
+
+```
+
+```{r}
+results_pm_copd |> 
+  pluck("health_main") |>
+  select(exp, bhd, rr, erf_ci, pop_fraction, impact_rounded) |> 
+  knitr::kable() # Prints tibble in a minimal layout
+```
+
+Interpretation: this table shows us that exposure was 8.85 $\mu g/m^3$, the baseline health data (bhd) was 30747 (COPD cases in this instance). The 1st row further shows that the impact attributable to this exposure using the central relative risk (rr) estimate of 1.369 is 3502 COPD cases, or \~11% of all baseline cases.
+
+The 2nd and 3rd rows show the impact using the lower and the upper estimates of the 95% confidence interval of the relative risk.
+
+*NOTE*: the main output contains more columns that provide additional information about the assessment, such as cutoff, the relative risk at the observed exposure level, the shape of the ERF, ...
+
+## Example: attribute cases of high annoyance to noise exposure
+
+```{r}
+# Extract rows that contain input data (others may contain results)
+niph_noise_ha_input <-
+  niph_noise_ha_excel |>
+  dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean))
+
+# Extract results from excel table
+# Only one (central) value for ERF, 
+# so let's repeat the value three times to build 
+# the vector for lower and upper bound
+niph_noise_ha_result <- 
+  niph_noise_ha_excel |>
+        dplyr::filter(exposure_category %in% "Total exposed")|>
+        dplyr::select(number)|>
+        dplyr::pull() |>
+  round()
+
+# Obtain attributable cases using the bestcost package and input data from niph
+bestcost_noise_ha_ar <- 
+  healthiar::attribute_health(
+    approach_risk = "absolute_risk",
+    exp_central = niph_noise_ha_input$exposure_mean,
+    # exp_lower = niph_noise_ha_input$exposure_mean - 1,
+    # exp_upper = niph_noise_ha_input$exposure_mean + 1,
+    cutoff_central = 10,
+    population = sum(niph_noise_ha_input$population_exposed_total), 
+    prop_pop_exp = niph_noise_ha_input$population_exposed_total/sum(niph_noise_ha_input$population_exposed_total),
+    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+    info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
 ```
