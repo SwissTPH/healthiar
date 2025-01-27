@@ -14,6 +14,9 @@ knitr::opts_chunk$set(
 )
 library(pacman)
 pacman::p_load(healthiar, tibble, dplyr, purrr, tidyr, stringr, pillar, knitr)
+options(knitr.kable.max_rows = 10)
+
+set.seed(1)
 ```
 
 Hi there!
@@ -148,35 +151,138 @@ The 2nd and 3rd rows show the impact using the lower and the upper estimates of 
 
 *NOTE*: the main output contains more columns that provide additional information about the assessment, such as cutoff, the relative risk at the observed exposure level, the shape of the ERF, ...
 
-## Example: attribute cases of high annoyance to noise exposure
+### Including uncertainty in several input parameters
+
+Now we will make a similar function call, but include uncertainty in several input arguments.
 
 ```{r}
-# Extract rows that contain input data (others may contain results)
-niph_noise_ha_input <-
-  niph_noise_ha_excel |>
-  dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean))
 
-# Extract results from excel table
-# Only one (central) value for ERF, 
-# so let's repeat the value three times to build 
-# the vector for lower and upper bound
-niph_noise_ha_result <- 
-  niph_noise_ha_excel |>
-        dplyr::filter(exposure_category %in% "Total exposed")|>
-        dplyr::select(number)|>
-        dplyr::pull() |>
-  round()
+results_pm_copd <-
+  healthiar::attribute_health(
+    exp_central = exdat_pm_copd$mean_concentration,
+    exp_lower = 8,
+    exp_upper = 9,
+    cutoff_central = exdat_pm_copd$cut_off_value, 
+    bhd_central = exdat_pm_copd$prevalence,
+    bhd_lower = exdat_pm_copd$prevalence - 5000,
+    bhd_upper = exdat_pm_copd$prevalence + 5000,
+    rr_central = airqplus_pm_copd$relative_risk, 
+    rr_lower = airqplus_pm_copd$relative_risk_lower,
+    rr_upper = airqplus_pm_copd$relative_risk_upper,
+    rr_increment = 10, 
+    erf_shape = "log_linear")
 
-# Obtain attributable cases using the bestcost package and input data from niph
-bestcost_noise_ha_ar <- 
+```
+
+Let's inspect the detailed results:
+
+```{r}
+results_pm_copd |> 
+  purrr::pluck("health_detailed") |>
+  purrr::pluck("raw") |> 
+  dplyr::select(contains("_ci"), impact_rounded) |> 
+  knitr::kable() # Prints tibble in a minimal layout
+```
+
+We see that each row represents a unique combination of the provided input variable estimates:
+
+-   The 1st row shows the impact when using the central estimates of each input variable
+
+-   The 2nd row shows the impact when using the central estimates of the relative risk, exposure in combination with the lower estimate of the baseline health
+
+-   ...
+
+(Note that only 9 of the 27 possible combinations are displayed due to space constraints.)
+
+### Adding summary uncertainty
+
+You can do a Monte Carlo uncertainty analysis via the `include_summary_uncertainty` function.
+
+```{r}
+
+results_pm_copd <- 
+  include_summary_uncertainty(
+    results = results_pm_copd,
+    n_sim = 1000
+)
+
+```
+
+The outcome of the Monte Carlo analysis is added to the variable entered as the `results` argument, which is `results_pm_copd` in our case.
+
+Two folders are added:
+
+-   `uncertainty_main` contains the central estimate and the corresponding 95% confidence intervals obtained through the Monte Carlo assessment
+
+-   `uncertainty_detailed` contains all `n_sim` simulations of the Monte Carlo assessment
+
+```{r}
+
+print(
+  results_pm_copd |> 
+  purrr::pluck("uncertainty_main")
+  )
+
+results_pm_copd |> 
+  purrr::pluck("uncertainty_detailed") |> 
+  purrr::pluck("raw") |> 
+  select(rr:impact_total) |> 
+  knitr::kable()
+
+```
+
+## Example: attribute cases of high annoyance to (road) noise exposure
+
+```{r}
+
+exdat_noise_ha <-
+  exdat_noise_ha |>
+  dplyr::filter(!is.na(exdat_noise_ha$exposure_mean))
+
+results_noise_ha <- 
   healthiar::attribute_health(
     approach_risk = "absolute_risk",
-    exp_central = niph_noise_ha_input$exposure_mean,
-    # exp_lower = niph_noise_ha_input$exposure_mean - 1,
-    # exp_upper = niph_noise_ha_input$exposure_mean + 1,
-    cutoff_central = 10,
-    population = sum(niph_noise_ha_input$population_exposed_total), 
-    prop_pop_exp = niph_noise_ha_input$population_exposed_total/sum(niph_noise_ha_input$population_exposed_total),
-    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-    info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
+    exp_central = exdat_noise_ha$exposure_mean,
+    population = sum(exdat_noise_ha$population_exposed_total), 
+    prop_pop_exp = exdat_noise_ha$population_exposed_total / 
+      sum(exdat_noise_ha$population_exposed_total),
+    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2")
 ```
+
+```{r echo=FALSE}
+results_noise_ha |> 
+  pluck("health_main") |>
+  select(erf_eq, erf_ci, impact_rounded) |> 
+  knitr::kable() # Prints tibble in a minimal layout
+```
+
+## Example: assess impact in multiple geographic units
+
+To iterate an burden or impact assessment over multiple geo units the geo-specific information, such as the `exp_...` and `bhd_...` arguments, have to be entered as a list, i.e. wrapped by the `as.list` function. Additionally, specify the `geo_id_disaggregated` (e.g. "Brussels") and `geo_id_aggregated` (e.g. "Belgium") arguments that assign a IDs to the geo units
+
+We use the `runif` function to simulate data for 5 Swiss cantons.
+
+```{r}
+
+results_iteration <- 
+  healthiar::attribute_health(
+    exp_central = as.list(runif(5, 8.0, 9.0)),
+    exp_lower = as.list(runif(5, 8.0, 9.0) - 0.1),
+    exp_upper = as.list(runif(5, 8.0, 9.0) + 0.1),
+    cutoff_central = 5,   
+    bhd_central = as.list(runif(5, 25000, 35000)),
+    bhd_lower = as.list(runif(5, 25000, 35000) - 1000),
+    bhd_upper = as.list(runif(5, 25000, 35000) + 1000),
+    rr_central = 1.369, 
+    rr_lower = 1.124,
+    rr_upper = 1.664,
+    rr_increment = 10, 
+    erf_shape = "log_linear", 
+    geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Grisons"), 
+    geo_id_aggregated = rep("CH", 5), # CH = abbreviation of Switzerland
+  )
+
+
+
+```
+

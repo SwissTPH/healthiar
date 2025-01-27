@@ -1200,7 +1200,7 @@ exdat_pop_male <- lifetable_withPopulation[["male"]]
 exdat_pop_female <- lifetable_withPopulation[["female"]]
 exdat_erf <- mrbrt_stroke
 exdat_noise_ha <- niph_noise_ha_excel
-exdat_noise_ihd <- niph_noise_ha_excel
+exdat_noise_ihd <- niph_noise_ihd_excel
 exdat_pop_2 <- pop_data_norway
 exdat_mdi <- social_data
 
