@@ -1,28 +1,28 @@
-testthat::test_that("result correct rr with single exposure value and only rr_central", {
-# testthat::test_that("result correct pw_erf_log_lin pw_exp_pop_weighted pw_cutoff_TRUE pw_iteration_TRUE pw_multiexp_FALSE pw_varuncer_FALSE", {
+# testthat::test_that("result correct rr with single exposure value and only rr_central", {
+testthat::test_that("result correct rr with single exp (pw_exp_single pw_cutoff_TRUE pw_varuncer_FALSE pw_erf_log_lin pw_iteration_FALSE pw_multiexp_FALSE)", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+    data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        exp_central = data$mean_concentration,
-        cutoff_central = data$cut_off_value,
-        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
-        rr_central = data$relative_risk,
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        info = paste0(data$pollutant,"_", data$evaluation_name)
-      ) |>
-      helper_extract_main_results(),
-    expected =
-      data |>
-      dplyr::select(estimated_number_of_attributable_cases_central)|>
-      base::as.numeric()
-  )
-})
+    testthat::expect_equal(
+      object =
+        healthiar::attribute_health(
+          exp_central = data$mean_concentration,
+          cutoff_central = data$cut_off_value,
+          bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+          rr_central = data$relative_risk,
+          rr_increment = 10,
+          erf_shape = "log_linear",
+          info = paste0(data$pollutant,"_", data$evaluation_name)
+        ) |>
+        helper_extract_main_results(),
+      expected =
+        data |>
+        dplyr::select(estimated_number_of_attributable_cases_central)|>
+        base::as.numeric()
+    )})
 
-testthat::test_that("result correct rr with single exposure and variable uncertainty", {
+# testthat::test_that("result correct rr with single exposure and variable uncertainty", {
+testthat::test_that("result correct rr with single exposure and variable uncertainty (pw_erf_log_lin pw_exp_single pw_cutoff_TRUE pw_varuncer_TRUE pw_iteration_FALSE pw_multiexp_FALSE )", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -49,6 +49,33 @@ testthat::test_that("result correct rr with single exposure and variable uncerta
     expected = # Results on 2025-01-17; no comparison study
       c(3502, 4344, 2633, 3502, 4344, 2633, 3502, 4345, 2633, 1353, 1695, 1007, 1353, 1695, 1007, 1353, 1695, 1007, 5474, 6729, 4154, 5474, 6728, 4153, 5474, 6729, 4154, 2633, 3502, 1736, 2633, 3502, 1736, 2633, 3502, 1736, 1007, 1353, 658, 1007, 1353, 658, 1007, 1353, 658, 4154, 5474, 2764, 4153, 5474, 2764, 4154, 5474, 2764, 4344, 5161, 3502, 4344, 5161, 3502, 4345, 5161, 3502, 1695, 2032, 1353, 1695, 2032, 1353, 1695, 2032, 1353, 6729, 7921, 5474, 6728, 7921, 5474, 6729, 7921, 5474)
     )
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$mean_concentration,
+        exp_lower = 8,
+        exp_upper = 9,
+        cutoff_central = data$cut_off_value,
+        cutoff_lower = data$cut_off_value - 1,
+        cutoff_upper = data$cut_off_value + 1,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+        bhd_lower = 25000,
+        bhd_upper = 35000,
+        rr_central = data$relative_risk,
+        rr_lower = data$relative_risk_lower,
+        rr_upper = data$relative_risk_upper,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        info = paste0(data$pollutant,"_", data$evaluation_name)
+      ) |>
+      helper_extract_main_results(),
+    expected =
+      data |>
+      dplyr::select(estimated_number_of_attributable_cases_central,
+                    estimated_number_of_attributable_cases_lower,
+                    estimated_number_of_attributable_cases_upper)|>
+      base::as.numeric()
+  )
 })
 
 testthat::test_that("no error rr single exposure value with with uncertainties in 4 input variables", {
@@ -75,39 +102,6 @@ testthat::test_that("no error rr single exposure value with with uncertainties i
         info = paste0(data$pollutant,"_", data$evaluation_name)
         )
     )
-})
-
-testthat::test_that("main result correct rr single exposure value with uncertainties in 4 input variables", {
-
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        exp_central = data$mean_concentration,
-        exp_lower = 8,
-        exp_upper = 9,
-        cutoff_central = data$cut_off_value,
-        cutoff_lower = data$cut_off_value - 1,
-        cutoff_upper = data$cut_off_value + 1,
-        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
-        bhd_lower = 25000,
-        bhd_upper = 35000,
-        rr_central = data$relative_risk,
-        rr_lower = data$relative_risk_lower,
-        rr_upper = data$relative_risk_upper,
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        info = paste0(data$pollutant,"_", data$evaluation_name)
-        ) |>
-      helper_extract_main_results(),
-  expected =
-    data |>
-    dplyr::select(estimated_number_of_attributable_cases_central,
-                  estimated_number_of_attributable_cases_lower,
-                  estimated_number_of_attributable_cases_upper)|>
-    base::as.numeric()
-  )
 })
 
 testthat::test_that("number of rows in detailed results correct rr single exposure value with uncertainties in 4 input variables", {
@@ -142,7 +136,8 @@ testthat::test_that("number of rows in detailed results correct rr single exposu
 
 })
 
-testthat::test_that("results correct user-defined erf (mrbrt) with splinefun with cutoff of 5", {
+# testthat::test_that("results correct user-defined erf (mrbrt) with splinefun", {
+testthat::test_that("results correct user-defined erf (mrbrt) with splinefun ( pw_exp_single pw_erf_point_pairs pw_cutoff_TRUE pw_varuncer_FALSE pw_iteration_FALSE pw_multiexp_FALSE )", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
