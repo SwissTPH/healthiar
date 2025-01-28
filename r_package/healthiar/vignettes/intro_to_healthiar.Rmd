@@ -12,11 +12,12 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
 library(pacman)
 pacman::p_load(healthiar, tibble, dplyr, purrr, tidyr, stringr, pillar, knitr)
 options(knitr.kable.max_rows = 10)
-
 set.seed(1)
+
 ```
 
 Hi there!
@@ -115,6 +116,7 @@ Let's inspect the main results
 
 ```{r, include=TRUE, eval=TRUE, echo=TRUE}
 results_pm_copd[["health_main"]]
+
 ```
 
 It is a tibble of 3 rows and 22 columns. Let's zoom in on some relevant aspects
