@@ -7,7 +7,7 @@
 compare(
   approach_multiexposure = NULL,
   approach_comparison = "delta",
-  health_metric = "same_input_output",
+  health_outcome = "same_input_output",
   approach_risk = "relative_risk",
   exp_central_1,
   exp_lower_1 = NULL,

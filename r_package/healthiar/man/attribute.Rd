@@ -45,7 +45,7 @@ attribute(
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
   population = NULL,
-  health_metric = "same_input_output",
+  health_outcome = "same_input_output",
   approach_multiexposure = NULL,
   info = NULL
 )
@@ -97,7 +97,7 @@ attribute(
 
 \item{population}{code{Vector} with numeric values referring to the population in the geographical unit}
 
-\item{health_metric}{\code{String} showing the change in outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".}
+\item{health_outcome}{\code{String} showing the change in outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".}
 
 \item{approach_multiexposure}{\code{String} showing the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined".}
 
