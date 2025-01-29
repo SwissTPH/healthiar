@@ -141,8 +141,8 @@ compile_input <-
 
     length_exp_list <-
       ifelse(is.list(exp_central),
-             length(exp_central),      # If exposure distribution
-             1)                        # If single exposure
+             length(exp_central),      # If multiple geo units
+             1)                        # If only one geo unit
 # browser()
     input_wo_lifetable <-
       # Tibble converts NULL into NA: if variable is NULL, column not initiated
