@@ -64,15 +64,13 @@ get_output <-
         # Remove all impact rounded because
         # we have to round final results
         # not summing rounded results ("too rounded")
-        dplyr::select(-all_of(intersect(paste0("impact_rounded", c("", "_1", "_2")),
-                                        names(output_last)))) |>
+        dplyr::select(-any_of(paste0("impact_rounded", c("", "_1", "_2")))) |>
         dplyr::group_by(geo_id_disaggregated) |>
         # Collapse the exposure categories to have only a vector
-        dplyr::mutate(across(all_of(intersect(c(paste0("exp", c("", "_1", "_2")),
-                                                paste0("pop_exp", c("", "_1", "_2")),
-                                                paste0("prop_pop_exp", c("", "_1", "_2")),
-                                                "exposure_dimension"),
-                                              names(output_last))),
+        dplyr::mutate(across(any_of(c(paste0("exp", c("", "_1", "_2")),
+                                      paste0("pop_exp", c("", "_1", "_2")),
+                                      paste0("prop_pop_exp", c("", "_1", "_2")),
+                                      "exposure_dimension")),
                              ~ paste(., collapse = ", ")))
 
       output[["health_detailed"]][["agg_exp_cat"]] <-
@@ -91,10 +89,9 @@ get_output <-
                                   paste0("impact", c("", "_1", "_2")),
                                   paste0("impact_per_100k_inhab", c("", "_1", "_2"))))))) |>
         dplyr::summarize(
-          across(all_of(intersect(c(paste0("absolute_risk_as_percent", c("", "_1", "_2")),
-                                    paste0("impact", c("", "_1", "_2")),
-                                    "impact_social"),
-                                  names(output[["health_detailed"]][["agg_exp_cat"]]))),
+          across(any_of(c(paste0("absolute_risk_as_percent", c("", "_1", "_2")),
+                          paste0("impact", c("", "_1", "_2")),
+                          "impact_social")),
                  ~sum(.x, na.rm = TRUE)),
           .groups = "drop") |>
         # Round impact
@@ -112,11 +109,10 @@ get_output <-
       output[["health_detailed"]][["agg_geo"]]  <-
         output_last |>
         # Group by higher geo level
-        dplyr::group_by(across(all_of(intersect(
+        dplyr::group_by(across(any_of(
                           c("exposure_name",
                             "geo_id_aggregated",
-                            "erf_ci", "exp_ci", "bhd_ci", "dw_ci"),
-                          names(output_last)))))
+                            "erf_ci", "exp_ci", "bhd_ci", "dw_ci"))))
 
         if (!"population" %in% names(output_last)) {
           output[["health_detailed"]][["agg_geo"]]  <- output[["health_detailed"]][["agg_geo"]] |>
@@ -147,9 +143,8 @@ get_output <-
         dplyr::mutate(
           exposure_name = paste(unique(exposure_name), collapse = ", ")) |>
         # Group by higher geo level
-        dplyr::group_by(across(all_of(intersect(c("geo_id_aggregated", "exp_ci",
-                                                     "bhd_ci", "erf_ci","dw_ci", "cutoff_ci", "duration_ci"),
-                                                   names(output_last)))))|>
+        dplyr::group_by(across(any_of(c("geo_id_aggregated", "exp_ci",
+                                        "bhd_ci", "erf_ci","dw_ci", "cutoff_ci", "duration_ci"))))|>
         dplyr::summarise(impact = sum(impact),
                          impact_rounded = round(impact),
                          .groups = "drop")
@@ -195,8 +190,7 @@ get_output <-
     put_first_cols <-
       function(x, cols){
         dplyr::select(x,
-                      all_of(intersect(cols,
-                                       names(x))),
+                      any_of(cols),
                       everything())
       }
 
