@@ -35,12 +35,10 @@ get_risk_and_pop_fraction <-
     collapse_df_by_columns <-
       function(df, columns_for_group, sep){
 
-        columns_for_group_present <-
-          columns_for_group[columns_for_group %in% names(df)]
-
         df <-
           df |>
-          dplyr::group_by(across(all_of(columns_for_group_present)))|>
+          # group_by requires across() to use any_of()
+          dplyr::group_by(across(any_of(columns_for_group)))|>
           dplyr::summarize(
             across(everything(),
                    ~ if (length(unique(.)) == 1) {
