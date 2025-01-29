@@ -13,165 +13,81 @@ Test the functions of the bestcost package comparing the results with results fr
 The R script required the loading of certain R packages. 
 ```{r Load packages and data, include=FALSE}
 
-# Load required packages
+## Load required packages
+### using {pacman}, which automatically installs packages if not yet installed
+library("pacman")
+pacman::p_load(
+  ## To manipulate data
+  readxl, dplyr, tidyr, purrr, stringr, tibble, zoo, stats,
+  ## To set colors in console messages (checking)
+  crayon,
+  ## To load {healthiar}
+  credentials, gitcreds, devtools,
+  ## To do geo analysis
+  terra, sf
+  )
 
-# to assess performance
-library(profvis)
-library(bench)
-library(microbenchmark)
-
-# to manipulate data
-library(readxl)
-library(dplyr)
-library(tidyr)
-library(purrr)
-library(stringr)
-library(tibble)
-library(zoo)
-library(stats)
-
-# to set colors in console messages (checking)
-library(crayon)
-
-# to visualize results
-library(ggplot2)
-
-## to export tables in excel format
-library(openxlsx)
-
-## to load own packages
-library(credentials)
-library(gitcreds)
-library(devtools)
-
-## to make geo analysis
-library(terra)
-library(sf)
-
-# Load healthiar package (either current version or installed version)
+## Load development version of healthiar package
+### Only if in development environment! If you're not use option in chunk below
 devtools::load_all(export_all = FALSE)
 
-# Load data
+## Load data necessary for running examples below
 load("../testing/input/data/input_data_for_testing_Rpackage.RData")
-
-# Unit meeting demo
-# data <- airqplus_pm_copd |> 
-#   mutate(prevalence = incidents_per_100_000_per_year/1E5*population_at_risk)
 ```
 
 
 
-```{r Alternative 1 to load healthiar: Install own package from github, eval=FALSE, include=FALSE}
-# Install own package from github as suggested here: https://stackoverflow.com/a/71846333/6104907
-if(!"healthiar" %in% installed.packages()[, "Package"]){
-  #gitcreds::gitcreds_set()
-  #usethis::use_git_config(user.name = "YourName", user.email = "your@mail.com") # run if installation doesn't work
-  credentials::set_github_pat() # paste github PAT if prompted
-  devtools::install_github(repo = "best-cost/best-cost_WPs",
-                           subdir = "/r_package/healthiar",
-                           ref = "HEAD", # Branch name (by default "HEAD") as a string
-                           force = TRUE)
-}
+```{r Install {healthiar} from GitHub, eval=FALSE, include=FALSE}
+
+## NOTE: if an older version of {healthiar} already installed and loaded, detach first 
+# detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
+
+## Install own package from GitHub
+### Source: https://stackoverflow.com/a/71846333/6104907
+
+## Authenticate yourself using PAT (personal access token)
+### See README file at GitHub repo for guidance on how to create a PAT
+### https://github.com/best-cost/best-cost_WPs
+credentials::set_github_pat() # paste github PAT if prompted
+
+## Install current version of {healthiar}
+### If prompted to update or install packages please do so
+devtools::install_github(
+  repo = "best-cost/best-cost_WPs",
+  subdir = "/r_package/healthiar",
+  ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string  
+  force = TRUE
+)
+
 library(healthiar)
 ```
 
 
 
-```{r Alternative 2 to load healthiar: load zip from local source, eval=FALSE, include=FALSE}
-detach("package:healthiar", unload = TRUE) # detach healthiar
-# Package as .zip file
+```{r Install healthiar from local source, eval=FALSE, include=FALSE}
+
+## NOTE: if an older version of {healthiar} already installed and loaded, detach first 
+detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
+
+## Install package from .zip file
 devtools::build(binary = TRUE, path = "../testing/input/") # Save current state of package as .zip file (e.g. to directly test changes in functions)
-install.packages("../testing/input/healthiar_0.0.0.1.zip", repos=NULL, type='source') # Install package from source
+install.packages("../testing/input/healthiar_0.0.0.1.zip", repos=NULL, type='source') # Modify file path
 
-
-# Package as .tar.gz file
+## Install package from .tar.gz file
 devtools::build(path = "../testing/input/") # Save current state of package as tar.gz file (e.g. to directly test changes in functions)
-install.packages("../testing/input/healthiar_0.0.0.1.tar.gz", repos=NULL, type='source') # Install package from source
+install.packages("../testing/input/healthiar_0.0.0.1.tar.gz", repos=NULL, type='source') # Modify file path
 
 library(healthiar)
 ```
 
-# Test prepare function
 
-```{r prepare_exposure_data, eval=FALSE, include=FALSE}
 
-# To be added
-# test <- prepare_exposure_data()
-
-```
 
 # Calculate health impacts
 
 ## Attributable health impact
 
 ### Single baseline health data
-
-
-```{r Demo unit meeting}
-
-# Calculate COPD cases attributable to PM exposure
-# results_pm_copd <-
-#   healthiar::attribute_health(
-#     exp_central = data$mean_concentration,                      # 8.85
-#     cutoff_central = data$cut_off_value,                        # 5
-#     bhd_central = data$prevalence,                              # 30747
-#     bhd_lower = data$prevalence - 1000,                         # 29747
-#     bhd_upper = data$prevalence + 1000,                         # 31747
-#     rr_central = data$relative_risk,                            # 1.36
-#     rr_lower = data$relative_risk_lower,                        # 1.124
-#     rr_upper = data$relative_risk_upper,                        # 1.664
-#     rr_increment = 10,                                           
-#     erf_shape = "log_linear", 
-#     info = "pm_copd_assessment_1")
-
-# Check results
-# View(results_pm_copd)
-# View(results_pm_copd$main)
-# View(results_pm_copd$detailed$raw)
-
-
-# Now with population
-# results_pm_copd_pop <-
-  # healthiar::attribute(
-  #   exp_central = data$mean_concentration,                      # 8.85
-  #   cutoff_central = data$cut_off_value,                        # 5
-  #   bhd_central = data$prevalence,                              # 30747
-  #   bhd_lower = data$prevalence - 1000,                         # 29747
-  #   bhd_upper = data$prevalence + 1000,                         # 31747
-  #   rr_central = data$relative_risk,                            # 1.36
-  #   rr_lower = data$relative_risk_lower,                        # 1.124
-  #   rr_upper = data$relative_risk_upper,                        # 1.664
-  #   rr_increment = 10,                                           
-  #   erf_shape = "log_linear", 
-  #   info = "pm_copd_assessment_1",
-  #   population = 1E6)
-```
-
-
-
-```{r Screenshot for poster, eval=FALSE, include=FALSE}
-
-health_impact <- attribute(
-    exp_central = 12.3,
-    bhd_central = 15000,
-    rr_central = 1.04,
-    rr_lower = 1.02,
-    rr_upper = 1.06,
-    cutoff_central = 5,
-    erf_shape = "log_linear",
-    info = "scenario_1")
-
-health_impact <- attribute(
-    exposure = 12.3,
-    baseline_health_data = 15000,
-    rr_central = 1.04,
-    cutoff = 5,
-    erf_shape = "log_linear",
-    info = "PM2.5_scenario_1")
-
-```
-
-
 
 ```{r single exposure value}
 # Assess attributable cases using the AirQ+ export as input data
@@ -200,6 +116,60 @@ check_bestcost(result_list_bestcost = bestcost_pm_copd,
 ```
 
 
+```{r Test }
+
+```
+
+
+```{r prepare tests}
+
+data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
+data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+
+
+## Gives error
+healthiar::attribute_health(
+  approach_risk = "relative_risk",
+  exp_central = data_pop$Concentration,
+  prop_pop_exp = data_pop$Viken,
+  bhd_central = 4500,
+  erf_eq_central =
+    stats::splinefun(
+      x = data_erf$exposure,
+      y = data_erf$mean,
+      method = "natural")
+)
+
+## Error in `dplyr::group_by()`:
+# ! Must group by variables found in `.data`.
+# ✖ Column `cutoff_ci` is not found.
+
+
+data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+test <- healthiar::attribute_health(
+        approach_multiexposure = "multiplicative",
+        exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
+        exp_lower = c("pm2.5" = 8.1 - 1, "no2" =  10.9 - 1),
+        exp_upper = c("pm2.5" = 8.1 + 1, "no2" =  10.9 + 1),
+        cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
+        bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
+        rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
+        rr_lower = setNames(c(1.063, 1.031) - 0.005, c("pm2.5", "no2")),
+        rr_upper = setNames(c(1.063, 1.031) + 0.005, c("pm2.5", "no2")),
+        rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
+        erf_shape = "log_linear")
+    
+test <- test |> 
+  pluck("health_detailed") |>
+  pluck("raw") |>
+  select(impact_rounded) |>
+  base::unlist() |>
+  base::as.numeric()
+
+test <- paste(test, collapse = ", ")
+print(test)
+```
 
 
 
@@ -470,7 +440,7 @@ check_bestcost(result_list_bestcost = bestcost_pm_stroke_mr_brt,
 ```{r absolute risk}
 
 # Extract rows that contain input data (others may contain results)
-niph_noise_ha_input <- 
+niph_noise_ha_input <-
   niph_noise_ha_excel |>
   dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean))
 
@@ -491,7 +461,8 @@ bestcost_noise_ha_ar <-
     approach_risk = "absolute_risk",
     exp_central = niph_noise_ha_input$exposure_mean,
     # exp_lower = niph_noise_ha_input$exposure_mean - 1,
-    # exp_upper = niph_noise_ha_input$exposure_mean + 1
+    # exp_upper = niph_noise_ha_input$exposure_mean + 1,
+    cutoff_central = 10,
     population = sum(niph_noise_ha_input$population_exposed_total), 
     prop_pop_exp = niph_noise_ha_input$population_exposed_total/sum(niph_noise_ha_input$population_exposed_total),
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
@@ -525,6 +496,12 @@ bestcost_noise_ha_ar_geo <-
     exp_central = list(runif_with_seed(5,8,10,1), 
                           runif_with_seed(5,8,10,2), 
                           runif_with_seed(5,8,10,3)),
+            exp_lower = list(runif_with_seed(5,8,10,1) - 5,
+                         runif_with_seed(5,8,10,2) - 5,
+                         runif_with_seed(5,8,10,3) - 5),
+        exp_upper = list(runif_with_seed(5,8,10,1) + 5,
+                         runif_with_seed(5,8,10,2) + 5,
+                         runif_with_seed(5,8,10,3) + 5),
     population = list(runif_with_seed(1,5E3,1E4,1),
                         runif_with_seed(1,5E3,1E4,2), 
                         runif_with_seed(1,5E3,1E4,3)),
@@ -534,7 +511,6 @@ bestcost_noise_ha_ar_geo <-
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
     geo_id_disaggregated = 1:3,
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
-
 ```
 
 
@@ -579,13 +555,13 @@ bestcost_pm_death <-
 
 # Then include social indicators of deprivation 
 bestcost_pm_death_social_decile <- 
-  healthiar::include_social(output = bestcost_pm_death,
+  healthiar::include_social(output_healthiar = bestcost_pm_death,
                             geo_id_disaggregated = social_data$CS01012020,
                             social_indicator = social_data$score,
                             n_quantile = 10,
                             approach = "quantile")
 
-View(bestcost_pm_death_social_decile)
+#View(bestcost_pm_death_social_decile)
 
 # Check that results did not change over time
 check_general(
@@ -1065,13 +1041,17 @@ bestcost_pm_no2_mortality_additive <-
   healthiar::attribute_health(
     approach_multiexposure = "additive",
     exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
+    exp_lower = c("pm2.5" = 8.1 - 1, "no2" =  10.9 - 1),
+    exp_upper = c("pm2.5" = 8.1 + 1, "no2" =  10.9 + 1),
     cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
     bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
     rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
+    rr_lower = setNames(c(1.063, 1.031)- 0.001, c("pm2.5", "no2")),
+    rr_upper = setNames(c(1.063, 1.031) + 0.001, c("pm2.5", "no2")),
     rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
     erf_shape = "log_linear")
 
-# View(bestcost_pm_copd_1rr)
+View(bestcost_pm_no2_mortality_additive)
 
 check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_additive,
                result_vector_alternative = 0.081 * 1000)
@@ -1084,35 +1064,86 @@ bestcost_pm_no2_mortality_multiplicative <-
   healthiar::attribute_health(
     approach_multiexposure = "multiplicative",
     exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
+    # exp_lower = c("pm2.5" = 8.1 - 1, "no2" =  10.9 - 1),
+    # exp_upper = c("pm2.5" = 8.1 + 1, "no2" =  10.9 + 1),
     cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
     bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
     rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
+    # rr_lower = setNames(c(1.063, 1.031)- 0.001, c("pm2.5", "no2")),
+    # rr_upper = setNames(c(1.063, 1.031) + 0.001, c("pm2.5", "no2")),
+    rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
+    erf_shape = "log_linear")
+
+View(bestcost_pm_no2_mortality_multiplicative)
+
+check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative,
+               result_vector_alternative = 0.079 * 1000)
+
+
+# Assess attributable cases using the BEST-COST task 1.4 report
+# Attention fake rr and exp conficence interval data (only for testing purposes)
+bestcost_pm_no2_mortality_multiplicative_ci <-
+  healthiar::attribute_health(
+    approach_multiexposure = "multiplicative",
+    exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
+    exp_lower = c("pm2.5" = 7, "no2" =  9),
+    exp_upper = c("pm2.5" = 9, "no2" =  12),
+    cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
+    bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
+    rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
+    rr_lower = setNames(c(1.05, 1.02), c("pm2.5", "no2")),
+    rr_upper = setNames(c(1.07, 1.04), c("pm2.5", "no2")),
     rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
     erf_shape = "log_linear")
 
 # View(bestcost_pm_copd_1rr)
 
-check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative,
-               result_vector_alternative = 0.079 * 1000)
+check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative_ci,
+               result_vector_alternative = c(79,59,93)) # Results on 21.01.2025
 ```
 
 
 ```{r combined approach}
 # Assess attributable cases using the BEST-COST task 1.4 report
-bestcost_pm_no2_mortality_multiplicative <-
+bestcost_pm_no2_mortality_combined <-
   healthiar::attribute_health(
     approach_multiexposure = "combined",
     exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
+    # exp_lower = c("pm2.5" = 8.1 - 1, "no2" =  10.9 - 1),
+    # exp_upper = c("pm2.5" = 8.1 + 1, "no2" =  10.9 + 1),
     cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
     bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
     rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
+    # rr_lower = setNames(c(1.063, 1.031)- 0.001, c("pm2.5", "no2")),
+    # rr_upper = setNames(c(1.063, 1.031) + 0.001, c("pm2.5", "no2")),
+    rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
+    erf_shape = "log_linear")
+
+View(bestcost_pm_no2_mortality_multiplicative)
+
+check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative,
+               result_vector_alternative = 0.079 * 1000)
+
+# Assess attributable cases using the BEST-COST task 1.4 report
+# Attention fake rr and exp conficence interval data (only for testing purposes)
+bestcost_pm_no2_mortality_combined_ci <-
+  healthiar::attribute_health(
+    approach_multiexposure = "combined",
+    exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
+    exp_lower = c("pm2.5" = 7, "no2" =  9),
+    exp_upper = c("pm2.5" = 9, "no2" =  12),
+    cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
+    bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
+    rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
+    rr_lower = setNames(c(1.05, 1.02), c("pm2.5", "no2")),
+    rr_upper = setNames(c(1.07, 1.04), c("pm2.5", "no2")),
     rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
     erf_shape = "log_linear")
 
 # View(bestcost_pm_copd_1rr)
 
-check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative,
-               result_vector_alternative = 0.079 * 1000)
+check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_combined_ci,
+               result_vector_alternative = c(79,59,93)) # Results on 21.01.2025
 ```
 
 
@@ -2661,15 +2692,83 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 ```
 
 
-# Export 
 
-```{r eval=FALSE, include=FALSE}
-# write.csv2(lifetable_airqplus,
-#             "../testing/output/lifetable_airqplus_2019_ch.csv", 
-#             row.names = FALSE)
+# Test prepare function
+
+```{r prepare_exposure_data, eval=FALSE, include=FALSE}
+
+## To be added
+# test <- healthiar::prepare_exposure_data()
 ```
 
+
+
 # Other
+
+```{r Demo unit meeting, eval=FALSE, include=FALSE}
+
+## Unit meeting demo
+# data <- airqplus_pm_copd |> 
+#   mutate(prevalence = incidents_per_100_000_per_year/1E5*population_at_risk)
+
+#3 Calculate COPD cases attributable to PM exposure
+# results_pm_copd <-
+#   healthiar::attribute_health(
+#     exp_central = data$mean_concentration,                      # 8.85
+#     cutoff_central = data$cut_off_value,                        # 5
+#     bhd_central = data$prevalence,                              # 30747
+#     bhd_lower = data$prevalence - 1000,                         # 29747
+#     bhd_upper = data$prevalence + 1000,                         # 31747
+#     rr_central = data$relative_risk,                            # 1.36
+#     rr_lower = data$relative_risk_lower,                        # 1.124
+#     rr_upper = data$relative_risk_upper,                        # 1.664
+#     rr_increment = 10,                                           
+#     erf_shape = "log_linear", 
+#     info = "pm_copd_assessment_1")
+
+## Check results
+# View(results_pm_copd)
+# View(results_pm_copd$main)
+# View(results_pm_copd$detailed$raw)
+
+## Now with population
+# results_pm_copd_pop <-
+  # healthiar::attribute(
+  #   exp_central = data$mean_concentration,                      # 8.85
+  #   cutoff_central = data$cut_off_value,                        # 5
+  #   bhd_central = data$prevalence,                              # 30747
+  #   bhd_lower = data$prevalence - 1000,                         # 29747
+  #   bhd_upper = data$prevalence + 1000,                         # 31747
+  #   rr_central = data$relative_risk,                            # 1.36
+  #   rr_lower = data$relative_risk_lower,                        # 1.124
+  #   rr_upper = data$relative_risk_upper,                        # 1.664
+  #   rr_increment = 10,                                           
+  #   erf_shape = "log_linear", 
+  #   info = "pm_copd_assessment_1",
+  #   population = 1E6)
+```
+
+```{r Screenshot for poster, eval=FALSE, include=FALSE}
+
+# health_impact <- attribute(
+#     exp_central = 12.3,
+#     bhd_central = 15000,
+#     rr_central = 1.04,
+#     rr_lower = 1.02,
+#     rr_upper = 1.06,
+#     cutoff_central = 5,
+#     erf_shape = "log_linear",
+#     info = "scenario_1")
+# 
+# health_impact <- attribute(
+#     exposure = 12.3,
+#     baseline_health_data = 15000,
+#     rr_central = 1.04,
+#     cutoff = 5,
+#     erf_shape = "log_linear",
+#     info = "PM2.5_scenario_1")
+
+```
 
 ```{r Illustration integrate compare() in attribute()}
 

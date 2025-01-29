@@ -1174,6 +1174,56 @@ input_data_mortality <-
   dplyr::filter(rr_id %in% rr_data_allCauseMortality$rr_id)
 ```
 
+Variables that are used in examples of testing_Rpackage
+
+airqplus_deaths_pop_multipleYear
+airqplus_deaths_pop_singleYear
+airqplus_pm_copd
+airqplus_pm_deaths_yll
+input_data_mortality
+lifetable_withPopulation
+mrbrt_stroke
+niph_noise_ha_excel
+niph_noise_ihd_excel
+pop_data_norway
+social_data
+
+```{r modify variable names for package example data}
+
+# exdat_pop_multi <- airqplus_deaths_pop_multipleYear # Avoid using lifetable data where one age groups included more than one year
+# exdat_pop <- airqplus_deaths_pop_singleYear # Doesn't seem to be used in testing_Rpackage
+exdat_pm_copd <- airqplus_pm_copd
+exdat_pop_1 <- airqplus_pm_deaths_yll[["pop"]]
+exdat_input_1 <- airqplus_pm_deaths_yll[["input"]]
+exdat_input_2 <- input_data_mortality
+exdat_pop_male <- lifetable_withPopulation[["male"]]
+exdat_pop_female <- lifetable_withPopulation[["female"]]
+exdat_erf <- mrbrt_stroke
+exdat_noise_ha <- niph_noise_ha_excel
+exdat_noise_ihd <- niph_noise_ihd_excel
+exdat_pop_2 <- pop_data_norway
+exdat_mdi <- social_data
+
+rm(list=setdiff(ls(), 
+                c(
+                  "exdat_pm_copd",
+                  "exdat_pop_1",
+                  "exdat_input_1",
+                  "exdat_input_2",
+                  "exdat_pop_male",
+                  "exdat_pop_female",
+                  "exdat_erf",
+                  "exdat_noise_ha",
+                  "exdat_noise_ihd",
+                  "exdat_pop_2",
+                  "exdat_mdi"
+                  )))
+save.image(file = "../healthiar/data/example_data.RData")
+
+
+
+
+```
 
 
 ```{r Export environment}

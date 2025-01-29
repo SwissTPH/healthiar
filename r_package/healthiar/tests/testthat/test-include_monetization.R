@@ -61,7 +61,7 @@ testthat::test_that("results correct direct discounting with discount factor and
   )
 })
 
-
+# Not included in overview
 testthat::test_that("results correct direct discounting with impact vector with discount factor and exponential discount shape", {
 
   testthat::expect_equal(
@@ -81,6 +81,7 @@ testthat::test_that("results correct direct discounting with impact vector with 
   )
 })
 
+# Not included in overview
 testthat::test_that("results correct direct discounting with impact vector discounting only one specific year and exponential discount shape", {
 
   testthat::expect_equal(

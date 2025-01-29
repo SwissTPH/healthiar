@@ -242,7 +242,7 @@ compile_input <-
 
       input_wo_lifetable <-
         tidyr::pivot_longer(data = input_wo_lifetable,
-                            cols = c(rr_central, rr_lower, rr_upper),
+                            cols = any_of(c("rr_central", "rr_lower", "rr_upper")),
                             names_to = "erf_ci",
                             names_prefix = "rr_",
                             values_to = "rr")

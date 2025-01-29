@@ -3,7 +3,11 @@ Title: Quantification and monetarization of health impacts of environmental stre
 Version: 0.0.0.1
 Author: Alberto Castro [aut, cre], Axel Luyten [aut, cre]
 Maintainer: Alberto Castro <alberto.castrofernandez@swisstph.ch>
-Description: This R package was developed within the framework of the EU project BEST-COST. It aims to quantify and monetize health impacts of environmental stressors focusing on air pollution and noise.
+Description: healthiar aims to quantify and monetize health impacts of environmental stressors focusing on air pollution and noise.
+    ***** TERMS OF USE *****
+    By using the R package healthiar or accessing its corresponding GitHub website https://github.com/best-cost/ the user agrees not to disseminate the package or any parts of it to third parties.
+    ***** DISCLAIMER *****
+    This is work in progress. The developers are not liable for any calculation errors or inaccuracies resulting from the use of this package."
 License: GPL
 Encoding: UTF-8
 RoxygenNote: 7.3.2
@@ -18,5 +22,8 @@ Depends:
     R (>= 4.1.0)
 LazyData: true
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+VignetteBuilder: knitr

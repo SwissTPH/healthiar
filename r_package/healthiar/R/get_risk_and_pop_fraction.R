@@ -35,12 +35,10 @@ get_risk_and_pop_fraction <-
     collapse_df_by_columns <-
       function(df, columns_for_group, sep){
 
-        columns_for_group_present <-
-          columns_for_group[columns_for_group %in% names(df)]
-
         df <-
           df |>
-          dplyr::group_by(across(all_of(columns_for_group_present)))|>
+          # group_by requires across() to use any_of()
+          dplyr::group_by(across(any_of(columns_for_group)))|>
           dplyr::summarize(
             across(everything(),
                    ~ if (length(unique(.)) == 1) {
@@ -66,13 +64,14 @@ get_risk_and_pop_fraction <-
       ## If PAF
     if ( {{pop_fraction_type}} == "paf" ) {
 
+      # browser()
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         ## Obtain the relative risk for the relevant concentration
         rowwise() |>
         dplyr::mutate(rr_conc =
                         healthiar::get_risk(rr = rr,
                                            exp = exp,
-                                           cutoff = cutoff,
+                                           cutoff = if ( "cutoff" %in% names(input_with_risk_and_pop_fraction) ) cutoff else 0, # if cutoff argument not specified in attribute argument call (and therefore not present in the tibble) then input 0 to the healthiar::get_risk function to avoid error
                                            rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq)) |>
@@ -104,6 +103,7 @@ get_risk_and_pop_fraction <-
 
       # * * Multiplicative approach ############################################
 
+
       if ( unique(input$approach_multiexposure) %in% "multiplicative" ) {
 
         ## In the multiplicative approach, relative risks have to be merged
@@ -111,6 +111,17 @@ get_risk_and_pop_fraction <-
         if({{pop_fraction_type}} == "paf"){
           input_with_risk_and_pop_fraction <-
             input_with_risk_and_pop_fraction |>
+            ## group by columns that define diversity
+            ## Only combine pm2.5 and no2 for rr_conc in the same ci
+            dplyr::group_by(
+              across(any_of(c(
+                "erf_ci",
+                "exp_ci",
+                "bhd_ci",
+                "cutoff_ci",
+                "dw_ci",
+                "duration_ci",
+                "erf_eq_ci")))) |>
             # prod() multiplies all elements in a vector
             dplyr::mutate(
               rr_conc_before_multiplying = rr_conc,
@@ -119,6 +130,17 @@ get_risk_and_pop_fraction <-
           } else { ## if PIF
           input_with_risk_and_pop_fraction <-
             input_with_risk_and_pop_fraction |>
+            ## group by columns that define diversity
+            ## Only combine pm2.5 and no2 for rr_conc in the same ci
+            dplyr::group_by(
+              across(any_of(c(
+                "erf_ci",
+                "exp_ci",
+                "bhd_ci",
+                "cutoff_ci",
+                "dw_ci",
+                "duration_ci",
+                "erf_eq_ci")))) |>
             ## prod() multiplies all elements in a vector
             dplyr::mutate(
               rr_conc_1_before_multiplying = rr_conc_1,
@@ -137,14 +159,7 @@ get_risk_and_pop_fraction <-
               "geo_id_disaggregated",
               "sex",
               "lifetable_with_pop_nest",
-              "erf_ci",
-              "exp_ci",
-              "bhd_ci",
-              "cutoff_ci",
-              "dw_ci",
-              "duration_ci",
-              "erf_eq"
-              ),
+              "rr_conc"),
             sep = ", ")
       }
     }
@@ -210,6 +225,17 @@ get_risk_and_pop_fraction <-
 
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
+          ## group by columns that define diversity
+          ## Only combine pm2.5 and no2 for rr_conc in the same ci
+          dplyr::group_by(
+            across(any_of(c(
+              "erf_ci",
+              "exp_ci",
+              "bhd_ci",
+              "cutoff_ci",
+              "dw_ci",
+              "duration_ci",
+              "erf_eq_ci")))) |>
           dplyr::mutate(pop_fraction_before_combining = pop_fraction,
                         ## Multiply with prod() across all pollutants
                         pop_fraction = 1-(prod(1-pop_fraction)))
@@ -224,13 +250,7 @@ get_risk_and_pop_fraction <-
             "geo_id_disaggregated",
             "sex",
             "lifetable_with_pop_nest",
-            "erf_ci",
-            "exp_ci",
-            "bhd_ci",
-            "cutoff_ci",
-            "dw_ci",
-            "duration_ci",
-            "erf_eq"),
+            "rr_conc"),
             sep = ", ")
         }
       }
