@@ -40,7 +40,7 @@ get_risk_and_pop_fraction <-
 
         df <-
           df |>
-          dplyr::group_by(across(all_of(columns_for_group_present)))|>
+          dplyr::group_by(all_of(columns_for_group_present))|>
           dplyr::summarize(
             across(everything(),
                    ~ if (length(unique(.)) == 1) {

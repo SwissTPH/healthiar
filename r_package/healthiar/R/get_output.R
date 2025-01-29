@@ -67,31 +67,33 @@ get_output <-
         dplyr::select(-any_of(paste0("impact_rounded", c("", "_1", "_2")))) |>
         dplyr::group_by(geo_id_disaggregated) |>
         # Collapse the exposure categories to have only a vector
-        dplyr::mutate(across(any_of(c(paste0("exp", c("", "_1", "_2")),
-                                      paste0("pop_exp", c("", "_1", "_2")),
-                                      paste0("prop_pop_exp", c("", "_1", "_2")),
-                                      "exposure_dimension")),
-                             ~ paste(., collapse = ", ")))
+        dplyr::mutate(across(any_of(
+          c(paste0("exp", c("", "_1", "_2")),
+            paste0("pop_exp", c("", "_1", "_2")),
+            paste0("prop_pop_exp", c("", "_1", "_2")),
+            "exposure_dimension")),
+          ~ paste(., collapse = ", ")))
 
       output[["health_detailed"]][["agg_exp_cat"]] <-
         output[["health_detailed"]][["agg_exp_cat"]] |>
         # Sum columns to summarize
         dplyr::group_by(
-          across(all_of(setdiff(names(output[["health_detailed"]][["agg_exp_cat"]]),
-                                c("geo_id_disaggregated",
-                                  paste0("exp", c("", "_1", "_2")),
-                                  paste0("population", c("", "_1", "_2")),
-                                  paste0("prop_pop_exp", c("", "_1", "_2")),
-                                  paste0("pop_exp", c("", "_1", "_2")),
-                                  paste0("rr_conc", c("", "_1", "_2")),
-                                  paste0("pop_fraction", c("", "_1", "_2")),
-                                  paste0("absolute_risk_as_percent", c("", "_1", "_2")),
-                                  paste0("impact", c("", "_1", "_2")),
-                                  paste0("impact_per_100k_inhab", c("", "_1", "_2"))))))) |>
+          across(-any_of(
+            c("geo_id_disaggregated",
+              paste0("exp", c("", "_1", "_2")),
+              paste0("population", c("", "_1", "_2")),
+              paste0("prop_pop_exp", c("", "_1", "_2")),
+              paste0("pop_exp", c("", "_1", "_2")),
+              paste0("rr_conc", c("", "_1", "_2")),
+              paste0("pop_fraction", c("", "_1", "_2")),
+              paste0("absolute_risk_as_percent", c("", "_1", "_2")),
+              paste0("impact", c("", "_1", "_2")),
+              paste0("impact_per_100k_inhab", c("", "_1", "_2")))))) |>
         dplyr::summarize(
-          across(any_of(c(paste0("absolute_risk_as_percent", c("", "_1", "_2")),
-                          paste0("impact", c("", "_1", "_2")),
-                          "impact_social")),
+          across(any_of(
+            c(paste0("absolute_risk_as_percent", c("", "_1", "_2")),
+              paste0("impact", c("", "_1", "_2")),
+              "impact_social")),
                  ~sum(.x, na.rm = TRUE)),
           .groups = "drop") |>
         # Round impact
