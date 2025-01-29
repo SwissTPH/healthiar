@@ -26,7 +26,7 @@ get_output <-
 
     # Get main results from detailed results ###################################
 
-    if(grepl("lifetable", unique(impact_raw$health_metric))){
+    if(grepl("lifetable", unique(impact_raw$health_outcome))){
       impact_main <-
         impact_raw |>
         dplyr::select(-contains("nest"))|>
@@ -171,7 +171,7 @@ get_output <-
       output[["health_main"]] <- output[["health_main"]] |>
         dplyr::filter(cutoff_ci %in% c("central"))}
 
-    if(unique(impact_raw$health_metric) %in%
+    if(unique(impact_raw$health_outcome) %in%
        c("yld", "yld_from_lifetable")) {
 
       output[["health_main"]] <- output[["health_main"]] |>

@@ -5,7 +5,7 @@
 \title{Compile input}
 \usage{
 compile_input(
-  health_metric = NULL,
+  health_outcome = NULL,
   approach_multiexposure = NULL,
   approach_risk = NULL,
   exp_central,
@@ -51,7 +51,7 @@ compile_input(
 )
 }
 \arguments{
-\item{health_metric}{\code{String} showing the change in outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".}
+\item{health_outcome}{\code{String} showing the change in outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".}
 
 \item{approach_multiexposure}{\code{String} showing the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined".}
 

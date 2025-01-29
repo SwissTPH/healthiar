@@ -37,7 +37,7 @@ attribute_yld <-
 
     output <-
       healthiar::attribute(
-        health_metric = "yld",
+        health_outcome = "yld",
         approach_risk = approach_risk,
         approach_multiexposure = approach_multiexposure,
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,

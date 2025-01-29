@@ -44,7 +44,7 @@ compare_yld <-
       healthiar::compare(
         approach_multiexposure = approach_multiexposure,
         approach_comparison = approach_comparison,
-        health_metric = "yld",
+        health_outcome = "yld",
         approach_risk = "relative_risk",
         exp_central_1, exp_lower_1 = exp_lower_1, exp_upper_1 = exp_upper_1,
         exp_central_2, exp_lower_2 = exp_lower_2, exp_upper_2 = exp_upper_2,

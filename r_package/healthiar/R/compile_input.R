@@ -23,7 +23,7 @@
 #' @keywords internal
 
 compile_input <-
-  function(health_metric = NULL,
+  function(health_outcome = NULL,
            approach_multiexposure = NULL,
            approach_risk = NULL,
            exp_central, exp_lower = NULL, exp_upper = NULL,
@@ -173,7 +173,7 @@ compile_input <-
           test = !is.null( min_age ),
           yes = min_age,
           no = ifelse(
-            test = ( is.null ( min_age ) & grepl("lifetable", health_metric) ),
+            test = ( is.null ( min_age ) & grepl("lifetable", health_outcome) ),
             yes = first_age_pop,
             # no = NULL)
           no = NA)
@@ -182,7 +182,7 @@ compile_input <-
           test = !is.null( max_age ),
           yes = max_age,
           no = ifelse(
-            test = ( is.null ( max_age ) & grepl("lifetable", health_metric) ),
+            test = ( is.null ( max_age ) & grepl("lifetable", health_outcome) ),
             yes = last_age_pop,
             # no = NULL)
           no = NA)
@@ -211,7 +211,7 @@ compile_input <-
       # Information derived from input data
       dplyr::mutate(
         approach_risk = approach_risk, # RR or AR
-        health_metric = health_metric,
+        health_outcome = health_outcome,
         exposure_dimension =
           rep(1:length_exp_dist, length_exp_list),
         exposure_type =
@@ -294,7 +294,7 @@ compile_input <-
 
     # CREATE LIFETABLES ##########################################################
     # As nested tibble
-    if ( grepl("lifetable", health_metric) ) {
+    if ( grepl("lifetable", health_outcome) ) {
 
       # Build the data set for lifetable-related data
       # The life table has to be provided (by sex)

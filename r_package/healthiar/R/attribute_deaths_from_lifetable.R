@@ -40,7 +40,7 @@ attribute_deaths_from_lifetable <-
 
     output <-
       healthiar::attribute(
-        health_metric = "deaths_from_lifetable",
+        health_outcome = "deaths_from_lifetable",
         approach_risk = "relative_risk",
         approach_multiexposure = approach_multiexposure,
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,

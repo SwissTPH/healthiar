@@ -34,7 +34,7 @@ get_impact <-
 
       # * Same input as output #################################################
 
-      if(unique(input$health_metric) %in% "same_input_output") {
+      if(unique(input$health_outcome) %in% "same_input_output") {
 
         # Get pop_fraction and add it to the input data frame
         impact_raw <-
@@ -47,7 +47,7 @@ get_impact <-
                         everything())
 
         # * YLD ################################################################
-      } else if (unique(input$health_metric) %in% "yld") {
+      } else if (unique(input$health_outcome) %in% "yld") {
 
         # Add impact
         impact_raw <-
@@ -61,11 +61,11 @@ get_impact <-
                         everything())
 
         # * Lifetable ##########################################################
-        } else if (unique(input$health_metric) %in% c("deaths_from_lifetable",
+        } else if (unique(input$health_outcome) %in% c("deaths_from_lifetable",
                                                       "yll_from_lifetable",
                                                       "yld_from_lifetable")) {
           outcome_metric <-
-            gsub("_from_lifetable", "", unique(input$health_metric))
+            gsub("_from_lifetable", "", unique(input$health_outcome))
 
           pop_impact <-
             healthiar:::get_pop_impact(
@@ -79,7 +79,7 @@ get_impact <-
               pop_impact = pop_impact,
               input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
-    } else if (unique(input$health_metric) %in% "daly_from_lifetable"){
+    } else if (unique(input$health_outcome) %in% "daly_from_lifetable"){
 
       pop_impact <-
         healthiar:::get_pop_impact(
@@ -100,7 +100,7 @@ get_impact <-
 
     } else if (
       unique(input$approach_risk) == "absolute_risk" &
-      ( unique(input$health_metric) == "same_input_output" | unique(input$health_metric) == "yld" )
+      ( unique(input$health_outcome) == "same_input_output" | unique(input$health_outcome) == "yld" )
       ) {
 
       # Calculate absolute risk for each exposure category
@@ -116,7 +116,7 @@ get_impact <-
 
       # * YLD ##################################################################
 
-      if ( unique(input$health_metric) == "yld" ) {
+      if ( unique(input$health_outcome) == "yld" ) {
 
         impact_raw <-
           impact_raw |>
@@ -134,7 +134,7 @@ get_impact <-
     # * Single geo unit ########################################################
     if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) &
          ( unique(impact_raw$exposure_type) == "exposure_distribution" ) &
-         ( !grepl("from_lifetable", impact_raw$health_metric[1]) ) &
+         ( !grepl("from_lifetable", impact_raw$health_outcome[1]) ) &
          ( max(impact_raw$geo_id_disaggregated) == 1 ) ) {
 
       impact_raw <- impact_raw |>
@@ -156,7 +156,7 @@ get_impact <-
 
     } else if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) &
                 ( unique(impact_raw$exposure_type) == "exposure_distribution" ) &
-                ( !grepl("from_lifetable", impact_raw$health_metric[1]) ) &
+                ( !grepl("from_lifetable", impact_raw$health_outcome[1]) ) &
                 ( max(impact_raw$geo_id_disaggregated) > 1 ) ) {
 
       impact_raw <- impact_raw |>

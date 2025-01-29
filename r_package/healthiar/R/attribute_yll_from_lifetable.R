@@ -40,7 +40,7 @@ attribute_yll_from_lifetable <-
 
     output <-
       healthiar::attribute(
-        health_metric = "yll_from_lifetable", # Set outcome metric
+        health_outcome = "yll_from_lifetable", # Set outcome metric
         approach_risk = "relative_risk",
         approach_multiexposure = approach_multiexposure,
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
