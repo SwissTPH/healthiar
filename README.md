@@ -38,13 +38,13 @@ Step 2 – Connect RStudio with your GitHub profile
 Step 3 – Download & install the newest package version 
 1.	Open RStudio
 2.	Check that you have the package devtools installed (if not install it)
-3.	Run the code devtools::install_github(repo = "best-cost/best-cost_WPs", subdir = "/r_package/healthiar", ref = "HEAD", force = TRUE) which downloads the bestcost package from GitHub and installs it
+3.	Run the code devtools::install_github(repo = "best-cost/best-cost_WPs", subdir = "/r_package/healthiar", ref = "HEAD", force = TRUE, build_vignettes = TRUE) which downloads the bestcost package from GitHub and installs it
 4.	If prompted to update some existing packages do so
 5.	Run library(healthiar) to load the package
 6.	Done! : )
 
 From now on you can always download and install the newest/current version of the bestcost R package by running 
-devtools::install_github(repo = "best-cost/best-cost_WPs", subdir = "/r_package/healthiar", ref = "HEAD", force = TRUE)
+devtools::install_github(repo = "best-cost/best-cost_WPs", subdir = "/r_package/healthiar", ref = "HEAD", force = TRUE, build_vignettes = TRUE)
 
 ![image](https://github.com/user-attachments/assets/9e67a384-cfd2-4cbb-9ff5-837294f61739)
 
