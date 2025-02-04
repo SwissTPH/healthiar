@@ -1,0 +1,56 @@
+#' Helper function: extract main health results
+
+#' @description This helper function extracts the main results from a variable containing the ouput of an \code{attribute} call.
+#' @param x \code{Variable containing the ouput of an \code{attribute} call}
+#' @return
+#' This helper function returns the main health result(s) as a \code{vector}.
+#' @author Axel Luyten
+#' @note Helper function
+#' @export
+
+helper_extract_main_health_results <- function(x){
+  y <- x |>
+    purrr::pluck("health_main") |>
+    dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
+    dplyr::select(impact_rounded)  |>
+    base::unlist() |>
+    base::as.numeric()
+}
+
+#' Helper function: extract detailed health results
+
+#' @description This helper function extracts the main results from a variable containing the ouput of an \code{attribute} call.
+#' @param x \code{Variable containing the ouput of an \code{attribute} call}
+#' @return
+#' This helper function returns the main health result(s) as a \code{vector}.
+#' @author Axel Luyten
+#' @note Helper function
+#' @export
+
+helper_extract_detailed_health_results <- function(x){
+  y <- x |>
+    purrr::pluck("health_detailed") |>
+    purrr::pluck("raw") |>
+    dplyr::select(impact_rounded)  |>
+    base::unlist() |>
+    base::as.numeric()
+}
+
+#' Helper function: generate values with a seed
+
+#' @description This helper function generates values with a seed
+#' @param n \code{Numeric value} Number of values to be generated
+#' @param min,max \code{Numeric values} Lower and upper limits
+#' @param seed \code{Numeric values} Seed to be used
+#' @return
+#' This helper function returns generated values as a \code{vector}.
+#' @author Alberto Castro
+#' @note Helper function
+#' @export
+
+helper_runif_with_seed <-
+  function(n, min, max, seed){
+    set.seed(seed)
+    output <- runif(n, min, max)
+  }
+
