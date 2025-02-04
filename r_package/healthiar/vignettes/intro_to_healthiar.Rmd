@@ -31,7 +31,7 @@ This vignette will 1) tell you about `healthiar`, 2) help you install the `healt
 
 ## Initial installation
 
-Prerequisite: access to the [BEST-COST GitHub repository](https://github.com/best-cost/best-cost_WPs) with your GitHub account
+Prerequisite: access to the [BEST-COST GitHub repository](https://github.com/best-cost/best-cost_WPs) with your GitHub account. If you don't have access yet, write to [alberto.castrofernandez\@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch){.email} or [axel.luyten\@swisstph.ch](mailto:axel.luyten@swisstph.ch){.email} and provide them with the email address of the GitHub account they should give access to.
 
 For initial installation follow the detailed steps in the [README](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme). The main steps are:
 
@@ -285,4 +285,3 @@ results_iteration <-
 
 
 ```
-

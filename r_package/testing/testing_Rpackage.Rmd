@@ -3,14 +3,15 @@ title: "Testing of BEST-COST R package"
 author: "Alberto Castro & Axel Luyten"
 output: html_document
 ---
-# Goal
-Test the functions of the bestcost package comparing the results with results from other tools or assessments
 
+# Goal
+
+Test the functions of the bestcost package comparing the results with results from other tools or assessments
 
 # Load packages and data
 
+The R script required the loading of certain R packages.
 
-The R script required the loading of certain R packages. 
 ```{r Load packages and data, include=FALSE}
 
 ## Load required packages
@@ -34,8 +35,6 @@ devtools::load_all(export_all = FALSE)
 ## Load data necessary for running examples below
 load("../testing/input/data/input_data_for_testing_Rpackage.RData")
 ```
-
-
 
 ```{r Install {healthiar} from GitHub, eval=FALSE, include=FALSE}
 
@@ -62,8 +61,6 @@ devtools::install_github(
 library(healthiar)
 ```
 
-
-
 ```{r Install healthiar from local source, eval=FALSE, include=FALSE}
 
 ## NOTE: if an older version of {healthiar} already installed and loaded, detach first 
@@ -79,9 +76,6 @@ install.packages("../testing/input/healthiar_0.0.0.1.tar.gz", repos=NULL, type='
 
 library(healthiar)
 ```
-
-
-
 
 # Calculate health impacts
 
@@ -115,11 +109,9 @@ check_bestcost(result_list_bestcost = bestcost_pm_copd,
                  unlist())
 ```
 
-
 ```{r Test }
 
 ```
-
 
 ```{r prepare tests}
 
@@ -174,10 +166,13 @@ print(test)
 
 
 
+
+
+
+
 ```{r single exposure value with multiple uncertainties}
 
-# Assess attributable cases for multiple uncertainties at the same time
-# i.e. rr, bhd and exp
+
 bestcost_pm_copd_multiple <-
   healthiar::attribute_health(
     exp_central = airqplus_pm_copd$mean_concentration,
@@ -196,9 +191,13 @@ bestcost_pm_copd_multiple <-
     erf_shape = "log_linear",
     info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
 
-# View(bestcost_pm_copd_multiple)
 check_bestcost(result_list_bestcost = bestcost_pm_copd_multiple,
                result_vector_alternative = c(3502, 1353, 5474)) # Results on 5 November 2024
+
+
+
+
+
 
 
 
@@ -254,8 +253,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_copd_geo_short,
                result_vector_alternative = c(32449, 12508, 50836)) # Results on 5 November 2024
 ```
 
-
-
 ```{r single exposure & user-defined points for relative risk using splinefun}
 
 # Assess attributable cases using the AirQ+ export as input data
@@ -306,8 +303,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_alri_erf_dots_approxfun,
                result_vector_alternative = c(1052)) # Results on 10 October 2024 (with cutoff = 5 = airqplus_pm_copd$cut_off_value)
 ```
 
-
-
 ```{r single exposure value and relative risk with monetization}
 
 # Assess attributable cases using the AirQ+ export as input data
@@ -334,7 +329,6 @@ airqplus_pm_copd_1rr_result <-
 check_bestcost(result_list_bestcost = bestcost_pm_copd,
                result_vector_alternative = airqplus_pm_copd_result)
 ```
-
 
 ```{r exposure distribution with rr}
 
@@ -435,8 +429,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_stroke_mr_brt,
 
 ```
 
-
-
 ```{r absolute risk}
 
 # Extract rows that contain input data (others may contain results)
@@ -513,9 +505,9 @@ bestcost_noise_ha_ar_geo <-
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
 ```
 
-
 ```{r YLD with single relative risk}
 
+## prevalence-based YLD (duration_central=1)
 bestcost_pm_yld_singlebhd  <- 
   healthiar::attribute_yld(
     exp_central = 8.85, 
@@ -532,10 +524,30 @@ bestcost_pm_yld_singlebhd  <-
 # View(bestcost_pm_yld_singlebhd)
 
 # No study to compare bestcost results
-# Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = bestcost_pm_yld_singlebhd ,
                result_vector_alternative = c(525, 277, 768)) # Result on 16 May 2024
+
+## incidence-based YLD (duration_central > 1)
+bestcost_pm_yld_singlebhd  <- 
+  healthiar::attribute_yld(
+    exp_central = 8.85, 
+    cutoff_central = 5,    
+    bhd_central = 25000,
+    rr_central = 1.118,
+    rr_lower = 1.060, 
+    rr_upper = 1.179,
+    rr_increment = 10, 
+    erf_shape = "log_linear", 
+    dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+    duration_central = 5, duration_lower = 2, duration_upper = 10)
+
+# View(bestcost_pm_yld_singlebhd)
+
+# Check only if results stay the same overtime despite developments
+check_bestcost(result_list_bestcost = bestcost_pm_yld_singlebhd,
+               result_vector_alternative = c(2627, 1386, 3839 )) # Result on 2025-01-28
 ```
+
 # Social analysis
 
 ```{r Social analysis using attribute output}
@@ -685,8 +697,6 @@ round(as.numeric(bestcost_pm_copd_geo_short_uncertainty[["uncertainty_main"]]), 
 # Results seem plausible
 ```
 
-
-
 ```{r Summary uncertainty rr & exposure distribution}
 
 # Data prep
@@ -729,8 +739,6 @@ print("Summary uncertainty estimates (extern uncertainty function): ")
 round(as.numeric(bestcost_noise_ihd_expDist_extern_uncertainty[["uncertainty_main"]]), digits = 0)
 # Results seem plausible
 ```
-
-
 
 ```{r Summary uncertainty rr exposure distribution iteration}
 
@@ -792,8 +800,6 @@ print("Summary uncertainty estimates (extern uncertainty function): ")
 round(as.numeric(bestcost_noise_ihd_expDist_iteration_uncertainty[["uncertainty_main"]] |> pull(central_estimate)), digits = 0)
 ## Results seem plausible
 ```
-
-
 
 ```{r Summary uncertainty rr attribute_yld}
 
@@ -1032,7 +1038,6 @@ round(as.numeric(bestcost_noise_ha_ar_iteration_with_erf_eq_mc[["uncertainty_mai
 
 ```
 
-
 ### Multiple exposure
 
 ```{r additive approach}
@@ -1056,7 +1061,6 @@ View(bestcost_pm_no2_mortality_additive)
 check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_additive,
                result_vector_alternative = 0.081 * 1000)
 ```
-
 
 ```{r multiplicative approach}
 # Assess attributable cases using the BEST-COST task 1.4 report
@@ -1102,7 +1106,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative_c
                result_vector_alternative = c(79,59,93)) # Results on 21.01.2025
 ```
 
-
 ```{r combined approach}
 # Assess attributable cases using the BEST-COST task 1.4 report
 bestcost_pm_no2_mortality_combined <-
@@ -1146,7 +1149,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_combined_ci,
                result_vector_alternative = c(79,59,93)) # Results on 21.01.2025
 ```
 
-
 ### Life table
 
 #### Premature deaths
@@ -1182,8 +1184,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_deaths_lifetable_airqplus,
                 result_vector_alternative = c(2601, 1371, 3804))
 ```
 
-
-
 ```{r premature deaths lifetable and exposure distribution}
 
 # Calculate premature deaths using bestcost function
@@ -1214,8 +1214,6 @@ bestcost_pm_deaths_lifetable_expDistribution <-
 check_bestcost(result_list_bestcost = bestcost_pm_deaths_lifetable_expDistribution,
                result_vector_alternative = c(2900, 1531, 4239)) # Result on 20 August 2024
 ```
-
-
 
 #### Years of life lost (YLL)
 
@@ -1251,8 +1249,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_exposure_single_year_lifet
 
 ```
 
-
-
 ```{r YLL lifetable from CONSTANT exposure and NO NEWBORNS}
 
 # Input data from an AirQ+ case
@@ -1286,8 +1282,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_airqplus,
                result_vector_alternative = c(2776839.17,	1452410.83,	4094163.08)) # AirQ+ result
 ```
 
-
-
 ```{r YLL lifetable from CONSTANT exposure and WITH NEWBORNS}
 
 # Input data from an AirQ+ case
@@ -1317,8 +1311,6 @@ bestcost_pm_yll_lifetable_airqplus_with_newborns <-
 check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_airqplus_with_newborns,
                result_vector_alternative = c(3248408.53,	1700230.04,	4786195.41)) # AirQ+ result
 ```
-
-
 
 ```{r YLL lifetable with single relative risk}
 # Only one relative risk estimate (central estimate)
@@ -1350,8 +1342,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_1rr_geluft,
                # result_vector_alternative = c(27742)) # GeLuft approach result 
                result_vector_alternative = c(29274.89)) # AirQ+ approach result 
 ```
-
-
 
 ```{r YLL lifetable with exposure distribution}
 
@@ -1387,8 +1377,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_expDistribution_
                result_vector_alternative = c(32704, 17122, 48173)) # Result on 20 August 2024 (AirQ+ approach)
 
 ```
-
-
 
 #### Years lived with disability (YLD)
 
@@ -1435,8 +1423,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_yld_lifetable_geluft,
 
 ```
 
-
-
 #### Disability-adjusted lived years (DALY)
 
 ```{r DALY lifetable}
@@ -1476,8 +1462,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_daly_lifetable_geluft,
 
 
 ```
-
-
 
 ## Comparison
 
@@ -1611,7 +1595,6 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_pif_geo ,
                result_vector_alternative = c(1114, 586, 1634)) # Result on 19 June 2024
 ```
 
-
 ```{r comparison singlebhd_rr geo iteration, eval=FALSE, include=FALSE}
 # Assess iteration in many geographical areas (geo_id) keeping the multiple uncertainties
 comparison_singlebhd_rr_geo <-
@@ -1647,7 +1630,6 @@ comparison_singlebhd_rr_geo <-
 check_bestcost(result_list_bestcost = comparison_singlebhd_rr_geo,
                result_vector_alternative = c(211111, 84203, 319618)) # Result on 19 December 2024
 ```
-
 
 ```{r comparison ar}
 
@@ -1820,8 +1802,6 @@ comparison_yld_singlebhd_rr_pif_geo <-
 check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_pif_geo ,
                result_vector_alternative = c(599, 315, 878)) # Result on 20 June 2024
 ```
-
-
 
 ### Lifetable
 
@@ -2013,8 +1993,6 @@ check_bestcost(result_list_bestcost = comparison_deaths_lifetable_pif_geo ,
                result_vector_alternative = c(2961, 1556, 4346)) # Result on 20 AUgust 2024
 ```
 
-
-
 ```{r comparison YLL lifetable}
 
 # DELTA 
@@ -2197,8 +2175,6 @@ check_bestcost(result_list_bestcost = comparison_yll_lifetable_pif_geo ,
                result_vector_alternative = c(33137, 17335, 48851)) # Result on 20 August 2024
 ```
 
-
-
 ```{r comparison YLD lifetable}
 
 # DELTA
@@ -2378,7 +2354,6 @@ check_bestcost(result_list_bestcost = comparison_yld_lifetable_pif_geo ,
                result_vector_alternative = c(33137, 17335, 48851)) # Result on 20 August 2024
 
 ```
-
 
 ```{r comparison DALY lifetable}
 
@@ -2650,7 +2625,6 @@ check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_
 
 ```
 
-
 ```{r cba}
 
 ## Discounting only one specific year
@@ -2691,8 +2665,6 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 
 ```
 
-
-
 # Test prepare function
 
 ```{r prepare_exposure_data, eval=FALSE, include=FALSE}
@@ -2700,8 +2672,6 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 ## To be added
 # test <- healthiar::prepare_exposure_data()
 ```
-
-
 
 # Other
 

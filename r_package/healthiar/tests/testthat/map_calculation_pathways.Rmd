@@ -108,6 +108,17 @@ result <- pathways_rr_ar %>%
 
 ```{r Pathways non-lifetable}
 
+## Estimation of core cases
+# ov_rr_ar <- list(
+#   # erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"),
+#   erf = c("log_lin", "lin_lin", "formula", "point_pairs"),
+#   exp = c("single", "dist"), # prop_pop_exp linked with this
+#   cutoff = c("TRUE", "FALSE"),
+#   iteration = c("TRUE", "FALSE"),
+#   # multiexp = c("FALSE", "additive", "multiplicative", "combined"),
+#   varuncer = c("TRUE", "FALSE")
+# )
+
 ## Create tibble containing (almost) all possible calculation pathways
 ov_rr_ar <- list(
   # erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"),
@@ -192,8 +203,8 @@ cat("As percentage:", round(true_implemented_rows/total_rows*100, digits = 0), "
 
 ```{r OLD Pathways non-lifetable}
 ov_rr_ar <- list(
-  # erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"),
-  erf = c("log_lin", "lin_lin", "formula", "point_pairs"),
+  erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"),
+  # erf = c("log_lin", "lin_lin", "formula", "point_pairs"),
   exp = c("single", "dist"), # prop_pop_exp linked with this
   cutoff = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE"),
@@ -329,6 +340,17 @@ pathways_rr_ar <- pathways_rr_ar |>
 
 
 ```{r Pathways lifetable}
+## Estimation of core cases
+# ov_lifetable <- list(
+#   exp = c("single", "dist"), # prop_pop_exp linked with this
+#   exp_time = c("single_year", "constant"),
+#   newborns = c("TRUE", "FALSE"),
+#   # min_age = c("TRUE", "FALSE"),
+#   # max_age = c("TRUE", "FALSE"),
+#   # time_horizon = c("TRUE", "FALSE"),
+#   iteration = c("TRUE", "FALSE"),
+#   varuncer = c("TRUE", "FALSE")
+# )
 
 ov_lifetable <- list(
   exp = c("single", "dist"), # prop_pop_exp linked with this
@@ -374,10 +396,18 @@ pathways_lifetable <- pathways_lifetable |>
 
 ```{r Pathways summary uncertainty}
 
+## Estimation number of core cases
+# ov_uncertainty <- list(
+#   exp = c("single", "dist"),
+#   erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
+#   iteration = c("TRUE", "FALSE")
+# )
+
 ov_uncertainty <- list(
   exp = c("single", "dist"),
   erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
-  iteration = c("TRUE", "FALSE")
+  iteration = c("TRUE", "FALSE"),
+  distribution = c("normal", "beta", "other")
 )
 
 pathways_uncertainty <- expand.grid(ov_uncertainty)
@@ -391,6 +421,14 @@ Both the functions include_cba and include_discount call the
 function include_monetization in the background --> created only ov_monetization 
 instead of creating an overview tibble for all 3 functions
 ```{r Pathways monetization}
+
+## Estimation number of core cases
+# ov_monetization <- list(
+#   discount_appr = c("direct", "indirect"), # direct is the default
+#   discount_rate = c("TRUE", "FALSE"),
+#   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+#   discount_overtime = c("all_years", "last_year") # all_years is default
+# )
 
 ov_monetization <- list(
   discount_appr = c("direct", "indirect"), # direct is the default
@@ -418,10 +456,15 @@ pathways_monetization <- pathways_monetization |>
 
 ```{r Pathways non-lifetable compare}
 
+## Estimation number of core cases
+# ov_rr_ar_compare <- list(
+#   comp_appr = c("delta", "pif")
+# )
+
 ov_rr_ar_compare <- list(
   comp_appr = c("delta", "pif"),
-  # erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"), # all options
-  erf = c("log_lin", "lin_lin", "formula", "point_pairs"), # more relevant options
+  erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"), # all options
+  # erf = c("log_lin", "lin_lin", "formula", "point_pairs"), # more relevant options
   exp = c("single", "dist"), # prop_pop_exp linked with this
   cutoff = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE"),
@@ -495,6 +538,11 @@ pathways_rr_ar_compare <- pathways_rr_ar_compare |>
 
 
 ```{r Pathways lifetable compare}
+
+## Estimation number of core cases
+# ov_lifetable_compare <- list(
+#   comp_appr = c("delta", "pif")
+# )
 
 ov_lifetable_compare <- list(
   comp_appr = c("delta", "pif"),
