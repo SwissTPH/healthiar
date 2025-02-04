@@ -1,0 +1,251 @@
+---
+title: "example_adding_a_test"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{example_adding_a_test}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(pacman)
+pacman::p_load(healthiar, tibble, dplyr, purrr, tidyr, stringr, pillar, knitr, testthat, readxl)
+options(knitr.kable.max_rows = 10)
+set.seed(1)
+
+```
+
+## Prerequisite: access to the [BEST-COST GitHub repository](https://github.com/best-cost/best-cost_WPs)
+
+If you don't have access yet, write to [alberto.castrofernandez\@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch){.email} or [axel.luyten\@swisstph.ch](mailto:axel.luyten@swisstph.ch){.email} and provide them with the email address of the GitHub account they should give access to.
+
+## Prerequisite: newest version of `healthiar` installed
+
+If you haven't already, install & load the most recent version of the BEST-COST R package healthiar.
+
+For initial installation follow the detailed steps in the [README](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme) of the [BEST-COST GitHub repository](https://github.com/best-cost/best-cost_WPs).
+
+For more information on how to use the `healthiar` package, please see the vignette `intro_to_healthiar`. Once you have the package installed, you can access it in RStudio by
+
+-   running `browseVignettes("healthiar")` in the console and clicking on *HTML* on the page that pops up
+-   going to the *Packages* tab in RStudio, and clicking on `healthiar`\>*User guides, package vignettes and other documentation*\>*HTML*
+
+# Example: Adding a test
+
+## 1. Pick a pathway
+
+You want to make sure the results for the following calculation pathway are correct:
+
+-   Relative risk
+
+-   ERF shape: log-linear
+
+-   Exposure: exposure distribution
+
+-   With cutoff
+
+-   No iteration
+
+-   No input variable uncertainty
+
+## 2. Look for comparison assessment
+
+You remember that you've just assessed such a case recently! You dig up the assessment, both the input data and the results, and get set to add a test. The assessment details are saved in a .xlsx file (Excel file).
+
+## 3. Fill out the function template with the assessment input data
+
+You select the appropriate template that Swiss TPH provided. You make sure that the package "testthat" (more info: <https://testthat.r-lib.org/>) is installed.
+
+```{r template, include=TRUE, echo=TRUE, eval=FALSE}
+
+testthat::test_that("results correct, YOUR NAME (TEST_ID)", {
+  
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  # data <- ...
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        exp_central = ,
+        prop_pop_exp = ,
+        cutoff_central = ,
+        bhd_central = ,
+        rr_central = ,
+        rr_increment = ,
+        erf_shape = 
+      ) |>
+      healthiar::helper_extract_main_health_results(),
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c( )
+    )
+})
+
+## Assessment details: Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## Input data details: Add here input data details: data sources, measured vs. modelled, ...
+
+```
+
+## 3.1 Add test details
+
+In this example, we'll start by entering name, institute abbreviation and pathway ID to the first argument of the `testthat::test_that` call.
+
+-   Name: Axel Luyten
+
+-   Institute abbreviation: Swiss TPH
+
+-   Pathway ID: pw_exp_dist pw_cutoff_TRUE pw_varuncer_FALSE pw_erf_log_lin pw_iteration_FALSE pw_multiexp_FALSE
+
+So the test name is:
+
+`testthat::test_that("results correct, Axel Luyten, Swiss TPH (pw_exp_dist pw_cutoff_TRUE pw_varuncer_FALSE pw_erf_log_lin pw_iteration_FALSE pw_multiexp_FALSE)", { ... }`
+
+Then we'll continue by adding the test details. Optionally, you can also leave this until the end.
+
+```{r add test details}
+
+## Assessment details: attribute DALYs from ischemic heart disease to road noise exposure
+## Input data details: noise exposure data from NIPH; cutoff based on exposure data; baseline DALYs from GBD; relative risk from WHO (2003)
+
+```
+
+## 3.2 Enter input data & comparison results
+
+Then you fill out the rest of the template using the input data of your selected assessment. There are two options:
+
+1.  Enter the input data hard-coded
+
+2.  Enter the input data by loading the data first into RStudio and then access it using the `$` operator
+
+Depending on the assessment, one of the two might be better suited. We will first look at option 1, and then at option 2.
+
+If you don't have much R programming experience, it's easiest to create the test with hard-coded inputs.
+
+In case you load the input data before calling the `healthiar` function, please also upload the input data to the Teams testing folder of your institute, alongside the code for the test.
+
+### 3.2.1 Test with hard-coded data
+
+We can manually open the Excel file containing the assessment details, and then copy the relevant data into the template.
+
+To see the Excel file used in this example, run `shell.exec(dirname(system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar")))`, which will open the folder containing the .xlsx file of the assessment.
+
+Here's the filled out template with hard-coded input data (e.g. no external input data loaded).
+
+```{r test with hard-coded inputs, include=FALSE, echo=TRUE, eval=TRUE}
+
+testthat::test_that("results correct, Axel Luyten, Swiss TPH (pw_exp_dist pw_cutoff_TRUE pw_varuncer_FALSE pw_erf_log_lin pw_iteration_FALSE pw_multiexp_FALSE)", {
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
+        prop_pop_exp = c(0.818718312, 0.074319355, 0.054852478, 0.036785683, 0.013847374, 0.001476797),
+        cutoff_central = 53,
+        bhd_central = 85362.08,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      ) |>
+      healthiar::helper_extract_main_health_results(),
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c(1151)
+    )
+})
+
+```
+
+### 3.2.2. Test with loaded data
+
+Another option is to load all your necessary input data (witing) before calling t
+
+In case you select this approach, remember to also upload the input data to the Teams testing folder of your institute, alongside the code for the test.
+
+```{r inspect excel file, eval=FALSE, include=FALSE, eval=FALSE}
+# system.file("extdata", package = "healthiar") |> list.files()
+# test <- readxl::read_xlsx(path = system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar"), sheet = "Relative_risk_IHD_WHO_2003a")
+```
+
+```{r test with loaded inputs, include=FALSE, echo=TRUE, eval=TRUE}
+
+testthat::test_that("results correct, Axel Luyten, Swiss TPH (pw_exp_dist pw_cutoff_TRUE pw_varuncer_FALSE pw_erf_log_lin pw_iteration_FALSE pw_multiexp_FALSE)", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data_raw  <-  readxl::read_xlsx(
+    path = system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar"),
+    sheet = "Relative_risk_IHD_WHO_2003a")
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+  
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        exp_central = data$exposure_mean,
+        prop_pop_exp = data$prop_exposed,
+        cutoff_central = min(data$exposure_mean),
+        bhd_central = data$gbd_daly[1],
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear") |>
+      healthiar::helper_extract_main_health_results(),
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      data_raw |>
+      dplyr::filter(exposure_category %in% "Total exposed")|>
+      dplyr::select(daly)|>
+      dplyr::pull() |>
+      round()
+    )
+})
+
+```
+
+## 4. Check whether results of healthiar and your chosen assessment are the same
+
+```{r check results, include=TRUE, echo=FALSE, eval=TRUE}
+
+testthat::test_that("results correct, Axel Luyten, Swiss TPH (pw_exp_dist pw_cutoff_TRUE pw_varuncer_FALSE pw_erf_log_lin pw_iteration_FALSE pw_multiexp_FALSE)", {
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
+        prop_pop_exp = c(0.818718312, 0.074319355, 0.054852478, 0.036785683, 0.013847374, 0.001476797),
+        cutoff_central = 53,
+        bhd_central = 85362.08,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      ) |>
+      healthiar::helper_extract_main_health_results(),
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c(1151)
+    )
+})
+
+## Assessment details: attribute DALYs from ischemic heart disease to road noise exposure
+## Input data details: noise exposure data from NIPH; cutoff based on exposure data; baseline DALYs from GBD; relative risk from WHO (2003)
+
+```
+
+Yes, they are the same.
+
+In case there is a deviation: ...
+
+## 5. Upload the test
+
+You upload your test with the file name ....
+
+# Function templates
+
+

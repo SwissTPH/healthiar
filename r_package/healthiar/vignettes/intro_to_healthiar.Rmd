@@ -47,7 +47,8 @@ devtools::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
   ref = "HEAD", # By default "HEAD"; branch name to install package from  
-  force = TRUE
+  force = TRUE,
+  build_vignettes = TRUE
 )
 
 library(healthiar)
