@@ -209,8 +209,228 @@ cat("As percentage:", round(pathways_ar %>%
 
 ```
 
+```{r Pathways cba}
+
+pathways_cba_direct <- list(
+  discount_appr = c("direct"), # direct is the default
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("all_years", "last_year"), # all_years is default ; only applicable if discount_appr is "direct" 
+  discount_rate_benefit = c("TRUE", "FALSE"),
+  discount_rate_cost = c("TRUE", "FALSE")
+)
+
+pathways_cba_indirect <- list(
+  discount_appr = c("indirect"), # direct is the default
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("NA"), # all_years is default ; only applicable if discount_appr is "direct" 
+  discount_rate_benefit = c("TRUE", "FALSE"),
+  discount_rate_cost = c("TRUE", "FALSE")
+)
+
+pathways_cba_direct <- expand.grid(pathways_cba_direct) |>
+  tibble::as_tibble() |>
+  mutate_all(as.character)
+
+pathways_cba_indirect <- expand.grid(pathways_cba_indirect) |>
+  tibble::as_tibble() |>
+  mutate_all(as.character)
+
+pathways_cba <- rbind(pathways_cba_direct, pathways_cba_indirect) %>% # Important to use magrittr pipe
+  mutate(
+    pathway_id = purrr::pmap_chr(., function(...) {
+      vals <- list(...)
+      paste0("pathway_cba|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+    })
+  ) 
+  
+#* Define core pathways ########################################################
+core_cba_direct <- list(
+  discount_appr = c("direct"), # direct is the default
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("all_years", "last_year"), # all_years is default ; only applicable if discount_appr is "direct" 
+  discount_rate_benefit = c("TRUE", "FALSE"),
+  discount_rate_cost = c("TRUE", "FALSE")
+)
+
+core_cba_indirect <- list(
+  discount_appr = c("indirect"), # direct is the default
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("NA"), # all_years is default ; only applicable if discount_appr is "direct" 
+  discount_rate_benefit = c("TRUE", "FALSE"),
+  discount_rate_cost = c("TRUE", "FALSE")
+)
+
+core_cba_direct <- expand.grid(core_cba_direct) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) |> 
+  mutate(core_pathway = "TRUE")
+
+core_cba_indirect <- expand.grid(core_cba_indirect) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) |> 
+  mutate(core_pathway = "TRUE")
+
+core_cba <- rbind(core_cba_direct, core_cba_indirect)
+
+pathways_cba <- pathways_cba |> 
+  left_join(x = _, y = core_cba, by = c("discount_appr", "discount_shape", "discount_overtime", "discount_rate_benefit", "discount_rate_cost")) |> 
+  mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
+  mutate(implemented = "FALSE")
+
+# * Document existing pathways #################################################
+file_path <- "../healthiar/tests/testthat/test-include_cba.R"
+file_content <- readLines(file_path) # String vector where each element is all code from a line
+
+test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
+test_names_with_pw <- Filter(function(x) any(grepl("pathway_cba\\|", x)), test_names)
+# test_names <- unlist(test_names)
+
+## Create an empty tibble with NA placeholders
+num_rows <- length(test_names_with_pw)
+existing_tests <- tibble(
+  discount_appr = rep(NA_character_, num_rows),
+  discount_shape = rep(NA_character_, num_rows),
+  discount_overtime = rep(NA_character_, num_rows),
+  discount_rate_benefit = rep(NA_character_, num_rows),
+  discount_rate_cost = rep(NA_character_, num_rows),
+  implemented = rep("FALSE", num_rows)
+)
+
+## Extract values and assign them directly to the tibble
+for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
+
+  # Extract values for each column
+  existing_tests$discount_appr[i] <- str_extract(strings[str_detect(strings, "\\|discount_appr_")], "(?<=\\|discount_appr_)[^\\|]+")
+  existing_tests$discount_shape[i] <- str_extract(strings[str_detect(strings, "\\|discount_shape_")], "(?<=\\|discount_shape_)[^\\|]+")
+  existing_tests$discount_overtime[i] <- str_extract(strings[str_detect(strings, "\\|discount_overtime_")], "(?<=\\|discount_overtime_)[^\\|]+")
+  existing_tests$discount_rate_benefit[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_benefit_")], "(?<=\\|discount_rate_benefit_)[^\\|]+")
+  existing_tests$discount_rate_cost[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_cost_")], "(?<=\\|discount_rate_cost_)[^\\|]+")
+  existing_tests$implemented[i] <- "TRUE"
+}
+
+## Merge the pathways tibble and the existing_tests tibble
+pathways_cba <- pathways_cba %>%
+  left_join(existing_tests, by = c("discount_appr", "discount_shape", "discount_overtime", "discount_rate_benefit", "discount_rate_cost"),
+            suffix = c("", ".existing")) %>%
+  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
+  select(-implemented.existing)
+
+## Output short report
+cat("Number of pathways implemented as tests:", pathways_cba %>%
+  filter(implemented == "TRUE") %>%
+  nrow(), "\n")
+cat("Total possible number of pathways:", nrow(pathways_cba), "\n")
+cat("As percentage:", round(pathways_cba %>%
+  filter(implemented == "TRUE") %>%
+  nrow()/nrow(pathways_cba)*100, digits = 0), "%\n")
+
+
+```
+
+```{r Pathways monetization}
+# TO BE DONE ####
+
+## Estimation number of core cases
+# ov_monetization <- list(
+#   discount_appr = c("direct", "indirect"), # direct is the default
+#   discount_rate = c("TRUE", "FALSE"),
+#   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+#   discount_overtime = c("all_years", "last_year") # all_years is default
+# )
+
+ov_monetization <- list(
+  discount_appr = c("direct", "indirect"), # direct is the default
+  discount_rate = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("all_years", "last_year") # all_years is default
+)
+
+pathways_monetization <- expand.grid(ov_monetization)
+
+pathways_monetization <- pathways_monetization |> 
+  as_tibble() |> 
+  dplyr::mutate(test_name = "NULL") |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "direct" & discount_rate == "FALSE" & discount_shape == "FALSE" & discount_overtime == "all_years" ) ~
+      "results correct simple monetization", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "direct" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "last_year" ) ~
+      "results correct direct discounting with discount factor and exponential discount shape", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "indirect" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "all_years" ) ~
+      "results correct indirect discounting with exponential discount shape", TRUE ~ test_name))  
+  
+```
+
+Both the functions include_cba and include_discount call the 
+function include_monetization in the background --> created only ov_monetization 
+instead of creating an overview tibble for all 3 functions
+```{r OLD Pathways monetization}
+
+## Estimation number of core cases
+# ov_monetization <- list(
+#   discount_appr = c("direct", "indirect"), # direct is the default
+#   discount_rate = c("TRUE", "FALSE"),
+#   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+#   discount_overtime = c("all_years", "last_year") # all_years is default
+# )
+
+ov_monetization <- list(
+  discount_appr = c("direct", "indirect"), # direct is the default
+  discount_rate = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("all_years", "last_year") # all_years is default
+)
+
+pathways_monetization <- expand.grid(ov_monetization)
+
+pathways_monetization <- pathways_monetization |> 
+  as_tibble() |> 
+  dplyr::mutate(test_name = "NULL") |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "direct" & discount_rate == "FALSE" & discount_shape == "FALSE" & discount_overtime == "all_years" ) ~
+      "results correct simple monetization", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "direct" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "last_year" ) ~
+      "results correct direct discounting with discount factor and exponential discount shape", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "indirect" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "all_years" ) ~
+      "results correct indirect discounting with exponential discount shape", TRUE ~ test_name))  
+  
+```
 
 ```{r Pathways lifetable}
+
+# TO BE DONE ####
+
+## Estimation of core cases
+# ov_lifetable <- list(
+#   exp = c("single", "dist"), # prop_pop_exp linked with this
+#   exp_time = c("single_year", "constant"),
+#   newborns = c("TRUE", "FALSE"),
+#   # min_age = c("TRUE", "FALSE"),
+#   # max_age = c("TRUE", "FALSE"),
+#   # time_horizon = c("TRUE", "FALSE"),
+#   iteration = c("TRUE", "FALSE"),
+#   varuncer = c("TRUE", "FALSE")
+# )
+
+ov_lifetable <- list(
+  exp = c("single", "dist"), # prop_pop_exp linked with this
+  exp_time = c("single_year", "constant"),
+  newborns = c("TRUE", "FALSE"),
+  min_age = c("TRUE", "FALSE"),
+  max_age = c("TRUE", "FALSE"),
+  time_horizon = c("TRUE", "FALSE"),
+  iteration = c("TRUE", "FALSE"),
+  varuncer = c("TRUE", "FALSE")
+)
+
+pathways_lifetable <- expand.grid(ov_lifetable)
+```
+
+```{r OLD Pathways lifetable}
 ## Estimation of core cases
 # ov_lifetable <- list(
 #   exp = c("single", "dist"), # prop_pop_exp linked with this
@@ -266,6 +486,7 @@ pathways_lifetable <- pathways_lifetable |>
 ```
 
 ```{r Pathways summary uncertainty}
+# TO BE DONE ####
 
 ## Estimation number of core cases
 # ov_uncertainty <- list(
@@ -288,44 +509,10 @@ pathways_uncertainty <- pathways_uncertainty |>
   dplyr::mutate(test_name = "NULL")
 ```
 
-Both the functions include_cba and include_discount call the 
-function include_monetization in the background --> created only ov_monetization 
-instead of creating an overview tibble for all 3 functions
-```{r Pathways monetization}
 
-## Estimation number of core cases
-# ov_monetization <- list(
-#   discount_appr = c("direct", "indirect"), # direct is the default
-#   discount_rate = c("TRUE", "FALSE"),
-#   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-#   discount_overtime = c("all_years", "last_year") # all_years is default
-# )
-
-ov_monetization <- list(
-  discount_appr = c("direct", "indirect"), # direct is the default
-  discount_rate = c("TRUE", "FALSE"),
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("all_years", "last_year") # all_years is default
-)
-
-pathways_monetization <- expand.grid(ov_monetization)
-
-pathways_monetization <- pathways_monetization |> 
-  as_tibble() |> 
-  dplyr::mutate(test_name = "NULL") |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "direct" & discount_rate == "FALSE" & discount_shape == "FALSE" & discount_overtime == "all_years" ) ~
-      "results correct simple monetization", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "direct" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "last_year" ) ~
-      "results correct direct discounting with discount factor and exponential discount shape", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "indirect" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "all_years" ) ~
-      "results correct indirect discounting with exponential discount shape", TRUE ~ test_name))  
-  
-```
 
 ```{r Pathways non-lifetable compare}
+# TO BE DONE ####
 
 ## Estimation number of core cases
 # ov_rr_compare <- list(
@@ -408,15 +595,17 @@ pathways_rr_compare <- pathways_rr_compare |>
 
 ```{r Create Excel}
 
-
-
-
-
+# Remove implemented column or not? Rename?
+# Add empty column "institute"
+# Add empty column "name"
+# Add column "finished": FALSE
+# Add empty column "Test_passed", partners enter TRUE/FALSE
 
 ```
 
 
 ```{r Pathways lifetable compare}
+# TO BE DONE ####
 
 ## Estimation number of core cases
 # ov_lifetable_compare <- list(
