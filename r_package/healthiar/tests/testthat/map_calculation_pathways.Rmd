@@ -96,34 +96,118 @@ for (i in seq_along(test_names_with_pw)) {
 }
 
 ## Merge the pathways tibble and the existing_tests tibble
-pathways_rr_implemented <- pathways_rr %>%
+pathways_rr <- pathways_rr %>%
   left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-implemented.existing)
 
-## Check that nrow matches
-if ( nrow(pathways_rr_implemented) == nrow(pathways_rr) ) {
-  print("All good, rows match")
-} else {
-  print("WATCH OUT, ROWS DON'T MATCH")
-  ## In case comparison is FALSE, find out which rows are duplicated
-  extra_rows <- pathways_rr_implemented %>%
-  anti_join(pathways_rr, by = c("erf", "exp", "cutoff", "iteration", "multiexp", "varuncer"))
-  print(extra_rows)
-}
-
 ## Output short report
-total_rows <- nrow(pathways_rr_implemented)
-true_implemented_rows <- pathways_rr_implemented %>%
+cat("Number of pathways implemented as tests:", pathways_rr %>%
   filter(implemented == "TRUE") %>%
-  nrow()
-cat("Number of pathways implemented as tests:", true_implemented_rows, "\n")
-cat("Total possible number of pathways:", total_rows, "\n")
-cat("As percentage:", round(true_implemented_rows/total_rows*100, digits = 0), "%\n")
+  nrow(), "\n")
+cat("Total possible number of pathways:", nrow(pathways_rr), "\n")
+cat("As percentage:", round(pathways_rr %>%
+  filter(implemented == "TRUE") %>%
+  nrow()/nrow(pathways_rr)*100, digits = 0), "%\n")
 
 ```
 
+```{r AR pathways}
+
+# * Define all relevant pathways ###############################################
+## Create tibble containing (almost) all possible calculation pathways
+pathways_ar <- list(
+  erf = c("formula", "point_pairs"),
+  exp = c("dist"), # prop_pop_exp linked with this
+  cutoff = c("FALSE"),
+  varuncer = c("TRUE", "FALSE"),
+  iteration = c("TRUE", "FALSE"),
+  multiexp = c("FALSE")
+)
+
+pathways_ar <- expand.grid(pathways_ar) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) %>% # IMPORTANT TO USE magrittr PIPE
+  ## Create all pathway ID's
+  mutate(
+    pathway_id = purrr::pmap_chr(., function(...) {
+      vals <- list(...)
+paste0("pathway_ar|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+})
+  ) 
+
+#* Define core pathways ########################################################
+core_ar <- list(
+  erf = c("formula", "point_pairs"),
+  exp = c("dist"), # prop_pop_exp linked with this
+  cutoff = c("FALSE"),
+  varuncer = c("TRUE", "FALSE"),
+  iteration = c("TRUE", "FALSE"),
+  multiexp = c("FALSE")
+)
+
+core_ar <- expand.grid(core_ar) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) |> 
+  mutate(core_pathway = "TRUE")
+
+pathways_ar <- pathways_ar |> 
+  left_join(x = _, y = core_ar, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp")) |> 
+  mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
+  mutate(implemented = "FALSE")
+
+# * Document existing pathways #################################################
+file_path <- "../healthiar/tests/testthat/test-attribute_health.R"
+file_content <- readLines(file_path) # String vector where each element is all code from a line
+
+test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
+test_names_with_pw <- Filter(function(x) any(grepl("pathway_ar\\|", x)), test_names)
+# test_names <- unlist(test_names)
+
+## Create an empty tibble with NA placeholders
+num_rows <- length(test_names_with_pw)
+existing_tests <- tibble(
+  erf = rep(NA_character_, num_rows),
+  exp = rep(NA_character_, num_rows),
+  cutoff = rep(NA_character_, num_rows),
+  varuncer = rep(NA_character_, num_rows),
+  iteration = rep(NA_character_, num_rows),
+  multiexp = rep(NA_character_, num_rows),
+  implemented = rep(FALSE, num_rows)
+)
+
+## Extract values and assign them directly to the tibble
+for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
+
+  # Extract values for each column
+  existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "\\|exp_")], "(?<=\\|exp_)[^\\|]+")
+  existing_tests$cutoff[i] <- str_extract(strings[str_detect(strings, "\\|cutoff_")], "(?<=\\|cutoff_)[^\\|]+")
+  existing_tests$varuncer[i] <- str_extract(strings[str_detect(strings, "\\|varuncer_")], "(?<=\\|varuncer_)[^\\|]+")
+  existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "\\|erf_")], "(?<=\\|erf_)[^\\|]+")
+  existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
+  existing_tests$multiexp[i] <- str_extract(strings[str_detect(strings, "\\|multiexp_")], "(?<=\\|multiexp_)[^\\|)]+")
+  existing_tests$implemented[i] <- "TRUE"
+}
+
+## Merge the pathways tibble and the existing_tests tibble
+pathways_ar <- pathways_ar %>%
+  left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp"),
+            suffix = c("", ".existing")) %>%
+  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
+  select(-implemented.existing)
+
+## Output short report
+cat("Number of pathways implemented as tests:", pathways_ar %>%
+  filter(implemented == "TRUE") %>%
+  nrow(), "\n")
+cat("Total possible number of pathways:", nrow(pathways_ar), "\n")
+cat("As percentage:", round(pathways_ar %>%
+  filter(implemented == "TRUE") %>%
+  nrow()/nrow(pathways_ar)*100, digits = 0), "%\n")
+
+```
 
 
 ```{r Pathways lifetable}
@@ -322,6 +406,14 @@ pathways_rr_compare <- pathways_rr_compare |>
     ~ "results correct delta comparison rr single exposure", TRUE ~ test_name)) 
 ```
 
+```{r Create Excel}
+
+
+
+
+
+
+```
 
 
 ```{r Pathways lifetable compare}
