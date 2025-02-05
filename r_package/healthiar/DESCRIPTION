@@ -12,18 +12,17 @@ License: GPL
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Imports:
-  stats,
-  dplyr,
-  purrr,
-  tidyr,
-  stringr, 
-  tibble
+    stats,
+    dplyr,
+    purrr,
+    tidyr,
+    stringr,
+    tibble,
+    knitr,
+    rmarkdown,
+    testthat
 Depends: 
     R (>= 4.1.0)
 LazyData: true
-Suggests: 
-    knitr,
-    rmarkdown,
-    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
