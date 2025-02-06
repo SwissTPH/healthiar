@@ -7,9 +7,9 @@
 prepare_exposure_data(poll_grid, geo_units)
 }
 \arguments{
-\item{poll_grid}{\code(SpatRaster) of the pollution data.}
+\item{poll_grid}{\code{SpatRaster} of the pollution data.}
 
-\item{geo_units}{\code(sf) of the geographic units data.}
+\item{geo_units}{\code{sf} of the geographic units data.}
 }
 \value{
 This function returns a vector of population exposure values.
@@ -26,4 +26,3 @@ TBD
 \author{
 Arno Pauwels
 }
-\keyword{internal}
