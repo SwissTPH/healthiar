@@ -27,7 +27,7 @@ testthat::test_that("results correct simple monetization", {
   )
 })
 
-testthat::test_that("results correct direct discounting with discount factor and exponential discount shape", {
+testthat::test_that("results the same direct discounting with discount factor and exponential discount shape", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -57,7 +57,7 @@ testthat::test_that("results correct direct discounting with discount factor and
       base::unlist() |>
       base::as.numeric() |>
       base::round(),
-    expect = c(60416, 23343, 94436) # Result on 9 Jan 2025
+    expect = c(60416, 23343, 94436) # Result on 9 Jan 2025 ; no comparison study
   )
 })
 
@@ -103,7 +103,7 @@ testthat::test_that("results correct direct discounting with impact vector disco
 })
 
 
-testthat::test_that("results correct indirect discounting with exponential discount shape", {
+testthat::test_that("results the same indirect discounting with exponential discount shape", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
@@ -142,11 +142,11 @@ testthat::test_that("results correct indirect discounting with exponential disco
       base::unlist() |>
       base::as.numeric() |>
       base::round(),
-    expect = c(26493, 13877, 39006) # Result on 13 Dec 2024
+    expect = c(26493, 13877, 39006) # Result on 13 Dec 2024 ; no comparison study
   )
 })
 
-testthat::test_that("results correct direct discounting without valuation with exponential discount shape", {
+testthat::test_that("results the same direct discounting without valuation with exponential discount shape", {
 
   testthat::expect_equal(
     object =
@@ -161,6 +161,6 @@ testthat::test_that("results correct direct discounting without valuation with e
       base::unlist() |>
       base::as.numeric() |>
       base::round(),
-    expect = 14877 # Result on 15 Jan 2025
+    expect = 14877 # Result on 15 Jan 2025 ; no comparison study
   )
 })
