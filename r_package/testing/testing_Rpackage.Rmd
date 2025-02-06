@@ -60,7 +60,7 @@ devtools::install_github(
   # force = TRUE,
   # dependencies = TRUE,
   build_vignettes = TRUE
-)
+) 
 
 library(healthiar)
 ```
