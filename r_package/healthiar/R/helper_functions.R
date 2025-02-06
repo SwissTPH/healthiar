@@ -54,3 +54,22 @@ helper_runif_with_seed <-
     output <- runif(n, min, max)
   }
 
+#' Helper function: extract main CBA results
+
+#' @description This helper function extracts the main CBA results from a variable containing CBA results.
+#' @param x \code{Variable containing the ouput of an \code{include_cba} call}
+#' @return
+#' This helper function returns the main CBA result(s) as a \code{vector}.
+#' @author Axel Luyten
+#' @note Helper function
+#' @export
+
+helper_extract_main_cba_results <- function(x){
+  y <- x |>
+    purrr::pluck("cba_main") |>
+    dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
+    dplyr::select(impact_rounded)  |>
+    base::unlist() |>
+    base::as.numeric()
+}
+
