@@ -1,4 +1,4 @@
-testthat::test_that("results correct cba with direct discounting and exponential discounting shape", {
+testthat::test_that("results correct pathway_cba|discount_appr_direct|discount_shape_exp|discount_overtime_last_year|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -22,7 +22,7 @@ testthat::test_that("results correct cba with direct discounting and exponential
   )
 })
 
-testthat::test_that("results correct cba discounting only one specific year with direct discounting and exponential discounting shape", {
+testthat::test_that("results the same fake_cba|discount_appr_direct|discount_shape_exp|discount_overtime_last_year|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -56,7 +56,7 @@ testthat::test_that("results correct cba discounting only one specific year with
       base::unlist() |>
       base::as.numeric() |>
       base::round(),
-    expect = c(60416, 23343, 94436) - 86 # Excel file from University of Porto "WP2_Examples.xlsx"
+    expect = c(60416, 23343, 94436) - 86 # Results on 2025-02-05 ; no comparison study
   )
 })
 
