@@ -51,11 +51,15 @@ credentials::set_github_pat() # paste github PAT if prompted
 
 ## Install current version of {healthiar}
 ### If prompted to update or install packages please do so
+### First detach the healthiar package
 devtools::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
-  ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string  
-  force = TRUE
+  # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string  
+  ref = "415-prepare-package-for-use-by-ubdpolicy", # By default "HEAD"; name of branch to install package from as a string  
+  # force = TRUE,
+  # dependencies = TRUE,
+  build_vignettes = TRUE
 )
 
 library(healthiar)
