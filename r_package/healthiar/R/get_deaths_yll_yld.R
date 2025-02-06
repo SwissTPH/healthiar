@@ -21,7 +21,7 @@ get_deaths_yll_yld <-
            input_with_risk_and_pop_fraction) {
 
     ## Define outcome_metric variable
-    outcome_metric <- sub("_.*", "", unique(input_with_risk_and_pop_fraction$health_metric))
+    outcome_metric <- sub("_.*", "", unique(input_with_risk_and_pop_fraction$health_outcome))
 
     # Determine default time horizon for YLL/YLD if not specified ##############
     if ( outcome_metric %in% c("yll", "yld")  &

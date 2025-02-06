@@ -57,7 +57,6 @@ testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRU
       base::as.numeric()
   )
 
-
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
@@ -86,6 +85,7 @@ testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRU
 testthat::test_that("detailed result the same fake_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|multiexp_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
 
   testthat::expect_equal(
     object =

@@ -29,7 +29,7 @@ get_daly <-
       impact_yll_yld_raw[[o]] <-
         healthiar:::get_deaths_yll_yld(
           pop_impact = pop_impact,
-          input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction |> mutate(health_metric = paste0(o, "_from_lifetable")))
+          input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction |> mutate(health_outcome = paste0(o, "_from_lifetable")))
     }
 
     ## Identify the common and identical columns (joining columns)

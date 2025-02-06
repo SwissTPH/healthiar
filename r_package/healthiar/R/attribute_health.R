@@ -41,7 +41,7 @@ attribute_health <-
 
     output <-
       healthiar::attribute(
-        health_metric = "same_input_output",
+        health_outcome = "same_input_output",
         approach_risk = approach_risk,
         approach_multiexposure = approach_multiexposure,
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
