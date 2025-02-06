@@ -593,16 +593,6 @@ pathways_rr_compare <- pathways_rr_compare |>
     ~ "results correct delta comparison rr single exposure", TRUE ~ test_name)) 
 ```
 
-```{r Create Excel}
-
-# Remove implemented column or not? Rename?
-# Add empty column "institute"
-# Add empty column "name"
-# Add column "finished": FALSE
-# Add empty column "Test_passed", partners enter TRUE/FALSE
-
-```
-
 
 ```{r Pathways lifetable compare}
 # TO BE DONE ####
@@ -647,7 +637,42 @@ pathways_lifetable_compare <- pathways_lifetable_compare |>
   
 ```
 
+```{r Create Excel for teams folder}
+knitr::opts_knit$set(root.dir = getwd())
 
+pathways_rr<- pathways_rr |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_)
+
+pathways_ar<- pathways_ar |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_)
+
+pathways_cba <- pathways_cba |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_)
+
+pathways_list <- list(
+  pathways_rr,
+  pathways_ar,
+  pathways_cba
+)
+names(pathways_list) <- c("pathways_rr", "pathways_ar", "pathways_cba")
+
+hs <- openxlsx::createStyle(textDecoration = "bold") # hs = header style
+
+openxlsx::write.xlsx(pathways_list, "tests/pathways_overview.xlsx",
+                     headerStyle = hs,
+                     gridExpand = TRUE) # doesn't seem to have effect
+
+
+```
 
 
 ```{r Example, eval=FALSE, include=FALSE}
