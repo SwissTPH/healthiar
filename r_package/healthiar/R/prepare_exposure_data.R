@@ -2,15 +2,14 @@
 
 #' @description
 #' This function prepares tabular population exposure data compatible with the attribute() and compare() functions, based on spatial pollution and geographic units data.
-#' @param poll_grid \code(SpatRaster) of the pollution data.
-#' @param geo_units \code(sf) of the geographic units data.
+#' @param poll_grid \code{SpatRaster} of the pollution data.
+#' @param geo_units \code{sf} of the geographic units data.
 #' @return
 #' This function returns a vector of population exposure values.
 #' @importFrom terra extract
 #' @export
 #' @author Arno Pauwels
 #' @note Experimental function
-#' @keywords internal
 #' @examples
 #' TBD
 
