@@ -2,28 +2,39 @@
 % Please edit documentation in R/attribute_health.R
 \name{attribute_health}
 \alias{attribute_health}
-\title{Attribute health impact from the same health metric and using on relative risk}
+\title{Attribute health impacts to an environmental stressor}
 \usage{
+Relative risk case:
 attribute_health(
   approach_risk = "relative_risk",
-  exp_central,
-  exp_lower = NULL,
-  exp_upper = NULL,
-  prop_pop_exp = 1,
-  cutoff_central = NULL,
-  cutoff_lower = NULL,
-  cutoff_upper = NULL,
-  rr_central = NULL,
-  rr_lower = NULL,
-  rr_upper = NULL,
-  rr_increment = NULL,
+  erf_shape,
+  rr_central, rr_lower = NULL, rr_upper = NULL,
+  rr_increment,
+  exp_central, exp_lower = NULL, exp_upper = NULL
+  cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+  bhd_central
+)
+
+Absolute risk case:
+healthiar::attribute_health(
+  approach_risk = "absolute_risk",
+  erf_eq_central, erf_eq_lower = NULL, erf_eq_upper = NULL,
+  exp_central, exp_lower = NULL, exp_upper = NULL,
+  population,
+  prop_pop_exp
+)
+
+All available arguments:
+attribute_health(
+  approach_risk = "relative_risk", # Default
   erf_shape = NULL,
-  erf_eq_central = NULL,
-  erf_eq_lower = NULL,
-  erf_eq_upper = NULL,
-  bhd_central = NULL,
-  bhd_lower = NULL,
-  bhd_upper = NULL,
+  rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+  rr_increment = NULL,
+  erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
+  exp_central, exp_lower = NULL, exp_upper = NULL,
+  prop_pop_exp = 1,
+  cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
+  bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
   approach_multiexposure = NULL,
@@ -34,17 +45,17 @@ attribute_health(
 \arguments{
 \item{approach_risk}{\code{String} showing the risk risk method. To choose between: "relative_risk" (default) or "absolute_risk".}
 
-\item{exp_central, exp_lower, exp_upper}{\code{Numeric values} of the exposure to the environmental stressor referring to the central estimate and (optionally) to lower and upper bound of the 95\% confidence interval. If only one value is provided, it will be assumed that it refers to population-weighted mean exposure in ug/m3. If a {vector} is provided, it will be assumed that it refers to the exposure categories (average exposure in the category) in a exposure distribution (this information is linked to the proportion of population exposed).}
-
-\item{prop_pop_exp}{\code{Numeric value} or {Numeric vector} Fraction (values between 0 & 1) of the total population exposed to (one or more) exposure categories, i.e., a exposure distribution, respectively. If a exposure distribution is used, the dimension of this input variable should be the same as "exp". By default, 1 for single exposure value will be assigned to this input variable assuming a single exposure value, but users can change this value.}
+\item{erf_shape}{\code{String} showing the shape of the exposure-response function to be assumed using the relative risk from the literature as support point. Options: "linear", log_linear", "linear_log", "log_log".}
 
 \item{rr_central, rr_lower, rr_upper}{\code{Numeric values} referring to the central estimate of the relative risk and the corresponding lower and upper 95\% confidence interval bounds.}
 
 \item{rr_increment}{\code{Numeric value} showing the increment of the exposure-response function in ug/m3 (usually 10 or 5).}
 
-\item{erf_shape}{\code{String} showing the shape of the exposure-response function to be assumed using the relative risk from the literature as support point. Options: "linear", log_linear", "linear_log", "log_log".}
-
 \item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} referring to the equation of the user-defined exposure-response function. If a \code{string} is entered, the function must contains only one variable: x (exposure). E.g. "3+x+x^2". If a \code{function} is entered, it has to have a function class. If only the values of the x-axis (exposure) and y axis (relative risk) of the dots in the exposure-response function are available, a cubic spline natural interpolation can be assumed to get the function using, e.g., \code{stats::splinefun(x, y, method="natural")}}
+
+\item{exp_central, exp_lower, exp_upper}{\code{Numeric values} of the exposure to the environmental stressor referring to the central estimate and (optionally) to lower and upper bound of the 95\% confidence interval. If only one value is provided, it will be assumed that it refers to population-weighted mean exposure in ug/m3. If a {vector} is provided, it will be assumed that it refers to the exposure categories (average exposure in the category) in a exposure distribution (this information is linked to the proportion of population exposed).}
+
+\item{prop_pop_exp}{\code{Numeric value} or {Numeric vector} Fraction (values between 0 & 1) of the total population exposed to (one or more) exposure categories, i.e., a exposure distribution, respectively. If a exposure distribution is used, the dimension of this input variable should be the same as "exp". By default, 1 for single exposure value will be assigned to this input variable assuming a single exposure value, but users can change this value.}
 
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} showing the central estimate and (optionally) the lower bound and the upper bound of the confidence interval of the baseline health data (e.g. incidence of the health outcome in the population).}
 
@@ -59,9 +70,9 @@ attribute_health(
 \item{info}{\code{String} or {data frame} showing additional information or id. The suffix "info" will be added to the column name. Default value = NULL.}
 }
 \value{
-TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
-concentration-response function i.e. central, lower and upper bound confidence interval.
-Moreover, the data frame includes columns such as:
+TBD. This function returns two lists: 1) \code{health_main}, which contains a data frame with the main results and
+2) \code{health_detailed}, which contains detailed (and interim) results.
+The results includes columns such as:
 \itemize{
  \item Attributable fraction
  \item Health impact
@@ -70,9 +81,10 @@ Moreover, the data frame includes columns such as:
 }
 }
 \description{
-It calculates the health impacts, mortality or morbidity,
-of exposure to an environmental stressor based on the same health metric
-(in the baseline health data as in the result) and using relative risk.
+This function calculates the health impacts (mortality or morbidity)
+of exposure to an environmental stressor (air pollution or noise), using either relative or absolute risk.
+
+The health metric inputted and outputted are the same, e.g. if the baseline health data are mortalities then the result will be mortalities as well. Analogeously for disease cases, DALYs, etc.
 }
 \examples{
 TBD

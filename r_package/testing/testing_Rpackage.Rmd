@@ -62,6 +62,7 @@ devtools::install_github(
   build_vignettes = TRUE
 )
 
+
 library(healthiar)
 ```
 

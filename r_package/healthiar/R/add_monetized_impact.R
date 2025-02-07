@@ -8,9 +8,9 @@
 #'
 #' @return Description of the return value.
 #' @examples
-#' # Example of how to use the function
-#' function_name(param1 = value1, param2 = value2)
-#' @export
+#' # To be added
+#' @keywords internal
+
 add_monetized_impact  <- function(df,
                                   valuation,
                                   discount_rate,
