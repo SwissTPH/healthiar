@@ -44,14 +44,20 @@
 
 attribute <-
   function(approach_risk = "relative_risk",
-           exp_central, exp_lower = NULL, exp_upper = NULL,
-           cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+           # Risk and shape arguments
            rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
            rr_increment = NULL, erf_shape = NULL,
-           bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
-           # Arguments for advanced use
-           prop_pop_exp = 1,
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
+           prop_pop_exp = 1,
+           # Other central input
+           exp_central, exp_lower = NULL, exp_upper = NULL,
+           cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+           bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+           # Iteration arguments
+           geo_id_disaggregated = NULL,
+           geo_id_aggregated = NULL,
+           # Multiexposure
+           approach_multiexposure = NULL,
            # Lifetable arguments
            population_midyear_male = NULL, population_midyear_female = NULL,
            deaths_male = NULL, deaths_female = NULL, # For AirQ+ method for lifetable
@@ -63,14 +69,11 @@ attribute <-
            approach_exposure = NULL,
            approach_newborns = NULL,
            time_horizon = NULL,
-           # Iteration arguments
-           geo_id_disaggregated = NULL,
-           geo_id_aggregated = NULL,
            # Meta-information
            population = NULL,
            health_metric = "same_input_output",
-           approach_multiexposure = NULL,
-           info = NULL){
+           info = NULL
+           ){
 
     # Check input data
     #stopifnot(exprs = {
