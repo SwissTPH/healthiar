@@ -35,12 +35,10 @@ get_risk_and_pop_fraction <-
     collapse_df_by_columns <-
       function(df, columns_for_group, sep){
 
-        columns_for_group_present <-
-          columns_for_group[columns_for_group %in% names(df)]
-
         df <-
           df |>
-          dplyr::group_by(across(all_of(columns_for_group_present)))|>
+          # group_by requires across() to use any_of()
+          dplyr::group_by(across(any_of(columns_for_group)))|>
           dplyr::summarize(
             across(everything(),
                    ~ if (length(unique(.)) == 1) {
@@ -186,12 +184,7 @@ get_risk_and_pop_fraction <-
 
       ## Group by exp_ci and cutoff_ci in case that there are different exposure or cutoff categories
       dplyr::group_by(across(all_of(available_columns_to_group_input)))
-      ## Alternative coding if one of the grouping variables is NULL
-      ## dplyr::group_by(across(all_of(intersect(c("geo_id_disaggregated", "exp_ci", "erf_ci"), names(input))))) |>
-      ## Alternative coding with if statement within group_by
-      ## Using if statement as below because otherwise (e.g. with if_else or case_when)
-      ## the FALSE condition is evaluate and results in an error because the names do not match
-      ## dplyr::group_by(if("geo_id_disaggregated" %in% names(input)){geo_id_disaggregated}, exp_ci, erf_ci)|>
+
 
     # * PAF ####################################################################
 

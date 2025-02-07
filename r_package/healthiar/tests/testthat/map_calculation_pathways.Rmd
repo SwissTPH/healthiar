@@ -62,6 +62,7 @@ pathways_rr <- pathways_rr |>
   mutate(implemented = "FALSE")
 
 # * Document existing pathways #################################################
+
 file_path <- "../healthiar/tests/testthat/test-attribute_health.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
@@ -191,6 +192,7 @@ for (i in seq_along(test_names_with_pw)) {
   existing_tests$implemented[i] <- "TRUE"
 }
 
+
 ## Merge the pathways tibble and the existing_tests tibble
 pathways_ar <- pathways_ar %>%
   left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp"),
@@ -208,6 +210,56 @@ cat("As percentage:", round(pathways_ar %>%
   nrow()/nrow(pathways_ar)*100, digits = 0), "%\n")
 
 ```
+```{r test extraction of all relevant test names}
+
+file_path <- "../healthiar/tests/testthat/test-attribute_health.R"
+file_content <- readLines(file_path) # String vector where each element is all code from a line
+
+
+test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
+test_names_with_pw <- Filter(function(x) any(grepl("pw_", x)), test_names)
+# test_names <- unlist(test_names)
+
+
+## Create an empty tibble with NA placeholders
+num_rows <- length(test_names_with_pw)
+existing_tests <- tibble(
+  erf = rep(NA_character_, num_rows),
+  exp = rep(NA_character_, num_rows),
+  cutoff = rep(NA_character_, num_rows),
+  iteration = rep(NA_character_, num_rows),
+  multiexp = rep(NA_character_, num_rows),
+  varuncer = rep(NA_character_, num_rows),
+  implemented = rep(FALSE, num_rows)
+)
+
+## Extract values and assign them directly to the tibble
+for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
+
+  # Extract values for each column
+  existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "pw_exp_")], "(?<=pw_exp_)[^ ]+")
+  existing_tests$cutoff[i] <- str_extract(strings[str_detect(strings, "pw_cutoff_")], "(?<=pw_cutoff_)[^ ]+")
+  existing_tests$varuncer[i] <- str_extract(strings[str_detect(strings, "pw_varuncer_")], "(?<=pw_varuncer_)[^ ]+")
+  existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "pw_erf_")], "(?<=pw_erf_)[^ ]+")
+  existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "pw_iteration_")], "(?<=pw_iteration_)[^ ]+")
+  existing_tests$multiexp[i] <- str_extract(strings[str_detect(strings, "pw_multiexp_")], "(?<=pw_multiexp_)[^ )]+")
+  existing_tests$implemented[i] <- TRUE
+
+}
+
+result <- pathways_rr_ar %>%
+  left_join(existing_tests, by = c("erf", "exp", "cutoff", "iteration", "multiexp", "varuncer"),
+            suffix = c("", ".existing")) %>%
+  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
+  select(-implemented.existing)
+
+# ## Check that nrow matches
+# nrow(result) == nrow(pathways_rr_ar)
+# ## In case comparison is FALSE, find out which rows are duplicated
+# extra_rows <- result %>%
+#   anti_join(pathways_rr_ar, by = c("erf", "exp", "cutoff", "iteration", "multiexp", "varuncer"))
+
 
 ```{r Pathways cba}
 
@@ -217,6 +269,7 @@ pathways_cba_direct <- list(
   discount_overtime = c("all_years", "last_year"), # all_years is default ; only applicable if discount_appr is "direct" 
   discount_rate_benefit = c("TRUE", "FALSE"),
   discount_rate_cost = c("TRUE", "FALSE")
+
 )
 
 pathways_cba_indirect <- list(
@@ -398,6 +451,7 @@ pathways_monetization <- pathways_monetization |>
     ( discount_appr == "indirect" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "all_years" ) ~
       "results correct indirect discounting with exponential discount shape", TRUE ~ test_name))  
   
+
 ```
 
 ```{r Pathways lifetable}

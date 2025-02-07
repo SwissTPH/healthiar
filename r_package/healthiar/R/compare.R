@@ -53,7 +53,7 @@
 compare <-
   function(approach_multiexposure = NULL,
            approach_comparison = "delta",
-           health_metric = "same_input_output",
+           health_outcome = "same_input_output",
            approach_risk = "relative_risk",
            exp_central_1, exp_lower_1 = NULL, exp_upper_1 = NULL,
            exp_central_2, exp_lower_2 = NULL, exp_upper_2 = NULL,
@@ -95,7 +95,7 @@ compare <-
       healthiar::attribute(
         approach_multiexposure = approach_multiexposure,
         approach_risk = approach_risk,
-        health_metric = health_metric,
+        health_outcome = health_outcome,
         exp_central = exp_central_1, exp_lower = exp_lower_1, exp_upper = exp_upper_1,
         prop_pop_exp = prop_pop_exp_1,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
@@ -127,7 +127,7 @@ compare <-
       healthiar::attribute(
         approach_multiexposure = approach_multiexposure,
         approach_risk = approach_risk,
-        health_metric = health_metric,
+        health_outcome = health_outcome,
         exp_central = exp_central_2, exp_lower = exp_lower_2, exp_upper = exp_upper_2,
         prop_pop_exp = prop_pop_exp_2,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
@@ -215,7 +215,7 @@ compare <-
       # Compile input data of scenario 1
       input_1 <-
         healthiar::compile_input(
-          health_metric = health_metric,
+          health_outcome = health_outcome,
           approach_risk = approach_risk,
           exp_central = exp_central_1, exp_lower = exp_lower_1, exp_upper = exp_upper_1,
           prop_pop_exp = prop_pop_exp_1,
@@ -250,7 +250,7 @@ compare <-
       # Compile input data of scenario 2
       input_2 <-
         healthiar::compile_input(
-          health_metric = health_metric,
+          health_outcome = health_outcome,
           approach_risk = approach_risk,
           exp_central = exp_central_2, exp_lower = exp_lower_2, exp_upper = exp_upper_2,
           prop_pop_exp = prop_pop_exp_2,
@@ -313,7 +313,7 @@ compare <-
       # browser()
 
       ## Added if statement below to avoid error in the non-lifetable cases
-      if( stringr::str_detect(health_metric, "lifetable") ) {
+      if( stringr::str_detect(health_outcome, "lifetable") ) {
         # Calculate the health impacts for each case (uncertainty, category, geo area...)
         impact_raw <-
           healthiar:::get_impact(

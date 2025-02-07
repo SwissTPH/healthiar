@@ -59,7 +59,7 @@ compare_daly_from_lifetable <-
       healthiar::compare(
         approach_multiexposure = approach_multiexposure,
         approach_comparison = approach_comparison,
-        health_metric = "daly_from_lifetable",
+        health_outcome = "daly_from_lifetable",
         approach_risk = "relative_risk",
         exp_central_1, exp_lower_1 = exp_lower_1, exp_upper_1 = exp_upper_1,
         exp_central_2, exp_lower_2 = exp_lower_2, exp_upper_2 = exp_upper_2,

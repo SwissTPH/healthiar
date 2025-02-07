@@ -46,7 +46,7 @@ compare_health <-
       healthiar::compare(
         approach_multiexposure = approach_multiexposure,
         approach_comparison = approach_comparison,
-        health_metric = "same_input_output",
+        health_outcome = "same_input_output",
         approach_risk = approach_risk,
         exp_central_1, exp_lower_1 = exp_lower_1, exp_upper_1 = exp_upper_1,
         exp_central_2, exp_lower_2 = exp_lower_2, exp_upper_2 = exp_upper_2,

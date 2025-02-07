@@ -46,7 +46,7 @@ attribute(
   approach_newborns = NULL,
   time_horizon = NULL,
   population = NULL,
-  health_metric = "same_input_output",
+  health_outcome = "same_input_output",
   info = NULL
 )
 }
@@ -99,7 +99,7 @@ attribute(
 
 \item{population}{code{Vector} with numeric values referring to the population in the geographical unit}
 
-\item{health_metric}{\code{String} showing the change in outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".}
+\item{health_outcome}{\code{String} showing the change in outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".}
 
 \item{info}{\code{String} or {data frame} showing additional information or id. The suffix "info" will be added to the column name. Default value = NULL.}
 }
