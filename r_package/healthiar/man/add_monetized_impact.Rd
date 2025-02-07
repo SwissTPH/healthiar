@@ -35,6 +35,6 @@ Description of the return value.
 Function to calculate and add the monetization of the health impacts
 }
 \examples{
-# Example of how to use the function
-function_name(param1 = value1, param2 = value2)
+# To be added
 }
+\keyword{internal}

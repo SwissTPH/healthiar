@@ -102,14 +102,15 @@ exdat_pm_copd <- exdat_pm_copd |>
 ```{r, eval=TRUE, include=TRUE, echo=TRUE}
 results_pm_copd <-
   healthiar::attribute_health(
-    exp_central = exdat_pm_copd$mean_concentration,
-    cutoff_central = exdat_pm_copd$cut_off_value,
-    bhd_central = exdat_pm_copd$prevalence,
+    erf_shape = "log_linear",
     rr_central = exdat_pm_copd$relative_risk, 
     rr_lower = exdat_pm_copd$relative_risk_lower,
     rr_upper = exdat_pm_copd$relative_risk_upper,
     rr_increment = 10, 
-    erf_shape = "log_linear")
+    exp_central = exdat_pm_copd$mean_concentration,
+    cutoff_central = exdat_pm_copd$cut_off_value,
+    bhd_central = exdat_pm_copd$prevalence
+)
 
 ```
 
@@ -170,18 +171,19 @@ Now we will make a similar function call, but include uncertainty in several inp
 
 results_pm_copd <-
   healthiar::attribute_health(
+    erf_shape = "log_linear",
+    rr_central = airqplus_pm_copd$relative_risk, 
+    rr_lower = airqplus_pm_copd$relative_risk_lower,
+    rr_upper = airqplus_pm_copd$relative_risk_upper,
+    rr_increment = 10, 
     exp_central = exdat_pm_copd$mean_concentration,
     exp_lower = 8,
     exp_upper = 9,
     cutoff_central = exdat_pm_copd$cut_off_value, 
     bhd_central = exdat_pm_copd$prevalence,
     bhd_lower = exdat_pm_copd$prevalence - 5000,
-    bhd_upper = exdat_pm_copd$prevalence + 5000,
-    rr_central = airqplus_pm_copd$relative_risk, 
-    rr_lower = airqplus_pm_copd$relative_risk_lower,
-    rr_upper = airqplus_pm_copd$relative_risk_upper,
-    rr_increment = 10, 
-    erf_shape = "log_linear")
+    bhd_upper = exdat_pm_copd$prevalence + 5000
+    )
 
 ```
 
