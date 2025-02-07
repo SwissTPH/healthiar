@@ -63,14 +63,14 @@
 
 attribute_health <-
   function(approach_risk = "relative_risk",
+           erf_shape = NULL,
+           rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+           rr_increment = NULL,
+           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            exp_central,
            exp_lower = NULL, exp_upper = NULL,
            prop_pop_exp = 1,
            cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
-           rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           rr_increment = NULL,
-           erf_shape = NULL,
-           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
            geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
            approach_multiexposure = NULL,
