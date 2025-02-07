@@ -1,15 +1,15 @@
-#' Attribute health impact from the same health metric and using on relative risk
+#' Attribute health impacts to an environmental stressor
 
-#' @description It calculates the health impacts, mortality or morbidity,
-#' of exposure to an environmental stressor based on the same health metric
-#' (in the baseline health data as in the result) and using relative risk.
+#' @description This function calculates the health impacts, mortality or morbidity,
+#' of exposure to an environmental stressor (air pollution or noise) either using relative or absolute risk.
+#' The health metric inputted to the function is the health metric outputted, e.g. is the baseline health data are mortalities then the result will be mortalities as well.
 
 #' @inheritParams attribute
 
 #' @return
-#' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
-#' concentration-response function i.e. central, lower and upper bound confidence interval.
-#' Moreover, the data frame includes columns such as:
+#' TBD. This function returns two lists: 1) \code{health_main}, which contains a data frame with the main results and
+#' 2) \code{health_detailed}, which contains detailed (and interim) results.
+#' The results includes columns such as:
 #' \itemize{
 #'  \item Attributable fraction
 #'  \item Health impact

@@ -9,6 +9,7 @@
 #' @return Description of the return value.
 #' @examples
 #' # To be added
+#' @keywords internal
 
 add_monetized_impact  <- function(df,
                                   valuation,
