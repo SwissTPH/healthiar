@@ -68,6 +68,8 @@ After the initial installation we recommend to regularly update `healthiar` by r
 
 The main function family of `healthiar` is the attribute family, used to attribute health impacts to a risk factor, e.g. noise or air pollution. The core function `attribute_health` can be used for most (non-lifetable) assessments. For lifetable assessments the functions ending in `..._from_lifetable` are used.
 
+![Figure: `healthiar` overview](images/EPHC_poster_landscape_v0.2.2_only_package_overview.jpg){width="700"}
+
 ------------------------------------------------------------------------
 
 # How to use `healthiar`
