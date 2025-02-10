@@ -17,7 +17,7 @@ testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRU
           info = paste0(data$pollutant,"_", data$evaluation_name)
         ) |>
         helper_extract_main_results(),
-      expected =
+      expected = # airqplus_pm_copd
         data |>
         dplyr::select(estimated_number_of_attributable_cases_central)|>
         base::as.numeric()
@@ -49,7 +49,7 @@ testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRU
         info = paste0(data$pollutant,"_", data$evaluation_name)
       ) |>
       helper_extract_main_results(),
-    expected =
+    expected = # airqplus_pm_copd
       data |>
       dplyr::select(estimated_number_of_attributable_cases_central,
                     estimated_number_of_attributable_cases_lower,

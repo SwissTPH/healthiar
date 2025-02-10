@@ -210,74 +210,24 @@ cat("As percentage:", round(pathways_ar %>%
   nrow()/nrow(pathways_ar)*100, digits = 0), "%\n")
 
 ```
-```{r test extraction of all relevant test names}
-
-file_path <- "../healthiar/tests/testthat/test-attribute_health.R"
-file_content <- readLines(file_path) # String vector where each element is all code from a line
-
-
-test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
-test_names_with_pw <- Filter(function(x) any(grepl("pw_", x)), test_names)
-# test_names <- unlist(test_names)
-
-
-## Create an empty tibble with NA placeholders
-num_rows <- length(test_names_with_pw)
-existing_tests <- tibble(
-  erf = rep(NA_character_, num_rows),
-  exp = rep(NA_character_, num_rows),
-  cutoff = rep(NA_character_, num_rows),
-  iteration = rep(NA_character_, num_rows),
-  multiexp = rep(NA_character_, num_rows),
-  varuncer = rep(NA_character_, num_rows),
-  implemented = rep(FALSE, num_rows)
-)
-
-## Extract values and assign them directly to the tibble
-for (i in seq_along(test_names_with_pw)) {
-  strings <- test_names_with_pw[[i]] # Current list item
-
-  # Extract values for each column
-  existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "pw_exp_")], "(?<=pw_exp_)[^ ]+")
-  existing_tests$cutoff[i] <- str_extract(strings[str_detect(strings, "pw_cutoff_")], "(?<=pw_cutoff_)[^ ]+")
-  existing_tests$varuncer[i] <- str_extract(strings[str_detect(strings, "pw_varuncer_")], "(?<=pw_varuncer_)[^ ]+")
-  existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "pw_erf_")], "(?<=pw_erf_)[^ ]+")
-  existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "pw_iteration_")], "(?<=pw_iteration_)[^ ]+")
-  existing_tests$multiexp[i] <- str_extract(strings[str_detect(strings, "pw_multiexp_")], "(?<=pw_multiexp_)[^ )]+")
-  existing_tests$implemented[i] <- TRUE
-
-}
-
-result <- pathways_rr_ar %>%
-  left_join(existing_tests, by = c("erf", "exp", "cutoff", "iteration", "multiexp", "varuncer"),
-            suffix = c("", ".existing")) %>%
-  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
-  select(-implemented.existing)
-
-# ## Check that nrow matches
-# nrow(result) == nrow(pathways_rr_ar)
-# ## In case comparison is FALSE, find out which rows are duplicated
-# extra_rows <- result %>%
-#   anti_join(pathways_rr_ar, by = c("erf", "exp", "cutoff", "iteration", "multiexp", "varuncer"))
 
 
 ```{r Pathways cba}
 
 pathways_cba_direct <- list(
   discount_appr = c("direct"), # direct is the default
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("all_years", "last_year"), # all_years is default ; only applicable if discount_appr is "direct" 
   discount_rate_benefit = c("TRUE", "FALSE"),
-  discount_rate_cost = c("TRUE", "FALSE")
-
+  discount_rate_cost = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("all_years", "last_year") # all_years is default ; only applicable if discount_appr is "direct" 
 )
 
 pathways_cba_indirect <- list(
   discount_appr = c("indirect"), # direct is the default
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("NA"), # all_years is default ; only applicable if discount_appr is "direct" 
   discount_rate_benefit = c("TRUE", "FALSE"),
-  discount_rate_cost = c("TRUE", "FALSE")
+  discount_rate_cost = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("NA") # all_years is default ; only applicable if discount_appr is "direct" 
 )
 
 pathways_cba_direct <- expand.grid(pathways_cba_direct) |>
@@ -299,18 +249,18 @@ pathways_cba <- rbind(pathways_cba_direct, pathways_cba_indirect) %>% # Importan
 #* Define core pathways ########################################################
 core_cba_direct <- list(
   discount_appr = c("direct"), # direct is the default
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("all_years", "last_year"), # all_years is default ; only applicable if discount_appr is "direct" 
   discount_rate_benefit = c("TRUE", "FALSE"),
-  discount_rate_cost = c("TRUE", "FALSE")
+  discount_rate_cost = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("all_years", "last_year") # all_years is default ; only applicable if discount_appr is "direct" 
 )
 
 core_cba_indirect <- list(
   discount_appr = c("indirect"), # direct is the default
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("NA"), # all_years is default ; only applicable if discount_appr is "direct" 
   discount_rate_benefit = c("TRUE", "FALSE"),
-  discount_rate_cost = c("TRUE", "FALSE")
+  discount_rate_cost = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("NA") # all_years is default ; only applicable if discount_appr is "direct" 
 )
 
 core_cba_direct <- expand.grid(core_cba_direct) |> 
@@ -342,10 +292,10 @@ test_names_with_pw <- Filter(function(x) any(grepl("pathway_cba\\|", x)), test_n
 num_rows <- length(test_names_with_pw)
 existing_tests <- tibble(
   discount_appr = rep(NA_character_, num_rows),
-  discount_shape = rep(NA_character_, num_rows),
-  discount_overtime = rep(NA_character_, num_rows),
   discount_rate_benefit = rep(NA_character_, num_rows),
   discount_rate_cost = rep(NA_character_, num_rows),
+  discount_shape = rep(NA_character_, num_rows),
+  discount_overtime = rep(NA_character_, num_rows),
   implemented = rep("FALSE", num_rows)
 )
 
@@ -355,10 +305,11 @@ for (i in seq_along(test_names_with_pw)) {
 
   # Extract values for each column
   existing_tests$discount_appr[i] <- str_extract(strings[str_detect(strings, "\\|discount_appr_")], "(?<=\\|discount_appr_)[^\\|]+")
-  existing_tests$discount_shape[i] <- str_extract(strings[str_detect(strings, "\\|discount_shape_")], "(?<=\\|discount_shape_)[^\\|]+")
-  existing_tests$discount_overtime[i] <- str_extract(strings[str_detect(strings, "\\|discount_overtime_")], "(?<=\\|discount_overtime_)[^\\|]+")
   existing_tests$discount_rate_benefit[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_benefit_")], "(?<=\\|discount_rate_benefit_)[^\\|]+")
   existing_tests$discount_rate_cost[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_cost_")], "(?<=\\|discount_rate_cost_)[^\\|]+")
+  existing_tests$discount_shape[i] <- str_extract(strings[str_detect(strings, "\\|discount_shape_")], "(?<=\\|discount_shape_)[^\\|]+")
+  existing_tests$discount_overtime[i] <- str_extract(strings[str_detect(strings, "\\|discount_overtime_")], "(?<=\\|discount_overtime_)[^\\|]+")
+  
   existing_tests$implemented[i] <- "TRUE"
 }
 
@@ -382,15 +333,6 @@ cat("As percentage:", round(pathways_cba %>%
 ```
 
 ```{r Pathways monetization}
-# TO BE DONE ####
-
-## Estimation number of core cases
-# ov_monetization <- list(
-#   discount_appr = c("direct", "indirect"), # direct is the default
-#   discount_rate = c("TRUE", "FALSE"),
-#   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-#   discount_overtime = c("all_years", "last_year") # all_years is default
-# )
 
 ov_monetization <- list(
   discount_appr = c("direct", "indirect"), # direct is the default
@@ -399,25 +341,88 @@ ov_monetization <- list(
   discount_overtime = c("all_years", "last_year") # all_years is default
 )
 
-pathways_monetization <- expand.grid(ov_monetization)
+pathways_monetization <- expand.grid(ov_monetization) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character)
+
+pathways_monetization <- pathways_monetization %>% # Important to use magrittr pipe
+  mutate(
+    pathway_id = purrr::pmap_chr(., function(...) {
+      vals <- list(...)
+      paste0("pathway_monetization|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+    })
+  ) 
+
+#* Define core pathways ########################################################
+core_monetization <- list(
+  discount_appr = c("direct", "indirect"), # direct is the default
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("all_years", "last_year"),
+  discount_rate = c("TRUE", "FALSE")
+)
+
+core_monetization <- expand.grid(core_monetization) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) |> 
+  mutate(core_pathway = "TRUE")
 
 pathways_monetization <- pathways_monetization |> 
-  as_tibble() |> 
-  dplyr::mutate(test_name = "NULL") |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "direct" & discount_rate == "FALSE" & discount_shape == "FALSE" & discount_overtime == "all_years" ) ~
-      "results correct simple monetization", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "direct" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "last_year" ) ~
-      "results correct direct discounting with discount factor and exponential discount shape", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "indirect" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "all_years" ) ~
-      "results correct indirect discounting with exponential discount shape", TRUE ~ test_name))  
+  left_join(x = _, y = core_monetization, by = c("discount_appr", "discount_shape", "discount_overtime", "discount_rate")) |> 
+  mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
+  mutate(implemented = "FALSE")
+
+# * Document existing pathways ####
+
+file_path <- "../healthiar/tests/testthat/test-include_monetization.R"
+file_content <- readLines(file_path) # String vector where each element is all code from a line
+
+test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
+test_names_with_pw <- Filter(function(x) any(grepl("pathway_monetization\\|", x)), test_names)
+# test_names <- unlist(test_names)
+
+## Create an empty tibble with NA placeholders
+num_rows <- length(test_names_with_pw)
+existing_tests <- tibble(
+  discount_appr = rep(NA_character_, num_rows),
+  discount_rate = rep(NA_character_, num_rows),
+  discount_shape = rep(NA_character_, num_rows),
+  discount_overtime = rep(NA_character_, num_rows),
+  implemented = rep("FALSE", num_rows)
+)
+
+## Extract values and assign them directly to the tibble
+for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
+
+  # Extract values for each column
+  existing_tests$discount_appr[i] <- str_extract(strings[str_detect(strings, "\\|discount_appr_")], "(?<=\\|discount_appr_)[^\\|]+")
+  existing_tests$discount_rate[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_")], "(?<=\\|discount_rate_)[^\\|]+")
+  existing_tests$discount_shape[i] <- str_extract(strings[str_detect(strings, "\\|discount_shape_")], "(?<=\\|discount_shape_)[^\\|]+")
+  existing_tests$discount_overtime[i] <- str_extract(strings[str_detect(strings, "\\|discount_overtime_")], "(?<=\\|discount_overtime_)[^\\|]+")
   
+  existing_tests$implemented[i] <- "TRUE"
+}
+
+## Merge the pathways tibble and the existing_tests tibble
+pathways_monetization <- pathways_monetization %>%
+  left_join(existing_tests, by = c("discount_appr", "discount_shape", "discount_overtime", "discount_rate"),
+            suffix = c("", ".existing")) %>%
+  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
+  select(-implemented.existing)
+
+## Output short report
+cat("Number of pathways implemented as tests:", pathways_monetization %>%
+  filter(implemented == "TRUE") %>%
+  nrow(), "\n")
+cat("Total possible number of pathways:", nrow(pathways_monetization), "\n")
+cat("As percentage:", round(pathways_monetization %>%
+  filter(implemented == "TRUE") %>%
+  nrow()/nrow(pathways_monetization)*100, digits = 0), "%\n")
+
 ```
 
 Both the functions include_cba and include_discount call the 
-function include_monetization in the background --> created only ov_monetization 
+function include_monetization in the background --> created only ov_monetization and ov_cba
 instead of creating an overview tibble for all 3 functions
 ```{r OLD Pathways monetization}
 
@@ -456,20 +461,6 @@ pathways_monetization <- pathways_monetization |>
 
 ```{r Pathways lifetable}
 
-# TO BE DONE ####
-
-## Estimation of core cases
-# ov_lifetable <- list(
-#   exp = c("single", "dist"), # prop_pop_exp linked with this
-#   exp_time = c("single_year", "constant"),
-#   newborns = c("TRUE", "FALSE"),
-#   # min_age = c("TRUE", "FALSE"),
-#   # max_age = c("TRUE", "FALSE"),
-#   # time_horizon = c("TRUE", "FALSE"),
-#   iteration = c("TRUE", "FALSE"),
-#   varuncer = c("TRUE", "FALSE")
-# )
-
 ov_lifetable <- list(
   exp = c("single", "dist"), # prop_pop_exp linked with this
   exp_time = c("single_year", "constant"),
@@ -481,7 +472,96 @@ ov_lifetable <- list(
   varuncer = c("TRUE", "FALSE")
 )
 
-pathways_lifetable <- expand.grid(ov_lifetable)
+pathways_lifetable <- expand.grid(ov_lifetable) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character)
+
+pathways_lifetable <- pathways_lifetable %>% # Important to use magrittr pipe
+  mutate(
+    pathway_id = purrr::pmap_chr(., function(...) {
+      vals <- list(...)
+      paste0("pathway_lifetable|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+    })
+  )
+
+#* Define core pathways ########################################################
+core_lifetable <- list(
+  exp = c("single", "dist"),
+  exp_time = c("single_year", "constant"),
+  newborns = c("TRUE", "FALSE"),
+  min_age = c("TRUE"),
+  max_age = c("TRUE"),
+  time_horizon = c("FALSE"),
+  iteration = c("TRUE", "FALSE"),
+  varuncer = c("TRUE", "FALSE")
+)
+
+core_lifetable <- expand.grid(core_lifetable) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) |> 
+  mutate(core_pathway = "TRUE")
+
+pathways_lifetable <- pathways_lifetable |> 
+  left_join(x = _, y = core_lifetable, by = c("exp", "exp_time", "newborns", "min_age", "max_age", "time_horizon", "iteration", "varuncer")) |> 
+  mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
+  mutate(implemented = "FALSE")
+
+# * Document existing pathways ####
+
+file_path <- "../healthiar/tests/testthat/test-attribute_yll_from_lifetable.R"
+file_content <- readLines(file_path) # String vector where each element is all code from a line
+
+test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
+test_names_with_pw <- Filter(function(x) any(grepl("pathway_lifetable\\|", x)), test_names)
+# test_names <- unlist(test_names)
+
+## Create an empty tibble with NA placeholders
+num_rows <- length(test_names_with_pw)
+existing_tests <- tibble(
+  exp = rep(NA_character_, num_rows),
+  exp_time = rep(NA_character_, num_rows),
+  newborns = rep(NA_character_, num_rows),
+  min_age = rep(NA_character_, num_rows),
+  max_age = rep(NA_character_, num_rows),
+  time_horizon = rep(NA_character_, num_rows),
+  iteration = rep(NA_character_, num_rows),
+  varuncer = rep(NA_character_, num_rows),
+  implemented = rep("FALSE", num_rows)
+)
+
+## Extract values and assign them directly to the tibble
+for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
+
+  # Extract values for each column
+  existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "\\|exp_")], "(?<=\\|exp_)[^\\|]+")
+  existing_tests$exp_time[i] <- str_extract(strings[str_detect(strings, "\\|exp_time_")], "(?<=\\|exp_time_)[^\\|]+")
+  existing_tests$newborns[i] <- str_extract(strings[str_detect(strings, "\\|newborns_")], "(?<=\\|newborns_)[^\\|]+")
+  existing_tests$min_age[i] <- str_extract(strings[str_detect(strings, "\\|min_age_")], "(?<=\\|min_age_)[^\\|]+")
+  existing_tests$max_age[i] <- str_extract(strings[str_detect(strings, "\\|max_age_")], "(?<=\\|max_age_)[^\\|]+")
+  existing_tests$time_horizon[i] <- str_extract(strings[str_detect(strings, "\\|time_horizon_")], "(?<=\\|time_horizon_)[^\\|]+")
+  existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
+  existing_tests$varuncer[i] <- str_extract(strings[str_detect(strings, "\\|varuncer_")], "(?<=\\|varuncer_)[^\\|]+")
+  
+  existing_tests$implemented[i] <- "TRUE"
+}
+
+## Merge the pathways tibble and the existing_tests tibble
+pathways_lifetable <- pathways_lifetable %>%
+  left_join(existing_tests, by = c("exp", "exp_time", "newborns", "min_age", "max_age", "time_horizon", "iteration", "varuncer"),
+            suffix = c("", ".existing")) %>%
+  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
+  select(-implemented.existing)
+
+## Output short report
+cat("Number of pathways implemented as tests:", pathways_lifetable %>%
+  filter(implemented == "TRUE") %>%
+  nrow(), "\n")
+cat("Total possible number of pathways:", nrow(pathways_lifetable), "\n")
+cat("As percentage:", round(pathways_lifetable %>%
+  filter(implemented == "TRUE") %>%
+  nrow()/nrow(pathways_lifetable)*100, digits = 0), "%\n")
+
 ```
 
 ```{r OLD Pathways lifetable}

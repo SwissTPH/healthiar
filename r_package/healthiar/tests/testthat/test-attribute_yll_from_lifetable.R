@@ -1,4 +1,4 @@
-testthat::test_that("results correct lifetable yll single exposure and one year exposure and without newborns", {
+testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
@@ -36,7 +36,7 @@ testthat::test_that("results correct lifetable yll single exposure and one year 
   )
 })
 
-testthat::test_that("results correct lifetable yll single exposure and constant exposure and without newborns", {
+testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
 
@@ -72,7 +72,7 @@ testthat::test_that("results correct lifetable yll single exposure and constant 
   )
 })
 
-testthat::test_that("results correct lifetable yll single exposure and constant exposure and with newborns", {
+testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
 
@@ -107,7 +107,7 @@ testthat::test_that("results correct lifetable yll single exposure and constant 
   )
 })
 
-testthat::test_that("results correct lifetable yll exposure distribution and one year exposure and without newborns", {
+testthat::test_that("results correct pathway_lifetable|exp_dist|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
@@ -143,4 +143,3 @@ testthat::test_that("results correct lifetable yll exposure distribution and one
     tolerance = 0.1
   )
 })
-

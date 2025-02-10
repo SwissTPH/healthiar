@@ -26,9 +26,6 @@ include_monetization <-
            discount_years = 1,
            discount_overtime = "all_years") {
 
-
-
-
   # Using the output of attribute ####
   if(!is.null(output_healthiar) & is.null(impact)){
 
