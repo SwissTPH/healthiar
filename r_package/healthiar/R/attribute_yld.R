@@ -1,38 +1,48 @@
-#' Determine years lived with disability (YLD) attributable to the incidence of a specific morbidity health outcome
+#' Attribute years lived with disability (YLD) from a specific morbidity health outcome that is due to an environmental stressor
 
-#' @description Calculates the YLDs using a single value for baseline heath data, i.e. without life table. It provides as a result the mean as well as the lower and the higher bounds of the morbidity impact based on the confidence interval of the exposure-response function. Assumption: cases happen at the start of the year.
-#' @inheritParams attribute
-#'
+#' @description
+#' This function first attributes disease cases of a specific morbidity health outcome to an environmental exposure.
+#' Then this disease burden is then expressed in YLDs, using associated disability weight and duration.
+#' @description
+#' For calculation of YLDs using life tables use \code{attribute_yld_from_lifetable}.
+#' Assumption: cases happen at the start of the year.
+
 #' @return
-#' This function returns a \code{data.frame} with one row for each value of the
-#' concentration-response function (i.e. central estimate, lower and upper bound confidence interval.
-#' The YLDs are listed in the columns:
+#' This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
+#' 2) \code{health_detailed}, which contains detailed (and interim) results.
+#' The result tibbles include columns such as:
 #' \itemize{
-#'  \item yld
-#'  \item yld_rounded
+#'  \item pop_fraction (population attributable fraction)
+#'  \item impact (health impact)
+#'  \item And many more.
 #'  }
+#' @examples
+#' To be added
+#' @inheritParams attribute
 #' @import dplyr
 #' @import purrr
-#' @examples
-#' TBD
+
 #' @author Axel Luyten
 #' @note Experimental function
 #' @export
 attribute_yld <-
   function(approach_risk = "relative_risk",
-           approach_multiexposure = NULL,
-           exp_central, exp_lower = NULL, exp_upper = NULL,
+           erf_shape = NULL,
+           rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+           rr_increment = NULL,
+           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
+           exp_central,
+           exp_lower = NULL, exp_upper = NULL,
            prop_pop_exp = 1,
            cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
-           rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           rr_increment,
-           erf_shape = NULL,
-           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
-           population = NULL,
            dw_central, dw_lower = NULL, dw_upper = NULL,
            duration_central, duration_lower = NULL, duration_upper = NULL,
-           info = NULL){
+           geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
+           approach_multiexposure = NULL,
+           population = NULL,
+           info = NULL
+           ){
 
 
     output <-
