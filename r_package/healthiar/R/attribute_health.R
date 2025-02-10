@@ -55,7 +55,6 @@
 #' }
 
 #' @inheritParams attribute
-# 2025-02-10 AL: Somehow the function doc for the cutoff_... arguments is not inherited from attribute... don't know why
 # @param cutoff_central,cutoff_lower,cutoff,upper \code{Numeric value} showing the central exposure cut-off in ug/m3 and (optionally) the lower and upper bounds of the 95\% confidence interval. The cut-off level refers to the exposure level below which no health effects occur.
 #' @import dplyr
 #' @import purrr

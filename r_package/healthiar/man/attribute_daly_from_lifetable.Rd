@@ -43,43 +43,53 @@ attribute_daly_from_lifetable(
 )
 }
 \arguments{
-\item{approach_multiexposure}{\code{String} showing the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined".}
+\item{approach_multiexposure}{\code{String} specifying the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined". Default: \code{NULL} (i.e. no other exposure is considered besides the one specified in the \code{exp.._ argument(s)})}
 
-\item{exp_central, exp_lower, exp_upper}{\code{Numeric values} of the exposure to the environmental stressor referring to the central estimate and (optionally) to lower and upper bound of the 95\% confidence interval. If only one value is provided, it will be assumed that it refers to population-weighted mean exposure in ug/m3. If a {vector} is provided, it will be assumed that it refers to the exposure categories (average exposure in the category) in a exposure distribution (this information is linked to the proportion of population exposed).}
+\item{exp_central, exp_lower, exp_upper}{\code{Numeric value(s)} specifying the exposure level(s) to the environmental stressor and (optionally) to lower and upper bound of the 95\% confidence interval. If only one value is provided, it will be assumed that it refers to population-weighted mean exposure in \eqn{µg/m^3}. If a {vector} is provided, it will be assumed that it refers to the exposure categories (average exposure in the category) in a exposure distribution (this information is linked to the proportion of population exposed).}
 
-\item{prop_pop_exp}{\code{Numeric value} or {Numeric vector} Fraction (values between 0 & 1) of the total population exposed to (one or more) exposure categories, i.e., a exposure distribution, respectively. If a exposure distribution is used, the dimension of this input variable should be the same as "exp". By default, 1 for single exposure value will be assigned to this input variable assuming a single exposure value, but users can change this value.}
+\item{prop_pop_exp}{\code{Numeric value} or \code{Numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to each exposure categories.
+If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.}
 
-\item{rr_central, rr_lower, rr_upper}{\code{Numeric value(s)} referring to the central estimate of the relative risk and the corresponding lower and upper 95\% confidence interval bounds.}
+\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} showing the central exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
+The cutoff level refers to the exposure level below which no health effects occur.}
 
-\item{rr_increment}{\code{Numeric value} showing the increment of the exposure-response function in \eqn{µg/m^3} (usually 10 or 5).}
+\item{rr_central, rr_lower, rr_upper}{\code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.}
+
+\item{rr_increment}{\code{Numeric value} specifying the increment of the exposure-response function in \eqn{µg/m^3} (usually 10 or 5 \eqn{µg/m^3}).}
 
 \item{erf_shape}{\code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".}
 
-\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} referring to the equation of the user-defined exposure-response function. If a \code{string} is entered, the function must contains only one variable: x (exposure). E.g. "3+x+x^2". If a \code{function} is entered, it has to have a function class. If only the values of the x-axis (exposure) and y axis (relative risk) of the dots in the exposure-response function are available, a cubic spline natural interpolation can be assumed to get the function using, e.g., \code{stats::splinefun(x, y, method="natural")}}
+\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the equation of the user-defined exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions.
+If a \code{string} is entered, the function must contains only one variable: x (exposure), e.g. "3+x+x^2".
+If a \code{function} is fed to the argument, it has be of the class function class, e.g. output from the functions \code{stats::splinefun()} or \code{stats::approxfun()}.
+If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use a cubic spline natural interpolation to derive the exposure-response function using, e.g. \code{stats::splinefun(x, y, method="natural")}.}
 
-\item{approach_exposure}{\code{String} showing whether air pollution is constant or only in one year. Options: "single_year" (default), "constant"}
+\item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: "single_year" (default), "constant".}
 
-\item{approach_newborns}{\code{String} showing whether newborns are considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns"}
+\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". If "with_newborns" is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.}
 
-\item{first_age_pop}{\code{Numeric value} starting age of the youngest age group from population and life table data (age interval = 1 year)}
+\item{first_age_pop}{\code{Numeric value} specifying the age of the youngest age group from population and life table data (age interval = 1 year).}
 
-\item{last_age_pop}{\code{Numeric value} ending age of the oldest age group from population and life table data (age interval = 1 year)}
+\item{last_age_pop}{\code{Numeric value} specifying the age of the oldest age group from population and life table data (age interval = 1 year).}
 
-\item{population_midyear_male, population_midyear_female}{\code{Numeric vector} containing the mid-year male population for the year of analysis for male and female respectively.}
+\item{population_midyear_male, population_midyear_female}{\code{Numeric vector} containing the mid-year population for the year of analysis for female and male, respectively.}
 
-\item{year_of_analysis}{\code{Numeric value} of the year of analysis, which corresponds to the first year of the life table.}
+\item{year_of_analysis}{\code{Numeric value} providing the year of analysis.}
 
-\item{min_age}{\code{Numberic value} of the minimal age to be considered for adults (by default 30, i.e. 30+).}
+\item{min_age}{\code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. By default 30, which implies that all adults aged 30 or older will be affected by the exposure.}
 
-\item{max_age}{\code{Numberic value} of the maximal age to be considered for infants/children (by default 0, i.e. below 1 year old).}
+\item{max_age}{\code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.}
 
-\item{dw_central, dw_lower, dw_upper}{\code{Numeric value} showing the disability weights (central estimate, lower and upper 95\% confidence intervals) associated with the morbidity health outcome}
+\item{dw_central, dw_lower, dw_upper}{\code{Numeric value(s)} providing the disability weight associated with the morbidity health outcome and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
 
-\item{duration_central, duration_lower, duration_upper}{\code{Numeric value} showing the central estimate of the disease duration and (optionally) the lower and upper bounds of the 95\% confidence interval.}
+\item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval.}
 
-\item{time_horizon}{\code{Numeric value} corresponding to time horizon (number of years) for which the impacts should be considered. For example, would be 10 if one is interested in the impacts of an intervention during the next 10 years.}
+\item{time_horizon}{\code{Numeric value} corresponding to time horizon (number of years) for which the impacts of exposure are to be considered.
+For example, would be 10 if one is interested in the impacts of exposure during the year of analysis and the next 9 years.}
 
-\item{info}{\code{String} or {data frame} showing additional information or id. The suffix "info" will be added to the column name. Default value = NULL.}
+\item{info}{\code{String} or {data.frame} providing additional information linked with the assessment.
+The suffix "info" will be added to the column name.
+Default value = \code{NULL}.}
 }
 \value{
 This function returns a \code{data.frame}

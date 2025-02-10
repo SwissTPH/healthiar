@@ -24,7 +24,8 @@ include_social(
 
 \item{population}{\code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.}
 
-\item{geo_id_disaggregated}{\code{Vector} showing the id code of the each geographic area considered in the assessment. If a vector is entered here, the data for each geographical area have to be provided as list in the corresponding arguments.}
+\item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
+If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \exp{exp_...}) has to be provided as a list.}
 
 \item{social_indicator}{\code{Vector} with numeric values showing the deprivation score (indicator of economic wealth) of the fine geographical area (it should match with those used in \code{attribute} or \code{compare})}
 

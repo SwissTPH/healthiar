@@ -20,7 +20,7 @@ get_risk(
 
 \item{cutoff}{\code{Numeric value} showing the cut-off exposure level in ug/m3 (i.e. the exposure level below which no health effects occur).}
 
-\item{rr_increment}{\code{Numeric value} showing the increment of the exposure-response function in \eqn{µg/m^3} (usually 10 or 5).}
+\item{rr_increment}{\code{Numeric value} specifying the increment of the exposure-response function in \eqn{µg/m^3} (usually 10 or 5 \eqn{µg/m^3}).}
 
 \item{erf_shape}{\code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".}
 

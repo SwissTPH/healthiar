@@ -9,7 +9,7 @@ get_impact(input, pop_fraction_type, population = NULL)
 \arguments{
 \item{input}{\code{Data frame} containing all input data.}
 
-\item{population}{code{Vector} with numeric values referring to the population in the geographical unit}
+\item{population}{code{Vector} providing the population (in each geographical unit).}
 }
 \value{
 TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
