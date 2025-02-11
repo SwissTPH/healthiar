@@ -231,7 +231,7 @@ Two folders are added:
 
 -   `uncertainty_detailed` contains all `n_sim` simulations of the Monte Carlo assessment
 
-```{r}
+```{r summary uncertainty}
 
 print(
   results_pm_copd |> 
@@ -245,6 +245,78 @@ results_pm_copd |>
   knitr::kable()
 
 ```
+
+### Adding monetization of results
+
+You can monetize the obtained health impacts via the `include_monetization` function.
+
+```{r monetization}
+
+results_pm_copd <- 
+  include_monetization(
+    output_healthiar = results_pm_copd,
+    approach_discount = "direct",
+    discount_shape = "exponential",
+    discount_rate = 0.03,
+    discount_years = 5,
+    valuation = 50000, # E.g. EURO
+    discount_overtime = "all_years"
+  )
+
+
+results_pm_copd |> 
+  purrr::pluck("monetization_main") |> 
+  select(erf_ci, impact, monetized_impact) |> 
+  knitr::kable()
+  
+```
+
+We see that the monetized impact (discounted) is more than 160 million EURO.
+
+The outcome of the monetization is added to the variable entered to the `output_healthiar` argument, which is `results_pm_copd` in our case.
+
+Two folders are added:
+
+-   `monetization_main` contains the central estimate and the corresponding 95% confidence intervals obtained through the specified monetization
+
+-   `monetization_detailed` contains the monetized results for each unique combination of the input variable estimates that were provided to the initial `attribute_health()` call
+
+### Adding a cost-benefit analysis (CBA) using the results
+
+Let's imagine we design a policy that would reduce air pollution to 5 $\mu g/m^3$, which is the concentration specified in the `cutoff_central` argument in the initial `attribute_health()` call. So we could avoid all COPD cases attributed to air pollution.
+
+What would be the monetary benefit of such a policy, considering also the cost to implement the policy (estimated at 100 million EURO)? We can find out using `healthiar`'s `include_cba()` function.
+
+```{r cba}
+
+cba <- 
+  healthiar::include_cba(
+    output_healthiar = results_pm_copd,
+    approach_discount = "direct",
+    valuation = 50000,
+    cost = 100000000,
+    discount_shape = "exponential",
+    discount_rate_benefit = 0.03,
+    discount_rate_cost = 0.03,
+    discount_years_benefit = 5,
+    discount_years_cost = 5,
+    discount_overtime = "all_years"
+  )
+
+cba |> 
+  purrr::pluck("cba_main") |> 
+  select(benefit, cost, benefit_minus_cost) |> 
+  knitr::kable()
+
+```
+
+We see that the central and upper 95& confidence interval estimates of avoided attributable COPD cases result in a net monetary benefit of the policy, while the lower 95% confidence interval estimate results in a net cost!
+
+The outcome of the CBA is contained in two folders are added:
+
+-   `cba_main` contains the central estimate and the corresponding 95% confidence intervals obtained
+
+-   `cba_detailed` contains additional intermediate results for both cost and benefit
 
 ## Example: attribute cases of high annoyance to (road) noise exposure
 
