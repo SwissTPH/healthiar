@@ -101,7 +101,8 @@ pathways_rr <- pathways_rr %>%
   left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
-  select(-implemented.existing)
+  select(-implemented.existing) |> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
 ## Output short report
 cat("Number of pathways implemented as tests:", pathways_rr %>%
@@ -198,7 +199,8 @@ pathways_ar <- pathways_ar %>%
   left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
-  select(-implemented.existing)
+  select(-implemented.existing) |> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
 ## Output short report
 cat("Number of pathways implemented as tests:", pathways_ar %>%
@@ -318,7 +320,8 @@ pathways_cba <- pathways_cba %>%
   left_join(existing_tests, by = c("discount_appr", "discount_shape", "discount_overtime", "discount_rate_benefit", "discount_rate_cost"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
-  select(-implemented.existing)
+  select(-implemented.existing) |> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
 ## Output short report
 cat("Number of pathways implemented as tests:", pathways_cba %>%
@@ -408,7 +411,8 @@ pathways_monetization <- pathways_monetization %>%
   left_join(existing_tests, by = c("discount_appr", "discount_shape", "discount_overtime", "discount_rate"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
-  select(-implemented.existing)
+  select(-implemented.existing)|> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
 ## Output short report
 cat("Number of pathways implemented as tests:", pathways_monetization %>%
@@ -551,7 +555,8 @@ pathways_lifetable <- pathways_lifetable %>%
   left_join(existing_tests, by = c("exp", "exp_time", "newborns", "min_age", "max_age", "time_horizon", "iteration", "varuncer"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
-  select(-implemented.existing)
+  select(-implemented.existing)|> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
 ## Output short report
 cat("Number of pathways implemented as tests:", pathways_lifetable %>%
@@ -620,27 +625,94 @@ pathways_lifetable <- pathways_lifetable |>
 ```
 
 ```{r Pathways summary uncertainty}
-# TO BE DONE ####
-
-## Estimation number of core cases
-# ov_uncertainty <- list(
-#   exp = c("single", "dist"),
-#   erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
-#   iteration = c("TRUE", "FALSE")
-# )
 
 ov_uncertainty <- list(
   exp = c("single", "dist"),
   erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
   iteration = c("TRUE", "FALSE"),
-  distribution = c("normal", "beta", "other")
+  distribution = c("normal", "beta") # Maybe add "other" later if we implement new dist
 )
 
-pathways_uncertainty <- expand.grid(ov_uncertainty)
+pathways_uncertainty <- expand.grid(ov_uncertainty)|> 
+  tibble::as_tibble() |>
+  mutate_all(as.character)
+
+pathways_uncertainty <- pathways_uncertainty %>% # Important to use magrittr pipe
+  mutate(
+    pathway_id = purrr::pmap_chr(., function(...) {
+      vals <- list(...)
+      paste0("pathway_uncertainty|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+    })
+  )
+
+#* Define core pathways ########################################################
+
+core_uncertainty <- list(
+  exp = c("single", "dist"),
+  erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
+  iteration = c("TRUE", "FALSE"),
+  distribution = c("normal")
+)
+
+core_uncertainty <- expand.grid(core_uncertainty) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) |> 
+  mutate(core_pathway = "TRUE")
 
 pathways_uncertainty <- pathways_uncertainty |> 
-  as_tibble() |> 
-  dplyr::mutate(test_name = "NULL")
+  left_join(x = _, y = core_uncertainty, by = c("exp", "erf", "iteration", "distribution")) |> 
+  mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
+  mutate(implemented = "FALSE")
+
+# * Document existing pathways ####
+
+file_path <- "../healthiar/tests/testthat/test-include_summary_uncertainty.R"
+file_content <- readLines(file_path) # String vector where each element is all code from a line
+
+test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
+test_names_with_pw <- Filter(function(x) any(grepl("pathway_uncertainty\\|", x)), test_names)
+# test_names <- unlist(test_names)
+
+## Create an empty tibble with NA placeholders
+num_rows <- length(test_names_with_pw)
+existing_tests <- tibble(
+  exp = rep(NA_character_, num_rows),
+  erf = rep(NA_character_, num_rows),
+  iteration = rep(NA_character_, num_rows),
+  distribution = rep(NA_character_, num_rows),
+  implemented = rep("FALSE", num_rows)
+)
+
+## Extract values and assign them directly to the tibble
+for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
+
+  # Extract values for each column
+  existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "\\|exp_")], "(?<=\\|exp_)[^\\|]+")
+  existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "\\|erf_")], "(?<=\\|erf_)[^\\|]+")
+  existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
+  existing_tests$distribution[i] <- str_extract(strings[str_detect(strings, "\\|distribution_")], "(?<=\\|distribution_)[^\\|]+")
+  
+  existing_tests$implemented[i] <- "TRUE"
+}
+
+## Merge the pathways tibble and the existing_tests tibble
+pathways_uncertainty <- pathways_uncertainty %>%
+  left_join(existing_tests, by = c("exp", "erf", "iteration", "distribution"),
+            suffix = c("", ".existing")) %>%
+  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
+  select(-implemented.existing) |> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
+
+## Output short report
+cat("Number of pathways implemented as tests:", pathways_uncertainty %>%
+  filter(implemented == "TRUE") %>%
+  nrow(), "\n")
+cat("Total possible number of pathways:", nrow(pathways_uncertainty), "\n")
+cat("As percentage:", round(pathways_uncertainty %>%
+  filter(implemented == "TRUE") %>%
+  nrow()/nrow(pathways_uncertainty)*100, digits = 0), "%\n")
+
 ```
 
 
