@@ -659,6 +659,10 @@ print("Main estimates: ") ; bestcost_pm_copd_with_summary_uncertainty[["health_m
 ## With external uncertainty function (i.e. include_summary_uncertainty())
 print("Summary uncertainty estimates (extern uncertainty function): ")
 round(as.numeric(bestcost_pm_copd_extern_uncertainty[["uncertainty_main"]]), digits = 0)
+bestcost_pm_copd_extern_uncertainty |>
+    purrr::pluck("uncertainty_main") |>
+    base::as.numeric() |> 
+    round(digits = 0)
 # Results of internal Monte-Carlo summary uncertainty and extern Monte-Carlo summary uncertainty identical!
 ```
 
@@ -700,6 +704,8 @@ print("Summary uncertainty estimates (extern uncertainty function): ")
 round(as.numeric(bestcost_pm_copd_geo_short_uncertainty[["uncertainty_main"]]), digits = 0)
 # Results seem plausible
 ```
+
+
 
 ```{r Summary uncertainty rr & exposure distribution}
 

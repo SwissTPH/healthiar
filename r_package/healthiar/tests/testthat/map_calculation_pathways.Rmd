@@ -46,7 +46,7 @@ core_rr <- list(
   erf = c("log_lin", "point_pairs", "lin_lin"),
   exp = c("single", "dist"), # prop_pop_exp linked with this
   cutoff = c("TRUE", "FALSE"),
-  varuncer = c("TRUE", "FALSE"),
+  varuncer = c("FALSE"), # "TRUE" is a nice to have
   iteration = c("TRUE", "FALSE"),
   multiexp = c("FALSE")
 )
@@ -144,7 +144,7 @@ core_ar <- list(
   erf = c("formula", "point_pairs"),
   exp = c("dist"), # prop_pop_exp linked with this
   cutoff = c("FALSE"),
-  varuncer = c("TRUE", "FALSE"),
+  varuncer = c("FALSE"), # "TRUE" is a nice to have 
   iteration = c("TRUE", "FALSE"),
   multiexp = c("FALSE")
 )
@@ -254,7 +254,7 @@ core_cba_direct <- list(
   discount_rate_benefit = c("TRUE", "FALSE"),
   discount_rate_cost = c("TRUE", "FALSE"),
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("all_years", "last_year") # all_years is default ; only applicable if discount_appr is "direct" 
+  discount_overtime = c("all_years") # all_years is default ; only applicable if discount_appr is "direct" 
 )
 
 core_cba_indirect <- list(
@@ -360,7 +360,7 @@ pathways_monetization <- pathways_monetization %>% # Important to use magrittr p
 core_monetization <- list(
   discount_appr = c("direct", "indirect"), # direct is the default
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("all_years", "last_year"),
+  discount_overtime = c("all_years"), # "last_year" is a nice to have
   discount_rate = c("TRUE", "FALSE")
 )
 
@@ -425,43 +425,7 @@ cat("As percentage:", round(pathways_monetization %>%
 
 ```
 
-Both the functions include_cba and include_discount call the 
-function include_monetization in the background --> created only ov_monetization and ov_cba
-instead of creating an overview tibble for all 3 functions
-```{r OLD Pathways monetization}
 
-## Estimation number of core cases
-# ov_monetization <- list(
-#   discount_appr = c("direct", "indirect"), # direct is the default
-#   discount_rate = c("TRUE", "FALSE"),
-#   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-#   discount_overtime = c("all_years", "last_year") # all_years is default
-# )
-
-ov_monetization <- list(
-  discount_appr = c("direct", "indirect"), # direct is the default
-  discount_rate = c("TRUE", "FALSE"),
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("all_years", "last_year") # all_years is default
-)
-
-pathways_monetization <- expand.grid(ov_monetization)
-
-pathways_monetization <- pathways_monetization |> 
-  as_tibble() |> 
-  dplyr::mutate(test_name = "NULL") |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "direct" & discount_rate == "FALSE" & discount_shape == "FALSE" & discount_overtime == "all_years" ) ~
-      "results correct simple monetization", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "direct" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "last_year" ) ~
-      "results correct direct discounting with discount factor and exponential discount shape", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "indirect" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "all_years" ) ~
-      "results correct indirect discounting with exponential discount shape", TRUE ~ test_name))  
-  
-
-```
 
 ```{r Pathways lifetable}
 
@@ -497,7 +461,7 @@ core_lifetable <- list(
   max_age = c("TRUE"),
   time_horizon = c("FALSE"),
   iteration = c("TRUE", "FALSE"),
-  varuncer = c("TRUE", "FALSE")
+  varuncer = c("FALSE") # "TRUE" is a nice to have
 )
 
 core_lifetable <- expand.grid(core_lifetable) |> 
@@ -569,60 +533,7 @@ cat("As percentage:", round(pathways_lifetable %>%
 
 ```
 
-```{r OLD Pathways lifetable}
-## Estimation of core cases
-# ov_lifetable <- list(
-#   exp = c("single", "dist"), # prop_pop_exp linked with this
-#   exp_time = c("single_year", "constant"),
-#   newborns = c("TRUE", "FALSE"),
-#   # min_age = c("TRUE", "FALSE"),
-#   # max_age = c("TRUE", "FALSE"),
-#   # time_horizon = c("TRUE", "FALSE"),
-#   iteration = c("TRUE", "FALSE"),
-#   varuncer = c("TRUE", "FALSE")
-# )
 
-ov_lifetable <- list(
-  exp = c("single", "dist"), # prop_pop_exp linked with this
-  exp_time = c("single_year", "constant"),
-  newborns = c("TRUE", "FALSE"),
-  min_age = c("TRUE", "FALSE"),
-  max_age = c("TRUE", "FALSE"),
-  time_horizon = c("TRUE", "FALSE"),
-  iteration = c("TRUE", "FALSE"),
-  varuncer = c("TRUE", "FALSE")
-)
-
-pathways_lifetable <- expand.grid(ov_lifetable)
-
-pathways_lifetable <- pathways_lifetable |> 
-  as_tibble() |> 
-  dplyr::mutate(test_name = "NULL") |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable daly single exposure and one year exposure without newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "single" & exp_time == "single_year" & newborns == "TRUE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable premature deaths single year exposure with newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "dist" & exp_time == "constant" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable premature deaths exposure distribution with constant exposure and without newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable yld single exposure and one year exposure without newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable yll single exposure and one year exposure and without newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "single" & exp_time == "constant" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable yll single exposure and constant exposure and without newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "single" & exp_time == "constant" & newborns == "TRUE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable yll single exposure and constant exposure and with newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "dist" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable yll exposure distribution and one year exposure and without newborns", TRUE ~ test_name))
-```
 
 ```{r Pathways summary uncertainty}
 
@@ -717,8 +628,8 @@ cat("As percentage:", round(pathways_uncertainty %>%
 
 
 
-```{r Pathways non-lifetable compare}
-# TO BE DONE ####
+```{r Pathways non-lifetable compare, eval=FALSE, include=FALSE}
+# TO BE DONE? ####
 
 ## Estimation number of core cases
 # ov_rr_compare <- list(
@@ -800,8 +711,8 @@ pathways_rr_compare <- pathways_rr_compare |>
 ```
 
 
-```{r Pathways lifetable compare}
-# TO BE DONE ####
+```{r Pathways lifetable compare, eval=FALSE, include=FALSE}
+# TO BE DONE? ####
 
 ## Estimation number of core cases
 # ov_lifetable_compare <- list(
@@ -843,16 +754,93 @@ pathways_lifetable_compare <- pathways_lifetable_compare |>
   
 ```
 
-```{r Create Excel for teams folder}
+# Create Excel
+
+```{r Create Excel for Teams folder (only core pathways)}
 knitr::opts_knit$set(root.dir = getwd())
 
-pathways_rr<- pathways_rr |> 
+core_rr <- pathways_rr |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_) |> 
+  mutate(comment = NA_character_) |> 
+  filter(core_pathway == "TRUE") |> 
+  relocate(iteration, .after = cutoff) |> 
+  arrange(erf, desc(exp), desc(cutoff), desc(iteration))
+    
+core_ar <- pathways_ar |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_) |> 
+  filter(core_pathway == "TRUE") |> 
+  relocate(iteration, .after = exp) |> 
+  arrange(erf, desc(iteration))
+
+core_cba <- pathways_cba |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_) |> 
+  filter(core_pathway == "TRUE") |> 
+  arrange(discount_appr, desc(discount_rate_benefit), desc(discount_rate_cost), discount_shape, discount_overtime, )
+
+core_monetization <- pathways_monetization |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_) |> 
+  filter(core_pathway == "TRUE") |> 
+  arrange(discount_appr, desc(discount_rate), discount_shape, discount_overtime, )
+
+core_lifetable <- pathways_lifetable |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_) |> 
+  relocate(iteration, .after = max_age) |> 
+  filter(core_pathway == "TRUE") |> 
+  arrange(exp, desc(exp_time), desc(newborns), desc(min_age), max_age, iteration, varuncer)
+
+core_uncertainty <- pathways_uncertainty |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_) |> 
+  relocate(erf, .before = exp) |> 
+  filter(core_pathway == "TRUE") |> 
+  # factor(levels = c("rr_increment", "ar_formula", "rr_point_pairs", "ar_point_pairs", "rr_formula")) |> 
+  arrange(erf, exp, iteration, desc(distribution))
+
+core_list <- list(
+  core_rr,
+  core_ar,
+  core_cba,
+  core_monetization,
+  core_lifetable,
+  core_uncertainty
+)
+names(core_list) <- c("core_pathways_rr", "core_pathways_ar", "core_pathways_cba", "core_pathways_monetization", "core_pathways_lifetable", "core_pathways_uncertainty")
+
+hs <- openxlsx::createStyle(textDecoration = "bold") # hs = header style
+
+openxlsx::write.xlsx(core_list, "tests/pathways_overview_core.xlsx",
+                     headerStyle = hs,
+                     gridExpand = TRUE) # doesn't seem to have effect
+
+```
+
+```{r Create Excel with all pathways}
+knitr::opts_knit$set(root.dir = getwd())
+
+pathways_rr <- pathways_rr |> 
   mutate(institute = NA_character_) |> 
   mutate(name = NA_character_) |> 
   mutate(finished = "FALSE") |> 
   mutate(results_the_same = NA_character_)
 
-pathways_ar<- pathways_ar |> 
+pathways_ar <- pathways_ar |> 
   mutate(institute = NA_character_) |> 
   mutate(name = NA_character_) |> 
   mutate(finished = "FALSE") |> 
@@ -864,22 +852,48 @@ pathways_cba <- pathways_cba |>
   mutate(finished = "FALSE") |> 
   mutate(results_the_same = NA_character_)
 
+pathways_monetization <- pathways_monetization |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_)
+
+pathways_lifetable <- pathways_lifetable |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_)
+
+pathways_uncertainty <- pathways_uncertainty |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_)
+
 pathways_list <- list(
   pathways_rr,
   pathways_ar,
-  pathways_cba
+  pathways_cba,
+  pathways_monetization,
+  pathways_lifetable,
+  pathways_uncertainty
 )
-names(pathways_list) <- c("pathways_rr", "pathways_ar", "pathways_cba")
+names(pathways_list) <- c("pathways_rr", "pathways_ar", "pathways_cba", "pathways_monetization", "pathways_lifetable", "pathways_uncertainty")
 
 hs <- openxlsx::createStyle(textDecoration = "bold") # hs = header style
 
-openxlsx::write.xlsx(pathways_list, "tests/pathways_overview.xlsx",
+openxlsx::write.xlsx(pathways_list, "tests/pathways_overview_all.xlsx",
                      headerStyle = hs,
                      gridExpand = TRUE) # doesn't seem to have effect
 
 
 ```
 
+
+
+
+
+# VARIA
 
 ```{r Example, eval=FALSE, include=FALSE}
 library(DiagrammeR) ; library(data.tree)
@@ -1153,5 +1167,98 @@ pathways_rr_ar <- pathways_rr_ar |>
   dplyr::mutate(test_name = case_when(
     ( erf == "log_lin" & exp == "single" & cutoff == "FALSE" & iteration == "FALSE" &  multiexp == "combined" & varuncer == "FALSE" ) ~
       "results correct rr multiple exposure combined approach without cutoff", TRUE ~ test_name))
+
+```
+
+```{r OLD Pathways lifetable, eval=FALSE, include=FALSE}
+## Estimation of core cases
+# ov_lifetable <- list(
+#   exp = c("single", "dist"), # prop_pop_exp linked with this
+#   exp_time = c("single_year", "constant"),
+#   newborns = c("TRUE", "FALSE"),
+#   # min_age = c("TRUE", "FALSE"),
+#   # max_age = c("TRUE", "FALSE"),
+#   # time_horizon = c("TRUE", "FALSE"),
+#   iteration = c("TRUE", "FALSE"),
+#   varuncer = c("TRUE", "FALSE")
+# )
+
+ov_lifetable <- list(
+  exp = c("single", "dist"), # prop_pop_exp linked with this
+  exp_time = c("single_year", "constant"),
+  newborns = c("TRUE", "FALSE"),
+  min_age = c("TRUE", "FALSE"),
+  max_age = c("TRUE", "FALSE"),
+  time_horizon = c("TRUE", "FALSE"),
+  iteration = c("TRUE", "FALSE"),
+  varuncer = c("TRUE", "FALSE")
+)
+
+pathways_lifetable <- expand.grid(ov_lifetable)
+
+pathways_lifetable <- pathways_lifetable |> 
+  as_tibble() |> 
+  dplyr::mutate(test_name = "NULL") |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable daly single exposure and one year exposure without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "single" & exp_time == "single_year" & newborns == "TRUE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable premature deaths single year exposure with newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "dist" & exp_time == "constant" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable premature deaths exposure distribution with constant exposure and without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable yld single exposure and one year exposure without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable yll single exposure and one year exposure and without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "single" & exp_time == "constant" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable yll single exposure and constant exposure and without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "single" & exp_time == "constant" & newborns == "TRUE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable yll single exposure and constant exposure and with newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "dist" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable yll exposure distribution and one year exposure and without newborns", TRUE ~ test_name))
+```
+
+Both the functions include_cba and include_discount call the 
+function include_monetization in the background --> created only ov_monetization and ov_cba
+instead of creating an overview tibble for all 3 functions
+```{r OLD Pathways monetization, eval=FALSE, include=FALSE}
+
+## Estimation number of core cases
+# ov_monetization <- list(
+#   discount_appr = c("direct", "indirect"), # direct is the default
+#   discount_rate = c("TRUE", "FALSE"),
+#   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+#   discount_overtime = c("all_years", "last_year") # all_years is default
+# )
+
+ov_monetization <- list(
+  discount_appr = c("direct", "indirect"), # direct is the default
+  discount_rate = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("all_years", "last_year") # all_years is default
+)
+
+pathways_monetization <- expand.grid(ov_monetization)
+
+pathways_monetization <- pathways_monetization |> 
+  as_tibble() |> 
+  dplyr::mutate(test_name = "NULL") |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "direct" & discount_rate == "FALSE" & discount_shape == "FALSE" & discount_overtime == "all_years" ) ~
+      "results correct simple monetization", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "direct" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "last_year" ) ~
+      "results correct direct discounting with discount factor and exponential discount shape", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "indirect" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "all_years" ) ~
+      "results correct indirect discounting with exponential discount shape", TRUE ~ test_name))  
+  
 
 ```

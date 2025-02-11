@@ -65,7 +65,7 @@ You want to make sure the results for the following calculation pathway are corr
 
 -   No multiexposure
 
-So you claim this pathway by filling in your institution abbreviation and your name in the Excel [*pathways_overview*](https://ugentbe.sharepoint.com/:x:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions/pathways_overview.xlsx?d=w2da74c6a6e0146a5ba025ee050702838&csf=1&web=1&e=SkltuU) in the corresponding row.
+So you claim this pathway by filling in your institution abbreviation and your name in the corresponding row of the Excel *pathways_overview_core.xlsx*, which is located on Teams under [Documents\>WP4 PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk).
 
 In this case, it's the row with the `pathway_id` *pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|multiexp_FALSE\|*.
 
