@@ -19,9 +19,9 @@
 #' If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.
 #' @param bhd_central,bhd_lower,bhd_upper \code{Numeric value(s)} providing the basline (incidence) level of the health outcome in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.
 #' @param dw_central,dw_lower,dw_upper \code{Numeric value(s)} providing the disability weight associated with the morbidity health outcome and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.
-#' @param duration_central,duration_lower,duration_upper \code{Numeric value(s)} providing the disease duration and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval.
+#' @param duration_central,duration_lower,duration_upper \code{Numeric value(s)} providing the disease duration in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval (default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).
 #' @param geo_id_disaggregated \code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
-#' If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \exp{exp_...}) has to be provided as a list.
+#' If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.
 #' @param geo_id_aggregated \code{Numeric vector} an ID for each geographic area that specifies which geographic areas should be aggregated together.
 #' E.g. if you provide the municipality names to \code{geo_id_disaggregated}, you might provide here the corresponding region / canton / province.
 #' Consequently The vector has to have the same length as the one fed to \code{geo_id_disaggregated}.
@@ -42,14 +42,14 @@
 #' @param max_age \code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.
 #' @param health_outcome \code{String} specifying the (input and) outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".
 #' @return
-#' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
-#' concentration-response function (i.e. central, lower and upper bound confidence interval.
-#' Moreover, the data frame includes columns such as:
+#' This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
+#' 2) \code{health_detailed}, which contains detailed (and interim) results.
+#' The result tibbles include columns such as:
 #' \itemize{
-#'  \item pop_fraction (population attributable fraction)
+#'  \item pop_fraction (population attributable fraction; only for assessments using relative risk)
 #'  \item impact (health impact)
 #'  \item And many more.
-#' }
+#'  }
 #'
 #' @author Alberto Castro
 #' @export

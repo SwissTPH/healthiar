@@ -43,21 +43,9 @@
 #'   population = NULL,
 #'   info = NULL
 #')
-#'
-#' @return
-#' This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
-#' 2) \code{health_detailed}, which contains detailed (and interim) results.
-#' The result tibbles include columns such as:
-#' \itemize{
-#'  \item pop_fraction (population attributable fraction)
-#'  \item impact (health impact)
-#'  \item And many more.
-#' }
 
+#' @inherit attribute return
 #' @inheritParams attribute
-# @param cutoff_central,cutoff_lower,cutoff,upper \code{Numeric value} showing the central exposure cut-off in ug/m3 and (optionally) the lower and upper bounds of the 95\% confidence interval. The cut-off level refers to the exposure level below which no health effects occur.
-#' @import dplyr
-#' @import purrr
 #' @examples
 #' TBD
 #' @author Alberto Castro

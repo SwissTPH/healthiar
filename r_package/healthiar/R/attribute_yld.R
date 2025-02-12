@@ -5,22 +5,12 @@
 #' Then this disease burden is then expressed in YLDs, using associated disability weight and duration.
 #' @description
 #' For calculation of YLDs using life tables use \code{attribute_yld_from_lifetable}.
+#' @description
 #' Assumption: cases happen at the start of the year.
-
-#' @return
-#' This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
-#' 2) \code{health_detailed}, which contains detailed (and interim) results.
-#' The result tibbles include columns such as:
-#' \itemize{
-#'  \item pop_fraction (population attributable fraction)
-#'  \item impact (health impact)
-#'  \item And many more.
-#'  }
 #' @examples
 #' To be added
 #' @inheritParams attribute
-#' @import dplyr
-#' @import purrr
+#' @inherit attribute return
 
 #' @author Axel Luyten
 #' @note Experimental function
