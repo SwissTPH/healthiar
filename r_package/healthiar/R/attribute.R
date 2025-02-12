@@ -2,7 +2,7 @@
 
 #' @description
 #' Calculates the health impacts, mortality or morbidity, of an environmental stressor using a single value for baseline heath data, i.e. without life table.
-#' It provides as a result the mean as well as the lower and the higher bound of the impact based on the confidence interval of the concentration-response function.
+#' @details It provides as a result the mean as well as the lower and the higher bound of the impact based on the confidence interval of the concentration-response function.
 #' @param approach_risk \code{String} specifying the risk risk method. Options: "relative_risk" (default) or "absolute_risk".
 #' @param erf_shape \code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".
 #' @param rr_central,rr_lower,rr_upper \code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.

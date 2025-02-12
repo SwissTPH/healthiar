@@ -2,7 +2,7 @@
 
 #' @description This function calculates the health impacts (mortality or morbidity)
 #' of exposure to an environmental stressor (air pollution or noise), using either relative or absolute risk.
-#' @description
+#' @details
 #' The health metric inputted and outputted are the same, e.g. if the baseline health data are mortalities then the result will be mortalities as well. Analogeously for disease cases, DALYs, etc.
 
 #' @usage
