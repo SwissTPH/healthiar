@@ -22,3 +22,10 @@ runif_with_seed <-
     output <- runif(n, min, max)
   }
 
+helper_extract_main_uncertainty_results <- function(x){
+  y <- x |>
+    purrr::pluck("uncertainty_main") |>
+    base::as.numeric() |>
+    round(digits = 0)
+}
+

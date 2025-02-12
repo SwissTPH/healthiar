@@ -2,11 +2,18 @@
 % Please edit documentation in R/attribute_yld.R
 \name{attribute_yld}
 \alias{attribute_yld}
-\title{Determine years lived with disability (YLD) attributable to the incidence of a specific morbidity health outcome}
+\title{Attribute years lived with disability (YLD) from a specific morbidity health outcome that is due to an environmental stressor}
 \usage{
 attribute_yld(
   approach_risk = "relative_risk",
-  approach_multiexposure = NULL,
+  erf_shape = NULL,
+  rr_central = NULL,
+  rr_lower = NULL,
+  rr_upper = NULL,
+  rr_increment = NULL,
+  erf_eq_central = NULL,
+  erf_eq_lower = NULL,
+  erf_eq_upper = NULL,
   exp_central,
   exp_lower = NULL,
   exp_upper = NULL,
@@ -14,71 +21,88 @@ attribute_yld(
   cutoff_central = NULL,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
-  rr_central = NULL,
-  rr_lower = NULL,
-  rr_upper = NULL,
-  rr_increment,
-  erf_shape = NULL,
-  erf_eq_central = NULL,
-  erf_eq_lower = NULL,
-  erf_eq_upper = NULL,
   bhd_central = NULL,
   bhd_lower = NULL,
   bhd_upper = NULL,
-  population = NULL,
   dw_central,
   dw_lower = NULL,
   dw_upper = NULL,
   duration_central,
   duration_lower = NULL,
   duration_upper = NULL,
+  geo_id_disaggregated = NULL,
+  geo_id_aggregated = NULL,
+  approach_multiexposure = NULL,
+  population = NULL,
   info = NULL
 )
 }
 \arguments{
-\item{approach_risk}{\code{String} showing the risk risk method. To choose between: "relative_risk" (default) or "absolute_risk".}
+\item{approach_risk}{\code{String} specifying the risk risk method. Options: "relative_risk" (default) or "absolute_risk".}
 
-\item{approach_multiexposure}{\code{String} showing the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined".}
+\item{erf_shape}{\code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".}
 
-\item{exp_central, exp_lower, exp_upper}{\code{Numeric values} of the exposure to the environmental stressor referring to the central estimate and (optionally) to lower and upper bound of the 95\% confidence interval. If only one value is provided, it will be assumed that it refers to population-weighted mean exposure in ug/m3. If a {vector} is provided, it will be assumed that it refers to the exposure categories (average exposure in the category) in a exposure distribution (this information is linked to the proportion of population exposed).}
+\item{rr_central, rr_lower, rr_upper}{\code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.}
 
-\item{prop_pop_exp}{\code{Numeric value} or {Numeric vector} Fraction (values between 0 & 1) of the total population exposed to (one or more) exposure categories, i.e., a exposure distribution, respectively. If a exposure distribution is used, the dimension of this input variable should be the same as "exp". By default, 1 for single exposure value will be assigned to this input variable assuming a single exposure value, but users can change this value.}
+\item{rr_increment}{\code{Numeric value} specifying the increment of the exposure-response function in \eqn{µg/m^3} (usually 10 or 5 \eqn{µg/m^3}).}
 
-\item{rr_central, rr_lower, rr_upper}{\code{Numeric values} referring to the central estimate of the relative risk and the corresponding lower and upper 95\% confidence interval bounds.}
+\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the equation of the user-defined exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions.
+If a \code{string} is entered, the function must contains only one variable: x (exposure), e.g. "3+x+x^2".
+If a \code{function} is fed to the argument, it has be of the class function class, e.g. output from the functions \code{stats::splinefun()} or \code{stats::approxfun()}.
+If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use a cubic spline natural interpolation to derive the exposure-response function using, e.g. \code{stats::splinefun(x, y, method="natural")}.}
 
-\item{rr_increment}{\code{Numeric value} showing the increment of the exposure-response function in ug/m3 (usually 10 or 5).}
+\item{exp_central, exp_lower, exp_upper}{\code{Numeric value(s)} specifying the exposure level(s) to the environmental stressor and (optionally) to lower and upper bound of the 95\% confidence interval. If only one value is provided, it will be assumed that it refers to population-weighted mean exposure in \eqn{µg/m^3}. If a {vector} is provided, it will be assumed that it refers to the exposure categories (average exposure in the category) in a exposure distribution (this information is linked to the proportion of population exposed).}
 
-\item{erf_shape}{\code{String} showing the shape of the exposure-response function to be assumed using the relative risk from the literature as support point. Options: "linear", log_linear", "linear_log", "log_log".}
+\item{prop_pop_exp}{\code{Numeric value} or \code{Numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to each exposure categories.
+If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.}
 
-\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} referring to the equation of the user-defined exposure-response function. If a \code{string} is entered, the function must contains only one variable: x (exposure). E.g. "3+x+x^2". If a \code{function} is entered, it has to have a function class. If only the values of the x-axis (exposure) and y axis (relative risk) of the dots in the exposure-response function are available, a cubic spline natural interpolation can be assumed to get the function using, e.g., \code{stats::splinefun(x, y, method="natural")}}
+\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} showing the central exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
+The cutoff level refers to the exposure level below which no health effects occur.}
 
-\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} showing the central estimate and (optionally) the lower bound and the upper bound of the confidence interval of the baseline health data (e.g. incidence of the health outcome in the population).}
+\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value(s)} providing the basline (incidence) level of the health outcome in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
 
-\item{population}{code{Vector} with numeric values referring to the population in the geographical unit}
+\item{dw_central, dw_lower, dw_upper}{\code{Numeric value(s)} providing the disability weight associated with the morbidity health outcome and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
 
-\item{dw_central, dw_lower, dw_upper}{\code{Numeric value} showing the disability weights (central estimate, lower and upper 95\% confidence intervals) associated with the morbidity health outcome}
+\item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval (default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).}
 
-\item{duration_central, duration_lower, duration_upper}{\code{Numeric value} showing the central estimate of the disease duration and (optionally) the lower and upper bounds of the 95\% confidence interval.}
+\item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
+If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
 
-\item{info}{\code{String} or {data frame} showing additional information or id. The suffix "info" will be added to the column name. Default value = NULL.}
+\item{geo_id_aggregated}{\code{Numeric vector} an ID for each geographic area that specifies which geographic areas should be aggregated together.
+E.g. if you provide the municipality names to \code{geo_id_disaggregated}, you might provide here the corresponding region / canton / province.
+Consequently The vector has to have the same length as the one fed to \code{geo_id_disaggregated}.}
+
+\item{approach_multiexposure}{\code{String} specifying the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined". Default: \code{NULL} (i.e. no other exposure is considered besides the one specified in the \code{exp.._ argument(s)})}
+
+\item{population}{code{Vector} providing the population (in each geographical unit).}
+
+\item{info}{\code{String} or {data.frame} providing additional information linked with the assessment.
+The suffix "info" will be added to the column name.
+Default value = \code{NULL}.}
 }
 \value{
-This function returns a \code{data.frame} with one row for each value of the
-concentration-response function (i.e. central estimate, lower and upper bound confidence interval.
-The YLDs are listed in the columns:
+This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
+2) \code{health_detailed}, which contains detailed (and interim) results.
+The result tibbles include columns such as:
 \itemize{
- \item yld
- \item yld_rounded
+ \item pop_fraction (population attributable fraction; only for assessments using relative risk)
+ \item impact (health impact)
+ \item And many more.
  }
 }
 \description{
-Calculates the YLDs using a single value for baseline heath data, i.e. without life table. It provides as a result the mean as well as the lower and the higher bounds of the morbidity impact based on the confidence interval of the exposure-response function. Assumption: cases happen at the start of the year.
+This function first attributes disease cases of a specific morbidity health outcome to an environmental exposure.
+Then this disease burden is then expressed in YLDs, using associated disability weight and duration.
+
+For calculation of YLDs using life tables use \code{attribute_yld_from_lifetable}.
+
+Assumption: cases happen at the start of the year.
 }
 \note{
 Experimental function
 }
 \examples{
-TBD
+To be added
 }
 \author{
 Axel Luyten

@@ -46,7 +46,7 @@ core_rr <- list(
   erf = c("log_lin", "point_pairs", "lin_lin"),
   exp = c("single", "dist"), # prop_pop_exp linked with this
   cutoff = c("TRUE", "FALSE"),
-  varuncer = c("TRUE", "FALSE"),
+  varuncer = c("FALSE"), # "TRUE" is a nice to have
   iteration = c("TRUE", "FALSE"),
   multiexp = c("FALSE")
 )
@@ -101,7 +101,8 @@ pathways_rr <- pathways_rr %>%
   left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
-  select(-implemented.existing)
+  select(-implemented.existing) |> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
 ## Output short report
 cat("Number of pathways implemented as tests:", pathways_rr %>%
@@ -143,7 +144,7 @@ core_ar <- list(
   erf = c("formula", "point_pairs"),
   exp = c("dist"), # prop_pop_exp linked with this
   cutoff = c("FALSE"),
-  varuncer = c("TRUE", "FALSE"),
+  varuncer = c("FALSE"), # "TRUE" is a nice to have 
   iteration = c("TRUE", "FALSE"),
   multiexp = c("FALSE")
 )
@@ -198,7 +199,8 @@ pathways_ar <- pathways_ar %>%
   left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
-  select(-implemented.existing)
+  select(-implemented.existing) |> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
 ## Output short report
 cat("Number of pathways implemented as tests:", pathways_ar %>%
@@ -210,74 +212,24 @@ cat("As percentage:", round(pathways_ar %>%
   nrow()/nrow(pathways_ar)*100, digits = 0), "%\n")
 
 ```
-```{r test extraction of all relevant test names}
-
-file_path <- "../healthiar/tests/testthat/test-attribute_health.R"
-file_content <- readLines(file_path) # String vector where each element is all code from a line
-
-
-test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
-test_names_with_pw <- Filter(function(x) any(grepl("pw_", x)), test_names)
-# test_names <- unlist(test_names)
-
-
-## Create an empty tibble with NA placeholders
-num_rows <- length(test_names_with_pw)
-existing_tests <- tibble(
-  erf = rep(NA_character_, num_rows),
-  exp = rep(NA_character_, num_rows),
-  cutoff = rep(NA_character_, num_rows),
-  iteration = rep(NA_character_, num_rows),
-  multiexp = rep(NA_character_, num_rows),
-  varuncer = rep(NA_character_, num_rows),
-  implemented = rep(FALSE, num_rows)
-)
-
-## Extract values and assign them directly to the tibble
-for (i in seq_along(test_names_with_pw)) {
-  strings <- test_names_with_pw[[i]] # Current list item
-
-  # Extract values for each column
-  existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "pw_exp_")], "(?<=pw_exp_)[^ ]+")
-  existing_tests$cutoff[i] <- str_extract(strings[str_detect(strings, "pw_cutoff_")], "(?<=pw_cutoff_)[^ ]+")
-  existing_tests$varuncer[i] <- str_extract(strings[str_detect(strings, "pw_varuncer_")], "(?<=pw_varuncer_)[^ ]+")
-  existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "pw_erf_")], "(?<=pw_erf_)[^ ]+")
-  existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "pw_iteration_")], "(?<=pw_iteration_)[^ ]+")
-  existing_tests$multiexp[i] <- str_extract(strings[str_detect(strings, "pw_multiexp_")], "(?<=pw_multiexp_)[^ )]+")
-  existing_tests$implemented[i] <- TRUE
-
-}
-
-result <- pathways_rr_ar %>%
-  left_join(existing_tests, by = c("erf", "exp", "cutoff", "iteration", "multiexp", "varuncer"),
-            suffix = c("", ".existing")) %>%
-  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
-  select(-implemented.existing)
-
-# ## Check that nrow matches
-# nrow(result) == nrow(pathways_rr_ar)
-# ## In case comparison is FALSE, find out which rows are duplicated
-# extra_rows <- result %>%
-#   anti_join(pathways_rr_ar, by = c("erf", "exp", "cutoff", "iteration", "multiexp", "varuncer"))
 
 
 ```{r Pathways cba}
 
 pathways_cba_direct <- list(
   discount_appr = c("direct"), # direct is the default
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("all_years", "last_year"), # all_years is default ; only applicable if discount_appr is "direct" 
   discount_rate_benefit = c("TRUE", "FALSE"),
-  discount_rate_cost = c("TRUE", "FALSE")
-
+  discount_rate_cost = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("all_years", "last_year") # all_years is default ; only applicable if discount_appr is "direct" 
 )
 
 pathways_cba_indirect <- list(
   discount_appr = c("indirect"), # direct is the default
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("NA"), # all_years is default ; only applicable if discount_appr is "direct" 
   discount_rate_benefit = c("TRUE", "FALSE"),
-  discount_rate_cost = c("TRUE", "FALSE")
+  discount_rate_cost = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("NA") # all_years is default ; only applicable if discount_appr is "direct" 
 )
 
 pathways_cba_direct <- expand.grid(pathways_cba_direct) |>
@@ -299,18 +251,18 @@ pathways_cba <- rbind(pathways_cba_direct, pathways_cba_indirect) %>% # Importan
 #* Define core pathways ########################################################
 core_cba_direct <- list(
   discount_appr = c("direct"), # direct is the default
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("all_years", "last_year"), # all_years is default ; only applicable if discount_appr is "direct" 
   discount_rate_benefit = c("TRUE", "FALSE"),
-  discount_rate_cost = c("TRUE", "FALSE")
+  discount_rate_cost = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("all_years") # all_years is default ; only applicable if discount_appr is "direct" 
 )
 
 core_cba_indirect <- list(
   discount_appr = c("indirect"), # direct is the default
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("NA"), # all_years is default ; only applicable if discount_appr is "direct" 
   discount_rate_benefit = c("TRUE", "FALSE"),
-  discount_rate_cost = c("TRUE", "FALSE")
+  discount_rate_cost = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("NA") # all_years is default ; only applicable if discount_appr is "direct" 
 )
 
 core_cba_direct <- expand.grid(core_cba_direct) |> 
@@ -342,10 +294,10 @@ test_names_with_pw <- Filter(function(x) any(grepl("pathway_cba\\|", x)), test_n
 num_rows <- length(test_names_with_pw)
 existing_tests <- tibble(
   discount_appr = rep(NA_character_, num_rows),
-  discount_shape = rep(NA_character_, num_rows),
-  discount_overtime = rep(NA_character_, num_rows),
   discount_rate_benefit = rep(NA_character_, num_rows),
   discount_rate_cost = rep(NA_character_, num_rows),
+  discount_shape = rep(NA_character_, num_rows),
+  discount_overtime = rep(NA_character_, num_rows),
   implemented = rep("FALSE", num_rows)
 )
 
@@ -355,10 +307,11 @@ for (i in seq_along(test_names_with_pw)) {
 
   # Extract values for each column
   existing_tests$discount_appr[i] <- str_extract(strings[str_detect(strings, "\\|discount_appr_")], "(?<=\\|discount_appr_)[^\\|]+")
-  existing_tests$discount_shape[i] <- str_extract(strings[str_detect(strings, "\\|discount_shape_")], "(?<=\\|discount_shape_)[^\\|]+")
-  existing_tests$discount_overtime[i] <- str_extract(strings[str_detect(strings, "\\|discount_overtime_")], "(?<=\\|discount_overtime_)[^\\|]+")
   existing_tests$discount_rate_benefit[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_benefit_")], "(?<=\\|discount_rate_benefit_)[^\\|]+")
   existing_tests$discount_rate_cost[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_cost_")], "(?<=\\|discount_rate_cost_)[^\\|]+")
+  existing_tests$discount_shape[i] <- str_extract(strings[str_detect(strings, "\\|discount_shape_")], "(?<=\\|discount_shape_)[^\\|]+")
+  existing_tests$discount_overtime[i] <- str_extract(strings[str_detect(strings, "\\|discount_overtime_")], "(?<=\\|discount_overtime_)[^\\|]+")
+  
   existing_tests$implemented[i] <- "TRUE"
 }
 
@@ -367,7 +320,8 @@ pathways_cba <- pathways_cba %>%
   left_join(existing_tests, by = c("discount_appr", "discount_shape", "discount_overtime", "discount_rate_benefit", "discount_rate_cost"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
-  select(-implemented.existing)
+  select(-implemented.existing) |> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
 ## Output short report
 cat("Number of pathways implemented as tests:", pathways_cba %>%
@@ -382,15 +336,6 @@ cat("As percentage:", round(pathways_cba %>%
 ```
 
 ```{r Pathways monetization}
-# TO BE DONE ####
-
-## Estimation number of core cases
-# ov_monetization <- list(
-#   discount_appr = c("direct", "indirect"), # direct is the default
-#   discount_rate = c("TRUE", "FALSE"),
-#   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-#   discount_overtime = c("all_years", "last_year") # all_years is default
-# )
 
 ov_monetization <- list(
   discount_appr = c("direct", "indirect"), # direct is the default
@@ -399,77 +344,91 @@ ov_monetization <- list(
   discount_overtime = c("all_years", "last_year") # all_years is default
 )
 
-pathways_monetization <- expand.grid(ov_monetization)
+pathways_monetization <- expand.grid(ov_monetization) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character)
 
-pathways_monetization <- pathways_monetization |> 
-  as_tibble() |> 
-  dplyr::mutate(test_name = "NULL") |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "direct" & discount_rate == "FALSE" & discount_shape == "FALSE" & discount_overtime == "all_years" ) ~
-      "results correct simple monetization", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "direct" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "last_year" ) ~
-      "results correct direct discounting with discount factor and exponential discount shape", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "indirect" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "all_years" ) ~
-      "results correct indirect discounting with exponential discount shape", TRUE ~ test_name))  
-  
-```
+pathways_monetization <- pathways_monetization %>% # Important to use magrittr pipe
+  mutate(
+    pathway_id = purrr::pmap_chr(., function(...) {
+      vals <- list(...)
+      paste0("pathway_monetization|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+    })
+  ) 
 
-Both the functions include_cba and include_discount call the 
-function include_monetization in the background --> created only ov_monetization 
-instead of creating an overview tibble for all 3 functions
-```{r OLD Pathways monetization}
-
-## Estimation number of core cases
-# ov_monetization <- list(
-#   discount_appr = c("direct", "indirect"), # direct is the default
-#   discount_rate = c("TRUE", "FALSE"),
-#   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-#   discount_overtime = c("all_years", "last_year") # all_years is default
-# )
-
-ov_monetization <- list(
+#* Define core pathways ########################################################
+core_monetization <- list(
   discount_appr = c("direct", "indirect"), # direct is the default
-  discount_rate = c("TRUE", "FALSE"),
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_overtime = c("all_years", "last_year") # all_years is default
+  discount_overtime = c("all_years"), # "last_year" is a nice to have
+  discount_rate = c("TRUE", "FALSE")
 )
 
-pathways_monetization <- expand.grid(ov_monetization)
+core_monetization <- expand.grid(core_monetization) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) |> 
+  mutate(core_pathway = "TRUE")
 
 pathways_monetization <- pathways_monetization |> 
-  as_tibble() |> 
-  dplyr::mutate(test_name = "NULL") |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "direct" & discount_rate == "FALSE" & discount_shape == "FALSE" & discount_overtime == "all_years" ) ~
-      "results correct simple monetization", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "direct" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "last_year" ) ~
-      "results correct direct discounting with discount factor and exponential discount shape", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( discount_appr == "indirect" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "all_years" ) ~
-      "results correct indirect discounting with exponential discount shape", TRUE ~ test_name))  
+  left_join(x = _, y = core_monetization, by = c("discount_appr", "discount_shape", "discount_overtime", "discount_rate")) |> 
+  mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
+  mutate(implemented = "FALSE")
+
+# * Document existing pathways ####
+
+file_path <- "../healthiar/tests/testthat/test-include_monetization.R"
+file_content <- readLines(file_path) # String vector where each element is all code from a line
+
+test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
+test_names_with_pw <- Filter(function(x) any(grepl("pathway_monetization\\|", x)), test_names)
+# test_names <- unlist(test_names)
+
+## Create an empty tibble with NA placeholders
+num_rows <- length(test_names_with_pw)
+existing_tests <- tibble(
+  discount_appr = rep(NA_character_, num_rows),
+  discount_rate = rep(NA_character_, num_rows),
+  discount_shape = rep(NA_character_, num_rows),
+  discount_overtime = rep(NA_character_, num_rows),
+  implemented = rep("FALSE", num_rows)
+)
+
+## Extract values and assign them directly to the tibble
+for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
+
+  # Extract values for each column
+  existing_tests$discount_appr[i] <- str_extract(strings[str_detect(strings, "\\|discount_appr_")], "(?<=\\|discount_appr_)[^\\|]+")
+  existing_tests$discount_rate[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_")], "(?<=\\|discount_rate_)[^\\|]+")
+  existing_tests$discount_shape[i] <- str_extract(strings[str_detect(strings, "\\|discount_shape_")], "(?<=\\|discount_shape_)[^\\|]+")
+  existing_tests$discount_overtime[i] <- str_extract(strings[str_detect(strings, "\\|discount_overtime_")], "(?<=\\|discount_overtime_)[^\\|]+")
   
+  existing_tests$implemented[i] <- "TRUE"
+}
+
+## Merge the pathways tibble and the existing_tests tibble
+pathways_monetization <- pathways_monetization %>%
+  left_join(existing_tests, by = c("discount_appr", "discount_shape", "discount_overtime", "discount_rate"),
+            suffix = c("", ".existing")) %>%
+  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
+  select(-implemented.existing)|> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
+
+## Output short report
+cat("Number of pathways implemented as tests:", pathways_monetization %>%
+  filter(implemented == "TRUE") %>%
+  nrow(), "\n")
+cat("Total possible number of pathways:", nrow(pathways_monetization), "\n")
+cat("As percentage:", round(pathways_monetization %>%
+  filter(implemented == "TRUE") %>%
+  nrow()/nrow(pathways_monetization)*100, digits = 0), "%\n")
 
 ```
+
+
 
 ```{r Pathways lifetable}
 
-# TO BE DONE ####
-
-## Estimation of core cases
-# ov_lifetable <- list(
-#   exp = c("single", "dist"), # prop_pop_exp linked with this
-#   exp_time = c("single_year", "constant"),
-#   newborns = c("TRUE", "FALSE"),
-#   # min_age = c("TRUE", "FALSE"),
-#   # max_age = c("TRUE", "FALSE"),
-#   # time_horizon = c("TRUE", "FALSE"),
-#   iteration = c("TRUE", "FALSE"),
-#   varuncer = c("TRUE", "FALSE")
-# )
-
 ov_lifetable <- list(
   exp = c("single", "dist"), # prop_pop_exp linked with this
   exp_time = c("single_year", "constant"),
@@ -481,92 +440,196 @@ ov_lifetable <- list(
   varuncer = c("TRUE", "FALSE")
 )
 
-pathways_lifetable <- expand.grid(ov_lifetable)
-```
+pathways_lifetable <- expand.grid(ov_lifetable) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character)
 
-```{r OLD Pathways lifetable}
-## Estimation of core cases
-# ov_lifetable <- list(
-#   exp = c("single", "dist"), # prop_pop_exp linked with this
-#   exp_time = c("single_year", "constant"),
-#   newborns = c("TRUE", "FALSE"),
-#   # min_age = c("TRUE", "FALSE"),
-#   # max_age = c("TRUE", "FALSE"),
-#   # time_horizon = c("TRUE", "FALSE"),
-#   iteration = c("TRUE", "FALSE"),
-#   varuncer = c("TRUE", "FALSE")
-# )
+pathways_lifetable <- pathways_lifetable %>% # Important to use magrittr pipe
+  mutate(
+    pathway_id = purrr::pmap_chr(., function(...) {
+      vals <- list(...)
+      paste0("pathway_lifetable|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+    })
+  )
 
-ov_lifetable <- list(
-  exp = c("single", "dist"), # prop_pop_exp linked with this
+#* Define core pathways ########################################################
+core_lifetable <- list(
+  exp = c("single", "dist"),
   exp_time = c("single_year", "constant"),
   newborns = c("TRUE", "FALSE"),
-  min_age = c("TRUE", "FALSE"),
-  max_age = c("TRUE", "FALSE"),
-  time_horizon = c("TRUE", "FALSE"),
+  min_age = c("TRUE"),
+  max_age = c("TRUE"),
+  time_horizon = c("FALSE"),
   iteration = c("TRUE", "FALSE"),
-  varuncer = c("TRUE", "FALSE")
+  varuncer = c("FALSE") # "TRUE" is a nice to have
 )
 
-pathways_lifetable <- expand.grid(ov_lifetable)
+core_lifetable <- expand.grid(core_lifetable) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) |> 
+  mutate(core_pathway = "TRUE")
 
 pathways_lifetable <- pathways_lifetable |> 
-  as_tibble() |> 
-  dplyr::mutate(test_name = "NULL") |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable daly single exposure and one year exposure without newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "single" & exp_time == "single_year" & newborns == "TRUE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable premature deaths single year exposure with newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "dist" & exp_time == "constant" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable premature deaths exposure distribution with constant exposure and without newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable yld single exposure and one year exposure without newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable yll single exposure and one year exposure and without newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "single" & exp_time == "constant" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable yll single exposure and constant exposure and without newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "single" & exp_time == "constant" & newborns == "TRUE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable yll single exposure and constant exposure and with newborns", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( exp == "dist" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
-      "results correct lifetable yll exposure distribution and one year exposure and without newborns", TRUE ~ test_name))
+  left_join(x = _, y = core_lifetable, by = c("exp", "exp_time", "newborns", "min_age", "max_age", "time_horizon", "iteration", "varuncer")) |> 
+  mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
+  mutate(implemented = "FALSE")
+
+# * Document existing pathways ####
+
+file_path <- "../healthiar/tests/testthat/test-attribute_yll_from_lifetable.R"
+file_content <- readLines(file_path) # String vector where each element is all code from a line
+
+test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
+test_names_with_pw <- Filter(function(x) any(grepl("pathway_lifetable\\|", x)), test_names)
+# test_names <- unlist(test_names)
+
+## Create an empty tibble with NA placeholders
+num_rows <- length(test_names_with_pw)
+existing_tests <- tibble(
+  exp = rep(NA_character_, num_rows),
+  exp_time = rep(NA_character_, num_rows),
+  newborns = rep(NA_character_, num_rows),
+  min_age = rep(NA_character_, num_rows),
+  max_age = rep(NA_character_, num_rows),
+  time_horizon = rep(NA_character_, num_rows),
+  iteration = rep(NA_character_, num_rows),
+  varuncer = rep(NA_character_, num_rows),
+  implemented = rep("FALSE", num_rows)
+)
+
+## Extract values and assign them directly to the tibble
+for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
+
+  # Extract values for each column
+  existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "\\|exp_")], "(?<=\\|exp_)[^\\|]+")
+  existing_tests$exp_time[i] <- str_extract(strings[str_detect(strings, "\\|exp_time_")], "(?<=\\|exp_time_)[^\\|]+")
+  existing_tests$newborns[i] <- str_extract(strings[str_detect(strings, "\\|newborns_")], "(?<=\\|newborns_)[^\\|]+")
+  existing_tests$min_age[i] <- str_extract(strings[str_detect(strings, "\\|min_age_")], "(?<=\\|min_age_)[^\\|]+")
+  existing_tests$max_age[i] <- str_extract(strings[str_detect(strings, "\\|max_age_")], "(?<=\\|max_age_)[^\\|]+")
+  existing_tests$time_horizon[i] <- str_extract(strings[str_detect(strings, "\\|time_horizon_")], "(?<=\\|time_horizon_)[^\\|]+")
+  existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
+  existing_tests$varuncer[i] <- str_extract(strings[str_detect(strings, "\\|varuncer_")], "(?<=\\|varuncer_)[^\\|]+")
+  
+  existing_tests$implemented[i] <- "TRUE"
+}
+
+## Merge the pathways tibble and the existing_tests tibble
+pathways_lifetable <- pathways_lifetable %>%
+  left_join(existing_tests, by = c("exp", "exp_time", "newborns", "min_age", "max_age", "time_horizon", "iteration", "varuncer"),
+            suffix = c("", ".existing")) %>%
+  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
+  select(-implemented.existing)|> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
+
+## Output short report
+cat("Number of pathways implemented as tests:", pathways_lifetable %>%
+  filter(implemented == "TRUE") %>%
+  nrow(), "\n")
+cat("Total possible number of pathways:", nrow(pathways_lifetable), "\n")
+cat("As percentage:", round(pathways_lifetable %>%
+  filter(implemented == "TRUE") %>%
+  nrow()/nrow(pathways_lifetable)*100, digits = 0), "%\n")
+
 ```
 
-```{r Pathways summary uncertainty}
-# TO BE DONE ####
 
-## Estimation number of core cases
-# ov_uncertainty <- list(
-#   exp = c("single", "dist"),
-#   erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
-#   iteration = c("TRUE", "FALSE")
-# )
+
+```{r Pathways summary uncertainty}
 
 ov_uncertainty <- list(
   exp = c("single", "dist"),
   erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
   iteration = c("TRUE", "FALSE"),
-  distribution = c("normal", "beta", "other")
+  distribution = c("normal", "beta") # Maybe add "other" later if we implement new dist
 )
 
-pathways_uncertainty <- expand.grid(ov_uncertainty)
+pathways_uncertainty <- expand.grid(ov_uncertainty)|> 
+  tibble::as_tibble() |>
+  mutate_all(as.character)
+
+pathways_uncertainty <- pathways_uncertainty %>% # Important to use magrittr pipe
+  mutate(
+    pathway_id = purrr::pmap_chr(., function(...) {
+      vals <- list(...)
+      paste0("pathway_uncertainty|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+    })
+  )
+
+#* Define core pathways ########################################################
+
+core_uncertainty <- list(
+  exp = c("single", "dist"),
+  erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
+  iteration = c("TRUE", "FALSE"),
+  distribution = c("normal")
+)
+
+core_uncertainty <- expand.grid(core_uncertainty) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) |> 
+  mutate(core_pathway = "TRUE")
 
 pathways_uncertainty <- pathways_uncertainty |> 
-  as_tibble() |> 
-  dplyr::mutate(test_name = "NULL")
+  left_join(x = _, y = core_uncertainty, by = c("exp", "erf", "iteration", "distribution")) |> 
+  mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
+  mutate(implemented = "FALSE")
+
+# * Document existing pathways ####
+
+file_path <- "../healthiar/tests/testthat/test-include_summary_uncertainty.R"
+file_content <- readLines(file_path) # String vector where each element is all code from a line
+
+test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
+test_names_with_pw <- Filter(function(x) any(grepl("pathway_uncertainty\\|", x)), test_names)
+# test_names <- unlist(test_names)
+
+## Create an empty tibble with NA placeholders
+num_rows <- length(test_names_with_pw)
+existing_tests <- tibble(
+  exp = rep(NA_character_, num_rows),
+  erf = rep(NA_character_, num_rows),
+  iteration = rep(NA_character_, num_rows),
+  distribution = rep(NA_character_, num_rows),
+  implemented = rep("FALSE", num_rows)
+)
+
+## Extract values and assign them directly to the tibble
+for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
+
+  # Extract values for each column
+  existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "\\|exp_")], "(?<=\\|exp_)[^\\|]+")
+  existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "\\|erf_")], "(?<=\\|erf_)[^\\|]+")
+  existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
+  existing_tests$distribution[i] <- str_extract(strings[str_detect(strings, "\\|distribution_")], "(?<=\\|distribution_)[^\\|]+")
+  
+  existing_tests$implemented[i] <- "TRUE"
+}
+
+## Merge the pathways tibble and the existing_tests tibble
+pathways_uncertainty <- pathways_uncertainty %>%
+  left_join(existing_tests, by = c("exp", "erf", "iteration", "distribution"),
+            suffix = c("", ".existing")) %>%
+  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
+  select(-implemented.existing) |> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
+
+## Output short report
+cat("Number of pathways implemented as tests:", pathways_uncertainty %>%
+  filter(implemented == "TRUE") %>%
+  nrow(), "\n")
+cat("Total possible number of pathways:", nrow(pathways_uncertainty), "\n")
+cat("As percentage:", round(pathways_uncertainty %>%
+  filter(implemented == "TRUE") %>%
+  nrow()/nrow(pathways_uncertainty)*100, digits = 0), "%\n")
+
 ```
 
 
 
-```{r Pathways non-lifetable compare}
-# TO BE DONE ####
+```{r Pathways non-lifetable compare, eval=FALSE, include=FALSE}
+# TO BE DONE? ####
 
 ## Estimation number of core cases
 # ov_rr_compare <- list(
@@ -648,8 +711,8 @@ pathways_rr_compare <- pathways_rr_compare |>
 ```
 
 
-```{r Pathways lifetable compare}
-# TO BE DONE ####
+```{r Pathways lifetable compare, eval=FALSE, include=FALSE}
+# TO BE DONE? ####
 
 ## Estimation number of core cases
 # ov_lifetable_compare <- list(
@@ -691,16 +754,93 @@ pathways_lifetable_compare <- pathways_lifetable_compare |>
   
 ```
 
-```{r Create Excel for teams folder}
+# Create Excel
+
+```{r Create Excel for Teams folder (only core pathways)}
 knitr::opts_knit$set(root.dir = getwd())
 
-pathways_rr<- pathways_rr |> 
+core_rr <- pathways_rr |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_) |> 
+  mutate(comment = NA_character_) |> 
+  filter(core_pathway == "TRUE") |> 
+  relocate(iteration, .after = cutoff) |> 
+  arrange(erf, desc(exp), desc(cutoff), desc(iteration))
+    
+core_ar <- pathways_ar |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_) |> 
+  filter(core_pathway == "TRUE") |> 
+  relocate(iteration, .after = exp) |> 
+  arrange(erf, desc(iteration))
+
+core_cba <- pathways_cba |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_) |> 
+  filter(core_pathway == "TRUE") |> 
+  arrange(discount_appr, desc(discount_rate_benefit), desc(discount_rate_cost), discount_shape, discount_overtime, )
+
+core_monetization <- pathways_monetization |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_) |> 
+  filter(core_pathway == "TRUE") |> 
+  arrange(discount_appr, desc(discount_rate), discount_shape, discount_overtime, )
+
+core_lifetable <- pathways_lifetable |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_) |> 
+  relocate(iteration, .after = max_age) |> 
+  filter(core_pathway == "TRUE") |> 
+  arrange(exp, desc(exp_time), desc(newborns), desc(min_age), max_age, iteration, varuncer)
+
+core_uncertainty <- pathways_uncertainty |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_) |> 
+  relocate(erf, .before = exp) |> 
+  filter(core_pathway == "TRUE") |> 
+  # factor(levels = c("rr_increment", "ar_formula", "rr_point_pairs", "ar_point_pairs", "rr_formula")) |> 
+  arrange(erf, exp, iteration, desc(distribution))
+
+core_list <- list(
+  core_rr,
+  core_ar,
+  core_cba,
+  core_monetization,
+  core_lifetable,
+  core_uncertainty
+)
+names(core_list) <- c("core_pathways_rr", "core_pathways_ar", "core_pathways_cba", "core_pathways_monetization", "core_pathways_lifetable", "core_pathways_uncertainty")
+
+hs <- openxlsx::createStyle(textDecoration = "bold") # hs = header style
+
+openxlsx::write.xlsx(core_list, "tests/pathways_overview_core.xlsx",
+                     headerStyle = hs,
+                     gridExpand = TRUE) # doesn't seem to have effect
+
+```
+
+```{r Create Excel with all pathways}
+knitr::opts_knit$set(root.dir = getwd())
+
+pathways_rr <- pathways_rr |> 
   mutate(institute = NA_character_) |> 
   mutate(name = NA_character_) |> 
   mutate(finished = "FALSE") |> 
   mutate(results_the_same = NA_character_)
 
-pathways_ar<- pathways_ar |> 
+pathways_ar <- pathways_ar |> 
   mutate(institute = NA_character_) |> 
   mutate(name = NA_character_) |> 
   mutate(finished = "FALSE") |> 
@@ -712,22 +852,48 @@ pathways_cba <- pathways_cba |>
   mutate(finished = "FALSE") |> 
   mutate(results_the_same = NA_character_)
 
+pathways_monetization <- pathways_monetization |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_)
+
+pathways_lifetable <- pathways_lifetable |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_)
+
+pathways_uncertainty <- pathways_uncertainty |> 
+  mutate(institute = NA_character_) |> 
+  mutate(name = NA_character_) |> 
+  mutate(finished = "FALSE") |> 
+  mutate(results_the_same = NA_character_)
+
 pathways_list <- list(
   pathways_rr,
   pathways_ar,
-  pathways_cba
+  pathways_cba,
+  pathways_monetization,
+  pathways_lifetable,
+  pathways_uncertainty
 )
-names(pathways_list) <- c("pathways_rr", "pathways_ar", "pathways_cba")
+names(pathways_list) <- c("pathways_rr", "pathways_ar", "pathways_cba", "pathways_monetization", "pathways_lifetable", "pathways_uncertainty")
 
 hs <- openxlsx::createStyle(textDecoration = "bold") # hs = header style
 
-openxlsx::write.xlsx(pathways_list, "tests/pathways_overview.xlsx",
+openxlsx::write.xlsx(pathways_list, "tests/pathways_overview_all.xlsx",
                      headerStyle = hs,
                      gridExpand = TRUE) # doesn't seem to have effect
 
 
 ```
 
+
+
+
+
+# VARIA
 
 ```{r Example, eval=FALSE, include=FALSE}
 library(DiagrammeR) ; library(data.tree)
@@ -1001,5 +1167,98 @@ pathways_rr_ar <- pathways_rr_ar |>
   dplyr::mutate(test_name = case_when(
     ( erf == "log_lin" & exp == "single" & cutoff == "FALSE" & iteration == "FALSE" &  multiexp == "combined" & varuncer == "FALSE" ) ~
       "results correct rr multiple exposure combined approach without cutoff", TRUE ~ test_name))
+
+```
+
+```{r OLD Pathways lifetable, eval=FALSE, include=FALSE}
+## Estimation of core cases
+# ov_lifetable <- list(
+#   exp = c("single", "dist"), # prop_pop_exp linked with this
+#   exp_time = c("single_year", "constant"),
+#   newborns = c("TRUE", "FALSE"),
+#   # min_age = c("TRUE", "FALSE"),
+#   # max_age = c("TRUE", "FALSE"),
+#   # time_horizon = c("TRUE", "FALSE"),
+#   iteration = c("TRUE", "FALSE"),
+#   varuncer = c("TRUE", "FALSE")
+# )
+
+ov_lifetable <- list(
+  exp = c("single", "dist"), # prop_pop_exp linked with this
+  exp_time = c("single_year", "constant"),
+  newborns = c("TRUE", "FALSE"),
+  min_age = c("TRUE", "FALSE"),
+  max_age = c("TRUE", "FALSE"),
+  time_horizon = c("TRUE", "FALSE"),
+  iteration = c("TRUE", "FALSE"),
+  varuncer = c("TRUE", "FALSE")
+)
+
+pathways_lifetable <- expand.grid(ov_lifetable)
+
+pathways_lifetable <- pathways_lifetable |> 
+  as_tibble() |> 
+  dplyr::mutate(test_name = "NULL") |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable daly single exposure and one year exposure without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "single" & exp_time == "single_year" & newborns == "TRUE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable premature deaths single year exposure with newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "dist" & exp_time == "constant" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable premature deaths exposure distribution with constant exposure and without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable yld single exposure and one year exposure without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable yll single exposure and one year exposure and without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "single" & exp_time == "constant" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable yll single exposure and constant exposure and without newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "single" & exp_time == "constant" & newborns == "TRUE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable yll single exposure and constant exposure and with newborns", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( exp == "dist" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE"& varuncer == "FALSE") ~
+      "results correct lifetable yll exposure distribution and one year exposure and without newborns", TRUE ~ test_name))
+```
+
+Both the functions include_cba and include_discount call the 
+function include_monetization in the background --> created only ov_monetization and ov_cba
+instead of creating an overview tibble for all 3 functions
+```{r OLD Pathways monetization, eval=FALSE, include=FALSE}
+
+## Estimation number of core cases
+# ov_monetization <- list(
+#   discount_appr = c("direct", "indirect"), # direct is the default
+#   discount_rate = c("TRUE", "FALSE"),
+#   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+#   discount_overtime = c("all_years", "last_year") # all_years is default
+# )
+
+ov_monetization <- list(
+  discount_appr = c("direct", "indirect"), # direct is the default
+  discount_rate = c("TRUE", "FALSE"),
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_overtime = c("all_years", "last_year") # all_years is default
+)
+
+pathways_monetization <- expand.grid(ov_monetization)
+
+pathways_monetization <- pathways_monetization |> 
+  as_tibble() |> 
+  dplyr::mutate(test_name = "NULL") |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "direct" & discount_rate == "FALSE" & discount_shape == "FALSE" & discount_overtime == "all_years" ) ~
+      "results correct simple monetization", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "direct" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "last_year" ) ~
+      "results correct direct discounting with discount factor and exponential discount shape", TRUE ~ test_name)) |> 
+  dplyr::mutate(test_name = case_when(
+    ( discount_appr == "indirect" & discount_rate == "TRUE" & discount_shape == "exp" & discount_overtime == "all_years" ) ~
+      "results correct indirect discounting with exponential discount shape", TRUE ~ test_name))  
+  
 
 ```

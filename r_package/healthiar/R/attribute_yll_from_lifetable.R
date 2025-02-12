@@ -1,6 +1,37 @@
 #' Attributable years of life lost based on life tables
 #'
-#' @description Calculates the years of life lost attributable to the exposure to an environmental stressor using a life table approach. It provides the central estimate of the impact and the corresponding 95\% confidence intervals (based on the 95\% confidence interval exposure-response function).
+#' @description Calculates the years of life lost attributable to the exposure to an environmental stressor using a life table approach.
+#' @details Function defined for relative risk approach; absolute risk is not supported due to methodological restrictions.
+#' @usage
+#' attribute_yll_from_lifetable(
+#'   ## Calculation specification
+#'   approach_multiexposure = NULL,
+#'   approach_exposure = "single_year",
+#'   approach_newborns = "without_newborns",
+#'   year_of_analysis,
+#'   min_age = NULL,
+#'   max_age = NULL,
+#'   time_horizon = NULL,
+#'   ## Lifetable arguments
+#'   first_age_pop,
+#'   last_age_pop,
+#'   population_midyear_male, population_midyear_female,
+#'   deaths_male = NULL, deaths_female = NULL,
+#'   rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+#'   rr_increment = NULL,
+#'   ## Risk and shape arguments
+#'   erf_shape = NULL,
+#'   erf_eq_central = NULL,
+#'   erf_eq_lower = NULL,
+#'   erf_eq_upper = NULL,
+#'   duration_central = NULL,
+#'   ## Other central input
+#'   exp_central, exp_lower = NULL, exp_upper = NULL,
+#'   prop_pop_exp = 1,
+#'   cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+#'   ## Meta-info
+#'   info = NULL
+#' )
 #' @inheritParams attribute
 #' @return
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
@@ -20,23 +51,30 @@
 #' @note Experimental function
 #' @export
 attribute_yll_from_lifetable <-
-  function(approach_multiexposure = NULL,
-           exp_central, exp_lower = NULL, exp_upper = NULL,
-           prop_pop_exp = 1,
-           cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
-           rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           rr_increment = NULL, erf_shape = NULL,
-           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-           approach_exposure = "single_year",
-           approach_newborns = "without_newborns",
-           first_age_pop, last_age_pop,
-           population_midyear_male, population_midyear_female,
-           deaths_male = NULL, deaths_female = NULL,
-           year_of_analysis,
-           min_age = NULL, max_age = NULL,
-           info = NULL,
-           duration_central = NULL,
-           time_horizon = NULL){
+  function(
+    ## Calculation specification
+    approach_multiexposure = NULL,
+    approach_exposure = "single_year",
+    approach_newborns = "without_newborns",
+    year_of_analysis,
+    min_age = NULL, max_age = NULL,
+    time_horizon = NULL,
+    ## Lifetable arguments
+    first_age_pop, last_age_pop,
+    population_midyear_male, population_midyear_female,
+    deaths_male = NULL, deaths_female = NULL,
+    ## Risk and shape arguments
+    rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+    rr_increment = NULL, erf_shape = NULL,
+    erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
+    duration_central = NULL, # AL 2025-02-12: Applicable to YLL calculations?
+    ## Other central input
+    exp_central, exp_lower = NULL, exp_upper = NULL,
+    prop_pop_exp = 1,
+    cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+    ## Meta-info
+    info = NULL
+  ) {
 
     output <-
       healthiar::attribute(

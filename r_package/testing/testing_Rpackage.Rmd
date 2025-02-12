@@ -471,7 +471,7 @@ check_bestcost(result_list_bestcost = bestcost_noise_ha_ar,
                result_vector_alternative = niph_noise_ha_result)
 
 # YLD case for absolute risk
-bestcost_noise_ha_ar <- 
+bestcost_noise_ha_ar_yld <- 
   healthiar::attribute_yld(
     approach_risk = "absolute_risk",
     exp_central = niph_noise_ha_input$exposure_mean,
@@ -479,10 +479,11 @@ bestcost_noise_ha_ar <-
     prop_pop_exp = niph_noise_ha_input$population_exposed_total/sum(niph_noise_ha_input$population_exposed_total),
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
     dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
-    duration_central = 1, duration_lower = 0.1, duration_upper = 10,
+    # dw_central = 1, dw_lower = 0.1, dw_upper = 10,
+    duration_central = 1, #duration_lower = 0.1, duration_upper = 10,
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
 
-check_bestcost(result_list_bestcost = bestcost_noise_ha_ar,
+check_bestcost(result_list_bestcost = bestcost_noise_ha_ar_yld,
                result_vector_alternative = niph_noise_ha_result/2)
 
 # Obtain attributable cases using the bestcost package and input data from niph
@@ -660,6 +661,10 @@ print("Main estimates: ") ; bestcost_pm_copd_with_summary_uncertainty[["health_m
 ## With external uncertainty function (i.e. include_summary_uncertainty())
 print("Summary uncertainty estimates (extern uncertainty function): ")
 round(as.numeric(bestcost_pm_copd_extern_uncertainty[["uncertainty_main"]]), digits = 0)
+bestcost_pm_copd_extern_uncertainty |>
+    purrr::pluck("uncertainty_main") |>
+    base::as.numeric() |> 
+    round(digits = 0)
 # Results of internal Monte-Carlo summary uncertainty and extern Monte-Carlo summary uncertainty identical!
 ```
 
@@ -701,6 +706,8 @@ print("Summary uncertainty estimates (extern uncertainty function): ")
 round(as.numeric(bestcost_pm_copd_geo_short_uncertainty[["uncertainty_main"]]), digits = 0)
 # Results seem plausible
 ```
+
+
 
 ```{r Summary uncertainty rr & exposure distribution}
 

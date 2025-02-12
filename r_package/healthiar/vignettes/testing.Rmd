@@ -9,7 +9,7 @@ vignette: >
 
 ------------------------------------------------------------------------
 
-```{r, include = FALSE}
+```{r prepare, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -22,13 +22,21 @@ set.seed(1)
 
 ```
 
-## Prerequisite: access to the [BEST-COST GitHub repository](https://github.com/best-cost/best-cost_WPs)
+## Hi there : )
 
-If you don't have access yet, write to [alberto.castrofernandez\@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch){.email} or [axel.luyten\@swisstph.ch](mailto:axel.luyten@swisstph.ch){.email} and provide them with the email address of the GitHub account they should give access to.
+This document will guide you step-by-step through the process of adding a test for a specific calculation pathway.
+
+In case you encounter difficulties, you find something unclear or you see a way to improve the testing process, please let us know:
+
+-   Preferably by opening a GitHub issue by going on this [link](https://github.com/best-cost/best-cost_WPs/issues) and clicking the green button that says *New issue* or
+
+-   write us at [axel.luyten\@swisstph.ch](mailto:axel.luyten@swisstph.ch){.email} or [alberto.castrofernandez\@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch){.email}
+
+Thank you in advance for your efforts! Together we can make healthiar more error proof and improve function and package documentation!
 
 ## Prerequisite: newest version of `healthiar` installed
 
-If you haven't already, install the most recent version of the BEST-COST R package healthiar. If you get prompted to update packages that `healthiar` uses and/or relies on, we advise to do so.
+If you haven't already, install the most recent version of the BEST-COST R package `healthiar`. If you get prompted to update packages that `healthiar` uses and/or relies on, we recommend to do so.
 
 ```{r install package, include=TRUE, echo=TRUE, eval=FALSE}
 devtools::install_github(
@@ -38,9 +46,10 @@ devtools::install_github(
   build_vignettes = TRUE)
 ```
 
-For more information on how to use the `healthiar` package, please see the vignette `intro_to_healthiar`: you can access it (once you have the `healthiar` package installed) in RStudio by
+For more information on how to use the `healthiar` package (including several example cases of how to use the functions), please see the vignette `intro_to_healthiar`: you can access it (once you have the `healthiar` package installed) in RStudio by
 
 -   running `browseVignettes("healthiar")` in the console and clicking on *HTML* on the page that pops up
+
 -   going to the *Packages* tab in RStudio, and clicking on `healthiar`\>*User guides, package vignettes and other documentation*\>*HTML*
 
 ------------------------------------------------------------------------
@@ -49,7 +58,46 @@ For more information on how to use the `healthiar` package, please see the vigne
 
 ## 1. Pick a pathway
 
-You want to make sure the results for the following calculation pathway are correct:
+### 1.1 Pathway characterisation
+
+The Excel *pathways_overview_core.xlsx*, which is located on Teams under [Documents\>WP4 PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk), contains an overview of the most relevant (= core) pathways that are available to users of *healthiar* functions. There are different sheets. In the first sheet is the overview of the core relative risk pathways. The columns might seem a bit cryptic at first glance, but bear with me:
+
+-   *erf* contains the exposure-response function shape
+
+    -   lin_lin = linear-linear ERF shape
+    -   log_lin = log-linear ERF shape
+    -   point_pairs = case where the ERF is defined by multiple points (x and y coordinates), e.g. the MR-BRT curves from GBD
+
+-   *exp* specifies the type of exposure input data
+
+    -   single = single exposure input value, e.g. yearly average population-weighted PM2.5 exposure
+    -   dist = exposure distribution, e.g. 5 different exposure categories (\~ exposure ranges) with the information how many people are exposed to each of the 5 exposure range
+
+-   *cutoff* specifies whether a cutoff is considered in the calculations (yes –\> TRUE) or not (no –\> FALSE)
+
+-   *iteration* specifies whether the assessment is done for more than one geo unit (e.g. municipality, region, province, ...); if yes –\> TRUE, if no –\> FALSE
+
+-   *varuncer* (= variable uncertainty) specifies whether 95% confidence intervals are considered in all / some of the input variables, e.g. the central COPD incidence estimate and the upper and lower 95% confidence interval values are entered as baseline health data
+
+    -   Note: set to *FALSE* for all core pathways
+
+-   *multiexp* (= multi-exposure) specifies whether the calculation considers two correlated pollutants at the same time, e.g. PM2.5 and NO2
+
+    -   Note: set to *FALSE* for all core pathways
+
+Similarly, pathways are also defined (with some different columns) for cost-benefit analysis, monetization, assessments with lifetables and calculation of summary uncertainty.
+
+Each calculation pathway has a unique *pathway_id* linked to it, which contain all the infos from the characterisation columns in a condensed way. These pathways are used internally to keep track of the testing progress, and to find specific pathways quickly.
+
+### 1.2 Choosing a pathway
+
+For picking a calculation pathway you can either
+
+1.  first take an existing assessment and then select the corresponding `healthiar` pathway (recommended in case you have a specific assessment ready)
+
+2.  first pick a `healthiar` pathway and then look for an existing assessment that corresponds to that pathway
+
+You decide to go with the second approach: you have a look at the calculation pathways in the Excel *pathways_overview_core.xlsx* and you select the following pathway:
 
 -   Relative risk
 
@@ -65,13 +113,13 @@ You want to make sure the results for the following calculation pathway are corr
 
 -   No multiexposure
 
-So you claim this pathway by filling in your institution abbreviation and your name in the Excel [*pathways_overview*](https://ugentbe.sharepoint.com/:x:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions/pathways_overview.xlsx?d=w2da74c6a6e0146a5ba025ee050702838&csf=1&web=1&e=SkltuU) in the corresponding row.
+The `pathway_id` of this calculation pathway is: *pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|multiexp_FALSE\|*.
 
-In this case, it's the row with the `pathway_id` *pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|multiexp_FALSE\|*.
+You claim this pathway by filling in your institution abbreviation and your name in the corresponding columns.
 
-## 2. Look for comparison assessment
+### 1.3 Look for comparison assessment
 
-You remember that you've just assessed such a case recently! You dig up the assessment, both the input data and the results, and get set to add a test. In this case, the assessment details are saved in a .xlsx file (Excel file).
+You ask around and find out that a colleague of you just recently did an assessmen that matches your selected pathway. She digs up the assessment and sends you both the input data and the results. You get set to add a test. In this case, the assessment details are saved in a .xlsx file (Excel file).
 
 Of course, there are multiple possible sources of comparison assessments. These are, in order of decreasing preference:
 
@@ -83,16 +131,15 @@ Of course, there are multiple possible sources of comparison assessments. These 
 
 4.  “fake” (but realistic) input data, to make sure calculation works (no error) and that results stay the same over time
 
-## 3. Fill out the testing template with the assessment input data
+## 2. Fill out the testing template with the assessment input data
 
 You create a new R script (`.R` file) or RMarkdown (`.Rmd` file) for your test (please create one file for each test, if possible).
 
 You select the appropriate template that Swiss TPH provided.
 
-All testing templates can be found below in the section *Function templates*.
+Several testing templates can be found below in the section [*Testing templates*].
 
 ```{r template, include=TRUE, echo=TRUE, eval=FALSE}
-
 testthat::test_that("results correct [pathway_id]", {
   
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
@@ -126,18 +173,16 @@ testthat::test_that("results correct [pathway_id]", {
 
 ```
 
-## 3.1 Add test details
+## 2.1 Add test details
 
-In this example, we'll start by entering the `pathway_id` (which is found in the [*pathways_overview*](https://ugentbe.sharepoint.com/:x:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions/pathways_overview.xlsx?d=w2da74c6a6e0146a5ba025ee050702838&csf=1&web=1&e=SkltuU)Excel) to the first argument of the `testthat::test_that` call.
+In this example, we'll start by entering the `pathway_id` (which is found in the *pathways_overview_core* Excel located in [this folder](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk)) to the first argument of the `testthat::test_that` call.
 
 -   `pathway_id`: pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|multiexp_FALSE\|
 
 So the test name is:
 
 ```{r add test name, include=TRUE, echo=TRUE, eval=FALSE}
-
 testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", { ... })
-
 ```
 
 Then we'll continue by adding other details. Optionally, you can also leave this until the end.
@@ -145,14 +190,13 @@ Then we'll continue by adding other details. Optionally, you can also leave this
 In case your comparison assessment has a DOI, please add it.
 
 ```{r add test details}
-
 ## ASSESSOR: Axel Luyten, Swiss TPH
 ## ASSESSMENT DETAILS: attribute DALYs from ischemic heart disease to road noise exposure
 ## INPUT DATA DETAILS: noise exposure data from NIPH; cutoff based on exposure data; baseline DALYs from GBD; relative risk from WHO (2003)
 
 ```
 
-## 3.2 Enter input data & comparison results
+## 2.2 Enter input data & comparison results
 
 Then you fill out the rest of the template using the input data of your selected assessment. There are two options:
 
@@ -166,16 +210,19 @@ If you don't have much R programming experience, it's easiest to create the test
 
 In case you load the input data before calling the `healthiar` function, please also upload the input data to the Teams testing folder of your institute, alongside the code for the test.
 
-### 3.2.1 Test with hard-coded data
+### 2.2.1 Test with hard-coded data
 
 We can manually open the Excel file containing the assessment details, and then copy the relevant data into the template.
 
-To see the Excel file used in this example, run `shell.exec(dirname(system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar")))`, which will open the folder containing the .xlsx file of the assessment.
+To see the Excel file used in this example, run
 
-Here's the filled out template with hard-coded input data (e.g. no external input data loaded).
+`shell.exec(dirname(system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar")))`
 
-```{r test with hard-coded inputs, include=TRUE, echo=TRUE, eval=TRUE}
+which will open the folder containing the .xlsx file of the example assessment.
 
+Here's the filled out template with hard-coded input data, i.e. raw numbers are fed to the function arguments and no external input data are loaded into RStudio.
+
+```{r test with hard-coded inputs, include=TRUE, echo=TRUE, eval=FALSE}
 testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
 
   testthat::expect_equal(
@@ -202,7 +249,7 @@ testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|cutoff_TR
 
 ```
 
-### 3.2.2. Test with loaded data
+### 2.2.2. Test with loaded data
 
 Another option is to load all your necessary input data (witing) before calling t
 
@@ -252,9 +299,11 @@ testthat::test_that("results correct results correct pathway_rr|erf_log_lin|exp_
 
 ```
 
-## 4. Check whether results of healthiar and your chosen assessment are the same
+## 3. Check whether results of healthiar and your chosen assessment are the same
 
-```{r check results, include=TRUE, echo=FALSE, eval=TRUE}
+Now you check whether the results of healthiar and your chosen comparison assessment are the same by running the `test_that` function.
+
+```{r check results, include=TRUE, echo=TRUE, eval=TRUE}
 
 testthat::test_that("results correct results correct pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
 
@@ -279,34 +328,29 @@ testthat::test_that("results correct results correct pathway_rr|erf_log_lin|exp_
       c(1151)
     )
 })
-
-
-## ASSESSOR: Axel Luyten, Swiss TPH
-## ASSESSMENT DETAILS: attribute DALYs from ischemic heart disease to road noise exposure
-## INPUT DATA DETAILS: noise exposure data from NIPH; cutoff based on exposure data; baseline DALYs from GBD; relative risk from WHO (2003)
-
 ```
 
-Yes, they are the same.
+Yes, in this case they are the same (the function printed `Test passed`), so you indicate this by putting *TRUE* in the Excel column *results_the_same*.
 
-In case there is a deviation try to judge what could cause the difference. Please alert Alberto and Axel in case that there is a deviation between the \`healthiar\` result and the comparison case result.
+However, in case there is a deviation between the `healthiar` output and the results from the comparison assessment, you would put FALSE in the Excel column *results_the_same.* Please try to judge what could cause the difference and leave a comment in the Excel. If you're unsure what's the issue and can't fix it yourself, we can discuss it and maybe another WP4 partner can help.
 
-## 5. Upload the test
+Then change the value in the column *finished* in the Excel *pathways_overview_core* from *FALSE* to *TRUE* to indicate that you are done with the assessment.
 
-You upload your test with the `pathway_id` as the file name to the [Teams folder WP4 PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=hT3jaK) to the folder of your institute.
+## 4. Upload the test
 
-Then change the value in the column *finished* in the Excel [*pathways_overview*](https://ugentbe.sharepoint.com/:x:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions/pathways_overview.xlsx?d=w2da74c6a6e0146a5ba025ee050702838&csf=1&web=1&e=SkltuU) from *FALSE* to *TRUE*, and indicate whether whether the results of healthiar and your chosen comparison assessment are the same in the column *results_the_same* (*TRUE* or *FALSE*).
+Finally, you upload your test with the `pathway_id` as the file name to the [Teams folder WP4 PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=hT3jaK) to the folder of your institute.
 
 ------------------------------------------------------------------------
 
 # Testing templates
+
+For more information on how to use the `healthiar` package (including several example cases of how to use its functions), please see the vignette `intro_to_healthiar` (refer to section [Prerequisite: newest version of healthiar installed] for how to access it).
 
 ## Relative risk pathways
 
 Depending on your calculation pathway you will have to replace some of the `NULL` values in the template.
 
 ```{r template rr complete, include=TRUE, echo=TRUE, eval=FALSE}
-
 testthat::test_that("results correct [pathway_id]", {
   
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
@@ -345,7 +389,6 @@ testthat::test_that("results correct [pathway_id]", {
 ## ASSESSOR: Add here your name and your institute abbreviation
 ## ASSESSMENT DETAILS: Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
 ## INPUT DATA DETAILS: Add here input data details: data sources, measured vs. modelled, ...
-
 ```
 
 ## Absolute risk pathways
@@ -353,7 +396,6 @@ testthat::test_that("results correct [pathway_id]", {
 Depending on your calculation pathway you will have to replace some of the `NULL` values in the template.
 
 ```{r template ar complete, include=TRUE, echo=TRUE, eval=FALSE}
-
 testthat::test_that("results correct [pathway_id]", {
   
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
@@ -386,7 +428,6 @@ testthat::test_that("results correct [pathway_id]", {
 ## ASSESSOR: Add here your name and your institute abbreviation
 ## ASSESSMENT DETAILS: Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
 ## INPUT DATA DETAILS: Add here input data details: data sources, measured vs. modelled, ...
-
 ```
 
 ## Cost-benefit analysis pathways
@@ -394,7 +435,6 @@ testthat::test_that("results correct [pathway_id]", {
 Depending on your calculation pathway you will have to replace some of the `NULL` values in the template.
 
 ```{r template cba complete, include=TRUE, echo=TRUE, eval=FALSE}
-
 testthat::test_that("results correct [pathway_id]", {
   
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
@@ -426,5 +466,4 @@ testthat::test_that("results correct [pathway_id]", {
 ## ASSESSOR: Add here your name and your institute abbreviation
 ## ASSESSMENT DETAILS: Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
 ## INPUT DATA DETAILS: Add here input data details: data sources, measured vs. modelled, ...
-
 ```

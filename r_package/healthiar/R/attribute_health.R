@@ -2,9 +2,9 @@
 
 #' @description This function calculates the health impacts (mortality or morbidity)
 #' of exposure to an environmental stressor (air pollution or noise), using either relative or absolute risk.
-#' @description
+#' @details
 #' The health metric inputted and outputted are the same, e.g. if the baseline health data are mortalities then the result will be mortalities as well. Analogeously for disease cases, DALYs, etc.
-#' @inheritParams attribute
+
 #' @usage
 #' Relative risk case:
 #' attribute_health(
@@ -43,19 +43,8 @@
 #'   population = NULL,
 #'   info = NULL
 #')
-#'
-#' @return
-#' TBD. This function returns two lists: 1) \code{health_main}, which contains a data frame with the main results and
-#' 2) \code{health_detailed}, which contains detailed (and interim) results.
-#' The results includes columns such as:
-#' \itemize{
-#'  \item Attributable fraction
-#'  \item Health impact
-#'  \item Outcome metric
-#'  \item And many more.
-#' }
-#' @import dplyr
-#' @import purrr
+#' @inherit attribute return
+#' @inheritParams attribute
 #' @examples
 #' TBD
 #' @author Alberto Castro

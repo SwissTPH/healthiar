@@ -16,18 +16,23 @@ testthat::test_that("results correct simple monetization", {
 
   testthat::expect_equal(
     object =
-      healthiar::include_monetization(output_healthiar = bestcost_pm_copd,
-                                      valuation = 1000) |>
+      healthiar::include_monetization(
+        output_healthiar = bestcost_pm_copd,
+        approach_discount = "direct",
+        valuation = 1000,
+        discount_rate = NULL,
+        discount_shape = NULL) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
       base::unlist() |>
       base::as.numeric() |>
       base::round(),
-    expect = round(1000 * bestcost_pm_copd[["health_main"]]$impact)
+    expect = # 1000 * airqplus_pm_copd
+      round(1000 * bestcost_pm_copd[["health_main"]]$impact)
   )
 })
 
-testthat::test_that("results the same direct discounting with discount factor and exponential discount shape", {
+testthat::test_that("results the same fake_monetization|discount_appr_direct|discount_rate_TRUE|discount_shape_exp|discount_overtime_last_year|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -61,8 +66,7 @@ testthat::test_that("results the same direct discounting with discount factor an
   )
 })
 
-# Not included in overview
-testthat::test_that("results correct direct discounting with impact vector with discount factor and exponential discount shape", {
+testthat::test_that("results correct pathway_monetization|discount_appr_direct|discount_rate_TRUE|discount_shape_exp|discount_overtime_all_years|", {
 
   testthat::expect_equal(
     object =
@@ -71,6 +75,7 @@ testthat::test_that("results correct direct discounting with impact vector with 
                                       discount_shape = "exponential",
                                       discount_rate = 0.03,
                                       discount_years = 20,
+                                      discount_overtime = "all_years",
                                       valuation = 1) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
@@ -81,8 +86,7 @@ testthat::test_that("results correct direct discounting with impact vector with 
   )
 })
 
-# Not included in overview
-testthat::test_that("results correct direct discounting with impact vector discounting only one specific year and exponential discount shape", {
+testthat::test_that("results correct pathway_monetization|discount_appr_direct|discount_rate_TRUE|discount_shape_exp|discount_overtime_last_year|", {
 
   testthat::expect_equal(
     object =
@@ -102,8 +106,7 @@ testthat::test_that("results correct direct discounting with impact vector disco
   )
 })
 
-
-testthat::test_that("results the same indirect discounting with exponential discount shape", {
+testthat::test_that("results the same fake_monetization|discount_appr_indirect|discount_rate_TRUE|discount_shape_exp|discount_overtime_all_years|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
@@ -136,7 +139,8 @@ testthat::test_that("results the same indirect discounting with exponential disc
                                       output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
                                       discount_shape = "exponential",
                                       discount_rate = 0.01,
-                                      valuation = 1) |>
+                                      valuation = 1,
+                                      discount_overtime = "all_years") |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
       base::unlist() |>
@@ -146,7 +150,7 @@ testthat::test_that("results the same indirect discounting with exponential disc
   )
 })
 
-testthat::test_that("results the same direct discounting without valuation with exponential discount shape", {
+testthat::test_that("results the same fake_monetization|discount_appr_direct|discount_rate_TRUE|discount_shape_exp|discount_overtime_all_years|", {
 
   testthat::expect_equal(
     object =
@@ -155,7 +159,8 @@ testthat::test_that("results the same direct discounting without valuation with 
         impact = 2E4,
         discount_shape = "exponential",
         discount_rate = 0.03,
-        discount_years = 20) |>
+        discount_years = 20,
+        discount_overtime = "all_years") |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
       base::unlist() |>
