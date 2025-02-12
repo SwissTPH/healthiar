@@ -83,7 +83,7 @@ If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple
 \item{max_age}{\code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.}
 
 \item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
-If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \exp{exp_...}) has to be provided as a list.}
+If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
 
 \item{geo_id_aggregated}{\code{Numeric vector} an ID for each geographic area that specifies which geographic areas should be aggregated together.
 E.g. if you provide the municipality names to \code{geo_id_disaggregated}, you might provide here the corresponding region / canton / province.
@@ -95,7 +95,7 @@ Default value = \code{NULL}.}
 
 \item{population}{code{Vector} providing the population (in each geographical unit).}
 
-\item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval.}
+\item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval (default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).}
 
 \item{dw_central, dw_lower, dw_upper}{\code{Numeric value(s)} providing the disability weight associated with the morbidity health outcome and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
 

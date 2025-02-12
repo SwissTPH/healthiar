@@ -75,7 +75,7 @@ The cutoff level refers to the exposure level below which no health effects occu
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value(s)} providing the basline (incidence) level of the health outcome in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
 
 \item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
-If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \exp{exp_...}) has to be provided as a list.}
+If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
 
 \item{geo_id_aggregated}{\code{Numeric vector} an ID for each geographic area that specifies which geographic areas should be aggregated together.
 E.g. if you provide the municipality names to \code{geo_id_disaggregated}, you might provide here the corresponding region / canton / province.
@@ -97,7 +97,7 @@ Consequently The vector has to have the same length as the one fed to \code{geo_
 
 \item{dw_central, dw_lower, dw_upper}{\code{Numeric value(s)} providing the disability weight associated with the morbidity health outcome and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
 
-\item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval.}
+\item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval (default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).}
 
 \item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: "single_year" (default), "constant".}
 
@@ -115,14 +115,14 @@ The suffix "info" will be added to the column name.
 Default value = \code{NULL}.}
 }
 \value{
-TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
-concentration-response function (i.e. central, lower and upper bound confidence interval.
-Moreover, the data frame includes columns such as:
+This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
+2) \code{health_detailed}, which contains detailed (and interim) results.
+The result tibbles include columns such as:
 \itemize{
- \item pop_fraction (population attributable fraction)
+ \item pop_fraction (population attributable fraction; only for assessments using relative risk)
  \item impact (health impact)
  \item And many more.
-}
+ }
 }
 \description{
 Calculates the health impacts, mortality or morbidity, of an environmental stressor using a single value for baseline heath data, i.e. without life table.

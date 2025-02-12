@@ -85,7 +85,7 @@ For example, would be 10 if one is interested in the impacts of exposure during 
 
 \item{dw_central, dw_lower, dw_upper}{\code{Numeric value(s)} providing the disability weight associated with the morbidity health outcome and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
 
-\item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval.}
+\item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval (default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).}
 
 \item{info}{\code{String} or {data.frame} providing additional information linked with the assessment.
 The suffix "info" will be added to the column name.

@@ -63,10 +63,10 @@ The cutoff level refers to the exposure level below which no health effects occu
 
 \item{dw_central, dw_lower, dw_upper}{\code{Numeric value(s)} providing the disability weight associated with the morbidity health outcome and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
 
-\item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval.}
+\item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval (default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).}
 
 \item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
-If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \exp{exp_...}) has to be provided as a list.}
+If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
 
 \item{geo_id_aggregated}{\code{Numeric vector} an ID for each geographic area that specifies which geographic areas should be aggregated together.
 E.g. if you provide the municipality names to \code{geo_id_disaggregated}, you might provide here the corresponding region / canton / province.
@@ -85,7 +85,7 @@ This function returns two lists: 1) \code{health_main}, which contains a tibble 
 2) \code{health_detailed}, which contains detailed (and interim) results.
 The result tibbles include columns such as:
 \itemize{
- \item pop_fraction (population attributable fraction)
+ \item pop_fraction (population attributable fraction; only for assessments using relative risk)
  \item impact (health impact)
  \item And many more.
  }
@@ -95,6 +95,7 @@ This function first attributes disease cases of a specific morbidity health outc
 Then this disease burden is then expressed in YLDs, using associated disability weight and duration.
 
 For calculation of YLDs using life tables use \code{attribute_yld_from_lifetable}.
+
 Assumption: cases happen at the start of the year.
 }
 \note{
