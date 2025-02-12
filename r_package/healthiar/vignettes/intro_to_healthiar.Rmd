@@ -1,5 +1,5 @@
 ---
-title: "intro_to_healthiar"
+title: "Get started with healthiar"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{intro_to_healthiar}
