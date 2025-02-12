@@ -43,7 +43,6 @@
 #'   population = NULL,
 #'   info = NULL
 #')
-
 #' @inherit attribute return
 #' @inheritParams attribute
 #' @examples
