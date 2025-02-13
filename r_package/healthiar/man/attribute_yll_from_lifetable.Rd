@@ -18,9 +18,9 @@ attribute_yll_from_lifetable(
   last_age_pop,
   population_midyear_male, population_midyear_female,
   deaths_male = NULL, deaths_female = NULL,
+  ## Risk and shape arguments
   rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
   rr_increment = NULL,
-  ## Risk and shape arguments
   erf_shape = NULL,
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
@@ -80,18 +80,21 @@ The suffix "info" will be added to the column name.
 Default value = \code{NULL}.}
 }
 \value{
-TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
-concentration-response function (i.e. central estimate, lower and upper bound confidence interval.
-Moreover, the data frame include columns such as:
+This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
+2) \code{health_detailed}, which contains detailed (and interim) results.
+
+The main results tibble include columns such as:
 \itemize{
- \item Attributable fraction
- \item Health impact
- \item Outcome metric
+ \item pop_fraction (population attributable fraction; only for assessments using relative risk)
+ \item impact (health impact, in this case YLL)
+ \item impact_per_100k_inhab (impact per 100'000 inhabitants)
  \item And many more.
-}
+ }
+
+The detailed results tibble additionally provides information on the year- and age-specific impacts for males and females seperately.
 }
 \description{
-Calculates the years of life lost attributable to the exposure to an environmental stressor using a life table approach.
+Calculates the years of life lost (YLL) attributable to the exposure to an environmental stressor using a life table approach.
 }
 \details{
 Function defined for relative risk approach; absolute risk is not supported due to methodological restrictions.

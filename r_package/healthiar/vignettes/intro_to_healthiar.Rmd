@@ -19,7 +19,6 @@ library(pacman)
 pacman::p_load(healthiar, tibble, dplyr, purrr, tidyr, stringr, pillar, knitr)
 options(knitr.kable.max_rows = 10)
 set.seed(1)
-
 ```
 
 Hi there!
@@ -112,8 +111,7 @@ results_pm_copd <-
     exp_central = exdat_pm_copd$mean_concentration,
     cutoff_central = exdat_pm_copd$cut_off_value,
     bhd_central = exdat_pm_copd$prevalence
-)
-
+  )
 ```
 
 ### Results inspection
@@ -128,7 +126,6 @@ Let's inspect the main results
 
 ```{r, include=TRUE, eval=TRUE, echo=TRUE}
 results_pm_copd[["health_main"]]
-
 ```
 
 It is a tibble of 3 rows and 22 columns. Let's zoom in on some relevant aspects
@@ -149,7 +146,6 @@ results_pm_copd |>
   select(exp, bhd, rr, erf_ci, pop_fraction, impact_rounded) |> 
   as.data.frame() |> 
   print()
-
 ```
 
 ```{r}
@@ -165,12 +161,13 @@ The 2nd and 3rd rows show the impact using the lower and the upper estimates of 
 
 *NOTE*: the main output contains more columns that provide additional information about the assessment, such as cutoff, the relative risk at the observed exposure level, the shape of the ERF, ...
 
+CONTINUE HERE: ADD HARD-CODED FUNCTION CALL FROM TESTING VIGNETTE
+
 ### Including uncertainty in several input parameters
 
 Now we will make a similar function call, but include uncertainty in several input arguments.
 
 ```{r}
-
 results_pm_copd <-
   healthiar::attribute_health(
     erf_shape = "log_linear",
@@ -186,7 +183,6 @@ results_pm_copd <-
     bhd_lower = exdat_pm_copd$prevalence - 5000,
     bhd_upper = exdat_pm_copd$prevalence + 5000
     )
-
 ```
 
 Let's inspect the detailed results:
@@ -214,13 +210,11 @@ We see that each row represents a unique combination of the provided input varia
 You can do a Monte Carlo uncertainty analysis via the `include_summary_uncertainty` function.
 
 ```{r}
-
 results_pm_copd <- 
   include_summary_uncertainty(
     results = results_pm_copd,
     n_sim = 1000
 )
-
 ```
 
 The outcome of the Monte Carlo analysis is added to the variable entered as the `results` argument, which is `results_pm_copd` in our case.
@@ -232,7 +226,6 @@ Two folders are added:
 -   `uncertainty_detailed` contains all `n_sim` simulations of the Monte Carlo assessment
 
 ```{r summary uncertainty}
-
 print(
   results_pm_copd |> 
   purrr::pluck("uncertainty_main")
@@ -243,7 +236,6 @@ results_pm_copd |>
   purrr::pluck("raw") |> 
   select(rr:impact_total) |> 
   knitr::kable()
-
 ```
 
 ### Adding monetization of results
@@ -251,7 +243,6 @@ results_pm_copd |>
 You can monetize the obtained health impacts via the `include_monetization` function.
 
 ```{r monetization}
-
 results_pm_copd <- 
   include_monetization(
     output_healthiar = results_pm_copd,
@@ -263,12 +254,10 @@ results_pm_copd <-
     discount_overtime = "all_years"
   )
 
-
 results_pm_copd |> 
   purrr::pluck("monetization_main") |> 
   select(erf_ci, impact, monetized_impact) |> 
   knitr::kable()
-  
 ```
 
 We see that the monetized impact (discounted) is more than 160 million EURO.
@@ -288,7 +277,6 @@ Let's imagine we design a policy that would reduce air pollution to 5 $\mu g/m^3
 What would be the monetary benefit of such a policy, considering also the cost to implement the policy (estimated at 100 million EURO)? We can find out using `healthiar`'s `include_cba()` function.
 
 ```{r cba}
-
 cba <- 
   healthiar::include_cba(
     output_healthiar = results_pm_copd,
@@ -307,7 +295,6 @@ cba |>
   purrr::pluck("cba_main") |> 
   select(benefit, cost, benefit_minus_cost) |> 
   knitr::kable()
-
 ```
 
 We see that the central and upper 95& confidence interval estimates of avoided attributable COPD cases result in a net monetary benefit of the policy, while the lower 95% confidence interval estimate results in a net cost!
@@ -321,7 +308,6 @@ The outcome of the CBA is contained in two folders are added:
 ## Example: attribute cases of high annoyance to (road) noise exposure
 
 ```{r}
-
 exdat_noise_ha <-
   exdat_noise_ha |>
   dplyr::filter(!is.na(exdat_noise_ha$exposure_mean))
@@ -350,7 +336,6 @@ To iterate an burden or impact assessment over multiple geo units the geo-specif
 We use the `runif` function to simulate data for 5 Swiss cantons.
 
 ```{r}
-
 results_iteration <- 
   healthiar::attribute_health(
     exp_central = as.list(runif(5, 8.0, 9.0)),
@@ -368,7 +353,6 @@ results_iteration <-
     geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Grisons"), 
     geo_id_aggregated = rep("CH", 5), # CH = abbreviation of Switzerland
   )
-
-
-
 ```
+
+CONTINUE HERE: LOOKING AT OUTPUT OF ITERATION
