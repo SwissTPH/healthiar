@@ -5,7 +5,7 @@
 #' function output.
 #' @param results \code{variable} in which the results of an attribute function is stored.
 #' @param n_sim \code{numeric value} indicating the number of simulations to be performed.
-#' @return
+#' @returns
 #' This function returns confidence intervals for the attributable health impacts using a Monte Carlo simulation.
 #' @import dplyr
 #' @import purrr

@@ -2,7 +2,7 @@
 
 #' @description Distributes and store outputs by level of detail by aggregating or filtering impacts.
 #' @param impact_raw \code{Data frame} containing all input data and the calculation of health impacts.
-#' @return
+#' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central, lower and upper bound confidence interval.
 #' Moreover, the data frame includes columns such as:

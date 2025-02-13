@@ -3,7 +3,7 @@
 #' @description Calculates the population attributable fraction of a health outcome due to exposure to an environmental stressor
 #' @inheritParams attribute
 #' @param rr_conc \code{Numerical value} Risk estimate of the concentration response function for a specific concentration. The population attributable fraction is normally calculated using the risk estimate that refers to the concentration that reflects the population exposure and the cut-off. This risk estimate is obtained after re-scaling from the epidemiological study with a particular increment (e.g. for PM2.5 10 or 5 ug/m3) to the aimed concentration.
-#' @return
+#' @returns
 #' This function returns a \code{value} corresponding to the population attributable fraction
 #' @examples
 #' get_paf(rr = 1.062, prop_pop_exposed = 1)

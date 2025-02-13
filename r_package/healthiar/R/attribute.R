@@ -41,7 +41,7 @@
 #' @param min_age \code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. By default 30, which implies that all adults aged 30 or older will be affected by the exposure.
 #' @param max_age \code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.
 #' @param health_outcome \code{String} specifying the (input and) outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".
-#' @return
+#' @returns
 #' This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
 #' 2) \code{health_detailed}, which contains detailed (and interim) results.
 #' The result tibbles include columns such as:

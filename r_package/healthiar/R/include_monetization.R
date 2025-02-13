@@ -11,7 +11,7 @@
 #' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting.
 #' @param discount_overtime \code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".
 #'
-#' @return Description of the return value.
+#' @returns Description of the return value.
 #' @examples
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)

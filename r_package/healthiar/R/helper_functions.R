@@ -2,7 +2,7 @@
 
 #' @description This helper function extracts the main results from a variable containing the ouput of an \code{attribute} call.
 #' @param x \code{Variable containing the ouput of an \code{attribute} call}
-#' @return
+#' @returns
 #' This helper function returns the main health result(s) as a \code{vector}.
 #' @author Axel Luyten
 #' @note Helper function
@@ -21,7 +21,7 @@ helper_extract_main_health_results <- function(x){
 
 #' @description This helper function extracts the main results from a variable containing the ouput of an \code{attribute} call.
 #' @param x \code{Variable containing the ouput of an \code{attribute} call}
-#' @return
+#' @returns
 #' This helper function returns the main health result(s) as a \code{vector}.
 #' @author Axel Luyten
 #' @note Helper function
@@ -42,7 +42,7 @@ helper_extract_detailed_health_results <- function(x){
 #' @param n \code{Numeric value} Number of values to be generated
 #' @param min,max \code{Numeric values} Lower and upper limits
 #' @param seed \code{Numeric values} Seed to be used
-#' @return
+#' @returns
 #' This helper function returns generated values as a \code{vector}.
 #' @author Alberto Castro
 #' @note Helper function
@@ -58,7 +58,7 @@ helper_runif_with_seed <-
 
 #' @description This helper function extracts the main CBA results from a variable containing CBA results.
 #' @param x \code{Variable containing the ouput of an \code{include_cba} call}
-#' @return
+#' @returns
 #' This helper function returns the main CBA result(s) as a \code{vector}.
 #' @author Axel Luyten
 #' @note Helper function

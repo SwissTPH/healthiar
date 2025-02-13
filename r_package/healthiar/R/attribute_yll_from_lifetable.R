@@ -33,10 +33,10 @@
 #'   info = NULL
 #' )
 #' @inheritParams attribute
-#' @returns
+#' @returnss
 #' This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
 #' 2) \code{health_detailed}, which contains detailed (and interim) results.
-#' @returns
+#' @returnss
 #' The main results tibble include columns such as:
 #' \itemize{
 #'  \item pop_fraction (population attributable fraction; only for assessments using relative risk)
@@ -44,7 +44,7 @@
 #'  \item impact_per_100k_inhab (impact per 100'000 inhabitants)
 #'  \item And many more.
 #'  }
-#' @returns
+#' @returnss
 #' The detailed results tibble additionally provides information on the year- and age-specific impacts for males and females seperately.
 #' @examples
 #' TBD

@@ -3,7 +3,7 @@
 #' @description Get attributable disability-adjusted lived years applying a lifetable approach
 #' @inheritParams attribute
 #' @param outcome_metric \code{String} with the metric of the health outcome to be assessed. Options: "deaths", "yll" or "yld".
-#' @return
+#' @returns
 #' This function returns a \code{List}
 #' @import dplyr
 #' @import purrr

@@ -3,7 +3,7 @@
 #' @description Calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments). It provides as a result the central estimate as well as the lower and the higher bound of the confidence interval based on the uncertainty of the exposure-response function.
 #' @inheritParams compare
 #'
-#' @return
+#' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central estimate, lower and upper bound confidence interval).
 #' Moreover, the data frame includes columns such as:

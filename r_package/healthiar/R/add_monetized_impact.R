@@ -6,7 +6,7 @@
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function).
 #' @inheritParams include_monetization
 #'
-#' @return Description of the return value.
+#' @returns Description of the return value.
 #' @examples
 #' # To be added
 #' @keywords internal

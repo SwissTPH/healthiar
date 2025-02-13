@@ -6,7 +6,7 @@
 #' @param except \code{Vector} of strings showing columns that have to be excluded although they fulfill the inclusion criteria (same name and value)
 
 #'
-#' @return
+#' @returns
 #' This function returns a \code{vector} of strings
 #' @import dplyr
 #' @import purrr
