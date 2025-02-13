@@ -14,9 +14,6 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
-#' @import dplyr
-#' @import purrr
-#' @importFrom stringr str_replace
 #' @examples
 #' TBD
 #' @author Alberto Castro

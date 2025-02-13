@@ -12,14 +12,10 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
-#' @import dplyr
-#' @import purrr
-#' @importFrom tidyr pivot_longer crossing nest
 #' @examples
 #' TBD
 #' @author Alberto Castro
 #' @note Experimental function
-#' @export
 #' @keywords internal
 
 compile_input <-

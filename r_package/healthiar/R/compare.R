@@ -47,7 +47,6 @@
 #'  \item And many more.
 #' }
 #' @author Alberto Castro
-#' @importFrom stringr str_detect
 #' @note Experimental function
 #' @export
 compare <-

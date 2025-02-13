@@ -13,8 +13,6 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
-#' @import dplyr
-#' @import purrr
 #' @examples
 #' TBD
 #' @author Alberto Castro

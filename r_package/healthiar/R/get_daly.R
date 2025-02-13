@@ -5,8 +5,6 @@
 #' @param outcome_metric \code{String} with the metric of the health outcome to be assessed. Options: "deaths", "yll" or "yld".
 #' @returns
 #' This function returns a \code{List}
-#' @import dplyr
-#' @import purrr
 #' @examples
 #' TBD
 #' @author Alberto Castro & Axel Luyten

@@ -8,8 +8,6 @@
 #'
 #' @returns
 #' This function returns a \code{vector} of strings
-#' @import dplyr
-#' @import purrr
 #' @examples
 #' TBD
 #' @author Alberto Castro & Axel Luyten

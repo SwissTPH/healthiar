@@ -28,3 +28,4 @@ Config/testthat/edition: 3
 VignetteBuilder: knitr
 Suggests: 
     terra
+    sf

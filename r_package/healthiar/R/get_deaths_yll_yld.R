@@ -4,10 +4,6 @@
 #' @inheritParams attribute
 #' @returns
 #' This function returns a \code{List}
-#' @import dplyr
-#' @importFrom tidyr pivot_longer
-#' @importFrom tidyr unnest
-#' @import purrr
 #' @examples
 #' TBD
 #' @author Alberto Castro & Axel Luyten
