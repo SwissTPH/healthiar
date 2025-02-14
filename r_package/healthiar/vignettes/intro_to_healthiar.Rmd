@@ -69,11 +69,7 @@ The main function family of `healthiar` is the attribute family, used to attribu
 
 ![Figure: `healthiar` overview](images/EPHC_poster_landscape_v0.2.2_only_package_overview.jpg){width="700"}
 
-------------------------------------------------------------------------
-
-# How to use `healthiar`
-
-\`healthiar\` comes with some example data that start with `exdat_` that allow you to test functions.
+`healthiar` comes with some example data that start with `exdat_` that allow you to test functions.
 
 ```{r, eval=TRUE, echo=FALSE, include=TRUE}
 package_data <- data(package = "healthiar")[["results"]] |> 
@@ -88,7 +84,11 @@ package_data <- data(package = "healthiar")[["results"]] |>
   # cat(paste(collapse = "\n"), "\n")
 ```
 
-## Example: attribute COPD cases to pop-weighted mean exposure
+------------------------------------------------------------------------
+
+# How to use `healthiar`
+
+## Example relative risk: attribute COPD cases to pop-weighted mean exposure
 
 ### Function call
 
@@ -203,7 +203,7 @@ We see that each row represents a unique combination of the provided input varia
 
 -   ...
 
-(Note that only 9 of the 27 possible combinations are displayed due to space constraints.)
+(*NOTE*: that only 9 of the 27 possible combinations are displayed due to space constraints.)
 
 ### Adding summary uncertainty
 
@@ -305,7 +305,7 @@ The outcome of the CBA is contained in two folders are added:
 
 -   `cba_detailed` contains additional intermediate results for both cost and benefit
 
-## Example: attribute cases of high annoyance to (road) noise exposure
+## Example absolute risk: attribute cases of high annoyance to (road) noise exposure
 
 ```{r}
 exdat_noise_ha <-
@@ -329,11 +329,13 @@ results_noise_ha |>
   knitr::kable() # Prints tibble in a minimal layout
 ```
 
-## Example: assess impact in multiple geographic units
+## Example iteration: assess impact in multiple geographic units
 
-To iterate an burden or impact assessment over multiple geo units the geo-specific information, such as the `exp_...` and `bhd_...` arguments, have to be entered as a list, i.e. wrapped by the `as.list` function. Additionally, specify the `geo_id_disaggregated` (e.g. "Brussels") and `geo_id_aggregated` (e.g. "Belgium") arguments that assign a IDs to the geo units
+To iterate an burden or impact assessment over multiple geo(graphic) units the geo-specific information, such as the `exp_...` and `bhd_...` arguments, have to be entered as a list, i.e. wrapped by the `as.list` function.
 
-We use the `runif` function to simulate data for 5 Swiss cantons.
+Additionally, specify the `geo_id_disaggregated` (e.g. "Brussels", "Antwerp", ...) and `geo_id_aggregated` (e.g. "Belgium") arguments. These IDs are used for aggregation of the results, i.e. all geo units that belong to the same administrative unit (Belgium in this case) have the same `geo_id_aggregated`.
+
+(*NOTE*: in the example below the `runif` function from the `stats` package is used to simulate stroke cases and PM2.5 exposure for 5 Swiss cantons.)
 
 ```{r}
 results_iteration <- 
@@ -355,4 +357,27 @@ results_iteration <-
   )
 ```
 
-CONTINUE HERE: LOOKING AT OUTPUT OF ITERATION
+Let’s inspect the results from the iteration
+
+```{r inspect iteration main results}
+results_iteration[["health_main"]] |> 
+  kable()
+```
+
+We see that there are fewer columns than for a single geo unit assessment with `attribute()` because in this iteration case, the tibble `health_main` contains the *aggregated* results of the geo units. The cumulative / summed number of stroke cases attributable to PM2.5 exposure in the 5 geo units is 14560 (using a relative risk of 1.369).
+
+The geo unit specific information and results are stored in `health_detailed`. Filter for the main result for each geo unit as follows
+
+```{r inspect iteration detailed results}
+results_iteration[["health_detailed"]][["raw"]] |>
+  pluck() |> 
+  ## Select main result for each geo unit
+  ## i.e. rows where all ..._ci columns have value "central"
+filter( 
+      if_all(.cols = matches("_ci"), .fns = ~ . == "central")
+      ) |>
+  select(geo_id_disaggregated, exp, bhd, rr, pop_fraction, impact_rounded) |> 
+  kable() 
+```
+
+Besides the main result, `health_detailed` also contains impacts obtained through all combinations of input data central, lower and upper estimates.
