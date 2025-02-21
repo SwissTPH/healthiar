@@ -6,7 +6,6 @@
 #' @param geo_units \code{sf} of the geographic units data.
 #' @return
 #' This function returns a vector of population exposure values.
-#' @importFrom terra extract
 #' @export
 #' @author Arno Pauwels
 #' @note Experimental function
