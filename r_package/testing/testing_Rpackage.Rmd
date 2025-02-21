@@ -55,8 +55,9 @@ credentials::set_github_pat() # paste github PAT if prompted
 devtools::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
-  ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
+  # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
   # ref = "415-prepare-package-for-use-by-ubdpolicy", # By default "HEAD"; name of branch to install package from as a string  
+  ref = "432-terra-package-required-for-installing-healthiar",
   # force = TRUE,
   # dependencies = TRUE,
   build_vignettes = TRUE
@@ -82,43 +83,9 @@ install.packages("../testing/input/healthiar_0.0.0.1.tar.gz", repos=NULL, type='
 library(healthiar)
 ```
 
-# Calculate health impacts
 
-## Attributable health impact
-
-### Single baseline health data
-
-```{r single exposure value}
-# Assess attributable cases using the AirQ+ export as input data
-bestcost_pm_copd <-
-  healthiar::attribute_health(
-    exp_central = airqplus_pm_copd$mean_concentration,
-    cutoff_central = airqplus_pm_copd$cut_off_value,
-    bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
-    rr_central = airqplus_pm_copd$relative_risk, 
-    rr_lower = airqplus_pm_copd$relative_risk_lower,
-    rr_upper = airqplus_pm_copd$relative_risk_upper,
-    rr_increment = 10, 
-    erf_shape = "log_linear", 
-    info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
-
-# View(bestcost_pm_copd)
-
-check_bestcost(result_list_bestcost = bestcost_pm_copd,
-               result_vector_alternative = airqplus_pm_copd_result <- 
-                 # Store the central, lower and upper estimate of the AirQ+ assessment
-                 airqplus_pm_copd |>
-                 dplyr::select(estimated_number_of_attributable_cases_central,
-                               estimated_number_of_attributable_cases_lower,
-                               estimated_number_of_attributable_cases_upper)|>
-                 unlist())
-```
-
-```{r Test }
-
-```
-
-```{r prepare tests}
+This is test code and should not be run
+```{r prepare tests, eval=FALSE, include=FALSE}
 
 data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
 data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -167,6 +134,41 @@ test <- test |>
 test <- paste(test, collapse = ", ")
 print(test)
 ```
+
+
+# Calculate health impacts
+
+## Attributable health impact
+
+### Single baseline health data
+
+```{r single exposure value}
+# Assess attributable cases using the AirQ+ export as input data
+bestcost_pm_copd <-
+  healthiar::attribute_health(
+    exp_central = airqplus_pm_copd$mean_concentration,
+    cutoff_central = airqplus_pm_copd$cut_off_value,
+    bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+    rr_central = airqplus_pm_copd$relative_risk, 
+    rr_lower = airqplus_pm_copd$relative_risk_lower,
+    rr_upper = airqplus_pm_copd$relative_risk_upper,
+    rr_increment = 10, 
+    erf_shape = "log_linear", 
+    info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
+
+# View(bestcost_pm_copd)
+
+check_bestcost(result_list_bestcost = bestcost_pm_copd,
+               result_vector_alternative = airqplus_pm_copd_result <- 
+                 # Store the central, lower and upper estimate of the AirQ+ assessment
+                 airqplus_pm_copd |>
+                 dplyr::select(estimated_number_of_attributable_cases_central,
+                               estimated_number_of_attributable_cases_lower,
+                               estimated_number_of_attributable_cases_upper)|>
+                 unlist())
+```
+
+
 
 
 
