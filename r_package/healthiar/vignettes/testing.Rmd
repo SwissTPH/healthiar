@@ -14,9 +14,19 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(healthiar)
+library(tibble)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(stringr)
+library(knitr)
+library(readxl)
 
-library(pacman)
-pacman::p_load(healthiar, tibble, dplyr, purrr, tidyr, stringr, pillar, knitr, testthat, readxl)
+## Avoid using pacman here, as it causes error in installation if it's not installed already
+# library(pacman)
+# pacman::p_load(healthiar, tibble, dplyr, purrr, tidyr, stringr, knitr, readxl)
+
 options(knitr.kable.max_rows = 10)
 set.seed(1)
 
