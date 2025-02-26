@@ -113,7 +113,18 @@ include_cba <-
 
 
 
-    return(output_cba)
+    if(is.null(positive_impact) & !is.null(output_healthiar)){
+      output <-
+        c(output_healthiar,
+          output_cba)
+
+    }else if(!is.null(positive_impact) & is.null(output_healthiar)){
+     output <- output_cba
+    }
+
+
+
+    return(output)
 
 
 
