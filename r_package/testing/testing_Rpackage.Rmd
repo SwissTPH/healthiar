@@ -135,7 +135,6 @@ test <- paste(test, collapse = ", ")
 print(test)
 ```
 
-
 # Calculate health impacts
 
 ## Attributable health impact
@@ -171,12 +170,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_copd,
 
 
 
-
-
-
-
-
-
 ```{r single exposure value with multiple uncertainties}
 
 
@@ -200,11 +193,6 @@ bestcost_pm_copd_multiple <-
 
 check_bestcost(result_list_bestcost = bestcost_pm_copd_multiple,
                result_vector_alternative = c(3502, 1353, 5474)) # Results on 5 November 2024
-
-
-
-
-
 
 
 
@@ -1092,7 +1080,7 @@ bestcost_pm_no2_mortality_multiplicative <-
     rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
     erf_shape = "log_linear")
 
-View(bestcost_pm_no2_mortality_multiplicative)
+# View(bestcost_pm_no2_mortality_multiplicative)
 
 check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative,
                result_vector_alternative = 0.079 * 1000)
@@ -1481,9 +1469,40 @@ check_bestcost(result_list_bestcost = bestcost_pm_daly_lifetable_geluft,
 
 ### Single bhd
 
+
+```{r TEST compare_health_new}
+
+scen_a <-
+  attribute_health(
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+    rr_increment = 10,
+    exp_central = 8.85, exp_lower = NULL, exp_upper = NULL,
+    cutoff_central = 5, cutoff_lower = NULL, cutoff_upper = NULL,
+    bhd_central = 25000
+  )
+
+scen_b <-
+  attribute_health(
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+    rr_increment = 10,
+    exp_central = 6, exp_lower = NULL, exp_upper = NULL,
+    cutoff_central = 5, cutoff_lower = NULL, cutoff_upper = NULL,
+    bhd_central = 25000
+  )
+
+test_comparison <- 
+  compare_health_new(
+    output_attribute_scen_A = scen_a,
+    output_attribute_scen_B = scen_b
+  )
+
+```
+
 ```{r comparison singlebhd_rr}
-
-
 
 # Test delta comparison function with fake values
 # DELTA
