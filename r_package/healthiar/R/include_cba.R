@@ -27,16 +27,16 @@ include_cba <-
 
     # Define vectors that are relevant below
 
-    relevant_columns <-
+    columns_monetization <-
         c("monetized_impact", "monetized_impact_rounded")
 
-    suffix <-
+    suffix_monetization <-
       c("_benefit", "_cost")
 
-    relevant_columns_with_suffix <-
+    columns_monetization_with_suffix <-
       paste0(
-        relevant_columns,
-        rep(suffix, each = length(relevant_columns))
+        columns_monetization,
+        rep(suffix_monetization, each = length(columns_monetization))
       )
 
     # Run include_monetization for benefit and cost separately
@@ -74,12 +74,26 @@ include_cba <-
       dplyr::left_join(
         cba_detailed_benefit,
         cba_detailed_cost,
-        by = c("discount_shape", "discount_overtime"), # Removed all_of() because it triggered warning in testing
-        suffix = suffix)|>
-      # Keep only relevant columns (results)
-      dplyr::select(all_of(relevant_columns_with_suffix))|> # This line resulted in a warning: Using `all_of()` outside of a selecting function was deprecated in tidyselect 1.2.0.
-      # dplyr::select(relevant_columns_with_suffix)|> # ... but this line also resulted in a warning
-      # Rename columns to make them shorter
+        by = c("discount_shape", "discount_overtime"),
+        suffix = suffix_monetization)
+
+
+    # Store names of columns with ci and geo_id
+    # These columns define the different cases (rows)
+    # This intermediate step is needed to ensure that no errors are produced
+    # if no columns with ci or geo are available
+    # (i.e, without using the function attribute in a previous step)
+    columns_ci_geo <-
+      names(cba_main)[grepl("_ci|geo_id", names(cba_main))]
+
+    relevant_columns <-
+      c(columns_ci_geo, columns_monetization_with_suffix)
+
+
+    cba_main <-
+      cba_main |>
+      # Keep only relevant columns
+      dplyr::select(all_of(relevant_columns))|>
       # Moreover, cost is not actually a monetized impact
       dplyr::rename(benefit = monetized_impact_benefit,
                     cost = monetized_impact_cost,
