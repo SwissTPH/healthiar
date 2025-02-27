@@ -40,6 +40,8 @@ include_cba <-
       )
 
     # Run include_monetization for benefit and cost separately
+    # Important to obtain main and detailed to avoid losing information
+
     cba_detailed_benefit <-
       healthiar::include_monetization(
         approach_discount = approach_discount,
@@ -49,7 +51,20 @@ include_cba <-
         discount_years = discount_years_benefit,
         discount_shape = discount_shape,
         discount_overtime = discount_overtime,
+        valuation = valuation)[["monetization_detailed"]]
+
+    cba_main_benefit <-
+      healthiar::include_monetization(
+        approach_discount = approach_discount,
+        output_healthiar = output_healthiar,
+        impact = positive_impact,
+        discount_rate = discount_rate_benefit,
+        discount_years = discount_years_benefit,
+        discount_shape = discount_shape,
+        discount_overtime = discount_overtime,
         valuation = valuation)[["monetization_main"]]
+
+
 
     # For cost, assume 1 impact with full valuation to make use of include_monetization
     cba_detailed_cost <-
@@ -62,6 +77,9 @@ include_cba <-
         discount_shape = discount_shape,
         discount_overtime = discount_overtime)[["monetization_main"]]
 
+    # For costs main and detailed are the same because they only have one row
+    cba_main_cost <- cba_detailed_cost
+
     # Build the detailed output list
     cba_detailed <-
       list(
@@ -72,8 +90,8 @@ include_cba <-
     cba_main <-
       # Join benefit and cost into one df
       dplyr::left_join(
-        cba_detailed_benefit,
-        cba_detailed_cost,
+        cba_main_benefit,
+        cba_main_cost,
         by = c("discount_shape", "discount_overtime"),
         suffix = suffix_monetization)
 
