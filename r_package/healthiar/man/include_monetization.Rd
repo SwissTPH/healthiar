@@ -12,7 +12,8 @@ include_monetization(
   discount_rate = NULL,
   discount_shape = NULL,
   discount_years = 1,
-  discount_overtime = "all_years"
+  discount_overtime = "all_years",
+  inflation = NULL
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ include_monetization(
 \item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
 
 \item{discount_overtime}{\code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".}
+
+\item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices) to be applied to the discount. Default value = NULL (asumming no inflaction or inflaction already applied in the provided discount rate)}
 }
 \value{
 Description of the return value.
