@@ -7,7 +7,7 @@
 #' @param benefit \code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure
 #' @param cost \code{Numeric value} referring to the investment cost to achive the reduction of exposure
 #'
-#' @return Description of the return value.
+#' @returns Description of the return value.
 #' @examples
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)

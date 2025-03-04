@@ -4,7 +4,7 @@
 #' @inheritParams attribute
 #' @param outcome_metric \code{String} to define the outcome metric. Choose between "death", "yll" and "yld"
 #'
-#' @return
+#' @returns
 #' This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central estimate, lower and upper bound confidence interval).
 #' Moreover, the data frame include columns such as:
@@ -14,9 +14,6 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
-#' @import dplyr
-#' @import purrr
-#' @importFrom stringr str_replace
 #' @examples
 #' TBD
 #' @author Alberto Castro

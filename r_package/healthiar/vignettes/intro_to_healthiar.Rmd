@@ -30,7 +30,6 @@ library(knitr)
 
 options(knitr.kable.max_rows = 10)
 set.seed(1)
-
 ```
 
 Hi there!
@@ -81,11 +80,7 @@ The main function family of `healthiar` is the attribute family, used to attribu
 
 ![Figure: `healthiar` overview](images/EPHC_poster_landscape_v0.2.2_only_package_overview.jpg){width="700"}
 
-------------------------------------------------------------------------
-
-# How to use `healthiar`
-
-\`healthiar\` comes with some example data that start with `exdat_` that allow you to test functions.
+`healthiar` comes with some example data that start with `exdat_` that allow you to test functions.
 
 ```{r, eval=TRUE, echo=FALSE, include=TRUE}
 package_data <- data(package = "healthiar")[["results"]] |> 
@@ -100,7 +95,11 @@ package_data <- data(package = "healthiar")[["results"]] |>
   # cat(paste(collapse = "\n"), "\n")
 ```
 
-## Example: attribute COPD cases to pop-weighted mean exposure
+------------------------------------------------------------------------
+
+# How to use `healthiar`
+
+## Example relative risk: attribute COPD cases to pop-weighted mean exposure
 
 ### Function call
 
@@ -123,8 +122,7 @@ results_pm_copd <-
     exp_central = exdat_pm_copd$mean_concentration,
     cutoff_central = exdat_pm_copd$cut_off_value,
     bhd_central = exdat_pm_copd$prevalence
-)
-
+  )
 ```
 
 ### Results inspection
@@ -139,7 +137,6 @@ Let's inspect the main results
 
 ```{r, include=TRUE, eval=TRUE, echo=TRUE}
 results_pm_copd[["health_main"]]
-
 ```
 
 It is a tibble of 3 rows and 22 columns. Let's zoom in on some relevant aspects
@@ -160,7 +157,6 @@ results_pm_copd |>
   select(exp, bhd, rr, erf_ci, pop_fraction, impact_rounded) |> 
   as.data.frame() |> 
   print()
-
 ```
 
 ```{r}
@@ -176,12 +172,13 @@ The 2nd and 3rd rows show the impact using the lower and the upper estimates of 
 
 *NOTE*: the main output contains more columns that provide additional information about the assessment, such as cutoff, the relative risk at the observed exposure level, the shape of the ERF, ...
 
+CONTINUE HERE: ADD HARD-CODED FUNCTION CALL FROM TESTING VIGNETTE
+
 ### Including uncertainty in several input parameters
 
 Now we will make a similar function call, but include uncertainty in several input arguments.
 
 ```{r}
-
 results_pm_copd <-
   healthiar::attribute_health(
     erf_shape = "log_linear",
@@ -197,7 +194,6 @@ results_pm_copd <-
     bhd_lower = exdat_pm_copd$prevalence - 5000,
     bhd_upper = exdat_pm_copd$prevalence + 5000
     )
-
 ```
 
 Let's inspect the detailed results:
@@ -218,20 +214,18 @@ We see that each row represents a unique combination of the provided input varia
 
 -   ...
 
-(Note that only 9 of the 27 possible combinations are displayed due to space constraints.)
+(*NOTE*: that only 9 of the 27 possible combinations are displayed due to space constraints.)
 
 ### Adding summary uncertainty
 
 You can do a Monte Carlo uncertainty analysis via the `include_summary_uncertainty` function.
 
 ```{r}
-
 results_pm_copd <- 
   include_summary_uncertainty(
     results = results_pm_copd,
     n_sim = 1000
 )
-
 ```
 
 The outcome of the Monte Carlo analysis is added to the variable entered as the `results` argument, which is `results_pm_copd` in our case.
@@ -243,7 +237,6 @@ Two folders are added:
 -   `uncertainty_detailed` contains all `n_sim` simulations of the Monte Carlo assessment
 
 ```{r summary uncertainty}
-
 print(
   results_pm_copd |> 
   purrr::pluck("uncertainty_main")
@@ -254,7 +247,6 @@ results_pm_copd |>
   purrr::pluck("raw") |> 
   select(rr:impact_total) |> 
   knitr::kable()
-
 ```
 
 ### Adding monetization of results
@@ -262,7 +254,6 @@ results_pm_copd |>
 You can monetize the obtained health impacts via the `include_monetization` function.
 
 ```{r monetization}
-
 results_pm_copd <- 
   include_monetization(
     output_healthiar = results_pm_copd,
@@ -274,12 +265,10 @@ results_pm_copd <-
     discount_overtime = "all_years"
   )
 
-
 results_pm_copd |> 
   purrr::pluck("monetization_main") |> 
   select(erf_ci, impact, monetized_impact) |> 
   knitr::kable()
-  
 ```
 
 We see that the monetized impact (discounted) is more than 160 million EURO.
@@ -299,7 +288,6 @@ Let's imagine we design a policy that would reduce air pollution to 5 $\mu g/m^3
 What would be the monetary benefit of such a policy, considering also the cost to implement the policy (estimated at 100 million EURO)? We can find out using `healthiar`'s `include_cba()` function.
 
 ```{r cba}
-
 cba <- 
   healthiar::include_cba(
     output_healthiar = results_pm_copd,
@@ -318,7 +306,6 @@ cba |>
   purrr::pluck("cba_main") |> 
   select(benefit, cost, benefit_minus_cost) |> 
   knitr::kable()
-
 ```
 
 We see that the central and upper 95& confidence interval estimates of avoided attributable COPD cases result in a net monetary benefit of the policy, while the lower 95% confidence interval estimate results in a net cost!
@@ -329,10 +316,9 @@ The outcome of the CBA is contained in two folders are added:
 
 -   `cba_detailed` contains additional intermediate results for both cost and benefit
 
-## Example: attribute cases of high annoyance to (road) noise exposure
+## Example absolute risk: attribute cases of high annoyance to (road) noise exposure
 
 ```{r}
-
 exdat_noise_ha <-
   exdat_noise_ha |>
   dplyr::filter(!is.na(exdat_noise_ha$exposure_mean))
@@ -354,14 +340,15 @@ results_noise_ha |>
   knitr::kable() # Prints tibble in a minimal layout
 ```
 
-## Example: assess impact in multiple geographic units
+## Example iteration: assess impact in multiple geographic units
 
-To iterate an burden or impact assessment over multiple geo units the geo-specific information, such as the `exp_...` and `bhd_...` arguments, have to be entered as a list, i.e. wrapped by the `as.list` function. Additionally, specify the `geo_id_disaggregated` (e.g. "Brussels") and `geo_id_aggregated` (e.g. "Belgium") arguments that assign a IDs to the geo units
+To iterate an burden or impact assessment over multiple geo(graphic) units the geo-specific information, such as the `exp_...` and `bhd_...` arguments, have to be entered as a list, i.e. wrapped by the `as.list` function.
 
-We use the `runif` function to simulate data for 5 Swiss cantons.
+Additionally, specify the `geo_id_disaggregated` (e.g. "Brussels", "Antwerp", ...) and `geo_id_aggregated` (e.g. "Belgium") arguments. These IDs are used for aggregation of the results, i.e. all geo units that belong to the same administrative unit (Belgium in this case) have the same `geo_id_aggregated`.
+
+(*NOTE*: in the example below the `runif` function from the `stats` package is used to simulate stroke cases and PM2.5 exposure for 5 Swiss cantons.)
 
 ```{r}
-
 results_iteration <- 
   healthiar::attribute_health(
     exp_central = as.list(runif(5, 8.0, 9.0)),
@@ -379,7 +366,29 @@ results_iteration <-
     geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Grisons"), 
     geo_id_aggregated = rep("CH", 5), # CH = abbreviation of Switzerland
   )
-
-
-
 ```
+
+Let’s inspect the results from the iteration
+
+```{r inspect iteration main results}
+results_iteration[["health_main"]] |> 
+  kable()
+```
+
+We see that there are fewer columns than for a single geo unit assessment with `attribute()` because in this iteration case, the tibble `health_main` contains the *aggregated* results of the geo units. The cumulative / summed number of stroke cases attributable to PM2.5 exposure in the 5 geo units is 14560 (using a relative risk of 1.369).
+
+The geo unit specific information and results are stored in `health_detailed`. Filter for the main result for each geo unit as follows
+
+```{r inspect iteration detailed results}
+results_iteration[["health_detailed"]][["raw"]] |>
+  pluck() |> 
+  ## Select main result for each geo unit
+  ## i.e. rows where all ..._ci columns have value "central"
+filter( 
+      if_all(.cols = matches("_ci"), .fns = ~ . == "central")
+      ) |>
+  select(geo_id_disaggregated, exp, bhd, rr, pop_fraction, impact_rounded) |> 
+  kable() 
+```
+
+Besides the main result, `health_detailed` also contains impacts obtained through all combinations of input data central, lower and upper estimates.

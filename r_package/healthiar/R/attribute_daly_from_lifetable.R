@@ -1,34 +1,38 @@
-#' Health impacts based on life tables
+#' Attributable disability-adjusted life years based on life tables
 
-#' @description Calculates the years lived with disability attributable to the exposure to an environmental stressor using a life table approach. It provides the central estimate of the impact and the corresponding 95\% confidence intervals (based on the 95\% confidence interval exposure-response function).
+#' @description
+#' Calculates the disability-adjusted life years attributable to the exposure to an environmental stressor using a life table approach.
 #' @inheritParams attribute
-#' @return
-#' This function returns a \code{data.frame}
-#' @import dplyr
-#' @import purrr
+#' @inherit attribute_yll_from_lifetable return
 #' @author Alberto Castro & Axel Luyten
 #' @note Experimental function
 #' @export
 attribute_daly_from_lifetable <-
-  function(approach_multiexposure = NULL,
-           exp_central, exp_lower = NULL, exp_upper = NULL,
-           prop_pop_exp = 1,
-           cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
-           rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           rr_increment = NULL, erf_shape = NULL,
-           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-           approach_exposure = "single_year",
-           approach_newborns = "without_newborns",
-           first_age_pop, last_age_pop,
-           deaths_male = NULL,
-           deaths_female = NULL,
-           population_midyear_male, population_midyear_female,
-           year_of_analysis,
-           min_age = NULL, max_age = NULL,
-           dw_central, dw_lower = NULL, dw_upper = NULL,
-           duration_central, duration_lower = NULL, duration_upper = NULL,
-           time_horizon = NULL,
-           info = NULL){
+  function(
+    ## Calculation specification
+    approach_multiexposure = NULL,
+    approach_exposure = "single_year",
+    approach_newborns = "without_newborns",
+    year_of_analysis,
+    min_age = NULL, max_age = NULL,
+    time_horizon = NULL,
+    dw_central, dw_lower = NULL, dw_upper = NULL,
+    duration_central, duration_lower = NULL, duration_upper = NULL,
+    ## Lifetable arguments
+    first_age_pop, last_age_pop,
+    deaths_male = NULL,
+    deaths_female = NULL,
+    population_midyear_male, population_midyear_female,
+    ## Risk and shape arguments
+    rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+    rr_increment = NULL, erf_shape = NULL,
+    erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
+    ## Other central input
+    exp_central, exp_lower = NULL, exp_upper = NULL,
+    prop_pop_exp = 1,
+    cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+    ## Meta-info
+    info = NULL){
 
     output<-
       healthiar::attribute(

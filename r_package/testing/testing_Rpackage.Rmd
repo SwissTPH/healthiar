@@ -5,7 +5,7 @@ output: html_document
 ---
 
 # Goal
-
+ 
 Test the functions of the bestcost package comparing the results with results from other tools or assessments
 
 # Load packages and data

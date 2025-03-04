@@ -2,12 +2,8 @@
 #'
 #' @description Get attributable deaths, years of life lost or years lived with disability from lifetable
 #' @inheritParams attribute
-#' @return
+#' @returns
 #' This function returns a \code{List}
-#' @import dplyr
-#' @importFrom tidyr pivot_longer
-#' @importFrom tidyr unnest
-#' @import purrr
 #' @examples
 #' TBD
 #' @author Alberto Castro & Axel Luyten

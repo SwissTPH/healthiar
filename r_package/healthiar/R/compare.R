@@ -36,7 +36,7 @@
 #' @param info_2 \code{String} or {data frame} showing additional information or id of the scenario 1. The suffix "info" will be added to the column name. Default value = NULL.
 
 
-#' @return
+#' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central estimate, lower and upper bound confidence interval).
 #' Moreover, the data frame includes columns such as:
@@ -47,7 +47,6 @@
 #'  \item And many more.
 #' }
 #' @author Alberto Castro
-#' @importFrom stringr str_detect
 #' @note Experimental function
 #' @export
 compare <-

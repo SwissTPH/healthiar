@@ -41,7 +41,7 @@
 #' @param min_age \code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. By default 30, which implies that all adults aged 30 or older will be affected by the exposure.
 #' @param max_age \code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.
 #' @param health_outcome \code{String} specifying the (input and) outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".
-#' @return
+#' @returns
 #' This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
 #' 2) \code{health_detailed}, which contains detailed (and interim) results.
 #' The result tibbles include columns such as:
@@ -56,21 +56,21 @@
 
 attribute <-
   function(approach_risk = "relative_risk",
-           # Risk and shape arguments
+           ## Risk and shape arguments
            rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
            rr_increment = NULL, erf_shape = NULL,
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            prop_pop_exp = 1,
-           # Other central input
+           ## Other central input
            exp_central, exp_lower = NULL, exp_upper = NULL,
            cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
-           # Iteration arguments
+           ## Iteration arguments
            geo_id_disaggregated = NULL,
            geo_id_aggregated = NULL,
-           # Multiexposure
+           ## Multiexposure
            approach_multiexposure = NULL,
-           # Lifetable arguments
+           ## Lifetable arguments
            population_midyear_male = NULL, population_midyear_female = NULL,
            deaths_male = NULL, deaths_female = NULL, # For AirQ+ method for lifetable
            first_age_pop = NULL, last_age_pop = NULL,
@@ -81,7 +81,7 @@ attribute <-
            approach_exposure = NULL,
            approach_newborns = NULL,
            time_horizon = NULL,
-           # Meta-information
+           ## Meta-information
            population = NULL,
            health_outcome = "same_input_output",
            info = NULL){

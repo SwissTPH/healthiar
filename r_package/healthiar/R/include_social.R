@@ -9,7 +9,7 @@
 #' @param approach \code{String} referring the approach to include the social aspects. To choose between "quantile" and ?
 #' @inheritParams attribute
 #'
-#' @return Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
+#' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 #'
 #' @examples
 #' # Example of how to use the function
