@@ -16,7 +16,8 @@ add_monetized_impact  <- function(df,
                                   discount_rate,
                                   discount_years,
                                   discount_shape,
-                                  discount_overtime) {
+                                  discount_overtime,
+                                  inflation = inflation) {
 
   # If the discounting has to be applied in all years of the period
   if(discount_overtime == "all_years"){
@@ -40,7 +41,8 @@ add_monetized_impact  <- function(df,
     dplyr::mutate(discount_rate = {{discount_rate}},
                   discount_years = {{discount_years}},
                   discount_shape = {{discount_shape}},
-                  discount_overtime = {{discount_overtime}})
+                  discount_overtime = {{discount_overtime}},
+                  inflation = {{inflation}})
 
   df_with_discount_factor <-
     dplyr::cross_join(x = df_with_input,
@@ -57,7 +59,8 @@ add_monetized_impact  <- function(df,
         healthiar::get_discount_factor(
           discount_rate = discount_rate,
           discount_year = discount_year,
-          discount_shape = discount_shape))
+          discount_shape = discount_shape,
+          inflation = inflation))
 
   sum_of_discount_factors <-
     df_with_discount_factor |>
