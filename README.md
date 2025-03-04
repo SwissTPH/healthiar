@@ -46,6 +46,18 @@ Step 3 – Download & install the newest package version
 From now on you can always download and install the newest/current version of the bestcost R package by running 
 devtools::install_github(repo = "best-cost/best-cost_WPs", subdir = "/r_package/healthiar", ref = "HEAD", force = TRUE, build_vignettes = TRUE)
 
+***** GET STARTED WITH THE healthiar PACKAGE *****
+
+Please consult the intro vignette (i.e. documentation on how to start using the healthiar package) by either 
+1) running browseVignettes("healthiar") in the console and clicking on HTML on the page that pops up
+2) going to the "Packages" tab in RStudio, scrolling to the healthiar package and clicking on healthiar>User guides, package vignettes and other documentation>HTML
+
+
+
+
+
+
+Screenshot creating PAT:
 ![image](https://github.com/user-attachments/assets/9e67a384-cfd2-4cbb-9ff5-837294f61739)
 
 

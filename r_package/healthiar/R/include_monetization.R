@@ -10,6 +10,7 @@
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
 #' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting.
 #' @param discount_overtime \code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".
+#' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices) to be applied to the discount. Default value = NULL (asumming no inflaction or inflaction already applied in the provided discount rate)
 #'
 #' @returns Description of the return value.
 #' @examples
@@ -24,7 +25,8 @@ include_monetization <-
            discount_rate = NULL,
            discount_shape = NULL,
            discount_years = 1,
-           discount_overtime = "all_years") {
+           discount_overtime = "all_years",
+           inflation = NULL) {
 
   # Using the output of attribute ####
   if(!is.null(output_healthiar) & is.null(impact)){
@@ -71,7 +73,8 @@ include_monetization <-
                     healthiar::get_discount_factor(
                       discount_rate = discount_rate,
                       discount_year = discount_years,
-                      discount_shape = discount_shape)) |>
+                      discount_shape = discount_shape,
+                      inflation = inflation)) |>
 
                 # Calculate life years discounted
 
@@ -166,7 +169,8 @@ include_monetization <-
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
                                          discount_shape = discount_shape,
-                                         discount_overtime = discount_overtime)
+                                         discount_overtime = discount_overtime,
+                                         inflation = inflation)
 
       output_monetization[["monetization_detailed"]]<-
         healthiar:::add_monetized_impact(df = output_healthiar[["health_detailed"]][["raw"]],
@@ -174,7 +178,8 @@ include_monetization <-
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
                                          discount_shape = discount_shape,
-                                         discount_overtime = discount_overtime)
+                                         discount_overtime = discount_overtime,
+                                         inflation = inflation)
     }
 
 
@@ -220,7 +225,8 @@ include_monetization <-
               discount_rate = discount_rate,
               discount_years = discount_years,
               discount_shape = discount_shape,
-              discount_overtime = discount_overtime)
+              discount_overtime = discount_overtime,
+              inflation = inflation)
         )
 
   }

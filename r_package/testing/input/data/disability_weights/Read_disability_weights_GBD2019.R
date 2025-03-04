@@ -1,9 +1,18 @@
 library(readxl) ; library(stringr)
 
+## 2019 disability weights
 disability_weights <- read_excel("J:/EEH/QHIAS/2023_BEST-COST/WP4/Literature/YLD/Disability weights/IHME_GBD_2019_DISABILITY_WEIGHTS_Y2020M010D15.XLSX", skip = 1)
+## 2021 disability weights
+# disability_weights <- read_excel("IHME_GBD_2021_DISABILITY_WEIGHTS_Y2024M05D13.xlsx", skip = 1)
 
 # Remove rows without disability weights
 disability_weights <- disability_weights[!(disability_weights$`Disability Weight`=="--"),] # 290 rows removed
+
+## Save as Excel
+openxlsx::write.xlsx(
+  x = disability_weights,
+  file = "IHME_GBD_2019_DISABILITY_WEIGHTS_CLEAN.XLSX"
+)
 
 # Extract disability weight central estimate
 disability_weights$dw_central <- 0

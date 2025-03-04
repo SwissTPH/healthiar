@@ -20,7 +20,8 @@ Imports:
     tibble,
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    readxl
 Depends: 
     R (>= 4.1.0)
 LazyData: true
