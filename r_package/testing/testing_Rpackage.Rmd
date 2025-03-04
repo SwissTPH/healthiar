@@ -2659,6 +2659,8 @@ bestcost_inflation <-
 check_general(bestcost_inflation[["monetization_main"]]$monetized_impact_rounded,
               5445)# Results on 2025-03-04 from the sheet of Uni Porto
 
+## Test helper_extract_main_monetization_results() fct
+bestcost_inflation_main <- healthiar::helper_extract_main_monetization_results(bestcost_inflation) # Throws error
 ```
 
 ```{r cba}
@@ -2678,6 +2680,9 @@ bestcost_pm_copd_cba <-
     discount_overtime = "last_year")
 check_general(bestcost_pm_copd_cba[["cba_main"]]$benefit_minus_cost_rounded,
               776) # As indicated by University of Port in Excel file
+
+## Test helper_extract_main_cba_results fct
+bestcost_pm_copd_cba_main <- healthiar::helper_extract_main_cba_results(bestcost_pm_copd_cba) # Throws error
 
 
 ## Discounting only one specific year

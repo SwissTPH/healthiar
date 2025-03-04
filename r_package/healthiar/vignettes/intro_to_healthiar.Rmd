@@ -342,7 +342,7 @@ results_noise_ha |>
 
 ## Example iteration: assess impact in multiple geographic units
 
-To iterate an burden or impact assessment over multiple geo(graphic) units the geo-specific information, such as the `exp_...` and `bhd_...` arguments, have to be entered as a list, i.e. wrapped by the `as.list` function.
+To iterate an burden or impact assessment over multiple geo(graphic) units the geo-specific information, such as the numerical vectors entered as the `exp_...` and `bhd_...` arguments, have to be entered as a list, i.e. wrapped by the `as.list` function.
 
 Additionally, specify the `geo_id_disaggregated` (e.g. "Brussels", "Antwerp", ...) and `geo_id_aggregated` (e.g. "Belgium") arguments. These IDs are used for aggregation of the results, i.e. all geo units that belong to the same administrative unit (Belgium in this case) have the same `geo_id_aggregated`.
 

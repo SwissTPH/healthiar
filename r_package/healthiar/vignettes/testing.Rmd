@@ -354,7 +354,7 @@ Finally, you upload your test with the `pathway_id` as the file name to the [Tea
 
 # Testing templates
 
-For more information on how to use the `healthiar` package (including several example cases of how to use its functions), please see the vignette `intro_to_healthiar` (refer to section [Prerequisite: newest version of healthiar installed] for how to access it).
+For more information on how to use the `healthiar` package (including several example cases of how to use its functions), please see the vignette `intro_to_healthiar` (refer to section [Prerequisite: newest version of healthiar installed] for how to access it). For more information on a specific function, you can call `?healthiar::<function_name>` (e.g. `?healthiar::attribute_health`), which will open the function documentation. An alternative way to open the function documentation is to go to the *Packges* tab in RStudio, scroll down to & click on *healthiar*, and scroll down and click on the function you are interested in.
 
 ## Relative risk pathways
 
@@ -440,6 +440,43 @@ testthat::test_that("results correct [pathway_id]", {
 ## INPUT DATA DETAILS: Add here input data details: data sources, measured vs. modelled, ...
 ```
 
+## Monetization pathways
+
+See start of the section [Testing templates] for guidance on how to access function-specific info about the `include_monetization` function.
+
+```{r template monetization complete, include=TRUE, echo=TRUE, eval=FALSE}
+testthat::test_that("results correct [pathway_id]", {
+  
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  # data <- ...
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::include_monetization(
+        approach_discount = ,
+        output_healthiar = NULL, # Only specify one of either "output_healthiar" or "impact" argument 
+        impact = , # Only specify one of either "output_healthiar" or "impact" argument 
+        valuation = ,
+        cost = ,
+        discount_rate = NULL,
+        discount_shape = NULL,
+        discount_years = 1,
+        discount_overtime = "all_years", # only applicable if approach_discount is "direct" 
+        inflation = NULL
+        ) |>
+      healthiar::helper_extract_main_monetization_results(),
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c( )
+    )
+})
+
+## ASSESSOR: Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: Add here input data details: data sources, measured vs. modelled, ...
+```
+
 ## Cost-benefit analysis pathways
 
 Depending on your calculation pathway you will have to replace some of the `NULL` values in the template.
@@ -467,6 +504,51 @@ testthat::test_that("results correct [pathway_id]", {
         discount_overtime =  # only applicable if approach_discount is "direct" 
         ) |>
       healthiar::helper_extract_main_cba_results(),
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c( )
+    )
+})
+
+## ASSESSOR: Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: Add here input data details: data sources, measured vs. modelled, ...
+```
+
+## Iteration
+
+The iteration function calls require two additional arguments compared to the function calls for single geo units: you have to additionally specify the `geo_id_disaggregated` (e.g. "Brussels", "Antwerp", ...) and `geo_id_aggregated` (e.g. "Belgium") arguments. Also, the geo unit-specific arguments (e.g. `exp_central`, `bhd_central`, ...) have to be provided as lists, with each list element representing a geo unit. For more detailed information on iterations using `attribute_...` functions please see section *Example iteration: assess impact in multiple geographic units* in the *intro_to_healthiar* vignette.
+
+```{r template iteration rr, include=TRUE, echo=TRUE, eval=FALSE}
+testthat::test_that("results correct [pathway_id]", {
+  
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  # data <- ...
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = , # Note: numeric vector must be wrapped by as.list() fct
+        rr_central = ,
+        rr_lower = NULL, 
+        rr_upper = NULL,
+        rr_increment = ,
+        exp_central = , # Note: numeric vector must be wrapped by as.list() fct
+        exp_lower = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
+        exp_upper = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
+        cutoff_central = ,
+        cutoff_lower = NULL, 
+        cutoff_upper = NULL,
+        bhd_central = , # Note: numeric vector must be wrapped by as.list() fct
+        bhd_lower = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
+        bhd_upper = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
+        geo_id_disaggregated = ,
+        geo_id_aggregated = ,
+        approach_multiexposure = NULL
+      ) |>
+      healthiar::helper_extract_main_health_results(),
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c( )

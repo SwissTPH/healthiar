@@ -73,3 +73,22 @@ helper_extract_main_cba_results <- function(x){
     base::as.numeric()
 }
 
+#' Helper function: extract main monetization results
+
+#' @description This helper function extracts the main monetization results from a variable containing monetization results.
+#' @param x \code{Variable containing the ouput of an \code{include_monetization} call}
+#' @returns
+#' This helper function returns the main monetization result(s) as a \code{vector}.
+#' @author Axel Luyten
+#' @note Helper function
+#' @export
+
+helper_extract_main_monetization_results <- function(x){
+  y <- x |>
+    purrr::pluck("monetization_main") |>
+    dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
+    dplyr::select(impact_rounded)  |>
+    base::unlist() |>
+    base::as.numeric()
+}
+
