@@ -2642,6 +2642,25 @@ check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_
 
 ```
 
+
+```{r with inflation}
+
+# Discounting without valuation
+bestcost_inflation <- 
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    impact = 5,
+    discount_shape = "exponential",
+    discount_rate = 0.05,
+    discount_years = 5,
+    inflation = 0.08,
+    valuation = 1E3)
+
+check_general(bestcost_inflation[["monetization_main"]]$monetized_impact_rounded,
+              5445)# Results on 2025-03-04 from the sheet of Uni Porto
+
+```
+
 ```{r cba}
 
 ## Discounting only one specific year
