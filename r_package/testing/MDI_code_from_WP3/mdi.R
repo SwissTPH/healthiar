@@ -1,3 +1,21 @@
+#' socialize
+
+#' @description Create and check the BEST-COST Multidimensional Deprivation Index (MDI)
+#' @param output_healthiar \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results
+#' @param impact \code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_disaggregated}.
+#' @param population \code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.
+#' @param social_indicator \code{Vector} with numeric values showing the deprivation score (indicator of economic wealth) of the fine geographical area (it should match with those used in \code{attribute} or \code{compare})
+#' @param n_quantile \code{Integer value} specifying to the number quantiles in the analysis
+#' @param approach \code{String} referring the approach to include the social aspects. To choose between "quantile" and ?
+#' @inheritParams attribute
+#'
+#' @return Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
+#'
+#' @examples
+#' # Example of how to use the function
+#' function_name(param1 = value1, param2 = value2)
+#' @export
+
 # BEST-COST MDI - Example code for creating the Multidimensional Deprivation Index (MDI)
 # Using Belgium 2021 Census Data
 
