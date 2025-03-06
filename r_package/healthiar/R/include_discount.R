@@ -4,7 +4,7 @@
 
 #' @inheritParams include_monetization
 
-#' @return
+#' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function i.e. central, lower and upper bound confidence interval.
 #' Moreover, the data frame includes columns such as:
@@ -14,8 +14,6 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
-#' @import dplyr
-#' @import purrr
 #' @examples
 #' TBD
 #' @author Alberto Castro

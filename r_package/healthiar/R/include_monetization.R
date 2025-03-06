@@ -12,7 +12,7 @@
 #' @param discount_overtime \code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".
 #' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices) to be applied to the discount. Default value = NULL (asumming no inflaction or inflaction already applied in the provided discount rate)
 #'
-#' @return Description of the return value.
+#' @returns Description of the return value.
 #' @examples
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)

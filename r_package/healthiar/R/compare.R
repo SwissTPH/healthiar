@@ -36,7 +36,7 @@
 #' @param info_2 \code{String} or {data frame} showing additional information or id of the scenario 1. The suffix "info" will be added to the column name. Default value = NULL.
 
 
-#' @return
+#' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central estimate, lower and upper bound confidence interval).
 #' Moreover, the data frame includes columns such as:
@@ -47,7 +47,6 @@
 #'  \item And many more.
 #' }
 #' @author Alberto Castro
-#' @importFrom stringr str_detect
 #' @note Experimental function
 #' @export
 compare <-
@@ -214,7 +213,7 @@ compare <-
 
       # Compile input data of scenario 1
       input_1 <-
-        healthiar::compile_input(
+        healthiar:::compile_input(
           health_outcome = health_outcome,
           approach_risk = approach_risk,
           exp_central = exp_central_1, exp_lower = exp_lower_1, exp_upper = exp_upper_1,
@@ -249,7 +248,7 @@ compare <-
 
       # Compile input data of scenario 2
       input_2 <-
-        healthiar::compile_input(
+        healthiar:::compile_input(
           health_outcome = health_outcome,
           approach_risk = approach_risk,
           exp_central = exp_central_2, exp_lower = exp_lower_2, exp_upper = exp_upper_2,
