@@ -67,8 +67,8 @@ helper_runif_with_seed <-
 helper_extract_main_cba_results <- function(x){
   y <- x |>
     purrr::pluck("cba_main") |>
-    dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-    dplyr::select(impact_rounded)  |>
+    (\(x) if ("erf_ci" %in% names(x)) x |> arrange(erf_ci) else x)() |> # Ascending order: central, lower, upper
+    dplyr::select(benefit_minus_cost_rounded)  |>
     base::unlist() |>
     base::as.numeric()
 }
@@ -86,8 +86,11 @@ helper_extract_main_cba_results <- function(x){
 helper_extract_main_monetization_results <- function(x){
   y <- x |>
     purrr::pluck("monetization_main") |>
-    dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-    dplyr::select(impact_rounded)  |>
+    (\(x) if ("erf_ci" %in% names(x)) x |> arrange(erf_ci) else x)() |> # Ascending order: central, lower, upper
+    (\(df) if ("monetized_impact" %in% names(df))
+      df |> select(monetized_impact)
+     else
+       df)() |>
     base::unlist() |>
     base::as.numeric()
 }
