@@ -197,7 +197,7 @@ compile_input <-
         prop_pop_exp = unlist(prop_pop_exp)) |>
 
       ## Remove min_age & max_age columns if they are NA
-      select(-where(~ all(is.na(x = .))))
+      dplyr::select(-where(~ all(is.na(x = .))))
 
       # Add erf data
     input_wo_lifetable <-
