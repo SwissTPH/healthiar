@@ -213,7 +213,7 @@ compare <-
 
       # Compile input data of scenario 1
       input_1 <-
-        healthiar::compile_input(
+        healthiar:::compile_input(
           health_outcome = health_outcome,
           approach_risk = approach_risk,
           exp_central = exp_central_1, exp_lower = exp_lower_1, exp_upper = exp_upper_1,
@@ -248,7 +248,7 @@ compare <-
 
       # Compile input data of scenario 2
       input_2 <-
-        healthiar::compile_input(
+        healthiar:::compile_input(
           health_outcome = health_outcome,
           approach_risk = approach_risk,
           exp_central = exp_central_2, exp_lower = exp_lower_2, exp_upper = exp_upper_2,

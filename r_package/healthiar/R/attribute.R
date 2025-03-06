@@ -93,7 +93,7 @@ attribute <-
 
     # Compile input data
     input <-
-      healthiar::compile_input(
+      healthiar:::compile_input(
         approach_risk = approach_risk,
         approach_multiexposure = approach_multiexposure,
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
