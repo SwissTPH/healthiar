@@ -79,9 +79,10 @@ include_monetization <-
                 # Calculate life years discounted
 
                 dplyr::mutate(
-                  impact_before_discount = impact,
-                  impact_after_discount = impact * discount_factor,
-                  impact = impact_after_discount)
+                  monetized_impact_before_discount = impact * valuation,
+                  monetized_impact_after_discount = impact * valuation * discount_factor,
+                  monetized_impact = monetized_impact_after_discount)
+
 
 
               ## If yll or yld
@@ -94,9 +95,10 @@ include_monetization <-
                   dplyr::filter(.data = lifeyear_nest_with_and_without_discount,
                                 year < .y) |>
                   ## Sum among years to obtain the total impact (single value)
-                  dplyr::summarise(impact_before_discount = sum(impact_before_discount),
-                                   impact_after_discount = sum(impact_after_discount),
-                                   impact = sum(impact),
+                  dplyr::summarise(impact = sum(impact),
+                                   monetized_impact_before_discount = sum(monetized_impact_before_discount),
+                                   monetized_impact_after_discount = sum(monetized_impact_after_discount),
+                                   monetized_impact = sum(monetized_impact),
                                    .groups = "drop")
               }
 
@@ -113,11 +115,9 @@ include_monetization <-
         tidyr::unnest(impact_with_discount_nest) |>
         # Round results
         dplyr::mutate(
-          impact_rounded = round(impact, 0),
-          monetized_impact = impact * valuation,
-          monetized_impact_before_discount = impact_before_discount * valuation,
-          monetized_impact_after_discount = impact_after_discount * valuation,
-          # Round monetized_impacts
+
+          # Round impacts and monetized impacts
+          impact_rounded = round(impact),
           monetized_impact_rounded = round(monetized_impact),
           monetized_impact_before_discount_rounded = round(monetized_impact_before_discount),
           monetized_impact_after_discount_rounded = round(monetized_impact_after_discount))

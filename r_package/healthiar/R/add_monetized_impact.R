@@ -79,9 +79,7 @@ add_monetized_impact  <- function(df,
     # Add columns
     dplyr::mutate(
       # Calculate impact after discounting
-      impact_before_discount = impact,
-      impact_after_discount = impact / discount_period_length * discount_factor_overtime,
-      impact = impact_after_discount,
+      monetized_impact = impact * valuation,
       # Add column for valuation
       valuation = valuation,
       # Calculate monetized impact
@@ -89,8 +87,8 @@ add_monetized_impact  <- function(df,
       # (one for each year of the period)
       # The default value 1 for time period enables that the calculation below
       # is not affected if no discount is demanded by the user
-      monetized_impact_before_discount = impact_before_discount * valuation,
-      monetized_impact_after_discount = impact_after_discount * valuation,
+      monetized_impact_before_discount = impact * valuation,
+      monetized_impact_after_discount = impact * valuation / discount_period_length * discount_factor_overtime,
       monetized_impact = monetized_impact_after_discount,
       .after = impact) |>
 
