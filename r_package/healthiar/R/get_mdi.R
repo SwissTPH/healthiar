@@ -146,7 +146,7 @@ get_mdi <- function(
 
   return(
     data |>
-           relocate(MDI, .after = geo_id_disaggregated) |>
-           relocate(MDI_index, .after = MDI)
+           dplyr::relocate(MDI, .after = geo_id_disaggregated) |>
+           dplyr::relocate(MDI_index, .after = MDI)
   )
 }
