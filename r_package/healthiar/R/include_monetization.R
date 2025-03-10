@@ -65,25 +65,12 @@ include_monetization <-
                               discount_years = year - {{year_of_analysis}},
                               discount_rate = {{discount_rate}},
                               discount_shape = {{discount_shape}})|>
-
-
-                # Calculate discount rate for each year
-                dplyr::mutate(
-                  discount_factor =
-                    healthiar::get_discount_factor(
-                      discount_rate = discount_rate,
-                      discount_year = discount_years,
-                      discount_shape = discount_shape,
-                      inflation = inflation)) |>
-
-                # Calculate life years discounted
-
-                dplyr::mutate(
-                  monetized_impact_before_discount = impact * valuation,
-                  monetized_impact_after_discount = impact * valuation * discount_factor,
-                  monetized_impact = monetized_impact_after_discount)
-
-
+                healthiar:::add_monetized_impact(discount_rate = discount_rate,
+                                                 discount_year = discount_years,
+                                                 discount_shape = discount_shape,
+                                                 discount_overtime = discount_overtime,
+                                                 inflation = inflation,
+                                                 valuation = valuation)
 
               ## If yll or yld
 
@@ -96,8 +83,8 @@ include_monetization <-
                                 year < .y) |>
                   ## Sum among years to obtain the total impact (single value)
                   dplyr::summarise(impact = sum(impact),
-                                   monetized_impact_before_discount = sum(monetized_impact_before_discount),
-                                   monetized_impact_after_discount = sum(monetized_impact_after_discount),
+                                   monetized_impact_before_inflation_and_discount = sum(monetized_impact_before_inflation_and_discount),
+                                   monetized_impact_after_inflation_and_discount = sum(monetized_impact_after_inflation_and_discount),
                                    monetized_impact = sum(monetized_impact),
                                    .groups = "drop")
               }
@@ -119,8 +106,8 @@ include_monetization <-
           # Round impacts and monetized impacts
           impact_rounded = round(impact),
           monetized_impact_rounded = round(monetized_impact),
-          monetized_impact_before_discount_rounded = round(monetized_impact_before_discount),
-          monetized_impact_after_discount_rounded = round(monetized_impact_after_discount))
+          monetized_impact_before_discount_rounded = round(monetized_impact_before_inflation_and_discount),
+          monetized_impact_after_discount_rounded = round(monetized_impact_after_inflation_and_discount))
 
 
 
@@ -187,11 +174,11 @@ include_monetization <-
     # Identify the relevant columns for monetization that are in the output
     relevant_columns <-
       c("info", "geo_id_disaggregated", "geo_id_aggregated",
-        paste0("impact", c("", "_before_discount", "_after_discount")),
+        paste0("impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount")),
         "discount_rate", "discount_shape", "discount_overtime", "approach_discount",
         "valuation",
-        paste0("monetized_impact", c("", "_before_discount", "_after_discount")),
-        paste0("monetized_impact", c("", "_before_discount", "_after_discount"), "_rounded"))
+        paste0("monetized_impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount")),
+        paste0("monetized_impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount"), "_rounded"))
 
 
     # Keep only relevant columns for monetization
