@@ -182,9 +182,9 @@ Now we will make a similar function call, but include uncertainty in several inp
 results_pm_copd <-
   healthiar::attribute_health(
     erf_shape = "log_linear",
-    rr_central = airqplus_pm_copd$relative_risk, 
-    rr_lower = airqplus_pm_copd$relative_risk_lower,
-    rr_upper = airqplus_pm_copd$relative_risk_upper,
+    rr_central = exdat_pm_copd$relative_risk, 
+    rr_lower = exdat_pm_copd$relative_risk_lower,
+    rr_upper = exdat_pm_copd$relative_risk_upper,
     rr_increment = 10, 
     exp_central = exdat_pm_copd$mean_concentration,
     exp_lower = 8,
