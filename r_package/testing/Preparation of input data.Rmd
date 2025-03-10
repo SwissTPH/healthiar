@@ -1174,6 +1174,11 @@ input_data_mortality <-
   dplyr::filter(rr_id %in% rr_data_allCauseMortality$rr_id)
 ```
 
+```{r Add data for testing get_mdi function}
+exdat_get_mdi <- read.csv("../testing/input/data/mdi/Belgium_MDI_2021.csv")
+```
+
+
 Variables that are used in examples of testing_Rpackage
 
 airqplus_deaths_pop_multipleYear
@@ -1187,6 +1192,7 @@ niph_noise_ha_excel
 niph_noise_ihd_excel
 pop_data_norway
 social_data
+exdat_get_mdi
 
 ```{r modify variable names for package example data}
 
@@ -1216,46 +1222,63 @@ rm(list=setdiff(ls(),
                   "exdat_noise_ha",
                   "exdat_noise_ihd",
                   "exdat_pop_2",
-                  "exdat_mdi"
+                  "exdat_mdi",
+                  "exdat_get_mdi"
                   )))
+```
+
+```{r save package example data}
+
+## Save variables to RData file
 save.image(file = "../healthiar/data/example_data.RData")
 
-
+# EXPERIMENTAL: save each object as .rds file
+# Get the list of all objects in the environment
+# objects_in_env <- ls()
+# 
+# dir_name <- "../healthiar/data"
+# 
+# # Save each object as an .rds file in the specified directory
+# for (obj_name in objects_in_env) {
+#   obj <- get(obj_name)
+#   file_name <- paste0(dir_name, "/", obj_name, ".rds")
+#   saveRDS(obj, file = file_name)
+# }
 
 
 ```
 
 
-```{r Export environment}
-# Keep only variables/functions that will be used in "testing_Rpackage.Rmd"
-rm(list=setdiff(ls(), 
-                c(# Data
-                  "airqplus_pm_copd",
-                  "airqplus_deaths_pop_multipleYear",
-                  "airqplus_deaths_pop_singleYear",
-                  "airqplus_pm_deaths_yll",
-                  "niph_noise_ha_excel",
-                  "niph_noise_hsd_excel", 
-                  "niph_noise_ihd_excel",
-                  "codebook",
-                  "input_data_morbidities",
-                  "input_data_mortality",
-                  "lifetable_airqplus",
-                  "lifetable_withPopulation",
-                  "rr_data",
-                  # Values (keep none)
-                  # Functions
-                  "paste_round_CI",
-                  "round_keeping0",
-                  "check_bestcost",
-                  "check_general",
-                  "runif_with_seed",
-                  "social_data",
-                  "social_per_decile", 
-                  "social_results",
-                  "mrbrt_stroke",
-                  "pop_data_norway"
-                  )))
-save.image(file = "../testing/input/data/input_data_for_testing_Rpackage.RData")
+```{r OLD Export environment}
+# # Keep only variables/functions that will be used in "testing_Rpackage.Rmd"
+# rm(list=setdiff(ls(), 
+#                 c(# Data
+#                   "airqplus_pm_copd",
+#                   "airqplus_deaths_pop_multipleYear",
+#                   "airqplus_deaths_pop_singleYear",
+#                   "airqplus_pm_deaths_yll",
+#                   "niph_noise_ha_excel",
+#                   "niph_noise_hsd_excel", 
+#                   "niph_noise_ihd_excel",
+#                   "codebook",
+#                   "input_data_morbidities",
+#                   "input_data_mortality",
+#                   "lifetable_airqplus",
+#                   "lifetable_withPopulation",
+#                   "rr_data",
+#                   # Values (keep none)
+#                   # Functions
+#                   "paste_round_CI",
+#                   "round_keeping0",
+#                   "check_bestcost",
+#                   "check_general",
+#                   "runif_with_seed",
+#                   "social_data",
+#                   "social_per_decile", 
+#                   "social_results",
+#                   "mrbrt_stroke",
+#                   "pop_data_norway"
+#                   )))
+# save.image(file = "../testing/input/data/input_data_for_testing_Rpackage.RData")
 ```
 

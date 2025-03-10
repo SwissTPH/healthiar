@@ -625,26 +625,19 @@ check_general(
 
 ```{r get_mdi}
 
-# Load dataset
-## Sciensano
-# data <- read.csv("//sciensano.be/fs/1147_BESTCOST_Employee/03_Content/WP3/Task3.1/Analysis/Belgium_MDI_2021.csv")
-## Swiss TPH
-data <- read.csv("../testing/MDI_code_from_WP3/Belgium_MDI_2021.csv")
-str(data)
-
 mdi <- healthiar::get_mdi(
-  geo_id_disaggregated = data$id,
-  edu = data$edu,
-  unemployed = data$unemployed,
-  single_parent = data$single_parent,
-  pop_change = data$pop_change,
-  no_heating = data$no_heating,
+  geo_id_disaggregated = exdat_get_mdi$id,
+  edu = exdat_get_mdi$edu,
+  unemployed = exdat_get_mdi$unemployed,
+  single_parent = exdat_get_mdi$single_parent,
+  pop_change = exdat_get_mdi$pop_change,
+  no_heating = exdat_get_mdi$no_heating,
   n_quantile = 10)
 
 ## Validate calculation of get_mdi with the following code function psych::alpha
 # Install and load the psych package (if not already installed)
 reliability <- psych::alpha(
-  data |> dplyr::select(norm_edu, norm_unemployed, norm_single_parent, norm_pop_change, norm_no_heating))
+  exdat_get_mdi |> dplyr::select(norm_edu, norm_unemployed, norm_single_parent, norm_pop_change, norm_no_heating))
 print(reliability$total |> dplyr::pull(raw_alpha))
 
 ```
