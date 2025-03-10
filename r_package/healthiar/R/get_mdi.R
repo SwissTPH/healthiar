@@ -1,0 +1,134 @@
+#' Create the BEST-COST Multidimensional Deprivation Index (MDI)
+
+#' @description Creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
+#' @param geo_id_disaggregated \code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment
+#' @param edu \code{Numeric vector} indicating educational attainment as \% of individuals (≥18) without a high school diploma (ISCED 0-2) per geo unit
+#' @param unemployed \code{Numeric vector} containing \% of unemployed individuals in the active population (18-65) per geo unit
+#' @param single_parent \code{Numeric vector} containing single-parent households as \% of total households headed by a single parent per geo unit
+#' @param pop_change \code{Numeric vector} containing population change as \% change in population over the previous 5 years (e.g., 2017-2021) per geo unit
+#' @param no_heating \code{Numeric vector} containing \% of households without central heating per geo unit
+#' @details
+#' The function prints Cronbach's \eqn{\alpha}.
+#' \describe{
+#'   \item{\eqn{\alpha} ≥ 0.9}{Excellent reliability}
+#'   \item{0.8 ≤ \eqn{\alpha} ≤ 0.89}{Good reliability}
+#'   \item{0.7 ≤ \eqn{\alpha} ≤  0.79}{Acceptable reliability}
+#'   \item{0.6 ≤ \eqn{\alpha} ≤ 0.69}{Questionable reliability}
+#'   \item{alpha ≤ \eqn{\alpha} ≤ 0}{Poor reliability}
+#' }
+#' @details
+#' Data completeness and imputation: ensure the dataset is as complete as possible. You can try to impute missing data:
+#' \itemize{
+#'   \item Time-Based Imputation: Use linear regression based on historical trends if prior years' data is complete.
+#'   \item Indicator-Based Imputation: Use multiple linear regression if the missing indicator correlates strongly with others.
+#' }
+#' Imputation models should have an R² ≥ 0.7. If R² < 0.7, consider alternative data sources or methods.
+#' @return
+#' Tibble with the columns
+#' \itemize{
+#'   \item geo_id_disaggregated
+#'   \item BEST-COST Multidimensional Deprivation Index
+#' }
+#' @return
+#' For the internal consistency check the function provides
+#' \itemize{
+#'   \item Cronbach's \eqn{\alpha}
+#'   \item Descriptive analysis of the input data
+#'   \item Boxplot
+#'   \item Histogram
+#'   \item Person's correlation coefficient (pairwise-comparisons)
+#' }
+#' @examples
+#' # Example of how to use the function
+#' function_name(param1 = value1, param2 = value2)
+#' @export
+
+get_mdi <- function(
+    geo_id_disaggregated,
+    edu,
+    unemployed,
+    single_parent,
+    pop_change,
+    no_heating
+    ) {
+
+  if (requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("The 'ggplot2' package is required for this function. Please install it if you want to use this function.", call. = FALSE)}
+
+  # Create helper functions ####################################################
+
+  ## Create helper function that normalizes indicators using min-max scaling
+  normalize <- function(x) {
+    return((x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE)))
+  }
+
+  ## Create helper function that calculates total MDI Cronbach's
+  cronbach_alpha <- function(x) {
+    N <- base::ncol(x)  # Number of items
+    item_variances <- base::apply(x, 2, var)  # Variance of each item
+    total_variance <- base::var(base::rowSums(x))   # Variance of the total score
+
+    ## Cronbach's alpha formula
+    alpha <- (N / (N - 1)) * (1 - base::sum(item_variances) / total_variance)
+    return(alpha)
+  }
+
+  # Compute MDI ################################################################
+  data <- tibble::tibble(
+    geo_id_disaggregated,
+    edu,
+    unemployed,
+    single_parent,
+    pop_change,
+    no_heating
+  )
+
+  data <- data |>
+    dplyr::mutate(dplyr::across(c(edu, unemployed, single_parent, pop_change, no_heating), normalize, .names = "norm_{.col}"))
+
+  data$MDI <- base::with(data,
+                         (norm_edu + norm_unemployed + norm_single_parent + norm_pop_change + norm_no_heating) / 5)
+
+  ## Create quantile ranks
+  ## NOTE: is this really needed? ################################################
+  ## Define N of quantile
+  n <- 10
+  data$MDI_index <- dplyr::ntile(data$MDI, n)
+
+  # Save results
+  # write.csv(data, "Belgium_MDI_2021.csv", row.names = FALSE)
+
+  # Check internal consistency ###################################################
+  indicators <- c("norm_edu", "norm_unemployed", "norm_single_parent", "norm_pop_change", "norm_no_heating")
+
+  # * Descriptive analysis #######################################################
+  base::sapply(data[c(indicators, "MDI")], function(x)
+    base::data.frame(MEAN = base::round(base::mean(x), 3), SD = base::round(base::sd(x), 3), MIN = base::min(x), MAX = base::max(x)))
+
+  # * Boxplot ####################################################################
+  ggplot2::ggplot(utils::stack(data[ ,c(indicators, "MDI")]), ggplot2::aes(x = ind, y = values)) + # NOTE: not sure whether it's the stack fct from {utils} or {rlang}
+    ggplot2::geom_boxplot() +
+    ggplot2::theme_minimal() +
+    ggplot2::ggtitle("Boxplot of Normalized Indicators and MDI")
+
+  #ggsave("boxplot.png")
+
+  # * Histogram ##################################################################
+  ggplot2::ggplot(data, ggplot2::aes(x = MDI)) +
+    ggplot2::geom_histogram(ggplot2::aes(y = ..density..), bins = 30, fill = "blue", alpha = 0.5) +
+    ggplot2::geom_density(color = "red") +
+    ggplot2::theme_minimal() +
+    ggplot2::ggtitle("Histogram of MDI with Normal Curve")
+
+  #ggsave("MDI_hist.png")
+
+  # * Pearson’s correlation coefficient for each indicator #######################
+  base::cor(data[,indicators], use = "pairwise.complete.obs", method = "pearson")
+
+  # * Cronbach's alpha ###########################################################
+  alpha_value <- cronbach_alpha(
+    data[, indicators])
+
+  base::print(base::paste("Cronbach's Alpha:", base::round(alpha_value, 3)))
+
+}
