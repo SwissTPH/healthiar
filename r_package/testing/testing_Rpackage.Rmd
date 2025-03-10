@@ -23,7 +23,7 @@ pacman::p_load(
   ## To set colors in console messages (checking)
   crayon,
   ## To load {healthiar}
-  credentials, gitcreds, devtools,
+  credentials, devtools, # Not needed anymore: gitcreds
   ## To do geo analysis
   terra, sf
   )
@@ -63,7 +63,7 @@ remotes::install_github(
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   # dependencies = TRUE,
-  build_vignettes = TRUE
+  # build_vignettes = TRUE
 )
 
 library(healthiar)
@@ -2662,7 +2662,20 @@ check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_
 
 ```{r with inflation}
 
-# Discounting without valuation
+bestcost_inflation_attribute_result <- 
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    output_healthiar = bestcost_pm_copd,
+    discount_shape = "exponential",
+    discount_rate = 0.05,
+    discount_years = 5,
+    inflation = 0.08,
+    valuation = 1E3)
+
+## Test helper_extract_main_monetization_results() fct
+bestcost_inflation_attribute_result_main <- healthiar::helper_extract_main_monetization_results(bestcost_inflation_attribute_result) 
+
+# Discounting without valuation a non-attribute result  
 bestcost_inflation <- 
   healthiar::include_monetization(
     approach_discount = "direct",
@@ -2676,12 +2689,34 @@ bestcost_inflation <-
 check_general(bestcost_inflation[["monetization_main"]]$monetized_impact_rounded,
               5445)# Results on 2025-03-04 from the sheet of Uni Porto
 
+## Test helper_extract_main_monetization_results() fct
+bestcost_inflation_main <- healthiar::helper_extract_main_monetization_results(bestcost_inflation) # Throws error
 ```
 
 ```{r cba}
 
-## Discounting only one specific year
-bestcost_pm_copd_cba <-
+## Discounting only one specific year (attr input)
+bestcost_pm_copd_cba_attr_input <-
+  healthiar::include_cba(
+    output_healthiar = bestcost_pm_copd,
+    approach_discount = "direct",
+    valuation = 20,
+    cost = 100,
+    discount_shape = "exponential",
+    discount_rate_benefit = 0.03,
+    discount_rate_cost = 0.03,
+    discount_years_benefit = 5,
+    discount_years_cost = 5,
+    discount_overtime = "last_year")
+check_general(bestcost_pm_copd_cba_attr_input[["cba_main"]]$benefit_minus_cost_rounded,
+              c(60330,23257,94350)) # Results on 2025-03-06; no comparison study
+
+## Test helper_extract_main_cba_results fct
+bestcost_pm_copd_cba_attr_input_main <- 
+  healthiar::helper_extract_main_cba_results(bestcost_pm_copd_cba_attr_input)
+
+## Discounting only one specific year (raw input)
+bestcost_pm_copd_cba_raw_input <-
   healthiar::include_cba(
     approach_discount = "direct",
     positive_impact = 50,
@@ -2693,9 +2728,12 @@ bestcost_pm_copd_cba <-
     discount_years_benefit = 5,
     discount_years_cost = 5,
     discount_overtime = "last_year")
-check_general(bestcost_pm_copd_cba[["cba_main"]]$benefit_minus_cost_rounded,
+check_general(bestcost_pm_copd_cba_raw_input[["cba_main"]]$benefit_minus_cost_rounded,
               776) # As indicated by University of Port in Excel file
 
+## Test helper_extract_main_cba_results fct
+bestcost_pm_copd_cba_main <- 
+  healthiar::helper_extract_main_cba_results(bestcost_pm_copd_cba_raw_input)
 
 ## Discounting only one specific year
 bestcost_pm_copd_cba_output <-

@@ -65,7 +65,7 @@ get_risk_and_pop_fraction <-
       # browser()
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         ## Obtain the relative risk for the relevant concentration
-        rowwise() |>
+        dplyr::rowwise() |>
         dplyr::mutate(rr_conc =
                         healthiar::get_risk(rr = rr,
                                            exp = exp,

@@ -27,7 +27,7 @@ include_social <- function(output_healthiar = NULL,
                            approach = "quantile") {
 
   # Using the output of attribute ##############################################
-# browser()
+
   if ( is.null(impact) & !is.null(output_healthiar) ) {
 
     # * Add social_indicator to detailed output ################################
@@ -45,11 +45,11 @@ include_social <- function(output_healthiar = NULL,
     output_social <-
       output_social |>
       ## Remove NAs
-      filter(!is.na(social_indicator)) |>
+      dplyr::filter(!is.na(social_indicator)) |>
       ## Add ranking of deprivation score and quantiles
       dplyr::mutate(
-        ranking = min_rank(desc(social_indicator)),
-        quantile = dplyr::ntile(desc(social_indicator), n = n_quantile))
+        ranking = dplyr::min_rank(dplyr::desc(social_indicator)),
+        quantile = dplyr::ntile(dplyr::desc(social_indicator), n = n_quantile))
 
     # * Calculate statistics summed/averaged over all geographic units #########
 
@@ -119,8 +119,8 @@ include_social <- function(output_healthiar = NULL,
       ## for each parameter
       dplyr::group_by(parameter) |>
       dplyr::summarize(
-        first = first(difference_value),
-        last = last(difference_value)) |>
+        first = dplyr::first(difference_value),
+        last = dplyr::last(difference_value)) |>
       ## Add the overall (not by quantile) sums and means
       dplyr::left_join(
         x = _,
@@ -214,11 +214,11 @@ include_social <- function(output_healthiar = NULL,
     output_social <-
       output_social |>
       ## Remove NAs
-      filter(!is.na(social_indicator)) |>
+      dplyr::filter(!is.na(social_indicator)) |>
       ## Add ranking of deprivation score and quantiles
       dplyr::mutate(
-        ranking = min_rank(desc(social_indicator)),
-        quantile = dplyr::ntile(desc(social_indicator), n = n_quantile))
+        ranking = dplyr::min_rank(dplyr::desc(social_indicator)),
+        quantile = dplyr::ntile(dplyr::desc(social_indicator), n = n_quantile))
 
     # * Calculate statistics summed/averaged over all geographic units #########
 
@@ -314,8 +314,8 @@ include_social <- function(output_healthiar = NULL,
       ## for each parameter
       dplyr::group_by(parameter) |>
       dplyr::summarize(
-        first = first(difference_value),
-        last = last(difference_value)) |>
+        first = dplyr::first(difference_value),
+        last = dplyr::last(difference_value)) |>
       ## Add the overall (not by quantile) sums and means
       dplyr::left_join(
         x = _,
