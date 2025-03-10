@@ -10,7 +10,7 @@
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
 #' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting.
 #' @param discount_overtime \code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".
-#' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices) to be applied to the discount. Default value = NULL (asumming no inflaction or inflaction already applied in the provided discount rate)
+#' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assumming no nominal discount rate)
 #'
 #' @returns Description of the return value.
 #' @examples
