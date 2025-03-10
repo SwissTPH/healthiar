@@ -119,7 +119,7 @@ get_mdi <- function(
   # * Histogram ##################################################################
   print(
     ggplot2::ggplot(data, ggplot2::aes(x = MDI)) +
-    ggplot2::geom_histogram(ggplot2::aes(y = ..density..), bins = 30, fill = "blue", alpha = 0.5) +
+    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density), bins = 30, fill = "blue", alpha = 0.5)) +
     ggplot2::geom_density(color = "red") +
     ggplot2::theme_minimal() +
     ggplot2::ggtitle("Histogram of MDI with Normal Curve")
