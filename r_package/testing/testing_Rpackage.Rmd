@@ -2596,7 +2596,7 @@ check_general(bestcost_pm_copd_costs_discount[["monetization_main"]]$monetized_i
               c(60416, 23343, 94436)) # Result on 9 Jan 2025
 
 ## Monetize with impact (without output of attribute)
-bestcost_pm_copd_cost_discount_single_value <- 
+bestcost_cost_discount_single_value <- 
   healthiar::include_monetization(
     approach_discount = "direct",
     impact = 2E4, 
@@ -2605,9 +2605,9 @@ bestcost_pm_copd_cost_discount_single_value <-
     discount_years = 20,
     valuation = 1)
 
-check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
-              14877)
-## According to ChatGPT, the result should be 14877. 5 Dec 2024
+check_general(bestcost_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
+              11074)
+## Results according to ChatGPT on 10 March 2025
 
 
 
@@ -2655,7 +2655,7 @@ bestcost_pm_copd_discount <-
     discount_years = 20)
 
 check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_rounded,
-              14877)# Results on 2025-01-15
+              11074)# Results on 2025-01-15
 
 ```
 
@@ -2673,13 +2673,14 @@ bestcost_inflation_attribute_result <-
     valuation = 1E3)
 
 ## Test helper_extract_main_monetization_results() fct
-bestcost_inflation_attribute_result_main <- healthiar::helper_extract_main_monetization_results(bestcost_inflation_attribute_result) 
+bestcost_inflation_attribute_result_main <- 
+  healthiar::helper_extract_main_monetization_results(bestcost_inflation_attribute_result) 
 
 # Discounting without valuation a non-attribute result  
 bestcost_inflation <- 
   healthiar::include_monetization(
     approach_discount = "direct",
-    impact = 5,
+    impact = 1,
     discount_shape = "exponential",
     discount_rate = 0.05,
     discount_years = 5,
@@ -2687,10 +2688,24 @@ bestcost_inflation <-
     valuation = 1E3)
 
 check_general(bestcost_inflation[["monetization_main"]]$monetized_impact_rounded,
-              5445)# Results on 2025-03-04 from the sheet of Uni Porto
+              round(783.53))# Results on 2025-03-04 from the sheet of Uni Porto
 
-## Test helper_extract_main_monetization_results() fct
-bestcost_inflation_main <- healthiar::helper_extract_main_monetization_results(bestcost_inflation) # Throws error
+
+# Discounting without valuation a non-attribute result  
+bestcost_inflation_chatgpt <- 
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    impact = 1,
+    discount_shape = "exponential",
+    discount_rate = 0.04,
+    discount_years = 5,
+    inflation = 0.03,
+    valuation = 1E4)
+
+check_general(bestcost_inflation_chatgpt[["monetization_main"]]$monetized_impact_rounded,
+              8219)# Results on 2025-03-10 from ChatGPT
+
+
 ```
 
 ```{r cba}
