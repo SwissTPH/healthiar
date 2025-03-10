@@ -52,7 +52,7 @@ get_mdi <- function(
     no_heating
     ) {
 
-  if (requireNamespace("ggplot2", quietly = TRUE)) {
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop("The 'ggplot2' package is required for this function. Please install it if you want to use this function.", call. = FALSE)}
 
   # Create helper functions ####################################################
@@ -65,8 +65,8 @@ get_mdi <- function(
   ## Create helper function that calculates total MDI Cronbach's
   cronbach_alpha <- function(x) {
     N <- base::ncol(x)  # Number of items
-    item_variances <- base::apply(x, 2, var)  # Variance of each item
-    total_variance <- base::var(base::rowSums(x))   # Variance of the total score
+    item_variances <- base::apply(x, 2, stats::var)  # Variance of each item
+    total_variance <- stats::var(base::rowSums(x))   # Variance of the total score
 
     ## Cronbach's alpha formula
     alpha <- (N / (N - 1)) * (1 - base::sum(item_variances) / total_variance)
@@ -102,33 +102,42 @@ get_mdi <- function(
   indicators <- c("norm_edu", "norm_unemployed", "norm_single_parent", "norm_pop_change", "norm_no_heating")
 
   # * Descriptive analysis #######################################################
+  print(
   base::sapply(data[c(indicators, "MDI")], function(x)
-    base::data.frame(MEAN = base::round(base::mean(x), 3), SD = base::round(base::sd(x), 3), MIN = base::min(x), MAX = base::max(x)))
+    tibble::tibble(MEAN = base::round(base::mean(x), 3), SD = base::round(stats::sd(x), 3), MIN = base::min(x), MAX = base::max(x)))
+  )
 
   # * Boxplot ####################################################################
-  ggplot2::ggplot(utils::stack(data[ ,c(indicators, "MDI")]), ggplot2::aes(x = ind, y = values)) + # NOTE: not sure whether it's the stack fct from {utils} or {rlang}
+  print(
+    ggplot2::ggplot(utils::stack(data[ ,c(indicators, "MDI")]), ggplot2::aes(x = ind, y = values)) + # NOTE: not sure whether it's the stack fct from {utils} or {rlang}
     ggplot2::geom_boxplot() +
     ggplot2::theme_minimal() +
     ggplot2::ggtitle("Boxplot of Normalized Indicators and MDI")
+  )
 
   #ggsave("boxplot.png")
 
   # * Histogram ##################################################################
-  ggplot2::ggplot(data, ggplot2::aes(x = MDI)) +
+  print(
+    ggplot2::ggplot(data, ggplot2::aes(x = MDI)) +
     ggplot2::geom_histogram(ggplot2::aes(y = ..density..), bins = 30, fill = "blue", alpha = 0.5) +
     ggplot2::geom_density(color = "red") +
     ggplot2::theme_minimal() +
     ggplot2::ggtitle("Histogram of MDI with Normal Curve")
-
+)
   #ggsave("MDI_hist.png")
 
   # * Pearson’s correlation coefficient for each indicator #######################
-  base::cor(data[,indicators], use = "pairwise.complete.obs", method = "pearson")
+  print(
+    stats::cor(data[,indicators], use = "pairwise.complete.obs", method = "pearson")
+  )
 
   # * Cronbach's alpha ###########################################################
   alpha_value <- cronbach_alpha(
     data[, indicators])
 
+  ## NOTE: add corresponding tag (Excellent reliability, Good reliability, ...) to the Cronbach's alpha printing
   base::print(base::paste("Cronbach's Alpha:", base::round(alpha_value, 3)))
 
+  return(data)
 }
