@@ -1,7 +1,6 @@
 #' Create the BEST-COST Multidimensional Deprivation Index (MDI)
 
 #' @description Creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
-#' @param geo_id_disaggregated \code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment
 #' @param edu \code{Numeric vector} indicating educational attainment as \% of individuals (≥18) without a high school diploma (ISCED 0-2) per geo unit
 #' @param unemployed \code{Numeric vector} containing \% of unemployed individuals in the active population (18-65) per geo unit
 #' @param single_parent \code{Numeric vector} containing single-parent households as \% of total households headed by a single parent per geo unit
@@ -14,7 +13,7 @@
 #'   \item{0.8 ≤ \eqn{\alpha} ≤ 0.89}{Good reliability}
 #'   \item{0.7 ≤ \eqn{\alpha} ≤  0.79}{Acceptable reliability}
 #'   \item{0.6 ≤ \eqn{\alpha} ≤ 0.69}{Questionable reliability}
-#'   \item{alpha ≤ \eqn{\alpha} ≤ 0}{Poor reliability}
+#'   \item{\eqn{\alpha} ≤ 0.6}{Poor reliability}
 #' }
 #' @details
 #' Data completeness and imputation: ensure the dataset is as complete as possible. You can try to impute missing data:
@@ -41,6 +40,7 @@
 #' @examples
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)
+#' @inheritParams include_social
 #' @export
 
 get_mdi <- function(
@@ -49,7 +49,8 @@ get_mdi <- function(
     unemployed,
     single_parent,
     pop_change,
-    no_heating
+    no_heating,
+    n_quantile
     ) {
 
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
@@ -90,10 +91,7 @@ get_mdi <- function(
                          (norm_edu + norm_unemployed + norm_single_parent + norm_pop_change + norm_no_heating) / 5)
 
   ## Create quantile ranks
-  ## NOTE: is this really needed? ################################################
-  ## Define N of quantile
-  n <- 10
-  data$MDI_index <- dplyr::ntile(data$MDI, n)
+  data$MDI_index <- dplyr::ntile(data$MDI, n_quantile)
 
   # Save results
   # write.csv(data, "Belgium_MDI_2021.csv", row.names = FALSE)
@@ -102,6 +100,7 @@ get_mdi <- function(
   indicators <- c("norm_edu", "norm_unemployed", "norm_single_parent", "norm_pop_change", "norm_no_heating")
 
   # * Descriptive analysis #######################################################
+  print("DESCRIPTIVE STATISTICS")
   print(
   base::sapply(data[c(indicators, "MDI")], function(x)
     tibble::tibble(MEAN = base::round(base::mean(x), 3), SD = base::round(stats::sd(x), 3), MIN = base::min(x), MAX = base::max(x)))
@@ -128,6 +127,7 @@ get_mdi <- function(
   #ggsave("MDI_hist.png")
 
   # * Pearson’s correlation coefficient for each indicator #######################
+  print("PEARSON'S CORRELATION COEFFICIENTS")
   print(
     stats::cor(data[,indicators], use = "pairwise.complete.obs", method = "pearson")
   )
@@ -136,8 +136,17 @@ get_mdi <- function(
   alpha_value <- cronbach_alpha(
     data[, indicators])
 
-  ## NOTE: add corresponding tag (Excellent reliability, Good reliability, ...) to the Cronbach's alpha printing
   base::print(base::paste("Cronbach's Alpha:", base::round(alpha_value, 3)))
 
-  return(data)
+  if ( alpha_value >= 0.9 ) print("Excellent reliability: α ≥ 0.9")
+  if ( alpha_value <= 0.8 & alpha_value <= 0.89 ) print("Good reliability: 0.8 ≤ α ≤ 0.89")
+  if ( alpha_value <= 0.7 & alpha_value <= 0.79 ) print("Acceptable reliability: 0.7 ≤ α ≤ 0.79")
+  if ( alpha_value <= 0.6 & alpha_value <= 0.69 ) print("Questionable reliability: 0.6 ≤ α ≤ 0.69")
+  if ( alpha_value < 0.6 ) print("Poor reliability: α < 0.6")
+
+  return(
+    data |>
+           relocate(MDI, .after = geo_id_disaggregated) |>
+           relocate(MDI_index, .after = MDI)
+  )
 }

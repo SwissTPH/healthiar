@@ -10,11 +10,13 @@ get_mdi(
   unemployed,
   single_parent,
   pop_change,
-  no_heating
+  no_heating,
+  n_quantile
 )
 }
 \arguments{
-\item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment}
+\item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
+If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
 
 \item{edu}{\code{Numeric vector} indicating educational attainment as \% of individuals (≥18) without a high school diploma (ISCED 0-2) per geo unit}
 
@@ -25,6 +27,8 @@ get_mdi(
 \item{pop_change}{\code{Numeric vector} containing population change as \% change in population over the previous 5 years (e.g., 2017-2021) per geo unit}
 
 \item{no_heating}{\code{Numeric vector} containing \% of households without central heating per geo unit}
+
+\item{n_quantile}{\code{Integer value} specifying to the number quantiles in the analysis}
 }
 \value{
 Tibble with the columns
@@ -43,7 +47,7 @@ For the internal consistency check the function provides
 }
 }
 \description{
-Create the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha}
+Creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
 }
 \details{
 The function prints Cronbach's \eqn{\alpha}.
@@ -52,7 +56,7 @@ The function prints Cronbach's \eqn{\alpha}.
   \item{0.8 ≤ \eqn{\alpha} ≤ 0.89}{Good reliability}
   \item{0.7 ≤ \eqn{\alpha} ≤  0.79}{Acceptable reliability}
   \item{0.6 ≤ \eqn{\alpha} ≤ 0.69}{Questionable reliability}
-  \item{alpha ≤ \eqn{\alpha} ≤ 0}{Poor reliability}
+  \item{\eqn{\alpha} ≤ 0.6}{Poor reliability}
 }
 
 Data completeness and imputation: ensure the dataset is as complete as possible. You can try to impute missing data:
