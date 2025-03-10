@@ -18,8 +18,8 @@ prepare_exposure_data <-
     geo_units
   ){
 
-    if (requireNamespace("terra", quietly = TRUE)) {
-      stop("The 'terra' package is required for this function. Please install it using install.packages('terra').", call. = FALSE)}
+    if (!requireNamespace("terra", quietly = TRUE)) {
+      stop("The 'terra' package is required for this function. Please install it if you want to use this function.", call. = FALSE)}
 
     ## calculate mean concentration in each geo unit
     exp <- terra::extract(poll_grid, geo_units, fun = mean)
