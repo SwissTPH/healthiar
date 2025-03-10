@@ -38,8 +38,15 @@
 #'   \item Person's correlation coefficient (pairwise-comparisons)
 #' }
 #' @examples
-#' # Example of how to use the function
-#' function_name(param1 = value1, param2 = value2)
+#' mdi <- healthiar::get_mdi(
+#'   geo_id_disaggregated = exdat_get_mdi$id,
+#'   edu = exdat_get_mdi$edu,
+#'   unemployed = exdat_get_mdi$unemployed,
+#'   single_parent = exdat_get_mdi$single_parent,
+#'   pop_change = exdat_get_mdi$pop_change,
+#'   no_heating = exdat_get_mdi$no_heating,
+#'   n_quantile = 10
+#'   )
 #' @inheritParams include_social
 #' @export
 
