@@ -36,19 +36,10 @@ load("../testing/input/data/input_data_for_testing_Rpackage.RData")
 
 ```{r Install {healthiar} from GitHub, eval=FALSE, include=FALSE}
 
-
-## Install own package from GitHub
-### Source: https://stackoverflow.com/a/71846333/6104907
-
-## Authenticate yourself using PAT (personal access token)
-### See README file at GitHub repo for guidance on how to create a PAT
-### https://github.com/best-cost/best-cost_WPs
-
 ## NOTE: if an older version of {healthiar} already installed and loaded, detach first 
 # detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
 
-
-## Option B: Using remotes package (size: 426 KB)
+## Option A: Using remotes package (size: 426 KB)
 ### Advantage: no installation of Git required
 credentials::set_github_pat() # paste github PAT if prompted
 # ?remotes::install_github
@@ -56,7 +47,7 @@ remotes::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
   # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
-  ref = "445-installation-error-sasha",
+  ref = "463-create-get_mdi-function",
   # ref = "415-prepare-package-for-use-by-ubdpolicy", # By default "HEAD"; name of branch to install package from as a string  
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
@@ -66,36 +57,22 @@ remotes::install_github(
 
 library(healthiar)
 
-## Option B (outdated): Using devtools package (size: 433 KB) and credentials package
-### WARNING: installation of Git required
-# credentials::set_github_pat() # paste github PAT if prompted
-# credentials::git_credential_forget() # remove PAT
-# devtools::install_github(
-#   repo = "best-cost/best-cost_WPs",
-#   subdir = "/r_package/healthiar",
-#   # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
-#   # ref = "415-prepare-package-for-use-by-ubdpolicy", # By default "HEAD"; name of branch to install package from as a string  
-#   force = TRUE,
-#   # dependencies = TRUE,
-#   build_vignettes = TRUE
-# )
-
 ```
 
 ```{r Install healthiar from local source, eval=FALSE, include=FALSE}
 
 ## NOTE: if an older version of {healthiar} already installed and loaded, detach first 
-detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
+# detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
 
 ## Install package from .zip file
-devtools::build(binary = TRUE, path = "../testing/input/") # Save current state of package as .zip file (e.g. to directly test changes in functions)
-install.packages("../testing/input/healthiar_0.0.0.1.zip", repos=NULL, type='source') # Modify file path
+# devtools::build(binary = TRUE, path = "../testing/input/") # Save current state of package as .zip file (e.g. to directly test changes in functions)
+# install.packages("../testing/input/healthiar_0.0.0.1.zip", repos=NULL, type='source') # Modify file path
 
 ## Install package from .tar.gz file
-devtools::build(path = "../testing/input/") # Save current state of package as tar.gz file (e.g. to directly test changes in functions)
-install.packages("../testing/input/healthiar_0.0.0.1.tar.gz", repos=NULL, type='source') # Modify file path
+# devtools::build(path = "../testing/input/") # Save current state of package as tar.gz file (e.g. to directly test changes in functions)
+# install.packages("../testing/input/healthiar_0.0.0.1.tar.gz", repos=NULL, type='source') # Modify file path
 
-library(healthiar)
+# library(healthiar)
 ```
 
 
