@@ -2676,7 +2676,7 @@ bestcost_inflation_attribute_result <-
 bestcost_inflation_attribute_result_main <- 
   healthiar::helper_extract_main_monetization_results(bestcost_inflation_attribute_result) 
 
-# Discounting without valuation a non-attribute result  
+# Discounting and inflation using example from uni Porto
 bestcost_inflation <- 
   healthiar::include_monetization(
     approach_discount = "direct",
@@ -2691,7 +2691,7 @@ check_general(bestcost_inflation[["monetization_main"]]$monetized_impact_rounded
               round(783.53))# Results on 2025-03-04 from the sheet of Uni Porto
 
 
-# Discounting without valuation a non-attribute result  
+# Discounting and inflation using chaggpt
 bestcost_inflation_chatgpt <- 
   healthiar::include_monetization(
     approach_discount = "direct",
@@ -2703,8 +2703,24 @@ bestcost_inflation_chatgpt <-
     valuation = 1E4)
 
 check_general(bestcost_inflation_chatgpt[["monetization_main"]]$monetized_impact_rounded,
-              8219)# Results on 2025-03-10 from ChatGPT
+              8219)# Results on 2025-03-10 from ChatGPT (some deviation because of rounding)
 
+
+# Discounting with different cost dending on the year 
+# following example of University of Porto
+bestcost_inflation_different_cost_by_year <- 
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    impact = c(800, 1000, 1200, 1500, 1800, 2000),
+    discount_shape = "exponential",
+    discount_rate = 0.05,
+    discount_years = 5,
+    valuation = 1,
+    discount_overtime = "all_years")
+
+check_general(round(bestcost_inflation_different_cost_by_year[["monetization_detailed"]]$monetized_impact),
+              round(c(800, 952.38,1088.44, 1295.76, 1480.86, 1567.05)))
+# Results on 2025-03-04 from the sheet of Uni Porto
 
 ```
 
