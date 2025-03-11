@@ -65,10 +65,27 @@ add_monetized_impact  <- function(df,
                   inflation = inflation,
                   discount_rate_with_inflation = discount_rate_with_inflation)
 
+  # If impact is inserted as vector to refer to different monetized impacts by year
+  # (case of real costs, not applicable for nominal costs)
+  # discount_years -1 because the year 0 has been added to the df
+
+  if(length(df$impact) == discount_years + 1){
+    df_by_year <-
+      df_with_input|>
+      dplyr::mutate(discount_year = discount_years_vector,
+                    .before = everything())
+
+  } else {
+    df_by_year <-
+      # Split by discount year
+      dplyr::cross_join(x = dplyr::tibble(discount_year = discount_years_vector),
+                        y = df_with_input)
+  }
+
+
+
   df_by_year <-
-    # Split by discount year
-    dplyr::cross_join(x = dplyr::tibble(discount_year = discount_years_vector),
-                      y = df_with_input) |>
+    df_by_year |>
     # Add monetized impact and inflation factor
     dplyr::mutate(
       monetized_impact_before_inflation_and_discount = impact * valuation) |>
@@ -102,7 +119,9 @@ add_monetized_impact  <- function(df,
       dplyr::mutate(
         monetized_impact_after_inflation = monetized_impact_before_inflation_and_discount * inflation_factor,
         monetized_impact_after_inflation_and_discount =
-          monetized_impact_after_inflation / discount_factor)
+          monetized_impact_after_inflation / discount_factor,
+        monetized_impact = monetized_impact_after_inflation_and_discount,
+        .after = impact)
 
   df_aggregated <-
     df_by_year |>
@@ -113,20 +132,20 @@ add_monetized_impact  <- function(df,
     dplyr::select(-discount_year)
 
 
-  monetization <-
+  monetization_main <-
     df_aggregated |>
-    # Add columns
-    dplyr::mutate(
-      monetized_impact_before_inflation_and_discount = impact * valuation,
-      monetized_impact = monetized_impact_after_inflation_and_discount,
-      .after = impact) |>
-
     # Round monetized impacts
     dplyr::mutate(
       monetized_impact_before_inflation_and_discount_rounded = round(monetized_impact_before_inflation_and_discount),
       monetized_impact_after__inflation_and_discount_rounded = round(monetized_impact_after_inflation_and_discount),
       monetized_impact_rounded = round(monetized_impact),
       .after = monetized_impact)
+
+  monetization <-
+    list(
+      monetization_main = monetization_main,
+      monetization_detailed = df_by_year
+    )
 
   return(monetization)
 
