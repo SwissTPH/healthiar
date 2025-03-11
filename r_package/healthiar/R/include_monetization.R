@@ -70,12 +70,13 @@ include_monetization <-
                                                  discount_shape = discount_shape,
                                                  discount_overtime = discount_overtime,
                                                  inflation = inflation,
-                                                 valuation = valuation)
+                                                 valuation = valuation) |>
+                purrr::pluck("monetization_main")
+
 
               ## If yll or yld
 
               if({{outcome_metric}} %in% c("yll", "yld")){
-
 
                 lifeyear_nest_with_and_without_discount <-
                   ## Filter for the relevant years
@@ -157,16 +158,27 @@ include_monetization <-
                                          discount_years = {{discount_years}},
                                          discount_shape = discount_shape,
                                          discount_overtime = discount_overtime,
-                                         inflation = inflation)
+                                         inflation = inflation)[["monetization_main"]]
 
-      output_monetization[["monetization_detailed"]]<-
+      #Detailed results showing the by-year results of monetization
+      output_monetization[["monetization_detailed"]][["by_year"]] <-
+        healthiar:::add_monetized_impact(df = output_healthiar[["health_main"]],
+                                         valuation = valuation,
+                                         discount_rate = discount_rate,
+                                         discount_years = {{discount_years}},
+                                         discount_shape = discount_shape,
+                                         discount_overtime = discount_overtime,
+                                         inflation = inflation)[["monetization_detailed"]]
+
+      #Detailed results showing all the details of the health results
+      output_monetization[["monetization_detailed"]][["health_raw"]]<-
         healthiar:::add_monetized_impact(df = output_healthiar[["health_detailed"]][["raw"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
                                          discount_shape = discount_shape,
                                          discount_overtime = discount_overtime,
-                                         inflation = inflation)
+                                         inflation = inflation)[["monetization_main"]]
     }
 
 
@@ -182,44 +194,33 @@ include_monetization <-
 
 
     # Keep only relevant columns for monetization
-    output_monetization[c("monetization_main", "monetization_detailed")]<-
-      purrr::map(
-        .x = output_monetization[c("monetization_main", "monetization_detailed")],
-        ~ dplyr::select(
-          .x,
-          # The columns containing "_ci" are the uncertainties that define the rows
-          contains("_ci"),
-          # Use any_of() instead of all_of() because depending on the calculation pathway
-          # there might not be any of the relevant_columns
-          any_of(relevant_columns))
-      )
+    output_monetization[["monetization_main"]] <-
+      output_monetization[["monetization_main"]] |>
+      dplyr::select(
+        # The columns containing "_ci" are the uncertainties that define the rows
+        contains("_ci"),
+        # Use any_of() instead of all_of() because depending on the calculation pathway
+        # there might not be any of the relevant_columns
+        any_of(relevant_columns))
+
 
 
     # Using user input ####
     # If the user only provide a number of the impact (not based on output of attribute)
+    # The approach cannot be indirect
     }else if(!is.null(impact) & is.null(output_healthiar)){
 
-
-      # The approach cannot be indirect
-      # The output is data frame but we put it in an output list
-      # to keep consistency with the approach of using the output of attribute/compare
       output_monetization <-
-        list(
-          monetization_main =
-            healthiar:::add_monetized_impact(
-              df = data.frame(impact = impact),
-              valuation = valuation,
-              discount_rate = discount_rate,
-              discount_years = discount_years,
-              discount_shape = discount_shape,
-              discount_overtime = discount_overtime,
-              inflation = inflation)
-        )
+        healthiar:::add_monetized_impact(
+          df = data.frame(impact = impact),
+          valuation = valuation,
+          discount_rate = discount_rate,
+          discount_years = discount_years,
+          discount_shape = discount_shape,
+          discount_overtime = discount_overtime,
+          inflation = inflation)
 
   }
-
-
-
 
 
   return(output_monetization)
