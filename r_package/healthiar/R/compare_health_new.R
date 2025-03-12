@@ -15,14 +15,14 @@
 
 compare_health_new <-
   function(
-    output_attribute_scen_A,
-    output_attribute_scen_B,
+    output_attribute_scen_1,
+    output_attribute_scen_2,
     approach_comparison){
 
   browser()
 
-  scen_a <- output_attribute_scen_A
-  scen_b <- output_attribute_scen_B
+  scen_1 <- output_attribute_scen_1
+  scen_2 <- output_attribute_scen_2
 
   # Check that (relevant) input values from scenarios A & B are equal ##########
   ## Works also if no input was provided (might be the case for e.g. ..._lower arguments)
@@ -35,16 +35,16 @@ compare_health_new <-
   ## rr
   if (
     identical(
-      scen_a[["health_detailed"]][["raw"]] |> filter(erf_ci == "central") |> slice() |> pull(rr),
-      scen_b[["health_detailed"]][["raw"]] |> filter(erf_ci == "central") |> slice() |> pull(rr)
+      scen_1[["health_detailed"]][["raw"]] |> filter(erf_ci == "central") |> slice() |> pull(rr),
+      scen_2[["health_detailed"]][["raw"]] |> filter(erf_ci == "central") |> slice() |> pull(rr)
     )  &
     identical(
-      scen_a[["health_detailed"]][["raw"]] |> filter(erf_ci == "lower") |> slice() |> pull(rr),
-      scen_b[["health_detailed"]][["raw"]] |> filter(erf_ci == "lower") |> slice() |> pull(rr)
+      scen_1[["health_detailed"]][["raw"]] |> filter(erf_ci == "lower") |> slice() |> pull(rr),
+      scen_2[["health_detailed"]][["raw"]] |> filter(erf_ci == "lower") |> slice() |> pull(rr)
     ) &
     identical(
-      scen_a[["health_detailed"]][["raw"]] |> filter(erf_ci == "upper") |> slice() |> pull(rr),
-      scen_b[["health_detailed"]][["raw"]] |> filter(erf_ci == "upper") |> slice() |> pull(rr)
+      scen_1[["health_detailed"]][["raw"]] |> filter(erf_ci == "upper") |> slice() |> pull(rr),
+      scen_2[["health_detailed"]][["raw"]] |> filter(erf_ci == "upper") |> slice() |> pull(rr)
     )
   ) {
     print("OK - RR input data of the scenarios match")
@@ -66,16 +66,16 @@ compare_health_new <-
   ## rr increment
   if (
     identical(
-      scen_a[["health_detailed"]][["raw"]] |> slice() |> pull(rr_increment),
-      scen_b[["health_detailed"]][["raw"]] |> slice() |> pull(rr_increment)
+      scen_1[["health_detailed"]][["raw"]] |> slice() |> pull(rr_increment),
+      scen_2[["health_detailed"]][["raw"]] |> slice() |> pull(rr_increment)
     )  &
     identical(
-      scen_a[["health_detailed"]][["raw"]] |> slice() |> pull(rr_increment),
-      scen_b[["health_detailed"]][["raw"]] |> slice() |> pull(rr_increment)
+      scen_1[["health_detailed"]][["raw"]] |> slice() |> pull(rr_increment),
+      scen_2[["health_detailed"]][["raw"]] |> slice() |> pull(rr_increment)
     ) &
     identical(
-      scen_a[["health_detailed"]][["raw"]] |> slice() |> pull(rr_increment),
-      scen_b[["health_detailed"]][["raw"]] |> slice() |> pull(rr_increment)
+      scen_1[["health_detailed"]][["raw"]] |> slice() |> pull(rr_increment),
+      scen_2[["health_detailed"]][["raw"]] |> slice() |> pull(rr_increment)
     )
   ) {
     print("OK - RR increment input data of the scenarios match")
@@ -86,16 +86,16 @@ compare_health_new <-
   ## cutoff
   if (
     identical(
-      scen_a[["health_detailed"]][["raw"]] |> filter(cutoff_ci == "central") |> slice() |> pull(cutoff),
-      scen_b[["health_detailed"]][["raw"]] |> filter(cutoff_ci == "central") |> slice() |> pull(cutoff)
+      scen_1[["health_detailed"]][["raw"]] |> filter(cutoff_ci == "central") |> slice() |> pull(cutoff),
+      scen_2[["health_detailed"]][["raw"]] |> filter(cutoff_ci == "central") |> slice() |> pull(cutoff)
     )  &
     identical(
-      scen_a[["health_detailed"]][["raw"]] |> filter(cutoff_ci == "lower") |> slice() |> pull(cutoff),
-      scen_b[["health_detailed"]][["raw"]] |> filter(cutoff_ci == "lower") |> slice() |> pull(cutoff)
+      scen_1[["health_detailed"]][["raw"]] |> filter(cutoff_ci == "lower") |> slice() |> pull(cutoff),
+      scen_2[["health_detailed"]][["raw"]] |> filter(cutoff_ci == "lower") |> slice() |> pull(cutoff)
     ) &
     identical(
-      scen_a[["health_detailed"]][["raw"]] |> filter(cutoff_ci == "upper") |> slice() |> pull(cutoff),
-      scen_b[["health_detailed"]][["raw"]] |> filter(cutoff_ci == "upper") |> slice() |> pull(cutoff)
+      scen_1[["health_detailed"]][["raw"]] |> filter(cutoff_ci == "upper") |> slice() |> pull(cutoff),
+      scen_2[["health_detailed"]][["raw"]] |> filter(cutoff_ci == "upper") |> slice() |> pull(cutoff)
     )
   ) {
     print("OK - cutoff input data of the scenarios match")
@@ -161,16 +161,16 @@ compare_health_new <-
       ## bhd
       if (
         identical(
-          scen_a[["health_detailed"]][["raw"]] |> filter(bhd_ci == "central") |> slice() |> pull(bhd),
-          scen_b[["health_detailed"]][["raw"]] |> filter(bhd_ci == "central") |> slice() |> pull(bhd)
+          scen_1[["health_detailed"]][["raw"]] |> filter(bhd_ci == "central") |> slice() |> pull(bhd),
+          scen_2[["health_detailed"]][["raw"]] |> filter(bhd_ci == "central") |> slice() |> pull(bhd)
         )  &
         identical(
-          scen_a[["health_detailed"]][["raw"]] |> filter(bhd_ci == "lower") |> slice() |> pull(bhd),
-          scen_b[["health_detailed"]][["raw"]] |> filter(bhd_ci == "lower") |> slice() |> pull(bhd)
+          scen_1[["health_detailed"]][["raw"]] |> filter(bhd_ci == "lower") |> slice() |> pull(bhd),
+          scen_2[["health_detailed"]][["raw"]] |> filter(bhd_ci == "lower") |> slice() |> pull(bhd)
         ) &
         identical(
-          scen_a[["health_detailed"]][["raw"]] |> filter(bhd_ci == "upper") |> slice() |> pull(bhd),
-          scen_b[["health_detailed"]][["raw"]] |> filter(bhd_ci == "upper") |> slice() |> pull(bhd)
+          scen_1[["health_detailed"]][["raw"]] |> filter(bhd_ci == "upper") |> slice() |> pull(bhd),
+          scen_2[["health_detailed"]][["raw"]] |> filter(bhd_ci == "upper") |> slice() |> pull(bhd)
         )
       ) {
         print("OK - baseline health input data of the scenarios match")
