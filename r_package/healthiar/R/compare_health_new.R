@@ -5,6 +5,7 @@
 #' Note that several input parameters (such as baseline health data and relative risk must be the same to correctly compare the two scenarios.
 #' @param output_attribute_scen_A description
 #' @param output_attribute_scen_B description
+#' @param approach_comparison \code{String} showing the method of comparison. Options: "delta" or "pif".
 #' @return
 #' TBD
 #' @examples
@@ -12,9 +13,11 @@
 #' @author Alberto Castro & Axel Luyten
 #' @export
 
-compare_health_new <- function(
+compare_health_new <-
+  function(
     output_attribute_scen_A,
-    output_attribute_scen_B){
+    output_attribute_scen_B,
+    approach_comparison){
 
   browser()
 
@@ -121,5 +124,26 @@ compare_health_new <- function(
 
 
   # Extract input data (for subsequent get_impact call) ########################
+
+  # Identify the arguments that have _1 or _2 in the name (scenario specific)
+  # This is useful for joining data frames below
+  scenario_specific_arguments <-
+    c("exp_central", "exp_lower", "exp_upper",
+      "bhd_central", "bhd_lower", "bhd_upper",
+      "population",
+      "prop_pop_exp",
+      "pop_exp",
+      "approach_exposure",
+      "approach_newborns",
+      "first_age_pop", "last_age_pop",
+      "population_midyear_male", "population_midyear_female",
+      "year_of_analysis",
+      "info")
+
+  #Add impact and pop_fraction
+  scenario_specific_arguments <-
+    c(scenario_specific_arguments,
+      "impact", "pop_fraction")
+
 
 }
