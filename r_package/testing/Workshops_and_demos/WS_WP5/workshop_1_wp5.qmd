@@ -1,0 +1,110 @@
+---
+title: "Hello, I'm healthiar!"
+subtitle: "healthiar R package workshop 1 for WP5"
+author:
+  - name:
+      given: Axel Luyten &
+      family: Alberto Castro
+    affiliations:
+      - name: Swiss TPH
+    orcid: 0000-0002-7005-5889
+    email: axel.luyten@swisstph.ch
+date: 2025-03-24 # last-modified
+editor: source
+execute: 
+  eval: true
+  echo: true
+  warning: false
+freeze: auto
+format:
+  revealjs:
+    incremental: true
+    transition: slide # alts: fade
+    table-of-contents: true
+    logo: images/combo_logo_stph_bc.png
+    footer: 'healthiar WP5 workshop 1'
+    smaller: true
+    template-partials:
+      - title-slide.html
+    title-slide-attributes:
+      data-background-image: images/combo_title_stph_bc.png
+      data-background-size: contain
+      data-background-opacity: "1"
+    slide-number: true
+    embed-resources: true
+---
+
+```{r, echo=FALSE}
+library(healthiar)
+library(tibble)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(stringr)
+library(knitr)
+
+options(knitr.kable.max_rows = 10)
+set.seed(1)
+```
+
+# BEST-COST GitHub repository
+
+Let's start by checking out the [BEST-COST GitHub repo](https://github.com/best-cost/best-cost_WPs) and the [README file](https://github.com/best-cost/best-cost_WPs/tree/master?tab=readme-ov-file#readme)
+
+[![Landing page of the BEST-COST GitHub repo. The *README* file tells you how to get started. The folder *r_package* contains package-related files (including function code). Developments are discussed and documented under *Issues*.](images/bc_github_repo.png)](https://github.com/best-cost/best-cost_WPs)
+
+# *healthiar* in RStudio
+
+Post installation, you can access the `healthiar` package landing page in RStudio by going to the *Packages* tab and then clicking on the `healthiar` package.
+
+![Landing page of the `healthiar` package in RStudio, where you find the package vignettes and function documentation.](images/healthiar_package_landing_page.png)
+
+## Simple calculation
+
+Attribute COPD cases to air pollution
+
+```{r, eval=TRUE,include=TRUE,echo=TRUE}
+#| code-line-numbers: "|2|3|4-7|8|9|10-11"
+#| output-location: fragment # Pause before showing output
+#|# output-location: slide # Puts output on the next slide
+
+results_pm_copd <-
+  healthiar::attribute_health(
+    erf_shape = "log_linear",
+    rr_central = exdat_pm_copd$relative_risk, 
+    rr_lower = exdat_pm_copd$relative_risk_lower,
+    rr_upper = exdat_pm_copd$relative_risk_upper,
+    rr_increment = 10, 
+    exp_central = exdat_pm_copd$mean_concentration,
+    cutoff_central = exdat_pm_copd$cut_off_value,
+    bhd_central = exdat_pm_copd$incidents_per_100_000_per_year/1E5*
+      exdat_pm_copd$population_at_risk
+  ) 
+```
+
+## Let's check the main output!
+
+This is what the `health_main` output table looks like
+
+```{r, echo=TRUE}
+results_pm_copd |> 
+  pluck("health_main") |>
+  select(exp, bhd, rr, erf_ci, pop_fraction, impact_rounded) |> 
+  knitr::kable() # Prints tibble in a minimal layout
+```
+
+## Let's check the detailed output!
+
+```{r, echo=TRUE}
+results_pm_copd[["health_detailed"]][["raw"]] |> knitr::kable()
+```
+
+## New slide
+
+```{r}
+results_pm_copd |> 
+  purrr::pluck("health_detailed") |>
+  purrr::pluck("raw") |> 
+  dplyr::select(contains("_ci"), impact_rounded) |> 
+  knitr::kable() # Prints tibble in a minimal layout
+```
