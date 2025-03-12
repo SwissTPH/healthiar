@@ -17,7 +17,7 @@ compare_health_new <-
   function(
     output_attribute_scen_1,
     output_attribute_scen_2,
-    approach_comparison){
+    approach_comparison = "delta"){
 
 
 
