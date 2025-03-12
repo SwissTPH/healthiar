@@ -3,8 +3,8 @@
 #' @description Calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
 #' @details
 #' Note that several input parameters (such as baseline health data and relative risk must be the same to correctly compare the two scenarios.
-#' @param output_attribute_scen_A description
-#' @param output_attribute_scen_B description
+#' @param output_attribute_1 Scenario 1 as in the output of attribute()
+#' @param output_attribute_2 Scenario 2 as in the output of attribute()
 #' @param approach_comparison \code{String} showing the method of comparison. Options: "delta" or "pif".
 #' @return
 #' TBD
@@ -144,6 +144,29 @@ compare_health_new <-
   scenario_specific_arguments <-
     c(scenario_specific_arguments,
       "impact", "pop_fraction")
+
+  # Delta approach ########################
+
+  if(approach_comparison == "delta"){
+
+    # Identify the columns that are to be used to join impact_raw_1 and _2
+    joining_columns_output <-
+      healthiar:::find_joining_columns(
+        df1 = output_attribute_1[["health_detailed"]][["raw"]],
+        df2 = output_attribute_2[["health_detailed"]][["raw"]],
+        except = scenario_specific_arguments)
+
+    # Merge the result tables by common columns
+    impact_raw <-
+      dplyr::left_join(
+        output_attribute_1[["health_detailed"]][["raw"]],
+        output_attribute_2[["health_detailed"]][["raw"]],
+        by = joining_columns_output,
+        suffix = c("_1", "_2")) |>
+      # Calculate the delta (difference) between scenario 1 and 2
+      dplyr::mutate(impact = impact_1 - impact_2,
+                    impact_rounded = round(impact, 0))
+  }
 
 
 }
