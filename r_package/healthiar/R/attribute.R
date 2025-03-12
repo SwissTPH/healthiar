@@ -127,13 +127,13 @@ attribute <-
         deaths_female = deaths_female)
 
     # Calculate the health impacts for each case (uncertainty, category, geo area...)
-    impact_raw <-
+    impact <-
       healthiar:::get_impact(input = input,
                              pop_fraction_type = "paf")
 
     # Get the main and detailed output by aggregating and/or filtering cases (rows)
     output <-
-      healthiar:::get_output(impact_raw)
+      healthiar:::get_output(impact = impact)
 
     return(output)
   }
