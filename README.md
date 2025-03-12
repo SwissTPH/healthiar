@@ -1,4 +1,5 @@
 ***** GET STARTED WITH THE healthiar PACKAGE *****
+
 (First install the healthiar package following steps below)
 
 To get started wiht the healthiar package please consult the intro_to_healthiar vignette (i.e. documentation on how to use the healthiar package) by either 
