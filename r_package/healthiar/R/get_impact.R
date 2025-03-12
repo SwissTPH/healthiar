@@ -189,6 +189,10 @@ get_impact <-
         )
     }
 
+    impact <-
+      list(input = input,
+           impact_raw = impact_raw)
+
 
 
     return(impact_raw)

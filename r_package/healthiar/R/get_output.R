@@ -1,7 +1,7 @@
 #' Attributable health cases based on relative risk
 
 #' @description Distributes and store outputs by level of detail by aggregating or filtering impacts.
-#' @param impact_raw \code{Data frame} containing all input data and the calculation of health impacts.
+#' @param impact \code{List} containing all input data and the calculation of health impacts.
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central, lower and upper bound confidence interval.
@@ -17,12 +17,11 @@
 #' @author Alberto Castro
 #' @keywords internal
 get_output <-
-  function(impact_raw){
-
-
-
+  function(impact){
 
     # Get main results from detailed results ###################################
+    input <- impact[["input"]]
+    impact_raw <- impact[["raw"]]
 
     if(grepl("lifetable", unique(impact_raw$health_outcome))){
       impact_main <-
@@ -37,7 +36,8 @@ get_output <-
       ## Classify results in main and detailed
       output <-
         list(health_main = impact_main,
-             health_detailed = list(raw = impact_raw))
+             health_detailed = list(input = input,
+                                    raw = impact_raw))
 
 
     } else {
