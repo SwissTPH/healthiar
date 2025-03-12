@@ -3,8 +3,8 @@
 #' @description Calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
 #' @details
 #' Note that several input parameters (such as baseline health data and relative risk must be the same to correctly compare the two scenarios.
-#' @param scen_1 Scenario 1 as in the output of attribute()
-#' @param scen_2 Scenario 2 as in the output of attribute()
+#' @param output_attribute_scen_1 Scenario 1 as in the output of attribute()
+#' @param output_attribute_scen_2 Scenario 2 as in the output of attribute()
 #' @param approach_comparison \code{String} showing the method of comparison. Options: "delta" or "pif".
 #' @return
 #' TBD
@@ -18,6 +18,7 @@ compare_health_new <-
     output_attribute_scen_1,
     output_attribute_scen_2,
     approach_comparison){
+
 
 
     input_1 <- output_attribute_scen_1[["health_detailed"]][["input"]]
@@ -136,11 +137,11 @@ compare_health_new <-
     if(approach_comparison == "delta"){
 
 
-      # Identify the columns that are to be used to join impact_scen_1_raw and _2
+      # Identify the columns that are to be used to join raw_1 and _2
       joining_columns_output <-
         healthiar:::find_joining_columns(
-          df1 =raw_1,
-          df2 =raw_2,
+          df1 = raw_1,
+          df2 = raw_2,
           except = scenario_specific_arguments)
 
       # Merge the result tables by common columns
@@ -249,10 +250,10 @@ compare_health_new <-
     # in a list
 
     output <-
-      healthiar:::get_output(impact_raw = impact_raw)
+      healthiar:::get_output(impact = list(raw=impact_raw))
 
-    output[["health_detailed"]][["scenario_1"]] <- impact_scen_1_raw
-    output[["health_detailed"]][["scenario_2"]] <- impact_scen_1_raw
+    output[["health_detailed"]][["scenario_1"]] <- raw_1
+    output[["health_detailed"]][["scenario_2"]] <- raw_1
 
 
 

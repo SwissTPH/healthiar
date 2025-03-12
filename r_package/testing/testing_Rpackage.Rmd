@@ -1497,7 +1497,7 @@ scen_1 <-
     bhd_central = 25000
   )
 
-scen_1 <-
+scen_2 <-
   attribute_health(
     approach_risk = "relative_risk",
     erf_shape = "log_linear",
@@ -1511,7 +1511,8 @@ scen_1 <-
 test_comparison <- 
   compare_health_new(
     output_attribute_scen_1 = scen_1,
-    output_attribute_scen_2 = scen_2
+    output_attribute_scen_2 = scen_2,
+    approach_comparison = "delta"
   )
 
 ```

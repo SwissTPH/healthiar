@@ -22,6 +22,9 @@ get_output <-
     # Get main results from detailed results ###################################
     input <- impact[["input"]]
     impact_raw <- impact[["raw"]]
+    health_detailed_from_impact  <-
+      list(input = input,
+           raw = impact_raw)
 
     if(grepl("lifetable", unique(impact_raw$health_outcome))){
       impact_main <-
@@ -36,8 +39,7 @@ get_output <-
       ## Classify results in main and detailed
       output <-
         list(health_main = impact_main,
-             health_detailed = list(input = input,
-                                    raw = impact_raw))
+             health_detailed = health_detailed_from_impact)
 
 
     } else {
@@ -46,7 +48,7 @@ get_output <-
       # The main will change below that we give a first value
       output <-
         list(health_main = impact_raw,
-             health_detailed = list(raw = impact_raw))}
+             health_detailed = health_detailed_from_impact)}
 
     # Keep the last version
       output_last <- output[["health_main"]]
