@@ -4,7 +4,7 @@
 #' @inheritParams attribute
 #' @param outcome_metric \code{String} to define the outcome metric. Choose between "death", "yll" and "yld"
 #'
-#' @return
+#' @returns
 #' This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central estimate, lower and upper bound confidence interval).
 #' Moreover, the data frame include columns such as:
@@ -14,9 +14,6 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
-#' @import dplyr
-#' @import purrr
-#' @importFrom stringr str_replace
 #' @examples
 #' TBD
 #' @author Alberto Castro
@@ -216,7 +213,7 @@ get_pop_impact <-
     # PREMATURE DEATHS (SINGLE YEAR EXPOSURE) ######################################################
     # YOA = YEAR OF ANALYSIS
     if (outcome_metric == "deaths" &
-        unique(input_with_risk_and_pop_fraction |> select(contains("approach_exposure"))== "single_year")[1]) {
+        unique(input_with_risk_and_pop_fraction |> dplyr::select(contains("approach_exposure"))== "single_year")[1]) {
 
       pop <- pop |>
         # Premature deaths = ( impacted scenario YOA end-of-year population ) - ( baseline scenario YOA end-of-year pop )
@@ -236,7 +233,7 @@ get_pop_impact <-
     # YLL & PREMATURE DEATHS (CONSTANT EXPOSURE) ####################################################
 
     if ((outcome_metric %in% c("yll", "yld", "daly") |
-         (unique(input_with_risk_and_pop_fraction |> select(contains("approach_exposure")) == "constant")[1] & outcome_metric == "deaths"))) {
+         (unique(input_with_risk_and_pop_fraction |> dplyr::select(contains("approach_exposure")) == "constant")[1] & outcome_metric == "deaths"))) {
 
       ## PROJECT POPULATIONS #########################################################################
 
@@ -309,7 +306,7 @@ get_pop_impact <-
       ### SINGLE YEAR EXPOSURE #######################################################################
       # Determine YLLs for baseline and impacted scenario's in the single year exposure case
 
-      if (unique(input_with_risk_and_pop_fraction |> select(contains("approach_exposure")) == "single_year")[1]){
+      if (unique(input_with_risk_and_pop_fraction |> dplyr::select(contains("approach_exposure")) == "single_year")[1]){
 
         # PROJECT POPULATIONS IN BOTH IMPACTED AND BASELINE SCENARIO FROM YOA+1 UNTIL THE END
         # USING MODIFIED SURVIVAL PROBABILITIES (BECAUSE AFTER YOA THERE IS NO MORE AIR POLLUTION)

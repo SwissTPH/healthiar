@@ -7,7 +7,7 @@
 #' @param benefit \code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure
 #' @param cost \code{Numeric value} referring to the investment cost to achive the reduction of exposure
 #'
-#' @return Description of the return value.
+#' @returns Description of the return value.
 #' @examples
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)
@@ -27,19 +27,21 @@ include_cba <-
 
     # Define vectors that are relevant below
 
-    relevant_columns <-
+    columns_monetization <-
         c("monetized_impact", "monetized_impact_rounded")
 
-    suffix <-
+    suffix_monetization <-
       c("_benefit", "_cost")
 
-    relevant_columns_with_suffix <-
+    columns_monetization_with_suffix <-
       paste0(
-        relevant_columns,
-        rep(suffix, each = length(relevant_columns))
+        columns_monetization,
+        rep(suffix_monetization, each = length(columns_monetization))
       )
 
     # Run include_monetization for benefit and cost separately
+    # Important to obtain main and detailed to avoid losing information
+
     cba_detailed_benefit <-
       healthiar::include_monetization(
         approach_discount = approach_discount,
@@ -49,7 +51,20 @@ include_cba <-
         discount_years = discount_years_benefit,
         discount_shape = discount_shape,
         discount_overtime = discount_overtime,
+        valuation = valuation)[["monetization_detailed"]]
+
+    cba_main_benefit <-
+      healthiar::include_monetization(
+        approach_discount = approach_discount,
+        output_healthiar = output_healthiar,
+        impact = positive_impact,
+        discount_rate = discount_rate_benefit,
+        discount_years = discount_years_benefit,
+        discount_shape = discount_shape,
+        discount_overtime = discount_overtime,
         valuation = valuation)[["monetization_main"]]
+
+
 
     # For cost, assume 1 impact with full valuation to make use of include_monetization
     cba_detailed_cost <-
@@ -62,6 +77,9 @@ include_cba <-
         discount_shape = discount_shape,
         discount_overtime = discount_overtime)[["monetization_main"]]
 
+    # For costs main and detailed are the same because they only have one row
+    cba_main_cost <- cba_detailed_cost
+
     # Build the detailed output list
     cba_detailed <-
       list(
@@ -72,14 +90,28 @@ include_cba <-
     cba_main <-
       # Join benefit and cost into one df
       dplyr::left_join(
-        cba_detailed_benefit,
-        cba_detailed_cost,
-        by = c("discount_shape", "discount_overtime"), # Removed all_of() because it triggered warning in testing
-        suffix = suffix)|>
-      # Keep only relevant columns (results)
-      dplyr::select(all_of(relevant_columns_with_suffix))|> # This line resulted in a warning: Using `all_of()` outside of a selecting function was deprecated in tidyselect 1.2.0.
-      # dplyr::select(relevant_columns_with_suffix)|> # ... but this line also resulted in a warning
-      # Rename columns to make them shorter
+        cba_main_benefit,
+        cba_main_cost,
+        by = c("discount_shape", "discount_overtime"),
+        suffix = suffix_monetization)
+
+
+    # Store names of columns with ci and geo_id
+    # These columns define the different cases (rows)
+    # This intermediate step is needed to ensure that no errors are produced
+    # if no columns with ci or geo are available
+    # (i.e, without using the function attribute in a previous step)
+    columns_ci_geo <-
+      names(cba_main)[grepl("_ci|geo_id", names(cba_main))]
+
+    relevant_columns <-
+      c(columns_ci_geo, columns_monetization_with_suffix)
+
+
+    cba_main <-
+      cba_main |>
+      # Keep only relevant columns
+      dplyr::select(all_of(relevant_columns))|>
       # Moreover, cost is not actually a monetized impact
       dplyr::rename(benefit = monetized_impact_benefit,
                     cost = monetized_impact_cost,
@@ -99,7 +131,18 @@ include_cba <-
 
 
 
-    return(output_cba)
+    if(is.null(positive_impact) & !is.null(output_healthiar)){
+      output <-
+        c(output_healthiar,
+          output_cba)
+
+    }else if(!is.null(positive_impact) & is.null(output_healthiar)){
+     output <- output_cba
+    }
+
+
+
+    return(output)
 
 
 

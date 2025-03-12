@@ -4,7 +4,7 @@
 
 #' @inheritParams include_monetization
 
-#' @return
+#' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function i.e. central, lower and upper bound confidence interval.
 #' Moreover, the data frame includes columns such as:
@@ -14,8 +14,6 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
-#' @import dplyr
-#' @import purrr
 #' @examples
 #' TBD
 #' @author Alberto Castro
@@ -28,7 +26,8 @@ include_discount <-
            discount_rate = NULL,
            discount_years = 1,
            discount_shape = NULL,
-           discount_overtime = "all_years") {
+           discount_overtime = "all_years",
+           inflation = NULL) {
 
     output_discounting <-
       healthiar::include_monetization(
@@ -39,7 +38,8 @@ include_discount <-
         discount_years = discount_years,
         discount_shape = discount_shape,
         discount_overtime = discount_overtime,
-        valuation = 1)
+        valuation = 1,
+        inflation = inflation)
 
 
     output_discounting[["monetization_main"]] <-

@@ -3,7 +3,7 @@
 #' @description Compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
 #' @inheritParams attribute
 #'
-#' @return
+#' @returns
 #' This function returns a \code{data.frame} with all input data together
 #' Moreover, the data frame includes columns such as:
 #' \itemize{
@@ -12,14 +12,10 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
-#' @import dplyr
-#' @import purrr
-#' @importFrom tidyr pivot_longer crossing nest
 #' @examples
 #' TBD
 #' @author Alberto Castro
 #' @note Experimental function
-#' @export
 #' @keywords internal
 
 compile_input <-
@@ -201,7 +197,7 @@ compile_input <-
         prop_pop_exp = unlist(prop_pop_exp)) |>
 
       ## Remove min_age & max_age columns if they are NA
-      select(-where(~ all(is.na(x = .))))
+      dplyr::select(-where(~ all(is.na(x = .))))
 
       # Add erf data
     input_wo_lifetable <-

@@ -4,7 +4,7 @@
 #' This function prepares tabular population exposure data compatible with the attribute() and compare() functions, based on spatial pollution and geographic units data.
 #' @param poll_grid \code{SpatRaster} of the pollution data.
 #' @param geo_units \code{sf} of the geographic units data.
-#' @return
+#' @returns
 #' This function returns a vector of population exposure values.
 #' @export
 #' @author Arno Pauwels
@@ -18,8 +18,8 @@ prepare_exposure_data <-
     geo_units
   ){
 
-    if (requireNamespace("terra", quietly = TRUE)) {
-      stop("The 'terra' package is required for this function. Please install it using install.packages('terra').", call. = FALSE)}
+    if (!requireNamespace("terra", quietly = TRUE)) {
+      stop("The 'terra' package is required for this function. Please install it if you want to use this function.", call. = FALSE)}
 
     ## calculate mean concentration in each geo unit
     exp <- terra::extract(poll_grid, geo_units, fun = mean)

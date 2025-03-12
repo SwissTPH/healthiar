@@ -11,7 +11,8 @@ include_discount(
   discount_rate = NULL,
   discount_years = 1,
   discount_shape = NULL,
-  discount_overtime = "all_years"
+  discount_overtime = "all_years",
+  inflation = NULL
 )
 }
 \arguments{
@@ -21,13 +22,15 @@ include_discount(
 
 \item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function).}
 
-\item{discount_rate}{\code{Numeric value} showing the discount rate for future years including correction from inflation rate}
+\item{discount_rate}{\code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.}
 
 \item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 
 \item{discount_overtime}{\code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".}
+
+\item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assumming no nominal discount rate)}
 }
 \value{
 TBD. E.g. This function returns a \code{data.frame} with one row for each value of the

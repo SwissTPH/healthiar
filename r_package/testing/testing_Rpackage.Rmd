@@ -5,7 +5,7 @@ output: html_document
 ---
 
 # Goal
-
+ 
 Test the functions of the bestcost package comparing the results with results from other tools or assessments
 
 # Load packages and data
@@ -23,9 +23,7 @@ pacman::p_load(
   ## To set colors in console messages (checking)
   crayon,
   ## To load {healthiar}
-  credentials, gitcreds, devtools,
-  ## To do geo analysis
-  terra, sf
+  credentials, devtools # Not needed anymore: gitcreds
   )
 
 ## Load development version of healthiar package
@@ -41,46 +39,39 @@ load("../testing/input/data/input_data_for_testing_Rpackage.RData")
 ## NOTE: if an older version of {healthiar} already installed and loaded, detach first 
 # detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
 
-## Install own package from GitHub
-### Source: https://stackoverflow.com/a/71846333/6104907
-
-## Authenticate yourself using PAT (personal access token)
-### See README file at GitHub repo for guidance on how to create a PAT
-### https://github.com/best-cost/best-cost_WPs
+## Option A: Using remotes package (size: 426 KB)
+### Advantage: no installation of Git required
 credentials::set_github_pat() # paste github PAT if prompted
-
-## Install current version of {healthiar}
-### If prompted to update or install packages please do so
-### First detach the healthiar package
-devtools::install_github(
+# ?remotes::install_github
+remotes::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
-  # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
-  # ref = "415-prepare-package-for-use-by-ubdpolicy", # By default "HEAD"; name of branch to install package from as a string  
-  ref = "432-terra-package-required-for-installing-healthiar",
-  # force = TRUE,
+  ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
+  # ref = "463-create-get_mdi-function",
+  force = TRUE,
+  # auth_token = "", # Paste your GitHub PAT between the quotation marks
   # dependencies = TRUE,
   build_vignettes = TRUE
 )
 
-
 library(healthiar)
+
 ```
 
 ```{r Install healthiar from local source, eval=FALSE, include=FALSE}
 
 ## NOTE: if an older version of {healthiar} already installed and loaded, detach first 
-detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
+# detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
 
 ## Install package from .zip file
-devtools::build(binary = TRUE, path = "../testing/input/") # Save current state of package as .zip file (e.g. to directly test changes in functions)
-install.packages("../testing/input/healthiar_0.0.0.1.zip", repos=NULL, type='source') # Modify file path
+# devtools::build(binary = TRUE, path = "../testing/input/") # Save current state of package as .zip file (e.g. to directly test changes in functions)
+# install.packages("../testing/input/healthiar_0.0.0.1.zip", repos=NULL, type='source') # Modify file path
 
 ## Install package from .tar.gz file
-devtools::build(path = "../testing/input/") # Save current state of package as tar.gz file (e.g. to directly test changes in functions)
-install.packages("../testing/input/healthiar_0.0.0.1.tar.gz", repos=NULL, type='source') # Modify file path
+# devtools::build(path = "../testing/input/") # Save current state of package as tar.gz file (e.g. to directly test changes in functions)
+# install.packages("../testing/input/healthiar_0.0.0.1.tar.gz", repos=NULL, type='source') # Modify file path
 
-library(healthiar)
+# library(healthiar)
 ```
 
 
@@ -146,6 +137,9 @@ print(test)
 bestcost_pm_copd <-
   healthiar::attribute_health(
     exp_central = airqplus_pm_copd$mean_concentration,
+    exp_lower = airqplus_pm_copd$mean_concentration-0.5,
+    exp_upper = airqplus_pm_copd$mean_concentration+0.5,
+    
     cutoff_central = airqplus_pm_copd$cut_off_value,
     bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
     rr_central = airqplus_pm_copd$relative_risk, 
@@ -615,6 +609,26 @@ check_general(
   )
 
 ```
+
+```{r get_mdi}
+
+mdi <- healthiar::get_mdi(
+  geo_id_disaggregated = exdat_get_mdi$id,
+  edu = exdat_get_mdi$edu,
+  unemployed = exdat_get_mdi$unemployed,
+  single_parent = exdat_get_mdi$single_parent,
+  pop_change = exdat_get_mdi$pop_change,
+  no_heating = exdat_get_mdi$no_heating,
+  n_quantile = 10)
+
+## Validate calculation of get_mdi with the following code function psych::alpha
+# Install and load the psych package (if not already installed)
+reliability <- psych::alpha(
+  exdat_get_mdi |> dplyr::select(norm_edu, norm_unemployed, norm_single_parent, norm_pop_change, norm_no_heating))
+print(reliability$total |> dplyr::pull(raw_alpha))
+
+```
+
 
 # Summary uncertainty
 
@@ -2595,7 +2609,7 @@ check_general(bestcost_pm_copd_costs_discount[["monetization_main"]]$monetized_i
               c(60416, 23343, 94436)) # Result on 9 Jan 2025
 
 ## Monetize with impact (without output of attribute)
-bestcost_pm_copd_cost_discount_single_value <- 
+bestcost_cost_discount_single_value <- 
   healthiar::include_monetization(
     approach_discount = "direct",
     impact = 2E4, 
@@ -2604,9 +2618,9 @@ bestcost_pm_copd_cost_discount_single_value <-
     discount_years = 20,
     valuation = 1)
 
-check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
-              14877)
-## According to ChatGPT, the result should be 14877. 5 Dec 2024
+check_general(bestcost_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
+              11074)
+## Results according to ChatGPT on 10 March 2025
 
 
 
@@ -2654,14 +2668,130 @@ bestcost_pm_copd_discount <-
     discount_years = 20)
 
 check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_rounded,
-              14877)# Results on 2025-01-15
+              11074)# Results on 2025-01-15
+
+```
+
+
+```{r with inflation}
+
+bestcost_inflation_attribute_result <- 
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    output_healthiar = bestcost_pm_copd,
+    discount_shape = "exponential",
+    discount_rate = 0.05,
+    discount_years = 5,
+    inflation = 0.08,
+    valuation = 1E3)
+
+## Test helper_extract_main_monetization_results() fct
+bestcost_inflation_attribute_result_main <- 
+  healthiar::helper_extract_main_monetization_results(bestcost_inflation_attribute_result) 
+
+# Discounting and inflation using example from uni Porto
+bestcost_inflation <- 
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    impact = 1,
+    discount_shape = "exponential",
+    discount_rate = 0.05,
+    discount_years = 5,
+    inflation = 0.08,
+    valuation = 1E3)
+
+check_general(bestcost_inflation[["monetization_main"]]$monetized_impact_rounded,
+              round(783.53))# Results on 2025-03-04 from the sheet of Uni Porto
+
+
+# Discounting and inflation using chaggpt
+bestcost_inflation_chatgpt <- 
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    impact = 1,
+    discount_shape = "exponential",
+    discount_rate = 0.04,
+    discount_years = 5,
+    inflation = 0.03,
+    valuation = 1E4)
+
+check_general(bestcost_inflation_chatgpt[["monetization_main"]]$monetized_impact_rounded,
+              8219)# Results on 2025-03-10 from ChatGPT (some deviation because of rounding)
+
+
+# Discounting with different cost depending on the year 
+# following example of University of Porto
+bestcost_inflation_different_cost_by_year_exp <- 
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    impact = c(800, 1000, 1200, 1500, 1800, 2000),
+    discount_shape = "exponential",
+    discount_rate = 0.05,
+    discount_years = 5,
+    valuation = 1,
+    discount_overtime = "all_years")
+
+check_general(round(bestcost_inflation_different_cost_by_year_exp[["monetization_detailed"]]$monetized_impact),
+              round(c(800, 952.38,1088.44, 1295.76, 1480.86, 1567.05)))
+# Results on 2025-03-04 from the sheet of Uni Porto
+
+
+# Discounting with different cost depending on the year 
+# following example of University of Porto
+# Now with hyperbolic
+bestcost_inflation_different_cost_by_year_hyp_harvey <- 
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    impact = c(800, 1000, 1200, 1500, 1800, 2000),
+    discount_shape = "hyperbolic_harvey_1986",
+    discount_rate = 0.05,
+    discount_years = 5,
+    valuation = 1,
+    discount_overtime = "all_years")
+
+check_general(round(bestcost_inflation_different_cost_by_year_hyp_harvey[["monetization_detailed"]]$monetized_impact),
+              round(c(800,965.94, 1135.86, 1399.55, 1660.83, 1828.62)))
+
+
+bestcost_inflation_different_cost_by_year_hyp_mazur <- 
+  healthiar::include_monetization(
+    approach_discount = "direct",
+    impact = c(800, 1000, 1200, 1500, 1800, 2000),
+    discount_shape = "hyperbolic_mazur_1987",
+    discount_rate = 0.05,
+    discount_years = 5,
+    valuation = 1,
+    discount_overtime = "all_years")
+
+check_general(round(bestcost_inflation_different_cost_by_year_hyp_mazur[["monetization_detailed"]]$monetized_impact),
+              round(c(800, 952.38, 1090.91, 1304.35, 1500.00, 1600.00)))
 
 ```
 
 ```{r cba}
 
-## Discounting only one specific year
-bestcost_pm_copd_cba <-
+## Discounting only one specific year (attr input)
+bestcost_pm_copd_cba_attr_input <-
+  healthiar::include_cba(
+    output_healthiar = bestcost_pm_copd,
+    approach_discount = "direct",
+    valuation = 20,
+    cost = 100,
+    discount_shape = "exponential",
+    discount_rate_benefit = 0.03,
+    discount_rate_cost = 0.03,
+    discount_years_benefit = 5,
+    discount_years_cost = 5,
+    discount_overtime = "last_year")
+check_general(bestcost_pm_copd_cba_attr_input[["cba_main"]]$benefit_minus_cost_rounded,
+              c(60330,23257,94350)) # Results on 2025-03-06; no comparison study
+
+## Test helper_extract_main_cba_results fct
+bestcost_pm_copd_cba_attr_input_main <- 
+  healthiar::helper_extract_main_cba_results(bestcost_pm_copd_cba_attr_input)
+
+## Discounting only one specific year (raw input)
+bestcost_pm_copd_cba_raw_input <-
   healthiar::include_cba(
     approach_discount = "direct",
     positive_impact = 50,
@@ -2673,9 +2803,12 @@ bestcost_pm_copd_cba <-
     discount_years_benefit = 5,
     discount_years_cost = 5,
     discount_overtime = "last_year")
-check_general(bestcost_pm_copd_cba[["cba_main"]]$benefit_minus_cost_rounded,
+check_general(bestcost_pm_copd_cba_raw_input[["cba_main"]]$benefit_minus_cost_rounded,
               776) # As indicated by University of Port in Excel file
 
+## Test helper_extract_main_cba_results fct
+bestcost_pm_copd_cba_main <- 
+  healthiar::helper_extract_main_cba_results(bestcost_pm_copd_cba_raw_input)
 
 ## Discounting only one specific year
 bestcost_pm_copd_cba_output <-

@@ -1,8 +1,7 @@
 #' Get discount factor
 
 #' @description Get discount factor based on discount rate (already corrected for inflation)
-#' @inheritParams attribute
-#' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting.
+#' @inheritParams include_monetization
 #' @author Alberto Castro
 #' @note Experimental function
 #' @export
@@ -29,12 +28,16 @@ get_discount_factor <-
       discount_factor <-
         ifelse(
           discount_shape == "exponential",
-          1/((1 + discount_rate) ^ discount_year),
+          (1 + discount_rate) ^ discount_year,
           ifelse(discount_shape == "hyperbolic_harvey_1986",
-                 1/((1 + discount_year) ^ discount_rate),
+                 (1 + discount_year) ^ discount_rate,
                  ifelse(discount_shape == "hyperbolic_mazur_1987",
-                        1/(1 + discount_rate * discount_year),
+                        1 + discount_rate * discount_year,
                         NA)))
 
     }
+
+
+
+    return(discount_factor)
   }

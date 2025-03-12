@@ -4,14 +4,15 @@
 #'
 #' @param approach_discount \code{String} referring to the method to be used for the discounting choosing between the default "direct" (after obtaining the health impacts) and the alternative "indirect" (before the health impacts).
 #' @param output_healthiar \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.
-#' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function).
+#' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while discount_years does not include the year 0. Thus, length of impact = discount_years + 1.
 #' @param valuation \code{Numberic value} referring to unit value of a health impact
-#' @param discount_rate \code{Numeric value} showing the discount rate for future years including correction from inflation rate
+#' @param discount_rate \code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
 #' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting.
 #' @param discount_overtime \code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".
+#' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assumming no nominal discount rate)
 #'
-#' @return Description of the return value.
+#' @returns Description of the return value.
 #' @examples
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)
@@ -24,7 +25,8 @@ include_monetization <-
            discount_rate = NULL,
            discount_shape = NULL,
            discount_years = 1,
-           discount_overtime = "all_years") {
+           discount_overtime = "all_years",
+           inflation = NULL) {
 
   # Using the output of attribute ####
   if(!is.null(output_healthiar) & is.null(impact)){
@@ -63,37 +65,28 @@ include_monetization <-
                               discount_years = year - {{year_of_analysis}},
                               discount_rate = {{discount_rate}},
                               discount_shape = {{discount_shape}})|>
-
-
-                # Calculate discount rate for each year
-                dplyr::mutate(
-                  discount_factor =
-                    healthiar::get_discount_factor(
-                      discount_rate = discount_rate,
-                      discount_year = discount_years,
-                      discount_shape = discount_shape)) |>
-
-                # Calculate life years discounted
-
-                dplyr::mutate(
-                  impact_before_discount = impact,
-                  impact_after_discount = impact * discount_factor,
-                  impact = impact_after_discount)
+                healthiar:::add_monetized_impact(discount_rate = discount_rate,
+                                                 discount_year = discount_years,
+                                                 discount_shape = discount_shape,
+                                                 discount_overtime = discount_overtime,
+                                                 inflation = inflation,
+                                                 valuation = valuation) |>
+                purrr::pluck("monetization_main")
 
 
               ## If yll or yld
 
               if({{outcome_metric}} %in% c("yll", "yld")){
 
-
                 lifeyear_nest_with_and_without_discount <-
                   ## Filter for the relevant years
                   dplyr::filter(.data = lifeyear_nest_with_and_without_discount,
                                 year < .y) |>
                   ## Sum among years to obtain the total impact (single value)
-                  dplyr::summarise(impact_before_discount = sum(impact_before_discount),
-                                   impact_after_discount = sum(impact_after_discount),
-                                   impact = sum(impact),
+                  dplyr::summarise(impact = sum(impact),
+                                   monetized_impact_before_inflation_and_discount = sum(monetized_impact_before_inflation_and_discount),
+                                   monetized_impact_after_inflation_and_discount = sum(monetized_impact_after_inflation_and_discount),
+                                   monetized_impact = sum(monetized_impact),
                                    .groups = "drop")
               }
 
@@ -110,14 +103,12 @@ include_monetization <-
         tidyr::unnest(impact_with_discount_nest) |>
         # Round results
         dplyr::mutate(
-          impact_rounded = round(impact, 0),
-          monetized_impact = impact * valuation,
-          monetized_impact_before_discount = impact_before_discount * valuation,
-          monetized_impact_after_discount = impact_after_discount * valuation,
-          # Round monetized_impacts
+
+          # Round impacts and monetized impacts
+          impact_rounded = round(impact),
           monetized_impact_rounded = round(monetized_impact),
-          monetized_impact_before_discount_rounded = round(monetized_impact_before_discount),
-          monetized_impact_after_discount_rounded = round(monetized_impact_after_discount))
+          monetized_impact_before_discount_rounded = round(monetized_impact_before_inflation_and_discount),
+          monetized_impact_after_discount_rounded = round(monetized_impact_after_inflation_and_discount))
 
 
 
@@ -166,15 +157,28 @@ include_monetization <-
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
                                          discount_shape = discount_shape,
-                                         discount_overtime = discount_overtime)
+                                         discount_overtime = discount_overtime,
+                                         inflation = inflation)[["monetization_main"]]
 
-      output_monetization[["monetization_detailed"]]<-
+      #Detailed results showing the by-year results of monetization
+      output_monetization[["monetization_detailed"]][["by_year"]] <-
+        healthiar:::add_monetized_impact(df = output_healthiar[["health_main"]],
+                                         valuation = valuation,
+                                         discount_rate = discount_rate,
+                                         discount_years = {{discount_years}},
+                                         discount_shape = discount_shape,
+                                         discount_overtime = discount_overtime,
+                                         inflation = inflation)[["monetization_detailed"]]
+
+      #Detailed results showing all the details of the health results
+      output_monetization[["monetization_detailed"]][["health_raw"]]<-
         healthiar:::add_monetized_impact(df = output_healthiar[["health_detailed"]][["raw"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
                                          discount_shape = discount_shape,
-                                         discount_overtime = discount_overtime)
+                                         discount_overtime = discount_overtime,
+                                         inflation = inflation)[["monetization_main"]]
     }
 
 
@@ -182,51 +186,41 @@ include_monetization <-
     # Identify the relevant columns for monetization that are in the output
     relevant_columns <-
       c("info", "geo_id_disaggregated", "geo_id_aggregated",
-        paste0("impact", c("", "_before_discount", "_after_discount")),
+        paste0("impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount")),
         "discount_rate", "discount_shape", "discount_overtime", "approach_discount",
         "valuation",
-        paste0("monetized_impact", c("", "_before_discount", "_after_discount")),
-        paste0("monetized_impact", c("", "_before_discount", "_after_discount"), "_rounded"))
+        paste0("monetized_impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount")),
+        paste0("monetized_impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount"), "_rounded"))
 
 
     # Keep only relevant columns for monetization
-    output_monetization[c("monetization_main", "monetization_detailed")]<-
-      purrr::map(
-        .x = output_monetization[c("monetization_main", "monetization_detailed")],
-        ~ dplyr::select(
-          .x,
-          # The columns containing "_ci" are the uncertainties that define the rows
-          contains("_ci"),
-          # Use any_of() instead of all_of() because depending on the calculation pathway
-          # there might not be any of the relevant_columns
-          any_of(relevant_columns))
-      )
+    output_monetization[["monetization_main"]] <-
+      output_monetization[["monetization_main"]] |>
+      dplyr::select(
+        # The columns containing "_ci" are the uncertainties that define the rows
+        contains("_ci"),
+        # Use any_of() instead of all_of() because depending on the calculation pathway
+        # there might not be any of the relevant_columns
+        any_of(relevant_columns))
+
 
 
     # Using user input ####
     # If the user only provide a number of the impact (not based on output of attribute)
+    # The approach cannot be indirect
     }else if(!is.null(impact) & is.null(output_healthiar)){
 
-
-      # The approach cannot be indirect
-      # The output is data frame but we put it in an output list
-      # to keep consistency with the approach of using the output of attribute/compare
       output_monetization <-
-        list(
-          monetization_main =
-            healthiar:::add_monetized_impact(
-              df = data.frame(impact = impact),
-              valuation = valuation,
-              discount_rate = discount_rate,
-              discount_years = discount_years,
-              discount_shape = discount_shape,
-              discount_overtime = discount_overtime)
-        )
+        healthiar:::add_monetized_impact(
+          df = data.frame(impact = impact),
+          valuation = valuation,
+          discount_rate = discount_rate,
+          discount_years = discount_years,
+          discount_shape = discount_shape,
+          discount_overtime = discount_overtime,
+          inflation = inflation)
 
   }
-
-
-
 
 
   return(output_monetization)

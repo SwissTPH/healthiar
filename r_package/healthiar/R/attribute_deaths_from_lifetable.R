@@ -2,7 +2,7 @@
 #'
 #' @description Calculates the premature deaths attributable to the exposure to an environmental stressor using a life table approach. It provides the central estimate of the impact and the corresponding 95\% confidence intervals (based on the 95\% confidence interval exposure-response function).
 #' @inheritParams attribute
-#' @return
+#' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central, lower and upper bound confidence interval.
 #' Moreover, the data frame include columns such as:
@@ -12,8 +12,6 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
-#' @import dplyr
-#' @import purrr
 #' @examples
 #' TBD
 #' @author Alberto Castro
