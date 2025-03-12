@@ -4,12 +4,18 @@
 \alias{compare_health_new}
 \title{Compare attributable health cases based on single baseline health value and relative risk}
 \usage{
-compare_health_new(output_attribute_scen_A, output_attribute_scen_B)
+compare_health_new(
+  output_attribute_scen_1,
+  output_attribute_scen_2,
+  approach_comparison
+)
 }
 \arguments{
-\item{output_attribute_scen_A}{description}
+\item{approach_comparison}{\code{String} showing the method of comparison. Options: "delta" or "pif".}
 
-\item{output_attribute_scen_B}{description}
+\item{scen_1}{Scenario 1 as in the output of attribute()}
+
+\item{scen_2}{Scenario 2 as in the output of attribute()}
 }
 \value{
 TBD
