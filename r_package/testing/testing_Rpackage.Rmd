@@ -1523,20 +1523,29 @@ test_comparison <-
 # DELTA
 
 comparison_singlebhd_rr_delta <-
-  healthiar::compare_health(
-    approach_comparison = "delta",
-    exp_central_1 = 8.85, 
-    exp_central_2 = 6,
-    cutoff_central = 5,    
-    bhd_central_1 = 25000,
-    bhd_central_2 = 25000,
-    rr_central = 1.118, 
-    rr_lower = 1.060, 
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear", 
-    info_1 = "PM2.5_mortality_2010",
-    info_2 = "PM2.5_mortality_2020")
+  healthiar::compare_health_new(
+    
+     output_attribute_scen_1 = 
+       attribute_health(
+         exp_central = 8.85,
+         cutoff_central = 5, 
+         bhd_central = 25000,
+         approach_risk = "relative_risk",
+         erf_shape = "log_linear",
+         rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+         rr_increment = 10,
+         info = "PM2.5_mortality_2010"),
+     
+     output_attribute_scen_2 = 
+       attribute_health(
+         exp_central = 6, 
+         cutoff_central = 5, 
+         bhd_central = 25000,
+         approach_risk = "relative_risk",
+         erf_shape = "log_linear",
+         rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+         rr_increment = 10,
+         info = "PM2.5_mortality_2020"))
 
 # View(comparison_singlebhd_rr_delta)
 
