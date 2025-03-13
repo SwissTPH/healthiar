@@ -45,9 +45,25 @@ attribute_scen2_from_scen1 <-
     # Extract args1
     args1 <- output_attribute_scen_1[["health_detailed"]][["args"]]
 
+    # Create a function to replace values in list of arguments
+    # modifyList() and purrr::list_modify() do not work because require named lists
+    # And the list elements are entered by users without name
 
-    args2_after_merge_with_arg1 <- modifyList(args1, args2)
+    replace_list <- function(original, updated) {
+      # If an element exists in updates, replace it; otherwise, keep original
+      purrr::imap(original,
+                  function(.x, .y){
+                    if(.y %in% names(updated)){
+                      .x<- updated[[.y]]
+                      }else {.x <- .x}})
+    }
 
+    args2_after_merge_with_arg1 <-
+      replace_list(args1, args2)
+
+
+
+    # Use the arguments attribute()
     output_attribute_scen_2 <-
       do.call(healthiar::attribute,
               args2_after_merge_with_arg1)
