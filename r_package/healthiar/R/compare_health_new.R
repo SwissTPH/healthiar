@@ -19,6 +19,9 @@ compare_health_new <-
     output_attribute_scen_2,
     approach_comparison = "delta"){
 
+    args_1 <- output_attribute_scen_1[["health_detailed"]][["args"]]
+    args_2 <- output_attribute_scen_2[["health_detailed"]][["args"]]
+
 
     input_1 <- output_attribute_scen_1[["health_detailed"]][["input"]]
     input_2 <- output_attribute_scen_2[["health_detailed"]][["input"]]
@@ -26,86 +29,6 @@ compare_health_new <-
 
     raw_1 <- output_attribute_scen_1[["health_detailed"]][["impact_raw"]]
     raw_2 <- output_attribute_scen_2[["health_detailed"]][["impact_raw"]]
-
-
-    # Check that (relevant) input values from scenarios A & B are equal ##########
-    ## Works also if no input was provided (might be the case for e.g. ..._lower arguments)
-
-    ## Check number of geo units
-    # TBA
-    # Test the code with attribute output of an iteration
-
-
-    ## rr
-    if (
-      identical(
-        input_1 |> filter(erf_ci == "central") |> slice() |> pull(rr),
-        input_2 |> filter(erf_ci == "central") |> slice() |> pull(rr)
-      )  &
-      identical(
-        input_1 |> filter(erf_ci == "lower") |> slice() |> pull(rr),
-        input_2 |> filter(erf_ci == "lower") |> slice() |> pull(rr)
-      ) &
-      identical(
-        input_1 |> filter(erf_ci == "upper") |> slice() |> pull(rr),
-        input_2 |> filter(erf_ci == "upper") |> slice() |> pull(rr)
-      )
-    ) {
-      print("OK - RR input data of the scenarios match")
-    } else {
-      stop("RR input data of the two scenarios have to be identical")
-    }
-
-    ## erf_eq
-    ### absolute risk formula
-
-
-    ### function rr & ar
-    # tricky, because the column erf_eq contains a strange string like "c("function (x, deriv = 0L) ", "{", "    deriv <-  [...] "
-
-    ##
-
-    ## rr from function (from point-pairs)
-
-    ## rr increment
-    if (
-      identical(
-        input_1 |> slice() |> pull(rr_increment),
-        input_2 |> slice() |> pull(rr_increment)
-      )  &
-      identical(
-        input_1 |> slice() |> pull(rr_increment),
-        input_2 |> slice() |> pull(rr_increment)
-      ) &
-      identical(
-        input_1 |> slice() |> pull(rr_increment),
-        input_2 |> slice() |> pull(rr_increment)
-      )
-    ) {
-      print("OK - RR increment input data of the scenarios match")
-    } else {
-      stop("RR increment input data of the two scenarios have to be identical")
-    }
-
-    ## cutoff
-    if (
-      identical(
-        input_1 |> filter(cutoff_ci == "central") |> slice() |> pull(cutoff),
-        input_2 |> filter(cutoff_ci == "central") |> slice() |> pull(cutoff)
-      )  &
-      identical(
-        input_1 |> filter(cutoff_ci == "lower") |> slice() |> pull(cutoff),
-        input_2 |> filter(cutoff_ci == "lower") |> slice() |> pull(cutoff)
-      ) &
-      identical(
-        input_1 |> filter(cutoff_ci == "upper") |> slice() |> pull(cutoff),
-        input_2 |> filter(cutoff_ci == "upper") |> slice() |> pull(cutoff)
-      )
-    ) {
-      print("OK - cutoff input data of the scenarios match")
-    } else {
-      stop("cutoff input data of the two scenarios have to be identical")
-    }
 
 
     # Extract input data (for subsequent get_impact call) ########################
@@ -125,12 +48,60 @@ compare_health_new <-
         "first_age_pop", "last_age_pop",
         "population_midyear_male", "population_midyear_female",
         "year_of_analysis",
-        "info")
-
-    #Add impact and pop_fraction
-    scenario_specific_arguments <-
-      c(scenario_specific_arguments,
+        "info",
         "impact", "pop_fraction")
+
+    # Only those for baseline health data (including for lifetable)
+    scenario_specific_arguments_for_bhd_and_lifetable <-
+      c("bhd_central", "bhd_lower", "bhd_upper",
+        "approach_newborns",
+        "first_age_pop", "last_age_pop",
+        "population_midyear_male", "population_midyear_female",
+        "year_of_analysis")
+
+    # Excluding the baseline health data and lifetable
+    scenario_specific_arguments_wo_bhd_and_lifetable <-
+      setdiff(scenario_specific_arguments,
+              scenario_specific_arguments_for_bhd_and_lifetable)
+
+    # Arguments that should be identical in both scenarios
+    common_arguments_1 <-
+      names(input_1)[!names(input_1) %in% scenario_specific_arguments]
+
+    common_arguments_2 <-
+      names(input_2)[!names(input_2) %in% scenario_specific_arguments]
+
+    # Check that (relevant) input values from scenarios A & B are equal ##########
+    ## Works also if no input was provided (might be the case for e.g. ..._lower arguments)
+
+    #Check if the common arguments in both scenarios are identical
+    if(identical(common_arguments_1, common_arguments_2)){
+      common_arguments <- common_arguments_1
+    }else{
+      stop("The two scenarios have to use the same arguments")
+    }
+
+    # Create function to check that the common_arguments have the same values
+    check_if_identical <- function(original, updated, names_to_check) {
+
+      # Compare values
+      checked_values <-
+        purrr::map_lgl(names_to_check, ~ identical(original[[.x]], updated[[.x]])) |>
+        setNames(names_to_check)  # Name the result
+
+      return(checked_values)
+    }
+
+    identical_common_arguments <-
+      check_if_identical(
+        original = args_1,
+        updated = args_2,
+        names_to_check = common_arguments)
+
+
+
+    if(!all(identical_common_arguments))
+      {stop("The exposure-response function, cut-off and geo data must be identical in both scenarios")}
 
     # Delta approach ########################
 
@@ -158,45 +129,15 @@ compare_health_new <-
       input <- list(input_1 = input_1, input_2 = input_2)
 
 
+      # PIF approach ########################
+
+
       # If the user choose "pif"  as comparison method
       # pif is additonally calculated
       # impact is overwritten with the new values that refer to pif instead of paf
       # Use if instead of else if becuase otherwise the package will read here inside
       # and produce an error because the variables are different
       }else if(approach_comparison == "pif"){
-
-
-        # Either both NULL or identical. Use the function identical() to enable NULL==NULL
-        ## bhd
-        if (
-          identical(
-            input_1 |> filter(bhd_ci == "central") |> slice() |> pull(bhd),
-            input_2 |> filter(bhd_ci == "central") |> slice() |> pull(bhd)
-          )  &
-          identical(
-            input_1 |> filter(bhd_ci == "lower") |> slice() |> pull(bhd),
-            input_2 |> filter(bhd_ci == "lower") |> slice() |> pull(bhd)
-          ) &
-          identical(
-            input_1 |> filter(bhd_ci == "upper") |> slice() |> pull(bhd),
-            input_2 |> filter(bhd_ci == "upper") |> slice() |> pull(bhd)
-          )
-        ) {
-          print("OK - baseline health input data of the scenarios match")
-        } else {
-          stop("Baseline health input data of the two scenarios have to be identical")
-        }
-
-        # Error if length of fraction_of_year_lived > 1
-        if (!identical(first_age_pop_1, first_age_pop_2) &
-            !identical(last_age_pop_1, last_age_pop_2) &
-            !identical(population_midyear_male_1, population_midyear_male_2) &
-            !identical(population_midyear_female_1, population_midyear_female_2) &
-            !identical(year_of_analysis_1, year_of_analysis_2)){
-          stop("Age interval, probability of dying and population in the scenario 1 and 2 have to be identical")
-        }
-
-
 
 
         # Identify the arguments scenario specific arguments excluding bhd
@@ -206,6 +147,20 @@ compare_health_new <-
         # bhd and lifetable_with_pop_nest are excluded
         # because they have to be identical in scenario_1 and _2
         # for the pif approach by definition
+
+        identical_scenario_specific_arguments_for_bhd_and_lifetable <-
+          check_if_identical(
+            original = args_1,
+            updated = args_2,
+            names_to_check = scenario_specific_arguments_for_bhd_and_lifetable)
+
+
+        if(!all(identical_scenario_specific_arguments_for_bhd_and_lifetable))
+        {stop("The baseline health data (including lifetable if applicable) must be identical in both scenarios")}
+
+
+
+
         scenario_specific_arguments_excluding_bhd <-
           setdiff(scenario_specific_arguments, c("bhd_central", "bhd_lower", "bhd_upper"))
 
@@ -227,10 +182,11 @@ compare_health_new <-
             by = joining_columns_input,
             suffix = c("_1", "_2"))
 
-        # browser()
 
         ## Added if statement below to avoid error in the non-lifetable cases
-        if( stringr::str_detect(health_outcome, "lifetable") ) {
+        # args1 and args2 should have the same health_outcome (see checks above)
+        # So let's use e.g. args1
+        if(stringr::str_detect(args_1$health_outcome, "lifetable") ) {
           # Calculate the health impacts for each case (uncertainty, category, geo area...)
           impact_raw <-
             healthiar:::get_impact(
