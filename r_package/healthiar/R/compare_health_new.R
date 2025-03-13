@@ -250,7 +250,10 @@ compare_health_new <-
     # in a list
 
     output <-
-      healthiar:::get_output(impact = list(raw=impact_raw))
+      healthiar:::get_output(
+        args = args,
+        input = input,
+        impact = list(raw=impact_raw))
 
     output[["health_detailed"]][["scenario_1"]] <- raw_1
     output[["health_detailed"]][["scenario_2"]] <- raw_1
