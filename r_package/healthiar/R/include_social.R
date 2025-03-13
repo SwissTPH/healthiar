@@ -33,7 +33,7 @@ include_social <- function(output_healthiar = NULL,
     # * Add social_indicator to detailed output ################################
 
     output_social <-
-      output_healthiar[["health_detailed"]][["raw"]] |>
+      output_healthiar[["health_detailed"]][["impact_raw"]] |>
       dplyr::left_join(
         x = _,
         y = dplyr::tibble(geo_id_disaggregated = geo_id_disaggregated,

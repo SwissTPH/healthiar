@@ -37,7 +37,7 @@ include_monetization <-
     if(approach_discount == "indirect"){
 
       outcome_metric <-
-        unique(output_healthiar[["health_detailed"]][["raw"]]$outcome_metric)
+        unique(output_healthiar[["health_detailed"]][["impact_raw"]]$outcome_metric)
 
       # Store the original data (they refer to health)
       output_health <- output_healthiar
@@ -45,7 +45,7 @@ include_monetization <-
       # Output will be adapted according to monetized impacts
       #TODO The names health are kept just provisionally until we adapt get_output()
       impact_detailed <-
-        output_health[["health_detailed"]][["raw"]] |>
+        output_health[["health_detailed"]][["impact_raw"]] |>
 
         ## Calculate total, discounted life years (single value) per sex & ci
         dplyr::mutate(
@@ -172,7 +172,7 @@ include_monetization <-
 
       #Detailed results showing all the details of the health results
       output_monetization[["monetization_detailed"]][["health_raw"]]<-
-        healthiar:::add_monetized_impact(df = output_healthiar[["health_detailed"]][["raw"]],
+        healthiar:::add_monetized_impact(df = output_healthiar[["health_detailed"]][["impact_raw"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},

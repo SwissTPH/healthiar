@@ -24,8 +24,8 @@ compare_health_new <-
     input_1 <- output_attribute_scen_1[["health_detailed"]][["input"]]
     input_2 <- output_attribute_scen_2[["health_detailed"]][["input"]]
 
-    raw_1 <- output_attribute_scen_1[["health_detailed"]][["raw"]]
-    raw_2 <- output_attribute_scen_2[["health_detailed"]][["raw"]]
+    raw_1 <- output_attribute_scen_1[["health_detailed"]][["impact_raw"]]
+    raw_2 <- output_attribute_scen_2[["health_detailed"]][["impact_raw"]]
 
 
     # Check that (relevant) input values from scenarios A & B are equal ##########
