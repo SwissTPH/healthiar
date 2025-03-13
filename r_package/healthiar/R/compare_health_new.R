@@ -20,9 +20,9 @@ compare_health_new <-
     approach_comparison = "delta"){
 
 
-
     input_1 <- output_attribute_scen_1[["health_detailed"]][["input"]]
     input_2 <- output_attribute_scen_2[["health_detailed"]][["input"]]
+
 
     raw_1 <- output_attribute_scen_1[["health_detailed"]][["impact_raw"]]
     raw_2 <- output_attribute_scen_2[["health_detailed"]][["impact_raw"]]
@@ -155,6 +155,8 @@ compare_health_new <-
         dplyr::mutate(impact = impact_1 - impact_2,
                       impact_rounded = round(impact, 0))
 
+      input <- list(input_1 = input_1, input_2 = input_2)
+
 
       # If the user choose "pif"  as comparison method
       # pif is additonally calculated
@@ -253,7 +255,7 @@ compare_health_new <-
       healthiar:::get_output(
         args = args,
         input = input,
-        impact = list(raw=impact_raw))
+        impact_raw = impact_raw)
 
     output[["health_detailed"]][["scenario_1"]] <- raw_1
     output[["health_detailed"]][["scenario_2"]] <- raw_1
