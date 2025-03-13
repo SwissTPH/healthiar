@@ -19,8 +19,8 @@
 #' @author Alberto Castro
 #' @keywords internal
 get_output <-
-  function(args,
-           input,
+  function(args = NULL,
+           input = NULL,
            impact_raw){
 
     # Get main results from detailed results ###################################

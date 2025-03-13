@@ -4,7 +4,7 @@
 \alias{get_output}
 \title{Attributable health cases based on relative risk}
 \usage{
-get_output(args, input, impact_raw)
+get_output(args = NULL, input = NULL, impact_raw)
 }
 \arguments{
 \item{args}{\code{List} containingall arguments and values entered in attribute().}
