@@ -7,15 +7,15 @@
 compare_health_new(
   output_attribute_scen_1,
   output_attribute_scen_2,
-  approach_comparison
+  approach_comparison = "delta"
 )
 }
 \arguments{
+\item{output_attribute_scen_1}{Scenario 1 as in the output of attribute()}
+
+\item{output_attribute_scen_2}{Scenario 2 as in the output of attribute()}
+
 \item{approach_comparison}{\code{String} showing the method of comparison. Options: "delta" or "pif".}
-
-\item{scen_1}{Scenario 1 as in the output of attribute()}
-
-\item{scen_2}{Scenario 2 as in the output of attribute()}
 }
 \value{
 TBD
