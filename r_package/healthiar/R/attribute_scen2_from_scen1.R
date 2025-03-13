@@ -1,7 +1,7 @@
 #' Get attributable health impacts in scenario 2 based on scenario 1
 
-#' @description The function uses the output of attribute for scenario 1 (output_attribute_scen1) to build scenario 2. The values of the arguments of this function (except output_attribute_scen1) are used to replace the values in the arguments of scenario 1 to build scenario 2.
-#' @param output_attribute_scen1 \code{List} containing the output of the function attribute() for scenario 1.
+#' @description The function uses the output of attribute for scenario 1 (output_attribute_scen_1) to build scenario 2. The values of the arguments of this function (except output_attribute_scen_1) are used to replace the values in the arguments of scenario 1 to build scenario 2.
+#' @param output_attribute_scen_1 \code{List} containing the output of the function attribute() for scenario 1.
 #' @inheritParams attribute
 #' @returns
 #' TBD. E.g. This function returns a \code{list} with the attributable
@@ -19,7 +19,7 @@
 
 attribute_scen2_from_scen1 <-
   function(
-    output_attribute_scen1,
+    output_attribute_scen_1,
     exp_central = NULL, exp_lower = NULL, exp_upper = NULL,
     bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
     population = NULL,
@@ -35,23 +35,24 @@ attribute_scen2_from_scen1 <-
     # Capture all arguments and values
     args2 <- as.list(environment())
 
-    # Removing output_attribute_scen1 from args
-    args2$output_attribute_scen1 <- NULL
+    # Removing output_attribute_scen_1 from args
+    args2$output_attribute_scen_1 <- NULL
 
     #Remove all arguments that are NULL in args2 to avoid that they overwrite
     #those in args1
     args2 <- purrr::discard(args2, is.null)
 
     # Extract args1
-    args1 <- output_attribute_scen1[["health_detailed"]][["args"]]
+    args1 <- output_attribute_scen_1[["health_detailed"]][["args"]]
 
 
-    args2 <- modifyList(args1, args2)
+    args2_after_merge_with_arg1 <- modifyList(args1, args2)
 
-    output_attribute_scen2 <-
-      do.call(healthiar::attribute, args2)
+    output_attribute_scen_2 <-
+      do.call(healthiar::attribute,
+              args2_after_merge_with_arg1)
 
-    return(output_attribute_scen2)
+    return(output_attribute_scen_2)
 
 
   }
