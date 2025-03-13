@@ -1484,45 +1484,12 @@ check_bestcost(result_list_bestcost = bestcost_pm_daly_lifetable_geluft,
 ### Single bhd
 
 
-```{r TEST compare_health_new}
-
-scen_1 <-
-  attribute_health(
-    approach_risk = "relative_risk",
-    erf_shape = "log_linear",
-    rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
-    rr_increment = 10,
-    exp_central = 8.85, exp_lower = NULL, exp_upper = NULL,
-    cutoff_central = 5, cutoff_lower = NULL, cutoff_upper = NULL,
-    bhd_central = 25000
-  )
-
-scen_2 <-
-  attribute_health(
-    approach_risk = "relative_risk",
-    erf_shape = "log_linear",
-    rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
-    rr_increment = 10,
-    exp_central = 6, exp_lower = NULL, exp_upper = NULL,
-    cutoff_central = 5, cutoff_lower = NULL, cutoff_upper = NULL,
-    bhd_central = 25000
-  )
-
-test_comparison <- 
-  compare_health_new(
-    output_attribute_scen_1 = scen_1,
-    output_attribute_scen_2 = scen_2,
-    approach_comparison = "delta"
-  )
-
-```
-
 ```{r comparison singlebhd_rr}
 
 # Test delta comparison function with fake values
 # DELTA
 
-comparison_singlebhd_rr_delta <-
+comparison_singlebhd_rr_delta_unpacked <-
   healthiar::compare_health_new(
     
      output_attribute_scen_1 = 
@@ -1547,12 +1514,65 @@ comparison_singlebhd_rr_delta <-
          rr_increment = 10,
          info = "PM2.5_mortality_2020"))
 
-# View(comparison_singlebhd_rr_delta)
+# No study to compare bestcost results
+# Check only if results stay the same overtime despite developments
+check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_unpacked ,
+               result_vector_alternative = c(774, 409, 1127)) # Result on 16 May 2024
+
+# You can also first store the variables and enter them in attribute() 
+scen_1_singlebhd_rr_delta <-
+  attribute_health(
+    exp_central = 8.85,
+    cutoff_central = 5,
+    bhd_central = 25000,
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+    rr_increment = 10)
+
+scen_2_singlebhd_rr_delta <-
+  attribute_health(
+    exp_central = 6,
+    cutoff_central = 5,
+    bhd_central = 25000,
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+    rr_increment = 10)
+
+comparison_singlebhd_rr_delta_packed <- 
+  healthiar::compare_health_new(
+    output_attribute_scen_1 = scen_1_singlebhd_rr_delta,
+    output_attribute_scen_2 = scen_2_singlebhd_rr_delta,
+    approach_comparison = "delta")
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta ,
+check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_packed,
                result_vector_alternative = c(774, 409, 1127)) # Result on 16 May 2024
+
+# And even easier: using a the function attribute_scen2_from_scen1
+# You just add the values of the arguments that have to be replaced 
+# in scen1 to become scen2
+
+scen_2_singlebhd_rr_delta_helper <-
+  healthiar::attribute_scen2_from_scen1(
+    output_attributte_scen1 = output_attribute_scen_2,
+    # What is different in scenario 2 compared to scenario 1
+    exp_central = 6)
+
+comparison_singlebhd_rr_delta_packed_helper <- 
+  healthiar::compare_health_new(
+    output_attribute_scen_1 = scen_1_singlebhd_rr_delta,
+    output_attribute_scen_2 = scen_2_singlebhd_rr_delta_helper,
+    approach_comparison = "delta")
+
+# No study to compare bestcost results
+# Check only if results stay the same overtime despite developments
+check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_packed_helper,
+               result_vector_alternative = c(774, 409, 1127)) # Result on 16 May 2024
+
+
 
 
 # With same impact to test that there is no error.
