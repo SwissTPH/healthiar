@@ -1760,44 +1760,31 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_ar_delta_geo ,
 ```{r comparison yld singlebhd_rr}
 # DELTA
 # Test delta comparison function with fake values
-comparison_yld_singlebhd_rr_delta <-
-  healthiar::compare_yld(
-    approach_comparison = "delta",
-    exp_central_1 = 8.85, 
-    exp_central_2 = 6,
-    cutoff_central = 5,    
-    bhd_central_1 = 25000,
-    bhd_central_2 = 25000,
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear", 
-    dw_central = 0.5,
-    duration_central = 1,
-    info_1 = "PM2.5_yld_before",
-    info_2 = "PM2.5_yld_after")
+scen_1_singlebhd_yld <-
+  bestcost_pm_yld_singlebhd
 
-# View(comparison_yld_singlebhd_rr_delta)
+scen_2_singlebhd_yld <-
+  healthiar::attribute_scen2_from_scen1(
+    output_attribute_scen_1 = scen_1_singlebhd_yld,
+    exp_central = 6)
+
+comparison_yld_singlebhd_rr_delta <-
+  healthiar::compare_health_new(
+    output_attribute_scen_1 = scen_1_singlebhd_yld, 
+    output_attribute_scen_2 = scen_2_singlebhd_yld)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_delta ,
                result_vector_alternative = c(387, 205, 564)) # Result on 16 May 2024
 
-# Additionally check that the first scenario produces the same results as above
-check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_delta[["health_detailed"]][["scenario_1"]] ,
-               result_vector_alternative = bestcost_pm_yld_singlebhd[["health_main"]]$impact_rounded) 
 
 # Iteration
-comparison_yld_singlebhd_rr_delta_geo <-
-  healthiar::compare_yld(
-    approach_comparison = "delta",
-    exp_central_1 = list(8.85, 8.0),
-    exp_central_2 = list(6, 6.5),
+scen_1_singlebhd_yld_geo <- 
+  healthiar::attribute_yld(
+    exp_central = list(8.85, 8.0),
     cutoff_central = 5,    
-    bhd_central_1 = 25000,
-    bhd_central_2 = 25000,
+    bhd_central = 25000,
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
@@ -1805,12 +1792,20 @@ comparison_yld_singlebhd_rr_delta_geo <-
     erf_shape = "log_linear", 
     dw_central = 0.5,
     duration_central = 1,
-    info_1 = "PM2.5_yld_before",
-    info_2 = "PM2.5_yld_after",
+    info = "PM2.5_yld_before",
     geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
-# View(comparison_yld_singlebhd_rr_delta_geo)
+scen_2_singlebhd_yld_geo <- 
+  attribute_scen2_from_scen1(
+    output_attribute_scen_1 = scen_1_singlebhd_yld_geo,
+    exp_central = list(6, 6.5),
+    info = "PM2.5_yld_after")
+
+comparison_yld_singlebhd_rr_delta_geo <-
+  healthiar::compare_health_new(
+    output_attribute_scen_1 = scen_1_singlebhd_yld_geo, 
+    output_attribute_scen_2 = scen_2_singlebhd_yld_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1821,56 +1816,26 @@ check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_delta_geo ,
 #PIF
 # Test pif comparison function with fake values
 comparison_yld_singlebhd_rr_pif <-
-  healthiar::compare_yld(
+  healthiar::compare_health_new(
     approach_comparison = "pif",
-    exp_central_1 = 8.85,  
-    exp_central_2 = 6,
-    cutoff_central = 5,    
-    bhd_central_1 = 25000,
-    bhd_central_2 = 25000,
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear", 
-    dw_central = 0.5,
-    duration_central = 1,
-    info_1 = "PM2.5_yld_before",
-    info_2 = "PM2.5_yld_after")
+    output_attribute_scen_1 = scen_1_singlebhd_yld, 
+    output_attribute_scen_2 = scen_2_singlebhd_yld)
 
-# View(comparison_yld_singlebhd_rr_pif)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_pif ,
                result_vector_alternative = c(391,206,573)) # Result on 16 May 2024
 
-# Additionally check that the first scenario produces the same results as above
-check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_pif[["health_detailed"]][["scenario_1"]] ,
-               result_vector_alternative = bestcost_pm_yld_singlebhd[["health_main"]]$impact_rounded) 
+
 
 # Iteration
+# Test pif comparison function with fake values
 comparison_yld_singlebhd_rr_pif_geo <-
-  healthiar::compare_yld(
+  healthiar::compare_health_new(
     approach_comparison = "pif",
-    exp_central_1 = list(8.85, 8.0),
-    exp_central_2 = list(6, 6.5),
-    cutoff_central = 5,    
-    bhd_central_1 = 25000,
-    bhd_central_2 = 25000,
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear", 
-    dw_central = 0.5,
-    duration_central = 1,
-    info_1 = "PM2.5_yld_before",
-    info_2 = "PM2.5_yld_after",
-    geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2))
-
-# View(comparison_yld_singlebhd_rr_pif_geo)
+    output_attribute_scen_1 = scen_1_singlebhd_yld_geo, 
+    output_attribute_scen_2 = scen_2_singlebhd_yld_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
