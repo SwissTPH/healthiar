@@ -1646,22 +1646,16 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_pif_geo ,
 
 ```{r comparison singlebhd_rr geo iteration, eval=FALSE, include=FALSE}
 # Assess iteration in many geographical areas (geo_id) keeping the multiple uncertainties
-comparison_singlebhd_rr_geo <-
-  healthiar::compare_health(
-    approach_comparison = "delta",
-    exp_central_1 = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)),
-    exp_lower_1 = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)-0.1),
-    exp_upper_1 = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)+0.1),
-    exp_central_2 = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)),
-    exp_lower_2 = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)-0.1),
-    exp_upper_2 = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)+0.1),
+
+scen_1_singlebhd_rr_geo_large <- 
+  healthiar::attribute_health(
+    exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)),
+    exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)-0.1),
+    exp_upper = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)+0.1),
     cutoff_central = 5,   
-    bhd_central_1 = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-    bhd_lower_1 = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-    bhd_upper_1 = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-    bhd_central_2 = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-    bhd_lower_2 = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-    bhd_upper_2 = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
+    bhd_central = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
+    bhd_lower = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
+    bhd_upper = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
     rr_central = 1.369, 
     rr_lower = 1.124,
     rr_upper = 1.664,
@@ -1669,14 +1663,27 @@ comparison_singlebhd_rr_geo <-
     erf_shape = "log_linear", 
     geo_id_disaggregated = 1:1E4, 
     geo_id_aggregated = rep("CH", 1E4),
-    info_1 = "PM2.5_mortality_2010",
-    info_2 = "PM2.5_mortality_2020")
+    info = "PM2.5_mortality_2010")
+
+scen_2_singlebhd_rr_geo_large <-
+  healthiar::attribute_scen2_from_scen1(
+    output_attribute_scen_1 = scen_1_singlebhd_rr_geo_large,
+    exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)),
+    exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)-0.1),
+    exp_upper = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)+0.1))
+
+
+
+comparison_singlebhd_rr_geo_large <-
+  healthiar::compare_health_new(
+    output_attribute_scen_1 = scen_1_singlebhd_rr_geo_large,
+    output_attribute_scen_2 = scen_2_singlebhd_rr_geo_large)
 
 # View(comparison_singlebhd_rr_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_singlebhd_rr_geo,
+check_bestcost(result_list_bestcost = comparison_singlebhd_rr_geo_large,
                result_vector_alternative = c(211111, 84203, 319618)) # Result on 19 December 2024
 ```
 
