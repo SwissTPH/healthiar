@@ -27,6 +27,8 @@ attribute_daly_from_lifetable <-
     rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
     rr_increment = NULL, erf_shape = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
+    #geo iterations
+    geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
     ## Other central input
     exp_central, exp_lower = NULL, exp_upper = NULL,
     prop_pop_exp = 1,
@@ -58,7 +60,7 @@ attribute_daly_from_lifetable <-
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
         duration_central = duration_central, duration_lower = duration_lower, duration_upper = duration_upper,
         time_horizon = time_horizon,
-        geo_id_disaggregated = NULL , geo_id_aggregated = NULL,
+        geo_id_disaggregated = geo_id_disaggregated , geo_id_aggregated = geo_id_aggregated,
         info = info)
 
     return(output)
