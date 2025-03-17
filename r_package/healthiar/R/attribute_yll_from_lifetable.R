@@ -73,6 +73,8 @@ attribute_yll_from_lifetable <-
     exp_central, exp_lower = NULL, exp_upper = NULL,
     prop_pop_exp = 1,
     cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+    #geo iterations
+    geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
     ## Meta-info
     info = NULL
   ) {
@@ -102,7 +104,7 @@ attribute_yll_from_lifetable <-
         prop_pop_exp = prop_pop_exp,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
         ## Meta-info
-        geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
+        geo_id_disaggregated = geo_id_disaggregated, geo_id_aggregated = geo_id_aggregated,
         info = info
         )
 
