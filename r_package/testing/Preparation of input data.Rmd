@@ -604,6 +604,10 @@ airqplus_copd_export <-
 # Digest the data (make it ready for testing the package)
 airqplus_pm_copd <- 
   digest_airqplus_export_singlebhd(airqplus_export = airqplus_copd_export)
+
+## Add incidence column
+airqplus_pm_copd <- airqplus_pm_copd |> 
+  mutate(incidence = incidents_per_100_000_per_year/1E5*population_at_risk)
  
 # Data sets from the AirQ+ manual (for testing of function get_prob_dying())
 airqplus_deaths_pop_multipleYear <-
