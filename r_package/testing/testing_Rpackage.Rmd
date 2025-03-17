@@ -447,7 +447,9 @@ bestcost_noise_ha_ar <-
     population = sum(niph_noise_ha_input$population_exposed_total), 
     prop_pop_exp = niph_noise_ha_input$population_exposed_total/sum(niph_noise_ha_input$population_exposed_total),
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-    info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
+    info = data.frame(pollutant = "road_noise", 
+                      outcome = "highly_annoyance",
+                      year = 2019))
 
 # View(bestcost_noise_ha_ar)
 
@@ -1691,20 +1693,24 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_geo_large,
 
 # Test delta comparison function with fake values
 # No PIF option in ar
+scen_1_singlebhd_ar <- 
+  bestcost_noise_ha_ar
+
+scen_2_singlebhd_ar <-
+  healthiar::attribute_scen2_from_scen1(
+    output_attribute_scen_1 = scen_1_singlebhd_ar,
+    exp_central = c(50, 55, 60, 65, 75), # Fake values
+    info = data.frame(pollutant = "road_noise",
+                      outcome = "highly_annoyance",
+                      year = 2022)
+  )
+
+
 comparison_singlebhd_ar_delta <-
-  healthiar::compare_health(
-    approach_risk = "absolute_risk",
-    approach_comparison = "delta",
-    exp_central_1 = c(57.5, 62.5, 67.5, 72.5, 77.5),# Values as example provided by NIPH
-    exp_central_2 = c(50, 55, 60, 65, 75), # Fake values
-    population_1 = sum(c(387500, 286000, 191800, 72200, 7700)),
-    population_2 = sum(c(387500, 286000, 191800, 72200, 7700)),
-    prop_pop_exp_1 = c(387500, 286000, 191800, 72200, 7700)/sum(c(387500, 286000, 191800, 72200, 7700)), # Values as example provided by NIPH
-    prop_pop_exp_2 = c(387500, 286000, 191800, 72200, 7700)/sum(c(387500, 286000, 191800, 72200, 7700)), # Fake values
-    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-    info_1 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2020),
-    info_2 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2022)
-    )
+  healthiar::compare_health_new(
+    scen_1_singlebhd_ar,
+    scen_2_singlebhd_ar)
+
 
 # View(comparison_singlebhd_ar_delta)
 
@@ -1713,23 +1719,54 @@ comparison_singlebhd_ar_delta <-
 check_bestcost(result_list_bestcost = comparison_singlebhd_ar_delta ,
                result_vector_alternative = c(62531)) # Result on 23 May 2024
 
-comparison_singlebhd_ar_delta_geo <-
-  healthiar::compare_health(
+# Now with geo iteration
+scen_1_singlebhd_ar_geo <-
+  healthiar::attribute_health(
     approach_risk = "absolute_risk",
-    approach_comparison = "delta",
-    exp_central_1 = list(c(57.5, 62.5, 67.5, 72.5, 77.5), c(57, 62, 67, 72, 77)),# Fake values
-    exp_central_2 = list(c(50, 55, 60, 65, 75), c(50.5, 55.5, 60.5, 65.5, 75.5)), # Fake values
-    population_1 = list(945200, 929800),
-    population_2 = list(945200, 929800),
-    prop_pop_exp_1 = list(c(387500, 286000, 191800, 72200, 7700)/945200, 
-                          c(380000, 280000, 190800, 72000, 7000)/929800), # Fake values
-    prop_pop_exp_2 = list(c(387500, 286000, 191800, 72200, 7700)/945200, 
-                          c(380000, 280000, 190800, 72000, 7000)/929800), # Fake values
+    exp_central = list(c(57.5, 62.5, 67.5, 72.5, 77.5), 
+                       c(57, 62, 67, 72, 77)),# Fake values
+    population = list(945200, 929800),
+    prop_pop_exp= list(c(387500, 286000, 191800, 72200, 7700)/945200, 
+                       c(380000, 280000, 190800, 72000, 7000)/929800), # Fake values
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-    info_1 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2020),
-    info_2 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2022),
+    info = data.frame(pollutant = "road_noise", 
+                        outcome = "highly_annoyance", 
+                        year = 2020),
     geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2))
+    geo_id_aggregated = rep("ch", 2)
+  )
+
+scen_2_singlebhd_ar_geo <-
+  healthiar::attribute_scen2_from_scen1(
+    output_attribute_scen_1 = scen_1_singlebhd_ar_geo,
+    exp_central = list(c(50, 55, 60, 65, 75), 
+                       c(50.5, 55.5, 60.5, 65.5, 75.5)), # Fake values
+    info = data.frame(pollutant = "road_noise", 
+                      outcome = "highly_annoyance", 
+                      year = 2022))
+
+comparison_singlebhd_ar_delta_geo <-
+  healthiar::compare_health_new(
+    output_attribute_scen_1 = scen_1_singlebhd_ar_geo,
+    output_attribute_scen_2 = scen_2_singlebhd_ar_geo)
+
+# comparison_singlebhd_ar_delta_geo <-
+#   healthiar::compare_health(
+#     approach_risk = "absolute_risk",
+#     approach_comparison = "delta",
+#     exp_central_1 = list(c(57.5, 62.5, 67.5, 72.5, 77.5), c(57, 62, 67, 72, 77)),# Fake values
+#     exp_central_2 = list(c(50, 55, 60, 65, 75), c(50.5, 55.5, 60.5, 65.5, 75.5)), # Fake values
+#     population_1 = list(945200, 929800),
+#     population_2 = list(945200, 929800),
+#     prop_pop_exp_1 = list(c(387500, 286000, 191800, 72200, 7700)/945200, 
+#                           c(380000, 280000, 190800, 72000, 7000)/929800), # Fake values
+#     prop_pop_exp_2 = list(c(387500, 286000, 191800, 72200, 7700)/945200, 
+#                           c(380000, 280000, 190800, 72000, 7000)/929800), # Fake values
+#     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+#     info_1 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2020),
+#     info_2 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2022),
+#     geo_id_disaggregated = c("a", "b"),
+#     geo_id_aggregated = rep("ch", 2))
 
 # View(comparison_singlebhd_ar_delta_geo)
 
