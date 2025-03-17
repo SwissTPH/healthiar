@@ -520,7 +520,7 @@ check_bestcost(result_list_bestcost = bestcost_pm_yld_singlebhd ,
                result_vector_alternative = c(525, 277, 768)) # Result on 16 May 2024
 
 ## incidence-based YLD (duration_central > 1)
-bestcost_pm_yld_singlebhd  <- 
+bestcost_pm_yld_singlebhd_long_duration  <- 
   healthiar::attribute_yld(
     exp_central = 8.85, 
     cutoff_central = 5,    
@@ -536,7 +536,7 @@ bestcost_pm_yld_singlebhd  <-
 # View(bestcost_pm_yld_singlebhd)
 
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = bestcost_pm_yld_singlebhd,
+check_bestcost(result_list_bestcost = bestcost_pm_yld_singlebhd_long_duration,
                result_vector_alternative = c(2627, 1386, 3839 )) # Result on 2025-01-28
 ```
 
@@ -942,7 +942,7 @@ niph_noise_ha_input <-
   dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean))
 
 # YLD case for absolute risk
-bestcost_noise_ha_ar <- 
+bestcost_noise_ha_ar_uncertainty <- 
   healthiar::attribute_yld(
     approach_risk = "absolute_risk",
     exp_central = niph_noise_ha_input$exposure_mean,
@@ -954,7 +954,7 @@ bestcost_noise_ha_ar <-
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
 
 bestcost_noise_ha_ar_external_uncertainty <- healthiar::include_summary_uncertainty(
-  bestcost_noise_ha_ar,
+  bestcost_noise_ha_ar_uncertainty,
   n_sim = 100)
 
 # Comparison central +- 95% CIs & Monte-Carlo central, lower, upper estimates
