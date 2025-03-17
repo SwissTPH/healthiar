@@ -160,8 +160,8 @@ compare_health_new <-
 
 
 
-
-        scenario_specific_arguments_excluding_bhd <-
+        # Delete bhd arguments because they are not used in the lifetable
+        scenario_specific_arguments_lifetable <-
           setdiff(scenario_specific_arguments, c("bhd_central", "bhd_lower", "bhd_upper"))
 
 
@@ -170,7 +170,7 @@ compare_health_new <-
           healthiar:::find_joining_columns(
             df1 = input_1,
             df2 = input_2,
-            except =  c(scenario_specific_arguments_excluding_bhd,
+            except =  c(scenario_specific_arguments_lifetable,
                         ## Keep year_of_analysis in the table so it can be accessed in the get_impact script
                         "year_of_analysis"))
 
