@@ -32,6 +32,8 @@ attribute_deaths_from_lifetable(
   year_of_analysis,
   min_age = NULL,
   max_age = NULL,
+  geo_id_disaggregated = NULL,
+  geo_id_aggregated = NULL,
   info = NULL
 )
 }
@@ -72,6 +74,13 @@ If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple
 \item{min_age}{\code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. By default 30, which implies that all adults aged 30 or older will be affected by the exposure.}
 
 \item{max_age}{\code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.}
+
+\item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
+If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
+
+\item{geo_id_aggregated}{\code{Numeric vector} an ID for each geographic area that specifies which geographic areas should be aggregated together.
+E.g. if you provide the municipality names to \code{geo_id_disaggregated}, you might provide here the corresponding region / canton / province.
+Consequently The vector has to have the same length as the one fed to \code{geo_id_disaggregated}.}
 
 \item{info}{\code{String} or {data.frame} providing additional information linked with the assessment.
 The suffix "info" will be added to the column name.
