@@ -2182,179 +2182,109 @@ check_bestcost(result_list_bestcost = comparison_yld_lifetable_pif_geo ,
 ```{r comparison DALY lifetable}
 
 # DELTA
-comparison_daly_lifetable_delta  <-
-  healthiar::compare_daly_from_lifetable(
-    approach_comparison = "delta",
-    exp_central_1 = 8.85, # Fake data just for testing purposes
-    prop_pop_exp_1 = 1, # Fake data just for testing purposes
-    exp_central_2 = 6, # Fake data just for testing purposes
-    prop_pop_exp_2 = 1, # Fake data just for testing purposes
-    cutoff_central = 5, # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
+
+scen_1_daly  <- 
+  healthiar::attribute_daly_from_lifetable(
+    exp_central = 8.85,
+    prop_pop_exp = 1,
+    cutoff_central = 5,
+    rr_central =  1.118, 
+    rr_lower = 1.060, 
+    rr_upper = 1.179, 
     rr_increment = 10, 
     erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019, 
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
-    min_age = 20,
-    duration_central = 100,
+    first_age_pop = 0,
+    last_age_pop = 99,
+    deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
+    deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
+    population_midyear_male = lifetable_withPopulation[["male"]]$population, 
+    population_midyear_female = lifetable_withPopulation[["female"]]$population,
+    year_of_analysis = 2019, 
+    info = input_data_mortality$pollutant[2],
+    min_age = input_data_mortality$min_age[2], # min_age = 20,
+    duration_central = 100, 
     dw_central = 1)
 
-# View(comparison_daly_lifetable_delta)
+scen_2_daly  <- 
+  healthiar::attribute_scen2_from_scen1(
+    output_attribute_scen_1 = scen_1_daly,
+    exp_central = 6)
+
+comparison_daly_delta  <-
+  healthiar::compare_health_new(
+    output_attribute_scen_1 = scen_1_daly, 
+    output_attribute_scen_2 = scen_2_daly)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_daly_lifetable_delta ,
+check_bestcost(result_list_bestcost = comparison_daly_delta ,
                # result_vector_alternative = c(20421*2,10806*2,29763*2)) # Result on 16 May 2024
                result_vector_alternative = c(43288, 22679, 63720)) # Result on 20 August 2024
 
-# Additionally check that it producesthe first scenario produce the same results as above
-check_bestcost(result_list_bestcost = comparison_daly_lifetable_delta[["health_detailed"]][["scenario_1"]] ,
-               result_vector_alternative = bestcost_pm_daly_lifetable_geluft[["health_main"]]$impact_rounded) 
 
 # Iteration
-comparison_daly_lifetable_delta_geo <-
-  healthiar::compare_daly_from_lifetable(
-    approach_comparison = "delta",
-    exp_central_1 = list(8.85, 8.0),# Fake data just for testing purposes
-    exp_central_2 = list(6, 6.5),# Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
+scen_1_daly_geo  <- 
+  healthiar::attribute_daly_from_lifetable(
+    exp_central = list(8.85, 8.0),
+    cutoff_central = 5,
+    rr_central =  1.118, 
+    rr_lower = 1.060, 
+    rr_upper = 1.179, 
     rr_increment = 10, 
     erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019,
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
+    first_age_pop = 0,
+    last_age_pop = 99,
+    deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
+    deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
+    population_midyear_male = lifetable_withPopulation[["male"]]$population, 
+    population_midyear_female = lifetable_withPopulation[["female"]]$population,
+    year_of_analysis = 2019, 
     min_age = 20,
+    duration_central = 100, 
+    dw_central = 1,
     geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2),
-    duration_central = 100,
-    dw_central = 1)
+    geo_id_aggregated = rep("ch", 2))
 
-# View(comparison_daly_lifetable_delta_geo)
+scen_2_daly_geo  <- 
+  healthiar::attribute_scen2_from_scen1(
+    output_attribute_scen_1 = scen_1_daly_geo,
+    exp_central = list(6, 6.5))# Fake data just for testing purposes
+
+comparison_daly_delta_geo  <-
+  healthiar::compare_health_new(
+    output_attribute_scen_1 = scen_1_daly_geo, 
+    output_attribute_scen_2 = scen_2_daly_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_daly_lifetable_delta_geo ,
-               # result_vector_alternative = c(31190*2, 16500*2, 45472*2)) # Result on 08 July 2024
+check_bestcost(result_list_bestcost = comparison_daly_delta_geo ,
                result_vector_alternative = c(66082, 34618, 97279)) # Result on 20 August 2024
 
 # PIF
-comparison_daly_lifetable_pif <-
-  healthiar::compare_daly_from_lifetable(
+comparison_daly_pif  <-
+  healthiar::compare_health_new(
     approach_comparison = "pif",
-    exp_central_1 = 8.85, # Fake data just for testing purposes
-    prop_pop_exp_1 = 1, # Fake data just for testing purposes
-    exp_central_2 = 6, # Fake data just for testing purposes
-    prop_pop_exp_2 = 1, # Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019, 
-    info_1 = NULL,
-    info_2 = NULL, 
-    min_age = 20,
-    duration_central = 100,
-    dw_central = 1)
-
-# View(comparison_daly_lifetable_pif)
+    output_attribute_scen_1 = scen_1_daly, 
+    output_attribute_scen_2 = scen_2_daly)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_daly_lifetable_pif ,
-               # result_vector_alternative = c(20650*2, 10870*2, 30257*2)) # Result on 16 May 2024
+check_bestcost(result_list_bestcost = comparison_daly_pif,
                result_vector_alternative = c(43396, 22708, 63957 )) # Result on 20 August 2024
 
-# Additionally check that the first scenario produce the same results as above
-check_bestcost(result_list_bestcost = comparison_daly_lifetable_pif[["health_detailed"]][["scenario_1"]],
-               result_vector_alternative = bestcost_pm_daly_lifetable_geluft[["health_main"]]$impact_rounded)
 
 # Iteration
-comparison_daly_lifetable_pif_geo <-
-  healthiar::compare_daly_from_lifetable(
+comparison_daly_pif_geo  <-
+  healthiar::compare_health_new(
     approach_comparison = "pif",
-    exp_central_1 = list(8.85, 8.0),# Fake data just for testing purposes
-    exp_central_2 = list(6, 6.5),# Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019,
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
-    min_age = 20,
-    geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2),
-    duration_central = 100,
-    dw_central = 1)
+    output_attribute_scen_1 = scen_1_daly_geo, 
+    output_attribute_scen_2 = scen_2_daly_geo)
 
 # View(comparison_daly_lifetable_pif_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_daly_lifetable_pif_geo ,
-               # result_vector_alternative = c(31601*2, 16613*2, 46359*2)) # Result on 26 June 2024
+check_bestcost(result_list_bestcost = comparison_daly_pif_geo,
                result_vector_alternative = c(66275, 34671, 97702)) # Result on 20 August 2024
 
 ```
