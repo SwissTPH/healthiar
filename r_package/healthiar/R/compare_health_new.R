@@ -76,21 +76,11 @@ compare_health_new <-
       stop("The two scenarios have to use the same arguments")
     }
 
-    # Create function to check that the common_arguments have the same values
-    check_if_identical <- function(original, updated, names_to_check) {
-
-      # Compare values
-      checked_values <-
-        purrr::map_lgl(names_to_check, ~ identical(original[[.x]], updated[[.x]])) |>
-        setNames(names_to_check)  # Name the result
-
-      return(checked_values)
-    }
 
     identical_common_arguments <-
-      check_if_identical(
-        original = args_1,
-        updated = args_2,
+      healthiar:::check_if_args_identical(
+        args_a = args_1,
+        args_b = args_2,
         names_to_check = common_arguments)
 
 
@@ -146,9 +136,9 @@ compare_health_new <-
         # for the pif approach by definition
 
         identical_scenario_specific_arguments_for_bhd_and_lifetable <-
-          check_if_identical(
-            original = args_1,
-            updated = args_2,
+          check_if_args_identical(
+            args_a = args_1,
+            args_b = args_2,
             names_to_check = scenario_specific_arguments_for_bhd_and_lifetable)
 
 
