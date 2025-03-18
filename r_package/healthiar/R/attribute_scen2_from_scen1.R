@@ -30,6 +30,7 @@ attribute_scen2_from_scen1 <-
     first_age_pop = NULL, last_age_pop = NULL,
     population_midyear_male = NULL, population_midyear_female = NULL,
     year_of_analysis = NULL,
+    geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
     info = NULL){
 
     # Capture all arguments and values

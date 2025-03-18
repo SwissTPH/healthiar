@@ -22,6 +22,8 @@ attribute_scen2_from_scen1(
   population_midyear_male = NULL,
   population_midyear_female = NULL,
   year_of_analysis = NULL,
+  geo_id_disaggregated = NULL,
+  geo_id_aggregated = NULL,
   info = NULL
 )
 }
@@ -48,6 +50,13 @@ If exposure categories are used, the dimension of this input must be the same as
 \item{population_midyear_male, population_midyear_female}{\code{Numeric vector} containing the mid-year population for the year of analysis for female and male, respectively.}
 
 \item{year_of_analysis}{\code{Numeric value} providing the year of analysis.}
+
+\item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
+If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
+
+\item{geo_id_aggregated}{\code{Numeric vector} an ID for each geographic area that specifies which geographic areas should be aggregated together.
+E.g. if you provide the municipality names to \code{geo_id_disaggregated}, you might provide here the corresponding region / canton / province.
+Consequently The vector has to have the same length as the one fed to \code{geo_id_disaggregated}.}
 
 \item{info}{\code{String} or {data.frame} providing additional information linked with the assessment.
 The suffix "info" will be added to the column name.
