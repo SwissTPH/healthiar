@@ -15,6 +15,7 @@ attribute_daly <-
     # Capture all arguments and values
     args <- as.list(environment())
 
+
     # Store impact_raw of yll and yld
     # Shorter and handy to code
     impact_raw_yll <- output_attribute_yll[["health_detailed"]][["impact_raw"]] |>
@@ -27,10 +28,26 @@ attribute_daly <-
       unique(c(names(impact_raw_yll), names(impact_raw_yll)))
 
     common_columns <-
-      column_names_impact_raw[grepl("exp|exposure|cutoff|geo",
+      column_names_impact_raw[grepl("exp|exposure|cutoff|geo|approach_risk",
                                     column_names_impact_raw)]
     common_columns <- common_columns[!common_columns %in% "approach_exposure"]
-    common_columns <- c(common_columns, c("approach_risk", "erf_ci"))
+    common_columns_for_join <- c(common_columns, "erf_ci")
+
+
+    common_columns_identical <-
+      healthiar:::check_if_args_identical(
+        args_a = args$output_attribute_yld,
+        args_b = args$output_attribute_yld,
+        names_to_check = common_columns)
+
+
+    if(!all(common_columns_identical))
+    {stop("The arguments ",
+          paste(names(common_columns_identical)[common_columns_identical]
+                , collapse = ", "),
+          " must be identical in both scenarios")}
+
+
 
     # Remove those containing the word impact
     column_names_impact_raw_without_impact <-
@@ -46,7 +63,7 @@ attribute_daly <-
       dplyr::full_join(
         impact_raw_yll,
         impact_raw_yld,
-        by = common_columns,
+        by = common_columns_for_join,
         suffix = c("_yll", "_yld")) |>
       dplyr::mutate(
         # Add metric
