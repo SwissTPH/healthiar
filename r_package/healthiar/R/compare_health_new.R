@@ -47,7 +47,7 @@ compare_health_new <-
         "impact", "pop_fraction")
 
     # Only those for baseline health data (including for lifetable)
-    scenario_specific_arguments_for_bhd_and_lifetable <-
+    scenario_arguments_for_bhd_and_lifetable <-
       c("bhd_central", "bhd_lower", "bhd_upper",
         "approach_exposure", "approach_newborns",
         "first_age_pop", "last_age_pop",
@@ -57,7 +57,7 @@ compare_health_new <-
     # Excluding the baseline health data and lifetable
     scenario_specific_arguments_wo_bhd_and_lifetable <-
       setdiff(scenario_specific_arguments,
-              scenario_specific_arguments_for_bhd_and_lifetable)
+              scenario_arguments_for_bhd_and_lifetable)
 
     # Arguments that should be identical in both scenarios
     common_arguments_1 <-
@@ -77,7 +77,7 @@ compare_health_new <-
     }
 
 
-    identical_common_arguments <-
+    common_arguments_identical <-
       healthiar:::check_if_args_identical(
         args_a = args_1,
         args_b = args_2,
@@ -85,9 +85,10 @@ compare_health_new <-
 
 
 
-    if(!all(identical_common_arguments))
+    if(!all(common_arguments_identical))
     {stop(paste0("The arguments ",
-                 paste(common_arguments, collapse = ", "),
+                 paste(names(common_arguments_identical)[common_arguments_identical],
+                       collapse = ", "),
                  " must be identical in both scenarios"))}
 
     # Delta approach ########################
@@ -135,15 +136,18 @@ compare_health_new <-
         # because they have to be identical in scenario_1 and _2
         # for the pif approach by definition
 
-        identical_scenario_specific_arguments_for_bhd_and_lifetable <-
-          check_if_args_identical(
+        scenario_arguments_for_bhd_and_lifetable_identical <-
+          healthiar:::check_if_args_identical(
             args_a = args_1,
             args_b = args_2,
-            names_to_check = scenario_specific_arguments_for_bhd_and_lifetable)
+            names_to_check = scenario_arguments_for_bhd_and_lifetable)
 
 
-        if(!all(identical_scenario_specific_arguments_for_bhd_and_lifetable))
-        {stop("The baseline health data (including lifetable if applicable) must be identical in both scenarios")}
+        if(!all(scenario_arguments_for_bhd_and_lifetable_identical))
+        {stop("The arguments ",
+              paste(names(scenario_arguments_for_bhd_and_lifetable_identical)[scenario_arguments_for_bhd_and_lifetable_identical],
+                    collapse = ", "),
+              " must be identical in both scenarios")}
 
 
 
