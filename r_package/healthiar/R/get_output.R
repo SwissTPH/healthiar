@@ -30,7 +30,7 @@ get_output <-
            input = input,
            impact_raw = impact_raw)
 
-    if(grepl("lifetable", unique(impact_raw$health_outcome))){
+    if(any(grepl("nest", names(impact_raw)))){
       impact_main <-
         impact_raw |>
         dplyr::select(-contains("nest"))|>
@@ -175,8 +175,7 @@ get_output <-
       output[["health_main"]] <- output[["health_main"]] |>
         dplyr::filter(cutoff_ci %in% c("central"))}
 
-    if(unique(impact_raw$health_outcome) %in%
-       c("yld", "yld_from_lifetable")) {
+    if(any(grepl("dw_", names(output[["health_main"]])))) {
 
       output[["health_main"]] <- output[["health_main"]] |>
         dplyr::filter(dw_ci %in% "central")}
