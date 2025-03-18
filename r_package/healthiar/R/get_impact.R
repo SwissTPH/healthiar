@@ -77,20 +77,6 @@ get_impact <-
               pop_impact = pop_impact,
               input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
-    } else if (unique(input$health_outcome) %in% "daly_from_lifetable"){
-
-      pop_impact <-
-        healthiar:::get_pop_impact(
-          input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction,
-          outcome_metric = "daly"
-          )
-
-
-      impact_raw <-
-        healthiar:::get_daly(
-          pop_impact = pop_impact,
-          input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction
-        )
     }
 
 
