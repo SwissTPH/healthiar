@@ -22,10 +22,8 @@ compare_health_new <-
     args_1 <- output_attribute_scen_1[["health_detailed"]][["args"]]
     args_2 <- output_attribute_scen_2[["health_detailed"]][["args"]]
 
-
     input_1 <- output_attribute_scen_1[["health_detailed"]][["input"]]
     input_2 <- output_attribute_scen_2[["health_detailed"]][["input"]]
-
 
     raw_1 <- output_attribute_scen_1[["health_detailed"]][["impact_raw"]]
     raw_2 <- output_attribute_scen_2[["health_detailed"]][["impact_raw"]]
@@ -43,9 +41,9 @@ compare_health_new <-
         "population",
         "prop_pop_exp",
         "pop_exp",
-        "approach_exposure",
-        "approach_newborns",
-        "first_age_pop", "last_age_pop",
+        # "approach_exposure",
+        # "approach_newborns",
+        # "first_age_pop", "last_age_pop",
         "population_midyear_male", "population_midyear_female",
         "year_of_analysis",
         "info",
