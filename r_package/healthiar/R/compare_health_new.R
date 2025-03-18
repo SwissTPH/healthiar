@@ -54,7 +54,7 @@ compare_health_new <-
     # Only those for baseline health data (including for lifetable)
     scenario_specific_arguments_for_bhd_and_lifetable <-
       c("bhd_central", "bhd_lower", "bhd_upper",
-        "approach_newborns",
+        "approach_exposure", "approach_newborns",
         "first_age_pop", "last_age_pop",
         "population_midyear_male", "population_midyear_female",
         "year_of_analysis")
