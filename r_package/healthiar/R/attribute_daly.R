@@ -9,35 +9,6 @@
 #' @export
 attribute_daly <-
   function(
-    # ## Risk and shape arguments
-    # approach_risk = "relative_risk",
-    # rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-    # rr_increment = NULL, erf_shape = NULL,
-    # erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-    # #geo iterations
-    # geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
-    # ## Exposure arguments
-    # exp_central, exp_lower = NULL, exp_upper = NULL,
-    # prop_pop_exp = 1,
-    # ## Correlated exposure
-    # approach_multiexposure = NULL,
-    # ## Cut-off arguments
-    # cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
-    # # Baseline health data
-    # bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
-    # ## Lifetable arguments
-    # approach_exposure = "single_year", approach_newborns = "without_newborns",
-    # first_age_pop, last_age_pop,
-    # deaths_male = NULL, deaths_female = NULL,
-    # population_midyear_male, population_midyear_female,
-    # year_of_analysis,
-    # min_age = NULL, max_age = NULL,
-    # time_horizon = NULL,
-    # ## YLD arguments
-    # dw_central, dw_lower = NULL, dw_upper = NULL,
-    # duration_central, duration_lower = NULL, duration_upper = NULL,
-    # ## Meta-info
-    # info = NULL
     output_attribute_yll,
     output_attribute_yld){
 
@@ -78,8 +49,19 @@ attribute_daly <-
         by = common_columns,
         suffix = c("_yll", "_yld")) |>
       dplyr::mutate(
+        # Add metric
+        outcome_metric = "daly",
+        # Add impact as sum of yll and yld (including rounded impact)
         impact = impact_yll + impact_yld,
         impact_rounded = round(impact))
+
+    # Add impact per 100k inhabitants if population is available
+    if("population" %in% names(impact_raw)){
+      impact_raw <-
+        impact_raw |>
+        dplyr::mutate(
+          impact_per_100k = impact / population)
+    }
 
     # Use args and impact to produce impact
     # input_table is not available (two branches: yll and yld) but not needed
@@ -87,22 +69,6 @@ attribute_daly <-
       healthiar:::get_output(
         args = args,
         impact_raw = impact_raw)
-
-
-
-    # # Add argument for health_outcome
-    # args_with_health_outcome <- args
-    # args_with_health_outcome$health_outcome <- "same_input_output"
-    #
-    # # If the user enter a value for baseline health data (bhd)
-    # # then this is an assessment as in attribute_health()
-    # # DALY as bhd --> attributable DALY
-    # if(!is.na(bhd_central)){
-    #   output <-
-    #     do.call(healthiar::attribute,
-    #             args_with_health_outcome)
-    # }
-
 
     return(output)
 
