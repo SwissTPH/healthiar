@@ -96,7 +96,9 @@ compare_health_new <-
 
 
     if(!all(identical_common_arguments))
-      {stop("The exposure-response function, cut-off and geo data must be identical in both scenarios")}
+    {stop(paste0("The arguments ",
+                 paste(common_arguments, collapse = ", "),
+                 " must be identical in both scenarios"))}
 
     # Delta approach ########################
 
