@@ -1557,7 +1557,7 @@ bestcost_pm_yll <-
 # Calculate years lived with disability using bestcost function
 # with input data from the Swiss project GeLuft
 
-bestcost_pm_daly  <- 
+bestcost_pm_daly_from_lifetable  <- 
   attribute_daly_from_lifetable(
     exp_central = input_data_mortality$exp[2],
     prop_pop_exp = 1,
@@ -1583,7 +1583,7 @@ bestcost_pm_daly  <-
 # But disability weight = 1 in the function above, then YLD = YLL 
 # and the result should be identical.
 # Since DALY = YLL + YLD and in this case YLL=YLD --> DALY = 2*YLL
-check_bestcost(result_list_bestcost = bestcost_pm_daly,
+check_bestcost(result_list_bestcost = bestcost_pm_daly_from_lifetable,
                # result_vector_alternative = c(27742*2, 14641*2, 40542*2)) # GeLuft approach result
                result_vector_alternative = c(29274.89*2,	15328.16*2,	43118.30*2)) # AirQ+ approach result
 
@@ -2288,11 +2288,135 @@ check_bestcost(result_list_bestcost = comparison_yld_lifetable_pif_geo ,
 
 ```
 
-```{r comparison DALY lifetable}
+```{r comparison DALY }
+
+
+# Define scenarios
+scen_1_yll <-
+  bestcost_pm_yll
+
+scen_2_yll <-
+  healthiar::attribute_scen2_from_scen1(
+    output_attribute_scen_1 = bestcost_pm_yll,
+    exp_central = 6)
+
+scen_1_yld <-
+  bestcost_pm_yld
+
+scen_2_yld <-
+  healthiar::attribute_scen2_from_scen1(
+    output_attribute_scen_1 = bestcost_pm_yld,
+    exp_central = 6)
+
 
 # DELTA
+comparison_daly_delta <- 
+  healthiar::attribute_daly(
+    output_attribute_yll =
+      healthiar::compare_health_new(
+        approach_comparison = "delta",
+        output_attribute_scen_1 = scen_1_yll, 
+        output_attribute_scen_2 = scen_2_yll),
+    output_attribute_yld = 
+      healthiar::compare_health_new(
+        approach_comparison = "delta",
+        output_attribute_scen_1 = scen_1_yld, 
+        output_attribute_scen_2 = scen_2_yld))
 
-scen_1_daly  <- 
+
+# No study to compare bestcost results
+# Check only if results stay the same overtime despite developments
+check_bestcost(result_list_bestcost = comparison_daly_delta ,
+               result_vector_alternative = c(24738, 12977, 36370)) # Result on 18 March 2025
+
+# PIF
+comparison_daly_pif <- 
+  healthiar::attribute_daly(
+    output_attribute_yll =
+      healthiar::compare_health_new(
+        approach_comparison = "pif",
+        output_attribute_scen_1 = scen_1_yll, 
+        output_attribute_scen_2 = scen_2_yll),
+    output_attribute_yld = 
+      healthiar::compare_health_new(
+        approach_comparison = "pif",
+        output_attribute_scen_1 = scen_1_yld, 
+        output_attribute_scen_2 = scen_2_yld))
+
+
+# No study to compare bestcost results
+# Check only if results stay the same overtime despite developments
+check_bestcost(result_list_bestcost = comparison_daly_pif,
+               result_vector_alternative = c(24827, 13001, 36563 )) # Result on 18 March 2025
+
+# With geo iteration
+# Define scenarios
+scen_1_yll_geo <-
+  healthiar::attribute_scen2_from_scen1(
+    output_attribute_scen_1 = bestcost_pm_yll,
+    geo_id_disaggregated = c("a", "b"),
+    geo_id_aggregated = c("ch", "ch"),
+    exp_central = list(8.5, 8))
+
+scen_2_yll_geo <-
+  healthiar::attribute_scen2_from_scen1(
+    output_attribute_scen_1 = scen_1_yll_geo,
+    exp_central = list(6, 6.5))
+
+scen_1_yld_geo <-
+  healthiar::attribute_scen2_from_scen1(
+    output_attribute_scen_1 = bestcost_pm_yld,
+    exp_central = list(8.5, 8),
+    geo_id_disaggregated = c("a", "b"),
+    geo_id_aggregated = c("ch", "ch"))
+
+scen_2_yld_geo <-
+  healthiar::attribute_scen2_from_scen1(
+    output_attribute_scen_1 = scen_1_yld_geo,
+    exp_central = list(6, 6.5))
+
+# Delta
+comparison_daly_delta_geo <- 
+  healthiar::attribute_daly(
+    output_attribute_yll =
+      healthiar::compare_health_new(
+        approach_comparison = "delta",
+        output_attribute_scen_1 = scen_1_yll_geo, 
+        output_attribute_scen_2 = scen_2_yll_geo),
+    output_attribute_yld = 
+      healthiar::compare_health_new(
+        approach_comparison = "delta",
+        output_attribute_scen_1 = scen_1_yld_geo, 
+        output_attribute_scen_2 = scen_2_yld_geo))
+
+
+# No study to compare bestcost results
+# Check only if results stay the same overtime despite developments
+check_bestcost(result_list_bestcost = comparison_daly_delta_geo ,
+               result_vector_alternative = c(34742, 18219, 51093 )) # Result on 18 March 2025
+
+# PIF
+comparison_daly_pif_geo <- 
+  healthiar::attribute_daly(
+    output_attribute_yll =
+      healthiar::compare_health_new(
+        approach_comparison = "pif",
+        output_attribute_scen_1 = scen_1_yll_geo, 
+        output_attribute_scen_2 = scen_2_yll_geo),
+    output_attribute_yld = 
+      healthiar::compare_health_new(
+        approach_comparison = "pif",
+        output_attribute_scen_1 = scen_1_yld_geo, 
+        output_attribute_scen_2 = scen_2_yld_geo))
+
+
+# No study to compare bestcost results
+# Check only if results stay the same overtime despite developments
+check_bestcost(result_list_bestcost = comparison_daly_pif_geo,
+               result_vector_alternative = c(34890, 18260, 51415)) # Result on 18 March 2025
+
+
+scen_1_daly_from_lifetable  <- 
   healthiar::attribute_daly_from_lifetable(
     exp_central = 8.85,
     prop_pop_exp = 1,
@@ -2314,25 +2438,25 @@ scen_1_daly  <-
     duration_central = 100, 
     dw_central = 1)
 
-scen_2_daly  <- 
+scen_2_daly_from_lifetable  <- 
   healthiar::attribute_scen2_from_scen1(
-    output_attribute_scen_1 = scen_1_daly,
+    output_attribute_scen_1 = scen_1_daly_from_lifetable,
     exp_central = 6)
 
-comparison_daly_delta  <-
+comparison_daly_delta_from_lifetable  <-
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_daly, 
-    output_attribute_scen_2 = scen_2_daly)
+    output_attribute_scen_1 = scen_1_daly_from_lifetable, 
+    output_attribute_scen_2 = scen_2_daly_from_lifetable)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_daly_delta ,
+check_bestcost(result_list_bestcost = comparison_daly_delta_from_lifetable ,
                # result_vector_alternative = c(20421*2,10806*2,29763*2)) # Result on 16 May 2024
                result_vector_alternative = c(43288, 22679, 63720)) # Result on 20 August 2024
 
 
 # Iteration
-scen_1_daly_geo  <- 
+scen_1_daly_geo_from_lifetable  <- 
   healthiar::attribute_daly_from_lifetable(
     exp_central = list(8.85, 8.0),
     cutoff_central = 5,
@@ -2354,46 +2478,46 @@ scen_1_daly_geo  <-
     geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
-scen_2_daly_geo  <- 
+scen_2_daly_geo_from_lifetable  <- 
   healthiar::attribute_scen2_from_scen1(
-    output_attribute_scen_1 = scen_1_daly_geo,
+    output_attribute_scen_1 = scen_1_daly_geo_from_lifetable,
     exp_central = list(6, 6.5))# Fake data just for testing purposes
 
-comparison_daly_delta_geo  <-
+comparison_daly_delta_geo_from_lifetable  <-
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_daly_geo, 
-    output_attribute_scen_2 = scen_2_daly_geo)
+    output_attribute_scen_1 = scen_1_daly_geo_from_lifetable, 
+    output_attribute_scen_2 = scen_2_daly_geo_from_lifetable)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_daly_delta_geo ,
+check_bestcost(result_list_bestcost = comparison_daly_delta_geo_from_lifetable,
                result_vector_alternative = c(66082, 34618, 97279)) # Result on 20 August 2024
 
 # PIF
-comparison_daly_pif  <-
+comparison_daly_pif_from_lifetable  <-
   healthiar::compare_health_new(
     approach_comparison = "pif",
-    output_attribute_scen_1 = scen_1_daly, 
-    output_attribute_scen_2 = scen_2_daly)
+    output_attribute_scen_1 = scen_1_daly_from_lifetable, 
+    output_attribute_scen_2 = scen_2_daly_from_lifetable)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_daly_pif,
+check_bestcost(result_list_bestcost = comparison_daly_pif_from_lifetable,
                result_vector_alternative = c(43396, 22708, 63957 )) # Result on 20 August 2024
 
 
 # Iteration
-comparison_daly_pif_geo  <-
+comparison_daly_pif_geo_from_lifetable  <-
   healthiar::compare_health_new(
     approach_comparison = "pif",
-    output_attribute_scen_1 = scen_1_daly_geo, 
-    output_attribute_scen_2 = scen_2_daly_geo)
+    output_attribute_scen_1 = scen_1_daly_geo_from_lifetable, 
+    output_attribute_scen_2 = scen_2_daly_geo_from_lifetable)
 
 # View(comparison_daly_lifetable_pif_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_daly_pif_geo,
+check_bestcost(result_list_bestcost = comparison_daly_pif_geo_from_lifetable,
                result_vector_alternative = c(66275, 34671, 97702)) # Result on 20 August 2024
 
 ```
