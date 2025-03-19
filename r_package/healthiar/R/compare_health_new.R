@@ -3,8 +3,8 @@
 #' @description Calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
 #' @details
 #' Note that several input parameters (such as baseline health data and relative risk must be the same to correctly compare the two scenarios.
-#' @param output_attribute_scen_1 Scenario 1 as in the output of attribute()
-#' @param output_attribute_scen_2 Scenario 2 as in the output of attribute()
+#' @param output_attribute_1 Scenario 1 as in the output of attribute()
+#' @param output_attribute_2 Scenario 2 as in the output of attribute()
 #' @param approach_comparison \code{String} showing the method of comparison. Options: "delta" or "pif".
 #' @return
 #' TBD
@@ -15,18 +15,18 @@
 
 compare_health_new <-
   function(
-    output_attribute_scen_1,
-    output_attribute_scen_2,
+    output_attribute_1,
+    output_attribute_2,
     approach_comparison = "delta"){
 
-    args_1 <- output_attribute_scen_1[["health_detailed"]][["args"]]
-    args_2 <- output_attribute_scen_2[["health_detailed"]][["args"]]
+    args_1 <- output_attribute_1[["health_detailed"]][["args"]]
+    args_2 <- output_attribute_2[["health_detailed"]][["args"]]
 
-    input_1 <- output_attribute_scen_1[["health_detailed"]][["input"]]
-    input_2 <- output_attribute_scen_2[["health_detailed"]][["input"]]
+    input_1 <- output_attribute_1[["health_detailed"]][["input"]]
+    input_2 <- output_attribute_2[["health_detailed"]][["input"]]
 
-    raw_1 <- output_attribute_scen_1[["health_detailed"]][["impact_raw"]]
-    raw_2 <- output_attribute_scen_2[["health_detailed"]][["impact_raw"]]
+    raw_1 <- output_attribute_1[["health_detailed"]][["impact_raw"]]
+    raw_2 <- output_attribute_2[["health_detailed"]][["impact_raw"]]
 
 
     # Extract input data (for subsequent get_impact call) ########################

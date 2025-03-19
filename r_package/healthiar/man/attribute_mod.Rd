@@ -5,7 +5,7 @@
 \title{Attributable health impacts in scenario 2 based on scenario 1}
 \usage{
 attribute_mod(
-  output_attribute_scen_1,
+  output_attribute_1,
   exp_central = NULL,
   exp_lower = NULL,
   exp_upper = NULL,
@@ -28,7 +28,7 @@ attribute_mod(
 )
 }
 \arguments{
-\item{output_attribute_scen_1}{\code{List} containing the output of the function attribute() for scenario 1.}
+\item{output_attribute_1}{\code{List} containing the output of the function attribute() for scenario 1.}
 
 \item{exp_central, exp_lower, exp_upper}{\code{Numeric value(s)} specifying the exposure level(s) to the environmental stressor and (optionally) to lower and upper bound of the 95\% confidence interval. If only one value is provided, it will be assumed that it refers to population-weighted mean exposure in \eqn{µg/m^3}. If a {vector} is provided, it will be assumed that it refers to the exposure categories (average exposure in the category) in a exposure distribution (this information is linked to the proportion of population exposed).}
 
@@ -73,7 +73,7 @@ Moreover, the data frame includes columns such as:
 }
 }
 \description{
-The function assesses the attributable health impacts in a new scenario (2) by modifying an existing scenario (1). The values of the arguments of this function (except output_attribute_scen_1) are used to replace the values in the arguments of scenario 1 to build scenario 2.
+The function assesses the attributable health impacts in a new scenario (2) by modifying an existing scenario (1). The values of the arguments of this function (except output_attribute_1) are used to replace the values in the arguments of scenario 1 to build scenario 2.
 }
 \examples{
 TBD
