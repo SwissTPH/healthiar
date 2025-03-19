@@ -1,0 +1,8 @@
+ul, ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+li {
+  margin-bottom: 2px; /* Adjust spacing between list items */
+}

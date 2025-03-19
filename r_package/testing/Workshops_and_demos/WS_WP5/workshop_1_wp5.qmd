@@ -18,12 +18,19 @@ execute:
 freeze: auto
 format:
   revealjs:
+    css: custom_style.css
+    # code-tools: # Test at later point what this does
+      # source: https://github.com/best-cost/best-cost_WPs/tree/master
+    # code-fold: true # Folds code chunk in the HTML prez
     incremental: true
-    transition: slide # alts: fade
-    table-of-contents: true
+    transition: none # alts: fade, none, slide
+    transition-speed: default
+    table-of-contents: false
+    toc-depth: 2
     logo: images/combo_logo_stph_bc.png
-    footer: 'healthiar WP5 workshop 1'
-    smaller: true
+    # footer: 'healthiar WP5 workshop 1'
+    smaller: true # If you set {.smaller} after the slide title, reduces font automatically so content fits on slide
+    scrollable: true # If you set {.scrollable} after the slide title, let's you scroll on the slide
     template-partials:
       - title-slide.html
     title-slide-attributes:
@@ -43,30 +50,50 @@ library(tidyr)
 library(stringr)
 library(knitr)
 
-options(knitr.kable.max_rows = 10)
+options(knitr.kable.max_rows = 100)
 set.seed(1)
 ```
 
-# BEST-COST GitHub repository
+## BEST-COST GitHub repository
 
 Let's start by checking out the [BEST-COST GitHub repo](https://github.com/best-cost/best-cost_WPs) and the [README file](https://github.com/best-cost/best-cost_WPs/tree/master?tab=readme-ov-file#readme)
 
-[![Landing page of the BEST-COST GitHub repo. The *README* file tells you how to get started. The folder *r_package* contains package-related files (including function code). Developments are discussed and documented under *Issues*.](images/bc_github_repo.png)](https://github.com/best-cost/best-cost_WPs)
+[![Landing page of the BEST-COST GitHub repo. The README file tells you how to get started. The folder r_package contains package-related files (including function code). Developments are discussed and documented under Issues.](images/bc_github_repo.png)](https://github.com/best-cost/best-cost_WPs)
 
-# *healthiar* in RStudio
+## *`healthiar`* in RStudio 1/2 {.scrollable}
 
 Post installation, you can access the `healthiar` package landing page in RStudio by going to the *Packages* tab and then clicking on the `healthiar` package.
 
+![](images/rstudio_how_to_access_package_landing_page.png)
+
+## *`healthiar`* in RStudio 2/2
+
 ![Landing page of the `healthiar` package in RStudio, where you find the package vignettes and function documentation.](images/healthiar_package_landing_page.png)
 
-## Simple calculation
+## Example: `attribute` call without input uncertainties
 
 Attribute COPD cases to air pollution
 
+::: panel-tabset
+## Hard-coded input data
+
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
-#| code-line-numbers: "|2|3|4-7|8|9|10-11"
-#| output-location: fragment # Pause before showing output
-#|# output-location: slide # Puts output on the next slide
+#| code-line-numbers: "|1|2|3|4-7|8|9|10"
+
+results_pm_copd <-
+  healthiar::attribute_health(
+    erf_shape = "log_linear",
+    rr_central = 1.369, 
+    rr_increment = 10, 
+    exp_central = 8.85, # μg / m^3
+    cutoff_central = 5, # μg / m^3
+    bhd_central = 30747 # COPD incidence
+  ) 
+```
+
+## Pre-loaded data
+
+```{r, eval=TRUE,include=TRUE,echo=TRUE}
 
 results_pm_copd <-
   healthiar::attribute_health(
@@ -77,34 +104,95 @@ results_pm_copd <-
     rr_increment = 10, 
     exp_central = exdat_pm_copd$mean_concentration,
     cutoff_central = exdat_pm_copd$cut_off_value,
-    bhd_central = exdat_pm_copd$incidents_per_100_000_per_year/1E5*
-      exdat_pm_copd$population_at_risk
+    bhd_central = exdat_pm_copd$incidents_per_100_000_per_year/1E5*exdat_pm_copd$population_at_risk,
+    # bhd_central = exdat_pm_copd$incidence # Uncomment once change committed to main
+  ) 
+```
+:::
+
+## Output structure
+
+Every `attribute` output consists of two lists ("folders")
+
+-   `health_main` contains the main results
+
+-   `health_detailed` detailed results (and in some cases even more information about the assessment/calculation)
+
+. . .
+
+#### Different ways to access the results
+
+::: callout-tip
+#### Tip
+
+This is really about personal preference! However, you might encounter them all.
+:::
+
+::: panel-tabset
+## With `[[]]` operator
+
+`results_pm_copd[["health_main"]]`
+
+Note: if the cursor is located within the square braces you can see all available options by pressing the tab key
+
+## With `$` operator
+
+`results_pm_copd$health_main$impact_rounded`
+
+Note: after typing the `$` sign you can see all available options by pressing the tab key and use the arrows & tab keys to select an option (or alternatively use the mouse)
+
+## With `pluck()` & `pull()`
+
+Using the `purrr::pluck` function to select a list and then the `dplyr::pull` function extract values from a specified column
+
+`results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
+
+Note: available options can't be displayed automatically using these functions -\> better suited for a more permanent analysis script
+
+## With `View()`
+
+`View(results_pm_copd)` will "open" the variable in a new window within RStudio. Alternatively, you can go to the *Environment* tab and click on the variable to open the same view mode.
+:::
+
+## Example: `attribute` call with input uncertainties
+
+```{r, eval=TRUE,include=TRUE,echo=TRUE}
+#| code-line-numbers: "|5-6|9-10|13-14"
+
+results_pm_copd <-
+  healthiar::attribute_health(
+    erf_shape = "log_linear",
+    rr_central = 1.369, 
+    rr_lower = 1.124, 
+    rr_upper = 1.664,
+    rr_increment = 10, 
+    exp_central = 8.85, 
+    exp_lower = 8, 
+    exp_upper = 10,
+    cutoff_central = 5,
+    bhd_central = 30747, 
+    bhd_lower = 28000, 
+    bhd_upper = 32000
   ) 
 ```
 
-## Let's check the main output!
+## Let's check the detailed output! {.scrollable}
 
-This is what the `health_main` output table looks like
+:::: {.fragment .fade-in}
+::: callout-tip
+#### Tip
 
+See the intro vignette for a detailed description of output columns (coming soon)
+:::
+::::
+
+::: {.fragment .fade-in}
+This is what the `health_detailed` output table looks like
+:::
+
+::: {.fragment .fade-in}
 ```{r, echo=TRUE}
-results_pm_copd |> 
-  pluck("health_main") |>
-  select(exp, bhd, rr, erf_ci, pop_fraction, impact_rounded) |> 
-  knitr::kable() # Prints tibble in a minimal layout
-```
-
-## Let's check the detailed output!
-
-```{r, echo=TRUE}
+#| output-location: fragment
 results_pm_copd[["health_detailed"]][["raw"]] |> knitr::kable()
 ```
-
-## New slide
-
-```{r}
-results_pm_copd |> 
-  purrr::pluck("health_detailed") |>
-  purrr::pluck("raw") |> 
-  dplyr::select(contains("_ci"), impact_rounded) |> 
-  knitr::kable() # Prints tibble in a minimal layout
-```
+:::
