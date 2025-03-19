@@ -1573,12 +1573,12 @@ comparison_singlebhd_rr_delta_packed <-
 check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_packed,
                result_vector_alternative = c(774, 409, 1127)) # Result on 16 May 2024
 
-# And even easier: using a the function attribute_scen2_from_scen1
+# And even easier: using a the function attribute_mod
 # You just add the values of the arguments that have to be replaced 
 # in scen1 to become scen2
 
 scen_2_singlebhd_rr_delta_helper <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_singlebhd_rr_delta,
     # What is different in scenario 2 compared to scenario 1
     exp_central = 6)
@@ -1619,7 +1619,7 @@ scen_1_singlebhd_rr_geo <-
     geo_id_aggregated = rep("ch", 2))
 
 scen_2_singlebhd_rr_geo <- 
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_singlebhd_rr_geo,
     # What is different in scenario 2 compared to scenario 1
     exp_central = list(6, 6.5))
@@ -1688,7 +1688,7 @@ scen_1_singlebhd_rr_geo_large <-
     info = "PM2.5_mortality_2010")
 
 scen_2_singlebhd_rr_geo_large <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_singlebhd_rr_geo_large,
     exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)),
     exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)-0.1),
@@ -1717,7 +1717,7 @@ scen_1_singlebhd_ar <-
   bestcost_noise_ha_ar
 
 scen_2_singlebhd_ar <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_singlebhd_ar,
     exp_central = c(50, 55, 60, 65, 75))
 
@@ -1753,7 +1753,7 @@ scen_1_singlebhd_ar_geo <-
   )
 
 scen_2_singlebhd_ar_geo <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_singlebhd_ar_geo,
     exp_central = list(c(50, 55, 60, 65, 75), 
                        c(50.5, 55.5, 60.5, 65.5, 75.5)), # Fake values
@@ -1780,7 +1780,7 @@ scen_1_singlebhd_yld <-
   bestcost_pm_yld_singlebhd
 
 scen_2_singlebhd_yld <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_singlebhd_yld,
     exp_central = 6)
 
@@ -1813,7 +1813,7 @@ scen_1_singlebhd_yld_geo <-
     geo_id_aggregated = rep("ch", 2))
 
 scen_2_singlebhd_yld_geo <- 
-  attribute_scen2_from_scen1(
+  attribute_mod(
     output_attribute_scen_1 = scen_1_singlebhd_yld_geo,
     exp_central = list(6, 6.5),
     info = "PM2.5_yld_after")
@@ -1885,7 +1885,7 @@ scen_1_deaths_lifetable <-
     min_age = 20)
 
 scen_2_deaths_lifetable <- 
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_deaths_lifetable,
     exp_central = 6)
 
@@ -1925,7 +1925,7 @@ scen_1_deaths_lifetable_geo <-
     geo_id_aggregated = rep("ch", 2))
 
 scen_2_deaths_lifetable_geo <- 
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_deaths_lifetable_geo,
     exp_central = list(6, 6.5)) # Fake data just for testing purposes
 
@@ -1995,7 +1995,7 @@ scen_1_yll_lifetable <-
     min_age = 20)
 
 scen_2_yll_lifetable <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_yll_lifetable,
     exp_central = 6) # Fake data just for testing purposes
 
@@ -2038,7 +2038,7 @@ scen_1_yll_lifetable_geo <-
     geo_id_aggregated = rep("ch", 2))
 
 scen_2_yll_lifetable_geo <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_yll_lifetable_geo,
     exp_central = list(6, 6.5)) # Fake data just for testing purposes
 
@@ -2111,7 +2111,7 @@ scen_1_yld_lifetable <-
     dw_central = 1)
 
 scen_2_yld_lifetable <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_yld_lifetable,
     exp_central = 6) # Fake data just for testing purposes
 
@@ -2155,7 +2155,7 @@ scen_1_yld_lifetable_geo <-
     geo_id_aggregated = rep("ch", 2))
 
 scen_2_yld_lifetable_geo <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_yld_lifetable_geo,
     exp_central = list(6, 6.5))# Fake data just for testing purposes
 
@@ -2207,7 +2207,7 @@ scen_1_yll <-
   bestcost_pm_yll
 
 scen_2_yll <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = bestcost_pm_yll,
     exp_central = 6)
 
@@ -2215,7 +2215,7 @@ scen_1_yld <-
   bestcost_pm_yld
 
 scen_2_yld <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = bestcost_pm_yld,
     exp_central = 6)
 
@@ -2263,26 +2263,26 @@ check_bestcost(result_list_bestcost = comparison_daly_pif,
 # With geo iteration
 # Define scenarios
 scen_1_yll_geo <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = bestcost_pm_yll,
     geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = c("ch", "ch"),
     exp_central = list(8.5, 8))
 
 scen_2_yll_geo <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_yll_geo,
     exp_central = list(6, 6.5))
 
 scen_1_yld_geo <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = bestcost_pm_yld,
     exp_central = list(8.5, 8),
     geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = c("ch", "ch"))
 
 scen_2_yld_geo <-
-  healthiar::attribute_scen2_from_scen1(
+  healthiar::attribute_mod(
     output_attribute_scen_1 = scen_1_yld_geo,
     exp_central = list(6, 6.5))
 

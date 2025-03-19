@@ -1,6 +1,6 @@
-#' Get attributable health impacts in scenario 2 based on scenario 1
+#' Attributable health impacts in scenario 2 based on scenario 1
 
-#' @description The function uses the output of attribute for scenario 1 (output_attribute_scen_1) to build scenario 2. The values of the arguments of this function (except output_attribute_scen_1) are used to replace the values in the arguments of scenario 1 to build scenario 2.
+#' @description The function assesses the attributable health impacts in a new scenario (2) by modifying an existing scenario (1). The values of the arguments of this function (except output_attribute_scen_1) are used to replace the values in the arguments of scenario 1 to build scenario 2.
 #' @param output_attribute_scen_1 \code{List} containing the output of the function attribute() for scenario 1.
 #' @inheritParams attribute
 #' @returns
@@ -17,7 +17,7 @@
 #' @author Alberto Castro
 #' @export
 
-attribute_scen2_from_scen1 <-
+attribute_mod <-
   function(
     output_attribute_scen_1,
     exp_central = NULL, exp_lower = NULL, exp_upper = NULL,
