@@ -25,7 +25,7 @@ format:
     incremental: true
     transition: none # alts: fade, none, slide
     transition-speed: default
-    table-of-contents: false
+    table-of-contents: true
     toc-depth: 2
     logo: images/combo_logo_stph_bc.png
     # footer: 'healthiar WP5 workshop 1'
@@ -66,9 +66,33 @@ Post installation, you can access the `healthiar` package landing page in RStudi
 
 ![](images/rstudio_how_to_access_package_landing_page.png)
 
+## note: Screen shot readme after screenshot BC git
+
 ## *`healthiar`* in RStudio 2/2
 
+note: first screenshot of full screen note: mention vignette opens as pdf or html
+
 ![Landing page of the `healthiar` package in RStudio, where you find the package vignettes and function documentation.](images/healthiar_package_landing_page.png)
+
+## Vignette
+
+note: show vignette
+
+## Fun doc
+
+note: show fun doc of attribute_healthiar
+
+## Workflow BoD
+
+note: quickly introduce the main workflow of burden assessments
+
+## Function families
+
+note: Quickly show function families
+
+## healthiar poster
+
+note: Figure out where to put it best
 
 ## Example: `attribute` call without input uncertainties
 
@@ -76,6 +100,8 @@ Attribute COPD cases to air pollution
 
 ::: panel-tabset
 ## Hard-coded input data
+
+# note: add erf alternatives to function call with #; write out baseline health data
 
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
 #| code-line-numbers: "|1|2|3|4-7|8|9|10"
@@ -118,7 +144,9 @@ Every `attribute` output consists of two lists ("folders")
 
 -   `health_detailed` detailed results (and in some cases even more information about the assessment/calculation)
 
-. . .
+note: add here that format is tibble (but can be changed to data frame)
+
+note: screenshot of how to click on variable in env (put that as first option) . . .
 
 #### Different ways to access the results
 
@@ -129,17 +157,17 @@ This is really about personal preference! However, you might encounter them all.
 :::
 
 ::: panel-tabset
-## With `[[]]` operator
-
-`results_pm_copd[["health_main"]]`
-
-Note: if the cursor is located within the square braces you can see all available options by pressing the tab key
-
 ## With `$` operator
 
 `results_pm_copd$health_main$impact_rounded`
 
 Note: after typing the `$` sign you can see all available options by pressing the tab key and use the arrows & tab keys to select an option (or alternatively use the mouse)
+
+## With `[[]]` operator
+
+`results_pm_copd[["health_main"]]`
+
+Note: if the cursor is located within the square braces you can see all available options by pressing the tab key
 
 ## With `pluck()` & `pull()`
 
@@ -154,7 +182,9 @@ Note: available options can't be displayed automatically using these functions -
 `View(results_pm_copd)` will "open" the variable in a new window within RStudio. Alternatively, you can go to the *Environment* tab and click on the variable to open the same view mode.
 :::
 
-## Example: `attribute` call with input uncertainties
+## Example: `attribute` with input uncertainties
+
+Goal: attribute lung cancer deaths to PM2.5 exposure
 
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
 #| code-line-numbers: "|5-6|9-10|13-14"
@@ -176,7 +206,11 @@ results_pm_copd <-
   ) 
 ```
 
-## Let's check the detailed output! {.scrollable}
+## Main output
+
+note: look into main output
+
+## Let's check the detailed output!
 
 :::: {.fragment .fade-in}
 ::: callout-tip
@@ -187,12 +221,106 @@ See the intro vignette for a detailed description of output columns (coming soon
 ::::
 
 ::: {.fragment .fade-in}
-This is what the `health_detailed` output table looks like
+The `health_detailed` output table contains all different combinations of the arguments with uncertainty. E.g. `rr_central` with `exp_lower` and `bhd_upper`, ...
+:::
+
+note: hide knitr::kable() call 
+
+::: {.fragment .fade-in}
+
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_pm_copd[["health_detailed"]][["raw"]]
+```
+
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_pm_copd[["health_detailed"]][["raw"]] |> knitr::kable()
+```
+
+
+:::
+
+## Example: `attribute` with exposure categories (noise)
+
+Goal: attribute cases of high annoyance (HA) to noise exposure
+
+:::::: columns
+::: {.column .fragment .fade-in width="50%"}
+```{r}
+exdat_noise_ha <-
+  exdat_noise_ha |>
+  dplyr::filter(!is.na(exdat_noise_ha$exposure_mean))
+
+results_noise_ha <- 
+  healthiar::attribute_health(
+    approach_risk = "absolute_risk",
+    exp_central = c(57.5, 62.5, 67.5, 72.5, 77.5),
+    population = sum(exdat_noise_ha$population_exposed_total), # TO DO: hard code input here
+    prop_pop_exp = exdat_noise_ha$population_exposed_total / 
+      sum(exdat_noise_ha$population_exposed_total),
+    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2")
+```
+:::
+
+::: {.column .fragment .fade-in width="50%"}
+![Source input data: NIPH](images/example_noise_ha.png)
 :::
 
 ::: {.fragment .fade-in}
 ```{r, echo=TRUE}
 #| output-location: fragment
-results_pm_copd[["health_detailed"]][["raw"]] |> knitr::kable()
+results_noise_ha[["health_detailed"]][["raw"]] |> knitr::kable()
 ```
 :::
+::::::
+
+## Iteration example
+
+## Compare example
+
+note: definitely include because WP5 will do
+
+# Additional analyses
+
+## Monetization
+
+## Social analysis
+
+note: if time allows
+
+## Other features
+
+Check out the intro vignette for examples (to be added)
+
+-   correlated exposures
+
+-   life table analysis
+
+-   get_daly
+
+## Exporting results
+
+note: show how to export csv, ...
+
+## Visualize
+
+Out of scope of `healthiar`
+
+-   Using R, e.g. with ggplot2 package
+
+-   Using Excel (once results are exported)
+
+## Introduce homework
+
+note: stress that they must install & test healthiar before 2nd WS
+
+note: AC: not more than 2-3 exercises, one with provided numbers, one where they use exdat
+
+note: put exercises in PDF on Teams
+
+If you encounter challenges during installation, get in touch with us!
+
+## Outlook WS2
+
+note: mention programme WS2 & explicitly YOU WILL HAVE TO PROGRAMME IN RSTUDIO USING HEALTHIAR
+
+note: document any suggestions for improvements
