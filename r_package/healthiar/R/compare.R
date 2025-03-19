@@ -173,8 +173,8 @@ compare <-
       # Identify the columns that are to be used to join impact_raw_1 and _2
       joining_columns_output <-
         healthiar:::find_joining_columns(
-          df1 = impact_raw_1[["health_detailed"]][["impact_raw"]],
-          df2 = impact_raw_2[["health_detailed"]][["impact_raw"]],
+          df_1 = impact_raw_1[["health_detailed"]][["impact_raw"]],
+          df_2 = impact_raw_2[["health_detailed"]][["impact_raw"]],
           except = scenario_specific_arguments)
 
       # Merge the result tables by common columns
@@ -295,8 +295,8 @@ compare <-
       # Get identical columns to join data frames (as above)
       joining_columns_input <-
         healthiar:::find_joining_columns(
-          df1 = input_1,
-          df2 = input_2,
+          df_1 = input_1,
+          df_2 = input_2,
           except =  c(scenario_specific_arguments_excluding_bhd,
                       ## Keep year_of_analysis in the table so it can be accessed in the get_impact script
                       "year_of_analysis"))

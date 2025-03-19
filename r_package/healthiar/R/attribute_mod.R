@@ -34,17 +34,17 @@ attribute_mod <-
     info = NULL){
 
     # Capture all arguments and values
-    args2 <- as.list(environment())
+    args_2 <- as.list(environment())
 
     # Removing output_attribute_scen_1 from args
-    args2$output_attribute_scen_1 <- NULL
+    args_2$output_attribute_scen_1 <- NULL
 
-    #Remove all arguments that are NULL in args2 to avoid that they overwrite
-    #those in args1
-    args2 <- purrr::discard(args2, is.null)
+    #Remove all arguments that are NULL in args_2 to avoid that they overwrite
+    #those in args_1
+    args_2 <- purrr::discard(args_2, is.null)
 
-    # Extract args1
-    args1 <- output_attribute_scen_1[["health_detailed"]][["args"]]
+    # Extract args_1
+    args_1 <- output_attribute_scen_1[["health_detailed"]][["args"]]
 
     # Create a function to replace values in list of arguments
     # modifyList() and purrr::list_modify() do not work because require named lists
@@ -59,15 +59,15 @@ attribute_mod <-
                       }else {.x <- .x}})
     }
 
-    args2_after_merge_with_arg1 <-
-      replace_list(args1, args2)
+    args_2_after_merge_with_arg1 <-
+      replace_list(args_1, args_2)
 
 
 
     # Use the arguments attribute()
     output_attribute_scen_2 <-
       do.call(healthiar::attribute,
-              args2_after_merge_with_arg1)
+              args_2_after_merge_with_arg1)
 
     return(output_attribute_scen_2)
 

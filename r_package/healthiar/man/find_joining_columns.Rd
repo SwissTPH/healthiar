@@ -4,12 +4,12 @@
 \alias{find_joining_columns}
 \title{Find joining columns}
 \usage{
-find_joining_columns(df1, df2, except = NULL)
+find_joining_columns(df_1, df_2, except = NULL)
 }
 \arguments{
-\item{df1}{First \code{Data frame}}
+\item{df_1}{First \code{Data frame}}
 
-\item{df2}{Second \code{Data frame}}
+\item{df_2}{Second \code{Data frame}}
 
 \item{except}{\code{Vector} of strings showing columns that have to be excluded although they fulfill the inclusion criteria (same name and value)}
 }

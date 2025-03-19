@@ -99,8 +99,8 @@ compare_health_new <-
       # Identify the columns that are to be used to join raw_1 and _2
       joining_columns_output <-
         healthiar:::find_joining_columns(
-          df1 = raw_1,
-          df2 = raw_2,
+          df_1 = raw_1,
+          df_2 = raw_2,
           except = scenario_specific_arguments)
 
       # Merge the result tables by common columns
@@ -159,8 +159,8 @@ compare_health_new <-
         # Get identical columns to join data frames (as above)
         joining_columns_input <-
           healthiar:::find_joining_columns(
-            df1 = input_1,
-            df2 = input_2,
+            df_1 = input_1,
+            df_2 = input_2,
             except =  c(scenario_specific_arguments_lifetable,
                         ## Keep year_of_analysis in the table so it can be accessed in the get_impact script
                         "year_of_analysis"))
@@ -175,8 +175,8 @@ compare_health_new <-
 
 
         ## Added if statement below to avoid error in the non-lifetable cases
-        # args1 and args2 should have the same health_outcome (see checks above)
-        # So let's use e.g. args1
+        # args_1 and args_2 should have the same health_outcome (see checks above)
+        # So let's use e.g. args_1
         if(stringr::str_detect(args_1$health_outcome, "lifetable") ) {
           # Calculate the health impacts for each case (uncertainty, category, geo area...)
           impact_raw <-
