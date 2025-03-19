@@ -83,12 +83,16 @@ include_monetization <-
           impact_detailed |>
           dplyr::mutate(
             impact_with_discount_summed = purrr::pmap(
-              list(.x = impact_with_discount_nest, .y = last_year),
+              list(.x = impact_with_discount_nest),
               function(.x, .y){
                 impact_with_summed_discount <-
                   .x |>
+                  #Deactivated filter because probably not needed anymore
+                  #Year is always lower than the last_year and
+                  # the non-relevant years (>last_year) excluded from the calculation in get_deaths_yll_yld()
+                  #TODO To be confirmed
                   # Filter for the relevant years
-                  dplyr::filter(year < .y+1) |>
+                  # dplyr::filter(year < .y+1) |>
                   ## Sum among years to obtain the total impact (single value)
                   dplyr::summarise(
                     impact = sum(impact, na.rm = TRUE),
