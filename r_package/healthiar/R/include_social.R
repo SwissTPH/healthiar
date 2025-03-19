@@ -385,7 +385,7 @@ include_social <- function(output_healthiar = NULL,
 
     output_social[["social_detailed"]][["results_detailed"]] <- social_results
     output_social[["social_detailed"]][["impact_per_quantile"]] <- output_social_by_quantile
-    output_social[["input"]] <- output_social
+    output_social[["input_table"]] <- output_social
 
     return(output_social)
 

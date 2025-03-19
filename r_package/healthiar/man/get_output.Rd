@@ -4,12 +4,12 @@
 \alias{get_output}
 \title{Attributable health cases based on relative risk}
 \usage{
-get_output(args = NULL, input = NULL, impact_raw)
+get_output(input_args = NULL, input_table = NULL, impact_raw)
 }
 \arguments{
-\item{args}{\code{List} containingall arguments and values entered in attribute().}
+\item{input_args}{\code{List} containingall arguments and values entered in attribute().}
 
-\item{input}{\code{List} containing the input data compiled and packed in a data frame.}
+\item{input_table}{\code{List} containing the input_table data compiled and packed in a data frame.}
 
 \item{impact_raw}{\code{List} containing all the calculation of health impacts.}
 }

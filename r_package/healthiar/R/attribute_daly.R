@@ -13,7 +13,7 @@ attribute_daly <-
     output_attribute_yld){
 
     # Capture all arguments and values
-    args <- as.list(environment())
+    input_args <- as.list(environment())
 
 
     # Store impact_raw of yll and yld
@@ -36,8 +36,8 @@ attribute_daly <-
 
     common_columns_identical <-
       healthiar:::check_if_args_identical(
-        args_a = args$output_attribute_yld,
-        args_b = args$output_attribute_yld,
+        args_a = input_args$output_attribute_yld,
+        args_b = input_args$output_attribute_yld,
         names_to_check = common_columns)
 
 
@@ -84,7 +84,7 @@ attribute_daly <-
     # input_table is not available (two branches: yll and yld) but not needed
     output <-
       healthiar:::get_output(
-        args = args,
+        input_args = input_args,
         impact_raw = impact_raw)
 
     return(output)

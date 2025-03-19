@@ -19,11 +19,11 @@ compare_health_new <-
     output_attribute_2,
     approach_comparison = "delta"){
 
-    args_1 <- output_attribute_1[["health_detailed"]][["args"]]
-    args_2 <- output_attribute_2[["health_detailed"]][["args"]]
+    input_args_1 <- output_attribute_1[["health_detailed"]][["input_args"]]
+    input_args_2 <- output_attribute_2[["health_detailed"]][["input_args"]]
 
-    input_1 <- output_attribute_1[["health_detailed"]][["input"]]
-    input_2 <- output_attribute_2[["health_detailed"]][["input"]]
+    input_table_1 <- output_attribute_1[["health_detailed"]][["input_table"]]
+    input_table_2 <- output_attribute_2[["health_detailed"]][["input_table"]]
 
     raw_1 <- output_attribute_1[["health_detailed"]][["impact_raw"]]
     raw_2 <- output_attribute_2[["health_detailed"]][["impact_raw"]]
@@ -61,10 +61,10 @@ compare_health_new <-
 
     # Arguments that should be identical in both scenarios
     common_arguments_1 <-
-      names(input_1)[!names(input_1) %in% scenario_specific_arguments]
+      names(input_table_1)[!names(input_table_1) %in% scenario_specific_arguments]
 
     common_arguments_2 <-
-      names(input_2)[!names(input_2) %in% scenario_specific_arguments]
+      names(input_table_2)[!names(input_table_2) %in% scenario_specific_arguments]
 
     # Check that (relevant) input values from scenarios A & B are equal ##########
     ## Works also if no input was provided (might be the case for e.g. ..._lower arguments)
@@ -79,8 +79,8 @@ compare_health_new <-
 
     common_arguments_identical <-
       healthiar:::check_if_args_identical(
-        args_a = args_1,
-        args_b = args_2,
+        args_a = input_args_1,
+        args_b = input_args_2,
         names_to_check = common_arguments)
 
 
@@ -114,7 +114,8 @@ compare_health_new <-
         dplyr::mutate(impact = impact_1 - impact_2,
                       impact_rounded = round(impact, 0))
 
-      input <- list(input_1 = input_1, input_2 = input_2)
+      input_table <- list(input_table_1 = input_table_1,
+                          input_table_2 = input_table_2)
 
 
       # PIF approach ########################
@@ -138,8 +139,8 @@ compare_health_new <-
 
         scenario_arguments_for_bhd_and_lifetable_identical <-
           healthiar:::check_if_args_identical(
-            args_a = args_1,
-            args_b = args_2,
+            args_a = input_args_1,
+            args_b = input_args_2,
             names_to_check = scenario_arguments_for_bhd_and_lifetable)
 
 
@@ -159,34 +160,34 @@ compare_health_new <-
         # Get identical columns to join data frames (as above)
         joining_columns_input <-
           healthiar:::find_joining_columns(
-            df_1 = input_1,
-            df_2 = input_2,
+            df_1 = input_table_1,
+            df_2 = input_table_2,
             except =  c(scenario_specific_arguments_lifetable,
                         ## Keep year_of_analysis in the table so it can be accessed in the get_impact script
                         "year_of_analysis"))
 
         # Merge the input tables by common columns
-        input <-
+        input_table <-
           dplyr::left_join(
-            input_1,
-            input_2,
+            input_table_1,
+            input_table_2,
             by = joining_columns_input,
             suffix = c("_1", "_2"))
 
 
         ## Added if statement below to avoid error in the non-lifetable cases
-        # args_1 and args_2 should have the same health_outcome (see checks above)
-        # So let's use e.g. args_1
-        if(stringr::str_detect(args_1$health_outcome, "lifetable") ) {
+        # input_args_1 and input_args_2 should have the same health_outcome (see checks above)
+        # So let's use e.g. input_args_1
+        if(stringr::str_detect(input_args_1$health_outcome, "lifetable") ) {
           # Calculate the health impacts for each case (uncertainty, category, geo area...)
           impact_raw <-
             healthiar:::get_impact(
-              input = input |> rename(year_of_analysis = year_of_analysis_1),
+              input_table = input_table |> rename(year_of_analysis = year_of_analysis_1),
               pop_fraction_type = "pif")
         } else { # Non-lifetable cases
           impact_raw <-
             healthiar:::get_impact(
-              input = input,
+              input_table = input_table,
               pop_fraction_type = "pif")
         }
 
@@ -200,8 +201,8 @@ compare_health_new <-
 
     output <-
       healthiar:::get_output(
-        args = args,
-        input = input,
+        input_args = args,
+        input_table = input_table,
         impact_raw = impact_raw)
 
     output[["health_detailed"]][["scenario_1"]] <- raw_1

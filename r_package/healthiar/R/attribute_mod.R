@@ -44,7 +44,7 @@ attribute_mod <-
     args_2 <- purrr::discard(args_2, is.null)
 
     # Extract args_1
-    args_1 <- output_attribute_1[["health_detailed"]][["args"]]
+    args_1 <- output_attribute_1[["health_detailed"]][["input_args"]]
 
     # Create a function to replace values in list of arguments
     # modifyList() and purrr::list_modify() do not work because require named lists

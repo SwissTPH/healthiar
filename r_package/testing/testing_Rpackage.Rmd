@@ -1077,8 +1077,6 @@ bestcost_pm_no2_mortality_additive <-
     rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
     erf_shape = "log_linear")
 
-View(bestcost_pm_no2_mortality_additive)
-
 check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_additive,
                result_vector_alternative = 0.081 * 1000)
 ```
@@ -1142,8 +1140,6 @@ bestcost_pm_no2_mortality_combined <-
     # rr_upper = setNames(c(1.063, 1.031) + 0.001, c("pm2.5", "no2")),
     rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
     erf_shape = "log_linear")
-
-View(bestcost_pm_no2_mortality_multiplicative)
 
 check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative,
                result_vector_alternative = 0.079 * 1000)
@@ -1514,7 +1510,7 @@ check_bestcost(result_list_bestcost = bestcost_daly_from_yll_yld,
 comparison_singlebhd_rr_delta_unpacked <-
   healthiar::compare_health_new(
     
-     output_attribute_scen_1 = 
+     output_attribute_1 = 
        attribute_health(
          exp_central = 8.85,
          cutoff_central = 5, 
@@ -1525,7 +1521,7 @@ comparison_singlebhd_rr_delta_unpacked <-
          rr_increment = 10,
          info = "PM2.5_mortality_2010"),
      
-     output_attribute_scen_2 = 
+     output_attribute_2 = 
        attribute_health(
          exp_central = 6, 
          cutoff_central = 5, 
@@ -1564,8 +1560,8 @@ scen_2_singlebhd_rr_delta <-
 
 comparison_singlebhd_rr_delta_packed <- 
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_singlebhd_rr_delta,
-    output_attribute_scen_2 = scen_2_singlebhd_rr_delta,
+    output_attribute_1 = scen_1_singlebhd_rr_delta,
+    output_attribute_2 = scen_2_singlebhd_rr_delta,
     approach_comparison = "delta")
 
 # No study to compare bestcost results
@@ -1579,14 +1575,14 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_packed,
 
 scen_2_singlebhd_rr_delta_helper <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_singlebhd_rr_delta,
+    output_attribute_1 = scen_1_singlebhd_rr_delta,
     # What is different in scenario 2 compared to scenario 1
     exp_central = 6)
 
 comparison_singlebhd_rr_delta_packed_helper <- 
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_singlebhd_rr_delta,
-    output_attribute_scen_2 = scen_2_singlebhd_rr_delta_helper,
+    output_attribute_1 = scen_1_singlebhd_rr_delta,
+    output_attribute_2 = scen_2_singlebhd_rr_delta_helper,
     approach_comparison = "delta")
 
 # No study to compare bestcost results
@@ -1598,8 +1594,8 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_packed_helpe
 # With same impact to test that there is no error.
 comparison_singlebhd_rr_delta_same_impact <-
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_singlebhd_rr_delta,
-    output_attribute_scen_2 = scen_1_singlebhd_rr_delta)
+    output_attribute_1 = scen_1_singlebhd_rr_delta,
+    output_attribute_2 = scen_1_singlebhd_rr_delta)
 
 check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_same_impact ,
                result_vector_alternative = c(0, 0, 0)) # Result on 27 Nov 2024
@@ -1620,15 +1616,15 @@ scen_1_singlebhd_rr_geo <-
 
 scen_2_singlebhd_rr_geo <- 
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_singlebhd_rr_geo,
+    output_attribute_1 = scen_1_singlebhd_rr_geo,
     # What is different in scenario 2 compared to scenario 1
     exp_central = list(6, 6.5))
   
 
 comparison_singlebhd_rr_delta_geo <-
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_singlebhd_rr_geo,
-    output_attribute_scen_2 = scen_2_singlebhd_rr_geo)
+    output_attribute_1 = scen_1_singlebhd_rr_geo,
+    output_attribute_2 = scen_2_singlebhd_rr_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1639,8 +1635,8 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_geo ,
 # Test pif comparison function with fake values
 comparison_singlebhd_rr_pif <-
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_singlebhd_rr_delta,
-    output_attribute_scen_2 = scen_2_singlebhd_rr_delta,
+    output_attribute_1 = scen_1_singlebhd_rr_delta,
+    output_attribute_2 = scen_2_singlebhd_rr_delta,
     approach_comparison = "pif")
 
 # View(comparison_singlebhd_rr_pif)
@@ -1654,8 +1650,8 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_pif ,
 comparison_singlebhd_rr_pif_geo <-
   comparison_singlebhd_rr_pif <-
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_singlebhd_rr_geo,
-    output_attribute_scen_2 = scen_2_singlebhd_rr_geo,
+    output_attribute_1 = scen_1_singlebhd_rr_geo,
+    output_attribute_2 = scen_2_singlebhd_rr_geo,
     approach_comparison = "pif")
 
 # View(comparison_singlebhd_rr_pif_geo)
@@ -1689,7 +1685,7 @@ scen_1_singlebhd_rr_geo_large <-
 
 scen_2_singlebhd_rr_geo_large <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_singlebhd_rr_geo_large,
+    output_attribute_1 = scen_1_singlebhd_rr_geo_large,
     exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)),
     exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)-0.1),
     exp_upper = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)+0.1))
@@ -1698,8 +1694,8 @@ scen_2_singlebhd_rr_geo_large <-
 
 comparison_singlebhd_rr_geo_large <-
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_singlebhd_rr_geo_large,
-    output_attribute_scen_2 = scen_2_singlebhd_rr_geo_large)
+    output_attribute_1 = scen_1_singlebhd_rr_geo_large,
+    output_attribute_2 = scen_2_singlebhd_rr_geo_large)
 
 # View(comparison_singlebhd_rr_geo)
 
@@ -1718,7 +1714,7 @@ scen_1_singlebhd_ar <-
 
 scen_2_singlebhd_ar <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_singlebhd_ar,
+    output_attribute_1 = scen_1_singlebhd_ar,
     exp_central = c(50, 55, 60, 65, 75))
 
 
@@ -1754,7 +1750,7 @@ scen_1_singlebhd_ar_geo <-
 
 scen_2_singlebhd_ar_geo <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_singlebhd_ar_geo,
+    output_attribute_1 = scen_1_singlebhd_ar_geo,
     exp_central = list(c(50, 55, 60, 65, 75), 
                        c(50.5, 55.5, 60.5, 65.5, 75.5)), # Fake values
     info = data.frame(pollutant = "road_noise", 
@@ -1763,8 +1759,8 @@ scen_2_singlebhd_ar_geo <-
 
 comparison_singlebhd_ar_delta_geo <-
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_singlebhd_ar_geo,
-    output_attribute_scen_2 = scen_2_singlebhd_ar_geo)
+    output_attribute_1 = scen_1_singlebhd_ar_geo,
+    output_attribute_2 = scen_2_singlebhd_ar_geo)
 
 # View(comparison_singlebhd_ar_delta_geo)
 
@@ -1781,13 +1777,13 @@ scen_1_singlebhd_yld <-
 
 scen_2_singlebhd_yld <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_singlebhd_yld,
+    output_attribute_1 = scen_1_singlebhd_yld,
     exp_central = 6)
 
 comparison_yld_singlebhd_rr_delta <-
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_singlebhd_yld, 
-    output_attribute_scen_2 = scen_2_singlebhd_yld)
+    output_attribute_1 = scen_1_singlebhd_yld, 
+    output_attribute_2 = scen_2_singlebhd_yld)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1814,14 +1810,14 @@ scen_1_singlebhd_yld_geo <-
 
 scen_2_singlebhd_yld_geo <- 
   attribute_mod(
-    output_attribute_scen_1 = scen_1_singlebhd_yld_geo,
+    output_attribute_1 = scen_1_singlebhd_yld_geo,
     exp_central = list(6, 6.5),
     info = "PM2.5_yld_after")
 
 comparison_yld_singlebhd_rr_delta_geo <-
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_singlebhd_yld_geo, 
-    output_attribute_scen_2 = scen_2_singlebhd_yld_geo)
+    output_attribute_1 = scen_1_singlebhd_yld_geo, 
+    output_attribute_2 = scen_2_singlebhd_yld_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1834,8 +1830,8 @@ check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_delta_geo ,
 comparison_yld_singlebhd_rr_pif <-
   healthiar::compare_health_new(
     approach_comparison = "pif",
-    output_attribute_scen_1 = scen_1_singlebhd_yld, 
-    output_attribute_scen_2 = scen_2_singlebhd_yld)
+    output_attribute_1 = scen_1_singlebhd_yld, 
+    output_attribute_2 = scen_2_singlebhd_yld)
 
 
 # No study to compare bestcost results
@@ -1850,8 +1846,8 @@ check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_pif ,
 comparison_yld_singlebhd_rr_pif_geo <-
   healthiar::compare_health_new(
     approach_comparison = "pif",
-    output_attribute_scen_1 = scen_1_singlebhd_yld_geo, 
-    output_attribute_scen_2 = scen_2_singlebhd_yld_geo)
+    output_attribute_1 = scen_1_singlebhd_yld_geo, 
+    output_attribute_2 = scen_2_singlebhd_yld_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1886,13 +1882,13 @@ scen_1_deaths_lifetable <-
 
 scen_2_deaths_lifetable <- 
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_deaths_lifetable,
+    output_attribute_1 = scen_1_deaths_lifetable,
     exp_central = 6)
 
 comparison_deaths_lifetable_delta <- 
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_deaths_lifetable,
-    output_attribute_scen_2 = scen_2_deaths_lifetable)
+    output_attribute_1 = scen_1_deaths_lifetable,
+    output_attribute_2 = scen_2_deaths_lifetable)
 
 
 # No study to compare bestcost results
@@ -1926,13 +1922,13 @@ scen_1_deaths_lifetable_geo <-
 
 scen_2_deaths_lifetable_geo <- 
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_deaths_lifetable_geo,
+    output_attribute_1 = scen_1_deaths_lifetable_geo,
     exp_central = list(6, 6.5)) # Fake data just for testing purposes
 
 comparison_deaths_lifetable_delta_geo <- 
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_deaths_lifetable_geo,
-    output_attribute_scen_2 = scen_2_deaths_lifetable_geo)
+    output_attribute_1 = scen_1_deaths_lifetable_geo,
+    output_attribute_2 = scen_2_deaths_lifetable_geo)
 
 
 # No study to compare bestcost results
@@ -1946,8 +1942,8 @@ check_bestcost(result_list_bestcost = comparison_deaths_lifetable_delta_geo ,
 comparison_deaths_lifetable_pif <- 
   healthiar::compare_health_new(
     approach_comparison = "pif",
-    output_attribute_scen_1 = scen_1_deaths_lifetable,
-    output_attribute_scen_2 = scen_2_deaths_lifetable)
+    output_attribute_1 = scen_1_deaths_lifetable,
+    output_attribute_2 = scen_2_deaths_lifetable)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1960,8 +1956,8 @@ check_bestcost(result_list_bestcost = comparison_deaths_lifetable_pif ,
 comparison_deaths_lifetable_pif_geo <- 
   healthiar::compare_health_new(
     approach_comparison = "pif",
-    output_attribute_scen_1 = scen_1_deaths_lifetable_geo,
-    output_attribute_scen_2 = scen_2_deaths_lifetable_geo)
+    output_attribute_1 = scen_1_deaths_lifetable_geo,
+    output_attribute_2 = scen_2_deaths_lifetable_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1996,13 +1992,13 @@ scen_1_yll_lifetable <-
 
 scen_2_yll_lifetable <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_yll_lifetable,
+    output_attribute_1 = scen_1_yll_lifetable,
     exp_central = 6) # Fake data just for testing purposes
 
 comparison_yll_lifetable_delta <- 
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_yll_lifetable,
-    output_attribute_scen_2 = scen_2_yll_lifetable)
+    output_attribute_1 = scen_1_yll_lifetable,
+    output_attribute_2 = scen_2_yll_lifetable)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -2039,13 +2035,13 @@ scen_1_yll_lifetable_geo <-
 
 scen_2_yll_lifetable_geo <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_yll_lifetable_geo,
+    output_attribute_1 = scen_1_yll_lifetable_geo,
     exp_central = list(6, 6.5)) # Fake data just for testing purposes
 
 comparison_yll_lifetable_delta_geo <- 
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_yll_lifetable_geo,
-    output_attribute_scen_2 = scen_2_yll_lifetable_geo)
+    output_attribute_1 = scen_1_yll_lifetable_geo,
+    output_attribute_2 = scen_2_yll_lifetable_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -2060,8 +2056,8 @@ check_bestcost(result_list_bestcost = comparison_yll_lifetable_delta_geo ,
 comparison_yll_lifetable_pif <-
   healthiar::compare_health_new(
     approach_comparison = "pif",
-    output_attribute_scen_1 = scen_1_yll_lifetable,
-    output_attribute_scen_2 = scen_2_yll_lifetable)
+    output_attribute_1 = scen_1_yll_lifetable,
+    output_attribute_2 = scen_2_yll_lifetable)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -2074,8 +2070,8 @@ check_bestcost(result_list_bestcost = comparison_yll_lifetable_pif ,
 comparison_yll_lifetable_pif_geo <-
   healthiar::compare_health_new(
     approach_comparison = "pif",
-    output_attribute_scen_1 = scen_1_yll_lifetable_geo,
-    output_attribute_scen_2 = scen_2_yll_lifetable_geo)
+    output_attribute_1 = scen_1_yll_lifetable_geo,
+    output_attribute_2 = scen_2_yll_lifetable_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -2112,13 +2108,13 @@ scen_1_yld_lifetable <-
 
 scen_2_yld_lifetable <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_yld_lifetable,
+    output_attribute_1 = scen_1_yld_lifetable,
     exp_central = 6) # Fake data just for testing purposes
 
 comparison_yld_lifetable_delta <- 
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_yld_lifetable,
-    output_attribute_scen_2 = scen_2_yld_lifetable)
+    output_attribute_1 = scen_1_yld_lifetable,
+    output_attribute_2 = scen_2_yld_lifetable)
 
 
 # No study to compare bestcost results
@@ -2156,13 +2152,13 @@ scen_1_yld_lifetable_geo <-
 
 scen_2_yld_lifetable_geo <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_yld_lifetable_geo,
+    output_attribute_1 = scen_1_yld_lifetable_geo,
     exp_central = list(6, 6.5))# Fake data just for testing purposes
 
 comparison_yld_lifetable_delta_geo <- 
   healthiar::compare_health_new(
-    output_attribute_scen_1 = scen_1_yld_lifetable_geo,
-    output_attribute_scen_2 = scen_2_yld_lifetable_geo)
+    output_attribute_1 = scen_1_yld_lifetable_geo,
+    output_attribute_2 = scen_2_yld_lifetable_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -2174,8 +2170,8 @@ check_bestcost(result_list_bestcost = comparison_yld_lifetable_delta_geo ,
 comparison_yld_lifetable_pif <-
   healthiar::compare_health_new(
     approach_comparison = "pif",
-    output_attribute_scen_1 = scen_1_yld_lifetable,
-    output_attribute_scen_2 = scen_2_yld_lifetable)
+    output_attribute_1 = scen_1_yld_lifetable,
+    output_attribute_2 = scen_2_yld_lifetable)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -2188,8 +2184,8 @@ check_bestcost(result_list_bestcost = comparison_yld_lifetable_pif ,
 comparison_yld_lifetable_pif_geo <-
   healthiar::compare_health_new(
     approach_comparison = "pif",
-    output_attribute_scen_1 = scen_1_yld_lifetable_geo,
-    output_attribute_scen_2 = scen_2_yld_lifetable_geo)
+    output_attribute_1 = scen_1_yld_lifetable_geo,
+    output_attribute_2 = scen_2_yld_lifetable_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -2208,7 +2204,7 @@ scen_1_yll <-
 
 scen_2_yll <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = bestcost_pm_yll,
+    output_attribute_1 = bestcost_pm_yll,
     exp_central = 6)
 
 scen_1_yld <-
@@ -2216,7 +2212,7 @@ scen_1_yld <-
 
 scen_2_yld <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = bestcost_pm_yld,
+    output_attribute_1 = bestcost_pm_yld,
     exp_central = 6)
 
 
@@ -2226,19 +2222,19 @@ comparison_daly_delta <-
     output_attribute_yll =
       healthiar::compare_health_new(
         approach_comparison = "delta",
-        output_attribute_scen_1 = scen_1_yll, 
-        output_attribute_scen_2 = scen_2_yll),
+        output_attribute_1 = scen_1_yll, 
+        output_attribute_2 = scen_2_yll),
     output_attribute_yld = 
       healthiar::compare_health_new(
         approach_comparison = "delta",
-        output_attribute_scen_1 = scen_1_yld, 
-        output_attribute_scen_2 = scen_2_yld))
+        output_attribute_1 = scen_1_yld, 
+        output_attribute_2 = scen_2_yld))
 
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_delta ,
-               result_vector_alternative = c(24738, 12977, 36370)) # Result on 18 March 2025
+               result_vector_alternative = c(24299, 12714, 36613)) # Result on 18 March 2025
 
 # PIF
 comparison_daly_pif <- 
@@ -2246,44 +2242,44 @@ comparison_daly_pif <-
     output_attribute_yll =
       healthiar::compare_health_new(
         approach_comparison = "pif",
-        output_attribute_scen_1 = scen_1_yll, 
-        output_attribute_scen_2 = scen_2_yll),
+        output_attribute_1 = scen_1_yll, 
+        output_attribute_2 = scen_2_yll),
     output_attribute_yld = 
       healthiar::compare_health_new(
         approach_comparison = "pif",
-        output_attribute_scen_1 = scen_1_yld, 
-        output_attribute_scen_2 = scen_2_yld))
+        output_attribute_1 = scen_1_yld, 
+        output_attribute_2 = scen_2_yld))
 
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_pif,
-               result_vector_alternative = c(24827, 13001, 36563 )) # Result on 18 March 2025
+               result_vector_alternative = c(24378, 12735, 36815)) # Result on 18 March 2025
 
 # With geo iteration
 # Define scenarios
 scen_1_yll_geo <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = bestcost_pm_yll,
+    output_attribute_1 = bestcost_pm_yll,
     geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = c("ch", "ch"),
     exp_central = list(8.5, 8))
 
 scen_2_yll_geo <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_yll_geo,
+    output_attribute_1 = scen_1_yll_geo,
     exp_central = list(6, 6.5))
 
 scen_1_yld_geo <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = bestcost_pm_yld,
+    output_attribute_1 = bestcost_pm_yld,
     exp_central = list(8.5, 8),
     geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = c("ch", "ch"))
 
 scen_2_yld_geo <-
   healthiar::attribute_mod(
-    output_attribute_scen_1 = scen_1_yld_geo,
+    output_attribute_1 = scen_1_yld_geo,
     exp_central = list(6, 6.5))
 
 # Delta
@@ -2292,19 +2288,19 @@ comparison_daly_delta_geo <-
     output_attribute_yll =
       healthiar::compare_health_new(
         approach_comparison = "delta",
-        output_attribute_scen_1 = scen_1_yll_geo, 
-        output_attribute_scen_2 = scen_2_yll_geo),
+        output_attribute_1 = scen_1_yll_geo, 
+        output_attribute_2 = scen_2_yll_geo),
     output_attribute_yld = 
       healthiar::compare_health_new(
         approach_comparison = "delta",
-        output_attribute_scen_1 = scen_1_yld_geo, 
-        output_attribute_scen_2 = scen_2_yld_geo))
+        output_attribute_1 = scen_1_yld_geo, 
+        output_attribute_2 = scen_2_yld_geo))
 
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_delta_geo ,
-               result_vector_alternative = c(34742, 18219, 51093 )) # Result on 18 March 2025
+               result_vector_alternative = c(34123, 17849, 51437)) # Result on 18 March 2025
 
 # PIF
 comparison_daly_pif_geo <- 
@@ -2312,19 +2308,19 @@ comparison_daly_pif_geo <-
     output_attribute_yll =
       healthiar::compare_health_new(
         approach_comparison = "pif",
-        output_attribute_scen_1 = scen_1_yll_geo, 
-        output_attribute_scen_2 = scen_2_yll_geo),
+        output_attribute_1 = scen_1_yll_geo, 
+        output_attribute_2 = scen_2_yll_geo),
     output_attribute_yld = 
       healthiar::compare_health_new(
         approach_comparison = "pif",
-        output_attribute_scen_1 = scen_1_yld_geo, 
-        output_attribute_scen_2 = scen_2_yld_geo))
+        output_attribute_1 = scen_1_yld_geo, 
+        output_attribute_2 = scen_2_yld_geo))
 
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_pif_geo,
-               result_vector_alternative = c(34890, 18260, 51415)) # Result on 18 March 2025
+               result_vector_alternative = c(34255,17885,51773)) # Result on 18 March 2025
 
 
 
@@ -2390,7 +2386,7 @@ check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]
 
 # Indirect approach. 
 ## valuation=1 to compare results with only discounting
-bestcost_pm_yll_lifetable_geluft_indirect <- 
+bestcost_pm_yll_lifetable_geluft_indirect_discount <- 
   healthiar::include_monetization(
     approach_discount = "indirect",
     output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft, 
@@ -2398,7 +2394,7 @@ bestcost_pm_yll_lifetable_geluft_indirect <-
     discount_rate = 0.01,
     valuation = 1)
 
-check_general(bestcost_pm_yll_lifetable_geluft_discount[["monetization_main"]]$monetized_impact_rounded,
+check_general(bestcost_pm_yll_lifetable_geluft_indirect_discount[["monetization_main"]]$monetized_impact_rounded,
               c(26493, 13877, 39006))
 # Result on 13 Dec 2025. Same result as discounting in attribute() (deprecated).
 

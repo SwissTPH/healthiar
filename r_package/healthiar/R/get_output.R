@@ -1,8 +1,8 @@
 #' Attributable health cases based on relative risk
 
 #' @description Distributes and store outputs by level of detail by aggregating or filtering impacts.
-#' @param args \code{List} containingall arguments and values entered in attribute().
-#' @param input \code{List} containing the input data compiled and packed in a data frame.
+#' @param input_args \code{List} containingall arguments and values entered in attribute().
+#' @param input_table \code{List} containing the input_table data compiled and packed in a data frame.
 #' @param impact_raw \code{List} containing all the calculation of health impacts.
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
@@ -19,15 +19,15 @@
 #' @author Alberto Castro
 #' @keywords internal
 get_output <-
-  function(args = NULL,
-           input = NULL,
+  function(input_args = NULL,
+           input_table = NULL,
            impact_raw){
 
     # Get main results from detailed results ###################################
 
     health_detailed_from_impact  <-
-      list(args = args,
-           input = input,
+      list(input_args = input_args,
+           input_table = input_table,
            impact_raw = impact_raw)
 
     if(any(grepl("nest", names(impact_raw)))){
@@ -63,7 +63,7 @@ get_output <-
 
     if(unique(impact_raw$approach_risk) == "absolute_risk") {
 
-      output[["health_detailed"]][["agg_exp_cat"]] <-
+      output[["health_detailed"]][["impact_agg_exp_cat"]] <-
         output_last |>
         # Remove all impact rounded because
         # we have to round final results
@@ -78,8 +78,8 @@ get_output <-
             "exposure_dimension")),
           ~ paste(., collapse = ", ")))
 
-      output[["health_detailed"]][["agg_exp_cat"]] <-
-        output[["health_detailed"]][["agg_exp_cat"]] |>
+      output[["health_detailed"]][["impact_agg_exp_cat"]] <-
+        output[["health_detailed"]][["impact_agg_exp_cat"]] |>
         # Sum columns to summarize
         dplyr::group_by(
           across(-any_of(
@@ -104,7 +104,7 @@ get_output <-
         dplyr::mutate(impact_rounded = round(impact, 0))
 
 
-      output_last <- output[["health_detailed"]][["agg_exp_cat"]]
+      output_last <- output[["health_detailed"]][["impact_agg_exp_cat"]]
 
     }
 
@@ -112,7 +112,7 @@ get_output <-
     # only if geo_id_aggregated is defined
     if("geo_id_aggregated" %in% names(output_last)){
 
-      output[["health_detailed"]][["agg_geo"]]  <-
+      output[["health_detailed"]][["impact_agg_geo"]]  <-
         output_last |>
         # Group by higher geo level
         dplyr::group_by(across(any_of(
@@ -121,13 +121,13 @@ get_output <-
                             "erf_ci", "exp_ci", "bhd_ci", "dw_ci"))))
 
         if (!"population" %in% names(output_last)) {
-          output[["health_detailed"]][["agg_geo"]]  <- output[["health_detailed"]][["agg_geo"]] |>
+          output[["health_detailed"]][["impact_agg_geo"]]  <- output[["health_detailed"]][["impact_agg_geo"]] |>
           dplyr::summarise(impact = sum(impact),
                            impact_rounded = round(impact),
                            .groups = "drop")
 
         } else {
-          output[["health_detailed"]][["agg_geo"]]  <- output[["health_detailed"]][["agg_geo"]] |>
+          output[["health_detailed"]][["impact_agg_geo"]]  <- output[["health_detailed"]][["impact_agg_geo"]] |>
           dplyr::summarise(impact = sum(impact),
                            impact_rounded = round(impact),
                            population = sum(population),
@@ -136,7 +136,7 @@ get_output <-
         }
 
 
-      output_last <- output[["health_detailed"]][["agg_geo"]]
+      output_last <- output[["health_detailed"]][["impact_agg_geo"]]
 
     }
 
@@ -144,7 +144,7 @@ get_output <-
     # if approach_multiexposure == "additive"
     if(length(unique(impact_raw$exposure_name)) > 1){
 
-      output[["health_detailed"]][["agg_exp_names"]]  <-
+      output[["health_detailed"]][["impact_agg_exp_names"]]  <-
         output_last |>
         dplyr::mutate(
           exposure_name = paste(unique(exposure_name), collapse = ", ")) |>
@@ -155,7 +155,7 @@ get_output <-
                          impact_rounded = round(impact),
                          .groups = "drop")
 
-      output_last <- output[["health_detailed"]][["agg_exp_names"]]
+      output_last <- output[["health_detailed"]][["impact_agg_exp_names"]]
 
 
     }
