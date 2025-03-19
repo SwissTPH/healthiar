@@ -13,7 +13,7 @@
 #' @author Alberto Castro & Axel Luyten
 #' @export
 
-compare_health_new <-
+compare <-
   function(
     output_attribute_1,
     output_attribute_2,

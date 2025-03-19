@@ -1508,7 +1508,7 @@ check_bestcost(result_list_bestcost = bestcost_daly_from_yll_yld,
 # DELTA
 
 comparison_singlebhd_rr_delta_unpacked <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     
      output_attribute_1 = 
        attribute_health(
@@ -1559,7 +1559,7 @@ scen_2_singlebhd_rr_delta <-
     rr_increment = 10)
 
 comparison_singlebhd_rr_delta_packed <- 
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_singlebhd_rr_delta,
     output_attribute_2 = scen_2_singlebhd_rr_delta,
     approach_comparison = "delta")
@@ -1580,7 +1580,7 @@ scen_2_singlebhd_rr_delta_helper <-
     exp_central = 6)
 
 comparison_singlebhd_rr_delta_packed_helper <- 
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_singlebhd_rr_delta,
     output_attribute_2 = scen_2_singlebhd_rr_delta_helper,
     approach_comparison = "delta")
@@ -1593,7 +1593,7 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_packed_helpe
 
 # With same impact to test that there is no error.
 comparison_singlebhd_rr_delta_same_impact <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_singlebhd_rr_delta,
     output_attribute_2 = scen_1_singlebhd_rr_delta)
 
@@ -1622,7 +1622,7 @@ scen_2_singlebhd_rr_geo <-
   
 
 comparison_singlebhd_rr_delta_geo <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_singlebhd_rr_geo,
     output_attribute_2 = scen_2_singlebhd_rr_geo)
 
@@ -1634,7 +1634,7 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_geo ,
 #PIF
 # Test pif comparison function with fake values
 comparison_singlebhd_rr_pif <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_singlebhd_rr_delta,
     output_attribute_2 = scen_2_singlebhd_rr_delta,
     approach_comparison = "pif")
@@ -1649,7 +1649,7 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_pif ,
 # With iteration
 comparison_singlebhd_rr_pif_geo <-
   comparison_singlebhd_rr_pif <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_singlebhd_rr_geo,
     output_attribute_2 = scen_2_singlebhd_rr_geo,
     approach_comparison = "pif")
@@ -1693,7 +1693,7 @@ scen_2_singlebhd_rr_geo_large <-
 
 
 comparison_singlebhd_rr_geo_large <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_singlebhd_rr_geo_large,
     output_attribute_2 = scen_2_singlebhd_rr_geo_large)
 
@@ -1719,7 +1719,7 @@ scen_2_singlebhd_ar <-
 
 
 comparison_singlebhd_ar_delta <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     scen_1_singlebhd_ar,
     scen_2_singlebhd_ar)
 
@@ -1758,7 +1758,7 @@ scen_2_singlebhd_ar_geo <-
                       year = 2022))
 
 comparison_singlebhd_ar_delta_geo <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_singlebhd_ar_geo,
     output_attribute_2 = scen_2_singlebhd_ar_geo)
 
@@ -1781,7 +1781,7 @@ scen_2_singlebhd_yld <-
     exp_central = 6)
 
 comparison_yld_singlebhd_rr_delta <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_singlebhd_yld, 
     output_attribute_2 = scen_2_singlebhd_yld)
 
@@ -1815,7 +1815,7 @@ scen_2_singlebhd_yld_geo <-
     info = "PM2.5_yld_after")
 
 comparison_yld_singlebhd_rr_delta_geo <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_singlebhd_yld_geo, 
     output_attribute_2 = scen_2_singlebhd_yld_geo)
 
@@ -1828,7 +1828,7 @@ check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_delta_geo ,
 #PIF
 # Test pif comparison function with fake values
 comparison_yld_singlebhd_rr_pif <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     approach_comparison = "pif",
     output_attribute_1 = scen_1_singlebhd_yld, 
     output_attribute_2 = scen_2_singlebhd_yld)
@@ -1844,7 +1844,7 @@ check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_pif ,
 # Iteration
 # Test pif comparison function with fake values
 comparison_yld_singlebhd_rr_pif_geo <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     approach_comparison = "pif",
     output_attribute_1 = scen_1_singlebhd_yld_geo, 
     output_attribute_2 = scen_2_singlebhd_yld_geo)
@@ -1886,7 +1886,7 @@ scen_2_deaths_lifetable <-
     exp_central = 6)
 
 comparison_deaths_lifetable_delta <- 
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_deaths_lifetable,
     output_attribute_2 = scen_2_deaths_lifetable)
 
@@ -1926,7 +1926,7 @@ scen_2_deaths_lifetable_geo <-
     exp_central = list(6, 6.5)) # Fake data just for testing purposes
 
 comparison_deaths_lifetable_delta_geo <- 
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_deaths_lifetable_geo,
     output_attribute_2 = scen_2_deaths_lifetable_geo)
 
@@ -1940,7 +1940,7 @@ check_bestcost(result_list_bestcost = comparison_deaths_lifetable_delta_geo ,
 
 # PIF
 comparison_deaths_lifetable_pif <- 
-  healthiar::compare_health_new(
+  healthiar::compare(
     approach_comparison = "pif",
     output_attribute_1 = scen_1_deaths_lifetable,
     output_attribute_2 = scen_2_deaths_lifetable)
@@ -1954,7 +1954,7 @@ check_bestcost(result_list_bestcost = comparison_deaths_lifetable_pif ,
 
 # Iteration
 comparison_deaths_lifetable_pif_geo <- 
-  healthiar::compare_health_new(
+  healthiar::compare(
     approach_comparison = "pif",
     output_attribute_1 = scen_1_deaths_lifetable_geo,
     output_attribute_2 = scen_2_deaths_lifetable_geo)
@@ -1996,7 +1996,7 @@ scen_2_yll_lifetable <-
     exp_central = 6) # Fake data just for testing purposes
 
 comparison_yll_lifetable_delta <- 
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_yll_lifetable,
     output_attribute_2 = scen_2_yll_lifetable)
 
@@ -2039,7 +2039,7 @@ scen_2_yll_lifetable_geo <-
     exp_central = list(6, 6.5)) # Fake data just for testing purposes
 
 comparison_yll_lifetable_delta_geo <- 
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_yll_lifetable_geo,
     output_attribute_2 = scen_2_yll_lifetable_geo)
 
@@ -2054,7 +2054,7 @@ check_bestcost(result_list_bestcost = comparison_yll_lifetable_delta_geo ,
 
 # PIF
 comparison_yll_lifetable_pif <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     approach_comparison = "pif",
     output_attribute_1 = scen_1_yll_lifetable,
     output_attribute_2 = scen_2_yll_lifetable)
@@ -2068,7 +2068,7 @@ check_bestcost(result_list_bestcost = comparison_yll_lifetable_pif ,
 
 # Iteration
 comparison_yll_lifetable_pif_geo <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     approach_comparison = "pif",
     output_attribute_1 = scen_1_yll_lifetable_geo,
     output_attribute_2 = scen_2_yll_lifetable_geo)
@@ -2112,7 +2112,7 @@ scen_2_yld_lifetable <-
     exp_central = 6) # Fake data just for testing purposes
 
 comparison_yld_lifetable_delta <- 
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_yld_lifetable,
     output_attribute_2 = scen_2_yld_lifetable)
 
@@ -2156,7 +2156,7 @@ scen_2_yld_lifetable_geo <-
     exp_central = list(6, 6.5))# Fake data just for testing purposes
 
 comparison_yld_lifetable_delta_geo <- 
-  healthiar::compare_health_new(
+  healthiar::compare(
     output_attribute_1 = scen_1_yld_lifetable_geo,
     output_attribute_2 = scen_2_yld_lifetable_geo)
 
@@ -2168,7 +2168,7 @@ check_bestcost(result_list_bestcost = comparison_yld_lifetable_delta_geo ,
 
 # PIF
 comparison_yld_lifetable_pif <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     approach_comparison = "pif",
     output_attribute_1 = scen_1_yld_lifetable,
     output_attribute_2 = scen_2_yld_lifetable)
@@ -2182,7 +2182,7 @@ check_bestcost(result_list_bestcost = comparison_yld_lifetable_pif ,
 
 # Iteration
 comparison_yld_lifetable_pif_geo <-
-  healthiar::compare_health_new(
+  healthiar::compare(
     approach_comparison = "pif",
     output_attribute_1 = scen_1_yld_lifetable_geo,
     output_attribute_2 = scen_2_yld_lifetable_geo)
@@ -2220,12 +2220,12 @@ scen_2_yld <-
 comparison_daly_delta <- 
   healthiar::attribute_daly(
     output_attribute_yll =
-      healthiar::compare_health_new(
+      healthiar::compare(
         approach_comparison = "delta",
         output_attribute_1 = scen_1_yll, 
         output_attribute_2 = scen_2_yll),
     output_attribute_yld = 
-      healthiar::compare_health_new(
+      healthiar::compare(
         approach_comparison = "delta",
         output_attribute_1 = scen_1_yld, 
         output_attribute_2 = scen_2_yld))
@@ -2240,12 +2240,12 @@ check_bestcost(result_list_bestcost = comparison_daly_delta ,
 comparison_daly_pif <- 
   healthiar::attribute_daly(
     output_attribute_yll =
-      healthiar::compare_health_new(
+      healthiar::compare(
         approach_comparison = "pif",
         output_attribute_1 = scen_1_yll, 
         output_attribute_2 = scen_2_yll),
     output_attribute_yld = 
-      healthiar::compare_health_new(
+      healthiar::compare(
         approach_comparison = "pif",
         output_attribute_1 = scen_1_yld, 
         output_attribute_2 = scen_2_yld))
@@ -2286,12 +2286,12 @@ scen_2_yld_geo <-
 comparison_daly_delta_geo <- 
   healthiar::attribute_daly(
     output_attribute_yll =
-      healthiar::compare_health_new(
+      healthiar::compare(
         approach_comparison = "delta",
         output_attribute_1 = scen_1_yll_geo, 
         output_attribute_2 = scen_2_yll_geo),
     output_attribute_yld = 
-      healthiar::compare_health_new(
+      healthiar::compare(
         approach_comparison = "delta",
         output_attribute_1 = scen_1_yld_geo, 
         output_attribute_2 = scen_2_yld_geo))
@@ -2306,12 +2306,12 @@ check_bestcost(result_list_bestcost = comparison_daly_delta_geo ,
 comparison_daly_pif_geo <- 
   healthiar::attribute_daly(
     output_attribute_yll =
-      healthiar::compare_health_new(
+      healthiar::compare(
         approach_comparison = "pif",
         output_attribute_1 = scen_1_yll_geo, 
         output_attribute_2 = scen_2_yll_geo),
     output_attribute_yld = 
-      healthiar::compare_health_new(
+      healthiar::compare(
         approach_comparison = "pif",
         output_attribute_1 = scen_1_yld_geo, 
         output_attribute_2 = scen_2_yld_geo))
