@@ -3,7 +3,6 @@
 export(attribute_deaths_from_lifetable)
 export(attribute_health)
 export(attribute_mod)
-export(attribute_yld)
 export(attribute_yld_from_lifetable)
 export(attribute_yll_from_lifetable)
 export(cba)
