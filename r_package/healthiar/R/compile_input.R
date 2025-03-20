@@ -378,7 +378,7 @@ compile_input <-
           dplyr::summarize(population = sum(population, rm.na = TRUE))
 
         # Join the input without and with lifetable variable into one tibble
-        input <-
+        input_table <-
           dplyr::left_join(input_wo_lifetable,
                            lifetable_with_pop,
                            by = "geo_id_disaggregated",
@@ -389,8 +389,8 @@ compile_input <-
 
       } else {
       # If no lifetable, only use input_wo_lifetable
-      input <- input_wo_lifetable}
+      input_table <- input_wo_lifetable}
 
-  return(input)
+  return(input_table)
 
   }

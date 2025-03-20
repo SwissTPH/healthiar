@@ -185,7 +185,7 @@ get_deaths_yll_yld <-
 
         dplyr::mutate(
           impact_nest = purrr::pmap(
-            list(.x = lifeyears_nest, .y = last_year + 1, outcome_metric = unique(outcome_metric)),
+            list(.x = lifeyears_nest, .y = last_year, outcome_metric = unique(outcome_metric)),
             function(.x, .y, outcome_metric){
 
             ## If yll or yld
@@ -195,7 +195,7 @@ get_deaths_yll_yld <-
                 .x |>
 
                 ## Select all years within time horizon
-                dplyr::filter(.data = _, year < .y) |>
+                dplyr::filter(.data = _, year < .y+1) |>
 
                 ## Sum impact
                 dplyr::summarise(impact = sum(impact, na.rm = TRUE))

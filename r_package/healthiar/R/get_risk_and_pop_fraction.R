@@ -1,7 +1,7 @@
 #' Get input data and PAF
 
 #' @description Calculates the population attributable fraction (PAF) based on the input data and puts the results in additional columns joined to the input data frame.
-#' @param input \code{Data frame} with the input data
+#' @param input_table \code{Data frame} with the input data
 #' @param pop_fraction_type \code{String} indicating the type of the population fraction. Options: "paf" or "pif"
 #' @returns
 #' This function returns a \code{data.frame} with the input data adding a column for the population attributable fraction
@@ -19,7 +19,7 @@
 #' @keywords internal
 
 get_risk_and_pop_fraction <-
-  function(input,
+  function(input_table,
            pop_fraction_type){
 
 
@@ -52,10 +52,10 @@ get_risk_and_pop_fraction <-
     # Check if erf_eq is NULL before going into get_risk
     # Otherwise the variable is created without value and cannot be evaluated
     # We need to know erf_eq is NULL if statements within get_risk
-    if ( !"erf_eq" %in% names(input) ) { erf_eq <- NULL }
+    if ( !"erf_eq" %in% names(input_table) ) { erf_eq <- NULL }
 
     input_with_risk_and_pop_fraction <-
-      input |>
+      input_table |>
       ## Add pop fraction type
       dplyr::mutate(pop_fraction_type = pop_fraction_type)
 
@@ -97,12 +97,12 @@ get_risk_and_pop_fraction <-
       }
 
     # * Correction for multiexposure  ###############################################
-    if ( "approach_multiexposure" %in% names(input) ) {
+    if ( "approach_multiexposure" %in% names(input_table) ) {
 
       # * * Multiplicative approach ############################################
 
 
-      if ( unique(input$approach_multiexposure) %in% "multiplicative" ) {
+      if ( unique(input_table$approach_multiexposure) %in% "multiplicative" ) {
 
         ## In the multiplicative approach, relative risks have to be merged
         ## by multiplying across different exposures
@@ -213,8 +213,8 @@ get_risk_and_pop_fraction <-
 
     # * Correction for multiexposure ###########################################
 
-    if("approach_multiexposure" %in% names(input)){
-      if(unique(input$approach_multiexposure) %in% "combined"){
+    if("approach_multiexposure" %in% names(input_table)){
+      if(unique(input_table$approach_multiexposure) %in% "combined"){
 
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
@@ -252,7 +252,7 @@ get_risk_and_pop_fraction <-
 
     ## Only if exposure distribution (multiple exposure categories)
     ## then reduce the number of rows to keep the same number as in rr
-    if(unique(input$exposure_type) == "exposure_distribution"){
+    if(unique(input_table$exposure_type) == "exposure_distribution"){
     input_with_risk_and_pop_fraction <-
       collapse_df_by_columns(df = input_with_risk_and_pop_fraction,
                              columns_for_group = c(

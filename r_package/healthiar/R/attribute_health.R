@@ -12,7 +12,7 @@
 #'   erf_shape,
 #'   rr_central, rr_lower = NULL, rr_upper = NULL,
 #'   rr_increment,
-#'   exp_central, exp_lower = NULL, exp_upper = NULL
+#'   exp_central, exp_lower = NULL, exp_upper = NULL,
 #'   cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
 #'   bhd_central
 #' )

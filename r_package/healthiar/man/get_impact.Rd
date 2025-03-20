@@ -4,10 +4,10 @@
 \alias{get_impact}
 \title{Attributable health cases based on relative risk}
 \usage{
-get_impact(input, pop_fraction_type, population = NULL)
+get_impact(input_table, pop_fraction_type, population = NULL)
 }
 \arguments{
-\item{input}{\code{Data frame} containing all input data.}
+\item{input_table}{\code{Data frame} containing all input data.}
 
 \item{population}{code{Vector} providing the population (in each geographical unit).}
 }

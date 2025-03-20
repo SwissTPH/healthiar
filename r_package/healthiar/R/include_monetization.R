@@ -37,7 +37,7 @@ include_monetization <-
     if(approach_discount == "indirect"){
 
       outcome_metric <-
-        unique(output_healthiar[["health_detailed"]][["raw"]]$outcome_metric)
+        unique(output_healthiar[["health_detailed"]][["impact_raw"]]$outcome_metric)
 
       # Store the original data (they refer to health)
       output_health <- output_healthiar
@@ -45,14 +45,13 @@ include_monetization <-
       # Output will be adapted according to monetized impacts
       #TODO The names health are kept just provisionally until we adapt get_output()
       impact_detailed <-
-        output_health[["health_detailed"]][["raw"]] |>
+        output_health[["health_detailed"]][["impact_raw"]] |>
 
         ## Calculate total, discounted life years (single value) per sex & ci
         dplyr::mutate(
           impact_with_discount_nest = purrr::pmap(
-            list(.x = lifeyears_nest, .y = last_year + 1, .z = impact_for_discounting_nest),
-            function(.x, .y, .z){
-
+            list(.x = lifeyears_nest),
+            function(.x){
 
               ## Calculate total, discounted life years (single value) per sex & ci ####
               lifeyear_nest_with_and_without_discount <-
@@ -73,37 +72,51 @@ include_monetization <-
                                                  valuation = valuation) |>
                 purrr::pluck("monetization_main")
 
-
-              ## If yll or yld
-
-              if({{outcome_metric}} %in% c("yll", "yld")){
-
-                lifeyear_nest_with_and_without_discount <-
-                  ## Filter for the relevant years
-                  dplyr::filter(.data = lifeyear_nest_with_and_without_discount,
-                                year < .y) |>
-                  ## Sum among years to obtain the total impact (single value)
-                  dplyr::summarise(impact = sum(impact),
-                                   monetized_impact_before_inflation_and_discount = sum(monetized_impact_before_inflation_and_discount),
-                                   monetized_impact_after_inflation_and_discount = sum(monetized_impact_after_inflation_and_discount),
-                                   monetized_impact = sum(monetized_impact),
-                                   .groups = "drop")
-              }
-
               return(lifeyear_nest_with_and_without_discount)
 
-            }
-          )
-        )|>
+              }))
 
+      ## If yll or yld
+      if({{outcome_metric}} %in% c("yll", "yld")){
+
+        impact_detailed <-
+          impact_detailed |>
+          dplyr::mutate(
+            impact_with_discount_summed = purrr::pmap(
+              list(.x = impact_with_discount_nest),
+              function(.x, .y){
+                impact_with_summed_discount <-
+                  .x |>
+                  #Deactivated filter because probably not needed anymore
+                  #Year is always lower than the last_year and
+                  # the non-relevant years (>last_year) excluded from the calculation in get_deaths_yll_yld()
+                  #TODO To be confirmed
+                  # Filter for the relevant years
+                  # dplyr::filter(year < .y+1) |>
+                  ## Sum among years to obtain the total impact (single value)
+                  dplyr::summarise(
+                    impact = sum(impact, na.rm = TRUE),
+                    monetized_impact_before_inflation_and_discount = sum(monetized_impact_before_inflation_and_discount, na.rm = TRUE),
+                    monetized_impact_after_inflation_and_discount = sum(monetized_impact_after_inflation_and_discount, na.rm = TRUE),
+                    monetized_impact = sum(monetized_impact, na.rm = TRUE),
+                    .groups = "drop")
+
+                return(impact_with_summed_discount)
+              }
+
+            )
+          )
+      }
+
+      impact_detailed <-
+        impact_detailed |>
         # Remove column impact to avoid duplication
         dplyr::select(-impact) |>
         ## Unnest the obtained impacts to integrate them the main tibble
         ## Impact saved in column impact
-        tidyr::unnest(impact_with_discount_nest) |>
+        tidyr::unnest(impact_with_discount_summed) |>
         # Round results
         dplyr::mutate(
-
           # Round impacts and monetized impacts
           impact_rounded = round(impact),
           monetized_impact_rounded = round(monetized_impact),
@@ -127,13 +140,13 @@ include_monetization <-
 
       # Get the main and detailed output by aggregating and/or filtering cases (rows)
       output_monetization <-
-        healthiar:::get_output(impact_detailed) |>
+        healthiar:::get_output(impact_raw = impact_detailed) |>
         # Rename the list elements (not anymore health but health including monetization)
         setNames(c("monetization_main", "monetization_detailed"))
 
       # Keep only the main detailed data frame (raw) for monetization
       output_monetization[["monetization_detailed"]] <-
-        output_monetization[["monetization_detailed"]][["raw"]]
+        output_monetization[["monetization_detailed"]][["impact_raw"]]
 
       # Add the list elements health_main and health_detailed
       output_monetization <-
@@ -172,7 +185,7 @@ include_monetization <-
 
       #Detailed results showing all the details of the health results
       output_monetization[["monetization_detailed"]][["health_raw"]]<-
-        healthiar:::add_monetized_impact(df = output_healthiar[["health_detailed"]][["raw"]],
+        healthiar:::add_monetized_impact(df = output_healthiar[["health_detailed"]][["impact_raw"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},

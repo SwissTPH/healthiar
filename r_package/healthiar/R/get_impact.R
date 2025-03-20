@@ -2,7 +2,7 @@
 
 #' @description Calculates the health impacts for each uncertainty and geo area.
 #' @inheritParams attribute
-#' @param input \code{Data frame} containing all input data.
+#' @param input_table \code{Data frame} containing all input data.
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central, lower and upper bound confidence interval.
@@ -18,21 +18,21 @@
 #' @author Alberto Castro
 #' @keywords internal
 get_impact <-
-  function(input,
+  function(input_table,
            pop_fraction_type,
            population = NULL){
 
     # Relative risk ############################################################
 
-    if(unique(input$approach_risk) == "relative_risk"){
-      # Get pop_fraction and add to the input data frame
+    if(unique(input_table$approach_risk) == "relative_risk"){
+      # Get pop_fraction and add to the input_table data frame
       input_with_risk_and_pop_fraction <-
-        healthiar:::get_risk_and_pop_fraction(input = input,
+        healthiar:::get_risk_and_pop_fraction(input_table = input_table,
                                               pop_fraction_type = pop_fraction_type)
 
       # * Same input as output #################################################
 
-      if(unique(input$health_outcome) %in% "same_input_output") {
+      if(unique(input_table$health_outcome) %in% "same_input_output") {
 
         # Get pop_fraction and add it to the input data frame
         impact_raw <-
@@ -45,7 +45,7 @@ get_impact <-
                         everything())
 
         # * YLD ################################################################
-      } else if (unique(input$health_outcome) %in% "yld") {
+      } else if (unique(input_table$health_outcome) %in% "yld") {
 
         # Add impact
         impact_raw <-
@@ -59,11 +59,11 @@ get_impact <-
                         everything())
 
         # * Lifetable ##########################################################
-        } else if (unique(input$health_outcome) %in% c("deaths_from_lifetable",
+        } else if (unique(input_table$health_outcome) %in% c("deaths_from_lifetable",
                                                       "yll_from_lifetable",
                                                       "yld_from_lifetable")) {
           outcome_metric <-
-            gsub("_from_lifetable", "", unique(input$health_outcome))
+            gsub("_from_lifetable", "", unique(input_table$health_outcome))
 
           pop_impact <-
             healthiar:::get_pop_impact(
@@ -77,33 +77,20 @@ get_impact <-
               pop_impact = pop_impact,
               input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
-    } else if (unique(input$health_outcome) %in% "daly_from_lifetable"){
-
-      pop_impact <-
-        healthiar:::get_pop_impact(
-          input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction,
-          outcome_metric = "daly"
-          )
-
-
-      impact_raw <-
-        healthiar:::get_daly(
-          pop_impact = pop_impact,
-          input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction
-        )
     }
 
 
       # Absolute risk ##########################################################
 
     } else if (
-      unique(input$approach_risk) == "absolute_risk" &
-      ( unique(input$health_outcome) == "same_input_output" | unique(input$health_outcome) == "yld" )
+      unique(input_table$approach_risk) == "absolute_risk" &
+      ( unique(input_table$health_outcome) == "same_input_output" |
+        unique(input_table$health_outcome) == "yld" )
       ) {
 
       # Calculate absolute risk for each exposure category
       impact_raw <-
-        input |>
+        input_table |>
         dplyr::rowwise() |>
         dplyr::mutate(
           absolute_risk_as_percent = healthiar::get_risk(exp = exp, erf_eq = erf_eq),
@@ -114,7 +101,7 @@ get_impact <-
 
       # * YLD ##################################################################
 
-      if ( unique(input$health_outcome) == "yld" ) {
+      if ( unique(input_table$health_outcome) == "yld" ) {
 
         impact_raw <-
           impact_raw |>
@@ -139,7 +126,7 @@ get_impact <-
         dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
         dplyr::left_join(
           x = _,
-          y = input |>
+          y = input_table |>
             dplyr::group_by(across(any_of(c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")))) |> # if cutoff argument not specified in attribute argument call then "cutoff_ci" is not used to group
             dplyr::summarize(exp = list(exp),
                              prop_pop_exp = list(prop_pop_exp),
@@ -148,7 +135,7 @@ get_impact <-
             dplyr::select(c(exp_ci, erf_ci, exp, prop_pop_exp, exposure_dimension)),
           by = c("exp_ci", "erf_ci")
         )|>
-        dplyr::mutate(exposure_type = input$exposure_type |> dplyr::first())
+        dplyr::mutate(exposure_type = input_table$exposure_type |> dplyr::first())
 
       # * Multiple geo units ###################################################
 
@@ -161,7 +148,7 @@ get_impact <-
         dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
         dplyr::left_join(
           x = _,
-          y = input |>
+          y = input_table |>
             dplyr::group_by(across(any_of(c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")))) |> # if cutoff argument not specified in attribute argument call then "cutoff_ci" is not used to group
             dplyr::summarize(exp = list(exp),
                              prop_pop_exp = list(prop_pop_exp), # Introduced error in ar pathway
@@ -170,7 +157,7 @@ get_impact <-
             dplyr::select(c(exp_ci, erf_ci, exp, prop_pop_exp, exposure_dimension, geo_id_disaggregated)),
           by = c("exp_ci", "erf_ci", "geo_id_disaggregated")
         )|>
-        dplyr::mutate(exposure_type = input$exposure_type |> dplyr::first())
+        dplyr::mutate(exposure_type = input_table$exposure_type |> dplyr::first())
 
     }
 
@@ -189,8 +176,6 @@ get_impact <-
         )
     }
 
-
-
-    return(impact_raw)
+  return(impact_raw)
 
   }

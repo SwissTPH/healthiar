@@ -39,6 +39,8 @@ attribute_yld_from_lifetable(
   cutoff_central,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
+  geo_id_disaggregated = NULL,
+  geo_id_aggregated = NULL,
   info = NULL
 )
 }
@@ -86,6 +88,13 @@ If exposure categories are used, the dimension of this input must be the same as
 
 \item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} showing the central exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
 The cutoff level refers to the exposure level below which no health effects occur.}
+
+\item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
+If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
+
+\item{geo_id_aggregated}{\code{Numeric vector} an ID for each geographic area that specifies which geographic areas should be aggregated together.
+E.g. if you provide the municipality names to \code{geo_id_disaggregated}, you might provide here the corresponding region / canton / province.
+Consequently The vector has to have the same length as the one fed to \code{geo_id_disaggregated}.}
 
 \item{info}{\code{String} or {data.frame} providing additional information linked with the assessment.
 The suffix "info" will be added to the column name.

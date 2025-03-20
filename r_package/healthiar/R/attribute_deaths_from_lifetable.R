@@ -34,6 +34,7 @@ attribute_deaths_from_lifetable <-
            population_midyear_male, population_midyear_female,
            year_of_analysis,
            min_age = NULL, max_age = NULL,
+           geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
            info = NULL){
 
     output <-
@@ -58,7 +59,7 @@ attribute_deaths_from_lifetable <-
         population_midyear_male = population_midyear_male, population_midyear_female = population_midyear_female,
         year_of_analysis = year_of_analysis,
         min_age = min_age, max_age = max_age,
-        geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
+        geo_id_disaggregated = geo_id_disaggregated, geo_id_aggregated = geo_id_aggregated,
         info = info)
 
     return(output)

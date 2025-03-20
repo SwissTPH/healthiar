@@ -91,8 +91,12 @@ attribute <-
     #length(exp) == length(prop_pop_exp)
     #})
 
+
+    # Capture all arguments and values
+    input_args <- as.list(environment())
+
     # Compile input data
-    input <-
+    input_table <-
       healthiar:::compile_input(
         approach_risk = approach_risk,
         approach_multiexposure = approach_multiexposure,
@@ -128,12 +132,14 @@ attribute <-
 
     # Calculate the health impacts for each case (uncertainty, category, geo area...)
     impact_raw <-
-      healthiar:::get_impact(input = input,
+      healthiar:::get_impact(input_table = input_table,
                              pop_fraction_type = "paf")
 
     # Get the main and detailed output by aggregating and/or filtering cases (rows)
     output <-
-      healthiar:::get_output(impact_raw)
+      healthiar:::get_output(input_args = input_args,
+                             input_table = input_table,
+                             impact_raw = impact_raw)
 
     return(output)
   }

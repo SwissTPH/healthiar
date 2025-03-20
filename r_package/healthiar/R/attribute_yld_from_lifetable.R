@@ -30,6 +30,8 @@ attribute_yld_from_lifetable <-
     exp_central, exp_lower = NULL, exp_upper = NULL,
     prop_pop_exp = 1,
     cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+    #geo iterations
+    geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
     ## Meta-info
     info = NULL
   ) {
@@ -58,7 +60,7 @@ attribute_yld_from_lifetable <-
         min_age = min_age, max_age = max_age,
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
         duration_central = duration_central, duration_lower = duration_lower, duration_upper = duration_upper,
-        geo_id_disaggregated = NULL , geo_id_aggregated = NULL,
+        geo_id_disaggregated = geo_id_disaggregated, geo_id_aggregated = geo_id_aggregated,
         info = info)
 
     return(output)

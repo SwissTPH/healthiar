@@ -111,7 +111,8 @@ add_monetized_impact  <- function(df,
         healthiar::get_discount_factor(
           discount_rate = discount_rate_with_inflation,
           discount_year = discount_year,
-          discount_shape = discount_shape))
+          discount_shape = discount_shape)) |>
+    dplyr::ungroup()
 
 
     df_by_year <-

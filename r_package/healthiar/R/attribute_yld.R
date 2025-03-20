@@ -55,7 +55,7 @@ attribute_yld <-
         min_age = NULL, max_age = NULL,
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
         duration_central = duration_central, duration_lower = duration_lower, duration_upper = duration_upper,
-        geo_id_disaggregated = NULL , geo_id_aggregated = NULL,
+        geo_id_disaggregated = geo_id_disaggregated , geo_id_aggregated = geo_id_aggregated,
         info = info)
 
 

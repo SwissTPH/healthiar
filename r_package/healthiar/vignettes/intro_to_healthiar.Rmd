@@ -380,7 +380,7 @@ We see that there are fewer columns than for a single geo unit assessment with `
 The geo unit specific information and results are stored in `health_detailed`. Filter for the main result for each geo unit as follows
 
 ```{r inspect iteration detailed results}
-results_iteration[["health_detailed"]][["raw"]] |>
+results_iteration[["health_detailed"]][["impact_raw"]] |>
   pluck() |> 
   ## Select main result for each geo unit
   ## i.e. rows where all ..._ci columns have value "central"

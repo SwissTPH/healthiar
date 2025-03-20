@@ -33,7 +33,7 @@ include_social <- function(output_healthiar = NULL,
     # * Add social_indicator to detailed output ################################
 
     output_social <-
-      output_healthiar[["health_detailed"]][["raw"]] |>
+      output_healthiar[["health_detailed"]][["impact_raw"]] |>
       dplyr::left_join(
         x = _,
         y = dplyr::tibble(geo_id_disaggregated = geo_id_disaggregated,
@@ -385,7 +385,7 @@ include_social <- function(output_healthiar = NULL,
 
     output_social[["social_detailed"]][["results_detailed"]] <- social_results
     output_social[["social_detailed"]][["impact_per_quantile"]] <- output_social_by_quantile
-    output_social[["input"]] <- output_social
+    output_social[["input_table"]] <- output_social
 
     return(output_social)
 
