@@ -581,7 +581,7 @@ bestcost_pm_death <-
 
 # Then include social indicators of deprivation 
 bestcost_pm_death_social_decile <- 
-  healthiar::include_social(output_healthiar = bestcost_pm_death,
+  healthiar::socialize(output_healthiar = bestcost_pm_death,
                             geo_id_disaggregated = social_data$CS01012020,
                             social_indicator = social_data$score,
                             n_quantile = 10,
@@ -614,7 +614,7 @@ bestcost_pm_death <-
 
 # Then include social indicators of deprivation 
 bestcost_pm_death_social_decile_impact_vector <- 
-  healthiar::include_social(impact = bestcost_pm_death[["health_main"]]$impact,
+  healthiar::socialize(impact = bestcost_pm_death[["health_main"]]$impact,
                             population = bestcost_pm_death[["health_main"]]$population,
                             bhd = bestcost_pm_death[["health_main"]]$bhd,
                             exp = bestcost_pm_death[["health_main"]]$exp,
