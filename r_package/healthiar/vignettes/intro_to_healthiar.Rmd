@@ -255,7 +255,7 @@ You can monetize the obtained health impacts via the `include_monetization` func
 
 ```{r monetization}
 results_pm_copd <- 
-  include_monetization(
+  monetize(
     output_healthiar = results_pm_copd,
     approach_discount = "direct",
     discount_shape = "exponential",

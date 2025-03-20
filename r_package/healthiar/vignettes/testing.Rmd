@@ -772,7 +772,7 @@ See start of the section [Testing templates] for guidance on how to access funct
 # data <- ...
 
 ## healthiar FUNCTION CALL
-healthiar::include_monetization(
+healthiar::monetize(
   approach_discount = ,
   output_healthiar = NULL, # Only specify one of either "output_healthiar" or "impact" argument 
   impact = , # Only specify one of either "output_healthiar" or "impact" argument 
@@ -805,7 +805,7 @@ testthat::test_that("results correct [pathway_id]", {
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
-      healthiar::include_monetization(
+      healthiar::monetize(
         approach_discount = ,
         output_healthiar = NULL, # Only specify one of either "output_healthiar" or "impact" argument 
         impact = , # Only specify one of either "output_healthiar" or "impact" argument 
