@@ -5,7 +5,7 @@
 \title{Compile input}
 \usage{
 compile_input(
-  health_outcome = NULL,
+  is_lifetable = NULL,
   approach_multiexposure = NULL,
   approach_risk = NULL,
   exp_central,
@@ -39,6 +39,7 @@ compile_input(
   dw_central = NULL,
   dw_lower = NULL,
   dw_upper = NULL,
+  health_outcome = NULL,
   approach_exposure = NULL,
   approach_newborns = NULL,
   year_of_analysis = NULL,
@@ -52,7 +53,7 @@ compile_input(
 )
 }
 \arguments{
-\item{health_outcome}{\code{String} specifying the (input and) outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".}
+\item{is_lifetable}{\code{Boolean} argument specifying if the life table approach is applied (TRUE) or not (FALSE)}
 
 \item{approach_multiexposure}{\code{String} specifying the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined". Default: \code{NULL} (i.e. no other exposure is considered besides the one specified in the \code{exp.._ argument(s)})}
 
@@ -101,6 +102,8 @@ Default value = \code{NULL}.}
 \item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval (default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).}
 
 \item{dw_central, dw_lower, dw_upper}{\code{Numeric value(s)} providing the disability weight associated with the morbidity health outcome and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
+
+\item{health_outcome}{\code{String} specifying if the result of the assessment with life table is premature deaths ("deaths") or years of life lost ("yll")}
 
 \item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: "single_year" (default), "constant".}
 
