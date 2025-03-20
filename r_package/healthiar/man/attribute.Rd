@@ -14,6 +14,7 @@ attribute(
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
   erf_eq_upper = NULL,
+  pop_exp = NULL,
   prop_pop_exp = 1,
   exp_central,
   exp_lower = NULL,
@@ -64,6 +65,8 @@ If a \code{string} is entered, the function must contains only one variable: x (
 If a \code{function} is fed to the argument, it has be of the class function class, e.g. output from the functions \code{stats::splinefun()} or \code{stats::approxfun()}.
 If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use a cubic spline natural interpolation to derive the exposure-response function using, e.g. \code{stats::splinefun(x, y, method="natural")}.}
 
+\item{pop_exp}{\code{Numeric vector} referring to the population exposed for each exposure category.}
+
 \item{prop_pop_exp}{\code{Numeric value} or \code{Numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to each exposure categories.
 If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.}
 
@@ -106,7 +109,7 @@ Consequently The vector has to have the same length as the one fed to \code{geo_
 \item{time_horizon}{\code{Numeric value} corresponding to time horizon (number of years) for which the impacts of exposure are to be considered.
 For example, would be 10 if one is interested in the impacts of exposure during the year of analysis and the next 9 years.}
 
-\item{population}{code{Vector} providing the population (in each geographical unit).}
+\item{population}{\code{Numeric value} or \code{Vector} referring to the total population, including both exposed and non-exposed (in each geographical unit). Only to be used to assess relative impact per 100k inhabitants.}
 
 \item{health_outcome}{\code{String} specifying the (input and) outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".}
 
