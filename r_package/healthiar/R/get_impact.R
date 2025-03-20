@@ -110,7 +110,7 @@ get_impact <-
           pop_exp = population * prop_pop_exp,
           impact = absolute_risk_as_percent/100 * pop_exp,
           impact_rounded = round(impact, 0)) |>
-          ungroup()
+          dplyr::ungroup()
 
       # * YLD ##################################################################
 

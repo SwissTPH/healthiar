@@ -74,7 +74,7 @@ Consequently The vector has to have the same length as the one fed to \code{geo_
 
 \item{approach_multiexposure}{\code{String} specifying the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined". Default: \code{NULL} (i.e. no other exposure is considered besides the one specified in the \code{exp.._ argument(s)})}
 
-\item{population}{code{Vector} providing the population (in each geographical unit).}
+\item{population}{\code{Vector} providing the population (in each geographical unit).}
 
 \item{info}{\code{String} or {data.frame} providing additional information linked with the assessment.
 The suffix "info" will be added to the column name.

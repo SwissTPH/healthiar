@@ -25,7 +25,7 @@ format:
     incremental: true
     transition: none # alts: fade, none, slide
     transition-speed: default
-    table-of-contents: true
+    table-of-contents: false
     toc-depth: 2
     logo: images/combo_logo_stph_bc.png
     # footer: 'healthiar WP5 workshop 1'
@@ -60,15 +60,44 @@ Let's start by checking out the [BEST-COST GitHub repo](https://github.com/best-
 
 [![Landing page of the BEST-COST GitHub repo. The README file tells you how to get started. The folder r_package contains package-related files (including function code). Developments are discussed and documented under Issues.](images/bc_github_repo.png)](https://github.com/best-cost/best-cost_WPs)
 
-## *`healthiar`* in RStudio 1/2 {.scrollable}
+## README
+
+The [README file](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme) contains the following information
+
+-   [GET STARTED WITH THE *healthiar* R PACKAGE](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#get-started-with-the-healthiar-r-package)
+
+-   [Initial installation of the *healthiar* package from GitHub](Initial installation of the healthiar package from GitHub)
+
+-   [TERMS OF USE](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#terms-of-use)
+
+-   [NOTE](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#note)
+
+-   [DISCLAIMER](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#disclaimer)
+
+. . .
+
+![README file of the `healthiar` R package](images/readme.png)
+
+
+## About *`healthiar`*
+
+The main function family of `healthiar` is the `attribute` family, used to attribute health impacts to a (environmental) risk factor, e.g. noise or air pollution. 
+The core function `attribute_health` can be used for most assessments.
+
+![Figure: `healthiar` overview](images/EPHC_poster_landscape_v0.2.2_only_package_overview.jpg){width="700"}
+
+## *`healthiar`* in RStudio 1/3
+
+![RStudio startup screen](images/rstudio_startup_screen.png)
+
+## *`healthiar`* in RStudio 2/3
 
 Post installation, you can access the `healthiar` package landing page in RStudio by going to the *Packages* tab and then clicking on the `healthiar` package.
 
 ![](images/rstudio_how_to_access_package_landing_page.png)
 
-## note: Screen shot readme after screenshot BC git
 
-## *`healthiar`* in RStudio 2/2
+## *`healthiar`* in RStudio 3/3
 
 note: first screenshot of full screen note: mention vignette opens as pdf or html
 
@@ -76,11 +105,48 @@ note: first screenshot of full screen note: mention vignette opens as pdf or htm
 
 ## Vignette
 
-note: show vignette
+![The vignette introduces `healthiar` step-by-step and contains (reproducible) examples. You can open the `intro_to_healthiar` vignette within RStudio or as a *HTML* within your browser.](images/rstudio_intro_vignette.png)
 
-## Fun doc
+. . .
+
+::: callout-note
+The vignette is a work in progress: we appreciate any feedback or suggestions you might have to make it more useful to future users!
+:::
+
+## Function documentation (1/) - Overview
+
+Access the function documentation (= fun doc) by clicking on a function name in the package landing page.
+
+::: callout-tip
+When the package is loaded (via `library(healthiar)`) access the fun doc of e.g. `attribute_health` by running `?attribute_health`.
+:::
+
+. . .
+
+Any fun doc contains the following sections:
+- *Title* Essence of the function
+- *Description* What does the function do exactly?
+- *Usage* Bare-minimum examples of how to use the function (includes default values if there are any)
+- *Arguments* Short description of each function argument: input type (`numeric` vs. `string`), options (if available), how each argument affects the output.
+- *Details* (optional) Additional details about the function
+- *Value* Information about the function output
+- *Examples* (optional) Shows how the function works
+
+## Title
+
+## Description
+
+## Usage
+
+## Arguments
+
+## Details
+
+Warning: not very developped right now. More details in the vignette.
 
 note: show fun doc of attribute_healthiar
+
+## Value
 
 ## Workflow BoD
 
@@ -90,34 +156,33 @@ note: quickly introduce the main workflow of burden assessments
 
 note: Quickly show function families
 
-## healthiar poster
-
-note: Figure out where to put it best
-
 ## Example: `attribute` call without input uncertainties
 
-Attribute COPD cases to air pollution
+Goal: attribute COPD cases to air pollution
 
 ::: panel-tabset
 ## Hard-coded input data
 
-# note: add erf alternatives to function call with #; write out baseline health data
 
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
 #| code-line-numbers: "|1|2|3|4-7|8|9|10"
 
 results_pm_copd <-
   healthiar::attribute_health(
-    erf_shape = "log_linear",
+    erf_shape = "log_linear", # Alternatives: "linear", "log_log"
     rr_central = 1.369, 
-    rr_increment = 10, 
+    rr_increment = 10,  # μg / m^3
     exp_central = 8.85, # μg / m^3
     cutoff_central = 5, # μg / m^3
-    bhd_central = 30747 # COPD incidence
+    bhd_central = 30747 # baseline health data: COPD incidence
   ) 
 ```
 
 ## Pre-loaded data
+
+::: callout-tip
+`healthiar` comes with some example data that start with `exdat_` that allow you to test functions.
+:::
 
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
 
@@ -151,12 +216,14 @@ note: screenshot of how to click on variable in env (put that as first option) .
 #### Different ways to access the results
 
 ::: callout-tip
-#### Tip
-
-This is really about personal preference! However, you might encounter them all.
+This is personal preference! However, you might encounter all options.
 :::
 
 ::: panel-tabset
+## By clicking
+Go to the *Environment* tab in RStudio and click on a variable to "open" it.
+Alternatively, you can use `View(results_pm_copd)`, which has the same effect. 
+
 ## With `$` operator
 
 `results_pm_copd$health_main$impact_rounded`
@@ -176,11 +243,19 @@ Using the `purrr::pluck` function to select a list and then the `dplyr::pull` fu
 `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
 
 Note: available options can't be displayed automatically using these functions -\> better suited for a more permanent analysis script
-
-## With `View()`
-
-`View(results_pm_copd)` will "open" the variable in a new window within RStudio. Alternatively, you can go to the *Environment* tab and click on the variable to open the same view mode.
 :::
+
+## Let's check the main output!
+
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_pm_copd[["health_main"]]
+```
+
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_pm_copd[["health_detailed"]][["raw"]] |> 
+  select(exp, bhd, rr, erf_ci, pop_fraction, impact_rounded) |> 
+  knitr::kable()
+```
 
 ## Example: `attribute` with input uncertainties
 
@@ -206,17 +281,11 @@ results_pm_copd <-
   ) 
 ```
 
-## Main output
-
-note: look into main output
-
 ## Let's check the detailed output!
-
+<!-- #TODO -->
 :::: {.fragment .fade-in}
 ::: callout-tip
-#### Tip
-
-See the intro vignette for a detailed description of output columns (coming soon)
+See the intro vignette for a detailed description of output columns.
 :::
 ::::
 
@@ -224,10 +293,7 @@ See the intro vignette for a detailed description of output columns (coming soon
 The `health_detailed` output table contains all different combinations of the arguments with uncertainty. E.g. `rr_central` with `exp_lower` and `bhd_upper`, ...
 :::
 
-note: hide knitr::kable() call 
-
 ::: {.fragment .fade-in}
-
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
 results_pm_copd[["health_detailed"]][["raw"]]
 ```
@@ -235,8 +301,6 @@ results_pm_copd[["health_detailed"]][["raw"]]
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
 results_pm_copd[["health_detailed"]][["raw"]] |> knitr::kable()
 ```
-
-
 :::
 
 ## Example: `attribute` with exposure categories (noise)

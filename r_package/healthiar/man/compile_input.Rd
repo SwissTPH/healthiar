@@ -93,7 +93,7 @@ Consequently The vector has to have the same length as the one fed to \code{geo_
 The suffix "info" will be added to the column name.
 Default value = \code{NULL}.}
 
-\item{population}{code{Vector} providing the population (in each geographical unit).}
+\item{population}{\code{Vector} providing the population (in each geographical unit).}
 
 \item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval (default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).}
 

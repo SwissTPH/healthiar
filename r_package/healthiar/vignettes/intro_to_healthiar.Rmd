@@ -1,6 +1,9 @@
 ---
-title: "Get started with healthiar"
-output: rmarkdown::html_vignette
+title: "Intro to healthiar"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 4
 vignette: >
   %\VignetteIndexEntry{intro_to_healthiar}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,6 +17,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(rmarkdown.html_vignette.check_title = FALSE)
 
 library(healthiar)
 library(tibble)

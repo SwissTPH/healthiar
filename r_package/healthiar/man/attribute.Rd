@@ -106,7 +106,7 @@ Consequently The vector has to have the same length as the one fed to \code{geo_
 \item{time_horizon}{\code{Numeric value} corresponding to time horizon (number of years) for which the impacts of exposure are to be considered.
 For example, would be 10 if one is interested in the impacts of exposure during the year of analysis and the next 9 years.}
 
-\item{population}{code{Vector} providing the population (in each geographical unit).}
+\item{population}{\code{Vector} providing the population (in each geographical unit).}
 
 \item{health_outcome}{\code{String} specifying the (input and) outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".}
 
