@@ -31,6 +31,7 @@
 #' The suffix "info" will be added to the column name.
 #' Default value = \code{NULL}.
 # Lifetable parameters
+#' @param health_outcome \code{String} specifying if the result of the assessment with life table is premature deaths ("deaths") or years of life lost ("yll")
 #' @param approach_exposure \code{String} specifying whether exposure is constant or only in one year. Options: "single_year" (default), "constant".
 #' @param approach_newborns \code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". If "with_newborns" is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.
 #' @param first_age_pop \code{Numeric value} specifying the age of the youngest age group from population and life table data (age interval = 1 year).
@@ -41,7 +42,7 @@
 #' For example, would be 10 if one is interested in the impacts of exposure during the year of analysis and the next 9 years.
 #' @param min_age \code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. By default 30, which implies that all adults aged 30 or older will be affected by the exposure.
 #' @param max_age \code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.
-#' @param health_outcome \code{String} specifying the (input and) outcome metric to assess attributable health impacts. To choose between "same_input_output" (default), "yld", "deaths_from_lifetable", "yll_from_lifetable", "yld_from_lifetable" and "daly_from_lifetable".
+#' @param is_lifetable \code{Boolean} argument specifying if the life table approach is applied (TRUE) or not (FALSE)
 #' @returns
 #' This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
 #' 2) \code{health_detailed}, which contains detailed (and interim) results.
@@ -56,7 +57,8 @@
 
 
 attribute_master <-
-  function(approach_risk = "relative_risk",
+  function(is_lifetable = NULL,
+           approach_risk = NULL,
            ## Risk and shape arguments
            rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
            rr_increment = NULL, erf_shape = NULL,
@@ -73,19 +75,20 @@ attribute_master <-
            ## Multiexposure
            approach_multiexposure = NULL,
            ## Lifetable arguments
+           health_outcome = NULL,
            population_midyear_male = NULL, population_midyear_female = NULL,
            deaths_male = NULL, deaths_female = NULL, # For AirQ+ method for lifetable
            first_age_pop = NULL, last_age_pop = NULL,
            min_age = NULL, max_age = NULL,
            year_of_analysis = NULL,
+           approach_newborns = NULL,
+           time_horizon = NULL,
+           # YLD arguments
            dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
            duration_central = NULL, duration_lower = NULL, duration_upper = NULL,
            approach_exposure = NULL,
-           approach_newborns = NULL,
-           time_horizon = NULL,
            ## Meta-information
            population = NULL,
-           health_outcome = "same_input_output",
            info = NULL){
 
     # Check input data
@@ -100,6 +103,7 @@ attribute_master <-
     # Compile input data
     input_table <-
       healthiar:::compile_input(
+        is_lifetable = is_lifetable,
         approach_risk = approach_risk,
         approach_multiexposure = approach_multiexposure,
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
@@ -114,12 +118,12 @@ attribute_master <-
         geo_id_disaggregated = geo_id_disaggregated,
         geo_id_aggregated = geo_id_aggregated,
         info = info,
-        health_outcome = health_outcome,
         population = population,
         # YLD
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
         duration_central = duration_central, duration_lower = duration_lower, duration_upper = duration_upper,
         # Lifetable arguments if needed
+        health_outcome = health_outcome,
         approach_exposure = approach_exposure,
         approach_newborns = approach_newborns,
         year_of_analysis = year_of_analysis,

@@ -19,7 +19,7 @@
 #' @keywords internal
 
 compile_input <-
-  function(health_outcome = NULL,
+  function(is_lifetable = NULL,
            approach_multiexposure = NULL,
            approach_risk = NULL,
            exp_central, exp_lower = NULL, exp_upper = NULL,
@@ -41,6 +41,7 @@ compile_input <-
            duration_central = NULL, duration_lower = NULL, duration_upper = NULL,
            dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
            # Lifetable data
+           health_outcome = NULL,
            approach_exposure = NULL,
            approach_newborns = NULL,
            year_of_analysis = NULL,
@@ -131,6 +132,7 @@ compile_input <-
 
 
 
+
     # ARGUMENTS ################################################################
 
     # Store the length of the exposure argument (to be used below)
@@ -143,7 +145,7 @@ compile_input <-
       ifelse(is.list(exp_central),
              length(exp_central),      # If multiple geo units
              1)                        # If only one geo unit
-# browser()
+
     input_wo_lifetable <-
       # Tibble converts NULL into NA: if variable is NULL, column not initiated
       dplyr::tibble(
@@ -167,13 +169,14 @@ compile_input <-
         cutoff_upper = cutoff_upper,
         approach_exposure = approach_exposure,
         approach_newborns = approach_newborns,
+        is_lifetable = is_lifetable,
         year_of_analysis = year_of_analysis,
         time_horizon = time_horizon,
         min_age = ifelse(
           test = !is.null( min_age ),
           yes = min_age,
           no = ifelse(
-            test = ( is.null ( min_age ) & grepl("lifetable", health_outcome) ),
+            test = ( is.null ( min_age ) & {{is_lifetable}} ),
             yes = first_age_pop,
             # no = NULL)
           no = NA)
@@ -182,7 +185,7 @@ compile_input <-
           test = !is.null( max_age ),
           yes = max_age,
           no = ifelse(
-            test = ( is.null ( max_age ) & grepl("lifetable", health_outcome) ),
+            test = ( is.null ( max_age ) & {{is_lifetable}} ),
             yes = last_age_pop,
             # no = NULL)
           no = NA)),
@@ -294,7 +297,8 @@ compile_input <-
 
     # CREATE LIFETABLES ##########################################################
     # As nested tibble
-    if ( grepl("lifetable", health_outcome) ) {
+
+    if (is_lifetable) {
 
       # Build the data set for lifetable-related data
       # The life table has to be provided (by sex)
@@ -375,6 +379,7 @@ compile_input <-
 
 
       # JOIN TIBBLES ###########################################################
+
         # Calculate total population for impacts per 100k inhab.
         population <-
           lifetable_with_pop_total %>%
@@ -394,6 +399,7 @@ compile_input <-
       } else {
       # If no lifetable, only use input_wo_lifetable
       input_table <- input_wo_lifetable}
+
 
   return(input_table)
 

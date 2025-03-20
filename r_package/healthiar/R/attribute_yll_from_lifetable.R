@@ -81,8 +81,9 @@ attribute_yll_from_lifetable <-
 
     output <-
       healthiar:::attribute_master(
+        is_lifetable = TRUE,
         ## Calculation specification
-        health_outcome = "yll_from_lifetable", # Set outcome metric
+        health_outcome = "yll_from_lifetable",
         approach_risk = "relative_risk",
         approach_exposure = approach_exposure,
         approach_newborns = approach_newborns,

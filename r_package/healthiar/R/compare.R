@@ -178,7 +178,7 @@ compare <-
         ## Added if statement below to avoid error in the non-lifetable cases
         # input_args_1 and input_args_2 should have the same health_outcome (see checks above)
         # So let's use e.g. input_args_1
-        if(stringr::str_detect(input_args_1$health_outcome, "lifetable") ) {
+        if(input_args_1$is_lifetable) {
           # Calculate the health impacts for each case (uncertainty, category, geo area...)
           impact_raw <-
             healthiar:::get_impact(
