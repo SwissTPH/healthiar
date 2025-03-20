@@ -679,14 +679,14 @@ bestcost_pm_copd_with_summary_uncertainty <-
 # View(bestcost_pm_copd_with_summary_uncertainty)
 
 bestcost_pm_copd_extern_uncertainty <-
-  healthiar::include_summary_uncertainty(
+  healthiar::summarize_uncertainty(
     res = bestcost_pm_copd_with_summary_uncertainty,
     n_sim = 100)
 
 # Comparison central +- 95% CIs & Monte-Carlo central, lower, upper estimates
 ## Central estimates
 print("Main estimates: ") ; bestcost_pm_copd_with_summary_uncertainty[["health_main"]][["impact_rounded"]]
-## With external uncertainty function (i.e. include_summary_uncertainty())
+## With external uncertainty function (i.e. summarize_uncertainty())
 print("Summary uncertainty estimates (extern uncertainty function): ")
 round(as.numeric(bestcost_pm_copd_extern_uncertainty[["uncertainty_main"]]), digits = 0)
 bestcost_pm_copd_extern_uncertainty |>
@@ -724,7 +724,7 @@ check_bestcost(result_list_bestcost = bestcost_pm_copd_geo_short,
                result_vector_alternative = c(32449, 12508, 50836)) # Results on 5 November 2024
 
 bestcost_pm_copd_geo_short_uncertainty <- 
-  healthiar::include_summary_uncertainty(
+  healthiar::summarize_uncertainty(
     bestcost_pm_copd_geo_short,
     n_sim = 100)
 
@@ -769,7 +769,7 @@ bestcost_noise_ihd_expDist <-
 # View(bestcost_noise_ihd_expDist)
 
 # Calculate summary uncertainty
-bestcost_noise_ihd_expDist_extern_uncertainty <- include_summary_uncertainty(
+bestcost_noise_ihd_expDist_extern_uncertainty <- summarize_uncertainty(
   bestcost_noise_ihd_expDist,
     n_sim = 100)
 
@@ -816,7 +816,7 @@ bestcost_noise_ihd_expDist_iteration <-
     info = data.frame(pollutant = "road_noise", outcome = "YLD"))
 # View(bestcost_noise_ihd_expDist_iteration)
 
-bestcost_noise_ihd_expDist_iteration_uncertainty <- include_summary_uncertainty(
+bestcost_noise_ihd_expDist_iteration_uncertainty <- summarize_uncertainty(
   bestcost_noise_ihd_expDist_iteration,
     n_sim = 100)
 # View(bestcost_noise_ihd_expDist_iteration_uncertainty)
@@ -825,7 +825,7 @@ bestcost_noise_ihd_expDist_iteration_uncertainty <- include_summary_uncertainty(
 ## Check impacts per geo unit
 ### Central estimates from attribte()
 round(as.numeric(bestcost_noise_ihd_expDist_iteration[["health_detailed"]][["impact_raw"]] |> filter(erf_ci == "central") |> filter(exp_ci == "central") |> pull(impact_rounded)), digits = 0) 
-### Summary uncertainty estimates from include_summary_uncertainty()
+### Summary uncertainty estimates from summarize_uncertainty()
 round(as.numeric(bestcost_noise_ihd_expDist_iteration_uncertainty[["uncertainty_detailed"]][["geo_specific"]]$impact_central), digits = 0)
 ### Results seem plausible
 
@@ -864,7 +864,7 @@ bestcost_pm_yld_singlebhd_with_summary_uncertainty  <-
     duration_central = 1
     )
 
-bestcost_pm_yld_singlebhd_external_summary_uncertainty <- healthiar::include_summary_uncertainty(
+bestcost_pm_yld_singlebhd_external_summary_uncertainty <- healthiar::summarize_uncertainty(
   bestcost_pm_yld_singlebhd_with_summary_uncertainty,
     n_sim = 100)
 
@@ -897,14 +897,14 @@ bestcost_noise_ha_ar_with_summary_uncertainty <-
     )
 # View(bestcost_noise_ha_ar_with_summary_uncertainty)
 
-bestcost_noise_ha_ar_external_uncertainty <- healthiar::include_summary_uncertainty(
+bestcost_noise_ha_ar_external_uncertainty <- healthiar::summarize_uncertainty(
   bestcost_noise_ha_ar_with_summary_uncertainty,
   n_sim = 100)
 
 # Comparison central +- 95% CIs & Monte-Carlo central, lower, upper estimates
 print("Main estimate: ")
 bestcost_noise_ha_ar_with_summary_uncertainty[["health_main"]][["impact_rounded"]]
-# External include_summary_uncertainty function
+# External summarize_uncertainty function
 print("Summary uncertainty estimates (extern uncertainty function): ")
 round(as.numeric(bestcost_noise_ha_ar_external_uncertainty[["uncertainty_main"]]), digits = 0)
 # Results seem plausible
@@ -945,7 +945,7 @@ bestcost_noise_ha_ar_iteration <-
 # View(bestcost_noise_ha_ar_with_summary_uncertainty)
 
 bestcost_noise_ha_ar_iteration_with_summary_uncertainty <-
-  healthiar::include_summary_uncertainty(
+  healthiar::summarize_uncertainty(
     res = bestcost_noise_ha_ar_iteration,
     n_sim = 100)
 
@@ -976,14 +976,14 @@ bestcost_noise_ha_ar_uncertainty <-
     duration_central = 1, duration_lower = 0.1, duration_upper = 10,
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
 
-bestcost_noise_ha_ar_external_uncertainty <- healthiar::include_summary_uncertainty(
+bestcost_noise_ha_ar_external_uncertainty <- healthiar::summarize_uncertainty(
   bestcost_noise_ha_ar_uncertainty,
   n_sim = 100)
 
 # Comparison central +- 95% CIs & Monte-Carlo central, lower, upper estimates
 print("Main estimate: ")
 bestcost_noise_ha_ar[["health_main"]][["impact_rounded"]]
-# External include_summary_uncertainty function
+# External summarize_uncertainty function
 print("Summary uncertainty estimates (extern uncertainty function): ")
 round(as.numeric(bestcost_noise_ha_ar_external_uncertainty[["uncertainty_main"]]), digits = 0)
 # Results seem plausible
@@ -1014,7 +1014,7 @@ bestcost_noise_ha_ar_with_erf_eq <-
 # View(bestcost_noise_ha_ar_with_erf_eq)
 
 bestcost_noise_ha_ar_with_erf_eq_mc <-
-  healthiar::include_summary_uncertainty(
+  healthiar::summarize_uncertainty(
     res = bestcost_noise_ha_ar_with_erf_eq,
     n_sim = 1000)
 
@@ -1065,7 +1065,7 @@ bestcost_noise_ha_ar_iteration_with_erf_eq <-
 # View(bestcost_noise_ha_ar_iteration_with_erf_eq)
 
 bestcost_noise_ha_ar_iteration_with_erf_eq_mc <-
-  healthiar::include_summary_uncertainty(
+  healthiar::summarize_uncertainty(
     res = bestcost_noise_ha_ar_iteration_with_erf_eq,
     n_sim = 100)
 

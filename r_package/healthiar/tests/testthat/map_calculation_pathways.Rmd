@@ -577,7 +577,7 @@ pathways_uncertainty <- pathways_uncertainty |>
 
 # * Document existing pathways ####
 
-file_path <- "../healthiar/tests/testthat/test-include_summary_uncertainty.R"
+file_path <- "../healthiar/tests/testthat/test-summarize_uncertainty.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))

@@ -218,11 +218,11 @@ We see that each row represents a unique combination of the provided input varia
 
 ### Adding summary uncertainty
 
-You can do a Monte Carlo uncertainty analysis via the `include_summary_uncertainty` function.
+You can do a Monte Carlo uncertainty analysis via the `summarize_uncertainty` function.
 
 ```{r}
 results_pm_copd <- 
-  include_summary_uncertainty(
+  summarize_uncertainty(
     results = results_pm_copd,
     n_sim = 1000
 )

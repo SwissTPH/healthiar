@@ -23,7 +23,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_single|erf_rr_incre
 
   testthat::expect_equal(
     object =
-      healthiar::include_summary_uncertainty(
+      healthiar::summarize_uncertainty(
         res = bestcost_pm_copd_with_summary_uncertainty,
         n_sim = 100
         ) |>
@@ -56,7 +56,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_single|erf_rr_incre
 
   testthat::expect_equal(
     object =
-      healthiar::include_summary_uncertainty(
+      healthiar::summarize_uncertainty(
         res = bestcost_pm_copd_geo_short,
         n_sim = 100
       ) |>
@@ -90,7 +90,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_rr_increme
 
   testthat::expect_equal(
     object =
-      include_summary_uncertainty(
+      summarize_uncertainty(
         bestcost_noise_ihd_expDist,
         n_sim = 100) |>
       helper_extract_main_uncertainty_results(),
@@ -135,7 +135,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_rr_increme
 
   testthat::expect_equal(
     object =
-      include_summary_uncertainty(
+      summarize_uncertainty(
         bestcost_noise_ihd_expDist_iteration,
         n_sim = 100) |>
       helper_extract_main_uncertainty_results(),
@@ -172,7 +172,7 @@ testthat::test_that("results correct yld pathway_uncertainty|exp_single|erf_rr_i
 
   testthat::expect_equal(
     object =
-      healthiar::include_summary_uncertainty(
+      healthiar::summarize_uncertainty(
         res = bestcost_pm_yld_singlebhd_with_summary_uncertainty,
         n_sim = 100
       ) |>
@@ -205,7 +205,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_ar_formula
 
   testthat::expect_equal(
     object =
-      include_summary_uncertainty(
+      summarize_uncertainty(
         bestcost_noise_ha_ar_with_summary_uncertainty,
         n_sim = 100) |>
       helper_extract_main_uncertainty_results(),
@@ -247,7 +247,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_ar_formula
 
   testthat::expect_equal(
     object =
-      include_summary_uncertainty(
+      summarize_uncertainty(
         bestcost_noise_ha_ar_iteration,
         n_sim = 100) |>
       helper_extract_main_uncertainty_results(),
@@ -276,7 +276,7 @@ testthat::test_that("results correct yld pathway_uncertainty|exp_dist|erf_ar_for
 
   testthat::expect_equal(
     object =
-      include_summary_uncertainty(
+      summarize_uncertainty(
         bestcost_noise_ha_ar,
         n_sim = 100) |>
       helper_extract_main_uncertainty_results(),
@@ -308,7 +308,7 @@ testthat::test_that("results correct erf_eq uncertainty pathway_uncertainty|exp_
 
   testthat::expect_equal(
     object =
-      include_summary_uncertainty(
+      summarize_uncertainty(
         bestcost_noise_ha_ar_with_erf_eq,
         n_sim = 1000) |>
       helper_extract_main_uncertainty_results(),
@@ -352,7 +352,7 @@ testthat::test_that("results correct erf_eq uncertainty pathway_uncertainty|exp_
 
   testthat::expect_equal(
     object =
-      include_summary_uncertainty(
+      summarize_uncertainty(
         bestcost_noise_ha_ar_iteration_with_erf_eq,
         n_sim = 100) |>
       helper_extract_main_uncertainty_results(),

@@ -14,7 +14,7 @@
 #' @examples
 #' TBD
 
-include_summary_uncertainty <- function(
+summarize_uncertainty <- function(
     results,
     n_sim
     ) {
