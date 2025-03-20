@@ -38,6 +38,7 @@ attribute_yld_from_lifetable <-
 
     output<-
       healthiar:::attribute_master(
+        is_lifetable = TRUE,
         health_outcome = "yld_from_lifetable",
         approach_risk = "relative_risk",
         approach_multiexposure = approach_multiexposure,
