@@ -19,7 +19,7 @@
 #' @author Alberto Castro
 #' @export
 
-include_discount <-
+discount <-
   function(approach_discount = "direct",
            output_healthiar = NULL,
            impact = NULL,

@@ -154,7 +154,7 @@ testthat::test_that("results the same fake_monetization|discount_appr_direct|dis
 
   testthat::expect_equal(
     object =
-      healthiar::include_discount(
+      healthiar::discount(
         approach_discount = "direct",
         impact = 2E4,
         discount_shape = "exponential",
