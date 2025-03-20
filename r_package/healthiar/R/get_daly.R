@@ -8,7 +8,7 @@
 #' @note Experimental function
 #' @export
 
-attribute_daly <-
+get_daly <-
   function(
     output_attribute_yll,
     output_attribute_yld){
