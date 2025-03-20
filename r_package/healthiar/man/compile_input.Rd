@@ -11,6 +11,7 @@ compile_input(
   exp_central,
   exp_lower = NULL,
   exp_upper = NULL,
+  pop_exp = NULL,
   prop_pop_exp = NULL,
   cutoff_central = NULL,
   cutoff_lower = NULL,
@@ -59,6 +60,8 @@ compile_input(
 
 \item{exp_central, exp_lower, exp_upper}{\code{Numeric value(s)} specifying the exposure level(s) to the environmental stressor and (optionally) to lower and upper bound of the 95\% confidence interval. If only one value is provided, it will be assumed that it refers to population-weighted mean exposure in \eqn{µg/m^3}. If a {vector} is provided, it will be assumed that it refers to the exposure categories (average exposure in the category) in a exposure distribution (this information is linked to the proportion of population exposed).}
 
+\item{pop_exp}{\code{Numeric vector} referring to the population exposed for each exposure category.}
+
 \item{prop_pop_exp}{\code{Numeric value} or \code{Numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to each exposure categories.
 If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.}
 
@@ -93,7 +96,7 @@ Consequently The vector has to have the same length as the one fed to \code{geo_
 The suffix "info" will be added to the column name.
 Default value = \code{NULL}.}
 
-\item{population}{code{Vector} providing the population (in each geographical unit).}
+\item{population}{\code{Numeric value} or \code{Vector} referring to the total population, including both exposed and non-exposed (in each geographical unit). Only to be used to assess relative impact per 100k inhabitants.}
 
 \item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the disease duration in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval (default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).}
 

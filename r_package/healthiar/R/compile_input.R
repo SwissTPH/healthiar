@@ -23,6 +23,7 @@ compile_input <-
            approach_multiexposure = NULL,
            approach_risk = NULL,
            exp_central, exp_lower = NULL, exp_upper = NULL,
+           pop_exp = NULL,
            prop_pop_exp = NULL,
            cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
            rr_central, rr_lower = NULL, rr_upper = NULL,
@@ -62,6 +63,9 @@ compile_input <-
     #   geo_id_disaggregated <-
     #     as.character(ifelse(is.list({{exp_central}}), 1:length({{exp_central}}), 1))
     # }
+
+    #TODO: Check that prop_pop_exp and exp_central have the same length (consider list structure in iterations)
+    # Otherwise default value of prop_pop_exp (1) is wrongly assumed for exposure distribution.
 
 
     # PROCESS GEO ID ###################################################################
@@ -181,20 +185,20 @@ compile_input <-
             test = ( is.null ( max_age ) & grepl("lifetable", health_outcome) ),
             yes = last_age_pop,
             # no = NULL)
-          no = NA)
-      ),
-        duration_central = duration_central,
-        duration_lower = duration_lower,
-        duration_upper = duration_upper,
-        dw_central = dw_central,
-        dw_lower = dw_lower,
-        dw_upper = dw_upper,
+          no = NA)),
+      duration_central = duration_central,
+      duration_lower = duration_lower,
+      duration_upper = duration_upper,
+      dw_central = dw_central,
+      dw_lower = dw_lower,
+      dw_upper = dw_upper,
 
-        ## Finally, those variables that are multi-dimensional (exposure distribution)
-        exp_central = unlist(exp_central),
-        exp_lower = unlist(exp_lower),
-        exp_upper = unlist(exp_upper),
-        prop_pop_exp = unlist(prop_pop_exp)) |>
+      ## Finally, those variables that are multi-dimensional (exposure distribution)
+      exp_central = unlist(exp_central),
+      exp_lower = unlist(exp_lower),
+      exp_upper = unlist(exp_upper),
+      pop_exp = unlist(pop_exp),
+      prop_pop_exp = unlist(prop_pop_exp)) |>
 
       ## Remove min_age & max_age columns if they are NA
       dplyr::select(-where(~ all(is.na(x = .))))
