@@ -2597,7 +2597,7 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 
 # Test prepare function
 
-```{r prepare_exposure_data, eval=FALSE, include=FALSE}
+```{r prepare_exposure, eval=FALSE, include=FALSE}
 
 ## To be added
 # test <- healthiar::prepare_exposure_data()
