@@ -1,4 +1,4 @@
-#' include_cba
+#' Cost benefit analysis
 
 #' @description Perform cost-benefit analysis assuming that the monitized health impact is a benefit
 #'
@@ -12,7 +12,7 @@
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)
 #' @export
-include_cba <-
+cba <-
   function(approach_discount = "direct",
            output_healthiar = NULL,
            positive_impact = NULL,

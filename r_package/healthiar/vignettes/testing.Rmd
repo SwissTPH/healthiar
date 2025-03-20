@@ -844,7 +844,7 @@ Depending on your calculation pathway you will have to replace some of the `NULL
 
     ## healthiar FUNCTION CALL
     object =
-      healthiar::include_cba(
+      healthiar::cba(
         approach_discount = ,
         output_healthiar = NULL,
         positive_impact = ,
@@ -878,7 +878,7 @@ testthat::test_that("results correct [pathway_id]", {
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
-      healthiar::include_cba(
+      healthiar::cba(
         approach_discount = ,
         output_healthiar = NULL,
         positive_impact = ,

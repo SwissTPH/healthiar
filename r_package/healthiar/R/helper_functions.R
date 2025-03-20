@@ -57,7 +57,7 @@ helper_runif_with_seed <-
 #' Helper function: extract main CBA results
 
 #' @description This helper function extracts the main CBA results from a variable containing CBA results.
-#' @param x \code{Variable containing the ouput of an \code{include_cba} call}
+#' @param x \code{Variable containing the ouput of an \code{cba} call}
 #' @returns
 #' This helper function returns the main CBA result(s) as a \code{vector}.
 #' @author Axel Luyten

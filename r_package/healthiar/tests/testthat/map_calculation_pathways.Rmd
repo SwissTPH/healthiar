@@ -283,7 +283,7 @@ pathways_cba <- pathways_cba |>
   mutate(implemented = "FALSE")
 
 # * Document existing pathways #################################################
-file_path <- "../healthiar/tests/testthat/test-include_cba.R"
+file_path <- "../healthiar/tests/testthat/test-cba.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
@@ -1225,7 +1225,7 @@ pathways_lifetable <- pathways_lifetable |>
       "results correct lifetable yll exposure distribution and one year exposure and without newborns", TRUE ~ test_name))
 ```
 
-Both the functions include_cba and include_discount call the 
+Both the functions cba and include_discount call the 
 function include_monetization in the background --> created only ov_monetization and ov_cba
 instead of creating an overview tibble for all 3 functions
 ```{r OLD Pathways monetization, eval=FALSE, include=FALSE}

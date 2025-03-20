@@ -285,11 +285,11 @@ Two folders are added:
 
 Let's imagine we design a policy that would reduce air pollution to 5 $\mu g/m^3$, which is the concentration specified in the `cutoff_central` argument in the initial `attribute_health()` call. So we could avoid all COPD cases attributed to air pollution.
 
-What would be the monetary benefit of such a policy, considering also the cost to implement the policy (estimated at 100 million EURO)? We can find out using `healthiar`'s `include_cba()` function.
+What would be the monetary benefit of such a policy, considering also the cost to implement the policy (estimated at 100 million EURO)? We can find out using `healthiar`'s `cba()` function.
 
 ```{r cba}
 cba <- 
-  healthiar::include_cba(
+  healthiar::cba(
     output_healthiar = results_pm_copd,
     approach_discount = "direct",
     valuation = 50000,
