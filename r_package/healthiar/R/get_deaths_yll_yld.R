@@ -1,7 +1,7 @@
 #' Get deaths, YLL or YLD
 #'
 #' @description Get attributable deaths, years of life lost or years lived with disability from lifetable
-#' @inheritParams attribute
+#' @inheritParams attribute_master
 #' @returns
 #' This function returns a \code{List}
 #' @examples

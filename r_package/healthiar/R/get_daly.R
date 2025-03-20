@@ -2,7 +2,7 @@
 
 #' @description
 #' Calculates the disability-adjusted life years attributable to the exposure to an environmental stressor using a life table approach.
-#' @inheritParams attribute
+#' @inheritParams attribute_master
 #' @inherit attribute_yll_from_lifetable return
 #' @author Alberto Castro & Axel Luyten
 #' @note Experimental function

@@ -1,7 +1,7 @@
 #' Attributable health cases based on relative risk
 
 #' @description Calculates the health impacts for each uncertainty and geo area.
-#' @inheritParams attribute
+#' @inheritParams attribute_master
 #' @param input_table \code{Data frame} containing all input data.
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the

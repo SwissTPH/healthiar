@@ -1,7 +1,7 @@
 #' Compile input
 
 #' @description Compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
-#' @inheritParams attribute
+#' @inheritParams attribute_master
 #'
 #' @returns
 #' This function returns a \code{data.frame} with all input data together

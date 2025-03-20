@@ -7,7 +7,7 @@
 #' @param social_indicator \code{Vector} with numeric values showing the deprivation score (indicator of economic wealth) of the fine geographical area (it should match with those used in \code{attribute} or \code{compare})
 #' @param n_quantile \code{Integer value} specifying to the number quantiles in the analysis
 #' @param approach \code{String} referring the approach to include the social aspects. To choose between "quantile" and ?
-#' @inheritParams attribute
+#' @inheritParams attribute_master
 #'
 #' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 #'

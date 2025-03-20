@@ -32,7 +32,7 @@
 #'   ## Meta-info
 #'   info = NULL
 #' )
-#' @inheritParams attribute
+#' @inheritParams attribute_master
 #' @returns
 #' This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
 #' 2) \code{health_detailed}, which contains detailed (and interim) results.
@@ -80,7 +80,7 @@ attribute_yll_from_lifetable <-
   ) {
 
     output <-
-      healthiar::attribute(
+      healthiar:::attribute_master(
         ## Calculation specification
         health_outcome = "yll_from_lifetable", # Set outcome metric
         approach_risk = "relative_risk",

@@ -9,8 +9,8 @@
 #' Assumption: cases happen at the start of the year.
 #' @examples
 #' To be added
-#' @inheritParams attribute
-#' @inherit attribute return
+#' @inheritParams attribute_master
+#' @inherit attribute_master return
 
 #' @author Axel Luyten
 #' @note Experimental function
@@ -37,7 +37,7 @@ attribute_yld <-
 
 
     output <-
-      healthiar::attribute(
+      healthiar:::attribute_master(
         health_outcome = "yld",
         approach_risk = approach_risk,
         approach_multiexposure = approach_multiexposure,

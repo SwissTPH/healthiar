@@ -1,7 +1,7 @@
 #' Get population impact over time
 
 #' @description Get population impact over time
-#' @inheritParams attribute
+#' @inheritParams attribute_master
 #' @param outcome_metric \code{String} to define the outcome metric. Choose between "death", "yll" and "yld"
 #'
 #' @returns
