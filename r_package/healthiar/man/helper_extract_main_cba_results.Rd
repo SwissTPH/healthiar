@@ -7,7 +7,7 @@
 helper_extract_main_cba_results(x)
 }
 \arguments{
-\item{x}{\code{Variable containing the ouput of an \code{include_cba} call}}
+\item{x}{\code{Variable containing the ouput of an \code{cba} call}}
 }
 \value{
 This helper function returns the main CBA result(s) as a \code{vector}.

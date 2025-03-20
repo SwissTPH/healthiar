@@ -2,7 +2,7 @@
 
 #' @description
 #' Calculates the years lived with disability (YLD) attributable to exposure to an environmental stressor using a life table approach.
-#' @inheritParams attribute
+#' @inheritParams attribute_master
 #' @inherit attribute_yll_from_lifetable return
 #' @author Axel Luyten
 #' @note Experimental function
@@ -37,7 +37,7 @@ attribute_yld_from_lifetable <-
   ) {
 
     output<-
-      healthiar::attribute(
+      healthiar:::attribute_master(
         health_outcome = "yld_from_lifetable",
         approach_risk = "relative_risk",
         approach_multiexposure = approach_multiexposure,

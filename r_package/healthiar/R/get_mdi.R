@@ -47,7 +47,7 @@
 #'   no_heating = exdat_get_mdi$no_heating,
 #'   n_quantile = 10
 #'   )
-#' @inheritParams include_social
+#' @inheritParams socialize
 #' @export
 
 get_mdi <- function(

@@ -1,13 +1,13 @@
-#' include_social
+#' Soci-economic aspects in health imapcts
 
-#' @description Consider socio-economic aspects in the results
+#' @description The function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts
 #' @param output_healthiar \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results
 #' @param impact \code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_disaggregated}.
 #' @param population \code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.
 #' @param social_indicator \code{Vector} with numeric values showing the deprivation score (indicator of economic wealth) of the fine geographical area (it should match with those used in \code{attribute} or \code{compare})
 #' @param n_quantile \code{Integer value} specifying to the number quantiles in the analysis
 #' @param approach \code{String} referring the approach to include the social aspects. To choose between "quantile" and ?
-#' @inheritParams attribute
+#' @inheritParams attribute_master
 #'
 #' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 #'
@@ -15,16 +15,16 @@
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)
 #' @export
-include_social <- function(output_healthiar = NULL,
-                           impact = NULL,
-                           population = NULL,
-                           bhd = NULL,
-                           exp = NULL,
-                           pop_fraction = NULL,
-                           geo_id_disaggregated,
-                           social_indicator,
-                           n_quantile = 10, ## by default: decile
-                           approach = "quantile") {
+socialize <- function(output_healthiar = NULL,
+                      impact = NULL,
+                      population = NULL,
+                      bhd = NULL,
+                      exp = NULL,
+                      pop_fraction = NULL,
+                      geo_id_disaggregated,
+                      social_indicator,
+                      n_quantile = 10, ## by default: decile
+                      approach = "quantile") {
 
   # Using the output of attribute ##############################################
 

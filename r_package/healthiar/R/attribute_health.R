@@ -43,8 +43,8 @@
 #'   population = NULL,
 #'   info = NULL
 #')
-#' @inherit attribute return
-#' @inheritParams attribute
+#' @inherit attribute_master return
+#' @inheritParams attribute_master
 #' @examples
 #' TBD
 #' @author Alberto Castro
@@ -68,7 +68,7 @@ attribute_health <-
            info = NULL){
 
     output <-
-      healthiar::attribute(
+      healthiar:::attribute_master(
         health_outcome = "same_input_output",
         approach_risk = approach_risk,
         approach_multiexposure = approach_multiexposure,

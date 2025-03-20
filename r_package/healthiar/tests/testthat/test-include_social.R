@@ -15,7 +15,7 @@ testthat::test_that("results correct", {
 
   testthat::expect_equal(
     object =
-      healthiar::include_social(
+      healthiar::socialize(
         output_healthiar = bestcost_pm_death,
         geo_id_disaggregated = data$CS01012020,
         social_indicator = data$score,
@@ -47,7 +47,7 @@ testthat::test_that("results from use cases with attribute result and with vecto
 
   testthat::expect_equal(
     object =
-      healthiar::include_social(
+      healthiar::socialize(
         output = bestcost_pm_death,
         geo_id_disaggregated = data$CS01012020,
         social_indicator = data$score,
@@ -58,7 +58,7 @@ testthat::test_that("results from use cases with attribute result and with vecto
       dplyr::select(difference_value)  |>
       base::unlist() |>
       base::as.numeric(),
-    expect = healthiar::include_social(
+    expect = healthiar::socialize(
       impact = bestcost_pm_death[["health_main"]]$impact,
       population = bestcost_pm_death[["health_main"]]$population,
       bhd = bestcost_pm_death[["health_main"]]$bhd,

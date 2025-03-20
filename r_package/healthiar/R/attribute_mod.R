@@ -2,7 +2,7 @@
 
 #' @description The function assesses the attributable health impacts in a new scenario (2) by modifying an existing scenario (1). The values of the arguments of this function (except output_attribute_1) are used to replace the values in the arguments of scenario 1 to build scenario 2.
 #' @param output_attribute_1 \code{List} containing the output of the function attribute() for scenario 1.
-#' @inheritParams attribute
+#' @inheritParams attribute_master
 #' @returns
 #' TBD. E.g. This function returns a \code{list} with the attributable
 #' Moreover, the data frame includes columns such as:
@@ -66,7 +66,7 @@ attribute_mod <-
 
     # Use the arguments attribute()
     output_attribute_2 <-
-      do.call(healthiar::attribute,
+      do.call(healthiar:::attribute_master,
               args_2_after_merge_with_arg1)
 
     return(output_attribute_2)

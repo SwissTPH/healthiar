@@ -12,7 +12,7 @@
 #' @examples
 #' TBD
 
-prepare_exposure_data <-
+prepare_exposure <-
   function(
     poll_grid,
     geo_units

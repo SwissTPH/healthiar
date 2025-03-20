@@ -53,9 +53,9 @@
 #'  }
 #'
 #' @author Alberto Castro
-#' @export
 
-attribute <-
+
+attribute_master <-
   function(approach_risk = "relative_risk",
            ## Risk and shape arguments
            rr_central = NULL, rr_lower = NULL, rr_upper = NULL,

@@ -1,8 +1,8 @@
-#' include_cba
+#' Cost benefit analysis
 
 #' @description Perform cost-benefit analysis assuming that the monitized health impact is a benefit
 #'
-#' @inheritParams include_monetization
+#' @inheritParams monetize
 #' @param discount_rate_benefit,discount_rate_cost \code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates)
 #' @param benefit \code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure
 #' @param cost \code{Numeric value} referring to the investment cost to achive the reduction of exposure
@@ -12,7 +12,7 @@
 #' # Example of how to use the function
 #' function_name(param1 = value1, param2 = value2)
 #' @export
-include_cba <-
+cba <-
   function(approach_discount = "direct",
            output_healthiar = NULL,
            positive_impact = NULL,
@@ -43,7 +43,7 @@ include_cba <-
     # Important to obtain main and detailed to avoid losing information
 
     cba_detailed_benefit <-
-      healthiar::include_monetization(
+      healthiar::monetize(
         approach_discount = approach_discount,
         output_healthiar = output_healthiar,
         impact = positive_impact,
@@ -54,7 +54,7 @@ include_cba <-
         valuation = valuation)[["monetization_detailed"]]
 
     cba_main_benefit <-
-      healthiar::include_monetization(
+      healthiar::monetize(
         approach_discount = approach_discount,
         output_healthiar = output_healthiar,
         impact = positive_impact,
@@ -68,7 +68,7 @@ include_cba <-
 
     # For cost, assume 1 impact with full valuation to make use of include_monetization
     cba_detailed_cost <-
-      healthiar::include_monetization(
+      healthiar::monetize(
         approach_discount = approach_discount,
         impact = 1,
         valuation = cost,

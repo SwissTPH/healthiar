@@ -16,7 +16,7 @@ testthat::test_that("results correct simple monetization", {
 
   testthat::expect_equal(
     object =
-      healthiar::include_monetization(
+      healthiar::monetize(
         output_healthiar = bestcost_pm_copd,
         approach_discount = "direct",
         valuation = 1000,
@@ -50,7 +50,7 @@ testthat::test_that("results the same fake_monetization|discount_appr_direct|dis
 
   testthat::expect_equal(
     object =
-      healthiar::include_monetization(approach_discount = "direct",
+      healthiar::monetize(approach_discount = "direct",
                                       output_healthiar = bestcost_pm_copd,
                                       discount_shape = "exponential",
                                       discount_rate = 0.03,
@@ -70,7 +70,7 @@ testthat::test_that("results correct pathway_monetization|discount_appr_direct|d
 
   testthat::expect_equal(
     object =
-      healthiar::include_monetization(approach_discount = "direct",
+      healthiar::monetize(approach_discount = "direct",
                                       impact = 2E4,
                                       discount_shape = "exponential",
                                       discount_rate = 0.03,
@@ -90,7 +90,7 @@ testthat::test_that("results correct pathway_monetization|discount_appr_direct|d
 
   testthat::expect_equal(
     object =
-      healthiar::include_monetization(approach_discount = "direct",
+      healthiar::monetize(approach_discount = "direct",
                                       impact = 50,
                                       discount_shape = "exponential",
                                       discount_rate = 0.03,
@@ -135,7 +135,7 @@ testthat::test_that("results the same fake_monetization|discount_appr_indirect|d
 
   testthat::expect_equal(
     object =
-      healthiar::include_monetization(approach_discount = "indirect",
+      healthiar::monetize(approach_discount = "indirect",
                                       output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
                                       discount_shape = "exponential",
                                       discount_rate = 0.01,
@@ -154,7 +154,7 @@ testthat::test_that("results the same fake_monetization|discount_appr_direct|dis
 
   testthat::expect_equal(
     object =
-      healthiar::include_discount(
+      healthiar::discount(
         approach_discount = "direct",
         impact = 2E4,
         discount_shape = "exponential",

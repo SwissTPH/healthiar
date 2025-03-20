@@ -1,7 +1,7 @@
 #' Get discount factor
 
 #' @description Get discount factor based on discount rate (already corrected for inflation)
-#' @inheritParams include_monetization
+#' @inheritParams monetize
 #' @author Alberto Castro
 #' @note Experimental function
 #' @export

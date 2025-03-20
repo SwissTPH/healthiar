@@ -4,7 +4,7 @@
 #'
 #' @param df \code{Data frame} including the column "impact" (health impact)
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function).
-#' @inheritParams include_monetization
+#' @inheritParams monetize
 #'
 #' @returns Description of the return value.
 #' @examples
