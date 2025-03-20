@@ -25,9 +25,20 @@ get_impact <-
     # Relative risk ############################################################
 
     if(unique(input_table$approach_risk) == "relative_risk"){
+      # Obtain prop_pop_exp if only pop_exp was provided and not prop_pop_exp
+      if("prop_pop_exp" %in% names(input_table)&
+         "pop_exp" %in% names(input_table) ){
+        input_with_prop_pop_exp <- input_table |>
+          dplyr::group_by(geo_id_disaggregated) |>
+          dplyr::mutate(prop_pop_exp = pop_exp/sum(pop_exp))
+      } else{
+        input_with_prop_pop_exp <- input_table
+      }
+
+
       # Get pop_fraction and add to the input_table data frame
       input_with_risk_and_pop_fraction <-
-        healthiar:::get_risk_and_pop_fraction(input_table = input_table,
+        healthiar:::get_risk_and_pop_fraction(input_table = input_with_prop_pop_exp ,
                                               pop_fraction_type = pop_fraction_type)
 
       # * Same input as output #################################################
@@ -94,10 +105,10 @@ get_impact <-
         dplyr::rowwise() |>
         dplyr::mutate(
           absolute_risk_as_percent = healthiar::get_risk(exp = exp, erf_eq = erf_eq),
-          pop_exp = population * prop_pop_exp,
           impact = absolute_risk_as_percent/100 * pop_exp,
           impact_rounded = round(impact, 0)) |>
-          ungroup()
+        # Remove the grouping of rowwise
+        dplyr::ungroup()
 
       # * YLD ##################################################################
 
