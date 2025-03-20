@@ -1484,7 +1484,7 @@ bestcost_pm_yll <-
 
 # DALY from yll and yld means yll+yld
 bestcost_daly_from_yll_yld <-
-   healthiar::attribute_daly(
+   healthiar::get_daly(
      output_attribute_yll = bestcost_pm_yll,
      output_attribute_yld = bestcost_pm_yld)
 
@@ -2218,7 +2218,7 @@ scen_2_yld <-
 
 # DELTA
 comparison_daly_delta <- 
-  healthiar::attribute_daly(
+  healthiar::get_daly(
     output_attribute_yll =
       healthiar::compare(
         approach_comparison = "delta",
@@ -2238,7 +2238,7 @@ check_bestcost(result_list_bestcost = comparison_daly_delta ,
 
 # PIF
 comparison_daly_pif <- 
-  healthiar::attribute_daly(
+  healthiar::get_daly(
     output_attribute_yll =
       healthiar::compare(
         approach_comparison = "pif",
@@ -2284,7 +2284,7 @@ scen_2_yld_geo <-
 
 # Delta
 comparison_daly_delta_geo <- 
-  healthiar::attribute_daly(
+  healthiar::get_daly(
     output_attribute_yll =
       healthiar::compare(
         approach_comparison = "delta",
@@ -2304,7 +2304,7 @@ check_bestcost(result_list_bestcost = comparison_daly_delta_geo ,
 
 # PIF
 comparison_daly_pif_geo <- 
-  healthiar::attribute_daly(
+  healthiar::get_daly(
     output_attribute_yll =
       healthiar::compare(
         approach_comparison = "pif",
