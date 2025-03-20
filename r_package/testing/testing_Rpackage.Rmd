@@ -1557,7 +1557,7 @@ comparison_singlebhd_rr_delta_unpacked <-
 check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_unpacked ,
                result_vector_alternative = c(774, 409, 1127)) # Result on 16 May 2024
 
-# You can also first store the variables and enter them in attribute() 
+# You can also first store the variables and enter them in attribute_health() 
 scen_1_singlebhd_rr_delta <-
   attribute_health(
     exp_central = 8.85,
@@ -2416,7 +2416,7 @@ bestcost_pm_yll_lifetable_geluft_indirect_discount <-
 
 check_general(bestcost_pm_yll_lifetable_geluft_indirect_discount[["monetization_main"]]$monetized_impact_rounded,
               c(26493, 13877, 39006))
-# Result on 13 Dec 2025. Same result as discounting in attribute() (deprecated).
+# Result on 13 Dec 2025. Same result as discounting in attribute_health() (deprecated).
 
 ```
 
@@ -2633,7 +2633,7 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 
 ## Now with population
 # results_pm_copd_pop <-
-  # healthiar::attribute(
+  # healthiar::attribute_health(
   #   exp_central = data$mean_concentration,                      # 8.85
   #   cutoff_central = data$cut_off_value,                        # 5
   #   bhd_central = data$prevalence,                              # 30747
@@ -2650,7 +2650,7 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 
 ```{r Screenshot for poster, eval=FALSE, include=FALSE}
 
-# health_impact <- attribute(
+# health_impact <- attribute_health(
 #     exp_central = 12.3,
 #     bhd_central = 15000,
 #     rr_central = 1.04,
@@ -2660,7 +2660,7 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 #     erf_shape = "log_linear",
 #     info = "scenario_1")
 # 
-# health_impact <- attribute(
+# health_impact <- attribute_health(
 #     exposure = 12.3,
 #     baseline_health_data = 15000,
 #     rr_central = 1.04,
@@ -2670,13 +2670,13 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 
 ```
 
-```{r Illustration integrate compare() in attribute()}
+```{r Illustration integrate compare() in attribute_health()}
 
 # Benefit of this: compare the two conceptionally different approaches
  
-# case1 <- attribute(approach= cutoff in exposure)
+# case1 <- attribute_health(approach= cutoff in exposure)
 
-# case2 <- attribute(approach = delta approach/cutoff in ERF)
+# case2 <- attribute_health(approach = delta approach/cutoff in ERF)
 
 # difference impact <- case1[[impact]] - case2[[impact]]
 ```
