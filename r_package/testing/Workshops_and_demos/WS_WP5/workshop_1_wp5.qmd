@@ -79,12 +79,27 @@ The [README file](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#
 ![README file of the `healthiar` R package](images/readme.png)
 
 
-## About *`healthiar`*
-
-The main function family of `healthiar` is the `attribute` family, used to attribute health impacts to a (environmental) risk factor, e.g. noise or air pollution. 
-The core function `attribute_health` can be used for most assessments.
+## About *`healthiar`* (1/2)
 
 ![Figure: `healthiar` overview](images/EPHC_poster_landscape_v0.2.2_only_package_overview.jpg){width="700"}
+## About *`healthiar`* (2/2)
+
+The core function family of `healthiar` is the `attribute` family, used to attribute health impacts to a (environmental) risk factor, e.g. noise or air pollution. 
+- `attribute_health` can be used for relative and absolute risk assessments
+- `attribute_lifetable` is used for (RR & AR) life table assessment
+
+The extended family is the `compare` family, which is used to compare two scenarios with the population impact fraction (PIF) or delta approach.
+
+Then there are the in-laws, which are the "additional" analysis functions that can be run after the initial `attribute` or `compare` function calls
+- Economic analysis (WP2)
+    + `monetize`
+    + `cba` 
+- Social analysis (WP3)
+    + `get_mdi`
+    + `socialize`
+- Summary uncertainty (i.e. Monte Carlo simulation)
+- Multi-pollutant exposure
+    + `INSERT_NAME` TODO
 
 ## *`healthiar`* in RStudio 1/3
 
@@ -98,8 +113,6 @@ Post installation, you can access the `healthiar` package landing page in RStudi
 
 
 ## *`healthiar`* in RStudio 3/3
-
-note: first screenshot of full screen note: mention vignette opens as pdf or html
 
 ![Landing page of the `healthiar` package in RStudio, where you find the package vignettes and function documentation.](images/healthiar_package_landing_page.png)
 
@@ -132,29 +145,60 @@ Any fun doc contains the following sections:
 - *Value* Information about the function output
 - *Examples* (optional) Shows how the function works
 
-## Title
+. . .
 
-## Description
+Let's check out these sections using the fun doc of `attribute_health`
 
-## Usage
+## Function documentation (1/) - Title
 
-## Arguments
+![*Title section*](images/fun_doc_title.png)
 
-## Details
+The title summarizes the function of the function (hehe) in one sentence.
 
-Warning: not very developped right now. More details in the vignette.
+The title shows up next to the function name in the package landing page.
 
-note: show fun doc of attribute_healthiar
+## Function documentation (1/) - Description
 
-## Value
+![*Description section* provides additional details about the function's purpose](images/fun_doc_desc.png)
+
+## Function documentation (1/) - Usage
+
+![*Usage section* In the usage section you can find a bare-minimum function "template", which can either be auto-generated or created manually, as in this case.](images/fun_doc_usage.png)
+
+::: callout-important
+Any arguments that appear without a *=* symbol after them in the usage section have to be user-specified in all function call.
+:::
+
+::: callout-note
+The inputs to the arguments in the usage section are default inputs
+:::
+
+## Function documentation (1/) - Arguments
+
+![*Arguments section* This is the core section of the function documentation, where input type (`numeric` vs. `string`) & input options (if available) are specified.](images/fun_doc_arguments.png)
+
+
+## Function documentation (1/) - Details
+
+![*Details section* (optional) Additional details about the function](images/fun_doc_details.png)
+::: callout-warning
+Depending on the function, this section might be not very developed at the moment. Sometimes more function details are found in the intro vignette.
+:::
+
+
+## Function documentation (1/) - Value
+
+![*Value section* Information about the function output](images/fun_doc_value.png)
+
+## Function documentation (1/) - Examples
+
+TODO add screenshot + text
 
 ## Workflow BoD
 
+
+
 note: quickly introduce the main workflow of burden assessments
-
-## Function families
-
-note: Quickly show function families
 
 ## Example: `attribute` call without input uncertainties
 
@@ -253,9 +297,24 @@ results_pm_copd[["health_main"]]
 
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
 results_pm_copd[["health_detailed"]][["raw"]] |> 
-  select(exp, bhd, rr, erf_ci, pop_fraction, impact_rounded) |> 
+  select(impact_rounded, impact, pop_fraction, erf_ci, rr, exp, bhd) |> 
   knitr::kable()
 ```
+. . .
+
+::: callout-tip
+Each row shows a result obtained with all the input data & calculation pathway specifications shown in that row
+:::
+
+Some of the most relevant columns include:
+- *impact_rounded* Rounded attributable health impact/burden
+- *impact* Raw impact/burden
+- *pop_fraction* Population attributable fraction (PAF)
+- *erf_ci* Specifies whether `rr_central`, `..._lower` or `..._upper` was used in calculation
+- *rr* Specifies raw rr used in calculation
+- *
+- *exp*
+- *bhd*
 
 ## Example: `attribute` with input uncertainties
 

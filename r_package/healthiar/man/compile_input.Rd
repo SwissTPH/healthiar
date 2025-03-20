@@ -67,7 +67,7 @@ The cutoff level refers to the exposure level below which no health effects occu
 
 \item{rr_central, rr_lower, rr_upper}{\code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.}
 
-\item{rr_increment}{\code{Numeric value} specifying the increment of the exposure-response function in \eqn{µg/m^3} (usually 10 or 5 \eqn{µg/m^3}).}
+\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}).}
 
 \item{erf_shape}{\code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".}
 

@@ -44,7 +44,7 @@ attribute_yld(
 
 \item{rr_central, rr_lower, rr_upper}{\code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.}
 
-\item{rr_increment}{\code{Numeric value} specifying the increment of the exposure-response function in \eqn{µg/m^3} (usually 10 or 5 \eqn{µg/m^3}).}
+\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}).}
 
 \item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the equation of the user-defined exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions.
 If a \code{string} is entered, the function must contains only one variable: x (exposure), e.g. "3+x+x^2".
@@ -81,13 +81,16 @@ The suffix "info" will be added to the column name.
 Default value = \code{NULL}.}
 }
 \value{
-This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
+This function returns two lists:
+
+1) \code{health_main}, which contains a tibble with the main results and
 2) \code{health_detailed}, which contains detailed (and interim) results.
+
 The result tibbles include columns such as:
 \itemize{
- \item pop_fraction (population attributable fraction; only for assessments using relative risk)
- \item impact (health impact)
- \item And many more.
+ \item \code{pop_fraction} population attributable fraction; only for assessments using relative risk
+ \item \code{impact} attributable health burden/impact
+ \item And many more
  }
 }
 \description{
