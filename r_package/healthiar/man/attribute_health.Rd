@@ -61,6 +61,8 @@ If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple
 \item{prop_pop_exp}{\code{Numeric value} or \code{Numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to each exposure categories.
 If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.}
 
+\item{pop_exp}{\code{Numeric vector} referring to the population exposed for each exposure category.}
+
 \item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} showing the central exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
 The cutoff level refers to the exposure level below which no health effects occur.}
 
@@ -75,7 +77,7 @@ Consequently The vector has to have the same length as the one fed to \code{geo_
 
 \item{approach_multiexposure}{\code{String} specifying the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined". Default: \code{NULL} (i.e. no other exposure is considered besides the one specified in the \code{exp.._ argument(s)})}
 
-\item{population}{code{Vector} providing the population (in each geographical unit).}
+\item{population}{\code{Numeric value} or \code{Vector} referring to the total population, including both exposed and non-exposed (in each geographical unit). Only to be used to assess relative impact per 100k inhabitants.}
 
 \item{info}{\code{String} or {data.frame} providing additional information linked with the assessment.
 The suffix "info" will be added to the column name.

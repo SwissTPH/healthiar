@@ -34,10 +34,12 @@ attribute_mod(
 
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value(s)} providing the basline (incidence) level of the health outcome in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
 
-\item{population}{code{Vector} providing the population (in each geographical unit).}
+\item{population}{\code{Numeric value} or \code{Vector} referring to the total population, including both exposed and non-exposed (in each geographical unit). Only to be used to assess relative impact per 100k inhabitants.}
 
 \item{prop_pop_exp}{\code{Numeric value} or \code{Numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to each exposure categories.
 If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.}
+
+\item{pop_exp}{\code{Numeric vector} referring to the population exposed for each exposure category.}
 
 \item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: "single_year" (default), "constant".}
 
