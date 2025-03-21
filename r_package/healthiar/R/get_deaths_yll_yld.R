@@ -16,11 +16,11 @@ get_deaths_yll_yld <-
   function(pop_impact,
            input_with_risk_and_pop_fraction) {
 
-    ## Define outcome_metric variable
-    outcome_metric <- unique(input_with_risk_and_pop_fraction$health_outcome)
+    ## Define health_outcome variable
+    health_outcome <- unique(input_with_risk_and_pop_fraction$health_outcome)
 
     # Determine default time horizon for YLL/YLD if not specified ##############
-    if ( outcome_metric %in% c("yll") & # And ("yld")  if ever implemented
+    if ( health_outcome %in% c("yll") & # And ("yld")  if ever implemented
          !"time_horizon" %in% names(input_with_risk_and_pop_fraction ) ) {
 
         time_horizon <- input_with_risk_and_pop_fraction %>%
@@ -35,25 +35,24 @@ get_deaths_yll_yld <-
 
     }
 
-    # browser()
 
     ## ALTERNATIVE CODE
     ## Filter for relevant ages
     impact_detailed <- pop_impact |>
       dplyr::mutate(
-        outcome_metric = outcome_metric,
+        health_outcome = health_outcome,
         lifeyears_nest =
           purrr::pmap(
             list(.x =  pop_impact_nest,
                  max_age = unique(max_age),
                  min_age = unique(min_age),
-                 outcome_metric = unique(outcome_metric)),
-            function(.x, max_age, min_age, outcome_metric){
+                 health_outcome = unique(health_outcome)),
+            function(.x, max_age, min_age, health_outcome){
 
               # Set values in upper triangle to NA ###############################
               ## NOTE: also removes newborns values
 
-              if ( outcome_metric == "deaths" ) {
+              if ( health_outcome == "deaths" ) {
 
                 .x <- .x |>
                   dplyr::mutate(
@@ -89,7 +88,7 @@ get_deaths_yll_yld <-
 
               # Calculate YLL/YLD impact per year ################################
 
-              if ( outcome_metric %in% c("yll") ) { # And ("yld")  if ever implemented
+              if ( health_outcome %in% c("yll") ) { # And ("yld")  if ever implemented
 
                 .x <- .x |>
                   dplyr::select(contains("population_")) |>
@@ -113,7 +112,7 @@ get_deaths_yll_yld <-
     # YLD if ever implemented###################################################
 
     # ## Determine year- and age specific YLD
-    # if ( outcome_metric %in% "yld" ) {
+    # if ( health_outcome %in% "yld" ) {
     #
     #   impact_detailed <- impact_detailed |>
     #     dplyr::mutate(yll_nest =
@@ -145,7 +144,7 @@ get_deaths_yll_yld <-
     # Deaths ###################################################################
 
     ## Store total deaths in YOA in column impact_nest
-    if ( outcome_metric == "deaths" ) {
+    if ( health_outcome == "deaths" ) {
 
       impact_detailed <- impact_detailed |>
         # Store in new column "impact_nest"
@@ -169,7 +168,7 @@ get_deaths_yll_yld <-
     # Store total, YLL/YLD in YOA in column impact_nest #########
     ## Single number
 
-    if ( outcome_metric %in% c("yll")){ # And ("yld")  if ever implemented
+    if ( health_outcome %in% c("yll")){ # And ("yld")  if ever implemented
 
       impact_detailed <- impact_detailed |>
 
@@ -185,11 +184,11 @@ get_deaths_yll_yld <-
 
         dplyr::mutate(
           impact_nest = purrr::pmap(
-            list(.x = lifeyears_nest, .y = last_year, outcome_metric = unique(outcome_metric)),
-            function(.x, .y, outcome_metric){
+            list(.x = lifeyears_nest, .y = last_year, health_outcome = unique(health_outcome)),
+            function(.x, .y, health_outcome){
 
             ## If yll or yld
-            if( outcome_metric %in% c("yll")){ # And ("yld")  if ever implemented
+            if( health_outcome %in% c("yll")){ # And ("yld")  if ever implemented
 
               .x <-
                 .x |>
