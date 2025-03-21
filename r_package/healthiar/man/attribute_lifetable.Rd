@@ -22,7 +22,7 @@ attribute_lifetable(
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
   erf_eq_upper = NULL,
-  approach_exposure = "constant",
+  approach_exposure = "single_year",
   approach_newborns = "without_newborns",
   deaths_male = NULL,
   deaths_female = NULL,

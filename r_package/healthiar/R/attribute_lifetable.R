@@ -27,7 +27,7 @@ attribute_lifetable <-
            rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
            rr_increment = NULL, erf_shape = NULL,
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-           approach_exposure = "constant",
+           approach_exposure = "single_year",
            approach_newborns = "without_newborns",
            deaths_male = NULL,
            deaths_female = NULL,
