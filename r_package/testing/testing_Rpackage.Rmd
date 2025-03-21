@@ -1271,6 +1271,38 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_exposure_single_year_lifet
                # result_vector_alternative = c(27742, 14641, 40542)) # GeLuft approach result
 
 
+# Only one relative risk estimate (central estimate)
+
+# Calculate years of life lost using bestcost function
+# with input data from the Swiss project GeLuft
+
+bestcost_pm_yll_lifetable_1rr_geluft <- 
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
+      approach_exposure = "single_year",
+      exp_central = input_data_mortality$exp[2], #exp CH 2019
+      prop_pop_exp = 1,
+      cutoff_central = input_data_mortality$cutoff[2], 
+      rr_central = input_data_mortality[2,"rr_central"], 
+      rr_increment = 10, 
+      erf_shape = "log_linear",
+      first_age_pop = 0,
+      last_age_pop = 99,
+      deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
+      deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
+      population_midyear_male = lifetable_withPopulation[["male"]]$population, 
+      population_midyear_female = lifetable_withPopulation[["female"]]$population, 
+      year_of_analysis = 2019, 
+      info = input_data_mortality$pollutant[2], 
+      min_age = if(is.na(input_data_mortality$min_age[2])) NULL else input_data_mortality$min_age[2])
+
+# View(bestcost_pm_yll_lifetable_1rr_geluft)
+
+check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_1rr_geluft,
+               # result_vector_alternative = c(27742)) # GeLuft approach result 
+               result_vector_alternative = c(29274.89)) # AirQ+ approach result 
+
+
 
 ```
 
@@ -1306,6 +1338,8 @@ bestcost_pm_yll_lifetable_airqplus <-
 
 check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_airqplus,
                result_vector_alternative = c(2776839.17,	1452410.83,	4094163.08)) # AirQ+ result
+
+
 ```
 
 ```{r YLL lifetable from CONSTANT exposure and WITH NEWBORNS}
@@ -1339,37 +1373,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_airqplus_with_ne
                result_vector_alternative = c(3248408.53,	1700230.04,	4786195.41)) # AirQ+ result
 ```
 
-```{r YLL lifetable with single relative risk}
-# Only one relative risk estimate (central estimate)
-
-# Calculate years of life lost using bestcost function
-# with input data from the Swiss project GeLuft
-
-bestcost_pm_yll_lifetable_1rr_geluft <- 
-    healthiar::attribute_lifetable(
-      health_outcome = "yll",
-      exp_central = input_data_mortality$exp[2], #exp CH 2019
-      prop_pop_exp = 1,
-      cutoff_central = input_data_mortality$cutoff[2], 
-      rr_central = input_data_mortality[2,"rr_central"], 
-      rr_increment = 10, 
-      erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-      deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-      population_midyear_male = lifetable_withPopulation[["male"]]$population, 
-      population_midyear_female = lifetable_withPopulation[["female"]]$population, 
-      year_of_analysis = 2019, 
-      info = input_data_mortality$pollutant[2], 
-      min_age = if(is.na(input_data_mortality$min_age[2])) NULL else input_data_mortality$min_age[2])
-
-# View(bestcost_pm_yll_lifetable_1rr_geluft)
-
-check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_1rr_geluft,
-               # result_vector_alternative = c(27742)) # GeLuft approach result 
-               result_vector_alternative = c(29274.89)) # AirQ+ approach result 
-```
 
 ```{r YLL lifetable with exposure distribution}
 
@@ -1434,6 +1437,7 @@ bestcost_pm_yld  <-
 bestcost_pm_yll <- 
   healthiar::attribute_lifetable(
     health_outcome = "yll",
+    approach_exposure = "single_year",
     exp_central = 8.85,
     prop_pop_exp = 1,
     cutoff_central = 5,
@@ -2094,7 +2098,7 @@ comparison_daly_delta <-
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_delta ,
-               result_vector_alternative = c(2056879 , 1076177, 3032464)) # Result on 21 March 2025
+               result_vector_alternative = c(24299, 12714, 36613)) # Result on 21 March 2025
 
 # PIF
 comparison_daly_pif <- 
@@ -2114,7 +2118,7 @@ comparison_daly_pif <-
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_pif,
-               result_vector_alternative = c(2059673, 1076920, 3038734 )) # Result on 21 March 2025
+               result_vector_alternative = c(24378, 12735, 36815)) # Result on 21 March 2025
 
 # With geo iteration
 # Define scenarios
@@ -2160,7 +2164,7 @@ comparison_daly_delta_geo <-
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_delta_geo ,
-               result_vector_alternative = c(2887557, 1510609, 4257704 )) # Result on 21 March 2025
+               result_vector_alternative = c(34123, 17849, 51437)) # Result on 21 March 2025
 
 # PIF
 comparison_daly_pif_geo <- 
@@ -2180,7 +2184,7 @@ comparison_daly_pif_geo <-
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_pif_geo,
-               result_vector_alternative = c(2892177, 1511843, 4268034 )) # Result on 21 March 2025
+               result_vector_alternative = c(34255, 17885, 51773)) # Result on 21 March 2025
 
 
 
