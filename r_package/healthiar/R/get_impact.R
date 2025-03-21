@@ -59,18 +59,13 @@ get_impact <-
       # * Lifetable ##########################################################
       } else if (unique(input_table$is_lifetable)) {
 
-        outcome_metric <-
-          gsub("_from_lifetable", "", unique(input_table$health_outcome))
-
         pop_impact <-
           healthiar:::get_pop_impact(
-            input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction,
-            outcome_metric = outcome_metric
-          )
+            input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
 
         impact_raw <-
-          healthiar:::get_deaths_yll_yld(
+          healthiar:::get_deaths_yll_from_lifetable(
             pop_impact = pop_impact,
             input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
