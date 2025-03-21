@@ -1,8 +1,7 @@
 #' Get population impact over time
 
 #' @description Get population impact over time
-#' @inheritParams attribute
-#' @param outcome_metric \code{String} to define the outcome metric. Choose between "death", "yll" and "yld"
+#' @param input_with_risk_and_pop_fraction \code{Data frame} with the input data (including risk and population fraction)
 #'
 #' @returns
 #' This function returns a \code{data.frame} with one row for each value of the
@@ -21,24 +20,26 @@
 #' @keywords internal
 
 get_pop_impact <-
-  function(input_with_risk_and_pop_fraction,
-           outcome_metric
-           ){
+  function(input_with_risk_and_pop_fraction){
 
     user_options <- options()
     options(digits = 15)
 
-    if ((outcome_metric == "yld") | (outcome_metric == "daly")){
-      # If there are disability weights or duration in the input (i.e. if it's a YLD calculation),
-      # the lifetable calculations will only be done for the rows where the
-      # column "dw_ci" & "duration_ci" has the value "central" (to improve performance).
-      # The resulting (nested) lifetable tibbles will be left_join()'ed with "input_backup"
-      # at the end of the script.
-      input_backup <- input_with_risk_and_pop_fraction
-      input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
-        filter(dw_ci == "central") |>
-        filter(duration_ci == "central")
-    }
+
+    health_outcome <- unique(input_with_risk_and_pop_fraction$health_outcome)
+
+    # Code deactivated because yld from lifetable is not implemented (yet)
+    # if (health_outcome %in% c("yld", "daly")){
+    #   # If there are disability weights or duration in the input (i.e. if it's a YLD calculation),
+    #   # the lifetable calculations will only be done for the rows where the
+    #   # column "dw_ci" & "duration_ci" has the value "central" (to improve performance).
+    #   # The resulting (nested) lifetable tibbles will be left_join()'ed with "input_backup"
+    #   # at the end of the script.
+    #   input_backup <- input_with_risk_and_pop_fraction
+    #   input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
+    #     filter(dw_ci == "central") |>
+    #     filter(duration_ci == "central")
+    # }
 
     # LIFETABLE SETUP ##############################################################################
 
@@ -212,7 +213,7 @@ get_pop_impact <-
 
     # PREMATURE DEATHS (SINGLE YEAR EXPOSURE) ######################################################
     # YOA = YEAR OF ANALYSIS
-    if (outcome_metric == "deaths" &
+    if (health_outcome == "deaths" &
         unique(input_with_risk_and_pop_fraction |> dplyr::select(contains("approach_exposure"))== "single_year")[1]) {
 
       pop <- pop |>
@@ -232,8 +233,8 @@ get_pop_impact <-
 
     # YLL & PREMATURE DEATHS (CONSTANT EXPOSURE) ####################################################
 
-    if ((outcome_metric %in% c("yll", "yld", "daly") |
-         (unique(input_with_risk_and_pop_fraction |> dplyr::select(contains("approach_exposure")) == "constant")[1] & outcome_metric == "deaths"))) {
+    if ((health_outcome %in% c("yll")| #And  ("yld", "daly") if yld from lifetable ever implemented
+         (unique(input_with_risk_and_pop_fraction |> dplyr::select(contains("approach_exposure")) == "constant")[1] & health_outcome == "deaths"))) {
 
       ## PROJECT POPULATIONS #########################################################################
 
@@ -501,13 +502,13 @@ get_pop_impact <-
     pop <- pop |>
       dplyr::mutate(
         pop_impact_nest =
-          if(outcome_metric == "deaths") premature_deaths_nest else yll_nest)
+          if({{health_outcome}} == "deaths") premature_deaths_nest else yll_nest)
 
     # Remove from pop, as already present in input_with_risk_...
     pop <- pop |>
       dplyr::select(-lifetable_with_pop_nest)
 
-    if (outcome_metric != "yld" & outcome_metric != "daly"){ # YLL & premature deaths case
+    if (health_outcome %in% c("deaths", "yll")){
 
       joining_columns_pop_impact <-
         healthiar:::find_joining_columns(input_with_risk_and_pop_fraction,
@@ -517,29 +518,32 @@ get_pop_impact <-
       pop_impact <-
         input_with_risk_and_pop_fraction |>
         dplyr::right_join(pop, by = joining_columns_pop_impact) |>
-        relocate(contains("nest"), .before = 1)
+        relocate(contains("nest"), .before = 1)}
 
-    } else { # YLD case
 
-      pop <- pop |>
-        select(geo_id_disaggregated, contains("exp"), contains("prop_pop_exp"), rr, erf_ci, sex, # Variables to merge by
-               -contains("_2"), # Remove all "..._2" variables (e.g. "exp_2"); relevant in "compare_..." function calls
-               contains("_nest"),
-               -contains("approach_exposure"),
-               -contains("exposure_dimension"),
-               -contains("exposure_type"),
-               -contains("exp_ci"))
+      # Code deactivated because yld from lifetable is not implemented (yet)
 
-      if( is_empty((grep("_1", names(pop))))){
-        pop_impact <- input_backup |>
-        dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp", "prop_pop_exp", "rr", "erf_ci", "sex", "exposure_name"))
-        }else{
-          pop_impact <- input_backup |>
-          # attribute_... cases
-          dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp_1", "prop_pop_exp_1", "rr", "erf_ci", "sex", "exposure_name")) # compare_... cases
-        }
-
-    }
+    # else if(health_outcome %in% c("yld", "daly")) {
+    #
+    #   pop <- pop |>
+    #     select(geo_id_disaggregated, contains("exp"), contains("prop_pop_exp"), rr, erf_ci, sex, # Variables to merge by
+    #            -contains("_2"), # Remove all "..._2" variables (e.g. "exp_2"); relevant in "compare_..." function calls
+    #            contains("_nest"),
+    #            -contains("approach_exposure"),
+    #            -contains("exposure_dimension"),
+    #            -contains("exposure_type"),
+    #            -contains("exp_ci"))
+    #
+    #   if( is_empty((grep("_1", names(pop))))){
+    #     pop_impact <- input_backup |>
+    #     dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp", "prop_pop_exp", "rr", "erf_ci", "sex", "exposure_name"))
+    #     }else{
+    #       pop_impact <- input_backup |>
+    #       # attribute_... cases
+    #       dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp_1", "prop_pop_exp_1", "rr", "erf_ci", "sex", "exposure_name")) # compare_... cases
+    #     }
+    #
+    # }
 
 
     on.exit(options(user_options))

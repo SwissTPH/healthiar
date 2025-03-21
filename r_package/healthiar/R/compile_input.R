@@ -1,7 +1,7 @@
 #' Compile input
 
 #' @description Compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
-#' @inheritParams attribute
+#' @inheritParams attribute_master
 #'
 #' @returns
 #' This function returns a \code{data.frame} with all input data together
@@ -19,10 +19,11 @@
 #' @keywords internal
 
 compile_input <-
-  function(health_outcome = NULL,
+  function(is_lifetable = NULL,
            approach_multiexposure = NULL,
            approach_risk = NULL,
            exp_central, exp_lower = NULL, exp_upper = NULL,
+           pop_exp = NULL,
            prop_pop_exp = NULL,
            cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
            rr_central, rr_lower = NULL, rr_upper = NULL,
@@ -40,6 +41,7 @@ compile_input <-
            duration_central = NULL, duration_lower = NULL, duration_upper = NULL,
            dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
            # Lifetable data
+           health_outcome = NULL,
            approach_exposure = NULL,
            approach_newborns = NULL,
            year_of_analysis = NULL,
@@ -62,6 +64,9 @@ compile_input <-
     #   geo_id_disaggregated <-
     #     as.character(ifelse(is.list({{exp_central}}), 1:length({{exp_central}}), 1))
     # }
+
+    #TODO: Check that prop_pop_exp and exp_central have the same length (consider list structure in iterations)
+    # Otherwise default value of prop_pop_exp (1) is wrongly assumed for exposure distribution.
 
 
     # PROCESS GEO ID ###################################################################
@@ -127,6 +132,7 @@ compile_input <-
 
 
 
+
     # ARGUMENTS ################################################################
 
     # Store the length of the exposure argument (to be used below)
@@ -139,7 +145,7 @@ compile_input <-
       ifelse(is.list(exp_central),
              length(exp_central),      # If multiple geo units
              1)                        # If only one geo unit
-# browser()
+
     input_wo_lifetable <-
       # Tibble converts NULL into NA: if variable is NULL, column not initiated
       dplyr::tibble(
@@ -163,13 +169,14 @@ compile_input <-
         cutoff_upper = cutoff_upper,
         approach_exposure = approach_exposure,
         approach_newborns = approach_newborns,
+        is_lifetable = is_lifetable,
         year_of_analysis = year_of_analysis,
         time_horizon = time_horizon,
         min_age = ifelse(
           test = !is.null( min_age ),
           yes = min_age,
           no = ifelse(
-            test = ( is.null ( min_age ) & grepl("lifetable", health_outcome) ),
+            test = ( is.null ( min_age ) & {{is_lifetable}} ),
             yes = first_age_pop,
             # no = NULL)
           no = NA)
@@ -178,23 +185,23 @@ compile_input <-
           test = !is.null( max_age ),
           yes = max_age,
           no = ifelse(
-            test = ( is.null ( max_age ) & grepl("lifetable", health_outcome) ),
+            test = ( is.null ( max_age ) & {{is_lifetable}} ),
             yes = last_age_pop,
             # no = NULL)
-          no = NA)
-      ),
-        duration_central = duration_central,
-        duration_lower = duration_lower,
-        duration_upper = duration_upper,
-        dw_central = dw_central,
-        dw_lower = dw_lower,
-        dw_upper = dw_upper,
+          no = NA)),
+      duration_central = duration_central,
+      duration_lower = duration_lower,
+      duration_upper = duration_upper,
+      dw_central = dw_central,
+      dw_lower = dw_lower,
+      dw_upper = dw_upper,
 
-        ## Finally, those variables that are multi-dimensional (exposure distribution)
-        exp_central = unlist(exp_central),
-        exp_lower = unlist(exp_lower),
-        exp_upper = unlist(exp_upper),
-        prop_pop_exp = unlist(prop_pop_exp)) |>
+      ## Finally, those variables that are multi-dimensional (exposure distribution)
+      exp_central = unlist(exp_central),
+      exp_lower = unlist(exp_lower),
+      exp_upper = unlist(exp_upper),
+      pop_exp = unlist(pop_exp),
+      prop_pop_exp = unlist(prop_pop_exp)) |>
 
       ## Remove min_age & max_age columns if they are NA
       dplyr::select(-where(~ all(is.na(x = .))))
@@ -290,7 +297,8 @@ compile_input <-
 
     # CREATE LIFETABLES ##########################################################
     # As nested tibble
-    if ( grepl("lifetable", health_outcome) ) {
+
+    if (is_lifetable) {
 
       # Build the data set for lifetable-related data
       # The life table has to be provided (by sex)
@@ -371,6 +379,7 @@ compile_input <-
 
 
       # JOIN TIBBLES ###########################################################
+
         # Calculate total population for impacts per 100k inhab.
         population <-
           lifetable_with_pop_total %>%
@@ -378,7 +387,7 @@ compile_input <-
           dplyr::summarize(population = sum(population, rm.na = TRUE))
 
         # Join the input without and with lifetable variable into one tibble
-        input <-
+        input_table <-
           dplyr::left_join(input_wo_lifetable,
                            lifetable_with_pop,
                            by = "geo_id_disaggregated",
@@ -389,8 +398,9 @@ compile_input <-
 
       } else {
       # If no lifetable, only use input_wo_lifetable
-      input <- input_wo_lifetable}
+      input_table <- input_wo_lifetable}
 
-  return(input)
+
+  return(input_table)
 
   }

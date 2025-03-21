@@ -1,7 +1,7 @@
 #' Get discount factor
 
 #' @description Get discount factor based on discount rate (already corrected for inflation)
-#' @inheritParams include_monetization
+#' @inheritParams monetize
 #' @author Alberto Castro
 #' @note Experimental function
 #' @export
@@ -9,8 +9,7 @@
 get_discount_factor <-
   function(discount_rate,
            discount_year,
-           discount_shape = "exponential",
-           inflation = NULL){
+           discount_shape = "exponential"){
 
 
     # If no discount_rate is provided,
@@ -29,23 +28,16 @@ get_discount_factor <-
       discount_factor <-
         ifelse(
           discount_shape == "exponential",
-          1/((1 + discount_rate) ^ discount_year),
+          (1 + discount_rate) ^ discount_year,
           ifelse(discount_shape == "hyperbolic_harvey_1986",
-                 1/((1 + discount_year) ^ discount_rate),
+                 (1 + discount_year) ^ discount_rate,
                  ifelse(discount_shape == "hyperbolic_mazur_1987",
-                        1/(1 + discount_rate * discount_year),
+                        1 + discount_rate * discount_year,
                         NA)))
 
     }
 
-    inflation_factor <-
-      ifelse(is.null(inflation),
-             1,
-             (1+inflation)^discount_year)
-
-    discount_factor_after_inflation <-
-      discount_factor * inflation_factor
 
 
-    return(discount_factor_after_inflation)
+    return(discount_factor)
   }

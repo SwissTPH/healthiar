@@ -1,8 +1,8 @@
 #' Attributable health cases based on relative risk
 
 #' @description Calculates the health impacts for each uncertainty and geo area.
-#' @inheritParams attribute
-#' @param input \code{Data frame} containing all input data.
+#' @inheritParams attribute_master
+#' @param input_table \code{Data frame} containing all input data.
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central, lower and upper bound confidence interval.
@@ -18,21 +18,33 @@
 #' @author Alberto Castro
 #' @keywords internal
 get_impact <-
-  function(input,
+  function(input_table,
            pop_fraction_type,
            population = NULL){
 
     # Relative risk ############################################################
 
-    if(unique(input$approach_risk) == "relative_risk"){
-      # Get pop_fraction and add to the input data frame
+    if(unique(input_table$approach_risk) == "relative_risk"){
+
+      if("pop_exp" %in% names(input_table) ){
+
+        input_with_prop_pop_exp <- input_table |>
+          dplyr::group_by(geo_id_disaggregated) |>
+          dplyr::mutate(prop_pop_exp = pop_exp/sum(pop_exp))
+
+      } else{
+        input_with_prop_pop_exp <- input_table
+      }
+
+
+      # Get pop_fraction and add to the input_table data frame
       input_with_risk_and_pop_fraction <-
-        healthiar:::get_risk_and_pop_fraction(input = input,
+        healthiar:::get_risk_and_pop_fraction(input_table = input_with_prop_pop_exp ,
                                               pop_fraction_type = pop_fraction_type)
 
-      # * Same input as output #################################################
+      # * Without life table #################################################
 
-      if(unique(input$health_outcome) %in% "same_input_output") {
+      if(!unique(input_table$is_lifetable)) {
 
         # Get pop_fraction and add it to the input data frame
         impact_raw <-
@@ -44,77 +56,50 @@ get_impact <-
                         pop_fraction, impact,
                         everything())
 
-        # * YLD ################################################################
-      } else if (unique(input$health_outcome) %in% "yld") {
+      # * Lifetable ##########################################################
+      } else if (unique(input_table$is_lifetable)) {
 
-        # Add impact
+        pop_impact <-
+          healthiar:::get_pop_impact(
+            input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
+
+
         impact_raw <-
-          # impact_raw |> # Line for commented out code above
-          input_with_risk_and_pop_fraction |>
-          dplyr::mutate(impact = pop_fraction * bhd) |>
-          dplyr::mutate(impact = impact * dw * duration)  |>
-          # Order columns
-          dplyr::select(exp_ci, bhd_ci, erf_ci,
-                        pop_fraction, impact,
-                        everything())
+          healthiar:::get_deaths_yll_from_lifetable(
+            pop_impact = pop_impact,
+            input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
-        # * Lifetable ##########################################################
-        } else if (unique(input$health_outcome) %in% c("deaths_from_lifetable",
-                                                      "yll_from_lifetable",
-                                                      "yld_from_lifetable")) {
-          outcome_metric <-
-            gsub("_from_lifetable", "", unique(input$health_outcome))
-
-          pop_impact <-
-            healthiar:::get_pop_impact(
-              input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction,
-              outcome_metric = outcome_metric
-              )
+      }
 
 
-          impact_raw <-
-            healthiar:::get_deaths_yll_yld(
-              pop_impact = pop_impact,
-              input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
+        # Absolute risk ##########################################################
 
-    } else if (unique(input$health_outcome) %in% "daly_from_lifetable"){
+      } else if (
+        unique(input_table$approach_risk) == "absolute_risk" &
+        ( !unique(input_table$is_lifetable)) ) {
 
-      pop_impact <-
-        healthiar:::get_pop_impact(
-          input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction,
-          outcome_metric = "daly"
-          )
-
-
-      impact_raw <-
-        healthiar:::get_daly(
-          pop_impact = pop_impact,
-          input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction
-        )
-    }
+        # Calculate absolute risk for each exposure category
+        impact_raw <-
+          input_table |>
+          dplyr::rowwise() |>
+          dplyr::mutate(
+            absolute_risk_as_percent = healthiar::get_risk(exp = exp, erf_eq = erf_eq),
+            impact = absolute_risk_as_percent/100 * pop_exp) |>
+          # Remove the grouping of rowwise
+          dplyr::ungroup()}
 
 
-      # Absolute risk ##########################################################
 
-    } else if (
-      unique(input$approach_risk) == "absolute_risk" &
-      ( unique(input$health_outcome) == "same_input_output" | unique(input$health_outcome) == "yld" )
-      ) {
 
-      # Calculate absolute risk for each exposure category
-      impact_raw <-
-        input |>
-        dplyr::rowwise() |>
-        dplyr::mutate(
-          absolute_risk_as_percent = healthiar::get_risk(exp = exp, erf_eq = erf_eq),
-          pop_exp = population * prop_pop_exp,
-          impact = absolute_risk_as_percent/100 * pop_exp,
-          impact_rounded = round(impact, 0)) |>
-          dplyr::ungroup()
+      # * YLD ################################################################
+      # If dw is a column in input_table
+      # it means that the user entered a value for this argument
+      # and he/she wants to have YLD
+      # Then convert impact into impact with dw and duration
 
-      # * YLD ##################################################################
-
-      if ( unique(input$health_outcome) == "yld" ) {
+      if ("dw" %in% names(input_table) &
+          "duration" %in% names(input_table) &
+          !unique(input_table$is_lifetable)) {
 
         impact_raw <-
           impact_raw |>
@@ -122,7 +107,6 @@ get_impact <-
 
       }
 
-    }
 
 
     # Store results ############################################################
@@ -132,14 +116,14 @@ get_impact <-
     # * Single geo unit ########################################################
     if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) &
          ( unique(impact_raw$exposure_type) == "exposure_distribution" ) &
-         ( !grepl("from_lifetable", impact_raw$health_outcome[1]) ) &
+         ( !unique(impact_raw$is_lifetable) ) &
          ( max(impact_raw$geo_id_disaggregated) == 1 ) ) {
 
       impact_raw <- impact_raw |>
         dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
         dplyr::left_join(
           x = _,
-          y = input |>
+          y = input_table |>
             dplyr::group_by(across(any_of(c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")))) |> # if cutoff argument not specified in attribute argument call then "cutoff_ci" is not used to group
             dplyr::summarize(exp = list(exp),
                              prop_pop_exp = list(prop_pop_exp),
@@ -148,20 +132,20 @@ get_impact <-
             dplyr::select(c(exp_ci, erf_ci, exp, prop_pop_exp, exposure_dimension)),
           by = c("exp_ci", "erf_ci")
         )|>
-        dplyr::mutate(exposure_type = input$exposure_type |> dplyr::first())
+        dplyr::mutate(exposure_type = input_table$exposure_type |> dplyr::first())
 
       # * Multiple geo units ###################################################
 
     } else if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) &
                 ( unique(impact_raw$exposure_type) == "exposure_distribution" ) &
-                ( !grepl("from_lifetable", impact_raw$health_outcome[1]) ) &
+                ( !unique(impact_raw$is_lifetable) ) &
                 ( max(impact_raw$geo_id_disaggregated) > 1 ) ) {
 
       impact_raw <- impact_raw |>
         dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
         dplyr::left_join(
           x = _,
-          y = input |>
+          y = input_table |>
             dplyr::group_by(across(any_of(c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")))) |> # if cutoff argument not specified in attribute argument call then "cutoff_ci" is not used to group
             dplyr::summarize(exp = list(exp),
                              prop_pop_exp = list(prop_pop_exp), # Introduced error in ar pathway
@@ -170,7 +154,7 @@ get_impact <-
             dplyr::select(c(exp_ci, erf_ci, exp, prop_pop_exp, exposure_dimension, geo_id_disaggregated)),
           by = c("exp_ci", "erf_ci", "geo_id_disaggregated")
         )|>
-        dplyr::mutate(exposure_type = input$exposure_type |> dplyr::first())
+        dplyr::mutate(exposure_type = input_table$exposure_type |> dplyr::first())
 
     }
 
@@ -189,8 +173,6 @@ get_impact <-
         )
     }
 
-
-
-    return(impact_raw)
+  return(impact_raw)
 
   }

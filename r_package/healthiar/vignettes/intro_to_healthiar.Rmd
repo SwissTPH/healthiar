@@ -222,11 +222,11 @@ We see that each row represents a unique combination of the provided input varia
 
 ### Adding summary uncertainty
 
-You can do a Monte Carlo uncertainty analysis via the `include_summary_uncertainty` function.
+You can do a Monte Carlo uncertainty analysis via the `summarize_uncertainty` function.
 
 ```{r}
 results_pm_copd <- 
-  include_summary_uncertainty(
+  summarize_uncertainty(
     results = results_pm_copd,
     n_sim = 1000
 )
@@ -259,7 +259,7 @@ You can monetize the obtained health impacts via the `include_monetization` func
 
 ```{r monetization}
 results_pm_copd <- 
-  include_monetization(
+  monetize(
     output_healthiar = results_pm_copd,
     approach_discount = "direct",
     discount_shape = "exponential",
@@ -289,11 +289,11 @@ Two folders are added:
 
 Let's imagine we design a policy that would reduce air pollution to 5 $\mu g/m^3$, which is the concentration specified in the `cutoff_central` argument in the initial `attribute_health()` call. So we could avoid all COPD cases attributed to air pollution.
 
-What would be the monetary benefit of such a policy, considering also the cost to implement the policy (estimated at 100 million EURO)? We can find out using `healthiar`'s `include_cba()` function.
+What would be the monetary benefit of such a policy, considering also the cost to implement the policy (estimated at 100 million EURO)? We can find out using `healthiar`'s `cba()` function.
 
 ```{r cba}
 cba <- 
-  healthiar::include_cba(
+  healthiar::cba(
     output_healthiar = results_pm_copd,
     approach_discount = "direct",
     valuation = 50000,
@@ -384,7 +384,7 @@ We see that there are fewer columns than for a single geo unit assessment with `
 The geo unit specific information and results are stored in `health_detailed`. Filter for the main result for each geo unit as follows
 
 ```{r inspect iteration detailed results}
-results_iteration[["health_detailed"]][["raw"]] |>
+results_iteration[["health_detailed"]][["impact_raw"]] |>
   pluck() |> 
   ## Select main result for each geo unit
   ## i.e. rows where all ..._ci columns have value "central"

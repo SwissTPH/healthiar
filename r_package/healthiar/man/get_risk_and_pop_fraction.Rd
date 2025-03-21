@@ -4,10 +4,10 @@
 \alias{get_risk_and_pop_fraction}
 \title{Get input data and PAF}
 \usage{
-get_risk_and_pop_fraction(input, pop_fraction_type)
+get_risk_and_pop_fraction(input_table, pop_fraction_type)
 }
 \arguments{
-\item{input}{\code{Data frame} with the input data}
+\item{input_table}{\code{Data frame} with the input data}
 
 \item{pop_fraction_type}{\code{String} indicating the type of the population fraction. Options: "paf" or "pif"}
 }

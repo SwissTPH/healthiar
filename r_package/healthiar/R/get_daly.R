@@ -1,54 +1,92 @@
-#' Get DALY
-#'
-#' @description Get attributable disability-adjusted lived years applying a lifetable approach
-#' @inheritParams attribute
-#' @param outcome_metric \code{String} with the metric of the health outcome to be assessed. Options: "deaths", "yll" or "yld".
-#' @returns
-#' This function returns a \code{List}
-#' @examples
-#' TBD
+#' Attributable disability-adjusted life years based on life tables
+
+#' @description
+#' Calculates the disability-adjusted life years attributable to the exposure to an environmental stressor using a life table approach.
+#' @inheritParams attribute_master
 #' @author Alberto Castro & Axel Luyten
 #' @note Experimental function
-#' @keywords internal
-#'
-#'
-#'
+#' @export
+
 get_daly <-
   function(
-    pop_impact,
-    input_with_risk_and_pop_fraction
-    ) {
+    output_attribute_yll,
+    output_attribute_yld){
 
-    ## Create list to iterate
-    impact_yll_yld_raw <- list()
+    # Capture all arguments and values
+    input_args <- as.list(environment())
 
-    for(o in c("yll", "yld" )){
 
-      impact_yll_yld_raw[[o]] <-
-        healthiar:::get_deaths_yll_yld(
-          pop_impact = pop_impact,
-          input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction |> mutate(health_outcome = paste0(o, "_from_lifetable")))
+    # Store impact_raw of yll and yld
+    # Shorter and handy to code
+    impact_raw_yll <- output_attribute_yll[["health_detailed"]][["impact_raw"]] |>
+      dplyr::filter(sex=="total")
+    impact_raw_yld <- output_attribute_yld[["health_detailed"]][["impact_raw"]]
+
+    # Capture all column names
+    # They should be the same for yll and yld but just in case
+    column_names_impact_raw <-
+      unique(c(names(impact_raw_yll), names(impact_raw_yll)))
+
+    common_columns <-
+      column_names_impact_raw[grepl("exp|exposure|cutoff|geo|approach_risk",
+                                    column_names_impact_raw)]
+    common_columns <- common_columns[!common_columns %in% "approach_exposure"]
+    common_columns_for_join <- c(common_columns, "erf_ci")
+
+
+    common_columns_identical <-
+      healthiar:::check_if_args_identical(
+        args_a = input_args$output_attribute_yld,
+        args_b = input_args$output_attribute_yld,
+        names_to_check = common_columns)
+
+
+    if(!all(common_columns_identical))
+    {stop("The arguments ",
+          paste(names(common_columns_identical)[common_columns_identical]
+                , collapse = ", "),
+          " must be identical in both scenarios")}
+
+
+
+    # Remove those containing the word impact
+    column_names_impact_raw_without_impact <-
+      column_names_impact_raw[!grepl("impact|lifeyears|lifetable", column_names_impact_raw)]
+
+
+    # Obtain the new impact_raw for DALY
+    impact_raw <-
+      # Join impact_raw tables from yll and yld
+      # but giving a suffix _yll and _yld to free the name "impact" to YLD
+      # We need to use "impact" as final result to be consistent with the other
+      # healthiar functions
+      dplyr::full_join(
+        impact_raw_yll,
+        impact_raw_yld,
+        by = common_columns_for_join,
+        suffix = c("_yll", "_yld")) |>
+      dplyr::mutate(
+        # Add metric
+        outcome_metric = "daly",
+        # Add impact as sum of yll and yld (including rounded impact)
+        impact = impact_yll + impact_yld,
+        impact_rounded = round(impact))
+
+    # Add impact per 100k inhabitants if population is available
+    if("population" %in% names(impact_raw)){
+      impact_raw <-
+        impact_raw |>
+        dplyr::mutate(
+          impact_per_100k = impact / population)
     }
 
-    ## Identify the common and identical columns (joining columns)
-    ## Remove impact (it can never be a joining column)
-    joining_columns_yll_yld <-
-      healthiar:::find_joining_columns(
-        df1 = impact_yll_yld_raw[["yll"]],
-        df2 = impact_yll_yld_raw[["yld"]],
-        except = "impact")
+    # Use args and impact to produce impact
+    # input_table is not available (two branches: yll and yld) but not needed
+    output <-
+      healthiar:::get_output(
+        input_args = input_args,
+        impact_raw = impact_raw)
 
-    ## New table containing yll and yld results
-    impact_raw <-
-      # Join yll and yld tables
-      dplyr::full_join(impact_yll_yld_raw[["yll"]],
-                       impact_yll_yld_raw[["yld"]],
-                       by = joining_columns_yll_yld,
-                       suffix = c("_yll", "_yld")) |>
-      ## Sum yll and yld
-      dplyr::mutate(impact = impact_yll + impact_yld)
-
-   return(impact_raw)
-
+    return(output)
 
   }

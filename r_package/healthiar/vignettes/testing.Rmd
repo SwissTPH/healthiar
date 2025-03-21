@@ -778,7 +778,7 @@ See start of the section [Testing templates] for guidance on how to access funct
 # data <- ...
 
 ## healthiar FUNCTION CALL
-healthiar::include_monetization(
+healthiar::monetize(
   approach_discount = ,
   output_healthiar = NULL, # Only specify one of either "output_healthiar" or "impact" argument 
   impact = , # Only specify one of either "output_healthiar" or "impact" argument 
@@ -812,7 +812,7 @@ testthat::test_that("results correct [pathway_id]", {
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
-      healthiar::include_monetization(
+      healthiar::monetize(
         approach_discount = ,
         output_healthiar = NULL, # Only specify one of either "output_healthiar" or "impact" argument 
         impact = , # Only specify one of either "output_healthiar" or "impact" argument 
@@ -852,7 +852,7 @@ Depending on your calculation pathway you will have to replace some of the `NULL
 
     ## healthiar FUNCTION CALL
     object =
-      healthiar::include_cba(
+      healthiar::cba(
         approach_discount = ,
         output_healthiar = NULL,
         positive_impact = ,
@@ -887,7 +887,7 @@ testthat::test_that("results correct [pathway_id]", {
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
-      healthiar::include_cba(
+      healthiar::cba(
         approach_discount = ,
         output_healthiar = NULL,
         positive_impact = ,
@@ -1005,7 +1005,7 @@ testthat::test_that("results correct [pathway_id]", {
 
 ## Social analysis
 
-Note that to test the `include_social` function you a social indicator for each of the geo units under analysis in addition to the usual data needed for an iteration of `attribute`.
+Note that to test the `socialize` function you a social indicator for each of the geo units under analysis in addition to the usual data needed for an iteration of `attribute`.
 
 ### Basic function template
 
@@ -1025,7 +1025,7 @@ result_interim <- healthiar::attribute_health(
 )
 
 ## healthiar FUNCTION CALL
-healthiar::include_social(
+healthiar::socialize(
   output_healthiar = result_interim,
   geo_id_disaggregated = , # geo IDs of the preparatory iteration call above and this function call must match!
   social_indicator = ,
@@ -1066,7 +1066,7 @@ testthat::test_that("results correct [pathway_id]", {
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
-        healthiar::include_social(
+        healthiar::socialize(
           output_healthiar = result_interim,
           geo_id_disaggregated = , # geo IDs of the preparatory iteration call above and this function call must match!
           social_indicator = ,

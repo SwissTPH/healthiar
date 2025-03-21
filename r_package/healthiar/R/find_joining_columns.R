@@ -1,8 +1,8 @@
 #' Find joining columns
 #'
 #' @description Find columns in two data frames that have same name and identical values (excluding exceptions).- The resulting joining columns are used to dplyr::x_join data frames and add the vector to by=.
-#' @param df1 First \code{Data frame}
-#' @param df2 Second \code{Data frame}
+#' @param df_1 First \code{Data frame}
+#' @param df_2 Second \code{Data frame}
 #' @param except \code{Vector} of strings showing columns that have to be excluded although they fulfill the inclusion criteria (same name and value)
 
 #'
@@ -15,18 +15,18 @@
 #' @keywords internal
 
 find_joining_columns <-
-  function(df1,
-           df2,
+  function(df_1,
+           df_2,
            except = NULL){
 
     joining_columns <-
-      # First identify the columns that are common for df1 and df2
-      intersect(names(df1),
-                names(df2))|>
+      # First identify the columns that are common for df_1 and df_2
+      intersect(names(df_1),
+                names(df_2))|>
       # Second, the identical columns of the common ones
       # They are the columns to be used when joining data frames
-      purrr::keep(~ identical(df1[[.x]],
-                              df2[[.x]]))|>
+      purrr::keep(~ identical(df_1[[.x]],
+                              df_2[[.x]]))|>
         # Finally exclude scenario specific columns
         dplyr::setdiff(except)
 

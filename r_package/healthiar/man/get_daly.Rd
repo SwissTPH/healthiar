@@ -2,26 +2,16 @@
 % Please edit documentation in R/get_daly.R
 \name{get_daly}
 \alias{get_daly}
-\title{Get DALY}
+\title{Attributable disability-adjusted life years based on life tables}
 \usage{
-get_daly(pop_impact, input_with_risk_and_pop_fraction)
-}
-\arguments{
-\item{outcome_metric}{\code{String} with the metric of the health outcome to be assessed. Options: "deaths", "yll" or "yld".}
-}
-\value{
-This function returns a \code{List}
+get_daly(output_attribute_yll, output_attribute_yld)
 }
 \description{
-Get attributable disability-adjusted lived years applying a lifetable approach
+Calculates the disability-adjusted life years attributable to the exposure to an environmental stressor using a life table approach.
 }
 \note{
 Experimental function
 }
-\examples{
-TBD
-}
 \author{
 Alberto Castro & Axel Luyten
 }
-\keyword{internal}

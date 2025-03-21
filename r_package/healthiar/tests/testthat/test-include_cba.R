@@ -2,7 +2,7 @@ testthat::test_that("results correct pathway_cba|discount_appr_direct|discount_s
 
   testthat::expect_equal(
     object =
-      healthiar::include_cba(
+      healthiar::cba(
         approach_discount = "direct",
         positive_impact = 50,
         valuation = 20,
@@ -40,7 +40,7 @@ testthat::test_that("results the same fake_cba|discount_appr_direct|discount_sha
 
   testthat::expect_equal(
     object =
-      healthiar::include_cba(
+      healthiar::cba(
         approach_discount = "direct",
         output_healthiar = bestcost_pm_copd,
         valuation = 20,

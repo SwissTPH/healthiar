@@ -126,7 +126,6 @@ test <- paste(test, collapse = ", ")
 print(test)
 ```
 
-
 # Calculate health impacts
 
 ## Attributable health impact
@@ -165,12 +164,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_copd,
 
 
 
-
-
-
-
-
-
 ```{r single exposure value with multiple uncertainties}
 
 
@@ -194,11 +187,6 @@ bestcost_pm_copd_multiple <-
 
 check_bestcost(result_list_bestcost = bestcost_pm_copd_multiple,
                result_vector_alternative = c(3502, 1353, 5474)) # Results on 5 November 2024
-
-
-
-
-
 
 
 
@@ -370,6 +358,23 @@ bestcost_noise_ihd_expDist <-
 check_bestcost(result_list_bestcost = bestcost_noise_ihd_expDist,
                result_vector_alternative = niph_noise_ihd_result)
 
+# Now using pop_exp instead of prop_pop_exp. The result should be the same as above.
+bestcost_noise_ihd_expDist_pop_exp <- 
+  healthiar::attribute_health(
+    exp_central = niph_noise_ihd_input$exposure_mean,
+    pop_exp = niph_noise_ihd_input$population_exposed_total,
+    cutoff_central = min(niph_noise_ihd_input$exposure_mean), 
+    bhd_central = niph_noise_ihd_input$gbd_daly[1],
+    rr_central = 1.08,
+    rr_increment = 10, 
+    erf_shape = "log_linear",
+    info = data.frame(pollutant = "road_noise", outcome = "YLD"))
+
+# View(bestcost_noise_ihd_expDist)
+
+check_bestcost(result_list_bestcost = bestcost_noise_ihd_expDist_pop_exp,
+               result_vector_alternative = niph_noise_ihd_result)
+
  
 # Obtain attributable cases using the bestcost package
 # for multiple geo_sections
@@ -379,9 +384,9 @@ bestcost_noise_ihd_expDist_geo <-
                        runif_with_seed(5,8,10,2), 
                        runif_with_seed(5,8,10,3)),
     cutoff_central = 5,
-    prop_pop_exp = list(runif_with_seed(5,0.1,1,1),
-                        runif_with_seed(5,0.1,1,2), 
-                        runif_with_seed(5,0.1,1,3)),
+    pop_exp = list(runif_with_seed(5,1E2,1E3,1),
+                   runif_with_seed(5,1E2,1E3,2), 
+                   runif_with_seed(5,1E2,1E3,3)),
     bhd_central = list(runif_with_seed(3,1E4,1E5,1)),
     rr_central = 1.08,
     rr_increment = 10, 
@@ -448,39 +453,27 @@ niph_noise_ha_result <-
         dplyr::pull() |>
   round()
 
-# Obtain attributable cases using the bestcost package and input data from niph
-bestcost_noise_ha_ar <- 
-  healthiar::attribute_health(
-    approach_risk = "absolute_risk",
-    exp_central = niph_noise_ha_input$exposure_mean,
-    # exp_lower = niph_noise_ha_input$exposure_mean - 1,
-    # exp_upper = niph_noise_ha_input$exposure_mean + 1,
-    cutoff_central = 10,
-    population = sum(niph_noise_ha_input$population_exposed_total), 
-    prop_pop_exp = niph_noise_ha_input$population_exposed_total/sum(niph_noise_ha_input$population_exposed_total),
-    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-    info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
-
 # View(bestcost_noise_ha_ar)
 
 check_bestcost(result_list_bestcost = bestcost_noise_ha_ar,
                result_vector_alternative = niph_noise_ha_result)
 
-# YLD case for absolute risk
-bestcost_noise_ha_ar_yld <- 
-  healthiar::attribute_yld(
+# Obtain attributable cases using the bestcost package and input data from niph
+bestcost_noise_ha_ar <- 
+  healthiar::attribute_health(
     approach_risk = "absolute_risk",
     exp_central = niph_noise_ha_input$exposure_mean,
-    population = sum(niph_noise_ha_input$population_exposed_total), 
-    prop_pop_exp = niph_noise_ha_input$population_exposed_total/sum(niph_noise_ha_input$population_exposed_total),
+    cutoff_central = 10,
+    pop_exp = niph_noise_ha_input$population_exposed_total, 
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-    dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
-    # dw_central = 1, dw_lower = 0.1, dw_upper = 10,
-    duration_central = 1, #duration_lower = 0.1, duration_upper = 10,
-    info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
+    info = data.frame(pollutant = "road_noise", 
+                      outcome = "highly_annoyance",
+                      year = 2019))
 
-check_bestcost(result_list_bestcost = bestcost_noise_ha_ar_yld,
-               result_vector_alternative = niph_noise_ha_result/2)
+# View(bestcost_noise_ha_ar)
+
+check_bestcost(result_list_bestcost = bestcost_noise_ha_ar,
+               result_vector_alternative = niph_noise_ha_result)
 
 # Obtain attributable cases using the bestcost package and input data from niph
 # for multiple geo_sections
@@ -499,9 +492,10 @@ bestcost_noise_ha_ar_geo <-
     population = list(runif_with_seed(1,5E3,1E4,1),
                         runif_with_seed(1,5E3,1E4,2), 
                         runif_with_seed(1,5E3,1E4,3)),
-    prop_pop_exp = list(runif_with_seed(5,0,1,1),
-                        runif_with_seed(5,0,1,2), 
-                        runif_with_seed(5,0,1,3)), 
+    pop_exp = list(runif_with_seed(5,1E2,1E3,1),
+                   runif_with_seed(5,1E2,1E3,2), 
+                   runif_with_seed(5,1E2,1E3,3)),
+    bhd_central = list(runif_with_seed(3,1E4,1E5,1)), 
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
     geo_id_disaggregated = 1:3,
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
@@ -511,7 +505,7 @@ bestcost_noise_ha_ar_geo <-
 
 ## prevalence-based YLD (duration_central=1)
 bestcost_pm_yld_singlebhd  <- 
-  healthiar::attribute_yld(
+  healthiar::attribute_health(
     exp_central = 8.85, 
     cutoff_central = 5,    
     bhd_central = 25000,
@@ -530,8 +524,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_yld_singlebhd ,
                result_vector_alternative = c(525, 277, 768)) # Result on 16 May 2024
 
 ## incidence-based YLD (duration_central > 1)
-bestcost_pm_yld_singlebhd  <- 
-  healthiar::attribute_yld(
+bestcost_pm_yld_singlebhd_long_duration  <- 
+  healthiar::attribute_health(
     exp_central = 8.85, 
     cutoff_central = 5,    
     bhd_central = 25000,
@@ -546,9 +540,12 @@ bestcost_pm_yld_singlebhd  <-
 # View(bestcost_pm_yld_singlebhd)
 
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = bestcost_pm_yld_singlebhd,
+check_bestcost(result_list_bestcost = bestcost_pm_yld_singlebhd_long_duration,
                result_vector_alternative = c(2627, 1386, 3839 )) # Result on 2025-01-28
 ```
+
+
+
 
 # Social analysis
 
@@ -569,7 +566,7 @@ bestcost_pm_death <-
 
 # Then include social indicators of deprivation 
 bestcost_pm_death_social_decile <- 
-  healthiar::include_social(output_healthiar = bestcost_pm_death,
+  healthiar::socialize(output_healthiar = bestcost_pm_death,
                             geo_id_disaggregated = social_data$CS01012020,
                             social_indicator = social_data$score,
                             n_quantile = 10,
@@ -602,7 +599,7 @@ bestcost_pm_death <-
 
 # Then include social indicators of deprivation 
 bestcost_pm_death_social_decile_impact_vector <- 
-  healthiar::include_social(impact = bestcost_pm_death[["health_main"]]$impact,
+  healthiar::socialize(impact = bestcost_pm_death[["health_main"]]$impact,
                             population = bestcost_pm_death[["health_main"]]$population,
                             bhd = bestcost_pm_death[["health_main"]]$bhd,
                             exp = bestcost_pm_death[["health_main"]]$exp,
@@ -667,14 +664,14 @@ bestcost_pm_copd_with_summary_uncertainty <-
 # View(bestcost_pm_copd_with_summary_uncertainty)
 
 bestcost_pm_copd_extern_uncertainty <-
-  healthiar::include_summary_uncertainty(
+  healthiar::summarize_uncertainty(
     res = bestcost_pm_copd_with_summary_uncertainty,
     n_sim = 100)
 
 # Comparison central +- 95% CIs & Monte-Carlo central, lower, upper estimates
 ## Central estimates
 print("Main estimates: ") ; bestcost_pm_copd_with_summary_uncertainty[["health_main"]][["impact_rounded"]]
-## With external uncertainty function (i.e. include_summary_uncertainty())
+## With external uncertainty function (i.e. summarize_uncertainty())
 print("Summary uncertainty estimates (extern uncertainty function): ")
 round(as.numeric(bestcost_pm_copd_extern_uncertainty[["uncertainty_main"]]), digits = 0)
 bestcost_pm_copd_extern_uncertainty |>
@@ -712,7 +709,7 @@ check_bestcost(result_list_bestcost = bestcost_pm_copd_geo_short,
                result_vector_alternative = c(32449, 12508, 50836)) # Results on 5 November 2024
 
 bestcost_pm_copd_geo_short_uncertainty <- 
-  healthiar::include_summary_uncertainty(
+  healthiar::summarize_uncertainty(
     bestcost_pm_copd_geo_short,
     n_sim = 100)
 
@@ -757,7 +754,7 @@ bestcost_noise_ihd_expDist <-
 # View(bestcost_noise_ihd_expDist)
 
 # Calculate summary uncertainty
-bestcost_noise_ihd_expDist_extern_uncertainty <- include_summary_uncertainty(
+bestcost_noise_ihd_expDist_extern_uncertainty <- summarize_uncertainty(
   bestcost_noise_ihd_expDist,
     n_sim = 100)
 
@@ -804,7 +801,7 @@ bestcost_noise_ihd_expDist_iteration <-
     info = data.frame(pollutant = "road_noise", outcome = "YLD"))
 # View(bestcost_noise_ihd_expDist_iteration)
 
-bestcost_noise_ihd_expDist_iteration_uncertainty <- include_summary_uncertainty(
+bestcost_noise_ihd_expDist_iteration_uncertainty <- summarize_uncertainty(
   bestcost_noise_ihd_expDist_iteration,
     n_sim = 100)
 # View(bestcost_noise_ihd_expDist_iteration_uncertainty)
@@ -812,14 +809,14 @@ bestcost_noise_ihd_expDist_iteration_uncertainty <- include_summary_uncertainty(
 
 ## Check impacts per geo unit
 ### Central estimates from attribte()
-round(as.numeric(bestcost_noise_ihd_expDist_iteration[["health_detailed"]][["raw"]] |> filter(erf_ci == "central") |> filter(exp_ci == "central") |> pull(impact_rounded)), digits = 0) 
-### Summary uncertainty estimates from include_summary_uncertainty()
+round(as.numeric(bestcost_noise_ihd_expDist_iteration[["health_detailed"]][["impact_raw"]] |> filter(erf_ci == "central") |> filter(exp_ci == "central") |> pull(impact_rounded)), digits = 0) 
+### Summary uncertainty estimates from summarize_uncertainty()
 round(as.numeric(bestcost_noise_ihd_expDist_iteration_uncertainty[["uncertainty_detailed"]][["geo_specific"]]$impact_central), digits = 0)
 ### Results seem plausible
 
 ## Check PAFs  of geo units
 print("Main (PAF's of 1st/2nd/3rd geo unit)")
-bestcost_noise_ihd_expDist_iteration[["health_detailed"]][["raw"]] |> filter(erf_ci == "central") |> filter(exp_ci == "central") |> pull(pop_fraction)
+bestcost_noise_ihd_expDist_iteration[["health_detailed"]][["impact_raw"]] |> filter(erf_ci == "central") |> filter(exp_ci == "central") |> pull(pop_fraction)
 ## The PAFs from the attribute call of the different geo units match with the one obtained in the example_road_noise_niph_test.xlsx
 
 ## Check aggregated impact
@@ -829,10 +826,10 @@ round(as.numeric(bestcost_noise_ihd_expDist_iteration_uncertainty[["uncertainty_
 ## Results seem plausible
 ```
 
-```{r Summary uncertainty rr attribute_yld}
+```{r Summary uncertainty rr attribute for yld}
 
 bestcost_pm_yld_singlebhd_with_summary_uncertainty  <- 
-  healthiar::attribute_yld(
+  healthiar::attribute_health(
     exp_central = 8.85, 
     exp_lower = airqplus_pm_copd$mean_concentration - 1,
     exp_upper = airqplus_pm_copd$mean_concentration + 1,
@@ -852,7 +849,7 @@ bestcost_pm_yld_singlebhd_with_summary_uncertainty  <-
     duration_central = 1
     )
 
-bestcost_pm_yld_singlebhd_external_summary_uncertainty <- healthiar::include_summary_uncertainty(
+bestcost_pm_yld_singlebhd_external_summary_uncertainty <- healthiar::summarize_uncertainty(
   bestcost_pm_yld_singlebhd_with_summary_uncertainty,
     n_sim = 100)
 
@@ -879,20 +876,20 @@ bestcost_noise_ha_ar_with_summary_uncertainty <-
     exp_lower = niph_noise_ha_input$exposure_mean - 1,
     exp_upper = niph_noise_ha_input$exposure_mean + 1,
     population = sum(niph_noise_ha_input$population_exposed_total),
-    prop_pop_exp = niph_noise_ha_input$population_exposed_total/sum(niph_noise_ha_input$population_exposed_total), 
+    pop_exp = niph_noise_ha_input$population_exposed_total, 
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
     )
 # View(bestcost_noise_ha_ar_with_summary_uncertainty)
 
-bestcost_noise_ha_ar_external_uncertainty <- healthiar::include_summary_uncertainty(
+bestcost_noise_ha_ar_external_uncertainty <- healthiar::summarize_uncertainty(
   bestcost_noise_ha_ar_with_summary_uncertainty,
   n_sim = 100)
 
 # Comparison central +- 95% CIs & Monte-Carlo central, lower, upper estimates
 print("Main estimate: ")
 bestcost_noise_ha_ar_with_summary_uncertainty[["health_main"]][["impact_rounded"]]
-# External include_summary_uncertainty function
+# External summarize_uncertainty function
 print("Summary uncertainty estimates (extern uncertainty function): ")
 round(as.numeric(bestcost_noise_ha_ar_external_uncertainty[["uncertainty_main"]]), digits = 0)
 # Results seem plausible
@@ -921,9 +918,10 @@ bestcost_noise_ha_ar_iteration <-
     prop_pop_exp = list(niph_noise_ha_input$population_exposed_total, 
                    niph_noise_ha_input$population_exposed_total + 0.1,
                    niph_noise_ha_input$population_exposed_total + 0.2),
-    population = list(runif_with_seed(1,5E3,1E4,1),
-                        runif_with_seed(1,5E3,1E4,2), 
-                        runif_with_seed(1,5E3,1E4,3)),
+    pop_exp = list(runif_with_seed(5,1E2,1E3,1),
+                   runif_with_seed(5,1E2,1E3,2), 
+                   runif_with_seed(5,1E2,1E3,3)),
+    bhd_central = list(runif_with_seed(3,1E4,1E5,1)), 
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
     geo_id_disaggregated = 1:3, 
     geo_id_aggregated = rep("CH", 3),
@@ -932,7 +930,7 @@ bestcost_noise_ha_ar_iteration <-
 # View(bestcost_noise_ha_ar_with_summary_uncertainty)
 
 bestcost_noise_ha_ar_iteration_with_summary_uncertainty <-
-  healthiar::include_summary_uncertainty(
+  healthiar::summarize_uncertainty(
     res = bestcost_noise_ha_ar_iteration,
     n_sim = 100)
 
@@ -952,25 +950,25 @@ niph_noise_ha_input <-
   dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean))
 
 # YLD case for absolute risk
-bestcost_noise_ha_ar <- 
-  healthiar::attribute_yld(
+bestcost_noise_ha_ar_uncertainty <- 
+  healthiar::attribute_health(
     approach_risk = "absolute_risk",
     exp_central = niph_noise_ha_input$exposure_mean,
     population = sum(niph_noise_ha_input$population_exposed_total), 
-    prop_pop_exp = niph_noise_ha_input$population_exposed_total/sum(niph_noise_ha_input$population_exposed_total),
+    pop_exp = niph_noise_ha_input$population_exposed_total,
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
     dw_central = 0.5, dw_lower = 0.25, dw_upper = 0.75,
     duration_central = 1, duration_lower = 0.1, duration_upper = 10,
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
 
-bestcost_noise_ha_ar_external_uncertainty <- healthiar::include_summary_uncertainty(
-  bestcost_noise_ha_ar,
+bestcost_noise_ha_ar_external_uncertainty <- healthiar::summarize_uncertainty(
+  bestcost_noise_ha_ar_uncertainty,
   n_sim = 100)
 
 # Comparison central +- 95% CIs & Monte-Carlo central, lower, upper estimates
 print("Main estimate: ")
 bestcost_noise_ha_ar[["health_main"]][["impact_rounded"]]
-# External include_summary_uncertainty function
+# External summarize_uncertainty function
 print("Summary uncertainty estimates (extern uncertainty function): ")
 round(as.numeric(bestcost_noise_ha_ar_external_uncertainty[["uncertainty_main"]]), digits = 0)
 # Results seem plausible
@@ -991,7 +989,7 @@ bestcost_noise_ha_ar_with_erf_eq <-
     exp_central = niph_noise_ha_input$exposure_mean,
     # exp_lower = niph_noise_ha_input$exposure_mean -2,
     # exp_upper = niph_noise_ha_input$exposure_mean + 2,
-    prop_pop_exp = niph_noise_ha_input$population_exposed_total/sum(niph_noise_ha_input$population_exposed_total),
+    pop_exp = niph_noise_ha_input$population_exposed_total,
     population = sum(niph_noise_ha_input$population_exposed_total),
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
     erf_eq_lower = "78.9270-3.1162*c+0.034*c^2",
@@ -1001,7 +999,7 @@ bestcost_noise_ha_ar_with_erf_eq <-
 # View(bestcost_noise_ha_ar_with_erf_eq)
 
 bestcost_noise_ha_ar_with_erf_eq_mc <-
-  healthiar::include_summary_uncertainty(
+  healthiar::summarize_uncertainty(
     res = bestcost_noise_ha_ar_with_erf_eq,
     n_sim = 1000)
 
@@ -1036,7 +1034,7 @@ bestcost_noise_ha_ar_iteration_with_erf_eq <-
     # exp_upper = list(niph_noise_ha_input$exposure_mean + 2,
     #                    niph_noise_ha_input$exposure_mean + 5 + 2,
     #                    niph_noise_ha_input$exposure_mean + 10 + 2),
-    prop_pop_exp = list(niph_noise_ha_input$population_exposed_total, 
+    pop_exp = list(niph_noise_ha_input$population_exposed_total, 
                    niph_noise_ha_input$population_exposed_total + 0.1,
                    niph_noise_ha_input$population_exposed_total + 0.2),
     population = list(runif_with_seed(1,5E3,1E4,1),
@@ -1052,7 +1050,7 @@ bestcost_noise_ha_ar_iteration_with_erf_eq <-
 # View(bestcost_noise_ha_ar_iteration_with_erf_eq)
 
 bestcost_noise_ha_ar_iteration_with_erf_eq_mc <-
-  healthiar::include_summary_uncertainty(
+  healthiar::summarize_uncertainty(
     res = bestcost_noise_ha_ar_iteration_with_erf_eq,
     n_sim = 100)
 
@@ -1079,12 +1077,10 @@ bestcost_pm_no2_mortality_additive <-
     cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
     bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
     rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-    rr_lower = setNames(c(1.063, 1.031)- 0.001, c("pm2.5", "no2")),
-    rr_upper = setNames(c(1.063, 1.031) + 0.001, c("pm2.5", "no2")),
+    #rr_lower = setNames(c(1.063, 1.031)- 0.001, c("pm2.5", "no2")),
+    #rr_upper = setNames(c(1.063, 1.031) + 0.001, c("pm2.5", "no2")),
     rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
     erf_shape = "log_linear")
-
-View(bestcost_pm_no2_mortality_additive)
 
 check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_additive,
                result_vector_alternative = 0.081 * 1000)
@@ -1106,7 +1102,7 @@ bestcost_pm_no2_mortality_multiplicative <-
     rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
     erf_shape = "log_linear")
 
-View(bestcost_pm_no2_mortality_multiplicative)
+# View(bestcost_pm_no2_mortality_multiplicative)
 
 check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative,
                result_vector_alternative = 0.079 * 1000)
@@ -1150,8 +1146,6 @@ bestcost_pm_no2_mortality_combined <-
     rr_increment = setNames(c(10, 10), c("pm2.5", "no2")), 
     erf_shape = "log_linear")
 
-View(bestcost_pm_no2_mortality_multiplicative)
-
 check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_multiplicative,
                result_vector_alternative = 0.079 * 1000)
 
@@ -1187,7 +1181,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_combined_ci,
 # and input data from an AirQ+ case
 
 bestcost_pm_deaths_lifetable_airqplus <-
-  healthiar::attribute_deaths_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "deaths",
     approach_exposure = "single_year",
     approach_newborns = "with_newborns",
     exp_central = airqplus_pm_deaths_yll[["input"]]$mean_concentration, 
@@ -1216,7 +1211,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_deaths_lifetable_airqplus,
 
 # Calculate premature deaths using bestcost function
 bestcost_pm_deaths_lifetable_expDistribution <- 
-    healthiar::attribute_deaths_from_lifetable(
+    healthiar::attribute_lifetable(
+      health_outcome = "deaths",
       exp_central = c(8, 9, 10), # Fake data just for testing purposes
       prop_pop_exp = c(0.2, 0.3, 0.5), # Fake data just for testing purposes
       cutoff_central = input_data_mortality$cutoff[2],   # PM2.5=5, NO2=10, i.e. WHO AQG 2021 
@@ -1249,7 +1245,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_deaths_lifetable_expDistributi
 
 # Now with input data from the Swiss project GeLuft
 bestcost_pm_yll_exposure_single_year_lifetable_geluft <-
-  healthiar::attribute_yll_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "yll",
     approach_exposure = "single_year",
     exp_central = input_data_mortality$exp[2], #exp CH 2019
     prop_pop_exp = 1,
@@ -1274,6 +1271,38 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_exposure_single_year_lifet
                # result_vector_alternative = c(27742, 14641, 40542)) # GeLuft approach result
 
 
+# Only one relative risk estimate (central estimate)
+
+# Calculate years of life lost using bestcost function
+# with input data from the Swiss project GeLuft
+
+bestcost_pm_yll_lifetable_1rr_geluft <- 
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
+      approach_exposure = "single_year",
+      exp_central = input_data_mortality$exp[2], #exp CH 2019
+      prop_pop_exp = 1,
+      cutoff_central = input_data_mortality$cutoff[2], 
+      rr_central = input_data_mortality[2,"rr_central"], 
+      rr_increment = 10, 
+      erf_shape = "log_linear",
+      first_age_pop = 0,
+      last_age_pop = 99,
+      deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
+      deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
+      population_midyear_male = lifetable_withPopulation[["male"]]$population, 
+      population_midyear_female = lifetable_withPopulation[["female"]]$population, 
+      year_of_analysis = 2019, 
+      info = input_data_mortality$pollutant[2], 
+      min_age = if(is.na(input_data_mortality$min_age[2])) NULL else input_data_mortality$min_age[2])
+
+# View(bestcost_pm_yll_lifetable_1rr_geluft)
+
+check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_1rr_geluft,
+               # result_vector_alternative = c(27742)) # GeLuft approach result 
+               result_vector_alternative = c(29274.89)) # AirQ+ approach result 
+
+
 
 ```
 
@@ -1282,7 +1311,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_exposure_single_year_lifet
 # Input data from an AirQ+ case
 
 bestcost_pm_yll_lifetable_airqplus <-
-  healthiar::attribute_yll_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "yll",
     approach_exposure = "constant",
     approach_newborns = "without_newborns",
     exp_central = airqplus_pm_deaths_yll[["input"]]$mean_concentration,
@@ -1308,6 +1338,8 @@ bestcost_pm_yll_lifetable_airqplus <-
 
 check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_airqplus,
                result_vector_alternative = c(2776839.17,	1452410.83,	4094163.08)) # AirQ+ result
+
+
 ```
 
 ```{r YLL lifetable from CONSTANT exposure and WITH NEWBORNS}
@@ -1315,7 +1347,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_airqplus,
 # Input data from an AirQ+ case
 
 bestcost_pm_yll_lifetable_airqplus_with_newborns <-
-  healthiar::attribute_yll_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "yll",
     approach_exposure = "constant",
     approach_newborns = "with_newborns",
     exp_central = airqplus_pm_deaths_yll[["input"]]$mean_concentration,
@@ -1340,36 +1373,6 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_airqplus_with_ne
                result_vector_alternative = c(3248408.53,	1700230.04,	4786195.41)) # AirQ+ result
 ```
 
-```{r YLL lifetable with single relative risk}
-# Only one relative risk estimate (central estimate)
-
-# Calculate years of life lost using bestcost function
-# with input data from the Swiss project GeLuft
-
-bestcost_pm_yll_lifetable_1rr_geluft <- 
-    healthiar::attribute_yll_from_lifetable(
-      exp_central = input_data_mortality$exp[2], #exp CH 2019
-      prop_pop_exp = 1,
-      cutoff_central = input_data_mortality$cutoff[2], 
-      rr_central = input_data_mortality[2,"rr_central"], 
-      rr_increment = 10, 
-      erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-      deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-      population_midyear_male = lifetable_withPopulation[["male"]]$population, 
-      population_midyear_female = lifetable_withPopulation[["female"]]$population, 
-      year_of_analysis = 2019, 
-      info = input_data_mortality$pollutant[2], 
-      min_age = if(is.na(input_data_mortality$min_age[2])) NULL else input_data_mortality$min_age[2])
-
-# View(bestcost_pm_yll_lifetable_1rr_geluft)
-
-check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_1rr_geluft,
-               # result_vector_alternative = c(27742)) # GeLuft approach result 
-               result_vector_alternative = c(29274.89)) # AirQ+ approach result 
-```
 
 ```{r YLL lifetable with exposure distribution}
 
@@ -1377,7 +1380,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_1rr_geluft,
 # with exposure distribution (instead of population-weighted mean)
 
 bestcost_pm_yll_lifetable_expDistribution_geluft <- 
-    healthiar::attribute_yll_from_lifetable(
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
       exp_central = c(8, 9, 10), # Fake data just for testing purposes
       prop_pop_exp = c(0.2, 0.3, 0.5), # Fake data just for testing purposes
       cutoff_central = input_data_mortality$cutoff[2], # WHO AQG 2021 
@@ -1406,165 +1410,195 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_expDistribution_
 
 ```
 
-#### Years lived with disability (YLD)
 
-```{r YLD lifetable}
 
-# Calculate years lived with disability using bestcost function
-# with input data from the Swiss project GeLuft
+### Disability-adjusted lived years (DALY)
 
-bestcost_pm_yld_lifetable_geluft  <- 
-  attribute_yld_from_lifetable(
-    exp_central = input_data_mortality$exp[2],
-    # exp_central = c(8, 9, 10), # Fake data. Deactivate to test exposure distribution.
+
+```{r DALY from yll and yld}
+
+bestcost_pm_yld  <- 
+  healthiar::attribute_health(
+    exp_central = 8.85,
     prop_pop_exp = 1,
-    # prop_pop_exp = c(0.2, 0.3, 0.5), # Fake data. Deactivate to test exposure distribution.
-    cutoff_central = input_data_mortality$cutoff[2],
-    rr_central = input_data_mortality[2,"rr_central"], 
-    rr_lower = input_data_mortality[2,"rr_lower"], 
-    rr_upper = input_data_mortality[2,"rr_upper"], 
+    cutoff_central = 5,
+    bhd_central = 1E3,
+    rr_central = 1.1, 
+    rr_lower = 1.05, 
+    rr_upper = 1.19, 
     rr_increment = 10, 
     erf_shape = "log_linear",
-    approach_exposure = "single_year",
-    first_age_pop = 0,
-    last_age_pop = 99,
-    deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female = lifetable_withPopulation[["female"]]$population,
-    year_of_analysis = 2019, 
-    info = input_data_mortality$pollutant[2],
-    min_age = input_data_mortality$min_age[2], # min_age = 20,
-    duration_central = 100, 
-    duration_lower = 50, duration_upper = 100, 
-    dw_central = 1 #, dw_lower = 0.1, dw_upper = 10
-)
-
-# View(bestcost_pm_yld_lifetable_geluft)
-
-# The Swiss project GeLuft did not calculated the YLD, only YLL. 
-# But disability weight = 1 in the function above, then YLD = YLL 
-# and the result should be identical.
-check_bestcost(result_list_bestcost = bestcost_pm_yld_lifetable_geluft,
-               # result_vector_alternative = c(27742, 14641, 40542)) # GeLuft approach result
-               result_vector_alternative = c(29274.89,	15328.16,	43118.30)) # AirQ+ approach result
-
-```
-
-#### Disability-adjusted lived years (DALY)
-
-```{r DALY lifetable}
-
-# Calculate years lived with disability using bestcost function
-# with input data from the Swiss project GeLuft
-
-bestcost_pm_daly_lifetable_geluft  <- 
-  attribute_daly_from_lifetable(
-    exp_central = input_data_mortality$exp[2],
-    prop_pop_exp = 1,
-    cutoff_central = input_data_mortality$cutoff[2],
-    rr_central = input_data_mortality[2,"rr_central"], 
-    rr_lower = input_data_mortality[2,"rr_lower"], 
-    rr_upper =input_data_mortality[2,"rr_upper"], 
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop = 0,
-    last_age_pop = 99,
-    deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female = lifetable_withPopulation[["female"]]$population,
-    year_of_analysis = 2019, 
-    info = input_data_mortality$pollutant[2],
-    min_age = input_data_mortality$min_age[2], # min_age = 20,
-    duration_central = 100, 
+    info = "pm2.5_yld",
+    duration_central = 100,
+    population = sum(lifetable_withPopulation[["male"]]$population,
+                     lifetable_withPopulation[["female"]]$population),
     dw_central = 1)
 
-# The Swiss project GeLuft did not calculated the YLD, only YLL. 
-# But disability weight = 1 in the function above, then YLD = YLL 
-# and the result should be identical.
-# Since DALY = YLL + YLD and in this case YLL=YLD --> DALY = 2*YLL
-check_bestcost(result_list_bestcost = bestcost_pm_daly_lifetable_geluft,
-               # result_vector_alternative = c(27742*2, 14641*2, 40542*2)) # GeLuft approach result
-               result_vector_alternative = c(29274.89*2,	15328.16*2,	43118.30*2)) # AirQ+ approach result
+bestcost_pm_yll <- 
+  healthiar::attribute_lifetable(
+    health_outcome = "yll",
+    approach_exposure = "single_year",
+    exp_central = 8.85,
+    prop_pop_exp = 1,
+    cutoff_central = 5,
+    rr_central =  1.118, 
+    rr_lower = 1.06, 
+    rr_upper = 1.179, 
+    rr_increment = 10, 
+    erf_shape = "log_linear",
+    first_age_pop = 0,
+    last_age_pop = 99,
+    deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
+    deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
+    population_midyear_male = lifetable_withPopulation[["male"]]$population, 
+    population_midyear_female = lifetable_withPopulation[["female"]]$population,
+    year_of_analysis = 2019, 
+    min_age = 20,
+    info = "pm2.5_yll") 
+
+# DALY from yll and yld means yll+yld
+bestcost_daly_from_yll_yld <-
+   healthiar::get_daly(
+     output_attribute_yll = bestcost_pm_yll,
+     output_attribute_yld = bestcost_pm_yld)
+
+check_bestcost(result_list_bestcost = bestcost_daly_from_yll_yld,
+               result_vector_alternative = 
+                 bestcost_pm_yll[["health_main"]]$impact + 
+                 bestcost_pm_yld[["health_main"]]$impact)
 
 
 ```
+
 
 ## Comparison
 
 ### Single bhd
 
+
 ```{r comparison singlebhd_rr}
-
-
 
 # Test delta comparison function with fake values
 # DELTA
 
-comparison_singlebhd_rr_delta <-
-  healthiar::compare_health(
-    approach_comparison = "delta",
-    exp_central_1 = 8.85, 
-    exp_central_2 = 6,
-    cutoff_central = 5,    
-    bhd_central_1 = 25000,
-    bhd_central_2 = 25000,
-    rr_central = 1.118, 
-    rr_lower = 1.060, 
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear", 
-    info_1 = "PM2.5_mortality_2010",
-    info_2 = "PM2.5_mortality_2020")
-
-# View(comparison_singlebhd_rr_delta)
+comparison_singlebhd_rr_delta_unpacked <-
+  healthiar::compare(
+    
+     output_attribute_1 = 
+       healthiar::attribute_health(
+         exp_central = 8.85,
+         cutoff_central = 5, 
+         bhd_central = 25000,
+         approach_risk = "relative_risk",
+         erf_shape = "log_linear",
+         rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+         rr_increment = 10,
+         info = "PM2.5_mortality_2010"),
+     
+     output_attribute_2 = 
+       healthiar::attribute_health(
+         exp_central = 6, 
+         cutoff_central = 5, 
+         bhd_central = 25000,
+         approach_risk = "relative_risk",
+         erf_shape = "log_linear",
+         rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+         rr_increment = 10,
+         info = "PM2.5_mortality_2020"))
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta ,
+check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_unpacked ,
+               result_vector_alternative = c(774, 409, 1127)) # Result on 16 May 2024
+
+# You can also first store the variables and enter them in attribute_health() 
+scen_1_singlebhd_rr_delta <-
+  healthiar::attribute_health(
+    exp_central = 8.85,
+    cutoff_central = 5,
+    bhd_central = 25000,
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+    rr_increment = 10)
+
+scen_2_singlebhd_rr_delta <-
+  healthiar::attribute_health(
+    exp_central = 6,
+    cutoff_central = 5,
+    bhd_central = 25000,
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+    rr_increment = 10)
+
+comparison_singlebhd_rr_delta_packed <- 
+  healthiar::compare(
+    output_attribute_1 = scen_1_singlebhd_rr_delta,
+    output_attribute_2 = scen_2_singlebhd_rr_delta,
+    approach_comparison = "delta")
+
+# No study to compare bestcost results
+# Check only if results stay the same overtime despite developments
+check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_packed,
+               result_vector_alternative = c(774, 409, 1127)) # Result on 16 May 2024
+
+# And even easier: using a the function attribute_mod
+# You just add the values of the arguments that have to be replaced 
+# in scen1 to become scen2
+
+scen_2_singlebhd_rr_delta_helper <-
+  healthiar::attribute_mod(
+    output_attribute_1 = scen_1_singlebhd_rr_delta,
+    # What is different in scenario 2 compared to scenario 1
+    exp_central = 6)
+
+comparison_singlebhd_rr_delta_packed_helper <- 
+  healthiar::compare(
+    output_attribute_1 = scen_1_singlebhd_rr_delta,
+    output_attribute_2 = scen_2_singlebhd_rr_delta_helper,
+    approach_comparison = "delta")
+
+# No study to compare bestcost results
+# Check only if results stay the same overtime despite developments
+check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_packed_helper,
                result_vector_alternative = c(774, 409, 1127)) # Result on 16 May 2024
 
 
 # With same impact to test that there is no error.
 comparison_singlebhd_rr_delta_same_impact <-
-  healthiar::compare_health(
-    approach_comparison = "delta",
-    exp_central_1 = 8.85, 
-    exp_central_2 = 8.85,
-    cutoff_central = 5,    
-    bhd_central_1 = 25000,
-    bhd_central_2 = 25000,
-    rr_central = 1.118, 
-    rr_lower = 1.060, 
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear", 
-    info_1 = "PM2.5_mortality_2010",
-    info_2 = "PM2.5_mortality_2020")
+  healthiar::compare(
+    output_attribute_1 = scen_1_singlebhd_rr_delta,
+    output_attribute_2 = scen_1_singlebhd_rr_delta)
+
 check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_same_impact ,
                result_vector_alternative = c(0, 0, 0)) # Result on 27 Nov 2024
 
 # With iteration
-comparison_singlebhd_rr_delta_geo <-
-  healthiar::compare_health(
-    approach_comparison = "delta",
-    exp_central_1 = list(8.85, 8.0),
-    exp_central_2 = list(6, 6.5),
+scen_1_singlebhd_rr_geo <-
+  healthiar::attribute_health(
+    exp_central = list(8.85, 8.0),
     cutoff_central = 5,    
-    bhd_central_1 = list(25000, 20000),
-    bhd_central_2 = list(25000, 20000),
+    bhd_central = list(25000, 20000),
     rr_central = 1.118, 
     rr_lower = 1.060, 
     rr_upper = 1.179,
     rr_increment = 10, 
     erf_shape = "log_linear", 
-    info_1 = "PM2.5_mortality_2010",
-    info_2 = "PM2.5_mortality_2020",
     geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
-# View(comparison_singlebhd_rr_delta_geo)
+scen_2_singlebhd_rr_geo <- 
+  healthiar::attribute_mod(
+    output_attribute_1 = scen_1_singlebhd_rr_geo,
+    # What is different in scenario 2 compared to scenario 1
+    exp_central = list(6, 6.5))
+  
+
+comparison_singlebhd_rr_delta_geo <-
+  healthiar::compare(
+    output_attribute_1 = scen_1_singlebhd_rr_geo,
+    output_attribute_2 = scen_2_singlebhd_rr_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1575,19 +1609,9 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_geo ,
 # Test pif comparison function with fake values
 comparison_singlebhd_rr_pif <-
   healthiar::compare(
-    approach_comparison = "pif",
-    exp_central_1 = 8.85, 
-    exp_central_2 = 6,
-    cutoff_central = 5,    
-    bhd_central_1 = 25000,
-    bhd_central_2 = 25000,
-    rr_central = 1.118, 
-    rr_lower = 1.060, 
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear", 
-    info_1 = "PM2.5_mortality_2010",
-    info_2 = "PM2.5_mortality_2020")
+    output_attribute_1 = scen_1_singlebhd_rr_delta,
+    output_attribute_2 = scen_2_singlebhd_rr_delta,
+    approach_comparison = "pif")
 
 # View(comparison_singlebhd_rr_pif)
 
@@ -1598,22 +1622,11 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_pif ,
 
 # With iteration
 comparison_singlebhd_rr_pif_geo <-
-  healthiar::compare_health(
-    approach_comparison = "pif",
-    exp_central_1 = list(8.85, 8.0),
-    exp_central_2 = list(6, 6.5),
-    cutoff_central = 5,    
-    bhd_central_1 = list(25000, 20000),
-    bhd_central_2 = list(25000, 20000),
-    rr_central = 1.118, 
-    rr_lower = 1.060, 
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear", 
-    info_1 = "PM2.5_mortality_2010",
-    info_2 = "PM2.5_mortality_2020",
-    geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2))
+  comparison_singlebhd_rr_pif <-
+  healthiar::compare(
+    output_attribute_1 = scen_1_singlebhd_rr_geo,
+    output_attribute_2 = scen_2_singlebhd_rr_geo,
+    approach_comparison = "pif")
 
 # View(comparison_singlebhd_rr_pif_geo)
 
@@ -1625,22 +1638,16 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_pif_geo ,
 
 ```{r comparison singlebhd_rr geo iteration, eval=FALSE, include=FALSE}
 # Assess iteration in many geographical areas (geo_id) keeping the multiple uncertainties
-comparison_singlebhd_rr_geo <-
-  healthiar::compare_health(
-    approach_comparison = "delta",
-    exp_central_1 = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)),
-    exp_lower_1 = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)-0.1),
-    exp_upper_1 = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)+0.1),
-    exp_central_2 = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)),
-    exp_lower_2 = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)-0.1),
-    exp_upper_2 = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)+0.1),
+
+scen_1_singlebhd_rr_geo_large <- 
+  healthiar::attribute_health(
+    exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)),
+    exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)-0.1),
+    exp_upper = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)+0.1),
     cutoff_central = 5,   
-    bhd_central_1 = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-    bhd_lower_1 = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-    bhd_upper_1 = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-    bhd_central_2 = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-    bhd_lower_2 = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-    bhd_upper_2 = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
+    bhd_central = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
+    bhd_lower = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
+    bhd_upper = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
     rr_central = 1.369, 
     rr_lower = 1.124,
     rr_upper = 1.664,
@@ -1648,14 +1655,27 @@ comparison_singlebhd_rr_geo <-
     erf_shape = "log_linear", 
     geo_id_disaggregated = 1:1E4, 
     geo_id_aggregated = rep("CH", 1E4),
-    info_1 = "PM2.5_mortality_2010",
-    info_2 = "PM2.5_mortality_2020")
+    info = "PM2.5_mortality_2010")
+
+scen_2_singlebhd_rr_geo_large <-
+  healthiar::attribute_mod(
+    output_attribute_1 = scen_1_singlebhd_rr_geo_large,
+    exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)),
+    exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)-0.1),
+    exp_upper = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)+0.1))
+
+
+
+comparison_singlebhd_rr_geo_large <-
+  healthiar::compare(
+    output_attribute_1 = scen_1_singlebhd_rr_geo_large,
+    output_attribute_2 = scen_2_singlebhd_rr_geo_large)
 
 # View(comparison_singlebhd_rr_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_singlebhd_rr_geo,
+check_bestcost(result_list_bestcost = comparison_singlebhd_rr_geo_large,
                result_vector_alternative = c(211111, 84203, 319618)) # Result on 19 December 2024
 ```
 
@@ -1663,20 +1683,20 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_geo,
 
 # Test delta comparison function with fake values
 # No PIF option in ar
+scen_1_singlebhd_ar <- 
+  bestcost_noise_ha_ar
+
+scen_2_singlebhd_ar <-
+  healthiar::attribute_mod(
+    output_attribute_1 = scen_1_singlebhd_ar,
+    exp_central = c(50, 55, 60, 65, 75))
+
+
 comparison_singlebhd_ar_delta <-
-  healthiar::compare_health(
-    approach_risk = "absolute_risk",
-    approach_comparison = "delta",
-    exp_central_1 = c(57.5, 62.5, 67.5, 72.5, 77.5),# Values as example provided by NIPH
-    exp_central_2 = c(50, 55, 60, 65, 75), # Fake values
-    population_1 = sum(c(387500, 286000, 191800, 72200, 7700)),
-    population_2 = sum(c(387500, 286000, 191800, 72200, 7700)),
-    prop_pop_exp_1 = c(387500, 286000, 191800, 72200, 7700)/sum(c(387500, 286000, 191800, 72200, 7700)), # Values as example provided by NIPH
-    prop_pop_exp_2 = c(387500, 286000, 191800, 72200, 7700)/sum(c(387500, 286000, 191800, 72200, 7700)), # Fake values
-    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-    info_1 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2020),
-    info_2 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2022)
-    )
+  healthiar::compare(
+    scen_1_singlebhd_ar,
+    scen_2_singlebhd_ar)
+
 
 # View(comparison_singlebhd_ar_delta)
 
@@ -1685,23 +1705,36 @@ comparison_singlebhd_ar_delta <-
 check_bestcost(result_list_bestcost = comparison_singlebhd_ar_delta ,
                result_vector_alternative = c(62531)) # Result on 23 May 2024
 
-comparison_singlebhd_ar_delta_geo <-
-  healthiar::compare_health(
+# Now with geo iteration
+scen_1_singlebhd_ar_geo <-
+  healthiar::attribute_health(
     approach_risk = "absolute_risk",
-    approach_comparison = "delta",
-    exp_central_1 = list(c(57.5, 62.5, 67.5, 72.5, 77.5), c(57, 62, 67, 72, 77)),# Fake values
-    exp_central_2 = list(c(50, 55, 60, 65, 75), c(50.5, 55.5, 60.5, 65.5, 75.5)), # Fake values
-    population_1 = list(945200, 929800),
-    population_2 = list(945200, 929800),
-    prop_pop_exp_1 = list(c(387500, 286000, 191800, 72200, 7700)/945200, 
-                          c(380000, 280000, 190800, 72000, 7000)/929800), # Fake values
-    prop_pop_exp_2 = list(c(387500, 286000, 191800, 72200, 7700)/945200, 
-                          c(380000, 280000, 190800, 72000, 7000)/929800), # Fake values
+    exp_central = list(c(57.5, 62.5, 67.5, 72.5, 77.5), 
+                       c(57, 62, 67, 72, 77)),# Fake values
+    population = list(945200, 929800),
+    pop_exp= list(c(387500, 286000, 191800, 72200, 7700), 
+                  c(380000, 280000, 190800, 72000, 7000)), # Fake values
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-    info_1 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2020),
-    info_2 = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", year = 2022),
+    info = data.frame(pollutant = "road_noise", 
+                        outcome = "highly_annoyance", 
+                        year = 2020),
     geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2))
+    geo_id_aggregated = rep("ch", 2)
+  )
+
+scen_2_singlebhd_ar_geo <-
+  healthiar::attribute_mod(
+    output_attribute_1 = scen_1_singlebhd_ar_geo,
+    exp_central = list(c(50, 55, 60, 65, 75), 
+                       c(50.5, 55.5, 60.5, 65.5, 75.5)), # Fake values
+    info = data.frame(pollutant = "road_noise", 
+                      outcome = "highly_annoyance", 
+                      year = 2022))
+
+comparison_singlebhd_ar_delta_geo <-
+  healthiar::compare(
+    output_attribute_1 = scen_1_singlebhd_ar_geo,
+    output_attribute_2 = scen_2_singlebhd_ar_geo)
 
 # View(comparison_singlebhd_ar_delta_geo)
 
@@ -1713,44 +1746,31 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_ar_delta_geo ,
 ```{r comparison yld singlebhd_rr}
 # DELTA
 # Test delta comparison function with fake values
-comparison_yld_singlebhd_rr_delta <-
-  healthiar::compare_yld(
-    approach_comparison = "delta",
-    exp_central_1 = 8.85, 
-    exp_central_2 = 6,
-    cutoff_central = 5,    
-    bhd_central_1 = 25000,
-    bhd_central_2 = 25000,
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear", 
-    dw_central = 0.5,
-    duration_central = 1,
-    info_1 = "PM2.5_yld_before",
-    info_2 = "PM2.5_yld_after")
+scen_1_singlebhd_yld <-
+  bestcost_pm_yld_singlebhd
 
-# View(comparison_yld_singlebhd_rr_delta)
+scen_2_singlebhd_yld <-
+  healthiar::attribute_mod(
+    output_attribute_1 = scen_1_singlebhd_yld,
+    exp_central = 6)
+
+comparison_yld_singlebhd_rr_delta <-
+  healthiar::compare(
+    output_attribute_1 = scen_1_singlebhd_yld, 
+    output_attribute_2 = scen_2_singlebhd_yld)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_delta ,
                result_vector_alternative = c(387, 205, 564)) # Result on 16 May 2024
 
-# Additionally check that the first scenario produces the same results as above
-check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_delta[["health_detailed"]][["scenario_1"]] ,
-               result_vector_alternative = bestcost_pm_yld_singlebhd[["health_main"]]$impact_rounded) 
 
 # Iteration
-comparison_yld_singlebhd_rr_delta_geo <-
-  healthiar::compare_yld(
-    approach_comparison = "delta",
-    exp_central_1 = list(8.85, 8.0),
-    exp_central_2 = list(6, 6.5),
+scen_1_singlebhd_yld_geo <- 
+  healthiar::attribute_health(
+    exp_central = list(8.85, 8.0),
     cutoff_central = 5,    
-    bhd_central_1 = 25000,
-    bhd_central_2 = 25000,
+    bhd_central = 25000,
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
@@ -1758,12 +1778,20 @@ comparison_yld_singlebhd_rr_delta_geo <-
     erf_shape = "log_linear", 
     dw_central = 0.5,
     duration_central = 1,
-    info_1 = "PM2.5_yld_before",
-    info_2 = "PM2.5_yld_after",
+    info = "PM2.5_yld_before",
     geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
-# View(comparison_yld_singlebhd_rr_delta_geo)
+scen_2_singlebhd_yld_geo <- 
+  attribute_mod(
+    output_attribute_1 = scen_1_singlebhd_yld_geo,
+    exp_central = list(6, 6.5),
+    info = "PM2.5_yld_after")
+
+comparison_yld_singlebhd_rr_delta_geo <-
+  healthiar::compare(
+    output_attribute_1 = scen_1_singlebhd_yld_geo, 
+    output_attribute_2 = scen_2_singlebhd_yld_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1774,56 +1802,26 @@ check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_delta_geo ,
 #PIF
 # Test pif comparison function with fake values
 comparison_yld_singlebhd_rr_pif <-
-  healthiar::compare_yld(
+  healthiar::compare(
     approach_comparison = "pif",
-    exp_central_1 = 8.85,  
-    exp_central_2 = 6,
-    cutoff_central = 5,    
-    bhd_central_1 = 25000,
-    bhd_central_2 = 25000,
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear", 
-    dw_central = 0.5,
-    duration_central = 1,
-    info_1 = "PM2.5_yld_before",
-    info_2 = "PM2.5_yld_after")
+    output_attribute_1 = scen_1_singlebhd_yld, 
+    output_attribute_2 = scen_2_singlebhd_yld)
 
-# View(comparison_yld_singlebhd_rr_pif)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_pif ,
                result_vector_alternative = c(391,206,573)) # Result on 16 May 2024
 
-# Additionally check that the first scenario produces the same results as above
-check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_pif[["health_detailed"]][["scenario_1"]] ,
-               result_vector_alternative = bestcost_pm_yld_singlebhd[["health_main"]]$impact_rounded) 
+
 
 # Iteration
+# Test pif comparison function with fake values
 comparison_yld_singlebhd_rr_pif_geo <-
-  healthiar::compare_yld(
+  healthiar::compare(
     approach_comparison = "pif",
-    exp_central_1 = list(8.85, 8.0),
-    exp_central_2 = list(6, 6.5),
-    cutoff_central = 5,    
-    bhd_central_1 = 25000,
-    bhd_central_2 = 25000,
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear", 
-    dw_central = 0.5,
-    duration_central = 1,
-    info_1 = "PM2.5_yld_before",
-    info_2 = "PM2.5_yld_after",
-    geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2))
-
-# View(comparison_yld_singlebhd_rr_pif_geo)
+    output_attribute_1 = scen_1_singlebhd_yld_geo, 
+    output_attribute_2 = scen_2_singlebhd_yld_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1837,38 +1835,36 @@ check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_pif_geo ,
 
 # DELTA
 
-comparison_deaths_lifetable_delta <-
-  healthiar::compare_deaths_from_lifetable(
-    approach_comparison = "delta",
-    exp_central_1 = 8.85, # Fake data just for testing purposes
-    prop_pop_exp_1 = 1, # Fake data just for testing purposes
-    exp_central_2 = 6, # Fake data just for testing purposes
-    prop_pop_exp_2 = 1, # Fake data just for testing purposes
+scen_1_deaths_lifetable <-
+  healthiar::attribute_lifetable(
+    health_outcome = "deaths",
+    exp_central = 8.85, # Fake data just for testing purposes
+    prop_pop_exp = 1, # Fake data just for testing purposes
     cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
     rr_increment = 10, 
     erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019,
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
+    first_age_pop = 0,
+    last_age_pop = 99,
+    deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
+    deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
+    population_midyear_male = lifetable_withPopulation[["male"]]$population, 
+    population_midyear_female = lifetable_withPopulation[["female"]]$population, 
+    year_of_analysis = 2019, 
     min_age = 20)
 
-# View(comparison_deaths_lifetable_delta)
+scen_2_deaths_lifetable <- 
+  healthiar::attribute_mod(
+    output_attribute_1 = scen_1_deaths_lifetable,
+    exp_central = 6)
+
+comparison_deaths_lifetable_delta <- 
+  healthiar::compare(
+    output_attribute_1 = scen_1_deaths_lifetable,
+    output_attribute_2 = scen_2_deaths_lifetable)
+
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1876,43 +1872,40 @@ check_bestcost(result_list_bestcost = comparison_deaths_lifetable_delta,
                # result_vector_alternative = c(1922,1017,2801)) # Result on 16 May 2024
                result_vector_alternative = c(1915, 1013, 2795 )) # Result on 20 August 2024
 
-# Additionally check that it produces the first scenario produce the same results as above
-check_bestcost(result_list_bestcost = comparison_deaths_lifetable_delta[["health_detailed"]][["scenario_1"]] ,
-               result_vector_alternative = bestcost_pm_deaths_lifetable_airqplus[["health_main"]]$impact_rounded)  
 
 # Iteration
-comparison_deaths_lifetable_delta_geo <-
-  healthiar::compare_deaths_from_lifetable(
-    approach_comparison = "delta",
-    exp_central_1 = list(8.85, 8.0),# Fake data just for testing purposes
-    exp_central_2 = list(6, 6.5),# Fake data just for testing purposes
+scen_1_deaths_lifetable_geo <-
+  healthiar::attribute_lifetable(
+    health_outcome = "deaths",
+    exp_central = list(8.85, 8.0),# Fake data just for testing purposes
+    prop_pop_exp = 1, # Fake data just for testing purposes
     cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
     rr_increment = 10, 
     erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2= airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019,
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
+    first_age_pop = 0,
+    last_age_pop = 99,
+    deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
+    deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
+    population_midyear_male = lifetable_withPopulation[["male"]]$population, 
+    population_midyear_female = lifetable_withPopulation[["female"]]$population, 
+    year_of_analysis = 2019, 
     min_age = 20,
     geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
-# View(comparison_deaths_lifetable_delta_geo)
+scen_2_deaths_lifetable_geo <- 
+  healthiar::attribute_mod(
+    output_attribute_1 = scen_1_deaths_lifetable_geo,
+    exp_central = list(6, 6.5)) # Fake data just for testing purposes
+
+comparison_deaths_lifetable_delta_geo <- 
+  healthiar::compare(
+    output_attribute_1 = scen_1_deaths_lifetable_geo,
+    output_attribute_2 = scen_2_deaths_lifetable_geo)
+
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1921,53 +1914,12 @@ check_bestcost(result_list_bestcost = comparison_deaths_lifetable_delta_geo ,
                result_vector_alternative = c(2925, 1546, 4269)) # Result on 20 August 2024
 
 
-# Additionally check that it produces the first scenario produce the same results as above
-# comparison_deaths_lifetable_delta_geo[["health_detailed"]][["scenario_1"]][["health_detailed"]][["raw"]] |>  dplyr::filter(., geo_id_disaggregated %in% "a") |> select(., impact)  |> pull(.) == bestcost_pm_deaths_lifetable_geluft[["health_main"]]$impact 
-round(comparison_deaths_lifetable_delta_geo[["health_detailed"]][["scenario_1"]][["health_detailed"]][["raw"]] |>  
-        dplyr::filter(geo_id_disaggregated %in% "a") |> 
-        select(impact)  |> 
-        pull(), digits = 0) == 
-  round(bestcost_pm_deaths_lifetable_airqplus[["health_main"]]$impact)
-# Absolute differences
-abs(comparison_deaths_lifetable_delta_geo[["health_detailed"]][["scenario_1"]][["health_detailed"]][["raw"]] |>  
-      dplyr::filter(geo_id_disaggregated %in% "a") |> select(impact)  |> pull() 
-    - bestcost_pm_deaths_lifetable_airqplus[["health_main"]]$impact)
-# Absolute differences are negligeable (< 0.01, or < 0.0001%)
-      
-
 # PIF
-comparison_deaths_lifetable_pif  <-
-  healthiar::compare_deaths_from_lifetable(
+comparison_deaths_lifetable_pif <- 
+  healthiar::compare(
     approach_comparison = "pif",
-    exp_central_1 = 8.85, # Fake data just for testing purposes
-    prop_pop_exp_1 = 1, # Fake data just for testing purposes
-    exp_central_2 = 6, # Fake data just for testing purposes
-    prop_pop_exp_2 = 1, # Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    approach_exposure_1 = "single_year",
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    approach_exposure_2 = "single_year",
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019,
-    min_age = 20)
-
-# View(comparison_deaths_lifetable_pif)
+    output_attribute_1 = scen_1_deaths_lifetable,
+    output_attribute_2 = scen_2_deaths_lifetable)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -1975,44 +1927,13 @@ check_bestcost(result_list_bestcost = comparison_deaths_lifetable_pif ,
                # result_vector_alternative = c(1943,1023,2847)) # Result on 16 May 2024
                result_vector_alternative = c(1935, 1018, 2837 )) # Result on 20 August 2024
 
-# Additionally check that scenario produce the same results as above
-check_bestcost(result_list_bestcost = comparison_deaths_lifetable_pif[["health_detailed"]][["scenario_1"]],
-               result_vector_alternative = bestcost_pm_deaths_lifetable_airqplus[["health_main"]]$impact_rounded)  # AirQ+ result
-
 
 # Iteration
-comparison_deaths_lifetable_pif_geo <-
-  healthiar::compare_deaths_from_lifetable(
+comparison_deaths_lifetable_pif_geo <- 
+  healthiar::compare(
     approach_comparison = "pif",
-    exp_central_1 = list(8.85, 8.0),# Fake data just for testing purposes
-    exp_central_2 = list(6, 6.5),# Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019,
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
-    min_age = 20,
-    geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2))
-
-# View(comparison_deaths_lifetable_pif_geo)
+    output_attribute_1 = scen_1_deaths_lifetable_geo,
+    output_attribute_2 = scen_2_deaths_lifetable_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -2024,42 +1945,37 @@ check_bestcost(result_list_bestcost = comparison_deaths_lifetable_pif_geo ,
 ```{r comparison YLL lifetable}
 
 # DELTA 
-comparison_yll_lifetable_delta  <-
-  healthiar::compare_yll_from_lifetable(
-    approach_comparison = "delta",
-    exp_central_1 = 8.85, # Fake data just for testing purposes
-    prop_pop_exp_1 = 1, # Fake data just for testing purposes
-    exp_central_2 = 6, # Fake data just for testing purposes
-    prop_pop_exp_2 = 1, # Fake data just for testing purposes
+scen_1_yll_lifetable <-
+  healthiar::attribute_lifetable(
+    health_outcome = "yll",
+    exp_central = 8.85, # Fake data just for testing purposes
+    prop_pop_exp = 1, # Fake data just for testing purposes
     cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
     rr_increment = 10, 
     erf_shape = "log_linear",
-    approach_exposure_1 = "single_year",
-    approach_newborns_1 = "without_newborns",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019,
-    approach_exposure_2 = "single_year",
-    approach_newborns_2 = "without_newborns",
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019, 
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
+    approach_exposure = "single_year",
+    approach_newborns = "without_newborns",
+    first_age_pop = 0,
+    last_age_pop = 99,
+    deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
+    deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
+    population_midyear_male = lifetable_withPopulation[["male"]]$population, 
+    population_midyear_female = lifetable_withPopulation[["female"]]$population, 
+    year_of_analysis = 2019, 
     min_age = 20)
 
-# View(comparison_yll_lifetable_delta)
+scen_2_yll_lifetable <-
+  healthiar::attribute_mod(
+    output_attribute_1 = scen_1_yll_lifetable,
+    exp_central = 6) # Fake data just for testing purposes
+
+comparison_yll_lifetable_delta <- 
+  healthiar::compare(
+    output_attribute_1 = scen_1_yll_lifetable,
+    output_attribute_2 = scen_2_yll_lifetable)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -2068,46 +1984,42 @@ check_bestcost(result_list_bestcost = comparison_yll_lifetable_delta,
                result_vector_alternative = c(21644, 11340, 31860)) # Results on 20 August 2024
 
 
-# Additionally check that it producesthe first scenario produce the same results as above
-check_bestcost(result_list_bestcost = comparison_yll_lifetable_delta[["health_detailed"]][["scenario_1"]] ,
-               # result_vector_alternative = bestcost_pm_yll_lifetable_geluft[["health_main"]]$impact_rounded) # OLD GeLuft variable
-               result_vector_alternative = bestcost_pm_yll_exposure_single_year_lifetable_geluft[["health_main"]]$impact_rounded) # AirQ+ results
+
 
 # Iteration
-comparison_yll_lifetable_delta_geo <-
-  healthiar::compare_yll_from_lifetable(
-    approach_comparison = "delta",
-    exp_central_1 = list(8.85, 8.0),# Fake data just for testing purposes
-    exp_central_2 = list(6, 6.5),# Fake data just for testing purposes
+scen_1_yll_lifetable_geo <-
+  healthiar::attribute_lifetable(
+    health_outcome = "yll",
+    exp_central = list(8.85, 8.0), # Fake data just for testing purposes
+    prop_pop_exp = 1, # Fake data just for testing purposes
     cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
     rr_central = 1.118,
     rr_lower = 1.060,
     rr_upper = 1.179,
     rr_increment = 10, 
     erf_shape = "log_linear",
-    approach_exposure_1 = "single_year",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    approach_exposure_2 = "single_year",
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019,
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
+    approach_exposure = "single_year",
+    approach_newborns = "without_newborns",
+    first_age_pop = 0,
+    last_age_pop = 99,
+    deaths_male = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
+    deaths_female = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
+    population_midyear_male = lifetable_withPopulation[["male"]]$population, 
+    population_midyear_female = lifetable_withPopulation[["female"]]$population, 
+    year_of_analysis = 2019, 
     min_age = 20,
     geo_id_disaggregated = c("a", "b"),
     geo_id_aggregated = rep("ch", 2))
 
-# View(comparison_yll_lifetable_delta_geo)
+scen_2_yll_lifetable_geo <-
+  healthiar::attribute_mod(
+    output_attribute_1 = scen_1_yll_lifetable_geo,
+    exp_central = list(6, 6.5)) # Fake data just for testing purposes
+
+comparison_yll_lifetable_delta_geo <- 
+  healthiar::compare(
+    output_attribute_1 = scen_1_yll_lifetable_geo,
+    output_attribute_2 = scen_2_yll_lifetable_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -2115,41 +2027,15 @@ check_bestcost(result_list_bestcost = comparison_yll_lifetable_delta_geo ,
                # result_vector_alternative = c(31190, 16500, 45472)) # Results on 08 July 2024
                result_vector_alternative = c(33041, 17309, 48639)) # Results on 20 August 2024
 
+
+
+
 # PIF
 comparison_yll_lifetable_pif <-
-  healthiar::compare_yll_from_lifetable(
+  healthiar::compare(
     approach_comparison = "pif",
-    exp_central_1 = 8.85, # Fake data just for testing purposes
-    prop_pop_exp_1 = 1, # Fake data just for testing purposes
-    exp_central_2 = 6, # Fake data just for testing purposes
-    prop_pop_exp_2 = 1, # Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    approach_exposure_1 = "single_year",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    approach_exposure_2 = "single_year",
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019, 
-    info_1 = NULL,
-    info_2 = NULL, 
-    min_age = 20)
-
-# View(comparison_yll_lifetable_pif)
+    output_attribute_1 = scen_1_yll_lifetable,
+    output_attribute_2 = scen_2_yll_lifetable)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -2157,44 +2043,13 @@ check_bestcost(result_list_bestcost = comparison_yll_lifetable_pif ,
                # result_vector_alternative = c(20650, 10870, 30257)) # Result on 16 May 2024
                result_vector_alternative = c(21698, 11354, 31978 )) # Result on 20 August 2024
 
-# Additionally check that it producesthe first scenario produce the same results as above
-check_bestcost(result_list_bestcost = comparison_yll_lifetable_pif[["health_detailed"]][["scenario_1"]],
-               # result_vector_alternative = bestcost_pm_yll_lifetable_geluft[["health_main"]]$impact_rounded) # OLD GeLuft variable
-               result_vector_alternative = bestcost_pm_yll_exposure_single_year_lifetable_geluft[["health_main"]]$impact_rounded)
 
 # Iteration
 comparison_yll_lifetable_pif_geo <-
-  healthiar::compare_yll_from_lifetable(
+  healthiar::compare(
     approach_comparison = "pif",
-    exp_central_1 = list(8.85, 8.0),# Fake data just for testing purposes
-    exp_central_2 = list(6, 6.5),# Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019,
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
-    min_age = 20,
-    geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2))
-
-# View(comparison_yll_lifetable_pif_geo)
+    output_attribute_1 = scen_1_yll_lifetable_geo,
+    output_attribute_2 = scen_2_yll_lifetable_geo)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
@@ -2203,363 +2058,135 @@ check_bestcost(result_list_bestcost = comparison_yll_lifetable_pif_geo ,
                result_vector_alternative = c(33137, 17335, 48851)) # Result on 20 August 2024
 ```
 
-```{r comparison YLD lifetable}
+
+```{r comparison DALY }
+
+
+# Define scenarios
+scen_1_yll <-
+  bestcost_pm_yll
+
+scen_2_yll <-
+  healthiar::attribute_mod(
+    output_attribute_1 = bestcost_pm_yll,
+    exp_central = 6)
+
+scen_1_yld <-
+  bestcost_pm_yld
+
+scen_2_yld <-
+  healthiar::attribute_mod(
+    output_attribute_1 = bestcost_pm_yld,
+    exp_central = 6)
+
 
 # DELTA
-comparison_yld_lifetable_delta  <-
-  healthiar::compare_yld_from_lifetable(
-    approach_comparison = "delta",
-    exp_central_1 = 8.85, # Fake data just for testing purposes
-    prop_pop_exp_1 = 1, # Fake data just for testing purposes
-    exp_central_2 = 6, # Fake data just for testing purposes
-    prop_pop_exp_2 = 1, # Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019, 
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
-    min_age = 20,
-    duration_central = 100,
-    dw_central = 1)
+comparison_daly_delta <- 
+  healthiar::get_daly(
+    output_attribute_yll =
+      healthiar::compare(
+        approach_comparison = "delta",
+        output_attribute_1 = scen_1_yll, 
+        output_attribute_2 = scen_2_yll),
+    output_attribute_yld = 
+      healthiar::compare(
+        approach_comparison = "delta",
+        output_attribute_1 = scen_1_yld, 
+        output_attribute_2 = scen_2_yld))
 
-# View(comparison_yld_lifetable_delta)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_yld_lifetable_delta ,
-               # result_vector_alternative = c(20421, 10806, 29763)) # Result on 16 May 2024
-               result_vector_alternative = c(21644, 11340, 31860)) # Result on 20 August 2024
-
-# Additionally check that it producesthe first scenario produce the same results as above
-check_bestcost(result_list_bestcost = comparison_yld_lifetable_delta[["health_detailed"]][["scenario_1"]] ,
-               result_vector_alternative = bestcost_pm_yld_lifetable_geluft[["health_main"]]$impact_rounded) 
-
-# Iteration
-comparison_yld_lifetable_delta_geo <-
-  healthiar::compare_yld_from_lifetable(
-    approach_comparison = "delta",
-    exp_central_1 = list(8.85, 8.0),# Fake data just for testing purposes
-    exp_central_2 = list(6, 6.5),# Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019,
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
-    min_age = 20,
-    geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2),
-    duration_central = 100,
-    dw_central = 1)
-
-# View(comparison_yld_lifetable_delta_geo)
-
-# No study to compare bestcost results
-# Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_yld_lifetable_delta_geo ,
-               # result_vector_alternative = c(31190, 16500, 45472)) # Result on 08 July 2024
-               result_vector_alternative = c(33041, 17309, 48639)) # Result on 20 August 2024
+check_bestcost(result_list_bestcost = comparison_daly_delta ,
+               result_vector_alternative = c(24299, 12714, 36613)) # Result on 21 March 2025
 
 # PIF
-comparison_yld_lifetable_pif <-
-  healthiar::compare_yld_from_lifetable(
-    approach_comparison = "pif",
-    exp_central_1 = 8.85, # Fake data just for testing purposes
-    prop_pop_exp_1 = 1, # Fake data just for testing purposes
-    exp_central_2 = 6, # Fake data just for testing purposes
-    prop_pop_exp_2 = 1, # Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019, 
-    info_1 = NULL,
-    info_2 = NULL, 
-    min_age = 20,
-    duration_central = 100,
-    dw_central = 1)
+comparison_daly_pif <- 
+  healthiar::get_daly(
+    output_attribute_yll =
+      healthiar::compare(
+        approach_comparison = "pif",
+        output_attribute_1 = scen_1_yll, 
+        output_attribute_2 = scen_2_yll),
+    output_attribute_yld = 
+      healthiar::compare(
+        approach_comparison = "pif",
+        output_attribute_1 = scen_1_yld, 
+        output_attribute_2 = scen_2_yld))
 
-# View(comparison_yld_lifetable_pif)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_yld_lifetable_pif ,
-               # result_vector_alternative = c(20650, 10870, 30257)) # Result on 16 May 2024
-               result_vector_alternative = c(21698, 11354, 31978)) # Result on 20 August 2024
+check_bestcost(result_list_bestcost = comparison_daly_pif,
+               result_vector_alternative = c(24378, 12735, 36815)) # Result on 21 March 2025
 
-# Additionally check that the first scenario produce the same results as above
-check_bestcost(result_list_bestcost = comparison_yld_lifetable_pif[["health_detailed"]][["scenario_1"]],
-               result_vector_alternative = bestcost_pm_yld_lifetable_geluft[["health_main"]]$impact_rounded)
-
-# Iteration
-comparison_yld_lifetable_pif_geo <-
-  healthiar::compare_yld_from_lifetable(
-    approach_comparison = "pif",
-    exp_central_1 = list(8.85, 8.0),# Fake data just for testing purposes
-    exp_central_2 = list(6, 6.5),# Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019,
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
-    min_age = 20,
+# With geo iteration
+# Define scenarios
+scen_1_yll_geo <-
+  healthiar::attribute_mod(
+    output_attribute_1 = bestcost_pm_yll,
     geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2),
-    duration_central = 100,
-    dw_central = 1)
+    geo_id_aggregated = c("ch", "ch"),
+    exp_central = list(8.5, 8))
 
-# View(comparison_yld_lifetable_pif_geo)
+scen_2_yll_geo <-
+  healthiar::attribute_mod(
+    output_attribute_1 = scen_1_yll_geo,
+    exp_central = list(6, 6.5))
 
-# No study to compare bestcost results
-# Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_yld_lifetable_pif_geo ,
-               # result_vector_alternative = c(31601, 16613, 46359)) # Result on 26 June 2024
-               result_vector_alternative = c(33137, 17335, 48851)) # Result on 20 August 2024
-
-```
-
-```{r comparison DALY lifetable}
-
-# DELTA
-comparison_daly_lifetable_delta  <-
-  healthiar::compare_daly_from_lifetable(
-    approach_comparison = "delta",
-    exp_central_1 = 8.85, # Fake data just for testing purposes
-    prop_pop_exp_1 = 1, # Fake data just for testing purposes
-    exp_central_2 = 6, # Fake data just for testing purposes
-    prop_pop_exp_2 = 1, # Fake data just for testing purposes
-    cutoff_central = 5, # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019, 
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
-    min_age = 20,
-    duration_central = 100,
-    dw_central = 1)
-
-# View(comparison_daly_lifetable_delta)
-
-# No study to compare bestcost results
-# Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_daly_lifetable_delta ,
-               # result_vector_alternative = c(20421*2,10806*2,29763*2)) # Result on 16 May 2024
-               result_vector_alternative = c(43288, 22679, 63720)) # Result on 20 August 2024
-
-# Additionally check that it producesthe first scenario produce the same results as above
-check_bestcost(result_list_bestcost = comparison_daly_lifetable_delta[["health_detailed"]][["scenario_1"]] ,
-               result_vector_alternative = bestcost_pm_daly_lifetable_geluft[["health_main"]]$impact_rounded) 
-
-# Iteration
-comparison_daly_lifetable_delta_geo <-
-  healthiar::compare_daly_from_lifetable(
-    approach_comparison = "delta",
-    exp_central_1 = list(8.85, 8.0),# Fake data just for testing purposes
-    exp_central_2 = list(6, 6.5),# Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019,
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
-    min_age = 20,
+scen_1_yld_geo <-
+  healthiar::attribute_mod(
+    output_attribute_1 = bestcost_pm_yld,
+    exp_central = list(8.5, 8),
     geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2),
-    duration_central = 100,
-    dw_central = 1)
+    geo_id_aggregated = c("ch", "ch"))
 
-# View(comparison_daly_lifetable_delta_geo)
+scen_2_yld_geo <-
+  healthiar::attribute_mod(
+    output_attribute_1 = scen_1_yld_geo,
+    exp_central = list(6, 6.5))
+
+# Delta
+comparison_daly_delta_geo <- 
+  healthiar::get_daly(
+    output_attribute_yll =
+      healthiar::compare(
+        approach_comparison = "delta",
+        output_attribute_1 = scen_1_yll_geo, 
+        output_attribute_2 = scen_2_yll_geo),
+    output_attribute_yld = 
+      healthiar::compare(
+        approach_comparison = "delta",
+        output_attribute_1 = scen_1_yld_geo, 
+        output_attribute_2 = scen_2_yld_geo))
+
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_daly_lifetable_delta_geo ,
-               # result_vector_alternative = c(31190*2, 16500*2, 45472*2)) # Result on 08 July 2024
-               result_vector_alternative = c(66082, 34618, 97279)) # Result on 20 August 2024
+check_bestcost(result_list_bestcost = comparison_daly_delta_geo ,
+               result_vector_alternative = c(34123, 17849, 51437)) # Result on 21 March 2025
 
 # PIF
-comparison_daly_lifetable_pif <-
-  healthiar::compare_daly_from_lifetable(
-    approach_comparison = "pif",
-    exp_central_1 = 8.85, # Fake data just for testing purposes
-    prop_pop_exp_1 = 1, # Fake data just for testing purposes
-    exp_central_2 = 6, # Fake data just for testing purposes
-    prop_pop_exp_2 = 1, # Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019, 
-    info_1 = NULL,
-    info_2 = NULL, 
-    min_age = 20,
-    duration_central = 100,
-    dw_central = 1)
+comparison_daly_pif_geo <- 
+  healthiar::get_daly(
+    output_attribute_yll =
+      healthiar::compare(
+        approach_comparison = "pif",
+        output_attribute_1 = scen_1_yll_geo, 
+        output_attribute_2 = scen_2_yll_geo),
+    output_attribute_yld = 
+      healthiar::compare(
+        approach_comparison = "pif",
+        output_attribute_1 = scen_1_yld_geo, 
+        output_attribute_2 = scen_2_yld_geo))
 
-# View(comparison_daly_lifetable_pif)
 
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_daly_lifetable_pif ,
-               # result_vector_alternative = c(20650*2, 10870*2, 30257*2)) # Result on 16 May 2024
-               result_vector_alternative = c(43396, 22708, 63957 )) # Result on 20 August 2024
+check_bestcost(result_list_bestcost = comparison_daly_pif_geo,
+               result_vector_alternative = c(34255, 17885, 51773)) # Result on 21 March 2025
 
-# Additionally check that the first scenario produce the same results as above
-check_bestcost(result_list_bestcost = comparison_daly_lifetable_pif[["health_detailed"]][["scenario_1"]],
-               result_vector_alternative = bestcost_pm_daly_lifetable_geluft[["health_main"]]$impact_rounded)
 
-# Iteration
-comparison_daly_lifetable_pif_geo <-
-  healthiar::compare_daly_from_lifetable(
-    approach_comparison = "pif",
-    exp_central_1 = list(8.85, 8.0),# Fake data just for testing purposes
-    exp_central_2 = list(6, 6.5),# Fake data just for testing purposes
-    cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
-    rr_central = 1.118,
-    rr_lower = 1.060,
-    rr_upper = 1.179,
-    rr_increment = 10, 
-    erf_shape = "log_linear",
-    first_age_pop_1 = 0,
-    last_age_pop_1 = 99,
-    deaths_male_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_1 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_1 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_1 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_1 = 2019, 
-    first_age_pop_2 = 0,
-    last_age_pop_2 = 99,
-    deaths_male_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_male,
-    deaths_female_2 = airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female,
-    population_midyear_male_2 = lifetable_withPopulation[["male"]]$population, 
-    population_midyear_female_2 = lifetable_withPopulation[["female"]]$population, 
-    year_of_analysis_2 = 2019,
-    info_1 = input_data_mortality$pollutant[2],
-    info_2 = input_data_mortality$pollutant[2], 
-    min_age = 20,
-    geo_id_disaggregated = c("a", "b"),
-    geo_id_aggregated = rep("ch", 2),
-    duration_central = 100,
-    dw_central = 1)
-
-# View(comparison_daly_lifetable_pif_geo)
-
-# No study to compare bestcost results
-# Check only if results stay the same overtime despite developments
-check_bestcost(result_list_bestcost = comparison_daly_lifetable_pif_geo ,
-               # result_vector_alternative = c(31601*2, 16613*2, 46359*2)) # Result on 26 June 2024
-               result_vector_alternative = c(66275, 34671, 97702)) # Result on 20 August 2024
 
 ```
 
@@ -2568,7 +2195,7 @@ check_bestcost(result_list_bestcost = comparison_daly_lifetable_pif_geo ,
 ```{r Monetize a simple case}
 # Monetize only with valuation
 bestcost_pm_copd_costs <- 
-  healthiar::include_monetization(output_healthiar = bestcost_pm_copd, 
+  healthiar::monetize(output_healthiar = bestcost_pm_copd, 
                                   valuation = 1000)
 check_general(bestcost_pm_copd_costs[["monetization_main"]]$monetized_impact_rounded,
               round(bestcost_pm_copd[["health_main"]]$impact * 1000))
@@ -2577,7 +2204,7 @@ check_general(bestcost_pm_copd_costs[["monetization_main"]]$monetized_impact_rou
 # Direct discounting
 ## Monetize with all arguments (including discount)
 bestcost_pm_copd_costs_discount <- 
-  healthiar::include_monetization(
+  healthiar::monetize(
     approach_discount = "direct",
     output_healthiar = bestcost_pm_copd,
     discount_shape = "exponential",
@@ -2590,8 +2217,8 @@ check_general(bestcost_pm_copd_costs_discount[["monetization_main"]]$monetized_i
               c(60416, 23343, 94436)) # Result on 9 Jan 2025
 
 ## Monetize with impact (without output of attribute)
-bestcost_pm_copd_cost_discount_single_value <- 
-  healthiar::include_monetization(
+bestcost_cost_discount_single_value <- 
+  healthiar::monetize(
     approach_discount = "direct",
     impact = 2E4, 
     discount_shape = "exponential",
@@ -2599,15 +2226,15 @@ bestcost_pm_copd_cost_discount_single_value <-
     discount_years = 20,
     valuation = 1)
 
-check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
-              14877)
-## According to ChatGPT, the result should be 14877. 5 Dec 2024
+check_general(bestcost_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
+              11074)
+## Results according to ChatGPT on 10 March 2025
 
 
 
 ## Discounting only one specific year
 bestcost_pm_copd_cost_discount_single_value <-
-  healthiar::include_monetization(
+  healthiar::monetize(
     approach_discount = "direct",
     impact = 50,
     discount_shape = "exponential",
@@ -2623,17 +2250,17 @@ check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]
 
 # Indirect approach. 
 ## valuation=1 to compare results with only discounting
-bestcost_pm_yll_lifetable_geluft_indirect <- 
-  healthiar::include_monetization(
+bestcost_pm_yll_lifetable_geluft_indirect_discount <- 
+  healthiar::monetize(
     approach_discount = "indirect",
     output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft, 
     discount_shape = "exponential",
     discount_rate = 0.01,
     valuation = 1)
 
-check_general(bestcost_pm_yll_lifetable_geluft_discount[["monetization_main"]]$monetized_impact_rounded,
+check_general(bestcost_pm_yll_lifetable_geluft_indirect_discount[["monetization_main"]]$monetized_impact_rounded,
               c(26493, 13877, 39006))
-# Result on 13 Dec 2025. Same result as discounting in attribute() (deprecated).
+# Result on 13 Dec 2025. Same result as discounting in attribute_health() (deprecated).
 
 ```
 
@@ -2641,7 +2268,7 @@ check_general(bestcost_pm_yll_lifetable_geluft_discount[["monetization_main"]]$m
 
 # Discounting without valuation
 bestcost_pm_copd_discount <- 
-  healthiar::include_discount(
+  healthiar::discount(
     approach_discount = "direct",
     impact = 2E4,
     discount_shape = "exponential",
@@ -2649,7 +2276,7 @@ bestcost_pm_copd_discount <-
     discount_years = 20)
 
 check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_rounded,
-              14877)# Results on 2025-01-15
+              11074)# Results on 2025-01-15
 
 ```
 
@@ -2657,7 +2284,7 @@ check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_
 ```{r with inflation}
 
 bestcost_inflation_attribute_result <- 
-  healthiar::include_monetization(
+  healthiar::monetize(
     approach_discount = "direct",
     output_healthiar = bestcost_pm_copd,
     discount_shape = "exponential",
@@ -2667,13 +2294,14 @@ bestcost_inflation_attribute_result <-
     valuation = 1E3)
 
 ## Test helper_extract_main_monetization_results() fct
-bestcost_inflation_attribute_result_main <- healthiar::helper_extract_main_monetization_results(bestcost_inflation_attribute_result) 
+bestcost_inflation_attribute_result_main <- 
+  healthiar::helper_extract_main_monetization_results(bestcost_inflation_attribute_result) 
 
-# Discounting without valuation a non-attribute result  
+# Discounting and inflation using example from uni Porto
 bestcost_inflation <- 
-  healthiar::include_monetization(
+  healthiar::monetize(
     approach_discount = "direct",
-    impact = 5,
+    impact = 1,
     discount_shape = "exponential",
     discount_rate = 0.05,
     discount_years = 5,
@@ -2681,17 +2309,78 @@ bestcost_inflation <-
     valuation = 1E3)
 
 check_general(bestcost_inflation[["monetization_main"]]$monetized_impact_rounded,
-              5445)# Results on 2025-03-04 from the sheet of Uni Porto
+              round(783.53))# Results on 2025-03-04 from the sheet of Uni Porto
 
-## Test helper_extract_main_monetization_results() fct
-bestcost_inflation_main <- healthiar::helper_extract_main_monetization_results(bestcost_inflation) # Throws error
+
+# Discounting and inflation using chaggpt
+bestcost_inflation_chatgpt <- 
+  healthiar::monetize(
+    approach_discount = "direct",
+    impact = 1,
+    discount_shape = "exponential",
+    discount_rate = 0.04,
+    discount_years = 5,
+    inflation = 0.03,
+    valuation = 1E4)
+
+check_general(bestcost_inflation_chatgpt[["monetization_main"]]$monetized_impact_rounded,
+              8219)# Results on 2025-03-10 from ChatGPT (some deviation because of rounding)
+
+
+# Discounting with different cost depending on the year 
+# following example of University of Porto
+bestcost_inflation_different_cost_by_year_exp <- 
+  healthiar::monetize(
+    approach_discount = "direct",
+    impact = c(800, 1000, 1200, 1500, 1800, 2000),
+    discount_shape = "exponential",
+    discount_rate = 0.05,
+    discount_years = 5,
+    valuation = 1,
+    discount_overtime = "all_years")
+
+check_general(round(bestcost_inflation_different_cost_by_year_exp[["monetization_detailed"]]$monetized_impact),
+              round(c(800, 952.38,1088.44, 1295.76, 1480.86, 1567.05)))
+# Results on 2025-03-04 from the sheet of Uni Porto
+
+
+# Discounting with different cost depending on the year 
+# following example of University of Porto
+# Now with hyperbolic
+bestcost_inflation_different_cost_by_year_hyp_harvey <- 
+  healthiar::monetize(
+    approach_discount = "direct",
+    impact = c(800, 1000, 1200, 1500, 1800, 2000),
+    discount_shape = "hyperbolic_harvey_1986",
+    discount_rate = 0.05,
+    discount_years = 5,
+    valuation = 1,
+    discount_overtime = "all_years")
+
+check_general(round(bestcost_inflation_different_cost_by_year_hyp_harvey[["monetization_detailed"]]$monetized_impact),
+              round(c(800,965.94, 1135.86, 1399.55, 1660.83, 1828.62)))
+
+
+bestcost_inflation_different_cost_by_year_hyp_mazur <- 
+  healthiar::monetize(
+    approach_discount = "direct",
+    impact = c(800, 1000, 1200, 1500, 1800, 2000),
+    discount_shape = "hyperbolic_mazur_1987",
+    discount_rate = 0.05,
+    discount_years = 5,
+    valuation = 1,
+    discount_overtime = "all_years")
+
+check_general(round(bestcost_inflation_different_cost_by_year_hyp_mazur[["monetization_detailed"]]$monetized_impact),
+              round(c(800, 952.38, 1090.91, 1304.35, 1500.00, 1600.00)))
+
 ```
 
 ```{r cba}
 
 ## Discounting only one specific year (attr input)
 bestcost_pm_copd_cba_attr_input <-
-  healthiar::include_cba(
+  healthiar::cba(
     output_healthiar = bestcost_pm_copd,
     approach_discount = "direct",
     valuation = 20,
@@ -2711,7 +2400,7 @@ bestcost_pm_copd_cba_attr_input_main <-
 
 ## Discounting only one specific year (raw input)
 bestcost_pm_copd_cba_raw_input <-
-  healthiar::include_cba(
+  healthiar::cba(
     approach_discount = "direct",
     positive_impact = 50,
     valuation = 20,
@@ -2731,7 +2420,7 @@ bestcost_pm_copd_cba_main <-
 
 ## Discounting only one specific year
 bestcost_pm_copd_cba_output <-
-  healthiar::include_cba(
+  healthiar::cba(
     approach_discount = "direct",
     output_healthiar = bestcost_pm_copd,
     valuation = 20,
@@ -2752,7 +2441,7 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 
 # Test prepare function
 
-```{r prepare_exposure_data, eval=FALSE, include=FALSE}
+```{r prepare_exposure, eval=FALSE, include=FALSE}
 
 ## To be added
 # test <- healthiar::prepare_exposure_data()
@@ -2788,7 +2477,7 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 
 ## Now with population
 # results_pm_copd_pop <-
-  # healthiar::attribute(
+  # healthiar::attribute_health(
   #   exp_central = data$mean_concentration,                      # 8.85
   #   cutoff_central = data$cut_off_value,                        # 5
   #   bhd_central = data$prevalence,                              # 30747
@@ -2805,7 +2494,7 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 
 ```{r Screenshot for poster, eval=FALSE, include=FALSE}
 
-# health_impact <- attribute(
+# health_impact <- attribute_health(
 #     exp_central = 12.3,
 #     bhd_central = 15000,
 #     rr_central = 1.04,
@@ -2815,7 +2504,7 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 #     erf_shape = "log_linear",
 #     info = "scenario_1")
 # 
-# health_impact <- attribute(
+# health_impact <- attribute_health(
 #     exposure = 12.3,
 #     baseline_health_data = 15000,
 #     rr_central = 1.04,
@@ -2825,13 +2514,13 @@ check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_round
 
 ```
 
-```{r Illustration integrate compare() in attribute()}
+```{r Illustration integrate compare() in attribute_health()}
 
 # Benefit of this: compare the two conceptionally different approaches
  
-# case1 <- attribute(approach= cutoff in exposure)
+# case1 <- attribute_health(approach= cutoff in exposure)
 
-# case2 <- attribute(approach = delta approach/cutoff in ERF)
+# case2 <- attribute_health(approach = delta approach/cutoff in ERF)
 
 # difference impact <- case1[[impact]] - case2[[impact]]
 ```
