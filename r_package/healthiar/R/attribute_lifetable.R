@@ -19,7 +19,8 @@
 #' @export
 
 attribute_lifetable <-
-  function(approach_multiexposure = NULL,
+  function(health_outcome = NULL,
+           approach_multiexposure = NULL,
            exp_central, exp_lower = NULL, exp_upper = NULL,
            prop_pop_exp = 1,
            cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
@@ -40,7 +41,7 @@ attribute_lifetable <-
     output <-
       healthiar:::attribute_master(
         is_lifetable = TRUE,
-        health_outcome = "deaths_from_lifetable",
+        health_outcome = health_outcome,
         approach_risk = "relative_risk",
         approach_multiexposure = approach_multiexposure,
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
