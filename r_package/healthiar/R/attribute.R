@@ -55,10 +55,10 @@
 #'  }
 #'
 #' @author Alberto Castro & Axel Luyten
-#' @export
 
-attribute <-
-  function(approach_risk = "relative_risk",
+attribute_master <-
+  function(is_lifetable = NULL,
+           approach_risk = NULL,
            ## Risk and shape arguments
            rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
            rr_increment = NULL, erf_shape = NULL,
