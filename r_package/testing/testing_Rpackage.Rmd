@@ -1181,7 +1181,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_no2_mortality_combined_ci,
 # and input data from an AirQ+ case
 
 bestcost_pm_deaths_lifetable_airqplus <-
-  healthiar::attribute_deaths_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "deaths",
     approach_exposure = "single_year",
     approach_newborns = "with_newborns",
     exp_central = airqplus_pm_deaths_yll[["input"]]$mean_concentration, 
@@ -1210,7 +1211,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_deaths_lifetable_airqplus,
 
 # Calculate premature deaths using bestcost function
 bestcost_pm_deaths_lifetable_expDistribution <- 
-    healthiar::attribute_deaths_from_lifetable(
+    healthiar::attribute_lifetable(
+      health_outcome = "deaths",
       exp_central = c(8, 9, 10), # Fake data just for testing purposes
       prop_pop_exp = c(0.2, 0.3, 0.5), # Fake data just for testing purposes
       cutoff_central = input_data_mortality$cutoff[2],   # PM2.5=5, NO2=10, i.e. WHO AQG 2021 
@@ -1243,7 +1245,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_deaths_lifetable_expDistributi
 
 # Now with input data from the Swiss project GeLuft
 bestcost_pm_yll_exposure_single_year_lifetable_geluft <-
-  healthiar::attribute_yll_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "yll",
     approach_exposure = "single_year",
     exp_central = input_data_mortality$exp[2], #exp CH 2019
     prop_pop_exp = 1,
@@ -1276,7 +1279,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_exposure_single_year_lifet
 # Input data from an AirQ+ case
 
 bestcost_pm_yll_lifetable_airqplus <-
-  healthiar::attribute_yll_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "yll",
     approach_exposure = "constant",
     approach_newborns = "without_newborns",
     exp_central = airqplus_pm_deaths_yll[["input"]]$mean_concentration,
@@ -1309,7 +1313,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_airqplus,
 # Input data from an AirQ+ case
 
 bestcost_pm_yll_lifetable_airqplus_with_newborns <-
-  healthiar::attribute_yll_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "yll",
     approach_exposure = "constant",
     approach_newborns = "with_newborns",
     exp_central = airqplus_pm_deaths_yll[["input"]]$mean_concentration,
@@ -1341,7 +1346,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_airqplus_with_ne
 # with input data from the Swiss project GeLuft
 
 bestcost_pm_yll_lifetable_1rr_geluft <- 
-    healthiar::attribute_yll_from_lifetable(
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
       exp_central = input_data_mortality$exp[2], #exp CH 2019
       prop_pop_exp = 1,
       cutoff_central = input_data_mortality$cutoff[2], 
@@ -1371,7 +1377,8 @@ check_bestcost(result_list_bestcost = bestcost_pm_yll_lifetable_1rr_geluft,
 # with exposure distribution (instead of population-weighted mean)
 
 bestcost_pm_yll_lifetable_expDistribution_geluft <- 
-    healthiar::attribute_yll_from_lifetable(
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
       exp_central = c(8, 9, 10), # Fake data just for testing purposes
       prop_pop_exp = c(0.2, 0.3, 0.5), # Fake data just for testing purposes
       cutoff_central = input_data_mortality$cutoff[2], # WHO AQG 2021 
@@ -1451,7 +1458,7 @@ check_bestcost(result_list_bestcost = bestcost_pm_yld_lifetable_geluft,
 ```{r DALY from yll and yld}
 
 bestcost_pm_yld  <- 
-  attribute_health(
+  healthiar::attribute_health(
     exp_central = 8.85,
     prop_pop_exp = 1,
     cutoff_central = 5,
@@ -1468,7 +1475,8 @@ bestcost_pm_yld  <-
     dw_central = 1)
 
 bestcost_pm_yll <- 
-  attribute_yll_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "yll",
     exp_central = 8.85,
     prop_pop_exp = 1,
     cutoff_central = 5,
@@ -1516,7 +1524,7 @@ comparison_singlebhd_rr_delta_unpacked <-
   healthiar::compare(
     
      output_attribute_1 = 
-       attribute_health(
+       healthiar::attribute_health(
          exp_central = 8.85,
          cutoff_central = 5, 
          bhd_central = 25000,
@@ -1527,7 +1535,7 @@ comparison_singlebhd_rr_delta_unpacked <-
          info = "PM2.5_mortality_2010"),
      
      output_attribute_2 = 
-       attribute_health(
+       healthiar::attribute_health(
          exp_central = 6, 
          cutoff_central = 5, 
          bhd_central = 25000,
@@ -1544,7 +1552,7 @@ check_bestcost(result_list_bestcost = comparison_singlebhd_rr_delta_unpacked ,
 
 # You can also first store the variables and enter them in attribute_health() 
 scen_1_singlebhd_rr_delta <-
-  attribute_health(
+  healthiar::attribute_health(
     exp_central = 8.85,
     cutoff_central = 5,
     bhd_central = 25000,
@@ -1554,7 +1562,7 @@ scen_1_singlebhd_rr_delta <-
     rr_increment = 10)
 
 scen_2_singlebhd_rr_delta <-
-  attribute_health(
+  healthiar::attribute_health(
     exp_central = 6,
     cutoff_central = 5,
     bhd_central = 25000,
@@ -1867,7 +1875,8 @@ check_bestcost(result_list_bestcost = comparison_yld_singlebhd_rr_pif_geo ,
 # DELTA
 
 scen_1_deaths_lifetable <-
-  healthiar::attribute_deaths_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "deaths",
     exp_central = 8.85, # Fake data just for testing purposes
     prop_pop_exp = 1, # Fake data just for testing purposes
     cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
@@ -1905,7 +1914,8 @@ check_bestcost(result_list_bestcost = comparison_deaths_lifetable_delta,
 
 # Iteration
 scen_1_deaths_lifetable_geo <-
-  healthiar::attribute_deaths_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "deaths",
     exp_central = list(8.85, 8.0),# Fake data just for testing purposes
     prop_pop_exp = 1, # Fake data just for testing purposes
     cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
@@ -1975,7 +1985,8 @@ check_bestcost(result_list_bestcost = comparison_deaths_lifetable_pif_geo ,
 
 # DELTA 
 scen_1_yll_lifetable <-
-  healthiar::attribute_yll_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "yll",
     exp_central = 8.85, # Fake data just for testing purposes
     prop_pop_exp = 1, # Fake data just for testing purposes
     cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
@@ -2016,7 +2027,8 @@ check_bestcost(result_list_bestcost = comparison_yll_lifetable_delta,
 
 # Iteration
 scen_1_yll_lifetable_geo <-
-  healthiar::attribute_yll_from_lifetable(
+  healthiar::attribute_lifetable(
+    health_outcome = "yll",
     exp_central = list(8.85, 8.0), # Fake data just for testing purposes
     prop_pop_exp = 1, # Fake data just for testing purposes
     cutoff_central = 5,   # PM2.5=5, WHO AQG 2021 
