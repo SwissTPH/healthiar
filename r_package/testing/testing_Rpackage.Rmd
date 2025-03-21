@@ -2094,7 +2094,7 @@ comparison_daly_delta <-
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_delta ,
-               result_vector_alternative = c(24299, 12714, 36613)) # Result on 18 March 2025
+               result_vector_alternative = c(2056879 , 1076177, 3032464)) # Result on 21 March 2025
 
 # PIF
 comparison_daly_pif <- 
@@ -2114,7 +2114,7 @@ comparison_daly_pif <-
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_pif,
-               result_vector_alternative = c(24378, 12735, 36815)) # Result on 18 March 2025
+               result_vector_alternative = c(2059673, 1076920, 3038734 )) # Result on 21 March 2025
 
 # With geo iteration
 # Define scenarios
@@ -2160,7 +2160,7 @@ comparison_daly_delta_geo <-
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_delta_geo ,
-               result_vector_alternative = c(34123, 17849, 51437)) # Result on 18 March 2025
+               result_vector_alternative = c(2887557, 1510609, 4257704 )) # Result on 21 March 2025
 
 # PIF
 comparison_daly_pif_geo <- 
@@ -2180,7 +2180,7 @@ comparison_daly_pif_geo <-
 # No study to compare bestcost results
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_pif_geo,
-               result_vector_alternative = c(34255,17885,51773)) # Result on 18 March 2025
+               result_vector_alternative = c(2892177, 1511843, 4268034 )) # Result on 21 March 2025
 
 
 
