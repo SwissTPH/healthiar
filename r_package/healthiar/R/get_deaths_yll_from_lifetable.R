@@ -12,7 +12,7 @@
 #'
 #'
 #'
-get_deaths_yll_yld <-
+get_deaths_yll_from_lifetable <-
   function(pop_impact,
            input_with_risk_and_pop_fraction) {
 

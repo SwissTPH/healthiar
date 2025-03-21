@@ -65,7 +65,7 @@ get_impact <-
 
 
         impact_raw <-
-          healthiar:::get_deaths_yll_yld(
+          healthiar:::get_deaths_yll_from_lifetable(
             pop_impact = pop_impact,
             input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
