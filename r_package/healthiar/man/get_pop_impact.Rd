@@ -4,10 +4,10 @@
 \alias{get_pop_impact}
 \title{Get population impact over time}
 \usage{
-get_pop_impact(input_with_risk_and_pop_fraction, outcome_metric)
+get_pop_impact(input_with_risk_and_pop_fraction)
 }
 \arguments{
-\item{outcome_metric}{\code{String} to define the outcome metric. Choose between "death", "yll" and "yld"}
+\item{input_with_risk_and_pop_fraction}{\code{Data frame} with the input data (including risk and population fraction)}
 }
 \value{
 This function returns a \code{data.frame} with one row for each value of the

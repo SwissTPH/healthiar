@@ -1,8 +1,7 @@
 #' Get population impact over time
 
 #' @description Get population impact over time
-#' @inheritParams attribute_master
-#' @param outcome_metric \code{String} to define the outcome metric. Choose between "death", "yll" and "yld"
+#' @param input_with_risk_and_pop_fraction \code{Data frame} with the input data (including risk and population fraction)
 #'
 #' @returns
 #' This function returns a \code{data.frame} with one row for each value of the
@@ -21,14 +20,15 @@
 #' @keywords internal
 
 get_pop_impact <-
-  function(input_with_risk_and_pop_fraction,
-           outcome_metric
-           ){
+  function(input_with_risk_and_pop_fraction){
 
     user_options <- options()
     options(digits = 15)
 
-    if ((outcome_metric == "yld") | (outcome_metric == "daly")){
+
+    health_outcome <- unique(input_with_risk_and_pop_fraction$health_outcome)
+
+    if ((health_outcome == "yld") | (health_outcome == "daly")){
       # If there are disability weights or duration in the input (i.e. if it's a YLD calculation),
       # the lifetable calculations will only be done for the rows where the
       # column "dw_ci" & "duration_ci" has the value "central" (to improve performance).
@@ -212,7 +212,7 @@ get_pop_impact <-
 
     # PREMATURE DEATHS (SINGLE YEAR EXPOSURE) ######################################################
     # YOA = YEAR OF ANALYSIS
-    if (outcome_metric == "deaths" &
+    if (health_outcome == "deaths" &
         unique(input_with_risk_and_pop_fraction |> dplyr::select(contains("approach_exposure"))== "single_year")[1]) {
 
       pop <- pop |>
@@ -232,8 +232,8 @@ get_pop_impact <-
 
     # YLL & PREMATURE DEATHS (CONSTANT EXPOSURE) ####################################################
 
-    if ((outcome_metric %in% c("yll", "yld", "daly") |
-         (unique(input_with_risk_and_pop_fraction |> dplyr::select(contains("approach_exposure")) == "constant")[1] & outcome_metric == "deaths"))) {
+    if ((health_outcome %in% c("yll", "yld", "daly") |
+         (unique(input_with_risk_and_pop_fraction |> dplyr::select(contains("approach_exposure")) == "constant")[1] & health_outcome == "deaths"))) {
 
       ## PROJECT POPULATIONS #########################################################################
 
@@ -501,13 +501,13 @@ get_pop_impact <-
     pop <- pop |>
       dplyr::mutate(
         pop_impact_nest =
-          if(outcome_metric == "deaths") premature_deaths_nest else yll_nest)
+          if({{health_outcome}} == "deaths") premature_deaths_nest else yll_nest)
 
     # Remove from pop, as already present in input_with_risk_...
     pop <- pop |>
       dplyr::select(-lifetable_with_pop_nest)
 
-    if (outcome_metric != "yld" & outcome_metric != "daly"){ # YLL & premature deaths case
+    if (health_outcome != "yld" & health_outcome != "daly"){ # YLL & premature deaths case
 
       joining_columns_pop_impact <-
         healthiar:::find_joining_columns(input_with_risk_and_pop_fraction,
