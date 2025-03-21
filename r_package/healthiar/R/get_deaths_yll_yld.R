@@ -17,10 +17,10 @@ get_deaths_yll_yld <-
            input_with_risk_and_pop_fraction) {
 
     ## Define outcome_metric variable
-    outcome_metric <- sub("_.*", "", unique(input_with_risk_and_pop_fraction$health_outcome))
+    outcome_metric <- unique(input_with_risk_and_pop_fraction$health_outcome)
 
     # Determine default time horizon for YLL/YLD if not specified ##############
-    if ( outcome_metric %in% c("yll", "yld")  &
+    if ( outcome_metric %in% c("yll") & # And ("yld")  if ever implemented
          !"time_horizon" %in% names(input_with_risk_and_pop_fraction ) ) {
 
         time_horizon <- input_with_risk_and_pop_fraction %>%
@@ -89,7 +89,7 @@ get_deaths_yll_yld <-
 
               # Calculate YLL/YLD impact per year ################################
 
-              if ( outcome_metric %in% c("yll", "yld") ) {
+              if ( outcome_metric %in% c("yll") ) { # And ("yld")  if ever implemented
 
                 .x <- .x |>
                   dplyr::select(contains("population_")) |>
@@ -110,36 +110,36 @@ get_deaths_yll_yld <-
               } else
                 .x<-.x}), .before = 1)
 
-    # YLD ######################################################################
+    # YLD if ever implemented###################################################
 
-    ## Determine year- and age specific YLD
-    if ( outcome_metric %in% "yld" ) {
-
-      impact_detailed <- impact_detailed |>
-        dplyr::mutate(yll_nest =
-                        purrr::map2(
-          .x = yll_nest, .y = dw,
-          function(yll_nest, dw){
-            # YLL * DW = YLD
-            yll_nest <- yll_nest * dw
-            return(yll_nest)
-          }
-        )
-        )
-
-      ## Determine total YLD per year
-      impact_detailed <- impact_detailed |>
-        dplyr::mutate(lifeyears_nest =
-                        purrr::map2(
-                          .x = lifeyears_nest, .y = dw,
-                          function(lifeyears_nest, dw){
-                            lifeyears_nest <- lifeyears_nest |>
-                              mutate(impact = impact * dw)
-                            return(lifeyears_nest)
-                          }
-                        ))
-
-    }
+    # ## Determine year- and age specific YLD
+    # if ( outcome_metric %in% "yld" ) {
+    #
+    #   impact_detailed <- impact_detailed |>
+    #     dplyr::mutate(yll_nest =
+    #                     purrr::map2(
+    #       .x = yll_nest, .y = dw,
+    #       function(yll_nest, dw){
+    #         # YLL * DW = YLD
+    #         yll_nest <- yll_nest * dw
+    #         return(yll_nest)
+    #       }
+    #     )
+    #     )
+    #
+    #   ## Determine total YLD per year
+    #   impact_detailed <- impact_detailed |>
+    #     dplyr::mutate(lifeyears_nest =
+    #                     purrr::map2(
+    #                       .x = lifeyears_nest, .y = dw,
+    #                       function(lifeyears_nest, dw){
+    #                         lifeyears_nest <- lifeyears_nest |>
+    #                           mutate(impact = impact * dw)
+    #                         return(lifeyears_nest)
+    #                       }
+    #                     ))
+    #
+    # }
 
 
     # Deaths ###################################################################
@@ -169,7 +169,7 @@ get_deaths_yll_yld <-
     # Store total, YLL/YLD in YOA in column impact_nest #########
     ## Single number
 
-    if ( outcome_metric %in% c("yll", "yld")){
+    if ( outcome_metric %in% c("yll")){ # And ("yld")  if ever implemented
 
       impact_detailed <- impact_detailed |>
 
@@ -189,7 +189,7 @@ get_deaths_yll_yld <-
             function(.x, .y, outcome_metric){
 
             ## If yll or yld
-            if( outcome_metric %in% c("yld", "yll")){
+            if( outcome_metric %in% c("yll")){ # And ("yld")  if ever implemented
 
               .x <-
                 .x |>
