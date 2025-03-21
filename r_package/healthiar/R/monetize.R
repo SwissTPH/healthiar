@@ -36,8 +36,8 @@ monetize <-
 
     if(approach_discount == "indirect"){
 
-      outcome_metric <-
-        unique(output_healthiar[["health_detailed"]][["impact_raw"]]$outcome_metric)
+      health_outcome <-
+        unique(output_healthiar[["health_detailed"]][["impact_raw"]]$health_outcome)
 
       # Store the original data (they refer to health)
       output_health <- output_healthiar
@@ -77,7 +77,7 @@ monetize <-
               }))
 
       ## If yll or yld
-      if({{outcome_metric}} %in% c("yll", "yld")){
+      if({{health_outcome}} %in% c("yll", "yld")){
 
         impact_detailed <-
           impact_detailed |>
