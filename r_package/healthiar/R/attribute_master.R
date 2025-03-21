@@ -6,7 +6,7 @@
 #' @param approach_risk \code{String} specifying the risk risk method. Options: "relative_risk" (default) or "absolute_risk".
 #' @param erf_shape \code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".
 #' @param rr_central,rr_lower,rr_upper \code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
-#' @param rr_increment \code{Numeric value} specifying the increment of the exposure-response function in \eqn{µg/m^3} (usually 10 or 5 \eqn{µg/m^3}).
+#' @param rr_increment \code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}).
 #' @param erf_eq_central,erf_eq_lower,erf_eq_upper \code{String} or \code{function} specifying the equation of the user-defined exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions.
 #' If a \code{string} is entered, the function must contains only one variable: x (exposure), e.g. "3+x+x^2".
 #' If a \code{function} is fed to the argument, it has be of the class function class, e.g. output from the functions \code{stats::splinefun()} or \code{stats::approxfun()}.
@@ -44,17 +44,19 @@
 #' @param max_age \code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.
 #' @param is_lifetable \code{Boolean} argument specifying if the life table approach is applied (TRUE) or not (FALSE)
 #' @returns
-#' This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
+#' This function returns two lists:
+#' @returns
+#' 1) \code{health_main}, which contains a tibble with the main results and
 #' 2) \code{health_detailed}, which contains detailed (and interim) results.
+#' @returns
 #' The result tibbles include columns such as:
 #' \itemize{
-#'  \item pop_fraction (population attributable fraction; only for assessments using relative risk)
-#'  \item impact (health impact)
-#'  \item And many more.
+#'  \item \code{pop_fraction} population attributable fraction; only for assessments using relative risk
+#'  \item \code{impact} attributable health burden/impact
+#'  \item And many more
 #'  }
 #'
-#' @author Alberto Castro
-
+#' @author Alberto Castro & Axel Luyten
 
 attribute_master <-
   function(is_lifetable = NULL,

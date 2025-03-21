@@ -1,0 +1,591 @@
+---
+title: "Hello, I'm healthiar! Nice to meet you all!"
+subtitle: "healthiar R package workshop 1 for BEST-COST"
+author:
+  - name:
+      given: Axel Luyten &
+      family: Alberto Castro
+    affiliations:
+      - name: Swiss TPH
+    orcid: 0000-0002-7005-5889
+    email: axel.luyten@swisstph.ch
+date: 2025-03-24 # last-modified
+editor: source
+execute: 
+  eval: true
+  echo: true
+  warning: false
+freeze: auto
+format:
+  revealjs:
+    css: custom_style.css
+    # code-tools: # Test at later point what this does
+      # source: https://github.com/best-cost/best-cost_WPs/tree/master
+    # code-fold: true # Folds code chunk in the HTML prez
+    incremental: true
+    transition: none # alts: fade, none, slide
+    transition-speed: default
+    table-of-contents: false
+    toc-depth: 1
+    logo: images/combo_logo_stph_bc.png
+    # footer: 'healthiar WP5 workshop 1'
+    smaller: true # If you set {.smaller} after the slide title, reduces font automatically so content fits on slide
+    scrollable: true # If you set {.scrollable} after the slide title, let's you scroll on the slide
+    template-partials:
+      - title-slide.html
+    title-slide-attributes:
+      data-background-image: images/combo_title_stph_bc.png
+      data-background-size: contain
+      data-background-opacity: "1"
+    slide-number: true
+    embed-resources: true
+---
+
+<!-- #TODO -->
+
+<!-- Mention that questions for Q&A blocks (add to TOC) -->
+
+<!-- think about where to do the break -->
+
+<!-- think about which slides I could skip if necessary -->
+
+<!-- twhen to do Q&A? 2 Q&A blocks ~ 10 min at the end of each hours -->
+
+```{r, echo=FALSE}
+library(healthiar)
+library(tibble)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(stringr)
+library(knitr)
+
+options(knitr.kable.max_rows = 100)
+set.seed(1)
+```
+
+## BEST-COST GitHub repository
+
+Let's start by checking out the [BEST-COST GitHub repo](https://github.com/best-cost/best-cost_WPs) and the [README file](https://github.com/best-cost/best-cost_WPs/tree/master?tab=readme-ov-file#readme)
+
+[![Landing page of the BEST-COST GitHub repo. The README file tells you how to get started. The folder r_package contains package-related files (including function code). Developments are discussed and documented under Issues.](images/bc_github_repo.png)](https://github.com/best-cost/best-cost_WPs)
+
+## README
+
+The [README file](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme) contains the following information
+
+-   [GET STARTED WITH THE *healthiar* R PACKAGE](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#get-started-with-the-healthiar-r-package)
+
+-   [Initial installation of the *healthiar* package from GitHub](Initial%20installation%20of%20the%20healthiar%20package%20from%20GitHub)
+
+-   [TERMS OF USE](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#terms-of-use)
+
+-   [NOTE](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#note)
+
+-   [DISCLAIMER](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#disclaimer)
+
+. . .
+
+![README file of the `healthiar` R package](images/readme.png)
+
+## About *`healthiar`* (1/2)
+
+![Figure: healthiar overview](images/EPHC_poster_landscape_v0.2.2_only_package_overview.jpg){width="700"}
+
+TODO: update names in poster; make internal testing ticked
+
+## Workflow BoD
+
+note: quickly introduce the main workflow of burden assessments
+
+## Function call
+
+TODO: AC: let's insert a simple attribute function call at the start so that they have a reference
+
+## About *`healthiar`* (2/2)
+
+The core function family of `healthiar` is the `attribute` family, used to attribute health impacts to a (environmental) risk factor, e.g. noise or air pollution. - `attribute_health` can be used for relative and absolute risk assessments - `attribute_lifetable` is used for (RR & AR) life table assessment
+
+The extended family is the `compare` family, which is used to compare two scenarios with the population impact fraction (PIF) or delta approach.
+
+TODO: compare fct instead of compare family, add ()
+
+Then there are the in-laws, which are the "additional" analysis functions that can be run after the initial `attribute` or `compare` function calls - Economic analysis (WP2) + `monetize` + `cba` - Social analysis (WP3) + `get_mdi` + `socialize` - Summary uncertainty (i.e. Monte Carlo simulation) - Multi-pollutant exposure + `INSERT_NAME` TODO
+
+# *`healthiar`* package in RStudio
+
+## *`healthiar`* in RStudio 1/3
+
+![RStudio startup screen](images/rstudio_startup_screen.png)
+
+## *`healthiar`* in RStudio 2/3
+
+Post installation, you can access the `healthiar` package landing page in RStudio by going to the *Packages* tab and then clicking on the `healthiar` package.
+
+![](images/rstudio_how_to_access_package_landing_page.png)
+
+## *`healthiar`* in RStudio 3/3
+
+![Landing page of the `healthiar` package in RStudio, where you find the package vignettes and function documentation.](images/healthiar_package_landing_page.png)
+
+## Vignette
+
+![The vignette introduces `healthiar` step-by-step and contains (reproducible) examples. You can open the `intro_to_healthiar` vignette within RStudio or as a *HTML* within your browser.](images/rstudio_intro_vignette.png)
+
+TODO: add function call how to access vignette; add short definition of vignette
+
+. . .
+
+::: callout-note
+The vignette is a work in progress: we appreciate any feedback or suggestions you might have to make it more useful to future users!
+:::
+
+## Function documentation (1/) - Overview
+
+Access the function documentation (= fun doc) by clicking on a function name in the package landing page.
+
+::: callout-tip
+When the package is loaded (via `library(healthiar)`) access the fun doc of e.g. `attribute_health` by running
+
+`?attribute_health`.
+:::
+
+TODO: maybe it's easier to include the different sections with screenshots as collapsable things on one slide . . .
+
+Any fun doc contains the following sections:
+
+-   *Title* Essence of the function
+
+-   *Description* What does the function do exactly?
+
+-   *Usage* Bare-minimum examples of how to use the function (includes default values if there are any)
+
+-   *Arguments* Short description of each function argument: input type (`numeric` vs. `string`), options (if available), how each argument affects the output.
+
+-   *Details* (optional) Additional details about the function
+
+-   *Value* Information about the function output
+
+-   *Examples* (optional) Shows how the function works
+
+## Function documentation (1/) - Title
+
+![*Title section*](images/fun_doc_title.png)
+
+The title summarizes the function of the function (hehe) in one sentence.
+
+The title shows up next to the function name in the package landing page.
+
+## Function documentation (1/) - Description
+
+![*Description section* provides additional details about the function's purpose](images/fun_doc_desc.png)
+
+## Function documentation (1/) - Usage
+
+![*Usage section* In the usage section you can find a bare-minimum function "template", which can either be auto-generated or created manually, as in this case.](images/fun_doc_usage.png)
+
+::: callout-important
+Any arguments that appear without a *=* symbol after them in the usage section have to be user-specified in all function call.
+:::
+
+::: callout-note
+The inputs to the arguments in the usage section are default inputs
+:::
+
+## Function documentation (1/) - Arguments
+
+![*Arguments section* This is the core section of the function documentation, where input type (`numeric` vs. `string`) & input options (if available) are specified.](images/fun_doc_arguments.png)
+
+## Function documentation (1/) - Details
+
+![Details section (optional) Additional details about the function](images/fun_doc_details.png)
+
+::: callout-warning
+Depending on the function, this section might be not very developed at the moment. Sometimes more function details are found in the intro vignette.
+:::
+
+## Function documentation (1/) - Value
+
+![*Value section* Information about the function output](images/fun_doc_value.png)
+
+## Function documentation (1/) - Examples
+
+![Example section (optional) Shows how the function works](images/fun_doc_examples.png)
+
+::: callout-tip
+By clicking on `Run examples` the example(s) are executed and the output shown
+:::
+
+## Function documentation (1/) - Examples output
+
+![*Example output* Obtained by clicking on `Run examples` (see previous slide)](images/fun_doc_examples_output.png)
+
+## Example: `attribute` call without input uncertainties
+
+Goal: attribute COPD cases to air pollution
+
+:::: panel-tabset
+## Hard-coded input data
+
+```{r, eval=TRUE,include=TRUE,echo=TRUE}
+#| code-line-numbers: "|1|2|3|4-7|8|9|10"
+
+results_pm_copd <-
+  healthiar::attribute_health(
+    erf_shape = "log_linear", # Alternatives: "linear", "log_log"
+    rr_central = 1.369, 
+    rr_increment = 10,  # μg / m^3
+    exp_central = 8.85, # μg / m^3
+    cutoff_central = 5, # μg / m^3
+    bhd_central = 30747 # baseline health data: COPD incidence
+  ) 
+```
+
+## Pre-loaded data
+
+::: callout-tip
+`healthiar` comes with some example data that start with `exdat_` that allow you to test functions.
+:::
+
+```{r, eval=TRUE,include=TRUE,echo=TRUE}
+
+results_pm_copd <-
+  healthiar::attribute_health(
+    erf_shape = "log_linear",
+    rr_central = exdat_pm_copd$relative_risk, 
+    rr_lower = exdat_pm_copd$relative_risk_lower,
+    rr_upper = exdat_pm_copd$relative_risk_upper,
+    rr_increment = 10, 
+    exp_central = exdat_pm_copd$mean_concentration,
+    cutoff_central = exdat_pm_copd$cut_off_value,
+    bhd_central = exdat_pm_copd$incidents_per_100_000_per_year/1E5*exdat_pm_copd$population_at_risk,
+    # bhd_central = exdat_pm_copd$incidence # Uncomment once change committed to main
+  ) 
+```
+::::
+
+## Output structure
+
+Every `attribute` output consists of two lists ("folders")
+
+-   `health_main` contains the main results
+
+-   `health_detailed` detailed results (and in some cases even more information about the assessment/calculation)
+
+TODO: add to detailed bullet: interim results, input; add that tibble works like data frame note: add here that format is tibble (but can be changed to data frame)
+
+note: screenshot of how to click on variable in env (put that as first option) . . .
+
+#### Different ways to access the results
+
+::: callout-tip
+This is personal preference! However, you might encounter all options.
+:::
+
+::: panel-tabset
+## By clicking
+
+Go to the *Environment* tab in RStudio and click on a variable to "open" it. Alternatively, you can use `View(results_pm_copd)`, which has the same effect.
+
+## With `$` operator
+
+`results_pm_copd$health_main$impact_rounded`
+
+Note: after typing the `$` sign you can see all available options by pressing the tab key and use the arrows & tab keys to select an option (or alternatively use the mouse)
+
+## With `[[]]` operator
+
+`results_pm_copd[["health_main"]]`
+
+Note: if the cursor is located within the square braces you can see all available options by pressing the tab key
+
+## With `pluck()` & `pull()`
+
+Using the `purrr::pluck` function to select a list and then the `dplyr::pull` function extract values from a specified column
+
+`results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
+
+Note: available options can't be displayed automatically using these functions -\> better suited for a more permanent analysis script
+:::
+
+## Let's check the main output!
+
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_pm_copd[["health_main"]]
+```
+
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_pm_copd[["health_detailed"]][["raw"]] |> 
+  select(impact_rounded, impact, pop_fraction, erf_ci, rr, exp, bhd) |> 
+  knitr::kable()
+```
+
+. . .
+
+::: callout-tip
+Each row shows a result obtained with all the input data & calculation pathway specifications shown in that row
+:::
+
+Some of the most relevant columns include: - *impact_rounded* Rounded attributable health impact/burden - *impact* Raw impact/burden - *pop_fraction* Population attributable fraction (PAF) - *erf_ci* Specifies whether `rr_central`, `..._lower` or `..._upper` was used in calculation - *rr* Specifies raw rr used in calculation - *-* exp *-* bhd\*
+
+## Example: `attribute` with input uncertainties
+
+Goal: attribute lung cancer deaths to PM2.5 exposure
+
+```{r, eval=TRUE,include=TRUE,echo=TRUE}
+#| code-line-numbers: "|5-6|9-10|13-14"
+
+results_pm_copd <-
+  healthiar::attribute_health(
+    erf_shape = "log_linear",
+    rr_central = 1.369, 
+    rr_lower = 1.124, 
+    rr_upper = 1.664,
+    rr_increment = 10, 
+    exp_central = 8.85, 
+    exp_lower = 8, 
+    exp_upper = 10,
+    cutoff_central = 5,
+    bhd_central = 30747, 
+    bhd_lower = 28000, 
+    bhd_upper = 32000
+  ) 
+```
+
+## Let's check the detailed output!
+
+<!-- #TODO -->
+
+:::: {.fragment .fade-in}
+::: callout-tip
+See the intro vignette for a detailed description of output columns.
+:::
+::::
+
+::: {.fragment .fade-in}
+The `health_detailed` output table contains all different combinations of the arguments with uncertainty. E.g. `rr_central` with `exp_lower` and `bhd_upper`, ...
+:::
+
+::: {.fragment .fade-in}
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_pm_copd[["health_detailed"]][["raw"]]
+```
+
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_pm_copd[["health_detailed"]][["raw"]] |> knitr::kable()
+```
+:::
+
+## Include summary uncertainty
+
+TODO: add here Monte Carlo example
+
+## Example: `attribute` with exposure categories (noise)
+
+Goal: attribute cases of high annoyance (HA) to noise exposure
+
+:::::: columns
+::: {.column .fragment .fade-in width="50%"}
+```{r}
+exdat_noise_ha <-
+  exdat_noise_ha |>
+  dplyr::filter(!is.na(exdat_noise_ha$exposure_mean))
+
+results_noise_ha <- 
+  healthiar::attribute_health(
+    approach_risk = "absolute_risk",
+    exp_central = c(57.5, 62.5, 67.5, 72.5, 77.5),
+    population = sum(exdat_noise_ha$population_exposed_total), # TO DO: hard code input here
+    prop_pop_exp = exdat_noise_ha$population_exposed_total / 
+      sum(exdat_noise_ha$population_exposed_total),
+    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2")
+```
+
+TODO: hard code the function input
+:::
+
+::: {.column .fragment .fade-in width="50%"}
+![Source input data: NIPH](images/example_noise_ha.png)
+:::
+
+::: {.fragment .fade-in}
+```{r, echo=TRUE}
+#| output-location: fragment
+results_noise_ha[["health_detailed"]][["raw"]] |> knitr::kable()
+```
+:::
+::::::
+
+## Iteration example (1/)
+
+Goal: attribute disease cases to PM2.5 exposure in multiple geographic units, such as municipalities, provinces, countries, ...
+
+::: callout-tip
+-   For iterations, enter geo unit-specific inputs as lists use `as.list()` function
+
+-   Feed unique geo ID's to the \`geo_id_disaggregated\` argument (e.g. municipality names)
+
+-   Optional: aggregate geo unit-specific results by providing higher-level ID's (e.g. region names)
+:::
+
+TODO: make printed table smaller, select relevant columns
+
+. . .
+
+TODO: mention that geo ids to be entered es vector
+
+TODO: add name aggregated argument to bulb box ::: panel-tabset \## as.list(...)
+
+```{r}
+#| code-line-numbers: "|5-6|9-10|13-14"
+#| output-location: fragment
+
+results_iteration <- healthiar::attribute_health(
+    geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"), 
+    geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
+    rr_central = 1.369,
+    rr_increment = 10, 
+    cutoff_central = 5,
+    erf_shape = "log_linear",
+    exp_central = as.list(c(11, 11, 10, 8, 7)),
+    bhd_central = as.list(c(4000, 2500, 3000, 1500, 500))
+)
+```
+
+Here the we want to aggregate results by language region (`"Ger", "Fra", "Ita"`)
+
+## \|\> as.list()
+
+TODO: remove pipe; replace as.list with list
+
+```{r}
+
+results_iteration <- healthiar::attribute_health(
+    geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"), 
+    geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
+    rr_central = 1.369,
+    rr_increment = 10, 
+    cutoff_central = 5,
+    erf_shape = "log_linear",
+    exp_central = c(11, 11, 10, 8, 7) |> as.list(),
+    bhd_central = c(4000, 2500, 3000, 1500, 500) |> as.list()
+)
+```
+
+:::
+
+## Let's check the iteration output! (/)
+
+::: callout-tip
+The main output contains aggregated results if available, or disaggregated results if no aggregation ID was provided
+:::
+
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_iteration[["health_main"]]
+```
+
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_iteration[["health_main"]] |> 
+  dplyr::select(geo_id_aggregated, impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
+  knitr::kable()
+```
+
+## Iteration example with uncertainties
+
+Analogously to the single geo unit example the iteration can also be run with uncertainties in one or more input variables.
+
+```{r}
+
+results_iteration <- healthiar::attribute_health(
+    geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"), 
+    geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
+    rr_central = 1.369, 
+    rr_lower = 1.124,
+    rr_upper = 1.664,
+    rr_increment = 10, 
+    cutoff_central = 5,
+    erf_shape = "log_linear",
+    exp_central = as.list(c(11, 11, 10, 8, 7)),
+    exp_lower = as.list(c(10, 10, 9, 7, 6)),
+    exp_upper = as.list(c(12, 12, 11, 9, 8)),
+    bhd_central = as.list(c(4000, 2500, 3000, 1500, 500)),
+    bhd_lower = as.list(c(3000, 1875, 2250, 1125, 375)),
+    bhd_upper = as.list(c(5000, 3125, 3750, 1875, 625))
+)
+```
+
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_iteration[["health_detailed"]][["raw"]]
+```
+
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_iteration[["health_detailed"]][["raw"]] |> knitr::kable()
+```
+
+## Compare example
+
+note: definitely include because WP5 will do; mention PIF vs delta
+
+# Additional analyses
+
+## Monetization
+
+note: include definitely
+
+## Social analysis
+
+note: if time allows
+
+## Other features
+
+Check out the intro vignette for examples (to be added)
+
+-   correlated exposures
+
+-   life table analysis
+
+-   get_daly
+
+## Exporting results
+
+note: show how to export csv, ...
+
+Export to .csv
+
+TODO
+
+Save as .Rdata
+
+TODO
+
+Export to Excel
+
+```{r}
+openxlsx::write.xlsx(results_pm_copd, file = "../testing/Workshops_and_demos/WS_WP5/exported_results/results_pm_copd.xlsx")
+```
+
+![*Exported to .xlsx format*](images/export_xlsx.png)
+
+## Visualize
+
+Out of scope of `healthiar`
+
+-   Using R, e.g. with ggplot2 package
+
+-   Using Excel (once results are exported)
+
+## Introduce homework
+
+note: stress that they must install & test healthiar before 2nd WS
+
+note: AC: not more than 2-3 exercises, one with provided numbers, one where they use exdat
+
+note: put exercises in PDF on Teams
+
+If you encounter challenges during installation, get in touch with us!
+
+## Outlook WS2
+
+note: mention programme WS2 & explicitly YOU WILL HAVE TO PROGRAMME IN RSTUDIO USING HEALTHIAR
+
+note: document any suggestions for improvements

@@ -1,8 +1,0 @@
----
-title: "Testing_function_templates"
-author: "Axel Luyten"
-output:
-  pdf_document: default
-  html_document: default
----
-

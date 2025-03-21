@@ -59,7 +59,7 @@ attribute_master(
 
 \item{rr_central, rr_lower, rr_upper}{\code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.}
 
-\item{rr_increment}{\code{Numeric value} specifying the increment of the exposure-response function in \eqn{µg/m^3} (usually 10 or 5 \eqn{µg/m^3}).}
+\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}).}
 
 \item{erf_shape}{\code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".}
 
@@ -121,13 +121,16 @@ The suffix "info" will be added to the column name.
 Default value = \code{NULL}.}
 }
 \value{
-This function returns two lists: 1) \code{health_main}, which contains a tibble with the main results and
+This function returns two lists:
+
+1) \code{health_main}, which contains a tibble with the main results and
 2) \code{health_detailed}, which contains detailed (and interim) results.
+
 The result tibbles include columns such as:
 \itemize{
- \item pop_fraction (population attributable fraction; only for assessments using relative risk)
- \item impact (health impact)
- \item And many more.
+ \item \code{pop_fraction} population attributable fraction; only for assessments using relative risk
+ \item \code{impact} attributable health burden/impact
+ \item And many more
  }
 }
 \description{
@@ -137,5 +140,5 @@ Calculates the health impacts, mortality or morbidity, of an environmental stres
 It provides as a result the mean as well as the lower and the higher bound of the impact based on the confidence interval of the concentration-response function.
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }

@@ -1,5 +1,5 @@
 ---
-title: "testing"
+title: "Testing healthiar"
 output: 
   rmarkdown::html_vignette:
     toc: true
@@ -13,6 +13,8 @@ vignette: >
 ------------------------------------------------------------------------
 
 ```{r prepare, include=FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -645,6 +647,7 @@ healthiar::attribute_health(
 ```
 
 ### Extended function template
+
 ```{r template rr complete extended, include=TRUE, echo=TRUE, eval=FALSE}
 testthat::test_that("results correct [pathway_id]", {
   
@@ -694,6 +697,7 @@ testthat::test_that("results correct [pathway_id]", {
 Depending on your calculation pathway you will have to replace some of the `NULL` values in the template.
 
 ### Basic function template
+
 ```{r template ar complete basic, include=TRUE, echo=TRUE, eval=FALSE}
 ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
 # data <- ...
@@ -724,6 +728,7 @@ healthiar::attribute_health(
 ```
 
 ### Extended function template
+
 ```{r template ar complete extended, include=TRUE, echo=TRUE, eval=FALSE}
 testthat::test_that("results correct [pathway_id]", {
   
@@ -767,6 +772,7 @@ testthat::test_that("results correct [pathway_id]", {
 See start of the section [Testing templates] for guidance on how to access function-specific info about the `include_monetization` function.
 
 ### Basic function template
+
 ```{r template monetization complete basic, include=TRUE, echo=TRUE, eval=FALSE}
 ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
 # data <- ...
@@ -796,6 +802,7 @@ healthiar::monetize(
 ```
 
 ### Extended function template
+
 ```{r template monetization complete extended, include=TRUE, echo=TRUE, eval=FALSE}
 testthat::test_that("results correct [pathway_id]", {
   
@@ -837,6 +844,7 @@ testthat::test_that("results correct [pathway_id]", {
 Depending on your calculation pathway you will have to replace some of the `NULL` values in the template.
 
 ### Basic function template
+
 ```{r template cba complete basic, include=TRUE, echo=TRUE, eval=FALSE}
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
@@ -869,6 +877,7 @@ Depending on your calculation pathway you will have to replace some of the `NULL
 ```
 
 ### Extended function template
+
 ```{r template cba complete extended, include=TRUE, echo=TRUE, eval=FALSE}
 testthat::test_that("results correct [pathway_id]", {
   
@@ -911,6 +920,7 @@ testthat::test_that("results correct [pathway_id]", {
 The iteration function calls require two additional arguments compared to the function calls for single geo units: you have to additionally specify the `geo_id_disaggregated` (e.g. "Brussels", "Antwerp", ...) and `geo_id_aggregated` (e.g. "Belgium") arguments. Also, the geo unit-specific arguments (e.g. `exp_central`, `bhd_central`, ...) have to be provided as lists, with each list element representing a geo unit. For more detailed information on iterations using `attribute_...` functions please see section *Example iteration: assess impact in multiple geographic units* in the *intro_to_healthiar* vignette.
 
 ### Basic function template
+
 ```{r template iteration rr basic, include=TRUE, echo=TRUE, eval=FALSE}
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   # data <- ...
@@ -948,6 +958,7 @@ The iteration function calls require two additional arguments compared to the fu
 ```
 
 ### Extended function template
+
 ```{r template iteration rr extended, include=TRUE, echo=TRUE, eval=FALSE}
 testthat::test_that("results correct [pathway_id]", {
   
@@ -997,6 +1008,7 @@ testthat::test_that("results correct [pathway_id]", {
 Note that to test the `socialize` function you a social indicator for each of the geo units under analysis in addition to the usual data needed for an iteration of `attribute`.
 
 ### Basic function template
+
 ```{r template social analysis basic, include=TRUE, echo=TRUE, eval=FALSE}
 ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
 # data <- ...
@@ -1032,6 +1044,7 @@ healthiar::socialize(
 ```
 
 ### Extended function template
+
 ```{r template social analysis extended, include=TRUE, echo=TRUE, eval=FALSE}
 
 testthat::test_that("results correct [pathway_id]", {
