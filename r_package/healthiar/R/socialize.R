@@ -1,4 +1,4 @@
-#' Soci-economic aspects in health imapcts
+#' Socio-economic aspects in health impacts
 
 #' @description The function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts
 #' @param output_healthiar \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results
