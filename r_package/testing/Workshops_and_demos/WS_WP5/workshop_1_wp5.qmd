@@ -18,6 +18,7 @@ execute:
 freeze: auto
 format:
   revealjs:
+    # code-line-numbers: true # Doesn't work; probably works for html format
     css: custom_style.css
     # code-tools: # Test at later point what this does
       # source: https://github.com/best-cost/best-cost_WPs/tree/master
@@ -47,6 +48,8 @@ format:
 
 <!-- think about which slides I could skip if necessary -->
 
+# Workshop
+
 ```{r, echo=FALSE}
 library(healthiar)
 library(tibble)
@@ -59,8 +62,6 @@ library(knitr)
 options(knitr.kable.max_rows = 100)
 set.seed(1)
 ```
-
-# Workshop
 
 ::: fragment
 **Part 1 (today)**
@@ -93,7 +94,7 @@ No need to code!
 # Today
 
 :::::: columns
-:::: {.column .fragment .fade-in width="45%"}
+:::: {.column .fragment .nonincremental .fade-in width="60%"}
 **1st hour**
 
 -   \[About healthiar\]
@@ -115,7 +116,7 @@ No need to code!
 :::
 ::::
 
-::: {.column .fragment .fade-in width="45%"}
+::: {.column .fragment .nonincremental .fade-in width="40%"}
 **2nd hour**
 
 -   \[healthiar examples II\]
@@ -134,11 +135,19 @@ No need to code!
 
 ------------------------------------------------------------------------
 
-![](images/attribute_health_simple.png){fig-align="center" width="800"}
+::: fragment
+Let's jump right in!
+:::
+
+::: fragment
+Example of a `healthiar` function call
+
+![](images/attribute_health_simple.png){fig-align="center" width="500"}
+:::
 
 . . .
 
-What's going on here?
+What's going on here? Let's rewind a bit
 
 ------------------------------------------------------------------------
 
@@ -150,13 +159,11 @@ What's going on here?
 
 ![](images/bod_ar.png)
 
-## About *`healthiar`* (1/5)
+## About *`healthiar`* 1/4
 
-![Figure: healthiar overview](images/EPHC_poster_landscape_v0.2.2_only_package_overview.jpg){width="700"}
+![Figure: healthiar overview. DALY = disability-adjusted life years; GBD = global burden of disease; MDI = multidimensional deprivation index; PAF = population attributable fraction; PIF = population impact fraction; YLD = years lived with disability; YLL = years of life lost](images/package_overview.png)
 
-TODO: update names in poster; make internal testing ticked
-
-## About *`healthiar`* (2/5)
+## About *`healthiar`* 2/4
 
 `healthiar` core family members (functions)
 
@@ -167,19 +174,19 @@ TODO: update names in poster; make internal testing ticked
 -   `compare()` two scenarios
 -   `monetize()` health impacts
 -   `cba()` cost-benefit analysis
--   `socialize()` discovers inequalities in health impacts
--   `get_mdi()` creates the BEST-COST Multidimensional Deprivation Index (MDI)
+-   `socialize()` to discover inequalities in health impacts
+-   `get_mdi()` creates the BEST-COST MDI (Multidimensional Deprivation Index)
 -   `get_daly()` by adding up YLL & YLD
 
-## About *`healthiar`* (1/5)
+## About *`healthiar`* 3/4
 
 **BEST-COST GitHub repository**
 
 Let's check out the [BEST-COST GitHub repo](https://github.com/best-cost/best-cost_WPs) and the [README file](https://github.com/best-cost/best-cost_WPs/tree/master?tab=readme-ov-file#readme)
 
-[![Landing page of the BEST-COST GitHub repo. The README file tells you how to get started. The folder r_package contains package-related files (including function code). Developments are discussed and documented under Issues.](images/bc_github_repo.png)](https://github.com/best-cost/best-cost_WPs)
+[![Landing page of the BEST-COST GitHub repo. The README file tells you how to get started. The folder r_package contains package-related files (including function code in the R folder). Developments are discussed and documented under Issues.](images/bc_github_repo.png)](https://github.com/best-cost/best-cost_WPs)
 
-## About *`healthiar`* (4/5)
+## About *`healthiar`* 4/4
 
 **Installation**
 
@@ -197,13 +204,7 @@ The [README file](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#
 
 . . .
 
-![README file of the `healthiar` R package](images/readme.png)
-
-## About *`healthiar`* (5/5)
-
-Example of a `healthiar` function call
-
-![](images/attribute_health_simple.png){width="350"}
+![*README* file of the `healthiar` R package](images/readme.png)
 
 # The *healthiar* package in RStudio
 
@@ -213,48 +214,56 @@ Example of a `healthiar` function call
 
 ## *`healthiar`* in RStudio 2/3
 
-Post installation, you can access the `healthiar` package landing page in RStudio by going to the *Packages* tab and then clicking on the `healthiar` package.
-
-![](images/rstudio_how_to_access_package_landing_page.png)
+![Post installation, you can access the `healthiar` package landing page in RStudio by going to the *Packages* tab and then clicking on the `healthiar` package.](images/rstudio_how_to_access_package_landing_page.png)
 
 ## *`healthiar`* in RStudio 3/3
 
 ![Landing page of the `healthiar` package in RStudio, where you find the package vignettes and function documentation.](images/healthiar_package_landing_page.png)
 
-## Vignette (1/2)
+## Vignette 1/2
+
+::: fragment
 
 vignette
 
 :   long-form guide to a package
+:::
 
+::: fragment
 ![The intro vignette introduces `healthiar` step-by-step and contains (reproducible) examples. You can open the `intro_to_healthiar` vignette within RStudio or as a *HTML* within your browser.](images/rstudio_intro_vignette.png)
+:::
 
-## Vignette (2/2)
+## Vignette 2/2
 
+:::: fragment
 ::: callout-note
 The **vignette is a work in progress**: we appreciate any feedback or suggestions you might have to make it more useful to future users!
 :::
+::::
 
+::: {.fragment .nonincremental}
 You can access the intro vignette by
 
 1.  going to the *Packages* tab in RStudio, scrolling to the *healthiar* package and clicking on *healthiar* \> *User guides, package vignettes and other documentation* \> *HTML*
 
-2.  running *browseVignettes("healthiar")* in the console and clicking on *HTML* on the page that pops up
+2.  running `*browseVignettes("healthiar")*` and clicking on *HTML* on the page that pops up
+:::
 
-## Function documentation (1/3)
+## Function documentation 1/3
 
-Let's clarify some R jargon
+Let's clarify some R jargon using the function call from before
 
 ![](images/attribute_health_simple_annotated.png)
 
-## Function documentation (2/3)
+## Function documentation 2/3
 
-Access the function documentation by clicking on a function name in the package landing page.
-
+:::: fragment
 ::: callout-tip
-Alternatively, access the function documentation with `?attribute_health`
+Click on a function name in the package landing page to access it or run `?attribute_health`
 :::
+::::
 
+::: fragment
 Any function documentation contains the following sections:
 
 -   *Title* Essence of the function
@@ -270,15 +279,16 @@ Any function documentation contains the following sections:
 -   *Value* Information about the function output
 
 -   *Examples* (optional) Shows how the function works
+:::
 
-## Function documentation (3/3)
+## Function documentation 3/3
 
 :::::: columns
-::: {.column .fragment .fade-in width="45%"}
+::: {.column .fragment .fade-in width="65%"}
 ![](images/fun_doc_start.png)
 :::
 
-:::: {.column .fragment .fade-in width="45%"}
+:::: {.column .fragment .fade-in width="35"}
 ::: callout-important
 Any arguments without a "*="* symbol after the name have no default and must be user-specified
 :::
@@ -287,11 +297,11 @@ For a more detailed function documentation walk through see the [Appendix]
 ::::
 ::::::
 
-# Example: `attribute_health()` using RR
+# Example: `attribute_health()` with RR
 
 ------------------------------------------------------------------------
 
-## Example: `attribute_health()` with RR
+## `attribute_health()` with RR
 
 Goal: attribute COPD cases to air pollution
 
@@ -299,10 +309,10 @@ Goal: attribute COPD cases to air pollution
 ## Hard-coded input data
 
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
-#| code-line-numbers: "|1|2|3|4-7|8|9|10"
+#| code-line-numbers: "|1|2|3|4-7|8|10"
 
 results_pm_copd <-
-  healthiar::attribute_health(
+  attribute_health(
     erf_shape = "log_linear", # Alternatives: "linear", "log_log"
     rr_central = 1.369, 
     rr_increment = 10,  # μg / m^3
@@ -320,8 +330,7 @@ results_pm_copd <-
 
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
 
-results_pm_copd <-
-  healthiar::attribute_health(
+results_pm_copd <- attribute_health(
     erf_shape = "log_linear",
     rr_central = exdat_pm_copd$relative_risk, 
     rr_lower = exdat_pm_copd$relative_risk_lower,
@@ -337,22 +346,35 @@ results_pm_copd <-
 
 ## Output structure
 
-Every `attribute` output consists of two lists ("folders")
+::: fragment
+Every `attribute` output initially consists of two main lists ("folders"), and additional sub-lists ("sub-folders")
 
 -   `health_main` contains the main results
 
--   `health_detailed` detailed results (and in some cases even more information about the assessment/calculation)
+-   `health_detailed` contains more detailed results and additional information
 
-TODO: add to detailed bullet: interim results, input; add that tibble works like data frame note: add here that format is tibble (but can be changed to data frame)
+    -   `impact_raw` contains detailed results
 
-note: screenshot of how to click on variable in env (put that as first option) . . .
+    -   `input_table` contains the input data as entered in the function call
 
-#### Different ways to access the results
-
-::: callout-tip
-This is personal preference! However, you might encounter all options.
+    -   `args` a list of the function arguments as used by R in the background
 :::
 
+:::: fragment
+::: callout-info
+The output tables are in the [`tibble`](https://r4ds.had.co.nz/tibbles.html) format, which is a modern version of the original data frame, and can be used just like a data frame.
+:::
+::::
+
+## Access the results
+
+:::: fragment
+::: callout-tip
+You might have a personal preference! However, you might encounter all options.
+:::
+::::
+
+:::: fragment
 ::: panel-tabset
 ## By clicking
 
@@ -378,8 +400,9 @@ Using the `purrr::pluck` function to select a list and then the `dplyr::pull` fu
 
 Note: available options can't be displayed automatically using these functions -\> better suited for a more permanent analysis script
 :::
+::::
 
-## Let's check the main output!
+## Let's inspect the main results
 
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
 results_pm_copd[["health_main"]]
@@ -397,21 +420,28 @@ results_pm_copd[["health_detailed"]][["impact_raw"]] |>
 Each row shows a result obtained with all the input data & calculation pathway specifications shown in that row
 :::
 
-Some of the most relevant columns include: - *impact_rounded* Rounded attributable health impact/burden - *impact* Raw impact/burden - *pop_fraction* Population attributable fraction (PAF) - *erf_ci* Specifies whether `rr_central`, `..._lower` or `..._upper` was used in calculation - *rr* Specifies raw rr used in calculation - *-* exp *-* bhd\*
+Some of the most relevant columns include:
+
+-   *impact_rounded* Rounded attributable health impact/burden
+-   *impact* Raw impact/burden
+-   *pop_fraction* Population attributable fraction (PAF)
+-   *erf_ci* Specifies whether `rr_central`, `..._lower` or `..._upper` was used to obtain impact
+-   *rr* Raw RR used in calculation
+-   *exp* Exposure
+-   *bhd* Baseline health data
 
 # Example: `attribute_health()` with RR & uncertainty
 
 ------------------------------------------------------------------------
 
-## Example: `attribute_health()` with RR & uncertainty
+## `attribute_health()` with RR & uncertainty
 
 Goal: attribute lung cancer deaths to PM2.5 exposure
 
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
-#| code-line-numbers: "|5-6|9-10|13-14"
+#| code-line-numbers: "|4-5|8-9|12-13"
 
-results_pm_copd <-
-  healthiar::attribute_health(
+results_pm_copd <- attribute_health(
     erf_shape = "log_linear",
     rr_central = 1.369, 
     rr_lower = 1.124, 
@@ -424,10 +454,10 @@ results_pm_copd <-
     bhd_central = 30747, 
     bhd_lower = 28000, 
     bhd_upper = 32000
-  ) 
+) 
 ```
 
-## Let's check the detailed output!
+## Let's inspect the detailed results
 
 <!-- #TODO -->
 
@@ -451,71 +481,74 @@ results_pm_copd[["health_detailed"]][["impact_raw"]] |> knitr::kable()
 ```
 :::
 
-## Include summary uncertainty
-
-TODO: add here Monte Carlo example
-
 # Example: `attribute_health()` with AR
+
+## `attribute_health()` with AR
 
 Goal: attribute cases of high annoyance (HA) to noise exposure
 
-:::::: columns
-::: {.column .fragment .fade-in width="50%"}
-```{r}
-exdat_noise_ha <-
-  exdat_noise_ha |>
-  dplyr::filter(!is.na(exdat_noise_ha$exposure_mean))
-
-results_noise_ha <- attribute_health(
-    approach_risk = "absolute_risk",
-    exp_central = c(57.5, 62.5, 67.5, 72.5, 77.5),
-    pop_exp = exdat_noise_ha$population_exposed_total,
-    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
-)
-```
-
-TODO: hard code the function input
-:::
-
-::: {.column .fragment .fade-in width="50%"}
+::: fragment
 ![Source input data: NIPH](images/example_noise_ha.png)
 :::
 
-::: {.fragment .fade-in}
-```{r, echo=TRUE}
-#| output-location: fragment
-results_noise_ha[["health_detailed"]][["impact_raw"]] |> knitr::kable()
+::: fragment
+```{r}
+results_noise_ha <- attribute_health(
+    approach_risk = "absolute_risk",
+    exp_central = c(57.5, 62.5, 67.5, 72.5, 77.5),
+    pop_exp = c(387500, 286000, 191800, 72200, 7700),
+    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
+)
 ```
 :::
-::::::
 
-## Iteration example (1/)
-
-Goal: attribute disease cases to PM2.5 exposure in multiple geographic units, such as municipalities, provinces, countries, ...
-
-::: callout-tip
--   For iterations, enter geo unit-specific inputs as lists use `as.list()` function
-
--   Feed unique geo ID's to the \`geo_id_disaggregated\` argument (e.g. municipality names)
-
--   Optional: aggregate geo unit-specific results by providing higher-level ID's (e.g. region names)
-:::
-
-TODO: make printed table smaller, select relevant columns
+## Results per noise exposure band
 
 . . .
 
-TODO: mention that geo ids to be entered es vector
+```{r, echo=TRUE, eval=FALSE, include=FALSE}
+results_noise_ha[["health_detailed"]][["impact_raw"]] |> knitr::kable()
+```
 
-TODO: add name aggregated argument to bulb box
+```{r, echo=FALSE, eval=TRUE, include=TRUE}
+results_noise_ha[["health_detailed"]][["impact_raw"]] |> 
+  select(exposure_dimension, exp, pop_exp, impact) |> 
+  knitr::kable()
+```
 
-::: panel-tabset \## as.list(...)
+# Example: Iteration with `attribute_health()`
+
+## Iteration function call
+
+::: fragment
+Goal: attribute disease cases to PM2.5 exposure in multiple geographic units, such as municipalities, provinces, countries, ...
+:::
+
+:::: fragment
+Here the we want to aggregate results by language region (`"Ger", "Fra", "Ita"`)
+
+::: panel-tabset
+## list()
 
 ```{r}
-#| code-line-numbers: "|5-6|9-10|13-14"
+#| code-line-numbers: "|2-3|8-9|"
 #| output-location: fragment
+results_iteration <- attribute_health(
+    geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"), 
+    geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
+    rr_central = 1.369,
+    rr_increment = 10, 
+    cutoff_central = 5,
+    erf_shape = "log_linear",
+    exp_central = list(11, 11, 10, 8, 7),
+    bhd_central = list(4000, 2500, 3000, 1500, 500)
+)
+```
 
-results_iteration <- healthiar::attribute_health(
+## as.list()
+
+```{r}
+results_iteration <- attribute_health(
     geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"), 
     geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
     rr_central = 1.369,
@@ -526,31 +559,24 @@ results_iteration <- healthiar::attribute_health(
     bhd_central = as.list(c(4000, 2500, 3000, 1500, 500))
 )
 ```
-
-Here the we want to aggregate results by language region (`"Ger", "Fra", "Ita"`)
-
-## \|\> as.list()
-
-TODO: remove pipe; replace as.list with list
-
-```{r}
-
-results_iteration <- healthiar::attribute_health(
-    geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"), 
-    geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
-    rr_central = 1.369,
-    rr_increment = 10, 
-    cutoff_central = 5,
-    erf_shape = "log_linear",
-    exp_central = c(11, 11, 10, 8, 7) |> as.list(),
-    bhd_central = c(4000, 2500, 3000, 1500, 500) |> as.list()
-)
-```
-
 :::
+::::
 
-## Let's check the iteration output! (/)
+::::: fragment
+:::: callout-tip
+::: nonincremental
+-   For iterations, enter geo unit-specific inputs as lists use `as.list()` function
 
+-   Feed unique geo ID's as a vector to the `geo_id_disaggregated` argument (e.g. municipality names)
+
+-   Optional: aggregate geo unit-specific results by providing higher-level ID's (e.g. region names) as a vector to the `geo_id_aggregated` argument
+:::
+::::
+:::::
+
+## Let's check the main iteration results!
+
+:::: fragment
 ::: callout-tip
 The main output contains aggregated results if available, or disaggregated results if no aggregation ID was provided
 :::
@@ -564,38 +590,21 @@ results_iteration[["health_main"]] |>
   dplyr::select(geo_id_aggregated, impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
   knitr::kable()
 ```
+::::
 
-## Example: Iteration - Analysis of multiple geo units
+## Let's check the detailed iteration results!
 
-Analogously to the single geo unit example the iteration can also be run with uncertainties in one or more input variables.
-
-```{r}
-
-results_iteration <- healthiar::attribute_health(
-    geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"), 
-    geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
-    rr_central = 1.369, 
-    rr_lower = 1.124,
-    rr_upper = 1.664,
-    rr_increment = 10, 
-    cutoff_central = 5,
-    erf_shape = "log_linear",
-    exp_central = as.list(c(11, 11, 10, 8, 7)),
-    exp_lower = as.list(c(10, 10, 9, 7, 6)),
-    exp_upper = as.list(c(12, 12, 11, 9, 8)),
-    bhd_central = as.list(c(4000, 2500, 3000, 1500, 500)),
-    bhd_lower = as.list(c(3000, 1875, 2250, 1125, 375)),
-    bhd_upper = as.list(c(5000, 3125, 3750, 1875, 625))
-)
-```
-
+::: fragment
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
 results_iteration[["health_detailed"]][["impact_raw"]]
 ```
 
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
-results_iteration[["health_detailed"]][["impact_raw"]] |> knitr::kable()
+results_iteration[["health_detailed"]][["impact_raw"]] |> 
+  select(geo_id_disaggregated, geo_id_aggregated, impact_rounded) |> 
+  knitr::kable()
 ```
+:::
 
 # Q&A I
 
@@ -603,38 +612,63 @@ results_iteration[["health_detailed"]][["impact_raw"]] |> knitr::kable()
 
 # Example: compare()
 
-Goal: comparison of two scenarios with the population impact fraction (PIF) or delta approach.
+::: fragment
+Goal: comparison of two scenarios
 
+-   
+
+    1.  Use `attribute_health()` to calculate burden of scenarios A & B
+
+-   
+
+    2.  Use `compare()` to compare scenarios A & B
+:::
+
+::::: columns
+::: {.column .fragment width="50%"}
 ```{r}
+scenario_A <- attribute_health(
+    exp_central = 8.85,   # EXPOSURE 1
+    cutoff_central = 5, 
+    bhd_central = 25000,
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118,
+    rr_increment = 10)
+```
+:::
+
+::: {.column .fragment width="50%"}
+```{r}
+scenario_B <- attribute_health(
+    exp_central = 6,     # EXPOSURE 2
+    cutoff_central = 5, 
+    bhd_central = 25000,
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118,
+    rr_increment = 10)
+```
+:::
+:::::
+
+::: fragment
+```{r}
+
 results_comparison <- compare(
-    
-     output_attribute_1 = 
-       healthiar::attribute_health(
-         exp_central = 8.85,
-         cutoff_central = 5, 
-         bhd_central = 25000,
-         approach_risk = "relative_risk",
-         erf_shape = "log_linear",
-         rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
-         rr_increment = 10,
-         info = "PM2.5_mortality_2010"),
-     
-     output_attribute_2 = 
-       healthiar::attribute_health(
-         exp_central = 6, 
-         cutoff_central = 5, 
-         bhd_central = 25000,
-         approach_risk = "relative_risk",
-         erf_shape = "log_linear",
-         rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
-         rr_increment = 10,
-         info = "PM2.5_mortality_2020"),
-     
-     approach_comparison = "delta"
+  
+  approach_comparison = "delta", # or "pif" (population impact fraction)
+  
+  output_attribute_1 = scenario_A,
+  
+  output_attribute_2 = scenario_B
 )
 ```
+:::
 
-```{r, echo=TRUE,eval=FALSE,include=TRUE}
+## Let's check the comparison results!
+
+```{r, echo=TRUE,eval=FALSE,include=FALSE}
 results_comparison[["health_main"]]
 ```
 
@@ -651,19 +685,24 @@ results_comparison[["health_main"]] |>
   knitr::kable()
 ```
 
-# Example: monetize()
+# Example: `monetize()`
 
-Different monetization pathways available
+## Example: `monetize()`
 
--   **Direct** (default) after obtaining the health impacts
--   **Indirect** before the health impacts
+::: fragment
+Different monetization pathways / options are available
+
+-   **Direct monetization** (default) after obtaining the health impacts
+-   **Indirect monetization** before the health impacts
 -   **Discounting** yes/no
 -   **Inflation** yes/no
 -   **Stand-alone use** the function can either monetize a healthiar output or an "external" health impact
+:::
 
+::: fragment
 ```{r}
 results_monetization <- 
-  healthiar::monetize(
+  monetize(
     output_healthiar = results_pm_copd,
     approach_discount = "direct",
     discount_shape = "exponential",
@@ -671,8 +710,43 @@ results_monetization <-
     discount_years = 5,
     valuation = 20)
 ```
+:::
 
-# Example: socialize()
+## Let's check the `monetize()` output
+
+:::: .callout-info
+::: {.fragment .nonincremental}
+`monetize()` adds two main lists ("folders") to the inputted health impacts
+
+-   `monetization_main` contains total results
+
+-   `monetization_detailed`
+
+    -   `by_year` yearly results
+
+:::
+::::
+
+::: {.fragment}
+```{r, echo=TRUE,eval=FALSE,include=FALSE}
+results_monetization[["monetization_main"]]
+```
+
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_monetization[["monetization_main"]] |> 
+  dplyr::select(
+    impact, monetized_impact, discount_rate, valuation, 
+    monetized_impact_before_inflation_and_discount, 
+    monetized_impact_after_inflation_and_discount) |> 
+  dplyr::slice_head() |> 
+  knitr::kable()
+```
+:::
+
+
+# Example: `socialize()`
+
+## Example: `socialize()`
 
 `socialize()` features
 
@@ -685,7 +759,7 @@ First create an example to be *socialized* using example data set `exdat_mdi`
 ```{r}
 results_social <- attribute_health(
     geo_id_disaggregated = exdat_mdi$CS01012020,
-        rr_central = 1.08,
+    rr_central = 1.08,
     erf_shape = "log_linear", 
     rr_increment = 10,
     exp_central = as.list(exdat_mdi$PM25_MEAN),
@@ -698,7 +772,7 @@ results_social <- attribute_health(
 
 ::: fragment
 ```{r}
-results_social <- healthiar::socialize(
+results_social <- socialize(
   output_healthiar = results_social,
   geo_id_disaggregated = exdat_mdi$CS01012020,
   social_indicator = exdat_mdi$score,
@@ -706,6 +780,33 @@ results_social <- healthiar::socialize(
 )
 ```
 :::
+
+## Let's check the `socialize()` results
+
+:::: .callout-info
+::: {.fragment .nonincremental}
+`socialize()` adds two main lists ("folders") to the inputted health impacts
+
+-   `social_main` contains total results
+
+-   `social_detailed`
+
+    -   `results_detailed`
+    
+    -   `overview_quantiles`
+
+:::
+::::
+
+```{r, echo=TRUE,eval=FALSE,include=FALSE}
+results_social[["social_main"]]
+```
+
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_social[["social_main"]] |> 
+  slice(3,4) |> 
+  knitr::kable()
+```
 
 # Additional features
 
@@ -717,6 +818,7 @@ Additional existing `healthiar` functions
 -   `attribute_mod()` modify an existing `healthiar` assessment
 -   `cba()` cost-benefit analysis
 -   `get_mdi()` creates the BEST-COST Multidimensional Deprivation Index (MDI)
+-   `summarize_uncertainty()` with Monte Carlo simulation
 
 ::: callout-note
 Coming (relatively) soon: function examples in the intro vignette!
@@ -783,9 +885,7 @@ How many people are highly annoyed due to noise exposure
 -   In **total** ?
 -   In the **highest exposure band** ?
 
-*Advanced* How large is the health burden measured in YLD?
--   Assume that the population is exposed for **1 year**
--   Tip: check the function documentation of `attribute_health` to see which extra argument must be used to express the burden in YLD
+*Advanced* How large is the health burden measured in YLD? - Assume that the population is exposed for **1 year** - Tip: check the function documentation of `attribute_health` to see which extra argument must be used to express the burden in YLD
 
 **Data**
 
@@ -868,14 +968,13 @@ By clicking on `Run examples` the example(s) are executed and the output shown
 ![*Example output* Obtained by clicking on `Run examples` (see previous slide)](images/fun_doc_examples_output.png)
 :::::::
 
----
+------------------------------------------------------------------------
 
 **Solution Exercise 1**
 
 How many COPD cases are attributable to PM2.5 exposure in a single year?
 
 ::: panel-tabset
-
 ## cutoff = 5
 
 ```{r}
@@ -892,7 +991,6 @@ results_with_cutoff <- attribute_health(
 print(results_with_cutoff$health_main$impact_rounded)
 ```
 
-
 ## cutoff = 0
 
 ```{r}
@@ -908,6 +1006,7 @@ results_no_cutoff <- attribute_health(
 # Attributable impact
 print(results_no_cutoff$health_main$impact_rounded)
 ```
+
 ## Costs
 
 ```{r}
@@ -919,15 +1018,13 @@ results_monetized <- monetize(
 # Cost
 print(results_monetized$monetization_main$monetized_impact_rounded)
 ```
-
 :::
 
----
+------------------------------------------------------------------------
 
 **Solution Exercise 2**
 
 ::: panel-tabset
-
 ## Total
 
 ```{r}

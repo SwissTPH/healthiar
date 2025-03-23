@@ -323,10 +323,6 @@ The outcome of the CBA is contained in two folders are added:
 ## Example absolute risk: attribute cases of high annoyance to (road) noise exposure
 
 ```{r}
-exdat_noise_ha <-
-  exdat_noise_ha |>
-  dplyr::filter(!is.na(exdat_noise_ha$exposure_mean))
-
 results_noise_ha <- 
   healthiar::attribute_health(
     approach_risk = "absolute_risk",
