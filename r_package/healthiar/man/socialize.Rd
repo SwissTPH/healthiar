@@ -2,7 +2,7 @@
 % Please edit documentation in R/socialize.R
 \name{socialize}
 \alias{socialize}
-\title{Soci-economic aspects in health imapcts}
+\title{Socio-economic aspects in health impacts}
 \usage{
 socialize(
   output_healthiar = NULL,
