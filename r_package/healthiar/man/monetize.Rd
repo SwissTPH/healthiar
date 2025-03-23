@@ -2,7 +2,7 @@
 % Please edit documentation in R/monetize.R
 \name{monetize}
 \alias{monetize}
-\title{include_monetization}
+\title{Monetization of health impacts}
 \usage{
 monetize(
   approach_discount = "direct",

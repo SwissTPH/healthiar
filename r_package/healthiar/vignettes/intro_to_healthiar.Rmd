@@ -205,7 +205,7 @@ Let's inspect the detailed results:
 ```{r}
 results_pm_copd |> 
   purrr::pluck("health_detailed") |>
-  purrr::pluck("raw") |> 
+  purrr::pluck("impact_raw") |> 
   dplyr::select(contains("_ci"), impact_rounded) |> 
   knitr::kable() # Prints tibble in a minimal layout
 ```
@@ -323,18 +323,13 @@ The outcome of the CBA is contained in two folders are added:
 ## Example absolute risk: attribute cases of high annoyance to (road) noise exposure
 
 ```{r}
-exdat_noise_ha <-
-  exdat_noise_ha |>
-  dplyr::filter(!is.na(exdat_noise_ha$exposure_mean))
-
 results_noise_ha <- 
   healthiar::attribute_health(
     approach_risk = "absolute_risk",
     exp_central = exdat_noise_ha$exposure_mean,
-    population = sum(exdat_noise_ha$population_exposed_total), 
-    prop_pop_exp = exdat_noise_ha$population_exposed_total / 
-      sum(exdat_noise_ha$population_exposed_total),
+    pop_exp = exdat_noise_ha$population_exposed_total,  
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2")
+
 ```
 
 ```{r echo=FALSE}

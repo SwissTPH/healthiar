@@ -1,4 +1,4 @@
-#' include_monetization
+#' Monetization of health impacts
 
 #' @description Monetize health impacts
 #'
