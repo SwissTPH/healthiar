@@ -3,11 +3,11 @@ title: "Hello, I'm healthiar!"
 subtitle: "R package workshop for BEST-COST"
 author:
   - name:
-      given: Axel Luyten &
+      given: Axel Luyten and
       family: Alberto Castro
     # affiliations:
       # - name: Swiss TPH
-    orcid: 0000-0002-7005-5889
+    # orcid: 0000-0002-7005-5889
     email: axel.luyten@swisstph.ch & alberto.castrofernandez@swisstph.ch
 date: 2025-03-24 # last-modified
 editor: source
@@ -45,8 +45,6 @@ format:
 <!-- #TODO -->
 
 <!-- think about where to do the break -->
-
-<!-- think about which slides I could skip if necessary -->
 
 <!-- when to show the first attribute_health function call -->
 
@@ -161,17 +159,10 @@ Let's jump right in, with an example of a `healthiar` R function call
 ![](images/attribute_health_simple_annotated.png){width="600"}
 :::
 
-## Interlude: BoD - Relative risk
-
-![](images/bod_rr.png)
-
-## Interlude BoD - Absolute risk
-
-![](images/bod_ar.png)
 
 ## About `healthiar` 2/5
 
-![Figure: healthiar overview. DALY = disability-adjusted life years; GBD = global burden of disease; MDI = multidimensional deprivation index; PAF = population attributable fraction; PIF = population impact fraction; YLD = years lived with disability; YLL = years of life lost](images/package_overview.png)
+![Figure: healthiar overview. CBA = Cost-benefit analysis; DALY = disability-adjusted life years; GBD = global burden of disease; MDI = multidimensional deprivation index; PAF = population attributable fraction; PIF = population impact fraction; YLD = years lived with disability; YLL = years of life lost](images/package_overview.png)
 
 ## About `healthiar` 3/5
 
@@ -179,7 +170,7 @@ Let's jump right in, with an example of a `healthiar` R function call
 
 -   `attribute_health()` to env. exposure with either relative or absolute risk
 -   `attribute_lifetable()` life table analysis (RR & AR)
--   `summary_uncertainty()` Monte Carlo simulation
+-   `summarize_uncertainty()` Monte Carlo simulation
 -   `attribute_mod()` modify an existing assessment
 -   `compare()` two scenarios
 -   `monetize()` health impacts
@@ -187,6 +178,7 @@ Let's jump right in, with an example of a `healthiar` R function call
 -   `socialize()` to discover inequalities in health impacts
 -   `get_mdi()` creates the BEST-COST MDI (Multidimensional Deprivation Index)
 -   `get_daly()` by adding up YLL & YLD
+-   `prepare_exposure()` from spatial pollution and geographic units data 
 
 ## About `healthiar` 4/5
 
@@ -202,9 +194,9 @@ Let's check out the [BEST-COST GitHub repo](https://github.com/best-cost/best-co
 
 The [README file](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme) contains the following information
 
--   [GET STARTED WITH THE *healthiar* R PACKAGE](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#get-started-with-the-healthiar-r-package)
-
 -   [Initial installation of the *healthiar* package from GitHub](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#initial-installation-of-the-healthiar-package-from-github)
+
+-   [GET STARTED WITH THE *healthiar* R PACKAGE](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#get-started-with-the-healthiar-r-package)
 
 -   [TERMS OF USE](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#terms-of-use)
 
@@ -264,7 +256,7 @@ Click on a function name in the package landing page to access its documentation
 :::
 ::::
 
-::: fragment
+::: {.fragment .nonincremental}
 Any function documentation contains the following sections:
 
 -   *Title* Essence of the function
@@ -297,6 +289,10 @@ For a more detailed function documentation walk through see the [Appendix]
 # Example: `attribute_health()` with RR
 
 ------------------------------------------------------------------------
+
+## Refresher - Burden of disease with relative risk
+
+![](images/bod_rr.png)
 
 ## `attribute_health()` with RR
 
@@ -333,8 +329,6 @@ results_pm_copd <-
 results_pm_copd <- attribute_health(
     erf_shape = "log_linear",
     rr_central = exdat_pm_copd$relative_risk, 
-    rr_lower = exdat_pm_copd$relative_risk_lower,
-    rr_upper = exdat_pm_copd$relative_risk_upper,
     rr_increment = 10, 
     exp_central = exdat_pm_copd$mean_concentration,
     cutoff_central = exdat_pm_copd$cut_off_value,
@@ -358,7 +352,7 @@ Every `attribute` output initially consists of two main lists ("folders"), and a
 
     -   `input_table` contains the input data as entered in the function call
 
-    -   `args` is a list of the function arguments as used by R in the background
+    -   `input_args` is a list of the function arguments as used by R in the background
 :::
 
 :::: fragment
@@ -431,7 +425,7 @@ Each row shows a result obtained with all the input data & calculation pathway s
 :::
 ::::
 
-::: fragment
+::: {.fragment .nonincremental}
 Some of the most relevant columns include:
 
 -   *impact_rounded* Rounded attributable health impact/burden
@@ -449,7 +443,7 @@ Some of the most relevant columns include:
 
 ## `attribute_health()` with RR & uncertainty
 
-Goal: attribute lung cancer deaths to PM2.5 exposure
+Goal: attribute COPD cases to PM2.5 exposure
 
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
 #| code-line-numbers: "|4-5|8-9|12-13"
@@ -498,6 +492,10 @@ results_pm_copd[["health_detailed"]][["impact_raw"]] |> knitr::kable()
 
 # Example: `attribute_health()` with AR
 
+## Refresher - Burden of disease with absolute risk
+
+![](images/bod_ar.png)
+
 ## `attribute_health()` with AR
 
 Goal: attribute cases of high annoyance (HA) to noise exposure
@@ -520,7 +518,7 @@ results_noise_ha <- attribute_health(
 ## Results per noise exposure band
 
 ::: fragment
-```{r, echo=TRUE, eval=FALSE, include=FALSE}
+```{r, echo=TRUE, eval=FALSE, include=TRUE}
 results_noise_ha$health_detailed$impact_raw
 ```
 :::
@@ -733,11 +731,11 @@ results_comparison[["health_main"]] |>
 ::: fragment
 Different monetization pathways / options are available
 
--   **Direct monetization** (default) after obtaining the health impacts
--   **Indirect monetization** before the health impacts
--   **Discounting** yes/no
--   **Inflation** yes/no
--   **Stand-alone use** the function can either monetize a healthiar output or an "external" health impact
+-   *Direct monetization* (default) after obtaining the health impacts
+-   *Indirect monetization* before the health impacts
+-   *Discounting* yes/no
+-   *Inflation* yes/no
+-   *Stand-alone use* the function can either monetize a healthiar output or an "external" health impact
 :::
 
 ::: fragment
@@ -791,9 +789,9 @@ results_monetization[["monetization_main"]] |>
 
 `socialize()` features
 
--   **Stand-alone use** the function can either be used with an `attribute_...` output or an *external* health impact
+-   *Stand-alone use* the function can either be used with an `attribute_...` output or an *external* health impact
 
--   **Use of deprivation indicator** BEST-COST Multidimensional Deprivation Index (MDI) or any other (single) deprivation indicator, e.g. house hold income
+-   *Use of deprivation indicator* BEST-COST Multidimensional Deprivation Index (MDI) or any other (single) deprivation indicator, e.g. household income
 
 ::: fragment
 First create an `attribute_health()` using example data set `exdat_mdi`
@@ -906,24 +904,26 @@ openxlsx::write.xlsx(x = results_pm_copd$health_main, file = "exported_results/r
 
 ## Visualize results
 
+::: nonincremental
 Visualization is out of scope of `healthiar`. You can visualize in
 
 -   R, e.g. with the `ggplot2` package ([online book by the creator](https://ggplot2-book.org/))
 -   Excel (export results first)
 -   Other tools
 
+:::
+
 # Exercises
 
 ## Exercise 1 - RR
 
-::: fragment
+::: {.fragment .nonincremental}
 1.1. How many lung cancer cases are attributable to PM2.5 exposure in a single year?
 
-```         
--   With a **cutoff of 5** microgram/m\^3 ?
+-   With a **cutoff of 5** microgram/m^3 ?
 
--   With **no cutoff**?
-```
+-   With **no cutoff** ?
+
 
 1.2. What's the direct treatment **costs** per year in the no cutoff scenario?
 :::
@@ -942,14 +942,14 @@ Visualization is out of scope of `healthiar`. You can visualize in
 
 ## Exercise 2 - AR
 
-::: fragment
-2.1. How many people are highly annoyed due to noise exposure
+::: {.fragment .nonincremental}
+2.1. How many people are highly annoyed due to noise exposure ...
 
--   In **total** ?
--   In the **highest exposure band** ?
+-   ... in **total** ?
+-   ... in the **highest exposure band** ?
 :::
 
-::: fragment
+::: {.fragment .nonincremental}
 *Advanced*
 
 2.2. How large is the health burden measured in YLD?
@@ -967,13 +967,11 @@ Visualization is out of scope of `healthiar`. You can visualize in
 -   *Advanced* use the disability weight = `0.02`
 
 **Solutions** in the [Appendix]
-:::
 
-:::: fragment
 ::: callout-tip
 Once `healthiar` is installed and loaded you can use the example data directly or add it to your *Environment* in RStudio by assigning it to a variable, e.g. `data <- exdat_noise_ha`
 :::
-::::
+:::
 
 # Q&A II - Questions?
 
@@ -982,7 +980,7 @@ Once `healthiar` is installed and loaded you can use the example data directly o
 ::: fragment
 **Remember**: for the workshop next week, please **install & test `healthiar`**, because you will have to programm in RStudio!
 
-If you encounter challenges during installation, get in touch with us : )
+If you encounter challenges during installation, get in touch with us
 :::
 
 ::: fragment
@@ -1049,9 +1047,9 @@ By clicking on `Run examples` the example(s) are executed and the output shown
 ![*Example output* Obtained by clicking on `Run examples` (see previous slide)](images/fun_doc_examples_output.png)
 :::::::
 
-------------------------------------------------------------------------
+# Solutions exercise
 
-**Solution Exercise 1**
+## Solution exercise 1
 
 How many COPD cases are attributable to PM2.5 exposure in a single year?
 
@@ -1103,7 +1101,9 @@ print(results_monetized$monetization_main$monetized_impact_rounded)
 
 ------------------------------------------------------------------------
 
-**Solution Exercise 2**
+## Solution exercise 2
+
+How many people are highly annoyed due to noise exposure?
 
 ::: panel-tabset
 ## Total
