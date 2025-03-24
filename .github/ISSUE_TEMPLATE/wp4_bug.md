@@ -4,7 +4,7 @@ about: Report a bug
 title: ''
 labels: ''
 assignees: ''
-projects: ["WP4"]
+projects: ["best-cost/best-cost_WPs/WP4"]
 
 ---
 
