@@ -37,7 +37,7 @@ monetize <-
     if(approach_discount == "indirect"){
 
       health_outcome <-
-        unique(output_healthiar[["health_detailed"]][["impact_raw"]]$health_outcome)
+        output_healthiar[["health_detailed"]][["input_args"]]$health_outcome
 
       # Store the original data (they refer to health)
       output_health <- output_healthiar
