@@ -24,7 +24,7 @@ monetize <-
            valuation,
            discount_rate = NULL,
            discount_shape = NULL,
-           discount_years = 1,
+           discount_years = 0,
            discount_overtime = "all_years",
            inflation = NULL) {
 
@@ -57,27 +57,30 @@ monetize <-
               lifeyear_nest_with_and_without_discount <-
                 .x |>
                 # Convert year to numeric
+                dplyr::rowwise() |>
                 dplyr::mutate(year = as.numeric(year),
                               # Ignore user defined discount_years
                               # Here the difference between year of analysis and
                               # last year of mortality data is to be used
                               discount_years = year - {{year_of_analysis}},
                               discount_rate = {{discount_rate}},
-                              discount_shape = {{discount_shape}})|>
-                healthiar:::add_monetized_impact(discount_rate = discount_rate,
-                                                 discount_year = discount_years,
+                              discount_shape = {{discount_shape}})
+
+              lifeyear_nest_with_and_without_discount <-
+                healthiar:::add_monetized_impact(df = lifeyear_nest_with_and_without_discount,
+                                                 discount_rate = discount_rate,
+                                                 discount_years = length(lifeyear_nest_with_and_without_discount$discount_years)-1,
                                                  discount_shape = discount_shape,
                                                  discount_overtime = discount_overtime,
                                                  inflation = inflation,
-                                                 valuation = valuation) |>
-                purrr::pluck("monetization_main")
+                                                 valuation = valuation)[["monetization_main"]]
 
               return(lifeyear_nest_with_and_without_discount)
 
               }))
 
       ## If yll or yld
-      if({{health_outcome}} %in% c("yll", "yld")){
+      if({{health_outcome}} %in% c("yll")){ # And "yld" if ever implemented
 
         impact_detailed <-
           impact_detailed |>
