@@ -105,7 +105,9 @@ cba <-
       names(cba_main)[grepl("_ci|geo_id", names(cba_main))]
 
     relevant_columns <-
-      c(columns_ci_geo, columns_monetization_with_suffix)
+      c(columns_ci_geo,
+        columns_monetization_with_suffix,
+        "discount_shape", "discount_overtime")
 
 
     cba_main <-

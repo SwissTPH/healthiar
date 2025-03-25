@@ -11,13 +11,14 @@
 #' # To be added
 #' @keywords internal
 
-add_monetized_impact  <- function(df,
-                                  valuation,
-                                  discount_rate,
-                                  discount_years,
-                                  discount_shape,
-                                  discount_overtime,
-                                  inflation) {
+add_monetized_impact  <-
+  function(df,
+           valuation,
+           discount_rate,
+           discount_years,
+           discount_shape,
+           discount_overtime,
+           inflation) {
 
   # If the discounting has to be applied in all years of the period
   if(discount_overtime == "all_years"){
@@ -69,11 +70,17 @@ add_monetized_impact  <- function(df,
   # (case of real costs, not applicable for nominal costs)
   # discount_years -1 because the year 0 has been added to the df
 
-  if(length(df$impact) == discount_years + 1){
-    df_by_year <-
-      df_with_input|>
-      dplyr::mutate(discount_year = discount_years_vector,
-                    .before = everything())
+  if(length(df_with_input$impact) == length(discount_years_vector)){
+
+    df_by_year <-  df_with_input
+    df_by_year$discount_year <- discount_years_vector
+
+    # For some reason this does not work
+    # df_by_year <-
+    #   df_with_input|>
+    #   dplyr::mutate(discount_year = as.vector(discount_years_vector),
+    #                 .before = everything())
+
 
   } else {
     df_by_year <-
@@ -97,9 +104,10 @@ add_monetized_impact  <- function(df,
     # If any arguments "discount_rate" and "discount_shape" are NULL,
     # no discount (i.e. discount_factor=1)
     dplyr::mutate(
-
       inflation_factor =
-        (1+inflation)^discount_year,
+        (1+inflation)^discount_year) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
 
       discount_factor_wo_inflation =
         healthiar::get_discount_factor(
@@ -124,13 +132,25 @@ add_monetized_impact  <- function(df,
         monetized_impact = monetized_impact_after_inflation_and_discount,
         .after = impact)
 
+    grouping_variables <-
+      df_by_year |>
+      dplyr::select(starts_with("geo_id"),
+                    ends_with("_ci"),
+                    any_of(c("discount_shape", "discount_overtime"))) |>
+      names()
+
+
   df_aggregated <-
     df_by_year |>
-    # Keep only the last year
-    dplyr::filter(discount_year == {{discount_years}}) |>
-    # Remove the variable discount year because it is not anymore relevant
-    # (not by-year results)
-    dplyr::select(-discount_year)
+    dplyr::group_by(across(any_of(grouping_variables)))|>
+    dplyr::summarize(
+      across(starts_with("monetized"), sum)
+    )
+    # # Keep only the last year
+    # dplyr::filter(discount_year == {{discount_years}}-1) |>
+    # # Remove the variable discount year because it is not anymore relevant
+    # # (not by-year results)
+    # dplyr::select(-discount_year)
 
 
   monetization_main <-
