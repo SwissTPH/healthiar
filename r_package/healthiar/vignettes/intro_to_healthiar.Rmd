@@ -308,7 +308,7 @@ cba <-
 
 cba |> 
   purrr::pluck("cba_main") |> 
-  select(benefit, cost, benefit_minus_cost) |> 
+  select(benefit, cost, net_benefit) |> 
   knitr::kable()
 ```
 

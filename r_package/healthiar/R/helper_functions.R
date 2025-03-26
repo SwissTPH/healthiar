@@ -68,7 +68,7 @@ helper_extract_main_cba_results <- function(x){
   y <- x |>
     purrr::pluck("cba_main") |>
     (\(x) if ("erf_ci" %in% names(x)) x |> dplyr::arrange(erf_ci) else x)() |> # Ascending order: central, lower, upper
-    dplyr::select(benefit_minus_cost_rounded)  |>
+    dplyr::select(net_benefit_rounded)  |>
     base::unlist() |>
     base::as.numeric()
 }

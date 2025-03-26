@@ -2410,7 +2410,7 @@ bestcost_pm_copd_cba_attr_input <-
     discount_years_benefit = 5,
     discount_years_cost = 5,
     discount_overtime = "last_year")
-check_general(bestcost_pm_copd_cba_attr_input[["cba_main"]]$benefit_minus_cost_rounded,
+check_general(bestcost_pm_copd_cba_attr_input[["cba_main"]]$net_benefit_rounded,
               c(60330,23257,94350)) # Results on 2025-03-06; no comparison study
 
 ## Test helper_extract_main_cba_results fct
@@ -2430,7 +2430,7 @@ bestcost_pm_copd_cba_raw_input <-
     discount_years_benefit = 5,
     discount_years_cost = 5,
     discount_overtime = "last_year")
-check_general(bestcost_pm_copd_cba_raw_input[["cba_main"]]$benefit_minus_cost_rounded,
+check_general(bestcost_pm_copd_cba_raw_input[["cba_main"]]$net_benefit_rounded,
               776) # As indicated by University of Port in Excel file
 
 ## Test helper_extract_main_cba_results fct
@@ -2450,7 +2450,7 @@ bestcost_pm_copd_cba_output <-
     discount_years_benefit = 5,
     discount_years_cost = 5,
     discount_overtime = "last_year")
-check_general(bestcost_pm_copd_cba_output[["cba_main"]]$benefit_minus_cost_rounded,
+check_general(bestcost_pm_copd_cba_output[["cba_main"]]$net_benefit_rounded,
               c(60416, 23343, 94436) - 86) # As indicated by University of Porto in Excel file
 
 
