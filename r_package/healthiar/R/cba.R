@@ -120,8 +120,8 @@ cba <-
                     benefit_rounded = monetized_impact_rounded_benefit,
                     cost_rounded = monetized_impact_rounded_cost) |>
       # Calculate the difference between benefit and cost
-      dplyr::mutate(benefit_minus_cost = benefit - cost,
-                    benefit_minus_cost_rounded = round(benefit_minus_cost))
+      dplyr::mutate(net_benefit = benefit - cost,
+                    net_benefit_rounded = round(net_benefit))
 
 
 
