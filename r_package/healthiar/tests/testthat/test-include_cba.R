@@ -14,7 +14,7 @@ testthat::test_that("results correct pathway_cba|discount_appr_direct|discount_s
         discount_years_cost = 5,
         discount_overtime = "last_year") |>
       purrr::pluck("cba_main") |>
-      dplyr::select(benefit_minus_cost_rounded) |>
+      dplyr::select(net_benefit_rounded) |>
       base::unlist() |>
       base::as.numeric() |>
       base::round(),
@@ -52,7 +52,7 @@ testthat::test_that("results the same fake_cba|discount_appr_direct|discount_sha
         discount_years_cost = 5,
         discount_overtime = "last_year") |>
       purrr::pluck("cba_main") |>
-      dplyr::select(benefit_minus_cost_rounded) |>
+      dplyr::select(net_benefit_rounded) |>
       base::unlist() |>
       base::as.numeric() |>
       base::round(),
