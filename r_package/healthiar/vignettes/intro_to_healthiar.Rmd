@@ -493,8 +493,7 @@ results_pm_copd <-
 ### Main results
 
 ```{r}
-results_pm_copd |> 
-  purrr::pluck("monetization_main") |> 
+results_pm_copd$monetization_main |> 
   select(erf_ci, impact, monetized_impact) |> 
   knitr::kable()
 ```
