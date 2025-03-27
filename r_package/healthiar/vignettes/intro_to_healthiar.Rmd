@@ -536,9 +536,8 @@ cba <-
 ### Main results
 
 ```{r}
-cba |> 
-  purrr::pluck("cba_main") |> 
-  select(benefit, cost, benefit_minus_cost) |> 
+cba$cba_main |>  
+  select(benefit, cost, net_benefit) |> 
   knitr::kable()
 ```
 
@@ -617,19 +616,19 @@ results_social[["social_main"]] |>
 
 Export as `.csv` file
 
-```{r, eval=FALSE,echo=TRUE,include=TRUE}
+```{r, eval=FALSE}
 write.csv(x = results_pm_copd$health_main, file = "exported_results/results_pm_copd.csv")
 ```
 
 Save as `.Rdata` file
 
-```{r, eval=FALSE,echo=TRUE,include=TRUE}
+```{r, eval=FALSE}
 save(results_pm_copd, file = "exported_results/results_pm_copd.Rdata")
 ```
 
 Export to Excel (as `.xlsx` file)
 
-```{r, eval=FALSE,echo=TRUE,include=TRUE}
+```{r, eval=FALSE}
 openxlsx::write.xlsx(x = results_pm_copd$health_main, file = "exported_results/results_pm_copd.xlsx")
 ```
 
