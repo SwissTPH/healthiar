@@ -44,7 +44,7 @@ summarize_uncertainty <- function(
       # Let's use unique() instead of input_args
       # because in some cases the users do not enter the geo_id.
       # In that cases compile_input() provide a geo_id and it is shown in impact_raw
-      unique(is.null(results[["health_detailed"]][["impact_raw"]]$geo_id_disaggregated))
+      length(unique(results[["health_detailed"]][["impact_raw"]]$geo_id_disaggregated))
 
   } else {
 
