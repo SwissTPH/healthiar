@@ -38,19 +38,12 @@ summarize_uncertainty <- function(
   set.seed(123)
 
   ## Determine number of geographic units
-  if ("geo_id" %in% names(results[["health_detailed"]][["impact_raw"]])) {
+  n_geo <-
+    # Let's use unique() instead of input_args
+    # because in some cases the users do not enter the geo_id.
+    # In that cases compile_input() provide a geo_id and it is shown in impact_raw
+    length(unique(results[["health_detailed"]][["impact_raw"]]$geo_id_disaggregated))
 
-    n_geo <-
-      # Let's use unique() instead of input_args
-      # because in some cases the users do not enter the geo_id.
-      # In that cases compile_input() provide a geo_id and it is shown in impact_raw
-      length(unique(results[["health_detailed"]][["impact_raw"]]$geo_id_disaggregated))
-
-  } else {
-
-      n_geo <- 1
-
-      }
 
   # Define betaExpert function #################################################
   ## Copied from source code of prevalence::betaExpert() here:
