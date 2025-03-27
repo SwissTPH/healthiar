@@ -238,12 +238,16 @@ get_risk_and_pop_fraction <-
         ## Collapse data frame pasting the columns with different values
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
-          dplyr::mutate(exposure_name = paste(unique(exposure_name), collapse = ", ")) |>
-          collapse_df_by_columns(columns_for_group = c(
-            "geo_id_disaggregated",
-            "sex",
-            "lifetable_with_pop_nest",
-            "rr_conc"),
+          dplyr::mutate(exposure_name = paste(unique(exposure_name), collapse = ", "),
+                        exp = paste(unique(exp), collapse = ", "),
+                        rr_conc = paste(unique(rr_conc), collapse = ", "),
+                        pop_fraction_before_combining = paste(unique(pop_fraction_before_combining), collapse = ", ")) |>
+          collapse_df_by_columns(
+            columns_for_group = c(
+              "geo_id_disaggregated",
+              "sex",
+              "lifetable_with_pop_nest",
+              "pop_fraction"),
             sep = ", ")
         }
       }

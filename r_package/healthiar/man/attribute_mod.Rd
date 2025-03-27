@@ -12,6 +12,14 @@ attribute_mod(
   bhd_central = NULL,
   bhd_lower = NULL,
   bhd_upper = NULL,
+  rr_central = NULL,
+  rr_lower = NULL,
+  rr_upper = NULL,
+  rr_increment = NULL,
+  erf_shape = NULL,
+  erf_eq_central = NULL,
+  erf_eq_lower = NULL,
+  erf_eq_upper = NULL,
   population = NULL,
   prop_pop_exp = NULL,
   pop_exp = NULL,
@@ -33,6 +41,17 @@ attribute_mod(
 \item{exp_central, exp_lower, exp_upper}{\code{Numeric value(s)} specifying the exposure level(s) to the environmental stressor and (optionally) to lower and upper bound of the 95\% confidence interval. If only one value is provided, it will be assumed that it refers to population-weighted mean exposure in \eqn{µg/m^3}. If a {vector} is provided, it will be assumed that it refers to the exposure categories (average exposure in the category) in a exposure distribution (this information is linked to the proportion of population exposed).}
 
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value(s)} providing the basline (incidence) level of the health outcome in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
+
+\item{rr_central, rr_lower, rr_upper}{\code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.}
+
+\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}).}
+
+\item{erf_shape}{\code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".}
+
+\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the equation of the user-defined exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions.
+If a \code{string} is entered, the function must contains only one variable: x (exposure), e.g. "3+x+x^2".
+If a \code{function} is fed to the argument, it has be of the class function class, e.g. output from the functions \code{stats::splinefun()} or \code{stats::approxfun()}.
+If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use a cubic spline natural interpolation to derive the exposure-response function using, e.g. \code{stats::splinefun(x, y, method="natural")}.}
 
 \item{population}{\code{Numeric value} or \code{Vector} referring to the total population, including both exposed and non-exposed (in each geographical unit). Only to be used to assess relative impact per 100k inhabitants.}
 
