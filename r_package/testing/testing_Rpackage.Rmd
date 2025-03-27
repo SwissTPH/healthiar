@@ -923,7 +923,7 @@ bestcost_noise_ha_ar_iteration <-
                    runif_with_seed(5,1E2,1E3,3)),
     bhd_central = list(runif_with_seed(3,1E4,1E5,1)), 
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-    geo_id_disaggregated = 1:3, 
+    geo_id_disaggregated = c("Zurich", "Lugano", "Geneva"), 
     geo_id_aggregated = rep("CH", 3),
     info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"),
     )
