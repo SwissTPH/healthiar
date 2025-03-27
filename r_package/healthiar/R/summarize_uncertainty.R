@@ -38,9 +38,13 @@ summarize_uncertainty <- function(
   set.seed(123)
 
   ## Determine number of geographic units
-  if ( length(grep("geo_id", names(results[["health_detailed"]][["impact_raw"]]))) > 0 ) {
+  if ("geo_id" %in% names(results[["health_detailed"]][["impact_raw"]])) {
 
-    n_geo <- as.numeric(max(results[["health_detailed"]][["impact_raw"]]$geo_id_disaggregated))
+    n_geo <-
+      # Let's use unique() instead of input_args
+      # because in some cases the users do not enter the geo_id.
+      # In that cases compile_input() provide a geo_id and it is shown in impact_raw
+      unique(is.null(results[["health_detailed"]][["impact_raw"]]$geo_id_disaggregated))
 
   } else {
 
@@ -510,7 +514,7 @@ summarize_uncertainty <- function(
       ### @ AC: sorry for the loop : /
       ###  I tried to avoid it, but failed. To be changed.
       dat_sim <- tibble::tibble(
-        geo_id_disaggregated = numeric(0)  # Initialize geo_id_disaggregated as numeric
+        geo_id_disaggregated = character(0)  # Initialize geo_id_disaggregated as numeric
       ) |>
         dplyr::bind_cols(
           set_names(rep(list(numeric(0)), length(exp_columns)), exp_columns),
@@ -1000,23 +1004,23 @@ summarize_uncertainty <- function(
         dplyr::select(geo_id_disaggregated, pop_exp) |>
         dplyr::group_by(geo_id_disaggregated) %>%
         dplyr::summarize(pop_exp = list(pop_exp), .groups = "drop")
-
       ## Create vectors of column names
-      exp_columns <- paste0("exp_", dat_exp |>
-                              dplyr::filter(geo_id_disaggregated == 1) |>
+      exp_columns <- paste0("exp_",
+                            dat_exp[1, ] |>
                               dplyr::pull(exp_central) |>
                               unlist() |>
                               seq_along())
-      pop_columns <- paste0("pop_exp_", dat_exp |>
-                               dplyr::filter(geo_id_disaggregated == 1) |>
-                               dplyr::pull(exp_central) |>
-                               unlist() |>
-                               seq_along())
+      pop_columns <- paste0("pop_exp_",
+                            dat_exp[1, ] |>
+                              dplyr::pull(exp_central) |>
+                              unlist() |>
+                              seq_along())
 
       ## Create empty tibble to be filled in loop below
       ## @ AC: sorry for the loop (again) : P
+
       dat_sim <- tibble::tibble(
-        geo_id_disaggregated = numeric(0)  # Initialize geo_id_disaggregated as numeric
+        geo_id_disaggregated = character(0)  # Initialize geo_id_disaggregated as numeric
       ) |>
         dplyr::bind_cols(
           set_names(rep(list(numeric(0)), length(exp_columns)), exp_columns),
@@ -1053,6 +1057,7 @@ summarize_uncertainty <- function(
           )
 
         ## Add simulated values of current iteration to dat_sim tabble
+
         dat_sim <- dat_sim |>
           dplyr::bind_rows(temp)
 
@@ -1146,7 +1151,7 @@ summarize_uncertainty <- function(
     ## Create empty tibble to be filled in loop below
     ## @ AC: sorry for the loop (again) : P
     dat_sim <- tibble::tibble(
-      geo_id_disaggregated = numeric(0)  # Initialize geo_id_disaggregated as numeric
+      geo_id_disaggregated = character(0)  # Initialize geo_id_disaggregated as numeric
     ) |>
       dplyr::bind_cols(
         set_names(rep(list(numeric(0)), length(exp_columns)), exp_columns),
@@ -1327,6 +1332,7 @@ summarize_uncertainty <- function(
 
     ## Calculate impact per noise band
     ### impact_X = risk_X * pop_X * dw
+
     dat <- dat |>
       dplyr::mutate(
         ## Iterate over corresponding "risk_" and "pop_" columns
