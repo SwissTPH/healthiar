@@ -26,7 +26,6 @@
 #' @param geo_id_aggregated \code{Numeric vector} an ID for each geographic area that specifies which geographic areas should be aggregated together.
 #' E.g. if you provide the municipality names to \code{geo_id_disaggregated}, you might provide here the corresponding region / canton / province.
 #' Consequently The vector has to have the same length as the one fed to \code{geo_id_disaggregated}.
-#' @param approach_multiexposure \code{String} specifying the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined". Default: \code{NULL} (i.e. no other exposure is considered besides the one specified in the \code{exp.._ argument(s)})
 #' @param info \code{String} or {data.frame} providing additional information linked with the assessment.
 #' The suffix "info" will be added to the column name.
 #' Default value = \code{NULL}.
@@ -74,8 +73,6 @@ attribute_master <-
            ## Iteration arguments
            geo_id_disaggregated = NULL,
            geo_id_aggregated = NULL,
-           ## Multiexposure
-           approach_multiexposure = NULL,
            ## Lifetable arguments
            health_outcome = NULL,
            population_midyear_male = NULL, population_midyear_female = NULL,
@@ -107,7 +104,6 @@ attribute_master <-
       healthiar:::compile_input(
         is_lifetable = is_lifetable,
         approach_risk = approach_risk,
-        approach_multiexposure = approach_multiexposure,
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
         prop_pop_exp = prop_pop_exp,
         pop_exp = pop_exp,

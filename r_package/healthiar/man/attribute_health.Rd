@@ -37,7 +37,6 @@ attribute_health(
   bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
-  approach_multiexposure = NULL,
   population = NULL,
   info = NULL
 )
@@ -74,8 +73,6 @@ If a vector is entered here, the data for geo-specific input data (e.g. \code{bh
 \item{geo_id_aggregated}{\code{Numeric vector} an ID for each geographic area that specifies which geographic areas should be aggregated together.
 E.g. if you provide the municipality names to \code{geo_id_disaggregated}, you might provide here the corresponding region / canton / province.
 Consequently The vector has to have the same length as the one fed to \code{geo_id_disaggregated}.}
-
-\item{approach_multiexposure}{\code{String} specifying the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined". Default: \code{NULL} (i.e. no other exposure is considered besides the one specified in the \code{exp.._ argument(s)})}
 
 \item{population}{\code{Numeric value} or \code{Vector} referring to the total population, including both exposed and non-exposed (in each geographical unit). Only to be used to assess relative impact per 100k inhabitants.}
 

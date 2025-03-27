@@ -41,7 +41,6 @@
 #'   bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
 #'   geo_id_disaggregated = NULL,
 #'   geo_id_aggregated = NULL,
-#'   approach_multiexposure = NULL,
 #'   population = NULL,
 #'   info = NULL
 #')
@@ -77,7 +76,6 @@ attribute_health <-
            cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
            geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
-           approach_multiexposure = NULL,
            population = NULL,
            info = NULL,
            # Only for for YLD
@@ -88,7 +86,6 @@ attribute_health <-
       healthiar:::attribute_master(
         is_lifetable = FALSE,
         approach_risk = approach_risk,
-        approach_multiexposure = approach_multiexposure,
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
         prop_pop_exp = prop_pop_exp,
         pop_exp,

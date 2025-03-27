@@ -28,7 +28,6 @@ attribute_master(
   bhd_upper = NULL,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
-  approach_multiexposure = NULL,
   health_outcome = NULL,
   population_midyear_male = NULL,
   population_midyear_female = NULL,
@@ -86,8 +85,6 @@ If a vector is entered here, the data for geo-specific input data (e.g. \code{bh
 \item{geo_id_aggregated}{\code{Numeric vector} an ID for each geographic area that specifies which geographic areas should be aggregated together.
 E.g. if you provide the municipality names to \code{geo_id_disaggregated}, you might provide here the corresponding region / canton / province.
 Consequently The vector has to have the same length as the one fed to \code{geo_id_disaggregated}.}
-
-\item{approach_multiexposure}{\code{String} specifying the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined". Default: \code{NULL} (i.e. no other exposure is considered besides the one specified in the \code{exp.._ argument(s)})}
 
 \item{health_outcome}{\code{String} specifying if the result of the assessment with life table is premature deaths ("deaths") or years of life lost ("yll")}
 
