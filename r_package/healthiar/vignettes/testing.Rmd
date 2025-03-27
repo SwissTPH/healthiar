@@ -221,8 +221,7 @@ healthiar::attribute_health(
   cutoff_central = ,
   bhd_central = ,
   geo_id_disaggregated = ,
-  geo_id_aggregated = ,
-  approach_multiexposure = 
+  geo_id_aggregated =  
 )
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -267,8 +266,7 @@ testthat::expect_equal(
       cutoff_central = ,
       bhd_central = ,
       geo_id_disaggregated = ,
-      geo_id_aggregated = ,
-      approach_multiexposure = 
+      geo_id_aggregated = 
     ) |>
     healthiar::helper_extract_main_health_results(),
   ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
@@ -361,8 +359,7 @@ healthiar::attribute_health(
   cutoff_central = 53,
   bhd_central = 85362.08,
   geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL,
-  approach_multiexposure = NULL
+  geo_id_aggregated = NULL
 )
 ```
 
@@ -395,8 +392,7 @@ healthiar::attribute_health(
   cutoff_central = min(data$exposure_mean),
   bhd_central = data$gbd_daly[1],
   geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL,
-  approach_multiexposure = NULL
+  geo_id_aggregated = NULL
 ) 
 ```
 
@@ -462,8 +458,7 @@ healthiar::attribute_health(
   cutoff_central = 53,
   bhd_central = 85362.08,
   geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL,
-  approach_multiexposure = NULL
+  geo_id_aggregated = NULL
 ) |> 
   healthiar::helper_extract_main_health_results() |> 
   print()
@@ -494,8 +489,7 @@ testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|cutoff_TR
         rr_increment = 10,
         erf_shape = "log_linear",
         geo_id_disaggregated = NULL,
-        geo_id_aggregated = NULL,
-        approach_multiexposure = NULL
+        geo_id_aggregated = NULL
       ) |>
       healthiar::helper_extract_main_health_results(),
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
@@ -532,8 +526,7 @@ healthiar::attribute_health(
   cutoff_central = 53,
   bhd_central = 85362.08,
   geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL,
-  approach_multiexposure = NULL
+  geo_id_aggregated = NULL
 ) |> 
   healthiar::helper_extract_main_health_results() |> 
   print()
@@ -574,8 +567,7 @@ testthat::test_that("results correct results correct pathway_rr|erf_log_lin|exp_
         cutoff_central = min(data$exposure_mean),
         bhd_central = data$gbd_daly[1],
         geo_id_disaggregated = NULL,
-        geo_id_aggregated = NULL,
-        approach_multiexposure = NULL
+        geo_id_aggregated = NULL
         ) |>
       healthiar::helper_extract_main_health_results(),
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
@@ -632,8 +624,7 @@ healthiar::attribute_health(
   bhd_lower = NULL, 
   bhd_upper = NULL,
   geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL,
-  approach_multiexposure = NULL
+  geo_id_aggregated = NULL
 )
     
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -674,8 +665,7 @@ testthat::test_that("results correct [pathway_id]", {
         bhd_lower = NULL, 
         bhd_upper = NULL,
         geo_id_disaggregated = NULL,
-        geo_id_aggregated = NULL,
-        approach_multiexposure = NULL
+        geo_id_aggregated = NULL
       ) |>
       healthiar::helper_extract_main_health_results(),
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
@@ -713,8 +703,7 @@ healthiar::attribute_health(
   population = ,
   prop_pop_exp = ,
   geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL,
-  approach_multiexposure = NULL
+  geo_id_aggregated = NULL
 )
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -749,8 +738,7 @@ testthat::test_that("results correct [pathway_id]", {
         population = ,
         prop_pop_exp = ,
         geo_id_disaggregated = NULL,
-        geo_id_aggregated = NULL,
-        approach_multiexposure = NULL
+        geo_id_aggregated = NULL
       ) |>
       healthiar::helper_extract_main_health_results(),
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
@@ -943,8 +931,7 @@ The iteration function calls require two additional arguments compared to the fu
         bhd_lower = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
         bhd_upper = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
         geo_id_disaggregated = ,
-        geo_id_aggregated = ,
-        approach_multiexposure = NULL
+        geo_id_aggregated = 
       )
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -985,8 +972,7 @@ testthat::test_that("results correct [pathway_id]", {
         bhd_lower = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
         bhd_upper = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
         geo_id_disaggregated = ,
-        geo_id_aggregated = ,
-        approach_multiexposure = NULL
+        geo_id_aggregated = 
       ) |>
       healthiar::helper_extract_main_health_results(),
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
