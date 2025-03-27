@@ -15,6 +15,7 @@
 #' @param cutoff_central,cutoff_lower,cutoff_upper \code{Numeric value} showing the central exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
 #' The cutoff level refers to the exposure level below which no health effects occur.
 #' If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.
+#' Only applicable to relative risk pathways.
 #' @param pop_exp \code{Numeric vector} referring to the population exposed for each exposure category. For absolute risk, the value of this argument must be entered, for relative risk only optional.
 #' @param prop_pop_exp \code{Numeric value} or \code{Numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to each exposure categories. Only to be used for exposure distribution (if pop_exp not available) or if not the whole population is exposed. Otherwise, 1 will be assumed as default.
 #' @param population \code{Numeric value} or \code{Vector} referring to the total population, including both exposed and non-exposed (in each geographical unit). Only to be used to assess relative impact per 100k inhabitants.
