@@ -6,7 +6,6 @@
 \usage{
 compile_input(
   is_lifetable = NULL,
-  approach_multiexposure = NULL,
   approach_risk = NULL,
   exp_central,
   exp_lower = NULL,
@@ -54,8 +53,6 @@ compile_input(
 }
 \arguments{
 \item{is_lifetable}{\code{Boolean} argument specifying if the life table approach is applied (TRUE) or not (FALSE)}
-
-\item{approach_multiexposure}{\code{String} specifying the approach that has to be used in assessments with multiple exposures. To choose among: "additive", "multiplicative" or "combined". Default: \code{NULL} (i.e. no other exposure is considered besides the one specified in the \code{exp.._ argument(s)})}
 
 \item{approach_risk}{\code{String} specifying the risk risk method. Options: "relative_risk" (default) or "absolute_risk".}
 

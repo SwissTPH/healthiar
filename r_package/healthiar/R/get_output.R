@@ -141,7 +141,6 @@ get_output <-
     }
 
     # Aggregate results across pollutants (exposures)
-    # if approach_multiexposure == "additive"
     if(length(unique(impact_raw$exposure_name)) > 1){
 
       output[["health_detailed"]][["impact_agg_exp_names"]]  <-
