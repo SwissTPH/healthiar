@@ -13,8 +13,7 @@
 #' function_name(param1 = value1, param2 = value2)
 #' @export
 cba <-
-  function(approach_discount = "direct",
-           output_healthiar = NULL,
+  function(output_healthiar = NULL,
            positive_impact = NULL,
            valuation,
            cost,
@@ -44,7 +43,6 @@ cba <-
 
     cba_detailed_benefit <-
       healthiar::monetize(
-        approach_discount = approach_discount,
         output_healthiar = output_healthiar,
         impact = positive_impact,
         discount_rate = discount_rate_benefit,
@@ -55,7 +53,6 @@ cba <-
 
     cba_main_benefit <-
       healthiar::monetize(
-        approach_discount = approach_discount,
         output_healthiar = output_healthiar,
         impact = positive_impact,
         discount_rate = discount_rate_benefit,
@@ -69,7 +66,6 @@ cba <-
     # For cost, assume 1 impact with full valuation to make use of include_monetization
     cba_detailed_cost <-
       healthiar::monetize(
-        approach_discount = approach_discount,
         impact = 1,
         valuation = cost,
         discount_rate = discount_rate_cost,
