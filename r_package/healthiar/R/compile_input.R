@@ -66,7 +66,21 @@ compile_input <-
     ## geo_id_disaggregated is needed to group results in case of multiple geo_ids
     if(is.null(geo_id_disaggregated)){
       geo_id_disaggregated <-
-        as.character(ifelse(is.list({{exp_central}}), 1:length({{exp_central}}), 1))
+        ifelse(is.list({{exp_central}}), 1:length({{exp_central}}), 1) |>
+        as.character()
+    } else {
+      # geo_ids need to be character because
+      # a) no operations are expected
+      # b) otherwise error somewhere else in the package when mixing character and numeric
+      geo_id_disaggregated <- as.character(geo_id_disaggregated)
+    }
+
+    if(!is.null(geo_id_aggregated)){
+      # For geo_id_aggegated there is no default value as for geo_id_aggregated
+      # so it needs the if statement below.
+      # Otherwise, instead of not including the column when NULL
+      # no the tibble becomes empty and then error somewhere else
+      geo_id_aggregated <- as.character(geo_id_aggregated)
     }
 
     # PROCESS ERF ######################################################################
@@ -139,12 +153,15 @@ compile_input <-
              1)                        # If only one geo unit
 
     input_wo_lifetable <-
-      # Tibble converts NULL into NA: if variable is NULL, column not initiated
+      # Tibble removed columns that are NULL.
+      # So if variable is NULL, column not initiated
       dplyr::tibble(
         ## First compile input data that are geo-dependent
         ## Use rep() match dimensions
-        geo_id_disaggregated = rep(geo_id_disaggregated, each = length_exp_dist),
-        geo_id_aggregated = rep(geo_id_aggregated, each = length_exp_dist),
+        geo_id_disaggregated = rep(geo_id_disaggregated,
+                                   each = length_exp_dist),
+        geo_id_aggregated = rep(geo_id_aggregated,
+                                each = length_exp_dist),
         bhd_central = rep(unlist(bhd_central), each = length_exp_dist),
         bhd_lower = rep(unlist(bhd_lower), each = length_exp_dist),
         bhd_upper = rep(unlist(bhd_upper), each = length_exp_dist),

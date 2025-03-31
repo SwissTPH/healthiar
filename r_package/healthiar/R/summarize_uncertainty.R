@@ -165,9 +165,13 @@ summarize_uncertainty <- function(
     ## Create empty tibble to store simulated values & results in
     dat <-
       tibble::tibble(
+        # geo_id_disaggregated must be always character
+        # to avoid inconsistency with likely numeric formats entered by users
+        # and because no math operation is needed for this variable
         geo_id_disaggregated =
-          rep(1:n_geo,
-              each = n_sim),
+          as.character(
+            rep(1:n_geo,
+                each = n_sim)),
         rr =
           rep(NA, times = n_sim*n_geo),
         rr_increment =
