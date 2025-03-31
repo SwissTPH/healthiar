@@ -5,7 +5,6 @@
 \title{Cost benefit analysis}
 \usage{
 cba(
-  approach_discount = "direct",
   output_healthiar = NULL,
   positive_impact = NULL,
   valuation,
@@ -19,8 +18,6 @@ cba(
 )
 }
 \arguments{
-\item{approach_discount}{\code{String} referring to the method to be used for the discounting choosing between the default "direct" (after obtaining the health impacts) and the alternative "indirect" (before the health impacts).}
-
 \item{output_healthiar}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
 
 \item{valuation}{\code{Numberic value} referring to unit value of a health impact}

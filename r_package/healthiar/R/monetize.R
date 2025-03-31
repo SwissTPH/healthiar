@@ -2,7 +2,6 @@
 
 #' @description Monetize health impacts
 #'
-#' @param approach_discount \code{String} referring to the method to be used for the discounting choosing between the default "direct" (after obtaining the health impacts) and the alternative "indirect" (before the health impacts).
 #' @param output_healthiar \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while discount_years does not include the year 0. Thus, length of impact = discount_years + 1.
 #' @param valuation \code{Numberic value} referring to unit value of a health impact
@@ -10,7 +9,7 @@
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
 #' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting.
 #' @param discount_overtime \code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".
-#' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assumming no nominal discount rate)
+#' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)
 #'
 #' @returns Description of the return value.
 #' @examples
@@ -18,8 +17,7 @@
 #' function_name(param1 = value1, param2 = value2)
 #' @export
 monetize <-
-  function(approach_discount = "direct",
-           output_healthiar = NULL,
+  function(output_healthiar = NULL,
            impact = NULL,
            valuation,
            discount_rate = NULL,
@@ -28,13 +26,24 @@ monetize <-
            discount_overtime = "all_years",
            inflation = NULL) {
 
+    # Store variables to increase readability of conditions
+    using_impact_from_healthiar <-
+      !is.null(output_healthiar) & is.null(impact)
+    using_impact_from_user <-
+      !using_impact_from_healthiar
+
+    is_lifetable <-
+      is.null(output_healthiar[["health_detailed"]][["input_args"]]$bhd_central)
+    is_not_lifetable <-
+      !is_lifetable
+
+
   # Using the output of attribute ####
-  if(!is.null(output_healthiar) & is.null(impact)){
+  if(using_impact_from_healthiar){
 
-    # Indirect approach #######
-    # This means applying the discount within the lifetable method
-
-    if(approach_discount == "indirect"){
+    # Using life table method for the health assessment #######
+    # If bhd is null, it means that a life table (age-specific mortality) was entered.
+    if(is_lifetable){
 
       health_outcome <-
         output_healthiar[["health_detailed"]][["input_args"]]$health_outcome
@@ -43,7 +52,6 @@ monetize <-
       output_health <- output_healthiar
 
       # Output will be adapted according to monetized impacts
-      #TODO The names health are kept just provisionally until we adapt get_output()
       impact_detailed <-
         output_health[["health_detailed"]][["impact_raw"]] |>
 
@@ -157,9 +165,9 @@ monetize <-
           output_monetization)
 
 
-    # Direct approach #######
-    # This means applying the discount after obtaining the attributable health impact
-    } else if(approach_discount == "direct"){
+    # Without using life table #######
+    # If bhd_central is not NULL, then we are not using life table method
+    }else if (is_not_lifetable){
 
 
       # Duplicate output to work with monetization
@@ -198,7 +206,7 @@ monetize <-
     }
 
 
-    # For both direct and indirect approach
+    # For both with and without life table
     # Identify the relevant columns for monetization that are in the output
     relevant_columns <-
       c("info", "geo_id_disaggregated", "geo_id_aggregated",
@@ -223,8 +231,9 @@ monetize <-
 
     # Using user input ####
     # If the user only provide a number of the impact (not based on output of attribute)
-    # The approach cannot be indirect
-    }else if(!is.null(impact) & is.null(output_healthiar)){
+    # No life table approach when user is entering the health impacts
+    # because we cannot access the life table calculation to discount by year
+    }else if(using_impact_from_user){
 
       output_monetization <-
         healthiar:::add_monetized_impact(

@@ -27,7 +27,7 @@ add_monetized_impact(
 
 \item{discount_overtime}{\code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".}
 
-\item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assumming no nominal discount rate)}
+\item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
 
 \item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function).}
 }

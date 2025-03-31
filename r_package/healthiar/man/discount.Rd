@@ -5,7 +5,6 @@
 \title{Attribute discounted health impact}
 \usage{
 discount(
-  approach_discount = "direct",
   output_healthiar = NULL,
   impact = NULL,
   discount_rate = NULL,
@@ -16,8 +15,6 @@ discount(
 )
 }
 \arguments{
-\item{approach_discount}{\code{String} referring to the method to be used for the discounting choosing between the default "direct" (after obtaining the health impacts) and the alternative "indirect" (before the health impacts).}
-
 \item{output_healthiar}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
 
 \item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while discount_years does not include the year 0. Thus, length of impact = discount_years + 1.}
@@ -30,7 +27,7 @@ discount(
 
 \item{discount_overtime}{\code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting). Only applicable if approach_discount = "direct".}
 
-\item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assumming no nominal discount rate)}
+\item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
 }
 \value{
 TBD. E.g. This function returns a \code{data.frame} with one row for each value of the

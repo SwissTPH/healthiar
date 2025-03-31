@@ -20,8 +20,7 @@
 #' @export
 
 discount <-
-  function(approach_discount = "direct",
-           output_healthiar = NULL,
+  function(output_healthiar = NULL,
            impact = NULL,
            discount_rate = NULL,
            discount_years = 1,
@@ -31,7 +30,6 @@ discount <-
 
     output_discounting <-
       healthiar::monetize(
-        approach_discount = approach_discount,
         output_healthiar = output_healthiar,
         impact = impact,
         discount_rate = discount_rate,
