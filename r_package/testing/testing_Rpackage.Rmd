@@ -2168,7 +2168,7 @@ check_bestcost(result_list_bestcost = comparison_daly_pif_geo,
 
 # Cost
 
-```{r Monetize a simple case}
+```{r Witout life table}
 # Monetize only with valuation
 bestcost_pm_copd_costs <- 
   healthiar::monetize(output_healthiar = bestcost_pm_copd, 
@@ -2182,7 +2182,6 @@ check_general(bestcost_pm_copd_costs[["monetization_main"]]$monetized_impact_rou
 ## Monetize with all arguments (including discount)
 bestcost_pm_copd_costs_discount <- 
   healthiar::monetize(
-    approach_discount = "direct",
     output_healthiar = bestcost_pm_copd,
     discount_shape = "exponential",
     discount_rate = 0.03,
@@ -2196,7 +2195,6 @@ check_general(bestcost_pm_copd_costs_discount[["monetization_main"]]$monetized_i
 ## Monetize with impact (without output of attribute)
 bestcost_cost_discount_single_value <- 
   healthiar::monetize(
-    approach_discount = "direct",
     impact = 2E4, 
     discount_shape = "exponential",
     discount_rate = 0.03,
@@ -2212,7 +2210,6 @@ check_general(bestcost_cost_discount_single_value[["monetization_main"]]$monetiz
 ## Discounting only one specific year
 bestcost_pm_copd_cost_discount_single_value <-
   healthiar::monetize(
-    approach_discount = "direct",
     impact = 50,
     discount_shape = "exponential",
     discount_rate = 0.03,
@@ -2222,14 +2219,14 @@ bestcost_pm_copd_cost_discount_single_value <-
 
 check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
               863) # As indicated by University of Port in Excel file
+```
 
 
-
-# Indirect approach. 
+```{r With life table}
+# Life table approach approach. 
 ## valuation=1 to compare results with only discounting
 bestcost_pm_yll_lifetable_geluft_indirect_discount <- 
   healthiar::monetize(
-    approach_discount = "indirect",
     output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft, 
     discount_shape = "exponential",
     discount_rate = 0.01,
@@ -2241,20 +2238,6 @@ check_general(bestcost_pm_yll_lifetable_geluft_indirect_discount[["monetization_
               c(26493, 13877, 39006))
 # Result on 13 Dec 2024. Same result as discounting in attribute_health() (deprecated).
 
-
-# direct approach. 
-# valuation=1 to compare results with only discounting
-bestcost_pm_yll_lifetable_geluft_direct_discount <-
-  healthiar::monetize(
-    approach_discount = "direct",
-    output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
-    discount_shape = "exponential",
-    discount_rate = 0.01,
-    valuation = 1)
-
-check_general(bestcost_pm_yll_lifetable_geluft_direct_discount[["monetization_main"]]$monetized_impact_rounded,
-              c(29275, 15328, 43119))# Result on 25 March 2025.
-
 ```
 
 ```{r only discounting}
@@ -2262,7 +2245,6 @@ check_general(bestcost_pm_yll_lifetable_geluft_direct_discount[["monetization_ma
 # Discounting without valuation
 bestcost_pm_copd_discount <- 
   healthiar::discount(
-    approach_discount = "direct",
     impact = 2E4,
     discount_shape = "exponential",
     discount_rate = 0.03,
@@ -2278,7 +2260,6 @@ check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_
 
 bestcost_inflation_attribute_result <- 
   healthiar::monetize(
-    approach_discount = "direct",
     output_healthiar = bestcost_pm_copd,
     discount_shape = "exponential",
     discount_rate = 0.05,
@@ -2293,7 +2274,6 @@ bestcost_inflation_attribute_result_main <-
 # Discounting and inflation using example from uni Porto
 bestcost_inflation <- 
   healthiar::monetize(
-    approach_discount = "direct",
     discount_overtime = "last_year",
     impact = 1,
     discount_shape = "exponential",
@@ -2309,7 +2289,6 @@ check_general(bestcost_inflation[["monetization_main"]]$monetized_impact_rounded
 # Discounting and inflation using chaggpt
 bestcost_inflation_chatgpt <- 
   healthiar::monetize(
-    approach_discount = "direct",
     discount_overtime = "last_year",
     impact = 1,
     discount_shape = "exponential",
@@ -2326,7 +2305,6 @@ check_general(bestcost_inflation_chatgpt[["monetization_main"]]$monetized_impact
 # following example of University of Porto
 bestcost_inflation_different_cost_by_year_exp <- 
   healthiar::monetize(
-    approach_discount = "direct",
     impact = c(800, 1000, 1200, 1500, 1800, 2000),
     discount_shape = "exponential",
     discount_rate = 0.05,
@@ -2344,7 +2322,6 @@ check_general(round(bestcost_inflation_different_cost_by_year_exp[["monetization
 # Now with hyperbolic
 bestcost_inflation_different_cost_by_year_hyp_harvey <- 
   healthiar::monetize(
-    approach_discount = "direct",
     impact = c(800, 1000, 1200, 1500, 1800, 2000),
     discount_shape = "hyperbolic_harvey_1986",
     discount_rate = 0.05,
@@ -2358,7 +2335,6 @@ check_general(round(bestcost_inflation_different_cost_by_year_hyp_harvey[["monet
 
 bestcost_inflation_different_cost_by_year_hyp_mazur <- 
   healthiar::monetize(
-    approach_discount = "direct",
     impact = c(800, 1000, 1200, 1500, 1800, 2000),
     discount_shape = "hyperbolic_mazur_1987",
     discount_rate = 0.05,
@@ -2377,7 +2353,6 @@ check_general(round(bestcost_inflation_different_cost_by_year_hyp_mazur[["moneti
 bestcost_pm_copd_cba_attr_input <-
   healthiar::cba(
     output_healthiar = bestcost_pm_copd,
-    approach_discount = "direct",
     valuation = 20,
     cost = 100,
     discount_shape = "exponential",
@@ -2396,7 +2371,6 @@ bestcost_pm_copd_cba_attr_input_main <-
 ## Discounting only one specific year (raw input)
 bestcost_pm_copd_cba_raw_input <-
   healthiar::cba(
-    approach_discount = "direct",
     positive_impact = 50,
     valuation = 20,
     cost = 100,
@@ -2416,7 +2390,6 @@ bestcost_pm_copd_cba_main <-
 ## Discounting only one specific year
 bestcost_pm_copd_cba_output <-
   healthiar::cba(
-    approach_discount = "direct",
     output_healthiar = bestcost_pm_copd,
     valuation = 20,
     cost = 100,
