@@ -75,7 +75,8 @@ If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple
 
 \item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} showing the central exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
 The cutoff level refers to the exposure level below which no health effects occur.
-If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.}
+If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.
+Only applicable to relative risk pathways.}
 
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value(s)} providing the basline (incidence) level of the health outcome in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
 

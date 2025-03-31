@@ -46,7 +46,8 @@ attribute_lifetable(
 
 \item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} showing the central exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
 The cutoff level refers to the exposure level below which no health effects occur.
-If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.}
+If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.
+Only applicable to relative risk pathways.}
 
 \item{rr_central, rr_lower, rr_upper}{\code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.}
 
