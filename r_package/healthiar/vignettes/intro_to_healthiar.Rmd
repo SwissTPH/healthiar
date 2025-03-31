@@ -707,9 +707,11 @@ TODO
 
 ## Example: `get_mdi`
 
+Note: the `ggplot2` must be installed in order to use this function!
+
 ### Function call
 
-```{r}
+```{r echo=TRUE, eval=FALSE, include=TRUE}
 mdi <- get_mdi(
   geo_id_disaggregated = exdat_get_mdi$id,
   edu = exdat_get_mdi$edu,
