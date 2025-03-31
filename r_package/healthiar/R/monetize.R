@@ -26,13 +26,24 @@ monetize <-
            discount_overtime = "all_years",
            inflation = NULL) {
 
+    # Store variables to increase readability of conditions
+    using_impact_from_healthiar <-
+      !is.null(output_healthiar) & is.null(impact)
+    using_impact_from_user <-
+      !using_impact_from_healthiar
+
+    is_lifetable <-
+      is.null(output_healthiar[["health_detailed"]][["input_args"]]$bhd_central)
+    is_not_lifetable <-
+      !is_lifetable
+
 
   # Using the output of attribute ####
-  if(!is.null(output_healthiar) & is.null(impact)){
+  if(using_impact_from_healthiar){
 
     # Using life table method for the health assessment #######
     # If bhd is null, it means that a life table (age-specific mortality) was entered.
-    if(is.null(output_healthiar[["health_detailed"]][["input_args"]]$bhd_central)){
+    if(is_lifetable){
 
       health_outcome <-
         output_healthiar[["health_detailed"]][["input_args"]]$health_outcome
@@ -156,7 +167,7 @@ monetize <-
 
     # Without using life table #######
     # If bhd_central is not NULL, then we are not using life table method
-    }else{
+    }else if (is_not_lifetable){
 
 
       # Duplicate output to work with monetization
@@ -222,7 +233,7 @@ monetize <-
     # If the user only provide a number of the impact (not based on output of attribute)
     # No life table approach when user is entering the health impacts
     # because we cannot access the life table calculation to discount by year
-    }else if(!is.null(impact) & is.null(output_healthiar)){
+    }else if(using_impact_from_user){
 
       output_monetization <-
         healthiar:::add_monetized_impact(
