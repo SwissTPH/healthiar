@@ -19,7 +19,7 @@ cba <-
            cost,
            discount_rate_benefit = NULL,
            discount_rate_cost = NULL,
-           discount_shape = NULL,
+           discount_shape = "exponential",
            discount_years_benefit = 1,
            discount_years_cost = 1,
            discount_overtime = "all_years") {

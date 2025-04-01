@@ -80,7 +80,7 @@ attribute_health <-
            info = NULL,
            # Only for for YLD
            dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
-           duration_central = NULL, duration_lower = NULL, duration_upper = NULL){
+           duration_central = 1, duration_lower = NULL, duration_upper = NULL){
 
     output <-
       healthiar:::attribute_master(

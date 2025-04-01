@@ -21,7 +21,7 @@ monetize <-
            impact = NULL,
            valuation,
            discount_rate = NULL,
-           discount_shape = NULL,
+           discount_shape = "exponential",
            discount_years = 0,
            discount_overtime = "all_years",
            inflation = NULL) {
@@ -33,10 +33,9 @@ monetize <-
       !using_impact_from_healthiar
 
     is_lifetable <-
-      is.null(output_healthiar[["health_detailed"]][["input_args"]]$bhd_central)
+      !is.null(output_healthiar[["health_detailed"]][["input_args"]]$deaths_male)
     is_not_lifetable <-
       !is_lifetable
-
 
   # Using the output of attribute ####
   if(using_impact_from_healthiar){
