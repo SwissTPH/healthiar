@@ -3,7 +3,6 @@ testthat::test_that("results correct direct discounting without valuation with e
   testthat::expect_equal(
     object =
       healthiar::discount(
-        approach_discount = "direct",
         impact = 2E4,
         discount_shape = "exponential",
         discount_rate = 0.03,

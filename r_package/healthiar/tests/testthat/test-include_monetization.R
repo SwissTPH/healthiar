@@ -18,7 +18,6 @@ testthat::test_that("results correct simple monetization", {
     object =
       healthiar::monetize(
         output_healthiar = bestcost_pm_copd,
-        approach_discount = "direct",
         valuation = 1000,
         discount_rate = NULL,
         discount_shape = NULL) |>
@@ -50,13 +49,12 @@ testthat::test_that("results the same fake_monetization|discount_appr_direct|dis
 
   testthat::expect_equal(
     object =
-      healthiar::monetize(approach_discount = "direct",
-                                      output_healthiar = bestcost_pm_copd,
-                                      discount_shape = "exponential",
-                                      discount_rate = 0.03,
-                                      discount_years = 5,
-                                      valuation = 20,
-                                      discount_overtime = "last_year") |>
+      healthiar::monetize(output_healthiar = bestcost_pm_copd,
+                          discount_shape = "exponential",
+                          discount_rate = 0.03,
+                          discount_years = 5,
+                          valuation = 20,
+                          discount_overtime = "last_year") |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
       base::unlist() |>
@@ -70,13 +68,12 @@ testthat::test_that("results correct pathway_monetization|discount_appr_direct|d
 
   testthat::expect_equal(
     object =
-      healthiar::monetize(approach_discount = "direct",
-                                      impact = 2E4,
-                                      discount_shape = "exponential",
-                                      discount_rate = 0.03,
-                                      discount_years = 20,
-                                      discount_overtime = "all_years",
-                                      valuation = 1) |>
+      healthiar::monetize(impact = 2E4,
+                          discount_shape = "exponential",
+                          discount_rate = 0.03,
+                          discount_years = 20,
+                          discount_overtime = "all_years",
+                          valuation = 1) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
       base::unlist() |>
@@ -90,13 +87,12 @@ testthat::test_that("results correct pathway_monetization|discount_appr_direct|d
 
   testthat::expect_equal(
     object =
-      healthiar::monetize(approach_discount = "direct",
-                                      impact = 50,
-                                      discount_shape = "exponential",
-                                      discount_rate = 0.03,
-                                      discount_years = 5,
-                                      discount_overtime = "last_year",
-                                      valuation = 20) |>
+      healthiar::monetize(impact = 50,
+                          discount_shape = "exponential",
+                          discount_rate = 0.03,
+                          discount_years = 5,
+                          discount_overtime = "last_year",
+                          valuation = 20) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
       base::unlist() |>
@@ -135,12 +131,11 @@ testthat::test_that("results the same fake_monetization|discount_appr_indirect|d
 
   testthat::expect_equal(
     object =
-      healthiar::monetize(approach_discount = "indirect",
-                                      output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
-                                      discount_shape = "exponential",
-                                      discount_rate = 0.01,
-                                      valuation = 1,
-                                      discount_overtime = "all_years") |>
+      healthiar::monetize(output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
+                          discount_shape = "exponential",
+                          discount_rate = 0.01,
+                          valuation = 1,
+                          discount_overtime = "all_years") |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
       base::unlist() |>
@@ -155,8 +150,6 @@ testthat::test_that("results the same fake_monetization|discount_appr_direct|dis
   testthat::expect_equal(
     object =
       healthiar::discount(
-        approach_discount = "direct",
-        impact = 2E4,
         discount_shape = "exponential",
         discount_rate = 0.03,
         discount_years = 20,

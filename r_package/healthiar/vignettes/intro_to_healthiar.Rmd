@@ -483,7 +483,6 @@ You can monetize the obtained health impacts via the `include_monetization` func
 results_pm_copd <- 
   monetize(
     output_healthiar = results_pm_copd,
-    approach_discount = "direct",
     discount_shape = "exponential",
     discount_rate = 0.03,
     discount_years = 5,
@@ -523,7 +522,6 @@ What would be the monetary benefit of such a policy, considering also the cost t
 cba <- 
   cba(
     output_healthiar = results_pm_copd,
-    approach_discount = "direct",
     valuation = 50000,
     cost = 100000000,
     discount_shape = "exponential",

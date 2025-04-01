@@ -767,7 +767,6 @@ See start of the section [Testing templates] for guidance on how to access funct
 
 ## healthiar FUNCTION CALL
 healthiar::monetize(
-  approach_discount = ,
   output_healthiar = NULL, # Only specify one of either "output_healthiar" or "impact" argument 
   impact = , # Only specify one of either "output_healthiar" or "impact" argument 
   valuation = ,
@@ -775,7 +774,7 @@ healthiar::monetize(
   discount_rate = NULL,
   discount_shape = NULL,
   discount_years = 1,
-  discount_overtime = "all_years", # only applicable if approach_discount is "direct" 
+  discount_overtime = "all_years", 
   inflation = NULL
 )
 
@@ -801,7 +800,6 @@ testthat::test_that("results correct [pathway_id]", {
     ## healthiar FUNCTION CALL
     object =
       healthiar::monetize(
-        approach_discount = ,
         output_healthiar = NULL, # Only specify one of either "output_healthiar" or "impact" argument 
         impact = , # Only specify one of either "output_healthiar" or "impact" argument 
         valuation = ,
@@ -809,7 +807,7 @@ testthat::test_that("results correct [pathway_id]", {
         discount_rate = NULL,
         discount_shape = NULL,
         discount_years = 1,
-        discount_overtime = "all_years", # only applicable if approach_discount is "direct" 
+        discount_overtime = "all_years", 
         inflation = NULL
         ) |>
       healthiar::helper_extract_main_monetization_results(),
@@ -841,7 +839,6 @@ Depending on your calculation pathway you will have to replace some of the `NULL
     ## healthiar FUNCTION CALL
     object =
       healthiar::cba(
-        approach_discount = ,
         output_healthiar = NULL,
         positive_impact = ,
         valuation = ,
@@ -851,7 +848,7 @@ Depending on your calculation pathway you will have to replace some of the `NULL
         discount_rate_cost = ,
         discount_years_benefit = 1,
         discount_years_cost = 1,
-        discount_overtime =  # only applicable if approach_discount is "direct" 
+        discount_overtime =  
         ) 
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -876,7 +873,6 @@ testthat::test_that("results correct [pathway_id]", {
     ## healthiar FUNCTION CALL
     object =
       healthiar::cba(
-        approach_discount = ,
         output_healthiar = NULL,
         positive_impact = ,
         valuation = ,
@@ -886,7 +882,7 @@ testthat::test_that("results correct [pathway_id]", {
         discount_rate_cost = ,
         discount_years_benefit = 1,
         discount_years_cost = 1,
-        discount_overtime =  # only applicable if approach_discount is "direct" 
+        discount_overtime = 
         ) |>
       healthiar::helper_extract_main_cba_results(),
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
