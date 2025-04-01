@@ -1,9 +1,25 @@
 # healthiar BEST-COST WORKSHOP (PART 2) ########################################
 
-## SETUP #######################################################################
-library(healthiar) ; library(dplyr)
-## Set working directory to other than project default
-setwd("C:/Users/luytax/switchdrive/BEST-COST/best-cost_WPs/r_package/testing/Workshops_and_demos/WS_WP5/ws_2/")
+# SETUP ########################################################################
+
+## Load the healthiar package (make sure you have installed the newest version)
+library(healthiar)
+
+## Load the data
+
+### Option A - By clicking
+#### Click on "data_clean.Rdata" in the "Files" tab of RStudio to load the data
+
+### Option B - Using functions
+#### Install or load the rstudioapi package (for loading data)
+if ("rstudioapi" %in% installed.packages()[,"Package"]) {
+  library(rstudioapi) } else {
+    install.packages("rstudioapi")
+    library(rstudioapi)}
+#### Set working diretory to the folder that you have saved this RScript in
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+#### Load data for the case studies (make sure that this R script and the data
+#### file "data_clean.RData" are saved in the same folder)
 load(file = "data_clean.RData")
 
 # CASE STUDY 1 - PM2.5 & COPD (CHRONIC OBSTRUCTIVE PULMONARY DISEASE) ##########
@@ -60,13 +76,13 @@ pm_copd_cat$health_main$impact_rounded
 ## with lower PM2.5 exposure
 ### Tip: you can use the attribute_mod() function to create an alternative
 ### scenario based on the existing healthiar output variable "pm_copd_pwm"
-pm_copd_alt <- attribute_mod(
+pm_copd_alt_scen <- attribute_mod(
   output_attribute_1 = pm_copd_pwm,
   exp_central = 4
 )
 pm_copd_diff <- compare(
   output_attribute_1 = pm_copd_pwm,
-  output_attribute_2 = pm_copd_alt,
+  output_attribute_2 = pm_copd_alt_scen,
   approach_comparison = "delta"
 )
 ## Difference in DALYs from COPD between scenarios
@@ -144,22 +160,78 @@ pm_mr_brt$health_main$impact_rounded
 
 ## 2.1 #########################################################################
 ## Attribute HA cases in Oslo to categorical noise exposure
-noise_ha_oslo <- ...
+noise_ha_oslo <- attribute_health(
+  approach_risk = "absolute_risk",
+  erf_eq_central = "78.927-3.1162*c+0.0342*c^2",
+  exp_central = data_noise$exp_cat,
+  pop_exp = data_noise$pop_oslo
+)
+## Attr. HA cases (combined)
+noise_ha_oslo$health_main$impact_rounded
+## Attr. HA cases (per noise category)
+noise_ha_oslo$health_detailed$impact_raw[,c("exp","impact")]
 
 ## 2.2 #########################################################################
 ## Determine YLD due to noise-attributable HA cases in Oslo
-noise_ha_yld <- ...
+noise_ha_yld <- attribute_health(
+  approach_risk = "absolute_risk",
+  erf_eq_central = "78.927-3.1162*c+0.0342*c^2",
+  exp_central = data_noise$exp_cat,
+  pop_exp = data_noise$pop_oslo,
+  dw_central = 0.02
+)
+## YLD due to attr. HA cases (combined)
+noise_ha_yld$health_main$impact_rounded
+## YLD due to attr. HA cases (per noise category)
+noise_ha_yld$health_detailed$impact_raw$impact
 
 ## 2.3 #########################################################################
 ## Monetize noise-attributable HA cases in Oslo
-noise_monetization <- ...
+noise_monetization <- monetize(
+  output_healthiar = noise_ha_oslo,
+  valuation = 350
+)
+## Monetized impact due to noise-attributable high annoyance cases
+noise_monetization$monetization_main$monetized_impact
 
 ## 2.4 (Advanced) ##############################################################
 ## Cost-benefit analysis of a noise reduction intervention in Oslo
-noise_cba <- ...
+noise_cba <- cba(
+  output_healthiar = noise_ha_oslo,
+  valuation = 350,
+  cost = 10000000
+)
+## Net benefit
+noise_cba$cba_main$net_benefit
 
 ## 2.5 (Advanced) ##############################################################
-## Attribute HA cases to noise exposure in all parts of Oslo agglomeration
-## (iteration) and aggregate the impacts
-### Tip: the variable "data_noise" contains the exposure in the different parts
-noise_ha_agglo <- ...
+## Attribute HA cases to noise exposure in all municipalities of the Oslo
+## agglomeration (iteration) and aggregate the impacts
+### Tip: the variable "data_noise" contains the exposure per municipality
+noise_ha_agglo <- attribute_health(
+  approach_risk = "absolute_risk",
+  geo_id_disaggregated = c("Asker", "Baerum", "Oslo", "Lorenskok", "Lillestrom",
+                           "Raelingen", "Nordre Follo"),
+  geo_id_aggregated =  rep("Oslo & agglomeration", 7),
+  erf_eq_central = "78.927-3.1162*c+0.0342*c^2",
+  # exp_central = list(data_noise$exp_cat,
+  #                       data_noise$exp_cat,
+  #                       data_noise$exp_cat,
+  #                       data_noise$exp_cat,
+  #                       data_noise$exp_cat,
+  #                       data_noise$exp_cat,
+  #                       data_noise$exp_cat),
+  exp_central = rep(list(data_noise$exp_cat), 7),
+  pop_exp = list(data_noise$pop_asker,
+                    data_noise$pop_baerum,
+                    data_noise$pop_oslo,
+                    data_noise$pop_lorenskog,
+                    data_noise$pop_lillestrom,
+                    data_noise$pop_raelingen,
+                    data_noise$pop_nordre_follo)
+)
+## Attr. HA cases (aggregated)
+noise_ha_agglo$health_main$impact
+## Attr. HA cases (per municipality & noise category)
+noise_ha_agglo$health_detailed$impact_raw[,c("geo_id_disaggregated","exp","impact")]
+

@@ -1,9 +1,25 @@
 # healthiar BEST-COST WORKSHOP (PART 2) ########################################
 
-## SETUP #######################################################################
-library(healthiar) ; library(dplyr)
-## Set working directory to other than project default
-setwd("C:/Users/luytax/switchdrive/BEST-COST/best-cost_WPs/r_package/testing/Workshops_and_demos/WS_WP5/ws_2/")
+# SETUP ########################################################################
+
+## Load the healthiar package (make sure you have installed the newest version)
+library(healthiar)
+
+## Load the data
+
+### Option A - By clicking
+#### Click on "data_clean.Rdata" in the "Files" tab of RStudio to load the data
+
+### Option B - Using functions
+#### Install or load the rstudioapi package (for loading data)
+if ("rstudioapi" %in% installed.packages()[,"Package"]) {
+  library(rstudioapi) } else {
+    install.packages("rstudioapi")
+    library(rstudioapi)}
+#### Set working diretory to the folder that you have saved this RScript in
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+#### Load data for the case studies (make sure that this R script and the data
+#### file "data_clean.RData" are saved in the same folder)
 load(file = "data_clean.RData")
 
 # CASE STUDY 1 - PM2.5 & COPD (CHRONIC OBSTRUCTIVE PULMONARY DISEASE) ##########
@@ -33,7 +49,7 @@ pm_copd_cat <- ...
 ## with lower PM2.5 exposure
 ### Tip: you can use the attribute_mod() function to create an alternative
 ### scenario based on the existing healthiar output variable "pm_copd_pwm"
-pm_copd_alt <- ...
+pm_copd_alt_scen <- ...
 
 pm_copd_diff <- ...
 
@@ -81,8 +97,8 @@ noise_monetization <- ...
 noise_cba <- ...
 
 ## 2.5 (Advanced) ##############################################################
-## Attribute HA cases to noise exposure in all parts of Oslo agglomeration
-## (iteration) and aggregate the impacts
-### Tip: the variable "data_noise" contains the exposure in the different parts
+## Attribute HA cases to noise exposure in all municipalities of the Oslo
+## agglomeration (iteration) and aggregate the impacts
+### Tip: the variable "data_noise" contains the exposure per municipality
 noise_ha_agglo <- ...
 
