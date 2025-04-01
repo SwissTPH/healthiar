@@ -17,7 +17,6 @@ add_monetized_impact  <-
            discount_rate,
            discount_years,
            discount_shape,
-           discount_overtime,
            inflation) {
     # If df has only one column (impact)
     # it means that this is the direct input from user
@@ -35,21 +34,9 @@ add_monetized_impact  <-
     taking_last_discounted_year <- using_impact_from_healthiar_without_lifetable | using_impact_value_from_user
     summing_across_discounted_years <- using_impact_vector_from_user | using_impact_from_healthiar_with_lifetable
 
-
-
-  # if(discount_overtime == "all_years"){
-
-    #Build a vector starting with 1
+    # Define discount years
     discount_years_vector <- 0 : discount_years
     discount_period_length <- discount_years
-
-  # }else if(discount_overtime == "last_year"){
-  #   # Otherwise (discount_overtime == "all_years",
-  #   # i.e. if the discounting has to be applied only the last year)
-  #   # only consider the last year of the period
-  #   discount_years_vector <- discount_years
-  #   discount_period_length <- 1
-  # }
 
   # Convert NULL into 1 so that it can be integrated in the calculations.
   # If no inflation is wished, no problem, the 0 will not change the results
@@ -80,7 +67,6 @@ add_monetized_impact  <-
                   discount_rate = {{discount_rate}},
                   discount_years = {{discount_years}},
                   discount_shape = {{discount_shape}},
-                  discount_overtime = {{discount_overtime}},
                   inflation = inflation,
                   discount_rate_with_inflation = discount_rate_with_inflation)
 
@@ -91,13 +77,6 @@ add_monetized_impact  <-
 
     df_by_year <-  df_with_input
     df_by_year$discount_year <- discount_years_vector
-
-    # For some reason this does not work
-    # df_by_year <-
-    #   df_with_input|>
-    #   dplyr::mutate(discount_year = as.vector(discount_years_vector),
-    #                 .before = everything())
-
 
   } else if(taking_last_discounted_year){
     df_by_year <-
@@ -153,7 +132,7 @@ add_monetized_impact  <-
       df_by_year |>
       dplyr::select(starts_with("geo_id"),
                     ends_with("_ci"),
-                    any_of(c("discount_shape", "discount_overtime"))) |>
+                    any_of(c("discount_shape"))) |>
       names()
 
 

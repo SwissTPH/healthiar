@@ -13,8 +13,7 @@ cba(
   discount_rate_cost = NULL,
   discount_shape = NULL,
   discount_years_benefit = 1,
-  discount_years_cost = 1,
-  discount_overtime = "all_years"
+  discount_years_cost = 1
 )
 }
 \arguments{
@@ -27,8 +26,6 @@ cba(
 \item{discount_rate_benefit, discount_rate_cost}{\code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates)}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
-
-\item{discount_overtime}{\code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting).}
 
 \item{benefit}{\code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure}
 }

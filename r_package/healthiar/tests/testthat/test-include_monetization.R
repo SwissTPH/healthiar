@@ -31,7 +31,7 @@ testthat::test_that("results correct simple monetization", {
   )
 })
 
-testthat::test_that("results the same fake_monetization|discount_appr_direct|discount_rate_TRUE|discount_shape_exp|discount_overtime_last_year|", {
+testthat::test_that("results the same fake_monetization|discount_appr_direct|discount_rate_TRUE|discount_shape_exp|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -53,8 +53,7 @@ testthat::test_that("results the same fake_monetization|discount_appr_direct|dis
                           discount_shape = "exponential",
                           discount_rate = 0.03,
                           discount_years = 5,
-                          valuation = 20,
-                          discount_overtime = "last_year") |>
+                          valuation = 20) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
       base::unlist() |>
@@ -64,7 +63,7 @@ testthat::test_that("results the same fake_monetization|discount_appr_direct|dis
   )
 })
 
-testthat::test_that("results correct pathway_monetization|discount_appr_direct|discount_rate_TRUE|discount_shape_exp|discount_overtime_all_years|", {
+testthat::test_that("results correct pathway_monetization|discount_appr_direct|discount_rate_TRUE|discount_shape_exp|", {
 
   testthat::expect_equal(
     object =
@@ -72,7 +71,6 @@ testthat::test_that("results correct pathway_monetization|discount_appr_direct|d
                           discount_shape = "exponential",
                           discount_rate = 0.03,
                           discount_years = 20,
-                          discount_overtime = "all_years",
                           valuation = 1) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
@@ -83,7 +81,7 @@ testthat::test_that("results correct pathway_monetization|discount_appr_direct|d
   )
 })
 
-testthat::test_that("results correct pathway_monetization|discount_appr_direct|discount_rate_TRUE|discount_shape_exp|discount_overtime_last_year|", {
+testthat::test_that("results correct pathway_monetization|discount_appr_direct|discount_rate_TRUE|discount_shape_exp|", {
 
   testthat::expect_equal(
     object =
@@ -91,7 +89,6 @@ testthat::test_that("results correct pathway_monetization|discount_appr_direct|d
                           discount_shape = "exponential",
                           discount_rate = 0.03,
                           discount_years = 5,
-                          discount_overtime = "last_year",
                           valuation = 20) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
@@ -102,7 +99,7 @@ testthat::test_that("results correct pathway_monetization|discount_appr_direct|d
   )
 })
 
-testthat::test_that("results the same fake_monetization|discount_appr_indirect|discount_rate_TRUE|discount_shape_exp|discount_overtime_all_years|", {
+testthat::test_that("results the same fake_monetization|discount_appr_indirect|discount_rate_TRUE|discount_shape_exp|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
@@ -134,8 +131,7 @@ testthat::test_that("results the same fake_monetization|discount_appr_indirect|d
       healthiar::monetize(output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
                           discount_shape = "exponential",
                           discount_rate = 0.01,
-                          valuation = 1,
-                          discount_overtime = "all_years") |>
+                          valuation = 1) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
       base::unlist() |>
@@ -145,15 +141,14 @@ testthat::test_that("results the same fake_monetization|discount_appr_indirect|d
   )
 })
 
-testthat::test_that("results the same fake_monetization|discount_appr_direct|discount_rate_TRUE|discount_shape_exp|discount_overtime_all_years|", {
+testthat::test_that("results the same fake_monetization|discount_appr_direct|discount_rate_TRUE|discount_shape_exp|", {
 
   testthat::expect_equal(
     object =
       healthiar::discount(
         discount_shape = "exponential",
         discount_rate = 0.03,
-        discount_years = 20,
-        discount_overtime = "all_years") |>
+        discount_years = 20) |>
       purrr::pluck("monetization_main") |>
       dplyr::select(monetized_impact) |>
       base::unlist() |>

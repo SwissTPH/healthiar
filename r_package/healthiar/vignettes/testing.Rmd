@@ -774,7 +774,6 @@ healthiar::monetize(
   discount_rate = NULL,
   discount_shape = NULL,
   discount_years = 1,
-  discount_overtime = "all_years", 
   inflation = NULL
 )
 
@@ -807,7 +806,6 @@ testthat::test_that("results correct [pathway_id]", {
         discount_rate = NULL,
         discount_shape = NULL,
         discount_years = 1,
-        discount_overtime = "all_years", 
         inflation = NULL
         ) |>
       healthiar::helper_extract_main_monetization_results(),
@@ -847,9 +845,7 @@ Depending on your calculation pathway you will have to replace some of the `NULL
         discount_rate_benefit = ,
         discount_rate_cost = ,
         discount_years_benefit = 1,
-        discount_years_cost = 1,
-        discount_overtime =  
-        ) 
+        discount_years_cost = 1) 
 
 ## RESULT(S) COMPARISON ASSESSMENT:
 ## List here the results of the comparison assessment you selected
@@ -881,9 +877,7 @@ testthat::test_that("results correct [pathway_id]", {
         discount_rate_benefit = ,
         discount_rate_cost = ,
         discount_years_benefit = 1,
-        discount_years_cost = 1,
-        discount_overtime = 
-        ) |>
+        discount_years_cost = 1) |>
       healthiar::helper_extract_main_cba_results(),
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
