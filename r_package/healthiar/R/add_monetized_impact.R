@@ -19,19 +19,37 @@ add_monetized_impact  <-
            discount_shape,
            discount_overtime,
            inflation) {
+    # If df has only one column (impact)
+    # it means that this is the direct input from user
+    # no previous health assessment with healthiar
+    using_impact_from_user <- ncol(df) == 1
+    using_impact_vector <- length(df$impact)>1
+    using_impact_vector_from_user <- using_impact_from_user & using_impact_vector
+    using_impact_value_from_user <- using_impact_from_user & !using_impact_vector
+    using_impact_from_healthiar <- !using_impact_from_user
+    using_lifetable <- "year" %in% names(df)
+    using_impact_from_healthiar_with_lifetable <- using_impact_from_healthiar & using_lifetable
+    using_impact_from_healthiar_without_lifetable <- using_impact_from_healthiar & !using_lifetable
 
-  # If the discounting has to be applied in all years of the period
-  if(discount_overtime == "all_years"){
+    # Definition of calculation pathways
+    taking_last_discounted_year <- using_impact_from_healthiar_without_lifetable | using_impact_value_from_user
+    summing_across_discounted_years <- using_impact_vector_from_user | using_impact_from_healthiar_with_lifetable
+
+
+
+  # if(discount_overtime == "all_years"){
+
     #Build a vector starting with 1
     discount_years_vector <- 0 : discount_years
     discount_period_length <- discount_years
-  }else{
-    # Otherwise (discount_overtime == "all_years",
-    # i.e. if the discounting has to be applied only the last year)
-    # only consider the last year of the period
-    discount_years_vector <- discount_years
-    discount_period_length <- 1
-  }
+
+  # }else if(discount_overtime == "last_year"){
+  #   # Otherwise (discount_overtime == "all_years",
+  #   # i.e. if the discounting has to be applied only the last year)
+  #   # only consider the last year of the period
+  #   discount_years_vector <- discount_years
+  #   discount_period_length <- 1
+  # }
 
   # Convert NULL into 1 so that it can be integrated in the calculations.
   # If no inflation is wished, no problem, the 0 will not change the results
@@ -68,9 +86,8 @@ add_monetized_impact  <-
 
   # If impact is inserted as vector to refer to different monetized impacts by year
   # (case of real costs, not applicable for nominal costs)
-  # discount_years -1 because the year 0 has been added to the df
 
-  if(length(df_with_input$impact) == length(discount_years_vector)){
+  if(summing_across_discounted_years){
 
     df_by_year <-  df_with_input
     df_by_year$discount_year <- discount_years_vector
@@ -82,7 +99,7 @@ add_monetized_impact  <-
     #                 .before = everything())
 
 
-  } else {
+  } else if(taking_last_discounted_year){
     df_by_year <-
       # Split by discount year
       dplyr::cross_join(x = dplyr::tibble(discount_year = discount_years_vector),
@@ -140,21 +157,23 @@ add_monetized_impact  <-
       names()
 
 
-  df_relevant <-
-    df_by_year
-    # Keep only the last year
-    dplyr::filter(discount_year == max(discount_year)) |>
-    # Remove the variable discount year because it is not anymore relevant
-    # (not by-year results)
-    dplyr::select(-discount_year)
-  # Deactivated
-  # df_aggregated <-
-  #   df_by_year |>
-  #   dplyr::group_by(across(any_of(grouping_variables)))|>
-  #   dplyr::summarize(
-  #     across(starts_with("monetized"), sum)
-  #   )
+    if(taking_last_discounted_year){
+      df_relevant <-
+        df_by_year|>
+      # Keep only the last year
+      dplyr::filter(discount_year == max(discount_year)) |>
+        # Remove the variable discount year because it is not anymore relevant
+        # (not by-year results)
+        dplyr::select(-discount_year)
 
+    }else if(summing_across_discounted_years){
+      df_relevant <-
+        df_by_year |>
+        dplyr::group_by(across(any_of(grouping_variables)))|>
+        dplyr::summarize(
+          across(starts_with("monetized"), sum)
+        )
+    }
 
   monetization_main <-
     df_relevant |>
