@@ -1,0 +1,142 @@
+---
+title: "Hello, I'm healthiar!"
+subtitle: "R package workshop for BEST-COST"
+author:
+  - name:
+      given: Axel Luyten and
+      family: Alberto Castro
+    email: axel.luyten@swisstph.ch & alberto.castrofernandez@swisstph.ch
+date: 2025-03-24 # last-modified
+editor: source
+execute: 
+  eval: true
+  echo: true
+  warning: false
+freeze: auto
+format:
+  revealjs:
+    css: custom_style.css
+    incremental: true
+    transition: none # alts: fade, none, slide
+    transition-speed: default
+    # table-of-contents: true
+    # toc-depth: 1
+    logo: images/combo_logo_stph_bc.png
+    # footer: 'healthiar WP5 workshop 1'
+    smaller: true # If you set {.smaller} after the slide title, reduces font automatically so content fits on slide
+    scrollable: true # If you set {.scrollable} after the slide title, let's you scroll on the slide
+    template-partials:
+      - title-slide.html
+    title-slide-attributes:
+      data-background-image: images/combo_title_stph_bc.png
+      data-background-size: contain
+      data-background-opacity: "1"
+    slide-number: true
+    embed-resources: true
+---
+
+
+```{r, echo=FALSE, include=FALSE}
+library(healthiar)
+library(tibble)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(stringr)
+library(knitr)
+
+options(knitr.kable.max_rows = 100)
+set.seed(1)
+```
+
+# Example: `attribute_health()` with RR
+
+## `attribute_health()` with RR
+
+::: fragment
+Goal: attribute COPD cases to air pollution
+:::
+
+::::: fragment
+:::: panel-tabset
+## Hard-coded input data
+
+```{r, eval=TRUE,include=TRUE,echo=TRUE}
+#| code-line-numbers: "|1|2|3|4-7|8-11|12|"
+
+results_pm_copd <-
+  attribute_health(
+    erf_shape = "log_linear", # Alternatives: "linear", "log_log"
+    rr_central = 1.369, 
+    rr_lower = 1.124, 
+    rr_upper = 1.664,
+    rr_increment = 10,  # μg / m^3
+    exp_central = 8.85, # μg / m^3
+    exp_lower = 7,      # μg / m^3
+    exp_upper = 10,     # μg / m^3
+    cutoff_central = 5, # μg / m^3
+    bhd_central = 30747 # baseline health data: COPD incidence
+  ) 
+```
+
+## Pre-loaded data
+
+::: callout-tip
+`healthiar` comes with some example data that start with `exdat_` that allow you to test functions.
+:::
+
+```{r, eval=TRUE,include=TRUE,echo=TRUE}
+
+results_pm_copd_alt <- attribute_health(
+    erf_shape = "log_linear",
+    rr_central = exdat_pm_copd$relative_risk, 
+    rr_increment = 10, 
+    exp_central = exdat_pm_copd$mean_concentration,
+    cutoff_central = exdat_pm_copd$cut_off_value,
+    bhd_central = exdat_pm_copd$incidence
+  ) 
+```
+::::
+:::::
+
+
+# Let's inspect the results
+
+## Main results
+
+::: fragment
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_pm_copd$health_main
+```
+:::
+
+::: fragment
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_pm_copd[["health_main"]] |> 
+  select(impact_rounded, impact, pop_fraction, erf_ci, rr, exp, bhd) |> 
+  knitr::kable()
+```
+:::
+
+:::: {.fragment .fade-in}
+::: callout-tip
+See the intro vignette for a detailed description of output columns.
+:::
+::::
+
+
+## Detailed results
+
+::: fragment
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_pm_copd$health_detailed$impact_raw
+```
+:::
+
+::: fragment
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_pm_copd[["health_detailed"]][["impact_raw"]] |> knitr::kable()
+```
+:::
+
+
