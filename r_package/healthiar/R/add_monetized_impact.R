@@ -140,21 +140,24 @@ add_monetized_impact  <-
       names()
 
 
-  df_aggregated <-
-    df_by_year |>
-    dplyr::group_by(across(any_of(grouping_variables)))|>
-    dplyr::summarize(
-      across(starts_with("monetized"), sum)
-    )
-    # # Keep only the last year
-    # dplyr::filter(discount_year == {{discount_years}}-1) |>
-    # # Remove the variable discount year because it is not anymore relevant
-    # # (not by-year results)
-    # dplyr::select(-discount_year)
+  df_relevant <-
+    df_by_year
+    # Keep only the last year
+    dplyr::filter(discount_year == max(discount_year)) |>
+    # Remove the variable discount year because it is not anymore relevant
+    # (not by-year results)
+    dplyr::select(-discount_year)
+  # Deactivated
+  # df_aggregated <-
+  #   df_by_year |>
+  #   dplyr::group_by(across(any_of(grouping_variables)))|>
+  #   dplyr::summarize(
+  #     across(starts_with("monetized"), sum)
+  #   )
 
 
   monetization_main <-
-    df_aggregated |>
+    df_relevant |>
     # Round monetized impacts
     dplyr::mutate(
       monetized_impact_before_inflation_and_discount_rounded = round(monetized_impact_before_inflation_and_discount),
