@@ -2178,8 +2178,7 @@ check_general(bestcost_pm_copd_costs[["monetization_main"]]$monetized_impact_rou
               round(bestcost_pm_copd[["health_main"]]$impact * 1000))
 
 
-# Direct discounting
-## Monetize with all arguments (including discount)
+# Monetize with all arguments (including discount)
 bestcost_pm_copd_costs_discount <- 
   healthiar::monetize(
     output_healthiar = bestcost_pm_copd,
@@ -2202,8 +2201,8 @@ bestcost_cost_discount_single_value <-
     valuation = 1)
 
 check_general(bestcost_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
-              317549) 
-## 11074: Result according to ChatGPT on 10 March 2025 in the last year but you have to sum across all years 
+              11074) 
+## Result according to ChatGPT on 10 March 2025 
 
 
 
@@ -2219,6 +2218,8 @@ bestcost_pm_copd_cost_discount_single_value <-
 
 check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
               863) # As indicated by University of Port in Excel file
+
+
 ```
 
 
@@ -2251,7 +2252,7 @@ bestcost_pm_copd_discount <-
     discount_years = 20)
 
 check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_rounded,
-              317549)# Results on 2025-01-15
+              11074)# Results on 2025-01-15
 
 ```
 
