@@ -7,8 +7,7 @@
 #' @param valuation \code{Numberic value} referring to unit value of a health impact
 #' @param discount_rate \code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
-#' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting.
-#' @param discount_overtime \code{String} that refers to the year or years where the discounting has to be applied. Options: "all-years" (i.e. all years of the period of discounting; default option) or "last_year" (only last year of discounting).
+#' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting. Be aware that the year 0 (without discounting) is not be counted here. If a vector is entered in the argument impact, discount_years does not need to be entered (length of impact = discount_years + 1)
 #' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)
 #'
 #' @returns Description of the return value.
@@ -23,7 +22,6 @@ monetize <-
            discount_rate = NULL,
            discount_shape = "exponential",
            discount_years = 0,
-           discount_overtime = "all_years",
            inflation = NULL) {
 
     # Store variables to increase readability of conditions
@@ -32,10 +30,21 @@ monetize <-
     using_impact_from_user <-
       !using_impact_from_healthiar
 
+    using_impact_vector_from_user <- length(impact)>1
+
     is_lifetable <-
       !is.null(output_healthiar[["health_detailed"]][["input_args"]]$deaths_male)
     is_not_lifetable <-
       !is_lifetable
+
+
+    # If a vector is entered in impact
+    # The discount years are already defined by the lenght of the vector
+    # Users do not need to enter it.
+    if(using_impact_vector_from_user){
+      discount_years <- length(impact)-1
+    }
+
 
   # Using the output of attribute ####
   if(using_impact_from_healthiar){
@@ -78,7 +87,6 @@ monetize <-
                                                  discount_rate = discount_rate,
                                                  discount_years = length(lifeyear_nest_with_and_without_discount$discount_years)-1,
                                                  discount_shape = discount_shape,
-                                                 discount_overtime = discount_overtime,
                                                  inflation = inflation,
                                                  valuation = valuation)[["monetization_main"]]
 
@@ -180,7 +188,6 @@ monetize <-
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
                                          discount_shape = discount_shape,
-                                         discount_overtime = discount_overtime,
                                          inflation = inflation)[["monetization_main"]]
 
       #Detailed results showing the by-year results of monetization
@@ -190,7 +197,6 @@ monetize <-
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
                                          discount_shape = discount_shape,
-                                         discount_overtime = discount_overtime,
                                          inflation = inflation)[["monetization_detailed"]]
 
       #Detailed results showing all the details of the health results
@@ -200,7 +206,6 @@ monetize <-
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
                                          discount_shape = discount_shape,
-                                         discount_overtime = discount_overtime,
                                          inflation = inflation)[["monetization_main"]]
     }
 
@@ -210,7 +215,7 @@ monetize <-
     relevant_columns <-
       c("info", "geo_id_disaggregated", "geo_id_aggregated",
         paste0("impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount")),
-        "discount_rate", "discount_shape", "discount_overtime",
+        "discount_rate", "discount_shape",
         "valuation",
         paste0("monetized_impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount")),
         paste0("monetized_impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount"), "_rounded"))
@@ -241,7 +246,6 @@ monetize <-
           discount_rate = discount_rate,
           discount_years = discount_years,
           discount_shape = discount_shape,
-          discount_overtime = discount_overtime,
           inflation = inflation)
 
   }

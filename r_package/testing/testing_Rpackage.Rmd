@@ -2178,16 +2178,14 @@ check_general(bestcost_pm_copd_costs[["monetization_main"]]$monetized_impact_rou
               round(bestcost_pm_copd[["health_main"]]$impact * 1000))
 
 
-# Direct discounting
-## Monetize with all arguments (including discount)
+# Monetize with all arguments (including discount)
 bestcost_pm_copd_costs_discount <- 
   healthiar::monetize(
     output_healthiar = bestcost_pm_copd,
     discount_shape = "exponential",
     discount_rate = 0.03,
     discount_years = 5,
-    valuation = 20,
-    discount_overtime = "last_year")
+    valuation = 20)
 
 check_general(bestcost_pm_copd_costs_discount[["monetization_main"]]$monetized_impact_rounded,
               c(60416, 23343, 94436)) # Result on 9 Jan 2025
@@ -2202,8 +2200,8 @@ bestcost_cost_discount_single_value <-
     valuation = 1)
 
 check_general(bestcost_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
-              317549) 
-## 11074: Result according to ChatGPT on 10 March 2025 in the last year but you have to sum across all years 
+              11074) 
+## Result according to ChatGPT on 10 March 2025 
 
 
 
@@ -2214,11 +2212,12 @@ bestcost_pm_copd_cost_discount_single_value <-
     discount_shape = "exponential",
     discount_rate = 0.03,
     discount_years = 5,
-    discount_overtime = "last_year",
     valuation = 20)
 
 check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
               863) # As indicated by University of Port in Excel file
+
+
 ```
 
 
@@ -2251,7 +2250,7 @@ bestcost_pm_copd_discount <-
     discount_years = 20)
 
 check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_rounded,
-              317549)# Results on 2025-01-15
+              11074)# Results on 2025-01-15
 
 ```
 
@@ -2274,7 +2273,6 @@ bestcost_inflation_attribute_result_main <-
 # Discounting and inflation using example from uni Porto
 bestcost_inflation <- 
   healthiar::monetize(
-    discount_overtime = "last_year",
     impact = 1,
     discount_shape = "exponential",
     discount_rate = 0.05,
@@ -2289,7 +2287,6 @@ check_general(bestcost_inflation[["monetization_main"]]$monetized_impact_rounded
 # Discounting and inflation using chaggpt
 bestcost_inflation_chatgpt <- 
   healthiar::monetize(
-    discount_overtime = "last_year",
     impact = 1,
     discount_shape = "exponential",
     discount_rate = 0.04,
@@ -2309,8 +2306,7 @@ bestcost_inflation_different_cost_by_year_exp <-
     discount_shape = "exponential",
     discount_rate = 0.05,
     discount_years = 5,
-    valuation = 1,
-    discount_overtime = "all_years")
+    valuation = 1)
 
 check_general(round(bestcost_inflation_different_cost_by_year_exp[["monetization_detailed"]]$monetized_impact),
               round(c(800, 952.38,1088.44, 1295.76, 1480.86, 1567.05)))
@@ -2326,8 +2322,7 @@ bestcost_inflation_different_cost_by_year_hyp_harvey <-
     discount_shape = "hyperbolic_harvey_1986",
     discount_rate = 0.05,
     discount_years = 5,
-    valuation = 1,
-    discount_overtime = "all_years")
+    valuation = 1)
 
 check_general(round(bestcost_inflation_different_cost_by_year_hyp_harvey[["monetization_detailed"]]$monetized_impact),
               round(c(800,965.94, 1135.86, 1399.55, 1660.83, 1828.62)))
@@ -2339,8 +2334,7 @@ bestcost_inflation_different_cost_by_year_hyp_mazur <-
     discount_shape = "hyperbolic_mazur_1987",
     discount_rate = 0.05,
     discount_years = 5,
-    valuation = 1,
-    discount_overtime = "all_years")
+    valuation = 1)
 
 check_general(round(bestcost_inflation_different_cost_by_year_hyp_mazur[["monetization_detailed"]]$monetized_impact),
               round(c(800, 952.38, 1090.91, 1304.35, 1500.00, 1600.00)))
@@ -2359,8 +2353,7 @@ bestcost_pm_copd_cba_attr_input <-
     discount_rate_benefit = 0.03,
     discount_rate_cost = 0.03,
     discount_years_benefit = 5,
-    discount_years_cost = 5,
-    discount_overtime = "last_year")
+    discount_years_cost = 5)
 check_general(bestcost_pm_copd_cba_attr_input[["cba_main"]]$net_benefit_rounded,
               c(60330,23257,94350)) # Results on 2025-03-06; no comparison study
 
@@ -2378,8 +2371,7 @@ bestcost_pm_copd_cba_raw_input <-
     discount_rate_benefit = 0.03,
     discount_rate_cost = 0.03,
     discount_years_benefit = 5,
-    discount_years_cost = 5,
-    discount_overtime = "last_year")
+    discount_years_cost = 5)
 check_general(bestcost_pm_copd_cba_raw_input[["cba_main"]]$net_benefit_rounded,
               776) # As indicated by University of Port in Excel file
 
@@ -2397,8 +2389,7 @@ bestcost_pm_copd_cba_output <-
     discount_rate_benefit = 0.03,
     discount_rate_cost = 0.03,
     discount_years_benefit = 5,
-    discount_years_cost = 5,
-    discount_overtime = "last_year")
+    discount_years_cost = 5)
 check_general(bestcost_pm_copd_cba_output[["cba_main"]]$net_benefit_rounded,
               c(60416, 23343, 94436) - 86) # As indicated by University of Porto in Excel file
 

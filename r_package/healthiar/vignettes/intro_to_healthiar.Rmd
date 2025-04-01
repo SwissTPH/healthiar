@@ -486,8 +486,7 @@ results_pm_copd <-
     discount_shape = "exponential",
     discount_rate = 0.03,
     discount_years = 5,
-    valuation = 50000, # E.g. EURO
-    discount_overtime = "all_years"
+    valuation = 50000 # E.g. EURO
   )
 ```
 
@@ -528,8 +527,7 @@ cba <-
     discount_rate_benefit = 0.03,
     discount_rate_cost = 0.03,
     discount_years_benefit = 5,
-    discount_years_cost = 5,
-    discount_overtime = "all_years"
+    discount_years_cost = 5
   )
 ```
 

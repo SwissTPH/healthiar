@@ -1,4 +1,4 @@
-testthat::test_that("results correct pathway_cba|discount_appr_direct|discount_shape_exp|discount_overtime_last_year|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
+testthat::test_that("results correct pathway_cba|discount_appr_direct|discount_shape_exp|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -10,8 +10,7 @@ testthat::test_that("results correct pathway_cba|discount_appr_direct|discount_s
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
         discount_years_benefit = 5,
-        discount_years_cost = 5,
-        discount_overtime = "last_year") |>
+        discount_years_cost = 5) |>
       purrr::pluck("cba_main") |>
       dplyr::select(net_benefit_rounded) |>
       base::unlist() |>
@@ -21,7 +20,7 @@ testthat::test_that("results correct pathway_cba|discount_appr_direct|discount_s
   )
 })
 
-testthat::test_that("results the same fake_cba|discount_appr_direct|discount_shape_exp|discount_overtime_last_year|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
+testthat::test_that("results the same fake_cba|discount_appr_direct|discount_shape_exp|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -47,8 +46,7 @@ testthat::test_that("results the same fake_cba|discount_appr_direct|discount_sha
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
         discount_years_benefit = 5,
-        discount_years_cost = 5,
-        discount_overtime = "last_year") |>
+        discount_years_cost = 5) |>
       purrr::pluck("cba_main") |>
       dplyr::select(net_benefit_rounded) |>
       base::unlist() |>

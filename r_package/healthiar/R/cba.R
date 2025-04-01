@@ -21,8 +21,7 @@ cba <-
            discount_rate_cost = NULL,
            discount_shape = "exponential",
            discount_years_benefit = 1,
-           discount_years_cost = 1,
-           discount_overtime = "all_years") {
+           discount_years_cost = 1) {
 
     # Define vectors that are relevant below
 
@@ -48,7 +47,6 @@ cba <-
         discount_rate = discount_rate_benefit,
         discount_years = discount_years_benefit,
         discount_shape = discount_shape,
-        discount_overtime = discount_overtime,
         valuation = valuation)[["monetization_detailed"]]
 
     cba_main_benefit <-
@@ -58,7 +56,6 @@ cba <-
         discount_rate = discount_rate_benefit,
         discount_years = discount_years_benefit,
         discount_shape = discount_shape,
-        discount_overtime = discount_overtime,
         valuation = valuation)[["monetization_main"]]
 
 
@@ -70,8 +67,7 @@ cba <-
         valuation = cost,
         discount_rate = discount_rate_cost,
         discount_years = discount_years_cost,
-        discount_shape = discount_shape,
-        discount_overtime = discount_overtime)[["monetization_main"]]
+        discount_shape = discount_shape)[["monetization_main"]]
 
     # For costs main and detailed are the same because they only have one row
     cba_main_cost <- cba_detailed_cost
@@ -88,7 +84,7 @@ cba <-
       dplyr::left_join(
         cba_main_benefit,
         cba_main_cost,
-        by = c("discount_shape", "discount_overtime"),
+        by = c("discount_shape"),
         suffix = suffix_monetization)
 
 
@@ -103,7 +99,7 @@ cba <-
     relevant_columns <-
       c(columns_ci_geo,
         columns_monetization_with_suffix,
-        "discount_shape", "discount_overtime")
+        "discount_shape")
 
 
     cba_main <-
