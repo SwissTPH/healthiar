@@ -20,7 +20,7 @@ monetize <-
            impact = NULL,
            valuation,
            discount_rate = NULL,
-           discount_shape = NULL,
+           discount_shape = "exponential",
            discount_years = 0,
            inflation = NULL) {
 
@@ -33,9 +33,10 @@ monetize <-
     using_impact_vector_from_user <- length(impact)>1
 
     is_lifetable <-
-      is.null(output_healthiar[["health_detailed"]][["input_args"]]$bhd_central)
+      !is.null(output_healthiar[["health_detailed"]][["input_args"]]$deaths_male)
     is_not_lifetable <-
       !is_lifetable
+
 
     # If a vector is entered in impact
     # The discount years are already defined by the lenght of the vector
