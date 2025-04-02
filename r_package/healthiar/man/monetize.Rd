@@ -9,7 +9,7 @@ monetize(
   impact = NULL,
   valuation,
   discount_rate = NULL,
-  discount_shape = NULL,
+  discount_shape = "exponential",
   discount_years = 0,
   discount_overtime = "all_years",
   inflation = NULL
