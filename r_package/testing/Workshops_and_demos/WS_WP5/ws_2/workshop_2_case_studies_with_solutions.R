@@ -104,8 +104,10 @@ pm_iteration <- attribute_health(
 )
 ## Attr. DALYs from COPD in Norway
 pm_iteration$health_main$impact[1:3]
+## 63103.77 (95% CI: 24611.23 - 97752.78)
 ## Attr. DALYs from COPD in Oslo
 pm_iteration$health_main$impact[4:6]
+## 7881.710 (95% CI: 3125.801 - 12016.721)
 
 ## 1.5 (Advanced) ##############################################################
 ## Monte Carlo (MC) simulation (n=1000) to obtain summary uncertainty (combining
@@ -129,6 +131,8 @@ pm_copd_mc <- summarize_uncertainty(
 )
 ## Summary uncertainty estimates & confidence intervals:
 pm_copd_mc$uncertainty_main
+## 61884 (95% CI: 21556 - 96024)
+
 
 ## 1.6 (Advanced) ##############################################################
 ## Attribute DALYs from COPD to categorical PM2.5 exposure in Norway with the
@@ -147,6 +151,7 @@ pm_mr_brt <- attribute_health(
 )
 ## Attr. DALYs from COPD
 pm_mr_brt$health_main$impact_rounded
+## 31985 (95% CI: 26134 - 37717)
 
 # CASE STUDY 2 - NOISE & HIGH ANNOYANCE (HA) ###################################
 
@@ -168,8 +173,10 @@ noise_ha_oslo <- attribute_health(
 )
 ## Attr. HA cases (combined)
 noise_ha_oslo$health_main$impact_rounded
+## 40904
 ## Attr. HA cases (per noise category)
 noise_ha_oslo$health_detailed$impact_raw[,c("exp","impact")]
+## 57.5: 16454; 62.5: 11650; 67.5: 9217; 72.5: 3359; 77.5: 225
 
 ## 2.2 #########################################################################
 ## Determine YLD due to noise-attributable HA cases in Oslo
@@ -182,8 +189,11 @@ noise_ha_yld <- attribute_health(
 )
 ## YLD due to attr. HA cases (combined)
 noise_ha_yld$health_main$impact_rounded
+## 818
 ## YLD due to attr. HA cases (per noise category)
 noise_ha_yld$health_detailed$impact_raw$impact
+## 57.5: 329.085531; 62.5: 232.998895; 67.5: 184.333315; 72.5: 67.170813;
+## 77.5: 4.497701
 
 ## 2.3 #########################################################################
 ## Monetize noise-attributable HA cases in Oslo
@@ -193,6 +203,7 @@ noise_monetization <- monetize(
 )
 ## Monetized impact due to noise-attributable high annoyance cases
 noise_monetization$monetization_main$monetized_impact
+## 14316509
 
 ## 2.4 (Advanced) ##############################################################
 ## Cost-benefit analysis of a noise reduction intervention in Oslo
@@ -203,6 +214,7 @@ noise_cba <- cba(
 )
 ## Net benefit
 noise_cba$cba_main$net_benefit
+## 4316509
 
 ## 2.5 (Advanced) ##############################################################
 ## Attribute HA cases to noise exposure in all municipalities of the Oslo
@@ -225,6 +237,7 @@ noise_ha_agglo <- attribute_health(
 )
 ## Attr. HA cases (aggregated)
 noise_ha_agglo$health_main$impact
+## 53933.78
 ## Attr. HA cases (per municipality & noise category)
 noise_ha_agglo$health_detailed$impact_raw[,c("geo_id_disaggregated","exp","impact")]
-
+## See output in RStudio console after running line above
