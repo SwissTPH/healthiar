@@ -3,6 +3,8 @@
 # SETUP ########################################################################
 
 ## Load the healthiar package (make sure you have installed the newest version)
+### See the README file on the BEST-COST GitHub for installation guidance
+### Link: https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme
 library(healthiar)
 
 ## Load the data
@@ -33,8 +35,6 @@ load(file = "data_clean.RData")
 ### Approach comparison: delta
 ### Population-weighted mean PM2.5 exposure in Oslo: 6.59998 4 micrograms / m^3
 ### Baseline DALYs from COPD in Oslo: 42099.07 (95% CI: 34658.31 – 49513.7)
-
-
 ### Shape ERF: log-linear
 
 ## 1.1 #########################################################################
@@ -50,7 +50,7 @@ pm_copd_pwm <- attribute_health(
   erf_shape = "log_linear",
   bhd_central = 448216.70
 )
-## Attr. DALYs from COPD
+## Attributable DALYs from COPD
 pm_copd_pwm$health_main$impact_rounded
 # 63104 (95% CI: 24611 - 97753)
 
@@ -60,34 +60,56 @@ pm_copd_cat <- attribute_health(
   exp_central = data_pm_norway$exp,
   cutoff_central = 0,
   pop_exp = data_pm_norway$population,
-  rr_central = 1.03,
+  rr_central = 1.369,
   rr_lower = 1.124,
   rr_upper = 1.664,
   rr_increment = 10,
   erf_shape = "log_linear",
   bhd_central = 448216.70
 )
-## Attr. DALYs from COPD
+## Attributable DALYs from COPD
 pm_copd_cat$health_main$impact_rounded
-## 6362 (95% CI: 24710 - 99299)
+## 63751  (95% CI: 24710 - 99299)
 
 ## 1.3 #########################################################################
 ## Comparison scenario from exercise 1.1 with an alternative scenario in Norway
 ## with lower PM2.5 exposure
 ### Tip: you can use the attribute_mod() function to create an alternative
 ### scenario based on the existing healthiar output variable "pm_copd_pwm"
-pm_copd_alt_scen <- attribute_mod(
+
+### Option 1: create alternative scenario with the attribute_mod() function
+pm_copd_alt_scen_1 <- attribute_mod(
   output_attribute_1 = pm_copd_pwm,
   exp_central = 4
 )
-pm_copd_diff <- compare(
+pm_copd_diff_1 <- compare(
   output_attribute_1 = pm_copd_pwm,
-  output_attribute_2 = pm_copd_alt_scen,
+  output_attribute_2 = pm_copd_alt_scen_1,
   approach_comparison = "delta"
 )
-## Difference in DALYs from COPD between scenarios
-pm_copd_diff$health_main$impact
-## 10186.921 (95% CI: 4136.154 - 15153.354)
+## Difference between scenarios
+pm_copd_diff_1$health_main$impact_rounded
+## 10187 (95% CI: 4136 - 15153)
+
+### Option 2: create alternative scenario with the attribute_health() function
+pm_copd_alt_scen_2 <- attribute_health(
+  exp_central = 4, # Exposure in the alternative scenario
+  cutoff_central = 0,
+  rr_central = 1.369,
+  rr_lower = 1.124,
+  rr_upper = 1.664,
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  bhd_central = 448216.70
+)
+pm_copd_diff_2 <- compare(
+  output_attribute_1 = pm_copd_pwm,
+  output_attribute_2 = pm_copd_alt_scen_2,
+  approach_comparison = "delta"
+)
+## Difference between scenarios
+pm_copd_diff_2$health_main$impact_rounded
+## 10187 (95% CI: 4136 - 15153)
 
 ## 1.4 #########################################################################
 ## Iteration through whole of Norway and Oslo
@@ -102,10 +124,10 @@ pm_iteration <- attribute_health(
   erf_shape = "log_linear",
   bhd_central = list(448216.7, 42099.07)
 )
-## Attr. DALYs from COPD in Norway
+## Attributable DALYs from COPD in Norway
 pm_iteration$health_main$impact[1:3]
 ## 63103.77 (95% CI: 24611.23 - 97752.78)
-## Attr. DALYs from COPD in Oslo
+## Attributable DALYs from COPD in Oslo
 pm_iteration$health_main$impact[4:6]
 ## 7881.710 (95% CI: 3125.801 - 12016.721)
 
@@ -132,7 +154,6 @@ pm_copd_mc <- summarize_uncertainty(
 ## Summary uncertainty estimates & confidence intervals:
 pm_copd_mc$uncertainty_main
 ## 61884 (95% CI: 21556 - 96024)
-
 
 ## 1.6 (Advanced) ##############################################################
 ## Attribute DALYs from COPD to categorical PM2.5 exposure in Norway with the
@@ -187,12 +208,15 @@ noise_ha_yld <- attribute_health(
   pop_exp = data_noise$pop_oslo,
   dw_central = 0.02
 )
-## YLD due to attr. HA cases (combined)
+## YLD due to attributable HA cases (combined)
 noise_ha_yld$health_main$impact_rounded
 ## 818
-## YLD due to attr. HA cases (per noise category)
+## YLD due to attributable HA cases (per noise category)
 noise_ha_yld$health_detailed$impact_raw$impact
-## 57.5: 329.085531; 62.5: 232.998895; 67.5: 184.333315; 72.5: 67.170813;
+## 57.5: 329.085531
+## 62.5: 232.998895
+## 67.5: 184.333315
+## 72.5: 67.170813
 ## 77.5: 4.497701
 
 ## 2.3 #########################################################################
