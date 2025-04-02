@@ -64,7 +64,7 @@ library(healthiar)
 # detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
 
 ## Install package from .zip file
-# devtools::build(binary = TRUE, path = "../testing/input/") # Save current state of package as .zip file (e.g. to directly test changes in functions)
+# devtools::build(binary = TRUE, path = "../testing/Workshops_and_demos/WS_WP5/ws_2/") # Save current state of package as .zip file (e.g. to directly test changes in functions)
 # install.packages("../testing/input/healthiar_0.0.0.1.zip", repos=NULL, type='source') # Modify file path
 
 ## Install package from .tar.gz file
