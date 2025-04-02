@@ -1,3 +1,5 @@
+# RR ###########################################################################
+
 # testthat::test_that("result correct rr with single exposure value and only rr_central", {
 # testthat::test_that("result correct rr with single exp (pw_exp_single pw_cutoff_TRUE pw_varuncer_FALSE pw_erf_log_lin pw_iteration_FALSE pw_multiexp_FALSE)", {
 # testthat::test_that("result correct ID|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE", {
@@ -162,7 +164,7 @@ testthat::test_that("number of rows in detailed results correct rr|erf_log_lin|e
         info = paste0(data$pollutant,"_", data$evaluation_name)
         ) |>
       purrr::pluck("health_detailed") |>
-      purrr::pluck("raw") |>
+      purrr::pluck("impact_raw") |>
       base::nrow(),
     expected =
       3^4 # CI's in 4 input variables
@@ -246,7 +248,7 @@ testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_TR
   )
 })
 
-# BUG: WHEN CALLING THE FUNCTION WITH CUTOFF AND BHD CI'S THEN HEALTH MAIN HAS MORE THAN 3 ROWS ####
+# TODO BUG 2025-04-02: WHEN CALLING THE FUNCTION WITH CUTOFF AND BHD CI'S THEN HEALTH MAIN HAS MORE THAN 3 ROWS ####
 testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|multiexp_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
@@ -284,7 +286,7 @@ testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_TR
   )
 })
 
-# BUG: WHEN CALLING THE FUNCTION WITH CUTOFF AND BHD CI'S THEN HEALTH MAIN HAS MORE THAN 3 ROWS ####
+# TODO BUG 2025-04-02: WHEN CALLING THE FUNCTION WITH CUTOFF AND BHD CI'S THEN HEALTH MAIN HAS MORE THAN 3 ROWS ####
 testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_FALSE|varuncer_TRUE|iteration_FALSE|multiexp_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
@@ -534,6 +536,8 @@ testthat::test_that("results the same rr exposure distribution without cutoff", 
   )
 })
 
+# AR ###########################################################################
+
 testthat::test_that("results correct pathway_ar|erf_formula|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
@@ -546,8 +550,7 @@ testthat::test_that("results correct pathway_ar|erf_formula|exp_dist|cutoff_FALS
       healthiar::attribute_health(
         approach_risk = "absolute_risk",
         exp_central = data$exposure_mean,
-        population = sum(data$population_exposed_total),
-        prop_pop_exp = data$population_exposed_total/sum(data$population_exposed_total),
+        pop_exp = data$population_exposed_total,
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")) |>
       helper_extract_main_results(),
@@ -569,12 +572,11 @@ testthat::test_that("no error ar iteration", {
         exp_central = list(runif_with_seed(5,8,10,1),
                            runif_with_seed(5,8,10,2),
                            runif_with_seed(5,8,10,3)),
-        population = list(runif_with_seed(1,5E3,1E4,1),
-                          runif_with_seed(1,5E3,1E4,2),
-                          runif_with_seed(1,5E3,1E4,3)),
-        prop_pop_exp = list(runif_with_seed(5,0,1,1),
-                            runif_with_seed(5,0,1,2),
-                            runif_with_seed(5,0,1,3)),
+        pop_exp = list(
+          runif_with_seed(1,5E3,1E4,1) * runif_with_seed(5,0,1,1), # total pop * proportion pop exposed
+          runif_with_seed(1,5E3,1E4,2) * runif_with_seed(5,0,1,2),
+          runif_with_seed(1,5E3,1E4,3) * runif_with_seed(5,0,1,3)
+        ),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         geo_id_disaggregated = 1:3,
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
@@ -590,16 +592,16 @@ testthat::test_that("detailed results the same ar iteration no variable uncertai
         exp_central = list(runif_with_seed(5,8,10,1),
                            runif_with_seed(5,8,10,2),
                            runif_with_seed(5,8,10,3)),
-        population = list(runif_with_seed(1,5E3,1E4,1),
-                          runif_with_seed(1,5E3,1E4,2),
-                          runif_with_seed(1,5E3,1E4,3)),
-        prop_pop_exp = list(runif_with_seed(5,0,1,1),
-                            runif_with_seed(5,0,1,2),
-                            runif_with_seed(5,0,1,3)),
+        pop_exp = list(
+          runif_with_seed(1,5E3,1E4,1) * runif_with_seed(5,0,1,1), # total pop * proportion pop exposed
+          runif_with_seed(1,5E3,1E4,2) * runif_with_seed(5,0,1,2),
+          runif_with_seed(1,5E3,1E4,3) * runif_with_seed(5,0,1,3)
+          ),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         geo_id_disaggregated = 1:3,
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")) |>
-      helper_extract_detailed_results(),
+      helper_extract_detailed_results() |>
+      round(), # 2025-04-02 Round at the end to obtain rounded results
     expected =
       c(921, 1278, 1932, 2967, 704, 605, 2191, 1810, 551, 2877, 543, 2458, 1219, 1043, 1869) # Results on 2025-02-05; no comparison study
   )
@@ -620,16 +622,16 @@ testthat::test_that("detailed results the same ar iteration with variable uncert
         exp_upper = list(runif_with_seed(5,8,10,1) + 5,
                          runif_with_seed(5,8,10,2) + 5,
                          runif_with_seed(5,8,10,3) + 5),
-        population = list(runif_with_seed(1,5E3,1E4,1),
-                          runif_with_seed(1,5E3,1E4,2),
-                          runif_with_seed(1,5E3,1E4,3)),
-        prop_pop_exp = list(runif_with_seed(5,0,1,1),
-                            runif_with_seed(5,0,1,2),
-                            runif_with_seed(5,0,1,3)),
+        pop_exp = list(
+          runif_with_seed(1,5E3,1E4,1) * runif_with_seed(5,0,1,1), # total pop * proportion pop exposed
+          runif_with_seed(1,5E3,1E4,2) * runif_with_seed(5,0,1,2),
+          runif_with_seed(1,5E3,1E4,3) * runif_with_seed(5,0,1,3)
+        ),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         geo_id_disaggregated = 1:3,
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")) |>
-      helper_extract_detailed_results(),
+      helper_extract_detailed_results() |>
+      round(), # 2025-04-02 Round at the end to obtain rounded results
     expected = # Results on 2025-01-20; no comparison study
       c(921, 1148, 723, 1278, 1595, 1002, 1932, 2414, 1511, 2967, 3719, 2314, 704, 877, 553, 605, 754, 475, 2191, 2741, 1712, 1810, 2262, 1416, 551, 686, 433, 2877, 3607, 2243, 543, 676, 426, 2458, 3078, 1919, 1219, 1521, 956, 1043, 1301, 818, 1869, 2336, 1462)
   )
@@ -639,7 +641,7 @@ testthat::test_that("results the same rr yld with variable uncertainties", {
 
   testthat::expect_equal(
     object =
-      healthiar::attribute_yld(
+      healthiar::attribute_health(
         exp_central = 8.85,
         exp_lower = 8.85,
         cutoff_central = 5,
@@ -661,7 +663,7 @@ testthat::test_that("detailed results the same rr yld with variable uncertaintie
 
   testthat::expect_equal(
     object =
-      healthiar::attribute_yld(
+      healthiar::attribute_health(
         exp_central = 8.85,
         exp_lower = 8.85 - 1,
         exp_upper = 8.85 + 1,
@@ -676,169 +678,8 @@ testthat::test_that("detailed results the same rr yld with variable uncertaintie
         erf_shape = "log_linear",
         dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
         duration_central = 1, duration_lower = 0.5, duration_upper = 10) |>
-      helper_extract_detailed_results(),
+      helper_extract_detailed_results() |>
+      round(), # 2025-04-02 Round at the end to obtain rounded results
     expected = # Result on 2025-01-20; no comparison study
       c(525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 658, 329, 6583, 132, 66, 1317, 13165, 6583, 131651, 391, 196, 3911, 78, 39, 782, 7822, 3911, 78223, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 348, 174, 3483, 70, 35, 697, 6966, 3483, 69662, 206, 103, 2059, 41, 21, 412, 4117, 2059, 41174, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572, 959, 480, 9595, 192, 96, 1919, 19189, 9595, 191894, 573, 287, 5731, 115, 57, 1146, 11461, 5731, 114615, 391, 196, 3911, 78, 39, 782, 7822, 3911, 78223, 525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 255, 128, 2553, 51, 26, 511, 5106, 2553, 51059, 206, 103, 2059, 41, 21, 412, 4117, 2059, 41174, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 134, 67, 1340, 27, 13, 268, 2680, 1340, 26805, 573, 287, 5731, 115, 57, 1146, 11461, 5731, 114615, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572, 375, 188, 3750, 75, 38, 750, 7501, 3750, 75010, 658, 329, 6583, 132, 66, 1317, 13165, 6583, 131651, 790, 395, 7896, 158, 79, 1579, 15792, 7896, 157921, 525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 348, 174, 3483, 70, 35, 697, 6966, 3483, 69662, 419, 209, 4189, 84, 42, 838, 8378, 4189, 83782, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 959, 480, 9595, 192, 96, 1919, 19189, 9595, 191894, 1148, 574, 11479, 230, 115, 2296, 22959, 11479, 229589, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572))
-})
-
-# ARE THESE COMPARISON RESULTS FROM A STUDY? ####
-testthat::test_that("results correct rr multiple exposure additive approach no variable uncertainties", {
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        approach_multiexposure = "additive",
-        exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
-        cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
-        bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-        rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-        rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
-        erf_shape = "log_linear") |>
-      helper_extract_main_results(),
-    expected =
-      c(0.081 * 1000) # Unsure whether numbers from a study...; Results on 2025-01-16
-  )
-})
-
-testthat::test_that("detailed results the same rr multiple exposure additive approach with variable uncertainties", {
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        approach_multiexposure = "additive",
-        exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
-        exp_lower = c("pm2.5" = 8.1 - 1, "no2" =  10.9 - 1),
-        exp_upper = c("pm2.5" = 8.1 + 1, "no2" =  10.9 + 1),
-        cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
-        bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-        rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-        rr_lower = setNames(c(1.063, 1.031) - 0.005, c("pm2.5", "no2")),
-        rr_upper = setNames(c(1.063, 1.031) + 0.005, c("pm2.5", "no2")),
-        rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
-        erf_shape = "log_linear") |>
-      helper_extract_detailed_results(),
-    expected = # Results on 2025-01-20; no comparison study
-      c(33, 30, 36, 28, 25, 30, 38, 34, 41, 48, 42, 54, 45, 39, 50, 52, 46, 58)
-  )
-})
-
-# ARE THESE COMPARISON RESULTS FROM A STUDY? ####
-testthat::test_that("results correct rr multiple exposure multiplicative approach", {
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        approach_multiexposure = "multiplicative",
-        exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
-        cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
-        bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-        rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-        rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
-        erf_shape = "log_linear") |>
-      helper_extract_main_results(),
-    expected =
-      c(0.079 * 1000) # Unsure whether numbers from a study...; Results on 16 Jan 2025
-  )
-})
-
-# ARE THESE COMPARISON RESULTS FROM A STUDY? ####
-testthat::test_that("results correct rr multiple exposure multiplicative approach without cutoff", {
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        approach_multiexposure = "multiplicative",
-        exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
-        bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-        rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-        rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
-        erf_shape = "log_linear") |>
-      helper_extract_main_results(),
-    expected =
-      c(0.079 * 1000) # Unsure whether numbers from a study...; Results on 16 Jan 2025
-  )
-})
-
-# ARE THESE COMPARISON RESULTS FROM A STUDY? ####
-# ADD TEST ONCE BUG IS FIXED ###################################################
-# testthat::test_that("results correct rr multiple exposure multiplicative approach with variable uncertainty", {
-#
-#   testthat::expect_equal(
-#     object =
-#       healthiar::attribute_health(
-#         approach_multiexposure = "multiplicative",
-#         exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
-#         exp_lower = c("pm2.5" = 8.1 - 1, "no2" =  10.9 - 1),
-#         exp_upper = c("pm2.5" = 8.1 + 1, "no2" =  10.9 + 1),
-#         cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
-#         bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-#         rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-#         rr_lower = setNames(c(1.063, 1.031) - 0.005, c("pm2.5", "no2")),
-#         rr_upper = setNames(c(1.063, 1.031) + 0.005, c("pm2.5", "no2")),
-#         rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
-#         erf_shape = "log_linear") |>
-#       helper_extract_main_results(),
-#     expected =
-#       c(0.079 * 1000) # Unsure whether numbers from a study...; Results on 16 Jan 2025
-#   )
-# })
-
-# ARE THESE COMPARISON RESULTS FROM A STUDY? ####
-testthat::test_that("results correct rr multiple exposure combined approach with cutoff", {
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        approach_multiexposure = "combined",
-        exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
-        cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
-        bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-        rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-        rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
-        erf_shape = "log_linear") |>
-      helper_extract_main_results(),
-    expected =
-      c(0.079 * 1000) # Unsure whether numbers from a study...; Results on 16 Jan 2025
-  )
-})
-
-# ARE THESE COMPARISON RESULTS FROM A STUDY? ####
-testthat::test_that("results correct rr multiple exposure combined approach without cutoff", {
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        approach_multiexposure = "combined",
-        exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
-        bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-        rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-        rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
-        erf_shape = "log_linear") |>
-      helper_extract_main_results(),
-    expected =
-      c(0.079 * 1000) # Unsure whether numbers from a study...; Results on 16 Jan 2025
-  )
-})
-
-# ARE THESE COMPARISON RESULTS FROM A STUDY? ####
-testthat::test_that("results correct rr multiple exposure combined approach with ci", {
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        approach_multiexposure = "combined",
-        exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
-        exp_lower = c("pm2.5" = 7, "no2" =  9),
-        exp_upper = c("pm2.5" = 9, "no2" =  12),
-        cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
-        bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-        rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
-        rr_lower = setNames(c(1.05, 1.02), c("pm2.5", "no2")),
-        rr_upper = setNames(c(1.07, 1.04), c("pm2.5", "no2")),
-        rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
-        erf_shape = "log_linear") |>
-      helper_extract_main_results(),
-    expected =
-      c(79,59,93) # Unsure whether numbers from a study...; Results on 16 Jan 2025
-  )
 })
