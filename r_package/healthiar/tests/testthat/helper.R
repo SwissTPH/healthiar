@@ -10,7 +10,7 @@ helper_extract_main_results <- function(x){
 helper_extract_detailed_results <- function(x){
   y <- x |>
     purrr::pluck("health_detailed") |>
-    purrr::pluck("raw") |>
+    purrr::pluck("impact_raw") |>
     dplyr::select(impact_rounded)  |>
     base::unlist() |>
     base::as.numeric()
