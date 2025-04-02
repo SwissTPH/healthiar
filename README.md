@@ -30,17 +30,19 @@ Requirements:
 **Step 3** – Install the newest *healthiar* version 
 1.	Open RStudio
 2.	Install the R package *remotes*
-3.	Run the code *remotes::install_github(repo = "best-cost/best-cost_WPs", subdir = "/r_package/healthiar", ref = "HEAD", force = TRUE, build_vignettes = TRUE)* to install the *healthiar* package from GitHub
-4.	If prompted to update some existing packages please do so
-5.	Run *library(healthiar)* to load the package
-6.	Done! : )
+3.	Restarting the R session in RStudio by clicking *Session* > *Restart R* to make sure no packages are currently loaded 
+4.	Run the code *remotes::install_github(repo = "best-cost/best-cost_WPs", subdir = "/r_package/healthiar", force = TRUE, build_vignettes = TRUE)* to install the *healthiar* package from GitHub
+5.	If prompted to update some existing packages please do so
+6.	Run *library(healthiar)* to load the package
+7.	Done! : )
 
 If you encounter any difficulties let Alberto (<alberto.castrofernandez@swisstph.ch>) or Axel (<axel.luyten@swisstph.ch>) know.
 
 # Update the *healthiar* package
 
-We recommend to frequently install the newest *healthiar* version by running 
-*remotes::install_github(repo = "best-cost/best-cost_WPs", subdir = "/r_package/healthiar", ref = "HEAD", force = TRUE, build_vignettes = TRUE)*
+We recommend to frequently install the newest *healthiar* version.
+1.  First restarte the R session in RStudio by clicking *Session* > *Restart R* to make sure no packages are currently loaded 
+2.  Run *remotes::install_github(repo = "best-cost/best-cost_WPs", subdir = "/r_package/healthiar", force = TRUE, build_vignettes = TRUE)*
 
 # TERMS OF USE
 By using the R package *healthiar* or accessing its corresponding [GitHub website](https://github.com/best-cost/best-cost_WPs) the user agrees not to disseminate the *healthiar* R package or any parts of it to third parties. If you have any questions regarding the terms of use write to <alberto.castrofernandez@swisstph.ch>.
