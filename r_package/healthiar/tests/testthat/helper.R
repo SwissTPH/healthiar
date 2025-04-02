@@ -11,7 +11,7 @@ helper_extract_detailed_results <- function(x){
   y <- x |>
     purrr::pluck("health_detailed") |>
     purrr::pluck("impact_raw") |>
-    dplyr::select(impact_rounded)  |>
+    dplyr::select(impact)  |> # 2025-04-02 before was "impact_rounded", but now only raw impact in detailed results
     base::unlist() |>
     base::as.numeric()
 }
