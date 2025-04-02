@@ -20,7 +20,7 @@ discount(
 
 \item{discount_rate}{\code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.}
 
-\item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting.}
+\item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting. Be aware that the year 0 (without discounting) is not be counted here. If a vector is entered in the argument impact, discount_years does not need to be entered (length of impact = discount_years + 1)}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 
