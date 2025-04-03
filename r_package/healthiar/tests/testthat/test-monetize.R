@@ -77,7 +77,8 @@ testthat::test_that("results correct pathway_monetization|discount_appr_direct|d
       base::unlist() |>
       base::as.numeric() |>
       base::round(),
-    expect = c(14877) # Result on 5 Dec 2024; from ChatGPT
+    expect = c(11074) # Result on 2024-03-10; from ChatGPT ## OLD results from when it was include_monetization
+    # expect = c(14877) # Result on 5 Dec 2024; from ChatGPT ## OLD results from when it was include_monetization
   )
 })
 
@@ -106,7 +107,8 @@ testthat::test_that("results the same fake_monetization|discount_appr_indirect|d
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
   bestcost_pm_yll_exposure_single_year_lifetable_geluft <-
-    healthiar::attribute_yll_from_lifetable(
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
       approach_exposure = "single_year",
       exp_central = data_mort$exp[2], #exp CH 2019
       prop_pop_exp = 1,
@@ -124,7 +126,7 @@ testthat::test_that("results the same fake_monetization|discount_appr_indirect|d
       deaths_female = data[["pop"]]$number_of_deaths_female,
       year_of_analysis = 2019,
       info = data_mort$pollutant[2],
-      min_age = if(is.na(data_mort$min_age[2])) NULL else input_data_mortality$min_age[2])
+      min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2])
 
   testthat::expect_equal(
     object =
@@ -133,7 +135,7 @@ testthat::test_that("results the same fake_monetization|discount_appr_indirect|d
                           discount_rate = 0.01,
                           valuation = 1) |>
       purrr::pluck("monetization_main") |>
-      dplyr::select(monetized_impact) |>
+      dplyr::select(monetized_impact_rounded) |>
       base::unlist() |>
       base::as.numeric() |>
       base::round(),
@@ -146,6 +148,7 @@ testthat::test_that("results the same fake_monetization|discount_appr_direct|dis
   testthat::expect_equal(
     object =
       healthiar::discount(
+        impact = 2E4,
         discount_shape = "exponential",
         discount_rate = 0.03,
         discount_years = 20) |>
@@ -154,6 +157,7 @@ testthat::test_that("results the same fake_monetization|discount_appr_direct|dis
       base::unlist() |>
       base::as.numeric() |>
       base::round(),
-    expect = 14877 # Result on 15 Jan 2025 ; no comparison study
+    expect = 11074 # Result on 15 Jan 2025 ; no comparison study
+    # expect = 14877 # Result on 15 Jan 2025 ; no comparison study # OLD results
   )
 })

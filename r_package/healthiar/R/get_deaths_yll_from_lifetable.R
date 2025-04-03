@@ -17,21 +17,21 @@ get_deaths_yll_from_lifetable <-
            input_with_risk_and_pop_fraction) {
 
     ## Define health_outcome variable
-    health_outcome <- unique(input_with_risk_and_pop_fraction$health_outcome)
+    health_outcome <- base::unique(input_with_risk_and_pop_fraction$health_outcome)
 
     # Determine default time horizon for YLL/YLD if not specified ##############
     if ( health_outcome %in% c("yll") & # And ("yld")  if ever implemented
-         !"time_horizon" %in% names(input_with_risk_and_pop_fraction ) ) {
+         !"time_horizon" %in% base::names(input_with_risk_and_pop_fraction ) ) {
 
         time_horizon <- input_with_risk_and_pop_fraction %>%
           dplyr::slice(1) %>%                      # Select the first row
           dplyr::pull(lifetable_with_pop_nest) %>% # Extract the nested tibble column
           purrr::pluck(1) %>%                      # Get the tibble stored in the first element
-          nrow()
+          base::nrow()
 
         ## Add time_horizon to tibble
         input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
-          mutate(time_horizon = time_horizon)
+          dplyr::mutate(time_horizon = time_horizon)
 
     }
 
@@ -43,10 +43,10 @@ get_deaths_yll_from_lifetable <-
         health_outcome = health_outcome,
         lifeyears_nest =
           purrr::pmap(
-            list(.x =  pop_impact_nest,
-                 max_age = unique(max_age),
-                 min_age = unique(min_age),
-                 health_outcome = unique(health_outcome)),
+            base::list(.x =  pop_impact_nest,
+                 max_age = base::unique(max_age),
+                 min_age = base::unique(min_age),
+                 health_outcome = base::unique(health_outcome)),
             function(.x, max_age, min_age, health_outcome){
 
               # Set values in upper triangle to NA ###############################
@@ -56,18 +56,18 @@ get_deaths_yll_from_lifetable <-
 
                 .x <- .x |>
                   dplyr::mutate(
-                    across(contains("deaths"), ~ {
-                      mat <- as.matrix(.x)
-                      mat[upper.tri(mat, diag = FALSE)] <- NA
+                    dplyr::across(dplyr::contains("deaths"), ~ {
+                      mat <- base::as.matrix(.x)
+                      mat[base::upper.tri(mat, diag = FALSE)] <- NA
                       return(mat)}))
 
               } else {
 
                 .x <- .x |>
                   dplyr::mutate(
-                    across(contains("population"),
-                           ~ {mat <- as.matrix(.x)
-                           mat[upper.tri(mat, diag = FALSE)] <- NA
+                    dplyr::across(dplyr::contains("population"),
+                           ~ {mat <- base::as.matrix(.x)
+                           mat[base::upper.tri(mat, diag = FALSE)] <- NA
                            return(mat)}))
               }
 
@@ -75,13 +75,13 @@ get_deaths_yll_from_lifetable <-
               # Filter for relevant ages #########################################
               # use {{}} to refer to the argument and avoid warnings
 
-              if ( !is.null( max_age) ) {
+              if ( !base::is.null( max_age) ) {
 
                 .x <-
                   dplyr::filter(.x, age <= max_age)
               }
 
-              if ( !is.null( min_age ) ) {
+              if ( !base::is.null( min_age ) ) {
                 .x <-
                   dplyr::filter(.x, age >= min_age)
               }
@@ -91,7 +91,7 @@ get_deaths_yll_from_lifetable <-
               if ( health_outcome %in% c("yll") ) { # And ("yld")  if ever implemented
 
                 .x <- .x |>
-                  dplyr::select(contains("population_")) |>
+                  dplyr::select(dplyr::contains("population_")) |>
 
                   ## Sum over ages (i.e. vertically)
                   ## only ages between "max_age" and "input_with_risk_and_pop_fraction |>  pull(min_age) |> first()" filtered for above
@@ -99,13 +99,13 @@ get_deaths_yll_from_lifetable <-
 
                   ## Reshape to long format
                   ## (output is data frame with 2 columns "year" & "impact")
-                  tidyr::pivot_longer(cols = starts_with("population_"),
+                  tidyr::pivot_longer(cols = dplyr::starts_with("population_"),
                                       names_to = "year",
                                       values_to = "impact",
                                       names_prefix = "population_") |>
 
                   ## Convert year to numeric
-                  dplyr::mutate(year = as.numeric(year))
+                  dplyr::mutate(year = base::as.numeric(year))
               } else
                 .x<-.x}), .before = 1)
 
@@ -154,13 +154,13 @@ get_deaths_yll_from_lifetable <-
             function(.x){
 
               .x <- .x |>
-                dplyr::select(.data = _, all_of(paste0("deaths_", year_of_analysis))) |>
-                sum(na.rm = TRUE)
+                dplyr::select(.data = _, dplyr::all_of(base::paste0("deaths_", year_of_analysis))) |>
+                base::sum(na.rm = TRUE)
               return(.x)
             }
           )
         ) |>
-        dplyr::mutate(impact = as.numeric(impact))
+        dplyr::mutate(impact = base::as.numeric(impact))
 
 
     }
@@ -175,7 +175,7 @@ get_deaths_yll_from_lifetable <-
         ## Add column for year of analysis
         dplyr::mutate(year_of_analysis = year_of_analysis) |>
         ## Add column for time horizon
-        dplyr::mutate(time_horizon = input_with_risk_and_pop_fraction |>  pull(time_horizon) |> first()) |>
+        dplyr::mutate(time_horizon = input_with_risk_and_pop_fraction |>  dplyr::pull(time_horizon) |> dplyr::first()) |>
         ## Add column for last year of analysis
         dplyr::mutate(last_year = year_of_analysis + time_horizon - 1)
 
@@ -184,7 +184,7 @@ get_deaths_yll_from_lifetable <-
 
         dplyr::mutate(
           impact_nest = purrr::pmap(
-            list(.x = lifeyears_nest, .y = last_year, health_outcome = unique(health_outcome)),
+            base::list(.x = lifeyears_nest, .y = last_year, health_outcome = base::unique(health_outcome)),
             function(.x, .y, health_outcome){
 
             ## If yll or yld
@@ -197,7 +197,7 @@ get_deaths_yll_from_lifetable <-
                 dplyr::filter(.data = _, year < .y+1) |>
 
                 ## Sum impact
-                dplyr::summarise(impact = sum(impact, na.rm = TRUE))
+                dplyr::summarise(impact = base::sum(impact, na.rm = TRUE))
 
               return(.x)
             }
@@ -224,17 +224,17 @@ get_deaths_yll_from_lifetable <-
         "erf_ci", "bhd_ci", "exp_ci", "dw_ci", "cutoff_ci", "duration_ci")
 
     id_columns_in_df <-
-      id_columns[id_columns %in% names(impact_detailed)]
+      id_columns[id_columns %in% base::names(impact_detailed)]
 
     id <-
       purrr::pmap_chr(impact_detailed[id_columns_in_df],
-                      ~paste(..., sep = "_"))
+                      ~base::paste(..., sep = "_"))
 
     ## Name rows with the ids for better overview in Environment
     impact_detailed <-
       impact_detailed  |>
-      dplyr::mutate(across(contains("_nest"),
-                           ~set_names(.x,
+      dplyr::mutate(dplyr::across(dplyr::contains("_nest"),
+                           ~rlang::set_names(.x,
                                       id)))
 
     return(impact_detailed)

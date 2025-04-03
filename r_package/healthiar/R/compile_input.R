@@ -158,18 +158,18 @@ compile_input <-
       dplyr::tibble(
         ## First compile input data that are geo-dependent
         ## Use rep() match dimensions
-        geo_id_disaggregated = rep(geo_id_disaggregated,
+        geo_id_disaggregated = base::rep(geo_id_disaggregated,
                                    each = length_exp_dist),
-        geo_id_aggregated = rep(geo_id_aggregated,
+        geo_id_aggregated = base::rep(geo_id_aggregated,
                                 each = length_exp_dist),
-        bhd_central = rep(unlist(bhd_central), each = length_exp_dist),
-        bhd_lower = rep(unlist(bhd_lower), each = length_exp_dist),
-        bhd_upper = rep(unlist(bhd_upper), each = length_exp_dist),
+        bhd_central = base::rep(unlist(bhd_central), each = length_exp_dist),
+        bhd_lower = base::rep(unlist(bhd_lower), each = length_exp_dist),
+        bhd_upper = base::rep(unlist(bhd_upper), each = length_exp_dist),
         # min_age = rep(min_age, each = length_exp_dist),
         # max_age = rep(max_age, each = length_exp_dist),
         # approach_exposure = rep(approach_exposure, each = length_exp_dist),
         # approach_newborns = rep(approach_newborns, each = length_exp_dist),
-        population = rep(unlist(population), each = length_exp_dist),
+        population = base::rep(unlist(population), each = length_exp_dist),
 
         ## Second those variables with length = 1 (non-problematic)
         cutoff_central = cutoff_central,
@@ -224,9 +224,9 @@ compile_input <-
         approach_risk = approach_risk, # RR or AR
         health_outcome = health_outcome,
         exposure_dimension =
-          rep(1:length_exp_dist, length_exp_list),
+          base::rep(1:length_exp_dist, length_exp_list),
         exposure_type =
-          ifelse(length_exp_dist == 1,
+          base::ifelse(length_exp_dist == 1,
                  "population_weighted_mean",
                  "exposure_distribution")) |>
       # Remove all columns with all values being NA
@@ -333,23 +333,23 @@ compile_input <-
         # The function rep(, length.out=)
         # is needed to ensure that the vector length matches with number of rows of the tibble.
         dplyr::mutate(
-          age_end = rep(age_end_sequence, length.out = n()))
+          age_end = base::rep(age_end_sequence, length.out = dplyr::n()))
 
       # Based on the template create lifetable for male
       lifetable_with_pop_male <-
         lifetable_with_pop_template |>
         dplyr::mutate(
           sex = "male",
-          deaths = rep(unlist(deaths_male), length.out = n()),
-          population = rep(unlist(population_midyear_male), length.out = n()))
+          deaths = base::rep(unlist(deaths_male), length.out = dplyr::n()),
+          population = base::rep(unlist(population_midyear_male), length.out = dplyr::n()))
 
       # The same for female
       lifetable_with_pop_female <-
         lifetable_with_pop_template |>
         dplyr::mutate(
           sex = "female",
-          deaths = rep(unlist(deaths_female), length.out = n()),
-          population = rep(unlist(population_midyear_female), length.out = n()))
+          deaths = base::rep(unlist(deaths_female), length.out = dplyr::n()),
+          population = base::rep(unlist(population_midyear_female), length.out = dplyr::n()))
 
       lifetable_with_pop_male_female <-
         # Bind male and female tibbles

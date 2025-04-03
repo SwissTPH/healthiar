@@ -26,7 +26,7 @@ get_pop_impact <-
     options(digits = 15)
 
 
-    health_outcome <- unique(input_with_risk_and_pop_fraction$health_outcome)
+    health_outcome <- base::unique(input_with_risk_and_pop_fraction$health_outcome)
 
     # Code deactivated because yld from lifetable is not implemented (yet)
     # if (health_outcome %in% c("yld", "daly")){
@@ -58,11 +58,11 @@ get_pop_impact <-
 # browser()
     # Store variables for population_year
     # Year Of Analysis (YOA)
-    population_yoa <- paste0("population_", input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first())
-    population_yoa_entry <- paste0(population_yoa,"_entry")
-    population_yoa_plus_1_entry <- paste0("population_", input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first()+1,"_entry")
-    population_yoa_end <- paste0("population_", input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first(),"_end")
-    deaths_yoa <- paste0("deaths_", input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first())
+    population_yoa <- base::paste0("population_", input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first())
+    population_yoa_entry <- base::paste0(population_yoa,"_entry")
+    population_yoa_plus_1_entry <- base::paste0("population_", input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first()+1,"_entry")
+    population_yoa_end <- base::paste0("population_", input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first(),"_end")
+    deaths_yoa <- base::paste0("deaths_", input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first())
 
 
     # ADD ENTRY POPULATION OF YOA & SURVIVAL PROBABILITIES
@@ -80,15 +80,15 @@ get_pop_impact <-
 
                 # CALCULATE ENTRY POPULATION OF YEAR OF ANALYSIS (YOA)
                 dplyr::mutate(
-                  !!population_yoa_entry := !!sym(population_yoa) + (deaths / 2),
+                  !!population_yoa_entry := !!dplyr::sym(population_yoa) + (deaths / 2),
                   .before = !!population_yoa) |>
 
                 # CALCULATE PROBABILITY OF SURVIVAL FROM START YEAR TO END YEAR & START YEAR TO MID YEAR
                 # probability of survival from start of year i to start of year i+1 (entry to entry)
                 dplyr::mutate(
                   prob_survival =
-                    (!!sym(population_yoa) - (deaths / 2)) /
-                    (!!sym(population_yoa) + (deaths / 2) ),
+                    (!!dplyr::sym(population_yoa) - (deaths / 2)) /
+                    (!!dplyr::sym(population_yoa) + (deaths / 2) ),
                   .after = deaths) |>
 
                 # Probability of survival from start to midyear
@@ -100,7 +100,7 @@ get_pop_impact <-
 
                 # Hazard rate for calculating survival probabilities
                 dplyr::mutate(
-                  hazard_rate = deaths / !!sym(population_yoa),
+                  hazard_rate = deaths / !!dplyr::sym(population_yoa),
                   .after = deaths)
             }
           )
@@ -118,7 +118,7 @@ get_pop_impact <-
               # Calculate modified hazard rate = modification factor * hazard rate = mod factor * (deaths / mid-year pop)
               dplyr::mutate(
                 hazard_rate_mod =
-                  dplyr::if_else(age_end > c(rep_len(input_with_risk_and_pop_fraction |>  pull(min_age) |> first(), length.out = length(age_end))), # This makes sure comparators are of same length
+                  dplyr::if_else(age_end > c(rep_len(input_with_risk_and_pop_fraction |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
                                  modification_factor * hazard_rate,
                                  hazard_rate),
                 .after = deaths) |>
@@ -127,14 +127,14 @@ get_pop_impact <-
               # ( 2 - modified hazard rate ) / ( 2 + modified hazard rate )
               dplyr::mutate(
                 prob_survival_mod =
-                  dplyr::if_else(age_end > c(rep_len(input_with_risk_and_pop_fraction |>  pull(min_age) |> first(), length.out = length(age_end))), # This makes sure comparators are of same length
+                  dplyr::if_else(age_end > c(rep_len(input_with_risk_and_pop_fraction |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
                                  (2 - hazard_rate_mod) / (2 + hazard_rate_mod),
                                  prob_survival),
                 .after = deaths) |>
 
               dplyr::mutate(
                 prob_survival_until_mid_year_mod =
-                  dplyr::if_else(age_end > c(rep_len(input_with_risk_and_pop_fraction |>  pull(min_age) |> first(), length.out = length(age_end))), # This makes sure comparators are of same length
+                  dplyr::if_else(age_end > c(rep_len(input_with_risk_and_pop_fraction |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
                                  1 - ((1 - prob_survival_mod) / 2),
                                  prob_survival_until_mid_year),
                 .after = deaths)
@@ -158,18 +158,18 @@ get_pop_impact <-
                 # End-of-year population YOA = entry pop YOA * ( survival probability )
                 dplyr::mutate(
                   !!population_yoa_end :=
-                    !!sym(population_yoa_entry) * prob_survival) |>
+                    !!dplyr::sym(population_yoa_entry) * prob_survival) |>
 
                 # Deaths YOA = End pop YOA - Entry pop YOA
                 dplyr::mutate(
                   !!deaths_yoa :=
-                    !!sym(population_yoa_entry) - !!sym(population_yoa_end),
-                  .after =  !!sym(population_yoa)) |>
+                    !!dplyr::sym(population_yoa_entry) - !!dplyr::sym(population_yoa_end),
+                  .after =  !!dplyr::sym(population_yoa)) |>
 
                 # Entry population YOA+1 = lag ( End-of-year population YOA )
                 dplyr::mutate(
                   !!population_yoa_plus_1_entry :=
-                    lag(!!sym(population_yoa_end)))
+                    lag(!!dplyr::sym(population_yoa_end)))
               }
             )
         , .after = lifetable_with_pop_nest)
@@ -191,20 +191,20 @@ get_pop_impact <-
 
               # MID-YEAR POP = (ENTRY POP) * ( survival probability until mid year )
               dplyr::mutate(!!population_yoa :=
-                              !!sym(population_yoa_entry) * prob_survival_until_mid_year_mod) |>
+                              !!dplyr::sym(population_yoa_entry) * prob_survival_until_mid_year_mod) |>
 
               # Calculate end-of-year population in YOA to later determine premature deaths
               dplyr::mutate(!!population_yoa_end :=
-                              !!sym(population_yoa_entry) * prob_survival_mod) |>
+                              !!dplyr::sym(population_yoa_entry) * prob_survival_mod) |>
 
               # Deaths YOA = End pop YOA - Entry pop YOA
               dplyr::mutate(!!deaths_yoa :=
-                              !!sym(population_yoa_entry) - !!sym(population_yoa_end),
-                            .after =  !!sym(population_yoa)) |>
+                              !!dplyr::sym(population_yoa_entry) - !!dplyr::sym(population_yoa_end),
+                            .after =  !!dplyr::sym(population_yoa)) |>
 
               # Entry population YOA+1 = lag ( End-of-year population YOA )
               dplyr::mutate(!!population_yoa_plus_1_entry :=
-                              lag(!!sym(population_yoa_end)))
+                              lag(!!dplyr::sym(population_yoa_end)))
 
            }
          )
@@ -214,7 +214,7 @@ get_pop_impact <-
     # PREMATURE DEATHS (SINGLE YEAR EXPOSURE) ######################################################
     # YOA = YEAR OF ANALYSIS
     if (health_outcome == "deaths" &
-        unique(input_with_risk_and_pop_fraction |> dplyr::select(contains("approach_exposure"))== "single_year")[1]) {
+        base::unique(input_with_risk_and_pop_fraction |> dplyr::select(dplyr::contains("approach_exposure"))== "single_year")[1]) {
 
       pop <- pop |>
         # Premature deaths = ( impacted scenario YOA end-of-year population ) - ( baseline scenario YOA end-of-year pop )
@@ -234,7 +234,7 @@ get_pop_impact <-
     # YLL & PREMATURE DEATHS (CONSTANT EXPOSURE) ####################################################
 
     if ((health_outcome %in% c("yll")| #And  ("yld", "daly") if yld from lifetable ever implemented
-         (unique(input_with_risk_and_pop_fraction |> dplyr::select(contains("approach_exposure")) == "constant")[1] & health_outcome == "deaths"))) {
+         (base::unique(input_with_risk_and_pop_fraction |> dplyr::select(dplyr::contains("approach_exposure")) == "constant")[1] & health_outcome == "deaths"))) {
 
       ## PROJECT POPULATIONS #########################################################################
 
@@ -250,27 +250,27 @@ get_pop_impact <-
         # Define the years based on number_years
         # e.g. 2020 to 2118
         years_projection <-
-          (input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first() + 1) : (input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first() + number_years)
+          (input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first() + 1) : (input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first() + number_years)
 
         # Initialize matrices for entry population, mid-year population, and deaths
         pop_entry <- matrix(NA, nrow = 100, ncol = number_years)
         # Provide column names (population_year)
         # e.g. population_2020 to population_2118
         colnames(pop_entry) <-
-          paste0("population_", years_projection , "_entry")
+          base::paste0("population_", years_projection , "_entry")
 
         # Same for mid-year population
         pop_mid <- matrix(NA, nrow = 100, ncol = number_years)
         colnames(pop_mid) <-
-          paste0("population_", years_projection)
+          base::paste0("population_", years_projection)
 
         # Same for deaths
         deaths <- matrix(NA, nrow = 100, ncol = number_years)
         colnames(deaths) <-
-          paste0("deaths_", years_projection)
+          base::paste0("deaths_", years_projection)
 
         # Set initial population for the first year (2020)
-        pop_entry[, 1] <- df[[paste0("population_", input_with_risk_and_pop_fraction |>  pull(year_of_analysis) |> first() + 1, "_entry")]]
+        pop_entry[, 1] <- df[[base::paste0("population_", input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first() + 1, "_entry")]]
         pop_mid[, 1] <- pop_entry[, 1] * prob_survival_until_mid_year
         deaths[, 1] <- pop_entry[, 1] * (1 - prob_survival)
 
@@ -307,7 +307,7 @@ get_pop_impact <-
       ### SINGLE YEAR EXPOSURE #######################################################################
       # Determine YLLs for baseline and impacted scenario's in the single year exposure case
 
-      if (unique(input_with_risk_and_pop_fraction |> dplyr::select(contains("approach_exposure")) == "single_year")[1]){
+      if (base::unique(input_with_risk_and_pop_fraction |> dplyr::select(dplyr::contains("approach_exposure")) == "single_year")[1]){
 
         # PROJECT POPULATIONS IN BOTH IMPACTED AND BASELINE SCENARIO FROM YOA+1 UNTIL THE END
         # USING MODIFIED SURVIVAL PROBABILITIES (BECAUSE AFTER YOA THERE IS NO MORE AIR POLLUTION)
@@ -386,13 +386,13 @@ get_pop_impact <-
                 dplyr::select(age, age_end)
 
               pop_impacted <- .x |>
-                dplyr::select(contains("population"),
+                dplyr::select(dplyr::contains("population"),
                               -population_2019_end,
-                              -contains("entry"))
+                              -dplyr::contains("entry"))
               pop_baseline <- .y |>
-                dplyr::select(contains("population"),
+                dplyr::select(dplyr::contains("population"),
                               -population_2019_end,
-                              -contains("entry"))
+                              -dplyr::contains("entry"))
 
               # Difference in mid-year populations of baseline and impacted scenario equals attributable YLL
               pop_diff <-
@@ -419,10 +419,10 @@ get_pop_impact <-
             function(.x, .y){
 
               pop_baseline <- .x |>
-                dplyr::select(contains("deaths"),
+                dplyr::select(dplyr::contains("deaths"),
                               -deaths)
               pop_impacted <- .y |>
-                dplyr::select(contains("deaths"),
+                dplyr::select(dplyr::contains("deaths"),
                               -deaths)
 
               ages <- .x |>
@@ -453,12 +453,12 @@ get_pop_impact <-
               ~.x |>
                 # replace "deaths" with "population"
                 # dplyr::rename_with(~ stringr::str_replace(., "deaths", "population"))
-                dplyr::rename_with(~ gsub("population", "deaths", .), contains("population"))
+                dplyr::rename_with(~ gsub("population", "deaths", .), dplyr::contains("population"))
             ))
 
       ## NEWBORNS #################################################################
 
-      if (unique(input_with_risk_and_pop_fraction |> select(contains("approach_newborns")) == "with_newborns")[1]) {
+      if (base::unique(input_with_risk_and_pop_fraction |> dplyr::select(dplyr::contains("approach_newborns")) == "with_newborns")[1]) {
 
         fill_right_of_diag <- function(tbl) {
           for (i in seq_len(nrow(tbl))) {
@@ -518,7 +518,7 @@ get_pop_impact <-
       pop_impact <-
         input_with_risk_and_pop_fraction |>
         dplyr::right_join(pop, by = joining_columns_pop_impact) |>
-        relocate(contains("nest"), .before = 1)}
+        dplyr::relocate(dplyr::contains("nest"), .before = 1)}
 
 
       # Code deactivated because yld from lifetable is not implemented (yet)
@@ -526,13 +526,13 @@ get_pop_impact <-
     # else if(health_outcome %in% c("yld", "daly")) {
     #
     #   pop <- pop |>
-    #     select(geo_id_disaggregated, contains("exp"), contains("prop_pop_exp"), rr, erf_ci, sex, # Variables to merge by
-    #            -contains("_2"), # Remove all "..._2" variables (e.g. "exp_2"); relevant in "compare_..." function calls
-    #            contains("_nest"),
-    #            -contains("approach_exposure"),
-    #            -contains("exposure_dimension"),
-    #            -contains("exposure_type"),
-    #            -contains("exp_ci"))
+    #     dplyr::select(geo_id_disaggregated, dplyr::contains("exp"), dplyr::contains("prop_pop_exp"), rr, erf_ci, sex, # Variables to merge by
+    #            -dplyr::contains("_2"), # Remove all "..._2" variables (e.g. "exp_2"); relevant in "compare_..." function calls
+    #            dplyr::contains("_nest"),
+    #            -dplyr::contains("approach_exposure"),
+    #            -dplyr::contains("exposure_dimension"),
+    #            -dplyr::contains("exposure_type"),
+    #            -dplyr::contains("exp_ci"))
     #
     #   if( is_empty((grep("_1", names(pop))))){
     #     pop_impact <- input_backup |>
