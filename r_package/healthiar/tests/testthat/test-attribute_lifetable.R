@@ -1,3 +1,5 @@
+# YLL from lifetable ###########################################################
+
 testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
@@ -6,7 +8,8 @@ testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_singl
 
   testthat::expect_equal(
     object =
-      healthiar::attribute_yll_from_lifetable(
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
         approach_exposure = "single_year",
         exp_central = data_mort$exp[2], #exp CH 2019
         prop_pop_exp = 1,
@@ -42,7 +45,8 @@ testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_const
 
   testthat::expect_equal(
     object =
-      healthiar::attribute_yll_from_lifetable(
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
         approach_exposure = "constant",
         approach_newborns = "without_newborns",
         exp_central = data[["input"]]$mean_concentration,
@@ -78,7 +82,8 @@ testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_const
 
   testthat::expect_equal(
     object =
-      healthiar::attribute_yll_from_lifetable(
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
         approach_exposure = "constant",
         approach_newborns = "with_newborns",
         exp_central = data[["input"]]$mean_concentration,
@@ -115,7 +120,8 @@ testthat::test_that("results correct pathway_lifetable|exp_dist|exp_time_single_
 
   testthat::expect_equal(
     object =
-      healthiar::attribute_yll_from_lifetable(
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
         exp_central = c(8, 9, 10), # Fake data just for testing purposes
         prop_pop_exp = c(0.2, 0.3, 0.5), # Fake data just for testing purposes
         cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
@@ -143,3 +149,6 @@ testthat::test_that("results correct pathway_lifetable|exp_dist|exp_time_single_
     tolerance = 0.1
   )
 })
+
+# DEATHS #######################################################################
+
