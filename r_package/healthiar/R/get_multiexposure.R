@@ -3,8 +3,8 @@
 #' @description
 #' Aggregates health impacts from multiple exposures to environmental stressors.
 #' @param output_attribute_1,output_attribute_2  Output of attribute() for exposure 1 and 2 resp.Baseline health data and population cannot be different in exposure 1 and 2.
-#' @param exposure_name_1,exposure_name_2 \code{String} referring to the name of the exposure 1 and 2 to the environmental stressors.
-#' @param approach \code{String} specifying the approach that has to be used in assessments with multiple exposures. To choose among: "additive" (default), "multiplicative" or "combined".
+#' @param exposure_name_1,exposure_name_2 \code{String} referring to the name of the environmental exposures 1 and 2
+#' @param approach \code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined".
 #' @author Alberto Castro & Axel Luyten
 #' @note Experimental function
 #' @export
