@@ -683,3 +683,36 @@ testthat::test_that("detailed results the same rr yld with variable uncertaintie
     expected = # Result on 2025-01-20; no comparison study
       c(525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 658, 329, 6583, 132, 66, 1317, 13165, 6583, 131651, 391, 196, 3911, 78, 39, 782, 7822, 3911, 78223, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 348, 174, 3483, 70, 35, 697, 6966, 3483, 69662, 206, 103, 2059, 41, 21, 412, 4117, 2059, 41174, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572, 959, 480, 9595, 192, 96, 1919, 19189, 9595, 191894, 573, 287, 5731, 115, 57, 1146, 11461, 5731, 114615, 391, 196, 3911, 78, 39, 782, 7822, 3911, 78223, 525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 255, 128, 2553, 51, 26, 511, 5106, 2553, 51059, 206, 103, 2059, 41, 21, 412, 4117, 2059, 41174, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 134, 67, 1340, 27, 13, 268, 2680, 1340, 26805, 573, 287, 5731, 115, 57, 1146, 11461, 5731, 114615, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572, 375, 188, 3750, 75, 38, 750, 7501, 3750, 75010, 658, 329, 6583, 132, 66, 1317, 13165, 6583, 131651, 790, 395, 7896, 158, 79, 1579, 15792, 7896, 157921, 525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 348, 174, 3483, 70, 35, 697, 6966, 3483, 69662, 419, 209, 4189, 84, 42, 838, 8378, 4189, 83782, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 959, 480, 9595, 192, 96, 1919, 19189, 9595, 191894, 1148, 574, 11479, 230, 115, 2296, 22959, 11479, 229589, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572))
 })
+
+## YLD #########################################################################
+
+testthat::test_that("results correct ar yld with uncertainties in dw and duration", {
+
+  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  niph_noise_ha_input <-
+    niph_noise_ha_excel |>
+    dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean))
+
+  testthat::expect_equal(
+    object = healthiar::attribute_health(
+      approach_risk = "absolute_risk",
+      exp_central = data$exposure_mean,
+      # population = sum(data$population_exposed_total),
+      # prop_pop_exp = data$population_exposed_total/sum(data$population_exposed_total),
+      pop_exp = data$population_exposed_total,
+      erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+      dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+      duration_central = 1, duration_lower = 0.1, duration_upper = 10,
+      info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")) |>
+      helper_extract_main_results(),
+    expected = data_raw |>
+      dplyr::filter(exposure_category %in% "Total exposed")|>
+      dplyr::select(number)|>
+      dplyr::pull() |>
+      round() / 2 # With dw_central = 0.5 & duration_central = 1 the expected results are half of those we would obtain without dw & duration arguments
+  )
+})
