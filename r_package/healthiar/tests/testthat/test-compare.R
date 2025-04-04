@@ -210,6 +210,143 @@ testthat::test_that("results correct delta comparison iteration (high number of 
   )
 })
 
+## YLD #########################################################################
+
+testthat::test_that("results correct delta comparison yld rr single exposure", {
+
+  scen_1_singlebhd_yld <-
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+      duration_central = 1, duration_lower = 0.5, duration_upper = 10)
+
+  scen_2_singlebhd_yld <-
+    healthiar::attribute_mod(
+      output_attribute_1 = scen_1_singlebhd_yld,
+      exp_central = 6)
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_1 = scen_1_singlebhd_yld,
+        output_attribute_2 = scen_2_singlebhd_yld) |>
+      helper_extract_main_results(),
+    expected =
+      c(387, 205, 564) # Result on 16 May 2024; no comparison study
+  )
+})
+
+testthat::test_that("results correct delta comparison yld iteration rr single exposure", {
+
+  scen_1_singlebhd_yld_geo <-
+    healthiar::attribute_health(
+      exp_central = list(8.85, 8.0),
+      cutoff_central = 5,
+      bhd_central = 25000,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      dw_central = 0.5,
+      duration_central = 1,
+      info = "PM2.5_yld_before",
+      geo_id_disaggregated = c("a", "b"),
+      geo_id_aggregated = rep("ch", 2))
+
+  scen_2_singlebhd_yld_geo <-
+    attribute_mod(
+      output_attribute_1 = scen_1_singlebhd_yld_geo,
+      exp_central = list(6, 6.5),
+      info = "PM2.5_yld_after")
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_1 = scen_1_singlebhd_yld_geo,
+        output_attribute_2 = scen_2_singlebhd_yld_geo) |>
+      helper_extract_main_results(),
+    expected =
+      c(591, 313, 861) # Result on 26 June 2024; no comparison study
+  )
+})
+
+testthat::test_that("results correct pif comparison yld rr single exposure", {
+
+  scen_1_singlebhd_yld <-
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+      duration_central = 1, duration_lower = 0.5, duration_upper = 10)
+
+  scen_2_singlebhd_yld <-
+    healthiar::attribute_mod(
+      output_attribute_1 = scen_1_singlebhd_yld,
+      exp_central = 6)
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_1 = scen_1_singlebhd_yld,
+        output_attribute_2 = scen_2_singlebhd_yld,
+        approach_comparison = "pif") |>
+      helper_extract_main_results(),
+    expected =
+      c(391,206,573) # Result on 16 May 2024; no comparison study
+  )
+})
+
+testthat::test_that("results correct pif comparison yld iteration rr single exposure", {
+
+  scen_1_singlebhd_yld_geo <-
+    healthiar::attribute_health(
+      exp_central = list(8.85, 8.0),
+      cutoff_central = 5,
+      bhd_central = 25000,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      dw_central = 0.5,
+      duration_central = 1,
+      info = "PM2.5_yld_before",
+      geo_id_disaggregated = c("a", "b"),
+      geo_id_aggregated = rep("ch", 2))
+
+  scen_2_singlebhd_yld_geo <-
+    attribute_mod(
+      output_attribute_1 = scen_1_singlebhd_yld_geo,
+      exp_central = list(6, 6.5),
+      info = "PM2.5_yld_after")
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_1 = scen_1_singlebhd_yld_geo,
+        output_attribute_2 = scen_2_singlebhd_yld_geo,
+        approach_comparison = "pif") |>
+      helper_extract_main_results(),
+    expected =
+      c(599, 315, 878) # Result on 20 June 2024; no comparison study
+  )
+})
+
+
 # ABSOLUTE RISK ################################################################
 
 # Note: no PIF option in ar
