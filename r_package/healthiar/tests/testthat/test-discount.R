@@ -12,6 +12,7 @@ testthat::test_that("results correct direct discounting without valuation with e
       base::unlist() |>
       base::as.numeric() |>
       base::round(),
-    expect = 14877 # Result on 15 Jan 2025
+    # expect = 14877 # Result on 15 Jan 2025 # OLD
+    expect = 11074 # Result on 10 March 2025 according to ChatGPT
   )
 })
