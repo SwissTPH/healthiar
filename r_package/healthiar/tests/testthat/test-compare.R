@@ -428,9 +428,12 @@ testthat::test_that("results correct delta comparison iteration ar exposure dist
 testthat::test_that("results correct delta comparison lifetable yll rr single exposure", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  airqplus_pm_deaths_yll <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  lifetable_withPopulation <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
-  scen_1_yll_lifetable <-
+
+  scen_1_yll_lifetable_test <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
       exp_central = 8.85, # Fake data just for testing purposes
@@ -452,17 +455,17 @@ testthat::test_that("results correct delta comparison lifetable yll rr single ex
       year_of_analysis = 2019,
       min_age = 20)
 
-  scen_2_yll_lifetable <-
+  scen_2_yll_lifetable_test <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yll_lifetable,
+      output_attribute_1 = scen_1_yll_lifetable_test,
       exp_central = 6) # Fake data just for testing purposes
 
 
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_yll_lifetable,
-        output_attribute_2 = scen_2_yll_lifetable) |>
+        output_attribute_1 = scen_1_yll_lifetable_test,
+        output_attribute_2 = scen_2_yll_lifetable_test) |>
       helper_extract_main_results(),
 
     expected =
