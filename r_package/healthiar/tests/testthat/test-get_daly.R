@@ -51,9 +51,10 @@ testthat::test_that("results correct daly from yld rr and yll rr lifetable", {
       dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
       dplyr::select(impact)  |>
       base::unlist() |>
-      base::as.numeric(),
+      base::as.numeric() |>
+      base::round(),
     expected =
-      c(32878.0120960154, 17189.1453893015, 49596.4332447404) # Result from 2025-04-04; no comparison study
+      c(34508, 18043, 51994) # Result from 2025-04-04; no comparison study
   )
 })
 

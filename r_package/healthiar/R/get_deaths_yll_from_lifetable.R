@@ -23,10 +23,10 @@ get_deaths_yll_from_lifetable <-
     if ( health_outcome %in% c("yll") & # And ("yld")  if ever implemented
          !"time_horizon" %in% base::names(input_with_risk_and_pop_fraction ) ) {
 
-        time_horizon <- input_with_risk_and_pop_fraction %>%
-          dplyr::slice(1) %>%                      # Select the first row
-          dplyr::pull(lifetable_with_pop_nest) %>% # Extract the nested tibble column
-          purrr::pluck(1) %>%                      # Get the tibble stored in the first element
+        time_horizon <- input_with_risk_and_pop_fraction |>
+          dplyr::slice(1) |>                      # Select the first row
+          dplyr::pull(lifetable_with_pop_nest) |> # Extract the nested tibble column
+          purrr::pluck(1) |>                      # Get the tibble stored in the first element
           base::nrow()
 
         ## Add time_horizon to tibble

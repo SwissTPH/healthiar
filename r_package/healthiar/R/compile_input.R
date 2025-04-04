@@ -390,8 +390,8 @@ compile_input <-
 
         # Calculate total population for impacts per 100k inhab.
         population <-
-          lifetable_with_pop_total %>%
-          dplyr::group_by(geo_id_disaggregated) %>%
+          lifetable_with_pop_total |>
+          dplyr::group_by(geo_id_disaggregated) |>
           dplyr::summarize(population = sum(population, rm.na = TRUE))
 
         # Join the input without and with lifetable variable into one tibble

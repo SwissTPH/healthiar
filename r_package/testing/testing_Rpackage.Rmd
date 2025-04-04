@@ -47,7 +47,7 @@ remotes::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
   # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
-  # ref = "578-error-in-installation-caused-by-intro-vignette",
+  ref = "582-implement-new-function-structure-in-existing-tests",
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   # dependencies = TRUE,
@@ -1443,7 +1443,8 @@ check_bestcost(result_list_bestcost = bestcost_daly_from_yll_yld,
                  bestcost_pm_yll[["health_main"]]$impact + 
                  bestcost_pm_yld[["health_main"]]$impact)
 
-
+bestcost_pm_yll[["health_main"]]$impact + 
+                 bestcost_pm_yld[["health_main"]]$impact
 ```
 
 
@@ -2161,8 +2162,6 @@ comparison_daly_pif_geo <-
 # Check only if results stay the same overtime despite developments
 check_bestcost(result_list_bestcost = comparison_daly_pif_geo,
                result_vector_alternative = c(34255, 17885, 51773)) # Result on 21 March 2025
-
-
 
 ```
 

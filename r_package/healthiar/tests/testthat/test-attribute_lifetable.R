@@ -34,7 +34,7 @@ testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_singl
       base::unlist() |>
       base::as.numeric(),
     expected =
-      c(2974.89, 15328.16,	43118.30), # AirQ+ results from "Lifetable_CH_2019_PM_single_year_AP_no_newborns_default.csv"
+      c(29274.89, 15328.16,	43118.30), # AirQ+ results from "Lifetable_CH_2019_PM_single_year_AP_no_newborns_default.csv"
     tolerance = 0.49 # I.e. less than 1 YLL
   )
 })
@@ -55,9 +55,9 @@ testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_const
         rr_lower = data[["input"]]$relative_risk_lower,
         rr_upper = data[["input"]]$relative_risk_upper,
         rr_increment = 10,
-        erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
-        first_age_pop = first(data[["pop"]]$age_from...),
-        last_age_pop = last(data[["pop"]]$age_from...),
+        erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
+        first_age_pop = dplyr::first(data[["pop"]]$age_from...),
+        last_age_pop = dplyr::last(data[["pop"]]$age_from...),
         population_midyear_male = data[["pop"]]$midyear_population_male,
         population_midyear_female = data[["pop"]]$midyear_population_female,
         deaths_male = data[["pop"]]$number_of_deaths_male,
@@ -92,9 +92,9 @@ testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_const
         rr_lower = data[["input"]]$relative_risk_lower,
         rr_upper = data[["input"]]$relative_risk_upper,
         rr_increment = 10,
-        erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
-        first_age_pop = first(data[["pop"]]$age_from...),
-        last_age_pop = last(data[["pop"]]$age_from...),
+        erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
+        first_age_pop = dplyr::first(data[["pop"]]$age_from...),
+        last_age_pop = dplyr::last(data[["pop"]]$age_from...),
         population_midyear_male = data[["pop"]]$midyear_population_male,
         population_midyear_female = data[["pop"]]$midyear_population_female,
         deaths_male = data[["pop"]]$number_of_deaths_male,
@@ -168,9 +168,9 @@ testthat::test_that("results correct lifetable premature deaths single year expo
         rr_lower = data[["input"]]$relative_risk_lower,
         rr_upper = data[["input"]]$relative_risk_upper,
         rr_increment = 10,
-        erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
-        first_age_pop = first(data[["pop"]]$age_from...),
-        last_age_pop = last(data[["pop"]]$age_from...),
+        erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
+        first_age_pop = dplyr::first(data[["pop"]]$age_from...),
+        last_age_pop = dplyr::last(data[["pop"]]$age_from...),
         deaths_male = data[["pop"]]$number_of_deaths_male,
         deaths_female = data[["pop"]]$number_of_deaths_female,
         population_midyear_male = data[["pop"]]$midyear_population_male,

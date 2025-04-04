@@ -78,7 +78,8 @@ testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRU
         erf_shape = "log_linear",
         info = paste0(data$pollutant,"_", data$evaluation_name)
       ) |>
-      helper_extract_detailed_results(),
+      helper_extract_detailed_results() |>
+      base::round(),
     expected = # Results on 2025-01-17; no comparison study
       c(3502, 4344, 2633, 3502, 4344, 2633, 3502, 4345, 2633, 1353, 1695, 1007, 1353, 1695, 1007, 1353, 1695, 1007, 5474, 6729, 4154, 5474, 6728, 4153, 5474, 6729, 4154, 2633, 3502, 1736, 2633, 3502, 1736, 2633, 3502, 1736, 1007, 1353, 658, 1007, 1353, 658, 1007, 1353, 658, 4154, 5474, 2764, 4153, 5474, 2764, 4154, 5474, 2764, 4344, 5161, 3502, 4344, 5161, 3502, 4345, 5161, 3502, 1695, 2032, 1353, 1695, 2032, 1353, 1695, 2032, 1353, 6729, 7921, 5474, 6728, 7921, 5474, 6729, 7921, 5474)
   )
@@ -108,7 +109,8 @@ testthat::test_that("detailed result the same fake_rr|erf_log_lin|exp_single|cut
         erf_shape = "log_linear",
         info = paste0(data$pollutant,"_", data$evaluation_name)
       ) |>
-      helper_extract_detailed_results(),
+      helper_extract_detailed_results() |>
+      base::round(),
     expected = # Results on 2025-01-17; no comparison study
       c(3502, 4344, 2633, 3502, 4344, 2633, 3502, 4345, 2633, 1353, 1695, 1007, 1353, 1695, 1007, 1353, 1695, 1007, 5474, 6729, 4154, 5474, 6728, 4153, 5474, 6729, 4154, 2633, 3502, 1736, 2633, 3502, 1736, 2633, 3502, 1736, 1007, 1353, 658, 1007, 1353, 658, 1007, 1353, 658, 4154, 5474, 2764, 4153, 5474, 2764, 4154, 5474, 2764, 4344, 5161, 3502, 4344, 5161, 3502, 4345, 5161, 3502, 1695, 2032, 1353, 1695, 2032, 1353, 1695, 2032, 1353, 6729, 7921, 5474, 6728, 7921, 5474, 6729, 7921, 5474)
   )
