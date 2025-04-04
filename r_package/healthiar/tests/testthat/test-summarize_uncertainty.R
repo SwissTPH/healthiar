@@ -1,4 +1,4 @@
-# rr ###########################################################################
+# RR ###########################################################################
 testthat::test_that("results correct pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|distribution_normal|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
@@ -183,7 +183,7 @@ testthat::test_that("results correct yld pathway_uncertainty|exp_single|erf_rr_i
   )
 })
 
-# ar ###########################################################################
+# AR ###########################################################################
 
 testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|distribution_normal|", {
 
