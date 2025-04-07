@@ -428,10 +428,11 @@ testthat::test_that("results correct delta comparison iteration ar exposure dist
 testthat::test_that("results correct delta comparison lifetable yll rr single exposure", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  airqplus_pm_deaths_yll <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  lifetable_withPopulation <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  # airqplus_pm_deaths_yll <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  # data <- airqplus_pm_deaths_yll
+  # lifetable_withPopulation <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
-
+  # data_lifetable <- lifetable_withPopulation
 
   scen_1_yll_lifetable_test <-
     healthiar::attribute_lifetable(
