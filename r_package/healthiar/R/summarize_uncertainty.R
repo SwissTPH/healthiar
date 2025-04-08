@@ -493,7 +493,7 @@ summarize_uncertainty <- function(
                        )
       prop_pop_exp <- results[["health_detailed"]][["impact_raw"]] |>
         dplyr::select(geo_id_disaggregated, prop_pop_exp) |>
-        distinct(geo_id_disaggregated, .keep_all = TRUE)
+        dplyr::distinct(geo_id_disaggregated, .keep_all = TRUE)
 
       ## Create vectors of column names
       exp_columns <- paste0("exp_", dat_exp |>
@@ -514,8 +514,8 @@ summarize_uncertainty <- function(
         geo_id_disaggregated = character(0)  # Initialize geo_id_disaggregated as numeric
       ) |>
         dplyr::bind_cols(
-          set_names(rep(list(numeric(0)), length(exp_columns)), exp_columns),
-          set_names(rep(list(numeric(0)), length(prop_columns)), prop_columns)
+          purrr::set_names(rep(list(numeric(0)), length(exp_columns)), exp_columns),
+          purrr::set_names(rep(list(numeric(0)), length(prop_columns)), prop_columns)
         )
 
       ## Loop through geo ID's
@@ -524,7 +524,7 @@ summarize_uncertainty <- function(
         ## Create temp tibble to store simulated values in
         temp <- tibble::tibble(
           geo_id_disaggregated = rep(i, times = n_sim)) |>
-          bind_cols(
+          dplyr::bind_cols(
             purrr::map(
               ## .x will take the values 1, 2, ..., (nr. of exposure categories)
               .x = seq_along(
@@ -538,11 +538,11 @@ summarize_uncertainty <- function(
                   ## For each exposure category generate n_sim simulated values
                   rnorm(
                     n_sim,
-                    mean = dat_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_central) |> unlist(x = _) |> nth(.x) ,
-                    sd = ( dat_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_upper) |> unlist(x = _) |> nth(.x) -
-                             dat_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_lower) |> unlist(x = _) |> nth(.x) ) / (2 * 1.96) # Formula: exp_upper - exp_lower) / (2 * 1.96)
+                    mean = dat_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_central) |> unlist(x = _) |> dplyr::nth(.x) ,
+                    sd = ( dat_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_upper) |> unlist(x = _) |> dplyr::nth(.x) -
+                             dat_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_lower) |> unlist(x = _) |> dplyr::nth(.x) ) / (2 * 1.96) # Formula: exp_upper - exp_lower) / (2 * 1.96)
                   ),
-                !!paste0("prop_pop_exp_", .x) := prop_pop_exp|> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(prop_pop_exp) |> unlist(x = _) |> nth(.x)
+                !!paste0("prop_pop_exp_", .x) := prop_pop_exp|> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(prop_pop_exp) |> unlist(x = _) |> dplyr::nth(.x)
               )) |>
               purrr::reduce(bind_cols)
           )
@@ -1020,8 +1020,8 @@ summarize_uncertainty <- function(
         geo_id_disaggregated = character(0)  # Initialize geo_id_disaggregated as numeric
       ) |>
         dplyr::bind_cols(
-          set_names(rep(list(numeric(0)), length(exp_columns)), exp_columns),
-          set_names(rep(list(numeric(0)), length(pop_columns)), pop_columns)
+          purrr::set_names(rep(list(numeric(0)), length(exp_columns)), exp_columns),
+          purrr::set_names(rep(list(numeric(0)), length(pop_columns)), pop_columns)
         )
 
       for (i in exp_central$geo_id_disaggregated){
@@ -1043,12 +1043,12 @@ summarize_uncertainty <- function(
                   ## For each exposure category generate n_sim simulated values
                   rnorm(
                     n_sim,
-                    mean = dat_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_central) |> unlist(x = _) |> nth(.x) ,
+                    mean = dat_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_central) |> unlist(x = _) |> dplyr::nth(.x) ,
                     # Formula for standard deviation (sd): exp_upper - exp_lower) / (2 * 1.96)
-                    sd = ( dat_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_upper) |> unlist(x = _) |> nth(.x) -
-                             dat_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_lower) |> unlist(x = _) |> nth(.x) ) / (2 * 1.96)
+                    sd = ( dat_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_upper) |> unlist(x = _) |> dplyr::nth(.x) -
+                             dat_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_lower) |> unlist(x = _) |> dplyr::nth(.x) ) / (2 * 1.96)
                   ),
-                !!paste0("pop_exp_", .x) := pop_exp|> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(pop_exp) |> unlist(x = _) |> nth(.x)
+                !!paste0("pop_exp_", .x) := pop_exp|> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(pop_exp) |> unlist(x = _) |> dplyr::nth(.x)
               )) |>
               purrr::reduce(bind_cols)
           )
@@ -1151,8 +1151,8 @@ summarize_uncertainty <- function(
       geo_id_disaggregated = character(0)  # Initialize geo_id_disaggregated as numeric
     ) |>
       dplyr::bind_cols(
-        set_names(rep(list(numeric(0)), length(exp_columns)), exp_columns),
-        set_names(rep(list(numeric(0)), length(pop_columns)), pop_columns)
+        purrr::set_names(rep(list(numeric(0)), length(exp_columns)), exp_columns),
+        purrr::set_names(rep(list(numeric(0)), length(pop_columns)), pop_columns)
       )
 
     for (i in exp_central$geo_id_disaggregated){
@@ -1170,8 +1170,8 @@ summarize_uncertainty <- function(
                 base::unlist(x = _)
             ),
             .f = ~ tibble::tibble(
-              !!paste0("exp_", .x) := exp_central |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_central) |> unlist(x = _) |> nth(.x),
-              !!paste0("pop_exp_", .x) := pop_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(pop_exp) |> unlist(x = _) |> nth(.x)
+              !!paste0("exp_", .x) := exp_central |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_central) |> unlist(x = _) |> dplyr::nth(.x),
+              !!paste0("pop_exp_", .x) := pop_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(pop_exp) |> unlist(x = _) |> dplyr::nth(.x)
             )) |>
             purrr::reduce(bind_cols)
         )
