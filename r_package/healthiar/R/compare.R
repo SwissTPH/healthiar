@@ -205,7 +205,7 @@ compare <-
           # Calculate the health impacts for each case (uncertainty, category, geo area...)
           impact_raw <-
             healthiar:::get_impact(
-              input_table = input_table |> rename(year_of_analysis = year_of_analysis_1),
+              input_table = input_table |> dplyr::rename(year_of_analysis = year_of_analysis_1),
               pop_fraction_type = "pif")
         } else { # Non-lifetable cases
           impact_raw <-
