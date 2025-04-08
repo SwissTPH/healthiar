@@ -404,7 +404,7 @@ summarize_uncertainty <- function(
                       mean = exp_central[.x],
                       sd = (exp_upper[.x] - exp_lower[.x]) / (2 * 1.96)),
               !!paste0("prop_pop_exp_", .x) := prop_pop_exp[.x])) |>
-            purrr::reduce(bind_cols))
+            purrr::reduce(dplyr::bind_cols))
 
       # Merge dat & dat_exp_dist
       dat <- cbind(dat, dat_exp_dist) |>
@@ -441,7 +441,7 @@ summarize_uncertainty <- function(
             .f = ~ tibble::tibble(
               !!paste0("exp_", .x) := exp_central[.x],                     # .x refers to the xth element of the vector
               !!paste0("prop_pop_exp_", .x) := prop_pop_exp[.x])) |>
-            purrr::reduce(bind_cols))
+            purrr::reduce(dplyr::bind_cols))
 
       # Merge dat & dat_exp_dist
       dat <- cbind(dat, dat_exp_dist) |>
@@ -544,7 +544,7 @@ summarize_uncertainty <- function(
                   ),
                 !!paste0("prop_pop_exp_", .x) := prop_pop_exp|> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(prop_pop_exp) |> unlist(x = _) |> dplyr::nth(.x)
               )) |>
-              purrr::reduce(bind_cols)
+              purrr::reduce(dplyr::bind_cols)
           )
 
         ## Add simulated values of current iteration to dat_sim tabble
@@ -850,7 +850,7 @@ summarize_uncertainty <- function(
       # Excel located here: ..\best-cost\r_package\testing\input\noise_niph
       # NOTE 2024-11-26: PAF matches the result in the Excel sheet "Relative_risk_IHD_WHO_2003a" exactly
       dat <- dat |>
-        dplyr::mutate(sum_product = rowSums(across(contains("product_")))) |>
+        dplyr::mutate(sum_product = rowSums(dplyr::across(dplyr::contains("product_")))) |>
         dplyr::mutate(paf = ( sum_product - 1 ) / sum_product)
 
 
@@ -872,7 +872,7 @@ summarize_uncertainty <- function(
       #                     prop_pop_exp_2 = as.numeric(dat[[gsub("rr_conc_", "prop_pop_exp_", dplyr::cur_column())]])),
       #                   .names = "paf_{stringr::str_remove(.col, 'rr_conc_')}")) |>
       #   # Sum impacts across noise bands to obtain total impact
-      #   dplyr::mutate(paf = rowSums(across(starts_with("paf_"))))
+      #   dplyr::mutate(paf = rowSums(dplyr::across(dplyr::starts_with("paf_"))))
 
     }
 
@@ -954,7 +954,7 @@ summarize_uncertainty <- function(
                       mean = exp_central[.x],
                       sd = (exp_upper[.x] - exp_lower[.x]) / (2 * 1.96)),
               !!paste0("pop_exp_", .x) := pop_exp[.x])) |>
-            purrr::reduce(bind_cols))
+            purrr::reduce(dplyr::bind_cols))
 
 
     # * * * exp CI's & multiple geo units ######################################
@@ -1050,7 +1050,7 @@ summarize_uncertainty <- function(
                   ),
                 !!paste0("pop_exp_", .x) := pop_exp|> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(pop_exp) |> unlist(x = _) |> dplyr::nth(.x)
               )) |>
-              purrr::reduce(bind_cols)
+              purrr::reduce(dplyr::bind_cols)
           )
 
         ## Add simulated values of current iteration to dat_sim tabble
@@ -1106,7 +1106,7 @@ summarize_uncertainty <- function(
             .f = ~ tibble::tibble(
               !!paste0("exp_", .x) := exp_central[.x],
               !!paste0("pop_exp_", .x) := pop_exp[.x])) |>
-            purrr::reduce(bind_cols))
+            purrr::reduce(dplyr::bind_cols))
 
       # * * * no exp CI's & multiple geo unit case #############################
     }  else if (
@@ -1173,7 +1173,7 @@ summarize_uncertainty <- function(
               !!paste0("exp_", .x) := exp_central |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(exp_central) |> unlist(x = _) |> dplyr::nth(.x),
               !!paste0("pop_exp_", .x) := pop_exp |> dplyr::filter(geo_id_disaggregated == i) |> dplyr::pull(pop_exp) |> unlist(x = _) |> dplyr::nth(.x)
             )) |>
-            purrr::reduce(bind_cols)
+            purrr::reduce(dplyr::bind_cols)
         )
 
       ## Add simulated values of current iteration to dat_sim tabble
@@ -1337,7 +1337,7 @@ summarize_uncertainty <- function(
         dplyr::across(dplyr::starts_with("risk_"), ~ as.numeric(.x) * as.numeric(dat[[gsub("risk_", "pop_exp_", dplyr::cur_column())]]) * as.numeric(dw),
                       .names = "impact_{stringr::str_remove(.col, 'risk_')}")) |>
       # Sum impacts across noise bands to obtain total impact
-      dplyr::mutate(impact_total = rowSums(across(starts_with("impact_"))))
+      dplyr::mutate(impact_total = rowSums(dplyr::across(dplyr::starts_with("impact_"))))
 
   }
 
