@@ -3,11 +3,34 @@
 #' @description Calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
 #' @details
 #' Note that several input parameters (such as baseline health data and relative risk must be the same to correctly compare the two scenarios.
+#' @details
+#' Equations population impact fraction (PIF)
+#' @details The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality when exposure to a risk factor is changed (for instance due to an intervention). The most general equation describing this mathematically is an integral form:
+#' \deqn{PIF = \frac{\int RR(x)PE(x)dx - \int RR(x)PE'(x)dx}{\int RR(x)PE(x)dx}}
+#' @details Where:
+#' @details x     = exposure level
+#' @details PE(x) = population distribution of exposure
+#' @details PE'(x) = alternative population distribution of exposure
+#' @details RR(x) = relative risk at exposure level compared to the reference level
+#' @details
+#' If the population exposure is described as a categorical rather than continuous exposure, the integrals in equation (5) may be converted to sums, resulting in the following equations for the PIF:
+#' \deqn{PIF = \frac{\sum RR_{i} \times PE_{i} - \sum RR_{i}PE'_{i}}{\sum RR_{i}PE_{i}}}
+#' @details Where:
+#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
+#' @details \eqn{PE_i} = fraction of population in exposure category i
+#' @details \eqn{PE'_i} = fraction of population in category i for alternative (ideal) exposure scenario
+#' @details \eqn{RR_i} = relative risk for exposure category level i compared to the reference level
+#' @details
+#' Finally, if the exposure is provided as the population weighted mean concentration (PWC), the equation for the PIF is reduced to:
+#' \deqn{PIF = \frac{RR_{PWC} - RR_{alt PWC}}{RR_{PWC}}}
+#' @details Where:
+#' @details \eqn{RR_{PWC}} = relative risk associated with the population weighted mean exposure
+#' @details \eqn{RR_{PWC}} = relative risk associated with the population weighted mean for the alternative exposure scenario
+
 #' @param output_attribute_1 Scenario 1 as in the output of attribute()
 #' @param output_attribute_2 Scenario 2 as in the output of attribute()
 #' @param approach_comparison \code{String} showing the method of comparison. Options: "delta" or "pif".
-#' @return
-#' TBD
+#' @inherit attribute_master return
 #' @examples
 #' TBD
 #' @author Alberto Castro & Axel Luyten

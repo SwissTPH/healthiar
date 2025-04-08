@@ -14,13 +14,60 @@ compare(output_attribute_1, output_attribute_2, approach_comparison = "delta")
 \item{approach_comparison}{\code{String} showing the method of comparison. Options: "delta" or "pif".}
 }
 \value{
-TBD
+This function returns two lists:
+
+1) \code{health_main}, which contains a tibble with the main results and
+2) \code{health_detailed}, which contains detailed (and interim) results.
+
+The result tibbles include columns such as:
+\itemize{
+ \item \code{pop_fraction} population attributable fraction; only for assessments using relative risk
+ \item \code{impact} attributable health burden/impact
+ \item And many more
+ }
 }
 \description{
 Calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
 }
 \details{
 Note that several input parameters (such as baseline health data and relative risk must be the same to correctly compare the two scenarios.
+
+Equations population impact fraction (PIF)
+
+The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality when exposure to a risk factor is changed (for instance due to an intervention). The most general equation describing this mathematically is an integral form:
+\deqn{PIF = \frac{\int RR(x)PE(x)dx - \int RR(x)PE'(x)dx}{\int RR(x)PE(x)dx}}
+
+Where:
+
+x     = exposure level
+
+PE(x) = population distribution of exposure
+
+PE'(x) = alternative population distribution of exposure
+
+RR(x) = relative risk at exposure level compared to the reference level
+
+If the population exposure is described as a categorical rather than continuous exposure, the integrals in equation (5) may be converted to sums, resulting in the following equations for the PIF:
+\deqn{PIF = \frac{\sum RR_{i} \times PE_{i} - \sum RR_{i}PE'_{i}}{\sum RR_{i}PE_{i}}}
+
+Where:
+
+i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
+
+\eqn{PE_i} = fraction of population in exposure category i
+
+\eqn{PE'_i} = fraction of population in category i for alternative (ideal) exposure scenario
+
+\eqn{RR_i} = relative risk for exposure category level i compared to the reference level
+
+Finally, if the exposure is provided as the population weighted mean concentration (PWC), the equation for the PIF is reduced to:
+\deqn{PIF = \frac{RR_{PWC} - RR_{alt PWC}}{RR_{PWC}}}
+
+Where:
+
+\eqn{RR_{PWC}} = relative risk associated with the population weighted mean exposure
+
+\eqn{RR_{PWC}} = relative risk associated with the population weighted mean for the alternative exposure scenario
 }
 \examples{
 TBD
