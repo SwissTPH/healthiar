@@ -141,7 +141,8 @@ get_output <-
     }
 
     # Aggregate results across pollutants (exposures)
-    if(length(unique(impact_raw$exposure_name)) > 1){
+    if("approach_multiexposure" %in% names(impact_raw)){
+      if(unique(impact_raw$approach_multiexposure) %in% "additive"){
 
       output[["health_detailed"]][["impact_agg_exp_names"]]  <-
         output_last |>
@@ -155,8 +156,7 @@ get_output <-
                          .groups = "drop")
 
       output_last <- output[["health_detailed"]][["impact_agg_exp_names"]]
-
-
+      }
     }
 
     # Keep only exp_ci = central and bhd_ci = central in main output ###########

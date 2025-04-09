@@ -219,7 +219,6 @@ get_deaths_yll_from_lifetable <-
     ## Create ID for the rows (will be used below)
     id_columns <-
       c("sex",
-        "exposure_name",
         "geo_id_disaggregated",
         "erf_ci", "bhd_ci", "exp_ci", "dw_ci", "cutoff_ci", "duration_ci")
 

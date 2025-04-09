@@ -90,7 +90,6 @@ compile_input <-
 
       erf_data <- # 1 x 6 tibble
         dplyr::tibble(
-          exposure_name = names(rr_central),
           rr_increment = rr_increment,
           erf_shape = erf_shape,
           rr_central = rr_central,
@@ -103,7 +102,6 @@ compile_input <-
 
         erf_data <- # 1 x 3 tibble
           dplyr::tibble(
-            exposure_name = names(erf_eq_central),
             erf_eq_central = erf_eq_central,
             erf_eq_lower = erf_eq_lower,
             erf_eq_upper = erf_eq_upper)
@@ -114,7 +112,6 @@ compile_input <-
 
         erf_data <- # 1 x 3 tibble
           dplyr::tibble(
-            exposure_name = names(erf_eq_central),
             ## Functions can't be saved raw in column -> save as list
             erf_eq_central = list(erf_eq_central))
         }
@@ -127,14 +124,7 @@ compile_input <-
            erf_eq_lower = list(erf_eq_lower),
            erf_eq_upper = list(erf_eq_upper))}
 
-    # If there exist no column with name "exposure_name" because the vectors were not named,
-    # then the column has to be added as NA
-    if(!"exposure_name" %in% names(erf_data)){
-      erf_data <-
-        erf_data |>
-        dplyr::mutate(exposure_name = NA)
 
-    }
 
 
 
