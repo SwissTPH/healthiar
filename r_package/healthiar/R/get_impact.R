@@ -19,8 +19,7 @@
 #' @keywords internal
 get_impact <-
   function(input_table,
-           pop_fraction_type,
-           population = NULL){
+           pop_fraction_type){
 
     # Relative risk ############################################################
 
