@@ -257,21 +257,27 @@ get_risk_and_pop_fraction <-
     ## Only if exposure distribution (multiple exposure categories)
     ## then reduce the number of rows to keep the same number as in rr
     if(base::unique(input_table$exposure_type) == "exposure_distribution"){
-    input_with_risk_and_pop_fraction <-
-      collapse_df_by_columns(df = input_with_risk_and_pop_fraction,
-                             columns_for_group = c(
-                               "geo_id_disaggregated",
-                               "exposure_name",
-                               "sex",
-                               "lifetable_with_pop_nest",
-                               "erf_ci",
-                               "exp_ci",
-                               "bhd_ci",
-                               "cutoff_ci",
-                               "dw_ci",
-                               "duration_ci",
-                               "erf_eq"),
-                             sep = ", ")
+
+      pop_fraction_by_exp_category <- input_with_risk_and_pop_fraction
+
+      input_with_risk_and_pop_fraction <-
+        collapse_df_by_columns(df = input_with_risk_and_pop_fraction,
+                               columns_for_group = c(
+                                 "geo_id_disaggregated",
+                                 "exposure_name",
+                                 "sex",
+                                 "lifetable_with_pop_nest",
+                                 "erf_ci",
+                                 "exp_ci",
+                                 "bhd_ci",
+                                 "cutoff_ci",
+                                 "dw_ci",
+                                 "duration_ci",
+                                 "erf_eq"),
+                               sep = ", ")|>
+        #Add the paf or pif by exposure category as nested tibble
+        dplyr::mutate(
+          pop_fraction_by_exp_category = list(pop_fraction_by_exp_category))
     }
 
     return(input_with_risk_and_pop_fraction)
