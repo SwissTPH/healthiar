@@ -21,11 +21,11 @@ find_joining_columns <-
 
     joining_columns <-
       # First identify the columns that are common for df_1 and df_2
-      intersect(names(df_1),
-                names(df_2))|>
+      dplyr::intersect(base::names(df_1),
+                base::names(df_2))|>
       # Second, the identical columns of the common ones
       # They are the columns to be used when joining data frames
-      purrr::keep(~ identical(df_1[[.x]],
+      purrr::keep(~ base::identical(df_1[[.x]],
                               df_2[[.x]]))|>
         # Finally exclude scenario specific columns
         dplyr::setdiff(except)

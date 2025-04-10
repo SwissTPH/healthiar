@@ -1,0 +1,25 @@
+---
+title: "demo_ETH_HIA_2025"
+output: html_document
+---
+```{r}
+
+library(healthiar)
+
+attr_deaths <-
+  attribute_health(
+    exp_central = 10,
+    cutoff_central = 5,
+    bhd_central = 62642,
+    rr_central = 1.062,
+    rr_lower = 1.040,
+    rr_upper = 1.083,
+    rr_increment = 10,
+    erf_shape = "log_linear",
+    info = "pm2.5_deaths"
+  )
+
+attr_deaths$health_main |>
+  dplyr::select(impact_rounded, exp, bhd, rr, erf_ci, pop_fraction) |>  print()
+
+```

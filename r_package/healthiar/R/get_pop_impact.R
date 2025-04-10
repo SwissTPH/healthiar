@@ -169,7 +169,7 @@ get_pop_impact <-
                 # Entry population YOA+1 = lag ( End-of-year population YOA )
                 dplyr::mutate(
                   !!population_yoa_plus_1_entry :=
-                    lag(!!dplyr::sym(population_yoa_end)))
+                    dplyr::lag(!!dplyr::sym(population_yoa_end)))
               }
             )
         , .after = lifetable_with_pop_nest)
@@ -204,7 +204,7 @@ get_pop_impact <-
 
               # Entry population YOA+1 = lag ( End-of-year population YOA )
               dplyr::mutate(!!population_yoa_plus_1_entry :=
-                              lag(!!dplyr::sym(population_yoa_end)))
+                              dplyr::lag(!!dplyr::sym(population_yoa_end)))
 
            }
          )

@@ -58,7 +58,6 @@ testthat::test_that("results correct daly from yld rr and yll rr lifetable", {
   )
 })
 
-
 testthat::test_that("results correct daly from two compare outputs (once 2 delta comparisons and once 2 pif comparisons)", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
@@ -171,7 +170,6 @@ testthat::test_that("results correct daly from two compare outputs (once 2 delta
   )
 
 })
-
 
 testthat::test_that("results correct daly from two compare outputs (once 2 delta comparisons and once 2 pif comparisons)", {
 
