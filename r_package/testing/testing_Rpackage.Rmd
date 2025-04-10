@@ -47,7 +47,7 @@ remotes::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
   # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
-  ref = "582-implement-new-function-structure-in-existing-tests",
+  ref = "HEAD",
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   # dependencies = TRUE,
