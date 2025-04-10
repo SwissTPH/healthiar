@@ -223,7 +223,7 @@ get_pop_impact <-
             purrr::map2(
               .x = pop_impacted_scenario_nest,
               .y = pop_baseline_scenario_nest,
-              ~ dplyr::tibble(
+              ~ tibble::tibble(
                 age = .x$age,
                 age_end = .x$age_end,
                 deaths_2019 = .x$population_2019_end - .y$population_2019_end)),
@@ -477,7 +477,7 @@ get_pop_impact <-
             yll_nest = purrr::map(
               .x = yll_nest,
               function(.x){
-                .x[, setdiff(names(.x), c("age", "age_end"))] <- fill_right_of_diag(.x[, setdiff(names(.x), c("age", "age_end"))])
+                .x[, dplyr::setdiff(names(.x), c("age", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age", "age_end"))])
                 return(.x)
               }
               )
@@ -487,7 +487,7 @@ get_pop_impact <-
           dplyr::mutate(premature_deaths_nest = purrr::map(
             .x = premature_deaths_nest,
             function(.x){
-              .x[, setdiff(names(.x), c("age", "age_end"))] <- fill_right_of_diag(.x[, setdiff(names(.x), c("age", "age_end"))])
+              .x[, dplyr::setdiff(names(.x), c("age", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age", "age_end"))])
               return(.x)
             }
           )

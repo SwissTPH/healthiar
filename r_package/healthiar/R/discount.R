@@ -40,7 +40,7 @@ discount <-
 
     output_discounting[["monetization_main"]] <-
       output_discounting[["monetization_main"]] |>
-      dplyr::select(-contains("cost"))
+      dplyr::select(-dplyr::contains("cost"))
 
 
     return(output_discounting)
