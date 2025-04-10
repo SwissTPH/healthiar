@@ -243,13 +243,13 @@ digest_airqplus_export_singlebhd <-
         tidyr::pivot_wider(names_from = variable, 
                            values_from = value)%>%
         # Convert percent in proportion
-        dplyr::mutate(across(starts_with("estimated_attributable_proportion"),
+        dplyr::mutate(dplyr::across(dplyr::starts_with("estimated_attributable_proportion"),
                              readr::parse_number))%>%
         # Divide by 100 because the columns were a percentage originally (e.g. 5% = 0.05)
-         dplyr::mutate(across(starts_with("estimated_attributable_proportion"),
+         dplyr::mutate(dplyr::across(dplyr::starts_with("estimated_attributable_proportion"),
                               ~./100)) %>%
         # Convert to numeric
-        dplyr::mutate(across(-c(analysis_name, type, pollutant, location,
+        dplyr::mutate(dplyr::across(-c(analysis_name, type, pollutant, location,
                                 analyis_comment, evaluation_type, evaluation_name, 
                                 health_endpoint, calculation_method), 
                              as.numeric))
@@ -408,7 +408,7 @@ digest_airqplus_export_lifetable <-
       # Remove the first row without numeric value
       dplyr::slice(-1) %>%
       # Pivot wider
-      tidyr::pivot_wider(values_from = starts_with("value_"),             
+      tidyr::pivot_wider(values_from = dplyr::starts_with("value_"),             
                          names_from = "variable")%>%
       # Convert to numeric
       dplyr::mutate(across(-c(section_name, -subsection_name), 
@@ -750,15 +750,15 @@ rr_data <-
 # Pollutant-outcome pairs to be considered in the main analysis or in the appendix
 choice_pairs_main <- rr_data %>% 
   dplyr::filter(choice_pair %in% "main") %>% 
-  select(pair_id) %>% 
+  dplyr::select(pair_id) %>% 
   unique() %>% 
-  pull()
+  dplyr::pull()
 
 choice_pairs_appendix <- rr_data %>% 
   dplyr::filter(choice_pair %in% "appendix") %>%
-  select(pair_id) %>% 
+  dplyr::select(pair_id) %>% 
   unique() %>% 
-  pull()
+  dplyr::pull()
 
 choice_pairs_all <- c(choice_pairs_main, choice_pairs_appendix)
 
@@ -767,12 +767,12 @@ choice_rr_main_selected <-
   rr_data %>% 
   dplyr::filter(pair_id %in% choice_pairs_main & 
                   choice_rr %in% "selected") %>% 
-  select(rr_id) %>% unique() %>% pull()
+  select(rr_id) %>% unique() %>% dplyr::pull()
 choice_rr_main_sensitivity <- 
   rr_data %>% 
   dplyr::filter(pair_id %in% choice_pairs_main & 
                   choice_rr %in% "sensitivity") %>% 
-  select(rr_id) %>% unique() %>% pull()
+  dplyr::select(rr_id) %>% unique() %>% dplyr::pull()
 
 
 choice_pairs <- c("main", "appendix")
@@ -802,11 +802,11 @@ for (s in sex){
   population_byAge[[s]] <- 
     population_byAge_rawdata %>%
     # Select relevant columns
-    dplyr::select(age, starts_with(s)) %>%
+    dplyr::select(age, dplyr::starts_with(s)) %>%
     # Estimate the population at the middle of 2019 by 
     # calculating the average between the population at the end of 2018 and 2019
     dplyr::mutate(
-      population = rowMeans(across(contains(s)), na.rm = TRUE)) %>%
+      population = rowMeans(dplyr::across(dplyr::contains(s)), na.rm = TRUE)) %>%
     # Remove male and female columns used to calculate the mean
     dplyr::select(-contains(s)) %>%
     # Remove "und mehr" (and more)
@@ -921,7 +921,7 @@ for(s in sex){
     total_mortality[[s]] <- 
       total_mortality[[s]] %>%
       # Select columns keeping only those 10 year before (2010-2019)
-      dplyr::select(all_of(c("Age", as.character(2010:2019)))) %>%
+      dplyr::select(dplyr::all_of(c("Age", as.character(2010:2019)))) %>%
       # Calculate average by age
       dplyr::mutate(mean_total = 
                       rowMeans(subset(total_mortality[[s]], 

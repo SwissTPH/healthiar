@@ -33,7 +33,7 @@ get_output <-
     if(any(grepl("nest", names(impact_raw)))){
       impact_main <-
         impact_raw |>
-        dplyr::select(-contains("nest"))|>
+        dplyr::select(-dplyr::contains("nest"))|>
         dplyr::filter(sex %in% "total")
 
       if ("duration_ci" %in% names(impact_main)){impact_main <- impact_main |> dplyr::filter(duration_ci %in% "central")}
@@ -68,10 +68,10 @@ get_output <-
         # Remove all impact rounded because
         # we have to round final results
         # not summing rounded results ("too rounded")
-        dplyr::select(-any_of(paste0("impact_rounded", c("", "_1", "_2")))) |>
+        dplyr::select(-dplyr::any_of(paste0("impact_rounded", c("", "_1", "_2")))) |>
         dplyr::group_by(geo_id_disaggregated) |>
         # Collapse the exposure categories to have only a vector
-        dplyr::mutate(across(any_of(
+        dplyr::mutate(dplyr::across(dplyr::any_of(
           c(paste0("exp", c("", "_1", "_2")),
             paste0("pop_exp", c("", "_1", "_2")),
             paste0("prop_pop_exp", c("", "_1", "_2")),
@@ -82,7 +82,7 @@ get_output <-
         output[["health_detailed"]][["impact_agg_exp_cat"]] |>
         # Sum columns to summarize
         dplyr::group_by(
-          across(-any_of(
+          dplyr::across(-dplyr::any_of(
             c("geo_id_disaggregated",
               paste0("exp", c("", "_1", "_2")),
               paste0("population", c("", "_1", "_2")),
@@ -94,7 +94,7 @@ get_output <-
               paste0("impact", c("", "_1", "_2")),
               paste0("impact_per_100k_inhab", c("", "_1", "_2")))))) |>
         dplyr::summarize(
-          across(any_of(
+          dplyr::across(dplyr::any_of(
             c(paste0("absolute_risk_as_percent", c("", "_1", "_2")),
               paste0("impact", c("", "_1", "_2")),
               "impact_social")),
@@ -115,7 +115,7 @@ get_output <-
       output[["health_detailed"]][["impact_agg_geo"]]  <-
         output_last |>
         # Group by higher geo level
-        dplyr::group_by(across(any_of(
+        dplyr::group_by(dplyr::across(dplyr::any_of(
                           c("exposure_name",
                             "geo_id_aggregated",
                             "erf_ci", "exp_ci", "bhd_ci", "dw_ci"))))
@@ -149,7 +149,7 @@ get_output <-
         dplyr::mutate(
           exposure_name = paste(unique(exposure_name), collapse = ", ")) |>
         # Group by higher geo level
-        dplyr::group_by(across(any_of(c("geo_id_aggregated", "exp_ci",
+        dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_aggregated", "exp_ci",
                                         "bhd_ci", "erf_ci","dw_ci", "cutoff_ci", "duration_ci"))))|>
         dplyr::summarise(impact = sum(impact),
                          impact_rounded = round(impact),
@@ -194,8 +194,8 @@ get_output <-
     put_first_cols <-
       function(x, cols){
         dplyr::select(x,
-                      any_of(cols),
-                      everything())
+                      dplyr::any_of(cols),
+                      dplyr::everything())
       }
 
     put_first_cols_recursive <-

@@ -79,7 +79,7 @@ compare <-
 
     # Excluding the baseline health data and lifetable
     scenario_specific_arguments_wo_bhd_and_lifetable <-
-      setdiff(scenario_specific_arguments,
+      dplyr::setdiff(scenario_specific_arguments,
               scenario_arguments_for_bhd_and_lifetable)
 
     # Arguments that should be identical in both scenarios
@@ -177,7 +177,7 @@ compare <-
 
         # Delete bhd arguments because they are not used in the lifetable
         scenario_specific_arguments_lifetable <-
-          setdiff(scenario_specific_arguments, c("bhd_central", "bhd_lower", "bhd_upper"))
+          dplyr::setdiff(scenario_specific_arguments, c("bhd_central", "bhd_lower", "bhd_upper"))
 
 
         # Get identical columns to join data frames (as above)

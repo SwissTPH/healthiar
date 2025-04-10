@@ -12,16 +12,17 @@ License: GPL
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Imports:
-    stats,
-    dplyr,
-    purrr,
-    tidyr,
-    stringr,
-    tibble,
-    knitr,
-    rmarkdown,
-    testthat,
-    readxl
+  readxl, 
+  dplyr, 
+  tidyr, 
+  purrr, 
+  stringr, 
+  tibble, 
+  zoo, 
+  stats,
+  credentials,
+  rlang,
+  devtools
 Depends: 
     R (>= 4.1.0)
 LazyData: true

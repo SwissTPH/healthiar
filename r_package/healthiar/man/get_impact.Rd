@@ -4,12 +4,10 @@
 \alias{get_impact}
 \title{Attributable health cases based on relative risk}
 \usage{
-get_impact(input_table, pop_fraction_type, population = NULL)
+get_impact(input_table, pop_fraction_type)
 }
 \arguments{
 \item{input_table}{\code{Data frame} containing all input data.}
-
-\item{population}{\code{Numeric value} or \code{Vector} referring to the total population, including both exposed and non-exposed (in each geographical unit). Only to be used to assess relative impact per 100k inhabitants.}
 }
 \value{
 TBD. E.g. This function returns a \code{data.frame} with one row for each value of the

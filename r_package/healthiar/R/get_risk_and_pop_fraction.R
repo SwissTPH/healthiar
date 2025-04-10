@@ -36,7 +36,7 @@ get_risk_and_pop_fraction <-
         df <-
           df |>
           # group_by requires across() to use any_of()
-          dplyr::group_by(across(any_of(columns_for_group)))|>
+          dplyr::group_by(dplyr::across(dplyr::any_of(columns_for_group)))|>
           dplyr::summarize(
             dplyr::across(dplyr::everything(),
                    ~ if (base::length(base::unique(.)) == 1) {
@@ -181,7 +181,7 @@ get_risk_and_pop_fraction <-
     input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
 
       ## Group by exp_ci and cutoff_ci in case that there are different exposure or cutoff categories
-      dplyr::group_by(across(all_of(available_columns_to_group_input)))
+      dplyr::group_by(dplyr::across(dplyr::all_of(available_columns_to_group_input)))
 
 
     # * PAF ####################################################################
@@ -221,7 +221,7 @@ get_risk_and_pop_fraction <-
           ## group by columns that define diversity
           ## Only combine pm2.5 and no2 for rr_conc in the same ci
           dplyr::group_by(
-            across(any_of(c(
+            dplyr::across(dplyr::any_of(c(
               "erf_ci",
               "exp_ci",
               "bhd_ci",

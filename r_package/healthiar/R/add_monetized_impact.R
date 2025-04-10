@@ -81,7 +81,7 @@ add_monetized_impact  <-
   } else if(taking_last_discounted_year){
     df_by_year <-
       # Split by discount year
-      dplyr::cross_join(x = dplyr::tibble(discount_year = discount_years_vector),
+      dplyr::cross_join(x = tibble::tibble(discount_year = discount_years_vector),
                         y = df_with_input)
   }
 

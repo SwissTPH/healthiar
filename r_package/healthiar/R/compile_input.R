@@ -89,7 +89,7 @@ compile_input <-
     if(is.null(erf_eq_central)){
 
       erf_data <- # 1 x 6 tibble
-        dplyr::tibble(
+        tibble::tibble(
           rr_increment = rr_increment,
           erf_shape = erf_shape,
           rr_central = rr_central,
@@ -101,7 +101,7 @@ compile_input <-
     if(!is.null(erf_eq_central) & is.character(erf_eq_central)){
 
         erf_data <- # 1 x 3 tibble
-          dplyr::tibble(
+          tibble::tibble(
             erf_eq_central = erf_eq_central,
             erf_eq_lower = erf_eq_lower,
             erf_eq_upper = erf_eq_upper)
@@ -111,7 +111,7 @@ compile_input <-
     if(!is.null(erf_eq_central) & is.function(erf_eq_central)){
 
         erf_data <- # 1 x 3 tibble
-          dplyr::tibble(
+          tibble::tibble(
             ## Functions can't be saved raw in column -> save as list
             erf_eq_central = list(erf_eq_central))
         }
@@ -120,7 +120,7 @@ compile_input <-
     if (!is.null(erf_eq_lower) & !is.null(erf_eq_upper) & is.function(erf_eq_central)){
       erf_data <-
         erf_data |>
-         dplyr::mutate(
+        dplyr::mutate(
            erf_eq_lower = list(erf_eq_lower),
            erf_eq_upper = list(erf_eq_upper))}
 
@@ -145,7 +145,7 @@ compile_input <-
     input_wo_lifetable <-
       # Tibble removed columns that are NULL.
       # So if variable is NULL, column not initiated
-      dplyr::tibble(
+      tibble::tibble(
         ## First compile input data that are geo-dependent
         ## Use rep() match dimensions
         geo_id_disaggregated = base::rep(geo_id_disaggregated,
@@ -202,7 +202,7 @@ compile_input <-
       prop_pop_exp = unlist(prop_pop_exp)) |>
 
       ## Remove min_age & max_age columns if they are NA
-      dplyr::select(-where(~ all(is.na(x = .))))
+      dplyr::select(-dplyr::where(~ all(is.na(x = .))))
 
       # Add erf data
     input_wo_lifetable <-
@@ -233,7 +233,7 @@ compile_input <-
       # central, lower and upper estimates (relevant for iteration)
 
       ## For exposure,
-      tidyr::pivot_longer(cols = starts_with("exp_"),
+      tidyr::pivot_longer(cols = dplyr::starts_with("exp_"),
                           names_to = "exp_ci",
                           names_prefix = "exp_",
                           values_to = "exp")
@@ -243,14 +243,14 @@ compile_input <-
 
       input_wo_lifetable <-
         tidyr::pivot_longer(data = input_wo_lifetable,
-                            cols = any_of(c("rr_central", "rr_lower", "rr_upper")),
+                            cols = dplyr::any_of(c("rr_central", "rr_lower", "rr_upper")),
                             names_to = "erf_ci",
                             names_prefix = "rr_",
                             values_to = "rr")
     } else {
       input_wo_lifetable <-
         tidyr::pivot_longer(data = input_wo_lifetable,
-                            cols = starts_with("erf_eq_"),
+                            cols = dplyr::starts_with("erf_eq_"),
                             names_to = "erf_ci",
                             names_prefix = "erf_eq_",
                             values_to = "erf_eq") }
@@ -259,7 +259,7 @@ compile_input <-
     if(!is.null(bhd_central)) {
       input_wo_lifetable <-
         input_wo_lifetable |>
-        tidyr::pivot_longer(cols = starts_with("bhd_"),
+        tidyr::pivot_longer(cols = dplyr::starts_with("bhd_"),
                             names_to = "bhd_ci",
                             names_prefix = "bhd_",
                             values_to = "bhd")}
@@ -268,7 +268,7 @@ compile_input <-
     if(!is.null(cutoff_central)) {
       input_wo_lifetable <-
         input_wo_lifetable |>
-        tidyr::pivot_longer(cols = starts_with("cutoff_"),
+        tidyr::pivot_longer(cols = dplyr::starts_with("cutoff_"),
                             names_to = "cutoff_ci",
                             names_prefix = "cutoff_",
                             values_to = "cutoff")}
@@ -278,7 +278,7 @@ compile_input <-
     if (!is.null(dw_central)) {
       input_wo_lifetable <-
         input_wo_lifetable |>
-        tidyr::pivot_longer(cols = starts_with("dw_"),
+        tidyr::pivot_longer(cols = dplyr::starts_with("dw_"),
                             names_to = "dw_ci",
                             names_prefix = "dw_",
                             values_to = "dw")}
@@ -287,7 +287,7 @@ compile_input <-
     if (!is.null(duration_central)) {
       input_wo_lifetable <-
         input_wo_lifetable |>
-        tidyr::pivot_longer(cols = starts_with("duration_"),
+        tidyr::pivot_longer(cols = dplyr::starts_with("duration_"),
                             names_to = "duration_ci",
                             names_prefix = "duration_",
                             values_to = "duration")}

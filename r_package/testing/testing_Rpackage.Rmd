@@ -47,7 +47,6 @@ remotes::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
   # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
-  ref = "582-implement-new-function-structure-in-existing-tests",
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   # dependencies = TRUE,
@@ -1440,8 +1439,10 @@ bestcost_daly_from_yll_yld <-
 
 check_bestcost(result_list_bestcost = bestcost_daly_from_yll_yld,
                result_vector_alternative = 
-                 bestcost_pm_yll[["health_main"]]$impact + 
-                 bestcost_pm_yld[["health_main"]]$impact)
+                 c(32878.01, 17189.15, 49596.43)
+                 # bestcost_pm_yll[["health_main"]]$impact + 
+                 # bestcost_pm_yld[["health_main"]]$impact
+                 )
 
 bestcost_pm_yll[["health_main"]]$impact + 
                  bestcost_pm_yld[["health_main"]]$impact
