@@ -745,7 +745,12 @@ results_pm_copd_yld  <- attribute_health(
 ```
 
 ### Main results
-TODO
+```{r eval=FALSE}
+results_pm_copd_yld$health_main
+```
+```{r echo=FALSE}
+results_pm_copd_yld$health_main |> select(erf_ci, impact) |> kable()
+```
 
 ## Example: `get_daly()`
 
@@ -757,7 +762,14 @@ results_daly <- get_daly(
 ```
 
 ### Main results
-TODO
+```{r}
+## YLL
+results_daly$health_main$impact_yll
+## YLD
+results_daly$health_main$impact_yld
+## DALY
+results_daly$health_main$impact_rounded
+```
 
 ## Example: `get_multiexposure()`
 
@@ -789,7 +801,13 @@ results_multiplicative <- get_multiexposure(
 ```
 
 ### Main results
-TODO
+```{r eval=FALSE}
+results_multiplicative$health_main
+```
+```{r echo=FALSE}
+## Multiexposure impact
+results_multiplicative$health_main |> select(impact_rounded) |> kable()
+```
 
 ## Example: `get_mdi`
 
@@ -797,7 +815,7 @@ Note: the `ggplot2` must be installed in order to use this function!
 
 ### Function call
 
-```{r echo=TRUE, eval=FALSE, include=TRUE}
+```{r echo=TRUE, eval=FALSE, include=FALSE}
 mdi <- get_mdi(
   geo_id_disaggregated = exdat_get_mdi$id,
   edu = exdat_get_mdi$edu,
@@ -810,7 +828,35 @@ mdi <- get_mdi(
 ```
 
 ### Main results
-TODO
+```{r echo=FALSE, eval=FALSE, include=TRUE}
+mdi <- get_mdi(
+  geo_id_disaggregated = exdat_get_mdi$id,
+  edu = exdat_get_mdi$edu,
+  unemployed = exdat_get_mdi$unemployed,
+  single_parent = exdat_get_mdi$single_parent,
+  pop_change = exdat_get_mdi$pop_change,
+  no_heating = exdat_get_mdi$no_heating,
+  n_quantile = 10
+)
+```
+Function output included
+
+- In the console
+
+    - DESCRIPTIVE STATISTICS
+
+    - PEARSON'S CORRELATION COEFFICIENTS
+
+    - PEARSON'S CORRELATION COEFFICIENTS
+
+    - CRONBACH'S α, including the reliability rating this value indicates
+    
+- Plots
+
+    - Boxplots of the single indicators
+    
+    - Histogram of the MDI's for the geo units with a normal distribution curve
+
 
 # Post-`healthiar` workflow
 
