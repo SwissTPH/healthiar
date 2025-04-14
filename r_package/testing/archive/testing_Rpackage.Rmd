@@ -4,10 +4,194 @@ author: "Alberto Castro & Axel Luyten"
 output: html_document
 ---
 
+# Goal
+ 
+Test the functions of the bestcost package comparing the results with results from other tools or assessments
 
-## NOT IN TESTING FRAMEWORK
+# Load packages and data
+
+The R script required the loading of certain R packages.
+
+```{r Load packages and data, include=FALSE}
+
+## Load required packages
+### using {pacman}, which automatically installs packages if not yet installed
+library("pacman")
+pacman::p_load(
+  ## To manipulate data
+  readxl, dplyr, tidyr, purrr, stringr, tibble, zoo, stats,
+  ## To set colors in console messages (checking)
+  crayon,
+  ## To load {healthiar}
+  credentials, devtools # Not needed anymore: gitcreds
+  )
+
+## Load development version of healthiar package
+### Only if in development environment! If you're not use option in chunk below
+devtools::load_all(export_all = FALSE)
+
+## Load data necessary for running examples below
+load("../testing/input/data/input_data_for_testing_Rpackage.RData")
+```
+
+```{r Install {healthiar} from GitHub, eval=FALSE, include=FALSE}
+
+## NOTE: if an older version of {healthiar} already installed and loaded, detach first 
+# detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
+
+## Option A: Using remotes package (size: 426 KB)
+### Advantage: no installation of Git required
+credentials::set_github_pat() # paste github PAT if prompted
+# ?remotes::install_github
+remotes::install_github(
+  repo = "best-cost/best-cost_WPs",
+  subdir = "/r_package/healthiar",
+  ref = "568-add-example-descriptions-to-vignette", # By default "HEAD"; name of branch to install package from as a string
+  force = TRUE,
+  # auth_token = "", # Paste your GitHub PAT between the quotation marks
+  # dependencies = TRUE,
+  build_vignettes = TRUE,
+  # upgrade = c("always") # Update packages
+  upgrade = c("never") # Never update packages
+
+  
+)
+
+library(healthiar)
+
+```
+
+```{r Install healthiar from local source, eval=FALSE, include=FALSE}
+
+## NOTE: if an older version of {healthiar} already installed and loaded, detach first 
+# detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
+
+## Install package from .zip file
+# devtools::build(binary = TRUE, path = "../testing/Workshops_and_demos/2025_04_10_UBD_policy") # Save current state of package as .zip file (e.g. to directly test changes in functions)
+# install.packages("../testing/input/healthiar_0.0.0.1.zip", repos=NULL, type='source') # Modify file path
+
+## Install package from .tar.gz file
+# devtools::build(path = "../testing/input/") # Save current state of package as tar.gz file (e.g. to directly test changes in functions)
+# install.packages("../testing/input/healthiar_0.0.0.1.tar.gz", repos=NULL, type='source') # Modify file path
+
+# library(healthiar)
+```
+
+
+This is test code and should not be run
+```{r prepare tests, eval=FALSE, include=FALSE}
+
+data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
+data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+
+
+## Gives error
+healthiar::attribute_health(
+  approach_risk = "relative_risk",
+  exp_central = data_pop$Concentration,
+  prop_pop_exp = data_pop$Viken,
+  bhd_central = 4500,
+  erf_eq_central =
+    stats::splinefun(
+      x = data_erf$exposure,
+      y = data_erf$mean,
+      method = "natural")
+)
+
+## Error in `dplyr::group_by()`:
+# ! Must group by variables found in `.data`.
+# ✖ Column `cutoff_ci` is not found.
+
+
+data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+test <- healthiar::attribute_health(
+        approach_multiexposure = "multiplicative",
+        exp_central = c("pm2.5" = 8.1, "no2" =  10.9),
+        exp_lower = c("pm2.5" = 8.1 - 1, "no2" =  10.9 - 1),
+        exp_upper = c("pm2.5" = 8.1 + 1, "no2" =  10.9 + 1),
+        cutoff_central =  setNames(c(0, 0), c("pm2.5", "no2")),
+        bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
+        rr_central = setNames(c(1.063, 1.031), c("pm2.5", "no2")),
+        rr_lower = setNames(c(1.063, 1.031) - 0.005, c("pm2.5", "no2")),
+        rr_upper = setNames(c(1.063, 1.031) + 0.005, c("pm2.5", "no2")),
+        rr_increment = setNames(c(10, 10), c("pm2.5", "no2")),
+        erf_shape = "log_linear")
+    
+test <- test |> 
+  pluck("health_detailed") |>
+  pluck("raw") |>
+  select(impact_rounded) |>
+  base::unlist() |>
+  base::as.numeric()
+
+test <- paste(test, collapse = ", ")
+print(test)
+```
+
+# Calculate health impacts
+
+## Attributable health impact
+
+### Single baseline health data
+
+```{r single exposure value}
+# Assess attributable cases using the AirQ+ export as input data
+bestcost_pm_copd <-
+  healthiar::attribute_health(
+    exp_central = airqplus_pm_copd$mean_concentration,
+    exp_lower = airqplus_pm_copd$mean_concentration-0.5,
+    exp_upper = airqplus_pm_copd$mean_concentration+0.5,
+    
+    cutoff_central = airqplus_pm_copd$cut_off_value,
+    bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+    rr_central = airqplus_pm_copd$relative_risk, 
+    rr_lower = airqplus_pm_copd$relative_risk_lower,
+    rr_upper = airqplus_pm_copd$relative_risk_upper,
+    rr_increment = 10, 
+    erf_shape = "log_linear", 
+    info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
+
+# View(bestcost_pm_copd)
+
+check_bestcost(result_list_bestcost = bestcost_pm_copd,
+               result_vector_alternative = airqplus_pm_copd_result <- 
+                 # Store the central, lower and upper estimate of the AirQ+ assessment
+                 airqplus_pm_copd |>
+                 dplyr::select(estimated_number_of_attributable_cases_central,
+                               estimated_number_of_attributable_cases_lower,
+                               estimated_number_of_attributable_cases_upper)|>
+                 unlist())
+```
+
+
+
 
 ```{r single exposure value with multiple uncertainties}
+
+
+bestcost_pm_copd_multiple <-
+  healthiar::attribute_health(
+    exp_central = airqplus_pm_copd$mean_concentration,
+    exp_lower = 8,
+    exp_upper = 9,
+    cutoff_central = airqplus_pm_copd$cut_off_value, 
+    cutoff_lower = airqplus_pm_copd$cut_off_value - 1,
+    cutoff_upper = airqplus_pm_copd$cut_off_value + 1,
+    bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+    bhd_lower = 25000,
+    bhd_upper = 35000,
+    rr_central = airqplus_pm_copd$relative_risk, 
+    rr_lower = airqplus_pm_copd$relative_risk_lower,
+    rr_upper = airqplus_pm_copd$relative_risk_upper,
+    rr_increment = 10, 
+    erf_shape = "log_linear",
+    info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
+
+check_bestcost(result_list_bestcost = bestcost_pm_copd_multiple,
+               result_vector_alternative = c(3502, 1353, 5474)) # Results on 5 November 2024
+
+
 
 # Assess iteration geographical sections keeping the multiple uncertainties
 system.time(
@@ -61,8 +245,161 @@ check_bestcost(result_list_bestcost = bestcost_pm_copd_geo_short,
                result_vector_alternative = c(32449, 12508, 50836)) # Results on 5 November 2024
 ```
 
+```{r single exposure & user-defined points for relative risk using splinefun}
 
-# CONTINUE HERE ################################################################
+# Assess attributable cases using the AirQ+ export as input data
+bestcost_pm_alri_erf_dots_splinefun <-
+  healthiar::attribute_health(
+    exp_central = airqplus_pm_copd$mean_concentration,
+    cutoff_central = airqplus_pm_copd$cut_off_value,
+    # cutoff_central = 0,
+    bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+    # GBD2019 ERF for PM and lower respiratory infections
+    erf_eq_central = 
+      stats::splinefun(
+        x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
+        y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
+        method = "natural"),
+    info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
+
+# View(bestcost_pm_alri_erf_dots_splinefun)
+
+# check_bestcost(result_list_bestcost = bestcost_pm_alri_erf_dots_splinefun,
+#                result_vector_alternative = c(2263)) # Results on 10 October 2024 (with cutoff = 0)
+check_bestcost(result_list_bestcost = bestcost_pm_alri_erf_dots_splinefun,
+               result_vector_alternative = c(1057)) # Results on 10 October 2024 (with cutoff = 5 = airqplus_pm_copd$cut_off_value)
+```
+
+```{r single exposure & user-defined points for relative risk using approxfun}
+
+# Assess attributable cases using the AirQ+ export as input data
+bestcost_pm_alri_erf_dots_approxfun <-
+  healthiar::attribute_health(
+    exp_central = airqplus_pm_copd$mean_concentration,
+    cutoff_central = airqplus_pm_copd$cut_off_value,
+    # cutoff_central = 0,
+    bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+    # GBD2019 ERF for PM and lower respiratory infections
+    erf_eq_central = 
+      stats::approxfun(
+        x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
+        y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
+        method = "linear"),
+    info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
+
+# View(bestcost_pm_alri_erf_dots_approxfun)
+
+# check_bestcost(result_list_bestcost = bestcost_pm_alri_erf_dots_approxfun,
+#                result_vector_alternative = c(2254)) # Results on 10 October 2024 (with cutoff = 0)
+check_bestcost(result_list_bestcost = bestcost_pm_alri_erf_dots_approxfun,
+               result_vector_alternative = c(1052)) # Results on 10 October 2024 (with cutoff = 5 = airqplus_pm_copd$cut_off_value)
+```
+
+```{r single exposure value and relative risk with monetization}
+
+# Assess attributable cases using the AirQ+ export as input data
+bestcost_pm_copd_1rr <-
+  healthiar::attribute_health(
+    exp_central = airqplus_pm_copd$mean_concentration,
+    cutoff_central = airqplus_pm_copd$cut_off_value,
+    cutoff_lower = airqplus_pm_copd$cut_off_value - 1,
+    cutoff_upper = airqplus_pm_copd$cut_off_value + 1,
+    bhd_central = airqplus_pm_copd$incidents_per_100_000_per_year/1E5*airqplus_pm_copd$population_at_risk,
+    rr_central = airqplus_pm_copd$relative_risk,
+    rr_increment = 10, 
+    erf_shape = "log_linear", 
+    info = paste0(airqplus_pm_copd$pollutant,"_", airqplus_pm_copd$evaluation_name))
+
+# Store the central, lower and upper estimate of the AirQ+ assessment
+airqplus_pm_copd_1rr_result <- 
+  airqplus_pm_copd |>
+  dplyr::select(estimated_number_of_attributable_cases_central)|>
+  unlist()
+
+# View(bestcost_pm_copd_1rr)
+
+check_bestcost(result_list_bestcost = bestcost_pm_copd,
+               result_vector_alternative = airqplus_pm_copd_result)
+```
+
+```{r exposure distribution with rr}
+
+# Extract rows that contain input data (others may contain results)
+niph_noise_ihd_input <- 
+  niph_noise_ihd_excel |>
+  dplyr::filter(!is.na(niph_noise_ihd_excel$exposure_mean))
+
+# Extract results from excel table
+# Only one (central) value for ERF, 
+# so let's repeat the value three times to build 
+# the vector for lower and upper bound
+niph_noise_ihd_result <- 
+  niph_noise_ihd_excel |>
+        dplyr::filter(exposure_category %in% "Total exposed")|>
+        dplyr::select(daly)|>
+        dplyr::pull() |>
+  round()
+
+# Obtain attributable cases using the bestcost package and input data from niph
+bestcost_noise_ihd_expDist <- 
+  healthiar::attribute_health(
+    exp_central = niph_noise_ihd_input$exposure_mean,
+    # exp_lower = niph_noise_ihd_input$exposure_mean - 2,
+    # exp_upper = niph_noise_ihd_input$exposure_mean + 2,
+    prop_pop_exp = niph_noise_ihd_input$prop_exposed,
+    cutoff_central = min(niph_noise_ihd_input$exposure_mean), 
+    bhd_central = niph_noise_ihd_input$gbd_daly[1],
+    rr_central = 1.08,
+    # rr_lower = 1.08 - 0.02,
+    # rr_upper = 1.08 + 0.02,
+    rr_increment = 10, 
+    erf_shape = "log_linear",
+    info = data.frame(pollutant = "road_noise", outcome = "YLD"))
+
+# View(bestcost_noise_ihd_expDist)
+
+check_bestcost(result_list_bestcost = bestcost_noise_ihd_expDist,
+               result_vector_alternative = niph_noise_ihd_result)
+
+# Now using pop_exp instead of prop_pop_exp. The result should be the same as above.
+bestcost_noise_ihd_expDist_pop_exp <- 
+  healthiar::attribute_health(
+    exp_central = niph_noise_ihd_input$exposure_mean,
+    pop_exp = niph_noise_ihd_input$population_exposed_total,
+    cutoff_central = min(niph_noise_ihd_input$exposure_mean), 
+    bhd_central = niph_noise_ihd_input$gbd_daly[1],
+    rr_central = 1.08,
+    rr_increment = 10, 
+    erf_shape = "log_linear",
+    info = data.frame(pollutant = "road_noise", outcome = "YLD"))
+
+# View(bestcost_noise_ihd_expDist)
+
+check_bestcost(result_list_bestcost = bestcost_noise_ihd_expDist_pop_exp,
+               result_vector_alternative = niph_noise_ihd_result)
+
+ 
+# Obtain attributable cases using the bestcost package
+# for multiple geo_sections
+bestcost_noise_ihd_expDist_geo <- 
+  healthiar::attribute_health(
+    exp_central = list(runif_with_seed(5,8,10,1), 
+                       runif_with_seed(5,8,10,2), 
+                       runif_with_seed(5,8,10,3)),
+    cutoff_central = 5,
+    pop_exp = list(runif_with_seed(5,1E2,1E3,1),
+                   runif_with_seed(5,1E2,1E3,2), 
+                   runif_with_seed(5,1E2,1E3,3)),
+    bhd_central = list(runif_with_seed(3,1E4,1E5,1)),
+    rr_central = 1.08,
+    rr_increment = 10, 
+    erf_shape = "log_linear",
+    geo_id_disaggregated = 1:3,
+    geo_id_aggregated = rep("ch", 3),
+    info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
+
+# View(bestcost_noise_ihd_expDist_geo)
+```
 
 ```{r exposure distribution and user-defined points for relative risk}
 
