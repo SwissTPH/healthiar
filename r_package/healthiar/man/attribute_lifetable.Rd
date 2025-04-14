@@ -101,6 +101,11 @@ Moreover, the data frame include columns such as:
 \description{
 Assesses the premature deaths or years of life lost attributable to the exposure to an environmental stressor using a life table approach.
 }
+\details{
+The life table methodology follows the one implemented in the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200
+
+A more expansive life table case study by Miller is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
+}
 \note{
 Experimental function
 }

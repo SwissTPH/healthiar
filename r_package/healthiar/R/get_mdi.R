@@ -31,10 +31,10 @@
 #' @return
 #' For the internal consistency check the function provides
 #' \itemize{
-#'   \item Cronbach's \eqn{\alpha}
+#'   \item Cronbach's \eqn{\alpha} (including the reliability rating this value indicates)
 #'   \item Descriptive analysis of the input data
-#'   \item Boxplot
-#'   \item Histogram
+#'   \item Boxplots of the single indicators
+#'   \item Histogram of the MDI's for the geo units with a normal distribution curve
 #'   \item Person's correlation coefficient (pairwise-comparisons)
 #' }
 #' @examples
