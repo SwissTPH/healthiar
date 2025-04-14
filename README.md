@@ -13,7 +13,7 @@ Requirements:
 **Step 1** – Generate a GitHub personal access token (PAT)
 1.	Sign in to [www.github.com](www.github.com)
 2.	Click on your profile icon (top right of the screen) and then on *Settings*
-3.	Scroll down and click *Developer settings* > *Personal acess tokens* > *Tokens (classic)*
+3.	Scroll down and click *Developer settings* > *Personal access tokens* > *Tokens (classic)*
 4.	Click *Generate new token* > *Generate new token (classic)*
 5.	Confirm access by signing in to you GitHub profile
 6.	Name your token (e.g. *BEST-COST token*), set *No expiration date*, and tick all boxes of repo and write:packages (you don't have to tick the other boxes)
