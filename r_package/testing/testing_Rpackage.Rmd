@@ -46,11 +46,13 @@ credentials::set_github_pat() # paste github PAT if prompted
 remotes::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
-  # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
+  ref = "613-add-a-news-file-to-our-package", # By default "HEAD"; name of branch to install package from as a string
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   # dependencies = TRUE,
-  build_vignettes = TRUE
+  build_vignettes = TRUE,
+  upgrade = c("always")
+  
 )
 
 library(healthiar)
