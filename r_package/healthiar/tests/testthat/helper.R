@@ -1,31 +1,5 @@
-helper_extract_main_results <- function(x){
-  y <- x |>
-    purrr::pluck("health_main") |>
-    dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-    dplyr::select(impact_rounded)  |>
-    base::unlist() |>
-    base::as.numeric()
-}
-
-helper_extract_detailed_results <- function(x){
-  y <- x |>
-    purrr::pluck("health_detailed") |>
-    purrr::pluck("impact_raw") |>
-    dplyr::select(impact)  |> # 2025-04-02 before was "impact_rounded", but now only raw impact in detailed results
-    base::unlist() |>
-    base::as.numeric()
-}
-
 runif_with_seed <-
   function(n, min, max, seed){
     set.seed(seed)
     output <- runif(n, min, max)
   }
-
-helper_extract_main_uncertainty_results <- function(x){
-  y <- x |>
-    purrr::pluck("uncertainty_main") |>
-    base::as.numeric() |>
-    round(digits = 0)
-}
-

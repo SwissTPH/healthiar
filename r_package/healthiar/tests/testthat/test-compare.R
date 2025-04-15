@@ -32,8 +32,7 @@ testthat::test_that("results correct delta comparison rr single exposure", {
         output_attribute_1 = output_attribute_1,
         output_attribute_2 = output_attribute_2,
         approach_comparison = "delta"
-      ) |>
-      helper_extract_main_results(),
+      )$health_main$impact_rounded,
     expected =
       c(774, 409, 1127) # Results on 16 May 2024; no comparison study
   )
@@ -64,8 +63,7 @@ testthat::test_that("results correct delta comparison rr single exposure with at
         output_attribute_1 = output_attribute_1,
         output_attribute_2 = output_attribute_2,
         approach_comparison = "delta"
-      ) |>
-      helper_extract_main_results(),
+      )$health_main$impact_rounded,
     expected =
       c(774, 409, 1127) # Results on 16 May 2024; no comparison study
   )
@@ -101,8 +99,7 @@ testthat::test_that("results correct delta comparison when two scenarios are ide
         output_attribute_1 = output_attribute_1,
         output_attribute_2 = output_attribute_2,
         approach_comparison = "delta"
-      ) |>
-      helper_extract_main_results(),
+      )$health_main$impact_rounded,
     expected =
       c(0, 0, 0) # Results on 16 May 2024; no comparison study
   )
@@ -135,8 +132,8 @@ testthat::test_that("results correct delta comparison iteration rr single exposu
     object =
       healthiar::compare(
         output_attribute_1 = scen_1_singlebhd_rr_geo,
-        output_attribute_2 = scen_2_singlebhd_rr_geo) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_singlebhd_rr_geo
+      )$health_main$impact_rounded,
     expected =
       c(1100, 582, 1603) # Results on 16 May 2024; no comparison study
   )
@@ -168,8 +165,8 @@ testthat::test_that("results correct delta comparison iteration (high number of 
       comparison_singlebhd_rr_delta_geo <-
       healthiar::compare(
         output_attribute_1 = scen_1_singlebhd_rr_geo,
-        output_attribute_2 = scen_2_singlebhd_rr_geo) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_singlebhd_rr_geo
+        )$health_main$impact_rounded,
     expected =
       c(1100, 582, 1603) # Result on 26 June 2024; no comparison study
   )
@@ -207,8 +204,8 @@ testthat::test_that("results correct delta comparison iteration rr single exposu
       comparison_singlebhd_rr_delta_geo <-
       healthiar::compare(
         output_attribute_1 = scen_1_singlebhd_rr_geo_large,
-        output_attribute_2 = scen_2_singlebhd_rr_geo_large) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_singlebhd_rr_geo_large
+        )$health_main$impact_rounded,
     expected =
       c(211111, 84203, 319618) # Result on 19 December 2024; no comparison study
   )
@@ -240,8 +237,8 @@ testthat::test_that("results correct delta comparison yld rr single exposure", {
     object =
       healthiar::compare(
         output_attribute_1 = scen_1_singlebhd_yld,
-        output_attribute_2 = scen_2_singlebhd_yld) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_singlebhd_yld
+        )$health_main$impact_rounded,
     expected =
       c(387, 205, 564) # Result on 16 May 2024; no comparison study
   )
@@ -275,8 +272,8 @@ testthat::test_that("results correct delta comparison yld iteration rr single ex
     object =
       healthiar::compare(
         output_attribute_1 = scen_1_singlebhd_yld_geo,
-        output_attribute_2 = scen_2_singlebhd_yld_geo) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_singlebhd_yld_geo
+        )$health_main$impact_rounded,
     expected =
       c(591, 313, 861) # Result on 26 June 2024; no comparison study
   )
@@ -313,8 +310,8 @@ testthat::test_that("results correct delta comparison iteration YLD rr single ex
     object =
       healthiar::compare(
         output_attribute_1 = scen_1_singlebhd_yld_geo,
-        output_attribute_2 = scen_2_singlebhd_yld_geo) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_singlebhd_yld_geo
+        )$health_main$impact_rounded,
     expected =
       c(591, 313, 861) # Result on 26 June 2024; no comparison study
   )
@@ -352,8 +349,7 @@ testthat::test_that("results correct pif comparison rr single exposure", {
         output_attribute_1 = output_attribute_1,
         output_attribute_2 = output_attribute_2,
         approach_comparison = "pif"
-      ) |>
-      helper_extract_main_results(),
+      )$health_main$impact_rounded,
     expected =
       c(782, 412, 1146) # Results on 16 May 2024; no comparison study
   )
@@ -384,8 +380,8 @@ testthat::test_that("results correct pif comparison yld rr single exposure", {
       healthiar::compare(
         output_attribute_1 = scen_1_singlebhd_yld,
         output_attribute_2 = scen_2_singlebhd_yld,
-        approach_comparison = "pif") |>
-      helper_extract_main_results(),
+        approach_comparison = "pif"
+        )$health_main$impact_rounded,
     expected =
       c(391,206,573) # Result on 16 May 2024; no comparison study
   )
@@ -419,8 +415,8 @@ testthat::test_that("results correct pif comparison iteration rr single exposure
       healthiar::compare(
         output_attribute_1 = scen_1_singlebhd_rr_geo,
         output_attribute_2 = scen_2_singlebhd_rr_geo,
-        approach_comparison = "pif") |>
-      helper_extract_main_results(),
+        approach_comparison = "pif"
+        )$health_main$impact_rounded,
     expected =
       c(1114, 586, 1634) # Results on 19 June 2024; no comparison study
   )
@@ -455,8 +451,8 @@ testthat::test_that("results correct pif comparison yld iteration rr single expo
       healthiar::compare(
         output_attribute_1 = scen_1_singlebhd_yld_geo,
         output_attribute_2 = scen_2_singlebhd_yld_geo,
-        approach_comparison = "pif") |>
-      helper_extract_main_results(),
+        approach_comparison = "pif"
+        )$health_main$impact_rounded,
     expected =
       c(599, 315, 878) # Result on 20 June 2024; no comparison study
   )
@@ -489,8 +485,8 @@ testthat::test_that("results correct pif comparison yld rr single exposure", {
       healthiar::compare(
         approach_comparison = "pif",
         output_attribute_1 = scen_1_singlebhd_yld,
-        output_attribute_2 = scen_2_singlebhd_yld) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_singlebhd_yld
+        )$health_main$impact_rounded,
     expected =
       c(391,206,573) # Result on 16 May 2024; no comparison study
   )
@@ -527,8 +523,8 @@ testthat::test_that("results correct pif comparison iteration rr single exposure
       healthiar::compare(
         approach_comparison = "pif",
         output_attribute_1 = scen_1_singlebhd_yld_geo,
-        output_attribute_2 = scen_2_singlebhd_yld_geo) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_singlebhd_yld_geo
+        )$health_main$impact_rounded,
     expected =
       c(599, 315, 878) # Result on 20 June 2024; no comparison study
   )
@@ -564,8 +560,8 @@ testthat::test_that("results correct delta comparison ar exposure distribution",
       comparison_singlebhd_ar_delta <-
       healthiar::compare(
         scen_1_singlebhd_ar,
-        scen_2_singlebhd_ar) |>
-      helper_extract_main_results(),
+        scen_2_singlebhd_ar
+        )$health_main$impact_rounded,
     expected =
       c(62531) # Result on 23 May 2024; no comparison study
   )
@@ -598,8 +594,8 @@ testthat::test_that("results correct delta comparison ar YLD", {
       comparison_singlebhd_ar_delta <-
       healthiar::compare(
         output_attribute_1 = scen_1_singlebhd_yld,
-        output_attribute_2 = scen_2_singlebhd_yld) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_singlebhd_yld
+        )$health_main$impact_rounded,
     expected =
       c(387, 205, 564) # Result on 16 May 2024; no comparison study
   )
@@ -638,8 +634,8 @@ testthat::test_that("results correct delta comparison iteration ar exposure dist
     object =
       healthiar::compare(
         output_attribute_1 = scen_1_singlebhd_ar_geo,
-        output_attribute_2 = scen_2_singlebhd_ar_geo) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_singlebhd_ar_geo
+        )$health_main$impact_rounded,
     expected =
       c(115869) # Results on 19 June 2024; no comparison study
   )
@@ -685,14 +681,12 @@ testthat::test_that("results correct delta comparison lifetable yll rr single ex
       output_attribute_1 = scen_1_yll_lifetable_test,
       exp_central = 6) # Fake data just for testing purposes
 
-
   testthat::expect_equal(
     object =
       healthiar::compare(
         output_attribute_1 = scen_1_yll_lifetable_test,
-        output_attribute_2 = scen_2_yll_lifetable_test) |>
-      helper_extract_main_results(),
-
+        output_attribute_2 = scen_2_yll_lifetable_test
+        )$health_main$impact_rounded,
     expected =
       c(21644, 11340, 31860) # Result on 20 August 2024; no comparison study to
   )
@@ -738,8 +732,8 @@ testthat::test_that("results correct delta comparison lifetable yll iteration rr
     object =
       healthiar::compare(
         output_attribute_1 = scen_1_yll_lifetable_geo,
-        output_attribute_2 = scen_2_yll_lifetable_geo) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_yll_lifetable_geo
+        )$health_main$impact_rounded,
     expected =
       c(33041, 17309, 48639) # Result on 20 August 2024; no comparison study to
   )
@@ -784,9 +778,8 @@ testthat::test_that("results correct pif comparison lifetable yll rr single expo
       healthiar::compare(
         output_attribute_1 = scen_1_yll_lifetable,
         output_attribute_2 = scen_2_yll_lifetable,
-        approach_comparison = "pif") |>
-      helper_extract_main_results(),
-
+        approach_comparison = "pif"
+        )$health_main$impact_rounded,
     expected =
       c(21698, 11354, 31978) # Result on 20 August 2024; no comparison study to
   )
@@ -833,8 +826,8 @@ testthat::test_that("results correct pif comparison lifetable yll iteration rr s
       healthiar::compare(
         output_attribute_1 = scen_1_yll_lifetable_geo,
         output_attribute_2 = scen_2_yll_lifetable_geo,
-        approach_comparison = "pif") |>
-      helper_extract_main_results(),
+        approach_comparison = "pif"
+        )$health_main$impact_rounded,
     expected =
       c(33137, 17335, 48851) # Result on 20 August 2024; no comparison study to
   )
@@ -878,8 +871,8 @@ testthat::test_that("results correct delta comparison lifetable rr single exposu
     object =
       healthiar::compare(
         output_attribute_1 = scen_1_deaths_lifetable,
-        output_attribute_2 = scen_2_deaths_lifetable) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_deaths_lifetable
+        )$health_main$impact_rounded,
     expected =
       c(1915, 1013, 2795) # Result on 20 August 2024; no comparison study to
   )
@@ -923,8 +916,8 @@ testthat::test_that("results correct delta comparison lifetable iteration rr sin
     object =
       healthiar::compare(
         output_attribute_1 = scen_1_deaths_lifetable_geo,
-        output_attribute_2 = scen_2_deaths_lifetable_geo) |>
-      helper_extract_main_results(),
+        output_attribute_2 = scen_2_deaths_lifetable_geo
+        )$health_main$impact_rounded,
     expected =
       c(2925, 1546, 4269) # Result on 20 August 2024; no comparison study to
   )
@@ -967,8 +960,8 @@ testthat::test_that("results correct pif comparison lifetable rr single exposure
       healthiar::compare(
         output_attribute_1 = scen_1_deaths_lifetable,
         output_attribute_2 = scen_2_deaths_lifetable,
-        approach_comparison = "pif") |>
-      helper_extract_main_results(),
+        approach_comparison = "pif"
+        )$health_main$impact_rounded,
     expected =
       c(1935, 1018, 2837) # Result on 20 August 2024; no comparison study to
   )
@@ -1013,8 +1006,8 @@ testthat::test_that("results correct pif comparison lifetable iteration rr singl
       healthiar::compare(
         output_attribute_1 = scen_1_deaths_lifetable_geo,
         output_attribute_2 = scen_2_deaths_lifetable_geo,
-        approach_comparison = "pif") |>
-      helper_extract_main_results(),
+        approach_comparison = "pif"
+        )$health_main$impact_rounded,
     expected =
       c(2961, 1556, 4346) # Result on 20 AUgust 2024; no comparison study to
   )

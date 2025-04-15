@@ -48,13 +48,8 @@ testthat::test_that("results correct daly from yld rr and yll rr lifetable", {
     object =
       healthiar::get_daly(
         output_attribute_yll = bestcost_pm_yll,
-        output_attribute_yld = bestcost_pm_yld) |>
-      purrr::pluck("health_main") |>
-      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-      dplyr::select(impact)  |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+        output_attribute_yld = bestcost_pm_yld
+        )$health_main$impact_rounded,
     expected =
       c(32878, 17189, 49596) # Result from 2025-04-04; no comparison study
   )
@@ -134,16 +129,10 @@ testthat::test_that("results correct daly from two compare outputs (once 2 delta
           healthiar::compare(
             approach_comparison = "delta",
             output_attribute_1 = scen_1_yld,
-            output_attribute_2 = scen_2_yld)) |>
-      purrr::pluck("health_main") |>
-      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-      dplyr::select(impact)  |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+            output_attribute_2 = scen_2_yld)
+        )$health_main$impact_rounded,
     expected =
       c(24299, 12714, 36613) # Result on 21 March 2025; no comparison study
-    # tolerance = 0.49 # I.e. less than 1 YLL
   )
 
   ## PIF comparison
@@ -159,16 +148,10 @@ testthat::test_that("results correct daly from two compare outputs (once 2 delta
           healthiar::compare(
             approach_comparison = "pif",
             output_attribute_1 = scen_1_yld,
-            output_attribute_2 = scen_2_yld)) |>
-      purrr::pluck("health_main") |>
-      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-      dplyr::select(impact)  |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+            output_attribute_2 = scen_2_yld)
+        )$health_main$impact_rounded,
     expected =
       c(24378, 12735, 36815) # Result on 21 March 2025; no comparison study
-    # tolerance = 0.49 # I.e. less than 1 YLL
   )
 
 })
@@ -255,13 +238,8 @@ testthat::test_that("results correct daly from two compare outputs (once 2 delta
           healthiar::compare(
             approach_comparison = "delta",
             output_attribute_1 = scen_1_yld_geo,
-            output_attribute_2 = scen_2_yld_geo)) |>
-      purrr::pluck("health_main") |>
-      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-      dplyr::select(impact)  |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+            output_attribute_2 = scen_2_yld_geo)
+        )$health_main$impact_rounded,
     expected =
       c(34123, 17849, 51437) # Result on 21 March 2025; no comparison study
   )
@@ -279,13 +257,8 @@ testthat::test_that("results correct daly from two compare outputs (once 2 delta
           healthiar::compare(
             approach_comparison = "pif",
             output_attribute_1 = scen_1_yld_geo,
-            output_attribute_2 = scen_2_yld_geo)) |>
-      purrr::pluck("health_main") |>
-      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-      dplyr::select(impact)  |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+            output_attribute_2 = scen_2_yld_geo)
+        )$health_main$impact_rounded,
     expected =
       c(34255, 17885, 51773) # Result on 21 March 2025; no comparison study
   )

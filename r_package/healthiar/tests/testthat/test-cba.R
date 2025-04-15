@@ -12,12 +12,8 @@ testthat::test_that("results correct pathway_cba|discount_appr_direct|discount_s
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
         discount_years_benefit = 5,
-        discount_years_cost = 5) |>
-      purrr::pluck("cba_main") |>
-      dplyr::select(net_benefit_rounded) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+        discount_years_cost = 5
+        )$cba_main$net_benefit_rounded,
     expect = 776 # Excel file from University of Porto "WP2_Examples.xlsx"
   )
 })
@@ -50,12 +46,8 @@ testthat::test_that("results the same discounting only one specific year", {
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
         discount_years_benefit = 5,
-        discount_years_cost = 5) |>
-      purrr::pluck("cba_main") |>
-      dplyr::select(net_benefit_rounded) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+        discount_years_cost = 5
+        )$cba_main$net_benefit_rounded,
     expect = c(60330,23257,94350) # Results on 2025-03-06; no comparison study
   )
 })
@@ -86,12 +78,8 @@ testthat::test_that("results the same fake_cba|discount_appr_direct|discount_sha
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
         discount_years_benefit = 5,
-        discount_years_cost = 5) |>
-      purrr::pluck("cba_main") |>
-      dplyr::select(net_benefit_rounded) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+        discount_years_cost = 5
+        )$cba_main$net_benefit_rounded,
     expect = c(60416, 23343, 94436) - 86 # Results on 2025-02-05 ; no comparison study
   )
 })

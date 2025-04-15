@@ -21,11 +21,7 @@ testthat::test_that("results correct", {
         social_indicator = data$score,
         n_quantile = 10,
         approach = "quantile"
-      ) |>
-      purrr::pluck("social_main") |>
-      dplyr::select(difference_value)  |>
-      base::unlist() |>
-      base::as.numeric(),
+      )$social_main$difference_value,
     expect = c(22.52416423, 0.32236823, 14.5680866,0.17252793) # Results on 21 Nov 2024
   )
 })
@@ -53,11 +49,7 @@ testthat::test_that("results the same twice a socialize call", {
         social_indicator = data$score,
         n_quantile = 10,
         approach = "quantile"
-        ) |>
-      purrr::pluck("social_main") |>
-      dplyr::select(difference_value)  |>
-      base::unlist() |>
-      base::as.numeric(),
+        )$social_main$difference_value,
     expect = healthiar::socialize(
       impact = bestcost_pm_death[["health_main"]]$impact,
       population = bestcost_pm_death[["health_main"]]$population,
@@ -67,10 +59,6 @@ testthat::test_that("results the same twice a socialize call", {
       geo_id_disaggregated = data$CS01012020,
       social_indicator = data$score,
       n_quantile = 10,
-      approach = "quantile") |>
-      purrr::pluck("social_main") |>
-      dplyr::select(difference_value)  |>
-      base::unlist() |>
-      base::as.numeric()
+      approach = "quantile")$social_main$difference_value
   )
 })

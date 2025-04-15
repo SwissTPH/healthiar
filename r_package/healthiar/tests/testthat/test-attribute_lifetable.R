@@ -29,12 +29,8 @@ testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_singl
         deaths_female = data[["pop"]]$number_of_deaths_female,
         year_of_analysis = 2019,
         info = data_mort$pollutant[2],
-        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]) |>
-      purrr::pluck("health_main") |>
-      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-      dplyr::select(impact)  |>
-      base::unlist() |>
-      base::as.numeric(),
+        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
+        )$health_main$impact,
     expected =
       c(29274.89, 15328.16,	43118.30), # AirQ+ results from "Lifetable_CH_2019_PM_single_year_AP_no_newborns_default.csv"
     tolerance = 0.49 # I.e. less than 1 YLL
@@ -67,15 +63,10 @@ testthat::test_that("results correct pathway_lifetable|exp_dist|exp_time_single_
         population_midyear_female = data_lifetable[["female"]]$population,
         year_of_analysis = 2019,
         info = data_mort$pollutant[2],
-        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]) |>
-      purrr::pluck("health_main") |>
-      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-      dplyr::select(impact)  |>
-      base::unlist() |>
-      base::as.numeric(),
+        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
+        )$health_main$impact_rounded,
     expected =
-      c(32704.07, 17121.94, 48173.38), # Result on 20 August 2024 (AirQ+ approach); no comparison study to
-    tolerance = 0.1
+      round(c(32704.07, 17121.94, 48173.38)) # Result on 20 August 2024 (AirQ+ approach); no comparison study to
   )
 })
 
@@ -106,15 +97,9 @@ testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_const
         deaths_female = data[["pop"]]$number_of_deaths_female,
         year_of_analysis =  data[["input"]]$start_year,
         min_age = data[["input"]]$apply_rr_from_age
-      ) |>
-      purrr::pluck("health_main") |>
-      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-      dplyr::select(impact)  |>
-      base::unlist() |>
-      base::as.numeric(),
-    expected =
-      c(2776839.17,	1452410.83,	4094163.08), # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_no_newborns_default.csv"
-    tolerance = 0.49 # I.e. less than 1 YLL
+      )$health_main$impact,
+  expected =
+      c(2776839.17,	1452410.83,	4094163.08) # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_no_newborns_default.csv"
   )
 })
 
@@ -144,15 +129,10 @@ testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_const
         deaths_male = data[["pop"]]$number_of_deaths_male,
         deaths_female = data[["pop"]]$number_of_deaths_female,
         year_of_analysis =  data[["input"]]$start_year,
-        min_age = data[["input"]]$apply_rr_from_age) |>
-      purrr::pluck("health_main") |>
-      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-      dplyr::select(impact)  |>
-      base::unlist() |>
-      base::as.numeric(),
+        min_age = data[["input"]]$apply_rr_from_age
+        )$health_main$impact,
     expected =
-      c(3248408.53,	1700230.04,	4786195.41), # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_with_newborns_default.csv"
-    tolerance = 0.49 # I.e. less than 1 YLL
+      c(3248408.53,	1700230.04,	4786195.41) # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_with_newborns_default.csv"
   )
 })
 
@@ -184,10 +164,10 @@ testthat::test_that("results correct lifetable premature deaths single year expo
         population_midyear_male = data[["pop"]]$midyear_population_male,
         population_midyear_female = data[["pop"]]$midyear_population_female,
         year_of_analysis =  data[["input"]]$start_year,
-        min_age = data[["input"]]$apply_rr_from_age) |>
-      helper_extract_main_results(),
+        min_age = data[["input"]]$apply_rr_from_age
+        )$health_main$impact_rounded,
     expected =
-      c(2601, 1371, 3804) # Rounded impacts from "airqplus_deaths_yll_lifetable_adults.xlsx" (the YLL impacts were multiplied by 2 to obtain the total premature deaths deaths)
+      c(2601, 1371, 3804) # Results on 2025-04-15; Rounded impacts from "airqplus_deaths_yll_lifetable_adults.xlsx" (the YLL impacts were multiplied by 2 to obtain the total premature deaths deaths)
   )
 })
 
@@ -217,8 +197,8 @@ testthat::test_that("results correct lifetable premature deaths exposure distrib
         population_midyear_female = data_lifetable[["female"]]$population,
         year_of_analysis = 2019,
         info = data_mort$pollutant[2],
-        min_age = 20) |>
-      helper_extract_main_results(),
+        min_age = 20
+        )$health_main$impact_rounded,
     expected =
       c(2900, 1531, 4239) # Result on 20 August 2024; no comparison study
   )
