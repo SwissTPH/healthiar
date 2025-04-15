@@ -1,6 +1,6 @@
-
-
 # RELATIVE RISK ################################################################
+
+## DELTA #######################################################################
 
 testthat::test_that("results correct delta comparison rr single exposure", {
 
@@ -25,6 +25,38 @@ testthat::test_that("results correct delta comparison rr single exposure", {
       rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
       rr_increment = 10,
       info = "PM2.5_mortality_2020")
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_1 = output_attribute_1,
+        output_attribute_2 = output_attribute_2,
+        approach_comparison = "delta"
+      ) |>
+      helper_extract_main_results(),
+    expected =
+      c(774, 409, 1127) # Results on 16 May 2024; no comparison study
+  )
+})
+
+testthat::test_that("results correct delta comparison rr single exposure with attribute_mod", {
+
+  output_attribute_1 <-
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2010")
+
+  output_attribute_2 <-
+    healthiar::attribute_mod(
+      output_attribute_1 = output_attribute_1,
+      ## What is different in scenario 2 compared to scenario 1
+      exp_central = 6)
 
   testthat::expect_equal(
     object =
@@ -76,6 +108,8 @@ testthat::test_that("results correct delta comparison when two scenarios are ide
   )
 })
 
+### ITERATION ##################################################################
+
 testthat::test_that("results correct delta comparison iteration rr single exposures", {
 
   scen_1_singlebhd_rr_geo <-
@@ -108,76 +142,6 @@ testthat::test_that("results correct delta comparison iteration rr single exposu
   )
 })
 
-testthat::test_that("results correct pif comparison rr single exposure", {
-
-  output_attribute_1 =
-    healthiar::attribute_health(
-      exp_central = 8.85,
-      cutoff_central = 5,
-      bhd_central = 25000,
-      approach_risk = "relative_risk",
-      erf_shape = "log_linear",
-      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
-      rr_increment = 10,
-      info = "PM2.5_mortality_2010")
-
-  output_attribute_2 =
-    healthiar::attribute_health(
-      exp_central = 6,
-      cutoff_central = 5,
-      bhd_central = 25000,
-      approach_risk = "relative_risk",
-      erf_shape = "log_linear",
-      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
-      rr_increment = 10,
-      info = "PM2.5_mortality_2020")
-
-  testthat::expect_equal(
-    object =
-      healthiar::compare(
-        output_attribute_1 = output_attribute_1,
-        output_attribute_2 = output_attribute_2,
-        approach_comparison = "pif"
-        ) |>
-      helper_extract_main_results(),
-    expected =
-      c(782, 412, 1146) # Results on 16 May 2024; no comparison study
-  )
-})
-
-testthat::test_that("results correct pif comparison iteration rr single exposures", {
-
-  scen_1_singlebhd_rr_geo <-
-    healthiar::attribute_health(
-      exp_central = list(8.85, 8.0),
-      cutoff_central = 5,
-      bhd_central = list(25000, 20000),
-      rr_central = 1.118,
-      rr_lower = 1.060,
-      rr_upper = 1.179,
-      rr_increment = 10,
-      erf_shape = "log_linear",
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
-
-  scen_2_singlebhd_rr_geo <-
-    healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_rr_geo,
-      # What is different in scenario 2 compared to scenario 1
-      exp_central = list(6, 6.5))
-
-  testthat::expect_equal(
-    object =
-      healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_rr_geo,
-        output_attribute_2 = scen_2_singlebhd_rr_geo,
-        approach_comparison = "pif") |>
-      helper_extract_main_results(),
-    expected =
-      c(1114, 586, 1634) # Results on 19 June 2024; no comparison study
-  )
-})
-
 testthat::test_that("results correct delta comparison iteration (high number of geo units) rr single exposures", {
 
   scen_1_singlebhd_rr_geo <-
@@ -199,7 +163,6 @@ testthat::test_that("results correct delta comparison iteration (high number of 
       # What is different in scenario 2 compared to scenario 1
       exp_central = list(6, 6.5))
 
-
   testthat::expect_equal(
     object =
       comparison_singlebhd_rr_delta_geo <-
@@ -212,7 +175,46 @@ testthat::test_that("results correct delta comparison iteration (high number of 
   )
 })
 
-## YLD #########################################################################
+testthat::test_that("results correct delta comparison iteration rr single exposures and multiple variable uncertainties", {
+
+  scen_1_singlebhd_rr_geo_large <-
+    healthiar::attribute_health(
+      exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)),
+      exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)-0.1),
+      exp_upper = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)+0.1),
+      cutoff_central = 5,
+      bhd_central = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
+      bhd_lower = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
+      bhd_upper = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
+      rr_central = 1.369,
+      rr_lower = 1.124,
+      rr_upper = 1.664,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      geo_id_disaggregated = 1:1E4,
+      geo_id_aggregated = rep("CH", 1E4),
+      info = "PM2.5_mortality_2010")
+
+  scen_2_singlebhd_rr_geo_large <-
+    healthiar::attribute_mod(
+      output_attribute_1 = scen_1_singlebhd_rr_geo_large,
+      exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)),
+      exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)-0.1),
+      exp_upper = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)+0.1))
+
+  testthat::expect_equal(
+    object =
+      comparison_singlebhd_rr_delta_geo <-
+      healthiar::compare(
+        output_attribute_1 = scen_1_singlebhd_rr_geo_large,
+        output_attribute_2 = scen_2_singlebhd_rr_geo_large) |>
+      helper_extract_main_results(),
+    expected =
+      c(211111, 84203, 319618) # Result on 19 December 2024; no comparison study
+  )
+})
+
+### YLD ########################################################################
 
 testthat::test_that("results correct delta comparison yld rr single exposure", {
 
@@ -280,6 +282,83 @@ testthat::test_that("results correct delta comparison yld iteration rr single ex
   )
 })
 
+
+#### ITERATION #################################################################
+
+testthat::test_that("results correct delta comparison iteration YLD rr single exposures", {
+
+  scen_1_singlebhd_yld_geo <-
+    healthiar::attribute_health(
+      exp_central = list(8.85, 8.0),
+      cutoff_central = 5,
+      bhd_central = 25000,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      dw_central = 0.5,
+      duration_central = 1,
+      info = "PM2.5_yld_before",
+      geo_id_disaggregated = c("a", "b"),
+      geo_id_aggregated = rep("ch", 2))
+
+  scen_2_singlebhd_yld_geo <-
+    attribute_mod(
+      output_attribute_1 = scen_1_singlebhd_yld_geo,
+      exp_central = list(6, 6.5),
+      info = "PM2.5_yld_after")
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_1 = scen_1_singlebhd_yld_geo,
+        output_attribute_2 = scen_2_singlebhd_yld_geo) |>
+      helper_extract_main_results(),
+    expected =
+      c(591, 313, 861) # Result on 26 June 2024; no comparison study
+  )
+})
+
+## PIF #########################################################################
+
+testthat::test_that("results correct pif comparison rr single exposure", {
+
+  output_attribute_1 =
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2010")
+
+  output_attribute_2 =
+    healthiar::attribute_health(
+      exp_central = 6,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2020")
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_1 = output_attribute_1,
+        output_attribute_2 = output_attribute_2,
+        approach_comparison = "pif"
+      ) |>
+      helper_extract_main_results(),
+    expected =
+      c(782, 412, 1146) # Results on 16 May 2024; no comparison study
+  )
+})
+
 testthat::test_that("results correct pif comparison yld rr single exposure", {
 
   scen_1_singlebhd_yld <-
@@ -309,6 +388,41 @@ testthat::test_that("results correct pif comparison yld rr single exposure", {
       helper_extract_main_results(),
     expected =
       c(391,206,573) # Result on 16 May 2024; no comparison study
+  )
+})
+
+### ITERATION ##################################################################
+
+testthat::test_that("results correct pif comparison iteration rr single exposures", {
+
+  scen_1_singlebhd_rr_geo <-
+    healthiar::attribute_health(
+      exp_central = list(8.85, 8.0),
+      cutoff_central = 5,
+      bhd_central = list(25000, 20000),
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      geo_id_disaggregated = c("a", "b"),
+      geo_id_aggregated = rep("ch", 2))
+
+  scen_2_singlebhd_rr_geo <-
+    healthiar::attribute_mod(
+      output_attribute_1 = scen_1_singlebhd_rr_geo,
+      # What is different in scenario 2 compared to scenario 1
+      exp_central = list(6, 6.5))
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_1 = scen_1_singlebhd_rr_geo,
+        output_attribute_2 = scen_2_singlebhd_rr_geo,
+        approach_comparison = "pif") |>
+      helper_extract_main_results(),
+    expected =
+      c(1114, 586, 1634) # Results on 19 June 2024; no comparison study
   )
 })
 
@@ -348,10 +462,84 @@ testthat::test_that("results correct pif comparison yld iteration rr single expo
   )
 })
 
+### YLD ########################################################################
+
+testthat::test_that("results correct pif comparison yld rr single exposure", {
+
+  scen_1_singlebhd_yld  <-
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+      duration_central = 1, duration_lower = 0.5, duration_upper = 10)
+
+  scen_2_singlebhd_yld <-
+    healthiar::attribute_mod(
+      output_attribute_1 = scen_1_singlebhd_yld,
+      exp_central = 6)
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        approach_comparison = "pif",
+        output_attribute_1 = scen_1_singlebhd_yld,
+        output_attribute_2 = scen_2_singlebhd_yld) |>
+      helper_extract_main_results(),
+    expected =
+      c(391,206,573) # Result on 16 May 2024; no comparison study
+  )
+})
+
+#### ITERATION #################################################################
+
+testthat::test_that("results correct pif comparison iteration rr single exposures", {
+
+  scen_1_singlebhd_yld_geo <-
+    healthiar::attribute_health(
+      exp_central = list(8.85, 8.0),
+      cutoff_central = 5,
+      bhd_central = 25000,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      dw_central = 0.5,
+      duration_central = 1,
+      info = "PM2.5_yld_before",
+      geo_id_disaggregated = c("a", "b"),
+      geo_id_aggregated = rep("ch", 2))
+
+  scen_2_singlebhd_yld_geo <-
+    attribute_mod(
+      output_attribute_1 = scen_1_singlebhd_yld_geo,
+      exp_central = list(6, 6.5),
+      info = "PM2.5_yld_after")
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        approach_comparison = "pif",
+        output_attribute_1 = scen_1_singlebhd_yld_geo,
+        output_attribute_2 = scen_2_singlebhd_yld_geo) |>
+      helper_extract_main_results(),
+    expected =
+      c(599, 315, 878) # Result on 20 June 2024; no comparison study
+  )
+})
 
 # ABSOLUTE RISK ################################################################
 
-# Note: no PIF option in ar
+## NOTE: no PIF option in AR pathway
+
+## DELTA #######################################################################
+
 testthat::test_that("results correct delta comparison ar exposure distribution", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
@@ -382,6 +570,42 @@ testthat::test_that("results correct delta comparison ar exposure distribution",
       c(62531) # Result on 23 May 2024; no comparison study
   )
 })
+
+### YLD ########################################################################
+
+testthat::test_that("results correct delta comparison ar YLD", {
+
+  scen_1_singlebhd_yld  <-
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+      duration_central = 1, duration_lower = 0.5, duration_upper = 10)
+
+  scen_2_singlebhd_yld <-
+    healthiar::attribute_mod(
+      output_attribute_1 = scen_1_singlebhd_yld,
+      exp_central = 6)
+
+  testthat::expect_equal(
+    object =
+      comparison_singlebhd_ar_delta <-
+      healthiar::compare(
+        output_attribute_1 = scen_1_singlebhd_yld,
+        output_attribute_2 = scen_2_singlebhd_yld) |>
+      helper_extract_main_results(),
+    expected =
+      c(387, 205, 564) # Result on 16 May 2024; no comparison study
+  )
+})
+
+### ITERATION ##################################################################
 
 testthat::test_that("results correct delta comparison iteration ar exposure distribution", {
 
@@ -420,6 +644,8 @@ testthat::test_that("results correct delta comparison iteration ar exposure dist
       c(115869) # Results on 19 June 2024; no comparison study
   )
 })
+
+
 
 # LIFETABLE ####################################################################
 
@@ -471,6 +697,8 @@ testthat::test_that("results correct delta comparison lifetable yll rr single ex
       c(21644, 11340, 31860) # Result on 20 August 2024; no comparison study to
   )
 })
+
+#### ITERATION #################################################################
 
 testthat::test_that("results correct delta comparison lifetable yll iteration rr single exposure", {
 
@@ -564,6 +792,8 @@ testthat::test_that("results correct pif comparison lifetable yll rr single expo
   )
 })
 
+#### ITERATION #################################################################
+
 testthat::test_that("results correct pif comparison lifetable yll iteration rr single exposure", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
@@ -610,7 +840,7 @@ testthat::test_that("results correct pif comparison lifetable yll iteration rr s
   )
 })
 
-## DEATHS ######################################################################
+## PREMATURE DEATHS ############################################################
 
 ### DELTA ######################################################################
 
@@ -654,6 +884,8 @@ testthat::test_that("results correct delta comparison lifetable rr single exposu
       c(1915, 1013, 2795) # Result on 20 August 2024; no comparison study to
   )
 })
+
+#### ITERATION #################################################################
 
 testthat::test_that("results correct delta comparison lifetable iteration rr single exposure", {
 
@@ -741,6 +973,8 @@ testthat::test_that("results correct pif comparison lifetable rr single exposure
       c(1935, 1018, 2837) # Result on 20 August 2024; no comparison study to
   )
 })
+
+#### ITERATION #################################################################
 
 testthat::test_that("results correct pif comparison lifetable iteration rr single exposure", {
 

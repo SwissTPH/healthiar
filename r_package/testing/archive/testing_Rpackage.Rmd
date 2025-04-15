@@ -46,12 +46,14 @@ credentials::set_github_pat() # paste github PAT if prompted
 remotes::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
-  ref = "613-add-a-news-file-to-our-package", # By default "HEAD"; name of branch to install package from as a string
+  ref = "568-add-example-descriptions-to-vignette", # By default "HEAD"; name of branch to install package from as a string
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   # dependencies = TRUE,
   build_vignettes = TRUE,
-  upgrade = c("always")
+  # upgrade = c("always") # Update packages
+  upgrade = c("never") # Never update packages
+
   
 )
 
@@ -65,7 +67,7 @@ library(healthiar)
 # detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
 
 ## Install package from .zip file
-# devtools::build(binary = TRUE, path = "../testing/Workshops_and_demos/WS_WP5/ws_2/") # Save current state of package as .zip file (e.g. to directly test changes in functions)
+# devtools::build(binary = TRUE, path = "../testing/Workshops_and_demos/2025_04_10_UBD_policy") # Save current state of package as .zip file (e.g. to directly test changes in functions)
 # install.packages("../testing/input/healthiar_0.0.0.1.zip", repos=NULL, type='source') # Modify file path
 
 ## Install package from .tar.gz file
@@ -454,10 +456,6 @@ niph_noise_ha_result <-
         dplyr::pull() |>
   round()
 
-# View(bestcost_noise_ha_ar)
-
-check_bestcost(result_list_bestcost = bestcost_noise_ha_ar,
-               result_vector_alternative = niph_noise_ha_result)
 
 # Obtain attributable cases using the bestcost package and input data from niph
 bestcost_noise_ha_ar <- 

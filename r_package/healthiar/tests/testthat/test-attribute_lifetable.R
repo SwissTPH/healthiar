@@ -1,5 +1,7 @@
 # YLL from lifetable ###########################################################
 
+## SINGLE YEAR EXPOSURE & NO NEWBORNS ##########################################
+
 testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
@@ -35,79 +37,6 @@ testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_singl
       base::as.numeric(),
     expected =
       c(29274.89, 15328.16,	43118.30), # AirQ+ results from "Lifetable_CH_2019_PM_single_year_AP_no_newborns_default.csv"
-    tolerance = 0.49 # I.e. less than 1 YLL
-  )
-})
-
-testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
-
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_lifetable(
-        health_outcome = "yll",
-        approach_exposure = "constant",
-        approach_newborns = "without_newborns",
-        exp_central = data[["input"]]$mean_concentration,
-        cutoff_central = data[["input"]]$cut_off_value,
-        rr_central = data[["input"]]$relative_risk,
-        rr_lower = data[["input"]]$relative_risk_lower,
-        rr_upper = data[["input"]]$relative_risk_upper,
-        rr_increment = 10,
-        erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-        first_age_pop = dplyr::first(data[["pop"]]$age_from...),
-        last_age_pop = dplyr::last(data[["pop"]]$age_from...),
-        population_midyear_male = data[["pop"]]$midyear_population_male,
-        population_midyear_female = data[["pop"]]$midyear_population_female,
-        deaths_male = data[["pop"]]$number_of_deaths_male,
-        deaths_female = data[["pop"]]$number_of_deaths_female,
-        year_of_analysis =  data[["input"]]$start_year,
-        min_age = data[["input"]]$apply_rr_from_age
-      ) |>
-      purrr::pluck("health_main") |>
-      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-      dplyr::select(impact)  |>
-      base::unlist() |>
-      base::as.numeric(),
-    expected =
-      c(2776839.17,	1452410.83,	4094163.08), # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_no_newborns_default.csv"
-    tolerance = 0.49 # I.e. less than 1 YLL
-  )
-})
-
-testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
-
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_lifetable(
-        health_outcome = "yll",
-        approach_exposure = "constant",
-        approach_newborns = "with_newborns",
-        exp_central = data[["input"]]$mean_concentration,
-        cutoff_central = data[["input"]]$cut_off_value,
-        rr_central = data[["input"]]$relative_risk,
-        rr_lower = data[["input"]]$relative_risk_lower,
-        rr_upper = data[["input"]]$relative_risk_upper,
-        rr_increment = 10,
-        erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-        first_age_pop = dplyr::first(data[["pop"]]$age_from...),
-        last_age_pop = dplyr::last(data[["pop"]]$age_from...),
-        population_midyear_male = data[["pop"]]$midyear_population_male,
-        population_midyear_female = data[["pop"]]$midyear_population_female,
-        deaths_male = data[["pop"]]$number_of_deaths_male,
-        deaths_female = data[["pop"]]$number_of_deaths_female,
-        year_of_analysis =  data[["input"]]$start_year,
-        min_age = data[["input"]]$apply_rr_from_age) |>
-      purrr::pluck("health_main") |>
-      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
-      dplyr::select(impact)  |>
-      base::unlist() |>
-      base::as.numeric(),
-    expected =
-      c(3248408.53,	1700230.04,	4786195.41), # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_with_newborns_default.csv"
     tolerance = 0.49 # I.e. less than 1 YLL
   )
 })
@@ -150,7 +79,86 @@ testthat::test_that("results correct pathway_lifetable|exp_dist|exp_time_single_
   )
 })
 
-# DEATHS #######################################################################
+## CONSTANT EXPOSURE & NO NEWBORNS #############################################
+
+testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "constant",
+        approach_newborns = "without_newborns",
+        exp_central = data[["input"]]$mean_concentration,
+        cutoff_central = data[["input"]]$cut_off_value,
+        rr_central = data[["input"]]$relative_risk,
+        rr_lower = data[["input"]]$relative_risk_lower,
+        rr_upper = data[["input"]]$relative_risk_upper,
+        rr_increment = 10,
+        erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
+        first_age_pop = dplyr::first(data[["pop"]]$age_from...),
+        last_age_pop = dplyr::last(data[["pop"]]$age_from...),
+        population_midyear_male = data[["pop"]]$midyear_population_male,
+        population_midyear_female = data[["pop"]]$midyear_population_female,
+        deaths_male = data[["pop"]]$number_of_deaths_male,
+        deaths_female = data[["pop"]]$number_of_deaths_female,
+        year_of_analysis =  data[["input"]]$start_year,
+        min_age = data[["input"]]$apply_rr_from_age
+      ) |>
+      purrr::pluck("health_main") |>
+      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
+      dplyr::select(impact)  |>
+      base::unlist() |>
+      base::as.numeric(),
+    expected =
+      c(2776839.17,	1452410.83,	4094163.08), # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_no_newborns_default.csv"
+    tolerance = 0.49 # I.e. less than 1 YLL
+  )
+})
+
+## CONSTANT EXPOSURE & WITH NEWBORNS ###########################################
+
+testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "constant",
+        approach_newborns = "with_newborns",
+        exp_central = data[["input"]]$mean_concentration,
+        cutoff_central = data[["input"]]$cut_off_value,
+        rr_central = data[["input"]]$relative_risk,
+        rr_lower = data[["input"]]$relative_risk_lower,
+        rr_upper = data[["input"]]$relative_risk_upper,
+        rr_increment = 10,
+        erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
+        first_age_pop = dplyr::first(data[["pop"]]$age_from...),
+        last_age_pop = dplyr::last(data[["pop"]]$age_from...),
+        population_midyear_male = data[["pop"]]$midyear_population_male,
+        population_midyear_female = data[["pop"]]$midyear_population_female,
+        deaths_male = data[["pop"]]$number_of_deaths_male,
+        deaths_female = data[["pop"]]$number_of_deaths_female,
+        year_of_analysis =  data[["input"]]$start_year,
+        min_age = data[["input"]]$apply_rr_from_age) |>
+      purrr::pluck("health_main") |>
+      dplyr::arrange(erf_ci) |> # Ascending order: central, lower, upper
+      dplyr::select(impact)  |>
+      base::unlist() |>
+      base::as.numeric(),
+    expected =
+      c(3248408.53,	1700230.04,	4786195.41), # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_with_newborns_default.csv"
+    tolerance = 0.49 # I.e. less than 1 YLL
+  )
+})
+
+
+
+# PREMATURE DEATHS #############################################################
 
 testthat::test_that("results correct lifetable premature deaths single year exposure with newborns", {
 

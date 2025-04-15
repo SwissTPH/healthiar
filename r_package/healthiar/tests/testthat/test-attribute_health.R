@@ -1,5 +1,6 @@
 # RR ###########################################################################
 
+## SINGLE EXPOSURE #############################################################
 # testthat::test_that("result correct rr with single exposure value and only rr_central", {
 # testthat::test_that("result correct rr with single exp (pw_exp_single pw_cutoff_TRUE pw_varuncer_FALSE pw_erf_log_lin pw_iteration_FALSE pw_multiexp_FALSE)", {
 # testthat::test_that("result correct ID|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE", {
@@ -23,7 +24,8 @@ testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRU
         data |>
         dplyr::select(estimated_number_of_attributable_cases_central)|>
         base::as.numeric()
-    )})
+    )
+})
 
 # testthat::test_that("result correct rr with single exposure and variable uncertainty", {
 # testthat::test_that("result correct rr with single exposure and variable uncertainty (pw_erf_log_lin pw_exp_single pw_cutoff_TRUE pw_varuncer_TRUE pw_iteration_FALSE pw_multiexp_FALSE )", {
@@ -88,7 +90,6 @@ testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRU
 testthat::test_that("detailed result the same fake_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|multiexp_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
-
 
   testthat::expect_equal(
     object =
@@ -172,6 +173,319 @@ testthat::test_that("number of rows in detailed results correct rr|erf_log_lin|e
       3^4 # CI's in 4 input variables
       )
 
+})
+
+
+
+## single exposure & user-defined points for relative risk using splinefun
+testthat::test_that("results the same rr single exposure value and user-defined ERF (using stats::approxfun) and cutoff equals 5", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$mean_concentration,
+        cutoff_central = data$cut_off_value,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+        erf_eq_central = # GBD2019 ERF for PM and lower respiratory infections
+          stats::splinefun(
+            x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
+            y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
+            method = "natural"),
+        info = paste0(data$pollutant,"_", data$evaluation_name)) |>
+      helper_extract_main_results(),
+    expected =
+      c(1057) # Results on 10 October 2024 (with cutoff = 5 = data$cut_off_value); no comparison study
+  )
+})
+
+testthat::test_that("results the same rr single exposure value and user-defined ERF (using stats::splinefun) and cutoff equals 0", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$mean_concentration,
+        cutoff_central = 0,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+        erf_eq_central = # GBD2019 ERF for PM and lower respiratory infections
+          stats::splinefun(
+            x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
+            y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
+            method = "natural"),
+        info = paste0(data$pollutant,"_", data$evaluation_name)) |>
+      helper_extract_main_results(),
+    expected =
+      c(2263) # Results on 10 October 2024 (with cutoff = 0); no comparison study
+  )
+})
+
+## single exposure & user-defined points for relative risk using approxfun
+testthat::test_that("results the same rr single exposure value and user-defined ERF (using stats::approxfun) and cutoff equals 0", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$mean_concentration,
+        cutoff_central = data$cut_off_value,
+        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+        erf_eq_central = # GBD2019 ERF for PM and lower respiratory infections
+          stats::approxfun(
+            x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
+            y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
+            method = "linear"),
+        info = paste0(data$pollutant,"_", data$evaluation_name)) |>
+      helper_extract_main_results(),
+    expected =
+      c(1052) # Results on 10 October 2024 (with cutoff = 5); no comparison study
+  )
+})
+
+### ITERATION ##################################################################
+
+testthat::test_that("results the same rr iteration with exposure distribution and uncertainties in rr and exp", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)),
+        exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)-0.1),
+        exp_upper = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)+0.1),
+        cutoff_central = 5,
+        bhd_central = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
+        bhd_lower = as.list(runif_with_seed(1E4, 25000, 35000, 1) - 1000),
+        bhd_upper = as.list(runif_with_seed(1E4, 25000, 35000, 1) + 1000),
+        rr_central = 1.369,
+        rr_lower = 1.124,
+        rr_upper = 1.664,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        population = as.list(rep(1E6, 1E4)),
+        geo_id_disaggregated = 1:1E4,
+        geo_id_aggregated = rep("CH", 1E4),
+        info = "PM2.5_copd") |>
+      helper_extract_main_results(),
+    expected =
+      c(31460722, 12120764, 49312859) # Results on 5 November 2024; no comparison study
+  )
+})
+
+### YLD ########################################################################
+
+testthat::test_that("results the same rr single exposure value and prevalence-based YLD (duration_central=1)", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = 8.85,
+        cutoff_central = 5,
+        bhd_central = 25000,
+        rr_central = 1.118,
+        rr_lower = 1.060,
+        rr_upper = 1.179,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+        duration_central = 1, duration_lower = 0.5, duration_upper = 10) |>
+      helper_extract_main_results(),
+    expected =
+      c(525, 277, 768) # Result on 16 May 2024; no comparison study
+  )
+})
+
+testthat::test_that("results the same rr single exposure value and incidence-based YLD (duration_central > 1)", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = 8.85,
+        cutoff_central = 5,
+        bhd_central = 25000,
+        rr_central = 1.118,
+        rr_lower = 1.060,
+        rr_upper = 1.179,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+        duration_central = 5, duration_lower = 2, duration_upper = 10) |>
+      helper_extract_main_results(),
+    expected =
+      c(2627, 1386, 3839) # # Result on 2025-01-28; no comparison study
+  )
+})
+
+## EXPOSURE DISTRIBUTION #######################################################
+
+testthat::test_that("results correct pathway_rr|erf_log_linear|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  ## With prop_pop_exp
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$exposure_mean,
+        prop_pop_exp = data$prop_exposed,
+        cutoff_central = min(data$exposure_mean),
+        bhd_central = data$gbd_daly[1],
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        info = data.frame(pollutant = "road_noise", outcome = "YLD")) |>
+      helper_extract_main_results(),
+    expected =
+      data_raw |>
+      dplyr::filter(exposure_category %in% "Total exposed")|>
+      dplyr::select(daly)|>
+      dplyr::pull() |>
+      round()
+    )
+
+  ## With pop_exp
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$exposure_mean,
+        prop_pop = data$population_exposed_total,
+        cutoff_central = min(data$exposure_mean),
+        bhd_central = data$gbd_daly[1],
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        info = data.frame(pollutant = "road_noise", outcome = "YLD")) |>
+      helper_extract_main_results(),
+    expected =
+      data_raw |>
+      dplyr::filter(exposure_category %in% "Total exposed")|>
+      dplyr::select(daly)|>
+      dplyr::pull() |>
+      round()
+  )
+})
+
+testthat::test_that("results the same rr exposure distribution without cutoff", {
+
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$exposure_mean,
+        prop_pop_exp = data$prop_exposed,
+        bhd_central = data$gbd_daly[1],
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        info = data.frame(pollutant = "road_noise", outcome = "YLD")) |>
+      helper_extract_main_results(),
+    expected =
+      29358 # Results on 2025-01-20; no comparison study
+  )
+})
+
+### ITERATION ##################################################################
+testthat::test_that("results the same rr exposure distribution without cutoff", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = list(runif_with_seed(5,8,10,1),
+                           runif_with_seed(5,8,10,2),
+                           runif_with_seed(5,8,10,3)),
+        cutoff_central = 5,
+        pop_exp = list(runif_with_seed(5,1E2,1E3,1),
+                       runif_with_seed(5,1E2,1E3,2),
+                       runif_with_seed(5,1E2,1E3,3)),
+        bhd_central = list(runif_with_seed(3,1E4,1E5,1)),
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        geo_id_disaggregated = 1:3,
+        geo_id_aggregated = rep("ch", 3))$health_detailed$impact_raw$impact_rounded,
+    expected =
+      round(c(1066.970, 1421.845, 1908.409)) # Results on 2025-04-14; no comparison study
+  )
+})
+
+### USER-DEFINED ERF POINT-PAIRS ###############################################
+
+testthat::test_that("results the same user-defined erf (mrbrt) with splinefun, exposure distribution, uncertainties erf & cutoff", {
+
+  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$exposure_mean,
+        prop_pop_exp = data$prop_exposed,
+        cutoff_central = min(data$exposure_mean),
+        bhd_central = data$gbd_daly[1],
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_eq_central =
+          stats::splinefun(
+            x = data_erf$exposure,
+            y = data_erf$mean,
+            method = "natural"),
+        erf_eq_lower = stats::splinefun(
+          x = data_erf$exposure,
+          y = data_erf$mean,
+          method = "natural"),
+        erf_eq_upper = stats::splinefun(
+          x = data_erf$exposure,
+          y = data_erf$mean + 0.01,
+          method = "natural"),
+        info = data.frame(pollutant = "road_noise", outcome = "YLD")) |>
+      helper_extract_main_results(),
+    expected =
+      c(1637, 1637, 2450) # Results on 2025-01-20 ; no comparison study
+  )
+})
+
+testthat::test_that("results the same user-defined erf (mrbrt) with splinefun, exposure distribution, uncertainties erf & no cutoff", {
+
+  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$exposure_mean,
+        prop_pop_exp = data$prop_exposed,
+        bhd_central = data$gbd_daly[1],
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_eq_central =
+          stats::splinefun(
+            x = data_erf$exposure,
+            y = data_erf$mean,
+            method = "natural"),
+        erf_eq_lower = stats::splinefun(
+          x = data_erf$exposure,
+          y = data_erf$mean,
+          method = "natural"),
+        erf_eq_upper = stats::splinefun(
+          x = data_erf$exposure,
+          y = data_erf$mean + 0.01,
+          method = "natural"),
+        info = data.frame(pollutant = "road_noise", outcome = "YLD")) |>
+      helper_extract_main_results(),
+    expected =
+      c(32502, 32502, 32828) # Results on 2025-01-20 ; no comparison study
+  )
 })
 
 # testthat::test_that("results correct user-defined erf (mrbrt) with splinefun", {
@@ -325,218 +639,6 @@ testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_FA
   )
 })
 
-testthat::test_that("results the same user-defined erf (mrbrt) with splinefun, exposure distribution, uncertainties erf & cutoff", {
-
-  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
-  data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        exp_central = data$exposure_mean,
-        prop_pop_exp = data$prop_exposed,
-        cutoff_central = min(data$exposure_mean),
-        bhd_central = data$gbd_daly[1],
-        rr_central = 1.08,
-        rr_increment = 10,
-        erf_eq_central =
-          stats::splinefun(
-            x = data_erf$exposure,
-            y = data_erf$mean,
-            method = "natural"),
-        erf_eq_lower = stats::splinefun(
-          x = data_erf$exposure,
-          y = data_erf$mean,
-          method = "natural"),
-        erf_eq_upper = stats::splinefun(
-          x = data_erf$exposure,
-          y = data_erf$mean + 0.01,
-          method = "natural"),
-        info = data.frame(pollutant = "road_noise", outcome = "YLD")) |>
-      helper_extract_main_results(),
-    expected =
-      c(1637, 1637, 2450) # Results on 2025-01-20 ; no comparison study
-  )
-})
-
-testthat::test_that("results the same user-defined erf (mrbrt) with splinefun, exposure distribution, uncertainties erf & no cutoff", {
-
-  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
-  data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        exp_central = data$exposure_mean,
-        prop_pop_exp = data$prop_exposed,
-        bhd_central = data$gbd_daly[1],
-        rr_central = 1.08,
-        rr_increment = 10,
-        erf_eq_central =
-          stats::splinefun(
-            x = data_erf$exposure,
-            y = data_erf$mean,
-            method = "natural"),
-        erf_eq_lower = stats::splinefun(
-          x = data_erf$exposure,
-          y = data_erf$mean,
-          method = "natural"),
-        erf_eq_upper = stats::splinefun(
-          x = data_erf$exposure,
-          y = data_erf$mean + 0.01,
-          method = "natural"),
-        info = data.frame(pollutant = "road_noise", outcome = "YLD")) |>
-      helper_extract_main_results(),
-    expected =
-      c(32502, 32502, 32828) # Results on 2025-01-20 ; no comparison study
-  )
-})
-
-testthat::test_that("results the same rr iteration with exposure distribution and uncertainties in rr and exp", {
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)),
-        exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)-0.1),
-        exp_upper = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)+0.1),
-        cutoff_central = 5,
-        bhd_central = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-        bhd_lower = as.list(runif_with_seed(1E4, 25000, 35000, 1) - 1000),
-        bhd_upper = as.list(runif_with_seed(1E4, 25000, 35000, 1) + 1000),
-        rr_central = 1.369,
-        rr_lower = 1.124,
-        rr_upper = 1.664,
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        population = as.list(rep(1E6, 1E4)),
-        geo_id_disaggregated = 1:1E4,
-        geo_id_aggregated = rep("CH", 1E4),
-        info = "PM2.5_copd") |>
-      helper_extract_main_results(),
-    expected =
-      c(31460722, 12120764, 49312859) # Results on 5 November 2024; no comparison study
-  )
-})
-
-testthat::test_that("results the same rr single exposure value and user-defined ERF (using stats::approxfun) and cutoff equals 5", {
-
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        exp_central = data$mean_concentration,
-        cutoff_central = data$cut_off_value,
-        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
-        erf_eq_central = # GBD2019 ERF for PM and lower respiratory infections
-          stats::splinefun(
-            x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
-            y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
-            method = "natural"),
-        info = paste0(data$pollutant,"_", data$evaluation_name)) |>
-      helper_extract_main_results(),
-    expected =
-      c(1057) # Results on 10 October 2024 (with cutoff = 5 = data$cut_off_value); no comparison study
-  )
-})
-
-testthat::test_that("results the same rr single exposure value and user-defined ERF (using stats::splinefun) and cutoff equals 0", {
-
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        exp_central = data$mean_concentration,
-        cutoff_central = 0,
-        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
-        erf_eq_central = # GBD2019 ERF for PM and lower respiratory infections
-          stats::splinefun(
-            x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
-            y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
-            method = "natural"),
-        info = paste0(data$pollutant,"_", data$evaluation_name)) |>
-      helper_extract_main_results(),
-    expected =
-      c(2263) # Results on 10 October 2024 (with cutoff = 0); no comparison study
-  )
-})
-
-testthat::test_that("results the same rr single exposure value and user-defined ERF (using stats::approxfun) and cutoff equals 0", {
-
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        exp_central = data$mean_concentration,
-        cutoff_central = data$cut_off_value,
-        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
-        erf_eq_central = # GBD2019 ERF for PM and lower respiratory infections
-          stats::approxfun(
-            x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
-            y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
-            method = "linear"),
-        info = paste0(data$pollutant,"_", data$evaluation_name)) |>
-      helper_extract_main_results(),
-    expected =
-      c(1052) # Results on 10 October 2024 (with cutoff = 5); no comparison study
-  )
-})
-
-testthat::test_that("results correct pathway_rr|erf_log_linear|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
-
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
-  data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        exp_central = data$exposure_mean,
-        prop_pop_exp = data$prop_exposed,
-        cutoff_central = min(data$exposure_mean),
-        bhd_central = data$gbd_daly[1],
-        rr_central = 1.08,
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        info = data.frame(pollutant = "road_noise", outcome = "YLD")) |>
-      helper_extract_main_results(),
-    expected =
-      data_raw |>
-      dplyr::filter(exposure_category %in% "Total exposed")|>
-      dplyr::select(daly)|>
-      dplyr::pull() |>
-      round()
-    )
-})
-
-testthat::test_that("results the same rr exposure distribution without cutoff", {
-
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
-  data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        exp_central = data$exposure_mean,
-        prop_pop_exp = data$prop_exposed,
-        bhd_central = data$gbd_daly[1],
-        rr_central = 1.08,
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        info = data.frame(pollutant = "road_noise", outcome = "YLD")) |>
-      helper_extract_main_results(),
-    expected =
-      29358 # Results on 2025-01-20; no comparison study
-  )
-})
 
 # AR ###########################################################################
 
@@ -564,6 +666,8 @@ testthat::test_that("results correct pathway_ar|erf_formula|exp_dist|cutoff_FALS
       round()
   )
 })
+
+## ITERATION ###################################################################
 
 testthat::test_that("no error ar iteration", {
 
@@ -639,6 +743,8 @@ testthat::test_that("detailed results the same ar iteration with variable uncert
   )
 })
 
+## YLD #########################################################################
+
 testthat::test_that("results the same rr yld with variable uncertainties", {
 
   testthat::expect_equal(
@@ -685,8 +791,6 @@ testthat::test_that("detailed results the same rr yld with variable uncertaintie
     expected = # Result on 2025-01-20; no comparison study
       c(525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 658, 329, 6583, 132, 66, 1317, 13165, 6583, 131651, 391, 196, 3911, 78, 39, 782, 7822, 3911, 78223, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 348, 174, 3483, 70, 35, 697, 6966, 3483, 69662, 206, 103, 2059, 41, 21, 412, 4117, 2059, 41174, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572, 959, 480, 9595, 192, 96, 1919, 19189, 9595, 191894, 573, 287, 5731, 115, 57, 1146, 11461, 5731, 114615, 391, 196, 3911, 78, 39, 782, 7822, 3911, 78223, 525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 255, 128, 2553, 51, 26, 511, 5106, 2553, 51059, 206, 103, 2059, 41, 21, 412, 4117, 2059, 41174, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 134, 67, 1340, 27, 13, 268, 2680, 1340, 26805, 573, 287, 5731, 115, 57, 1146, 11461, 5731, 114615, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572, 375, 188, 3750, 75, 38, 750, 7501, 3750, 75010, 658, 329, 6583, 132, 66, 1317, 13165, 6583, 131651, 790, 395, 7896, 158, 79, 1579, 15792, 7896, 157921, 525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 348, 174, 3483, 70, 35, 697, 6966, 3483, 69662, 419, 209, 4189, 84, 42, 838, 8378, 4189, 83782, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 959, 480, 9595, 192, 96, 1919, 19189, 9595, 191894, 1148, 574, 11479, 230, 115, 2296, 22959, 11479, 229589, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572))
 })
-
-## YLD #########################################################################
 
 testthat::test_that("results correct ar yld with uncertainties in dw and duration", {
 
