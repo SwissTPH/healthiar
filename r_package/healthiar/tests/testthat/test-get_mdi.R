@@ -12,7 +12,7 @@
 #         single_parent = exdat_get_mdi$single_parent,
 #         pop_change = exdat_get_mdi$pop_change,
 #         no_heating = exdat_get_mdi$no_heating,
-#         n_quantile = 10)$MDI[1:50] |> round(digits = 7),
+#         n_quantile = 10)$MDI[1:50] |> round(digits = 7), # Extract the MDI of the first 50 geo units
 #     expect = c(0.2117721, 0.4319924, 0.1847750, 0.3787937, 0.3121354, 0.2565185, 0.2245822,
 #                0.2140148, 0.2656597, 0.3566141, 0.1746261, 0.2108900, 0.2221277, 0.2226641,
 #                0.2478800, 0.2513628, 0.3595167, 0.2321278, 0.2879502, 0.2962355, 0.1866685,

@@ -267,8 +267,7 @@ testthat::expect_equal(
       bhd_central = ,
       geo_id_disaggregated = ,
       geo_id_aggregated = 
-    ) |>
-    healthiar::helper_extract_main_health_results(),
+    )$health_main$impact_rounded,
   ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
   expected =
     c( )
@@ -283,7 +282,7 @@ testthat::expect_equal(
 ## Add here input data details: data sources, measured vs. modelled, ...
 ```
 
-Please note that there might not be a helper function to extract main / detailed results for all calculation pathways. Please refer to the *intro_to_healthiar* vignette for guidance on how to extract main / detailed results of an attribute output.
+Please refer to the *intro_to_healthiar* vignette for guidance on how to extract main / detailed results of an attribute output.
 
 ### Add test details
 
@@ -355,7 +354,7 @@ healthiar::attribute_health(
   rr_central = 1.08,
   rr_increment = 10,
   exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
-  prop_pop_exp = c(0.818718312, 0.074319355, 0.054852478, 0.036785683, 0.013847374, 0.001476797),
+  prop_pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700),
   cutoff_central = 53,
   bhd_central = 85362.08,
   geo_id_disaggregated = NULL,
@@ -454,13 +453,12 @@ healthiar::attribute_health(
   rr_central = 1.08,
   rr_increment = 10,
   exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
-  prop_pop_exp = c(0.818718312, 0.074319355, 0.054852478, 0.036785683, 0.013847374, 0.001476797),
+  pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700),
   cutoff_central = 53,
   bhd_central = 85362.08,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL
-) |> 
-  healthiar::helper_extract_main_health_results() |> 
+)$health_main$impact_rounded |> 
   print()
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -469,7 +467,7 @@ healthiar::attribute_health(
 
 In this case the results are the same!
 
-Please note that there might not be a helper function to extract main / detailed results for all calculation pathways. Please refer to the *intro_to_healthiar* vignette for guidance on how to extract main / detailed results of an attribute output.
+Please refer to the *intro_to_healthiar* vignette for guidance on how to extract main / detailed results of an attribute output.
 
 ### Option B: Compare results automatically (preferred)
 
@@ -482,7 +480,7 @@ testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|cutoff_TR
     object =
       healthiar::attribute_health(
         exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
-        prop_pop_exp = c(0.818718312, 0.074319355, 0.054852478, 0.036785683, 0.013847374, 0.001476797),
+        pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700),
         cutoff_central = 53,
         bhd_central = 85362.08,
         rr_central = 1.08,
@@ -490,8 +488,7 @@ testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|cutoff_TR
         erf_shape = "log_linear",
         geo_id_disaggregated = NULL,
         geo_id_aggregated = NULL
-      ) |>
-      healthiar::helper_extract_main_health_results(),
+      )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c(1151)
@@ -501,7 +498,7 @@ testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|cutoff_TR
 
 Yes, in this case they are the same (the function printed `Test passed`)
 
-Please note that there might not be a helper function to extract main / detailed results for all calculation pathways. Please refer to the *intro_to_healthiar* vignette for guidance on how to extract main / detailed results of an attribute output.
+Please refer to the *intro_to_healthiar* vignette for guidance on how to extract main / detailed results of an attribute output.
 
 ## 4. Upload the test
 
@@ -522,13 +519,12 @@ healthiar::attribute_health(
   rr_central = 1.08,
   rr_increment = 10,
   exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
-  prop_pop_exp = c(0.818718312, 0.074319355, 0.054852478, 0.036785683, 0.013847374, 0.001476797),
+  pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700),
   cutoff_central = 53,
   bhd_central = 85362.08,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL
-) |> 
-  healthiar::helper_extract_main_health_results() |> 
+)$health_main$impact_rounded |> 
   print()
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -541,7 +537,7 @@ healthiar::attribute_health(
 ## noise exposure data from NIPH; cutoff based on exposure data; baseline DALYs from GBD; relative risk from WHO (2003)
 ```
 
-Please note that there might not be a helper function to extract main / detailed results for all calculation pathways. Please refer to the *intro_to_healthiar* vignette for guidance on how to extract main / detailed results of an attribute output.
+Please refer to the *intro_to_healthiar* vignette for guidance on how to extract main / detailed results of an attribute output.
 
 Filled out extended template (with input data loaded into RStudio):
 
@@ -563,13 +559,12 @@ testthat::test_that("results correct results correct pathway_rr|erf_log_lin|exp_
         rr_central = 1.08,
         rr_increment = 10,
         exp_central = data$exposure_mean,
-        prop_pop_exp = data$prop_exposed,
+        pop_exp = data$population_exposed_total,
         cutoff_central = min(data$exposure_mean),
         bhd_central = data$gbd_daly[1],
         geo_id_disaggregated = NULL,
         geo_id_aggregated = NULL
-        ) |>
-      healthiar::helper_extract_main_health_results(),
+        )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       data_raw |>
@@ -588,7 +583,7 @@ testthat::test_that("results correct results correct pathway_rr|erf_log_lin|exp_
 ## noise exposure data from NIPH; cutoff based on exposure data; baseline DALYs from GBD; relative risk from WHO (2003)
 ```
 
-Please note that there might not be a helper function to extract main / detailed results for all calculation pathways. Please refer to the *intro_to_healthiar* vignette for guidance on how to extract main / detailed results of an attribute output.
+Please refer to the *intro_to_healthiar* vignette for guidance on how to extract main / detailed results of an attribute output.
 
 ------------------------------------------------------------------------
 
@@ -666,8 +661,7 @@ testthat::test_that("results correct [pathway_id]", {
         bhd_upper = NULL,
         geo_id_disaggregated = NULL,
         geo_id_aggregated = NULL
-      ) |>
-      healthiar::helper_extract_main_health_results(),
+      )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c( )
@@ -700,8 +694,7 @@ healthiar::attribute_health(
   exp_central = ,
   exp_lower = NULL, 
   exp_upper = NULL,
-  population = ,
-  prop_pop_exp = ,
+  pop_exp = ,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL
 )
@@ -735,12 +728,10 @@ testthat::test_that("results correct [pathway_id]", {
         exp_central = ,
         exp_lower = NULL, 
         exp_upper = NULL,
-        population = ,
-        prop_pop_exp = ,
+        pop_exp = ,
         geo_id_disaggregated = NULL,
         geo_id_aggregated = NULL
-      ) |>
-      healthiar::helper_extract_main_health_results(),
+      )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c( )
@@ -807,8 +798,7 @@ testthat::test_that("results correct [pathway_id]", {
         discount_shape = NULL,
         discount_years = 1,
         inflation = NULL
-        ) |>
-      healthiar::helper_extract_main_monetization_results(),
+        )$monetization_main$monetized_impact,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c( )
@@ -877,8 +867,7 @@ testthat::test_that("results correct [pathway_id]", {
         discount_rate_benefit = ,
         discount_rate_cost = ,
         discount_years_benefit = 1,
-        discount_years_cost = 1) |>
-      healthiar::helper_extract_main_cba_results(),
+        discount_years_cost = 1)$cba_main$net_benefit_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c( )
@@ -963,8 +952,7 @@ testthat::test_that("results correct [pathway_id]", {
         bhd_upper = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
         geo_id_disaggregated = ,
         geo_id_aggregated = 
-      ) |>
-      healthiar::helper_extract_main_health_results(),
+      )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c( )

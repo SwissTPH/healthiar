@@ -29,9 +29,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_single|erf_rr_incre
       healthiar::summarize_uncertainty(
         res = bestcost_pm_copd_with_summary_uncertainty,
         n_sim = 100
-        ) |>
-      helper_extract_main_uncertainty_results(),
-
+        )$uncertainty_main |> base::as.numeric() |> base::round(),
     expected = # Results on 2025-02-11; no comparison study
       c(1284, 684, 2023)
   )
@@ -64,9 +62,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_single|erf_rr_incre
       healthiar::summarize_uncertainty(
         res = bestcost_pm_copd_geo_short,
         n_sim = 100
-      ) |>
-      helper_extract_main_uncertainty_results(),
-
+      )$uncertainty_main |> base::as.numeric() |> base::round(),
     expected = # Results on 2025-02-11; no comparison study
       c(31865, 11661, 49306)
   )
@@ -100,12 +96,12 @@ testthat::test_that("results correct yld pathway_uncertainty|exp_single|erf_rr_i
     )
 
   testthat::expect_equal(
+
     object =
       healthiar::summarize_uncertainty(
         res = bestcost_pm_yld_singlebhd_with_summary_uncertainty,
         n_sim = 100
-      ) |>
-      helper_extract_main_uncertainty_results(),
+      )$uncertainty_main |> base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-02-11; no comparison study
       c(577, 255, 1125)
@@ -134,11 +130,11 @@ testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_rr_increme
       info = data.frame(pollutant = "road_noise", outcome = "YLD"))
 
   testthat::expect_equal(
+
     object =
       summarize_uncertainty(
         bestcost_noise_ihd_expDist,
-        n_sim = 100) |>
-      helper_extract_main_uncertainty_results(),
+        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-02-11; no comparison study
       c(1154, 914, 1418)
@@ -182,8 +178,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_rr_increme
     object =
       summarize_uncertainty(
         bestcost_noise_ihd_expDist_iteration,
-        n_sim = 100) |>
-      helper_extract_main_uncertainty_results(),
+        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-02-11; no comparison study
       c(13906, 10929, 16871)
@@ -215,8 +210,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_ar_formula
     object =
       summarize_uncertainty(
         bestcost_noise_ha_ar_with_summary_uncertainty,
-        n_sim = 100) |>
-      helper_extract_main_uncertainty_results(),
+        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-02-11; no comparison study
       c(174164, 170114, 180754)
@@ -245,8 +239,7 @@ testthat::test_that("results correct erf_eq uncertainty pathway_uncertainty|exp_
     object =
       summarize_uncertainty(
         bestcost_noise_ha_ar_with_erf_eq,
-        n_sim = 1000) |>
-      helper_extract_main_uncertainty_results(),
+        n_sim = 1000)$uncertainty_main |> base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-02-11; no comparison study
       c(174469, 116984, 237335)
@@ -286,11 +279,9 @@ testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_ar_formula
     object =
       summarize_uncertainty(
         bestcost_noise_ha_ar_iteration,
-        n_sim = 100) |>
-      helper_extract_main_uncertainty_results(),
+        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-04-04; no comparison study
-      # c(4343437849, 4101049590, 4629034588) # OLD (with prop_pop_exp & population); Results on 2025-02-11; no comparison study
     c(725770.0, 685122.0, 773366.0)
   )
 })
@@ -322,12 +313,10 @@ testthat::test_that("results correct erf_eq uncertainty pathway_uncertainty|exp_
     object =
       summarize_uncertainty(
         bestcost_noise_ha_ar_iteration_with_erf_eq,
-        n_sim = 100) |>
-      helper_extract_main_uncertainty_results(),
+        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-04-04; no comparison study
-      # c(4362578213, 3437957141, 5333680635) # OLD (with prop_pop_exp & population); Results on 2025-02-11; no comparison study
-      c(728926.0, 575952.0, 890259.0) # OLD (with prop_pop_exp & population); Results on 2025-02-11; no comparison study
+      c(728926.0, 575952.0, 890259.0)
   )
 })
 
@@ -353,8 +342,7 @@ testthat::test_that("results correct yld pathway_uncertainty|exp_dist|erf_ar_for
     object =
       summarize_uncertainty(
         bestcost_noise_ha_ar,
-        n_sim = 100) |>
-      helper_extract_main_uncertainty_results(),
+        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-02-11; no comparison study
       c(85954, 53721, 128138)

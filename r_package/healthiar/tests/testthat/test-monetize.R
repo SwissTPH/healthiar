@@ -24,12 +24,8 @@ testthat::test_that("results correct simple monetization", {
         output_healthiar = bestcost_pm_copd,
         valuation = 1000,
         discount_rate = NULL,
-        discount_shape = NULL) |>
-      purrr::pluck("monetization_main") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+        discount_shape = NULL
+        )$monetization_main$monetized_impact_rounded,
     expect = # 1000 * airqplus_pm_copd
       round(1000 * bestcost_pm_copd[["health_main"]]$impact)
   )
@@ -45,12 +41,8 @@ testthat::test_that("results correct only discounting", {
         impact = 2E4,
         discount_shape = "exponential",
         discount_rate = 0.03,
-        discount_years = 20) |>
-      purrr::pluck("monetization_main") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+        discount_years = 20
+        )$monetization_main$monetized_impact_rounded,
     expect =
       round(11074) # Results on 2025-04-15; no comparison study
   )
@@ -65,14 +57,10 @@ testthat::test_that("results correct exponential discounting with different cost
         discount_shape = "exponential",
         discount_rate = 0.05,
         discount_years = 5,
-        valuation = 1) |>
-      purrr::pluck("monetization_detailed") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+        valuation = 1
+        )$monetization_detailed$monetized_impact |> round(digits = 2),
     expect =
-      round(c(800, 952.38,1088.44, 1295.76, 1480.86, 1567.05)) # Results on 2025-03-04; Excel sheet of Uni Porto
+      c(800, 952.38,1088.44, 1295.76, 1480.86, 1567.05) # Results on 2025-03-04; Excel sheet of Uni Porto
   )
 })
 
@@ -85,14 +73,10 @@ testthat::test_that("results correct hyperbolic harvey 1986 discounting with dif
         discount_shape = "hyperbolic_harvey_1986",
         discount_rate = 0.05,
         discount_years = 5,
-        valuation = 1) |>
-      purrr::pluck("monetization_detailed") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+        valuation = 1
+        )$monetization_detailed$monetized_impact |> round(digits = 2),
     expect =
-      round(c(800,965.94, 1135.86, 1399.55, 1660.83, 1828.62)) # Results on 2025-04-15; Excel sheet of Uni Porto
+      c(800,965.94, 1135.86, 1399.55, 1660.83, 1828.62) # Results on 2025-04-15; Excel sheet of Uni Porto
   )
 })
 
@@ -105,14 +89,10 @@ testthat::test_that("results correct hyperbolic mazur 1987 discounting with diff
         discount_shape = "hyperbolic_mazur_1987",
         discount_rate = 0.05,
         discount_years = 5,
-        valuation = 1) |>
-      purrr::pluck("monetization_detailed") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+        valuation = 1
+        )$monetization_detailed$monetized_impact |> round(digits = 2),
     expect =
-      round(c(800, 952.38, 1090.91, 1304.35, 1500.00, 1600.00)) # Results on 2025-04-15; Excel sheet of Uni Porto
+      c(800, 952.38, 1090.91, 1304.35, 1500.00, 1600.00) # Results on 2025-04-15; Excel sheet of Uni Porto
   )
 })
 
@@ -120,16 +100,13 @@ testthat::test_that("results correct pathway_monetization|discount_appr_direct|d
 
   testthat::expect_equal(
     object =
-      healthiar::monetize(impact = 2E4,
-                          discount_shape = "exponential",
-                          discount_rate = 0.03,
-                          discount_years = 20,
-                          valuation = 1) |>
-      purrr::pluck("monetization_main") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+      healthiar::monetize(
+        impact = 2E4,
+        discount_shape = "exponential",
+        discount_rate = 0.03,
+        discount_years = 20,
+        valuation = 1
+      )$monetization_main$monetized_impact_rounded,
     expect = c(11074) # Result on 2024-03-10; from ChatGPT
   )
 })
@@ -138,16 +115,13 @@ testthat::test_that("results correct pathway_monetization|discount_appr_direct|d
 
   testthat::expect_equal(
     object =
-      healthiar::monetize(impact = 50,
-                          discount_shape = "exponential",
-                          discount_rate = 0.03,
-                          discount_years = 5,
-                          valuation = 20) |>
-      purrr::pluck("monetization_main") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+      healthiar::monetize(
+        impact = 50,
+        discount_shape = "exponential",
+        discount_rate = 0.03,
+        discount_years = 5,
+        valuation = 20
+      )$monetization_main$monetized_impact_rounded,
     expect = c(863) # Excel file from University of Porto "WP2_Examples.xlsx"
   )
 })
@@ -160,12 +134,8 @@ testthat::test_that("results the same fake_monetization|discount_appr_direct|dis
         impact = 2E4,
         discount_shape = "exponential",
         discount_rate = 0.03,
-        discount_years = 20) |>
-      purrr::pluck("monetization_main") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+        discount_years = 20
+        )$monetization_main$monetized_impact_rounded,
     expect = 11074 # Result on 15 Jan 2025 ; no comparison study
   )
 })
@@ -182,14 +152,10 @@ testthat::test_that("results correct inflation", {
         discount_rate = 0.05,
         discount_years = 5,
         inflation = 0.08,
-        valuation = 1E3) |>
-      purrr::pluck("monetization_main") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+        valuation = 1E3
+        )$monetization_main$monetized_impact |> base::round(digits = 2),
     expect =
-      round(783.53) # Results on 2025-03-04;  Excel sheet of Uni Porto
+      783.53 # Results on 2025-03-04;  Excel sheet of Uni Porto
   )
 
   testthat::expect_equal(
@@ -200,12 +166,8 @@ testthat::test_that("results correct inflation", {
         discount_rate = 0.04,
         discount_years = 5,
         inflation = 0.03,
-        valuation = 1E4) |>
-      purrr::pluck("monetization_main") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+        valuation = 1E4
+        )$monetization_main$monetized_impact_rounded,
     expect =
       8219 # Results on 2025-03-10; ChatGPT
   )
@@ -247,15 +209,12 @@ testthat::test_that("results the same fake_monetization|discount_appr_indirect|d
 
   testthat::expect_equal(
     object =
-      healthiar::monetize(output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
-                          discount_shape = "exponential",
-                          discount_rate = 0.01,
-                          valuation = 1) |>
-      purrr::pluck("monetization_main") |>
-      dplyr::select(monetized_impact_rounded) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+      healthiar::monetize(
+        output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
+        discount_shape = "exponential",
+        discount_rate = 0.01,
+        valuation = 1
+      )$monetization_main$monetized_impact_rounded,
     expect = c(26493, 13877, 39006) # Result on 13 Dec 2024 ; no comparison study
   )
 })
@@ -278,16 +237,13 @@ testthat::test_that("results the same fake_monetization|discount_appr_direct|dis
 
   testthat::expect_equal(
     object =
-      healthiar::monetize(output_healthiar = bestcost_pm_copd,
-                          discount_shape = "exponential",
-                          discount_rate = 0.03,
-                          discount_years = 5,
-                          valuation = 20) |>
-      purrr::pluck("monetization_main") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+      healthiar::monetize(
+        output_healthiar = bestcost_pm_copd,
+        discount_shape = "exponential",
+        discount_rate = 0.03,
+        discount_years = 5,
+        valuation = 20
+      )$monetization_main$monetized_impact_rounded,
     expect = c(60416, 23343, 94436) # Result on 9 Jan 2025 ; no comparison study
   )
 })
@@ -318,12 +274,8 @@ testthat::test_that("results correct discounting and inflation", {
       discount_rate = 0.05,
       discount_years = 5,
       inflation = 0.08,
-      valuation = 1E3) |>
-      purrr::pluck("monetization_main") |>
-      dplyr::select(monetized_impact) |>
-      base::unlist() |>
-      base::as.numeric() |>
-      base::round(),
+      valuation = 1E3
+      )$monetization_main$monetized_impact_rounded,
     expect =
       c(2743879, 1060162, 4288935) # Results on 2025-04-15; no comparison study
   )
