@@ -1,6 +1,6 @@
 # RR ###########################################################################
 
-## SINGLE EXPOSURE VALUE #######################################################
+## SINGLE EXPOSURE #############################################################
 # testthat::test_that("result correct rr with single exposure value and only rr_central", {
 # testthat::test_that("result correct rr with single exp (pw_exp_single pw_cutoff_TRUE pw_varuncer_FALSE pw_erf_log_lin pw_iteration_FALSE pw_multiexp_FALSE)", {
 # testthat::test_that("result correct ID|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE", {
