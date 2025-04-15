@@ -61,9 +61,6 @@ library(knitr)
 
 options(knitr.kable.max_rows = 100)
 set.seed(1)
-
-# load("../testing/Workshops_and_demos/2025_04_07_MRö_NE/data_clean.RData")
-# load("data_clean.RData")
 ```
 
 -   About `healthiar`

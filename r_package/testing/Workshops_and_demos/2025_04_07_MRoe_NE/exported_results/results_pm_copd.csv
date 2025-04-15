@@ -1,4 +1,0 @@
-"","geo_id_disaggregated","erf_ci","exp_ci","bhd_ci","cutoff_ci","pop_fraction","impact","is_lifetable","prop_pop_exp","rr_increment","erf_shape","exposure_name","approach_risk","exposure_dimension","exposure_type","exp","rr","bhd","cutoff","pop_fraction_type","rr_conc","impact_rounded"
-"1","1","central","central","central","central",0.113896050110994,3501.96185276274,FALSE,1,10,"log_linear",NA,"relative_risk",1,"population_weighted_mean",8.85,1.369,30747,5,"paf",1.12853576617649,3502
-"2","1","lower","central","central","central",0.0440064323151771,1353.06577439475,FALSE,1,10,"log_linear",NA,"relative_risk",1,"population_weighted_mean",8.85,1.124,30747,5,"paf",1.04603214268664,1353
-"3","1","upper","central","central","central",0.178029992504695,5473.88817954186,FALSE,1,10,"log_linear",NA,"relative_risk",1,"population_weighted_mean",8.85,1.664,30747,5,"paf",1.2165894021452,5474
