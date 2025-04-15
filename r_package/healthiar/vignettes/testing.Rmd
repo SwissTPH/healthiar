@@ -267,8 +267,7 @@ testthat::expect_equal(
       bhd_central = ,
       geo_id_disaggregated = ,
       geo_id_aggregated = 
-    ) |>
-    healthiar::helper_extract_main_health_results(),
+    )$health_main$impact_rounded,
   ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
   expected =
     c( )
@@ -459,8 +458,7 @@ healthiar::attribute_health(
   bhd_central = 85362.08,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL
-) |> 
-  healthiar::helper_extract_main_health_results() |> 
+)$health_main$impact_rounded |> 
   print()
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -490,8 +488,7 @@ testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|cutoff_TR
         erf_shape = "log_linear",
         geo_id_disaggregated = NULL,
         geo_id_aggregated = NULL
-      ) |>
-      healthiar::helper_extract_main_health_results(),
+      )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c(1151)
@@ -527,8 +524,7 @@ healthiar::attribute_health(
   bhd_central = 85362.08,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL
-) |> 
-  healthiar::helper_extract_main_health_results() |> 
+)$health_main$impact_rounded |> 
   print()
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -568,8 +564,7 @@ testthat::test_that("results correct results correct pathway_rr|erf_log_lin|exp_
         bhd_central = data$gbd_daly[1],
         geo_id_disaggregated = NULL,
         geo_id_aggregated = NULL
-        ) |>
-      healthiar::helper_extract_main_health_results(),
+        )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       data_raw |>
@@ -666,8 +661,7 @@ testthat::test_that("results correct [pathway_id]", {
         bhd_upper = NULL,
         geo_id_disaggregated = NULL,
         geo_id_aggregated = NULL
-      ) |>
-      healthiar::helper_extract_main_health_results(),
+      )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c( )
@@ -739,8 +733,7 @@ testthat::test_that("results correct [pathway_id]", {
         prop_pop_exp = ,
         geo_id_disaggregated = NULL,
         geo_id_aggregated = NULL
-      ) |>
-      healthiar::helper_extract_main_health_results(),
+      )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c( )
@@ -963,8 +956,7 @@ testthat::test_that("results correct [pathway_id]", {
         bhd_upper = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
         geo_id_disaggregated = ,
         geo_id_aggregated = 
-      ) |>
-      healthiar::helper_extract_main_health_results(),
+      )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c( )
