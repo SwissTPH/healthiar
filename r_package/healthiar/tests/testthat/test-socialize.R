@@ -30,7 +30,7 @@ testthat::test_that("results correct", {
   )
 })
 
-testthat::test_that("results from use cases with attribute result and with vectors identical", {
+testthat::test_that("results the same twice a socialize call", {
 
   data <- base::readRDS(testthat::test_path("data", "social_data.rds"))
 
