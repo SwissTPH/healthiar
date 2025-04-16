@@ -1350,7 +1350,8 @@ summarize_uncertainty <- function(
     ## CI of aggregated impact
     ### Because there's only 1 geo unit the aggregated impact is the same as the geo unit impact
     ci <- stats::quantile(x = dat |> dplyr::pull(impact_total) |> base::unlist(),
-                   probs = c(0.025, 0.5, 0.975))
+                   probs = c(0.025, 0.5, 0.975),
+                   na.rm = TRUE)
 
     ci <- unname(ci) # Unname to remove percentiles from the names vector
     ci <- tibble::tibble(central_estimate = ci[2],
@@ -1368,15 +1369,18 @@ summarize_uncertainty <- function(
       dplyr::summarize(
         impact_central = stats::quantile(
           x = impact_total,
-          probs = c(0.5)
+          probs = c(0.5),
+          na.rm = TRUE
           ),
         impact_lower = stats::quantile(
           x = impact_total,
-          probs = c(0.025)
+          probs = c(0.025),
+          na.rm = TRUE
         ),
         impact_upper = stats::quantile(
           x = impact_total,
-          probs = c(0.975)
+          probs = c(0.975),
+          na.rm = TRUE
         )
         )
 
