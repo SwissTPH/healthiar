@@ -22,7 +22,7 @@ prepare_exposure <-
       stop("The 'terra' package is required for this function. Please install it if you want to use this function.", call. = FALSE)}
 
     ## calculate mean concentration in each geo unit
-    exp <- terra::extract(poll_grid, geo_units, fun = mean)
+    exp <- terra::extract(poll_grid, geo_units, fun = mean, na.rm=T)
     return(as.vector(exp[,2]))
   }
 
