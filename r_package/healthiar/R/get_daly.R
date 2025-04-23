@@ -77,7 +77,7 @@ get_daly <-
       impact_raw <-
         impact_raw |>
         dplyr::mutate(
-          impact_per_100k = impact / population)
+          impact_per_100k = (impact / population) * 1E5)
     }
 
     # Use args and impact to produce impact

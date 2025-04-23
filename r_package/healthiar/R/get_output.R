@@ -131,7 +131,7 @@ get_output <-
           dplyr::summarise(impact = sum(impact),
                            impact_rounded = round(impact),
                            population = sum(population),
-                           impact_per_100k_inhab = impact/population,
+                           impact_per_100k_inhab = (impact / population) * 1E5,
                            .groups = "drop")
         }
 
