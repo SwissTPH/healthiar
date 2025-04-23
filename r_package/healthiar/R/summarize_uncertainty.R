@@ -806,7 +806,7 @@ summarize_uncertainty <- function(
 
     # * * Single exposure case #################################################
 
-    ## Determine PAF with healthiar::get_pop_fraction()
+    ## Determine PAF with healthiar:::get_pop_fraction()
     if ( ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "population_weighted_mean" ) ) ) {
 
       dat <- dat |>
@@ -814,7 +814,7 @@ summarize_uncertainty <- function(
           paf = purrr::pmap(
             list(rr_conc = rr_conc, prop_pop_exp = results[["health_detailed"]][["impact_raw"]]$prop_pop_exp |> dplyr::first(x = _)),
             function(rr_conc, prop_pop_exp){
-              paf <- healthiar::get_pop_fraction(
+              paf <- healthiar:::get_pop_fraction(
                 rr_conc_1 = rr_conc,
                 rr_conc_2 = 1,
                 prop_pop_exp_1 = prop_pop_exp,
@@ -854,7 +854,7 @@ summarize_uncertainty <- function(
         dplyr::mutate(paf = ( sum_product - 1 ) / sum_product)
 
 
-      ## NOT WORKING: CALCULATE PAF WITH healthiar::get_pop_fraction()
+      ## NOT WORKING: CALCULATE PAF WITH healthiar:::get_pop_fraction()
       # to calculate paf per exp band
       # dat <- dat |>
       #   dplyr::select(-c(rr_conc, paf, paf_weighted, prop_pop_exp))
@@ -865,7 +865,7 @@ summarize_uncertainty <- function(
       #   dplyr::mutate(
       #     # Use dplyr::across to iterate over corresponding "rr_conc_" and "prop_pop_exp_" pairs
       #     dplyr::across(.cols = dplyr::starts_with("rr_conc_"),
-      #                   .fns = ~ healthiar::get_pop_fraction(
+      #                   .fns = ~ healthiar:::get_pop_fraction(
       #                     rr_conc_1 = as.numeric(.x),
       #                     rr_conc_2 = 1,
       #                     prop_pop_exp_1 = as.numeric(dat[[gsub("rr_conc_", "prop_pop_exp_", dplyr::cur_column())]]),

@@ -191,7 +191,7 @@ get_risk_and_pop_fraction <-
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
           pop_fraction =
-            healthiar::get_pop_fraction(rr_conc_1 = rr_conc,
+            healthiar:::get_pop_fraction(rr_conc_1 = rr_conc,
                                        rr_conc_2 = 1,
                                        prop_pop_exp_1 = prop_pop_exp,
                                        prop_pop_exp_2 = prop_pop_exp))
@@ -202,7 +202,7 @@ get_risk_and_pop_fraction <-
         input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
           pop_fraction =
-            healthiar::get_pop_fraction(rr_conc_1 = rr_conc_1,
+            healthiar:::get_pop_fraction(rr_conc_1 = rr_conc_1,
                                        rr_conc_2 = rr_conc_2,
                                        prop_pop_exp_1 = prop_pop_exp_1,
                                        prop_pop_exp_2 = prop_pop_exp_2)) }
