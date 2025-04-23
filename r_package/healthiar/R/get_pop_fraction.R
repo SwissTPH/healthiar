@@ -11,7 +11,7 @@
 #' TBD
 #' @author Alberto Castro
 #' @note Experimental function
-#' @export
+#' @keywords internal
 
 get_pop_fraction <-
   function(rr_conc_1, rr_conc_2, prop_pop_exp_1, prop_pop_exp_2){
