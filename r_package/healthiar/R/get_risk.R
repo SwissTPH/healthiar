@@ -25,6 +25,18 @@ get_risk <-
            erf_shape = NULL,
            erf_eq = NULL){
 
+    # Check if exposure is upper than cutoff
+    # Otherwise the value of the exposure must be the cutoff (minimum possible)
+    # Of course, only applicable if there is a cutoff
+    if(!is.null(cutoff)){
+      exp <-
+        ifelse(exp > cutoff,
+               exp,
+               # if exp < cutoff, then exp should be cutoff
+               cutoff)
+    }
+
+
     # The function assumes that the user of the package does not define the function entirely,
     # but using arguments such as exp, cutoff, rr_increment and erf_shape
     # Therefore, the default value of the argument erf_eq should be NULL
