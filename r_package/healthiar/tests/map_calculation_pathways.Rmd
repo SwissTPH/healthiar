@@ -29,8 +29,7 @@ pathways_rr <- list(
   exp = c("single", "dist"), # prop_pop_exp linked with this
   cutoff = c("TRUE", "FALSE"),
   varuncer = c("TRUE", "FALSE"),
-  iteration = c("TRUE", "FALSE"),
-  multiexp = c("FALSE", "additive", "multiplicative", "combined")
+  iteration = c("TRUE", "FALSE")
 )
 
 pathways_rr <- expand.grid(pathways_rr) |> 
@@ -50,8 +49,7 @@ core_rr <- list(
   exp = c("single", "dist"), # prop_pop_exp linked with this
   cutoff = c("TRUE", "FALSE"),
   varuncer = c("FALSE"), # "TRUE" is a nice to have
-  iteration = c("TRUE", "FALSE"),
-  multiexp = c("FALSE")
+  iteration = c("TRUE", "FALSE")
 )
 
 core_rr <- expand.grid(core_rr) |> 
@@ -60,7 +58,7 @@ core_rr <- expand.grid(core_rr) |>
   mutate(core_pathway = "TRUE")
 
 pathways_rr <- pathways_rr |> 
-  left_join(x = _, y = core_rr, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp")) |> 
+  left_join(x = _, y = core_rr, by = c("erf", "exp", "cutoff", "varuncer", "iteration")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
 
@@ -81,7 +79,6 @@ existing_tests <- tibble(
   cutoff = rep(NA_character_, num_rows),
   varuncer = rep(NA_character_, num_rows),
   iteration = rep(NA_character_, num_rows),
-  multiexp = rep(NA_character_, num_rows),
   implemented = rep(FALSE, num_rows)
 )
 
@@ -95,13 +92,12 @@ for (i in seq_along(test_names_with_pw)) {
   existing_tests$varuncer[i] <- str_extract(strings[str_detect(strings, "\\|varuncer_")], "(?<=\\|varuncer_)[^\\|]+")
   existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "\\|erf_")], "(?<=\\|erf_)[^\\|]+")
   existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
-  existing_tests$multiexp[i] <- str_extract(strings[str_detect(strings, "\\|multiexp_")], "(?<=\\|multiexp_)[^\\|)]+")
   existing_tests$implemented[i] <- "TRUE"
 }
 
 ## Merge the pathways tibble and the existing_tests tibble
 pathways_rr <- pathways_rr %>%
-  left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp"),
+  left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-implemented.existing) |> 
@@ -129,8 +125,7 @@ pathways_ar <- list(
   exp = c("dist"), # prop_pop_exp linked with this
   cutoff = c("FALSE"),
   varuncer = c("TRUE", "FALSE"),
-  iteration = c("TRUE", "FALSE"),
-  multiexp = c("FALSE")
+  iteration = c("TRUE", "FALSE")
 )
 
 pathways_ar <- expand.grid(pathways_ar) |> 
@@ -150,8 +145,7 @@ core_ar <- list(
   exp = c("dist"), # prop_pop_exp linked with this
   cutoff = c("FALSE"),
   varuncer = c("FALSE"), # "TRUE" is a nice to have 
-  iteration = c("TRUE", "FALSE"),
-  multiexp = c("FALSE")
+  iteration = c("TRUE", "FALSE")
 )
 
 core_ar <- expand.grid(core_ar) |> 
@@ -160,7 +154,7 @@ core_ar <- expand.grid(core_ar) |>
   mutate(core_pathway = "TRUE")
 
 pathways_ar <- pathways_ar |> 
-  left_join(x = _, y = core_ar, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp")) |> 
+  left_join(x = _, y = core_ar, by = c("erf", "exp", "cutoff", "varuncer", "iteration")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
 
@@ -180,7 +174,6 @@ existing_tests <- tibble(
   cutoff = rep(NA_character_, num_rows),
   varuncer = rep(NA_character_, num_rows),
   iteration = rep(NA_character_, num_rows),
-  multiexp = rep(NA_character_, num_rows),
   implemented = rep(FALSE, num_rows)
 )
 
@@ -194,14 +187,13 @@ for (i in seq_along(test_names_with_pw)) {
   existing_tests$varuncer[i] <- str_extract(strings[str_detect(strings, "\\|varuncer_")], "(?<=\\|varuncer_)[^\\|]+")
   existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "\\|erf_")], "(?<=\\|erf_)[^\\|]+")
   existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
-  existing_tests$multiexp[i] <- str_extract(strings[str_detect(strings, "\\|multiexp_")], "(?<=\\|multiexp_)[^\\|)]+")
   existing_tests$implemented[i] <- "TRUE"
 }
 
 
 ## Merge the pathways tibble and the existing_tests tibble
 pathways_ar <- pathways_ar %>%
-  left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp"),
+  left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-implemented.existing) |> 
@@ -421,7 +413,7 @@ cat("As percentage:", round(pathways_monetization %>%
 
 ```
 
-
+# Lifetable
 
 ```{r Pathways lifetable}
 
@@ -639,7 +631,6 @@ ov_rr_compare <- list(
   exp = c("single", "dist"), # prop_pop_exp linked with this
   cutoff = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE"),
-  multiexp = c("FALSE", "additive", "multiplicative", "combined"),
   varuncer = c("TRUE", "FALSE")
 )
 
@@ -656,7 +647,6 @@ pathways_rr_compare <- pathways_rr_compare |>
       exp == "single" & 
       cutoff == "TRUE" & 
       iteration == "FALSE" & 
-      multiexp == "FALSE" & 
       varuncer == "FALSE") 
     ~ "results correct delta comparison rr single exposure", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -665,7 +655,6 @@ pathways_rr_compare <- pathways_rr_compare |>
       exp == "single" & 
       cutoff == "TRUE" & 
       iteration == "TRUE" & 
-      multiexp == "FALSE" & 
       varuncer == "FALSE") 
     ~ "results correct delta comparison iteration rr single exposures", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -674,7 +663,6 @@ pathways_rr_compare <- pathways_rr_compare |>
       exp == "single" & 
       cutoff == "TRUE" & 
       iteration == "FALSE" & 
-      multiexp == "FALSE" & 
       varuncer == "FALSE") 
     ~ "results correct pif comparison rr single exposure", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -683,7 +671,6 @@ pathways_rr_compare <- pathways_rr_compare |>
       exp == "single" & 
       cutoff == "TRUE" & 
       iteration == "iteration" & 
-      multiexp == "FALSE" & 
       varuncer == "FALSE") 
     ~ "results correct pif comparison iteration rr single exposures", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -692,7 +679,6 @@ pathways_rr_compare <- pathways_rr_compare |>
       exp == "dist" & 
       cutoff == "TRUE" & 
       iteration == "FALSE" & 
-      multiexp == "FALSE" & 
       varuncer == "FALSE") 
     ~ "results correct delta comparison ar exposure distribution", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -701,7 +687,6 @@ pathways_rr_compare <- pathways_rr_compare |>
       exp == "dist" & 
       cutoff == "TRUE" & 
       iteration == "TRUE" & 
-      multiexp == "FALSE" & 
       varuncer == "FALSE") 
     ~ "results correct delta comparison rr single exposure", TRUE ~ test_name)) 
 ```
@@ -971,8 +956,7 @@ test_pw <- pathways_rr |>
     ( erf == pw_id[1] & 
       exp == pw_id[2] & 
       cutoff == pw_id[3] & 
-      iteration == pw_id[4] & 
-      multiexp == pw_id[5] & 
+      iteration == pw_id[4] &
       varuncer == pw_id[6]) 
     ~ name_string, TRUE ~ test_name))
 
@@ -996,7 +980,6 @@ existing_tests <- tibble(
   cutoff = rep(NA_character_, num_rows),
   varuncer = rep(NA_character_, num_rows),
   iteration = rep(NA_character_, num_rows),
-  multiexp = rep(NA_character_, num_rows),
   implemented = rep(FALSE, num_rows)
 )
 
@@ -1010,13 +993,12 @@ for (i in seq_along(test_names_with_pw)) {
   existing_tests$varuncer[i] <- str_extract(strings[str_detect(strings, "\\|varuncer_")], "(?<=\\|varuncer_)[^\\|]+")
   existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "\\|erf_")], "(?<=\\|erf_)[^\\|]+")
   existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
-  existing_tests$multiexp[i] <- str_extract(strings[str_detect(strings, "\\|multiexp_")], "(?<=\\|multiexp_)[^\\|)]+")
   existing_tests$implemented[i] <- "TRUE"
 }
 
 ## Mark the column "implemented" in tibble of all pathways with "TRUE" if the test exists
 result <- pathways_rr %>%
-  left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration", "multiexp"),
+  left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-implemented.existing)
@@ -1025,7 +1007,7 @@ result <- pathways_rr %>%
 # nrow(result) == nrow(pathways_rr_ar)
 # ## In case comparison is FALSE, find out which rows are duplicated
 # extra_rows <- result %>%
-#   anti_join(pathways_rr_ar, by = c("erf", "exp", "cutoff", "iteration", "multiexp", "varuncer"))
+#   anti_join(pathways_rr_ar, by = c("erf", "exp", "cutoff", "iteration", "varuncer"))
 
 ```
 
@@ -1036,7 +1018,6 @@ ov_rr_ar <- list(
   exp = c("single", "dist"), # prop_pop_exp linked with this
   cutoff = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE"),
-  multiexp = c("FALSE", "additive", "multiplicative", "combined"),
   varuncer = c("TRUE", "FALSE")
 )
 
@@ -1055,7 +1036,7 @@ pathways_rr_ar <- pathways_rr_ar |>
       exp == "single" & 
       cutoff == "TRUE" & 
       iteration == "FALSE" & 
-      multiexp == "FALSE" & 
+       
       varuncer == "FALSE") 
     ~ "result correct rr with single exposure value and only rr_central", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -1063,7 +1044,7 @@ pathways_rr_ar <- pathways_rr_ar |>
       exp == "single" & 
       cutoff == "TRUE" & 
       iteration == "FALSE" & 
-      multiexp == "FALSE" & 
+       
       varuncer == "TRUE") 
     ~ "result correct rr with single exposure and variable uncertainty", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -1071,7 +1052,7 @@ pathways_rr_ar <- pathways_rr_ar |>
       exp == "single" & 
       cutoff == "TRUE" & 
       iteration == "FALSE" & 
-      multiexp == "FALSE" & 
+       
       varuncer == "FALSE") 
     ~ "results correct user-defined erf (mrbrt) with splinefun with cutoff of 5", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -1079,7 +1060,7 @@ pathways_rr_ar <- pathways_rr_ar |>
       exp == "single" & 
       cutoff == "TRUE" & 
       iteration == "FALSE" & 
-      multiexp == "FALSE" & 
+       
       varuncer == "TRUE") 
     ~ "results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & with cutoff of 5", TRUE ~ test_name))  |> 
   dplyr::mutate(test_name = case_when(
@@ -1087,7 +1068,7 @@ pathways_rr_ar <- pathways_rr_ar |>
       exp == "single" & 
       cutoff == "FALSE" & 
       iteration == "FALSE" & 
-      multiexp == "FALSE" & 
+       
       varuncer == "TRUE") 
     ~ "results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & with cutoff of 5", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -1095,7 +1076,7 @@ pathways_rr_ar <- pathways_rr_ar |>
       exp == "dist" & 
       cutoff == "TRUE" & 
       iteration == "FALSE" & 
-      multiexp == "FALSE" & 
+       
       varuncer == "TRUE") 
     ~ "results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & no cutoff", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -1103,7 +1084,7 @@ pathways_rr_ar <- pathways_rr_ar |>
       exp == "dist" & 
       cutoff == "TRUE" & 
       iteration == "FALSE" & 
-      multiexp == "FALSE" & 
+       
       varuncer == "TRUE") 
     ~ "results correct user-defined erf (mrbrt) with splinefun and uncertainties erf & with cutoff", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -1111,7 +1092,7 @@ pathways_rr_ar <- pathways_rr_ar |>
       exp == "dist" & 
       cutoff == "TRUE" & 
       iteration == "TRUE" & 
-      multiexp == "FALSE" & 
+       
       varuncer == "TRUE") 
     ~ "results correct rr iteration with exposure distribution and uncertainties in rr and exp", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -1119,7 +1100,7 @@ pathways_rr_ar <- pathways_rr_ar |>
       exp == "dist" & 
       cutoff == "FALSE" & 
       iteration == "FALSE" & 
-      multiexp == "FALSE" & 
+       
       varuncer == "FALSE") 
     ~ "results correct rr exposure distribution", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
@@ -1127,7 +1108,7 @@ pathways_rr_ar <- pathways_rr_ar |>
       exp == "dist" & 
       cutoff == "FALSE" & 
       iteration == "FALSE" & 
-      multiexp == "FALSE" & 
+       
       varuncer == "FALSE") 
     ~ "results correct ar without cutoff", TRUE ~ test_name)) |> 
   ## FIX EXAMPLE IN TEST SCRIPT ####
@@ -1136,32 +1117,32 @@ pathways_rr_ar <- pathways_rr_ar |>
   #     exp == "dist" & 
   #     cutoff == "FALSE" & 
   #     iteration == "FALSE" & 
-  #     multiexp == "FALSE" & 
+  #      
   #     varuncer == "FALSE") 
   #   ~ "results correct ar with cutoff", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
-    ( erf == "formula" & exp == "dist" & cutoff == "FALSE" & iteration == "TRUE" &  multiexp == "FALSE" & varuncer == "FALSE" ) ~
+    ( erf == "formula" & exp == "dist" & cutoff == "FALSE" & iteration == "TRUE" &   varuncer == "FALSE" ) ~
       "results correct ar iteration no variable uncertainties", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
-    ( erf == "formula" & exp == "dist" & cutoff == "FALSE" & iteration == "FALSE" &  multiexp == "FALSE" & varuncer == "TRUE" ) ~
+    ( erf == "formula" & exp == "dist" & cutoff == "FALSE" & iteration == "FALSE" &   varuncer == "TRUE" ) ~
       "results correct ar iteration with variable uncertainties", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
-    ( erf == "log_lin" & exp == "single" & cutoff == "TRUE" & iteration == "FALSE" &  multiexp == "additive" & varuncer == "FALSE" ) ~
+    ( erf == "log_lin" & exp == "single" & cutoff == "TRUE" & iteration == "FALSE" & varuncer == "FALSE" ) ~
       "results correct rr multiple exposure additive approach no variable uncertainties", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
-    ( erf == "log_lin" & exp == "single" & cutoff == "TRUE" & iteration == "FALSE" &  multiexp == "additive" & varuncer == "TRUE" ) ~
+    ( erf == "log_lin" & exp == "single" & cutoff == "TRUE" & iteration == "FALSE" & varuncer == "TRUE" ) ~
       "detailed results correct rr multiple exposure additive approach with variable uncertainties", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
-    ( erf == "log_lin" & exp == "single" & cutoff == "TRUE" & iteration == "FALSE" &  multiexp == "multiplicative" & varuncer == "FALSE" ) ~
+    ( erf == "log_lin" & exp == "single" & cutoff == "TRUE" & iteration == "FALSE" & varuncer == "FALSE" ) ~
       "results correct rr multiple exposure multiplicative approach", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
-    ( erf == "log_lin" & exp == "single" & cutoff == "FALSE" & iteration == "FALSE" &  multiexp == "multiplicative" & varuncer == "FALSE" ) ~
+    ( erf == "log_lin" & exp == "single" & cutoff == "FALSE" & iteration == "FALSE" & varuncer == "FALSE" ) ~
       "results correct rr multiple exposure multiplicative approach without cutoff", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
-    ( erf == "log_lin" & exp == "single" & cutoff == "TRUE" & iteration == "FALSE" &  multiexp == "combined" & varuncer == "FALSE" ) ~
+    ( erf == "log_lin" & exp == "single" & cutoff == "TRUE" & iteration == "FALSE" & varuncer == "FALSE" ) ~
       "results correct rr multiple exposure combined approach", TRUE ~ test_name)) |> 
   dplyr::mutate(test_name = case_when(
-    ( erf == "log_lin" & exp == "single" & cutoff == "FALSE" & iteration == "FALSE" &  multiexp == "combined" & varuncer == "FALSE" ) ~
+    ( erf == "log_lin" & exp == "single" & cutoff == "FALSE" & iteration == "FALSE" & varuncer == "FALSE" ) ~
       "results correct rr multiple exposure combined approach without cutoff", TRUE ~ test_name))
 
 ```
