@@ -60,7 +60,7 @@ core_rr <- list(
   erf = c("log_lin", "point_pairs", "lin_lin"),
   exp = c("single", "dist"), # prop_pop_exp linked with this
   cutoff = c("TRUE", "FALSE"),
-  varuncer = c("FALSE"), # "TRUE" is a nice to have
+  varuncer = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE")
 )
 
@@ -188,7 +188,7 @@ core_ar <- list(
   erf = c("formula", "point_pairs"),
   exp = c("dist"), # prop_pop_exp linked with this
   cutoff = c("FALSE"),
-  varuncer = c("FALSE"), # "TRUE" is a nice to have 
+  varuncer = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE")
 )
 
@@ -234,7 +234,6 @@ for (i in seq_along(test_names_with_pw)) {
   existing_tests$implemented[i] <- "TRUE"
 }
 
-
 ## Merge the pathways tibble and the existing_tests tibble
 pathways_ar <- pathways_ar %>%
   left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration"),
@@ -243,15 +242,44 @@ pathways_ar <- pathways_ar %>%
   select(-implemented.existing) |> 
   distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
-## Output short report
-cat("Number of pathways implemented as tests:", pathways_ar %>%
-  filter(implemented == "TRUE") %>%
-  nrow(), "\n")
-cat("Total possible number of pathways:", nrow(pathways_ar), "\n")
-cat("As percentage:", round(pathways_ar %>%
-  filter(implemented == "TRUE") %>%
-  nrow()/nrow(pathways_ar)*100, digits = 0), "%\n")
+## Rearrange columns
+pathways_ar <- pathways_ar |> 
+  relocate(implemented) |> 
+  relocate(core_pathway, .after = implemented) |> 
+  arrange(desc(implemented), desc(core_pathway), erf, desc(exp), desc(varuncer), desc(iteration))
 
+# * Measure progress ###########################################################
+
+## Add AR current testing state to overall progress tibble
+progress_ar <-
+  tibble(
+    domain = "AR",
+    n_implemented = nrow(pathways_ar |> filter(implemented == TRUE)),
+    `%_of_core` = 
+      paste0(
+        round(
+          pathways_ar |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_ar |> filter(core_pathway == "TRUE")) * 100, 
+          digits = 0
+        ),
+        " %"),
+    `%_of_total` = paste0(
+        round(
+          pathways_ar |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_ar) * 100, 
+          digits = 0
+        ),
+        " %"),
+    n_core_pw = nrow(pathways_ar |> filter(core_pathway == "TRUE")),
+    n_all_pw = nrow(pathways_ar)
+  )
+
+## Output short report
+cat("Number of AR pathways implemented as tests:", progress_ar$n_implemented, "\n")
+cat("% of core pathways:", progress_ar$`%_of_core`, "\n")
+cat("% of all pathways:", progress_ar$`%_of_total`, "\n")
+cat("Total number core of pathways:", progress_ar$n_core_pw, "\n")
+cat("Total number of pathways:", progress_ar$n_all_pw, "\n")
 ```
 
 
