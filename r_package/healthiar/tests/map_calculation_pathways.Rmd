@@ -12,9 +12,21 @@ calculation pathways covered by healthiar to keep track of testing progress.
 Core pathways should be all covered by tests.
 All pathways overview gives us an idea of how much we've covered.
 
+# Setup
+
 ```{r setup}
 
 pacman::p_load(dplyr, tibble, stringr, purrr)
+
+## Testing progress
+progress <- tibble(
+  domain = NA_character_,
+  n_implemented = NA_integer_,
+  `%_of_core` = NA_character_, # format: chr "XX %"
+  `%_of_total` = NA_character_, # format: chr "XX %"
+  n_core_pw = NA_integer_,
+  n_all_pw = NA_integer_
+)
 
 ```
 
@@ -57,10 +69,12 @@ core_rr <- expand.grid(core_rr) |>
   mutate_all(as.character) |> 
   mutate(core_pathway = "TRUE")
 
+## Merge core pathways into whole overview
 pathways_rr <- pathways_rr |> 
   left_join(x = _, y = core_rr, by = c("erf", "exp", "cutoff", "varuncer", "iteration")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
+rm(core_rr)
 
 # * Document existing pathways #################################################
 
@@ -72,14 +86,14 @@ test_names_with_pw <- Filter(function(x) any(grepl("pathway_rr\\|", x)), test_na
 # test_names <- unlist(test_names)
 
 ## Create an empty tibble with NA placeholders
-num_rows <- length(test_names_with_pw)
+n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
-  erf = rep(NA_character_, num_rows),
-  exp = rep(NA_character_, num_rows),
-  cutoff = rep(NA_character_, num_rows),
-  varuncer = rep(NA_character_, num_rows),
-  iteration = rep(NA_character_, num_rows),
-  implemented = rep(FALSE, num_rows)
+  erf = rep(NA_character_, n_row),
+  exp = rep(NA_character_, n_row),
+  cutoff = rep(NA_character_, n_row),
+  varuncer = rep(NA_character_, n_row),
+  iteration = rep(NA_character_, n_row),
+  implemented = rep(FALSE, n_row)
 )
 
 ## Extract values and assign them directly to the tibble
@@ -95,22 +109,52 @@ for (i in seq_along(test_names_with_pw)) {
   existing_tests$implemented[i] <- "TRUE"
 }
 
-## Merge the pathways tibble and the existing_tests tibble
+## Merge the whole pathways tibble and the existing_tests tibble
 pathways_rr <- pathways_rr %>%
   left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
-  select(-implemented.existing) |> 
+  select(-starts_with("implemented.existing")) |> 
   distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
+## Rearrange columns
+pathways_rr <- pathways_rr |> 
+  relocate(implemented) |> 
+  relocate(core_pathway, .after = implemented) |> 
+  arrange(desc(implemented), desc(core_pathway), erf, desc(exp), desc(cutoff), desc(varuncer), desc(iteration))
+
+# * Measure progress ###########################################################
+
+## Add RR current testing state to overall progress tibble
+progress_rr <-
+  tibble(
+    domain = "RR",
+    n_implemented = nrow(pathways_rr |> filter(implemented == TRUE)),
+    `%_of_core` = 
+      paste0(
+        round(
+          pathways_rr |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_rr |> filter(core_pathway == "TRUE")) * 100, 
+          digits = 0
+        ),
+        " %"),
+    `%_of_total` = paste0(
+        round(
+          pathways_rr |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_rr) * 100, 
+          digits = 0
+        ),
+        " %"),
+    n_core_pw = nrow(pathways_rr |> filter(core_pathway == "TRUE")),
+    n_all_pw = nrow(pathways_rr)
+  )
+
 ## Output short report
-cat("Number of pathways implemented as tests:", pathways_rr %>%
-  filter(implemented == "TRUE") %>%
-  nrow(), "\n")
-cat("Total possible number of pathways:", nrow(pathways_rr), "\n")
-cat("As percentage:", round(pathways_rr %>%
-  filter(implemented == "TRUE") %>%
-  nrow()/nrow(pathways_rr)*100, digits = 0), "%\n")
+cat("Number of RR pathways implemented as tests:", progress_rr$n_implemented, "\n")
+cat("% of core pathways:", progress_rr$`%_of_core`, "\n")
+cat("% of all pathways:", progress_rr$`%_of_total`, "\n")
+cat("Total number core of pathways:", progress_rr$n_core_pw, "\n")
+cat("Total number of pathways:", progress_rr$n_all_pw, "\n")
 
 ```
 
@@ -167,14 +211,14 @@ test_names_with_pw <- Filter(function(x) any(grepl("pathway_ar\\|", x)), test_na
 # test_names <- unlist(test_names)
 
 ## Create an empty tibble with NA placeholders
-num_rows <- length(test_names_with_pw)
+n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
-  erf = rep(NA_character_, num_rows),
-  exp = rep(NA_character_, num_rows),
-  cutoff = rep(NA_character_, num_rows),
-  varuncer = rep(NA_character_, num_rows),
-  iteration = rep(NA_character_, num_rows),
-  implemented = rep(FALSE, num_rows)
+  erf = rep(NA_character_, n_row),
+  exp = rep(NA_character_, n_row),
+  cutoff = rep(NA_character_, n_row),
+  varuncer = rep(NA_character_, n_row),
+  iteration = rep(NA_character_, n_row),
+  implemented = rep(FALSE, n_row)
 )
 
 ## Extract values and assign them directly to the tibble
@@ -284,13 +328,13 @@ test_names_with_pw <- Filter(function(x) any(grepl("pathway_cba\\|", x)), test_n
 # test_names <- unlist(test_names)
 
 ## Create an empty tibble with NA placeholders
-num_rows <- length(test_names_with_pw)
+n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
-  discount_appr = rep(NA_character_, num_rows),
-  discount_rate_benefit = rep(NA_character_, num_rows),
-  discount_rate_cost = rep(NA_character_, num_rows),
-  discount_shape = rep(NA_character_, num_rows),
-  implemented = rep("FALSE", num_rows)
+  discount_appr = rep(NA_character_, n_row),
+  discount_rate_benefit = rep(NA_character_, n_row),
+  discount_rate_cost = rep(NA_character_, n_row),
+  discount_shape = rep(NA_character_, n_row),
+  implemented = rep("FALSE", n_row)
 )
 
 ## Extract values and assign them directly to the tibble
@@ -374,12 +418,12 @@ test_names_with_pw <- Filter(function(x) any(grepl("pathway_monetization\\|", x)
 # test_names <- unlist(test_names)
 
 ## Create an empty tibble with NA placeholders
-num_rows <- length(test_names_with_pw)
+n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
-  discount_appr = rep(NA_character_, num_rows),
-  discount_rate = rep(NA_character_, num_rows),
-  discount_shape = rep(NA_character_, num_rows),
-  implemented = rep("FALSE", num_rows)
+  discount_appr = rep(NA_character_, n_row),
+  discount_rate = rep(NA_character_, n_row),
+  discount_shape = rep(NA_character_, n_row),
+  implemented = rep("FALSE", n_row)
 )
 
 ## Extract values and assign them directly to the tibble
@@ -472,17 +516,17 @@ test_names_with_pw <- Filter(function(x) any(grepl("pathway_lifetable\\|", x)), 
 # test_names <- unlist(test_names)
 
 ## Create an empty tibble with NA placeholders
-num_rows <- length(test_names_with_pw)
+n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
-  exp = rep(NA_character_, num_rows),
-  exp_time = rep(NA_character_, num_rows),
-  newborns = rep(NA_character_, num_rows),
-  min_age = rep(NA_character_, num_rows),
-  max_age = rep(NA_character_, num_rows),
-  time_horizon = rep(NA_character_, num_rows),
-  iteration = rep(NA_character_, num_rows),
-  varuncer = rep(NA_character_, num_rows),
-  implemented = rep("FALSE", num_rows)
+  exp = rep(NA_character_, n_row),
+  exp_time = rep(NA_character_, n_row),
+  newborns = rep(NA_character_, n_row),
+  min_age = rep(NA_character_, n_row),
+  max_age = rep(NA_character_, n_row),
+  time_horizon = rep(NA_character_, n_row),
+  iteration = rep(NA_character_, n_row),
+  varuncer = rep(NA_character_, n_row),
+  implemented = rep("FALSE", n_row)
 )
 
 ## Extract values and assign them directly to the tibble
@@ -573,13 +617,13 @@ test_names_with_pw <- Filter(function(x) any(grepl("pathway_uncertainty\\|", x))
 # test_names <- unlist(test_names)
 
 ## Create an empty tibble with NA placeholders
-num_rows <- length(test_names_with_pw)
+n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
-  exp = rep(NA_character_, num_rows),
-  erf = rep(NA_character_, num_rows),
-  iteration = rep(NA_character_, num_rows),
-  distribution = rep(NA_character_, num_rows),
-  implemented = rep("FALSE", num_rows)
+  exp = rep(NA_character_, n_row),
+  erf = rep(NA_character_, n_row),
+  iteration = rep(NA_character_, n_row),
+  distribution = rep(NA_character_, n_row),
+  implemented = rep("FALSE", n_row)
 )
 
 ## Extract values and assign them directly to the tibble
@@ -973,14 +1017,14 @@ test_names_with_pw <- Filter(function(x) any(grepl("pathway\\|", x)), test_names
 
 
 ## Create an empty tibble with NA placeholders
-num_rows <- length(test_names_with_pw)
+n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
-  erf = rep(NA_character_, num_rows),
-  exp = rep(NA_character_, num_rows),
-  cutoff = rep(NA_character_, num_rows),
-  varuncer = rep(NA_character_, num_rows),
-  iteration = rep(NA_character_, num_rows),
-  implemented = rep(FALSE, num_rows)
+  erf = rep(NA_character_, n_row),
+  exp = rep(NA_character_, n_row),
+  cutoff = rep(NA_character_, n_row),
+  varuncer = rep(NA_character_, n_row),
+  iteration = rep(NA_character_, n_row),
+  implemented = rep(FALSE, n_row)
 )
 
 ## Extract values and assign them directly to the tibble

@@ -309,7 +309,7 @@ testthat::test_that("results the same rr single exposure value and incidence-bas
 
 ## EXPOSURE DISTRIBUTION #######################################################
 
-testthat::test_that("results correct pathway_rr|erf_log_linear|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|", {
+testthat::test_that("results correct pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
