@@ -149,10 +149,13 @@ get_output <-
         }
 
       # Add the rest of columns
-      # output[["health_detailed"]][["impact_agg_geo"]] <-
-      #   output[["health_detailed"]][["impact_agg_geo"]] |>
-      #   dplyr::left_join(output[["health_detailed"]][["impact_agg_geo"]],
-      #                    output_last)
+      ## Identify the joining columns
+      # common_columns_for_aggregation <-
+      #   dplyr::intersect(
+      #     base::names(output[["health_detailed"]][["impact_agg_geo"]]),
+      #     base::names(output_last))
+      ## Join data frames
+      # TBD
 
 
       output_last <- output[["health_detailed"]][["impact_agg_geo"]]
