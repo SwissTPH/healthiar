@@ -66,7 +66,7 @@ The `healthiar` functions allow you to quantify and monetize the health impacts 
 -   `socialize()` to discover inequalities in health impacts
 -   `get_mdi()` creates the BEST-COST MDI (Multidimensional Deprivation Index)
 -   `get_daly()` by adding up YLL & YLD
--   `get_multiexposure` approaches to consider exposure to 2 air pollutants
+-   `multiexpose` approaches to consider exposure to 2 air pollutants
 
 ## Updating `healthiar`
 
@@ -771,7 +771,7 @@ results_daly$health_main$impact_yld
 results_daly$health_main$impact_rounded
 ```
 
-## Example: `get_multiexposure()`
+## Example: `multiexpose()`
 
 ### Function call
 
@@ -791,7 +791,7 @@ results_no2_copd <- attribute_mod(
   rr_central = 1.031
 )
 
-results_multiplicative <- get_multiexposure(
+results_multiplicative <- multiexpose(
   output_attribute_1 = results_pm_copd,
   output_attribute_2 = results_no2_copd,
   exposure_name_1 = "pm2.5",
