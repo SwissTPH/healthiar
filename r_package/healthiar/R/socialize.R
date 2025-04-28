@@ -24,7 +24,7 @@ socialize <- function(output_healthiar = NULL,
                       population = NULL,
                       bhd = NULL,
                       exp = NULL,
-                      pop_fraction = NULL,
+                      pop_fraction = NULL
                       ) {
 
   # Using the output of attribute ##############################################
