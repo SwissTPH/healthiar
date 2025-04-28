@@ -65,7 +65,7 @@ The `healthiar` functions allow you to quantify and monetize the health impacts 
 -   `cba()` cost-benefit analysis
 -   `socialize()` to discover inequalities in health impacts
 -   `get_mdi()` creates the BEST-COST MDI (Multidimensional Deprivation Index)
--   `get_daly()` by adding up YLL & YLD
+-   `daly()` by adding up YLL & YLD
 -   `multiexpose` approaches to consider exposure to 2 air pollutants
 
 ## Updating `healthiar`
@@ -752,11 +752,11 @@ results_pm_copd_yld$health_main
 results_pm_copd_yld$health_main |> select(erf_ci, impact) |> kable()
 ```
 
-## Example: `get_daly()`
+## Example: `daly()`
 
 ### Function call
 ```{r}
-results_daly <- get_daly(
+results_daly <- daly(
      output_attribute_yll = results_pm_yll,
      output_attribute_yld = results_pm_copd_yld)
 ```
