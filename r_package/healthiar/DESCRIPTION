@@ -19,10 +19,6 @@ Imports:
   purrr, 
   stringr, 
   tibble, 
-  zoo, 
-  stats,
-  credentials,
-  rlang,
   devtools
 Depends: 
     R (>= 4.1.0)
