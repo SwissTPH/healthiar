@@ -189,7 +189,10 @@ get_output <-
 
     id_columns <- c("geo_id_aggregated", "geo_id_disaggregated",
                     "sex",
-                    "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
+                    "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci",
+                    paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
+                             "monetized_impact", "monetized_impact_rounded"),
+                           rep(c("", "_1", "_2"), each = 3)))
 
     put_first_cols <-
       function(x, cols){
