@@ -17,14 +17,15 @@
 #' @export
 socialize <- function(output_healthiar = NULL,
                       impact = NULL,
+                      geo_id_disaggregated,
+                      social_indicator,
+                      n_quantile = 10, ## by default: decile
+                      approach = "quantile",
                       population = NULL,
                       bhd = NULL,
                       exp = NULL,
                       pop_fraction = NULL,
-                      geo_id_disaggregated,
-                      social_indicator,
-                      n_quantile = 10, ## by default: decile
-                      approach = "quantile") {
+                      ) {
 
   # Using the output of attribute ##############################################
 
