@@ -19,7 +19,7 @@ testthat::test_that("results correct rr multiple exposure additive approach no v
 
   testthat::expect_equal(
     object =
-      healthiar::get_multiexposure(
+      healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
         exposure_name_1 = "pm2.5",
@@ -58,7 +58,7 @@ testthat::test_that("results correct rr multiple exposure additive approach with
 
   testthat::expect_equal(
     object =
-      healthiar::get_multiexposure(
+      healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
         exposure_name_1 = "pm2.5",
@@ -97,7 +97,7 @@ testthat::test_that("detailed results the same rr multiple exposure additive app
 
   testthat::expect_equal(
     object =
-      healthiar::get_multiexposure(
+      healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
         exposure_name_1 = "pm2.5",
@@ -133,7 +133,7 @@ testthat::test_that("results correct rr multiple exposure multiplicative approac
 
   testthat::expect_equal(
     object =
-      healthiar::get_multiexposure(
+      healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
         exposure_name_1 = "pm2.5",
@@ -171,7 +171,7 @@ testthat::test_that("results correct rr multiple exposure multiplicative approac
 
   testthat::expect_equal(
     object =
-      healthiar::get_multiexposure(
+      healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
         exposure_name_1 = "pm2.5",
@@ -212,7 +212,7 @@ testthat::test_that("results correct rr multiple exposure combined approach", {
 
   testthat::expect_equal(
     object =
-      healthiar::get_multiexposure(
+      healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
         exposure_name_1 = "pm2.5",
@@ -251,7 +251,7 @@ testthat::test_that("results correct rr multiple exposure combined approach with
 
   testthat::expect_equal(
     object =
-      healthiar::get_multiexposure(
+      healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
         exposure_name_1 = "pm2.5",
@@ -290,7 +290,7 @@ testthat::test_that("detailed results correct rr multiple exposure combined appr
 
   testthat::expect_equal(
     object =
-      healthiar::get_multiexposure(
+      healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
         exposure_name_1 = "pm2.5",

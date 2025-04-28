@@ -46,7 +46,7 @@ testthat::test_that("results correct daly from yld rr and yll rr lifetable", {
 
   testthat::expect_equal(
     object =
-      healthiar::get_daly(
+      healthiar::daly(
         output_attribute_yll = bestcost_pm_yll,
         output_attribute_yld = bestcost_pm_yld
         )$health_main$impact_rounded,
@@ -119,7 +119,7 @@ testthat::test_that("results correct daly from two compare outputs (once 2 delta
   ## Delta comparison
   testthat::expect_equal(
     object =
-      healthiar::get_daly(
+      healthiar::daly(
         output_attribute_yll =
           healthiar::compare(
             approach_comparison = "delta",
@@ -138,7 +138,7 @@ testthat::test_that("results correct daly from two compare outputs (once 2 delta
   ## PIF comparison
   testthat::expect_equal(
     object =
-      healthiar::get_daly(
+      healthiar::daly(
         output_attribute_yll =
           healthiar::compare(
             approach_comparison = "pif",
@@ -228,7 +228,7 @@ testthat::test_that("results correct daly from two compare outputs (once 2 delta
   ## Delta comparison
   testthat::expect_equal(
     object =
-      healthiar::get_daly(
+      healthiar::daly(
         output_attribute_yll =
           healthiar::compare(
             approach_comparison = "delta",
@@ -247,7 +247,7 @@ testthat::test_that("results correct daly from two compare outputs (once 2 delta
   ## PIF comparison
   testthat::expect_equal(
     object =
-      healthiar::get_daly(
+      healthiar::daly(
         output_attribute_yll =
           healthiar::compare(
             approach_comparison = "pif",

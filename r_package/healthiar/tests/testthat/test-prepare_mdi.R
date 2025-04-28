@@ -1,17 +1,17 @@
 ## COMMENTED OUT SO THAT FUNCTION OUTPUT DOESN'T SHOW UP IN TESTING OVERVIEW
 # testthat::test_that("results correct", {
 #
-#   data <- base::readRDS(testthat::test_path("data", "exdat_get_mdi.rds"))
+#   data <- base::readRDS(testthat::test_path("data", "exdat_prepare_mdi.rds"))
 #
 #   testthat::expect_equal(
 #     object =
-#       healthiar::get_mdi(
-#         geo_id_disaggregated = exdat_get_mdi$id,
-#         edu = exdat_get_mdi$edu,
-#         unemployed = exdat_get_mdi$unemployed,
-#         single_parent = exdat_get_mdi$single_parent,
-#         pop_change = exdat_get_mdi$pop_change,
-#         no_heating = exdat_get_mdi$no_heating,
+#       healthiar::prepare_mdi(
+#         geo_id_disaggregated = exdat_prepare_mdi$id,
+#         edu = exdat_prepare_mdi$edu,
+#         unemployed = exdat_prepare_mdi$unemployed,
+#         single_parent = exdat_prepare_mdi$single_parent,
+#         pop_change = exdat_prepare_mdi$pop_change,
+#         no_heating = exdat_prepare_mdi$no_heating,
 #         n_quantile = 10)$MDI[1:50] |> round(digits = 7), # Extract the MDI of the first 50 geo units
 #     expect = c(0.2117721, 0.4319924, 0.1847750, 0.3787937, 0.3121354, 0.2565185, 0.2245822,
 #                0.2140148, 0.2656597, 0.3566141, 0.1746261, 0.2108900, 0.2221277, 0.2226641,

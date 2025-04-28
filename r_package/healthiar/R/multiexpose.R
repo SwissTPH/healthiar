@@ -9,7 +9,7 @@
 #' @note Experimental function
 #' @export
 
-get_multiexposure <-
+multiexpose <-
   function(
     output_attribute_1,
     output_attribute_2,
