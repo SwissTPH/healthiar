@@ -27,7 +27,7 @@ attribute_mod <-
     exp_central = NULL, exp_lower = NULL, exp_upper = NULL,
     prop_pop_exp = NULL,
     pop_exp = NULL,
-    cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+    cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
     bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
     geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
     population = NULL,
