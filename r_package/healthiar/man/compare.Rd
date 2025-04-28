@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare}
 \alias{compare}
-\title{Compare attributable health cases based on single baseline health value and relative risk}
+\title{Compare the attributable health impacts between two scenarios}
 \usage{
 compare(output_attribute_1, output_attribute_2, approach_comparison = "delta")
 }
@@ -27,7 +27,7 @@ The result tibbles include columns such as:
  }
 }
 \description{
-Calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
+This function calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
 }
 \details{
 Note that several input parameters (such as baseline health data and relative risk must be the same to correctly compare the two scenarios.

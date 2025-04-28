@@ -1,4 +1,4 @@
-#' Attributable health cases based on relative risk
+#' Attributabe health impact to an environmental stressor
 
 #' @description
 #' Calculates the health impacts, mortality or morbidity, of an environmental stressor using a single value for baseline heath data, i.e. without life table.
@@ -57,6 +57,7 @@
 #'  }
 #'
 #' @author Alberto Castro & Axel Luyten
+#' @keywords internal
 
 attribute_master <-
   function(is_lifetable = NULL,

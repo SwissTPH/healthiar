@@ -1,6 +1,6 @@
-#' Attribute discounted health impact
+#' Discount health impacts
 
-#' @description It calculates discounted health impacts (without valuation).
+#' @description This function calculates discounted health impacts (without valuation).
 
 #' @inheritParams monetize
 

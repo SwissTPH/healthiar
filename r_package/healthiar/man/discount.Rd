@@ -2,7 +2,7 @@
 % Please edit documentation in R/discount.R
 \name{discount}
 \alias{discount}
-\title{Attribute discounted health impact}
+\title{Discount health impacts}
 \usage{
 discount(
   output_healthiar = NULL,
@@ -38,7 +38,7 @@ Moreover, the data frame includes columns such as:
 }
 }
 \description{
-It calculates discounted health impacts (without valuation).
+This function calculates discounted health impacts (without valuation).
 }
 \examples{
 TBD

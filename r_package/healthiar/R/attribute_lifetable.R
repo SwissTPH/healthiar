@@ -1,6 +1,6 @@
-#' Deaths and YLL based on life table approach
+#' Attributable premature deaths or YLL based using a life table approach
 #'
-#' @description Assesses the premature deaths or years of life lost attributable to the exposure to an environmental stressor using a life table approach.
+#' @description This function assesses premature deaths or years of life lost (YLL) attributable to exposure to an environmental stressor using a life table approach.
 #' @inheritParams attribute_master
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the

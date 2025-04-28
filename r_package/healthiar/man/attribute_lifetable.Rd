@@ -2,10 +2,29 @@
 % Please edit documentation in R/attribute_lifetable.R
 \name{attribute_lifetable}
 \alias{attribute_lifetable}
-\title{Deaths and YLL based on life table approach}
+\title{Attributable premature deaths or YLL based using a life table approach}
 \usage{
 attribute_lifetable(
+  first_age_pop,
+  last_age_pop,
+  population_midyear_male,
+  population_midyear_female,
+  deaths_male = NULL,
+  deaths_female = NULL,
+  min_age = NULL,
+  max_age = NULL,
+  approach_exposure = "single_year",
+  approach_newborns = "without_newborns",
   health_outcome = NULL,
+  year_of_analysis,
+  erf_shape = NULL,
+  rr_central = NULL,
+  rr_lower = NULL,
+  rr_upper = NULL,
+  rr_increment = NULL,
+  erf_eq_central = NULL,
+  erf_eq_lower = NULL,
+  erf_eq_upper = NULL,
   exp_central,
   exp_lower = NULL,
   exp_upper = NULL,
@@ -13,32 +32,40 @@ attribute_lifetable(
   cutoff_central,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
-  rr_central = NULL,
-  rr_lower = NULL,
-  rr_upper = NULL,
-  rr_increment = NULL,
-  erf_shape = NULL,
-  erf_eq_central = NULL,
-  erf_eq_lower = NULL,
-  erf_eq_upper = NULL,
-  approach_exposure = "single_year",
-  approach_newborns = "without_newborns",
-  deaths_male = NULL,
-  deaths_female = NULL,
-  first_age_pop,
-  last_age_pop,
-  population_midyear_male,
-  population_midyear_female,
-  year_of_analysis,
-  min_age = NULL,
-  max_age = NULL,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
   info = NULL
 )
 }
 \arguments{
+\item{first_age_pop}{\code{Numeric value} specifying the age of the youngest age group from population and life table data (age interval = 1 year).}
+
+\item{last_age_pop}{\code{Numeric value} specifying the age of the oldest age group from population and life table data (age interval = 1 year).}
+
+\item{population_midyear_male, population_midyear_female}{\code{Numeric vector} containing the mid-year population for the year of analysis for female and male, respectively.}
+
+\item{min_age}{\code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. By default 30, which implies that all adults aged 30 or older will be affected by the exposure.}
+
+\item{max_age}{\code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.}
+
+\item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: "single_year" (default), "constant".}
+
+\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". If "with_newborns" is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.}
+
 \item{health_outcome}{\code{String} specifying if the result of the assessment with life table is premature deaths ("deaths") or years of life lost ("yll")}
+
+\item{year_of_analysis}{\code{Numeric value} providing the year of analysis.}
+
+\item{erf_shape}{\code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".}
+
+\item{rr_central, rr_lower, rr_upper}{\code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.}
+
+\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}).}
+
+\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the equation of the user-defined exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions.
+If a \code{string} is entered, the function must contains only one variable c (concentration/exposure), e.g. "3+c+c^2".
+If a \code{function} is fed to the argument, it has be of the class function class, e.g. output from the functions \code{stats::splinefun()} or \code{stats::approxfun()}.
+If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use a cubic spline natural interpolation to derive the exposure-response function using, e.g. \code{stats::splinefun(x, y, method="natural")}.}
 
 \item{exp_central, exp_lower, exp_upper}{\code{Numeric value(s)} specifying the exposure level(s) to the environmental stressor and (optionally) to lower and upper bound of the 95\% confidence interval. If only one value is provided, it will be assumed that it refers to population-weighted mean exposure in \eqn{µg/m^3}. If a {vector} is provided, it will be assumed that it refers to the exposure categories (average exposure in the category) in a exposure distribution (this information is linked to the proportion of population exposed).}
 
@@ -48,33 +75,6 @@ attribute_lifetable(
 The cutoff level refers to the exposure level below which no health effects occur.
 If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.
 Only applicable to relative risk pathways.}
-
-\item{rr_central, rr_lower, rr_upper}{\code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.}
-
-\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}).}
-
-\item{erf_shape}{\code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".}
-
-\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the equation of the user-defined exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions.
-If a \code{string} is entered, the function must contains only one variable c (concentration/exposure), e.g. "3+c+c^2".
-If a \code{function} is fed to the argument, it has be of the class function class, e.g. output from the functions \code{stats::splinefun()} or \code{stats::approxfun()}.
-If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use a cubic spline natural interpolation to derive the exposure-response function using, e.g. \code{stats::splinefun(x, y, method="natural")}.}
-
-\item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: "single_year" (default), "constant".}
-
-\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". If "with_newborns" is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.}
-
-\item{first_age_pop}{\code{Numeric value} specifying the age of the youngest age group from population and life table data (age interval = 1 year).}
-
-\item{last_age_pop}{\code{Numeric value} specifying the age of the oldest age group from population and life table data (age interval = 1 year).}
-
-\item{population_midyear_male, population_midyear_female}{\code{Numeric vector} containing the mid-year population for the year of analysis for female and male, respectively.}
-
-\item{year_of_analysis}{\code{Numeric value} providing the year of analysis.}
-
-\item{min_age}{\code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. By default 30, which implies that all adults aged 30 or older will be affected by the exposure.}
-
-\item{max_age}{\code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.}
 
 \item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
 If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
@@ -99,7 +99,7 @@ Moreover, the data frame include columns such as:
 }
 }
 \description{
-Assesses the premature deaths or years of life lost attributable to the exposure to an environmental stressor using a life table approach.
+This function assesses premature deaths or years of life lost (YLL) attributable to exposure to an environmental stressor using a life table approach.
 }
 \details{
 The life table methodology follows the one implemented in the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200

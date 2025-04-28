@@ -2,7 +2,7 @@
 % Please edit documentation in R/attribute_master.R
 \name{attribute_master}
 \alias{attribute_master}
-\title{Attributable health cases based on relative risk}
+\title{Attributabe health impact to an environmental stressor}
 \usage{
 attribute_master(
   is_lifetable = NULL,
@@ -140,3 +140,4 @@ It provides as a result the mean as well as the lower and the higher bound of th
 \author{
 Alberto Castro & Axel Luyten
 }
+\keyword{internal}
