@@ -233,7 +233,7 @@ get_deaths_yll_from_lifetable <-
     impact_detailed <-
       impact_detailed  |>
       dplyr::mutate(dplyr::across(dplyr::contains("_nest"),
-                           ~rlang::set_names(.x,
+                           ~purrr::set_names(.x,
                                       id)))
 
     return(impact_detailed)
