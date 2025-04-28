@@ -1,8 +1,8 @@
 #' Attributabe health impact to an environmental stressor
-#'
+
 #' @description
 #' This function calculates the health impacts, mortality or morbidity, of an environmental stressor using a single value for baseline heath data, i.e. without life table.
-#' @details It provides as a result the mean as well as the lower and the higher bound of the impact based on the confidence interval of the concentration-response function.
+
 #' @param approach_risk \code{String} specifying the risk risk method. Options: "relative_risk" (default) or "absolute_risk".
 #' @param erf_shape \code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".
 #' @param rr_central,rr_lower,rr_upper \code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
@@ -43,6 +43,9 @@
 #' @param min_age \code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. By default 30, which implies that all adults aged 30 or older will be affected by the exposure.
 #' @param max_age \code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.
 #' @param is_lifetable \code{Boolean} argument specifying if the life table approach is applied (TRUE) or not (FALSE)
+
+#' @details It provides as a result the mean as well as the lower and the higher bound of the impact based on the confidence interval of the concentration-response function.
+
 #' @returns
 #' This function returns two lists:
 #' @returns
@@ -55,9 +58,12 @@
 #'  \item \code{impact} attributable health burden/impact
 #'  \item And many more
 #'  }
-#'
+
 #' @author Alberto Castro & Axel Luyten
+
 #' @keywords internal
+
+
 
 attribute_master <-
   function(is_lifetable = NULL,

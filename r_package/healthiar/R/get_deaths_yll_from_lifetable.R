@@ -1,18 +1,24 @@
 #' Get deaths, YLL or YLD
-#'
+
 #' @description
-#' This function determines attributable deaths, years of life lost or years lived with disability from lifetable
+#' This function determines attributable deaths, years of life lost or years lived with disability from life table
+
 #' @inheritParams attribute_master
+
 #' @returns
 #' This function returns a \code{List}
+
 #' @examples
 #' TBD
+
 #' @author Alberto Castro & Axel Luyten
+
 #' @note Experimental function
+
 #' @keywords internal
-#'
-#'
-#'
+
+
+
 get_deaths_yll_from_lifetable <-
   function(pop_impact,
            input_with_risk_and_pop_fraction) {

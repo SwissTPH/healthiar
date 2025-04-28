@@ -99,14 +99,17 @@ Default value = \code{NULL}.}
 \item{year_of_analysis}{\code{Numeric value} providing the year of analysis.}
 }
 \value{
-TBD. E.g. This function returns a \code{list} with the attributable
-Moreover, the data frame includes columns such as:
+This function returns two lists:
+
+1) \code{health_main}, which contains a tibble with the main results and
+2) \code{health_detailed}, which contains detailed (and interim) results.
+
+The result tibbles include columns such as:
 \itemize{
- \item Attributable fraction
- \item Health impact
- \item Outcome metric
- \item And many more.
-}
+ \item \code{pop_fraction} population attributable fraction; only for assessments using relative risk
+ \item \code{impact} attributable health burden/impact
+ \item And many more
+ }
 }
 \description{
 This function assesses the attributable health impacts in a new scenario 2 which is obtained by modifying an existing scenario 1. Supply an existing attribute output and specify how scenario 1 should be modified to create scenario 2.

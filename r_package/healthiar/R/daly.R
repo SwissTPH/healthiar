@@ -2,9 +2,15 @@
 
 #' @description
 #' This function calculates the disability-adjusted life years (DALY) attributable to the exposure to an environmental stressor by adding the two DALY components YLL and YLD.
+
 #' @inheritParams attribute_master
+
+#' @inherit attribute_master return
+
 #' @author Alberto Castro & Axel Luyten
+
 #' @note Experimental function
+
 #' @export
 
 daly <-

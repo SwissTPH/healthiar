@@ -1,22 +1,21 @@
 #' Create a scenario 2 by modifying an existing scenario 1 and determine attributable health impacts in it
-#'
+
 #' @description
 #' This function assesses the attributable health impacts in a new scenario 2 which is obtained by modifying an existing scenario 1. Supply an existing attribute output and specify how scenario 1 should be modified to create scenario 2.
-#' @param output_attribute_1 \code{List} containing the output of the function attribute() for scenario 1.
+
 #' @inheritParams attribute_master
-#' @returns
-#' TBD. E.g. This function returns a \code{list} with the attributable
-#' Moreover, the data frame includes columns such as:
-#' \itemize{
-#'  \item Attributable fraction
-#'  \item Health impact
-#'  \item Outcome metric
-#'  \item And many more.
-#' }
+#' @param output_attribute_1 \code{List} containing the output of the function attribute() for scenario 1.
+
+#' @inherit attribute_master return
+
 #' @examples
 #' TBD
+
 #' @author Alberto Castro & Axel Luyten
+
 #' @export
+
+
 
 attribute_mod <-
   function(

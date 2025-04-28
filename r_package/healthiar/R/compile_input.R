@@ -2,8 +2,9 @@
 
 #' @description
 #' This function compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
+
 #' @inheritParams attribute_master
-#'
+
 #' @returns
 #' This function returns a \code{data.frame} with all input data together
 #' Moreover, the data frame includes columns such as:
@@ -13,11 +14,17 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
+
 #' @examples
 #' TBD
+
 #' @author Alberto Castro & Axel Luyten
+
 #' @note Experimental function
+
 #' @keywords internal
+
+
 
 compile_input <-
   function(is_lifetable = NULL,

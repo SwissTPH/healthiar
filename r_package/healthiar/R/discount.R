@@ -2,21 +2,20 @@
 
 #' @description
 #' This function calculates discounted health impacts (without valuation).
+
 #' @inheritParams monetize
+
 #' @returns
-#' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
-#' concentration-response function i.e. central, lower and upper bound confidence interval.
-#' Moreover, the data frame includes columns such as:
-#' \itemize{
-#'  \item Attributable fraction
-#'  \item Health impact
-#'  \item Outcome metric
-#'  \item And many more.
-#' }
+#' TBD
+
 #' @examples
 #' TBD
+
 #' @author Alberto Castro & Axel Luyten
+
 #' @export
+
+
 
 discount <-
   function(output_healthiar = NULL,

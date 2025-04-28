@@ -2,6 +2,11 @@
 
 #' @description
 #' This function calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
+
+#' @param output_attribute_1 Scenario 1 as in the output of attribute()
+#' @param output_attribute_2 Scenario 2 as in the output of attribute()
+#' @param approach_comparison \code{String} showing the method of comparison. Options: "delta" or "pif".
+
 #' @details
 #' Note that several input parameters (such as baseline health data and relative risk must be the same to correctly compare the two scenarios.
 #' @details
@@ -28,14 +33,16 @@
 #' @details \eqn{RR_{PWC}} = relative risk associated with the population weighted mean exposure
 #' @details \eqn{RR_{PWC}} = relative risk associated with the population weighted mean for the alternative exposure scenario
 
-#' @param output_attribute_1 Scenario 1 as in the output of attribute()
-#' @param output_attribute_2 Scenario 2 as in the output of attribute()
-#' @param approach_comparison \code{String} showing the method of comparison. Options: "delta" or "pif".
 #' @inherit attribute_master return
+
 #' @examples
 #' TBD
+
 #' @author Alberto Castro & Axel Luyten
+
 #' @export
+
+
 
 compare <-
   function(

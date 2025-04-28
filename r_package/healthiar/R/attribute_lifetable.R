@@ -5,6 +5,11 @@
 
 #' @inheritParams attribute_master
 
+#' @details
+#' The life table methodology follows the one implemented in the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200
+#' @details
+#' A more expansive life table case study by Miller is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
+
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central, lower and upper bound confidence interval.
@@ -16,19 +21,14 @@
 #'  \item And many more.
 #' }
 
-#' @details
-#' The life table methodology follows the one implemented in the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200
-#' @details
-#' A more expansive life table case study by Miller is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
-
 #' @examples
 #' TBD
 
 #' @author Alberto Castro & Axel Luyten
 
-#' @note Experimental function
-
 #' @export
+
+
 
 attribute_lifetable <-
   function(first_age_pop, last_age_pop,
