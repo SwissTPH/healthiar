@@ -2,5 +2,6 @@ bibentry(
   bibtype  = "Unpublished",
   title    = "R package healthiar to quantify and monetize the burden of disease attributable to environmental exposures",
   author   = "Alberto Castro and Axel Luyten",
+  year     = 2026,
   note     = "Planned release as open-source beginning 2026 (currently under development, more info at https://best-cost.eu/)"
 )
