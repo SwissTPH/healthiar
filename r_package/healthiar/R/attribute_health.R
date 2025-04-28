@@ -1,6 +1,7 @@
 #' Attribute health impacts to an environmental stressor
 
-#' @description This function calculates the health impacts (mortality or morbidity)
+#' @description
+#' This function calculates the health impacts (mortality or morbidity)
 #' of exposure to an environmental stressor (air pollution or noise), using either relative or absolute risk.
 #' @details
 #' What you put in is what you get out
@@ -41,7 +42,6 @@
 #' @details \eqn{AR_i} = absolute risk at the mean of exposure bin i
 #' @details \eqn{PE_i} = fraction of the population exposed to exposure levels of the exposure category i
 
-
 #' @usage
 #' Relative risk case:
 #' attribute_health(
@@ -79,8 +79,11 @@
 #'   population = NULL,
 #'   info = NULL
 #')
+
 #' @inherit attribute_master return
+
 #' @inheritParams attribute_master
+
 #' @examples
 #' # Goal: attribute lung cancer cases to population-weighted PM2.5 exposure using relative risk
 #'
@@ -95,7 +98,9 @@
 #'
 #' # Attributable cases
 #' print(results$health_main$impact_rounded)
-#' @author Alberto Castro
+
+#' @author Alberto Castro & Axel Luyten
+
 #' @export
 
 attribute_health <-

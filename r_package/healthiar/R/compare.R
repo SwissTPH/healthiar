@@ -1,6 +1,7 @@
-#' Compare attributable health cases based on single baseline health value and relative risk
+#' Compare the attributable health impacts between two scenarios
 
-#' @description Calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
+#' @description
+#' This function calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
 #' @details
 #' Note that several input parameters (such as baseline health data and relative risk must be the same to correctly compare the two scenarios.
 #' @details

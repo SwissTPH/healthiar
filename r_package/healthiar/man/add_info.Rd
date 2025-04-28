@@ -15,12 +15,12 @@ add_info(df, info)
 This function returns a \code{data frame} with binding the input data with the info columns (info_ is added to the column names)
 }
 \description{
-Add meta-information of the input data within the data frame containing the input data.
+This function adds meta-information of the input data within the data frame containing the input data.
 }
 \note{
 Experimental function
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }
 \keyword{internal}

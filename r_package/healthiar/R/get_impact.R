@@ -1,6 +1,7 @@
 #' Attributable health cases based on relative risk
 
-#' @description Calculates the health impacts for each uncertainty and geo area.
+#' @description
+#' This function calculates the health impacts for each uncertainty and geo area.
 #' @inheritParams attribute_master
 #' @param input_table \code{Data frame} containing all input data.
 #' @returns
@@ -15,7 +16,7 @@
 #' }
 #' @examples
 #' TBD
-#' @author Alberto Castro
+#' @author Alberto Castro & Axel Luyten
 #' @keywords internal
 get_impact <-
   function(input_table,

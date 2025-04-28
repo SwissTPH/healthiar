@@ -2,7 +2,7 @@
 % Please edit documentation in R/monetize.R
 \name{monetize}
 \alias{monetize}
-\title{Monetization of health impacts}
+\title{Monetize health impacts}
 \usage{
 monetize(
   output_healthiar = NULL,
@@ -33,7 +33,7 @@ monetize(
 Description of the return value.
 }
 \description{
-Monetize health impacts
+This function monetizes health impacts
 }
 \examples{
 # Example of how to use the function

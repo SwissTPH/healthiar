@@ -1,6 +1,7 @@
-#' Monetization of health impacts
+#' Monetize health impacts
 
-#' @description Monetize health impacts
+#' @description
+#' This function monetizes health impacts
 #'
 #' @param output_healthiar \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while discount_years does not include the year 0. Thus, length of impact = discount_years + 1.

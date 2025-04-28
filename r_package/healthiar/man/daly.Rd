@@ -2,12 +2,12 @@
 % Please edit documentation in R/daly.R
 \name{daly}
 \alias{daly}
-\title{Attributable disability-adjusted life years based on life tables}
+\title{Attributable disability-adjusted life years}
 \usage{
 daly(output_attribute_yll, output_attribute_yld)
 }
 \description{
-Calculates the disability-adjusted life years attributable to the exposure to an environmental stressor using a life table approach.
+This function calculates the disability-adjusted life years (DALY) attributable to the exposure to an environmental stressor by adding the two DALY components YLL and YLD.
 }
 \note{
 Experimental function

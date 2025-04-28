@@ -1,9 +1,11 @@
 #' add_monetized_impact
 
-#' @description Function to calculate and add the monetization of the health impacts
-#'
+#' @description
+#' This function calculates and adds the monetized health impacts
+
 #' @param df \code{Data frame} including the column "impact" (health impact)
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function).
+
 #' @inheritParams monetize
 #'
 #' @returns Description of the return value.

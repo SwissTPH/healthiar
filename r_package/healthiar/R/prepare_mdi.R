@@ -1,6 +1,7 @@
 #' Create the BEST-COST Multidimensional Deprivation Index (MDI)
 
-#' @description Creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
+#' @description
+#' This function creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
 #' @param edu \code{Numeric vector} indicating educational attainment as \% of individuals (≥18) without a high school diploma (ISCED 0-2) per geo unit
 #' @param unemployed \code{Numeric vector} containing \% of unemployed individuals in the active population (18-65) per geo unit
 #' @param single_parent \code{Numeric vector} containing single-parent households as \% of total households headed by a single parent per geo unit

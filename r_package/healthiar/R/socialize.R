@@ -1,6 +1,7 @@
-#' Socio-economic aspects in health impacts
+#' Consider socio-economic aspects in healthiar assessments
 
-#' @description The function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts
+#' @description
+#' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts
 #' @param output_healthiar \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results
 #' @param impact \code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_disaggregated}.
 #' @param population \code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.

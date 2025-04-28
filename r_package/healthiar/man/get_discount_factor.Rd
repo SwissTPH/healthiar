@@ -16,11 +16,11 @@ get_discount_factor(
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 }
 \description{
-Get discount factor based on discount rate (already corrected for inflation)
+This function calculates the discount factor based on discount rate (already corrected for inflation)
 }
 \note{
 Experimental function
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }

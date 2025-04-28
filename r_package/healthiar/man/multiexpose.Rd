@@ -20,7 +20,7 @@ multiexpose(
 \item{approach}{\code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined".}
 }
 \description{
-Aggregates health impacts from multiple exposures to environmental stressors.
+This function aggregates health impacts from multiple exposures to environmental stressors.
 }
 \note{
 Experimental function

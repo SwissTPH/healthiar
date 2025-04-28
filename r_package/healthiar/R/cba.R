@@ -1,11 +1,11 @@
-#' Cost benefit analysis
-
-#' @description Perform cost-benefit analysis assuming that the monitized health impact is a benefit
-#'
+#' Cost-benefit analysis
+#
+#' @description
+#' This function performs a cost-benefit analysis
 #' @inheritParams monetize
 #' @param discount_rate_benefit,discount_rate_cost \code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates)
 #' @param benefit \code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure
-#' @param cost \code{Numeric value} referring to the investment cost to achive the reduction of exposure
+#' @param cost \code{Numeric value} referring to the investment cost to achieve the reduction of exposure
 #'
 #' @returns Description of the return value.
 #' @examples

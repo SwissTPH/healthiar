@@ -14,9 +14,9 @@ check_if_args_identical(args_a, args_b, names_to_check)
 \item{names_to_check}{\code{Vector} with the names of arguments to be checked}
 }
 \description{
-The function check if two different sets of arguments are identical
+This function checks if two different sets of arguments are identical
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }
 \keyword{internal}

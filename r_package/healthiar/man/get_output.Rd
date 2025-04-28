@@ -25,12 +25,12 @@ Moreover, the data frame includes columns such as:
 }
 }
 \description{
-Distributes and store outputs by level of detail by aggregating or filtering impacts.
+This function distributes and store outputs by level of detail by aggregating or filtering impacts.
 }
 \examples{
 TBD
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }
 \keyword{internal}

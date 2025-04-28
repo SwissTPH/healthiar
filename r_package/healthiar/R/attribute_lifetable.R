@@ -1,7 +1,10 @@
-#' Deaths and YLL based on life table approach
-#'
-#' @description Assesses the premature deaths or years of life lost attributable to the exposure to an environmental stressor using a life table approach.
+#' Attributable premature deaths or YLL using a life table approach
+
+#' @description
+#' This function assesses premature deaths or years of life lost (YLL) attributable to exposure to an environmental stressor using a life table approach.
+
 #' @inheritParams attribute_master
+
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central, lower and upper bound confidence interval.
@@ -12,14 +15,19 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
+
 #' @details
 #' The life table methodology follows the one implemented in the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200
 #' @details
 #' A more expansive life table case study by Miller is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
+
 #' @examples
 #' TBD
-#' @author Alberto Castro
+
+#' @author Alberto Castro & Axel Luyten
+
 #' @note Experimental function
+
 #' @export
 
 attribute_lifetable <-

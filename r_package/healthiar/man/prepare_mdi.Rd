@@ -47,7 +47,7 @@ For the internal consistency check the function provides
 }
 }
 \description{
-Creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
+This function creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
 }
 \details{
 The function prints Cronbach's \eqn{\alpha}.
