@@ -23,6 +23,20 @@ get_output <-
            input_table = NULL,
            impact_raw){
 
+    # Store set of columns ###################################
+    # Variables to be used below
+
+    id_columns <- c("geo_id_aggregated", "geo_id_disaggregated",
+                    "exposure_name",
+                    "sex",
+                    "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
+
+    id_columns_for_geo_aggregation <- id_columns[!id_columns %in% c("geo_id_disaggregated")]
+
+    impact_columns <-paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
+                              "monetized_impact", "monetized_impact_rounded"),
+                            rep(c("", "_1", "_2"), each = 3))
+
     # Get main results from detailed results ###################################
 
     health_detailed_from_impact  <-
@@ -116,9 +130,8 @@ get_output <-
         output_last |>
         # Group by higher geo level
         dplyr::group_by(dplyr::across(dplyr::any_of(
-                          c("exposure_name",
-                            "geo_id_aggregated",
-                            "erf_ci", "exp_ci", "bhd_ci", "dw_ci"))))
+          id_columns_for_geo_aggregation
+          )))
 
         if (!"population" %in% names(output_last)) {
           output[["health_detailed"]][["impact_agg_geo"]]  <- output[["health_detailed"]][["impact_agg_geo"]] |>
@@ -134,6 +147,12 @@ get_output <-
                            impact_per_100k_inhab = (impact / population) * 1E5,
                            .groups = "drop")
         }
+
+      # Add the rest of columns
+      # output[["health_detailed"]][["impact_agg_geo"]] <-
+      #   output[["health_detailed"]][["impact_agg_geo"]] |>
+      #   dplyr::left_join(output[["health_detailed"]][["impact_agg_geo"]],
+      #                    output_last)
 
 
       output_last <- output[["health_detailed"]][["impact_agg_geo"]]
@@ -186,14 +205,6 @@ get_output <-
 
     # Order columns ############################################################
     # putting first (on the left) those that determine different results across rows
-
-    id_columns <- c("geo_id_aggregated", "geo_id_disaggregated",
-                    "sex",
-                    "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
-
-    impact_columns <-paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
-                              "monetized_impact", "monetized_impact_rounded"),
-                            rep(c("", "_1", "_2"), each = 3))
 
     first_columns <- c(id_columns, impact_columns)
 
