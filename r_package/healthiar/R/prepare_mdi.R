@@ -38,19 +38,19 @@
 #'   \item Person's correlation coefficient (pairwise-comparisons)
 #' }
 #' @examples
-#' mdi <- healthiar::get_mdi(
-#'   geo_id_disaggregated = exdat_get_mdi$id,
-#'   edu = exdat_get_mdi$edu,
-#'   unemployed = exdat_get_mdi$unemployed,
-#'   single_parent = exdat_get_mdi$single_parent,
-#'   pop_change = exdat_get_mdi$pop_change,
-#'   no_heating = exdat_get_mdi$no_heating,
+#' mdi <- healthiar::prepare_mdi(
+#'   geo_id_disaggregated = exdat_prepare_mdi$id,
+#'   edu = exdat_prepare_mdi$edu,
+#'   unemployed = exdat_prepare_mdi$unemployed,
+#'   single_parent = exdat_prepare_mdi$single_parent,
+#'   pop_change = exdat_prepare_mdi$pop_change,
+#'   no_heating = exdat_prepare_mdi$no_heating,
 #'   n_quantile = 10
 #'   )
 #' @inheritParams socialize
 #' @export
 
-get_mdi <- function(
+prepare_mdi <- function(
     geo_id_disaggregated,
     edu,
     unemployed,
