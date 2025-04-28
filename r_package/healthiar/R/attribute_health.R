@@ -65,7 +65,7 @@
 #'
 #' All available arguments:
 #' attribute_health(
-#'   approach_risk = "relative_risk", # Default
+#'   approach_risk = "relative_risk", # Default; alternative: "absolute_risk"
 #'   erf_shape = NULL,
 #'   rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
 #'   rr_increment = NULL,
