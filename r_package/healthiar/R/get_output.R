@@ -189,10 +189,13 @@ get_output <-
 
     id_columns <- c("geo_id_aggregated", "geo_id_disaggregated",
                     "sex",
-                    "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci",
-                    paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
-                             "monetized_impact", "monetized_impact_rounded"),
-                           rep(c("", "_1", "_2"), each = 3)))
+                    "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
+
+    impact_columns <-paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
+                              "monetized_impact", "monetized_impact_rounded"),
+                            rep(c("", "_1", "_2"), each = 3))
+
+    first_columns <- c(id_columns, impact_columns)
 
     put_first_cols <-
       function(x, cols){
@@ -222,7 +225,7 @@ get_output <-
       purrr:::map(
         .x = output,
         .f = ~ put_first_cols_recursive(x = .x,
-                                        cols = id_columns))
+                                        cols = first_columns))
 
 
 
