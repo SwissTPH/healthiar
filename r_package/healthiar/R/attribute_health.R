@@ -3,44 +3,6 @@
 #' @description
 #' This function calculates the health impacts (mortality or morbidity)
 #' of exposure to an environmental stressor (air pollution or noise), using either relative or absolute risk.
-#' @details
-#' What you put in is what you get out
-#' @details
-#' Generally, the health metric inputted and outputted are the same, e.g. if the baseline health data are mortalities then the result will be mortalities as well. Analogeously for disease cases, DALYs, etc. Exception: if a disability weight is inputted alongside a morbidity health outcome, then the main output will be YLD.
-#' @details
-#' Equations (relative risk)
-#' @details
-#' The most general equation describing the population attributable fraction (PAF) mathematically is an integral form
-#' \deqn{PAF = \frac{\int RR(x)PE(x)dx - 1}{\int RR(x)PE(x)dx}}
-#' @details Where:
-#' @details x     = exposure level
-#' @details PE(x) = population distribution of exposure
-#' @details RR(x) = relative risk at exposure level compared to the reference level
-#' @details
-#' If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF
-#' \deqn{PAF = \frac{\sum RR_i \times PE_i dx - 1}{\sum RR_i \times PE_i dx}}
-#' @details Where:
-#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
-#' @details \eqn{PE_i} = fraction of population in exposure category i
-#' @details \eqn{RR_i} = relative risk for exposure category level i compared to the reference level
-#' @details
-#' There is one alternative for the PAF for categorical exposure distribution that is commonly used. It is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical.
-#' \deqn{PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}}
-#' @details Where:
-#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
-#' @details \eqn{PE_i} = fraction of population in exposure category i
-#' @details \eqn{RR_i} = relative risk for exposure category level i compared to the reference level
-#' @details
-#' Finally, if the exposure is provided as the population weighted mean concentration (PWC), the equation for the PAF is reduced to
-#' \deqn{PAF = \frac{RR_{PWC} - 1}{RR_{PWC}}}
-#' Where \eqn{RR_PWC} is the relative risk associated with the population weighted mean exposure.
-#' @details
-#' Equation (absolute risk)
-#' \deqn{N = \sum AR_i\times PE_i}
-#' @details Where:
-#' @details N = the number of cases of the exposure-specific health outcome that are attributed to the exposure
-#' @details \eqn{AR_i} = absolute risk at the mean of exposure bin i
-#' @details \eqn{PE_i} = fraction of the population exposed to exposure levels of the exposure category i
 
 #' @usage
 #' Relative risk case:
@@ -80,9 +42,48 @@
 #'   info = NULL
 #')
 
-#' @inherit attribute_master return
-
 #' @inheritParams attribute_master
+
+#' @details
+#' What you put in is what you get out
+#' @details
+#' Generally, the health metric inputted and outputted are the same, e.g. if the baseline health data are mortalities then the result will be mortalities as well. Analogeously for disease cases, DALYs, etc. Exception: if a disability weight is inputted alongside a morbidity health outcome, then the main output will be YLD.
+#' @details
+#' Equations (relative risk)
+#' @details
+#' The most general equation describing the population attributable fraction (PAF) mathematically is an integral form
+#' \deqn{PAF = \frac{\int RR(x)PE(x)dx - 1}{\int RR(x)PE(x)dx}}
+#' @details Where:
+#' @details x     = exposure level
+#' @details PE(x) = population distribution of exposure
+#' @details RR(x) = relative risk at exposure level compared to the reference level
+#' @details
+#' If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF
+#' \deqn{PAF = \frac{\sum RR_i \times PE_i dx - 1}{\sum RR_i \times PE_i dx}}
+#' @details Where:
+#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
+#' @details \eqn{PE_i} = fraction of population in exposure category i
+#' @details \eqn{RR_i} = relative risk for exposure category level i compared to the reference level
+#' @details
+#' There is one alternative for the PAF for categorical exposure distribution that is commonly used. It is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical.
+#' \deqn{PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}}
+#' @details Where:
+#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
+#' @details \eqn{PE_i} = fraction of population in exposure category i
+#' @details \eqn{RR_i} = relative risk for exposure category level i compared to the reference level
+#' @details
+#' Finally, if the exposure is provided as the population weighted mean concentration (PWC), the equation for the PAF is reduced to
+#' \deqn{PAF = \frac{RR_{PWC} - 1}{RR_{PWC}}}
+#' Where \eqn{RR_PWC} is the relative risk associated with the population weighted mean exposure.
+#' @details
+#' Equation (absolute risk)
+#' \deqn{N = \sum AR_i\times PE_i}
+#' @details Where:
+#' @details N = the number of cases of the exposure-specific health outcome that are attributed to the exposure
+#' @details \eqn{AR_i} = absolute risk at the mean of exposure bin i
+#' @details \eqn{PE_i} = fraction of the population exposed to exposure levels of the exposure category i
+
+#' @inherit attribute_master return
 
 #' @examples
 #' # Goal: attribute lung cancer cases to population-weighted PM2.5 exposure using relative risk
@@ -102,6 +103,8 @@
 #' @author Alberto Castro & Axel Luyten
 
 #' @export
+
+
 
 attribute_health <-
   function(approach_risk = "relative_risk",

@@ -106,9 +106,6 @@ The life table methodology follows the one implemented in the WHO tool AirQ+, an
 
 A more expansive life table case study by Miller is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
 }
-\note{
-Experimental function
-}
 \examples{
 TBD
 }

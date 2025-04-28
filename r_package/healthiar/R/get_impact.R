@@ -2,8 +2,10 @@
 
 #' @description
 #' This function calculates the health impacts for each uncertainty and geo area.
+
 #' @inheritParams attribute_master
 #' @param input_table \code{Data frame} containing all input data.
+
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central, lower and upper bound confidence interval.
@@ -14,10 +16,16 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
+
 #' @examples
 #' TBD
+
 #' @author Alberto Castro & Axel Luyten
+
 #' @keywords internal
+
+
+
 get_impact <-
   function(input_table,
            pop_fraction_type){

@@ -2,9 +2,11 @@
 
 #' @description
 #' This function distributes and store outputs by level of detail by aggregating or filtering impacts.
+
 #' @param input_args \code{List} containingall arguments and values entered in attribute().
 #' @param input_table \code{List} containing the input_table data compiled and packed in a data frame.
 #' @param impact_raw \code{List} containing all the calculation of health impacts.
+
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central, lower and upper bound confidence interval.
@@ -15,10 +17,16 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
+
 #' @examples
 #' TBD
+
 #' @author Alberto Castro & Axel Luyten
+
 #' @keywords internal
+
+
+
 get_output <-
   function(input_args = NULL,
            input_table = NULL,

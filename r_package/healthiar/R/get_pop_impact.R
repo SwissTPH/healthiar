@@ -1,8 +1,9 @@
 #' Get population impact over time
 
 #' @description Get population impact over time
+
 #' @param input_with_risk_and_pop_fraction \code{Data frame} with the input data (including risk and population fraction)
-#'
+
 #' @returns
 #' This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central estimate, lower and upper bound confidence interval).
@@ -13,11 +14,17 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
+
 #' @examples
 #' TBD
+
 #' @author Alberto Castro & Axel Luyten
+
 #' @note Experimental function
+
 #' @keywords internal
+
+
 
 get_pop_impact <-
   function(input_with_risk_and_pop_fraction){

@@ -19,11 +19,8 @@ This function determines summary uncertainty (based on at least one variable
 with central, lower and upper estimate) based on attribute() or compare()
 function output.
 }
-\note{
-Experimental function
-}
 \examples{
-TBD
+TODO
 }
 \author{
 Axel Luyten

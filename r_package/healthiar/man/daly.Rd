@@ -6,6 +6,19 @@
 \usage{
 daly(output_attribute_yll, output_attribute_yld)
 }
+\value{
+This function returns two lists:
+
+1) \code{health_main}, which contains a tibble with the main results and
+2) \code{health_detailed}, which contains detailed (and interim) results.
+
+The result tibbles include columns such as:
+\itemize{
+ \item \code{pop_fraction} population attributable fraction; only for assessments using relative risk
+ \item \code{impact} attributable health burden/impact
+ \item And many more
+ }
+}
 \description{
 This function calculates the disability-adjusted life years (DALY) attributable to the exposure to an environmental stressor by adding the two DALY components YLL and YLD.
 }

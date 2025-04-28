@@ -4,16 +4,23 @@
 #' This function determines summary uncertainty (based on at least one variable
 #' with central, lower and upper estimate) based on attribute() or compare()
 #' function output.
+
 #' @param results \code{variable} in which the results of an attribute function is stored.
 #' @param n_sim \code{numeric value} indicating the number of simulations to be performed.
+
 #' @returns
 #' This function returns confidence intervals for the attributable health impacts using a Monte Carlo simulation.
-#' @export
+
 #' @author Axel Luyten
-#' @note Experimental function
-#' @keywords internal
+
 #' @examples
-#' TBD
+#' TODO
+
+#' @export
+
+#' @keywords internal
+
+
 
 summarize_uncertainty <- function(
     results,
