@@ -20,7 +20,6 @@ Imports:
   stringr, 
   tibble, 
   stats,
-  credentials,
   rlang,
   devtools
 Depends: 
