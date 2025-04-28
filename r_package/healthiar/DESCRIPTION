@@ -19,7 +19,6 @@ Imports:
   purrr, 
   stringr, 
   tibble, 
-  zoo, 
   stats,
   credentials,
   rlang,
