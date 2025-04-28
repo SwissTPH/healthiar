@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_risk.R
 \name{get_risk}
 \alias{get_risk}
-\title{Re-scale the relative risk}
+\title{Get the relative risk of an exposure level}
 \usage{
 get_risk(
   erf_shape = NULL,
@@ -30,7 +30,7 @@ get_risk(
 This function returns three \code{values} corresponding to the central estimate as well as the lower and upper bound of the exposure-response function.
 }
 \description{
-Re-scale the relative risk from the increment value in the epidemiological study (e.g. for PM2.5 10 or 5 ug/m3) to the actual population exposure)
+This function re-scales the relative risk from the increment value in the epidemiological study (e.g. for PM2.5 10 or 5 ug/m3) to the actual population exposure
 }
 \note{
 Experimental function
@@ -39,5 +39,5 @@ Experimental function
 get_risk(rr=1.05, exp=10, cutoff=5, erf_shape="linear" )
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }

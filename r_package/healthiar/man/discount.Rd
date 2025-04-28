@@ -44,5 +44,5 @@ This function calculates discounted health impacts (without valuation).
 TBD
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }

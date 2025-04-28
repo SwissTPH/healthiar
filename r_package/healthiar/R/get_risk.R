@@ -1,6 +1,7 @@
-#' Re-scale the relative risk
+#' Get the relative risk of an exposure level
 
-#' @description Re-scale the relative risk from the increment value in the epidemiological study (e.g. for PM2.5 10 or 5 ug/m3) to the actual population exposure)
+#' @description
+#' This function re-scales the relative risk from the increment value in the epidemiological study (e.g. for PM2.5 10 or 5 ug/m3) to the actual population exposure
 #' @inheritParams attribute_master
 #' @param rr
 #' \code{Numeric vector} containing the relative risk. The data frame must contain the central estimate as well as the lower and upper bound of the exposure-response function.
@@ -13,7 +14,7 @@
 #' This function returns three \code{values} corresponding to the central estimate as well as the lower and upper bound of the exposure-response function.
 #' @examples
 #' get_risk(rr=1.05, exp=10, cutoff=5, erf_shape="linear" )
-#' @author Alberto Castro
+#' @author Alberto Castro & Axel Luyten
 #' @note Experimental function
 #' @export
 

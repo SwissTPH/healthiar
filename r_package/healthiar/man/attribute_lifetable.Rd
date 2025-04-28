@@ -2,7 +2,7 @@
 % Please edit documentation in R/attribute_lifetable.R
 \name{attribute_lifetable}
 \alias{attribute_lifetable}
-\title{Attributable premature deaths or YLL based using a life table approach}
+\title{Attributable premature deaths or YLL using a life table approach}
 \usage{
 attribute_lifetable(
   first_age_pop,
@@ -113,5 +113,5 @@ Experimental function
 TBD
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }

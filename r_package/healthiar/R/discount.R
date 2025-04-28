@@ -1,9 +1,8 @@
 #' Discount health impacts
 
-#' @description This function calculates discounted health impacts (without valuation).
-
+#' @description
+#' This function calculates discounted health impacts (without valuation).
 #' @inheritParams monetize
-
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function i.e. central, lower and upper bound confidence interval.
@@ -16,7 +15,7 @@
 #' }
 #' @examples
 #' TBD
-#' @author Alberto Castro
+#' @author Alberto Castro & Axel Luyten
 #' @export
 
 discount <-

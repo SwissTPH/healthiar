@@ -129,7 +129,7 @@ Moreover, the data frame includes columns such as:
 }
 }
 \description{
-Compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
+This function compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
 }
 \note{
 Experimental function
@@ -138,6 +138,6 @@ Experimental function
 TBD
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }
 \keyword{internal}

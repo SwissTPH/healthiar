@@ -173,5 +173,5 @@ results <- attribute_health(
 print(results$health_main$impact_rounded)
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }

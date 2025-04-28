@@ -2,7 +2,7 @@
 % Please edit documentation in R/socialize.R
 \name{socialize}
 \alias{socialize}
-\title{Socio-economic aspects in health impacts}
+\title{Consider socio-economic aspects in healthiar assessments}
 \usage{
 socialize(
   output_healthiar = NULL,
@@ -37,7 +37,7 @@ If a vector is entered here, the data for geo-specific input data (e.g. \code{bh
 Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 }
 \description{
-The function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts
+This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts
 }
 \examples{
 # Example of how to use the function

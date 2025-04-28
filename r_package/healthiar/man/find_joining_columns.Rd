@@ -17,7 +17,7 @@ find_joining_columns(df_1, df_2, except = NULL)
 This function returns a \code{vector} of strings
 }
 \description{
-Find columns in two data frames that have same name and identical values (excluding exceptions).- The resulting joining columns are used to dplyr::x_join data frames and add the vector to by=.
+This function finds columns in two data frames that have same name and identical values (excluding exceptions).- The resulting joining columns are used to dplyr::x_join data frames and add the vector to by=.
 }
 \note{
 Experimental function

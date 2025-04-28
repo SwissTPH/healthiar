@@ -1,6 +1,7 @@
 #' Compile input
 
-#' @description Compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
+#' @description
+#' This function compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
 #' @inheritParams attribute_master
 #'
 #' @returns
@@ -14,7 +15,7 @@
 #' }
 #' @examples
 #' TBD
-#' @author Alberto Castro
+#' @author Alberto Castro & Axel Luyten
 #' @note Experimental function
 #' @keywords internal
 

@@ -19,7 +19,7 @@ get_pif(rr_conc_1, rr_conc_2, prop_pop_exp_1, prop_pop_exp_2)
 This function returns a \code{value} corresponding to the population attributable fraction
 }
 \description{
-Calculates the population impact fraction of a health outcome due to exposure to an environmental stressor
+This function calculates the population impact fraction of a health outcome due to exposure to an environmental stressor
 }
 \note{
 Experimental function
@@ -28,5 +28,5 @@ Experimental function
 TBD
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }

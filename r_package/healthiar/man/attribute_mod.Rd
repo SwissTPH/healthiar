@@ -109,11 +109,11 @@ Moreover, the data frame includes columns such as:
 }
 }
 \description{
-The function assesses the attributable health impacts in a new scenario 2 which is obtained by modifying an existing scenario 1. Supply an existing attribute output and specify how scenario 1 should be modified to create scenario 2.
+This function assesses the attributable health impacts in a new scenario 2 which is obtained by modifying an existing scenario 1. Supply an existing attribute output and specify how scenario 1 should be modified to create scenario 2.
 }
 \examples{
 TBD
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }

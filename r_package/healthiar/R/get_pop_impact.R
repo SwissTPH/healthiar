@@ -15,7 +15,7 @@
 #' }
 #' @examples
 #' TBD
-#' @author Alberto Castro
+#' @author Alberto Castro & Axel Luyten
 #' @note Experimental function
 #' @keywords internal
 
