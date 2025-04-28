@@ -23,23 +23,24 @@
 #' @export
 
 attribute_lifetable <-
-  function(health_outcome = NULL,
+  function(first_age_pop, last_age_pop,
+           population_midyear_male, population_midyear_female,
+           deaths_male = NULL, deaths_female = NULL,
+           min_age = NULL, max_age = NULL,
+           approach_exposure = "single_year",
+           approach_newborns = "without_newborns",
+           health_outcome = NULL,
+           year_of_analysis,
+           erf_shape = NULL,
+           rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+           rr_increment = NULL,
+           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            exp_central, exp_lower = NULL, exp_upper = NULL,
            prop_pop_exp = 1,
            cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
-           rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           rr_increment = NULL, erf_shape = NULL,
-           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-           approach_exposure = "single_year",
-           approach_newborns = "without_newborns",
-           deaths_male = NULL,
-           deaths_female = NULL,
-           first_age_pop, last_age_pop,
-           population_midyear_male, population_midyear_female,
-           year_of_analysis,
-           min_age = NULL, max_age = NULL,
            geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
-           info = NULL){
+           info = NULL
+           ) {
 
     output <-
       healthiar:::attribute_master(
