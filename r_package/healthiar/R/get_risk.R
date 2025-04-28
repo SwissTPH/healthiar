@@ -18,12 +18,14 @@
 #' @export
 
 get_risk <-
-  function(rr = NULL,
-           exp,
-           cutoff = NULL,
-           rr_increment = NULL,
-           erf_shape = NULL,
-           erf_eq = NULL){
+  function(
+    erf_shape = NULL,
+    rr = NULL,
+    rr_increment = NULL,
+    erf_eq = NULL,
+    cutoff = NULL,
+    exp
+  ) {
 
     # Check if exposure is upper than cutoff
     # Otherwise the value of the exposure must be the cutoff (minimum possible)

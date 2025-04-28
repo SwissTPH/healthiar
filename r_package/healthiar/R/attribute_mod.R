@@ -20,21 +20,26 @@
 attribute_mod <-
   function(
     output_attribute_1,
-    exp_central = NULL, exp_lower = NULL, exp_upper = NULL,
-    bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+    erf_shape = NULL,
     rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-    rr_increment = NULL, erf_shape = NULL,
+    rr_increment = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-    population = NULL,
+    exp_central = NULL, exp_lower = NULL, exp_upper = NULL,
     prop_pop_exp = NULL,
     pop_exp = NULL,
-    approach_exposure = NULL,
-    approach_newborns = NULL,
+    cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
+    bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+    geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
+    population = NULL,
+    info = NULL,
     first_age_pop = NULL, last_age_pop = NULL,
     population_midyear_male = NULL, population_midyear_female = NULL,
-    year_of_analysis = NULL,
-    geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
-    info = NULL){
+    deaths_male = NULL, deaths_female = NULL,
+    min_age = NULL, max_age = NULL,
+    approach_exposure = NULL,
+    approach_newborns = NULL,
+    year_of_analysis = NULL
+    ) {
 
     # Capture all arguments and values
     args_2 <- as.list(environment())
