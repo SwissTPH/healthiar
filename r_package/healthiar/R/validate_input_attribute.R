@@ -12,9 +12,6 @@ validate_input_attribute <-
 
     # Functions ###########
 
-    # Recreate the variables
-    list2env(input_args, envir = environment())
-
     get_length <- function(var){
       length <-
         ifelse(is.list(var),
@@ -23,25 +20,28 @@ validate_input_attribute <-
       return (length)
     }
 
-    same_length <- function(var_1, var_2){
-      # Only if var_2 (e.g. prop_pop_exp) is not 1 (default value)
-      if(!identical(var_2, 1)){
-        get_length(var_1) == get_length(var_2)
-      } else {TRUE}
+    same_length <- function(var_value_1, var_value_2){
 
+      # Only if var_2 (e.g. prop_pop_exp) is not 1 (default value)
+      if(!identical(var_value_2, 1)){
+        get_length(var_value_1) == get_length(var_value_2)
+      } else {TRUE}
     }
 
-    error_if_different_length <- function(var_1, var_2){
-      if(!is.null(var_1) && !is.null(var_2) && # Only if vars are available
-         !same_length(var_1, var_2)){
-          # Store varnames
-          varname_1 <- deparse(substitute(var_1))
-          varname_2 <- deparse(substitute(var_2))
+    error_if_different_length <- function(var_name_1, var_name_2){
+
+      # Store var_value
+      var_value_1 <- input_args[[var_name_1]]
+      var_value_2 <- input_args[[var_name_2]]
+
+      if(!is.null(var_value_1) && !is.null(var_value_2) && # Only if vars are available
+         !same_length(var_value_1, var_value_2)){
+
           # Create error message
-          stop(paste0(varname_1,
-                      "and",
-                      varname_2,
-                      "must have the same length."),
+          stop(paste0(var_name_1,
+                      " and ",
+                      var_name_2,
+                      " must have the same length."),
                call. = FALSE)
         }
       }
@@ -58,40 +58,51 @@ validate_input_attribute <-
         }
       }
 
-    error_if_ar_and_length_1_or_0 <- function(var){
-      if(!is.null(var) &&  # Only if available
-         !get_length(var) > 1){
-          # Store varname
-          varname <- deparse(substitute(var))
-          # Create error message
+    error_if_ar_and_length_1_or_0 <- function(var_name){
+      # Store var_value
+      var_value <- input_args[[var_name]]
+
+      if(!is.null(var_value) &&  # Only if available
+         !get_length(var_value) > 1){
+        # Create error message
           stop(
             paste0("For absolute risk, the length of ",
-                   varname ,
+                   var_name ,
                    " must be higher than 1."),
             call. = FALSE)
         }
       }
 
-    warning_if_ar_and_existing <- function(var){
-      if(!is.null(var)){ # Only if available
-        # Store varname
-        varname <- deparse(substitute(var))
+    warning_if_ar_and_existing <- function(var_name){
+
+      # Store var_value
+      var_value <- input_args[[var_name]]
+
+      if(!is.null(var_value)){ # Only if available
         # Create warning message
         warning(
           paste0("For absolute risk, the value of ",
-                 varname,
+                 var_name,
                  " is not considered (cutoff defined by exposure-response function)"),
           call. = FALSE)
       }
     }
 
-    # All pathways #####
-    # --> rr must be higher than 0
+    # Relevant variables ###########
 
+    # ci_suffix to avoid repetitions
+    ci_suffix <- c("_central", "_lower", "upper")
+
+    # numeric_var_names to use it in error_if_lower_than_0()
+    # which can be used only if the variable is numeric
     numeric_var_names <-
       input_args |>
       purrr::keep(is.numeric) |>
       base::names()
+
+    # All pathways #####
+    # --> rr must be higher than 0
+
 
     # Check one-by-one in loop
     #(purrr does not allow deactivating part of the error message)
@@ -105,28 +116,26 @@ validate_input_attribute <-
 
     # Exposure has to have the same length as prop_pop_exp
     # Only for relative risk
-    if(approach_risk == "relative_risk"){
+    if(input_args$approach_risk == "relative_risk"){
       # --> length(exp) and length(prop_pop_exp) must be the same
-      error_if_different_length(exp_central, prop_pop_exp)
-      error_if_different_length(exp_lower, prop_pop_exp)
-      error_if_different_length(exp_upper, prop_pop_exp)
-
-
+      for(exp_ci_suffix in paste0("exp", ci_suffix)){
+        error_if_different_length(exp_ci_suffix, "prop_pop_exp")
+      }
     }
 
     # if absolute_risk ###########
-    if(approach_risk == "absolute_risk"){
+    if(input_args$approach_risk == "absolute_risk"){
       # --> length(exp) must be higher than 1
-      error_if_ar_and_length_1_or_0(exp_central)
-      error_if_ar_and_length_1_or_0(exp_lower)
-      error_if_ar_and_length_1_or_0(exp_upper)
+
+      for(exp_ci_suffix in paste0("exp", ci_suffix)){
+        error_if_ar_and_length_1_or_0(exp_ci_suffix)
+      }
 
       # --> cutoff is not considered
-      warning_if_ar_and_existing(cutoff_central)
-      warning_if_ar_and_existing(cutoff_lower)
-      warning_if_ar_and_existing(cutoff_upper)
 
-
+      for(cutoff_ci_suffix in paste0("cutoff", ci_suffix)){
+        warning_if_ar_and_existing(cutoff_ci_suffix)
+      }
     }
 
 
