@@ -47,6 +47,19 @@ validate_input_attribute <-
       }
     }
 
+    error_if_lower_than_0 <- function(var_name){
+      var_value <- input_args[[var_name]]
+
+      if(!is.null(var_value)){ # Only if available
+        if(any(unlist(var_value) < 0)){ # any(unlist( To make it robust for lists
+          # Create error message
+          stop(paste0(var_name,
+                      " cannot be lower than 0"),
+               call. = FALSE)
+        }
+      }
+    }
+
     error_if_ar_and_length_1_or_0 <- function(var){
       if(!is.null(var)){ # Only if available
         if(!get_length(var) > 1){
@@ -73,30 +86,45 @@ validate_input_attribute <-
                  " is not considered (cutoff defined by exposure-response function)"),
           call. = FALSE)
       }
-  }
+    }
+
+    # All pathways #####
+    # --> rr must be higher than 0
+
+    numeric_var_names <-
+      input_args |>
+      purrr::keep(is.numeric) |>
+      base::names()
+
+    # Check one-by-one in loop
+    #(purrr does not allow deactivating part of the error message)
+    for (x in numeric_var_names) {
+      error_if_lower_than_0(x)
+    }
 
 
-    # length(exp) = length(prop_pop_exp) ###########
+
+    # If relative risk #####
 
     # Exposure has to have the same length as prop_pop_exp
     # Only for relative risk
     if(approach_risk == "relative_risk"){
-
+      # --> length(exp) and length(prop_pop_exp) must be the same
       error_if_different_length(exp_central, prop_pop_exp)
       error_if_different_length(exp_lower, prop_pop_exp)
       error_if_different_length(exp_upper, prop_pop_exp)
+
 
     }
 
     # if absolute_risk ###########
     if(approach_risk == "absolute_risk"){
-      # --> length(exp)>1
-
+      # --> length(exp) must be higher than 1
       error_if_ar_and_length_1_or_0(exp_central)
       error_if_ar_and_length_1_or_0(exp_lower)
       error_if_ar_and_length_1_or_0(exp_upper)
 
-      # --> cuoff is not considered
+      # --> cutoff is not considered
       warning_if_ar_and_existing(cutoff_central)
       warning_if_ar_and_existing(cutoff_lower)
       warning_if_ar_and_existing(cutoff_upper)

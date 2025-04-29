@@ -47,14 +47,29 @@ testthat::test_that("error if length of exp lower than length of prop pop", {
    testthat::expect_error(
     object =
       healthiar::attribute_health(
-        exp_central = 4,
+        exp_central = 6,
         prop_pop_exp = c(0.5, 0.5),
         cutoff_central = 5,
         bhd_central = 1000,
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear"
-      )$health_main$impact_rounded
+      )
+  )
+})
+
+testthat::test_that("error if rr lower than 0", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = -1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
   )
 })
 
