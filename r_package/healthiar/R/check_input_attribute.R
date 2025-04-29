@@ -50,6 +50,16 @@ check_input_attribute <-
       }
     }
 
+    warning_if_ar_and_existing <- function(var){
+      if(!is.null(var)){ # Only if available
+          warning(
+            paste0("For absolute risk, the value of ",
+                   var,
+                   " is not considered (cutoff defined by exposure-response function)"),
+            call. = FALSE)
+      }
+  }
+
 
     # length(exp) = length(prop_pop_exp) ###########
 
@@ -63,12 +73,18 @@ check_input_attribute <-
 
     }
 
-    # if absolute_risk --> length(exp)>1 ###########
+    # if absolute_risk ###########
     if(approach_risk == "absolute_risk"){
+      # --> length(exp)>1
 
       error_if_ar_and_length_1_or_0(exp_central)
       error_if_ar_and_length_1_or_0(exp_lower)
       error_if_ar_and_length_1_or_0(exp_upper)
+
+      # --> cuoff is not considered
+      warning_if_ar_and_existing(cutoff_central)
+      warning_if_ar_and_existing(cutoff_lower)
+      warning_if_ar_and_existing(cutoff_upper)
 
 
     }

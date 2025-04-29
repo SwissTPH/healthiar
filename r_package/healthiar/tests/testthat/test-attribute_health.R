@@ -702,6 +702,26 @@ testthat::test_that("error if absolute risk and exp length 1", {
       ))
 })
 
+testthat::test_that("warning if absolute risk and cutoff", {
+
+  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  testthat::expect_warning(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = data$exposure_mean,
+        cutoff_central = 5,
+        pop_exp = data$population_exposed_total,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
+      )
+    )
+})
+
 ## ITERATION ###################################################################
 
 testthat::test_that("no error ar iteration", {
