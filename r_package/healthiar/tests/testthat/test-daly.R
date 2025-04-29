@@ -1,6 +1,6 @@
 # YLL from lifetable ###########################################################
 
-testthat::test_that("results correct daly from yld rr and yll rr lifetable", {
+testthat::test_that("results correct pathway_daly|yll_from_lifetable_TRUE|output_1_type_attribute|output_2_type_attribute|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
