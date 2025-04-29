@@ -26,7 +26,11 @@ check_input_attribute <-
     same_length <- function(var_1, var_2){
       # Only if var_2 (e.g. prop_pop_exp) is not 1 (default value)
       if(!identical(var_2, 1)){
-        identical(get_length(var_1), get_length(var_2))
+        # Store varname
+        varname_1 <- deparse(substitute(var_1))
+        varname_2 <- deparse(substitute(var_2))
+        # Create error message
+        get_length(varname_1) == get_length(varname_2)
       } else {TRUE}
 
     }
@@ -34,7 +38,15 @@ check_input_attribute <-
     error_if_different_length <- function(var_1, var_2){
       if(!is.null(var_1) & !is.null(var_2)){ # Only if available
         if(!same_length(var_1, var_2)){
-          stop(paste0(var_1, "and", var_2, "must have the same length."))
+          # Store varname
+          varname_1 <- deparse(substitute(var_1))
+          varname_2 <- deparse(substitute(var_2))
+          # Create error message
+          stop(paste0(varname_1,
+                      "and",
+                      varname_2,
+                      "must have the same length."),
+               call. = FALSE)
         }
       }
     }
@@ -42,21 +54,28 @@ check_input_attribute <-
     error_if_ar_and_length_1_or_0 <- function(var){
       if(!is.null(var)){ # Only if available
         if(!get_length(var) > 1){
+          # Store varname
+          varname <- deparse(substitute(var))
+          # Create error message
           stop(
             paste0("For absolute risk, the length of ",
-                   var ,
-                   " must be higher than 1."))
+                   varname ,
+                   " must be higher than 1."),
+            call. = FALSE)
         }
       }
     }
 
     warning_if_ar_and_existing <- function(var){
       if(!is.null(var)){ # Only if available
-          warning(
-            paste0("For absolute risk, the value of ",
-                   var,
-                   " is not considered (cutoff defined by exposure-response function)"),
-            call. = FALSE)
+        # Store varname
+        varname <- deparse(substitute(var))
+        # Create warning message
+        warning(
+          paste0("For absolute risk, the value of ",
+                 varname,
+                 " is not considered (cutoff defined by exposure-response function)"),
+          call. = FALSE)
       }
   }
 
