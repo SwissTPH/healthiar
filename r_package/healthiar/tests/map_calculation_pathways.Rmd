@@ -380,7 +380,8 @@ cat("Total number of pathways:", progress_cba$n_all_pw, "\n")
 
 ov_monetization <- list(
   discount_rate = c("TRUE", "FALSE"),
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur")
+  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  inflation = c("TRUE", "FALSE")
 )
 
 pathways_monetization <- expand.grid(ov_monetization) |> 
@@ -398,7 +399,8 @@ pathways_monetization <- pathways_monetization %>% # Important to use magrittr p
 #* Define core pathways ########################################################
 core_monetization <- list(
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
-  discount_rate = c("TRUE", "FALSE")
+  discount_rate = c("TRUE", "FALSE"),
+  inflation = c("TRUE", "FALSE")
 )
 
 core_monetization <- expand.grid(core_monetization) |> 
@@ -407,13 +409,13 @@ core_monetization <- expand.grid(core_monetization) |>
   mutate(core_pathway = "TRUE")
 
 pathways_monetization <- pathways_monetization |> 
-  left_join(x = _, y = core_monetization, by = c("discount_shape", "discount_rate")) |> 
+  left_join(x = _, y = core_monetization, by = c("discount_shape", "discount_rate", "inflation")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
 
 # * Document existing pathways ####
 
-file_path <- "../healthiar/tests/testthat/test-include_monetization.R"
+file_path <- "../healthiar/tests/testthat/test-monetize.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
@@ -425,6 +427,7 @@ n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
   discount_rate = rep(NA_character_, n_row),
   discount_shape = rep(NA_character_, n_row),
+  inflation = rep(NA_character_, n_row),
   implemented = rep("FALSE", n_row)
 )
 
@@ -435,26 +438,57 @@ for (i in seq_along(test_names_with_pw)) {
   # Extract values for each column
   existing_tests$discount_rate[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_")], "(?<=\\|discount_rate_)[^\\|]+")
   existing_tests$discount_shape[i] <- str_extract(strings[str_detect(strings, "\\|discount_shape_")], "(?<=\\|discount_shape_)[^\\|]+")
+  existing_tests$inflation[i] <- str_extract(strings[str_detect(strings, "\\|inflation_")], "(?<=\\|inflation_)[^\\|]+")
   
   existing_tests$implemented[i] <- "TRUE"
 }
 
 ## Merge the pathways tibble and the existing_tests tibble
 pathways_monetization <- pathways_monetization %>%
-  left_join(existing_tests, by = c("discount_shape", "discount_rate"),
+  left_join(existing_tests, by = c("discount_shape", "discount_rate", "inflation"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-implemented.existing)|> 
   distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
+## Rearrange columns
+pathways_monetization <- pathways_monetization |> 
+  relocate(implemented) |> 
+  relocate(core_pathway, .after = implemented) |> 
+  arrange(desc(discount_rate), discount_shape, inflation)
+
+# * Measure progress ###########################################################
+
+## Add monetization current testing state to overall progress tibble
+progress_monetization <-
+  tibble(
+    domain = "monetization",
+    n_implemented = nrow(pathways_monetization |> filter(implemented == TRUE)),
+    `%_of_core` = 
+      paste0(
+        round(
+          pathways_monetization |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_monetization |> filter(core_pathway == "TRUE")) * 100, 
+          digits = 0
+        ),
+        " %"),
+    `%_of_total` = paste0(
+        round(
+          pathways_monetization |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_monetization) * 100, 
+          digits = 0
+        ),
+        " %"),
+    n_core_pw = nrow(pathways_monetization |> filter(core_pathway == "TRUE")),
+    n_all_pw = nrow(pathways_monetization)
+  )
+
 ## Output short report
-cat("Number of pathways implemented as tests:", pathways_monetization %>%
-  filter(implemented == "TRUE") %>%
-  nrow(), "\n")
-cat("Total possible number of pathways:", nrow(pathways_monetization), "\n")
-cat("As percentage:", round(pathways_monetization %>%
-  filter(implemented == "TRUE") %>%
-  nrow()/nrow(pathways_monetization)*100, digits = 0), "%\n")
+cat("Number of monetization pathways implemented as tests:", progress_monetization$n_implemented, "\n")
+cat("% of core pathways:", progress_monetization$`%_of_core`, "\n")
+cat("% of all pathways:", progress_monetization$`%_of_total`, "\n")
+cat("Total number core of pathways:", progress_monetization$n_core_pw, "\n")
+cat("Total number of pathways:", progress_monetization$n_all_pw, "\n")
 
 ```
 # summarize uncertainty
@@ -465,7 +499,7 @@ ov_uncertainty <- list(
   exp = c("single", "dist"),
   erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
   iteration = c("TRUE", "FALSE"),
-  distribution = c("normal", "beta") # Maybe add "other" later if we implement new dist
+  distribution = c("normal", "beta", "gamma") # Maybe add "other" later if we implement new dist
 )
 
 pathways_uncertainty <- expand.grid(ov_uncertainty)|> 
@@ -539,70 +573,163 @@ pathways_uncertainty <- pathways_uncertainty %>%
   select(-implemented.existing) |> 
   distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
-## Output short report
-cat("Number of pathways implemented as tests:", pathways_uncertainty %>%
-  filter(implemented == "TRUE") %>%
-  nrow(), "\n")
-cat("Total possible number of pathways:", nrow(pathways_uncertainty), "\n")
-cat("As percentage:", round(pathways_uncertainty %>%
-  filter(implemented == "TRUE") %>%
-  nrow()/nrow(pathways_uncertainty)*100, digits = 0), "%\n")
+## Rearrange columns
+pathways_uncertainty <- pathways_uncertainty |> 
+  relocate(implemented) |> 
+  relocate(core_pathway, .after = implemented) |> 
+  arrange(desc(implemented), desc(core_pathway), desc(erf), desc(exp), desc(iteration))
 
+# * Measure progress ###########################################################
+
+## Add AR current testing state to overall progress tibble
+progress_uncertainty <-
+  tibble(
+    domain = "summary unc",
+    n_implemented = nrow(pathways_uncertainty |> filter(implemented == TRUE)),
+    `%_of_core` = 
+      paste0(
+        round(
+          pathways_uncertainty |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_uncertainty |> filter(core_pathway == "TRUE")) * 100, 
+          digits = 0
+        ),
+        " %"),
+    `%_of_total` = paste0(
+        round(
+          pathways_uncertainty |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_uncertainty) * 100, 
+          digits = 0
+        ),
+        " %"),
+    n_core_pw = nrow(pathways_uncertainty |> filter(core_pathway == "TRUE")),
+    n_all_pw = nrow(pathways_uncertainty)
+  )
+
+## Output short report
+cat("Number of summary uncertainty pathways implemented as tests:", progress_uncertainty$n_implemented, "\n")
+cat("% of core pathways:", progress_uncertainty$`%_of_core`, "\n")
+cat("% of all pathways:", progress_uncertainty$`%_of_total`, "\n")
+cat("Total number core of pathways:", progress_uncertainty$n_core_pw, "\n")
+cat("Total number of pathways:", progress_uncertainty$n_all_pw, "\n")
 ```
+
 # compare
 
-```{r Pathways non-lifetable compare, eval=FALSE, include=FALSE}
-# TO BE DONE? ####
+```{r Pathways compare, eval=FALSE, include=FALSE}
 
-## Estimation number of core cases
-# ov_rr_compare <- list(
-#   comp_appr = c("delta", "pif")
-# )
-
-ov_rr_compare <- list(
+# * Define all relevant pathways ###############################################
+## Create tibble containing (almost) all possible calculation pathways
+pathways_compare <- list(
   comp_appr = c("delta", "pif"),
-  erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"), # all options
-  # erf = c("log_lin", "lin_lin", "formula", "point_pairs"), # more relevant options
   exp = c("single", "dist"), # prop_pop_exp linked with this
   iteration = c("TRUE", "FALSE")
 )
 
-pathways_rr_compare <- expand.grid(ov_rr_compare)
+pathways_compare <- expand.grid(pathways_compare) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) %>% # IMPORTANT TO USE magrittr PIPE
+  ## Create all pathway ID's
+  mutate(
+    pathway_id = purrr::pmap_chr(., function(...) {
+      vals <- list(...)
+paste0("pathway_compare|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+})
+  ) 
 
-pathways_rr_compare <- pathways_rr_compare |> 
-  tibble::as_tibble() |> 
-  dplyr::mutate(test_name = "NULL")
-
-
-```
-
-
-```{r Pathways lifetable compare, eval=FALSE, include=FALSE}
-# TO BE DONE? ####
-
-## Estimation number of core cases
-# ov_lifetable_compare <- list(
-#   comp_appr = c("delta", "pif")
-# )
-
-ov_lifetable_compare <- list(
+#* Define core pathways ########################################################
+core_compare <- list(
   comp_appr = c("delta", "pif"),
-  exp = c("single", "dist"), # prop_pop_exp linked with this
-  exp_time = c("single_year", "constant"),
-  newborns = c("TRUE", "FALSE"),
-  min_age = c("TRUE", "FALSE"),
-  max_age = c("TRUE", "FALSE"),
-  time_horizon = c("TRUE", "FALSE"),
-  iteration = c("TRUE", "FALSE"),
+  exp = c("single", "dist"),
+  iteration = c("TRUE", "FALSE")
 )
 
-pathways_lifetable_compare <- expand.grid(ov_lifetable_compare)
+core_compare <- expand.grid(core_compare) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) |> 
+  mutate(core_pathway = "TRUE")
 
-pathways_lifetable_compare <- pathways_lifetable_compare |> 
-  tibble::as_tibble() |> 
-  dplyr::mutate(test_name = "NULL")
+pathways_compare <- pathways_compare |> 
+  left_join(x = _, y = core_compare, by = c("comp_appr", "exp", "iteration")) |> 
+  mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
+  mutate(implemented = "FALSE")
 
+# * Document existing pathways #################################################
+file_path <- "../healthiar/tests/testthat/test-compare.R"
+file_content <- readLines(file_path) # String vector where each element is all code from a line
+
+test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
+test_names_with_pw <- Filter(function(x) any(grepl("pathway_compare\\|", x)), test_names)
+# test_names <- unlist(test_names)
+
+## Create an empty tibble with NA placeholders
+n_row <- length(test_names_with_pw)
+existing_tests <- tibble(
+  comp_appr = rep(NA_character_, n_row),
+  exp = rep(NA_character_, n_row),
+  iteration = rep(NA_character_, n_row),
+  implemented = rep(FALSE, n_row)
+)
+
+## Extract values and assign them directly to the tibble
+for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
+
+  # Extract values for each column
+  existing_tests$comp_appr[i] <- str_extract(strings[str_detect(strings, "\\|comp_appr_")], "(?<=\\|comp_appr_)[^\\|]+")
+  existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "\\|exp_")], "(?<=\\|exp_)[^\\|]+")
+  existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
+  existing_tests$implemented[i] <- "TRUE"
+}
+
+## Merge the pathways tibble and the existing_tests tibble
+pathways_compare <- pathways_compare %>%
+  left_join(existing_tests, by = c("comp_appr", "exp", "iteration"),
+            suffix = c("", ".existing")) %>%
+  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
+  select(-implemented.existing) |> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
+
+## Rearrange columns
+pathways_compare <- pathways_compare |> 
+  relocate(implemented) |> 
+  relocate(core_pathway, .after = implemented) |> 
+  arrange(desc(implemented), desc(core_pathway), comp_appr, desc(exp), desc(iteration))
+
+# * Measure progress ###########################################################
+
+## Add AR current testing state to overall progress tibble
+progress_compare <-
+  tibble(
+    domain = "comparison",
+    n_implemented = nrow(pathways_compare |> filter(implemented == TRUE)),
+    `%_of_core` = 
+      paste0(
+        round(
+          pathways_compare |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_compare |> filter(core_pathway == "TRUE")) * 100, 
+          digits = 0
+        ),
+        " %"),
+    `%_of_total` = paste0(
+        round(
+          pathways_compare |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_compare) * 100, 
+          digits = 0
+        ),
+        " %"),
+    n_core_pw = nrow(pathways_compare |> filter(core_pathway == "TRUE")),
+    n_all_pw = nrow(pathways_compare)
+  )
+
+## Output short report
+cat("Number of comparison pathways implemented as tests:", progress_compare$n_implemented, "\n")
+cat("% of core pathways:", progress_compare$`%_of_core`, "\n")
+cat("% of all pathways:", progress_compare$`%_of_total`, "\n")
+cat("Total number core of pathways:", progress_compare$n_core_pw, "\n")
+cat("Total number of pathways:", progress_compare$n_all_pw, "\n")
 ```
+
+
 
 # life table
 

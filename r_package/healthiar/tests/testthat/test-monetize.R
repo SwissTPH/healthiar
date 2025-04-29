@@ -96,7 +96,7 @@ testthat::test_that("results correct hyperbolic mazur 1987 discounting with diff
   )
 })
 
-testthat::test_that("results correct pathway_monetization|discount_rate_TRUE|discount_shape_exp|", {
+testthat::test_that("results correct pathway_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -111,7 +111,7 @@ testthat::test_that("results correct pathway_monetization|discount_rate_TRUE|dis
   )
 })
 
-testthat::test_that("results correct pathway_monetization|discount_rate_TRUE|discount_shape_exp|", {
+testthat::test_that("results correct pathway_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -126,7 +126,7 @@ testthat::test_that("results correct pathway_monetization|discount_rate_TRUE|dis
   )
 })
 
-testthat::test_that("results the same fake_monetization|discount_rate_TRUE|discount_shape_exp|", {
+testthat::test_that("results the same fake_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -179,7 +179,7 @@ testthat::test_that("results correct inflation", {
 ## NO DISCOUNTING ##############################################################
 
 ## DISCOUNTING #################################################################
-testthat::test_that("results the same fake_monetization|discount_rate_TRUE|discount_shape_exp|", {
+testthat::test_that("results the same fake_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
@@ -219,7 +219,7 @@ testthat::test_that("results the same fake_monetization|discount_rate_TRUE|disco
   )
 })
 
-testthat::test_that("results the same fake_monetization|discount_rate_TRUE|discount_shape_exp|", {
+testthat::test_that("results the same fake_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
