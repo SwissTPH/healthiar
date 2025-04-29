@@ -26,17 +26,13 @@ check_input_attribute <-
     same_length <- function(var_1, var_2){
       # Only if var_2 (e.g. prop_pop_exp) is not 1 (default value)
       if(!identical(var_2, 1)){
-        # Store varname
-        varname_1 <- deparse(substitute(var_1))
-        varname_2 <- deparse(substitute(var_2))
-        # Create error message
-        get_length(varname_1) == get_length(varname_2)
+        get_length(var_1) == get_length(var_2)
       } else {TRUE}
 
     }
 
     error_if_different_length <- function(var_1, var_2){
-      if(!is.null(var_1) & !is.null(var_2)){ # Only if available
+      if(!is.null(var_1) && !is.null(var_2)){ # Only if available
         if(!same_length(var_1, var_2)){
           # Store varname
           varname_1 <- deparse(substitute(var_1))
