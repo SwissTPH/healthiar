@@ -42,7 +42,7 @@ testthat::test_that("zero effect if exp lower than cutoff_pathway_rr|erf_log_lin
   )
 })
 
-testthat::test_that("error if length of exp lower than length of prop pop exp_pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("error if length of exp lower than length of prop pop", {
 
    testthat::expect_error(
     object =
@@ -684,7 +684,7 @@ testthat::test_that("results correct pathway_ar|erf_formula|exp_dist|cutoff_FALS
   )
 })
 
-testthat::test_that("error if absolute risk and exp length 1 pathway_ar|erf_formula|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("error if absolute risk and exp length 1", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
