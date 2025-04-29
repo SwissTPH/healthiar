@@ -96,7 +96,7 @@ attribute_master <-
 
 
     # Check input data
-    healthiar:::check_input_attribute(input_args)
+    healthiar:::validate_input_attribute(input_args)
 
 
     # Compile input data
