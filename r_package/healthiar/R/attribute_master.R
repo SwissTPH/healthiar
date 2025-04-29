@@ -91,14 +91,13 @@ attribute_master <-
            population = NULL,
            info = NULL){
 
-    # Check input data
-    #stopifnot(exprs = {
-    #length(exp) == length(prop_pop_exp)
-    #})
-
-
     # Capture all arguments and values
     input_args <- as.list(environment())
+
+
+    # Check input data
+    healthiar:::check_input_attribute(input_args)
+
 
     # Compile input data
     input_table <-
