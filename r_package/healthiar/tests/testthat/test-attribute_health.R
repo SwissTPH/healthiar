@@ -28,20 +28,33 @@ testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRU
 
 testthat::test_that("zero effect if exp lower than cutoff_pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
-
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
         exp_central = 4,
         cutoff_central = 5,
-        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
-        rr_central = data$relative_risk,
+        bhd_central = 1000,
+        rr_central = 1.05,
         rr_increment = 10,
-        erf_shape = "log_linear",
-        info = paste0(data$pollutant,"_", data$evaluation_name)
-      )$health_main$impact_rounded,
+        erf_shape = "log_linear"
+        )$health_main$impact_rounded,
     expected = 0
+  )
+})
+
+testthat::test_that("error if length of exp lower than length of prop pop exp_pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+
+   testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 4,
+        prop_pop_exp = c(0.5, 0.5),
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )$health_main$impact_rounded
   )
 })
 
