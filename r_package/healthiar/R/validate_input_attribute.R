@@ -32,9 +32,9 @@ validate_input_attribute <-
     }
 
     error_if_different_length <- function(var_1, var_2){
-      if(!is.null(var_1) && !is.null(var_2)){ # Only if available
-        if(!same_length(var_1, var_2)){
-          # Store varname
+      if(!is.null(var_1) && !is.null(var_2) && # Only if vars are available
+         !same_length(var_1, var_2)){
+          # Store varnames
           varname_1 <- deparse(substitute(var_1))
           varname_2 <- deparse(substitute(var_2))
           # Create error message
@@ -45,24 +45,22 @@ validate_input_attribute <-
                call. = FALSE)
         }
       }
-    }
 
     error_if_lower_than_0 <- function(var_name){
       var_value <- input_args[[var_name]]
 
-      if(!is.null(var_value)){ # Only if available
-        if(any(unlist(var_value) < 0)){ # any(unlist( To make it robust for lists
-          # Create error message
+      if(!is.null(var_value) && # Only if available
+         any(unlist(var_value) < 0)){ # any(unlist( To make it robust for lists
+        # Create error message
           stop(paste0(var_name,
                       " cannot be lower than 0"),
                call. = FALSE)
         }
       }
-    }
 
     error_if_ar_and_length_1_or_0 <- function(var){
-      if(!is.null(var)){ # Only if available
-        if(!get_length(var) > 1){
+      if(!is.null(var) &&  # Only if available
+         !get_length(var) > 1){
           # Store varname
           varname <- deparse(substitute(var))
           # Create error message
@@ -73,7 +71,6 @@ validate_input_attribute <-
             call. = FALSE)
         }
       }
-    }
 
     warning_if_ar_and_existing <- function(var){
       if(!is.null(var)){ # Only if available
