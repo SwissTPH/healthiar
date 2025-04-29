@@ -261,14 +261,12 @@ cat("Total number of pathways:", progress_ar$n_all_pw, "\n")
 ```{r Pathways cba}
 
 pathways_cba_direct <- list(
-  discount_appr = c("direct"), # direct is the default
   discount_rate_benefit = c("TRUE", "FALSE"),
   discount_rate_cost = c("TRUE", "FALSE"),
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur")
 )
 
 pathways_cba_indirect <- list(
-  discount_appr = c("indirect"), # direct is the default
   discount_rate_benefit = c("TRUE", "FALSE"),
   discount_rate_cost = c("TRUE", "FALSE"),
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur")
@@ -292,14 +290,12 @@ pathways_cba <- rbind(pathways_cba_direct, pathways_cba_indirect) %>% # Importan
   
 #* Define core pathways ########################################################
 core_cba_direct <- list(
-  discount_appr = c("direct"), # direct is the default
   discount_rate_benefit = c("TRUE", "FALSE"),
   discount_rate_cost = c("TRUE", "FALSE"),
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur")
 )
 
 core_cba_indirect <- list(
-  discount_appr = c("indirect"), # direct is the default
   discount_rate_benefit = c("TRUE", "FALSE"),
   discount_rate_cost = c("TRUE", "FALSE"),
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur")
@@ -318,7 +314,7 @@ core_cba_indirect <- expand.grid(core_cba_indirect) |>
 core_cba <- rbind(core_cba_direct, core_cba_indirect)
 
 pathways_cba <- pathways_cba |> 
-  left_join(x = _, y = core_cba, by = c("discount_appr", "discount_shape", "discount_rate_benefit", "discount_rate_cost")) |> 
+  left_join(x = _, y = core_cba, by = c("discount_shape", "discount_rate_benefit", "discount_rate_cost")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
 
@@ -333,7 +329,6 @@ test_names_with_pw <- Filter(function(x) any(grepl("pathway_cba\\|", x)), test_n
 ## Create an empty tibble with NA placeholders
 n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
-  discount_appr = rep(NA_character_, n_row),
   discount_rate_benefit = rep(NA_character_, n_row),
   discount_rate_cost = rep(NA_character_, n_row),
   discount_shape = rep(NA_character_, n_row),
@@ -345,7 +340,6 @@ for (i in seq_along(test_names_with_pw)) {
   strings <- test_names_with_pw[[i]] # Current list item
 
   # Extract values for each column
-  existing_tests$discount_appr[i] <- str_extract(strings[str_detect(strings, "\\|discount_appr_")], "(?<=\\|discount_appr_)[^\\|]+")
   existing_tests$discount_rate_benefit[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_benefit_")], "(?<=\\|discount_rate_benefit_)[^\\|]+")
   existing_tests$discount_rate_cost[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_cost_")], "(?<=\\|discount_rate_cost_)[^\\|]+")
   existing_tests$discount_shape[i] <- str_extract(strings[str_detect(strings, "\\|discount_shape_")], "(?<=\\|discount_shape_)[^\\|]+")
@@ -356,7 +350,7 @@ for (i in seq_along(test_names_with_pw)) {
 
 ## Merge the pathways tibble and the existing_tests tibble
 pathways_cba <- pathways_cba %>%
-  left_join(existing_tests, by = c("discount_appr", "discount_shape", "discount_rate_benefit", "discount_rate_cost"),
+  left_join(existing_tests, by = c("discount_shape", "discount_rate_benefit", "discount_rate_cost"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-implemented.existing) |> 
@@ -379,7 +373,6 @@ cat("As percentage:", round(pathways_cba %>%
 ```{r Pathways monetization}
 
 ov_monetization <- list(
-  discount_appr = c("direct", "indirect"), # direct is the default
   discount_rate = c("TRUE", "FALSE"),
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur")
 )
@@ -398,7 +391,6 @@ pathways_monetization <- pathways_monetization %>% # Important to use magrittr p
 
 #* Define core pathways ########################################################
 core_monetization <- list(
-  discount_appr = c("direct", "indirect"), # direct is the default
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
   discount_rate = c("TRUE", "FALSE")
 )
@@ -409,7 +401,7 @@ core_monetization <- expand.grid(core_monetization) |>
   mutate(core_pathway = "TRUE")
 
 pathways_monetization <- pathways_monetization |> 
-  left_join(x = _, y = core_monetization, by = c("discount_appr", "discount_shape", "discount_rate")) |> 
+  left_join(x = _, y = core_monetization, by = c("discount_shape", "discount_rate")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
 
@@ -425,7 +417,6 @@ test_names_with_pw <- Filter(function(x) any(grepl("pathway_monetization\\|", x)
 ## Create an empty tibble with NA placeholders
 n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
-  discount_appr = rep(NA_character_, n_row),
   discount_rate = rep(NA_character_, n_row),
   discount_shape = rep(NA_character_, n_row),
   implemented = rep("FALSE", n_row)
@@ -436,7 +427,6 @@ for (i in seq_along(test_names_with_pw)) {
   strings <- test_names_with_pw[[i]] # Current list item
 
   # Extract values for each column
-  existing_tests$discount_appr[i] <- str_extract(strings[str_detect(strings, "\\|discount_appr_")], "(?<=\\|discount_appr_)[^\\|]+")
   existing_tests$discount_rate[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_")], "(?<=\\|discount_rate_)[^\\|]+")
   existing_tests$discount_shape[i] <- str_extract(strings[str_detect(strings, "\\|discount_shape_")], "(?<=\\|discount_shape_)[^\\|]+")
   
@@ -445,7 +435,7 @@ for (i in seq_along(test_names_with_pw)) {
 
 ## Merge the pathways tibble and the existing_tests tibble
 pathways_monetization <- pathways_monetization %>%
-  left_join(existing_tests, by = c("discount_appr", "discount_shape", "discount_rate"),
+  left_join(existing_tests, by = c("discount_shape", "discount_rate"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-implemented.existing)|> 
@@ -773,7 +763,7 @@ core_cba <- pathways_cba |>
   mutate(finished = "FALSE") |> 
   mutate(results_the_same = NA_character_) |> 
   filter(core_pathway == "TRUE") |> 
-  arrange(discount_appr, desc(discount_rate_benefit), desc(discount_rate_cost), discount_shape)
+  arrange(desc(discount_rate_benefit), desc(discount_rate_cost), discount_shape)
 
 core_monetization <- pathways_monetization |> 
   mutate(institute = NA_character_) |> 
@@ -781,7 +771,7 @@ core_monetization <- pathways_monetization |>
   mutate(finished = "FALSE") |> 
   mutate(results_the_same = NA_character_) |> 
   filter(core_pathway == "TRUE") |> 
-  arrange(discount_appr, desc(discount_rate), discount_shape)
+  arrange(desc(discount_rate), discount_shape)
 
 core_lifetable <- pathways_lifetable |> 
   mutate(institute = NA_character_) |> 
