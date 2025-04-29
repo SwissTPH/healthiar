@@ -3,8 +3,8 @@
 ## SINGLE EXPOSURE #############################################################
 # testthat::test_that("result correct rr with single exposure value and only rr_central", {
 # testthat::test_that("result correct rr with single exp (pw_exp_single pw_cutoff_TRUE pw_varuncer_FALSE pw_erf_log_lin pw_iteration_FALSE)", {
-# testthat::test_that("result correct ID|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|", {
-testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|", {
+# testthat::test_that("result correct ID|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
     data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -309,7 +309,7 @@ testthat::test_that("results the same rr single exposure value and incidence-bas
 
 ## EXPOSURE DISTRIBUTION #######################################################
 
-testthat::test_that("results correct pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|", {
+testthat::test_that("results correct pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
@@ -527,7 +527,7 @@ testthat::test_that("results the same fake_rr user-defined erf (mrbrt) with spli
   )
 })
 
-testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|", {
+testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))

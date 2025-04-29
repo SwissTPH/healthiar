@@ -29,8 +29,6 @@ pacman::p_load(dplyr, tibble, stringr, purrr)
 pathways_rr <- list(
   erf = c("log_lin", "point_pairs", "formula", "lin_lin", "lin_log", "log_log"),
   exp = c("single", "dist"), # prop_pop_exp linked with this
-  cutoff = c("TRUE", "FALSE"),
-  varuncer = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE")
 )
 
@@ -49,8 +47,6 @@ paste0("pathway_rr|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
 core_rr <- list(
   erf = c("log_lin", "point_pairs", "lin_lin"),
   exp = c("single", "dist"), # prop_pop_exp linked with this
-  cutoff = c("TRUE", "FALSE"),
-  varuncer = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE")
 )
 
@@ -61,7 +57,7 @@ core_rr <- expand.grid(core_rr) |>
 
 ## Merge core pathways into whole overview
 pathways_rr <- pathways_rr |> 
-  left_join(x = _, y = core_rr, by = c("erf", "exp", "cutoff", "varuncer", "iteration")) |> 
+  left_join(x = _, y = core_rr, by = c("erf", "exp", "iteration")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
 rm(core_rr)
@@ -80,8 +76,6 @@ n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
   erf = rep(NA_character_, n_row),
   exp = rep(NA_character_, n_row),
-  cutoff = rep(NA_character_, n_row),
-  varuncer = rep(NA_character_, n_row),
   iteration = rep(NA_character_, n_row),
   implemented = rep(FALSE, n_row)
 )
@@ -92,8 +86,6 @@ for (i in seq_along(test_names_with_pw)) {
 
   # Extract values for each column
   existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "\\|exp_")], "(?<=\\|exp_)[^\\|]+")
-  existing_tests$cutoff[i] <- str_extract(strings[str_detect(strings, "\\|cutoff_")], "(?<=\\|cutoff_)[^\\|]+")
-  existing_tests$varuncer[i] <- str_extract(strings[str_detect(strings, "\\|varuncer_")], "(?<=\\|varuncer_)[^\\|]+")
   existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "\\|erf_")], "(?<=\\|erf_)[^\\|]+")
   existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
   existing_tests$implemented[i] <- "TRUE"
@@ -101,7 +93,7 @@ for (i in seq_along(test_names_with_pw)) {
 
 ## Merge the whole pathways tibble and the existing_tests tibble
 pathways_rr <- pathways_rr %>%
-  left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration"),
+  left_join(existing_tests, by = c("erf", "exp", "iteration"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-starts_with("implemented.existing")) |> 
@@ -111,7 +103,7 @@ pathways_rr <- pathways_rr %>%
 pathways_rr <- pathways_rr |> 
   relocate(implemented) |> 
   relocate(core_pathway, .after = implemented) |> 
-  arrange(desc(implemented), desc(core_pathway), erf, desc(exp), desc(cutoff), desc(varuncer), desc(iteration))
+  arrange(desc(implemented), desc(core_pathway), erf, desc(exp), desc(iteration))
 
 # * Measure progress ###########################################################
 
@@ -157,8 +149,6 @@ cat("Total number of pathways:", progress_rr$n_all_pw, "\n")
 pathways_ar <- list(
   erf = c("formula", "point_pairs"),
   exp = c("dist"), # prop_pop_exp linked with this
-  cutoff = c("FALSE"),
-  varuncer = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE")
 )
 
@@ -177,8 +167,6 @@ paste0("pathway_ar|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
 core_ar <- list(
   erf = c("formula", "point_pairs"),
   exp = c("dist"), # prop_pop_exp linked with this
-  cutoff = c("FALSE"),
-  varuncer = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE")
 )
 
@@ -188,7 +176,7 @@ core_ar <- expand.grid(core_ar) |>
   mutate(core_pathway = "TRUE")
 
 pathways_ar <- pathways_ar |> 
-  left_join(x = _, y = core_ar, by = c("erf", "exp", "cutoff", "varuncer", "iteration")) |> 
+  left_join(x = _, y = core_ar, by = c("erf", "exp", "iteration")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
 
@@ -205,8 +193,6 @@ n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
   erf = rep(NA_character_, n_row),
   exp = rep(NA_character_, n_row),
-  cutoff = rep(NA_character_, n_row),
-  varuncer = rep(NA_character_, n_row),
   iteration = rep(NA_character_, n_row),
   implemented = rep(FALSE, n_row)
 )
@@ -217,8 +203,6 @@ for (i in seq_along(test_names_with_pw)) {
 
   # Extract values for each column
   existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "\\|exp_")], "(?<=\\|exp_)[^\\|]+")
-  existing_tests$cutoff[i] <- str_extract(strings[str_detect(strings, "\\|cutoff_")], "(?<=\\|cutoff_)[^\\|]+")
-  existing_tests$varuncer[i] <- str_extract(strings[str_detect(strings, "\\|varuncer_")], "(?<=\\|varuncer_)[^\\|]+")
   existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "\\|erf_")], "(?<=\\|erf_)[^\\|]+")
   existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
   existing_tests$implemented[i] <- "TRUE"
@@ -226,7 +210,7 @@ for (i in seq_along(test_names_with_pw)) {
 
 ## Merge the pathways tibble and the existing_tests tibble
 pathways_ar <- pathways_ar %>%
-  left_join(existing_tests, by = c("erf", "exp", "cutoff", "varuncer", "iteration"),
+  left_join(existing_tests, by = c("erf", "exp", "iteration"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-implemented.existing) |> 
@@ -236,7 +220,7 @@ pathways_ar <- pathways_ar %>%
 pathways_ar <- pathways_ar |> 
   relocate(implemented) |> 
   relocate(core_pathway, .after = implemented) |> 
-  arrange(desc(implemented), desc(core_pathway), erf, desc(exp), desc(varuncer), desc(iteration))
+  arrange(desc(implemented), desc(core_pathway), erf, desc(exp), desc(iteration))
 
 # * Measure progress ###########################################################
 
@@ -272,6 +256,7 @@ cat("Total number core of pathways:", progress_ar$n_core_pw, "\n")
 cat("Total number of pathways:", progress_ar$n_all_pw, "\n")
 ```
 
+# CBA
 
 ```{r Pathways cba}
 
@@ -389,6 +374,8 @@ cat("As percentage:", round(pathways_cba %>%
 
 ```
 
+# monetize
+
 ```{r Pathways monetization}
 
 ov_monetization <- list(
@@ -474,116 +461,7 @@ cat("As percentage:", round(pathways_monetization %>%
   nrow()/nrow(pathways_monetization)*100, digits = 0), "%\n")
 
 ```
-
-# Lifetable
-
-```{r Pathways lifetable}
-
-ov_lifetable <- list(
-  exp = c("single", "dist"), # prop_pop_exp linked with this
-  exp_time = c("single_year", "constant"),
-  newborns = c("TRUE", "FALSE"),
-  min_age = c("TRUE", "FALSE"),
-  max_age = c("TRUE", "FALSE"),
-  time_horizon = c("TRUE", "FALSE"),
-  iteration = c("TRUE", "FALSE"),
-  varuncer = c("TRUE", "FALSE")
-)
-
-pathways_lifetable <- expand.grid(ov_lifetable) |> 
-  tibble::as_tibble() |>
-  mutate_all(as.character)
-
-pathways_lifetable <- pathways_lifetable %>% # Important to use magrittr pipe
-  mutate(
-    pathway_id = purrr::pmap_chr(., function(...) {
-      vals <- list(...)
-      paste0("pathway_lifetable|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
-    })
-  )
-
-#* Define core pathways ########################################################
-core_lifetable <- list(
-  exp = c("single", "dist"),
-  exp_time = c("single_year", "constant"),
-  newborns = c("TRUE", "FALSE"),
-  min_age = c("TRUE"),
-  max_age = c("TRUE"),
-  time_horizon = c("FALSE"),
-  iteration = c("TRUE", "FALSE"),
-  varuncer = c("FALSE") # "TRUE" is a nice to have
-)
-
-core_lifetable <- expand.grid(core_lifetable) |> 
-  tibble::as_tibble() |>
-  mutate_all(as.character) |> 
-  mutate(core_pathway = "TRUE")
-
-pathways_lifetable <- pathways_lifetable |> 
-  left_join(x = _, y = core_lifetable, by = c("exp", "exp_time", "newborns", "min_age", "max_age", "time_horizon", "iteration", "varuncer")) |> 
-  mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
-  mutate(implemented = "FALSE")
-
-# * Document existing pathways ####
-
-file_path <- "../healthiar/tests/testthat/test-attribute_yll_from_lifetable.R"
-file_content <- readLines(file_path) # String vector where each element is all code from a line
-
-test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
-test_names_with_pw <- Filter(function(x) any(grepl("pathway_lifetable\\|", x)), test_names)
-# test_names <- unlist(test_names)
-
-## Create an empty tibble with NA placeholders
-n_row <- length(test_names_with_pw)
-existing_tests <- tibble(
-  exp = rep(NA_character_, n_row),
-  exp_time = rep(NA_character_, n_row),
-  newborns = rep(NA_character_, n_row),
-  min_age = rep(NA_character_, n_row),
-  max_age = rep(NA_character_, n_row),
-  time_horizon = rep(NA_character_, n_row),
-  iteration = rep(NA_character_, n_row),
-  varuncer = rep(NA_character_, n_row),
-  implemented = rep("FALSE", n_row)
-)
-
-## Extract values and assign them directly to the tibble
-for (i in seq_along(test_names_with_pw)) {
-  strings <- test_names_with_pw[[i]] # Current list item
-
-  # Extract values for each column
-  existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "\\|exp_")], "(?<=\\|exp_)[^\\|]+")
-  existing_tests$exp_time[i] <- str_extract(strings[str_detect(strings, "\\|exp_time_")], "(?<=\\|exp_time_)[^\\|]+")
-  existing_tests$newborns[i] <- str_extract(strings[str_detect(strings, "\\|newborns_")], "(?<=\\|newborns_)[^\\|]+")
-  existing_tests$min_age[i] <- str_extract(strings[str_detect(strings, "\\|min_age_")], "(?<=\\|min_age_)[^\\|]+")
-  existing_tests$max_age[i] <- str_extract(strings[str_detect(strings, "\\|max_age_")], "(?<=\\|max_age_)[^\\|]+")
-  existing_tests$time_horizon[i] <- str_extract(strings[str_detect(strings, "\\|time_horizon_")], "(?<=\\|time_horizon_)[^\\|]+")
-  existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
-  existing_tests$varuncer[i] <- str_extract(strings[str_detect(strings, "\\|varuncer_")], "(?<=\\|varuncer_)[^\\|]+")
-  
-  existing_tests$implemented[i] <- "TRUE"
-}
-
-## Merge the pathways tibble and the existing_tests tibble
-pathways_lifetable <- pathways_lifetable %>%
-  left_join(existing_tests, by = c("exp", "exp_time", "newborns", "min_age", "max_age", "time_horizon", "iteration", "varuncer"),
-            suffix = c("", ".existing")) %>%
-  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
-  select(-implemented.existing)|> 
-  distinct() # Removes duplicate rows (rows that have the same pathway ID)
-
-## Output short report
-cat("Number of pathways implemented as tests:", pathways_lifetable %>%
-  filter(implemented == "TRUE") %>%
-  nrow(), "\n")
-cat("Total possible number of pathways:", nrow(pathways_lifetable), "\n")
-cat("As percentage:", round(pathways_lifetable %>%
-  filter(implemented == "TRUE") %>%
-  nrow()/nrow(pathways_lifetable)*100, digits = 0), "%\n")
-
-```
-
-
+# summarize uncertainty
 
 ```{r Pathways summary uncertainty}
 
@@ -675,8 +553,7 @@ cat("As percentage:", round(pathways_uncertainty %>%
   nrow()/nrow(pathways_uncertainty)*100, digits = 0), "%\n")
 
 ```
-
-
+# compare
 
 ```{r Pathways non-lifetable compare, eval=FALSE, include=FALSE}
 # TO BE DONE? ####
@@ -691,9 +568,7 @@ ov_rr_compare <- list(
   erf = c("lin_lin", "log_lin", "lin_log", "log_log", "formula", "point_pairs"), # all options
   # erf = c("log_lin", "lin_lin", "formula", "point_pairs"), # more relevant options
   exp = c("single", "dist"), # prop_pop_exp linked with this
-  cutoff = c("TRUE", "FALSE"),
-  iteration = c("TRUE", "FALSE"),
-  varuncer = c("TRUE", "FALSE")
+  iteration = c("TRUE", "FALSE")
 )
 
 pathways_rr_compare <- expand.grid(ov_rr_compare)
@@ -702,55 +577,7 @@ pathways_rr_compare <- pathways_rr_compare |>
   tibble::as_tibble() |> 
   dplyr::mutate(test_name = "NULL")
 
-pathways_rr_compare <- pathways_rr_compare |> 
-  dplyr::mutate(test_name = case_when(
-    ( comp_appr = "delta" &
-      erf == "log_lin" & 
-      exp == "single" & 
-      cutoff == "TRUE" & 
-      iteration == "FALSE" & 
-      varuncer == "FALSE") 
-    ~ "results correct delta comparison rr single exposure", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( comp_appr = "delta" &
-      erf == "log_lin" & 
-      exp == "single" & 
-      cutoff == "TRUE" & 
-      iteration == "TRUE" & 
-      varuncer == "FALSE") 
-    ~ "results correct delta comparison iteration rr single exposures", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( comp_appr = "pif" &
-      erf == "log_lin" & 
-      exp == "single" & 
-      cutoff == "TRUE" & 
-      iteration == "FALSE" & 
-      varuncer == "FALSE") 
-    ~ "results correct pif comparison rr single exposure", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( comp_appr = "pif" &
-      erf == "log_lin" & 
-      exp == "single" & 
-      cutoff == "TRUE" & 
-      iteration == "iteration" & 
-      varuncer == "FALSE") 
-    ~ "results correct pif comparison iteration rr single exposures", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( comp_appr = "delta" &
-      erf == "formula" & 
-      exp == "dist" & 
-      cutoff == "TRUE" & 
-      iteration == "FALSE" & 
-      varuncer == "FALSE") 
-    ~ "results correct delta comparison ar exposure distribution", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( comp_appr = "delta" &
-      erf == "formula" & 
-      exp == "dist" & 
-      cutoff == "TRUE" & 
-      iteration == "TRUE" & 
-      varuncer == "FALSE") 
-    ~ "results correct delta comparison rr single exposure", TRUE ~ test_name)) 
+
 ```
 
 
@@ -771,7 +598,6 @@ ov_lifetable_compare <- list(
   max_age = c("TRUE", "FALSE"),
   time_horizon = c("TRUE", "FALSE"),
   iteration = c("TRUE", "FALSE"),
-  varuncer = c("TRUE", "FALSE")
 )
 
 pathways_lifetable_compare <- expand.grid(ov_lifetable_compare)
@@ -780,21 +606,109 @@ pathways_lifetable_compare <- pathways_lifetable_compare |>
   tibble::as_tibble() |> 
   dplyr::mutate(test_name = "NULL")
 
-pathways_lifetable_compare <- pathways_lifetable_compare |> 
-  dplyr::mutate(test_name = case_when(
-    ( comp_appr == "delta" & exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE" & varuncer == "FALSE") ~
-      "results correct delta comparison lifetable daly rr single exposure", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( comp_appr == "delta" & exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "TRUE" & varuncer == "FALSE") ~
-      "results correct delta comparison lifetable daly iteration rr single exposure", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( comp_appr == "pif " & exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE" & varuncer == "FALSE") ~
-      "results correct pif comparison lifetable daly rr single exposure", TRUE ~ test_name)) |> 
-  dplyr::mutate(test_name = case_when(
-    ( comp_appr == "pif " & exp == "single" & exp_time == "single_year" & newborns == "FALSE" & min_age == "TRUE" &  max_age == "FALSE" & time_horizon == "FALSE" & iteration == "FALSE" & varuncer == "FALSE") ~
-      "results correct pif comparison lifetable daly iteration rr single exposure", TRUE ~ test_name))
-  
-  
+```
+
+# life table
+
+```{r Pathways lifetable}
+
+ov_lifetable <- list(
+  exp = c("single", "dist"), # prop_pop_exp linked with this
+  exp_time = c("single_year", "constant"),
+  newborns = c("TRUE", "FALSE"),
+  min_age = c("TRUE", "FALSE"),
+  max_age = c("TRUE", "FALSE"),
+  time_horizon = c("TRUE", "FALSE"),
+  iteration = c("TRUE", "FALSE"),
+)
+
+pathways_lifetable <- expand.grid(ov_lifetable) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character)
+
+pathways_lifetable <- pathways_lifetable %>% # Important to use magrittr pipe
+  mutate(
+    pathway_id = purrr::pmap_chr(., function(...) {
+      vals <- list(...)
+      paste0("pathway_lifetable|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+    })
+  )
+
+#* Define core pathways ########################################################
+core_lifetable <- list(
+  exp = c("single", "dist"),
+  exp_time = c("single_year", "constant"),
+  newborns = c("TRUE", "FALSE"),
+  min_age = c("TRUE"),
+  max_age = c("TRUE"),
+  time_horizon = c("FALSE"),
+  iteration = c("TRUE", "FALSE"),
+)
+
+core_lifetable <- expand.grid(core_lifetable) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) |> 
+  mutate(core_pathway = "TRUE")
+
+pathways_lifetable <- pathways_lifetable |> 
+  left_join(x = _, y = core_lifetable, by = c("exp", "exp_time", "newborns", "min_age", "max_age", "time_horizon", "iteration")) |> 
+  mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
+  mutate(implemented = "FALSE")
+
+# * Document existing pathways ####
+
+file_path <- "../healthiar/tests/testthat/test-attribute_yll_from_lifetable.R"
+file_content <- readLines(file_path) # String vector where each element is all code from a line
+
+test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
+test_names_with_pw <- Filter(function(x) any(grepl("pathway_lifetable\\|", x)), test_names)
+# test_names <- unlist(test_names)
+
+## Create an empty tibble with NA placeholders
+n_row <- length(test_names_with_pw)
+existing_tests <- tibble(
+  exp = rep(NA_character_, n_row),
+  exp_time = rep(NA_character_, n_row),
+  newborns = rep(NA_character_, n_row),
+  min_age = rep(NA_character_, n_row),
+  max_age = rep(NA_character_, n_row),
+  time_horizon = rep(NA_character_, n_row),
+  iteration = rep(NA_character_, n_row),
+  implemented = rep("FALSE", n_row)
+)
+
+## Extract values and assign them directly to the tibble
+for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
+
+  # Extract values for each column
+  existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "\\|exp_")], "(?<=\\|exp_)[^\\|]+")
+  existing_tests$exp_time[i] <- str_extract(strings[str_detect(strings, "\\|exp_time_")], "(?<=\\|exp_time_)[^\\|]+")
+  existing_tests$newborns[i] <- str_extract(strings[str_detect(strings, "\\|newborns_")], "(?<=\\|newborns_)[^\\|]+")
+  existing_tests$min_age[i] <- str_extract(strings[str_detect(strings, "\\|min_age_")], "(?<=\\|min_age_)[^\\|]+")
+  existing_tests$max_age[i] <- str_extract(strings[str_detect(strings, "\\|max_age_")], "(?<=\\|max_age_)[^\\|]+")
+  existing_tests$time_horizon[i] <- str_extract(strings[str_detect(strings, "\\|time_horizon_")], "(?<=\\|time_horizon_)[^\\|]+")
+  existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
+
+  existing_tests$implemented[i] <- "TRUE"
+}
+
+## Merge the pathways tibble and the existing_tests tibble
+pathways_lifetable <- pathways_lifetable %>%
+  left_join(existing_tests, by = c("exp", "exp_time", "newborns", "min_age", "max_age", "time_horizon", "iteration"),
+            suffix = c("", ".existing")) %>%
+  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
+  select(-implemented.existing)|> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
+
+## Output short report
+cat("Number of pathways implemented as tests:", pathways_lifetable %>%
+  filter(implemented == "TRUE") %>%
+  nrow(), "\n")
+cat("Total possible number of pathways:", nrow(pathways_lifetable), "\n")
+cat("As percentage:", round(pathways_lifetable %>%
+  filter(implemented == "TRUE") %>%
+  nrow()/nrow(pathways_lifetable)*100, digits = 0), "%\n")
 
 ```
 
@@ -842,8 +756,7 @@ core_rr <- pathways_rr |>
   mutate(results_the_same = NA_character_) |> 
   mutate(comment = NA_character_) |> 
   filter(core_pathway == "TRUE") |> 
-  relocate(iteration, .after = cutoff) |> 
-  arrange(erf, desc(exp), desc(cutoff), desc(iteration))
+  arrange(erf, desc(exp), desc(iteration))
     
 core_ar <- pathways_ar |> 
   mutate(institute = NA_character_) |> 
@@ -877,7 +790,7 @@ core_lifetable <- pathways_lifetable |>
   mutate(results_the_same = NA_character_) |> 
   relocate(iteration, .after = max_age) |> 
   filter(core_pathway == "TRUE") |> 
-  arrange(exp, desc(exp_time), desc(newborns), desc(min_age), max_age, iteration, varuncer)
+  arrange(exp, desc(exp_time), desc(newborns), desc(min_age), max_age, iteration)
 
 core_uncertainty <- pathways_uncertainty |> 
   mutate(institute = NA_character_) |> 
