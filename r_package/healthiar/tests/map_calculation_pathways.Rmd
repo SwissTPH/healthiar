@@ -260,27 +260,17 @@ cat("Total number of pathways:", progress_ar$n_all_pw, "\n")
 
 ```{r Pathways cba}
 
-pathways_cba_direct <- list(
+pathways_cba <- list(
   discount_rate_benefit = c("TRUE", "FALSE"),
   discount_rate_cost = c("TRUE", "FALSE"),
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur")
 )
 
-pathways_cba_indirect <- list(
-  discount_rate_benefit = c("TRUE", "FALSE"),
-  discount_rate_cost = c("TRUE", "FALSE"),
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur")
-)
-
-pathways_cba_direct <- expand.grid(pathways_cba_direct) |>
+pathways_cba <- expand.grid(pathways_cba) |>
   tibble::as_tibble() |>
   mutate_all(as.character)
 
-pathways_cba_indirect <- expand.grid(pathways_cba_indirect) |>
-  tibble::as_tibble() |>
-  mutate_all(as.character)
-
-pathways_cba <- rbind(pathways_cba_direct, pathways_cba_indirect) %>% # Important to use magrittr pipe
+pathways_cba <- pathways_cba %>% # Important to use magrittr pipe
   mutate(
     pathway_id = purrr::pmap_chr(., function(...) {
       vals <- list(...)
@@ -289,29 +279,16 @@ pathways_cba <- rbind(pathways_cba_direct, pathways_cba_indirect) %>% # Importan
   ) 
   
 #* Define core pathways ########################################################
-core_cba_direct <- list(
+core_cba <- list(
   discount_rate_benefit = c("TRUE", "FALSE"),
   discount_rate_cost = c("TRUE", "FALSE"),
   discount_shape = c("exp", "hyp_harvey", "hyp_mazur")
 )
 
-core_cba_indirect <- list(
-  discount_rate_benefit = c("TRUE", "FALSE"),
-  discount_rate_cost = c("TRUE", "FALSE"),
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur")
-)
-
-core_cba_direct <- expand.grid(core_cba_direct) |> 
+core_cba <- expand.grid(core_cba) |> 
   tibble::as_tibble() |>
   mutate_all(as.character) |> 
   mutate(core_pathway = "TRUE")
-
-core_cba_indirect <- expand.grid(core_cba_indirect) |> 
-  tibble::as_tibble() |>
-  mutate_all(as.character) |> 
-  mutate(core_pathway = "TRUE")
-
-core_cba <- rbind(core_cba_direct, core_cba_indirect)
 
 pathways_cba <- pathways_cba |> 
   left_join(x = _, y = core_cba, by = c("discount_shape", "discount_rate_benefit", "discount_rate_cost")) |> 
@@ -356,15 +333,44 @@ pathways_cba <- pathways_cba %>%
   select(-implemented.existing) |> 
   distinct() # Removes duplicate rows (rows that have the same pathway ID)
 
-## Output short report
-cat("Number of pathways implemented as tests:", pathways_cba %>%
-  filter(implemented == "TRUE") %>%
-  nrow(), "\n")
-cat("Total possible number of pathways:", nrow(pathways_cba), "\n")
-cat("As percentage:", round(pathways_cba %>%
-  filter(implemented == "TRUE") %>%
-  nrow()/nrow(pathways_cba)*100, digits = 0), "%\n")
+## Rearrange columns
+pathways_cba <- pathways_cba |> 
+  relocate(implemented) |> 
+  relocate(core_pathway, .after = implemented) |> 
+  arrange(desc(discount_rate_benefit), desc(discount_rate_cost), discount_shape)
 
+# * Measure progress ###########################################################
+
+## Add CBA current testing state to overall progress tibble
+progress_cba <-
+  tibble(
+    domain = "CBA",
+    n_implemented = nrow(pathways_cba |> filter(implemented == TRUE)),
+    `%_of_core` = 
+      paste0(
+        round(
+          pathways_cba |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_cba |> filter(core_pathway == "TRUE")) * 100, 
+          digits = 0
+        ),
+        " %"),
+    `%_of_total` = paste0(
+        round(
+          pathways_cba |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_cba) * 100, 
+          digits = 0
+        ),
+        " %"),
+    n_core_pw = nrow(pathways_cba |> filter(core_pathway == "TRUE")),
+    n_all_pw = nrow(pathways_cba)
+  )
+
+## Output short report
+cat("Number of CBA pathways implemented as tests:", progress_cba$n_implemented, "\n")
+cat("% of core pathways:", progress_cba$`%_of_core`, "\n")
+cat("% of all pathways:", progress_cba$`%_of_total`, "\n")
+cat("Total number core of pathways:", progress_cba$n_core_pw, "\n")
+cat("Total number of pathways:", progress_cba$n_all_pw, "\n")
 
 ```
 
