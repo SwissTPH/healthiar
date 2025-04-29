@@ -7,7 +7,7 @@
 #' @author Alberto Castro & Axel Luyten
 #' @keywords internal
 
-check_input_attribute <-
+validate_input_attribute <-
   function(input_args){
 
     # Functions ###########
