@@ -31,48 +31,45 @@ check_input_attribute <-
 
     }
 
+    error_if_different_length <- function(var_1, var_2){
+      if(!is.null(var_1) & !is.null(var_2)){ # Only if available
+        if(!same_length(var_1, var_2)){
+          stop(paste0(var_1, "and", var_2, "must have the same length."))
+        }
+      }
+    }
+
+    error_if_ar_and_length_1_or_0 <- function(var){
+      if(!is.null(var)){ # Only if available
+        if(!get_length(var) > 1){
+          stop(
+            paste0("For absolute risk, the length of ",
+                   var ,
+                   " must be higher than 1."))
+        }
+      }
+    }
+
+
     # length(exp) = length(prop_pop_exp) ###########
 
     # Exposure has to have the same length as prop_pop_exp
     # Only for relative risk
     if(approach_risk == "relative_risk"){
 
-      if(!same_length(exp_central, prop_pop_exp)){
-        stop("exp_central and prop_pop_exp must have the same length.")
-      }
-
-      if(!is.null(exp_lower)){ # Only if available
-        if(!same_length(exp_lower, prop_pop_exp)){
-          stop("exp_lower and prop_pop_exp must have the same length.")
-        }
-      }
-
-      if(!is.null(exp_upper)){ # Only if available
-        if(!same_length(exp_upper, prop_pop_exp)){
-          stop("exp_upper and prop_pop_exp must have the same length.")
-        }
-      }
-
+      error_if_different_length(exp_central, prop_pop_exp)
+      error_if_different_length(exp_lower, prop_pop_exp)
+      error_if_different_length(exp_upper, prop_pop_exp)
 
     }
 
     # if absolute_risk --> length(exp)>1 ###########
     if(approach_risk == "absolute_risk"){
-      if(!get_length(exp_central) > 1){
-        stop("For absolute risk, the length of exp_central must be higher than 1.")
-      }
 
-      if(!is.null(exp_lower)){ # Only if available
-        if(!get_length(exp_lower) > 1){
-        stop("For absolute risk, the length of exp_lower must be higher than 1.")
-        }
-      }
+      error_if_ar_and_length_1_or_0(exp_central)
+      error_if_ar_and_length_1_or_0(exp_lower)
+      error_if_ar_and_length_1_or_0(exp_upper)
 
-      if(!is.null(exp_upper)){ # Only if available
-        if(!get_length(exp_upper) > 1){
-          stop("For absolute risk, the length of exp_lower must be higher than 1.")
-        }
-      }
 
     }
 
