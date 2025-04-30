@@ -96,7 +96,7 @@ testthat::test_that("results correct hyperbolic mazur 1987 discounting with diff
   )
 })
 
-testthat::test_that("results correct pathway_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -111,7 +111,7 @@ testthat::test_that("results correct pathway_monetization|discount_rate_TRUE|dis
   )
 })
 
-testthat::test_that("results correct pathway_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =

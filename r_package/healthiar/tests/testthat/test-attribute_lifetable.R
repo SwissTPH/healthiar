@@ -2,7 +2,7 @@
 
 ## SINGLE YEAR EXPOSURE & NO NEWBORNS ##########################################
 
-testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
+testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
@@ -37,7 +37,7 @@ testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_singl
   )
 })
 
-testthat::test_that("results correct pathway_lifetable|exp_dist|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
+testthat::test_that("results correct |pathway_lifetable|exp_dist|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
@@ -72,7 +72,7 @@ testthat::test_that("results correct pathway_lifetable|exp_dist|exp_time_single_
 
 ## CONSTANT EXPOSURE & NO NEWBORNS #############################################
 
-testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
+testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
 
@@ -105,7 +105,7 @@ testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_const
 
 ## CONSTANT EXPOSURE & WITH NEWBORNS ###########################################
 
-testthat::test_that("results correct pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
+testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|varuncer_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
 

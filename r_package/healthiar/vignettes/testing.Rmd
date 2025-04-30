@@ -128,7 +128,7 @@ Example: you have a look at the calculation pathways in the Excel *pathways_over
 
 -   No multiexposure
 
-The `pathway_id` of this calculation pathway is: *pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|*.
+The `pathway_id` of this calculation pathway is: *\|pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|*.
 
 You claim this pathway by filling in your institution abbreviation and your name in the corresponding columns.
 
@@ -288,19 +288,19 @@ Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
 
 In this example, we'll start by entering the `pathway_id` (which is found in the *pathways_overview_core* Excel located in [this Teams folder](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk)) to the function template.
 
-In this example the `pathway_id` is *pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|*
+In this example the `pathway_id` is *\|pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|*
 
 In case of the basic template you add the `pathway_id` to the top of it:
 
 ```{r add test name basic, include=TRUE, echo=TRUE, eval=FALSE}
 ## Pathway ID: 
-## pathway_rr|erf_log_lin|exp_single|iteration_FALSE|
+## |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|
 ```
 
 In case of the extended template you add the first argument of the `testthat::test_that` call:
 
 ```{r add test name extended, include=TRUE, echo=TRUE, eval=FALSE}
-testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", { ... })
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", { ... })
 ```
 
 Then we'll continue by adding other details (same for basic & extended template) that describe the comparison case in more detail:
@@ -474,7 +474,7 @@ Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
 If you have advanced knowledge of R we are very grateful if you can compare the results automatically by running the `test_that` function.
 
 ```{r compare results automatically, include=TRUE, echo=TRUE, eval=TRUE}
-testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
@@ -511,7 +511,7 @@ Finally, you upload your test with the `pathway_id` as the file name to the [Tea
 Filled out basic template (with hard-coded input data):
 
 ```{r filled out template basic, include=TRUE, echo=TRUE, eval=TRUE}
-## Pathway ID: pathway_rr|erf_log_lin|exp_single|iteration_FALSE|
+## Pathway ID: |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|
 
 ## healthiar FUNCTION CALL
 healthiar::attribute_health(
@@ -542,7 +542,7 @@ Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
 Filled out extended template (with input data loaded into RStudio):
 
 ```{r filled out template extended, include=TRUE, echo=TRUE, eval=TRUE}
-testthat::test_that("results correct results correct pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data_raw  <-  readxl::read_xlsx(

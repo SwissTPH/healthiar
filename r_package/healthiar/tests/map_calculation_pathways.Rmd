@@ -39,7 +39,7 @@ pathways_rr <- expand.grid(pathways_rr) |>
   mutate(
     pathway_id = purrr::pmap_chr(., function(...) {
       vals <- list(...)
-paste0("pathway_rr|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+paste0("|pathway_rr|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
 })
   ) 
 
@@ -68,7 +68,7 @@ file_path <- "../healthiar/tests/testthat/test-attribute_health.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
-test_names_with_pw <- Filter(function(x) any(grepl("pathway_rr\\|", x)), test_names)
+test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_rr\\|", x)), test_names)
 
 
 ## Create an empty tibble with NA placeholders
@@ -159,7 +159,7 @@ pathways_ar <- expand.grid(pathways_ar) |>
   mutate(
     pathway_id = purrr::pmap_chr(., function(...) {
       vals <- list(...)
-paste0("pathway_ar|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+paste0("|pathway_ar|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
 })
   ) 
 
@@ -185,7 +185,7 @@ file_path <- "../healthiar/tests/testthat/test-attribute_health.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
-test_names_with_pw <- Filter(function(x) any(grepl("pathway_ar\\|", x)), test_names)
+test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_ar\\|", x)), test_names)
 
 
 ## Create an empty tibble with NA placeholders
@@ -275,7 +275,7 @@ pathways_uncertainty <- pathways_uncertainty %>% # Important to use magrittr pip
   mutate(
     pathway_id = purrr::pmap_chr(., function(...) {
       vals <- list(...)
-      paste0("pathway_uncertainty|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+      paste0("|pathway_uncertainty|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
     })
   )
 
@@ -304,7 +304,7 @@ file_path <- "../healthiar/tests/testthat/test-summarize_uncertainty.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
-test_names_with_pw <- Filter(function(x) any(grepl("pathway_uncertainty\\|", x)), test_names)
+test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_uncertainty\\|", x)), test_names)
 
 
 ## Create an empty tibble with NA placeholders
@@ -380,7 +380,7 @@ cat("Total number of pathways:", progress_uncertainty$n_all_pw, "\n")
 
 # compare
 
-```{r Pathways compare, eval=FALSE, include=FALSE}
+```{r Pathways compare}
 
 # * Define all relevant pathways ###############################################
 ## Create tibble containing (almost) all possible calculation pathways
@@ -397,7 +397,7 @@ pathways_compare <- expand.grid(pathways_compare) |>
   mutate(
     pathway_id = purrr::pmap_chr(., function(...) {
       vals <- list(...)
-paste0("pathway_compare|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+paste0("|pathway_compare|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
 })
   ) 
 
@@ -423,7 +423,7 @@ file_path <- "../healthiar/tests/testthat/test-compare.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
-test_names_with_pw <- Filter(function(x) any(grepl("pathway_compare\\|", x)), test_names)
+test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_compare\\|", x)), test_names)
 
 
 ## Create an empty tibble with NA placeholders
@@ -512,7 +512,7 @@ pathways_monetization <- pathways_monetization %>% # Important to use magrittr p
   mutate(
     pathway_id = purrr::pmap_chr(., function(...) {
       vals <- list(...)
-      paste0("pathway_monetization|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+      paste0("|pathway_monetization|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
     })
   ) 
 
@@ -539,7 +539,7 @@ file_path <- "../healthiar/tests/testthat/test-monetize.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
-test_names_with_pw <- Filter(function(x) any(grepl("pathway_monetization\\|", x)), test_names)
+test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_monetization\\|", x)), test_names)
 
 
 ## Create an empty tibble with NA placeholders
@@ -630,7 +630,7 @@ pathways_cba <- pathways_cba %>% # Important to use magrittr pipe
   mutate(
     pathway_id = purrr::pmap_chr(., function(...) {
       vals <- list(...)
-      paste0("pathway_cba|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+      paste0("|pathway_cba|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
     })
   ) 
   
@@ -656,7 +656,7 @@ file_path <- "../healthiar/tests/testthat/test-cba.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
-test_names_with_pw <- Filter(function(x) any(grepl("pathway_cba\\|", x)), test_names)
+test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_cba\\|", x)), test_names)
 
 
 ## Create an empty tibble with NA placeholders
@@ -751,7 +751,7 @@ pathways_daly <- expand.grid(pathways_daly) |>
   mutate(
     pathway_id = purrr::pmap_chr(., function(...) {
       vals <- list(...)
-paste0("pathway_daly|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+paste0("|pathway_daly|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
 })
   )
   
@@ -777,7 +777,7 @@ file_path <- "../healthiar/tests/testthat/test-daly.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
-test_names_with_pw <- Filter(function(x) any(grepl("pathway_daly\\|", x)), test_names)
+test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_daly\\|", x)), test_names)
 
 ## Create an empty tibble with NA placeholders
 n_row <- length(test_names_with_pw)
@@ -867,7 +867,7 @@ pathways_multiexposure <- expand.grid(pathways_multiexposure) |>
   mutate(
     pathway_id = purrr::pmap_chr(., function(...) {
       vals <- list(...)
-paste0("pathway_multiexposure|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+paste0("|pathway_multiexposure|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
 })
   )
   
@@ -891,7 +891,7 @@ file_path <- "../healthiar/tests/testthat/test-multiexpose.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
-test_names_with_pw <- Filter(function(x) any(grepl("pathway_multiexposure\\|", x)), test_names)
+test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_multiexposure\\|", x)), test_names)
 
 ## Create an empty tibble with NA placeholders
 n_row <- length(test_names_with_pw)
@@ -980,7 +980,7 @@ pathways_lifetable <- pathways_lifetable %>% # Important to use magrittr pipe
   mutate(
     pathway_id = purrr::pmap_chr(., function(...) {
       vals <- list(...)
-      paste0("pathway_lifetable|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+      paste0("|pathway_lifetable|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
     })
   )
 
@@ -1011,7 +1011,7 @@ file_path <- "../healthiar/tests/testthat/test-attribute_lifetable.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
-test_names_with_pw <- Filter(function(x) any(grepl("pathway_lifetable\\|", x)), test_names)
+test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_lifetable\\|", x)), test_names)
 
 ## Create an empty tibble with NA placeholders
 n_row <- length(test_names_with_pw)
@@ -1133,7 +1133,8 @@ progress_overall <- rbind(overall_row, progress_overall)
 
 # Create Excel
 
-```{r Create Excel for Teams folder (only core pathways)}
+TODO
+```{r Create Excel for Teams folder (only core pathways), eval=FALSE, include=FALSE}
 knitr::opts_knit$set(root.dir = getwd())
 
 core_rr <- pathways_rr |> 
@@ -1207,7 +1208,8 @@ openxlsx::write.xlsx(core_list, "tests/pathways_overview_core.xlsx",
 
 ```
 
-```{r Create Excel with all pathways}
+TODO 
+```{r Create Excel with all pathways, eval=FALSE, include=FALSE}
 knitr::opts_knit$set(root.dir = getwd())
 
 pathways_rr <- pathways_rr |> 

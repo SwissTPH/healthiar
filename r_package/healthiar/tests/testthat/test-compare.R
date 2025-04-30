@@ -2,7 +2,7 @@
 
 ## DELTA #######################################################################
 
-testthat::test_that("results correct pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
+testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   output_attribute_1 =
     healthiar::attribute_health(

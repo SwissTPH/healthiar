@@ -1,6 +1,6 @@
 # RAW INPUT ####################################################################
 
-testthat::test_that("results correct pathway_cba|discount_shape_exp|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
+testthat::test_that("results correct |pathway_cba|discount_shape_exp|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
   testthat::expect_equal(
     object =

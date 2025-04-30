@@ -2,7 +2,7 @@
 
 ## SINGLE EXPOSURE #############################################################
 
-testthat::test_that("results correct pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|distribution_normal|", {
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|distribution_normal|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -37,7 +37,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_single|erf_rr_incre
 
 ### ITERATION ##################################################################
 
-testthat::test_that("results correct pathway_uncertainty|exp_single|erf_rr_increment|iteration_TRUE|distribution_normal|", {
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_TRUE|distribution_normal|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -70,7 +70,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_single|erf_rr_incre
 
 ### YLD ########################################################################
 
-testthat::test_that("results correct yld pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|distribution_normal|", {
+testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|distribution_normal|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -110,7 +110,7 @@ testthat::test_that("results correct yld pathway_uncertainty|exp_single|erf_rr_i
 
 ## EXPOSURE DISTRIBUTION #######################################################
 
-testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_rr_increment|iteration_FALSE|distribution_normal|", {
+testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increment|iteration_FALSE|distribution_normal|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
@@ -143,7 +143,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_rr_increme
 
 ### ITERATION ##################################################################
 
-testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_rr_increment|iteration_TRUE|distribution_normal|", {
+testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increment|iteration_TRUE|distribution_normal|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
@@ -189,7 +189,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_rr_increme
 
 # AR ###########################################################################
 
-testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|distribution_normal|", {
+testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|distribution_normal|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
@@ -218,7 +218,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_ar_formula
 })
 
 
-testthat::test_that("results correct erf_eq uncertainty pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|distribution_normal|", {
+testthat::test_that("results correct erf_eq uncertainty |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|distribution_normal|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
@@ -248,7 +248,7 @@ testthat::test_that("results correct erf_eq uncertainty pathway_uncertainty|exp_
 
 ## ITERATION ###################################################################
 
-testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_ar_formula|iteration_TRUE|distribution_normal|", {
+testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_TRUE|distribution_normal|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
@@ -286,7 +286,7 @@ testthat::test_that("results correct pathway_uncertainty|exp_dist|erf_ar_formula
   )
 })
 
-testthat::test_that("results correct erf_eq uncertainty pathway_uncertainty|exp_dist|erf_ar_formula|iteration_TRUE|distribution_normal|", {
+testthat::test_that("results correct erf_eq uncertainty |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_TRUE|distribution_normal|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
@@ -322,7 +322,7 @@ testthat::test_that("results correct erf_eq uncertainty pathway_uncertainty|exp_
 
 ## YLD #########################################################################
 
-testthat::test_that("results correct yld pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|distribution_normal|", {
+testthat::test_that("results correct yld |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|distribution_normal|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
