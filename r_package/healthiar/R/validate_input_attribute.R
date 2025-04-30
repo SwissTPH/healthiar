@@ -153,7 +153,9 @@ validate_input_attribute <-
       var_value_1 <- input[[var_name_1]]
       var_value_2 <- input[[var_name_2]]
 
-      if(!base::is.null(var_value_1) && !base::is.null(var_value_2) && # Only if vars are available
+      if(# Deactivated because only available var_names are passed below
+        #!base::is.null(var_value_1) && !base::is.null(var_value_2) &&
+
          !same_length(var_value_1, var_value_2)){
 
           # Create error message
@@ -171,19 +173,27 @@ validate_input_attribute <-
     # Only for relative risk
     if(input$approach_risk == "relative_risk"){
 
-      for(exp_ci_suffix in base::paste0("exp", ci_suffix)){
-        error_if_different_length(exp_ci_suffix, "prop_pop_exp")
+      available_exp_var_names <-
+        available_var_names[available_var_names %in%
+                              base::paste0("exp", ci_suffix)]
+
+      for(x in available_exp_var_names){
+        error_if_different_length(x, "prop_pop_exp")
       }
     }
 
     # --> error if length of life table variables is different
 
-    for (i in seq_along(lifetable_var_names_with_same_length)) {
-      for(j in seq_along(lifetable_var_names_with_same_length)){
-        if(i<j){
-          error_if_different_length(lifetable_var_names_with_same_length[i],
-                                    lifetable_var_names_with_same_length[j])
-        }
+    if(all(lifetable_var_names_with_same_length %in% available_var_names)){
+      combi_vars <-
+        utils::combn(lifetable_var_names_with_same_length, 2)|>
+        base::t() |>
+        base::as.data.frame() |>
+        stats::setNames(c("var_1", "var_2"))
+
+      for (i in 1:base::nrow(combi_vars)) {
+        error_if_different_length(combi_vars$var_1[i],
+                                  combi_vars$var_2[i])
       }
     }
 
