@@ -139,6 +139,30 @@ validate_input_attribute <-
         }
       }
 
+    error_if_only_lower_or_upper <- function(var_short){
+      var_name_lower <- base::paste0(var_short, "_lower")
+      var_name_upper <- base::paste0(var_short, "_upper")
+
+      var_value_lower <- input[[var_name_lower]]
+      var_value_upper <- input[[var_name_upper]]
+
+      if((!base::is.null(var_value_lower) && base::is.null(var_value_upper)) |
+         (base::is.null(var_value_lower) && !base::is.null(var_value_upper)) ){ # Only if available
+        {
+          # Create error message
+          stop(
+            base::paste0(
+              "Either both, ",
+              var_name_lower,
+              " and ",
+              var_name_upper,
+              ", or non of them must entered, but not only one."),
+            call. = FALSE)
+        }
+      }
+      }
+
+
     error_if_ar_and_length_1_or_0 <- function(var_name){
       # Store var_value
       var_value <- input[[var_name]]
@@ -221,6 +245,11 @@ validate_input_attribute <-
     # --> Error if not lower>central>upper
     for (x in c("rr", "bhd", "exp", "cutoff", "dw", "duration")) {
       error_if_not_increasing_lower_central_upper(var_ci = base::paste0(x, ci_suffix))
+    }
+
+    # --> Error if lower but not upper (or vice versa)
+    for (x in c("rr", "bhd", "exp", "cutoff", "dw", "duration")) {
+      error_if_only_lower_or_upper(var_short = x)
     }
 
 

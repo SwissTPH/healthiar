@@ -106,6 +106,22 @@ testthat::test_that("error if not lower>central>upper", {
   )
 })
 
+testthat::test_that("error if onyl lower or upper", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 4,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_upper = 1.20,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
 
 
 
@@ -874,7 +890,6 @@ testthat::test_that("results the same rr yld with variable uncertainties", {
     object =
       healthiar::attribute_health(
         exp_central = 8.85,
-        exp_lower = 8.85,
         cutoff_central = 5,
         bhd_central = 25000,
         rr_central = 1.118,
