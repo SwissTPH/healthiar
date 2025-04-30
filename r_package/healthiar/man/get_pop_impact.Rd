@@ -30,6 +30,6 @@ Experimental function
 TBD
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }
 \keyword{internal}

@@ -1,10 +1,17 @@
 #' Get discount factor
 
-#' @description Get discount factor based on discount rate (already corrected for inflation)
+#' @description
+#' This function calculates the discount factor based on discount rate (already corrected for inflation)
+
 #' @inheritParams monetize
-#' @author Alberto Castro
+
+#' @author Alberto Castro & Axel Luyten
+
 #' @note Experimental function
+
 #' @export
+
+
 
 get_discount_factor <-
   function(discount_rate,

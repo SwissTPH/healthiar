@@ -1,40 +1,45 @@
-#' Attributable health impacts in scenario 2 based on scenario 1
+#' Create a scenario 2 by modifying an existing scenario 1 and determine attributable health impacts in it
 
-#' @description The function assesses the attributable health impacts in a new scenario (2) by modifying an existing scenario (1). The values of the arguments of this function (except output_attribute_1) are used to replace the values in the arguments of scenario 1 to build scenario 2.
-#' @param output_attribute_1 \code{List} containing the output of the function attribute() for scenario 1.
+#' @description
+#' This function assesses the attributable health impacts in a new scenario 2 which is obtained by modifying an existing scenario 1. Supply an existing attribute output and specify how scenario 1 should be modified to create scenario 2.
+
 #' @inheritParams attribute_master
-#' @returns
-#' TBD. E.g. This function returns a \code{list} with the attributable
-#' Moreover, the data frame includes columns such as:
-#' \itemize{
-#'  \item Attributable fraction
-#'  \item Health impact
-#'  \item Outcome metric
-#'  \item And many more.
-#' }
+#' @param output_attribute_1 \code{List} containing the output of the function attribute() for scenario 1.
+
+#' @inherit attribute_master return
+
 #' @examples
 #' TBD
-#' @author Alberto Castro
+
+#' @author Alberto Castro & Axel Luyten
+
 #' @export
+
+
 
 attribute_mod <-
   function(
     output_attribute_1,
-    exp_central = NULL, exp_lower = NULL, exp_upper = NULL,
-    bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+    erf_shape = NULL,
     rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-    rr_increment = NULL, erf_shape = NULL,
+    rr_increment = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-    population = NULL,
+    exp_central = NULL, exp_lower = NULL, exp_upper = NULL,
     prop_pop_exp = NULL,
     pop_exp = NULL,
-    approach_exposure = NULL,
-    approach_newborns = NULL,
+    cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
+    bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+    geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
+    population = NULL,
+    info = NULL,
     first_age_pop = NULL, last_age_pop = NULL,
     population_midyear_male = NULL, population_midyear_female = NULL,
-    year_of_analysis = NULL,
-    geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
-    info = NULL){
+    deaths_male = NULL, deaths_female = NULL,
+    min_age = NULL, max_age = NULL,
+    approach_exposure = NULL,
+    approach_newborns = NULL,
+    year_of_analysis = NULL
+    ) {
 
     # Capture all arguments and values
     args_2 <- as.list(environment())

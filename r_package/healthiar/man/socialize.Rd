@@ -2,27 +2,25 @@
 % Please edit documentation in R/socialize.R
 \name{socialize}
 \alias{socialize}
-\title{Socio-economic aspects in health impacts}
+\title{Consider socio-economic aspects in healthiar assessments}
 \usage{
 socialize(
   output_healthiar = NULL,
   impact = NULL,
-  population = NULL,
-  bhd = NULL,
-  exp = NULL,
-  pop_fraction = NULL,
   geo_id_disaggregated,
   social_indicator,
   n_quantile = 10,
-  approach = "quantile"
+  approach = "quantile",
+  population = NULL,
+  bhd = NULL,
+  exp = NULL,
+  pop_fraction = NULL
 )
 }
 \arguments{
 \item{output_healthiar}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results}
 
 \item{impact}{\code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_disaggregated}.}
-
-\item{population}{\code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.}
 
 \item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
 If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
@@ -32,14 +30,19 @@ If a vector is entered here, the data for geo-specific input data (e.g. \code{bh
 \item{n_quantile}{\code{Integer value} specifying to the number quantiles in the analysis}
 
 \item{approach}{\code{String} referring the approach to include the social aspects. To choose between "quantile" and ?}
+
+\item{population}{\code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.}
 }
 \value{
 Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 }
 \description{
-The function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts
+This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts
 }
 \examples{
 # Example of how to use the function
 function_name(param1 = value1, param2 = value2)
+}
+\author{
+TODO
 }

@@ -1,7 +1,17 @@
-#' Deaths and YLL based on life table approach
-#'
-#' @description Assesses the premature deaths or years of life lost attributable to the exposure to an environmental stressor using a life table approach.
+#' Attributable premature deaths or YLL using a life table approach
+
+#' @description
+#' This function assesses premature deaths or years of life lost (YLL) attributable to exposure to an environmental stressor using a life table approach.
+
 #' @inheritParams attribute_master
+
+#' @details
+#' The life table methodology follows the one implemented in the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200
+#' @details
+#' A more expansive life table case study by Miller is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
+#' @details
+#' See the AirQ+ manual "Health impact assessment of air pollution: AirQ+ life table manual" for guidance on how to convert larger age groups to 1 year age groups ("section "Estimation of yearly values"): https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf (accessed April 2025):
+#'
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central, lower and upper bound confidence interval.
@@ -12,34 +22,35 @@
 #'  \item Outcome metric
 #'  \item And many more.
 #' }
-#' @details
-#' The life table methodology follows the one implemented in the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200
-#' @details
-#' A more expansive life table case study by Miller is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
+
 #' @examples
 #' TBD
-#' @author Alberto Castro
-#' @note Experimental function
+
+#' @author Alberto Castro & Axel Luyten
+
 #' @export
 
+
+
 attribute_lifetable <-
-  function(health_outcome = NULL,
+  function(first_age_pop, last_age_pop,
+           population_midyear_male, population_midyear_female,
+           deaths_male = NULL, deaths_female = NULL,
+           min_age = NULL, max_age = NULL,
+           approach_exposure = "single_year",
+           approach_newborns = "without_newborns",
+           health_outcome = NULL,
+           year_of_analysis,
+           erf_shape = NULL,
+           rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+           rr_increment = NULL,
+           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            exp_central, exp_lower = NULL, exp_upper = NULL,
            prop_pop_exp = 1,
            cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
-           rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           rr_increment = NULL, erf_shape = NULL,
-           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-           approach_exposure = "single_year",
-           approach_newborns = "without_newborns",
-           deaths_male = NULL,
-           deaths_female = NULL,
-           first_age_pop, last_age_pop,
-           population_midyear_male, population_midyear_female,
-           year_of_analysis,
-           min_age = NULL, max_age = NULL,
            geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
-           info = NULL){
+           info = NULL
+           ) {
 
     output <-
       healthiar:::attribute_master(

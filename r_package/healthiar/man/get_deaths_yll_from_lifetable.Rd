@@ -10,7 +10,7 @@ get_deaths_yll_from_lifetable(pop_impact, input_with_risk_and_pop_fraction)
 This function returns a \code{List}
 }
 \description{
-Get attributable deaths, years of life lost or years lived with disability from lifetable
+This function determines attributable deaths, years of life lost or years lived with disability from life table
 }
 \note{
 Experimental function

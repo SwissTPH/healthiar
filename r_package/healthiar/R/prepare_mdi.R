@@ -1,11 +1,15 @@
 #' Create the BEST-COST Multidimensional Deprivation Index (MDI)
 
-#' @description Creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
+#' @description
+#' This function creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
+
+#' @inheritParams socialize
 #' @param edu \code{Numeric vector} indicating educational attainment as \% of individuals (≥18) without a high school diploma (ISCED 0-2) per geo unit
 #' @param unemployed \code{Numeric vector} containing \% of unemployed individuals in the active population (18-65) per geo unit
 #' @param single_parent \code{Numeric vector} containing single-parent households as \% of total households headed by a single parent per geo unit
 #' @param pop_change \code{Numeric vector} containing population change as \% change in population over the previous 5 years (e.g., 2017-2021) per geo unit
 #' @param no_heating \code{Numeric vector} containing \% of households without central heating per geo unit
+
 #' @details
 #' The function prints Cronbach's \eqn{\alpha}.
 #' \describe{
@@ -22,6 +26,7 @@
 #'   \item Indicator-Based Imputation: Use multiple linear regression if the missing indicator correlates strongly with others.
 #' }
 #' Imputation models should have an R² ≥ 0.7. If R² < 0.7, consider alternative data sources or methods.
+
 #' @return
 #' Tibble with the columns
 #' \itemize{
@@ -37,6 +42,7 @@
 #'   \item Histogram of the MDI's for the geo units with a normal distribution curve
 #'   \item Person's correlation coefficient (pairwise-comparisons)
 #' }
+
 #' @examples
 #' mdi <- healthiar::prepare_mdi(
 #'   geo_id_disaggregated = exdat_prepare_mdi$id,
@@ -47,8 +53,13 @@
 #'   no_heating = exdat_prepare_mdi$no_heating,
 #'   n_quantile = 10
 #'   )
-#' @inheritParams socialize
+
+#' @author
+#' TODO
+
 #' @export
+
+
 
 prepare_mdi <- function(
     geo_id_disaggregated,

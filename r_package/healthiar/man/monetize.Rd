@@ -2,7 +2,7 @@
 % Please edit documentation in R/monetize.R
 \name{monetize}
 \alias{monetize}
-\title{Monetization of health impacts}
+\title{Monetize health impacts}
 \usage{
 monetize(
   output_healthiar = NULL,
@@ -30,10 +30,10 @@ monetize(
 \item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
 }
 \value{
-Description of the return value.
+TODO
 }
 \description{
-Monetize health impacts
+This function monetizes health impacts
 }
 \examples{
 # Example of how to use the function

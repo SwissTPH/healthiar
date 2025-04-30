@@ -116,7 +116,9 @@ For example, would be 10 if one is interested in the impacts of exposure during 
 
 \item{last_age_pop}{\code{Numeric value} specifying the age of the oldest age group from population and life table data (age interval = 1 year).}
 
-\item{population_midyear_male, population_midyear_female}{\code{Numeric vector} containing the mid-year population for the year of analysis for female and male, respectively.}
+\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See the details section for guidance on how to adjust age groups.}
+
+\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively. See the details section for guidance on how to adjust age groups.}
 }
 \value{
 This function returns a \code{data.frame} with all input data together
@@ -129,7 +131,7 @@ Moreover, the data frame includes columns such as:
 }
 }
 \description{
-Compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
+This function compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
 }
 \note{
 Experimental function
@@ -138,6 +140,6 @@ Experimental function
 TBD
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }
 \keyword{internal}

@@ -1,14 +1,18 @@
 #' Check if arguments are identical before stop
 
-#' @description The function check if two different sets of arguments are identical
+#' @description
+#' This function checks if two different sets of arguments are identical
+
 #' @param args_a \code{List} first list of arguments
 #' @param args_b \code{List} second list of arguments
 #' @param names_to_check \code{Vector} with the names of arguments to be checked
-#' @author Alberto Castro
+
+#' @author Alberto Castro & Axel Luyten
+
 #' @keywords internal
 
 
-# Create function to check that the common_arguments have the same values
+
 check_if_args_identical <- function(args_a, args_b, names_to_check) {
 
   # Compare values

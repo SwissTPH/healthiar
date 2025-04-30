@@ -15,15 +15,12 @@ summarize_uncertainty(results, n_sim)
 This function returns confidence intervals for the attributable health impacts using a Monte Carlo simulation.
 }
 \description{
-Determine summary uncertainty (based on at least one variable
+This function determines summary uncertainty (based on at least one variable
 with central, lower and upper estimate) based on attribute() or compare()
 function output.
 }
-\note{
-Experimental function
-}
 \examples{
-TBD
+TODO
 }
 \author{
 Axel Luyten

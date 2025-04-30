@@ -21,12 +21,12 @@ Moreover, the data frame includes columns such as:
 }
 }
 \description{
-Calculates the health impacts for each uncertainty and geo area.
+This function calculates the health impacts for each uncertainty and geo area.
 }
 \examples{
 TBD
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }
 \keyword{internal}

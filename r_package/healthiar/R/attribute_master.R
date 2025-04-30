@@ -1,8 +1,8 @@
-#' Attributable health cases based on relative risk
+#' Attributabe health impact to an environmental stressor
 
 #' @description
-#' Calculates the health impacts, mortality or morbidity, of an environmental stressor using a single value for baseline heath data, i.e. without life table.
-#' @details It provides as a result the mean as well as the lower and the higher bound of the impact based on the confidence interval of the concentration-response function.
+#' This function calculates the health impacts, mortality or morbidity, of an environmental stressor using a single value for baseline heath data, i.e. without life table.
+
 #' @param approach_risk \code{String} specifying the risk risk method. Options: "relative_risk" (default) or "absolute_risk".
 #' @param erf_shape \code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".
 #' @param rr_central,rr_lower,rr_upper \code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
@@ -36,13 +36,18 @@
 #' @param approach_newborns \code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". If "with_newborns" is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.
 #' @param first_age_pop \code{Numeric value} specifying the age of the youngest age group from population and life table data (age interval = 1 year).
 #' @param last_age_pop \code{Numeric value} specifying the age of the oldest age group from population and life table data (age interval = 1 year).
-#' @param population_midyear_male,population_midyear_female \code{Numeric vector} containing the mid-year population for the year of analysis for female and male, respectively.
+#' @param population_midyear_female,population_midyear_male \code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See the details section for guidance on how to adjust age groups.
+#' @param deaths_female,deaths_male \code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively. See the details section for guidance on how to adjust age groups.
 #' @param year_of_analysis \code{Numeric value} providing the year of analysis.
 #' @param time_horizon \code{Numeric value} corresponding to time horizon (number of years) for which the impacts of exposure are to be considered.
 #' For example, would be 10 if one is interested in the impacts of exposure during the year of analysis and the next 9 years.
 #' @param min_age \code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. By default 30, which implies that all adults aged 30 or older will be affected by the exposure.
 #' @param max_age \code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.
 #' @param is_lifetable \code{Boolean} argument specifying if the life table approach is applied (TRUE) or not (FALSE)
+
+#' @details
+#' It provides as a result the mean as well as the lower and the higher bound of the impact based on the confidence interval of the concentration-response function.
+
 #' @returns
 #' This function returns two lists:
 #' @returns
@@ -55,8 +60,12 @@
 #'  \item \code{impact} attributable health burden/impact
 #'  \item And many more
 #'  }
-#'
+
 #' @author Alberto Castro & Axel Luyten
+
+#' @keywords internal
+
+
 
 attribute_master <-
   function(is_lifetable = NULL,

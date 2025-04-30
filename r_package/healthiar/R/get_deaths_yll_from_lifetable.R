@@ -1,17 +1,24 @@
 #' Get deaths, YLL or YLD
-#'
-#' @description Get attributable deaths, years of life lost or years lived with disability from lifetable
+
+#' @description
+#' This function determines attributable deaths, years of life lost or years lived with disability from life table
+
 #' @inheritParams attribute_master
+
 #' @returns
 #' This function returns a \code{List}
+
 #' @examples
 #' TBD
+
 #' @author Alberto Castro & Axel Luyten
+
 #' @note Experimental function
+
 #' @keywords internal
-#'
-#'
-#'
+
+
+
 get_deaths_yll_from_lifetable <-
   function(pop_impact,
            input_with_risk_and_pop_fraction) {
@@ -233,7 +240,7 @@ get_deaths_yll_from_lifetable <-
     impact_detailed <-
       impact_detailed  |>
       dplyr::mutate(dplyr::across(dplyr::contains("_nest"),
-                           ~rlang::set_names(.x,
+                           ~purrr::set_names(.x,
                                       id)))
 
     return(impact_detailed)

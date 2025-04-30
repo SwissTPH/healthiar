@@ -2,7 +2,7 @@
 % Please edit documentation in R/cba.R
 \name{cba}
 \alias{cba}
-\title{Cost benefit analysis}
+\title{Cost-benefit analysis}
 \usage{
 cba(
   output_healthiar = NULL,
@@ -21,7 +21,7 @@ cba(
 
 \item{valuation}{\code{Numberic value} referring to unit value of a health impact}
 
-\item{cost}{\code{Numeric value} referring to the investment cost to achive the reduction of exposure}
+\item{cost}{\code{Numeric value} referring to the investment cost to achieve the reduction of exposure}
 
 \item{discount_rate_benefit, discount_rate_cost}{\code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates)}
 
@@ -33,7 +33,7 @@ cba(
 Description of the return value.
 }
 \description{
-Perform cost-benefit analysis assuming that the monitized health impact is a benefit
+This function performs a cost-benefit analysis
 }
 \examples{
 # Example of how to use the function

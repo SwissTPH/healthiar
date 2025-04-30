@@ -1,7 +1,49 @@
 #' Attribute health impacts to an environmental stressor
 
-#' @description This function calculates the health impacts (mortality or morbidity)
+#' @description
+#' This function calculates the health impacts (mortality or morbidity)
 #' of exposure to an environmental stressor (air pollution or noise), using either relative or absolute risk.
+
+#' @usage
+#' Relative risk case:
+#' attribute_health(
+#'   approach_risk = "relative_risk",
+#'   erf_shape,
+#'   rr_central, rr_lower = NULL, rr_upper = NULL,
+#'   rr_increment,
+#'   exp_central, exp_lower = NULL, exp_upper = NULL,
+#'   cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+#'   bhd_central
+#' )
+#'
+#' Absolute risk case:
+#' healthiar::attribute_health(
+#'   approach_risk = "absolute_risk",
+#'   erf_eq_central, erf_eq_lower = NULL, erf_eq_upper = NULL,
+#'   exp_central, exp_lower = NULL, exp_upper = NULL,
+#'   population,
+#'   prop_pop_exp
+#')
+#'
+#' All available arguments:
+#' attribute_health(
+#'   approach_risk = "relative_risk", # Default; alternative: "absolute_risk"
+#'   erf_shape = NULL,
+#'   rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+#'   rr_increment = NULL,
+#'   erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
+#'   exp_central, exp_lower = NULL, exp_upper = NULL,
+#'   prop_pop_exp = 1,
+#'   cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
+#'   bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+#'   geo_id_disaggregated = NULL,
+#'   geo_id_aggregated = NULL,
+#'   population = NULL,
+#'   info = NULL
+#')
+
+#' @inheritParams attribute_master
+
 #' @details
 #' What you put in is what you get out
 #' @details
@@ -41,46 +83,8 @@
 #' @details \eqn{AR_i} = absolute risk at the mean of exposure bin i
 #' @details \eqn{PE_i} = fraction of the population exposed to exposure levels of the exposure category i
 
-
-#' @usage
-#' Relative risk case:
-#' attribute_health(
-#'   approach_risk = "relative_risk",
-#'   erf_shape,
-#'   rr_central, rr_lower = NULL, rr_upper = NULL,
-#'   rr_increment,
-#'   exp_central, exp_lower = NULL, exp_upper = NULL,
-#'   cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
-#'   bhd_central
-#' )
-#'
-#' Absolute risk case:
-#' healthiar::attribute_health(
-#'   approach_risk = "absolute_risk",
-#'   erf_eq_central, erf_eq_lower = NULL, erf_eq_upper = NULL,
-#'   exp_central, exp_lower = NULL, exp_upper = NULL,
-#'   population,
-#'   prop_pop_exp
-#')
-#'
-#' All available arguments:
-#' attribute_health(
-#'   approach_risk = "relative_risk", # Default
-#'   erf_shape = NULL,
-#'   rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-#'   rr_increment = NULL,
-#'   erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-#'   exp_central, exp_lower = NULL, exp_upper = NULL,
-#'   prop_pop_exp = 1,
-#'   cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
-#'   bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
-#'   geo_id_disaggregated = NULL,
-#'   geo_id_aggregated = NULL,
-#'   population = NULL,
-#'   info = NULL
-#')
 #' @inherit attribute_master return
-#' @inheritParams attribute_master
+
 #' @examples
 #' # Goal: attribute lung cancer cases to population-weighted PM2.5 exposure using relative risk
 #'
@@ -95,8 +99,12 @@
 #'
 #' # Attributable cases
 #' print(results$health_main$impact_rounded)
-#' @author Alberto Castro
+
+#' @author Alberto Castro & Axel Luyten
+
 #' @export
+
+
 
 attribute_health <-
   function(approach_risk = "relative_risk",

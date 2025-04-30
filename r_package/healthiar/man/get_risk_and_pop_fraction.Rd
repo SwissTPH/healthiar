@@ -22,7 +22,7 @@ Moreover, the data frame includes columns such as:
 }
 }
 \description{
-Calculates the population attributable fraction (PAF) based on the input data and puts the results in additional columns joined to the input data frame.
+This function calculates the population attributable fraction (PAF) based on the input data and puts the results in additional columns joined to the input data frame.
 }
 \note{
 Experimental function
@@ -31,6 +31,6 @@ Experimental function
 TBD
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }
 \keyword{internal}

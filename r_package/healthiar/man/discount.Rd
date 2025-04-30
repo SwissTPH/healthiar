@@ -2,7 +2,7 @@
 % Please edit documentation in R/discount.R
 \name{discount}
 \alias{discount}
-\title{Attribute discounted health impact}
+\title{Discount health impacts}
 \usage{
 discount(
   output_healthiar = NULL,
@@ -27,22 +27,14 @@ discount(
 \item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
 }
 \value{
-TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
-concentration-response function i.e. central, lower and upper bound confidence interval.
-Moreover, the data frame includes columns such as:
-\itemize{
- \item Attributable fraction
- \item Health impact
- \item Outcome metric
- \item And many more.
-}
+TBD
 }
 \description{
-It calculates discounted health impacts (without valuation).
+This function calculates discounted health impacts (without valuation).
 }
 \examples{
 TBD
 }
 \author{
-Alberto Castro
+Alberto Castro & Axel Luyten
 }

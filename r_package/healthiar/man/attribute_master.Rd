@@ -2,7 +2,7 @@
 % Please edit documentation in R/attribute_master.R
 \name{attribute_master}
 \alias{attribute_master}
-\title{Attributable health cases based on relative risk}
+\title{Attributabe health impact to an environmental stressor}
 \usage{
 attribute_master(
   is_lifetable = NULL,
@@ -89,7 +89,9 @@ Consequently The vector has to have the same length as the one fed to \code{geo_
 
 \item{health_outcome}{\code{String} specifying if the result of the assessment with life table is premature deaths ("deaths") or years of life lost ("yll")}
 
-\item{population_midyear_male, population_midyear_female}{\code{Numeric vector} containing the mid-year population for the year of analysis for female and male, respectively.}
+\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See the details section for guidance on how to adjust age groups.}
+
+\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively. See the details section for guidance on how to adjust age groups.}
 
 \item{first_age_pop}{\code{Numeric value} specifying the age of the youngest age group from population and life table data (age interval = 1 year).}
 
@@ -132,7 +134,7 @@ The result tibbles include columns such as:
  }
 }
 \description{
-Calculates the health impacts, mortality or morbidity, of an environmental stressor using a single value for baseline heath data, i.e. without life table.
+This function calculates the health impacts, mortality or morbidity, of an environmental stressor using a single value for baseline heath data, i.e. without life table.
 }
 \details{
 It provides as a result the mean as well as the lower and the higher bound of the impact based on the confidence interval of the concentration-response function.
@@ -140,3 +142,4 @@ It provides as a result the mean as well as the lower and the higher bound of th
 \author{
 Alberto Castro & Axel Luyten
 }
+\keyword{internal}

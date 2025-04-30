@@ -2,9 +2,9 @@
 
 ## SINGLE EXPOSURE #############################################################
 # testthat::test_that("result correct rr with single exposure value and only rr_central", {
-# testthat::test_that("result correct rr with single exp (pw_exp_single pw_cutoff_TRUE pw_varuncer_FALSE pw_erf_log_lin pw_iteration_FALSE pw_multiexp_FALSE)", {
-# testthat::test_that("result correct ID|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE", {
-testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+# testthat::test_that("result correct rr with single exp (pw_exp_single pw_cutoff_TRUE pw_varuncer_FALSE pw_erf_log_lin pw_iteration_FALSE)", {
+# testthat::test_that("result correct ID|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
     data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -157,8 +157,8 @@ testthat::test_that("error if numeric argument is not numeric", {
 
 
 # testthat::test_that("result correct rr with single exposure and variable uncertainty", {
-# testthat::test_that("result correct rr with single exposure and variable uncertainty (pw_erf_log_lin pw_exp_single pw_cutoff_TRUE pw_varuncer_TRUE pw_iteration_FALSE pw_multiexp_FALSE )", {
-testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|multiexp_FALSE|", {
+# testthat::test_that("result correct rr with single exposure and variable uncertainty (pw_erf_log_lin pw_exp_single pw_cutoff_TRUE pw_varuncer_TRUE pw_iteration_FALSE )", {
+testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -213,7 +213,7 @@ testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRU
   )
 })
 
-testthat::test_that("detailed result the same fake_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("detailed result the same fake_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -241,7 +241,7 @@ testthat::test_that("detailed result the same fake_rr|erf_log_lin|exp_single|cut
   )
 })
 
-testthat::test_that("no error rr_no_error|erf_log_lin|exp_single|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("no error rr_no_error|erf_log_lin|exp_single|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -267,7 +267,7 @@ testthat::test_that("no error rr_no_error|erf_log_lin|exp_single|cutoff_TRUE|var
     )
 })
 
-testthat::test_that("number of rows in detailed results correct rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("number of rows in detailed results correct rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -439,7 +439,7 @@ testthat::test_that("results the same rr single exposure value and incidence-bas
 
 ## EXPOSURE DISTRIBUTION #######################################################
 
-testthat::test_that("results correct pathway_rr|erf_log_linear|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("results correct pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
@@ -625,8 +625,8 @@ testthat::test_that("results the same user-defined erf (mrbrt) with splinefun, e
 })
 
 # testthat::test_that("results correct user-defined erf (mrbrt) with splinefun", {
-# testthat::test_that("results correct user-defined erf (mrbrt) with splinefun ( pw_exp_single pw_erf_point_pairs pw_cutoff_TRUE pw_varuncer_FALSE pw_iteration_FALSE pw_multiexp_FALSE )", {
-testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+# testthat::test_that("results correct user-defined erf (mrbrt) with splinefun ( pw_exp_single pw_erf_point_pairs pw_cutoff_TRUE pw_varuncer_FALSE pw_iteration_FALSE )", {
+testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -673,7 +673,7 @@ testthat::test_that("results the same fake_rr user-defined erf (mrbrt) with spli
   )
 })
 
-testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -698,7 +698,7 @@ testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_TR
 })
 
 # TODO BUG 2025-04-02: WHEN CALLING THE FUNCTION WITH CUTOFF AND BHD CI'S THEN HEALTH MAIN HAS MORE THAN 3 ROWS ####
-testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -735,7 +735,7 @@ testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_TR
 })
 
 # TODO BUG 2025-04-02: WHEN CALLING THE FUNCTION WITH CUTOFF AND BHD CI'S THEN HEALTH MAIN HAS MORE THAN 3 ROWS ####
-testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_FALSE|varuncer_TRUE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_FALSE|varuncer_TRUE|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -773,7 +773,7 @@ testthat::test_that("results the same fake_rr|erf_point_pairs|exp_dist|cutoff_FA
 
 # AR ###########################################################################
 
-testthat::test_that("results correct pathway_ar|erf_formula|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("results correct pathway_ar|erf_formula|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
