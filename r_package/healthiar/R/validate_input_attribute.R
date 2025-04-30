@@ -14,7 +14,7 @@ validate_input_attribute <-
     input <- input_args
 
     # Add age range (needed below)
-    if(!is.null(input$first_age_pop) && !is.null(input$last_age_pop)){
+    if(!base::is.null(input$first_age_pop) && !base::is.null(input$last_age_pop)){
     input$age_range <- input$last_age_pop:input$first_age_pop
     }
 
@@ -23,16 +23,17 @@ validate_input_attribute <-
 
     get_length <- function(var){
       length <-
-        ifelse(is.list(var),
-               length(var[[1]]), # Take first element for example
-               length(var))
+        base::ifelse(
+          base::is.list(var),
+          base::length(var[[1]]), # Take first element for example
+          base::length(var))
       return (length)
     }
 
     same_length <- function(var_value_1, var_value_2){
 
       # Only if var_2 (e.g. prop_pop_exp) is not 1 (default value)
-      if(!identical(var_value_2, 1)){
+      if(!base::identical(var_value_2, 1)){
         get_length(var_value_1) == get_length(var_value_2)
       } else {TRUE}
     }
@@ -43,11 +44,11 @@ validate_input_attribute <-
       var_value_1 <- input[[var_name_1]]
       var_value_2 <- input[[var_name_2]]
 
-      if(!is.null(var_value_1) && !is.null(var_value_2) && # Only if vars are available
+      if(!base::is.null(var_value_1) && !base::is.null(var_value_2) && # Only if vars are available
          !same_length(var_value_1, var_value_2)){
 
           # Create error message
-          stop(paste0(var_name_1,
+          stop(base::paste0(var_name_1,
                       " and ",
                       var_name_2,
                       " must have the same length."),
@@ -58,10 +59,10 @@ validate_input_attribute <-
     error_if_lower_than_0 <- function(var_name){
       var_value <- input[[var_name]]
 
-      if(!is.null(var_value) && # Only if available
-         any(unlist(var_value) < 0)){ # any(unlist( To make it robust for lists
+      if(!base::is.null(var_value) && # Only if available
+         base::any(base::unlist(var_value) < 0)){ # base::any(unlist( To make it robust for lists
         # Create error message
-          stop(paste0(var_name,
+          stop(base::paste0(var_name,
                       " cannot be lower than 0"),
                call. = FALSE)
         }
@@ -70,10 +71,10 @@ validate_input_attribute <-
     error_if_higher_than_1 <- function(var_name){
       var_value <- input[[var_name]]
 
-      if(!is.null(var_value) && # Only if available
-         any(unlist(var_value) > 1)){ # any(unlist( To make it robust for lists
+      if(!base::is.null(var_value) && # Only if available
+         base::any(unlist(var_value) > 1)){ # base::any(unlist( To make it robust for lists
         # Create error message
-        stop(paste0(var_name,
+        stop(base::paste0(var_name,
                     " cannot be higher than 1"),
              call. = FALSE)
       }
@@ -82,18 +83,19 @@ validate_input_attribute <-
     error_if_sum_higher_than_1 <- function(var_name){
       var_value <- input[[var_name]]
 
-      if(!is.null(var_value)){ # Only if available
-         if((is.list(var_value) &&
-            any(purrr::map_lgl(var_value, ~ sum(.x, na.rm = TRUE) > 1))) |
+      if(!base::is.null(var_value)){ # Only if available
+         if((base::is.list(var_value) &&
+            base::any(purrr::map_lgl(var_value, ~ base::sum(.x, na.rm = TRUE) > 1))) |
 
-            (!is.list(var_value) &&
-             sum(var_value, na.rm = TRUE) > 1)){
+            (!base::is.list(var_value) &&
+             base::sum(var_value, na.rm = TRUE) > 1)){
 
         # Create error message
-        stop(paste0("The sum of values in ",
-                    var_name,
-                    " cannot be higher than 1"),
-             call. = FALSE)
+        stop(base::paste0(
+          "The sum of values in ",
+          var_name,
+          " cannot be higher than 1"),
+          call. = FALSE)
       }
       }
     }
@@ -101,34 +103,35 @@ validate_input_attribute <-
     error_if_not_increasing_lower_central_upper <-
       function(var_ci){
         # Store var_name from vector var_ci
-        var_name_lower <- var_ci[grep("lower", var_ci)]
-        var_name_central <- var_ci[grep("central", var_ci)]
-        var_name_upper <- var_ci[grep("upper", var_ci)]
+        var_name_lower <- var_ci[base::grep("lower", var_ci)]
+        var_name_central <- var_ci[base::grep("central", var_ci)]
+        var_name_upper <- var_ci[base::grep("upper", var_ci)]
 
         # Store var_value
         var_value_lower <- input[[var_name_lower]]
         var_value_central <- input[[var_name_central]]
         var_value_upper <- input[[var_name_upper]]
 
-        if(!is.null(var_value_central) &&
-           !is.null(var_value_lower) &&
-           !is.null(var_value_upper)){ # Only if available
+        if(!base::is.null(var_value_central) &&
+           !base::is.null(var_value_lower) &&
+           !base::is.null(var_value_upper)){ # Only if available
 
-          if((!is.list(var_value_central) &&
-             ((any(var_value_central < var_value_lower)) |
-              (any(var_value_central > var_value_upper)))) | #any() if vector
-             (is.list(var_value_central) &&
-              any(purrr::map2_lgl(var_value_lower, var_value_central, ~any(.x > .y))) |
-              any(purrr::map2_lgl(var_value_upper, var_value_central, ~any(.x < .y))))){
+          if((!base::is.list(var_value_central) &&
+             ((base::any(var_value_central < var_value_lower)) |
+              (base::any(var_value_central > var_value_upper)))) | #base::any() if vector
+             (base::is.list(var_value_central) &&
+              base::any(purrr::map2_lgl(var_value_lower, var_value_central, ~base::any(.x > .y))) |
+              base::any(purrr::map2_lgl(var_value_upper, var_value_central, ~base::any(.x < .y))))){
 
             # Create error message
             stop(
-              paste0(var_name_central,
-                     " must be higher than ",
-                     var_name_lower,
-                     " and lower than ",
-                     var_name_upper,
-                     "."),
+              base::paste0(
+                var_name_central,
+                " must be higher than ",
+                var_name_lower,
+                " and lower than ",
+                var_name_upper,
+                "."),
               call. = FALSE)
 
             }
@@ -140,13 +143,14 @@ validate_input_attribute <-
       # Store var_value
       var_value <- input[[var_name]]
 
-      if(!is.null(var_value) &&  # Only if available
+      if(!base::is.null(var_value) &&  # Only if available
          !get_length(var_value) > 1){
         # Create error message
           stop(
-            paste0("For absolute risk, the length of ",
-                   var_name ,
-                   " must be higher than 1."),
+            base::paste0(
+              "For absolute risk, the length of ",
+              var_name ,
+              " must be higher than 1."),
             call. = FALSE)
         }
     }
@@ -158,12 +162,13 @@ validate_input_attribute <-
       # Store var_value
       var_value <- input[[var_name]]
 
-      if(!is.null(var_value)){ # Only if available
+      if(!base::is.null(var_value)){ # Only if available
         # Create warning message
         warning(
-          paste0("For absolute risk, the value of ",
-                 var_name,
-                 " is not considered (cutoff defined by exposure-response function)"),
+          base::paste0(
+            "For absolute risk, the value of ",
+            var_name,
+            " is not considered (cutoff defined by exposure-response function)"),
           call. = FALSE)
       }
     }
@@ -194,8 +199,8 @@ validate_input_attribute <-
       error_if_lower_than_0(x)
     }
 
-    # --> Error if any(prop_pop_exp) and dw are higher than 1
-    for (x in c("prop_pop_exp", paste0("dw", ci_suffix))) {
+    # --> Error if base::any(prop_pop_exp) and dw are higher than 1
+    for (x in c("prop_pop_exp", base::paste0("dw", ci_suffix))) {
       error_if_higher_than_1(x)
     }
 
@@ -210,12 +215,12 @@ validate_input_attribute <-
       }
     }
 
-    # --> Error if sum(prop_pop_exp) > 1
+    # --> Error if base::sum(prop_pop_exp) > 1
     error_if_sum_higher_than_1(var_name = "prop_pop_exp")
 
     # --> Error if not lower>central>upper
     for (x in c("rr", "bhd", "exp", "cutoff", "dw", "duration")) {
-      error_if_not_increasing_lower_central_upper(var_ci = paste0(x, ci_suffix))
+      error_if_not_increasing_lower_central_upper(var_ci = base::paste0(x, ci_suffix))
     }
 
 
@@ -227,7 +232,7 @@ validate_input_attribute <-
     # Only for relative risk
     if(input$approach_risk == "relative_risk"){
       # --> length(exp) and length(prop_pop_exp) must be the same
-      for(exp_ci_suffix in paste0("exp", ci_suffix)){
+      for(exp_ci_suffix in base::paste0("exp", ci_suffix)){
         error_if_different_length(exp_ci_suffix, "prop_pop_exp")
       }
     }
@@ -237,13 +242,13 @@ validate_input_attribute <-
 
       # --> Error if length(exp) is not higher than 1
 
-      for(exp_ci_suffix in paste0("exp", ci_suffix)){
+      for(exp_ci_suffix in base::paste0("exp", ci_suffix)){
         error_if_ar_and_length_1_or_0(exp_ci_suffix)
       }
 
       # --> Warning if cutoff is entered (will not be considered)
 
-      for(cutoff_ci_suffix in paste0("cutoff", ci_suffix)){
+      for(cutoff_ci_suffix in base::paste0("cutoff", ci_suffix)){
         warning_if_ar_and_existing(cutoff_ci_suffix)
       }
     }
