@@ -160,7 +160,33 @@ validate_input_attribute <-
             call. = FALSE)
         }
       }
-      }
+    }
+
+    # warning_if_only_central <- function(var_short){
+    #   var_name_central <- base::paste0(var_short, "_central")
+    #   var_name_lower <- base::paste0(var_short, "_lower")
+    #   var_name_upper <- base::paste0(var_short, "_upper")
+    #
+    #   var_value_central <- input[[var_name_central]]
+    #   var_value_lower <- input[[var_name_lower]]
+    #   var_value_upper <- input[[var_name_upper]]
+    #
+    #   if((!base::is.null(var_value_central) &&
+    #       base::is.null(var_value_lower) &&
+    #       base::is.null(var_value_upper))){
+    #       # Create warning message
+    #       base::warning(
+    #         base::paste0(
+    #           "All fine. Just consider entering",
+    #           var_name_lower,
+    #           " and ",
+    #           var_name_upper,
+    #           "to take into account uncertainty"),
+    #         call. = FALSE)
+    #     }
+    #   }
+
+
 
 
     error_if_ar_and_length_1_or_0 <- function(var_name){
@@ -251,6 +277,12 @@ validate_input_attribute <-
     for (x in c("rr", "bhd", "exp", "cutoff", "dw", "duration")) {
       error_if_only_lower_or_upper(var_short = x)
     }
+
+    # # --> Warning if only central
+    # for (x in c("rr")) { #Vector and for loop if more vars
+    #
+    #   warning_if_only_central(var_short = x)
+    # }
 
 
 
