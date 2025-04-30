@@ -86,8 +86,8 @@ validate_input_attribute <-
          if((is.list(var_value) &&
             any(purrr::map_lgl(var_value, ~ sum(.x, na.rm = TRUE) > 1))) |
 
-            (is.vector(var_value) &&
-            sum(var_value, na.rm = TRUE) > 1)){
+            (!is.list(var_value) &&
+             sum(var_value, na.rm = TRUE) > 1)){
 
         # Create error message
         stop(paste0("The sum of values in ",
@@ -97,6 +97,44 @@ validate_input_attribute <-
       }
       }
     }
+
+    error_if_not_increasing_lower_central_upper <-
+      function(var_ci){
+        # Store var_name from vector var_ci
+        var_name_lower <- var_ci[grep("lower", var_ci)]
+        var_name_central <- var_ci[grep("central", var_ci)]
+        var_name_upper <- var_ci[grep("upper", var_ci)]
+
+        # Store var_value
+        var_value_lower <- input[[var_name_lower]]
+        var_value_central <- input[[var_name_central]]
+        var_value_upper <- input[[var_name_upper]]
+
+        if(!is.null(var_value_central) &&
+           !is.null(var_value_lower) &&
+           !is.null(var_value_upper)){ # Only if available
+
+          if((!is.list(var_value_central) &&
+             ((any(var_value_central < var_value_lower)) |
+              (any(var_value_central > var_value_upper)))) | #any() if vector
+             (is.list(var_value_central) &&
+              any(purrr::map2_lgl(var_value_lower, var_value_central, ~any(.x > .y))) |
+              any(purrr::map2_lgl(var_value_upper, var_value_central, ~any(.x < .y))))){
+
+            # Create error message
+            stop(
+              paste0(var_name_central,
+                     " must be higher than ",
+                     var_name_lower,
+                     " and lower than ",
+                     var_name_upper,
+                     "."),
+              call. = FALSE)
+
+            }
+
+        }
+      }
 
     error_if_ar_and_length_1_or_0 <- function(var_name){
       # Store var_value
@@ -111,7 +149,9 @@ validate_input_attribute <-
                    " must be higher than 1."),
             call. = FALSE)
         }
-      }
+    }
+
+
 
     warning_if_ar_and_existing <- function(var_name){
 
@@ -171,7 +211,12 @@ validate_input_attribute <-
     }
 
     # --> Error if sum(prop_pop_exp) > 1
-    error_if_sum_higher_than_1("prop_pop_exp")
+    error_if_sum_higher_than_1(var_name = "prop_pop_exp")
+
+    # --> Error if not lower>central>upper
+    for (x in c("rr", "bhd", "exp", "cutoff", "dw", "duration")) {
+      error_if_not_increasing_lower_central_upper(var_ci = paste0(x, ci_suffix))
+    }
 
 
 

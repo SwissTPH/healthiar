@@ -89,6 +89,23 @@ testthat::test_that("error if dw higher than 1", {
   )
 })
 
+testthat::test_that("error if not lower>central>upper", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 4,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_lower = 1.10,
+        rr_upper = 1.20,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
 
 
 
@@ -823,15 +840,15 @@ testthat::test_that("detailed results the same ar iteration with variable uncert
     object =
       healthiar::attribute_health(
         approach_risk = "absolute_risk",
-        exp_central = list(runif_with_seed(5,8,10,1),
-                           runif_with_seed(5,8,10,2),
-                           runif_with_seed(5,8,10,3)),
-        exp_lower = list(runif_with_seed(5,8,10,1) - 5,
-                         runif_with_seed(5,8,10,2) - 5,
-                         runif_with_seed(5,8,10,3) - 5),
-        exp_upper = list(runif_with_seed(5,8,10,1) + 5,
-                         runif_with_seed(5,8,10,2) + 5,
-                         runif_with_seed(5,8,10,3) + 5),
+        exp_central = list(runif_with_seed(5,9,10,1),
+                           runif_with_seed(5,9,10,2),
+                           runif_with_seed(5,9,10,3)),
+        exp_lower = list(runif_with_seed(5,7,8,1),
+                         runif_with_seed(5,7,8,2),
+                         runif_with_seed(5,7,8,3)),
+        exp_upper = list(runif_with_seed(5,11,12,1),
+                         runif_with_seed(5,11,12,2),
+                         runif_with_seed(5,11,12,3)),
         pop_exp = list(
           runif_with_seed(1,5E3,1E4,1) * runif_with_seed(5,0,1,1), # total pop * proportion pop exposed
           runif_with_seed(1,5E3,1E4,2) * runif_with_seed(5,0,1,2),
@@ -842,7 +859,10 @@ testthat::test_that("detailed results the same ar iteration with variable uncert
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
         )$health_detailed$impact_raw$impact |> round(),
     expected = # Results on 2025-01-20; no comparison study
-      c(921, 1148, 723, 1278, 1595, 1002, 1932, 2414, 1511, 2967, 3719, 2314, 704, 877, 553, 605, 754, 475, 2191, 2741, 1712, 1810, 2262, 1416, 551, 686, 433, 2877, 3607, 2243, 543, 676, 426, 2458, 3078, 1919, 1219, 1521, 956, 1043, 1301, 818, 1869, 2336, 1462)
+      c(890, 976,  809, 1241, 1361, 1128, 1893, 2077, 1720, 2954, 3242, 2682,  678,  743,
+        617, 583, 639,  530, 2160, 2370, 1962, 1774, 1946, 1611, 530, 581, 482, 2870,
+        3150, 2605,  522,  573,  475, 2436, 2673, 2212, 1185, 1299, 1076, 1011, 1109,  919,
+        1834, 2012, 1666)
   )
 })
 
