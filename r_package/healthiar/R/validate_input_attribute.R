@@ -18,6 +18,9 @@ validate_input_attribute <-
     input$age_range <- input$last_age_pop:input$first_age_pop
     }
 
+    available_input <-
+      purrr::keep(input, ~!base::is.null(.x))
+
 
     # Functions ###########
 
@@ -63,7 +66,7 @@ validate_input_attribute <-
          base::any(base::unlist(var_value) < 0)){ # base::any(unlist( To make it robust for lists
         # Create error message
           stop(base::paste0(var_name,
-                      " cannot be lower than 0"),
+                            " cannot be lower than 0"),
                call. = FALSE)
         }
     }
@@ -214,7 +217,7 @@ validate_input_attribute <-
 
       if(!base::is.null(var_value)){ # Only if available
         # Create warning message
-        warning(
+        base::warning(
           base::paste0(
             "For absolute risk, the value of ",
             var_name,
@@ -222,6 +225,20 @@ validate_input_attribute <-
           call. = FALSE)
       }
     }
+
+    error_if_not_numeric <- function(var_name){
+      var_value <- input_args[[var_name]]
+
+      if(any(!is.numeric(unlist(var_value)))){
+
+        base::stop(
+          base::paste0(
+            var_name,
+            " must contain numeric value(s)."),
+          call. = FALSE)
+      }
+      }
+
 
     # Relevant variables ###########
 
@@ -235,12 +252,62 @@ validate_input_attribute <-
       purrr::keep(is.numeric) |>
       base::names()
 
+    args <- base::names(input_args)
+    ci_args <- args[base::grep("_central|_lower|_upper", args)]
+    ci_args_wo_eq <- ci_args[!base::grepl("erf_eq", ci_args)]
+    numeric_args <-
+      c(ci_args_wo_eq,
+        "prop_pop_exp",
+        "pop_exp",
+        "rr_increment",
+        "population",
+        "year_of_analysis",
+        "time_horizon",
+        "min_age",
+        "max_age",
+        "first_age_pop",
+        "last_age_pop",
+        "population_midyear_male",
+        "population_midyear_female",
+        "deaths_male",
+        "deaths_female")
+
+    boolean_args <- "is_lifetable"
+
+    string_args <- args[!args %in% c(numeric_args, boolean_args)]
+
+    options_of_categorical_args <-
+      list(
+        approach_risk = c("relative_risk", "absolute_risk"),
+        erf_shape = c("linear", "log_linear", "log_log", "linear_log"),
+        approach_exposure = c("single_year", "exposure"),
+        approach_newborns = c("without_newborns", "with_newborns")
+      )
+
+    categorical_args <- names(options_of_categorical_args)
+
     lifetable_var_names_with_same_length <-
       c("age_range",
         "deaths_male", "deaths_female",
         "population_midyear_male", "population_midyear_female")
 
+    available_var_names <-
+      names(available_input)
+
+    available_numeric_var_names <-
+      available_var_names[available_var_names %in% numeric_args]
+
+
+
+
     # All pathways #####
+    # --> Error if numeric argument has non-numeric value
+    for (x in available_numeric_var_names) {
+      error_if_not_numeric(var_name = x)
+    }
+
+
+
     # --> Error if rr if lower than 0
 
     # Check one-by-one in loop

@@ -122,6 +122,23 @@ testthat::test_that("error if onyl lower or upper", {
   )
 })
 
+testthat::test_that("error if numeric argument is not numeric", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = "hi",
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_upper = 1.20,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+
 
 
 
