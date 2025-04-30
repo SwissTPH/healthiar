@@ -634,7 +634,7 @@ pathways_cba <- pathways_cba %>% # Important to use magrittr pipe
 core_cba <- list(
   discount_rate_benefit = c("TRUE", "FALSE"),
   discount_rate_cost = c("TRUE", "FALSE"),
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur")
+  discount_shape = c("exponential", "hyp_harvey", "hyp_mazur")
 )
 
 core_cba <- expand.grid(core_cba) |> 
@@ -1104,7 +1104,7 @@ progress_overall_non_lifetable <- rbind(
 )
 
 overall_row_non_lifetable <- tibble(
-  domain = "OVERALL (non-lifetable pathways)",
+  domain = "OVERALL",
   n_implemented = sum(progress_overall_non_lifetable$n_implemented),
   `%_of_core` = paste0(
     round(
@@ -1183,8 +1183,20 @@ pathways_rr <- pathways_rr |>
   mutate(name_3 = NA_character_) |> 
   mutate(finished_3 = "FALSE") |> 
   mutate(results_the_same_3 = NA_character_) |> 
-  mutate(comment_3 = NA_character_)
-
+  mutate(comment_3 = NA_character_) |> 
+  mutate(`        ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_4 = NA_character_) |> 
+  mutate(name_4 = NA_character_) |> 
+  mutate(finished_4 = "FALSE") |> 
+  mutate(results_the_same_4 = NA_character_) |> 
+  mutate(comment_4 = NA_character_) |> 
+  mutate(`         ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_5 = NA_character_) |> 
+  mutate(name_5 = NA_character_) |> 
+  mutate(finished_5 = "FALSE") |> 
+  mutate(results_the_same_5 = NA_character_) |> 
+  mutate(comment_5 = NA_character_)
+  
 pathways_ar <- pathways_ar |> 
   mutate(`     ` = NA_character_) |> # Empty column to improve overview
   mutate(institute_1 = NA_character_) |> 
@@ -1203,7 +1215,19 @@ pathways_ar <- pathways_ar |>
   mutate(name_3 = NA_character_) |> 
   mutate(finished_3 = "FALSE") |> 
   mutate(results_the_same_3 = NA_character_) |> 
-  mutate(comment_3 = NA_character_)
+  mutate(comment_3 = NA_character_) |> 
+  mutate(`        ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_4 = NA_character_) |> 
+  mutate(name_4 = NA_character_) |> 
+  mutate(finished_4 = "FALSE") |> 
+  mutate(results_the_same_4 = NA_character_) |> 
+  mutate(comment_4 = NA_character_) |> 
+  mutate(`         ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_5 = NA_character_) |> 
+  mutate(name_5 = NA_character_) |> 
+  mutate(finished_5 = "FALSE") |> 
+  mutate(results_the_same_5 = NA_character_) |> 
+  mutate(comment_5 = NA_character_)
 
 
 pathways_uncertainty <- pathways_uncertainty |> 
@@ -1224,7 +1248,19 @@ pathways_uncertainty <- pathways_uncertainty |>
   mutate(name_3 = NA_character_) |> 
   mutate(finished_3 = "FALSE") |> 
   mutate(results_the_same_3 = NA_character_) |> 
-  mutate(comment_3 = NA_character_)
+  mutate(comment_3 = NA_character_) |> 
+  mutate(`        ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_4 = NA_character_) |> 
+  mutate(name_4 = NA_character_) |> 
+  mutate(finished_4 = "FALSE") |> 
+  mutate(results_the_same_4 = NA_character_) |> 
+  mutate(comment_4 = NA_character_) |> 
+  mutate(`         ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_5 = NA_character_) |> 
+  mutate(name_5 = NA_character_) |> 
+  mutate(finished_5 = "FALSE") |> 
+  mutate(results_the_same_5 = NA_character_) |> 
+  mutate(comment_5 = NA_character_)
 
 
 pathways_compare <- pathways_compare |> 
@@ -1245,7 +1281,19 @@ pathways_compare <- pathways_compare |>
   mutate(name_3 = NA_character_) |> 
   mutate(finished_3 = "FALSE") |> 
   mutate(results_the_same_3 = NA_character_) |> 
-  mutate(comment_3 = NA_character_)
+  mutate(comment_3 = NA_character_) |> 
+  mutate(`        ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_4 = NA_character_) |> 
+  mutate(name_4 = NA_character_) |> 
+  mutate(finished_4 = "FALSE") |> 
+  mutate(results_the_same_4 = NA_character_) |> 
+  mutate(comment_4 = NA_character_) |> 
+  mutate(`         ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_5 = NA_character_) |> 
+  mutate(name_5 = NA_character_) |> 
+  mutate(finished_5 = "FALSE") |> 
+  mutate(results_the_same_5 = NA_character_) |> 
+  mutate(comment_5 = NA_character_)
 
 pathways_monetization <- pathways_monetization |> 
   mutate(`     ` = NA_character_) |> # Empty column to improve overview
@@ -1265,7 +1313,19 @@ pathways_monetization <- pathways_monetization |>
   mutate(name_3 = NA_character_) |> 
   mutate(finished_3 = "FALSE") |> 
   mutate(results_the_same_3 = NA_character_) |> 
-  mutate(comment_3 = NA_character_)
+  mutate(comment_3 = NA_character_) |> 
+  mutate(`        ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_4 = NA_character_) |> 
+  mutate(name_4 = NA_character_) |> 
+  mutate(finished_4 = "FALSE") |> 
+  mutate(results_the_same_4 = NA_character_) |> 
+  mutate(comment_4 = NA_character_) |> 
+  mutate(`         ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_5 = NA_character_) |> 
+  mutate(name_5 = NA_character_) |> 
+  mutate(finished_5 = "FALSE") |> 
+  mutate(results_the_same_5 = NA_character_) |> 
+  mutate(comment_5 = NA_character_)
 
 
 pathways_cba <- pathways_cba |> 
@@ -1286,7 +1346,19 @@ pathways_cba <- pathways_cba |>
   mutate(name_3 = NA_character_) |> 
   mutate(finished_3 = "FALSE") |> 
   mutate(results_the_same_3 = NA_character_) |> 
-  mutate(comment_3 = NA_character_)
+  mutate(comment_3 = NA_character_) |> 
+  mutate(`        ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_4 = NA_character_) |> 
+  mutate(name_4 = NA_character_) |> 
+  mutate(finished_4 = "FALSE") |> 
+  mutate(results_the_same_4 = NA_character_) |> 
+  mutate(comment_4 = NA_character_) |> 
+  mutate(`         ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_5 = NA_character_) |> 
+  mutate(name_5 = NA_character_) |> 
+  mutate(finished_5 = "FALSE") |> 
+  mutate(results_the_same_5 = NA_character_) |> 
+  mutate(comment_5 = NA_character_)
 
 pathways_daly <- pathways_daly |> 
   mutate(`     ` = NA_character_) |> # Empty column to improve overview
@@ -1306,7 +1378,19 @@ pathways_daly <- pathways_daly |>
   mutate(name_3 = NA_character_) |> 
   mutate(finished_3 = "FALSE") |> 
   mutate(results_the_same_3 = NA_character_) |> 
-  mutate(comment_3 = NA_character_)
+  mutate(comment_3 = NA_character_) |> 
+  mutate(`        ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_4 = NA_character_) |> 
+  mutate(name_4 = NA_character_) |> 
+  mutate(finished_4 = "FALSE") |> 
+  mutate(results_the_same_4 = NA_character_) |> 
+  mutate(comment_4 = NA_character_) |> 
+  mutate(`         ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_5 = NA_character_) |> 
+  mutate(name_5 = NA_character_) |> 
+  mutate(finished_5 = "FALSE") |> 
+  mutate(results_the_same_5 = NA_character_) |> 
+  mutate(comment_5 = NA_character_)
 
 pathways_multiexposure <- pathways_multiexposure |> 
   mutate(`     ` = NA_character_) |> # Empty column to improve overview
@@ -1326,7 +1410,19 @@ pathways_multiexposure <- pathways_multiexposure |>
   mutate(name_3 = NA_character_) |> 
   mutate(finished_3 = "FALSE") |> 
   mutate(results_the_same_3 = NA_character_) |> 
-  mutate(comment_3 = NA_character_)
+  mutate(comment_3 = NA_character_) |> 
+  mutate(`        ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_4 = NA_character_) |> 
+  mutate(name_4 = NA_character_) |> 
+  mutate(finished_4 = "FALSE") |> 
+  mutate(results_the_same_4 = NA_character_) |> 
+  mutate(comment_4 = NA_character_) |> 
+  mutate(`         ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_5 = NA_character_) |> 
+  mutate(name_5 = NA_character_) |> 
+  mutate(finished_5 = "FALSE") |> 
+  mutate(results_the_same_5 = NA_character_) |> 
+  mutate(comment_5 = NA_character_)
 
 pathways_lifetable <- pathways_lifetable |> 
   mutate(`     ` = NA_character_) |> # Empty column to improve overview
@@ -1346,7 +1442,19 @@ pathways_lifetable <- pathways_lifetable |>
   mutate(name_3 = NA_character_) |> 
   mutate(finished_3 = "FALSE") |> 
   mutate(results_the_same_3 = NA_character_) |> 
-  mutate(comment_3 = NA_character_)
+  mutate(comment_3 = NA_character_) |> 
+  mutate(`        ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_4 = NA_character_) |> 
+  mutate(name_4 = NA_character_) |> 
+  mutate(finished_4 = "FALSE") |> 
+  mutate(results_the_same_4 = NA_character_) |> 
+  mutate(comment_4 = NA_character_) |> 
+  mutate(`         ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_5 = NA_character_) |> 
+  mutate(name_5 = NA_character_) |> 
+  mutate(finished_5 = "FALSE") |> 
+  mutate(results_the_same_5 = NA_character_) |> 
+  mutate(comment_5 = NA_character_)
 
 pathways_list <- list(
   progress_overall,
