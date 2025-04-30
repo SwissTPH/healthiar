@@ -237,7 +237,22 @@ validate_input_attribute <-
             " must contain numeric value(s)."),
           call. = FALSE)
       }
+    }
+
+    error_if_not_an_option <- function(var_name){
+      var_value <- input_args[[var_name]]
+      var_options <- options_of_categorical_args[[var_name]]
+
+      if(!var_value %in% var_options){
+
+        base::stop(
+          base::paste0(
+            "For ", var_name,",\n",
+            "please, type (between quotation marks) one of this options: \n",
+            base::paste0(var_options, collapse = ", ")),
+          call. = FALSE)
       }
+    }
 
 
     # Relevant variables ###########
@@ -280,7 +295,7 @@ validate_input_attribute <-
       list(
         approach_risk = c("relative_risk", "absolute_risk"),
         erf_shape = c("linear", "log_linear", "log_log", "linear_log"),
-        approach_exposure = c("single_year", "exposure"),
+        approach_exposure = c("single_year", "constant"),
         approach_newborns = c("without_newborns", "with_newborns")
       )
 
@@ -297,6 +312,10 @@ validate_input_attribute <-
     available_numeric_var_names <-
       available_var_names[available_var_names %in% numeric_args]
 
+    available_categorical_var_names <-
+      available_var_names[available_var_names %in% categorical_args]
+
+
 
 
 
@@ -304,6 +323,11 @@ validate_input_attribute <-
     # --> Error if numeric argument has non-numeric value
     for (x in available_numeric_var_names) {
       error_if_not_numeric(var_name = x)
+    }
+
+    # --> Error if numeric argument has non-numeric value
+    for (x in available_categorical_var_names) {
+      error_if_not_an_option(var_name = x)
     }
 
 

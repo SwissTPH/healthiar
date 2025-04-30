@@ -131,9 +131,23 @@ testthat::test_that("error if numeric argument is not numeric", {
         cutoff_central = 5,
         bhd_central = 1000,
         rr_central = 1.05,
-        rr_upper = 1.20,
         rr_increment = 10,
         erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if numeric argument is not numeric", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "hello"
       )
   )
 })
