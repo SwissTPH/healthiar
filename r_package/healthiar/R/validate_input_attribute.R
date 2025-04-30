@@ -101,14 +101,15 @@ validate_input_attribute <-
       base::names()
 
     # All pathways #####
-    # --> rr must be higher than 0
-
+    # --> Error if rr if lower than 0
 
     # Check one-by-one in loop
     #(purrr does not allow deactivating part of the error message)
     for (x in numeric_var_names) {
       error_if_lower_than_0(x)
     }
+
+    # --> Error if any(prop_pop_exp) and dw are higher than 1
 
 
 
@@ -125,13 +126,14 @@ validate_input_attribute <-
 
     # if absolute_risk ###########
     if(input_args$approach_risk == "absolute_risk"){
-      # --> length(exp) must be higher than 1
+
+      # --> Error if length(exp) is not higher than 1
 
       for(exp_ci_suffix in paste0("exp", ci_suffix)){
         error_if_ar_and_length_1_or_0(exp_ci_suffix)
       }
 
-      # --> cutoff is not considered
+      # --> Warning if cutoff is entered (will not be considered)
 
       for(cutoff_ci_suffix in paste0("cutoff", ci_suffix)){
         warning_if_ar_and_existing(cutoff_ci_suffix)
