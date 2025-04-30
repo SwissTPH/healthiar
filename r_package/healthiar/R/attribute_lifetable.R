@@ -9,7 +9,9 @@
 #' The life table methodology follows the one implemented in the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200
 #' @details
 #' A more expansive life table case study by Miller is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
-
+#' @details
+#' See the AirQ+ manual "Health impact assessment of air pollution: AirQ+ life table manual" for guidance on how to convert larger age groups to 1 year age groups ("section "Estimation of yearly values"): https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf (accessed April 2025):
+#'
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central, lower and upper bound confidence interval.
