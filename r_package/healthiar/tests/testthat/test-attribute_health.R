@@ -28,22 +28,133 @@ testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|iteration_
 
 testthat::test_that("zero effect if exp lower than cutoff_pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
-
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
         exp_central = 4,
         cutoff_central = 5,
-        bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
-        rr_central = data$relative_risk,
+        bhd_central = 1000,
+        rr_central = 1.05,
         rr_increment = 10,
-        erf_shape = "log_linear",
-        info = paste0(data$pollutant,"_", data$evaluation_name)
-      )$health_main$impact_rounded,
+        erf_shape = "log_linear"
+        )$health_main$impact_rounded,
     expected = 0
   )
 })
+
+testthat::test_that("error if length of exp lower than length of prop pop", {
+
+   testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = c(0.5, 0.5),
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if rr lower than 0", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = -1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if dw higher than 1", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 4,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        dw_central = 1.1,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if not lower>central>upper", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 4,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_lower = 1.10,
+        rr_upper = 1.20,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if onyl lower or upper", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 4,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_upper = 1.20,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if numeric argument is not numeric", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = "hi",
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if numeric argument is not numeric", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "hello"
+      )
+  )
+})
+
+
+
+
 
 # testthat::test_that("result correct rr with single exposure and variable uncertainty", {
 # testthat::test_that("result correct rr with single exposure and variable uncertainty (pw_erf_log_lin pw_exp_single pw_cutoff_TRUE pw_varuncer_TRUE pw_iteration_FALSE )", {
@@ -297,7 +408,7 @@ testthat::test_that("results the same rr single exposure value and prevalence-ba
         rr_upper = 1.179,
         rr_increment = 10,
         erf_shape = "log_linear",
-        dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+        dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
         duration_central = 1, duration_lower = 0.5, duration_upper = 10
         )$health_main$impact_rounded,
     expected =
@@ -318,7 +429,7 @@ testthat::test_that("results the same rr single exposure value and incidence-bas
         rr_upper = 1.179,
         rr_increment = 10,
         erf_shape = "log_linear",
-        dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+        dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
         duration_central = 5, duration_lower = 2, duration_upper = 10
         )$health_main$impact_rounded,
     expected =
@@ -396,6 +507,22 @@ testthat::test_that("results the same rr exposure distribution without cutoff", 
         )$health_main$impact_rounded,
     expected =
       29358 # Results on 2025-01-20; no comparison study
+  )
+})
+
+testthat::test_that("error if sum(prop_pop_exp) higher than 1", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = c(6,7,8),
+        prop_pop_exp = c(0.2,0.5,0.8),
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
   )
 })
 
@@ -671,6 +798,44 @@ testthat::test_that("results correct pathway_ar|erf_formula|exp_dist|cutoff_FALS
   )
 })
 
+testthat::test_that("error if absolute risk and exp length 1", {
+
+  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = 8.85,
+        pop_exp = data$population_exposed_total,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
+      ))
+})
+
+testthat::test_that("warning if absolute risk and cutoff", {
+
+  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  testthat::expect_warning(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = data$exposure_mean,
+        cutoff_central = 5,
+        pop_exp = data$population_exposed_total,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
+      )
+    )
+})
+
 ## ITERATION ###################################################################
 
 testthat::test_that("no error ar iteration", {
@@ -722,15 +887,15 @@ testthat::test_that("detailed results the same ar iteration with variable uncert
     object =
       healthiar::attribute_health(
         approach_risk = "absolute_risk",
-        exp_central = list(runif_with_seed(5,8,10,1),
-                           runif_with_seed(5,8,10,2),
-                           runif_with_seed(5,8,10,3)),
-        exp_lower = list(runif_with_seed(5,8,10,1) - 5,
-                         runif_with_seed(5,8,10,2) - 5,
-                         runif_with_seed(5,8,10,3) - 5),
-        exp_upper = list(runif_with_seed(5,8,10,1) + 5,
-                         runif_with_seed(5,8,10,2) + 5,
-                         runif_with_seed(5,8,10,3) + 5),
+        exp_central = list(runif_with_seed(5,9,10,1),
+                           runif_with_seed(5,9,10,2),
+                           runif_with_seed(5,9,10,3)),
+        exp_lower = list(runif_with_seed(5,7,8,1),
+                         runif_with_seed(5,7,8,2),
+                         runif_with_seed(5,7,8,3)),
+        exp_upper = list(runif_with_seed(5,11,12,1),
+                         runif_with_seed(5,11,12,2),
+                         runif_with_seed(5,11,12,3)),
         pop_exp = list(
           runif_with_seed(1,5E3,1E4,1) * runif_with_seed(5,0,1,1), # total pop * proportion pop exposed
           runif_with_seed(1,5E3,1E4,2) * runif_with_seed(5,0,1,2),
@@ -741,7 +906,10 @@ testthat::test_that("detailed results the same ar iteration with variable uncert
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
         )$health_detailed$impact_raw$impact |> round(),
     expected = # Results on 2025-01-20; no comparison study
-      c(921, 1148, 723, 1278, 1595, 1002, 1932, 2414, 1511, 2967, 3719, 2314, 704, 877, 553, 605, 754, 475, 2191, 2741, 1712, 1810, 2262, 1416, 551, 686, 433, 2877, 3607, 2243, 543, 676, 426, 2458, 3078, 1919, 1219, 1521, 956, 1043, 1301, 818, 1869, 2336, 1462)
+      c(890, 976,  809, 1241, 1361, 1128, 1893, 2077, 1720, 2954, 3242, 2682,  678,  743,
+        617, 583, 639,  530, 2160, 2370, 1962, 1774, 1946, 1611, 530, 581, 482, 2870,
+        3150, 2605,  522,  573,  475, 2436, 2673, 2212, 1185, 1299, 1076, 1011, 1109,  919,
+        1834, 2012, 1666)
   )
 })
 
@@ -753,7 +921,6 @@ testthat::test_that("results the same rr yld with variable uncertainties", {
     object =
       healthiar::attribute_health(
         exp_central = 8.85,
-        exp_lower = 8.85,
         cutoff_central = 5,
         bhd_central = 25000,
         rr_central = 1.118,
@@ -761,7 +928,7 @@ testthat::test_that("results the same rr yld with variable uncertainties", {
         rr_upper = 1.179,
         rr_increment = 10,
         erf_shape = "log_linear",
-        dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+        dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
         duration_central = 1, duration_lower = 0.5, duration_upper = 10
         )$health_main$impact_rounded,
     expected =
@@ -786,12 +953,13 @@ testthat::test_that("detailed results the same rr yld with variable uncertaintie
         rr_upper = 1.179,
         rr_increment = 10,
         erf_shape = "log_linear",
-        dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+        dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
         duration_central = 1, duration_lower = 0.5, duration_upper = 10
         )$health_detailed$impact_raw$impact |> round(), # 2025-04-02 Round at the end to obtain rounded results
     expected = # Result on 2025-01-20; no comparison study
-      c(525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 658, 329, 6583, 132, 66, 1317, 13165, 6583, 131651, 391, 196, 3911, 78, 39, 782, 7822, 3911, 78223, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 348, 174, 3483, 70, 35, 697, 6966, 3483, 69662, 206, 103, 2059, 41, 21, 412, 4117, 2059, 41174, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572, 959, 480, 9595, 192, 96, 1919, 19189, 9595, 191894, 573, 287, 5731, 115, 57, 1146, 11461, 5731, 114615, 391, 196, 3911, 78, 39, 782, 7822, 3911, 78223, 525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 255, 128, 2553, 51, 26, 511, 5106, 2553, 51059, 206, 103, 2059, 41, 21, 412, 4117, 2059, 41174, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 134, 67, 1340, 27, 13, 268, 2680, 1340, 26805, 573, 287, 5731, 115, 57, 1146, 11461, 5731, 114615, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572, 375, 188, 3750, 75, 38, 750, 7501, 3750, 75010, 658, 329, 6583, 132, 66, 1317, 13165, 6583, 131651, 790, 395, 7896, 158, 79, 1579, 15792, 7896, 157921, 525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 348, 174, 3483, 70, 35, 697, 6966, 3483, 69662, 419, 209, 4189, 84, 42, 838, 8378, 4189, 83782, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 959, 480, 9595, 192, 96, 1919, 19189, 9595, 191894, 1148, 574, 11479, 230, 115, 2296, 22959, 11479, 229589, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572))
-})
+      c(525, 263, 5254, 105, 53, 1051, 1051, 525, 10509, 658, 329, 6583, 132, 66, 1317, 1317, 658, 13165, 391, 196, 3911, 78, 39, 782, 782, 391, 7822, 277, 139, 2773, 55, 28, 555, 555, 277, 5546, 348, 174, 3483, 70, 35, 697, 697, 348, 6966, 206, 103, 2059, 41, 21, 412, 412, 206, 4117, 768, 384, 7679, 154, 77, 1536, 1536, 768, 15357, 959, 480, 9595, 192, 96, 1919, 1919, 959, 19189, 573, 287, 5731, 115, 57, 1146, 1146, 573, 11461, 391, 196, 3911, 78, 39, 782, 782, 391, 7822, 525, 263, 5254, 105, 53, 1051, 1051, 525, 10509, 255, 128, 2553, 51, 26, 511, 511, 255, 5106, 206, 103, 2059, 41, 21, 412, 412, 206, 4117, 277, 139, 2773, 55, 28, 555, 555, 277, 5546, 134, 67, 1340, 27, 13, 268, 268, 134, 2680, 573, 287, 5731, 115, 57, 1146, 1146, 573, 11461, 768, 384, 7679, 154, 77, 1536, 1536, 768, 15357, 375, 188, 3750, 75, 38, 750, 750, 375, 7501, 658, 329, 6583, 132, 66, 1317, 1317, 658, 13165, 790, 395, 7896, 158, 79, 1579, 1579, 790, 15792, 525, 263, 5254, 105, 53, 1051, 1051, 525, 10509, 348, 174, 3483, 70, 35, 697, 697, 348, 6966, 419, 209, 4189, 84, 42, 838, 838, 419, 8378, 277, 139, 2773, 55, 28, 555, 555, 277, 5546, 959, 480, 9595, 192, 96, 1919, 1919, 959, 19189, 1148, 574, 11479, 230, 115, 2296, 2296, 1148, 22959, 768, 384, 7679, 154, 77, 1536, 1536, 768, 15357)
+    )
+  })
 
 testthat::test_that("results correct ar yld with uncertainties in dw and duration", {
 
@@ -812,7 +980,7 @@ testthat::test_that("results correct ar yld with uncertainties in dw and duratio
       # prop_pop_exp = data$population_exposed_total/sum(data$population_exposed_total),
       pop_exp = data$population_exposed_total,
       erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-      dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+      dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
       duration_central = 1, duration_lower = 0.1, duration_upper = 10,
       info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
       )$health_main$impact_rounded,

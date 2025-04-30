@@ -57,17 +57,6 @@ compile_input <-
            population_midyear_male = NULL, population_midyear_female = NULL,
            deaths_male = NULL, deaths_female = NULL){
 
-    # Check input data
-    # stopifnot(exprs = {
-    #   length(exp) == length(prop_pop_exp)
-    #   is.null(min_age) == FALSE
-    #   is.null(max_age) == FALSE
-    # })
-
-
-
-    # Otherwise default value of prop_pop_exp (1) is wrongly assumed for exposure distribution.
-
 
     # PROCESS GEO ID ###################################################################
     # If no geo_id_disaggregated is provided (if is NULL) then assign some value.
