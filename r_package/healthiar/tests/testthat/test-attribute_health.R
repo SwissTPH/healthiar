@@ -89,6 +89,9 @@ testthat::test_that("error if dw higher than 1", {
   )
 })
 
+
+
+
 # testthat::test_that("result correct rr with single exposure and variable uncertainty", {
 # testthat::test_that("result correct rr with single exposure and variable uncertainty (pw_erf_log_lin pw_exp_single pw_cutoff_TRUE pw_varuncer_TRUE pw_iteration_FALSE pw_multiexp_FALSE )", {
 testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|multiexp_FALSE|", {
@@ -440,6 +443,22 @@ testthat::test_that("results the same rr exposure distribution without cutoff", 
         )$health_main$impact_rounded,
     expected =
       29358 # Results on 2025-01-20; no comparison study
+  )
+})
+
+testthat::test_that("error if sum(prop_pop_exp) higher than 1", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = c(6,7,8),
+        prop_pop_exp = c(0.2,0.5,0.8),
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
   )
 })
 

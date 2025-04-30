@@ -79,6 +79,25 @@ validate_input_attribute <-
       }
     }
 
+    error_if_sum_higher_than_1 <- function(var_name){
+      var_value <- input[[var_name]]
+
+      if(!is.null(var_value)){ # Only if available
+         if((is.list(var_value) &&
+            any(purrr::map_lgl(var_value, ~ sum(.x, na.rm = TRUE) > 1))) |
+
+            (is.vector(var_value) &&
+            sum(var_value, na.rm = TRUE) > 1)){
+
+        # Create error message
+        stop(paste0("The sum of values in ",
+                    var_name,
+                    " cannot be higher than 1"),
+             call. = FALSE)
+      }
+      }
+    }
+
     error_if_ar_and_length_1_or_0 <- function(var_name){
       # Store var_value
       var_value <- input[[var_name]]
@@ -150,6 +169,10 @@ validate_input_attribute <-
         }
       }
     }
+
+    # --> Error if sum(prop_pop_exp) > 1
+    error_if_sum_higher_than_1("prop_pop_exp")
+
 
 
 
