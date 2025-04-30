@@ -2,7 +2,7 @@
 
 ## NO DISCOUNTING ##############################################################
 
-testthat::test_that("results correct simple monetization", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -33,7 +33,7 @@ testthat::test_that("results correct simple monetization", {
 
 ## DISCOUNTING ############################################################
 
-testthat::test_that("results correct only discounting", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -48,7 +48,7 @@ testthat::test_that("results correct only discounting", {
   )
 })
 
-testthat::test_that("results correct exponential discounting with different cost depending on the year", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -64,7 +64,7 @@ testthat::test_that("results correct exponential discounting with different cost
   )
 })
 
-testthat::test_that("results correct hyperbolic harvey 1986 discounting with different cost depending on the year", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_harvey|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -80,7 +80,7 @@ testthat::test_that("results correct hyperbolic harvey 1986 discounting with dif
   )
 })
 
-testthat::test_that("results correct hyperbolic mazur 1987 discounting with different cost depending on the year", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_mazur|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -96,7 +96,7 @@ testthat::test_that("results correct hyperbolic mazur 1987 discounting with diff
   )
 })
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -111,7 +111,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
   )
 })
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -126,7 +126,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
   )
 })
 
-testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
+testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -142,7 +142,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 ### INFLATION ##################################################################
 
-testthat::test_that("results correct inflation", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -179,7 +179,7 @@ testthat::test_that("results correct inflation", {
 ## NO DISCOUNTING ##############################################################
 
 ## DISCOUNTING #################################################################
-testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
+testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
@@ -219,7 +219,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
   )
 })
 
-testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exp|inflation_FALSE|", {
+testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -250,7 +250,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 ### WITH INFLATION #############################################################
 
-testthat::test_that("results correct discounting and inflation", {
+testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 

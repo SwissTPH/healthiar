@@ -500,7 +500,7 @@ cat("Total number of pathways:", progress_compare$n_all_pw, "\n")
 
 ov_monetization <- list(
   discount_rate = c("TRUE", "FALSE"),
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_shape = c("exponential", "hyp_harvey", "hyp_mazur"),
   inflation = c("TRUE", "FALSE")
 )
 
@@ -518,7 +518,7 @@ pathways_monetization <- pathways_monetization %>% # Important to use magrittr p
 
 #* Define core pathways ########################################################
 core_monetization <- list(
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur"),
+  discount_shape = c("exponential", "hyp_harvey", "hyp_mazur"),
   discount_rate = c("TRUE", "FALSE"),
   inflation = c("TRUE", "FALSE")
 )
