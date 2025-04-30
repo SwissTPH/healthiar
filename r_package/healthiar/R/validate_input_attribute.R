@@ -2,13 +2,22 @@
 
 #' @description
 #' Check the input data in attribute_master() and provides specific warnings or errors if needed.
-#' @param input_args \code{List} with the argument names and values entered in the function
+#' @param input \code{List} with the argument names and values entered in the function
 #' @returns This function returns warning or error messages if needed.
 #' @author Alberto Castro & Axel Luyten
 #' @keywords internal
 
 validate_input_attribute <-
   function(input_args){
+
+    # Create a copy of input args to modify data set when needed
+    input <- input_args
+
+    # Add age range (needed below)
+    if(!is.null(input$first_age_pop) && !is.null(input$last_age_pop)){
+    input$age_range <- input$last_age_pop:input$first_age_pop
+    }
+
 
     # Functions ###########
 
@@ -31,8 +40,8 @@ validate_input_attribute <-
     error_if_different_length <- function(var_name_1, var_name_2){
 
       # Store var_value
-      var_value_1 <- input_args[[var_name_1]]
-      var_value_2 <- input_args[[var_name_2]]
+      var_value_1 <- input[[var_name_1]]
+      var_value_2 <- input[[var_name_2]]
 
       if(!is.null(var_value_1) && !is.null(var_value_2) && # Only if vars are available
          !same_length(var_value_1, var_value_2)){
@@ -47,7 +56,7 @@ validate_input_attribute <-
       }
 
     error_if_lower_than_0 <- function(var_name){
-      var_value <- input_args[[var_name]]
+      var_value <- input[[var_name]]
 
       if(!is.null(var_value) && # Only if available
          any(unlist(var_value) < 0)){ # any(unlist( To make it robust for lists
@@ -59,7 +68,7 @@ validate_input_attribute <-
     }
 
     error_if_higher_than_1 <- function(var_name){
-      var_value <- input_args[[var_name]]
+      var_value <- input[[var_name]]
 
       if(!is.null(var_value) && # Only if available
          any(unlist(var_value) > 1)){ # any(unlist( To make it robust for lists
@@ -72,7 +81,7 @@ validate_input_attribute <-
 
     error_if_ar_and_length_1_or_0 <- function(var_name){
       # Store var_value
-      var_value <- input_args[[var_name]]
+      var_value <- input[[var_name]]
 
       if(!is.null(var_value) &&  # Only if available
          !get_length(var_value) > 1){
@@ -88,7 +97,7 @@ validate_input_attribute <-
     warning_if_ar_and_existing <- function(var_name){
 
       # Store var_value
-      var_value <- input_args[[var_name]]
+      var_value <- input[[var_name]]
 
       if(!is.null(var_value)){ # Only if available
         # Create warning message
@@ -103,14 +112,19 @@ validate_input_attribute <-
     # Relevant variables ###########
 
     # ci_suffix to avoid repetitions
-    ci_suffix <- c("_central", "_lower", "upper")
+    ci_suffix <- c("_central", "_lower", "_upper")
 
     # numeric_var_names to use it in error_if_lower_than_0()
     # which can be used only if the variable is numeric
     numeric_var_names <-
-      input_args |>
+      input |>
       purrr::keep(is.numeric) |>
       base::names()
+
+    lifetable_var_names_with_same_length <-
+      c("age_range",
+        "deaths_male", "deaths_female",
+        "population_midyear_male", "population_midyear_female")
 
     # All pathways #####
     # --> Error if rr if lower than 0
@@ -126,12 +140,24 @@ validate_input_attribute <-
       error_if_higher_than_1(x)
     }
 
+    # --> error if length of life table variables is different
+
+    for (i in seq_along(lifetable_var_names_with_same_length)) {
+      for(j in seq_along(lifetable_var_names_with_same_length)){
+        if(i<j){
+          error_if_different_length(lifetable_var_names_with_same_length[i],
+                                    lifetable_var_names_with_same_length[j])
+        }
+      }
+    }
+
+
 
     # If relative risk #####
 
     # Exposure has to have the same length as prop_pop_exp
     # Only for relative risk
-    if(input_args$approach_risk == "relative_risk"){
+    if(input$approach_risk == "relative_risk"){
       # --> length(exp) and length(prop_pop_exp) must be the same
       for(exp_ci_suffix in paste0("exp", ci_suffix)){
         error_if_different_length(exp_ci_suffix, "prop_pop_exp")
@@ -139,7 +165,7 @@ validate_input_attribute <-
     }
 
     # if absolute_risk ###########
-    if(input_args$approach_risk == "absolute_risk"){
+    if(input$approach_risk == "absolute_risk"){
 
       # --> Error if length(exp) is not higher than 1
 
