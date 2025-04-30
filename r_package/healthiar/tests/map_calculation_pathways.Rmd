@@ -345,7 +345,7 @@ pathways_uncertainty <- pathways_uncertainty |>
 ## Create uncertainty current testing state overview
 progress_uncertainty <-
   tibble(
-    domain = "summary unc",
+    domain = "summary uncertainty",
     n_implemented = nrow(pathways_uncertainty |> filter(implemented == TRUE)),
     `%_of_core` = 
       paste0(
@@ -1091,7 +1091,8 @@ cat("Total number of pathways:", progress_lifetable$n_all_pw, "\n")
 
 ```{r}
 
-progress_overall <- rbind(
+## Non-liftable overall progress
+progress_overall_non_lifetable <- rbind(
   progress_rr,
   progress_ar,
   progress_uncertainty,
@@ -1099,167 +1100,272 @@ progress_overall <- rbind(
   progress_monetization,
   progress_cba,
   progress_daly,
-  progress_multiexposure,
-  progress_lifetable
+  progress_multiexposure
 )
 
-overall_row <- tibble(
-  domain = "OVERALL",
-  n_implemented = sum(progress_overall$n_implemented),
+overall_row_non_lifetable <- tibble(
+  domain = "OVERALL (non-lifetable pathways)",
+  n_implemented = sum(progress_overall_non_lifetable$n_implemented),
   `%_of_core` = paste0(
     round(
-      sum(progress_overall$n_implemented) / 
-        sum(progress_overall$n_core_pw) * 100
+      sum(progress_overall_non_lifetable$n_implemented) / 
+        sum(progress_overall_non_lifetable$n_core_pw) * 100
     ),
     " %"
   ),
   `%_of_total` = paste0(
     round(
-      sum(progress_overall$n_implemented) / 
-        sum(progress_overall$n_all_pw) * 100
+      sum(progress_overall_non_lifetable$n_implemented) / 
+        sum(progress_overall_non_lifetable$n_all_pw) * 100
     ),
     " %"
   ),
-  n_core_pw = sum(progress_overall$n_core_pw),
-  n_all_pw = sum(progress_overall$n_all_pw)
+  n_core_pw = sum(progress_overall_non_lifetable$n_core_pw),
+  n_all_pw = sum(progress_overall_non_lifetable$n_all_pw)
 ) 
 
-progress_overall <- rbind(overall_row, progress_overall)
+empty_row <- tibble(
+  domain = NA_character_,
+  n_implemented = NA_integer_,
+  `%_of_core` = NA_character_,
+  `%_of_total` = NA_character_,
+  n_core_pw = NA_integer_,
+  n_all_pw = NA_integer_
+)  
+
+## Lifetable overall progress
+overall_row_lifetable <- tibble(
+  domain = "OVERALL (lifetable pathways)",
+  n_implemented = sum(progress_lifetable$n_implemented),
+  `%_of_core` = paste0(
+    round(
+      sum(progress_lifetable$n_implemented) / 
+        sum(progress_lifetable$n_core_pw) * 100
+    ),
+    " %"
+  ),
+  `%_of_total` = paste0(
+    round(
+      sum(progress_lifetable$n_implemented) / 
+        sum(progress_lifetable$n_all_pw) * 100
+    ),
+    " %"
+  ),
+  n_core_pw = sum(progress_lifetable$n_core_pw),
+  n_all_pw = sum(progress_lifetable$n_all_pw)
+)  
+
+# Overall progress (both non-lifetable and lifetable pathways)
+progress_overall <- rbind(overall_row_non_lifetable, progress_overall_non_lifetable, empty_row, overall_row_lifetable, progress_lifetable)
 ```
 
 
 # Create Excel
-
-TODO
-```{r Create Excel for Teams folder (only core pathways), eval=FALSE, include=FALSE}
-knitr::opts_knit$set(root.dir = getwd())
-
-core_rr <- pathways_rr |> 
-  mutate(institute = NA_character_) |> 
-  mutate(name = NA_character_) |> 
-  mutate(finished = "FALSE") |> 
-  mutate(results_the_same = NA_character_) |> 
-  mutate(comment = NA_character_) |> 
-  filter(core_pathway == "TRUE") |> 
-  arrange(erf, desc(exp), desc(iteration))
-    
-core_ar <- pathways_ar |> 
-  mutate(institute = NA_character_) |> 
-  mutate(name = NA_character_) |> 
-  mutate(finished = "FALSE") |> 
-  mutate(results_the_same = NA_character_) |> 
-  filter(core_pathway == "TRUE") |> 
-  relocate(iteration, .after = exp) |> 
-  arrange(erf, desc(iteration))
-
-core_cba <- pathways_cba |> 
-  mutate(institute = NA_character_) |> 
-  mutate(name = NA_character_) |> 
-  mutate(finished = "FALSE") |> 
-  mutate(results_the_same = NA_character_) |> 
-  filter(core_pathway == "TRUE") |> 
-  arrange(desc(discount_rate_benefit), desc(discount_rate_cost), discount_shape)
-
-core_monetization <- pathways_monetization |> 
-  mutate(institute = NA_character_) |> 
-  mutate(name = NA_character_) |> 
-  mutate(finished = "FALSE") |> 
-  mutate(results_the_same = NA_character_) |> 
-  filter(core_pathway == "TRUE") |> 
-  arrange(desc(discount_rate), discount_shape)
-
-core_lifetable <- pathways_lifetable |> 
-  mutate(institute = NA_character_) |> 
-  mutate(name = NA_character_) |> 
-  mutate(finished = "FALSE") |> 
-  mutate(results_the_same = NA_character_) |> 
-  relocate(iteration, .after = max_age) |> 
-  filter(core_pathway == "TRUE") |> 
-  arrange(exp, desc(exp_time), desc(newborns), desc(min_age), max_age, iteration)
-
-core_uncertainty <- pathways_uncertainty |> 
-  mutate(institute = NA_character_) |> 
-  mutate(name = NA_character_) |> 
-  mutate(finished = "FALSE") |> 
-  mutate(results_the_same = NA_character_) |> 
-  relocate(erf, .before = exp) |> 
-  filter(core_pathway == "TRUE") |> 
-  # factor(levels = c("rr_increment", "ar_formula", "rr_function", "ar_function", "rr_formula")) |> 
-  arrange(erf, exp, iteration, desc(distribution))
-
-core_list <- list(
-  core_rr,
-  core_ar,
-  core_cba,
-  core_monetization,
-  core_lifetable,
-  core_uncertainty
-)
-names(core_list) <- c("core_pathways_rr", "core_pathways_ar", "core_pathways_cba", "core_pathways_monetization", "core_pathways_lifetable", "core_pathways_uncertainty")
-
-hs <- openxlsx::createStyle(textDecoration = "bold") # hs = header style
-
-openxlsx::write.xlsx(core_list, "tests/pathways_overview_core.xlsx",
-                     headerStyle = hs,
-                     gridExpand = TRUE) # doesn't seem to have effect
-
-```
-
-TODO 
-```{r Create Excel with all pathways, eval=FALSE, include=FALSE}
+                                                                     
+```{r Create Excel with all pathways for Teams folder}
 knitr::opts_knit$set(root.dir = getwd())
 
 pathways_rr <- pathways_rr |> 
-  mutate(institute = NA_character_) |> 
-  mutate(name = NA_character_) |> 
-  mutate(finished = "FALSE") |> 
-  mutate(results_the_same = NA_character_)
+  mutate(`     ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_1 = NA_character_) |> 
+  mutate(name_1 = NA_character_) |> 
+  mutate(finished_1 = "FALSE") |> 
+  mutate(results_the_same_1 = NA_character_) |> 
+  mutate(comment_1 = NA_character_) |> 
+  mutate(`      ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_2 = NA_character_) |> 
+  mutate(name_2 = NA_character_) |> 
+  mutate(finished_2 = "FALSE") |> 
+  mutate(results_the_same_2 = NA_character_) |> 
+  mutate(comment_2 = NA_character_) |> 
+  mutate(`       ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_3 = NA_character_) |> 
+  mutate(name_3 = NA_character_) |> 
+  mutate(finished_3 = "FALSE") |> 
+  mutate(results_the_same_3 = NA_character_) |> 
+  mutate(comment_3 = NA_character_)
 
 pathways_ar <- pathways_ar |> 
-  mutate(institute = NA_character_) |> 
-  mutate(name = NA_character_) |> 
-  mutate(finished = "FALSE") |> 
-  mutate(results_the_same = NA_character_)
+  mutate(`     ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_1 = NA_character_) |> 
+  mutate(name_1 = NA_character_) |> 
+  mutate(finished_1 = "FALSE") |> 
+  mutate(results_the_same_1 = NA_character_) |> 
+  mutate(comment_1 = NA_character_) |> 
+  mutate(`      ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_2 = NA_character_) |> 
+  mutate(name_2 = NA_character_) |> 
+  mutate(finished_2 = "FALSE") |> 
+  mutate(results_the_same_2 = NA_character_) |> 
+  mutate(comment_2 = NA_character_) |> 
+  mutate(`       ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_3 = NA_character_) |> 
+  mutate(name_3 = NA_character_) |> 
+  mutate(finished_3 = "FALSE") |> 
+  mutate(results_the_same_3 = NA_character_) |> 
+  mutate(comment_3 = NA_character_)
 
-pathways_cba <- pathways_cba |> 
-  mutate(institute = NA_character_) |> 
-  mutate(name = NA_character_) |> 
-  mutate(finished = "FALSE") |> 
-  mutate(results_the_same = NA_character_)
-
-pathways_monetization <- pathways_monetization |> 
-  mutate(institute = NA_character_) |> 
-  mutate(name = NA_character_) |> 
-  mutate(finished = "FALSE") |> 
-  mutate(results_the_same = NA_character_)
-
-pathways_lifetable <- pathways_lifetable |> 
-  mutate(institute = NA_character_) |> 
-  mutate(name = NA_character_) |> 
-  mutate(finished = "FALSE") |> 
-  mutate(results_the_same = NA_character_)
 
 pathways_uncertainty <- pathways_uncertainty |> 
-  mutate(institute = NA_character_) |> 
-  mutate(name = NA_character_) |> 
-  mutate(finished = "FALSE") |> 
-  mutate(results_the_same = NA_character_)
+  mutate(`     ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_1 = NA_character_) |> 
+  mutate(name_1 = NA_character_) |> 
+  mutate(finished_1 = "FALSE") |> 
+  mutate(results_the_same_1 = NA_character_) |> 
+  mutate(comment_1 = NA_character_)|> 
+  mutate(`      ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_2 = NA_character_) |> 
+  mutate(name_2 = NA_character_) |> 
+  mutate(finished_2 = "FALSE") |> 
+  mutate(results_the_same_2 = NA_character_) |> 
+  mutate(comment_2 = NA_character_) |> 
+  mutate(`       ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_3 = NA_character_) |> 
+  mutate(name_3 = NA_character_) |> 
+  mutate(finished_3 = "FALSE") |> 
+  mutate(results_the_same_3 = NA_character_) |> 
+  mutate(comment_3 = NA_character_)
+
+
+pathways_compare <- pathways_compare |> 
+  mutate(`     ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_1 = NA_character_) |> 
+  mutate(name_1 = NA_character_) |> 
+  mutate(finished_1 = "FALSE") |> 
+  mutate(results_the_same_1 = NA_character_) |> 
+  mutate(comment_1 = NA_character_) |> 
+  mutate(`      ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_2 = NA_character_) |> 
+  mutate(name_2 = NA_character_) |> 
+  mutate(finished_2 = "FALSE") |> 
+  mutate(results_the_same_2 = NA_character_) |> 
+  mutate(comment_2 = NA_character_) |> 
+  mutate(`       ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_3 = NA_character_) |> 
+  mutate(name_3 = NA_character_) |> 
+  mutate(finished_3 = "FALSE") |> 
+  mutate(results_the_same_3 = NA_character_) |> 
+  mutate(comment_3 = NA_character_)
+
+pathways_monetization <- pathways_monetization |> 
+  mutate(`     ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_1 = NA_character_) |> 
+  mutate(name_1 = NA_character_) |> 
+  mutate(finished_1 = "FALSE") |> 
+  mutate(results_the_same_1 = NA_character_) |> 
+  mutate(comment_1 = NA_character_) |> 
+  mutate(`      ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_2 = NA_character_) |> 
+  mutate(name_2 = NA_character_) |> 
+  mutate(finished_2 = "FALSE") |> 
+  mutate(results_the_same_2 = NA_character_) |> 
+  mutate(comment_2 = NA_character_) |> 
+  mutate(`       ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_3 = NA_character_) |> 
+  mutate(name_3 = NA_character_) |> 
+  mutate(finished_3 = "FALSE") |> 
+  mutate(results_the_same_3 = NA_character_) |> 
+  mutate(comment_3 = NA_character_)
+
+
+pathways_cba <- pathways_cba |> 
+  mutate(`     ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_1 = NA_character_) |> 
+  mutate(name_1 = NA_character_) |> 
+  mutate(finished_1 = "FALSE") |> 
+  mutate(results_the_same_1 = NA_character_) |> 
+  mutate(comment_1 = NA_character_)|> 
+  mutate(`      ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_2 = NA_character_) |> 
+  mutate(name_2 = NA_character_) |> 
+  mutate(finished_2 = "FALSE") |> 
+  mutate(results_the_same_2 = NA_character_) |> 
+  mutate(comment_2 = NA_character_) |> 
+  mutate(`       ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_3 = NA_character_) |> 
+  mutate(name_3 = NA_character_) |> 
+  mutate(finished_3 = "FALSE") |> 
+  mutate(results_the_same_3 = NA_character_) |> 
+  mutate(comment_3 = NA_character_)
+
+pathways_daly <- pathways_daly |> 
+  mutate(`     ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_1 = NA_character_) |> 
+  mutate(name_1 = NA_character_) |> 
+  mutate(finished_1 = "FALSE") |> 
+  mutate(results_the_same_1 = NA_character_) |> 
+  mutate(comment_1 = NA_character_) |> 
+  mutate(`      ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_2 = NA_character_) |> 
+  mutate(name_2 = NA_character_) |> 
+  mutate(finished_2 = "FALSE") |> 
+  mutate(results_the_same_2 = NA_character_) |> 
+  mutate(comment_2 = NA_character_) |> 
+  mutate(`       ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_3 = NA_character_) |> 
+  mutate(name_3 = NA_character_) |> 
+  mutate(finished_3 = "FALSE") |> 
+  mutate(results_the_same_3 = NA_character_) |> 
+  mutate(comment_3 = NA_character_)
+
+pathways_multiexposure <- pathways_multiexposure |> 
+  mutate(`     ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_1 = NA_character_) |> 
+  mutate(name_1 = NA_character_) |> 
+  mutate(finished_1 = "FALSE") |> 
+  mutate(results_the_same_1 = NA_character_) |> 
+  mutate(comment_1 = NA_character_) |> 
+  mutate(`      ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_2 = NA_character_) |> 
+  mutate(name_2 = NA_character_) |> 
+  mutate(finished_2 = "FALSE") |> 
+  mutate(results_the_same_2 = NA_character_) |> 
+  mutate(comment_2 = NA_character_) |> 
+  mutate(`       ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_3 = NA_character_) |> 
+  mutate(name_3 = NA_character_) |> 
+  mutate(finished_3 = "FALSE") |> 
+  mutate(results_the_same_3 = NA_character_) |> 
+  mutate(comment_3 = NA_character_)
+
+pathways_lifetable <- pathways_lifetable |> 
+  mutate(`     ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_1 = NA_character_) |> 
+  mutate(name_1 = NA_character_) |> 
+  mutate(finished_1 = "FALSE") |> 
+  mutate(results_the_same_1 = NA_character_) |> 
+  mutate(comment_1 = NA_character_) |> 
+  mutate(`      ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_2 = NA_character_) |> 
+  mutate(name_2 = NA_character_) |> 
+  mutate(finished_2 = "FALSE") |> 
+  mutate(results_the_same_2 = NA_character_) |> 
+  mutate(comment_2 = NA_character_) |> 
+  mutate(`       ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_3 = NA_character_) |> 
+  mutate(name_3 = NA_character_) |> 
+  mutate(finished_3 = "FALSE") |> 
+  mutate(results_the_same_3 = NA_character_) |> 
+  mutate(comment_3 = NA_character_)
 
 pathways_list <- list(
+  progress_overall,
   pathways_rr,
   pathways_ar,
-  pathways_cba,
+  pathways_uncertainty,
+  pathways_compare,
   pathways_monetization,
-  pathways_lifetable,
-  pathways_uncertainty
+  pathways_cba,
+  pathways_daly,
+  pathways_multiexposure,
+  pathways_lifetable
 )
-names(pathways_list) <- c("pathways_rr", "pathways_ar", "pathways_cba", "pathways_monetization", "pathways_lifetable", "pathways_uncertainty")
+names(pathways_list) <- c("OVERALL", "RR", "AR", "summary uncertainty", "comparison", "monetization", "CBA", "DALY", "multiexposure", "lifetable")
 
 hs <- openxlsx::createStyle(textDecoration = "bold") # hs = header style
 
-openxlsx::write.xlsx(pathways_list, "tests/pathways_overview_all.xlsx",
+openxlsx::write.xlsx(pathways_list, "tests/overview_testing.xlsx",
                      headerStyle = hs,
                      gridExpand = TRUE) # doesn't seem to have effect
-
 
 ```

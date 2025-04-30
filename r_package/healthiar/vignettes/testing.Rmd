@@ -92,7 +92,7 @@ You can either
 
     -   Recommended in case you have a specific assessment ready
 
-Both options are valid. In the best case the pathway that you want to test is not yet covered / claimed by another WP4 partner. Please check this before you start creating your test case in the the Excel *pathways_overview_core.xlsx*, which is located on Teams under [Documents\>WP4 PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk).
+Both options are valid. In the best case the pathway that you want to test is not yet covered / claimed by another WP4 partner. Please check this before you start creating your test case in the the Excel *overview_testing.xlsx*, which is located on Teams under [Documents\>WP4 PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk).
 
 Note: it is okay to test a specific pathway more than once, but of course testing a new pathway adds the most value.
 
@@ -108,11 +108,11 @@ Of course, there are multiple possible sources of comparison assessments. These 
 
 ### Option A: Look for comparison assessment & select corresponding pathway
 
-Example: you have done an assessment in the past and you claim the pathway in the Excel *pathways_overview_core.xlsx* and get started with Step 2 right away.
+Example: you have done an assessment in the past and you claim the pathway in the Excel *overview_testing.xlsx* and get started with Step 2 right away.
 
 ### Option B: Choose a pathway & look for corresponding comparison assessment
 
-Example: you have a look at the calculation pathways in the Excel *pathways_overview_core.xlsx* and you select the following pathway:
+Example: you have a look at the calculation pathways in the Excel *overview_testing.xlsx* and you select the following pathway:
 
 -   Relative risk
 
@@ -138,7 +138,7 @@ Please see the start of Step 1 for alternative sources of comparison assessments
 
 ### Detailed pathway characterizations
 
-The Excel *pathways_overview_core.xlsx*, which is located on Teams under [Documents\>WP4 PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk), contains an overview of the most relevant (= core) pathways that are available to users of *healthiar* functions. There are different sheets. In the first sheet is the overview of the core relative risk pathways. The columns might seem a bit cryptic at first glance, but bear with me:
+The Excel *overview_testing.xlsx*, which is located on Teams under [Documents\>WP4 PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk), contains an overview of the most relevant (= core) pathways that are available to users of *healthiar* functions. There are different sheets. In the first sheet is the overview of the core relative risk pathways. The columns might seem a bit cryptic at first glance, but bear with me:
 
 -   *erf* contains the exposure-response function shape
 
@@ -286,7 +286,7 @@ Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
 
 ### Add test details
 
-In this example, we'll start by entering the `pathway_id` (which is found in the *pathways_overview_core* Excel located in [this Teams folder](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk)) to the function template.
+In this example, we'll start by entering the `pathway_id` (which is found in the *overview_testing* Excel located in [this Teams folder](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk)) to the function template.
 
 In this example the `pathway_id` is *\|pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|*
 
@@ -502,7 +502,7 @@ Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
 
 ## 4. Upload the test
 
-Once you've completed the previous steps you can change the value in the column *finished* in the Excel *pathways_overview_core* from *FALSE* to *TRUE* to indicate that you are done with the assessment.
+Once you've completed the previous steps you can change the value in the column *finished* in the Excel *overview_testing* from *FALSE* to *TRUE* to indicate that you are done with the assessment.
 
 Please check that your test file clear sufficiently documented, i.e. someone who sees your test file for the first time should be able to understand what calculation pathway you covered, which input data was used, which comparison assessment you used, ... it is worth to invest a bit of time here, as it will also help you when you see this file again some time from now!
 
