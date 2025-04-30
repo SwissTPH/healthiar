@@ -617,9 +617,9 @@ cat("Total number of pathways:", progress_monetization$n_all_pw, "\n")
 ```{r Pathways cba}
 
 pathways_cba <- list(
+  discount_shape = c("exponential", "hyp_harvey", "hyp_mazur"),
   discount_rate_benefit = c("TRUE", "FALSE"),
-  discount_rate_cost = c("TRUE", "FALSE"),
-  discount_shape = c("exp", "hyp_harvey", "hyp_mazur")
+  discount_rate_cost = c("TRUE", "FALSE")
 )
 
 pathways_cba <- expand.grid(pathways_cba) |>
