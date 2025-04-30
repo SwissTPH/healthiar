@@ -56,7 +56,19 @@ validate_input_attribute <-
                       " cannot be lower than 0"),
                call. = FALSE)
         }
+    }
+
+    error_if_higher_than_1 <- function(var_name){
+      var_value <- input_args[[var_name]]
+
+      if(!is.null(var_value) && # Only if available
+         any(unlist(var_value) > 1)){ # any(unlist( To make it robust for lists
+        # Create error message
+        stop(paste0(var_name,
+                    " cannot be higher than 1"),
+             call. = FALSE)
       }
+    }
 
     error_if_ar_and_length_1_or_0 <- function(var_name){
       # Store var_value
@@ -110,7 +122,9 @@ validate_input_attribute <-
     }
 
     # --> Error if any(prop_pop_exp) and dw are higher than 1
-
+    for (x in c("prop_pop_exp", paste0("dw", ci_suffix))) {
+      error_if_higher_than_1(x)
+    }
 
 
     # If relative risk #####

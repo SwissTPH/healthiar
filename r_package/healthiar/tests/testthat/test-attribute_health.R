@@ -73,6 +73,22 @@ testthat::test_that("error if rr lower than 0", {
   )
 })
 
+testthat::test_that("error if dw higher than 1", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 4,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        dw_central = 1.1,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
 # testthat::test_that("result correct rr with single exposure and variable uncertainty", {
 # testthat::test_that("result correct rr with single exposure and variable uncertainty (pw_erf_log_lin pw_exp_single pw_cutoff_TRUE pw_varuncer_TRUE pw_iteration_FALSE pw_multiexp_FALSE )", {
 testthat::test_that("result correct pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|multiexp_FALSE|", {
