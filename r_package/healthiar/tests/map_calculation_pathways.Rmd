@@ -734,7 +734,7 @@ cat("Total number of pathways:", progress_cba$n_all_pw, "\n")
 
 All pathways are core pathways
 
-```{r Pathways DALY, eval=FALSE, include=FALSE}
+```{r Pathways DALY}
 
 # * Define all relevant pathways ###############################################
 ## Create tibble containing (almost) all possible calculation pathways
@@ -852,7 +852,7 @@ cat("Total number of pathways:", progress_daly$n_all_pw, "\n")
 
 All pathways are core pathways
 
-```{r Pathways multiexposure, eval=FALSE, include=FALSE}
+```{r Pathways multiexposure}
 
 # * Define all relevant pathways ###############################################
 ## Create tibble containing (almost) all possible calculation pathways
@@ -966,6 +966,7 @@ pathways_lifetable <- list(
   exp = c("single", "dist"), # prop_pop_exp linked with this
   exp_time = c("single_year", "constant"),
   newborns = c("TRUE", "FALSE"),
+  ## Note 2024-04-30 AL: in a later stage, maybe remove the min_age, max_age and time_horizon options ####
   min_age = c("TRUE", "FALSE"),
   max_age = c("TRUE", "FALSE"),
   time_horizon = c("TRUE", "FALSE"),
