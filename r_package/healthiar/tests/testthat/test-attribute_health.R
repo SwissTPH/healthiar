@@ -494,8 +494,8 @@ testthat::test_that("results the same user-defined erf (mrbrt) with splinefun, e
 })
 
 # testthat::test_that("results correct user-defined erf (mrbrt) with splinefun", {
-# testthat::test_that("results correct user-defined erf (mrbrt) with splinefun ( pw_exp_single pw_erf_point_pairs pw_cutoff_TRUE pw_varuncer_FALSE pw_iteration_FALSE )", {
-testthat::test_that("results the same |fake_rr|erf_point_pairs|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|", {
+# testthat::test_that("results correct user-defined erf (mrbrt) with splinefun ( pw_exp_single pw_erf_function pw_cutoff_TRUE pw_varuncer_FALSE pw_iteration_FALSE )", {
+testthat::test_that("results the same |fake_rr|erf_function|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -542,7 +542,7 @@ testthat::test_that("results the same |fake_rr user-defined erf (mrbrt) with spl
   )
 })
 
-testthat::test_that("results the same |fake_rr|erf_point_pairs|exp_dist|iteration_FALSE|", {
+testthat::test_that("results the same |fake_rr|erf_function|exp_dist|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -567,7 +567,7 @@ testthat::test_that("results the same |fake_rr|erf_point_pairs|exp_dist|iteratio
 })
 
 # TODO BUG 2025-04-02: WHEN CALLING THE FUNCTION WITH CUTOFF AND BHD CI'S THEN HEALTH MAIN HAS MORE THAN 3 ROWS ####
-testthat::test_that("results the same |fake_rr|erf_point_pairs|exp_dist|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|", {
+testthat::test_that("results the same |fake_rr|erf_function|exp_dist|cutoff_TRUE|varuncer_TRUE|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -604,7 +604,7 @@ testthat::test_that("results the same |fake_rr|erf_point_pairs|exp_dist|cutoff_T
 })
 
 # TODO BUG 2025-04-02: WHEN CALLING THE FUNCTION WITH CUTOFF AND BHD CI'S THEN HEALTH MAIN HAS MORE THAN 3 ROWS ####
-testthat::test_that("results the same |fake_rr|erf_point_pairs|exp_dist|cutoff_FALSE|varuncer_TRUE|iteration_FALSE|", {
+testthat::test_that("results the same |fake_rr|erf_function|exp_dist|cutoff_FALSE|varuncer_TRUE|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))

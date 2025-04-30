@@ -144,7 +144,7 @@ The Excel *pathways_overview_core.xlsx*, which is located on Teams under [Docume
 
     -   lin_lin = linear-linear ERF shape
     -   log_lin = log-linear ERF shape
-    -   point_pairs = case where the ERF is defined by multiple points (x and y coordinates), e.g. the MR-BRT curves from GBD
+    -   function = case where the ERF is defined by multiple points (x and y coordinates), e.g. the MR-BRT curves from GBD
 
 -   *exp* specifies the type of exposure input data
 

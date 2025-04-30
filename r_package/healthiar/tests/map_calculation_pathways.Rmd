@@ -27,7 +27,7 @@ pacman::p_load(dplyr, tibble, stringr, purrr)
 # * Define all relevant pathways ###############################################
 ## Create tibble containing (almost) all possible calculation pathways
 pathways_rr <- list(
-  erf = c("log_lin", "point_pairs", "formula", "lin_lin", "lin_log", "log_log"),
+  erf = c("log_lin", "function", "formula", "lin_lin", "lin_log", "log_log"),
   exp = c("single", "dist"), # prop_pop_exp linked with this
   iteration = c("TRUE", "FALSE")
 )
@@ -45,7 +45,7 @@ paste0("|pathway_rr|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
 
 #* Define core pathways ########################################################
 core_rr <- list(
-  erf = c("log_lin", "point_pairs", "lin_lin"),
+  erf = c("log_lin", "function", "lin_lin"),
   exp = c("single", "dist"), # prop_pop_exp linked with this
   iteration = c("TRUE", "FALSE")
 )
@@ -147,7 +147,7 @@ cat("Total number of pathways:", progress_rr$n_all_pw, "\n")
 # * Define all relevant pathways ###############################################
 ## Create tibble containing (almost) all possible calculation pathways
 pathways_ar <- list(
-  erf = c("formula", "point_pairs"),
+  erf = c("formula", "function"),
   exp = c("dist"), # prop_pop_exp linked with this
   iteration = c("TRUE", "FALSE")
 )
@@ -165,7 +165,7 @@ paste0("|pathway_ar|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
 
 #* Define core pathways ########################################################
 core_ar <- list(
-  erf = c("formula", "point_pairs"),
+  erf = c("formula", "function"),
   exp = c("dist"), # prop_pop_exp linked with this
   iteration = c("TRUE", "FALSE")
 )
@@ -262,7 +262,7 @@ cat("Total number of pathways:", progress_ar$n_all_pw, "\n")
 
 ov_uncertainty <- list(
   exp = c("single", "dist"),
-  erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
+  erf = c("rr_increment", "rr_formula", "rr_function", "ar_formula", "ar_function"),
   iteration = c("TRUE", "FALSE"),
   distribution = c("normal", "beta", "gamma") # Maybe add "other" later if we implement new dist
 )
@@ -283,7 +283,7 @@ pathways_uncertainty <- pathways_uncertainty %>% # Important to use magrittr pip
 
 core_uncertainty <- list(
   exp = c("single", "dist"),
-  erf = c("rr_increment", "rr_formula", "rr_point_pairs", "ar_formula", "ar_point_pairs"),
+  erf = c("rr_increment", "rr_formula", "rr_function", "ar_formula", "ar_function"),
   iteration = c("TRUE", "FALSE"),
   distribution = c("normal")
 )
@@ -1188,7 +1188,7 @@ core_uncertainty <- pathways_uncertainty |>
   mutate(results_the_same = NA_character_) |> 
   relocate(erf, .before = exp) |> 
   filter(core_pathway == "TRUE") |> 
-  # factor(levels = c("rr_increment", "ar_formula", "rr_point_pairs", "ar_point_pairs", "rr_formula")) |> 
+  # factor(levels = c("rr_increment", "ar_formula", "rr_function", "ar_function", "rr_formula")) |> 
   arrange(erf, exp, iteration, desc(distribution))
 
 core_list <- list(
