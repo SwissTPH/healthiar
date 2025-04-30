@@ -263,8 +263,7 @@ cat("Total number of pathways:", progress_ar$n_all_pw, "\n")
 ov_uncertainty <- list(
   exp = c("single", "dist"),
   erf = c("rr_increment", "rr_formula", "rr_function", "ar_formula", "ar_function"),
-  iteration = c("TRUE", "FALSE"),
-  distribution = c("normal", "beta", "gamma") # Maybe add "other" later if we implement new dist
+  iteration = c("TRUE", "FALSE")
 )
 
 pathways_uncertainty <- expand.grid(ov_uncertainty)|> 
@@ -284,8 +283,7 @@ pathways_uncertainty <- pathways_uncertainty %>% # Important to use magrittr pip
 core_uncertainty <- list(
   exp = c("single", "dist"),
   erf = c("rr_increment", "rr_formula", "rr_function", "ar_formula", "ar_function"),
-  iteration = c("TRUE", "FALSE"),
-  distribution = c("normal")
+  iteration = c("TRUE", "FALSE")
 )
 
 core_uncertainty <- expand.grid(core_uncertainty) |> 
@@ -294,7 +292,7 @@ core_uncertainty <- expand.grid(core_uncertainty) |>
   mutate(core_pathway = "TRUE")
 
 pathways_uncertainty <- pathways_uncertainty |> 
-  left_join(x = _, y = core_uncertainty, by = c("exp", "erf", "iteration", "distribution")) |> 
+  left_join(x = _, y = core_uncertainty, by = c("exp", "erf", "iteration")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
 
@@ -313,7 +311,6 @@ existing_tests <- tibble(
   exp = rep(NA_character_, n_row),
   erf = rep(NA_character_, n_row),
   iteration = rep(NA_character_, n_row),
-  distribution = rep(NA_character_, n_row),
   implemented = rep("FALSE", n_row)
 )
 
@@ -325,14 +322,13 @@ for (i in seq_along(test_names_with_pw)) {
   existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "\\|exp_")], "(?<=\\|exp_)[^\\|]+")
   existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "\\|erf_")], "(?<=\\|erf_)[^\\|]+")
   existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
-  existing_tests$distribution[i] <- str_extract(strings[str_detect(strings, "\\|distribution_")], "(?<=\\|distribution_)[^\\|]+")
   
   existing_tests$implemented[i] <- "TRUE"
 }
 
 ## Merge the pathways tibble and the existing_tests tibble
 pathways_uncertainty <- pathways_uncertainty %>%
-  left_join(existing_tests, by = c("exp", "erf", "iteration", "distribution"),
+  left_join(existing_tests, by = c("exp", "erf", "iteration"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-implemented.existing) |> 
