@@ -38,7 +38,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
   )
 })
 
-testthat::test_that("results correct delta comparison rr single exposure with attribute_mod", {
+testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   output_attribute_1 <-
     healthiar::attribute_health(
@@ -69,7 +69,7 @@ testthat::test_that("results correct delta comparison rr single exposure with at
   )
 })
 
-testthat::test_that("results correct delta comparison when two scenarios are identical", {
+testthat::test_that("zero difference when scenarios are identical |meta_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   output_attribute_1 =
     healthiar::attribute_health(
@@ -107,7 +107,7 @@ testthat::test_that("results correct delta comparison when two scenarios are ide
 
 ### ITERATION ##################################################################
 
-testthat::test_that("results correct delta comparison iteration rr single exposures", {
+testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
   scen_1_singlebhd_rr_geo <-
     healthiar::attribute_health(
@@ -139,40 +139,7 @@ testthat::test_that("results correct delta comparison iteration rr single exposu
   )
 })
 
-testthat::test_that("results correct delta comparison iteration (high number of geo units) rr single exposures", {
-
-  scen_1_singlebhd_rr_geo <-
-    healthiar::attribute_health(
-      exp_central = list(8.85, 8.0),
-      cutoff_central = 5,
-      bhd_central = list(25000, 20000),
-      rr_central = 1.118,
-      rr_lower = 1.060,
-      rr_upper = 1.179,
-      rr_increment = 10,
-      erf_shape = "log_linear",
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
-
-  scen_2_singlebhd_rr_geo <-
-    healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_rr_geo,
-      # What is different in scenario 2 compared to scenario 1
-      exp_central = list(6, 6.5))
-
-  testthat::expect_equal(
-    object =
-      comparison_singlebhd_rr_delta_geo <-
-      healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_rr_geo,
-        output_attribute_2 = scen_2_singlebhd_rr_geo
-        )$health_main$impact_rounded,
-    expected =
-      c(1100, 582, 1603) # Result on 26 June 2024; no comparison study
-  )
-})
-
-testthat::test_that("results correct delta comparison iteration rr single exposures and multiple variable uncertainties", {
+testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   scen_1_singlebhd_rr_geo_large <-
     healthiar::attribute_health(
@@ -213,7 +180,7 @@ testthat::test_that("results correct delta comparison iteration rr single exposu
 
 ### YLD ########################################################################
 
-testthat::test_that("results correct delta comparison yld rr single exposure", {
+testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   scen_1_singlebhd_yld <-
     healthiar::attribute_health(
@@ -244,7 +211,7 @@ testthat::test_that("results correct delta comparison yld rr single exposure", {
   )
 })
 
-testthat::test_that("results correct delta comparison yld iteration rr single exposure", {
+testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   scen_1_singlebhd_yld_geo <-
     healthiar::attribute_health(
@@ -279,10 +246,9 @@ testthat::test_that("results correct delta comparison yld iteration rr single ex
   )
 })
 
-
 #### ITERATION #################################################################
 
-testthat::test_that("results correct delta comparison iteration YLD rr single exposures", {
+testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
   scen_1_singlebhd_yld_geo <-
     healthiar::attribute_health(
@@ -319,7 +285,7 @@ testthat::test_that("results correct delta comparison iteration YLD rr single ex
 
 ## PIF #########################################################################
 
-testthat::test_that("results correct pif comparison rr single exposure", {
+testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
   output_attribute_1 =
     healthiar::attribute_health(
@@ -355,7 +321,7 @@ testthat::test_that("results correct pif comparison rr single exposure", {
   )
 })
 
-testthat::test_that("results correct pif comparison yld rr single exposure", {
+testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
   scen_1_singlebhd_yld <-
     healthiar::attribute_health(
@@ -389,7 +355,7 @@ testthat::test_that("results correct pif comparison yld rr single exposure", {
 
 ### ITERATION ##################################################################
 
-testthat::test_that("results correct pif comparison iteration rr single exposures", {
+testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
   scen_1_singlebhd_rr_geo <-
     healthiar::attribute_health(
@@ -422,7 +388,7 @@ testthat::test_that("results correct pif comparison iteration rr single exposure
   )
 })
 
-testthat::test_that("results correct pif comparison yld iteration rr single exposure", {
+testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
   scen_1_singlebhd_yld_geo <-
     healthiar::attribute_health(
@@ -460,7 +426,7 @@ testthat::test_that("results correct pif comparison yld iteration rr single expo
 
 ### YLD ########################################################################
 
-testthat::test_that("results correct pif comparison yld rr single exposure", {
+testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
   scen_1_singlebhd_yld  <-
     healthiar::attribute_health(
@@ -494,7 +460,7 @@ testthat::test_that("results correct pif comparison yld rr single exposure", {
 
 #### ITERATION #################################################################
 
-testthat::test_that("results correct pif comparison iteration rr single exposures", {
+testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
   scen_1_singlebhd_yld_geo <-
     healthiar::attribute_health(
@@ -536,7 +502,7 @@ testthat::test_that("results correct pif comparison iteration rr single exposure
 
 ## DELTA #######################################################################
 
-testthat::test_that("results correct delta comparison ar exposure distribution", {
+testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|iteration_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
@@ -569,7 +535,7 @@ testthat::test_that("results correct delta comparison ar exposure distribution",
 
 ### YLD ########################################################################
 
-testthat::test_that("results correct delta comparison ar YLD", {
+testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_dist|iteration_FALSE|", {
 
   scen_1_singlebhd_yld  <-
     healthiar::attribute_health(
@@ -603,7 +569,7 @@ testthat::test_that("results correct delta comparison ar YLD", {
 
 ### ITERATION ##################################################################
 
-testthat::test_that("results correct delta comparison iteration ar exposure distribution", {
+testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|iteration_TRUE|", {
 
   scen_1_singlebhd_ar_geo <-
     healthiar::attribute_health(
@@ -641,15 +607,13 @@ testthat::test_that("results correct delta comparison iteration ar exposure dist
   )
 })
 
-
-
 # LIFETABLE ####################################################################
 
 ## YLL #########################################################################
 
 ### DELTA ######################################################################
 
-testthat::test_that("results correct delta comparison lifetable yll rr single exposure", {
+testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
@@ -694,7 +658,7 @@ testthat::test_that("results correct delta comparison lifetable yll rr single ex
 
 #### ITERATION #################################################################
 
-testthat::test_that("results correct delta comparison lifetable yll iteration rr single exposure", {
+testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
@@ -741,7 +705,7 @@ testthat::test_that("results correct delta comparison lifetable yll iteration rr
 
 ### PIF ########################################################################
 
-testthat::test_that("results correct pif comparison lifetable yll rr single exposure", {
+testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
@@ -787,7 +751,7 @@ testthat::test_that("results correct pif comparison lifetable yll rr single expo
 
 #### ITERATION #################################################################
 
-testthat::test_that("results correct pif comparison lifetable yll iteration rr single exposure", {
+testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
@@ -837,7 +801,7 @@ testthat::test_that("results correct pif comparison lifetable yll iteration rr s
 
 ### DELTA ######################################################################
 
-testthat::test_that("results correct delta comparison lifetable rr single exposure", {
+testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
@@ -880,7 +844,7 @@ testthat::test_that("results correct delta comparison lifetable rr single exposu
 
 #### ITERATION #################################################################
 
-testthat::test_that("results correct delta comparison lifetable iteration rr single exposure", {
+testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
@@ -925,7 +889,7 @@ testthat::test_that("results correct delta comparison lifetable iteration rr sin
 
 ### PIF ########################################################################
 
-testthat::test_that("results correct pif comparison lifetable rr single exposure", {
+testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
@@ -969,7 +933,7 @@ testthat::test_that("results correct pif comparison lifetable rr single exposure
 
 #### ITERATION #################################################################
 
-testthat::test_that("results correct pif comparison lifetable iteration rr single exposure", {
+testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
