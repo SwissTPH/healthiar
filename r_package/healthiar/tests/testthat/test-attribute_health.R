@@ -431,7 +431,6 @@ testthat::test_that("results the same prevalence-based YLD |pathway_rr|erf_log_l
     object =
       healthiar::attribute_health(
         exp_central = 8.85,
-        exp_lower = 8.85,
         cutoff_central = 5,
         bhd_central = 25000,
         rr_central = 1.118,
@@ -439,7 +438,7 @@ testthat::test_that("results the same prevalence-based YLD |pathway_rr|erf_log_l
         rr_upper = 1.179,
         rr_increment = 10,
         erf_shape = "log_linear",
-        dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+        dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
         duration_central = 1,
       )$health_main$impact_rounded,
     expected =
@@ -464,11 +463,12 @@ testthat::test_that("detailed results the same prevalence-based YLD |pathway_rr|
         rr_upper = 1.179,
         rr_increment = 10,
         erf_shape = "log_linear",
-        dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+        dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
         duration_central = 1,
       )$health_detailed$impact_raw$impact |> round(), # 2025-04-02 Round at the end to obtain rounded results
     expected = # Result on 2025-01-20; no comparison study
-      c(525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 658, 329, 6583, 132, 66, 1317, 13165, 6583, 131651, 391, 196, 3911, 78, 39, 782, 7822, 3911, 78223, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 348, 174, 3483, 70, 35, 697, 6966, 3483, 69662, 206, 103, 2059, 41, 21, 412, 4117, 2059, 41174, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572, 959, 480, 9595, 192, 96, 1919, 19189, 9595, 191894, 573, 287, 5731, 115, 57, 1146, 11461, 5731, 114615, 391, 196, 3911, 78, 39, 782, 7822, 3911, 78223, 525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 255, 128, 2553, 51, 26, 511, 5106, 2553, 51059, 206, 103, 2059, 41, 21, 412, 4117, 2059, 41174, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 134, 67, 1340, 27, 13, 268, 2680, 1340, 26805, 573, 287, 5731, 115, 57, 1146, 11461, 5731, 114615, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572, 375, 188, 3750, 75, 38, 750, 7501, 3750, 75010, 658, 329, 6583, 132, 66, 1317, 13165, 6583, 131651, 790, 395, 7896, 158, 79, 1579, 15792, 7896, 157921, 525, 263, 5254, 105, 53, 1051, 10509, 5254, 105086, 348, 174, 3483, 70, 35, 697, 6966, 3483, 69662, 419, 209, 4189, 84, 42, 838, 8378, 4189, 83782, 277, 139, 2773, 55, 28, 555, 5546, 2773, 55459, 959, 480, 9595, 192, 96, 1919, 19189, 9595, 191894, 1148, 574, 11479, 230, 115, 2296, 22959, 11479, 229589, 768, 384, 7679, 154, 77, 1536, 15357, 7679, 153572))
+      c(525, 105, 1051, 658, 132, 1317, 391, 78, 782, 277, 55, 555, 348, 70, 697, 206, 41, 412, 768, 154, 1536, 959, 192, 1919, 573, 115, 1146, 391, 78, 782, 525, 105, 1051, 255, 51, 511, 206, 41, 412, 277, 55, 555, 134, 27, 268, 573, 115, 1146, 768, 154, 1536, 375, 75, 750, 658, 132, 1317, 790, 158, 1579, 525, 105, 1051, 348, 70, 697, 419, 84, 838, 277, 55, 555, 959, 192, 1919, 1148, 230, 2296, 768, 154, 1536)
+    )
 })
 ## EXPOSURE DISTRIBUTION #######################################################
 
@@ -965,7 +965,7 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
       # prop_pop_exp = data$population_exposed_total/sum(data$population_exposed_total),
       pop_exp = data$population_exposed_total,
       erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-      dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+      dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
       duration_central = 1,
       info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
       )$health_main$impact_rounded,
