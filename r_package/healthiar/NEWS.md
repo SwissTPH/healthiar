@@ -22,3 +22,7 @@ Main changes but not complete list. For this propose see Github.
 
 ## Others
 - get_pop_fraction() becomes intern function
+- get_mdi() was renamed to prepare_mdi()
+- get_multiexposure() was renamed to multiexpose()
+- get_daly was renamed to daly()
+
