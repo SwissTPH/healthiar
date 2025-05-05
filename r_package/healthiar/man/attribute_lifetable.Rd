@@ -42,7 +42,9 @@ attribute_lifetable(
 
 \item{last_age_pop}{\code{Numeric value} specifying the age of the oldest age group from population and life table data (age interval = 1 year).}
 
-\item{population_midyear_male, population_midyear_female}{\code{Numeric vector} containing the mid-year population for the year of analysis for female and male, respectively.}
+\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See the details section for guidance on how to adjust age groups.}
+
+\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively. See the details section for guidance on how to adjust age groups.}
 
 \item{min_age}{\code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. By default 30, which implies that all adults aged 30 or older will be affected by the exposure.}
 
@@ -105,6 +107,8 @@ This function assesses premature deaths or years of life lost (YLL) attributable
 The life table methodology follows the one implemented in the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200
 
 A more expansive life table case study by Miller is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
+
+See the AirQ+ manual "Health impact assessment of air pollution: AirQ+ life table manual" for guidance on how to convert larger age groups to 1 year age groups ("section "Estimation of yearly values"): https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf (accessed April 2025):
 }
 \examples{
 TBD

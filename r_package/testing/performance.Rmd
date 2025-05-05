@@ -12,15 +12,13 @@ library(healthiar)
 system.time(
   bestcost_pm_copd_geo <-
     healthiar::attribute_health(
-      exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)),
-      exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)-0.1),
-      exp_upper = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)+0.1),
+      exp_central = as.list(runif_with_seed(1E4, 8, 9, 1)),
+      exp_lower = as.list(runif_with_seed(1E4, 6, 7, 1)),
+      exp_upper = as.list(runif_with_seed(1E4, 10, 11, 1)),
       cutoff_central = 5,   
-      bhd_central = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-      # bhd_lower = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-      bhd_lower = as.list(runif_with_seed(1E4, 20000, 30000, 1)),
-      # bhd_upper = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-      bhd_upper = 0,
+      bhd_central = as.list(runif_with_seed(1E4, 25E3, 34E3, 1)),
+      bhd_lower = as.list(runif_with_seed(1E4, 20E3, 24E3, 1)),
+      bhd_upper = as.list(runif_with_seed(1E4, 35E3, 40E3, 1)),
       rr_central = 1.369, 
       rr_lower = 1.124,
       rr_upper = 1.664,

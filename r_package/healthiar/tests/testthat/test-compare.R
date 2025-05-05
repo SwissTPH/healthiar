@@ -192,7 +192,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+      dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
       duration_central = 1, duration_lower = 0.5, duration_upper = 10)
 
   scen_2_singlebhd_yld <-
@@ -333,7 +333,7 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+      dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
       duration_central = 1, duration_lower = 0.5, duration_upper = 10)
 
   scen_2_singlebhd_yld <-
@@ -438,7 +438,7 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+      dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
       duration_central = 1, duration_lower = 0.5, duration_upper = 10)
 
   scen_2_singlebhd_yld <-
@@ -547,7 +547,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_di
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      dw_central = 0.5, dw_lower = 0.1, dw_upper = 10,
+      dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
       duration_central = 1, duration_lower = 0.5, duration_upper = 10)
 
   scen_2_singlebhd_yld <-
