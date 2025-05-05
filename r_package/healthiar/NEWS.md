@@ -1,14 +1,24 @@
-# healthiar (development version)
+Main changes but not complete list. For this propose see Github.
 
-* Initial CRAN submission.
+# healthiar 0.0.1.666
+
+* WP Meeting 05.05.2025
 
 ## New Features
-- Added `awesome_function()`
+- Version number was added
+- Columns with health impacts were moved to the front in results
+- Custom warning and error messages are now available in attribute_health()
+
+
 
 ## Bug Fixes
 
-* Corrected typos in help documentation
+- Results for impact per 100k inhab. have been corrected
+- Exposure lower than cut-off must result in zero health impact
 
 ## Improvements
 
-* Many
+
+
+## Others
+- get_pop_fraction() becomes intern function
