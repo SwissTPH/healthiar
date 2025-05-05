@@ -1,6 +1,6 @@
 # ADDITIVE APPROACH ############################################################
 
-testthat::test_that("results correct rr multiple exposure additive approach no variable uncertainties", {
+testthat::test_that("results correct |pathway_multiexposure|approach_additive|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
@@ -31,7 +31,7 @@ testthat::test_that("results correct rr multiple exposure additive approach no v
   )
 })
 
-testthat::test_that("results correct rr multiple exposure additive approach with variable uncertainties", {
+testthat::test_that("results correct |fake_multiexposure|approach_additive|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
@@ -70,7 +70,7 @@ testthat::test_that("results correct rr multiple exposure additive approach with
   )
 })
 
-testthat::test_that("detailed results the same rr multiple exposure additive approach with variable uncertainties", {
+testthat::test_that("detailed results correct |fake_multiexposure|approach_additive|", {
 
   bestcost_pm_mortality <- healthiar::attribute_health(
     exp_central = 8.1,
@@ -112,8 +112,7 @@ testthat::test_that("detailed results the same rr multiple exposure additive app
 
 # MULTIPLICATIVE APPROACH ######################################################
 
-# DELETE UNCERTAINTY ARGUMENTS ONCE FINISHED ####
-testthat::test_that("results correct rr multiple exposure multiplicative approach", {
+testthat::test_that("results correct |pathway_multiexposure|approach_multiplicative|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
@@ -145,7 +144,7 @@ testthat::test_that("results correct rr multiple exposure multiplicative approac
   )
 })
 
-testthat::test_that("results correct rr multiple exposure multiplicative approach no cutoff", {
+testthat::test_that("results correct |fake_multiexposure|approach_multiplicative|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
@@ -185,7 +184,7 @@ testthat::test_that("results correct rr multiple exposure multiplicative approac
 
 # COMBINED APPROACH ############################################################
 
-testthat::test_that("results correct rr multiple exposure combined approach", {
+testthat::test_that("results correct |pathway_multiexposure|approach_combined|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
@@ -224,7 +223,7 @@ testthat::test_that("results correct rr multiple exposure combined approach", {
   )
 })
 
-testthat::test_that("results correct rr multiple exposure combined approach without cutoff", {
+testthat::test_that("results correct |fake_multiexposure|approach_combined|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
@@ -263,7 +262,7 @@ testthat::test_that("results correct rr multiple exposure combined approach with
   )
 })
 
-testthat::test_that("detailed results correct rr multiple exposure combined approach", {
+testthat::test_that("detailed results correct |fake_multiexposure|approach_combined|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(

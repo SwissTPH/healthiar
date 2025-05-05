@@ -1,6 +1,6 @@
 # RAW INPUT ####################################################################
 
-testthat::test_that("results correct pathway_cba|discount_shape_exp|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
+testthat::test_that("results correct |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -20,7 +20,7 @@ testthat::test_that("results correct pathway_cba|discount_shape_exp|discount_rat
 
 # HEALTHIAR INPUT ##############################################################
 
-testthat::test_that("results the same discounting only one specific year", {
+testthat::test_that("results the same |fake_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -52,7 +52,7 @@ testthat::test_that("results the same discounting only one specific year", {
   )
 })
 
-testthat::test_that("results the same fake_cba|discount_shape_exp|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
+testthat::test_that("results the same |fake_cba|discount_shape_exp|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 

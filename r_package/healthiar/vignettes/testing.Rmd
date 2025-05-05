@@ -92,7 +92,7 @@ You can either
 
     -   Recommended in case you have a specific assessment ready
 
-Both options are valid. In the best case the pathway that you want to test is not yet covered / claimed by another WP4 partner. Please check this before you start creating your test case in the the Excel *pathways_overview_core.xlsx*, which is located on Teams under [Documents\>WP4 PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk).
+Both options are valid. In the best case the pathway that you want to test is not yet covered / claimed by another WP4 partner. Please check this before you start creating your test case in the the Excel *overview_testing.xlsx*, which is located on Teams under [Documents\>WP4 PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk).
 
 Note: it is okay to test a specific pathway more than once, but of course testing a new pathway adds the most value.
 
@@ -108,11 +108,11 @@ Of course, there are multiple possible sources of comparison assessments. These 
 
 ### Option A: Look for comparison assessment & select corresponding pathway
 
-Example: you have done an assessment in the past and you claim the pathway in the Excel *pathways_overview_core.xlsx* and get started with Step 2 right away.
+Example: you have done an assessment in the past and you claim the pathway in the Excel *overview_testing.xlsx* and get started with Step 2 right away.
 
 ### Option B: Choose a pathway & look for corresponding comparison assessment
 
-Example: you have a look at the calculation pathways in the Excel *pathways_overview_core.xlsx* and you select the following pathway:
+Example: you have a look at the calculation pathways in the Excel *overview_testing.xlsx* and you select the following pathway:
 
 -   Relative risk
 
@@ -128,7 +128,7 @@ Example: you have a look at the calculation pathways in the Excel *pathways_over
 
 -   No multiexposure
 
-The `pathway_id` of this calculation pathway is: *pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|*.
+The `pathway_id` of this calculation pathway is: *\|pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|*.
 
 You claim this pathway by filling in your institution abbreviation and your name in the corresponding columns.
 
@@ -138,13 +138,13 @@ Please see the start of Step 1 for alternative sources of comparison assessments
 
 ### Detailed pathway characterizations
 
-The Excel *pathways_overview_core.xlsx*, which is located on Teams under [Documents\>WP4 PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk), contains an overview of the most relevant (= core) pathways that are available to users of *healthiar* functions. There are different sheets. In the first sheet is the overview of the core relative risk pathways. The columns might seem a bit cryptic at first glance, but bear with me:
+The Excel *overview_testing.xlsx*, which is located on Teams under [Documents\>WP4 PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk), contains an overview of the most relevant (= core) pathways that are available to users of *healthiar* functions. There are different sheets. In the first sheet is the overview of the core relative risk pathways. The columns might seem a bit cryptic at first glance, but bear with me:
 
 -   *erf* contains the exposure-response function shape
 
     -   lin_lin = linear-linear ERF shape
     -   log_lin = log-linear ERF shape
-    -   point_pairs = case where the ERF is defined by multiple points (x and y coordinates), e.g. the MR-BRT curves from GBD
+    -   function = case where the ERF is defined by multiple points (x and y coordinates), e.g. the MR-BRT curves from GBD
 
 -   *exp* specifies the type of exposure input data
 
@@ -286,21 +286,21 @@ Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
 
 ### Add test details
 
-In this example, we'll start by entering the `pathway_id` (which is found in the *pathways_overview_core* Excel located in [this Teams folder](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk)) to the function template.
+In this example, we'll start by entering the `pathway_id` (which is found in the *overview_testing* Excel located in [this Teams folder](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk)) to the function template.
 
-In this example the `pathway_id` is *pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|*
+In this example the `pathway_id` is *\|pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|*
 
 In case of the basic template you add the `pathway_id` to the top of it:
 
 ```{r add test name basic, include=TRUE, echo=TRUE, eval=FALSE}
 ## Pathway ID: 
-## pathway_rr|erf_log_lin|exp_single|iteration_FALSE|
+## |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|
 ```
 
 In case of the extended template you add the first argument of the `testthat::test_that` call:
 
 ```{r add test name extended, include=TRUE, echo=TRUE, eval=FALSE}
-testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", { ... })
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", { ... })
 ```
 
 Then we'll continue by adding other details (same for basic & extended template) that describe the comparison case in more detail:
@@ -474,7 +474,7 @@ Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
 If you have advanced knowledge of R we are very grateful if you can compare the results automatically by running the `test_that` function.
 
 ```{r compare results automatically, include=TRUE, echo=TRUE, eval=TRUE}
-testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
@@ -502,7 +502,7 @@ Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
 
 ## 4. Upload the test
 
-Once you've completed the previous steps you can change the value in the column *finished* in the Excel *pathways_overview_core* from *FALSE* to *TRUE* to indicate that you are done with the assessment.
+Once you've completed the previous steps you can change the value in the column *finished* in the Excel *overview_testing* from *FALSE* to *TRUE* to indicate that you are done with the assessment.
 
 Please check that your test file clear sufficiently documented, i.e. someone who sees your test file for the first time should be able to understand what calculation pathway you covered, which input data was used, which comparison assessment you used, ... it is worth to invest a bit of time here, as it will also help you when you see this file again some time from now!
 
@@ -511,7 +511,7 @@ Finally, you upload your test with the `pathway_id` as the file name to the [Tea
 Filled out basic template (with hard-coded input data):
 
 ```{r filled out template basic, include=TRUE, echo=TRUE, eval=TRUE}
-## Pathway ID: pathway_rr|erf_log_lin|exp_single|iteration_FALSE|
+## Pathway ID: |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|
 
 ## healthiar FUNCTION CALL
 healthiar::attribute_health(
@@ -542,7 +542,7 @@ Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
 Filled out extended template (with input data loaded into RStudio):
 
 ```{r filled out template extended, include=TRUE, echo=TRUE, eval=TRUE}
-testthat::test_that("results correct results correct pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data_raw  <-  readxl::read_xlsx(
