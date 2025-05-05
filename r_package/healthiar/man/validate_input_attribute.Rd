@@ -7,7 +7,7 @@
 validate_input_attribute(input_args)
 }
 \arguments{
-\item{input_args}{\code{List} with the argument names and values entered in the function}
+\item{input}{\code{List} with the argument names and values entered in the function}
 }
 \value{
 This function returns warning or error messages if needed.
