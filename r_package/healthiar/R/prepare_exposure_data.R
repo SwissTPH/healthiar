@@ -26,7 +26,7 @@ prepare_exposure_data <-
     geo_id_aggregated
   ){
     ## extract mean concentration in each raw geo unit
-    poll_mean <- terra::extract(poll_grid, geo_units, fun = mean)[, 2]
+    poll_mean <- terra::extract(poll_grid, geo_units, fun = function(x) {mean(x, na.rm = T)})[, 2]
     ## create table of non-aggregated exposure for raw output
     non_aggregated_exposure <- as.data.frame(
       cbind(
