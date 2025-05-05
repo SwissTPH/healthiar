@@ -207,3 +207,35 @@ testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_const
       c(2900, 1531, 4239) # Result on 20 August 2024; no comparison study
   )
 })
+
+testthat::test_that("error if length of age range higher than deaths", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "deaths",
+        exp_central = c(8, 9, 10), # Fake data just for testing purposes
+        prop_pop_exp = c(0.2, 0.3, 0.5), # Fake data just for testing purposes
+        cutoff_central = data_mort$cutoff[2],   # PM2.5=5, NO2=10, i.e. WHO AQG 2021
+        rr_central = data[["input"]]$relative_risk,
+        rr_lower = data[["input"]]$relative_risk_lower,
+        rr_upper = data[["input"]]$relative_risk_upper,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        first_age_pop = 0,
+        last_age_pop = 150,
+        deaths_male = data[["pop"]]$number_of_deaths_male,
+        deaths_female = data[["pop"]]$number_of_deaths_female,
+        population_midyear_male = data_lifetable[["male"]]$population,
+        population_midyear_female = data_lifetable[["female"]]$population,
+        year_of_analysis = 2019,
+        info = data_mort$pollutant[2],
+        min_age = 20
+      )
+  )
+})
+
