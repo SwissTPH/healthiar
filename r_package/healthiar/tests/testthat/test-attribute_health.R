@@ -1,6 +1,8 @@
-# RR ###########################################################################
+# QUANTITATIVE TEST ############################################################
 
-## SINGLE EXPOSURE #############################################################
+## RR ###########################################################################
+
+### SINGLE EXPOSURE #############################################################
 
 testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
@@ -40,115 +42,7 @@ testthat::test_that("zero effect if exp lower than cutoff |pathway_rr|erf_log_li
   )
 })
 
-testthat::test_that("error if length of exp lower than length of prop pop", {
 
-   testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 6,
-        prop_pop_exp = c(0.5, 0.5),
-        cutoff_central = 5,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "log_linear"
-      )
-  )
-})
-
-testthat::test_that("error if rr lower than 0", {
-
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 6,
-        cutoff_central = 5,
-        bhd_central = 1000,
-        rr_central = -1.05,
-        rr_increment = 10,
-        erf_shape = "log_linear"
-      )
-  )
-})
-
-testthat::test_that("error if dw higher than 1", {
-
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 4,
-        cutoff_central = 5,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        dw_central = 1.1,
-        erf_shape = "log_linear"
-      )
-  )
-})
-
-testthat::test_that("error if not lower>central>upper", {
-
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 4,
-        cutoff_central = 5,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_lower = 1.10,
-        rr_upper = 1.20,
-        rr_increment = 10,
-        erf_shape = "log_linear"
-      )
-  )
-})
-
-testthat::test_that("error if onyl lower or upper", {
-
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 4,
-        cutoff_central = 5,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_upper = 1.20,
-        rr_increment = 10,
-        erf_shape = "log_linear"
-      )
-  )
-})
-
-testthat::test_that("error if numeric argument is not numeric", {
-
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = "hi",
-        cutoff_central = 5,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "log_linear"
-      )
-  )
-})
-
-testthat::test_that("error if numeric argument is not numeric", {
-
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 6,
-        cutoff_central = 5,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "hello"
-      )
-  )
-})
 
 testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
@@ -353,7 +247,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
   )
 })
 
-### ITERATION ##################################################################
+#### ITERATION ##################################################################
 
 testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
 
@@ -381,7 +275,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
   )
 })
 
-### YLD ########################################################################
+#### YLD ########################################################################
 
 testthat::test_that("results the same prevalence-based YLD (duration_central=1) |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
@@ -470,7 +364,7 @@ testthat::test_that("detailed results the same prevalence-based YLD |pathway_rr|
       c(525, 105, 1051, 658, 132, 1317, 391, 78, 782, 277, 55, 555, 348, 70, 697, 206, 41, 412, 768, 154, 1536, 959, 192, 1919, 573, 115, 1146, 391, 78, 782, 525, 105, 1051, 255, 51, 511, 206, 41, 412, 277, 55, 555, 134, 27, 268, 573, 115, 1146, 768, 154, 1536, 375, 75, 750, 658, 132, 1317, 790, 158, 1579, 525, 105, 1051, 348, 70, 697, 419, 84, 838, 277, 55, 555, 959, 192, 1919, 1148, 230, 2296, 768, 154, 1536)
     )
 })
-## EXPOSURE DISTRIBUTION #######################################################
+### EXPOSURE DISTRIBUTION #######################################################
 
 testthat::test_that("results correct with cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
 
@@ -543,23 +437,9 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
   )
 })
 
-testthat::test_that("error if sum(prop_pop_exp) higher than 1", {
 
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = c(6,7,8),
-        prop_pop_exp = c(0.2,0.5,0.8),
-        cutoff_central = 5,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "log_linear"
-      )
-  )
-})
 
-### ITERATION ##################################################################
+#### ITERATION ##################################################################
 testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|", {
 
   testthat::expect_equal(
@@ -584,7 +464,7 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
   )
 })
 
-### USER-DEFINED ERF FUNCTION ###############################################
+#### USER-DEFINED ERF FUNCTION ###############################################
 
 testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|", {
 
@@ -802,7 +682,7 @@ testthat::test_that("results the same |fake_rr|erf_function|exp_dist|iteration_F
 })
 
 
-# AR ###########################################################################
+## AR ###########################################################################
 
 testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|", {
 
@@ -829,45 +709,10 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
   )
 })
 
-testthat::test_that("error if absolute risk and exp length 1", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
-  data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
 
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        approach_risk = "absolute_risk",
-        exp_central = 8.85,
-        pop_exp = data$population_exposed_total,
-        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
-      ))
-})
 
-testthat::test_that("warning if absolute risk and cutoff", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
-  data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
-
-  testthat::expect_warning(
-    object =
-      healthiar::attribute_health(
-        approach_risk = "absolute_risk",
-        exp_central = data$exposure_mean,
-        cutoff_central = 5,
-        pop_exp = data$population_exposed_total,
-        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
-      )
-    )
-})
-
-## ITERATION ###################################################################
+### ITERATION ###################################################################
 
 testthat::test_that("no error ar iteration", {
 
@@ -944,7 +789,7 @@ testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iter
   )
 })
 
-## YLD #########################################################################
+### YLD #########################################################################
 
 testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formula|exp_dist|iteration_FALSE|", {
 
@@ -976,3 +821,172 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
       round() / 2 # With dw_central = 0.5 & duration_central = 1 the expected results are half of those we would obtain without dw & duration arguments
   )
 })
+
+# ERROR OR WARNING ########
+## ERROR #########
+testthat::test_that("error if length of exp lower than length of prop pop", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = c(0.5, 0.5),
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if rr lower than 0", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = -1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if dw higher than 1", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 4,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        dw_central = 1.1,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if not lower>central>upper", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 4,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_lower = 1.10,
+        rr_upper = 1.20,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if onyl lower or upper", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 4,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_upper = 1.20,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if numeric argument is not numeric", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = "hi",
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if numeric argument is not numeric", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "hello"
+      )
+  )
+})
+
+testthat::test_that("error if sum(prop_pop_exp) higher than 1", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = c(6,7,8),
+        prop_pop_exp = c(0.2,0.5,0.8),
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+  )
+})
+
+testthat::test_that("error if absolute risk and exp length 1", {
+
+  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = 8.85,
+        pop_exp = data$population_exposed_total,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
+      ))
+})
+
+## WARNING #########
+
+testthat::test_that("warning if absolute risk and cutoff", {
+
+  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  testthat::expect_warning(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = data$exposure_mean,
+        cutoff_central = 5,
+        pop_exp = data$population_exposed_total,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
+      )
+  )
+})
+

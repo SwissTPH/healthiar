@@ -1,3 +1,4 @@
+# QUANTITATIVE TEST ############################################################
 testthat::test_that("linear rescaling works", {
   testthat::expect_equal(
     object = healthiar::get_risk(
@@ -11,3 +12,8 @@ testthat::test_that("linear rescaling works", {
     )
 }
 )
+
+# ERROR OR WARNING ########
+## ERROR #########
+
+## WARNING #########

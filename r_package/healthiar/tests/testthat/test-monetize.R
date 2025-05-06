@@ -1,6 +1,7 @@
-# RAW INPUT ####################################################################
+# QUANTITATIVE TEST ############################################################
+## RAW INPUT ####################################################################
 
-## NO DISCOUNTING ##############################################################
+### NO DISCOUNTING ##############################################################
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_FALSE|", {
 
@@ -31,7 +32,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
   )
 })
 
-## DISCOUNTING ############################################################
+### DISCOUNTING ############################################################
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
@@ -140,7 +141,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
   )
 })
 
-### INFLATION ##################################################################
+#### INFLATION ##################################################################
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_TRUE|", {
 
@@ -174,11 +175,11 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
 
 })
 
-# HEALTHIAR INPUT ##############################################################
+## HEALTHIAR INPUT ##############################################################
 
-## NO DISCOUNTING ##############################################################
+### NO DISCOUNTING ##############################################################
 
-## DISCOUNTING #################################################################
+### DISCOUNTING #################################################################
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
@@ -248,7 +249,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
   )
 })
 
-### WITH INFLATION #############################################################
+#### WITH INFLATION #############################################################
 
 testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
@@ -280,3 +281,8 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
       c(2743879, 1060162, 4288935) # Results on 2025-04-15; no comparison study
   )
 })
+
+# ERROR OR WARNING ########
+## ERROR #########
+
+## WARNING #########

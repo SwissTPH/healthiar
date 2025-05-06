@@ -1,4 +1,5 @@
-# ADDITIVE APPROACH ############################################################
+# QUANTITATIVE TEST ############################################################
+## ADDITIVE APPROACH ############################################################
 
 testthat::test_that("results correct |pathway_multiexposure|approach_additive|", {
 
@@ -110,7 +111,7 @@ testthat::test_that("detailed results correct |fake_multiexposure|approach_addit
   )
 })
 
-# MULTIPLICATIVE APPROACH ######################################################
+## MULTIPLICATIVE APPROACH ######################################################
 
 testthat::test_that("results correct |pathway_multiexposure|approach_multiplicative|", {
 
@@ -182,7 +183,7 @@ testthat::test_that("results correct |fake_multiexposure|approach_multiplicative
   )
 })
 
-# COMBINED APPROACH ############################################################
+## COMBINED APPROACH ############################################################
 
 testthat::test_that("results correct |pathway_multiexposure|approach_combined|", {
 
@@ -299,3 +300,8 @@ testthat::test_that("detailed results correct |fake_multiexposure|approach_combi
       c(0.051, 0.059, 0.065, 0.068, 0.079, 0.079, 0.088, 0.093, 0.102) * 1000 # Results on 2025-01-16; Results from BEST-COST task 1.4 report (NIVM), but lower and upper bounds are fake
   )
 })
+
+# ERROR OR WARNING ########
+## ERROR #########
+
+## WARNING #########
