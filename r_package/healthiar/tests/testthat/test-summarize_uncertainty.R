@@ -3,9 +3,11 @@
 ## corroborating our results that we have, I classify them as
 ## "results correct" comparisons.
 
-# RR ###########################################################################
+# QUANTITATIVE TEST ############################################################
 
-## SINGLE EXPOSURE #############################################################
+## RR ###########################################################################
+
+### SINGLE EXPOSURE #############################################################
 
 testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
@@ -40,7 +42,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
   )
 })
 
-### ITERATION ##################################################################
+#### ITERATION ##################################################################
 
 testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_TRUE|", {
 
@@ -73,7 +75,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
   )
 })
 
-### YLD ########################################################################
+#### YLD ########################################################################
 
 testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
@@ -113,7 +115,7 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_
   )
 })
 
-## EXPOSURE DISTRIBUTION #######################################################
+### EXPOSURE DISTRIBUTION #######################################################
 
 testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increment|iteration_FALSE|", {
 
@@ -146,7 +148,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
   )
 })
 
-### ITERATION ##################################################################
+#### ITERATION ##################################################################
 
 testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increment|iteration_TRUE|", {
 
@@ -192,7 +194,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
 
 
 
-# AR ###########################################################################
+## AR ###########################################################################
 
 testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 
@@ -251,7 +253,7 @@ testthat::test_that("results correct with erf_eq uncertainty |pathway_uncertaint
   )
 })
 
-## ITERATION ###################################################################
+### ITERATION ###################################################################
 
 testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_TRUE|", {
 
@@ -325,7 +327,7 @@ testthat::test_that("results correct with erf_eq uncertainty |pathway_uncertaint
   )
 })
 
-## YLD #########################################################################
+### YLD #########################################################################
 
 testthat::test_that("results correct yld |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 

@@ -1,6 +1,7 @@
-# RELATIVE RISK ################################################################
+# QUANTITATIVE TEST ############################################################
+## RELATIVE RISK ################################################################
 
-## DELTA #######################################################################
+### DELTA #######################################################################
 
 testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
@@ -105,7 +106,7 @@ testthat::test_that("zero difference when scenarios are identical |meta_compare|
   )
 })
 
-### ITERATION ##################################################################
+#### ITERATION ##################################################################
 
 testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
@@ -178,7 +179,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
   )
 })
 
-### YLD ########################################################################
+#### YLD ########################################################################
 
 testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
@@ -246,7 +247,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
   )
 })
 
-#### ITERATION #################################################################
+##### ITERATION #################################################################
 
 testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
@@ -283,7 +284,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
   )
 })
 
-## PIF #########################################################################
+### PIF #########################################################################
 
 testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
@@ -353,7 +354,7 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
   )
 })
 
-### ITERATION ##################################################################
+#### ITERATION ##################################################################
 
 testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
@@ -424,7 +425,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
   )
 })
 
-### YLD ########################################################################
+#### YLD ########################################################################
 
 testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
@@ -458,7 +459,7 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
   )
 })
 
-#### ITERATION #################################################################
+##### ITERATION #################################################################
 
 testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
@@ -496,11 +497,11 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
   )
 })
 
-# ABSOLUTE RISK ################################################################
+## ABSOLUTE RISK ################################################################
 
 ## NOTE: no PIF option in AR pathway
 
-## DELTA #######################################################################
+### DELTA #######################################################################
 
 testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|iteration_FALSE|", {
 
@@ -533,7 +534,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|i
   )
 })
 
-### YLD ########################################################################
+#### YLD ########################################################################
 
 testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_dist|iteration_FALSE|", {
 
@@ -567,7 +568,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_di
   )
 })
 
-### ITERATION ##################################################################
+#### ITERATION ##################################################################
 
 testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|iteration_TRUE|", {
 
@@ -607,11 +608,11 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|i
   )
 })
 
-# LIFETABLE ####################################################################
+## LIFETABLE ####################################################################
 
-## YLL #########################################################################
+### YLL #########################################################################
 
-### DELTA ######################################################################
+#### DELTA ######################################################################
 
 testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
@@ -656,7 +657,7 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
   )
 })
 
-#### ITERATION #################################################################
+##### ITERATION #################################################################
 
 testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
@@ -703,7 +704,7 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
   )
 })
 
-### PIF ########################################################################
+#### PIF ########################################################################
 
 testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
@@ -749,7 +750,7 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
   )
 })
 
-#### ITERATION #################################################################
+##### ITERATION #################################################################
 
 testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
@@ -797,9 +798,9 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
   )
 })
 
-## PREMATURE DEATHS ############################################################
+### PREMATURE DEATHS ############################################################
 
-### DELTA ######################################################################
+#### DELTA ######################################################################
 
 testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
@@ -842,7 +843,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
   )
 })
 
-#### ITERATION #################################################################
+##### ITERATION #################################################################
 
 testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
@@ -887,7 +888,7 @@ testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_singl
   )
 })
 
-### PIF ########################################################################
+#### PIF ########################################################################
 
 testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
@@ -931,7 +932,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
   )
 })
 
-#### ITERATION #################################################################
+##### ITERATION #################################################################
 
 testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
@@ -976,3 +977,8 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
       c(2961, 1556, 4346) # Result on 20 AUgust 2024; no comparison study to
   )
 })
+
+# ERROR OR WARNING ########
+## ERROR #########
+
+## WARNING #########

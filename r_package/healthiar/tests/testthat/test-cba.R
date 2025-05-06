@@ -1,4 +1,5 @@
-# RAW INPUT ####################################################################
+# QUANTITATIVE TEST ############################################################
+## RAW INPUT ####################################################################
 
 testthat::test_that("results correct |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
@@ -18,7 +19,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
   )
 })
 
-# HEALTHIAR INPUT ##############################################################
+## HEALTHIAR INPUT ##############################################################
 
 testthat::test_that("results the same |fake_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
@@ -83,4 +84,11 @@ testthat::test_that("results the same |fake_cba|discount_shape_exp|discount_rate
     expect = c(60416, 23343, 94436) - 86 # Results on 2025-02-05 ; no comparison study
   )
 })
+
+# ERROR OR WARNING ########
+## ERROR #########
+
+## WARNING #########
+
+
 

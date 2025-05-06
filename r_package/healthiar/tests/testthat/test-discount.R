@@ -1,3 +1,4 @@
+# QUANTITATIVE TEST ############################################################
 testthat::test_that("results correct direct discounting without valuation with exponential discount shape", {
 
   testthat::expect_equal(
@@ -10,3 +11,9 @@ testthat::test_that("results correct direct discounting without valuation with e
     expect = 11074 # Result on 10 March 2025 according to ChatGPT
   )
 })
+
+
+# ERROR OR WARNING ########
+## ERROR #########
+
+## WARNING #########

@@ -1,3 +1,4 @@
+# QUANTITATIVE TEST ############################################################
 testthat::test_that("results correct", {
 
   data <- base::readRDS(testthat::test_path("data", "social_data.rds"))
@@ -62,3 +63,8 @@ testthat::test_that("results the same twice a socialize call", {
       approach = "quantile")$social_main$difference_value
   )
 })
+
+# ERROR OR WARNING ########
+## ERROR #########
+
+## WARNING #########

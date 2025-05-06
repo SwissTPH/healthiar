@@ -1,4 +1,6 @@
-# YLL from lifetable ###########################################################
+# QUANTITATIVE TEST ############################################################
+
+## YLL from lifetable ###########################################################
 
 ## SINGLE YEAR EXPOSURE & NO NEWBORNS ##########################################
 
@@ -70,7 +72,7 @@ testthat::test_that("results the same |fake_lifetable|exp_single|exp_time_single
   )
 })
 
-## CONSTANT EXPOSURE & NO NEWBORNS #############################################
+### CONSTANT EXPOSURE & NO NEWBORNS #############################################
 
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
@@ -103,7 +105,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
   )
 })
 
-## CONSTANT EXPOSURE & WITH NEWBORNS ###########################################
+### CONSTANT EXPOSURE & WITH NEWBORNS ###########################################
 
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
@@ -138,9 +140,9 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
 
 
 
-# PREMATURE DEATHS #############################################################
+## PREMATURE DEATHS #############################################################
 
-## SINGLE YEAR EXPOSURE & WITH NEWBORNS ###########################################
+### SINGLE YEAR EXPOSURE & WITH NEWBORNS ###########################################
 
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
@@ -173,7 +175,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
   )
 })
 
-## CONSTANT EXPOSURE & NO NEWBORNS ###########################################
+### CONSTANT EXPOSURE & NO NEWBORNS ###########################################
 
 testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
@@ -208,6 +210,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_const
   )
 })
 
+# ERROR OR WARNING ########
+## ERROR #########
 testthat::test_that("error if length of age range higher than deaths", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
@@ -238,4 +242,6 @@ testthat::test_that("error if length of age range higher than deaths", {
       )
   )
 })
+
+## WARNING #########
 
