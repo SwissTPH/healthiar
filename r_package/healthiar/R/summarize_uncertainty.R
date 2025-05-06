@@ -52,6 +52,13 @@ summarize_uncertainty <- function(
     # In that cases compile_input() provide a geo_id and it is shown in impact_raw
     length(unique(results[["health_detailed"]][["impact_raw"]]$geo_id_disaggregated))
 
+  is_single_case <- base::ifelse(
+    "exp_1" %in% names(results[["health_main"]]),
+    TRUE,
+    FALSE)
+  is_comparison <- !is_single_case
+
+
 
   # Define betaExpert function #################################################
   ## Copied from source code of prevalence::betaExpert() here:
@@ -192,9 +199,6 @@ summarize_uncertainty <- function(
                 dplyr::pull(erf_shape) |>
                 dplyr::first(),
               times = n_sim*n_geo),
-        exp =
-          rep(NA,
-              times = n_sim*n_geo),
         cutoff =
           rep(NA,
               times = n_sim*n_geo),
@@ -204,16 +208,54 @@ summarize_uncertainty <- function(
         dw =
           rep(NA,
               times = n_sim*n_geo),
-        rr_conc =
-          rep(NA,
-              times = n_sim*n_geo),
-        paf =
-          rep(NA,
-              times = n_sim*n_geo),
-        prop_pop_exp =
-          rep(NA,
-              times = n_sim*n_geo)
+
       )
+
+    if(is_single_case){
+      dat <-
+        dplyr::mutate(
+          exp =
+            rep(NA,
+                times = n_sim*n_geo),
+          prop_pop_exp =
+            rep(NA,
+                times = n_sim*n_geo),
+          rr_conc =
+            rep(NA,
+                times = n_sim*n_geo),
+          paf =
+            rep(NA,
+                times = n_sim*n_geo))
+
+    } else{
+      dat <-
+        dplyr::mutate(
+          exp_1 =
+            rep(NA,
+                times = n_sim*n_geo),
+          exp_2 =
+            rep(NA,
+                times = n_sim*n_geo),
+          prop_pop_exp_1 =
+            rep(NA,
+                times = n_sim*n_geo),
+          prop_pop_exp_2 =
+            rep(NA,
+                times = n_sim*n_geo),
+          rr_conc_1 =
+            rep(NA,
+                times = n_sim*n_geo),
+          rr_conc_2 =
+            rep(NA,
+                times = n_sim*n_geo),
+          paf_1 =
+            rep(NA,
+                times = n_sim*n_geo),
+          paf_2 =
+            rep(NA,
+                times = n_sim*n_geo))
+
+    }
 
     # * Simulate values for input variables ####################################
     ## based on the provided 95% confidence intervals
