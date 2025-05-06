@@ -354,6 +354,60 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_dist|erf_ar_fo
   )
 })
 
+# COMPARE #########################################################################
 
+testthat::test_that("results correct for compare |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
+  bestcost_pm_copd_1 <-
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      exp_lower = data$mean_concentration - 1,
+      exp_upper = data$mean_concentration + 1,
+      cutoff_central = 5,
+      cutoff_lower = data$cut_off_value - 1,
+      cutoff_upper = data$cut_off_value + 1,
+      bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+      bhd_lower = (data$incidents_per_100_000_per_year/1E5*data$population_at_risk) - 5000,
+      bhd_upper = (data$incidents_per_100_000_per_year/1E5*data$population_at_risk) + 5000,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear"
+    )
+
+  bestcost_pm_copd_2 <-
+    healthiar::attribute_health(
+      exp_central = 8.85+1,
+      exp_lower = data$mean_concentration,
+      exp_upper = data$mean_concentration + 2,
+      cutoff_central = 5,
+      cutoff_lower = data$cut_off_value - 1,
+      cutoff_upper = data$cut_off_value + 1,
+      bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+      bhd_lower = (data$incidents_per_100_000_per_year/1E5*data$population_at_risk) - 5000,
+      bhd_upper = (data$incidents_per_100_000_per_year/1E5*data$population_at_risk) + 5000,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear"
+    )
+
+  comparison <-
+    healthiar::compare(
+      output_attribute_1 = bestcost_pm_copd_1,
+      output_attribute_2 = bestcost_pm_copd_2)
+
+  testthat::expect_equal(
+    object =
+      healthiar::summarize_uncertainty(
+        res = comparison,
+        n_sim = 100
+      )$uncertainty_main |> base::as.numeric() |> base::round(),
+    expected = # Results on 2025-02-11; no comparison study
+      c(1284, 684, 2023)
+  )
+})
