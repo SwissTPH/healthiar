@@ -45,12 +45,24 @@ summarize_uncertainty <- function(
   ## Set seed for reproducibility
   set.seed(123)
 
+  # Store the input data as entered in the arguments
+  input_args <- results[["health_detailed"]][["input_args"]]
+
   ## Determine number of geographic units
   n_geo <-
-    # Let's use unique() instead of input_args
+    # Exceptionally, let's use here unique() instead of input_args
     # because in some cases the users do not enter the geo_id.
     # In that cases compile_input() provide a geo_id and it is shown in impact_raw
     length(unique(results[["health_detailed"]][["impact_raw"]]$geo_id_disaggregated))
+
+  # Is population-weighted mean exposure?
+  is_pwm_exposure <-
+    unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "population_weighted_mean")
+  # Is categorical?
+  is_categorical_exposure <-
+    ! is_pwm_exposure
+
+
 
 
   # Define betaExpert function #################################################
@@ -183,14 +195,10 @@ summarize_uncertainty <- function(
         rr =
           rep(NA, times = n_sim*n_geo),
         rr_increment =
-          rep(results[["health_detailed"]][["impact_raw"]] |>
-                dplyr::pull(rr_increment) |>
-                dplyr::first(),
+          rep(input_args$rr_increment,
               times = n_sim*n_geo),
         erf_shape =
-          rep(results[["health_detailed"]][["impact_raw"]] |>
-                dplyr::pull(erf_shape) |>
-                dplyr::first(),
+          rep(input_args$erf_shap,
               times = n_sim*n_geo),
         exp =
           rep(NA,
@@ -221,29 +229,16 @@ summarize_uncertainty <- function(
     # * * rr ###################################################################
 
     # * * * rr CIs, both single and multiple geo unit case #####################
-    if ( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["erf_ci"]])) > 0 )  {
+    if ( !base::is.null(input_args$rr_lower))  {
 
       dat <- dat |>
         # Gamma distribution with optimization to generate simulated RR's
         dplyr::mutate(
           rr = sim_gamma(
-            n_sim = n_sim*n_geo,
-            central_estimate =
-              results[["health_detailed"]][["impact_raw"]] |>
-              dplyr::filter(erf_ci == "central") |>
-              dplyr::pull(rr) |>
-              dplyr::first(),
-            lower_estimate =
-              results[["health_detailed"]][["impact_raw"]] |>
-              dplyr::filter(erf_ci == "lower") |>
-              dplyr::pull(rr) |>
-              dplyr::first(),
-            upper_estimate =
-              results[["health_detailed"]][["impact_raw"]] |>
-              dplyr::filter(erf_ci == "upper") |>
-              dplyr::pull(rr) |>
-              dplyr::first()
-          )
+            n_sim = n_sim * n_geo,
+            central_estimate = input_args$rr_central,
+            lower_estimate = input_args$rr_lower,
+            upper_estimate = input_args$rr_upper)
         )
 
     # * * * No rr CIs, both single and multiple geo unit case ##################
@@ -251,11 +246,7 @@ summarize_uncertainty <- function(
 
       dat <- dat |>
         dplyr::mutate(
-          rr = results[["health_detailed"]][["impact_raw"]] |>
-            dplyr::filter(erf_ci == "central") |>
-            dplyr::pull(rr) |>
-            dplyr::first()
-        )
+          rr = central_estimate = input_args$rr_central)
     }
 
     # * * exp ##################################################################
@@ -264,45 +255,38 @@ summarize_uncertainty <- function(
 
     # * * * * exp CIs, single geo unit #########################################
     if (
-      ( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["exp_ci"]])) > 0 ) &
-      ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "population_weighted_mean") ) &
+      ( !base::is.null(input_args$rr_lower) ) &
+      ( is_pwm_exposure ) &
       ( max(dat$geo_id_disaggregated) == 1 )
       ) {
 
       ## Determine standard deviation (sd) based on the formula:
       ## (exp_upper - exp_lower) / (2 * 1.96)
       sd_exp <-
-      (results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(exp_ci == "upper") |> dplyr::pull(exp) |> dplyr::first() -
-          results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(exp_ci == "lower") |> dplyr::pull(exp) |>  dplyr::first()) / (2 * 1.96)
+      (input_args$exp_upper - input_args$exp_lower) / (2 * 1.96)
 
       ## Simulate values
       dat <- dat |>
         dplyr::mutate(
           exp = rnorm(
             n_sim,
-            mean = results[["health_detailed"]][["impact_raw"]] |>
-                      dplyr::filter(exp_ci == "central") |>
-                      dplyr::pull(exp) |>
-                      dplyr::first(),
+            mean = input_args$exp_central,
             sd = sd_exp))
 
     # * * * * No exp CIs, single geo unit ######################################
     } else if (
-      !( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["exp_ci"]])) > 0 ) &
-      ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "population_weighted_mean" ) ) &
+      ( base::is.null(input_args$exp_lower) ) &
+      ( is_pwm_exposure ) &
       ( max(dat$geo_id_disaggregated) == 1 )
       ) {
 
       ## Assign central value to all rows as no CI's present for exp variable
       dat <- dat |>
-        dplyr::mutate(exp = results[["health_detailed"]][["impact_raw"]] |>
-                        dplyr::filter(exp_ci == "central") |>
-                        dplyr::pull(exp) |>
-                        dplyr::first())
+        dplyr::mutate(exp = input_args$exp_central)
 
     # * * * * exp CIs, multiple geo units ######################################
-    } else if ( ( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["exp_ci"]])) > 0 ) &
-                ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "population_weighted_mean" ) ) &
+    } else if ( ( !base::is.null(input_args$exp_lower) ) &
+                ( is_pwm_exposure ) &
                 ( max(dat$geo_id_disaggregated) > 1 ) ) {
 
       ## For each geo unit, fit a normal distribution and assign to dat
@@ -347,8 +331,8 @@ summarize_uncertainty <- function(
 
     # * * * * No exp CIs, multiple geo units ###################################
     } else if (
-      !( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["exp_ci"]])) > 0 ) &
-      ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "population_weighted_mean" ) ) &
+      ( base::is.null(input_args$exp_lower) ) &
+      ( is_pwm_exposure ) &
       ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
@@ -370,8 +354,8 @@ summarize_uncertainty <- function(
 
     # * * *  * exp CIs, single geo unit #####################
     if (
-      ( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["exp_ci"]])) > 0 ) &
-      ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "exposure_distribution") ) &
+      ( !base::is.null(input_args$exp_lower) ) &
+      ( is_categorical_exposure ) &
       ( max(dat$geo_id_disaggregated) == 1 )
       ) {
 
@@ -421,8 +405,8 @@ summarize_uncertainty <- function(
         dplyr::select(-exp)
 
       # * * * * No exp CIs, single geo unit ####################################
-    } else if ( !( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["exp_ci"]])) > 0 ) &
-                ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "exposure_distribution") ) &
+    } else if ( (base::is.null(input_args$exp_lower) ) &
+                ( is_categorica_exposure ) &
                 ( max(dat$geo_id_disaggregated) == 1 ) ) {
 
       # Vectors needed for simulation below (exp_central & prop_pop_exp)
@@ -459,8 +443,8 @@ summarize_uncertainty <- function(
 
       # * * * * No exp CIs, multiple geo units #################################
     } else if (
-      !( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["exp_ci"]])) > 0 ) &
-      ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "exposure_distribution") ) &
+      ( base::is.null(input_args$exp_lower) ) &
+      ( is_categorica_exposure ) &
       ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
@@ -477,8 +461,8 @@ summarize_uncertainty <- function(
 
       # * * * *  Exp CIs, multiple geo units ###################################
     } else if (
-      ( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["exp_ci"]])) > 0 ) &
-      ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "exposure_distribution") ) &
+      ( ! base::is.null(input_args$exp_lower) ) &
+      ( is_categorica_exposure ) &
       ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
@@ -908,7 +892,7 @@ summarize_uncertainty <- function(
     # * * * exp CI's & single geo unit #########################################
 
     if (
-      (length(grep("lower", results[["health_detailed"]][["impact_raw"]][["exp_ci"]])) > 0) &
+      (! base::is.null(input_args$exp_lower)) &
       ( max(dat$geo_id_disaggregated) == 1 )
     ) {
 
@@ -969,7 +953,7 @@ summarize_uncertainty <- function(
 
     # * * * exp CI's & multiple geo units ######################################
     } else if (
-      ( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["exp_ci"]])) > 0 ) &
+      ( ! base::is.null(input_args$exp_lower) ) &
       ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
@@ -1076,7 +1060,7 @@ summarize_uncertainty <- function(
 
       # * * * no exp CI's & single geo unit case ###############################
     } else if (
-      ( !length(grep("lower", results[["health_detailed"]][["impact_raw"]][["exp_ci"]])) > 0 ) &
+      ( base::is.null(input_args$exp_lower) ) &
       ( max(dat$geo_id_disaggregated) == 1  )
     ) {
 
@@ -1120,7 +1104,7 @@ summarize_uncertainty <- function(
 
       # * * * no exp CI's & multiple geo unit case #############################
     }  else if (
-    ( !length(grep("lower", results[["health_detailed"]][["impact_raw"]][["exp_ci"]])) > 0 ) &
+    ( base::is.null(input_args$exp_lower) ) &
     ( max(dat$geo_id_disaggregated) > 1 )
     ) {
 
