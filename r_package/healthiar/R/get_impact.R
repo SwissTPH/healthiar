@@ -116,7 +116,6 @@ get_impact <-
       }
 
 
-
     # Store results ############################################################
 
     ## Note: column is called prop_pop_exp (rr case) or pop_exp (ar case)
@@ -127,20 +126,28 @@ get_impact <-
          ( !unique(impact_raw$is_lifetable) ) &
          ( max(impact_raw$geo_id_disaggregated) == 1 ) ) {
 
-      impact_raw <- impact_raw |>
-        dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
-        dplyr::left_join(
-          x = _,
-          y = input_table |>
-            dplyr::group_by(dplyr::across(dplyr::any_of(c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")))) |> # if cutoff argument not specified in attribute argument call then "cutoff_ci" is not used to group
-            dplyr::summarize(exp = list(exp),
-                             prop_pop_exp = list(prop_pop_exp),
-                             exposure_dimension = list(exposure_dimension),
-                             .groups = "drop") |>
-            dplyr::select(c(exp_ci, erf_ci, exp, prop_pop_exp, exposure_dimension)),
-          by = c("exp_ci", "erf_ci")
-        )|>
-        dplyr::mutate(exposure_type = input_table$exposure_type |> dplyr::first())
+
+      input_table_to_join <-
+        input_table |>
+        dplyr::group_by(
+          dplyr::across(
+            # if cutoff argument not specified in attribute argument call then "cutoff_ci" is not used to group
+            dplyr::any_of(c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci",
+                            "geo_id_disaggregated")))) |>
+        dplyr::summarize(exp = list(exp),
+                         prop_pop_exp = list(prop_pop_exp),
+                         exposure_dimension = list(exposure_dimension),
+                         .groups = "drop") |>
+        dplyr::select(c(exp_ci, erf_ci, exp, prop_pop_exp, exposure_dimension)) |>
+        base::unique()
+
+        impact_raw <- impact_raw |>
+          dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
+          dplyr::left_join(
+            x = _,
+            y = input_table_to_join,
+            by = c("exp_ci", "erf_ci"))|>
+          dplyr::mutate(exposure_type = base::unique(input_table$exposure_type))
 
       # * Multiple geo units ###################################################
 
@@ -149,17 +156,22 @@ get_impact <-
                 ( !unique(impact_raw$is_lifetable) ) &
                 ( max(impact_raw$geo_id_disaggregated) > 1 ) ) {
 
+      input_table_to_join <-
+        input_table |>
+        dplyr::group_by(dplyr::across(dplyr::any_of(c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")))) |> # if cutoff argument not specified in attribute argument call then "cutoff_ci" is not used to group
+        dplyr::summarize(exp = list(exp),
+                         prop_pop_exp = list(prop_pop_exp), # Introduced error in ar pathway
+                         exposure_dimension = list(exposure_dimension),
+                         .groups = "drop") |>
+        dplyr::select(c(exp_ci, erf_ci, exp, prop_pop_exp, exposure_dimension, geo_id_disaggregated)) |>
+        base::unique()
+
+
       impact_raw <- impact_raw |>
         dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
         dplyr::left_join(
           x = _,
-          y = input_table |>
-            dplyr::group_by(dplyr::across(dplyr::any_of(c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")))) |> # if cutoff argument not specified in attribute argument call then "cutoff_ci" is not used to group
-            dplyr::summarize(exp = list(exp),
-                             prop_pop_exp = list(prop_pop_exp), # Introduced error in ar pathway
-                             exposure_dimension = list(exposure_dimension),
-                             .groups = "drop") |>
-            dplyr::select(c(exp_ci, erf_ci, exp, prop_pop_exp, exposure_dimension, geo_id_disaggregated)),
+          y = input_table_to_join,
           by = c("exp_ci", "erf_ci", "geo_id_disaggregated")
         )|>
         dplyr::mutate(exposure_type = input_table$exposure_type |> dplyr::first())
@@ -180,6 +192,7 @@ get_impact <-
           impact_per_100k_inhab = (impact / population) *1E5
         )
     }
+
 
   return(impact_raw)
 

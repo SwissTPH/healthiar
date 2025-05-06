@@ -608,7 +608,7 @@ testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|ex
   )
 })
 
-# TODO BUG 2025-04-02: WHEN CALLING THE FUNCTION WITH CUTOFF AND BHD CI'S THEN HEALTH MAIN HAS MORE THAN 3 ROWS ####
+
 testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|exp_dist|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
@@ -621,11 +621,11 @@ testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|ex
         exp_central = data_pop$Concentration,
         prop_pop_exp = data_pop$Viken,
         cutoff_central = 5,
-        # cutoff_lower = 5 - 1,
-        # cutoff_upper = 5 + 1,
+        cutoff_lower = 5 - 1,
+        cutoff_upper = 5 + 1,
         bhd_central = 4500,
-        # bhd_lower = 4500 - 1000,
-        # bhd_upper = 4500 + 1000,
+        bhd_lower = 4500 - 1000,
+        bhd_upper = 4500 + 1000,
         erf_eq_central =
           stats::splinefun(
             x = data_erf$exposure,
@@ -645,7 +645,6 @@ testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|ex
   )
 })
 
-# TODO BUG 2025-04-02: WHEN CALLING THE FUNCTION WITH CUTOFF AND BHD CI'S THEN HEALTH MAIN HAS MORE THAN 3 ROWS ####
 testthat::test_that("results the same |fake_rr|erf_function|exp_dist|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
@@ -656,12 +655,12 @@ testthat::test_that("results the same |fake_rr|erf_function|exp_dist|iteration_F
       healthiar::attribute_health(
         approach_risk = "relative_risk",
         exp_central = data_pop$Concentration,
-        # cutoff_lower = 5 - 1,
-        # cutoff_upper = 5 + 1,
+        cutoff_lower = 5 - 1,
+        cutoff_upper = 5 + 1,
         prop_pop_exp = data_pop$Viken,
         bhd_central = 4500,
-        # bhd_lower = 4500 - 1000,
-        # bhd_upper = 4500 + 1000,
+        bhd_lower = 4500 - 1000,
+        bhd_upper = 4500 + 1000,
         erf_eq_central =
           stats::splinefun(
             x = data_erf$exposure,
