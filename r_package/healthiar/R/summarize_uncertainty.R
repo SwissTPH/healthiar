@@ -322,7 +322,7 @@ summarize_uncertainty <- function(
           ## Generate n_sim simulated values for each row
           exp = list(
             rnorm(
-              100,
+              n_sim,
               mean = exp_central,
               sd = (exp_upper - exp_lower) / (2 * 1.96)
             )
@@ -333,8 +333,10 @@ summarize_uncertainty <- function(
         ## Keep only relevant columns
         dplyr::select(geo_id_disaggregated, exp)
 
+
       ## Add simulated exposure values to dat tibble
-      dat <- dat |>
+      dat <-
+        dat |>
         dplyr::select(-exp) |>
         dplyr::bind_cols(
           simulated_data |> dplyr::select(-geo_id_disaggregated)
@@ -653,7 +655,7 @@ summarize_uncertainty <- function(
           ## Generate n_sim simulated values for each row
           bhd = list(
             rnorm(
-              100,
+              n_sim,
               mean = bhd_central,
               sd = (bhd_upper - bhd_lower) / (2 * 1.96)
             )
