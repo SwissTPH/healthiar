@@ -178,7 +178,7 @@ summarize_uncertainty <- function(
         # and because no math operation is needed for this variable
         geo_id_disaggregated =
           as.character(
-            rep(1:n_geo,
+            rep(unique(results[["health_detailed"]][["input_table"]]$geo_id_disaggregated),
                 each = n_sim)),
         rr =
           rep(NA, times = n_sim*n_geo),
