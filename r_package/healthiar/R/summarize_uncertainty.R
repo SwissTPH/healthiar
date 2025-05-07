@@ -53,18 +53,20 @@ summarize_uncertainty <- function(
     # Exceptionally, let's use here unique() instead of input_args
     # because in some cases the users do not enter the geo_id.
     # In that cases compile_input() provide a geo_id and it is shown in impact_raw
-    length(unique(results[["health_detailed"]][["impact_raw"]]$geo_id_disaggregated))
+    length(unique(results[["health_detailed"]][["input_table"]]$geo_id_disaggregated))
 
   # Is population-weighted mean exposure?
   is_pwm_exposure <-
-    base::unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "population_weighted_mean")
+    base::unique(results[["health_detailed"]][["input_table"]]$exposure_type == "population_weighted_mean")
   # Is categorical?
   is_categorical_exposure <-
     ! is_pwm_exposure
 
   # Sequence (vector) of exposure_dimension
   # Use impact_raw because it was obtained in compiled_input
-  seq_exposure_dimension <- base::seq_along(results[["health_detailed"]][["impact_raw"]]$exposure_dimension)
+  n_exp <- base::max(results[["health_detailed"]][["input_table"]]$exposure_dimension)
+  seq_exposure_dimension <- 1:n_exp
+
 
 
 
@@ -149,8 +151,9 @@ summarize_uncertainty <- function(
     }
 
   # Relative risk ##############################################################
-
-  if ( unique(results[["health_detailed"]][["impact_raw"]]$approach_risk) == "relative_risk" ) {
+  # Use input_table because approach risk a default value
+  # (i.e. the value might not be available in input_args)
+  if ( unique(results[["health_detailed"]][["input_table"]]$approach_risk) == "relative_risk" ) {
 
     ## Define helper functions for fitting a gamma distribution with optimization
     ## for the relative risk.
@@ -192,39 +195,41 @@ summarize_uncertainty <- function(
         # geo_id_disaggregated must be always character
         # to avoid inconsistency with likely numeric formats entered by users
         # and because no math operation is needed for this variable
+        # geo_id_disaggregated from input_table insteado of input_args because
+        # if users do not enter any data there, a default id is assigned in compile_input()
         geo_id_disaggregated =
           as.character(
             rep(unique(results[["health_detailed"]][["input_table"]]$geo_id_disaggregated),
-                each = n_sim)),
+                each = n_sim * n_exp)),
         rr =
-          rep(NA, times = n_sim*n_geo),
+          rep(NA, times = n_sim * n_geo * n_exp),
         rr_increment =
           rep(input_args$rr_increment,
-              times = n_sim*n_geo),
+              times = n_sim * n_geo * n_exp),
         erf_shape =
           rep(input_args$erf_shap,
-              times = n_sim*n_geo),
+              times = n_sim * n_geo * n_exp),
         exp =
           rep(NA,
-              times = n_sim*n_geo),
+              times = n_sim * n_geo * n_exp),
         cutoff =
           rep(NA,
-              times = n_sim*n_geo),
+              times = n_sim * n_geo * n_exp),
         bhd =
           rep(NA,
-              times = n_sim*n_geo),
+              times = n_sim * n_geo * n_exp),
         dw =
           rep(NA,
-              times = n_sim*n_geo),
+              times = n_sim * n_geo * n_exp),
         rr_conc =
           rep(NA,
-              times = n_sim*n_geo),
+              times = n_sim * n_geo * n_exp),
         paf =
           rep(NA,
-              times = n_sim*n_geo),
+              times = n_sim * n_geo * n_exp),
         prop_pop_exp =
           rep(NA,
-              times = n_sim*n_geo)
+              times = n_sim * n_geo * n_exp)
       )
 
     # * Simulate values for input variables ####################################
@@ -239,7 +244,7 @@ summarize_uncertainty <- function(
         # Gamma distribution with optimization to generate simulated RR's
         dplyr::mutate(
           rr = sim_gamma(
-            n_sim = n_sim * n_geo,
+            n_sim = n_sim * n_geo * n_exp,
             central_estimate = input_args$rr_central,
             lower_estimate = input_args$rr_lower,
             upper_estimate = input_args$rr_upper)
@@ -296,7 +301,7 @@ summarize_uncertainty <- function(
       ## For each geo unit, fit a normal distribution and assign to dat
       ## Fit distribution based on each geo units central, lower and upper bhd values
 
-      dat_with_exp_ci <- results[["health_detailed"]][["impact_raw"]] |>
+      dat_with_exp_ci <- results[["health_detailed"]][["input_table"]] |>
         dplyr::select(geo_id_disaggregated, exp_ci, exp) |>
         dplyr::distinct() |>
         tidyr::pivot_wider(
@@ -345,7 +350,7 @@ summarize_uncertainty <- function(
         dplyr::select(-exp) |>
         dplyr::left_join(
           x = _,
-          y = results[["health_detailed"]][["impact_raw"]] |>
+          y = results[["health_detailed"]][["input_table"]] |>
             dplyr::select(exp, geo_id_disaggregated) |>
             dplyr::distinct(),
           by = "geo_id_disaggregated"
@@ -405,12 +410,7 @@ summarize_uncertainty <- function(
         row_id = 1:n_sim) |>
 
         dplyr::bind_cols(
-          purrr::map(.x = seq_along(                      # .x will take the values 1, 2, ..., (nr. of exposure categories)
-            results[["health_detailed"]][["impact_raw"]] |>
-              dplyr::filter(exp_ci == "central") |>
-              dplyr::pull(exp) |>
-              dplyr::first() |>
-              base::unlist(x = _)),
+          purrr::map(.x = seq_exposure_dimension,
             .f = ~ tibble::tibble(
               !!paste0("exp_", .x) := exp_central[.x],                     # .x refers to the xth element of the vector
               !!paste0("prop_pop_exp_", .x) := prop_pop_exp[.x])) |>
@@ -432,53 +432,45 @@ summarize_uncertainty <- function(
 
       dat <- dat |>
         dplyr::select(-exp, -prop_pop_exp) |>
-        dplyr::left_join(results[["health_detailed"]][["impact_raw"]] |>
+        dplyr::left_join(results[["health_detailed"]][["input_table"]] |>
                     dplyr::filter(erf_ci == "central") |>
                     dplyr::select(geo_id_disaggregated, exp, prop_pop_exp),
                   by = "geo_id_disaggregated") |>
         tidyr::unnest_wider(c(exp, prop_pop_exp), names_sep = "_")
 
       # * * * *  Exp CIs, multiple geo units ###################################
+
     } else if (
       ( ! base::is.null(input_args$exp_lower) ) &
       ( is_categorical_exposure ) &
       ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
-      # browser()
 
       ## Generate a tibble with 1000 simulations per exposure category for each geo_id
 
       ## Vectors needed for simulation of exposure values (exp_central, exp_lower, exp_upper & prop_pop_exp central)
       ### Pull exposures for all geo id's
-      exp_central <- results[["health_detailed"]][["impact_raw"]] |>
+      exp_central <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "central") |>
         dplyr::select(geo_id_disaggregated, exp_central = exp)
-      exp_lower <- results[["health_detailed"]][["impact_raw"]] |>
+      exp_lower <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "lower") |>
         dplyr::select(geo_id_disaggregated, exp_lower = exp)
-      exp_upper <- results[["health_detailed"]][["impact_raw"]] |>
+      exp_upper <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "upper") |>
         dplyr::select(geo_id_disaggregated, exp_upper = exp)
       dat_exp <- cbind(exp_central,
                        exp_lower |> dplyr::select(-geo_id_disaggregated),
                        exp_upper |> dplyr::select(-geo_id_disaggregated)
                        )
-      prop_pop_exp <- results[["health_detailed"]][["impact_raw"]] |>
+      prop_pop_exp <- results[["health_detailed"]][["input_table"]] |>
         dplyr::select(geo_id_disaggregated, prop_pop_exp) |>
-        dplyr::distinct(geo_id_disaggregated, .keep_all = TRUE)
+        dplyr::distinct(geo_id_disaggregated, prop_pop_exp, .keep_all = TRUE)
 
       ## Create vectors of column names
-      exp_columns <- paste0("exp_", dat_exp |>
-                              dplyr::filter(geo_id_disaggregated == 1) |>
-                              dplyr::pull(exp_central) |>
-                              unlist() |>
-                              seq_along())
-      prop_columns <- paste0("prop_pop_exp_", dat_exp |>
-                               dplyr::filter(geo_id_disaggregated == 1) |>
-                               dplyr::pull(exp_central) |>
-                               unlist() |>
-                               seq_along())
+      exp_columns <- paste0("exp_", seq_exposure_dimension)
+      prop_columns <- paste0("prop_pop_exp_", seq_exposure_dimension)
 
       ## Create empty tibble to be filled in loop below
       ### @ AC: sorry for the loop : /
@@ -500,12 +492,7 @@ summarize_uncertainty <- function(
           dplyr::bind_cols(
             purrr::map(
               ## .x will take the values 1, 2, ..., (nr. of exposure categories)
-              .x = seq_along(
-                dat_exp |>
-                  dplyr::filter(geo_id_disaggregated == i) |>
-                  dplyr::pull(exp_central) |>
-                  base::unlist(x = _)
-              ),
+              .x = seq_exposure_dimension,
               .f = ~ tibble::tibble(
                 !!paste0("exp_", .x) :=
                   ## For each exposure category generate n_sim simulated values
@@ -520,11 +507,13 @@ summarize_uncertainty <- function(
               purrr::reduce(dplyr::bind_cols)
           )
 
+
         ## Add simulated values of current iteration to dat_sim tabble
         dat_sim <- dat_sim |>
           dplyr::bind_rows(temp)
 
       }
+
 
       # Add simulated values of all geo units to dat tibble
       dat <- dat |>
@@ -536,75 +525,61 @@ summarize_uncertainty <- function(
     # * * cutoff ###############################################################
 
     # * * * cutoff CIs, both single and multiple geo unit case ##################
-    if ( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["cutoff_ci"]])) > 0 ) {
+    if ( !is.null(input_args$cutoff_lower) ) {
 
       ## Determine standard deviation (sd) based on the formula:
       ## (cutoff_upper - cutoff_lower) / (2 * 1.96)
       sd_cutoff <-
-        (results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(cutoff_ci == "upper") |> dplyr::pull(cutoff) |> dplyr::first() -
-           results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(cutoff_ci == "lower") |> dplyr::pull(cutoff) |>  dplyr::first()) / (2 * 1.96)
+        (input_args$cutoff_upper - input_args$cutoff_lower) / (2 * 1.96)
 
       dat <- dat |>
         dplyr::mutate(
           cutoff = rnorm(
-            n_sim * n_geo,
-            mean = results[["health_detailed"]][["impact_raw"]] |>
-              dplyr::filter(cutoff_ci == "central") |>
-              dplyr::pull(cutoff) |>
-              dplyr::first(),
+            n_sim * n_geo * n_exp,
+            mean = input_args$cutoff_central,
             sd = sd_cutoff))
 
     # * * * No cutoff CIs, both single and multiple geo unit case ##############
-    } else if ( !length(grep("lower", results[["health_detailed"]][["impact_raw"]][["cutoff_ci"]])) > 0 ) {
+    } else if ( is.null(input_args$cutoff_lower) ) {
 
       dat <- dat |>
-        dplyr::mutate(cutoff = results[["health_detailed"]][["impact_raw"]] |>
-                        dplyr::filter(cutoff_ci == "central") |>
-                        dplyr::pull(cutoff) |>
-                        dplyr::first())
+        dplyr::mutate(cutoff = input_args$cutoff_central)
     }
 
     # * * bhd ##################################################################
 
     # * * * bhd CIs & single geo unit ##########################################
-    if ( (length(grep("lower", results[["health_detailed"]][["impact_raw"]][["bhd_ci"]])) > 0) &
+    if ( (!base::is.null(input_args$bhd_lower)) &
       ( max(dat$geo_id_disaggregated) == 1 ) ) {
 
       ## Determine standard deviation (sd) based on the formula:
       ## (bhd_upper - bhd_lower) / (2 * 1.96)
       sd_bhd <- #(bhd_upper - bhd_lower) / (2 * 1.96)
-        (results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(bhd_ci == "upper") |> dplyr::pull(bhd) |> dplyr::first() -
-           results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(bhd_ci == "lower") |> dplyr::pull(bhd) |>  dplyr::first()) / (2 * 1.96)
+        (base::unlist(input_args$bhd_upper) - base::unlist(input_args$bhd_lower)) / (2 * 1.96)
       dat <- dat |>
         dplyr::mutate(
           bhd = rnorm(
             n_sim,
-            mean = results[["health_detailed"]][["impact_raw"]] |>
-              dplyr::filter(bhd_ci == "central") |>
-              dplyr::pull(bhd) |>
-              dplyr::first(),
+            mean = base::unlist(input_args$bhd_central),
             sd = sd_bhd))
 
     # * * * No bhd CIs & single geo unit ##########################################
-    } else if ( !(length(grep("lower", results[["health_detailed"]][["impact_raw"]][["bhd_ci"]])) > 0) &
+    } else if ( (base::is.null(input_args$bhd_lower)) &
                 ( max(dat$geo_id_disaggregated) == 1 ) ) {
 
       dat <- dat |>
-        dplyr::mutate(bhd = results[["health_detailed"]][["impact_raw"]] |>
-                        dplyr::filter(bhd_ci == "central") |>
-                        dplyr::pull(bhd) |>
-                        dplyr::first())
+        dplyr::mutate(bhd = base::unlist(input_args$bhd_central))
 
     # * * * bhd CIs & multiple geo units ##########################################
     } else if (
-      (length(grep("lower", results[["health_detailed"]][["impact_raw"]][["bhd_ci"]])) > 0) &
+      (!base::is.null(input_args$bhd_lower)) &
       ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
       ## For each geo unit, fit a normal distribution and assign to dat
       ## Fit distribution based on each geo units central, lower and upper bhd values
 
-      dat_with_bhd_ci <- results[["health_detailed"]][["impact_raw"]] |>
+      dat_with_bhd_ci <- results[["health_detailed"]][["input_table"]] |>
         dplyr::select(geo_id_disaggregated, bhd_ci, bhd) |>
         dplyr::distinct() |>
         tidyr::pivot_wider(
@@ -639,7 +614,7 @@ summarize_uncertainty <- function(
 
     # * * * No bhd CI's & multiple geo units ######################################
     } else if (
-      !(length(grep("lower", results[["health_detailed"]][["impact_raw"]][["bhd_ci"]])) > 0) &
+      (base::is.null(input_args$bhd_lower)) &
       ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
@@ -648,33 +623,28 @@ summarize_uncertainty <- function(
         dplyr::select(-bhd) |>
         dplyr::left_join(
           x = _,
-          y = results[["health_detailed"]][["impact_raw"]] |>
+          y = results[["health_detailed"]][["input_table"]] |>
             dplyr::select(bhd, geo_id_disaggregated) |>
             dplyr::distinct(),
           by = "geo_id_disaggregated"
         ) |>
         dplyr::relocate(bhd, .after = cutoff)
 
+
     }
 
     # * * dw ###################################################################
 
     # * * * dw CIs, both single and multiple geo unit case #####################
-    if ( (length(grep("lower", results[["health_detailed"]][["impact_raw"]][["dw_ci"]])) > 0) &
+    if ( (!base::is.null(input_args$dw_lower)) &
          ( max(dat$geo_id_disaggregated) == 1 ) ) {
 
       ## beta distribution using prevalence::betaExpert()
       ### Determine the alpha and beta parameters needed to fit beta distribution using the (source code of the) prevalence::betaExpert() function
       dw_sim <- betaExpert(
-        ## dw_central
-        results[["health_detailed"]][["impact_raw"]] |>
-          dplyr::filter(dw_ci == "central") |>
-          dplyr::pull(dw) |>
-          dplyr::first(),
-        ## dw_lower
-        results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(dw_ci == "lower") |> dplyr::pull(dw) |>  dplyr::first(),
-        ##  dw_upper,
-        results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(dw_ci == "upper") |> dplyr::pull(dw) |> dplyr::first(),
+        input_args$dw_central,
+        input_args$dw_lower,
+        input_args$dw_upper,
         method = "mean")
 
       ### Simulate nsim disability weight values
@@ -707,16 +677,14 @@ summarize_uncertainty <- function(
       #                               vector_dw_ci = vector_dw_ci))
 
     # * * * No dw CIs, both single and multiple geo unit case ##################
-    } else if ( ("dw" %in% names(results[["health_detailed"]][["impact_raw"]])) &
-                ( max(dat$geo_id_disaggregated) == 1 ) ) {
+    } else if ( !base::is.null(input_args$dw_central) &
+                base::is.null(input_args$dw_lower) &
+                max(dat$geo_id_disaggregated) == 1 ) {
       dat <- dat |>
-        dplyr::mutate(dw = results[["health_detailed"]][["impact_raw"]] |>
-                        dplyr::filter(dw_ci == "central") |>
-                        dplyr::pull(dw) |>
-                        dplyr::first())
+        dplyr::mutate(dw = input_args$dw_central)
 
     # * * * No dw inputted, both single and multiple geo unit case #############
-    } else if ( !( "dw" %in% names(results[["health_detailed"]][["impact_raw"]]) ) ) {
+    } else if (base::is.null(input_args$dw_central)) {
 
       dat <- dat |>
         dplyr::mutate(dw = 1)
@@ -726,7 +694,7 @@ summarize_uncertainty <- function(
     # * rr_conc ################################################################
 
     # * * Single exposure case #################################################
-    if ( ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "population_weighted_mean" ) ) ) {
+    if ( is_pwm_exposure ) {
 
     ## Calculate rr_conc using healthiar::get_risk
     dat <- dat |>
@@ -749,18 +717,14 @@ summarize_uncertainty <- function(
     dat$rr <- base::unlist(dat$rr)
 
     # * * Exposure distribution case ###########################################
-    } else if ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "exposure_distribution" ) ) {
+    } else if ( is_categorical_exposure ) {
 
       # Calc rr_conc for each exp cat
       dat <- dat |>
         dplyr::bind_cols(
           ## .x will take the values 1, 2, ..., until (nr. of exposure categories)
-          purrr::map(.x = seq_along(
-            results[["health_detailed"]][["impact_raw"]] |>
-              dplyr::filter(exp_ci == "central") |>
-              dplyr::pull(exp) |>
-              dplyr::first() |>
-              base::unlist(x = _)),
+          purrr::map(
+            .x = seq_exposure_dimension,
             .f = ~ tibble::tibble(
               !!paste0("rr_conc_", .x) :=
                 get_risk(rr = dat$rr,
@@ -780,12 +744,12 @@ summarize_uncertainty <- function(
     # * * Single exposure case #################################################
 
     ## Determine PAF with healthiar:::get_pop_fraction()
-    if ( ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "population_weighted_mean" ) ) ) {
+    if ( is_pwm_exposure ) {
 
       dat <- dat |>
         dplyr::mutate(
           paf = purrr::pmap(
-            list(rr_conc = rr_conc, prop_pop_exp = results[["health_detailed"]][["impact_raw"]]$prop_pop_exp |> dplyr::first(x = _)),
+            list(rr_conc = rr_conc, prop_pop_exp = base::unlist(input_args$prop_pop_exp)),
             function(rr_conc, prop_pop_exp){
               paf <- healthiar:::get_pop_fraction(
                 rr_conc_1 = rr_conc,
@@ -801,18 +765,14 @@ summarize_uncertainty <- function(
 
     # * * Exposure distribution case ###########################################
 
-    } else if ( unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "exposure_distribution" ) ) {
+    } else if ( is_categorical_exposure ) {
 
       ## Determine product_x = rr_conc_x * prop_pop_exp_x
       ## This is an intermediate step towards PAF calculation
       dat <- dat |>
         dplyr::bind_cols(
-          purrr::map(.x = seq_along(                      # .x will take the values 1, 2, ..., until (nr. of exposure categories)
-            results[["health_detailed"]][["impact_raw"]] |>
-              dplyr::filter(exp_ci == "central") |>
-              dplyr::pull(exp) |>
-              dplyr::first() |>
-              base::unlist(x = _)),
+          purrr::map(
+            .x = seq_exposure_dimension,
             .f = ~ tibble::tibble(
               !!paste0("product_", .x) := dat[[!!paste0("rr_conc_", .x)]] * dat[[!!paste0("prop_pop_exp_", .x)]]
             )
@@ -825,6 +785,7 @@ summarize_uncertainty <- function(
       dat <- dat |>
         dplyr::mutate(sum_product = rowSums(dplyr::across(dplyr::contains("product_")))) |>
         dplyr::mutate(paf = ( sum_product - 1 ) / sum_product)
+
 
 
       ## NOT WORKING: CALCULATE PAF WITH healthiar:::get_pop_fraction()
@@ -859,7 +820,7 @@ summarize_uncertainty <- function(
     # Absolute risk ############################################################
 
     # * Simulate values for input variables ####################################
-  } else if ( unique(results[["health_detailed"]][["impact_raw"]]$approach_risk) == "absolute_risk" ) {
+  } else if ( unique(results[["health_detailed"]][["input_table"]]$approach_risk) == "absolute_risk" ) {
 
     ## Create (empty) tibble to store simulated values & results in
     dat <- tibble::tibble(
@@ -878,28 +839,28 @@ summarize_uncertainty <- function(
       # browser()
 
       ## Vectors needed for simulation below
-      exp_central <- results[["health_detailed"]][["impact_raw"]] |>
+      exp_central <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "central") |>
         (\(x) if ("duration_ci" %in% colnames(x)) dplyr::filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) dplyr::filter(x, dw_ci == "central") else x)() |>
         dplyr::filter(erf_ci == "central") |>
         dplyr::pull(exp) |>
         base::unlist(x = _)
-      exp_lower <- results[["health_detailed"]][["impact_raw"]] |>
+      exp_lower <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "lower") |>
         (\(x) if ("duration_ci" %in% colnames(x)) dplyr::filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) dplyr::filter(x, dw_ci == "central") else x)() |>
         dplyr::filter(erf_ci == "central") |>
         dplyr::pull(exp) |>
         base::unlist(x = _)
-      exp_upper <- results[["health_detailed"]][["impact_raw"]] |>
+      exp_upper <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "upper") |>
         (\(x) if ("duration_ci" %in% colnames(x)) dplyr::filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) dplyr::filter(x, dw_ci == "central") else x)() |>
         dplyr::filter(erf_ci == "central") |>
         dplyr::pull(exp) |>
         base::unlist(x = _)
-      pop_exp <- results[["health_detailed"]][["impact_raw"]] |>
+      pop_exp <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "central") |>
         (\(x) if ("duration_ci" %in% colnames(x)) dplyr::filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) dplyr::filter(x, dw_ci == "central") else x)() |>
@@ -913,7 +874,7 @@ summarize_uncertainty <- function(
         dplyr::bind_cols(
           purrr::map(.x = seq_along(
             # .x will take the values 1, 2, ..., (nr. of exposure categories)
-            results[["health_detailed"]][["impact_raw"]] |>
+            results[["health_detailed"]][["input_table"]] |>
               dplyr::filter(exp_ci == "central") |>
               (\(x) if ("duration_ci" %in% colnames(x)) dplyr::filter(x, duration_ci == "central") else x)() |>
               (\(x) if ("dw_ci" %in% colnames(x)) dplyr::filter(x, dw_ci == "central") else x)() |>
@@ -937,7 +898,7 @@ summarize_uncertainty <- function(
       ) {
 
       ## Create exp vectors needed for simulation below
-      exp_central <- results[["health_detailed"]][["impact_raw"]] |>
+      exp_central <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "central") |>
         (\(x) if ("duration_ci" %in% colnames(x)) dplyr::filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) dplyr::filter(x, dw_ci == "central") else x)() |>
@@ -945,7 +906,7 @@ summarize_uncertainty <- function(
         dplyr::select(geo_id_disaggregated, exposure_dimension, exp) |>
         dplyr::group_by(geo_id_disaggregated) |>
         dplyr::summarize(exp_central = list(exp), .groups = "drop")
-      exp_lower <- results[["health_detailed"]][["impact_raw"]] |>
+      exp_lower <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "lower") |>
         (\(x) if ("duration_ci" %in% colnames(x)) dplyr::filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) dplyr::filter(x, dw_ci == "central") else x)() |>
@@ -953,7 +914,7 @@ summarize_uncertainty <- function(
         dplyr::select(geo_id_disaggregated, exposure_dimension, exp) |>
         dplyr::group_by(geo_id_disaggregated) |>
         dplyr::summarize(exp_lower = list(exp), .groups = "drop")
-      exp_upper <- results[["health_detailed"]][["impact_raw"]] |>
+      exp_upper <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "upper") |>
         (\(x) if ("duration_ci" %in% colnames(x)) dplyr::filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) dplyr::filter(x, dw_ci == "central") else x)() |>
@@ -966,7 +927,7 @@ summarize_uncertainty <- function(
                        exp_lower |> dplyr::select(-geo_id_disaggregated),
                        exp_upper |> dplyr::select(-geo_id_disaggregated))
       ## Create vector with populations exposed
-      pop_exp <- results[["health_detailed"]][["impact_raw"]] |>
+      pop_exp <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "central") |>
         (\(x) if ("duration_ci" %in% colnames(x)) dplyr::filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) dplyr::filter(x, dw_ci == "central") else x)() |>
@@ -975,16 +936,8 @@ summarize_uncertainty <- function(
         dplyr::group_by(geo_id_disaggregated) |>
         dplyr::summarize(pop_exp = list(pop_exp), .groups = "drop")
       ## Create vectors of column names
-      exp_columns <- paste0("exp_",
-                            dat_exp[1, ] |>
-                              dplyr::pull(exp_central) |>
-                              unlist() |>
-                              seq_along())
-      pop_columns <- paste0("pop_exp_",
-                            dat_exp[1, ] |>
-                              dplyr::pull(exp_central) |>
-                              unlist() |>
-                              seq_along())
+      exp_columns <- paste0("exp_", seq_exposure_dimension)
+      pop_columns <- paste0("pop_exp_", seq_exposure_dimension)
 
       ## Create empty tibble to be filled in loop below
       ## @ AC: sorry for the loop (again) : P
@@ -1047,14 +1000,14 @@ summarize_uncertainty <- function(
       # browser()
 
       ## Create exp and prop_exp vectors
-      exp_central <- results[["health_detailed"]][["impact_raw"]] |>
+      exp_central <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "central") |>
         (\(x) if ("duration_ci" %in% colnames(x)) dplyr::filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) dplyr::filter(x, dw_ci == "central") else x)() |>
         dplyr::filter(erf_ci == "central") |>
         dplyr::pull(exp) |>
         base::unlist(x = _)
-      pop_exp <- results[["health_detailed"]][["impact_raw"]] |>
+      pop_exp <- results[["health_detailed"]][["input_table"]] |>
         dplyr::filter(exp_ci == "central") |>
         (\(x) if ("duration_ci" %in% colnames(x)) dplyr::filter(x, duration_ci == "central") else x)() |>
         (\(x) if ("dw_ci" %in% colnames(x)) dplyr::filter(x, dw_ci == "central") else x)() |>
@@ -1068,7 +1021,7 @@ summarize_uncertainty <- function(
         dplyr::bind_cols(
           purrr::map(.x = seq_along(
             # .x will take the values 1, 2, ..., (nr. of exposure categories)
-            results[["health_detailed"]][["impact_raw"]] |>
+            results[["health_detailed"]][["input_table"]] |>
               dplyr::filter(exp_ci == "central") |>
               (\(x) if ("duration_ci" %in% colnames(x)) dplyr::filter(x, duration_ci == "central") else x)() |>
               (\(x) if ("dw_ci" %in% colnames(x)) dplyr::filter(x, dw_ci == "central") else x)() |>
@@ -1088,7 +1041,7 @@ summarize_uncertainty <- function(
     ) {
 
     ## Create exp and prop_exp vectors
-    exp_central <- results[["health_detailed"]][["impact_raw"]] |>
+    exp_central <- results[["health_detailed"]][["input_table"]] |>
       dplyr::filter(exp_ci == "central") |>
       (\(x) if ("duration_ci" %in% colnames(x))dplyr::filter(x, duration_ci == "central") else x)() |>
       (\(x) if ("dw_ci" %in% colnames(x))dplyr::filter(x, dw_ci == "central") else x)() |>
@@ -1097,7 +1050,7 @@ summarize_uncertainty <- function(
       dplyr::group_by(geo_id_disaggregated) |>
       dplyr::summarize(exp_central = list(exp), .groups = "drop")
 
-    pop_exp <- results[["health_detailed"]][["impact_raw"]] |>
+    pop_exp <- results[["health_detailed"]][["input_table"]] |>
       dplyr::filter(exp_ci == "central") |>
       (\(x) if ("duration_ci" %in% colnames(x))dplyr::filter(x, duration_ci == "central") else x)() |>
       (\(x) if ("dw_ci" %in% colnames(x))dplyr::filter(x, dw_ci == "central") else x)() |>
@@ -1107,16 +1060,8 @@ summarize_uncertainty <- function(
       dplyr::summarize(pop_exp = list(pop_exp), .groups = "drop")
 
     ## Create vectors of column names
-    exp_columns <- paste0("exp_", exp_central |>
-                           dplyr::filter(geo_id_disaggregated == 1) |>
-                            dplyr::pull(exp_central) |>
-                            unlist() |>
-                            seq_along())
-    pop_columns <- paste0("pop_exp_", exp_central |>
-                           dplyr::filter(geo_id_disaggregated == 1) |>
-                            dplyr::pull(exp_central) |>
-                            unlist() |>
-                            seq_along())
+    exp_columns <- paste0("exp_", seq_exposure_dimension)
+    pop_columns <- paste0("pop_exp_", seq_exposure_dimension)
 
     ## Create empty tibble to be filled in loop below
     ## @ AC: sorry for the loop (again) : P
@@ -1168,21 +1113,15 @@ summarize_uncertainty <- function(
     # browser()
 
     # * * * dw CIs, both single and multiple geo unit case #####################
-    if ( (length(grep("lower", results[["health_detailed"]][["impact_raw"]][["dw_ci"]])) > 0) &
+    if ( (!base::is.null(input_args$dw_lower)) &
          ( max(dat$geo_id_disaggregated) == 1 ) ) {
 
       ## beta distribution using prevalence::betaExpert()
       ### Determine the alpha and beta parameters needed to fit beta distribution using the (source code of the) prevalence::betaExpert() function
       dw_sim <- betaExpert(
-        ## dw_central
-        results[["health_detailed"]][["impact_raw"]] |>
-          dplyr::filter(dw_ci == "central") |>
-          dplyr::pull(dw) |>
-          dplyr::first(),
-        ## dw_lower
-        results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(dw_ci == "lower") |> dplyr::pull(dw) |>  dplyr::first(),
-        ##  dw_upper,
-        results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(dw_ci == "upper") |> dplyr::pull(dw) |> dplyr::first(),
+        input_args$dw_central,
+        input_args$dw_lower,
+        input_args$dw_upper,
         method = "mean")
 
       ### Simulate nsim disability weight values
@@ -1215,15 +1154,12 @@ summarize_uncertainty <- function(
       #                               vector_dw_ci = vector_dw_ci))
 
       # * * * No dw CIs, both single and multiple geo unit case ################
-    } else if ( ("dw" %in% names(results[["health_detailed"]][["impact_raw"]])) ) {
+    } else if ( !is.null(input_args$dw_central) & is.null(input_args$dw_lower) ) {
       dat <- dat |>
-        dplyr::mutate(dw = results[["health_detailed"]][["impact_raw"]] |>
-                        dplyr::filter(dw_ci == "central") |>
-                        dplyr::pull(dw) |>
-                        dplyr::first())
+        dplyr::mutate(dw = input_args$dw_central)
 
       # * * * No dw inputted, both single and multiple geo unit case ###########
-    } else if ( !( "dw" %in% names(results[["health_detailed"]][["impact_raw"]]) ) ) {
+    } else if (is.null(input_args$dw_central) & is.null(input_args$dw_lower)) {
 
       dat <- dat |>
         dplyr::mutate(dw = 1)
@@ -1233,7 +1169,7 @@ summarize_uncertainty <- function(
     # * * erf_eq #################################################################
 
     # * * * No erf_eq CI's, both single and multiple geo unit case ###############
-    if ( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["erf_ci"]])) == 0 ) {
+    if ( !is.null(input_args$erf_eq_central) & is.null(input_args$erf_eq_lower) ) {
 
     ## Calculate risk for each noise band
     dat <- dat |>
@@ -1241,13 +1177,14 @@ summarize_uncertainty <- function(
       # dplyr::rowwise() |>
       dplyr::mutate(
         dplyr::across(.cols = dplyr::starts_with("exp_"),
-                      .fns = ~ healthiar::get_risk(exp = .x, erf_eq = results[["health_detailed"]][["impact_raw"]]$erf_eq |> dplyr::first(x = _)) / 100,
+                      .fns = ~ healthiar::get_risk(exp = .x, erf_eq = results[["health_detailed"]][["input_table"]]$erf_eq |> dplyr::first(x = _)) / 100,
                       .names = "risk_{stringr::str_remove(.col, 'exp_')}")
       ) # |>
       # dplyr::ungroup()
 
     # * * * erf_eq CI's & multiple geo unit case ###############################
-    } else if ( length(grep("lower", results[["health_detailed"]][["impact_raw"]][["erf_ci"]])) > 0 ){
+    } else if ( !is.null(input_args$erf_eq_central) &
+                !is.null(input_args$erf_eq_lower) ){
 
       ## For each exp category, create 3 risk (ri) columns: e.g. ri_1_central, ri_1_lower, ri_1_upper & add to dat
       ### For the columns ri_..._central use the erf_eq_central, for ri_..._lower use the erf_eq_lower, ...
@@ -1260,19 +1197,19 @@ summarize_uncertainty <- function(
         # dplyr::rowwise() |>
         dplyr::mutate(
           dplyr::across(.cols = dplyr::starts_with("exp_"),
-                        .fns = ~ healthiar::get_risk(exp = .x, erf_eq = results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(erf_ci == "central") |> dplyr::pull(erf_eq) |> dplyr::first()) / 100,
+                        .fns = ~ healthiar::get_risk(exp = .x, erf_eq = results[["health_detailed"]][["input_table"]] |> dplyr::filter(erf_ci == "central") |> dplyr::pull(erf_eq) |> dplyr::first()) / 100,
                         .names = "ri_central_{stringr::str_remove(.col, 'exp_')}")
         ) |>
         ### Lower risk estimates
         dplyr::mutate(
           dplyr::across(.cols = dplyr::starts_with("exp_"),
-                        .fns = ~ healthiar::get_risk(exp = .x, erf_eq = results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(erf_ci == "lower") |> dplyr::pull(erf_eq) |> dplyr::first()) / 100,
+                        .fns = ~ healthiar::get_risk(exp = .x, erf_eq = results[["health_detailed"]][["input_table"]] |> dplyr::filter(erf_ci == "lower") |> dplyr::pull(erf_eq) |> dplyr::first()) / 100,
                         .names = "ri_lower_{stringr::str_remove(.col, 'exp_')}")
         ) |>
         ### Upper risk estimates
         dplyr::mutate(
           dplyr::across(.cols = dplyr::starts_with("exp_"),
-                        .fns = ~ healthiar::get_risk(exp = .x, erf_eq = results[["health_detailed"]][["impact_raw"]] |> dplyr::filter(erf_ci == "upper") |> dplyr::pull(erf_eq) |> dplyr::first()) / 100,
+                        .fns = ~ healthiar::get_risk(exp = .x, erf_eq = results[["health_detailed"]][["input_table"]] |> dplyr::filter(erf_ci == "upper") |> dplyr::pull(erf_eq) |> dplyr::first()) / 100,
                         .names = "ri_upper_{stringr::str_remove(.col, 'exp_')}")
         ) # |>
         # dplyr::ungroup()
