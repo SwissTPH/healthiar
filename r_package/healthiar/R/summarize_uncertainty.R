@@ -57,10 +57,14 @@ summarize_uncertainty <- function(
 
   # Is population-weighted mean exposure?
   is_pwm_exposure <-
-    unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "population_weighted_mean")
+    base::unique(results[["health_detailed"]][["impact_raw"]]$exposure_type == "population_weighted_mean")
   # Is categorical?
   is_categorical_exposure <-
     ! is_pwm_exposure
+
+  # Sequence (vector) of exposure_dimension
+  # Use impact_raw because it was obtained in compiled_input
+  seq_exposure_dimension <- base::seq_along(results[["health_detailed"]][["impact_raw"]]$exposure_dimension)
 
 
 
@@ -246,7 +250,7 @@ summarize_uncertainty <- function(
 
       dat <- dat |>
         dplyr::mutate(
-          rr = central_estimate = input_args$rr_central)
+          rr = input_args$rr_central)
     }
 
     # * * exp ##################################################################
@@ -360,25 +364,11 @@ summarize_uncertainty <- function(
       ) {
 
       ## Vectors needed for simulation below
-      exp_central <- results[["health_detailed"]][["impact_raw"]] |>
-        dplyr::filter(exp_ci == "central") |>
-        dplyr::pull(exp) |>
-        dplyr::first() |>
-        base::unlist(x = _)
-      exp_lower <- results[["health_detailed"]][["impact_raw"]] |>
-        dplyr::filter(exp_ci == "lower") |>
-        dplyr::pull(exp) |>
-        dplyr::first() |>
-        base::unlist(x = _)
-      exp_upper <- results[["health_detailed"]][["impact_raw"]] |>
-        dplyr::filter(exp_ci == "upper") |>
-        dplyr::pull(exp) |>
-        dplyr::first() |>
-        base::unlist(x = _)
-      prop_pop_exp <- results[["health_detailed"]][["impact_raw"]] |>
-        dplyr::filter(exp_ci == "central") |>
-        dplyr::pull(prop_pop_exp) |>
-        base::unlist(x = _)
+      exp_central <- input_args$exp_central
+      exp_lower <- input_args$exp_lower
+      exp_upper <- input_args$exp_upper
+      prop_pop_exp <- input_args$prop_pop_exp
+
 
       # Simulate nsim exposure values (normal distribution) for each exp cat
       # using the corresultsponding values of exp_lower & exp_upper
@@ -386,12 +376,9 @@ summarize_uncertainty <- function(
         row_id = 1:n_sim) |>
 
         dplyr::bind_cols(
-          purrr::map(.x = seq_along(                      # .x will take the values 1, 2, ..., (nr. of exposure categories)
-            results[["health_detailed"]][["impact_raw"]] |>
-              dplyr::filter(exp_ci == "central") |>
-              dplyr::pull(exp) |>
-              dplyr::first() |>
-              base::unlist(x = _)),
+          purrr::map(
+            # .x refers to the values 1, 2, ..., (nr. of exposure categories)
+            .x = seq_exposure_dimension,
             .f = ~ tibble::tibble(
               !!paste0("exp_", .x) :=                     # .x refers to the xth element of the vector
                 rnorm(n_sim,
@@ -406,20 +393,12 @@ summarize_uncertainty <- function(
 
       # * * * * No exp CIs, single geo unit ####################################
     } else if ( (base::is.null(input_args$exp_lower) ) &
-                ( is_categorica_exposure ) &
+                ( is_categorical_exposure ) &
                 ( max(dat$geo_id_disaggregated) == 1 ) ) {
 
       # Vectors needed for simulation below (exp_central & prop_pop_exp)
-      exp_central <- results[["health_detailed"]][["impact_raw"]] |>
-        dplyr::filter(exp_ci == "central") |>
-        dplyr::pull(exp) |>
-        dplyr::first() |>
-        base::unlist(x = _)
-      prop_pop_exp <- results[["health_detailed"]][["impact_raw"]] |>
-        dplyr::filter(exp_ci == "central") |>
-        dplyr::first() |>
-        dplyr::pull(prop_pop_exp) |>
-        base::unlist(x = _)
+      exp_central <- input_args$exp_central
+      prop_pop_exp <- input_args$prop_pop_exp
 
       # Create a column for each exposure categories and each prop_pop_exp value
       dat_exp_dist <- tibble::tibble(
@@ -444,7 +423,7 @@ summarize_uncertainty <- function(
       # * * * * No exp CIs, multiple geo units #################################
     } else if (
       ( base::is.null(input_args$exp_lower) ) &
-      ( is_categorica_exposure ) &
+      ( is_categorical_exposure ) &
       ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
@@ -462,7 +441,7 @@ summarize_uncertainty <- function(
       # * * * *  Exp CIs, multiple geo units ###################################
     } else if (
       ( ! base::is.null(input_args$exp_lower) ) &
-      ( is_categorica_exposure ) &
+      ( is_categorical_exposure ) &
       ( max(dat$geo_id_disaggregated) > 1 )
       ) {
 
@@ -1401,7 +1380,3 @@ summarize_uncertainty <- function(
 
 }
 
-# ERROR OR WARNING ########
-## ERROR #########
-
-## WARNING #########
