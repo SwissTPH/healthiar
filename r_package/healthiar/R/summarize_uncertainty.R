@@ -56,6 +56,13 @@ summarize_uncertainty <- function(
     # In that cases compile_input() provide a geo_id and it is shown in impact_raw
     length(unique(input_table$geo_id_disaggregated))
 
+  # Sequence (vector) of exposure_dimension
+  # Use impact_raw because it was obtained in compiled_input
+  n_exp <- base::max(input_table$exposure_dimension)
+  seq_exposure_dimension <- 1:n_exp
+
+  # Store boolean variables
+
   # Is population-weighted mean exposure?
   is_pwm_exposure <-
     base::unique(input_table$exposure_type == "population_weighted_mean")
@@ -63,10 +70,31 @@ summarize_uncertainty <- function(
   is_categorical_exposure <-
     ! is_pwm_exposure
 
-  # Sequence (vector) of exposure_dimension
-  # Use impact_raw because it was obtained in compiled_input
-  n_exp <- base::max(input_table$exposure_dimension)
-  seq_exposure_dimension <- 1:n_exp
+  # Is there a confidence interval? I.e. lower and upper estimate?
+  ci_in_rr <-
+    !base::is.null(input_args$rr_lower) && !base::is.null(input_args$rr_upper)
+
+  ci_in_exp <-
+    !base::is.null(input_args$exp_lower) && !base::is.null(input_args$exp_upper)
+
+  ci_in_cutoff <-
+    !base::is.null(input_args$cutoff_lower) && !base::is.null(input_args$cutoff_upper)
+
+  ci_in_bhd <-
+    !base::is.null(input_args$bhd_lower) && !base::is.null(input_args$bhd_upper)
+
+  ci_in_dw <-
+    !base::is.null(input_args$dw_lower) && !base::is.null(input_args$dw_upper)
+
+  ci_in_erf_eq <-
+    !base::is.null(input_args$erf_eq_lower) && !base::is.null(input_args$erf_eq_upper)
+
+  value_in_dw_central <-
+    !is.null(input_args$dw_central)
+
+  value_in_erf_eq_central <-
+    !is.null(input_args$erf_eq_central)
+
 
 
 
@@ -241,7 +269,7 @@ summarize_uncertainty <- function(
     # * * rr ###################################################################
 
     # * * * rr CIs, both single and multiple geo unit case #####################
-    if ( !base::is.null(input_args$rr_lower))  {
+    if ( ci_in_rr )  {
 
       dat <- dat |>
         # Gamma distribution with optimization to generate simulated RR's
@@ -267,7 +295,7 @@ summarize_uncertainty <- function(
 
     # * * * * exp CIs, single geo unit #########################################
     if (
-      ( !base::is.null(input_args$rr_lower) ) &
+      ( ci_in_rr ) &
       ( is_pwm_exposure ) &
       ( n_geo == 1 )
       ) {
@@ -287,7 +315,7 @@ summarize_uncertainty <- function(
 
     # * * * * No exp CIs, single geo unit ######################################
     } else if (
-      ( base::is.null(input_args$exp_lower) ) &
+      ( !ci_in_exp ) &
       ( is_pwm_exposure ) &
       ( n_geo == 1 )
       ) {
@@ -297,7 +325,7 @@ summarize_uncertainty <- function(
         dplyr::mutate(exp = input_args$exp_central)
 
     # * * * * exp CIs, multiple geo units ######################################
-    } else if ( ( !base::is.null(input_args$exp_lower) ) &
+    } else if ( ( ci_in_exp ) &
                 ( is_pwm_exposure ) &
                 ( n_geo > 1 ) ) {
 
@@ -343,7 +371,7 @@ summarize_uncertainty <- function(
 
     # * * * * No exp CIs, multiple geo units ###################################
     } else if (
-      ( base::is.null(input_args$exp_lower) ) &
+      ( !ci_in_exp ) &
       ( is_pwm_exposure ) &
       ( n_geo > 1 )
       ) {
@@ -366,7 +394,7 @@ summarize_uncertainty <- function(
 
     # * * *  * exp CIs, single geo unit #####################
     if (
-      ( !base::is.null(input_args$exp_lower) ) &
+      ( ci_in_exp ) &
       ( is_categorical_exposure ) &
       ( n_geo == 1 )
       ) {
@@ -400,7 +428,7 @@ summarize_uncertainty <- function(
         dplyr::select(-exp)
 
       # * * * * No exp CIs, single geo unit ####################################
-    } else if ( (base::is.null(input_args$exp_lower) ) &
+    } else if ( ( !ci_in_exp ) &
                 ( is_categorical_exposure ) &
                 ( n_geo == 1 ) ) {
 
@@ -425,7 +453,7 @@ summarize_uncertainty <- function(
 
       # * * * * No exp CIs, multiple geo units #################################
     } else if (
-      ( base::is.null(input_args$exp_lower) ) &
+      ( !ci_in_exp ) &
       ( is_categorical_exposure ) &
       ( n_geo > 1 )
       ) {
@@ -444,7 +472,7 @@ summarize_uncertainty <- function(
       # * * * *  Exp CIs, multiple geo units ###################################
 
     } else if (
-      ( ! base::is.null(input_args$exp_lower) ) &
+      ( ci_in_exp ) &
       ( is_categorical_exposure ) &
       ( n_geo > 1 )
       ) {
@@ -528,7 +556,7 @@ summarize_uncertainty <- function(
     # * * cutoff ###############################################################
 
     # * * * cutoff CIs, both single and multiple geo unit case ##################
-    if ( !is.null(input_args$cutoff_lower) ) {
+    if ( ci_in_cutoff ) {
 
       ## Determine standard deviation (sd) based on the formula:
       ## (cutoff_upper - cutoff_lower) / (2 * 1.96)
@@ -543,7 +571,7 @@ summarize_uncertainty <- function(
             sd = sd_cutoff))
 
     # * * * No cutoff CIs, both single and multiple geo unit case ##############
-    } else if ( is.null(input_args$cutoff_lower) ) {
+    } else if ( !ci_in_cutoff ) {
 
       dat <- dat |>
         dplyr::mutate(cutoff = input_args$cutoff_central)
@@ -552,8 +580,8 @@ summarize_uncertainty <- function(
     # * * bhd ##################################################################
 
     # * * * bhd CIs & single geo unit ##########################################
-    if ( (!base::is.null(input_args$bhd_lower)) &
-      ( n_geo == 1 ) ) {
+    if ( ( ci_in_bhd ) &
+         ( n_geo == 1 ) ) {
 
       ## Determine standard deviation (sd) based on the formula:
       ## (bhd_upper - bhd_lower) / (2 * 1.96)
@@ -567,7 +595,7 @@ summarize_uncertainty <- function(
             sd = sd_bhd))
 
     # * * * No bhd CIs & single geo unit ##########################################
-    } else if ( (base::is.null(input_args$bhd_lower)) &
+    } else if ( ( !ci_in_bhd) &
                 ( n_geo == 1 ) ) {
 
       dat <- dat |>
@@ -575,7 +603,7 @@ summarize_uncertainty <- function(
 
     # * * * bhd CIs & multiple geo units ##########################################
     } else if (
-      (!base::is.null(input_args$bhd_lower)) &
+      ( ci_in_bhd ) &
       ( n_geo > 1 )
       ) {
 
@@ -617,7 +645,7 @@ summarize_uncertainty <- function(
 
     # * * * No bhd CI's & multiple geo units ######################################
     } else if (
-      (base::is.null(input_args$bhd_lower)) &
+      ( !ci_in_bhd ) &
       ( n_geo > 1 )
       ) {
 
@@ -639,7 +667,7 @@ summarize_uncertainty <- function(
     # * * dw ###################################################################
 
     # * * * dw CIs, both single and multiple geo unit case #####################
-    if ( (!base::is.null(input_args$dw_lower)) &
+    if ( ( ci_in_dw ) &
          ( n_geo == 1 ) ) {
 
       ## beta distribution using prevalence::betaExpert()
@@ -680,14 +708,14 @@ summarize_uncertainty <- function(
       #                               vector_dw_ci = vector_dw_ci))
 
     # * * * No dw CIs, both single and multiple geo unit case ##################
-    } else if ( !base::is.null(input_args$dw_central) &
-                base::is.null(input_args$dw_lower) &
+    } else if ( value_in_dw_central &
+                ci_in_dw &
                 n_geo == 1 ) {
       dat <- dat |>
         dplyr::mutate(dw = input_args$dw_central)
 
     # * * * No dw inputted, both single and multiple geo unit case #############
-    } else if (base::is.null(input_args$dw_central)) {
+    } else if (!value_in_dw_central) {
 
       dat <- dat |>
         dplyr::mutate(dw = 1)
@@ -835,7 +863,7 @@ summarize_uncertainty <- function(
     # * * * exp CI's & single geo unit #########################################
 
     if (
-      (! base::is.null(input_args$exp_lower)) &
+      ( ci_in_exp ) &
       ( n_geo == 1 )
     ) {
 
@@ -896,7 +924,7 @@ summarize_uncertainty <- function(
 
     # * * * exp CI's & multiple geo units ######################################
     } else if (
-      ( ! base::is.null(input_args$exp_lower) ) &
+      ( ci_in_exp ) &
       ( n_geo > 1 )
       ) {
 
@@ -995,7 +1023,7 @@ summarize_uncertainty <- function(
 
       # * * * no exp CI's & single geo unit case ###############################
     } else if (
-      ( base::is.null(input_args$exp_lower) ) &
+      ( !ci_in_exp ) &
       ( n_geo == 1  )
     ) {
 
@@ -1039,7 +1067,7 @@ summarize_uncertainty <- function(
 
       # * * * no exp CI's & multiple geo unit case #############################
     }  else if (
-    ( base::is.null(input_args$exp_lower) ) &
+    ( !ci_in_exp ) &
     ( n_geo > 1 )
     ) {
 
@@ -1116,7 +1144,7 @@ summarize_uncertainty <- function(
     # browser()
 
     # * * * dw CIs, both single and multiple geo unit case #####################
-    if ( (!base::is.null(input_args$dw_lower)) &
+    if ( ( ci_in_dw ) &
          ( n_geo == 1 ) ) {
 
       ## beta distribution using prevalence::betaExpert()
@@ -1157,12 +1185,12 @@ summarize_uncertainty <- function(
       #                               vector_dw_ci = vector_dw_ci))
 
       # * * * No dw CIs, both single and multiple geo unit case ################
-    } else if ( !is.null(input_args$dw_central) & is.null(input_args$dw_lower) ) {
+    } else if ( value_in_dw_central & !ci_in_dw ) {
       dat <- dat |>
         dplyr::mutate(dw = input_args$dw_central)
 
       # * * * No dw inputted, both single and multiple geo unit case ###########
-    } else if (is.null(input_args$dw_central) & is.null(input_args$dw_lower)) {
+    } else if ( !value_in_dw_central & !ci_in_dw) {
 
       dat <- dat |>
         dplyr::mutate(dw = 1)
@@ -1172,7 +1200,7 @@ summarize_uncertainty <- function(
     # * * erf_eq #################################################################
 
     # * * * No erf_eq CI's, both single and multiple geo unit case ###############
-    if ( !is.null(input_args$erf_eq_central) & is.null(input_args$erf_eq_lower) ) {
+    if ( value_in_erf_eq_central & !ci_in_erf_eq ) {
 
     ## Calculate risk for each noise band
     dat <- dat |>
@@ -1186,8 +1214,8 @@ summarize_uncertainty <- function(
       # dplyr::ungroup()
 
     # * * * erf_eq CI's & multiple geo unit case ###############################
-    } else if ( !is.null(input_args$erf_eq_central) &
-                !is.null(input_args$erf_eq_lower) ){
+    } else if ( value_in_erf_eq_central &
+                ci_in_erf_eq ){
 
       ## For each exp category, create 3 risk (ri) columns: e.g. ri_1_central, ri_1_lower, ri_1_upper & add to dat
       ### For the columns ri_..._central use the erf_eq_central, for ri_..._lower use the erf_eq_lower, ...
