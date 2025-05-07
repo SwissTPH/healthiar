@@ -26,7 +26,6 @@ summarize_uncertainty <- function(
     results,
     n_sim
     ) {
-
   ## SCRIPT STRUCTURE
   ## For each variable with a confidence interval a distribution is fitted, and
   ## then n_sim values are simulated based on the distribution.
@@ -60,6 +59,9 @@ summarize_uncertainty <- function(
   # Use impact_raw because it was obtained in compiled_input
   n_exp <- base::max(input_table$exposure_dimension)
   seq_exposure_dimension <- 1:n_exp
+
+  # Total number of iterations
+  n_total_it = n_sim * n_geo * n_exp
 
   # Store boolean variables
 
@@ -100,7 +102,8 @@ summarize_uncertainty <- function(
 
 
 
-  # Define betaExpert function #################################################
+  # Define functions #################################################
+  # betaExpert()
   ## Copied from source code of prevalence::betaExpert() here:
   ### https://github.com/cran/prevalence/blob/master/R/betaExpert.R
 
@@ -179,44 +182,211 @@ summarize_uncertainty <- function(
       return(out)
     }
 
+  ## Define helper functions for fitting a gamma distribution with optimization
+  ## for the relative risk.
+  ### NOTE: the functions were adapted from those provided by Sciensano
+
+  ## Set gamma distribution specs
+  vector_probabilities <- c(0.025, 0.975)
+  par <- 2 ## shape parameter of the gamma distribution
+
+  ## Fit gamma distribution
+  f_gamma <-
+    function(par, central_estimate, vector_propabilities, lower_estimate, upper_estimate) {
+      qfit <- qgamma(p = vector_propabilities, shape = par, rate = par / central_estimate)
+      return(sum((qfit - c(lower_estimate, upper_estimate))^2))
+    }
+
+  ## Optimize gamma distribution
+  optim_gamma <-
+    function(central_estimate, lower_estimate, upper_estimate) {
+      vector_propabilities <- c(0.025, 0.975)
+      f <- optimize(f = f_gamma,
+                    interval = c(0, 1e9),
+                    central_estimate = central_estimate,
+                    vector_propabilities = vector_probabilities,
+                    lower_estimate = lower_estimate,
+                    upper_estimate = upper_estimate)
+      return(c(f$minimum, f$minimum / central_estimate))
+    }
+
+  ## Simulate values based on optimized gamma distribution
+  sim_gamma <-
+    function(n_sim, central_estimate, lower_estimate, upper_estimate) {
+      fit <- optim_gamma(central_estimate, lower_estimate, upper_estimate)
+      rgamma(n = n_sim, fit[1], fit[2]) }
+
+
+  # Create template and run simulations #####################
+
+
+  # Create function to replace the input value by the simulated values
+  # (to be used below to create the df with simulated values)
+  replace_with_sim_values <- function(df, sim_list) {
+
+    n_sim <- base::length(sim_list[[1]])  # Number of simulations
+    sim_vars <- base::names(sim_list)
+    sim_vars_ci <-
+      base::replace(
+        base::paste0(sim_vars, "_ci"),
+        base::paste0(sim_vars, "_ci") %in% "rr_ci", "erf_ci")
+
+    # Get unique combinations of grouping variables
+    df_groups <- df
+    df_groups[sim_vars_ci] <- "central"
+    df_groups <- df_groups |>
+      dplyr::select(-dplyr::any_of(sim_vars))|>
+      #dplyr::select(dplyr::all_of(c("geo_id_disaggregated", "exposure_dimension")))|>
+      dplyr::distinct()
+
+    n_groups <- nrow(df_groups)
+
+    # Expand the data
+    df_expanded <- df_groups[base::rep(1:n_groups, each = n_sim), ]
+
+    # Align simulated data: repeat sim vector for each original row
+    sim_df <- purrr::map_dfc(sim_list, ~ base::rep(.x, times = n_groups))
+
+    # Add optional simulation index
+    sim_df$sim_id <- base::rownames(sim_df)
+
+    # Combine cleanly
+    df_with_sim <- dplyr::bind_cols(df_expanded, sim_df)
+  }
+
+
+  sim <- list()
+
+  if(ci_in_rr){
+    rr_sim <- sim_gamma(
+      n_sim = n_sim * n_geo * n_exp,
+      central_estimate = input_args$rr_central,
+      lower_estimate = input_args$rr_lower,
+      upper_estimate = input_args$rr_upper)
+
+    sim[["rr"]] <- rr_sim
+  }
+
+  if(ci_in_exp){
+    ## Determine standard deviation (sd) based on the formula:
+    ## (exp_upper - exp_lower) / (2 * 1.96)
+    sd_exp <-
+      (input_args$exp_upper - input_args$exp_lower) / (2 * 1.96)
+
+    ## Simulate values
+    exp_sim <- rnorm(
+      n_sim,
+      mean = input_args$exp_central,
+      sd = sd_exp)
+
+    sim[["exp"]] <- exp_sim
+  }
+
+  if(ci_in_cutoff){
+    sd_cutoff <-
+      (input_args$cutoff_upper - input_args$cutoff_lower) / (2 * 1.96)
+
+    cutoff_sim <- rnorm(
+        n_sim * n_geo * n_exp,
+        mean = input_args$cutoff_central,
+        sd = sd_cutoff)
+
+    sim[["cutoff"]] <- cutoff_sim
+  }
+
+  if(ci_in_bhd){
+    ## Determine standard deviation (sd) based on the formula:
+    ## (bhd_upper - bhd_lower) / (2 * 1.96)
+    sd_bhd <- #(bhd_upper - bhd_lower) / (2 * 1.96)
+      (base::unlist(input_args$bhd_upper) - base::unlist(input_args$bhd_lower)) / (2 * 1.96)
+
+    bhd_sim <- rnorm(
+      n_sim * n_geo * n_exp,
+      mean = base::unlist(input_args$bhd_central),
+      sd = sd_bhd)
+
+    sim[["bhd"]] <- bhd_sim
+  }
+
+
+  input_table_sim <-
+    replace_with_sim_values(
+      df = input_table,
+      sim_list = sim)
+
+  impact_sim <- healthiar:::get_impact(input_table = input_table_sim,
+                                       pop_fraction_type = "paf")
+
+
+  # Determine 95% CI of impact #################################################
+
+  # * Single geo unit ##########################################################
+
+  if ( ( n_geo == 1 ) ) {
+
+    ## CI of aggregated impact
+    ### Because there's only 1 geo unit the aggregated impact is the same as the geo unit impact
+    summarized_ci <- stats::quantile(x = impact_sim |> dplyr::pull(impact) |> base::unlist(),
+                                     probs = c(0.025, 0.5, 0.975),
+                                     na.rm = TRUE)
+
+    summarized_ci <- unname(summarized_ci) # Unname to remove percentiles from the names vector
+    summarized_ci <- tibble::tibble(central_estimate = summarized_ci[2],
+                                    lower_estimate = summarized_ci[1],
+                                    upper_estimate = summarized_ci[3])
+
+    # * Multiple geo units ###################################################
+  } else if ( n_geo > 1 ) {
+
+    # browser()
+
+    ## CIs of impact per geo unit
+    impact_per_geo_unit <- impact_sim |>
+      dplyr::group_by(geo_id_disaggregated) |>
+      dplyr::summarize(
+        impact_central = stats::quantile(
+          x = impact_total,
+          probs = c(0.5),
+          na.rm = TRUE
+        ),
+        impact_lower = stats::quantile(
+          x = impact_total,
+          probs = c(0.025),
+          na.rm = TRUE
+        ),
+        impact_upper = stats::quantile(
+          x = impact_total,
+          probs = c(0.975),
+          na.rm = TRUE
+        )
+      )
+
+    results[["uncertainty_detailed"]][["geo_specific"]] <- impact_per_geo_unit
+
+    ## CIs of impact aggregated over geo units
+    summarized_ci <- impact_per_geo_unit |>
+      dplyr::summarize(
+        central_estimate = sum(impact_central),
+        lower_estimate = sum(impact_lower),
+        upper_estimate = sum(impact_upper)
+      )
+
+  }
+
+  # Output #####################################################################
+  on.exit(options(user_options))
+
+  results[["uncertainty_main"]] <- summarized_ci
+
+  results[["uncertainty_detailed"]][["raw"]] <- impact_sim # to check interim results during development
+
+
   # Relative risk ##############################################################
   # Use input_table because approach risk a default value
   # (i.e. the value might not be available in input_args)
   if ( unique(input_table$approach_risk) == "relative_risk" ) {
 
-    ## Define helper functions for fitting a gamma distribution with optimization
-    ## for the relative risk.
-    ### NOTE: the functions were adapted from those provided by Sciensano
 
-    ## Set gamma distribution specs
-    vector_probabilities <- c(0.025, 0.975)
-    par <- 2 ## shape parameter of the gamma distribution
-
-    ## Fit gamma distribution
-    f_gamma <-
-      function(par, central_estimate, vector_propabilities, lower_estimate, upper_estimate) {
-        qfit <- qgamma(p = vector_propabilities, shape = par, rate = par / central_estimate)
-        return(sum((qfit - c(lower_estimate, upper_estimate))^2))
-      }
-
-    ## Optimize gamma distribution
-    optim_gamma <-
-      function(central_estimate, lower_estimate, upper_estimate) {
-        vector_propabilities <- c(0.025, 0.975)
-        f <- optimize(f = f_gamma,
-                      interval = c(0, 1e9),
-                      central_estimate = central_estimate,
-                      vector_propabilities = vector_probabilities,
-                      lower_estimate = lower_estimate,
-                      upper_estimate = upper_estimate)
-        return(c(f$minimum, f$minimum / central_estimate))
-      }
-
-    ## Simulate values based on optimized gamma distribution
-    sim_gamma <-
-      function(n_sim, central_estimate, lower_estimate, upper_estimate) {
-        fit <- optim_gamma(central_estimate, lower_estimate, upper_estimate)
-        rgamma(n = n_sim, fit[1], fit[2]) }
 
     ## Create empty tibble to store simulated values & results in
     dat <-
@@ -260,6 +430,7 @@ summarize_uncertainty <- function(
           rep(NA,
               times = n_sim * n_geo * n_exp)
       )
+
 
 
 
@@ -1343,7 +1514,7 @@ summarize_uncertainty <- function(
   results[["uncertainty_main"]] <- ci
 
   results[["uncertainty_detailed"]][["raw"]] <- dat # to check interim results during development
-
+  browser()
   return(results)
 
 }
