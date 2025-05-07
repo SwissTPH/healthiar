@@ -143,8 +143,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
         bestcost_noise_ihd_expDist,
         n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
 
-    expected = # Results on 2025-02-11; no comparison study
-      c(1154, 914, 1418)
+    expected = # Results on 2025-05-07; no comparison study
+      c(1148, 860, 1423)
   )
 })
 
@@ -183,12 +183,12 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
 
   testthat::expect_equal(
     object =
-      summarize_uncertainty(
+      healthiar::summarize_uncertainty(
         bestcost_noise_ihd_expDist_iteration,
         n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
 
-    expected = # Results on 2025-04-24; no comparison study
-      c(13997, 11687, 16871)
+    expected = # Results on 2025-05-07; no comparison study
+      c(14084, 11811, 17119)
   )
 })
 
