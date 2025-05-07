@@ -139,7 +139,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
   testthat::expect_equal(
 
     object =
-      summarize_uncertainty(
+      healthiar::summarize_uncertainty(
         bestcost_noise_ihd_expDist,
         n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
 
