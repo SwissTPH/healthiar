@@ -266,7 +266,7 @@ summarize_uncertainty <- function(
     if (
       ( !base::is.null(input_args$rr_lower) ) &
       ( is_pwm_exposure ) &
-      ( max(dat$geo_id_disaggregated) == 1 )
+      ( n_geo == 1 )
       ) {
 
       ## Determine standard deviation (sd) based on the formula:
@@ -286,7 +286,7 @@ summarize_uncertainty <- function(
     } else if (
       ( base::is.null(input_args$exp_lower) ) &
       ( is_pwm_exposure ) &
-      ( max(dat$geo_id_disaggregated) == 1 )
+      ( n_geo == 1 )
       ) {
 
       ## Assign central value to all rows as no CI's present for exp variable
@@ -296,7 +296,7 @@ summarize_uncertainty <- function(
     # * * * * exp CIs, multiple geo units ######################################
     } else if ( ( !base::is.null(input_args$exp_lower) ) &
                 ( is_pwm_exposure ) &
-                ( max(dat$geo_id_disaggregated) > 1 ) ) {
+                ( n_geo > 1 ) ) {
 
       ## For each geo unit, fit a normal distribution and assign to dat
       ## Fit distribution based on each geo units central, lower and upper bhd values
@@ -342,7 +342,7 @@ summarize_uncertainty <- function(
     } else if (
       ( base::is.null(input_args$exp_lower) ) &
       ( is_pwm_exposure ) &
-      ( max(dat$geo_id_disaggregated) > 1 )
+      ( n_geo > 1 )
       ) {
 
       ## Add central exposure value of each geo unit to dat tibble using left_join
@@ -365,7 +365,7 @@ summarize_uncertainty <- function(
     if (
       ( !base::is.null(input_args$exp_lower) ) &
       ( is_categorical_exposure ) &
-      ( max(dat$geo_id_disaggregated) == 1 )
+      ( n_geo == 1 )
       ) {
 
       ## Vectors needed for simulation below
@@ -399,7 +399,7 @@ summarize_uncertainty <- function(
       # * * * * No exp CIs, single geo unit ####################################
     } else if ( (base::is.null(input_args$exp_lower) ) &
                 ( is_categorical_exposure ) &
-                ( max(dat$geo_id_disaggregated) == 1 ) ) {
+                ( n_geo == 1 ) ) {
 
       # Vectors needed for simulation below (exp_central & prop_pop_exp)
       exp_central <- input_args$exp_central
@@ -424,7 +424,7 @@ summarize_uncertainty <- function(
     } else if (
       ( base::is.null(input_args$exp_lower) ) &
       ( is_categorical_exposure ) &
-      ( max(dat$geo_id_disaggregated) > 1 )
+      ( n_geo > 1 )
       ) {
 
       # Vectors needed for simulation below (exp_central & prop_pop_exp)
@@ -443,7 +443,7 @@ summarize_uncertainty <- function(
     } else if (
       ( ! base::is.null(input_args$exp_lower) ) &
       ( is_categorical_exposure ) &
-      ( max(dat$geo_id_disaggregated) > 1 )
+      ( n_geo > 1 )
       ) {
 
 
@@ -550,7 +550,7 @@ summarize_uncertainty <- function(
 
     # * * * bhd CIs & single geo unit ##########################################
     if ( (!base::is.null(input_args$bhd_lower)) &
-      ( max(dat$geo_id_disaggregated) == 1 ) ) {
+      ( n_geo == 1 ) ) {
 
       ## Determine standard deviation (sd) based on the formula:
       ## (bhd_upper - bhd_lower) / (2 * 1.96)
@@ -565,7 +565,7 @@ summarize_uncertainty <- function(
 
     # * * * No bhd CIs & single geo unit ##########################################
     } else if ( (base::is.null(input_args$bhd_lower)) &
-                ( max(dat$geo_id_disaggregated) == 1 ) ) {
+                ( n_geo == 1 ) ) {
 
       dat <- dat |>
         dplyr::mutate(bhd = base::unlist(input_args$bhd_central))
@@ -573,7 +573,7 @@ summarize_uncertainty <- function(
     # * * * bhd CIs & multiple geo units ##########################################
     } else if (
       (!base::is.null(input_args$bhd_lower)) &
-      ( max(dat$geo_id_disaggregated) > 1 )
+      ( n_geo > 1 )
       ) {
 
       ## For each geo unit, fit a normal distribution and assign to dat
@@ -615,7 +615,7 @@ summarize_uncertainty <- function(
     # * * * No bhd CI's & multiple geo units ######################################
     } else if (
       (base::is.null(input_args$bhd_lower)) &
-      ( max(dat$geo_id_disaggregated) > 1 )
+      ( n_geo > 1 )
       ) {
 
       ## Add central exposure value of each geo unit to dat tibble using left_join
@@ -637,7 +637,7 @@ summarize_uncertainty <- function(
 
     # * * * dw CIs, both single and multiple geo unit case #####################
     if ( (!base::is.null(input_args$dw_lower)) &
-         ( max(dat$geo_id_disaggregated) == 1 ) ) {
+         ( n_geo == 1 ) ) {
 
       ## beta distribution using prevalence::betaExpert()
       ### Determine the alpha and beta parameters needed to fit beta distribution using the (source code of the) prevalence::betaExpert() function
@@ -679,7 +679,7 @@ summarize_uncertainty <- function(
     # * * * No dw CIs, both single and multiple geo unit case ##################
     } else if ( !base::is.null(input_args$dw_central) &
                 base::is.null(input_args$dw_lower) &
-                max(dat$geo_id_disaggregated) == 1 ) {
+                n_geo == 1 ) {
       dat <- dat |>
         dplyr::mutate(dw = input_args$dw_central)
 
@@ -833,7 +833,7 @@ summarize_uncertainty <- function(
 
     if (
       (! base::is.null(input_args$exp_lower)) &
-      ( max(dat$geo_id_disaggregated) == 1 )
+      ( n_geo == 1 )
     ) {
 
       # browser()
@@ -894,7 +894,7 @@ summarize_uncertainty <- function(
     # * * * exp CI's & multiple geo units ######################################
     } else if (
       ( ! base::is.null(input_args$exp_lower) ) &
-      ( max(dat$geo_id_disaggregated) > 1 )
+      ( n_geo > 1 )
       ) {
 
       ## Create exp vectors needed for simulation below
@@ -993,7 +993,7 @@ summarize_uncertainty <- function(
       # * * * no exp CI's & single geo unit case ###############################
     } else if (
       ( base::is.null(input_args$exp_lower) ) &
-      ( max(dat$geo_id_disaggregated) == 1  )
+      ( n_geo == 1  )
     ) {
 
 
@@ -1037,7 +1037,7 @@ summarize_uncertainty <- function(
       # * * * no exp CI's & multiple geo unit case #############################
     }  else if (
     ( base::is.null(input_args$exp_lower) ) &
-    ( max(dat$geo_id_disaggregated) > 1 )
+    ( n_geo > 1 )
     ) {
 
     ## Create exp and prop_exp vectors
@@ -1114,7 +1114,7 @@ summarize_uncertainty <- function(
 
     # * * * dw CIs, both single and multiple geo unit case #####################
     if ( (!base::is.null(input_args$dw_lower)) &
-         ( max(dat$geo_id_disaggregated) == 1 ) ) {
+         ( n_geo == 1 ) ) {
 
       ## beta distribution using prevalence::betaExpert()
       ### Determine the alpha and beta parameters needed to fit beta distribution using the (source code of the) prevalence::betaExpert() function
@@ -1255,7 +1255,7 @@ summarize_uncertainty <- function(
 
   # * Single geo unit ##########################################################
 
-  if ( ( max(dat$geo_id_disaggregated) == 1 ) ) {
+  if ( ( n_geo == 1 ) ) {
 
     ## CI of aggregated impact
     ### Because there's only 1 geo unit the aggregated impact is the same as the geo unit impact
@@ -1269,7 +1269,7 @@ summarize_uncertainty <- function(
                  upper_estimate = ci[3])
 
   # * Multiple geo units ###################################################
-  } else if ( max(dat$geo_id_disaggregated) > 1 ) {
+  } else if ( n_geo > 1 ) {
 
     # browser()
 
