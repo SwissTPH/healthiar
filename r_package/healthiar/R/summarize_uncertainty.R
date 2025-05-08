@@ -44,14 +44,14 @@ summarize_uncertainty <- function(
   options(digits = 15) # Make sure that no rounding occurs
 
   ## Set seed for reproducibility
-  if(is.null(seed)){seed <- 123}
+  if(base::is.null(seed)){seed <- 123}
 
   seed_rr <- seed #+ 1
   seed_exp <- seed #+ 2
   seed_cutoff <- seed #+ 3
   seed_bhd <- seed #+ 4
   seed_dw <- seed #+ 5
-  seed_erf_eq <- seed #+ 6
+  seed_duration <- seed #+ 6
 
 
   # Store the input data as entered in the arguments
@@ -63,7 +63,7 @@ summarize_uncertainty <- function(
     # Exceptionally, let's use here unique() instead of input_args
     # because in some cases the users do not enter the geo_id.
     # In that cases compile_input() provide a geo_id and it is shown in impact_raw
-    length(unique(input_table$geo_id_disaggregated))
+    base::length(base::unique(input_table$geo_id_disaggregated))
 
   # Sequence (vector) of exposure_dimension
   # Use impact_raw because it was obtained in compiled_input
@@ -72,6 +72,11 @@ summarize_uncertainty <- function(
 
   # Total number of iterations
   n_total_it = n_sim * n_geo * n_exp
+
+  # Number of assessments (i.e. condensing exposure distributions)
+  n_ass <- n_sim * n_geo
+
+  ass_id <- base::as.numeric(base::rep(1:n_ass, each = n_exp))
 
   # Store boolean variables
 
@@ -98,14 +103,17 @@ summarize_uncertainty <- function(
   ci_in_dw <-
     !base::is.null(input_args$dw_lower) && !base::is.null(input_args$dw_upper)
 
+  ci_in_duration <-
+    !base::is.null(input_args$duration_lower) && !base::is.null(input_args$duration_upper)
+
   ci_in_erf_eq <-
     !base::is.null(input_args$erf_eq_lower) && !base::is.null(input_args$erf_eq_upper)
 
   value_in_dw_central <-
-    !is.null(input_args$dw_central)
+    !base::is.null(input_args$dw_central)
 
   value_in_erf_eq_central <-
-    !is.null(input_args$erf_eq_central)
+    !base::is.null(input_args$erf_eq_central)
 
   # Store seed
 
@@ -122,8 +130,8 @@ summarize_uncertainty <- function(
       f_mode <-
         function(x, mode, p, target){
           return(
-            sum(
-              (qbeta(p = p,
+            base::sum(
+              (stats::qbeta(p = p,
                      shape1 = x,
                      shape2 = (x * (1 - mode) + 2 * mode - 1) / mode) -
                  target) ^ 2
@@ -132,20 +140,20 @@ summarize_uncertainty <- function(
 
       f_mode_zero <-
         function(x, p, target){
-          return((qbeta(p = p, shape1 = 1, shape2 = x) - target) ^ 2)
+          return((stats::qbeta(p = p, shape1 = 1, shape2 = x) - target) ^ 2)
         }
 
       f_mode_one <-
         function(x, p, target){
-          return((qbeta(p = p, shape1 = x, shape2 = 1) - target) ^ 2)
+          return((stats::qbeta(p = p, shape1 = x, shape2 = 1) - target) ^ 2)
         }
 
       ## functions to optimize ~ mean
       f_mean <-
         function(x, mean, p, target){
           return(
-            sum(
-              (qbeta(p = p,
+            base::sum(
+              (stats::qbeta(p = p,
                      shape1 = x,
                      shape2 = (x * (1 - mean)) / mean) -
                  target) ^ 2
@@ -153,12 +161,12 @@ summarize_uncertainty <- function(
         }
 
       ## define 'target' and 'p'
-      if (!missing(lower) & missing(upper)){
+      if (!base::missing(lower) & base::missing(upper)){
         target <- lower
         p <- 1 - p
-      } else if (!missing(upper) & missing(lower)){
+      } else if (!base::missing(upper) & base::missing(lower)){
         target <- upper
-      } else if (!missing(upper) & !missing(lower)){
+      } else if (!base::missing(upper) & !base::missing(lower)){
         target <- c(lower, upper)
         p <- c(0, p) + (1 - p) / 2
       }
@@ -167,24 +175,24 @@ summarize_uncertainty <- function(
       if (method == "mode"){
         if (best == 0){
           a <- 1
-          b <- optimize(f_mode_zero, c(0, 1000), p = p, target = target)$minimum
+          b <- stats::optimize(f_mode_zero, c(0, 1000), p = p, target = target)$minimum
         } else if (best == 1) {
-          a <- optimize(f_mode_one, c(0, 1000), p = p, target = target)$minimum
+          a <- stats::optimize(f_mode_one, c(0, 1000), p = p, target = target)$minimum
           b <- 1
         } else {
-          a <- optimize(f_mode, c(0, 1000),
+          a <- stats::optimize(f_mode, c(0, 1000),
                         mode = best, p = p, target = target)$minimum
           b <- (a * (1 - best) + 2 * best - 1) / best
         }
       } else if (method == "mean"){
-        a <- optimize(f_mean, c(0, 1000),
+        a <- stats::optimize(f_mean, c(0, 1000),
                       mean = best, p = p, target = target)$minimum
         b <- (a * (1 - best)) / best
       }
 
       ## create 'out' dataframe
-      out <- list(alpha = a, beta = b)
-      class(out) <- "betaExpert"
+      out <- base::list(alpha = a, beta = b)
+      base::class(out) <- "betaExpert"
 
       ## return 'out'
       return(out)
@@ -201,15 +209,15 @@ summarize_uncertainty <- function(
   ## Fit gamma distribution
   f_gamma <-
     function(par, central_estimate, vector_propabilities, lower_estimate, upper_estimate) {
-      qfit <- qgamma(p = vector_propabilities, shape = par, rate = par / central_estimate)
-      return(sum((qfit - c(lower_estimate, upper_estimate))^2))
+      qfit <- stats::qgamma(p = vector_propabilities, shape = par, rate = par / central_estimate)
+      return(base::sum((qfit - c(lower_estimate, upper_estimate))^2))
     }
 
   ## Optimize gamma distribution
   optim_gamma <-
     function(central_estimate, lower_estimate, upper_estimate) {
       vector_propabilities <- c(0.025, 0.975)
-      f <- optimize(f = f_gamma,
+      f <- stats::optimize(f = f_gamma,
                     interval = c(0, 1e9),
                     central_estimate = central_estimate,
                     vector_propabilities = vector_probabilities,
@@ -222,7 +230,7 @@ summarize_uncertainty <- function(
   sim_gamma <-
     function(n_sim, central_estimate, lower_estimate, upper_estimate) {
       fit <- optim_gamma(central_estimate, lower_estimate, upper_estimate)
-      rgamma(n = n_sim, fit[1], fit[2]) }
+      stats::rgamma(n = n_sim, fit[1], fit[2]) }
 
 
   # Create template and run simulations #####################
@@ -233,12 +241,16 @@ summarize_uncertainty <- function(
   sim <- list()
 
   if(ci_in_rr){
+
     base::set.seed(seed_rr)
-    rr_sim <- sim_gamma(
-      n_sim = n_sim * n_geo * n_exp,
-      central_estimate = input_args$rr_central,
-      lower_estimate = input_args$rr_lower,
-      upper_estimate = input_args$rr_upper)
+    rr_sim <-
+      #abs() because negative values have to be avoided
+      base::abs(
+        sim_gamma(
+          n_sim = n_sim * n_geo * n_exp,
+          central_estimate = input_args$rr_central,
+          lower_estimate = input_args$rr_lower,
+          upper_estimate = input_args$rr_upper))
 
     sim[["rr"]] <- rr_sim
   }
@@ -252,10 +264,13 @@ summarize_uncertainty <- function(
     ## Simulate values
 
     base::set.seed(seed_exp)
-    exp_sim <- rnorm(
-      n_sim * n_geo * n_exp,
-      mean = base::unlist(input_args$exp_central),
-      sd = sd_exp)
+    exp_sim <-
+      #abs() because negative values have to be avoided
+      base::abs(
+        stats::rnorm(
+          n_sim * n_geo * n_exp,
+          mean = base::unlist(input_args$exp_central),
+          sd = sd_exp))
 
     sim[["exp"]] <- exp_sim
   }
@@ -264,10 +279,13 @@ summarize_uncertainty <- function(
     sd_cutoff <-
       (input_args$cutoff_upper - input_args$cutoff_lower) / (2 * 1.96)
     base::set.seed(seed_cutoff)
-    cutoff_sim <- rnorm(
-        n_sim * n_geo * n_exp,
-        mean = input_args$cutoff_central,
-        sd = sd_cutoff)
+    cutoff_sim <-
+      #abs() because negative values have to be avoided
+      base::abs(
+        stats::rnorm(
+          n_sim * n_geo * n_exp,
+          mean = input_args$cutoff_central,
+          sd = sd_cutoff))
 
     sim[["cutoff"]] <- cutoff_sim
   }
@@ -279,10 +297,13 @@ summarize_uncertainty <- function(
     sd_bhd <- #(bhd_upper - bhd_lower) / (2 * 1.96)
       (base::unlist(input_args$bhd_upper) - base::unlist(input_args$bhd_lower)) / (2 * 1.96)
     base::set.seed(seed_bhd)
-    bhd_sim <- rnorm(
-      n_sim * n_geo * n_exp,
-      mean = base::unlist(input_args$bhd_central),
-      sd = sd_bhd)
+    bhd_sim <-
+      #abs() because negative values have to be avoided
+      base::abs(
+        stats::rnorm(
+          n_sim * n_geo * n_exp,
+          mean = base::unlist(input_args$bhd_central),
+          sd = sd_bhd))
 
     sim[["bhd"]] <- bhd_sim
   }
@@ -300,8 +321,8 @@ summarize_uncertainty <- function(
 
       base::set.seed(seed_dw)
       dw_sim <-
-        rbeta(
-          n = n_sim,
+        stats::rbeta(
+          n = n_sim * n_geo * n_exp,
           shape1 = as.numeric(unname(dw_sim_betaExpert["alpha"])),
           shape2 = as.numeric(unname(dw_sim_betaExpert["beta"])))
 
@@ -309,53 +330,74 @@ summarize_uncertainty <- function(
 
   }
 
-  # Create function to replace the input value by the simulated values
-  # (to be used below to create the df with simulated values)
-  replace_with_sim_values <- function(df, sim_list) {
+  if(ci_in_duration){
 
-    n_total <- base::length(sim_list[[1]])  # Number of simulations
-    sim_vars <- base::names(sim_list)
-    sim_vars_ci <-
-      base::replace(
-        base::paste0(sim_vars, "_ci"),
-        base::paste0(sim_vars, "_ci") %in% "rr_ci", "erf_ci")
-    sim_vars_and_ci <-
-      c(sim_vars, sim_vars_ci)
+    ## Determine standard deviation (sd) based on the formula:
+    sd_duration <-
+      (base::unlist(input_args$duration_upper) - base::unlist(input_args$duration_lower)) / (2 * 1.96)
+    base::set.seed(seed_duration)
+    duration_sim <-
+      #abs() because negative values have to be avoided
+      base::abs(
+        stats::rnorm(
+          n_sim * n_geo * n_exp,
+          mean = base::unlist(input_args$duration_central),
+          sd = sd_duration))
 
-    # Get unique combinations of grouping variables
-    df_groups <- df
-    df_groups <- df_groups |>
-      dplyr::select(-dplyr::any_of(sim_vars_and_ci))|>
-      #dplyr::select(dplyr::all_of(c("geo_id_disaggregated", "exposure_dimension")))|>
-      dplyr::distinct()
+    sim[["duration"]] <- duration_sim
+  }
 
-
-    n_groups <- nrow(df_groups)
-    n_sim <- n_total / n_groups
-
-    # Expand the data
-    df_expanded <- df_groups[base::rep(1:n_groups, each = n_sim), ]
-    df_expanded[sim_vars_ci] <- base::rownames(df_expanded)  # Needed to group rows for obtaining paf or pif
-
-    # Align simulated data: repeat sim vector for each original row
-    sim_df <- sim_list |>
-      dplyr::bind_cols() |>
-      #purrr::map_dfc(, ~ base::rep(.x, times = n_groups)) |>
-      # Add optional simulation index
-      dplyr::mutate(sim_id = 1 : n_total) |>
-      # Combine cleanly
-      dplyr::bind_cols(df_expanded)
+  if((!base::is.null(input_args$erf_eq_lower) |
+      !base::is.null(input_args$erf_eq_lower))){
+    base::stop("Sorry, the summary of uncertainty for erf_eq is not currently supported",
+               call. = FALSE)
   }
 
 
-  input_table_sim <-
-    replace_with_sim_values(
-      df = input_table,
-      sim_list = sim)
+
+  # Create function to replace the input value by the simulated values
+  # (to be used below to create the df with simulated values)
+  sim_vars <- base::names(sim)
+  sim_vars_ci <-
+    base::replace(
+      base::paste0(sim_vars, "_ci"),
+      base::paste0(sim_vars, "_ci") %in% "rr_ci", "erf_ci")
+  sim_vars_and_ci <- c(sim_vars, sim_vars_ci)
+
+  # Get unique combinations of grouping variables
+  input_groups <- input_table |>
+    dplyr::select(-dplyr::any_of(sim_vars_and_ci))|>
+    dplyr::distinct()
+
+  n_groups <- base::nrow(input_groups)
+
+  # Expand the data
+  input_groups_expanded <- input_groups[base::rep(1:n_groups, each = n_sim), ]
+
+  template <-
+    tibble::tibble(
+      sim_id = base::as.numeric(base::rep(1:n_sim, each=n_geo)),
+      geo_id_disaggregated =
+        base::as.character(base::rep(base::unique(input_groups$geo_id_disaggregated),
+                                     times=n_sim))) |>
+    dplyr::left_join(input_groups,
+                     by = "geo_id_disaggregated")|>
+    dplyr::select(dplyr::all_of(c("sim_id", "geo_id_disaggregated", "exposure_dimension")))
+
+  sim_df <-
+    dplyr::left_join(template, input_groups,
+                     by = c("geo_id_disaggregated", "exposure_dimension")) |>
+    dplyr::bind_cols(sim)
+
+  sim_df[sim_vars_ci] <- base::paste0("central_" , sim_df$sim_id)
+
+
+  impact_raw_sim <-
+    healthiar:::get_impact(input_table = sim_df,
+                           pop_fraction_type = "paf")
 
   impact_sim <-
-    healthiar:::get_impact(input_table = input_table_sim,
-                           pop_fraction_type = "paf")
+    healthiar:::get_output(impact_raw = impact_raw_sim)[["health_main"]]
 
 
   # Determine 95% CI of impact #################################################
@@ -366,21 +408,23 @@ summarize_uncertainty <- function(
 
     ## CI of aggregated impact
     ### Because there's only 1 geo unit the aggregated impact is the same as the geo unit impact
-    summarized_ci <- stats::quantile(x = impact_sim |> dplyr::pull(impact) |> base::unlist(),
+    summarized_ci <- stats::quantile(x = impact_sim$impact,
                                      probs = c(0.025, 0.5, 0.975),
                                      na.rm = TRUE)
 
-    summarized_ci <- unname(summarized_ci) # Unname to remove percentiles from the names vector
+    summarized_ci <- base::unname(summarized_ci) # Unname to remove percentiles from the names vector
     summarized_ci <- tibble::tibble(central_estimate = summarized_ci[2],
                                     lower_estimate = summarized_ci[1],
                                     upper_estimate = summarized_ci[3])
 
     # * Multiple geo units ###################################################
   } else if ( n_geo > 1 ) {
+    grouping_geo_var <-
+      names(impact_sim)[grepl("geo_id", names(impact_sim))]
 
      ## CIs of impact per geo unit
     impact_per_geo_unit <- impact_sim |>
-      dplyr::group_by(geo_id_disaggregated) |>
+      dplyr::group_by(dplyr::across(dplyr::all_of(grouping_geo_var))) |>
       dplyr::summarize(
         impact_central = stats::quantile(
           x = impact,
@@ -404,9 +448,9 @@ summarize_uncertainty <- function(
     ## CIs of impact aggregated over geo units
     summarized_ci <- impact_per_geo_unit |>
       dplyr::summarize(
-        central_estimate = sum(impact_central),
-        lower_estimate = sum(impact_lower),
-        upper_estimate = sum(impact_upper)
+        central_estimate = base::sum(impact_central),
+        lower_estimate = base::sum(impact_lower),
+        upper_estimate = base::sum(impact_upper)
       )
 
   }
