@@ -156,7 +156,7 @@ get_pop_impact <-
 
     # DETERMINE ENTRY POPULATION OF YOA+1 IN BASELINE SCENARIO
     pop <- input_with_risk_and_pop_fraction |>
-      dplyr:::mutate(
+      dplyr::mutate(
         pop_baseline_scenario_nest =
           purrr::map(
             .x = lifetable_with_pop_nest,
