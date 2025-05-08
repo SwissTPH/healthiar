@@ -7,6 +7,7 @@
 
 #' @param results \code{variable} in which the results of an attribute function is stored.
 #' @param n_sim \code{numeric value} indicating the number of simulations to be performed.
+#' @param seed \code{numeric value} fixing the randomization. If empty, new results each time that the function runs.
 
 #' @returns
 #' This function returns confidence intervals for the attributable health impacts using a Monte Carlo simulation.
