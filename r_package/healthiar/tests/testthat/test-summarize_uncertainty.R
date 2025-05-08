@@ -71,8 +71,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
         res = bestcost_pm_copd_geo_short,
         n_sim = 100
       )$uncertainty_main |> base::as.numeric() |> base::round(),
-    expected = # Results on 2025-02-11; no comparison study
-      c(31357, 12369, 49747)
+    expected = # Results on 2025-05-08; no comparison study
+      c(31479, 11593, 50099)
   )
 })
 
@@ -113,7 +113,7 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_
       )$uncertainty_main |> base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-02-11; no comparison study
-      c(577, 255, 1125)
+      c(652, 266, 1031)
   )
 })
 

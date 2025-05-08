@@ -288,6 +288,7 @@ summarize_uncertainty <- function(
   }
 
   if(ci_in_dw){
+
     base::set.seed(seed_dw)
     dw_sim_betaExpert <-
       betaExpert(
@@ -296,12 +297,15 @@ summarize_uncertainty <- function(
         input_args$dw_upper,
         method = "mean")
 
-    dw_sim <-
+
       base::set.seed(seed_dw)
-      rbeta(
-        n = n_sim,
-        shape1 = as.numeric(unname(dw_sim["alpha"])),
-        shape2 = as.numeric(unname(dw_sim["beta"])))
+      dw_sim <-
+        rbeta(
+          n = n_sim,
+          shape1 = as.numeric(unname(dw_sim_betaExpert["alpha"])),
+          shape2 = as.numeric(unname(dw_sim_betaExpert["beta"])))
+
+      sim[["dw"]] <- dw_sim
 
   }
 
