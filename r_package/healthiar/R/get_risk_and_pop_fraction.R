@@ -190,7 +190,7 @@ get_risk_and_pop_fraction <-
     input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
 
       ## Group by exp_ci and cutoff_ci in case that there are different exposure or cutoff categories
-      dplyr::group_by(dplyr::across(dplyr::all_of(available_columns_to_group_input)))
+      dplyr::group_by(dplyr::across(dplyr::any_of(available_columns_to_group_input)))
 
 
     # * PAF ####################################################################
