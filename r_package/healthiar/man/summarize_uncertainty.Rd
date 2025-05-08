@@ -4,7 +4,7 @@
 \alias{summarize_uncertainty}
 \title{Get Monte Carlo confidence intervals}
 \usage{
-summarize_uncertainty(results, n_sim)
+summarize_uncertainty(results, n_sim, seed)
 }
 \arguments{
 \item{results}{\code{variable} in which the results of an attribute function is stored.}
