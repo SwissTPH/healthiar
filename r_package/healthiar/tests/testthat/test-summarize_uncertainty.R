@@ -39,7 +39,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
         seed = 123
         )$uncertainty_main |> base::as.numeric() |> base::round(),
     expected = # Results on 2025-05-08; no comparison study
-      c(1324, 1103, 1586)
+      c(1324, 854, 1815)
   )
 })
 
@@ -72,7 +72,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
         n_sim = 100
       )$uncertainty_main |> base::as.numeric() |> base::round(),
     expected = # Results on 2025-02-11; no comparison study
-      c(31865, 11661, 49306)
+      c(31357, 12369, 49747)
   )
 })
 

@@ -44,14 +44,14 @@ summarize_uncertainty <- function(
   options(digits = 15) # Make sure that no rounding occurs
 
   ## Set seed for reproducibility
-  if(!is.null(seed)){
-    seed_rr <- seed #+ 1
-    seed_exp <- seed #+ 2
-    seed_cutoff <- seed #+ 3
-    seed_bhd <- seed #+ 4
-    seed_dw <- seed #+ 5
-    seed_erf_eq <- seed #+ 6
-    }
+  if(is.null(seed)){seed <- 123}
+
+  seed_rr <- seed #+ 1
+  seed_exp <- seed #+ 2
+  seed_cutoff <- seed #+ 3
+  seed_bhd <- seed #+ 4
+  seed_dw <- seed #+ 5
+  seed_erf_eq <- seed #+ 6
 
 
   # Store the input data as entered in the arguments
@@ -233,7 +233,7 @@ summarize_uncertainty <- function(
   sim <- list()
 
   if(ci_in_rr){
-    #base::set.seed(seed_rr)
+    base::set.seed(seed_rr)
     rr_sim <- sim_gamma(
       n_sim = n_sim * n_geo * n_exp,
       central_estimate = input_args$rr_central,
@@ -251,7 +251,7 @@ summarize_uncertainty <- function(
 
     ## Simulate values
 
-    #base::set.seed(seed_exp)
+    base::set.seed(seed_exp)
     exp_sim <- rnorm(
       n_sim * n_geo * n_exp,
       mean = base::unlist(input_args$exp_central),
@@ -263,7 +263,7 @@ summarize_uncertainty <- function(
   if(ci_in_cutoff){
     sd_cutoff <-
       (input_args$cutoff_upper - input_args$cutoff_lower) / (2 * 1.96)
-    #base::set.seed(seed_cutoff)
+    base::set.seed(seed_cutoff)
     cutoff_sim <- rnorm(
         n_sim * n_geo * n_exp,
         mean = input_args$cutoff_central,
@@ -278,7 +278,7 @@ summarize_uncertainty <- function(
     ## (bhd_upper - bhd_lower) / (2 * 1.96)
     sd_bhd <- #(bhd_upper - bhd_lower) / (2 * 1.96)
       (base::unlist(input_args$bhd_upper) - base::unlist(input_args$bhd_lower)) / (2 * 1.96)
-    #base::set.seed(seed_bhd)
+    base::set.seed(seed_bhd)
     bhd_sim <- rnorm(
       n_sim * n_geo * n_exp,
       mean = base::unlist(input_args$bhd_central),
@@ -288,7 +288,7 @@ summarize_uncertainty <- function(
   }
 
   if(ci_in_dw){
-
+    base::set.seed(seed_dw)
     dw_sim_betaExpert <-
       betaExpert(
         input_args$dw_central,
@@ -297,6 +297,7 @@ summarize_uncertainty <- function(
         method = "mean")
 
     dw_sim <-
+      base::set.seed(seed_dw)
       rbeta(
         n = n_sim,
         shape1 = as.numeric(unname(dw_sim["alpha"])),
@@ -308,36 +309,39 @@ summarize_uncertainty <- function(
   # (to be used below to create the df with simulated values)
   replace_with_sim_values <- function(df, sim_list) {
 
-    n_sim <- base::length(sim_list[[1]])  # Number of simulations
+    n_total <- base::length(sim_list[[1]])  # Number of simulations
     sim_vars <- base::names(sim_list)
     sim_vars_ci <-
       base::replace(
         base::paste0(sim_vars, "_ci"),
         base::paste0(sim_vars, "_ci") %in% "rr_ci", "erf_ci")
+    sim_vars_and_ci <-
+      c(sim_vars, sim_vars_ci)
 
     # Get unique combinations of grouping variables
     df_groups <- df
-    df_groups[sim_vars_ci] <- "central"
     df_groups <- df_groups |>
-      dplyr::select(-dplyr::any_of(sim_vars))|>
+      dplyr::select(-dplyr::any_of(sim_vars_and_ci))|>
       #dplyr::select(dplyr::all_of(c("geo_id_disaggregated", "exposure_dimension")))|>
       dplyr::distinct()
 
+
     n_groups <- nrow(df_groups)
+    n_sim <- n_total / n_groups
 
     # Expand the data
     df_expanded <- df_groups[base::rep(1:n_groups, each = n_sim), ]
+    df_expanded[sim_vars_ci] <- base::rownames(df_expanded)  # Needed to group rows for obtaining paf or pif
 
     # Align simulated data: repeat sim vector for each original row
-    sim_df <- purrr::map_dfc(sim_list, ~ base::rep(.x, times = n_groups))
-
-    # Add optional simulation index
-    sim_df$sim_id <- base::rownames(sim_df)
-
-    # Combine cleanly
-    df_with_sim <- dplyr::bind_cols(df_expanded, sim_df)
+    sim_df <- sim_list |>
+      dplyr::bind_cols() |>
+      #purrr::map_dfc(, ~ base::rep(.x, times = n_groups)) |>
+      # Add optional simulation index
+      dplyr::mutate(sim_id = 1 : n_total) |>
+      # Combine cleanly
+      dplyr::bind_cols(df_expanded)
   }
-
 
 
   input_table_sim <-
