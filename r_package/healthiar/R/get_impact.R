@@ -60,9 +60,9 @@ get_impact <-
           # Build the result table adding the impact to the input table
           dplyr::mutate(impact = pop_fraction * bhd) |>
           # Order columns
-          dplyr::select(exp_ci, bhd_ci, erf_ci,
-                        pop_fraction, impact,
-                        dplyr::everything())
+          dplyr::select(dplyr::any_of(
+            c("exp_ci", "bhd_ci", "erf_ci", "pop_fraction", "impact")),
+            dplyr::everything())
 
       # * Lifetable ##########################################################
       } else if (unique(input_table$is_lifetable)) {

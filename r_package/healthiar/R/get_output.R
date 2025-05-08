@@ -193,27 +193,30 @@ get_output <-
     # Keep only exp_ci = central and bhd_ci = central in main output ###########
     output[["health_main"]] <-
       output_last |>
-      dplyr::filter(exp_ci %in% c("central"))
+        #grepl instead of %in% because it needs
+        # to be flexible to also acccept the central_*id_ass* in the
+        #summarize_uncertainty
+      dplyr::filter(base::grepl("central", exp_ci))
 
     if("bhd_ci" %in% names(output[["health_main"]])) {
 
       output[["health_main"]] <- output[["health_main"]] |>
-        dplyr::filter(bhd_ci %in% c("central"))}
+        dplyr::filter(base::grepl("central", bhd_ci))}
 
     if("cutoff_ci" %in% names(output[["health_main"]])) {
 
       output[["health_main"]] <- output[["health_main"]] |>
-        dplyr::filter(cutoff_ci %in% c("central"))}
+        dplyr::filter(base::grepl("central", cutoff_ci))}
 
     if(any(grepl("dw_", names(output[["health_main"]])))) {
 
       output[["health_main"]] <- output[["health_main"]] |>
-        dplyr::filter(dw_ci %in% "central")}
+        dplyr::filter(base::grepl("central", dw_ci))}
 
     if("duration_ci" %in% names(output[["health_main"]])) {
 
       output[["health_main"]] <- output[["health_main"]] |>
-        dplyr::filter(duration_ci %in% c("central"))}
+        dplyr::filter(base::grepl("central", duration_ci))}
 
     # Order columns ############################################################
     # putting first (on the left) those that determine different results across rows
@@ -245,7 +248,7 @@ get_output <-
       }
 
     output <-
-      purrr:::map(
+      purrr::map(
         .x = output,
         .f = ~ put_first_cols_recursive(x = .x,
                                         cols = first_columns))

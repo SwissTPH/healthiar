@@ -4,12 +4,14 @@
 \alias{summarize_uncertainty}
 \title{Get Monte Carlo confidence intervals}
 \usage{
-summarize_uncertainty(results, n_sim)
+summarize_uncertainty(results, n_sim, seed = NULL)
 }
 \arguments{
 \item{results}{\code{variable} in which the results of an attribute function is stored.}
 
 \item{n_sim}{\code{numeric value} indicating the number of simulations to be performed.}
+
+\item{seed}{\code{numeric value} fixing the randomization. If empty, new results each time that the function runs.}
 }
 \value{
 This function returns confidence intervals for the attributable health impacts using a Monte Carlo simulation.
