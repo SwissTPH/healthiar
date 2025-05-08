@@ -382,12 +382,14 @@ summarize_uncertainty <- function(
         base::as.character(base::rep(base::unique(input_groups$geo_id_disaggregated),
                                      times=n_sim))) |>
     dplyr::left_join(input_groups,
-                     by = "geo_id_disaggregated")|>
+                     by = "geo_id_disaggregated",
+                     relationship = "many-to-many")|>
     dplyr::select(dplyr::all_of(c("sim_id", "geo_id_disaggregated", "exposure_dimension")))
 
   sim_df <-
     dplyr::left_join(template, input_groups,
-                     by = c("geo_id_disaggregated", "exposure_dimension")) |>
+                     by = c("geo_id_disaggregated", "exposure_dimension"),
+                     relationship = "many-to-one") |>
     dplyr::bind_cols(sim)
 
   sim_df[sim_vars_ci] <- base::paste0("central_" , sim_df$sim_id)
