@@ -7,7 +7,7 @@
 
 #' @param results \code{variable} in which the results of an attribute function is stored.
 #' @param n_sim \code{numeric value} indicating the number of simulations to be performed.
-#' @param seed \code{numeric value} fixing the randomization. If empty, new results each time that the function runs.
+#' @param seed \code{numeric value} fixing the randomization. If empty, a fix default value is assigned.
 
 #' @returns
 #' This function returns confidence intervals for the attributable health impacts using a Monte Carlo simulation.
@@ -230,7 +230,8 @@ summarize_uncertainty <- function(
   sim_gamma <-
     function(n_sim, central_estimate, lower_estimate, upper_estimate) {
       fit <- optim_gamma(central_estimate, lower_estimate, upper_estimate)
-      stats::rgamma(n = n_sim, fit[1], fit[2]) }
+      gamma <- stats::rgamma(n = n_sim, fit[1], fit[2])
+      return(gamma)}
 
 
   # Create template and run simulations #####################
@@ -323,8 +324,8 @@ summarize_uncertainty <- function(
       dw_sim <-
         stats::rbeta(
           n = n_sim * n_geo * n_exp,
-          shape1 = as.numeric(unname(dw_sim_betaExpert["alpha"])),
-          shape2 = as.numeric(unname(dw_sim_betaExpert["beta"])))
+          shape1 = base::as.numeric(base::unname(dw_sim_betaExpert["alpha"])),
+          shape2 = base::as.numeric(base::unname(dw_sim_betaExpert["beta"])))
 
       sim[["dw"]] <- dw_sim
 
