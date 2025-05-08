@@ -35,10 +35,11 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
     object =
       healthiar::summarize_uncertainty(
         res = bestcost_pm_copd_with_summary_uncertainty,
-        n_sim = 100
+        n_sim = 100,
+        seed = 123
         )$uncertainty_main |> base::as.numeric() |> base::round(),
-    expected = # Results on 2025-02-11; no comparison study
-      c(1284, 684, 2023)
+    expected = # Results on 2025-05-08; no comparison study
+      c(1324, 1103, 1586)
   )
 })
 
@@ -107,7 +108,8 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_
     object =
       healthiar::summarize_uncertainty(
         res = bestcost_pm_yld_singlebhd_with_summary_uncertainty,
-        n_sim = 100
+        n_sim = 100,
+        seed = 123
       )$uncertainty_main |> base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-02-11; no comparison study
