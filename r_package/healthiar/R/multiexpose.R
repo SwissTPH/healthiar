@@ -63,6 +63,12 @@ multiexpose <-
                                input_table = input_table,
                                impact_raw = impact_raw)
 
+      # Put the column exposure_name as first column because it is now relevant
+      output[["health_detailed"]][c("input_table", "impact_raw")] <-
+        purrr::map(output[["health_detailed"]][c("input_table", "impact_raw")],
+                   ~ dplyr::select(.x,
+                                   exposure_name, dplyr::everything()))
+
 
 
 
