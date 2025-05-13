@@ -11,7 +11,7 @@ summarize_uncertainty(results, n_sim, seed = NULL)
 
 \item{n_sim}{\code{numeric value} indicating the number of simulations to be performed.}
 
-\item{seed}{\code{numeric value} fixing the randomization. If empty, new results each time that the function runs.}
+\item{seed}{\code{numeric value} fixing the randomization. If empty, a fix default value is assigned.}
 }
 \value{
 This function returns confidence intervals for the attributable health impacts using a Monte Carlo simulation.
