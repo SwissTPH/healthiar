@@ -469,7 +469,7 @@ print(
 results_pm_copd |> 
   purrr::pluck("uncertainty_detailed") |> 
   purrr::pluck("raw") |> 
-  select(rr:impact_total) |> 
+  dplyr::select(erf_ci:impact) |> 
   knitr::kable()
 ```
 
