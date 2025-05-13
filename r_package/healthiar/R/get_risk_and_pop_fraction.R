@@ -174,12 +174,13 @@ get_risk_and_pop_fraction <-
     # Calculate PAF/PIF ########################################################
 
     ## Calculate population (attributable or impact) fraction (PAF or PIF)
+    cols_uncertainty <-
+      names(input_with_risk_and_pop_fraction)[base::grepl("_ci", names(input_with_risk_and_pop_fraction))]
+
     likely_columns_to_group_input <-
       c("geo_id_disaggregated",
         "exposure_name",
-        "exp_ci",
-        "erf_ci",
-        "cutoff_ci")
+        cols_uncertainty)
 
     available_columns_to_group_input <-
       likely_columns_to_group_input[likely_columns_to_group_input %in%
@@ -189,7 +190,7 @@ get_risk_and_pop_fraction <-
 
     input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
 
-      ## Group by exp_ci and cutoff_ci in case that there are different exposure or cutoff categories
+      ## Group by different pathways and geo_units
       dplyr::group_by(dplyr::across(dplyr::any_of(available_columns_to_group_input)))
 
 
