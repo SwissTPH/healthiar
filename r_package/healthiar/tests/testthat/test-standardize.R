@@ -54,11 +54,11 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
       rr_increment = 10,
       erf_shape = "log_linear",
       population = list(1E5, 2E5),
-      geo_id_aggregated = c("a", "b"))
+      geo_id_disaggregated = c("a", "b"))
 
   bestcost_pm_mortality_40_plus_multigeo <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality_below_40,
+      output_attribute_1 = bestcost_pm_mortality_below_40_multigeo,
       bhd_central = list(4000, 8000),
       exp_central = list(10.9, 9.9),
       population = list(5E5, 1E6))
@@ -70,13 +70,13 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
   testthat::expect_equal(
     object =
       healthiar::standardize(
-        output_healthiar = list(bestcost_pm_mortality_below_40,
-                                bestcost_pm_mortality_40_plus),
+        output_healthiar = list(bestcost_pm_mortality_below_40_multigeo,
+                                bestcost_pm_mortality_40_plus_multigeo),
         age_groups = c("below_40", "40_plus"))$health_main$impact_per_100k_inhab,
 
     expected =
-      bestcost_pm_mortality_below_40_multigeo$health_main$impact_per_100k_inhab * population_below_40 / population_total_multigeo +
-      bestcost_pm_mortality_40_plus_multigeo$health_main$impact_per_100k_inhab * population_40_plus / population_total_multigeo
+      bestcost_pm_mortality_below_40_multigeo$health_main$impact_per_100k_inhab * population_below_40_multigeo / population_total_multigeo +
+      bestcost_pm_mortality_40_plus_multigeo$health_main$impact_per_100k_inhab * population_40_plus_multigeo / population_total_multigeo
     # No study behind.
     # Fake numbers to check consistency of result overtime. Results on 2025-01-16
   )
