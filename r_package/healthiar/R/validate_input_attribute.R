@@ -87,6 +87,26 @@ validate_input_attribute <-
 
 
     # Functions and calls ###########
+    error_if_var_1_but_not_var_2 <- function(var_name_1, var_name_2){
+      var_value_1 <- input_args[[var_name_1]]
+      var_value_2 <- input_args[[var_name_2]]
+
+      if(!is.null(var_value_1) && is.null(var_value_2)){
+        stop(
+          paste0(
+            "If ",
+            var_name_2,
+            " is empty, you cannot use ",
+            var_name_2,
+            "."),
+          call. = FALSE)
+      }
+    }
+
+    error_if_var_1_but_not_var_2(var_name_1 = "geo_id_aggregated",
+                                 var_name_2 = "geo_id_disaggregated")
+
+
 
     error_if_not_numeric <- function(var_name){
       var_value <- input_args[[var_name]]
