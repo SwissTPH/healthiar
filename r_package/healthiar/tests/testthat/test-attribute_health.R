@@ -858,6 +858,24 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
 
 # ERROR OR WARNING ########
 ## ERROR #########
+testthat::test_that("error if geo_id_aggregated but no geo_id_disaggregated", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        geo_id_aggregated = c("a", "b")
+      )
+  )
+})
+
+
 testthat::test_that("error if length of exp lower than length of prop pop", {
 
   testthat::expect_error(
