@@ -46,6 +46,13 @@ summarize_uncertainty <- function(
   ## Set seed for reproducibility
   if(base::is.null(seed)){seed <- 123}
 
+  var_names <- c("rr", "exp", "cutoff", "bhd", "dw", "duration")
+  seeds <- list()
+
+  for(i in 1:length(var_names)){
+    seeds[[var_names[i]]] <- seed #+i
+  }
+
   seed_rr <- seed #+ 1
   seed_exp <- seed #+ 2
   seed_cutoff <- seed #+ 3
@@ -243,7 +250,7 @@ summarize_uncertainty <- function(
 
   if(ci_in_rr){
 
-    base::set.seed(seed_rr)
+    base::set.seed(seeds[["rr"]])
     rr_sim <-
       #abs() because negative values have to be avoided
       base::abs(
@@ -264,7 +271,7 @@ summarize_uncertainty <- function(
 
     ## Simulate values
 
-    base::set.seed(seed_exp)
+    base::set.seed(seeds[["exp"]])
     exp_sim <-
       #abs() because negative values have to be avoided
       base::abs(
@@ -279,7 +286,7 @@ summarize_uncertainty <- function(
   if(ci_in_cutoff){
     sd_cutoff <-
       (input_args$cutoff_upper - input_args$cutoff_lower) / (2 * 1.96)
-    base::set.seed(seed_cutoff)
+    base::set.seed(seeds[["cutoff"]])
     cutoff_sim <-
       #abs() because negative values have to be avoided
       base::abs(
@@ -297,7 +304,7 @@ summarize_uncertainty <- function(
     ## (bhd_upper - bhd_lower) / (2 * 1.96)
     sd_bhd <- #(bhd_upper - bhd_lower) / (2 * 1.96)
       (base::unlist(input_args$bhd_upper) - base::unlist(input_args$bhd_lower)) / (2 * 1.96)
-    base::set.seed(seed_bhd)
+    base::set.seed(seeds[["bhd"]])
     bhd_sim <-
       #abs() because negative values have to be avoided
       base::abs(
@@ -311,7 +318,7 @@ summarize_uncertainty <- function(
 
   if(ci_in_dw){
 
-    base::set.seed(seed_dw)
+    base::set.seed(seeds[["dw"]])
     dw_sim_betaExpert <-
       betaExpert(
         input_args$dw_central,
@@ -320,14 +327,16 @@ summarize_uncertainty <- function(
         method = "mean")
 
 
-      base::set.seed(seed_dw)
-      dw_sim <-
-        stats::rbeta(
-          n = n_sim * n_geo * n_exp,
-          shape1 = base::as.numeric(base::unname(dw_sim_betaExpert["alpha"])),
-          shape2 = base::as.numeric(base::unname(dw_sim_betaExpert["beta"])))
 
-      sim[["dw"]] <- dw_sim
+    base::set.seed(seeds[["dw"]])
+
+    dw_sim <-
+      stats::rbeta(
+        n = n_sim * n_geo * n_exp,
+        shape1 = base::as.numeric(base::unname(dw_sim_betaExpert["alpha"])),
+        shape2 = base::as.numeric(base::unname(dw_sim_betaExpert["beta"])))
+
+    sim[["dw"]] <- dw_sim
 
   }
 
@@ -336,7 +345,7 @@ summarize_uncertainty <- function(
     ## Determine standard deviation (sd) based on the formula:
     sd_duration <-
       (base::unlist(input_args$duration_upper) - base::unlist(input_args$duration_lower)) / (2 * 1.96)
-    base::set.seed(seed_duration)
+    base::set.seed(seeds[["duration"]])
     duration_sim <-
       #abs() because negative values have to be avoided
       base::abs(
