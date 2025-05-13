@@ -24,6 +24,7 @@ standardize <- function(output_healthiar = NULL,
                         impact = NULL,
                         age_groups){
 
+
   impact_by_age_group <- output_healthiar
   base::names(impact_by_age_group) <- age_groups
 
@@ -37,31 +38,53 @@ standardize <- function(output_healthiar = NULL,
         }
       )
 
-  # Calculate total population across age groups
-  total_population_age_groups <- base::sum(impact_by_age_group$population)
+  # Identify geo_id cols
+  geo_id_cols <-
+    names(impact_by_age_group)[grepl("geo_id_", names(impact_by_age_group))]
 
-  # Calculate age-standardize health impacts
-  impact_std_by_age_group <-
-    impact_by_age_group |>
-    dplyr::mutate(
-      pop_weight = impact_by_age_group$population / total_population_age_groups,
-      impact_per_100k_inhab_std = impact_per_100k_inhab * pop_weight
-      # ,
-      # impact_std_total = sum(impact_std),
-      # population_total = sum(population)
-      )
+  # Identify columns with uncertainty
+  uncertainty_cols <-
+    names(impact_by_age_group)[grepl("_ci", names(impact_by_age_group))]
 
   # Identify invariant columns
-  invariant_cols <- impact_std_by_age_group |>
+  invariant_cols <- impact_by_age_group |>
     dplyr::summarize(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.x) == 1)) |>
     base::unlist() |>
     base::which() |>
     base::names()
 
+  # Add geo_ids to the group_cols and uncertainty_cols because
+  # below impacts are summed across age_groups but not geo_ids
+  group_cols <-
+    c(geo_id_cols,
+      uncertainty_cols,
+      invariant_cols)|>
+    unique()
+
+
+  # Calculate total population across age groups
+  total_population <-
+    impact_by_age_group |>
+    dplyr::group_by(dplyr::across(dplyr::any_of(group_cols))) |>
+    dplyr::summarize(
+      total_population = base::sum(population),
+      .groups = "drop")
+
+  # Calculate age-standardize health impacts
+  impact_std_by_age_group <-
+    #Add total population
+    dplyr::left_join(impact_by_age_group,
+                     total_population,
+                     by = group_cols)|>
+    dplyr::mutate(
+      pop_weight = population / total_population,
+      impact_per_100k_inhab_std = impact_per_100k_inhab * pop_weight)
+
   # Remove the rows per age group category keeping only the sum
   impact_std_sum <-
     impact_std_by_age_group |>
-    dplyr::group_by(dplyr::across(dplyr::all_of(invariant_cols))) |>
+    dplyr::group_by(dplyr::across(
+      dplyr::any_of(group_cols))) |>
     dplyr::summarize(impact_per_100k_inhab = sum(impact_per_100k_inhab_std),
                      population = sum(population),
                      .groups = "drop")
