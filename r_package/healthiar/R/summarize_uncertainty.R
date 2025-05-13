@@ -28,16 +28,6 @@ summarize_uncertainty <- function(
     n_sim,
     seed = NULL
     ) {
-  ## SCRIPT STRUCTURE
-  ## For each variable with a confidence interval a distribution is fitted, and
-  ## then n_sim values are simulated based on the distribution.
-  ## Then n_sim "new" impacts are calculated using the simulated values.
-  ## These steps are seperated for RR and AR pathways (see script outline).
-  ## Depending on the calculation pathway specified by the user in the attribute
-  ## call (singe exp vs exp dist; iteration yes/no), different code blocks are
-  ## triggered.
-  ## Lastly, the confidence intervals are determined based on the n_sim "new"
-  ## impact vlalues (same code for RR and AR pathways)
 
   ## Set options
   user_options <- options()
@@ -46,13 +36,12 @@ summarize_uncertainty <- function(
   ## Set seed for reproducibility
   if(base::is.null(seed)){seed <- 123}
 
-  seed_rr <- seed #+ 1
-  seed_exp <- seed #+ 2
-  seed_cutoff <- seed #+ 3
-  seed_bhd <- seed #+ 4
-  seed_dw <- seed #+ 5
-  seed_duration <- seed #+ 6
+  var_names <- c("rr", "exp", "cutoff", "bhd", "dw", "duration")
+  seeds <- list()
 
+  for(i in 1:length(var_names)){
+    seeds[[var_names[i]]] <- seed #+i
+  }
 
   # Store the input data as entered in the arguments
   input_args <- results[["health_detailed"]][["input_args"]]
@@ -88,26 +77,15 @@ summarize_uncertainty <- function(
     ! is_pwm_exposure
 
   # Is there a confidence interval? I.e. lower and upper estimate?
-  ci_in_rr <-
-    !base::is.null(input_args$rr_lower) && !base::is.null(input_args$rr_upper)
 
-  ci_in_exp <-
-    !base::is.null(input_args$exp_lower) && !base::is.null(input_args$exp_upper)
+  ci_in <- list()
 
-  ci_in_cutoff <-
-    !base::is.null(input_args$cutoff_lower) && !base::is.null(input_args$cutoff_upper)
+  for (v in var_names){
+    ci_in[[v]] <-
+      !base::is.null(input_args[[paste0(v, "_lower")]]) &&
+      !base::is.null(input_args[[paste0(v, "_upper")]])
+  }
 
-  ci_in_bhd <-
-    !base::is.null(input_args$bhd_lower) && !base::is.null(input_args$bhd_upper)
-
-  ci_in_dw <-
-    !base::is.null(input_args$dw_lower) && !base::is.null(input_args$dw_upper)
-
-  ci_in_duration <-
-    !base::is.null(input_args$duration_lower) && !base::is.null(input_args$duration_upper)
-
-  ci_in_erf_eq <-
-    !base::is.null(input_args$erf_eq_lower) && !base::is.null(input_args$erf_eq_upper)
 
   value_in_dw_central <-
     !base::is.null(input_args$dw_central)
@@ -237,115 +215,104 @@ summarize_uncertainty <- function(
   # Create template and run simulations #####################
 
 
+  simulate <- function(var_name, distribution, n){
+
+    var_value_central <- input_args[[paste0(var_name, "_central")]]
+    var_value_lower <- input_args[[paste0(var_name, "_lower")]]
+    var_value_upper <- input_args[[paste0(var_name, "_upper")]]
+
+    if(distribution == "gamma"){
+      base::set.seed(seeds[[var_name]])
+      simulation <-
+        #abs() because negative values have to be avoided
+        base::abs(
+          sim_gamma(
+            n_sim = n,
+            central_estimate = var_value_central,
+            lower_estimate = var_value_lower,
+            upper_estimate = var_value_upper))
+    } else if (distribution == "normal"){
+
+        base::set.seed(seeds[[var_name]])
+        simulation <-
+          #abs() because negative values have to be avoided
+          base::abs(
+            stats::rnorm(
+              n = n,
+              mean = base::unlist(var_value_central),
+              sd = (base::unlist(var_value_upper) - base::unlist(var_value_lower)) / (2 * 1.96)))
+
+    } else if (distribution == "beta") {
+
+      base::set.seed(seeds[[var_name]])
+      simulation_betaExpert <-
+        betaExpert(
+          best = var_value_central,
+          lower = var_value_lower,
+          upper = var_value_upper,
+          method = "mean")
+
+      base::set.seed(seeds[[var_name]])
+      simulation <-
+        stats::rbeta(
+          n = n,
+          shape1 = base::as.numeric(base::unname(simulation_betaExpert["alpha"])),
+          shape2 = base::as.numeric(base::unname(simulation_betaExpert["beta"])))
+    }
+
+  }
+
+
 
 
   sim <- list()
 
-  if(ci_in_rr){
+  if(ci_in[["rr"]]){
 
-    base::set.seed(seed_rr)
-    rr_sim <-
-      #abs() because negative values have to be avoided
-      base::abs(
-        sim_gamma(
-          n_sim = n_sim * n_geo * n_exp,
-          central_estimate = input_args$rr_central,
-          lower_estimate = input_args$rr_lower,
-          upper_estimate = input_args$rr_upper))
-
-    sim[["rr"]] <- rr_sim
+    sim[["rr"]] <-
+      simulate(var_name = "rr",
+               distribution = "gamma",
+               n = n_total_it)
   }
 
-  if(ci_in_exp){
-    ## Determine standard deviation (sd) based on the formula:
-    ## (exp_upper - exp_lower) / (2 * 1.96)
-    sd_exp <-
-      (base::unlist(input_args$exp_upper) - base::unlist(input_args$exp_lower)) / (2 * 1.96)
+  if(ci_in[["exp"]]){
 
-    ## Simulate values
-
-    base::set.seed(seed_exp)
-    exp_sim <-
-      #abs() because negative values have to be avoided
-      base::abs(
-        stats::rnorm(
-          n_sim * n_geo * n_exp,
-          mean = base::unlist(input_args$exp_central),
-          sd = sd_exp))
-
-    sim[["exp"]] <- exp_sim
+    sim[["exp"]] <-
+      simulate(var_name = "exp",
+               distribution = "normal",
+               n = n_total_it)
   }
 
-  if(ci_in_cutoff){
-    sd_cutoff <-
-      (input_args$cutoff_upper - input_args$cutoff_lower) / (2 * 1.96)
-    base::set.seed(seed_cutoff)
-    cutoff_sim <-
-      #abs() because negative values have to be avoided
-      base::abs(
-        stats::rnorm(
-          n_sim * n_geo * n_exp,
-          mean = input_args$cutoff_central,
-          sd = sd_cutoff))
+  if(ci_in[["cutoff"]]){
 
-    sim[["cutoff"]] <- cutoff_sim
+    sim[["cutoff"]] <-
+      simulate(var_name = "cutoff",
+               distribution = "normal",
+               n = n_total_it)
   }
 
-  if(ci_in_bhd){
+  if(ci_in[["bhd"]]){
 
-    ## Determine standard deviation (sd) based on the formula:
-    ## (bhd_upper - bhd_lower) / (2 * 1.96)
-    sd_bhd <- #(bhd_upper - bhd_lower) / (2 * 1.96)
-      (base::unlist(input_args$bhd_upper) - base::unlist(input_args$bhd_lower)) / (2 * 1.96)
-    base::set.seed(seed_bhd)
-    bhd_sim <-
-      #abs() because negative values have to be avoided
-      base::abs(
-        stats::rnorm(
-          n_sim * n_geo * n_exp,
-          mean = base::unlist(input_args$bhd_central),
-          sd = sd_bhd))
-
-    sim[["bhd"]] <- bhd_sim
+    sim[["bhd"]] <-
+      simulate(var_name = "bhd",
+               distribution = "normal",
+               n = n_total_it)
   }
 
-  if(ci_in_dw){
+  if(ci_in[["dw"]]){
 
-    base::set.seed(seed_dw)
-    dw_sim_betaExpert <-
-      betaExpert(
-        input_args$dw_central,
-        input_args$dw_lower,
-        input_args$dw_upper,
-        method = "mean")
+    sim[["dw"]] <-
+      simulate(var_name = "dw",
+               distribution = "beta",
+               n = n_total_it)
+}
 
+  if(ci_in[["duration"]]){
 
-      base::set.seed(seed_dw)
-      dw_sim <-
-        stats::rbeta(
-          n = n_sim * n_geo * n_exp,
-          shape1 = base::as.numeric(base::unname(dw_sim_betaExpert["alpha"])),
-          shape2 = base::as.numeric(base::unname(dw_sim_betaExpert["beta"])))
-
-      sim[["dw"]] <- dw_sim
-
-  }
-
-  if(ci_in_duration){
-
-    ## Determine standard deviation (sd) based on the formula:
-    sd_duration <-
-      (base::unlist(input_args$duration_upper) - base::unlist(input_args$duration_lower)) / (2 * 1.96)
-    base::set.seed(seed_duration)
-    duration_sim <-
-      #abs() because negative values have to be avoided
-      base::abs(
-        stats::rnorm(
-          n_sim * n_geo * n_exp,
-          mean = base::unlist(input_args$duration_central),
-          sd = sd_duration))
-
-    sim[["duration"]] <- duration_sim
+    sim[["duration"]] <-
+      simulate(var_name = "duration",
+               distribution = "normal",
+               n = n_total_it)
   }
 
   if((!base::is.null(input_args$erf_eq_lower) |
@@ -429,21 +396,9 @@ summarize_uncertainty <- function(
     impact_per_geo_unit <- impact_sim |>
       dplyr::group_by(dplyr::across(dplyr::all_of(grouping_geo_var))) |>
       dplyr::summarize(
-        impact_central = stats::quantile(
-          x = impact,
-          probs = c(0.5),
-          na.rm = TRUE
-        ),
-        impact_lower = stats::quantile(
-          x = impact,
-          probs = c(0.025),
-          na.rm = TRUE
-        ),
-        impact_upper = stats::quantile(
-          x = impact,
-          probs = c(0.975),
-          na.rm = TRUE
-        )
+        impact_central = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE),
+        impact_lower = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE),
+        impact_upper = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE)
       )
 
     results[["uncertainty_detailed"]][["geo_specific"]] <- impact_per_geo_unit
