@@ -53,14 +53,6 @@ summarize_uncertainty <- function(
     seeds[[var_names[i]]] <- seed #+i
   }
 
-  seed_rr <- seed #+ 1
-  seed_exp <- seed #+ 2
-  seed_cutoff <- seed #+ 3
-  seed_bhd <- seed #+ 4
-  seed_dw <- seed #+ 5
-  seed_duration <- seed #+ 6
-
-
   # Store the input data as entered in the arguments
   input_args <- results[["health_detailed"]][["input_args"]]
   input_table <- results[["health_detailed"]][["input_table"]]
@@ -95,26 +87,15 @@ summarize_uncertainty <- function(
     ! is_pwm_exposure
 
   # Is there a confidence interval? I.e. lower and upper estimate?
-  ci_in_rr <-
-    !base::is.null(input_args$rr_lower) && !base::is.null(input_args$rr_upper)
 
-  ci_in_exp <-
-    !base::is.null(input_args$exp_lower) && !base::is.null(input_args$exp_upper)
+  ci_in <- list()
 
-  ci_in_cutoff <-
-    !base::is.null(input_args$cutoff_lower) && !base::is.null(input_args$cutoff_upper)
+  for (v in var_names){
+    ci_in[[v]] <-
+      !base::is.null(input_args[[paste0(v, "_lower")]]) &&
+      !base::is.null(input_args[[paste0(v, "_upper")]])
+  }
 
-  ci_in_bhd <-
-    !base::is.null(input_args$bhd_lower) && !base::is.null(input_args$bhd_upper)
-
-  ci_in_dw <-
-    !base::is.null(input_args$dw_lower) && !base::is.null(input_args$dw_upper)
-
-  ci_in_duration <-
-    !base::is.null(input_args$duration_lower) && !base::is.null(input_args$duration_upper)
-
-  ci_in_erf_eq <-
-    !base::is.null(input_args$erf_eq_lower) && !base::is.null(input_args$erf_eq_upper)
 
   value_in_dw_central <-
     !base::is.null(input_args$dw_central)
@@ -248,7 +229,7 @@ summarize_uncertainty <- function(
 
   sim <- list()
 
-  if(ci_in_rr){
+  if(ci_in[["rr"]]){
 
     base::set.seed(seeds[["rr"]])
     rr_sim <-
@@ -263,7 +244,7 @@ summarize_uncertainty <- function(
     sim[["rr"]] <- rr_sim
   }
 
-  if(ci_in_exp){
+  if(ci_in[["exp"]]){
     ## Determine standard deviation (sd) based on the formula:
     ## (exp_upper - exp_lower) / (2 * 1.96)
     sd_exp <-
@@ -283,7 +264,7 @@ summarize_uncertainty <- function(
     sim[["exp"]] <- exp_sim
   }
 
-  if(ci_in_cutoff){
+  if(ci_in[["cutoff"]]){
     sd_cutoff <-
       (input_args$cutoff_upper - input_args$cutoff_lower) / (2 * 1.96)
     base::set.seed(seeds[["cutoff"]])
@@ -298,7 +279,7 @@ summarize_uncertainty <- function(
     sim[["cutoff"]] <- cutoff_sim
   }
 
-  if(ci_in_bhd){
+  if(ci_in[["bhd"]]){
 
     ## Determine standard deviation (sd) based on the formula:
     ## (bhd_upper - bhd_lower) / (2 * 1.96)
@@ -316,7 +297,7 @@ summarize_uncertainty <- function(
     sim[["bhd"]] <- bhd_sim
   }
 
-  if(ci_in_dw){
+  if(ci_in[["dw"]]){
 
     base::set.seed(seeds[["dw"]])
     dw_sim_betaExpert <-
@@ -340,7 +321,7 @@ summarize_uncertainty <- function(
 
   }
 
-  if(ci_in_duration){
+  if(ci_in[["duration"]]){
 
     ## Determine standard deviation (sd) based on the formula:
     sd_duration <-
