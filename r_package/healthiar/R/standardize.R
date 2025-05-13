@@ -24,27 +24,27 @@ standardize <- function(output_healthiar = NULL,
                         impact = NULL,
                         age_groups){
 
-  health_detailed_by_age_group <- output_healthiar
-  base::names(health_detailed_by_age_group) <- age_groups
+  impact_by_age_group <- output_healthiar
+  base::names(impact_by_age_group) <- age_groups
 
   # Add age groups as columns and bind rows
-  impact_raw_all_age_groups <-
+  impact_by_age_group <-
     purrr::imap_dfr(
-      health_detailed_by_age_group,
+      impact_by_age_group,
       \(x, name){
-        x[["health_detailed"]][["impact_raw"]] |>
+        x[["health_main"]] |>
         dplyr::mutate(age_group = name, .before = dplyr::everything())
         }
       )
 
   # Calculate total population across age groups
-  total_population_age_groups <- base::sum(impact_raw_all_age_groups$population)
+  total_population_age_groups <- base::sum(impact_by_age_group$population)
 
   # Calculate age-standardize health impacts
   impact_std_by_age_group <-
-    impact_raw_all_age_groups |>
+    impact_by_age_group |>
     dplyr::mutate(
-      pop_weight = impact_raw_all_age_groups$population / total_population_age_groups,
+      pop_weight = impact_by_age_group$population / total_population_age_groups,
       impact_per_100k_inhab_std = impact_per_100k_inhab * pop_weight
       # ,
       # impact_std_total = sum(impact_std),
@@ -66,14 +66,9 @@ standardize <- function(output_healthiar = NULL,
                      population = sum(population),
                      .groups = "drop")
 
-
-
-  impact_standardized <-
-    impact
-
   output<-
-    list(health_main = ,
-         health_detailed = health_detailed_by_age_group)
+    list(health_main = impact_std_sum,
+         health_detailed = impact_std_by_age_group)
 
   return(output)
 
