@@ -7,7 +7,7 @@
 standardize(listed_output_healthiar, age_groups)
 }
 \arguments{
-\item{listed_output_healthiar}{\code{List} containing as sub-lists the results of \code{healthiar::attribute_health()} or \code{healthiar::compare()} for each age group. Each list element should refer to one specific age group.#'}
+\item{listed_output_healthiar}{\code{List} containing as sub-lists the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.#'}
 
 \item{age_groups}{\code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{output_healthiar}.}
 }
