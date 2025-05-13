@@ -3,7 +3,7 @@
 
 ### ONE GEO UNIT ############################################################
 
-testthat::test_that("results correct |pathway_multiexposure|approach_additive|", {
+testthat::test_that("results correct |pathway_standardize|single_geo|", {
 
   bestcost_pm_mortality_below_40 <-
     healthiar::attribute_health(
@@ -17,7 +17,7 @@ testthat::test_that("results correct |pathway_multiexposure|approach_additive|",
 
   bestcost_pm_mortality_40_plus <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality,
+      output_attribute_1 = bestcost_pm_mortality_below_40,
       bhd_central = 4000,
       exp_central = 10.9,
       population = 5E5)
