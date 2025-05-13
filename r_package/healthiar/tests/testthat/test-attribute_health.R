@@ -251,6 +251,41 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
 
 testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
 
+  bestcost_pm_mortality_a <-
+    healthiar::attribute_health(
+      exp_central = 8.1,
+      cutoff_central =  0,
+      bhd_central = 1000,
+      rr_central = 1.063,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      population = 1E5)
+
+  bestcost_pm_mortality_b <-
+    healthiar::attribute_mod(
+      output_attribute_1 = bestcost_pm_mortality_a,
+      exp_central = 7.1,
+      bhd_central = 2000,
+      population = 2E5)
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = list(8.1, 7.1),
+        cutoff_central =  0,
+        bhd_central = list(1000, 2000),
+        rr_central = 1.063,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        population = list(1E5, 2E5),
+        geo_id_disaggregated = c("a", "b"))$health_main$impact|>round(4),
+    expected =
+      c(48.2825, 84.9003) # Results on 30 April 2025; no comparison study
+)
+})
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
+
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
