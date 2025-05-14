@@ -48,6 +48,11 @@ summarize_uncertainty <- function(
   input_args <- results[["health_detailed"]][["input_args"]]
   input_table <- results[["health_detailed"]][["input_table"]]
 
+  # Identify if this is one-case or two-case (comparison) assessment
+  is_one_case <- is.list(input_table)
+  is_two_cases <- !is_one_case
+
+  # CREATE FUNCTION TO SUMMARIZE UNCERTAINTY ######
   summarize_uncertainty_based_on_input <-
     function(input_args, input_table){
 
@@ -424,17 +429,23 @@ summarize_uncertainty <- function(
       impact_sim = impact_sim)
   return(summary)
     }
-
+  # GENERATE RESULTS USING THE FUNCTION ##################
   # One case (no comparison)
-  summary <-
-    summarize_uncertainty_based_on_input(
-      input_args = input_args,
-      input_table = input_table)
+
+  if(is_one_case){
+    summary <-
+      summarize_uncertainty_based_on_input(
+        input_args = input_args,
+        input_table = input_table)
+  } else if (is_two_cases){
+
+  }
 
 
 
 
-  # Output ####################################################################
+
+  # OUTPUT ####################################################################
 
   results[["uncertainty_main"]] <- summary[["summarized_ci"]]
 
