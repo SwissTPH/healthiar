@@ -31,7 +31,8 @@ summarize_uncertainty <- function(
 
   ## Set options
   user_options <- options()
-  options(digits = 15) # Make sure that no rounding occurs
+  # Make sure that no rounding occurs
+  options(digits = 15)
 
   ## Set seed for reproducibility
   if(base::is.null(seed)){seed <- 123}
@@ -46,6 +47,9 @@ summarize_uncertainty <- function(
   # Store the input data as entered in the arguments
   input_args <- results[["health_detailed"]][["input_args"]]
   input_table <- results[["health_detailed"]][["input_table"]]
+
+  summarize_uncertainty_based_on_input <-
+    function(input_args, input_table){
 
   ## Determine number of geographic units
   n_geo <-
@@ -413,12 +417,30 @@ summarize_uncertainty <- function(
 
   }
 
-  # Output #####################################################################
+
+  summary <-
+    list(
+      summarized_ci = summarized_ci,
+      impact_sim = impact_sim)
+  return(summary)
+    }
+
+  # One case (no comparison)
+  summary <-
+    summarize_uncertainty_based_on_input(
+      input_args = input_args,
+      input_table = input_table)
+
+
+
+
+  # Output ####################################################################
+
+  results[["uncertainty_main"]] <- summary[["summarized_ci"]]
+
+  results[["uncertainty_detailed"]][["impact_raw"]] <- summary[["impact_sim"]] # to check interim results during development
+
   on.exit(options(user_options))
-
-  results[["uncertainty_main"]] <- summarized_ci
-
-  results[["uncertainty_detailed"]][["raw"]] <- impact_sim # to check interim results during development
 
   return(results)
 
