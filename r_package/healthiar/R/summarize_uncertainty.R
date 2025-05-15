@@ -373,7 +373,7 @@ summarize_uncertainty <- function(
     # and so that values can be replaced
     stats::setNames(base::paste0(base::names(tibble::as_tibble(sim)), "_central"))
     # Replace values (original with simulated)
-  browser()
+
   attribute_by_sim <-
     dplyr::mutate(template_test,
       input_args =
@@ -392,96 +392,108 @@ summarize_uncertainty <- function(
       impact = output[["health_main"]]$impact)|>
     dplyr::ungroup()
 
-
-
-
-   template <-
-    tibble::tibble(
-      sim_id = base::as.numeric(base::rep(1:n_sim, each=n_geo)),
-      geo_id_disaggregated =
-        base::as.character(base::rep(base::unique(input_groups$geo_id_disaggregated),
-                                     times=n_sim))) |>
-    dplyr::left_join(input_groups,
-                     by = "geo_id_disaggregated",
-                     relationship = "many-to-many")|>
-    dplyr::select(dplyr::all_of(c("sim_id", "geo_id_disaggregated", "exposure_dimension")))
-
-  sim_df <-
-    dplyr::left_join(template, input_groups,
-                     by = c("geo_id_disaggregated", "exposure_dimension"),
-                     relationship = "many-to-one") |>
-    dplyr::bind_cols(sim)
-
-  # Assign new ci value (central_"n_sim") to variables
-
-  sim_df[sim_vars_ci] <- base::paste0("central_" , sim_df$sim_id)
-
-
-  impact_raw_sim <-
-    healthiar:::get_impact(input_table = sim_df,
-                           pop_fraction_type = "paf")
-
-  impact_sim <-
-    healthiar:::get_output(impact_raw = impact_raw_sim)[["health_main"]]
-
-
-  # SUMMARIZE (determine 95% CI of impact) #################################################
-
-  # * Single geo unit ##########################################################
-
-  if ( ( n_geo == 1 ) ) {
-
-    ## CI of aggregated impact
-    ### Because there's only 1 geo unit the aggregated impact is the same as the geo unit impact
-    summarized_ci <- stats::quantile(x = impact_sim$impact,
-                                     probs = c(0.025, 0.5, 0.975),
-                                     na.rm = TRUE)
-
-    summarized_ci <- base::unname(summarized_ci) # Unname to remove percentiles from the names vector
-    summarized_ci <- tibble::tibble(central_estimate = summarized_ci[2],
-                                    lower_estimate = summarized_ci[1],
-                                    upper_estimate = summarized_ci[3])
-
-    # * Multiple geo units ###################################################
-  } else if ( n_geo > 1 ) {
-    grouping_geo_var <-
-      names(impact_sim)[grepl("geo_id", names(impact_sim))]
-
-     ## CIs of impact per geo unit
-    impact_per_geo_unit <- impact_sim |>
-      dplyr::group_by(dplyr::across(dplyr::all_of(grouping_geo_var))) |>
-      dplyr::summarize(
-        impact_central = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE),
-        impact_lower = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE),
-        impact_upper = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE)
-      )
-
-    results[["uncertainty_detailed"]][["geo_specific"]] <- impact_per_geo_unit
-
-    ## CIs of impact aggregated over geo units
-    summarized_ci <- impact_per_geo_unit |>
-      dplyr::summarize(
-        central_estimate = base::sum(impact_central),
-        lower_estimate = base::sum(impact_lower),
-        upper_estimate = base::sum(impact_upper)
-      )
-
-  }
-
+  grouping_geo_var <-
+    names(results$health_main)[grepl("geo_id", names(results$health_main))]
 
   summary <-
-    list(
-      summarized_ci = summarized_ci,
-      impact_raw_sim = impact_raw_sim,
-      impact_sim = impact_sim)
+    attribute_by_sim |>
+    dplyr::pull(output) |>
+    purrr::map("health_main") |>
+    dplyr::bind_rows() |>
+    dplyr::group_by(dplyr::across(dplyr::all_of(grouping_geo_var))) |>
+    dplyr::summarise(
+      central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE),
+      lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE),
+      upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE),
+      .groups = "drop")
 
-  return(summary)
+
+  #  template <-
+  #   tibble::tibble(
+  #     sim_id = base::as.numeric(base::rep(1:n_sim, each=n_geo)),
+  #     geo_id_disaggregated =
+  #       base::as.character(base::rep(base::unique(input_groups$geo_id_disaggregated),
+  #                                    times=n_sim))) |>
+  #   dplyr::left_join(input_groups,
+  #                    by = "geo_id_disaggregated",
+  #                    relationship = "many-to-many")|>
+  #   dplyr::select(dplyr::all_of(c("sim_id", "geo_id_disaggregated", "exposure_dimension")))
+  #
+  # sim_df <-
+  #   dplyr::left_join(template, input_groups,
+  #                    by = c("geo_id_disaggregated", "exposure_dimension"),
+  #                    relationship = "many-to-one") |>
+  #   dplyr::bind_cols(sim)
+  #
+  # # Assign new ci value (central_"n_sim") to variables
+  #
+  # sim_df[sim_vars_ci] <- base::paste0("central_" , sim_df$sim_id)
+  #
+  #
+  # impact_raw_sim <-
+  #   healthiar:::get_impact(input_table = sim_df,
+  #                          pop_fraction_type = "paf")
+  #
+  # impact_sim <-
+  #   healthiar:::get_output(impact_raw = impact_raw_sim)[["health_main"]]
+  #
+  #
+  # # SUMMARIZE (determine 95% CI of impact) #################################################
+  #
+  # # * Single geo unit ##########################################################
+  #
+  # if ( ( n_geo == 1 ) ) {
+  #
+  #   ## CI of aggregated impact
+  #   ### Because there's only 1 geo unit the aggregated impact is the same as the geo unit impact
+  #   summarized_ci <- stats::quantile(x = attribute_by_sim$impact,
+  #                                    probs = c(0.025, 0.5, 0.975),
+  #                                    na.rm = TRUE)
+  #
+  #   summarized_ci <- base::unname(summarized_ci) # Unname to remove percentiles from the names vector
+  #   summarized_ci <- tibble::tibble(central_estimate = summarized_ci[2],
+  #                                   lower_estimate = summarized_ci[1],
+  #                                   upper_estimate = summarized_ci[3])
+  #
+  #   # * Multiple geo units ###################################################
+  # } else if ( n_geo > 1 ) {
+  #   grouping_geo_var <-
+  #     names(impact_sim)[grepl("geo_id", names(impact_sim))]
+  #
+  #    ## CIs of impact per geo unit
+  #   impact_per_geo_unit <- impact_sim |>
+  #     dplyr::group_by(dplyr::across(dplyr::all_of(grouping_geo_var))) |>
+  #     dplyr::summarize(
+  #       impact_central = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE),
+  #       impact_lower = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE),
+  #       impact_upper = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE)
+  #     )
+  #
+  #   results[["uncertainty_detailed"]][["geo_specific"]] <- impact_per_geo_unit
+  #
+  #   ## CIs of impact aggregated over geo units
+  #   summarized_ci <- impact_per_geo_unit |>
+  #     dplyr::summarize(
+  #       central_estimate = base::sum(impact_central),
+  #       lower_estimate = base::sum(impact_lower),
+  #       upper_estimate = base::sum(impact_upper)
+  #     )
+  #
+  # }
+
+
+  uncertainty <-
+    list(
+      uncertainty_main = summary,
+      uncertainty_detailed = attribute_by_sim)
+
+  return(uncertainty)
     }
   # GENERATE RESULTS USING THE FUNCTION ##################
   # One case (no comparison)
 
   if(is_one_case){
-    summary <-
+    uncertainty <-
       summarize_uncertainty_based_on_input(
         input_args = input_args,
         input_table = input_table)
@@ -523,14 +535,9 @@ summarize_uncertainty <- function(
 
   # OUTPUT ####################################################################
 
-  results[["uncertainty_main"]] <- summary[["summarized_ci"]]
-  # to check interim results during development
-  results[["uncertainty_detailed"]][["impact_sim"]] <- summary[["impact_sim"]]
-  results[["uncertainty_detailed"]][["impact_raw_sim"]] <- summary[["impact_raw_sim"]]
-
   on.exit(options(user_options))
 
-  return(results)
+  return(uncertainty)
 
 
 }
