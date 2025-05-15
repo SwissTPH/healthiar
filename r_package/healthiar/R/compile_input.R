@@ -29,7 +29,66 @@
 compile_input <-
   function(input_args){
 
-    base::list2env(input_args, envir = base::environment())
+    is_lifetable <- input_args$is_lifetable
+    approach_risk <- input_args$approach_risk
+    rr_central <- input_args$rr_central
+    rr_lower <- input_args$rr_lower
+    rr_upper <- input_args$rr_upper
+    rr_increment <- input_args$rr_increment
+    erf_shape <- input_args$erf_shape
+    erf_eq_central <- input_args$erf_eq_central
+    erf_eq_lower <- input_args$erf_eq_lower
+    erf_eq_upper <- input_args$erf_eq_upper
+    pop_exp <- input_args$pop_exp
+    prop_pop_exp <- input_args$prop_pop_exp
+    exp_central <- input_args$exp_central
+    exp_lower <- input_args$exp_lower
+    exp_upper <- input_args$exp_upper
+    cutoff_central <- input_args$cutoff_central
+    cutoff_lower <- input_args$cutoff_lower
+    cutoff_upper <- input_args$cutoff_upper
+    bhd_central <- input_args$bhd_central
+    bhd_lower <- input_args$bhd_lower
+    bhd_upper <- input_args$bhd_upper
+    geo_id_disaggregated <- input_args$geo_id_disaggregated
+    geo_id_aggregated <- input_args$geo_id_aggregated
+    health_outcome <- input_args$health_outcome
+    population_midyear_male <- input_args$population_midyear_male
+    population_midyear_female <- input_args$population_midyear_female
+    deaths_male <- input_args$deaths_male
+    deaths_female <- input_args$deaths_female
+    first_age_pop <- input_args$first_age_pop
+    last_age_pop <- input_args$last_age_pop
+    min_age <- input_args$min_age
+    max_age <- input_args$max_age
+    year_of_analysis <- input_args$year_of_analysis
+    approach_newborns <- input_args$approach_newborns
+    time_horizon <- input_args$time_horizon
+    dw_central <- input_args$dw_central
+    dw_lower <- input_args$dw_lower
+    dw_upper <- input_args$dw_upper
+    duration_central <- input_args$duration_central
+    duration_lower <- input_args$duration_lower
+    duration_upper <- input_args$duration_upper
+    approach_exposure <- input_args$approach_exposure
+    population <- input_args$population
+    info <- input_args$info
+
+    # Alternatives that do not in summarize_uncertainty
+    # probably because of the environment
+
+    #base::list2env(input_args, envir = base::environment())
+
+    # for (a in names(input_args)) {
+    #   base::assign(a, input_args[[a]], envir = base::environment())
+    # }
+
+    # for (a in names(input_args)) {
+    #   base::eval( base::bquote(.(base::as.name(a)) <- input_args[[.(a)]]),
+    #               envir = base::environment())
+    # }
+
+
 
     # PROCESS GEO ID ###################################################################
     # If no geo_id_disaggregated is provided (if is NULL) then assign some value.
