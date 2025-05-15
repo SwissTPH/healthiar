@@ -381,7 +381,7 @@ summarize_uncertainty <- function(
 
   vars_to_be_removed_in_input_args <-
     base::paste0(
-      base::rep(base::names(sim), each = 3),
+      base::rep(var_names_in_sim, each = 3),
       c("_central", "_lower", "_upper"))
 
   input_args_prepared_for_replacement <-
