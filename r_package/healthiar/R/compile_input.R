@@ -27,36 +27,9 @@
 
 
 compile_input <-
-  function(is_lifetable = NULL,
-           approach_risk = NULL,
-           exp_central, exp_lower = NULL, exp_upper = NULL,
-           pop_exp = NULL,
-           prop_pop_exp = NULL,
-           cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
-           rr_central, rr_lower = NULL, rr_upper = NULL,
-           rr_increment = NULL,
-           erf_shape = NULL,
-           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-           bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
-           min_age = NULL,
-           max_age = NULL,
-           geo_id_disaggregated = NULL,
-           geo_id_aggregated = NULL,
-           info = NULL,
-           population = population,
-           # YLD
-           duration_central = NULL, duration_lower = NULL, duration_upper = NULL,
-           dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
-           # Lifetable data
-           health_outcome = NULL,
-           approach_exposure = NULL,
-           approach_newborns = NULL,
-           year_of_analysis = NULL,
-           time_horizon = NULL,
-           first_age_pop = NULL, last_age_pop = NULL,
-           population_midyear_male = NULL, population_midyear_female = NULL,
-           deaths_male = NULL, deaths_female = NULL){
+  function(input_args){
 
+    base::list2env(input_args, envir = base::environment())
 
     # PROCESS GEO ID ###################################################################
     # If no geo_id_disaggregated is provided (if is NULL) then assign some value.
