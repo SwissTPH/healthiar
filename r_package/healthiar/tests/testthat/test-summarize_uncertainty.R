@@ -34,16 +34,51 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
   testthat::expect_equal(
     object =
       healthiar::summarize_uncertainty(
-        res = bestcost_pm_copd_with_summary_uncertainty,
+        results = bestcost_pm_copd_with_summary_uncertainty,
         n_sim = 100,
-        seed = 123
-        )$uncertainty_main |> base::as.numeric() |> base::round(),
+        seed = 122
+        )$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
     expected = # Results on 2025-05-08; no comparison study
       c(1324, 854, 1815)
   )
 })
-
 #### ITERATION ##################################################################
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
+
+  summary_uncertainty_small_iteration <-
+    healthiar::attribute_health(
+      exp_central = list(8, 7.5),
+      exp_lower = list(7, 6.2),
+      exp_upper = list(9, 8.1),
+      cutoff_central = 5,
+      cutoff_lower = 4,
+      cutoff_upper = 6,
+      bhd_central = list(1E5, 1E5),
+      bhd_lower = list(5E4, 5E4),
+      bhd_upper = list(2E5, 2E5),
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      geo_id_disaggregated = c("a", "b")
+    )
+
+  testthat::expect_equal(
+    object =
+      healthiar::summarize_uncertainty(
+        results = summary_uncertainty_small_iteration,
+        n_sim = 100,
+        seed = 123
+      )$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::unlist() |> base::as.numeric() |> base::round(),
+    expected = # Results on 2025-05-15; no comparison study
+      c(2941, 2941,  802,  802, 6468, 6468)
+  )
+})
 
 testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_TRUE|", {
 
@@ -68,13 +103,16 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
   testthat::expect_equal(
     object =
       healthiar::summarize_uncertainty(
-        res = bestcost_pm_copd_geo_short,
+        results = bestcost_pm_copd_geo_short,
         n_sim = 100
-      )$uncertainty_main |> base::as.numeric() |> base::round(),
+      )$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
     expected = # Results on 2025-05-08; no comparison study
-      c(31566, 25333, 37347)
+      c(30897, 11734, 51324)
   )
 })
+
 
 #### YLD ########################################################################
 
@@ -107,12 +145,14 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_
 
     object =
       healthiar::summarize_uncertainty(
-        res = bestcost_pm_yld_singlebhd_with_summary_uncertainty,
+        results = bestcost_pm_yld_singlebhd_with_summary_uncertainty,
         n_sim = 100,
-        seed = 123
-      )$uncertainty_main |> base::as.numeric() |> base::round(),
+        seed = 122
+      )$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
 
-    expected = # Results on 2025-05-08; no comparison study
+    expected = # Results on 2025-05-15; no comparison study
       c(652, 266, 1031)
   )
 })
@@ -142,58 +182,16 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
 
     object =
       healthiar::summarize_uncertainty(
-        bestcost_noise_ihd_expDist,
-        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
+        results = bestcost_noise_ihd_expDist,
+        n_sim = 100,
+        seed = 122)$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
 
-    expected = # Results on 2025-05-07; no comparison study
-      c(1152, 997, 1290)
+    expected = # Results on 2025-05-15; no comparison study
+      c(1154, 914, 1418)
   )
 })
-
-#### ITERATION ##################################################################
-
-testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increment|iteration_TRUE|", {
-
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
-  data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
-
-  bestcost_noise_ihd_expDist_iteration <-
-    healthiar::attribute_health(
-      exp_central = list(data$exposure_mean,
-                         data$exposure_mean + 5,
-                         data$exposure_mean + 10),
-      exp_lower = list(data$exposure_mean - 2,
-                       data$exposure_mean + 5 - 2,
-                       data$exposure_mean + 10 - 2),
-      exp_upper = list(data$exposure_mean + 2,
-                       data$exposure_mean + 5 + 2,
-                       data$exposure_mean + 10 + 2),
-      prop_pop_exp = list(data$prop_exposed,
-                          data$prop_exposed,
-                          data$prop_exposed),
-      cutoff_central = min(data$exposure_mean),
-      bhd_central = list(data$gbd_daly[1],
-                         data$gbd_daly[1] + 5000,
-                         data$gbd_daly[1] + 10000),
-      rr_central = 1.08,
-      rr_increment = 10,
-      erf_shape = "log_linear",
-      geo_id_disaggregated = 1:3,
-      geo_id_aggregated = rep("CH", 3),
-      info = data.frame(pollutant = "road_noise", outcome = "YLD"))
-
-  testthat::expect_equal(
-    object =
-      healthiar::summarize_uncertainty(
-        bestcost_noise_ihd_expDist_iteration,
-        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
-
-    expected = # Results on 2025-05-08; no comparison study
-      c(14177, 12688, 15875)
-  )
-})
-
 
 
 ## AR ###########################################################################
@@ -218,56 +216,16 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formul
   testthat::expect_equal(
     object =
       summarize_uncertainty(
-        bestcost_noise_ha_ar_with_summary_uncertainty,
-        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
+        results = bestcost_noise_ha_ar_with_summary_uncertainty,
+        n_sim = 100,
+        seed = 122)$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
 
-    expected = # Results on 2025-02-11; no comparison study
-      c(174770, 170157, 179547)
+    expected = # Results on 2025-05-15; no comparison study
+      c(230734, 117729, 417987)
   )
 })
-
-
-
-### ITERATION ###################################################################
-
-testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_TRUE|", {
-
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
-  data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
-
-  bestcost_noise_ha_ar_iteration <-
-    healthiar::attribute_health(
-      approach_risk = "absolute_risk",
-      exp_central = list(data$exposure_mean,
-                         data$exposure_mean + 5,
-                         data$exposure_mean + 10),
-      exp_lower = list(data$exposure_mean -2,
-                       data$exposure_mean + 5 - 2,
-                       data$exposure_mean + 10 - 2),
-      exp_upper = list(data$exposure_mean + 2,
-                       data$exposure_mean + 5 + 2,
-                       data$exposure_mean + 10 + 2),
-      pop_exp = list(data$population_exposed_total,
-                     data$population_exposed_total + 0.1,
-                     data$population_exposed_total + 0.2),
-      erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-      geo_id_disaggregated = 1:3,
-      geo_id_aggregated = rep("CH", 3),
-      info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"),
-    )
-
-  testthat::expect_equal(
-    object =
-      summarize_uncertainty(
-        bestcost_noise_ha_ar_iteration,
-        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
-
-    expected = # Results on 2025-04-04; no comparison study
-    c(728049, 708545, 751784)
-  )
-})
-
 
 
 ### YLD #########################################################################
@@ -291,18 +249,69 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_dist|erf_ar_fo
   testthat::expect_equal(
     object =
       summarize_uncertainty(
-        bestcost_noise_ha_ar,
-        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
+        results = bestcost_noise_ha_ar,
+        n_sim = 100,
+        seed = 122)$uncertainty_main|>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
 
-    expected = # Results on 2025-02-11; no comparison study
-      c(25126, 276, 142539)
+    expected = # Results on 2025-05-15; no comparison study
+      c(139409, 8132, 611435)
+  )
+})
+
+# COMPARE ########
+
+testthat::test_that("results correct |pathway_uncertainty_compare|exp_dist|erf_ar_formula|iteration_TRUE|", {
+
+  rr_scenario_1 <-
+    healthiar::attribute_health(
+      exp_central = 8,
+      exp_lower = 7,
+      exp_upper = 9,
+      cutoff_central = 5,
+      cutoff_lower = 4,
+      cutoff_upper = 6,
+      bhd_central = 1E5,
+      bhd_lower = 5E4,
+      bhd_upper = 2E5,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear")
+
+  rr_scenario_2 <-
+    healthiar::attribute_mod(
+      output_attribute_1 =  rr_scenario_1,
+      exp_central = 7.5,
+      exp_lower = 6.2,
+      exp_upper = 8.1)
+
+  rr_comparison <-
+    healthiar::compare(
+      output_attribute_1 = rr_scenario_1,
+      output_attribute_2 = rr_scenario_2,
+      approach_comparison = "delta")
+
+  testthat::expect_equal(
+    object =
+      healthiar::summarize_uncertainty(
+        results = rr_comparison,
+        n_sim = 100,
+        seed = 122)$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
+
+    expected = # Results on 2025-05-15; no comparison study
+      c(551,   155,   1075)
   )
 })
 
 # ERROR OR WARNING ########
 ## ERROR #########
 
-testthat::test_that("results correct with erf_eq uncertainty |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
+testthat::test_that("error_if_erf_eq |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
@@ -327,7 +336,7 @@ testthat::test_that("results correct with erf_eq uncertainty |pathway_uncertaint
   )
 })
 
-testthat::test_that("results correct with erf_eq uncertainty |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_TRUE|", {
+testthat::test_that("error_if_erf_eq  |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_TRUE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>

@@ -110,39 +110,7 @@ attribute_master <-
 
     # Compile input data
     input_table <-
-      healthiar:::compile_input(
-        is_lifetable = is_lifetable,
-        approach_risk = approach_risk,
-        exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
-        prop_pop_exp = prop_pop_exp,
-        pop_exp = pop_exp,
-        cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
-        rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
-        rr_increment = rr_increment,
-        erf_shape = erf_shape,
-        erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
-        bhd_central = bhd_central, bhd_lower = bhd_lower, bhd_upper = bhd_upper,
-        geo_id_disaggregated = geo_id_disaggregated,
-        geo_id_aggregated = geo_id_aggregated,
-        info = info,
-        population = population,
-        # YLD
-        dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
-        duration_central = duration_central, duration_lower = duration_lower, duration_upper = duration_upper,
-        # Lifetable arguments if needed
-        health_outcome = health_outcome,
-        approach_exposure = approach_exposure,
-        approach_newborns = approach_newborns,
-        year_of_analysis = year_of_analysis,
-        time_horizon = time_horizon,
-        min_age = min_age,
-        max_age = max_age,
-        first_age_pop =  first_age_pop,
-        last_age_pop = last_age_pop,
-        population_midyear_male = population_midyear_male,
-        population_midyear_female =  population_midyear_female,
-        deaths_male = deaths_male,
-        deaths_female = deaths_female)
+      healthiar:::compile_input(input_args)
 
     # Calculate the health impacts for each case (uncertainty, category, geo area...)
     impact_raw <-

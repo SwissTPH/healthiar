@@ -232,7 +232,9 @@ compare <-
 
     output <-
       healthiar:::get_output(
-        input_args = args,
+        input_args = list(approach_comparison = approach_comparison,
+                          input_args_1 = input_args_1,
+                          input_args_2 = input_args_2),
         input_table = input_table,
         impact_raw = impact_raw)
 
