@@ -26,13 +26,14 @@
 summarize_uncertainty <- function(
     results,
     n_sim,
-    seed = NULL
-    ) {
+    seed = NULL) {
 
   ## Set options
   user_options <- options()
   # Make sure that no rounding occurs
   options(digits = 15)
+
+
 
   ## Set seed for reproducibility
   if(base::is.null(seed)){seed <- 123}
@@ -40,22 +41,25 @@ summarize_uncertainty <- function(
   var_names <- c("rr", "exp", "cutoff", "bhd", "dw", "duration")
   seeds <- list()
 
+  # Store seed
   for(i in 1:length(var_names)){
     seeds[[var_names[i]]] <- seed #+i
   }
+
+
 
   # Store the input data as entered in the arguments
   input_args <- results[["health_detailed"]][["input_args"]]
   input_table <- results[["health_detailed"]][["input_table"]]
 
   # Identify if this is one-case or two-case (comparison) assessment
-  is_one_case <- is.list(input_table)
-  is_two_cases <- !is_one_case
+  is_two_cases <- any(c("input_table_1", "input_table_2") %in% names(input_table))
+  is_one_case <- !is_two_cases
+
 
   # CREATE FUNCTION TO SUMMARIZE UNCERTAINTY ######
   summarize_uncertainty_based_on_input <-
     function(input_args, input_table){
-
   ## Determine number of geographic units
   n_geo <-
     # Exceptionally, let's use here unique() instead of input_args
@@ -65,6 +69,7 @@ summarize_uncertainty <- function(
 
   # Sequence (vector) of exposure_dimension
   # Use impact_raw because it was obtained in compiled_input
+
   n_exp <- base::max(input_table$exposure_dimension)
   seq_exposure_dimension <- 1:n_exp
 
@@ -102,7 +107,7 @@ summarize_uncertainty <- function(
   value_in_erf_eq_central <-
     !base::is.null(input_args$erf_eq_central)
 
-  # Store seed
+
 
 
   # Define functions #################################################
@@ -351,7 +356,46 @@ summarize_uncertainty <- function(
   # Expand the data
   input_groups_expanded <- input_groups[base::rep(1:n_groups, each = n_sim), ]
 
-  template <-
+    vars_to_be_removed_in_input_args <-
+    base::paste0(
+      base::rep(base::names(sim), each = 3),
+      c("_central", "_lower", "_upper"))
+
+  input_args_prepared_for_replacement <-
+    purrr::keep(input_args,
+                !names(input_args) %in% vars_to_be_removed_in_input_args)
+
+
+
+  template_test <-
+    tibble::as_tibble(sim) |>
+    # Paste "_central" to match with the name of input_args
+    # and so that values can be replaced
+    stats::setNames(base::paste0(base::names(tibble::as_tibble(sim)), "_central"))
+    # Replace values (original with simulated)
+  browser()
+  attribute_by_sim <-
+    dplyr::mutate(template_test,
+      input_args =
+        purrr::pmap(template_test,
+                    \(...) {c(input_args_prepared_for_replacement, base::list(...))})) |>
+    dplyr::mutate(
+      sim_id = dplyr::row_number(), .before = dplyr::everything())|>
+    dplyr::rowwise()|>
+    dplyr::mutate(
+      input_table = list(healthiar:::compile_input(input_args = input_args)),
+      impact_raw = list(healthiar:::get_impact(input_table = input_table,
+                                               pop_fraction_type = "paf")),
+      output = list(healthiar:::get_output(input_args = input_args,
+                                           input_table = input_table,
+                                           impact_raw = impact_raw)),
+      impact = output[["health_main"]]$impact)|>
+    dplyr::ungroup()
+
+
+
+
+   template <-
     tibble::tibble(
       sim_id = base::as.numeric(base::rep(1:n_sim, each=n_geo)),
       geo_id_disaggregated =
@@ -368,6 +412,8 @@ summarize_uncertainty <- function(
                      relationship = "many-to-one") |>
     dplyr::bind_cols(sim)
 
+  # Assign new ci value (central_"n_sim") to variables
+
   sim_df[sim_vars_ci] <- base::paste0("central_" , sim_df$sim_id)
 
 
@@ -379,7 +425,7 @@ summarize_uncertainty <- function(
     healthiar:::get_output(impact_raw = impact_raw_sim)[["health_main"]]
 
 
-  # Determine 95% CI of impact #################################################
+  # SUMMARIZE (determine 95% CI of impact) #################################################
 
   # * Single geo unit ##########################################################
 
@@ -426,7 +472,9 @@ summarize_uncertainty <- function(
   summary <-
     list(
       summarized_ci = summarized_ci,
+      impact_raw_sim = impact_raw_sim,
       impact_sim = impact_sim)
+
   return(summary)
     }
   # GENERATE RESULTS USING THE FUNCTION ##################
@@ -439,6 +487,34 @@ summarize_uncertainty <- function(
         input_table = input_table)
   } else if (is_two_cases){
 
+    # Simulate and summarize data for the scenario 1 and 2
+    summary_1 <-
+      summarize_uncertainty_based_on_input(
+        input_args = input_args[["input_args_1"]],
+        input_table = input_table[["input_table_1"]])
+
+    impact_raw_sim_1 <-
+      summary_1[["impact_raw_sim"]]
+
+    data_1_nested_by_sim <-
+      impact_raw_sim_1 |>
+      tidyr::nest(.by = sim_id,
+                  .key = "impact_raw") |>
+      dplyr::mutate(
+        input_table =
+          purrr::map(impact_raw,
+                     ~dplyr::select(.x,
+                                    -impact, -absolute_risk_as_percent)))
+
+
+    summary_2 <-
+      summarize_uncertainty_based_on_input(
+        input_args = input_args[["input_args_2"]],
+        input_table = input_table[["input_table_2"]])
+
+
+
+
   }
 
 
@@ -448,8 +524,9 @@ summarize_uncertainty <- function(
   # OUTPUT ####################################################################
 
   results[["uncertainty_main"]] <- summary[["summarized_ci"]]
-
-  results[["uncertainty_detailed"]][["impact_raw"]] <- summary[["impact_sim"]] # to check interim results during development
+  # to check interim results during development
+  results[["uncertainty_detailed"]][["impact_sim"]] <- summary[["impact_sim"]]
+  results[["uncertainty_detailed"]][["impact_raw_sim"]] <- summary[["impact_raw_sim"]]
 
   on.exit(options(user_options))
 
