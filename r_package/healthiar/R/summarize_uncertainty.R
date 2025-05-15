@@ -440,29 +440,63 @@ summarize_uncertainty <- function(
   } else if (is_two_cases){
 
     # Simulate and summarize data for the scenario 1 and 2
-    summary_1 <-
+
+    attribute_1 <-
       summarize_uncertainty_based_on_input(
         input_args = input_args[["input_args_1"]],
         input_table = input_table[["input_table_1"]])
 
-    impact_raw_sim_1 <-
-      summary_1[["impact_raw_sim"]]
-
-    data_1_nested_by_sim <-
-      impact_raw_sim_1 |>
-      tidyr::nest(.by = sim_id,
-                  .key = "impact_raw") |>
-      dplyr::mutate(
-        input_table =
-          purrr::map(impact_raw,
-                     ~dplyr::select(.x,
-                                    -impact, -absolute_risk_as_percent)))
-
-
-    summary_2 <-
+    attribute_2 <-
       summarize_uncertainty_based_on_input(
         input_args = input_args[["input_args_2"]],
         input_table = input_table[["input_table_2"]])
+
+    output_1 <-
+      attribute_1[["uncertainty_detailed"]]|>
+      dplyr::select(dplyr::contains(c("_id", "output")))
+
+
+    output_2 <-
+      attribute_2[["uncertainty_detailed"]]|>
+      dplyr::select(dplyr::contains(c("_id", "output")))
+
+    id_cols <-
+      output_1 |>
+      dplyr::select(dplyr::contains("_id"))
+
+
+
+    attribute_by_sim <-
+      id_cols |>
+      dplyr::mutate(
+        output_1 = output_1$output,
+        output_2 = output_2$output)|>
+      dplyr::mutate(
+        output_compare =
+          purrr::pmap(base::list(output_1, output_2, input_args$approach_comparison),
+                      healthiar::compare),
+        impact_main = purrr::map(output_compare,"health_main"))
+
+    grouping_geo_var <-
+      names(results$health_main)[grepl("geo_id", names(results$health_main))]
+
+    summary <-
+      attribute_by_sim |>
+      dplyr::select(dplyr::all_of(c("sim_id", "impact_main"))) |>
+      tidyr::unnest(cols = impact_main) |>
+      dplyr::group_by(dplyr::across(dplyr::all_of(grouping_geo_var))) |>
+      dplyr::summarise(
+        central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE),
+        lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE),
+        upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE),
+        .groups = "drop")
+
+    uncertainty <-
+      list(
+        uncertainty_main = summary,
+        uncertainty_detailed = attribute_by_sim)
+
+
 
 
 
