@@ -37,7 +37,9 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
         results = bestcost_pm_copd_with_summary_uncertainty,
         n_sim = 100,
         seed = 123
-        )$uncertainty_main |> base::as.numeric() |> base::round(),
+        )$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
     expected = # Results on 2025-05-08; no comparison study
       c(1324, 854, 1815)
   )
@@ -70,7 +72,9 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       healthiar::summarize_uncertainty(
         results = bestcost_pm_copd_geo_short,
         n_sim = 100
-      )$uncertainty_main |> base::as.numeric() |> base::round(),
+      )$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
     expected = # Results on 2025-05-08; no comparison study
       c(31566, 25333, 37347)
   )
@@ -110,7 +114,9 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_
         results = bestcost_pm_yld_singlebhd_with_summary_uncertainty,
         n_sim = 100,
         seed = 123
-      )$uncertainty_main |> base::as.numeric() |> base::round(),
+      )$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-05-08; no comparison study
       c(652, 266, 1031)
@@ -143,7 +149,9 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
     object =
       healthiar::summarize_uncertainty(
         results = bestcost_noise_ihd_expDist,
-        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
+        n_sim = 100)$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-05-07; no comparison study
       c(1152, 997, 1290)
@@ -187,7 +195,9 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
     object =
       healthiar::summarize_uncertainty(
         results = bestcost_noise_ihd_expDist_iteration,
-        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
+        n_sim = 100)$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-05-08; no comparison study
       c(14177, 12688, 15875)
@@ -219,7 +229,9 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formul
     object =
       summarize_uncertainty(
         results = bestcost_noise_ha_ar_with_summary_uncertainty,
-        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
+        n_sim = 100)$uncertainty_main |>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-02-11; no comparison study
       c(174770, 170157, 179547)
@@ -261,7 +273,9 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formul
     object =
       summarize_uncertainty(
         results = bestcost_noise_ha_ar_iteration,
-        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
+        n_sim = 100)$uncertainty_main|>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-04-04; no comparison study
     c(728049, 708545, 751784)
@@ -292,7 +306,9 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_dist|erf_ar_fo
     object =
       summarize_uncertainty(
         results = bestcost_noise_ha_ar,
-        n_sim = 100)$uncertainty_main |> base::as.numeric() |> base::round(),
+        n_sim = 100)$uncertainty_main|>
+      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
+      base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-02-11; no comparison study
       c(25126, 276, 142539)
