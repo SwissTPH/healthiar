@@ -22,7 +22,6 @@
 #' @keywords internal
 
 
-
 summarize_uncertainty <- function(
     results,
     n_sim,
@@ -32,7 +31,6 @@ summarize_uncertainty <- function(
   user_options <- options()
   # Make sure that no rounding occurs
   options(digits = 15)
-
 
 
   ## Set seed for reproducibility
@@ -273,99 +271,16 @@ summarize_uncertainty <- function(
           shape2 = base::as.numeric(base::unname(simulation_betaExpert["beta"])))
     }
 
-
   }
-
-
 
   geo_id_disaggregated <- base::unique(input_table$geo_id_disaggregated)
 
-  ci_in_template <-
+  sim_template <-
     tibble::tibble(
       geo_id_disaggregated = geo_id_disaggregated,
       geo_id_number = 1:n_geo,
       sim_id = list(1:n_sim))
 
-  sim <- ci_in_template
-
-
-  if(ci_in[["rr"]]){
-
-    sim <-
-      sim |>
-      dplyr::rowwise() |>
-      dplyr::mutate(
-        rr_central =
-          base::list(simulate(var_name = "rr",
-                              distribution = "gamma",
-                              n = n_sim,
-                              seed = seeds[["rr"]]+geo_id_number)))
-  }
-
-  if(ci_in[["exp"]]){
-
-    sim <-
-      sim |>
-      dplyr::rowwise() |>
-      dplyr::mutate(
-        exp_central =
-          base::list(simulate(var_name = "exp",
-                              distribution = "normal",
-                              n = n_sim,
-                              seed = seeds[["exp"]]+geo_id_number)))
-  }
-
-  if(ci_in[["cutoff"]]){
-
-    sim <-
-      sim |>
-      dplyr::rowwise() |>
-      dplyr::mutate(
-        cutoff_central =
-          base::list(simulate(var_name = "cutoff",
-                              distribution = "normal",
-                              n = n_sim,
-                              seed = seeds[["cutoff"]]+geo_id_number)))
-  }
-
-  if(ci_in[["bhd"]]){
-
-    sim <-
-      sim |>
-      dplyr::rowwise() |>
-      dplyr::mutate(
-        bhd_central =
-          base::list(simulate(var_name = "bhd",
-                              distribution = "normal",
-                              n = n_sim,
-                              seed = seeds[["bhd"]]+geo_id_number)))
-  }
-
-  if(ci_in[["dw"]]){
-
-    sim <-
-      sim |>
-      dplyr::rowwise() |>
-      dplyr::mutate(
-        dw_central =
-          base::list(simulate(var_name = "dw",
-                              distribution = "beta",
-                              n = n_sim,
-                              seed = seeds[["dw"]]+geo_id_number)))
-}
-
-  if(ci_in[["duration"]]){
-
-    sim <-
-      sim |>
-      dplyr::rowwise() |>
-      dplyr::mutate(
-        duration_central =
-          base::list(simulate(var_name = "duration",
-                              distribution = "normal",
-                              n = n_sim,
-                              seed = seeds[["duration"]]+geo_id_number)))
-  }
 
   if((!base::is.null(input_args$erf_eq_lower) |
       !base::is.null(input_args$erf_eq_lower))){
@@ -374,21 +289,55 @@ summarize_uncertainty <- function(
   }
 
 
-  var_names_in_sim <- base::names(ci_in)[unlist(ci_in)]
-  var_names_in_sim_central <- base::paste0(var_names_in_sim, "_central")
+  var_names_with_ci <- base::names(ci_in)[unlist(ci_in)]
+  var_names_with_ci_central <- base::paste0(var_names_with_ci, "_central")
   cols_to_unnest <- c("sim_id",
-                      var_names_in_sim_central)
+                      var_names_with_ci_central)
 
   vars_to_be_removed_in_input_args <-
     base::paste0(
-      base::rep(var_names_in_sim, each = 3),
+      base::rep(var_names_with_ci, each = 3),
       c("_central", "_lower", "_upper"))
 
   input_args_prepared_for_replacement <-
     purrr::keep(input_args,
                 !names(input_args) %in% vars_to_be_removed_in_input_args)
 
-  template <- tidyr::unnest(sim, dplyr::any_of(cols_to_unnest))
+
+  # Define the mapping between variable names and their distributions
+  sim_config <- base::list(
+    rr = "gamma",
+    exp = "normal",
+    cutoff = "normal",
+    bhd = "normal",
+    dw = "beta",
+    duration = "normal"
+  )
+
+  sim <- list()
+
+  # Apply simulation for variables enabled in ci_in
+  for (var in var_names_with_ci) {
+    if (ci_in[[var]]) {
+      dist <- sim_config[[var]]
+      col_name <- paste0(var, "_central")
+
+      sim[[col_name]] <- purrr::map(
+        .x = sim_template$geo_id_number,
+        ~ simulate(
+          var_name = var,
+          distribution = dist,
+          n = n_sim,
+          seed = seeds[[var]] + .x
+        )
+      )
+    }
+  }
+
+
+  template <-
+    dplyr::bind_cols(sim_template, tibble::as_tibble(sim)) |>
+    tidyr::unnest(dplyr::any_of(cols_to_unnest))
 
   attribute_by_sim <-
     dplyr::mutate(template,
@@ -496,23 +445,13 @@ summarize_uncertainty <- function(
         uncertainty_main = summary,
         uncertainty_detailed = list(by_simulation = attribute_by_sim))
 
-
-
-
-
-
   }
-
-
-
-
 
   # OUTPUT ####################################################################
 
   on.exit(options(user_options))
 
   return(uncertainty)
-
 
 }
 
