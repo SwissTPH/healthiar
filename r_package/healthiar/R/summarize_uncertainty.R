@@ -452,12 +452,12 @@ summarize_uncertainty <- function(
         input_table = input_table[["input_table_2"]])
 
     output_1 <-
-      attribute_1[["uncertainty_detailed"]]|>
+      attribute_1[["uncertainty_detailed"]][["by_simulation"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
 
 
     output_2 <-
-      attribute_2[["uncertainty_detailed"]]|>
+      attribute_2[["uncertainty_detailed"]][["by_simulation"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
 
     id_cols <-
