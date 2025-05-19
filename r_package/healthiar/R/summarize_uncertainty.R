@@ -291,15 +291,25 @@ summarize_uncertainty <- function(
 
   if(ci_in[["rr"]]){
 
+
     sim <-
       sim |>
-      dplyr::rowwise() |>
       dplyr::mutate(
         rr_central =
-          base::list(simulate(var_name = "rr",
-                              distribution = "gamma",
-                              n = n_sim,
-                              seed = seeds[["rr"]]+geo_id_number)))
+          purrr::map(
+            .x = geo_id_number,
+            ~ simulate(var_name = "rr",
+                     distribution = "gamma",
+                     n = n_sim,
+                     seed = seeds[["rr"]] + .x)))
+      #
+      # dplyr::rowwise() |>
+      # dplyr::mutate(
+      #   rr_central =
+      #     base::list(simulate(var_name = "rr",
+      #                         distribution = "gamma",
+      #                         n = n_sim,
+      #                         seed = seeds[["rr"]]+geo_id_number)))
   }
 
   if(ci_in[["exp"]]){
@@ -319,52 +329,96 @@ summarize_uncertainty <- function(
 
     sim <-
       sim |>
-      dplyr::rowwise() |>
       dplyr::mutate(
         cutoff_central =
-          base::list(simulate(var_name = "cutoff",
-                              distribution = "normal",
-                              n = n_sim,
-                              seed = seeds[["cutoff"]]+geo_id_number)))
+          purrr::map(
+            .x = geo_id_number,
+            ~ simulate(var_name = "cutoff",
+                       distribution = "normal",
+                       n = n_sim,
+                       seed = seeds[["cutoff"]] + .x)))
+
+    # sim <-
+    #   sim |>
+    #   dplyr::rowwise() |>
+    #   dplyr::mutate(
+    #     cutoff_central =
+    #       base::list(simulate(var_name = "cutoff",
+    #                           distribution = "normal",
+    #                           n = n_sim,
+    #                           seed = seeds[["cutoff"]]+geo_id_number)))
   }
 
   if(ci_in[["bhd"]]){
 
     sim <-
       sim |>
-      dplyr::rowwise() |>
       dplyr::mutate(
         bhd_central =
-          base::list(simulate(var_name = "bhd",
-                              distribution = "normal",
-                              n = n_sim,
-                              seed = seeds[["bhd"]]+geo_id_number)))
+          purrr::map(
+            .x = geo_id_number,
+            ~ simulate(var_name = "bhd",
+                       distribution = "normal",
+                       n = n_sim,
+                       seed = seeds[["bhd"]] + .x)))
+
+    # sim <-
+    #   sim |>
+    #   dplyr::rowwise() |>
+    #   dplyr::mutate(
+    #     bhd_central =
+    #       base::list(simulate(var_name = "bhd",
+    #                           distribution = "normal",
+    #                           n = n_sim,
+    #                           seed = seeds[["bhd"]]+geo_id_number)))
   }
 
   if(ci_in[["dw"]]){
 
     sim <-
       sim |>
-      dplyr::rowwise() |>
       dplyr::mutate(
         dw_central =
-          base::list(simulate(var_name = "dw",
-                              distribution = "beta",
-                              n = n_sim,
-                              seed = seeds[["dw"]]+geo_id_number)))
+          purrr::map(
+            .x = geo_id_number,
+            ~ simulate(var_name = "dw",
+                       distribution = "beta",
+                       n = n_sim,
+                       seed = seeds[["dw"]] + .x)))
+
+    # sim <-
+    #   sim |>
+    #   dplyr::rowwise() |>
+    #   dplyr::mutate(
+    #     dw_central =
+    #       base::list(simulate(var_name = "dw",
+    #                           distribution = "beta",
+    #                           n = n_sim,
+    #                           seed = seeds[["dw"]]+geo_id_number)))
 }
 
   if(ci_in[["duration"]]){
 
     sim <-
       sim |>
-      dplyr::rowwise() |>
       dplyr::mutate(
         duration_central =
-          base::list(simulate(var_name = "duration",
-                              distribution = "normal",
-                              n = n_sim,
-                              seed = seeds[["duration"]]+geo_id_number)))
+          purrr::map(
+            .x = geo_id_number,
+            ~ simulate(var_name = "duration",
+                       distribution = "normal",
+                       n = n_sim,
+                       seed = seeds[["duration"]] + .x)))
+
+    # sim <-
+    #   sim |>
+    #   dplyr::rowwise() |>
+    #   dplyr::mutate(
+    #     duration_central =
+    #       base::list(simulate(var_name = "duration",
+    #                           distribution = "normal",
+    #                           n = n_sim,
+    #                           seed = seeds[["duration"]]+geo_id_number)))
   }
 
   if((!base::is.null(input_args$erf_eq_lower) |
@@ -452,12 +506,12 @@ summarize_uncertainty <- function(
         input_table = input_table[["input_table_2"]])
 
     output_1 <-
-      attribute_1[["uncertainty_detailed"]]|>
+      attribute_1[["uncertainty_detailed"]][["by_simulation"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
 
 
     output_2 <-
-      attribute_2[["uncertainty_detailed"]]|>
+      attribute_2[["uncertainty_detailed"]][["by_simulation"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
 
     id_cols <-
