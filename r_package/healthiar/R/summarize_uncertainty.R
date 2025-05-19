@@ -316,6 +316,7 @@ summarize_uncertainty <- function(
                        distribution = "normal",
                        n = n_sim,
                        seed = seeds[["exp"]] + .x)))
+    }
 
   if(ci_in[["cutoff"]]){
 
@@ -343,6 +344,7 @@ summarize_uncertainty <- function(
                        distribution = "normal",
                        n = n_sim,
                        seed = seeds[["bhd"]] + .x)))
+  }
 
   if(ci_in[["dw"]]){
 
