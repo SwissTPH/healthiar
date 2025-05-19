@@ -447,7 +447,7 @@ Two folders are added:
 ### Function call
 
 ```{r}
-results_pm_copd <- 
+results_pm_copd_summarized <- 
   summarize_uncertainty(
     results = results_pm_copd,
     n_sim = 1000
@@ -458,7 +458,7 @@ results_pm_copd <-
 
 ```{r}
 print(
-  results_pm_copd |> 
+  results_pm_copd_summarized |> 
   purrr::pluck("uncertainty_main")
   )
 ```
@@ -466,10 +466,9 @@ print(
 ### Detailed results
 
 ```{r}
-results_pm_copd |> 
+results_pm_copd_summarized |> 
   purrr::pluck("uncertainty_detailed") |> 
-  purrr::pluck("raw") |> 
-  dplyr::select(erf_ci:impact) |> 
+  purrr::pluck("by_simulation") |> 
   knitr::kable()
 ```
 

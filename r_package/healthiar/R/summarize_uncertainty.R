@@ -424,7 +424,7 @@ summarize_uncertainty <- function(
   uncertainty <-
     list(
       uncertainty_main = summary,
-      uncertainty_detailed = attribute_by_sim)
+      uncertainty_detailed = list(by_simulation = attribute_by_sim))
 
   return(uncertainty)
     }
@@ -494,7 +494,7 @@ summarize_uncertainty <- function(
     uncertainty <-
       list(
         uncertainty_main = summary,
-        uncertainty_detailed = attribute_by_sim)
+        uncertainty_detailed = list(by_simulation = attribute_by_sim))
 
 
 
