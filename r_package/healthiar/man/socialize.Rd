@@ -5,33 +5,33 @@
 \title{Consider socio-economic aspects in healthiar assessments}
 \usage{
 socialize(
-  output_healthiar = NULL,
+  listed_output_healthiar = NULL,
   impact = NULL,
   geo_id_disaggregated,
   social_indicator,
   n_quantile = 10,
-  approach = "quantile",
   population = NULL,
   bhd = NULL,
   exp = NULL,
-  pop_fraction = NULL
+  pop_fraction = NULL,
+  age_groups
 )
 }
 \arguments{
-\item{output_healthiar}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results}
+\item{listed_output_healthiar}{\code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.}
 
-\item{impact}{\code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_disaggregated}.}
+\item{impact}{\code{List} containing \code{numeric vectors}. The \code{numeric vectors} refer to the \code{age_groups} and the list to the \code{geo_id_disaggregated}.}
 
 \item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
 If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
 
-\item{social_indicator}{\code{Vector} with numeric values showing the deprivation score (indicator of economic wealth) of the fine geographical area (it should match with those used in \code{attribute} or \code{compare})}
+\item{social_indicator}{\code{List} with numeric values showing social indicator, e.g. the deprivation score (indicator of economic wealth), of the fine geographical area. The lenght of the list should be the same as the length of the vector of \code{geo_id_disaggregated}}
 
 \item{n_quantile}{\code{Integer value} specifying to the number quantiles in the analysis}
 
-\item{approach}{\code{String} referring the approach to include the social aspects. To choose between "quantile" and ?}
-
 \item{population}{\code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.}
+
+\item{age_groups}{\code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_healthiar}.}
 }
 \value{
 Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
