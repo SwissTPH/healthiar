@@ -24,7 +24,7 @@ standardize <- function(listed_output_healthiar,
 
 
   impact_by_age_group <-
-    healthiar::group_by_age(
+    healthiar:::group_by_age(
       listed_output_healthiar = listed_output_healthiar,
       age_groups = age_groups)
 
