@@ -4,12 +4,13 @@
 #' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts
 
 #' @inheritParams attribute_master
-#' @param output_healthiar \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results
-#' @param impact \code{Numeric vector} containing the health impacts to be used for social analysis and matched with the argument \code{geo_id_disaggregated}.
+#' @param listed_output_healthiar \code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.
+#' @param impact \code{List} containing \code{numeric vectors}. The \code{numeric vectors} refer to the \code{age_groups} and the list to the \code{geo_id_disaggregated}.
 #' @param population \code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.
-#' @param social_indicator \code{Vector} with numeric values showing the deprivation score (indicator of economic wealth) of the fine geographical area (it should match with those used in \code{attribute} or \code{compare})
+#' @param age_groups \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_healthiar}.
+#' @param social_indicator \code{Vector} with numeric values showing social indicator, e.g. the deprivation score (indicator of economic wealth), of the fine geographical area that match with those used in \code{attribute} or \code{compare})
 #' @param n_quantile \code{Integer value} specifying to the number quantiles in the analysis
-#' @param approach \code{String} referring the approach to include the social aspects. To choose between "quantile" and ?
+
 
 #' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 
@@ -24,26 +25,26 @@
 
 
 
-socialize <- function(output_healthiar = NULL,
+socialize <- function(listed_output_healthiar = NULL,
                       impact = NULL,
                       geo_id_disaggregated,
                       social_indicator,
                       n_quantile = 10, ## by default: decile
-                      approach = "quantile",
                       population = NULL,
                       bhd = NULL,
                       exp = NULL,
-                      pop_fraction = NULL
+                      pop_fraction = NULL,
+                      age_group
                       ) {
 
   # Using the output of attribute ##############################################
 
-  if ( is.null(impact) & !is.null(output_healthiar) ) {
+  if ( is.null(impact) & !is.null(listed_output_healthiar) ) {
 
     # * Add social_indicator to detailed output ################################
 
     output_social <-
-      output_healthiar[["health_detailed"]][["impact_raw"]] |>
+      listed_output_healthiar[["health_detailed"]][["impact_raw"]] |>
       dplyr::left_join(
         x = _,
         y = dplyr::tibble(geo_id_disaggregated = geo_id_disaggregated,
@@ -187,7 +188,10 @@ socialize <- function(output_healthiar = NULL,
       dplyr::select(-is_paf_from_deprivation, -is_attributable_from_deprivation,
                     -parameter_string)
 
-    output_healthiar[["social_main"]] <-
+    output_social <-
+      listed_output_healthiar
+
+    output_social[["social_main"]] <-
       social_results |>
       ## Keep only impact as parameter
       ## This is the most relevant result.
@@ -195,12 +199,12 @@ socialize <- function(output_healthiar = NULL,
       ## (just in case some users have interest on this)
       dplyr::filter(parameter == "impact_rate")
 
-    output_healthiar[["social_detailed"]][["results_detailed"]] <- social_results
-    output_healthiar[["social_detailed"]][["overview_quantiles"]] <- output_social_by_quantile
+    output_social[["social_detailed"]][["results_detailed"]] <- social_results
+    output_social[["social_detailed"]][["overview_quantiles"]] <- output_social_by_quantile
 
-    return(output_healthiar)
+    return(output_social)
 
-  } else if ( !is.null(impact) & is.null(output_healthiar) ) {
+  } else if ( !is.null(impact) & is.null(listed_output_healthiar) ) {
 
     # Using user-entered impacts in vector format ##############################
 
@@ -382,7 +386,7 @@ socialize <- function(output_healthiar = NULL,
                     -parameter_string)
 
     output_social <-
-      output_healthiar
+      listed_output_healthiar
 
     output_social[["social_main"]] <-
       social_results |>
