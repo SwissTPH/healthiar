@@ -5,8 +5,8 @@ library(dplyr)
 library(tidyr)
 
 ## read data
-mrt <- readRDS("./tests/example_age_std/no2_mrt_mdi.rds")
-ref <- readRDS("./tests/example_age_std/pop_ref.rds")
+mrt <- base::readRDS(testthat::test_path("data", "pop_ref.rds"))
+ref <- base::readRDS(testthat::test_path("data", "no2_mrt_mdi.rds"))
 
 ## aggregate burden & population by MDI
 mrt_mdi <- aggregate(cbind(POP,ATT_MORT)~AGE+MDI, mrt, sum)
