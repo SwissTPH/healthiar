@@ -27,12 +27,17 @@ summarize_uncertainty <- function(
     n_sim,
     seed = NULL) {
 
+  # PREPARATION ################
+
+  ## Decimals ######
+
   ## Set options
   user_options <- options()
   # Make sure that no rounding occurs
   options(digits = 15)
 
 
+  ## Seeds ########
   ## Set seed for reproducibility
   if(base::is.null(seed)){seed <- 123}
 
@@ -44,48 +49,45 @@ summarize_uncertainty <- function(
     seeds[[var_names[i]]] <- seed #+i*1E
   }
 
-
+  ## Data sets ##########
   # Store the input data as entered in the arguments
   input_args <- results[["health_detailed"]][["input_args"]]
   input_table <- results[["health_detailed"]][["input_table"]]
 
-  # Identify if this is one-case or two-case (comparison) assessment
-  is_two_cases <- any(c("input_table_1", "input_table_2") %in% names(input_table))
-  is_one_case <- !is_two_cases
 
 
-  # CREATE FUNCTION TO SUMMARIZE UNCERTAINTY ######
+  # VALIDATION
+  # Uncertainty in erf_eq is currently not supported
+  # It would require a more complex modelling
+  if((!base::is.null(input_args$erf_eq_lower) |
+      !base::is.null(input_args$erf_eq_lower))){
+    base::stop("Sorry, the summary of uncertainty for erf_eq is not currently supported",
+               call. = FALSE)
+  }
+
+
+
+  # FUNCTION TO SUMMARIZE UNCERTAINTY ######
+  # Create the function that make the whole job
+  # It is important to create it because for two cases (comparison)
+  # the function has to be run more than once (avoid copy-pasted code)
   summarize_uncertainty_based_on_input <-
     function(input_args, input_table){
-  ## Determine number of geographic units
+
+  ## N #####
+  # Determine number of geographic units
   n_geo <-
     # Exceptionally, let's use here unique() instead of input_args
     # because in some cases the users do not enter the geo_id.
     # In that cases compile_input() provide a geo_id and it is shown in impact_raw
     base::length(base::unique(input_table$geo_id_disaggregated))
 
-  # Sequence (vector) of exposure_dimension
-  # Use impact_raw because it was obtained in compiled_input
-
+  # Get the dimension of the exposure
+  # (i.e. if pop-weighted mean => 1, if exposure distribution => >1 )
   n_exp <- base::max(input_table$exposure_dimension)
-  seq_exposure_dimension <- 1:n_exp
 
-  # Total number of iterations
-  n_total_it = n_sim * n_geo * n_exp
 
-  # Number of assessments (i.e. condensing exposure distributions)
-  n_ass <- n_sim * n_geo
-
-  ass_id <- base::as.numeric(base::rep(1:n_ass, each = n_exp))
-
-  # Store boolean variables
-
-  # Is population-weighted mean exposure?
-  is_pwm_exposure <-
-    base::unique(input_table$exposure_type == "population_weighted_mean")
-  # Is categorical?
-  is_categorical_exposure <-
-    ! is_pwm_exposure
+  ## Boolean variables ####
 
   # Is there a confidence interval? I.e. lower and upper estimate?
 
@@ -97,20 +99,11 @@ summarize_uncertainty <- function(
       !base::is.null(input_args[[paste0(v, "_upper")]])
   }
 
+  # Beta and gamma functions ############################
 
-  value_in_dw_central <-
-    !base::is.null(input_args$dw_central)
-
-  value_in_erf_eq_central <-
-    !base::is.null(input_args$erf_eq_central)
-
-
-
-
-  # Define functions #################################################
   # betaExpert()
-  ## Copied from source code of prevalence::betaExpert() here:
-  ### https://github.com/cran/prevalence/blob/master/R/betaExpert.R
+  # Copied from source code of prevalence::betaExpert() here:
+  # https://github.com/cran/prevalence/blob/master/R/betaExpert.R
 
   betaExpert <-
     function(best, lower, upper, p = 0.95, method = "mode"){
@@ -187,13 +180,14 @@ summarize_uncertainty <- function(
       return(out)
     }
 
-  ## Define helper functions for fitting a gamma distribution with optimization
-  ## for the relative risk.
-  ### NOTE: the functions were adapted from those provided by Sciensano
+  # Define helper functions for fitting a gamma distribution with optimization
+  # for the relative risk.
+  # NOTE: the functions were adapted from those provided by Sciensano
 
-  ## Set gamma distribution specs
+  # Set gamma distribution specs
   vector_probabilities <- c(0.025, 0.975)
-  par <- 2 ## shape parameter of the gamma distribution
+  # shape parameter of the gamma distribution
+  par <- 2
 
   ## Fit gamma distribution
   f_gamma <-
@@ -223,9 +217,7 @@ summarize_uncertainty <- function(
       return(gamma)}
 
 
-  # Create template and run simulations #####################
-
-
+  # Simulate function #####################
   simulate <- function(var_name, distribution, n, seed){
 
     var_value_central <- input_args[[paste0(var_name, "_central")]]
@@ -273,35 +265,19 @@ summarize_uncertainty <- function(
 
   }
 
-  geo_id_disaggregated <- base::unique(input_table$geo_id_disaggregated)
-
+  ## Template and simulations #####
   sim_template <-
     tibble::tibble(
-      geo_id_disaggregated = geo_id_disaggregated,
+      geo_id_disaggregated = base::unique(input_table$geo_id_disaggregated),
       geo_id_number = 1:n_geo,
       sim_id = list(1:n_sim))
 
-
-  if((!base::is.null(input_args$erf_eq_lower) |
-      !base::is.null(input_args$erf_eq_lower))){
-    base::stop("Sorry, the summary of uncertainty for erf_eq is not currently supported",
-               call. = FALSE)
-  }
-
-
+  # Identify the variable names with confidence interval
   var_names_with_ci <- base::names(ci_in)[unlist(ci_in)]
+  # Identify the central variable names with confidence interval
   var_names_with_ci_central <- base::paste0(var_names_with_ci, "_central")
   cols_to_unnest <- c("sim_id",
                       var_names_with_ci_central)
-
-  vars_to_be_removed_in_input_args <-
-    base::paste0(
-      base::rep(var_names_with_ci, each = 3),
-      c("_central", "_lower", "_upper"))
-
-  input_args_prepared_for_replacement <-
-    purrr::keep(input_args,
-                !names(input_args) %in% vars_to_be_removed_in_input_args)
 
 
   # Define the mapping between variable names and their distributions
@@ -314,20 +290,26 @@ summarize_uncertainty <- function(
     duration = "normal"
   )
 
+  # Prepare the list to store the data in the for loop
   sim <- list()
 
   # Apply simulation for variables enabled in ci_in
   for (var in var_names_with_ci) {
     if (ci_in[[var]]) {
+      # Store distribution
       dist <- sim_config[[var]]
+      # Store column name
       col_name <- paste0(var, "_central")
 
+      # Run simulate across all rows
+      # (iteration across simulations, geo_units, exp categories...)
       sim[[col_name]] <- purrr::map(
         .x = sim_template$geo_id_number,
         ~ simulate(
           var_name = var,
           distribution = dist,
           n = n_sim,
+          # Different seed for each geo_unit to avoid similar results across geo_units
           seed = seeds[[var]] + .x
         )
       )
@@ -335,17 +317,36 @@ summarize_uncertainty <- function(
   }
 
 
-  template <-
+  # Identify the variables that have to be removed in input_args
+  # (to be used below)
+  vars_to_be_removed_in_input_args <-
+    base::paste0(
+      base::rep(var_names_with_ci, each = 3),
+      c("_central", "_lower", "_upper"))
+
+  # Prepare input_args to accommodate the new simulated values
+  # (to be used below)
+  input_args_prepared_for_replacement <-
+    purrr::keep(input_args,
+                !names(input_args) %in% vars_to_be_removed_in_input_args)
+
+  template_with_sim <-
+    # Bind the template with the simulated values
     dplyr::bind_cols(sim_template, tibble::as_tibble(sim)) |>
+    # Unnest to have table layout
     tidyr::unnest(dplyr::any_of(cols_to_unnest))
 
   attribute_by_sim <-
-    dplyr::mutate(template,
+    # Add columns (one row for each assessment)
+    # input_args
+    dplyr::mutate(template_with_sim,
       input_args =
-        purrr::pmap(template,
+        purrr::pmap(template_with_sim,
                     \(...) {c(input_args_prepared_for_replacement, base::list(...))})) |>
+    # simulation id
     dplyr::mutate(
       sim_id = dplyr::row_number(), .before = dplyr::everything())|>
+    # input_table, impact_raw and output (as in attribute_master)
     dplyr::mutate(
       input_table =
         purrr::map(input_args, healthiar:::compile_input),
@@ -353,12 +354,16 @@ summarize_uncertainty <- function(
         purrr::map2(input_table, "paf", healthiar:::get_impact),
       output =
         purrr::pmap(base::list(input_args,input_table, impact_raw), healthiar:::get_output),
+      # Extract impact main to use these data in a easier way below
       impact_main =
         purrr::map(output,"health_main"))
 
+  # Identify the geo_id (aggregated or disaggregated) that is present in health_main
+  # (to be used below)
   grouping_geo_var <-
     names(results$health_main)[grepl("geo_id", names(results$health_main))]
 
+  # Summarize results getting the central, lower and upper estimate
   summary <-
     attribute_by_sim |>
     dplyr::select(dplyr::all_of(c("sim_id", "impact_main"))) |>
@@ -370,6 +375,8 @@ summarize_uncertainty <- function(
       upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE),
       .groups = "drop")
 
+  # Store the results in a list keeping consistency in the structure with
+  # other healthiar functions
   uncertainty <-
     list(
       uncertainty_main = summary,
@@ -379,42 +386,53 @@ summarize_uncertainty <- function(
     }
 
   # GENERATE RESULTS USING THE FUNCTION ##################
-  # One case (no comparison)
+
+  ## One case (no comparison) ####
+
+  # Identify if this is one-case or two-case (comparison) assessment
+  is_two_cases <- any(c("input_table_1", "input_table_2") %in% names(input_table))
+  is_one_case <- !is_two_cases
 
   if(is_one_case){
+    # Use summarize_uncertainty_based_on_input() only once
     uncertainty <-
       summarize_uncertainty_based_on_input(
         input_args = input_args,
         input_table = input_table)
+
+  ## Two cases (comparison) ####
   } else if (is_two_cases){
 
-    # Simulate and summarize data for the scenario 1 and 2
+    # Use summarize_uncertainty_based_on_input() twice:
 
+    # Once for the scenario 1
     attribute_1 <-
       summarize_uncertainty_based_on_input(
         input_args = input_args[["input_args_1"]],
         input_table = input_table[["input_table_1"]])
-
+    # Once for the scenario 2
     attribute_2 <-
       summarize_uncertainty_based_on_input(
         input_args = input_args[["input_args_2"]],
         input_table = input_table[["input_table_2"]])
 
+    # Extract output 1 and 2
     output_1 <-
       attribute_1[["uncertainty_detailed"]][["by_simulation"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
-
 
     output_2 <-
       attribute_2[["uncertainty_detailed"]][["by_simulation"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
 
+    # Identify the id columns of the outputs (to be used below)
     id_cols <-
+      # We use output 1 but we could use output 2
+      # (same structure because same type of assessment)
       output_1 |>
       dplyr::select(dplyr::contains("_id"))
 
-
-
+    # Put ouputs together in one single tibble and run compare across rows
     attribute_by_sim <-
       id_cols |>
       dplyr::mutate(
@@ -426,9 +444,11 @@ summarize_uncertainty <- function(
                       healthiar::compare),
         impact_main = purrr::map(output_compare,"health_main"))
 
+    # Identify the geo_ids used in health_main (to be used below)
     grouping_geo_var <-
       names(results$health_main)[grepl("geo_id", names(results$health_main))]
 
+    # Summarize results getting the central, lower and upper estimate
     summary <-
       attribute_by_sim |>
       dplyr::select(dplyr::all_of(c("sim_id", "impact_main"))) |>
@@ -440,6 +460,8 @@ summarize_uncertainty <- function(
         upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE),
         .groups = "drop")
 
+    # Store the results in a list keeping consistency in the structure with
+    # other healthiar functions
     uncertainty <-
       list(
         uncertainty_main = summary,
@@ -447,7 +469,7 @@ summarize_uncertainty <- function(
 
   }
 
-  # OUTPUT ####################################################################
+  # RETURN ####################################################################
 
   on.exit(options(user_options))
 
