@@ -1,8 +1,7 @@
 # QUANTITATIVE TEST ############################################################
 testthat::test_that("results correct", {
 
-  pop_ref <- base::readRDS(testthat::test_path("data", "pop_ref.rds"))
-  no2_mrt_mdi <- base::readRDS(testthat::test_path("data", "no2_mrt_mdi.rds"))
+  data <- base::readRDS(testthat::test_path("data", "social_data.rds"))
 
   att_age_below_40 <-
     healthiar::attribute_health(
@@ -17,13 +16,13 @@ testthat::test_that("results correct", {
 
   att_age_above_40 <-
     healthiar::attribute_health(
-      exp_central = as.list(data$PM25_MEAN-1),
+      exp_central = as.list(data$PM25_MEAN-0.1),
       cutoff_central = 0,
       rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
       erf_shape = "log_linear",
       rr_increment = 10,
       bhd_central = as.list(data$MORTALITY_TOTAL-10),
-      population = data$POPULATION-20,
+      population = ifelse(data$POPULATION-20 < 0, 0, data$POPULATION-20),
       geo_id_disaggregated = data$CS01012020)
 
 
