@@ -8,7 +8,7 @@
 #' @param impact \code{List} containing \code{numeric vectors}. The \code{numeric vectors} refer to the \code{age_groups} and the list to the \code{geo_id_disaggregated}.
 #' @param population \code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.
 #' @param age_groups \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_healthiar}.
-#' @param social_indicator \code{Vector} with numeric values showing social indicator, e.g. the deprivation score (indicator of economic wealth), of the fine geographical area that match with those used in \code{attribute} or \code{compare})
+#' @param social_indicator \code{List} with numeric values showing social indicator, e.g. the deprivation score (indicator of economic wealth), of the fine geographical area. The lenght of the list should be the same as the length of the vector of \code{geo_id_disaggregated}
 #' @param n_quantile \code{Integer value} specifying to the number quantiles in the analysis
 
 
@@ -34,21 +34,25 @@ socialize <- function(listed_output_healthiar = NULL,
                       bhd = NULL,
                       exp = NULL,
                       pop_fraction = NULL,
-                      age_group
+                      age_groups
                       ) {
 
   # Using the output of attribute ##############################################
 
   if ( is.null(impact) & !is.null(listed_output_healthiar) ) {
+browser()
+    # * Convert listed_output_healthiar in a tibble
+    output_healthiar <-
+      healthiar:::group_by_age(listed_output_healthiar = listed_output_healthiar,
+                              age_groups = age_groups)
 
     # * Add social_indicator to detailed output ################################
 
     output_social <-
-      listed_output_healthiar[["health_detailed"]][["impact_raw"]] |>
       dplyr::left_join(
-        x = _,
-        y = dplyr::tibble(geo_id_disaggregated = geo_id_disaggregated,
-                          social_indicator = social_indicator),
+        output_healthiar,
+        dplyr::tibble(geo_id_disaggregated = geo_id_disaggregated,
+                      social_indicator = unlist(social_indicator)),
         by = "geo_id_disaggregated")
 
     # * Create quantiles and add rank based on social indicator ################
