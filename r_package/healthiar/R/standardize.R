@@ -23,18 +23,10 @@ standardize <- function(listed_output_healthiar,
                         age_groups){
 
 
-  impact_by_age_group <- listed_output_healthiar
-  base::names(impact_by_age_group) <- age_groups
-
-  # Add age groups as columns and bind rows
   impact_by_age_group <-
-    purrr::imap_dfr(
-      impact_by_age_group,
-      \(x, name){
-        x[["health_main"]] |>
-        dplyr::mutate(age_group = name, .before = dplyr::everything())
-        }
-      )
+    healthiar::group_by_age(
+      listed_output_healthiar = listed_output_healthiar,
+      age_groups = age_groups)
 
   # Identify geo_id cols
   geo_id_cols <-
