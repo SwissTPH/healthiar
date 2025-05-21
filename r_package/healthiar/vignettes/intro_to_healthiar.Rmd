@@ -279,7 +279,7 @@ results_noise_ha[["health_detailed"]][["impact_raw"]] |>
 ```
 
 
-## Example: `attribute_health()` for multiple geographic units (iteration)
+## Example: `attribute_health()` for multiple geographic units (iteration) (relative risk)
 
 Goal: attribute disease cases to PM2.5 exposure in multiple geographic units, such as municipalities, provinces, countries, ...
 
@@ -351,6 +351,53 @@ results_iteration[["health_detailed"]][["impact_raw"]] |>
 ```
 
 Besides the results per geo unit, `health_detailed` also contains impacts obtained through all combinations of input data central, lower and upper estimates.
+
+## Example: `attribute_health()` for multiple geographic units (iteration) (absolute risk)
+
+(See iteration example with relative risk above for a more detailed explanation multiple geo unit analysis)
+
+Goal: attribute high annoyance cases to noise exposure in rural and urban areas
+
+### Function call
+```{r}
+results_iteration_ar <- attribute_health(
+    geo_id_disaggregated = c("rural", "urban"), # 2 geographic areas
+    ## Both the rural and urban areas belong to the higher-level "total" region
+    geo_id_aggregated = c("total", "total"),
+    approach_risk = "absolute_risk",
+    exp_central = 
+      ## List of 2 elements
+      ## Each element a numeric vector that contains the 5 exposure means
+      rep(list(exdat_noise_ha$exposure_mean), 2), 
+    pop_exp = list(
+      exdat_noise_ha$population_exposed_rural, # Rural population exposed
+      exdat_noise_ha$population_exposed_urban # Urban population exposed
+      ),
+    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
+)
+```
+
+### Main results
+Contains the aggregated results (i.e. sum of impacts in rural and urban areas).
+```{r echo=TRUE,eval=FALSE,include=TRUE}
+results_iteration_ar$health_main
+```
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_iteration_ar[["health_main"]] |> 
+  dplyr::select(geo_id_aggregated, impact_rounded, erf_ci, exp_ci) |> 
+  knitr::kable()
+```
+
+### Detailed results
+Impact by geo area, in this case impact in rural and in urban area.
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_iteration_ar$health_detailed$impact_raw
+```
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_iteration_ar[["health_detailed"]][["impact_raw"]] |> 
+  select(geo_id_disaggregated, geo_id_aggregated, impact) |> 
+  knitr::kable()
+```
 
 ## Example: `compare()`
 
