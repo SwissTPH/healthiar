@@ -274,6 +274,24 @@ results_noise_ha[["health_detailed"]][["impact_raw"]] |>
   select(exposure_dimension, exp, pop_exp, impact) |> 
   knitr::kable()
 ```
+Alternatively, it's also possible to assess the impacts for a single noise exposure band.
+```{r}
+results_noise_ha <- attribute_health(
+  approach_risk = "absolute_risk",
+  exp_central = 57.5,
+  pop_exp = 387500,
+  erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
+)
+```
+```{r, echo=TRUE, eval=FALSE, include=TRUE}
+results_noise_ha$health_main
+```
+```{r, echo=FALSE, eval=TRUE, include=TRUE}
+results_noise_ha[["health_main"]] |> 
+  dplyr::select(exposure_dimension, impact) |> 
+  knitr::kable()
+```
+
 ```{r, echo=FALSE, eval=TRUE, include=FALSE}
 rm(results_noise_ha)
 ```
