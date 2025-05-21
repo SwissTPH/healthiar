@@ -43,8 +43,8 @@ socialize <- function(listed_output_healthiar = NULL,
 browser()
     # * Convert listed_output_healthiar in a tibble
     output_healthiar <-
-      healthiar:::group_by_age(listed_output_healthiar = listed_output_healthiar,
-                              age_groups = age_groups)
+      healthiar::standardize(listed_output_healthiar = listed_output_healthiar,
+                              age_groups = age_groups)$health_main
 
     # * Add social_indicator to detailed output ################################
 
