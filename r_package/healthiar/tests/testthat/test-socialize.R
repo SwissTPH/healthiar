@@ -29,7 +29,7 @@ testthat::test_that("results correct", {
   testthat::expect_equal(
     object =
       healthiar::socialize(
-        age_groups = c("below_40", "above_40"),
+        age_group = c("below_40", "above_40"),
         ref_prop_pop = c(0.5, 0.5),
         listed_output_healthiar = list(att_age_below_40, att_age_above_40),
         geo_id_disaggregated = data$CS01012020,
@@ -39,43 +39,31 @@ testthat::test_that("results correct", {
   )
 })
 
-# testthat::test_that("results the same twice a socialize call", {
-#
-#   pop_ref <- base::readRDS(testthat::test_path("data", "pop_ref.rds"))
-#   no2_mrt_mdi <- base::readRDS(testthat::test_path("data", "no2_mrt_mdi.rds"))
-#
-#   bestcost_pm_death <-
-#     healthiar::attribute_health(
-#       exp_central = as.list(data$PM25_MEAN),
-#       cutoff_central = 0,
-#       rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
-#       erf_shape = "log_linear",
-#       rr_increment = 10,
-#       bhd_central = as.list(data$MORTALITY_TOTAL),
-#       population = data$POPULATION,
-#       geo_id_disaggregated = data$CS01012020)
-#
-#   testthat::expect_equal(
-#     object =
-#       healthiar::socialize(
-#         output = bestcost_pm_death,
-#         geo_id_disaggregated = data$CS01012020,
-#         social_indicator = data$score,
-#         n_quantile = 10,
-#         approach = "quantile"
-#         )$social_main$difference_value,
-#     expect = healthiar::socialize(
-#       impact = bestcost_pm_death[["health_main"]]$impact,
-#       population = bestcost_pm_death[["health_main"]]$population,
-#       bhd = bestcost_pm_death[["health_main"]]$bhd,
-#       exp = bestcost_pm_death[["health_main"]]$exp,
-#       pop_fraction = bestcost_pm_death[["health_main"]]$pop_fraction,
-#       geo_id_disaggregated = data$CS01012020,
-#       social_indicator = data$score,
-#       n_quantile = 10,
-#       approach = "quantile")$social_main$difference_value
-#   )
-# })
+testthat::test_that("results the same twice a socialize call", {
+
+  pop_ref <- base::readRDS(testthat::test_path("data", "pop_ref.rds"))
+  no2_mrt_mdi <- base::readRDS(testthat::test_path("data", "no2_mrt_mdi.rds"))
+
+  data <- dplyr::left_join(
+    no2_mrt_mdi,
+    pop_ref,
+    by = "AGE")
+
+
+  testthat::expect_equal(
+    object =
+      healthiar::socialize(
+        impact = data$ATT_MORT,
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$MDI,
+        n_quantile = 10,
+        age_group = data$AGE,
+        population = data$POP,
+        ref_prop_pop = data$REF
+        )$social_main$difference_value,
+    expect = c(23.7975700, 42.4484118, 0.3040180, 0.7791663)
+  )
+})
 
 
 # testthat::test_that("results correct", {
