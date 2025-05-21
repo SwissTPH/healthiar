@@ -30,6 +30,7 @@ testthat::test_that("results correct", {
     object =
       healthiar::socialize(
         age_groups = c("below_40", "above_40"),
+        ref_prop_pop = c(0.5, 0.5),
         listed_output_healthiar = list(att_age_below_40, att_age_above_40),
         geo_id_disaggregated = data$CS01012020,
         social_indicator = list(data$score),
