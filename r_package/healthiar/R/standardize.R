@@ -5,6 +5,7 @@
 
 #' @param listed_output_healthiar \code{List} containing as sub-lists the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.#'
 #' @param age_groups \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{output_healthiar}.
+#' @param ref_prop_pop \code{Numeric vector} with the reference proportion of population for each age group. The sum of the values must be 1 and the length of the vector must be same as for \code{age_groups}.
 
 #' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 
@@ -20,7 +21,8 @@
 
 
 standardize <- function(listed_output_healthiar,
-                        age_groups){
+                        age_groups,
+                        ref_prop_pop){
 
 
   impact_by_age_group <-
@@ -53,7 +55,12 @@ standardize <- function(listed_output_healthiar,
 
   # Calculate age-standardize health impacts
   impact_std_by_age_group <-
-    impact_by_age_group |>
+    ## Add reference proportion of population
+    dplyr::left_join(
+      impact_by_age_group,
+      tibble::tibble(age_group = age_groups,
+                     ref_prop_pop = ref_prop_pop),
+      by = "age_group")|>
     #Add total population
     dplyr::group_by(dplyr::across(dplyr::any_of(geo_id_cols))) |>
     dplyr::mutate(
@@ -63,7 +70,7 @@ standardize <- function(listed_output_healthiar,
     dplyr::mutate(
       pop_weight = population / total_population,
       impact_weight = impact/total_impact,
-      impact_per_100k_inhab_std = impact_per_100k_inhab * pop_weight,
+      impact_per_100k_inhab_std = impact_per_100k_inhab * ref_prop_pop,
       exp_std = exp * pop_weight,
       pop_fraction_std = pop_fraction * impact_weight)
 
