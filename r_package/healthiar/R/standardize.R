@@ -75,7 +75,7 @@ standardize <- function(listed_output_healthiar,
     dplyr::summarize(bhd = base::sum(bhd),
                      impact = base::sum(impact),
                      impact_per_100k_inhab = sum(impact_per_100k_inhab_std),
-                     exp = base::sum(exp_std),
+                     exp = base::mean(exp_std),
                      pop_fraction = base::sum(pop_fraction),
                      population = base::sum(population),
                      .groups = "drop")
