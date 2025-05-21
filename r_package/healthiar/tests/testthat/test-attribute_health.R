@@ -741,10 +741,26 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
       dplyr::pull() |>
       round()
   )
+
+  ## Single exposure value
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = data$exposure_mean,
+        pop_exp = data$population_exposed_total,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
+      )$health_detailed$impact_raw |> dplyr::slice_head() |> dplyr::select(impact) |> dplyr::pull() |> base::round(),
+    expected =
+      data_raw |>
+      dplyr::filter(exposure_category %in% "55-59")|>
+      dplyr::select(number)|>
+      dplyr::slice_head() |>
+      dplyr::pull() |>
+      base::round()
+  )
 })
-
-
-
 
 ### ITERATION ###################################################################
 
@@ -1000,24 +1016,6 @@ testthat::test_that("error if sum(prop_pop_exp) higher than 1", {
         erf_shape = "log_linear"
       )
   )
-})
-
-testthat::test_that("error if absolute risk and exp length 1", {
-
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
-  data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
-
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        approach_risk = "absolute_risk",
-        exp_central = 8.85,
-        pop_exp = data$population_exposed_total,
-        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
-      ))
 })
 
 ## WARNING #########
