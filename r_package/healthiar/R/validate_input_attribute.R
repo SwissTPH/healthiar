@@ -353,26 +353,6 @@ validate_input_attribute <-
       error_if_only_lower_or_upper(var_short = x)
     }
 
-
-## COMMENTED OUT ON 2025-05-21 BY AL
-    # error_if_ar_and_length_1_or_0 <- function(var_name){
-    #   # Store var_value
-    #   var_value <- input[[var_name]]
-    #
-    #   if(!base::is.null(var_value) &&  # Only if available
-    #      !get_length(var_value) > 1){
-    #     # Create error message
-    #       stop(
-    #         base::paste0(
-    #           "For absolute risk, the length of ",
-    #           var_name ,
-    #           " must be higher than 1."),
-    #         call. = FALSE)
-    #     }
-    # }
-
-
-
     warning_if_ar_and_existing <- function(var_name){
 
       # Store var_value
@@ -390,13 +370,6 @@ validate_input_attribute <-
     }
 
     if(input$approach_risk == "absolute_risk"){
-
-      # --> Error if length(exp) is not higher than 1
-
-      ## COMMENTED OUT ON 2025-05-21 BY AL
-      # for(exp_ci_suffix in base::paste0("exp", ci_suffix)){
-      #   error_if_ar_and_length_1_or_0(exp_ci_suffix)
-      # }
 
       # --> Warning if cutoff is entered (will not be considered)
 
