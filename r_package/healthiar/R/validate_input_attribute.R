@@ -354,22 +354,22 @@ validate_input_attribute <-
     }
 
 
-
-    error_if_ar_and_length_1_or_0 <- function(var_name){
-      # Store var_value
-      var_value <- input[[var_name]]
-
-      if(!base::is.null(var_value) &&  # Only if available
-         !get_length(var_value) > 1){
-        # Create error message
-          stop(
-            base::paste0(
-              "For absolute risk, the length of ",
-              var_name ,
-              " must be higher than 1."),
-            call. = FALSE)
-        }
-    }
+## COMMENTED OUT ON 2025-05-21 BY AL
+    # error_if_ar_and_length_1_or_0 <- function(var_name){
+    #   # Store var_value
+    #   var_value <- input[[var_name]]
+    #
+    #   if(!base::is.null(var_value) &&  # Only if available
+    #      !get_length(var_value) > 1){
+    #     # Create error message
+    #       stop(
+    #         base::paste0(
+    #           "For absolute risk, the length of ",
+    #           var_name ,
+    #           " must be higher than 1."),
+    #         call. = FALSE)
+    #     }
+    # }
 
 
 
