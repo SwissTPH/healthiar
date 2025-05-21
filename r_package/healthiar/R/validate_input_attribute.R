@@ -393,9 +393,10 @@ validate_input_attribute <-
 
       # --> Error if length(exp) is not higher than 1
 
-      for(exp_ci_suffix in base::paste0("exp", ci_suffix)){
-        error_if_ar_and_length_1_or_0(exp_ci_suffix)
-      }
+      ## COMMENTED OUT ON 2025-05-21 BY AL
+      # for(exp_ci_suffix in base::paste0("exp", ci_suffix)){
+      #   error_if_ar_and_length_1_or_0(exp_ci_suffix)
+      # }
 
       # --> Warning if cutoff is entered (will not be considered)
 
