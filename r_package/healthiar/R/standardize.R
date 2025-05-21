@@ -51,32 +51,33 @@ standardize <- function(listed_output_healthiar,
       invariant_cols)|>
     unique()
 
-
-  # Calculate total population across age groups
-  total_population <-
-    impact_by_age_group |>
-    dplyr::group_by(dplyr::across(dplyr::any_of(group_cols))) |>
-    dplyr::summarize(
-      total_population = base::sum(population),
-      .groups = "drop")
-
   # Calculate age-standardize health impacts
   impact_std_by_age_group <-
+    impact_by_age_group |>
     #Add total population
-    dplyr::left_join(impact_by_age_group,
-                     total_population,
-                     by = group_cols)|>
+    dplyr::group_by(dplyr::across(dplyr::any_of(geo_id_cols))) |>
+    dplyr::mutate(
+      total_population = base::sum(population),
+      total_impact = base::sum(impact)) |>
+    # Calculate population weight and standardized impact
     dplyr::mutate(
       pop_weight = population / total_population,
-      impact_per_100k_inhab_std = impact_per_100k_inhab * pop_weight)
+      impact_weight = impact/total_impact,
+      impact_per_100k_inhab_std = impact_per_100k_inhab * pop_weight,
+      exp_std = exp * pop_weight,
+      pop_fraction_std = pop_fraction * impact_weight)
 
   # Remove the rows per age group category keeping only the sum
   impact_std_sum <-
     impact_std_by_age_group |>
     dplyr::group_by(dplyr::across(
       dplyr::any_of(group_cols))) |>
-    dplyr::summarize(impact_per_100k_inhab = sum(impact_per_100k_inhab_std),
-                     population = sum(population),
+    dplyr::summarize(bhd = base::sum(bhd),
+                     impact = base::sum(impact),
+                     impact_per_100k_inhab = sum(impact_per_100k_inhab_std),
+                     exp = base::sum(exp_std),
+                     pop_fraction = base::sum(pop_fraction),
+                     population = base::sum(population),
                      .groups = "drop")
 
   output<-
