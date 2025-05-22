@@ -52,8 +52,8 @@ socialize <- function(listed_output_healthiar = NULL,
 
     # * Convert listed_output_healthiar in a tibble
     output_healthiar <-
-      healthiar:::group_by_age(listed_output_healthiar = listed_output_healthiar,
-                               age_group = age_group)
+      healthiar:::flatten_by_age(listed_output_healthiar = listed_output_healthiar,
+                                 age_group = age_group)
 
     ref_prop_pop_table <-
       tibble::tibble(

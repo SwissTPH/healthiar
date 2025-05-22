@@ -18,8 +18,8 @@
 
 
 
-group_by_age <- function(listed_output_healthiar,
-                         age_groups){
+flatten_by_age <- function(listed_output_healthiar,
+                                age_groups){
 
 
   impact_by_age_group <- listed_output_healthiar
