@@ -17,7 +17,7 @@ socialize(
   exp = NULL,
   pop_fraction = NULL,
   age_group,
-  ref_prop_pop
+  ref_prop_pop = NULL
 )
 }
 \arguments{

@@ -4,7 +4,7 @@
 \alias{standardize}
 \title{Obtain age-standardized health impacts}
 \usage{
-standardize(listed_output_healthiar, age_groups, ref_prop_pop)
+standardize(listed_output_healthiar, age_groups, ref_prop_pop = NULL)
 }
 \arguments{
 \item{listed_output_healthiar}{\code{List} containing as sub-lists the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.#'}
