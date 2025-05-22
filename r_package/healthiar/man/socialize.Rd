@@ -40,7 +40,7 @@ If a vector is entered here, the data for geo-specific input data (e.g. \code{bh
 
 \item{age_group}{\code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_healthiar}.}
 
-\item{ref_prop_pop}{\code{Numeric vector} with the reference proportion of population for each age group.}
+\item{ref_prop_pop}{\code{Numeric vector} with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.}
 }
 \value{
 Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.

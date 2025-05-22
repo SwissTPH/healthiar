@@ -22,21 +22,42 @@
 
 standardize <- function(listed_output_healthiar,
                         age_groups,
-                        ref_prop_pop){
+                        ref_prop_pop = NULL){
 
 
   impact_by_age_group <-
-    healthiar:::group_by_age(
+    healthiar:::flatten_by_age(
       listed_output_healthiar = listed_output_healthiar,
       age_groups = age_groups)
 
+  if(is.null(ref_prop_pop)){
+    total_population_table <-
+      impact_by_age_group |>
+      dplyr::summarize(total_population = sum(population, na.rm = TRUE))
+
+    ref_prop_pop_table_from_population <-
+      dplyr::left_join(impact_by_age_group,
+                       population_by_geo_table,
+                       by = "age_group") |>
+      dplyr::mutate(ref_prop_pop = population / total_population) |>
+      base::unique(age_group) |>
+      dplyr::select(age_group, ref_prop_pop)
+
+    ref_prop_pop <-
+      ref_prop_pop_table_from_population |>
+      dplyr::select(ref_prop_pop) |>
+      dplyr::pull()
+
+  }
+
+
   # Identify geo_id cols
   geo_id_cols <-
-    names(impact_by_age_group)[grepl("geo_id_", names(impact_by_age_group))]
+    base::names(impact_by_age_group)[base::grepl("geo_id_", base::names(impact_by_age_group))]
 
   # Identify columns with uncertainty
   uncertainty_cols <-
-    names(impact_by_age_group)[grepl("_ci", names(impact_by_age_group))]
+    base::names(impact_by_age_group)[base::grepl("_ci", base::names(impact_by_age_group))]
 
   # Identify invariant columns
   invariant_cols <- impact_by_age_group |>
@@ -51,7 +72,7 @@ standardize <- function(listed_output_healthiar,
     c(geo_id_cols,
       uncertainty_cols,
       invariant_cols)|>
-    unique()
+    base::unique()
 
   # Calculate age-standardize health impacts
   impact_std_by_age_group <-
@@ -88,8 +109,8 @@ standardize <- function(listed_output_healthiar,
                      .groups = "drop")
 
   output<-
-    list(health_main = impact_std_sum,
-         health_detailed = impact_std_by_age_group)
+    base::list(health_main = impact_std_sum,
+               health_detailed = impact_std_by_age_group)
 
   return(output)
 
