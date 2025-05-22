@@ -9,9 +9,11 @@
 #' @param population \code{Integer vector} containing the population by age group and geographic unit.
 #' @param age_group \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_healthiar}.
 #' @param ref_prop_pop \code{Numeric vector} with the reference proportion of population for each age group.
-#' @param social_indicator \code{Numeric vector} showing social indicator, e.g. the deprivation score (indicator of economic wealth), of the fine geographical area.
+#' @param social_indicator \code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. Based on this and \code{n_quantile}, \code{social_quantile} will be calculated.
+#' @param n_quantile \code{Integer value} specifying to the number of quantiles in the analysis.
+#' @param social_quantile \code{Numeric vector} showing the values from 1 to the number of quantiles assigned to each geographic unit. Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}
 #' @param increasing_deprivation \code{Boolean} variable (TRUE/FALSE) that specifies if deprivation is higher when the \code{social_indicator} is higher (TRUE) or lower (FALSE). Default value = TRUE.
-#' @param n_quantile \code{Integer value} specifying to the number quantiles in the analysis.
+
 
 
 #' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
@@ -30,9 +32,10 @@
 socialize <- function(listed_output_healthiar = NULL,
                       impact = NULL,
                       geo_id_disaggregated,
-                      social_indicator,
+                      social_indicator = NULL,
                       increasing_deprivation = TRUE,
-                      n_quantile = 10, ## by default: decile
+                      n_quantile = NULL, ## by default: decile
+                      social_quantile = NULL,
                       population = NULL,
                       bhd = NULL,
                       exp = NULL,
