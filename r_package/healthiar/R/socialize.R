@@ -261,12 +261,12 @@ browser()
     if (increasing_deprivation) {
       social_component <- social_component |>
         dplyr::mutate(
-          ranking = dplyr::min_rank(social_indicator),
+          ranking = dplyr::dense_rank(social_indicator),
           quantile = dplyr::ntile(social_indicator, n = n_quantile))
     } else {
       social_component <- social_component |>
         dplyr::mutate(
-          ranking = dplyr::min_rank(dplyr::desc(social_indicator)),
+          ranking = dplyr::dense_rank(dplyr::desc(social_indicator)),
           quantile = dplyr::ntile(dplyr::desc(social_indicator), n = n_quantile))
     }
 
