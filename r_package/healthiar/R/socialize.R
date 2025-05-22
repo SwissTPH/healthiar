@@ -236,18 +236,6 @@ socialize <- function(listed_output_healthiar = NULL,
         bhd = bhd,
         pop_fraction = pop_fraction)
 
-
-    # output_social <-
-    #   tibble::tibble(
-    #     geo_id_disaggregated = geo_id_disaggregated,
-    #     impact = impact,
-    #     social_indicator = social_indicator,
-    #     population = if ( !is.null({{ population }}) ) { population } else { NA },
-    #     bhd = if ( !is.null({{ bhd }}) ) { bhd } else { NA },
-    #     exp = if ( !is.null({{ exp }}) ) { exp } else { NA },
-    #     pop_fraction = if ( !is.null({{ pop_fraction }}) ) { pop_fraction } else { NA }
-    #   )
-
     # * Create quantiles and add rank based on social indicator ################
 
     # If social_indicator and n_quantile
