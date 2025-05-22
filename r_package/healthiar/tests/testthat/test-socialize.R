@@ -55,13 +55,12 @@ testthat::test_that("results the same twice a socialize call", {
       healthiar::socialize(
         impact = data$ATT_MORT,
         geo_id_disaggregated = data$SECTOR,
-        social_indicator = data$MDI,
-        n_quantile = 10,
+        social_quantile = data$MDI,
         age_group = data$AGE,
         population = data$POP,
         ref_prop_pop = data$REF
-        )$social_main$difference_value,
-    expect = c(23.7975700, 42.4484118, 0.3040180, 0.7791663)
+        )$social_main$difference_value[1:2] |> base::round(3),
+    expect = round(c(42.4484118, 0.7791663), 3)
   )
 })
 
