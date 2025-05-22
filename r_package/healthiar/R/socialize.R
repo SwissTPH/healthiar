@@ -352,28 +352,68 @@ socialize <- function(listed_output_healthiar = NULL,
         pop_fraction_mean = if ( !is.null({{ pop_fraction }})) {
           mean(pop_fraction, na.rm = TRUE) } else { NA },
         impact_mean = mean(impact, na.rm = TRUE),
-        impact_sum = sum(impact, na.rm = TRUE))
+        impact_sum = sum(impact, na.rm = TRUE))|>
+      dplyr::ungroup()
 
     indicators_by_quantile <-
       dplyr::left_join(impact_rates_by_quantile,
                        other_indicators_by_quantile,
-                       by = "quantile")
+                       by = "social_quantile")
+
+    other_indicators_overall <-
+      data |>
+      ## Group by geo_id to ensure that you get one result per geo_id
+      ## keeping uncertainties
+      dplyr::summarize(
+        bhd_sum = if ( !is.null( {{ bhd }} ) ) {
+          sum(bhd, na.rm = TRUE) } else { NA },
+        population_sum = if ( !is.null( {{population}} ) ) {
+          sum(population, na.rm = TRUE) } else { NA },
+        bhd_rate = if ( !is.null( {{ bhd }} ) ) {
+          bhd_sum * 1e5 / population_sum } else { NA },
+        bhd_mean = if ( !is.null({{ bhd }})) {
+          mean(bhd, na.rm = TRUE) } else { NA },
+        exp_mean = if ( !is.null({{ exp }})) {
+          mean(exp, na.rm = TRUE) } else { NA },
+        exp_sd = if ( !is.na( exp_mean ) ) {
+          sd(exp, na.rm = TRUE) } else { NA },
+        pop_fraction_mean = if ( !is.null({{ pop_fraction }})) {
+          mean(pop_fraction, na.rm = TRUE) } else { NA },
+        impact_mean = mean(impact, na.rm = TRUE),
+        impact_sum = sum(impact, na.rm = TRUE))
+
+    impact_rates_overall <-
+      impact_rates_by_quantile_and_age |>
+      dplyr::summarize(impact_rate_sum = sum(impact_rate, na.rm = TRUE),
+                       impact_rate_std_sum = sum(impact_rate_std, na.rm = TRUE))
+
+    indicators_overall <-
+      dplyr::bind_cols(impact_rates_overall,
+                       other_indicators_overall)
+
+    indicators_overall_prepared <-
+      indicators_overall |>
+      ## Pivot longer to prepare data to be joined below
+      tidyr::pivot_longer(
+        cols = tidyr::everything(),
+        names_to = "parameter",
+        values_to = "overall")
 
     # * Determine differences in statistics between quantiles ##################
 
     social_calculation <-
-      by_quantile_and_age |>
+      indicators_by_quantile |>
       # Remove columns age_group and ref_prop_pop
       # They are not needed and avoid flattening the table
       #dplyr::select(-age_group, -ref_prop_pop) |>
       ## Pivot longer to prepare the data and have a column for parameter
-      tidyr::pivot_longer(cols = bhd_sum:impact_rate_std,
+      tidyr::pivot_longer(cols = -social_quantile,
                           names_to = "parameter",
                           values_to = "difference_value") |>
       ## Put column parameter first
       dplyr::select(parameter, everything()) |>
       ## Order columns by parameter
-      dplyr::arrange(age_order, parameter) |>
+      dplyr::arrange(parameter) |>
       ## Obtain the first (most deprived) and last (least deprived) values
       ## for each parameter
       dplyr::group_by(parameter) |>
@@ -383,7 +423,7 @@ socialize <- function(listed_output_healthiar = NULL,
       ## Add the overall (not by quantile) sums and means
       dplyr::left_join(
         x = _,
-        y = overall,
+        y = indicators_overall_prepared,
         by = "parameter") |>
       ## Calculate absolute and relative differences
       dplyr::mutate(
@@ -401,7 +441,8 @@ socialize <- function(listed_output_healthiar = NULL,
         parameter %in% c("exp_mean",
                          "bhd_rate",
                          "pop_fraction_mean",
-                         "impact_rate_std_mean")) |>
+                         "impact_rate_sum",
+                         "impact_rate_std_sum")) |>
       ## Long instead of wide layout
       tidyr::pivot_longer(
         cols = contains("_"),
@@ -445,11 +486,12 @@ socialize <- function(listed_output_healthiar = NULL,
       ## The other paramenters can be stored in detailed
       ## (just in case some users have interest on this)
       ## NOTE: if the population argument is not specified (i.e. it is NULL), then this table is full of NA's 3 ####
-      dplyr::filter(parameter == "impact_rate_std")
+      dplyr::filter(parameter == "impact_rate_std_sum")
 
-    output_social[["social_detailed"]][["results_detailed"]] <- social_results
-    output_social[["social_detailed"]][["impact_per_quantile"]] <- by_quantile_and_age
-    output_social[["social_detailed"]][["input_table"]] <- input_data
+    output_social[["social_detailed"]][["results_all_indicators"]] <- social_results
+    output_social[["social_detailed"]][["indicators_per_quantile"]] <- indicators_by_quantile
+    output_social[["social_detailed"]][["indicators_overall"]] <- indicators_overall
+    output_social[["social_detailed"]][["input_table"]] <- data
 
     return(output_social)
 
