@@ -223,7 +223,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formul
       base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-05-15; no comparison study
-      c(230734, 117729, 417987)
+      c(230734, 117729, 417988)
   )
 })
 
@@ -256,7 +256,7 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_dist|erf_ar_fo
       base::as.numeric() |> base::round(),
 
     expected = # Results on 2025-05-15; no comparison study
-      c(139409, 8132, 611435)
+      c(139410, 8132, 611444)
   )
 })
 

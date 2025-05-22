@@ -243,7 +243,7 @@ summarize_uncertainty <- function(
             stats::rnorm(
               n = n,
               mean = base::unlist(var_value_central),
-              sd = (base::unlist(var_value_upper) - base::unlist(var_value_lower)) / (2 * 1.96)))
+              sd = (base::unlist(var_value_upper) - base::unlist(var_value_lower)) / (2 * qnorm(0.975))))
 
     } else if (distribution == "beta") {
 
