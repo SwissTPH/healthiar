@@ -5,6 +5,7 @@
 
 #' @param listed_output_healthiar \code{List} containing as sub-lists the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.#'
 #' @param age_groups \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{output_healthiar}.
+#' @param ref_prop_pop \code{Numeric vector} with the reference proportion of population for each age group. The sum of the values must be 1 and the length of the vector must be same as for \code{age_groups}.
 
 #' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 
@@ -20,21 +21,14 @@
 
 
 standardize <- function(listed_output_healthiar,
-                        age_groups){
+                        age_groups,
+                        ref_prop_pop){
 
 
-  impact_by_age_group <- listed_output_healthiar
-  base::names(impact_by_age_group) <- age_groups
-
-  # Add age groups as columns and bind rows
   impact_by_age_group <-
-    purrr::imap_dfr(
-      impact_by_age_group,
-      \(x, name){
-        x[["health_main"]] |>
-        dplyr::mutate(age_group = name, .before = dplyr::everything())
-        }
-      )
+    healthiar:::group_by_age(
+      listed_output_healthiar = listed_output_healthiar,
+      age_groups = age_groups)
 
   # Identify geo_id cols
   geo_id_cols <-
@@ -59,32 +53,38 @@ standardize <- function(listed_output_healthiar,
       invariant_cols)|>
     unique()
 
-
-  # Calculate total population across age groups
-  total_population <-
-    impact_by_age_group |>
-    dplyr::group_by(dplyr::across(dplyr::any_of(group_cols))) |>
-    dplyr::summarize(
-      total_population = base::sum(population),
-      .groups = "drop")
-
   # Calculate age-standardize health impacts
   impact_std_by_age_group <-
+    ## Add reference proportion of population
+    dplyr::left_join(
+      impact_by_age_group,
+      tibble::tibble(age_group = age_groups,
+                     ref_prop_pop = ref_prop_pop),
+      by = "age_group")|>
     #Add total population
-    dplyr::left_join(impact_by_age_group,
-                     total_population,
-                     by = group_cols)|>
+    dplyr::group_by(dplyr::across(dplyr::any_of(geo_id_cols))) |>
+    dplyr::mutate(
+      total_population = base::sum(population),
+      total_impact = base::sum(impact)) |>
+    # Calculate population weight and standardized impact
     dplyr::mutate(
       pop_weight = population / total_population,
-      impact_per_100k_inhab_std = impact_per_100k_inhab * pop_weight)
+      impact_weight = impact/total_impact,
+      impact_per_100k_inhab_std = impact_per_100k_inhab * ref_prop_pop,
+      exp_std = exp * pop_weight,
+      pop_fraction_std = pop_fraction * impact_weight)
 
   # Remove the rows per age group category keeping only the sum
   impact_std_sum <-
     impact_std_by_age_group |>
     dplyr::group_by(dplyr::across(
       dplyr::any_of(group_cols))) |>
-    dplyr::summarize(impact_per_100k_inhab = sum(impact_per_100k_inhab_std),
-                     population = sum(population),
+    dplyr::summarize(bhd = base::sum(bhd),
+                     impact = base::sum(impact),
+                     impact_per_100k_inhab = sum(impact_per_100k_inhab_std),
+                     exp = base::mean(exp_std),
+                     pop_fraction = base::sum(pop_fraction),
+                     population = base::sum(population),
                      .groups = "drop")
 
   output<-

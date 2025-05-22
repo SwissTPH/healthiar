@@ -31,12 +31,12 @@ testthat::test_that("results correct |pathway_standardize|single_geo|", {
       healthiar::standardize(
         listed_output_healthiar = list(bestcost_pm_mortality_below_40,
                                 bestcost_pm_mortality_40_plus),
-        age_groups = c("below_40", "40_plus"))$health_main$impact_per_100k_inhab,
+        age_groups = c("below_40", "40_plus"),
+        ref_prop_pop = c(0.5, 0.5))$health_main$impact_per_100k_inhab,
 
     expected =  base::sum(
-      bestcost_pm_mortality_below_40$health_main$impact_per_100k_inhab * population_below_40 / population_total,
-      bestcost_pm_mortality_40_plus$health_main$impact_per_100k_inhab * population_40_plus / population_total
-    )
+      bestcost_pm_mortality_below_40$health_main$impact_per_100k_inhab * 0.5,
+      bestcost_pm_mortality_40_plus$health_main$impact_per_100k_inhab * 0.5)
       # No study behind.
       # Fake numbers to check consistency of result overtime. Results on 2025-01-16
   )
@@ -72,11 +72,12 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
       healthiar::standardize(
         listed_output_healthiar = list(bestcost_pm_mortality_below_40_multigeo,
                                 bestcost_pm_mortality_40_plus_multigeo),
-        age_groups = c("below_40", "40_plus"))$health_main$impact_per_100k_inhab,
+        age_groups = c("below_40", "40_plus"),
+        ref_prop_pop = c(0.5, 0.5))$health_main$impact_per_100k_inhab,
 
     expected =
-      bestcost_pm_mortality_below_40_multigeo$health_main$impact_per_100k_inhab * population_below_40_multigeo / population_total_multigeo +
-      bestcost_pm_mortality_40_plus_multigeo$health_main$impact_per_100k_inhab * population_40_plus_multigeo / population_total_multigeo
+      bestcost_pm_mortality_below_40_multigeo$health_main$impact_per_100k_inhab * 0.5 +
+      bestcost_pm_mortality_40_plus_multigeo$health_main$impact_per_100k_inhab * 0.5
     # No study behind.
     # Fake numbers to check consistency of result overtime. Results on 2025-01-16
   )

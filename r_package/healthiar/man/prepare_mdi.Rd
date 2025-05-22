@@ -28,7 +28,7 @@ If a vector is entered here, the data for geo-specific input data (e.g. \code{bh
 
 \item{no_heating}{\code{Numeric vector} containing \% of households without central heating per geo unit}
 
-\item{n_quantile}{\code{Integer value} specifying to the number quantiles in the analysis}
+\item{n_quantile}{\code{Integer value} specifying to the number of quantiles in the analysis.}
 }
 \value{
 Tibble with the columns
