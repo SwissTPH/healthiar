@@ -1,7 +1,7 @@
 #' Consider socio-economic aspects in healthiar assessments
 
 #' @description
-#' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts
+#' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{listed_output_healthiar}, it is assumed that all data come from a table and the argument refer to the columns of that table.
 
 #' @inheritParams attribute_master
 #' @param listed_output_healthiar \code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.
