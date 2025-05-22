@@ -20,12 +20,12 @@ rate_std <- merge(mrt_mdi, ref)
 rate_std$ATT_RT <- 1e5*(rate_std$ATT_MORT/rate_std$POP)
 rate_std$ATT_RT[is.nan(rate_std$ATT_RT)] <- 0
 rate_std$AGE_STD <- rate_std$REF*rate_std$ATT_RT
-rate_std <- aggregate(AGE_STD~MDI, rate_std, sum)
+rate_std_sum<- aggregate(AGE_STD~MDI, rate_std, sum)
 
 ## bind crude and age-std rates
 rate <- merge(
   rate_cr[, c("MDI", "CRUDE")],
-  rate_std
+  rate_std_sum
 )
 
 ## calculate inequalities
