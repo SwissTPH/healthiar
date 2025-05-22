@@ -8,7 +8,7 @@
 #' @param impact \code{Numeric vector} containing the attributable health impacts by both age group and geo id.
 #' @param population \code{Integer vector} containing the population by age group and geographic unit.
 #' @param age_group \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_healthiar}.
-#' @param ref_prop_pop \code{Numeric vector} with the reference proportion of population for each age group.
+#' @param ref_prop_pop \code{Numeric vector} with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.
 #' @param social_indicator \code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. Based on this and \code{n_quantile}, \code{social_quantile} will be calculated.
 #' @param n_quantile \code{Integer value} specifying to the number of quantiles in the analysis.
 #' @param social_quantile \code{Numeric vector} showing the values from 1 to the number of quantiles assigned to each geographic unit. Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}
@@ -41,11 +41,14 @@ socialize <- function(listed_output_healthiar = NULL,
                       exp = NULL,
                       pop_fraction = NULL,
                       age_group,
-                      ref_prop_pop
+                      ref_prop_pop = NULL
                       ) {
 
 
-  # Using the output of attribute ##############################################
+
+
+
+  # * If user enters listed_output_healthiar########
 
   if ( is.null(impact) & !is.null(listed_output_healthiar) ) {
 
@@ -55,10 +58,6 @@ socialize <- function(listed_output_healthiar = NULL,
       healthiar:::flatten_by_age(listed_output_healthiar = listed_output_healthiar,
                                  age_group = age_group)
 
-    ref_prop_pop_table <-
-      tibble::tibble(
-        age_group = unique(output_healthiar$age_group),
-        ref_prop_pop = ref_prop_pop)
 
     # Compile input data
     # without social component
@@ -70,11 +69,7 @@ socialize <- function(listed_output_healthiar = NULL,
         impact = output_healthiar$impact,
         exp = output_healthiar$exp,
         bhd = output_healthiar$bhd,
-        pop_fraction = output_healthiar$pop_fraction) |>
-      # Add ref_prop_pop which was not contained in the healthiar output
-      dplyr::left_join(
-        ref_prop_pop_table,
-        by = "age_group")
+        pop_fraction = output_healthiar$pop_fraction)
 
     # Compile social data
     # Here use unique() because the user will enter a vector with unique values
@@ -85,9 +80,40 @@ socialize <- function(listed_output_healthiar = NULL,
         geo_id_disaggregated = unique(input_data$geo_id_disaggregated),
         social_indicator = social_indicator)
 
-  } else if ( !is.null(impact) & is.null(listed_output_healthiar) ) {
+    # * Add international or derived ref_prop_pop ################
 
+
+    # If ref_prop_pop is not entered by the user, calculate it using populations
+    # Otherwise, keep it
+    if(is.null(ref_prop_pop)){
+      total_population_table <-
+        input_data |>
+        dplyr::summarize(total_population = sum(population, na.rm = TRUE))
+
+      ref_prop_pop_table_from_population <-
+        dplyr::left_join(input_data,
+                         population_by_geo_table,
+                         by = "age_group") |>
+        dplyr::mutate(ref_prop_pop = population / total_population) |>
+        base::unique(age_group) |>
+        dplyr::select(age_group, ref_prop_pop)
+
+      ref_prop_pop_table <-
+        ref_prop_pop_table_from_population
+
+    } else {
+      ref_prop_pop_table <-
+        tibble::tibble(
+          age_group = unique(input_data$age_group),
+          ref_prop_pop = unique(ref_prop_pop))
+    }
+
+
+
+
+  } else if ( !is.null(impact) & is.null(listed_output_healthiar) ) {
     # Using user-entered impacts in vector format ##############################
+
 
     # * Merge social_indicator, geo_id_disaggregated and impacts #########################
 
@@ -98,7 +124,6 @@ socialize <- function(listed_output_healthiar = NULL,
         geo_id_disaggregated = geo_id_disaggregated,
         age_group = age_group,
         population = population,
-        ref_prop_pop = ref_prop_pop,
         impact = impact,
         exp = exp,
         bhd = bhd,
@@ -117,7 +142,37 @@ socialize <- function(listed_output_healthiar = NULL,
       # the same value for the social_indicator
       base::unique()
 
+
+    # If ref_prop_pop is not entered by the user, calculate it using populations
+    # Otherwise, keep it
+    if(is.null(ref_prop_pop)){
+      total_population_table <-
+        input_data |>
+        dplyr::summarize(total_population = sum(population, na.rm = TRUE))
+
+      ref_prop_pop_table_from_population <-
+        dplyr::left_join(input_data,
+                         population_by_geo_table,
+                         by = "age_group") |>
+        dplyr::mutate(ref_prop_pop = population / total_population) |>
+        base::unique(age_group) |>
+        dplyr::select(age_group, ref_prop_pop)
+
+      ref_prop_pop_table <-
+        ref_prop_pop_table_from_population
+
+    } else {
+      # Here without unique() because the ref_prop_pop comes probably from another table
+      # so age_group and ref_prop_pop have the same length (including likely repetitions)
+      # because of geo_ids
+      ref_prop_pop_table <-
+        tibble::tibble(
+          age_group = input_data$age_group,
+          ref_prop_pop = ref_prop_pop)
+    }
+
   }
+
 
     # * Create quantiles and add rank based on social indicator ################
 
@@ -152,7 +207,6 @@ socialize <- function(listed_output_healthiar = NULL,
     }
 
 
-
     age_order <-
       tibble::tibble(
         age_group = base::unique(age_group),
@@ -168,7 +222,12 @@ socialize <- function(listed_output_healthiar = NULL,
       # Add age_order
       dplyr::left_join(
         age_order,
-        by = "age_group")
+        by = "age_group") |>
+      # Add ref_prop_pop
+      dplyr::left_join(
+        ref_prop_pop_table,
+        by = "age_group"
+      )
 
 
     # Add ranking_social to input data_with_std
