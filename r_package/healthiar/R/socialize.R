@@ -108,7 +108,7 @@ socialize <- function(listed_output_healthiar = NULL,
         values_to = "overall")
 
     # * Calculate statistics summed/averaged for each quantile #################
-browser()
+
     output_social_by_quantile <-
       output_social |>
       ## Group by geo_id to ensure that you get one result per geo_id
@@ -222,13 +222,12 @@ browser()
     # Using user-entered impacts in vector format ##############################
 
     # * Merge social_indicator, geo_id_disaggregated and impacts #########################
-browser()
 
     # Compile input data
+    # without social component
     input_data <-
       tibble::tibble(
         geo_id_disaggregated = geo_id_disaggregated,
-        social_indicator = social_indicator,
         age_group = age_group,
         population = population,
         ref_prop_pop = ref_prop_pop,
@@ -251,43 +250,54 @@ browser()
 
     # * Create quantiles and add rank based on social indicator ################
 
-    social_component <-
-      input_data |>
-      ## Select only geo_id as id for social indicator
-      ## Social indicator is not age-group specific but geo_id specific
-      dplyr::select(geo_id_disaggregated, social_indicator) |>
-      ## Keep only unique row (avoiding duplicates from age_group clasification)
-      base::unique() |>
-      ## Remove NAs
-      dplyr::filter(!is.na(social_indicator))
+    # If social_indicator and n_quantile
 
-    if (increasing_deprivation) {
-      social_component <- social_component |>
-        dplyr::mutate(
-          ranking = dplyr::dense_rank(social_indicator),
-          quantile = dplyr::ntile(social_indicator, n = n_quantile))
-    } else {
-      social_component <- social_component |>
-        dplyr::mutate(
-          ranking = dplyr::dense_rank(dplyr::desc(social_indicator)),
-          quantile = dplyr::ntile(dplyr::desc(social_indicator), n = n_quantile))
+    if(!is.null(social_indicator) && !is.null(n_quantile) && is.null(social_quantile)){
+      social_component <-
+        input_data |>
+        ## Select only geo_id as id for social indicator
+        ## Social indicator is not age-group specific but geo_id specific
+        dplyr::select(geo_id_disaggregated, social_indicator) |>
+        ## Keep only unique row (avoiding duplicates from age_group clasification)
+        base::unique() |>
+        ## Remove NAs
+        dplyr::filter(!is.na(social_indicator))
+
+      if (increasing_deprivation) {
+        social_component <- social_component |>
+          dplyr::mutate(
+            social_ranking = dplyr::dense_rank(social_indicator),
+            social_quantile = dplyr::ntile(social_indicator, n = n_quantile))
+      } else {
+        social_component <- social_component |>
+          dplyr::mutate(
+            social_ranking = dplyr::dense_rank(dplyr::desc(social_indicator)),
+            social_quantile = dplyr::ntile(dplyr::desc(social_indicator), n = n_quantile))
+      }
+
+    # If social_decile
+
+    } else if (is.null(social_indicator) && is.null(n_quantile) && !is.null(social_quantile)){
+      social_component <-
+        tibble::tibble(geo_id_disaggregated = geo_id_disaggregated,
+                       social_quantile = social_quantile) |>
+        base::unique()
     }
+
+
 
     age_order <-
       tibble::tibble(
         age_group = base::unique(age_group),
-        age_order = 1 : base::length(age_group)
-      )
+        age_order = 1 : base::length(age_group))
 
 
     data <-
-      social_component |>
-      # Remove social_indicator
-      # (not needed and creates a conflict with the existing column in data)
-      dplyr::select(-social_indicator) |>
-      # Add input data
-      dplyr::right_join(input_data,
-                        by = "geo_id_disaggregated") |>
+      # Add social_quantile (removing the other columns in social_component)
+      dplyr::left_join(
+        input_data,
+        social_component[, c("geo_id_disaggregated", "social_quantile")],
+        by = "geo_id_disaggregated") |>
       # Add age_order
       dplyr::left_join(
         age_order,
@@ -296,59 +306,13 @@ browser()
 
     # Add ranking_social to input data_with_std
 
-    # * Calculate statistics summed/averaged over all geographic units #########
 
-    overall <-
-      data |>
-      dplyr::group_by(age_group, age_order, ref_prop_pop) |>
-      dplyr::summarize(
-        ## Sum of baseline health data in the overall data set
-        bhd_sum = if ( !is.null({{ bhd }}) ) {
-          sum(bhd, na.rm = TRUE)
-        } else { NA },
-        ## Sum of population in the overall data set
-        population_sum = if ( !is.null({{population}}) ) {
-          sum(population, na.rm = TRUE)
-          } else { NA },
-        ## Baseline health data per 100k inhab.
-        bhd_rate = if ( !is.na( bhd_sum ) & !is.na( population_sum ) ) {
-          bhd_sum * 1e5 / population_sum
-        } else { NA },
-        ## Average baseline health data in the overall data set
-        bhd_mean = if ( !is.null({{ bhd }})) {
-          mean(bhd, na.rm = TRUE)
-        } else { NA },
-        ## Average exposure in the overall data set
-        exp_mean = if ( !is.null({{ exp }})) {
-          mean(exp, na.rm = TRUE)
-        } else { NA },
-        ## Standard deviation of exposure
-        exp_sd = if ( !is.na( exp_mean ) ) {
-          sd(exp, na.rm = TRUE)
-          } else { NA },
-        ## Average attributable fraction in the overall data set
-        pop_fraction_mean = if ( !is.null({{ pop_fraction }})) {
-          mean(pop_fraction, na.rm = TRUE)
-        } else { NA },
-        ## Average impact in the overall data set
-        impact_mean = mean(impact, na.rm = TRUE),
-        ## Absolute impact and population (sum across all geo units),
-        impact_sum = sum(impact, na.rm = TRUE))|>
-      dplyr::mutate(
-        impact_rate = impact_sum / population_sum * 1e5,
-        impact_rate_std = impact_rate * ref_prop_pop) |>
-      ## Pivot longer to prepare data to be joined below
-      tidyr::pivot_longer(
-        cols = bhd_sum:impact_rate_std,
-        names_to = "parameter",
-        values_to = "overall")
+    # * Calculate statistics summed/averaged #################
 
-    # * Calculate statistics summed/averaged for each quantile #################
-
-    impact_rates_by_quantile <-
+    impact_rates_by_quantile_and_age <-
       data |>
       ## Group by geo_id and age group to obtain impact rates at that level
-      dplyr::group_by(quantile, age_group, age_order, ref_prop_pop) |>
+      dplyr::group_by(social_quantile, age_group, age_order, ref_prop_pop) |>
       dplyr::summarize(
         population_sum = if ( !is.null( {{population}} ) ) {
           sum(population, na.rm = TRUE) } else { NA },
@@ -356,9 +320,14 @@ browser()
       dplyr::mutate(
         impact_rate = impact_sum / population_sum * 1e5,
         impact_rate_std = impact_rate * ref_prop_pop) |>
-      dplyr::group_by(quantile) |>
+      dplyr::ungroup()
+
+    impact_rates_by_quantile <-
+      impact_rates_by_quantile_and_age |>
+      dplyr::group_by(social_quantile) |>
       dplyr::summarize(impact_rate_sum = sum(impact_rate, na.rm = TRUE),
-                       impact_rate_std_sum = sum(impact_rate_std, na.rm = TRUE))
+                       impact_rate_std_sum = sum(impact_rate_std, na.rm = TRUE))|>
+      dplyr::ungroup()
 
     # Other indicators beyond impact_rates do not need to aggregate in two steps
     # Only one step by quantile
@@ -366,7 +335,7 @@ browser()
       data |>
       ## Group by geo_id to ensure that you get one result per geo_id
       ## keeping uncertainties
-      dplyr::group_by(quantile) |>
+      dplyr::group_by(social_quantile) |>
       dplyr::summarize(
         bhd_sum = if ( !is.null( {{ bhd }} ) ) {
           sum(bhd, na.rm = TRUE) } else { NA },
