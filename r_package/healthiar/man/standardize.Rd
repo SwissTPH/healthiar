@@ -4,12 +4,14 @@
 \alias{standardize}
 \title{Obtain age-standardized health impacts}
 \usage{
-standardize(listed_output_healthiar, age_groups)
+standardize(listed_output_healthiar, age_groups, ref_prop_pop)
 }
 \arguments{
 \item{listed_output_healthiar}{\code{List} containing as sub-lists the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.#'}
 
 \item{age_groups}{\code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{output_healthiar}.}
+
+\item{ref_prop_pop}{\code{Numeric vector} with the reference proportion of population for each age group. The sum of the values must be 1 and the length of the vector must be same as for \code{age_groups}.}
 }
 \value{
 Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.

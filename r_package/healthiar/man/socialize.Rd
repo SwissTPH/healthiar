@@ -8,36 +8,45 @@ socialize(
   listed_output_healthiar = NULL,
   impact = NULL,
   geo_id_disaggregated,
-  social_indicator,
-  n_quantile = 10,
+  social_indicator = NULL,
+  increasing_deprivation = TRUE,
+  n_quantile = NULL,
+  social_quantile = NULL,
   population = NULL,
   bhd = NULL,
   exp = NULL,
   pop_fraction = NULL,
-  age_groups
+  age_group,
+  ref_prop_pop
 )
 }
 \arguments{
 \item{listed_output_healthiar}{\code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.}
 
-\item{impact}{\code{List} containing \code{numeric vectors}. The \code{numeric vectors} refer to the \code{age_groups} and the list to the \code{geo_id_disaggregated}.}
+\item{impact}{\code{Numeric vector} containing the attributable health impacts by both age group and geo id.}
 
 \item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
 If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
 
-\item{social_indicator}{\code{List} with numeric values showing social indicator, e.g. the deprivation score (indicator of economic wealth), of the fine geographical area. The lenght of the list should be the same as the length of the vector of \code{geo_id_disaggregated}}
+\item{social_indicator}{\code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. Based on this and \code{n_quantile}, \code{social_quantile} will be calculated.}
 
-\item{n_quantile}{\code{Integer value} specifying to the number quantiles in the analysis}
+\item{increasing_deprivation}{\code{Boolean} variable (TRUE/FALSE) that specifies if deprivation is higher when the \code{social_indicator} is higher (TRUE) or lower (FALSE). Default value = TRUE.}
 
-\item{population}{\code{Integer vector} containing the population per geographic unit and matched with the argument \code{geo_id_disaggregated}.}
+\item{n_quantile}{\code{Integer value} specifying to the number of quantiles in the analysis.}
 
-\item{age_groups}{\code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_healthiar}.}
+\item{social_quantile}{\code{Numeric vector} showing the values from 1 to the number of quantiles assigned to each geographic unit. Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}}
+
+\item{population}{\code{Integer vector} containing the population by age group and geographic unit.}
+
+\item{age_group}{\code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_healthiar}.}
+
+\item{ref_prop_pop}{\code{Numeric vector} with the reference proportion of population for each age group.}
 }
 \value{
 Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 }
 \description{
-This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts
+This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{listed_output_healthiar}, it is assumed that all data come from a table and the argument refer to the columns of that table.
 }
 \examples{
 # Example of how to use the function
