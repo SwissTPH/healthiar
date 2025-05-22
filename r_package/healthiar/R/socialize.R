@@ -10,6 +10,7 @@
 #' @param age_group \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_healthiar}.
 #' @param ref_prop_pop \code{Numeric vector} with the reference proportion of population for each age group.
 #' @param social_indicator \code{Numeric vector} showing social indicator, e.g. the deprivation score (indicator of economic wealth), of the fine geographical area.
+#' @param increasing_deprivation \code{Boolean} variable (TRUE/FALSE) that specifies if deprivation is higher when the \code{social_indicator} is higher (TRUE) or lower (FALSE). Default value = TRUE.
 #' @param n_quantile \code{Integer value} specifying to the number quantiles in the analysis.
 
 
@@ -30,6 +31,7 @@ socialize <- function(listed_output_healthiar = NULL,
                       impact = NULL,
                       geo_id_disaggregated,
                       social_indicator,
+                      increasing_deprivation = TRUE,
                       n_quantile = 10, ## by default: decile
                       population = NULL,
                       bhd = NULL,
@@ -43,7 +45,7 @@ socialize <- function(listed_output_healthiar = NULL,
   # Using the output of attribute ##############################################
 
   if ( is.null(impact) & !is.null(listed_output_healthiar) ) {
-browser()
+
     # * Convert listed_output_healthiar in a tibble
     output_healthiar <-
       healthiar::standardize(listed_output_healthiar = listed_output_healthiar,
@@ -103,7 +105,7 @@ browser()
         values_to = "overall")
 
     # * Calculate statistics summed/averaged for each quantile #################
-
+browser()
     output_social_by_quantile <-
       output_social |>
       ## Group by geo_id to ensure that you get one result per geo_id
@@ -223,6 +225,7 @@ browser()
     input_data <-
       tibble::tibble(
         geo_id_disaggregated = geo_id_disaggregated,
+        social_indicator = social_indicator,
         age_group = age_group,
         population = population,
         ref_prop_pop = ref_prop_pop,
@@ -230,15 +233,6 @@ browser()
         exp = exp,
         bhd = bhd,
         pop_fraction = pop_fraction)
-
-    # Calculate impact_rate and impact_rate_std
-    input_with_impact_rate_std <-
-      input_data |>
-      dplyr::mutate(
-        impact_rate = base::ifelse(impact == 0 | population == 0,
-                                   0,
-                                   impact / population),
-        impact_rate_std = impact_rate * ref_prop_pop)
 
 
     # output_social <-
@@ -254,19 +248,50 @@ browser()
 
     # * Create quantiles and add rank based on social indicator ################
 
-    output_social <-
-      input_with_impact_rate_std |>
+    social_component <-
+      input_data |>
+      ## Select only geo_id as id for social indicator
+      ## Social indicator is not age-group specific but geo_id specific
+      dplyr::select(geo_id_disaggregated, social_indicator) |>
+      ## Keep only unique row (avoiding duplicates from age_group clasification)
+      base::unique() |>
       ## Remove NAs
-      dplyr::filter(!is.na(social_indicator)) |>
-      ## Add ranking of deprivation score and quantiles
+      dplyr::filter(!is.na(social_indicator))
+
+    if (increasing_deprivation) {
+      social_component <- social_component |>
+        dplyr::mutate(
+          ranking = dplyr::min_rank(social_indicator),
+          quantile = dplyr::ntile(social_indicator, n = n_quantile))
+    } else {
+      social_component <- social_component |>
+        dplyr::mutate(
+          ranking = dplyr::min_rank(dplyr::desc(social_indicator)),
+          quantile = dplyr::ntile(dplyr::desc(social_indicator), n = n_quantile))
+    }
+
+
+    data <-
+      social_component |>
+      # Remove social_indicator
+      # (not needed and creates a conflict with the existing column in data)
+      dplyr::select(-social_indicator) |>
+      # Add input data
+      dplyr::right_join(input_data,
+                        by = "geo_id_disaggregated") |>
+      # Calculate impact_rate and impact_rate_std
       dplyr::mutate(
-        ranking = dplyr::min_rank(dplyr::desc(social_indicator)),
-        quantile = dplyr::ntile(dplyr::desc(social_indicator), n = n_quantile))
+        impact_rate = base::ifelse(impact == 0 | population == 0,
+                                   0,
+                                   impact / population * 1E5),
+        impact_rate_std = impact_rate * ref_prop_pop)
+
+    # Add ranking_social to input data_with_std
 
     # * Calculate statistics summed/averaged over all geographic units #########
 
     overall <-
-      output_social |>
+      data |>
       dplyr::summarize(
         ## Sum of baseline health data in the overall data set
         bhd_sum = if ( !is.null({{ bhd }}) ) {
@@ -302,11 +327,9 @@ browser()
         impact_sum = sum(impact, na.rm = TRUE),
         ## Impact rate in all geographical units (without stratification by quantile)
         ## per 100'000 inhabitants
-        impact_rate = if ( !is.null({{population}}) ) {
-          (impact_sum / population_sum) * 1e5
-        } else { NA },
+        impact_rate_mean = mean(impact_rate, na.rm = TRUE),
         # Impact rate standardized
-        impact_rate_std = impact_rate * ref_prop_pop
+        impact_rate_std_mean = mean(impact_rate_std, na.rm = TRUE)
         )  |>
       ## Pivot longer to prepare data to be joined below
       tidyr::pivot_longer(
@@ -317,7 +340,7 @@ browser()
     # * Calculate statistics summed/averaged for each quantile #################
 
     output_social_by_quantile <-
-      output_social |>
+      data |>
       ## Group by geo_id to ensure that you get one result per geo_id
       ## keeping uncertainties
       dplyr::group_by(quantile) |>
@@ -338,11 +361,13 @@ browser()
           mean(pop_fraction, na.rm = TRUE) } else { NA },
         impact_mean = mean(impact, na.rm = TRUE),
         impact_sum = sum(impact, na.rm = TRUE),
-        impact_rate = sum(impact_rate, na.rm = TRUE),
+        impact_rate_sum = sum(impact_rate, na.rm = TRUE),
+        impact_rate_mean = mean(impact_rate, na.rm = TRUE),
         # impact_rate = if ( !is.null( {{ population }} ) ) {
         #   (impact_sum / population_sum) * 1e5
         # } else {NA},
-        impact_rate_std = sum(impact_rate_std, na.rm = TRUE)
+        impact_rate_std_mean = mean(impact_rate_std, na.rm = TRUE),
+        impact_rate_std_sum = sum(impact_rate_std, na.rm = TRUE)
         )
 
     # * Determine differences in statistics between quantiles ##################
@@ -384,7 +409,7 @@ browser()
         parameter %in% c("exp_mean",
                          "bhd_rate",
                          "pop_fraction_mean",
-                         "impact_rate_std")) |>
+                         "impact_rate_std_mean")) |>
       ## Long instead of wide layout
       tidyr::pivot_longer(
         cols = contains("_"),
@@ -419,7 +444,7 @@ browser()
                     -parameter_string)
 
     output_social <-
-      listed_output_healthiar
+      list()
 
     output_social[["social_main"]] <-
       social_results |>
