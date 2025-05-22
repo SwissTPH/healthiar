@@ -342,38 +342,25 @@ browser()
 
     # * Calculate statistics summed/averaged for each quantile #################
 
-    by_quantile_and_age <-
+    impact_rates_by_quantile <-
       data |>
-      ## Group by geo_id to ensure that you get one result per geo_id
-      ## keeping uncertainties
+      ## Group by geo_id and age group to obtain impact rates at that level
       dplyr::group_by(quantile, age_group, age_order, ref_prop_pop) |>
       dplyr::summarize(
-        bhd_sum = if ( !is.null( {{ bhd }} ) ) {
-          sum(bhd, na.rm = TRUE) } else { NA },
         population_sum = if ( !is.null( {{population}} ) ) {
           sum(population, na.rm = TRUE) } else { NA },
-        bhd_rate = if ( !is.null( {{ bhd }} ) ) {
-          bhd_sum * 1e5 / population_sum } else { NA },
-        bhd_mean = if ( !is.null({{ bhd }})) {
-          mean(bhd, na.rm = TRUE) } else { NA },
-        exp_mean = if ( !is.null({{ exp }})) {
-          mean(exp, na.rm = TRUE) } else { NA },
-        exp_sd = if ( !is.na( exp_mean ) ) {
-          sd(exp, na.rm = TRUE) } else { NA },
-        pop_fraction_mean = if ( !is.null({{ pop_fraction }})) {
-          mean(pop_fraction, na.rm = TRUE) } else { NA },
-        impact_mean = mean(impact, na.rm = TRUE),
-        impact_sum = sum(impact, na.rm = TRUE))|>
+        impact_sum = sum(impact, na.rm = TRUE)) |>
       dplyr::mutate(
         impact_rate = impact_sum / population_sum * 1e5,
-        # impact_rate = if ( !is.null( {{ population }} ) ) {
-        #   (impact_sum / population_sum) * 1e5
-        # } else {NA},
-        impact_rate_std = impact_rate * ref_prop_pop)
+        impact_rate_std = impact_rate * ref_prop_pop) |>
+      dplyr::group_by(quantile) |>
+      dplyr::summarize(impact_rate_sum = sum(impact_rate, na.rm = TRUE),
+                       impact_rate_std_sum = sum(impact_rate_std, na.rm = TRUE))
 
-    by_quantile <-
-      ## Add impact_rate and impact_rate_std
-      by_quantile_and_age |>
+    # Other indicators beyond impact_rates do not need to aggregate in two steps
+    # Only one step by quantile
+    other_indicators_by_quantile <-
+      data |>
       ## Group by geo_id to ensure that you get one result per geo_id
       ## keeping uncertainties
       dplyr::group_by(quantile) |>
@@ -393,11 +380,12 @@ browser()
         pop_fraction_mean = if ( !is.null({{ pop_fraction }})) {
           mean(pop_fraction, na.rm = TRUE) } else { NA },
         impact_mean = mean(impact, na.rm = TRUE),
-        impact_sum = sum(impact, na.rm = TRUE),
-        impact_rate_sum = sum(impact_rate, na.rm = TRUE),
-        impact_rate_std_sum = sum(impact_rate_std, na.rm = TRUE))
+        impact_sum = sum(impact, na.rm = TRUE))
 
-
+    indicators_by_quantile <-
+      dplyr::left_join(impact_rates_by_quantile,
+                       other_indicators_by_quantile,
+                       by = "quantile")
 
     # * Determine differences in statistics between quantiles ##################
 
