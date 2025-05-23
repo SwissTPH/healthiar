@@ -44,20 +44,27 @@ socialize <- function(listed_output_healthiar = NULL,
                       ref_prop_pop = NULL
                       ) {
 
+  # Create readable variables for if statements below
+  has_output_healthiar <- is.null(impact) & !is.null(listed_output_healthiar)
+  has_impact <- !is.null(impact) & is.null(listed_output_healthiar)
 
+  has_social_quantile <-
+    is.null(social_indicator) && is.null(n_quantile) && !is.null(social_quantile)
+  has_social_indicator <-
+    !is.null(social_indicator) && !is.null(n_quantile) && is.null(social_quantile)
 
+  has_ref_prop_pop <- !is.null(ref_prop_pop)
+
+  decreasing_deprivation <- !increasing_deprivation
 
 
   # * If user enters listed_output_healthiar########
-
-  if ( is.null(impact) & !is.null(listed_output_healthiar) ) {
-
+  if ( has_output_healthiar ) {
 
     # * Convert listed_output_healthiar in a tibble
     output_healthiar <-
       healthiar:::flatten_by_age(listed_output_healthiar = listed_output_healthiar,
                                  age_group = age_group)
-
 
     # Compile input data
     # without social component
@@ -101,7 +108,7 @@ socialize <- function(listed_output_healthiar = NULL,
       ref_prop_pop_table <-
         ref_prop_pop_table_from_population
 
-    } else {
+    } else if (has_ref_prop_pop){
       ref_prop_pop_table <-
         tibble::tibble(
           age_group = unique(input_data$age_group),
@@ -111,7 +118,7 @@ socialize <- function(listed_output_healthiar = NULL,
 
 
 
-  } else if ( !is.null(impact) & is.null(listed_output_healthiar) ) {
+  } else if ( has_impact ) {
     # Using user-entered impacts in vector format ##############################
 
 
@@ -150,7 +157,7 @@ socialize <- function(listed_output_healthiar = NULL,
       ref_prop_pop_table <-
         healthiar:::get_ref_prop_pop(df = input_data)
 
-    } else {
+    } else if(has_ref_prop_pop) {
       # Here without unique() because the ref_prop_pop comes probably from another table
       # so age_group and ref_prop_pop have the same length (including likely repetitions)
       # because of geo_ids
@@ -167,7 +174,7 @@ socialize <- function(listed_output_healthiar = NULL,
 
     # If social_indicator and n_quantile
 
-    if(!is.null(social_indicator) && !is.null(n_quantile) && is.null(social_quantile)){
+    if(has_social_indicator){
 
       social_component_before_quantile <-
         social_component_before_quantile |>
@@ -179,7 +186,7 @@ socialize <- function(listed_output_healthiar = NULL,
           dplyr::mutate(
             social_ranking = dplyr::dense_rank(social_indicator),
             social_quantile = dplyr::ntile(social_indicator, n = n_quantile))
-      } else {
+      } else if(decreasing_deprivation) {
         social_component <- social_component_before_quantile |>
           dplyr::mutate(
             social_ranking = dplyr::dense_rank(dplyr::desc(social_indicator)),
@@ -188,7 +195,7 @@ socialize <- function(listed_output_healthiar = NULL,
 
     # If social_decile
 
-    } else if (is.null(social_indicator) && is.null(n_quantile) && !is.null(social_quantile)){
+    } else if (has_social_quantile){
       social_component <-
         tibble::tibble(geo_id_disaggregated = geo_id_disaggregated,
                        social_quantile = social_quantile) |>
@@ -390,12 +397,12 @@ socialize <- function(listed_output_healthiar = NULL,
       dplyr::select(-is_paf_from_deprivation, -is_attributable_from_deprivation,
                     -parameter_string)
 
-    if ( is.null(impact) & !is.null(listed_output_healthiar) ) {
+    if ( has_output_healthiar ) {
     output_social <-
       base::list(health_main = output_healthiar[["healt_main"]],
            health_detailed = output_healthiar[["healt_detailed"]])
 
-    } else if (!is.null(impact) & is.null(listed_output_healthiar) ){
+    } else if (has_impact ){
       output_social <-
         list()
     }
