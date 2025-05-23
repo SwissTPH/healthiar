@@ -218,44 +218,38 @@ summarize_uncertainty <- function(
 
 
   # Simulate function #####################
-  simulate <- function(var_name, distribution, n, seed){
-
-    var_value_central <- input_args[[paste0(var_name, "_central")]]
-    var_value_lower <- input_args[[paste0(var_name, "_lower")]]
-    var_value_upper <- input_args[[paste0(var_name, "_upper")]]
+  simulate <- function(central, lower, upper, distribution, n, seed){
+    base::set.seed(seed)
 
     if(distribution == "gamma"){
-      base::set.seed(seed)
+
       simulation <-
         #abs() because negative values have to be avoided
         base::abs(
           sim_gamma(
             n_sim = n,
-            central_estimate = var_value_central,
-            lower_estimate = var_value_lower,
-            upper_estimate = var_value_upper))
-    } else if (distribution == "normal"){
+            central_estimate = central,
+            lower_estimate = lower,
+            upper_estimate = upper))
 
-        base::set.seed(seed)
+    } else if (distribution == "normal"){
         simulation <-
           #abs() because negative values have to be avoided
           base::abs(
             stats::rnorm(
               n = n,
-              mean = base::unlist(var_value_central),
-              sd = (base::unlist(var_value_upper) - base::unlist(var_value_lower)) / (2 * qnorm(0.975))))
+              mean = base::unlist(central),
+              sd = (base::unlist(upper) - base::unlist(lower)) / (2 * qnorm(0.975))))
 
     } else if (distribution == "beta") {
 
-      base::set.seed(seed)
       simulation_betaExpert <-
         betaExpert(
-          best = var_value_central,
-          lower = var_value_lower,
-          upper = var_value_upper,
+          best = central,
+          lower = lower,
+          upper = upper,
           method = "mean")
 
-      base::set.seed(seed)
       simulation <-
         stats::rbeta(
           n = n,
@@ -301,12 +295,19 @@ summarize_uncertainty <- function(
       # Store column name
       col_name <- paste0(var, "_central")
 
+      # Store central, lower and upper estimate for the simulation below
+      central <- as.numeric(input_args[[paste0(var, "_central")]])
+      lower   <- as.numeric(input_args[[paste0(var, "_lower")]])
+      upper   <- as.numeric(input_args[[paste0(var, "_upper")]])
+
       # Run simulate across all rows
       # (iteration across simulations, geo_units, exp categories...)
       sim[[col_name]] <- purrr::map(
         .x = sim_template$geo_id_number,
         ~ simulate(
-          var_name = var,
+          central = central,
+          lower = lower,
+          upper = upper,
           distribution = dist,
           n = n_sim,
           # Different seed for each geo_unit to avoid similar results across geo_units
