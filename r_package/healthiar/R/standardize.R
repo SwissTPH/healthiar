@@ -33,9 +33,7 @@ standardize <- function(listed_output_healthiar,
   if(is.null(ref_prop_pop)){
 
     ref_prop_pop <-
-      healthiar:::get_ref_prop_pop(df = input_data) |>
-      dplyr::select(ref_prop_pop) |>
-      dplyr::pull()
+      healthiar:::get_ref_prop_pop(df = input_data)$ref_prop_pop
 
   }
 
