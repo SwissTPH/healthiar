@@ -69,16 +69,12 @@ socialize <- function(listed_output_healthiar = NULL,
     # Compile input data
     # without social component
     input_data <-
-      tibble::tibble(
-        geo_id_disaggregated = output_healthiar$geo_id_disaggregated,
-        age_group = output_healthiar$age_group,
-        population = output_healthiar$population,
-        impact = output_healthiar$impact,
-        exp = output_healthiar$exp,
-        bhd = output_healthiar$bhd,
-        pop_fraction = output_healthiar$pop_fraction)
+      output_healthiar |>
+      dplyr::select(
+        dplyr::any_of(c("geo_id_disaggregated", "age_group", "population",
+                        "impact", "exp", "bhd", "pop_fraction")))
 
-    # Compile social data
+    # Compile social component
     # Here use unique() because the user will enter a vector with unique values
     # and not a vector that fits with a table
     # (the user entered the output of healthiar)
