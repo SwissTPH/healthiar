@@ -8,9 +8,6 @@
 #' @param geo_id_aggregated \code(Vector) containing the id code of the geographic unit the sub-unit belongs to.
 #' @return
 #' This function returns a vector of population exposure values.
-#' @import terra
-#' @import sf
-#' @import dplyr
 #' @export
 #' @author Arno Pauwels
 #' @note Experimental function
