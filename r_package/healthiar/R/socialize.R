@@ -45,13 +45,13 @@ socialize <- function(listed_output_healthiar = NULL,
                       ) {
 
   # Create readable variables for if statements below
-  has_output_healthiar <- is.null(impact) & !is.null(listed_output_healthiar)
-  has_impact <- !is.null(impact) & is.null(listed_output_healthiar)
+  has_output_healthiar <- base::is.null(impact) & !base::is.null(listed_output_healthiar)
+  has_impact <- !base::is.null(impact) & base::is.null(listed_output_healthiar)
 
   has_social_quantile <-
-    is.null(social_indicator) && is.null(n_quantile) && !is.null(social_quantile)
+    base::is.null(social_indicator) && base::is.null(n_quantile) && !base::is.null(social_quantile)
   has_social_indicator <-
-    !is.null(social_indicator) && !is.null(n_quantile) && is.null(social_quantile)
+    !base::is.null(social_indicator) && !base::is.null(n_quantile) && base::is.null(social_quantile)
 
   has_ref_prop_pop <- !is.null(ref_prop_pop)
 
@@ -84,7 +84,7 @@ socialize <- function(listed_output_healthiar = NULL,
     # (the user entered the output of healthiar)
     social_component_before_quantile <-
       tibble::tibble(
-        geo_id_disaggregated = unique(input_data$geo_id_disaggregated),
+        geo_id_disaggregated = base::unique(input_data$geo_id_disaggregated),
         social_indicator = social_indicator)
 
     # * Add international or derived ref_prop_pop ################
@@ -92,10 +92,10 @@ socialize <- function(listed_output_healthiar = NULL,
 
     # If ref_prop_pop is not entered by the user, calculate it using populations
     # Otherwise, keep it
-    if(is.null(ref_prop_pop)){
+    if(base::is.null(ref_prop_pop)){
       total_population_table <-
         input_data |>
-        dplyr::summarize(total_population = sum(population, na.rm = TRUE))
+        dplyr::summarize(total_population = base::sum(population, na.rm = TRUE))
 
       ref_prop_pop_table_from_population <-
         dplyr::left_join(input_data,
@@ -111,8 +111,8 @@ socialize <- function(listed_output_healthiar = NULL,
     } else if (has_ref_prop_pop){
       ref_prop_pop_table <-
         tibble::tibble(
-          age_group = unique(input_data$age_group),
-          ref_prop_pop = unique(ref_prop_pop))
+          age_group = base::unique(input_data$age_group),
+          ref_prop_pop = base::unique(ref_prop_pop))
     }
 
 
@@ -236,8 +236,8 @@ socialize <- function(listed_output_healthiar = NULL,
       ## Group by geo_id and age group to obtain impact rates at that level
       dplyr::group_by(social_quantile, age_group, age_order, ref_prop_pop) |>
       dplyr::summarize(
-        population_sum = sum(population, na.rm = TRUE),
-        impact_sum = sum(impact, na.rm = TRUE)) |>
+        population_sum = base::sum(population, na.rm = TRUE),
+        impact_sum = base::sum(impact, na.rm = TRUE)) |>
       dplyr::mutate(
         impact_rate = impact_sum / population_sum * 1e5,
         impact_rate_std = impact_rate * ref_prop_pop) |>
@@ -246,8 +246,8 @@ socialize <- function(listed_output_healthiar = NULL,
     impact_rates_by_quantile <-
       impact_rates_by_quantile_and_age |>
       dplyr::group_by(social_quantile) |>
-      dplyr::summarize(impact_rate_sum = sum(impact_rate, na.rm = TRUE),
-                       impact_rate_std_sum = sum(impact_rate_std, na.rm = TRUE))|>
+      dplyr::summarize(impact_rate_sum = base::sum(impact_rate, na.rm = TRUE),
+                       impact_rate_std_sum = base::sum(impact_rate_std, na.rm = TRUE))|>
       dplyr::ungroup()
 
     # Other indicators beyond impact_rates do not need to aggregate in two steps
@@ -305,8 +305,8 @@ socialize <- function(listed_output_healthiar = NULL,
 
     impact_rates_overall <-
       impact_rates_by_quantile_and_age |>
-      dplyr::summarize(impact_rate_sum = sum(impact_rate, na.rm = TRUE),
-                       impact_rate_std_sum = sum(impact_rate_std, na.rm = TRUE))
+      dplyr::summarize(impact_rate_sum = base::sum(impact_rate, na.rm = TRUE),
+                       impact_rate_std_sum = base::sum(impact_rate_std, na.rm = TRUE))
 
     parameters_overall <-
       dplyr::bind_cols(impact_rates_overall,
@@ -374,13 +374,13 @@ socialize <- function(listed_output_healthiar = NULL,
       dplyr::mutate(
         parameter_string =
           dplyr::case_when(
-            grepl("exp_", parameter) ~ "exposure",
-            grepl("bhd_", parameter) ~ "baseline health data",
-            grepl("pop_fraction_", parameter) ~ "population attributable fraction",
-            grepl("impact_", parameter) ~ "impact"),
+            base::grepl("exp_", parameter) ~ "exposure",
+            base::grepl("bhd_", parameter) ~ "baseline health data",
+            base::grepl("pop_fraction_", parameter) ~ "population attributable fraction",
+            base::grepl("impact_", parameter) ~ "impact"),
         ## Replace "quantile" with "bottom_quantile"
         difference_compared_with =
-          gsub("quantile", "bottom_quantile", difference_compared_with),
+          base::gsub("quantile", "bottom_quantile", difference_compared_with),
         ## Flag attributable fraction
         is_paf_from_deprivation =
           difference_type == "relative" & difference_compared_with == "overall",
@@ -390,9 +390,9 @@ socialize <- function(listed_output_healthiar = NULL,
         comment =
           dplyr::case_when(
             is_paf_from_deprivation ~
-              paste0("It can be interpreted as fraction attributable to deprivation"),
+              base::paste0("It can be interpreted as fraction attributable to deprivation"),
             is_attributable_from_deprivation ~
-              paste0("It can be interpreted as ", parameter_string, " attributable to deprivation"))) |>
+              base::paste0("It can be interpreted as ", parameter_string, " attributable to deprivation"))) |>
       ## Remove columns that are not needed anymore
       dplyr::select(-is_paf_from_deprivation, -is_attributable_from_deprivation,
                     -parameter_string)
@@ -404,7 +404,7 @@ socialize <- function(listed_output_healthiar = NULL,
 
     } else if (has_impact ){
       output_social <-
-        list()
+        base::list()
     }
 
     output_social[["social_main"]] <-
