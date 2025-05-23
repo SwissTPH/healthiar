@@ -98,7 +98,8 @@ socialize <- function(listed_output_healthiar = NULL,
       ref_prop_pop_table <-
         tibble::tibble(
           age_group = base::unique(input_data$age_group),
-          ref_prop_pop = base::unique(ref_prop_pop))
+          ref_prop_pop = base::unique(ref_prop_pop)) |>
+        base::unique()
 
       # * If NOT available ref_prop_pop ################
       # Calculate it using populations
@@ -148,8 +149,8 @@ socialize <- function(listed_output_healthiar = NULL,
           ref_prop_pop_table <-
             tibble::tibble(
               age_group = input_data$age_group,
-              ref_prop_pop = ref_prop_pop)
-
+              ref_prop_pop = ref_prop_pop) |>
+            base::unique()
 
           ### * If NOT available ref_prop_pop ################
         } else if(is.null(ref_prop_pop)) {
