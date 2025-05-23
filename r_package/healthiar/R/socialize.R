@@ -256,23 +256,32 @@ socialize <- function(listed_output_healthiar = NULL,
   has_exp <- "exp" %in% names(data)
   has_pop_fraction <- "pop_fraction" %in% names(data)
 
+
+  # Define function to get_other_parameters()
+  get_other_parameters <- function(df){
+    other_parameters <- df |>
+      dplyr::summarize(
+        impact_mean = base::mean(impact, na.rm = TRUE),
+        impact_sum = base::sum(impact, na.rm = TRUE),
+        bhd_sum = if (has_bhd) base::sum(bhd, na.rm = TRUE) else NA,
+        population_sum = if (has_population) sum(population, na.rm = TRUE) else NA,
+        bhd_mean = if (has_bhd) base::mean(bhd, na.rm = TRUE) else NA,
+        exp_mean = if (has_exp) base::mean(exp, na.rm = TRUE) else NA,
+        exp_sd = if (has_exp) stats::sd(exp, na.rm = TRUE) else NA,
+        pop_fraction_mean = if (has_pop_fraction) base::mean(pop_fraction, na.rm = TRUE) else NA,
+        .groups = "drop") |>
+        dplyr::mutate(
+          bhd_rate = if (has_bhd && has_population) bhd_sum * 1e5 / population_sum else NA
+        )
+    return(other_parameters)
+  }
+
+
   other_parameters_by_quantile <-
     data |>
     ## Group by social_quantile
     dplyr::group_by(social_quantile) |>
-    dplyr::summarize(
-      impact_mean = base::mean(impact, na.rm = TRUE),
-      impact_sum = base::sum(impact, na.rm = TRUE),
-      bhd_sum = if (has_bhd) base::sum(bhd, na.rm = TRUE) else NA,
-      population_sum = if (has_population) sum(population, na.rm = TRUE) else NA,
-      bhd_mean = if (has_bhd) base::mean(bhd, na.rm = TRUE) else NA,
-      exp_mean = if (has_exp) base::mean(exp, na.rm = TRUE) else NA,
-      exp_sd = if (has_exp) stats::sd(exp, na.rm = TRUE) else NA,
-      pop_fraction_mean = if (has_pop_fraction) base::mean(pop_fraction, na.rm = TRUE) else NA,
-      .groups = "drop") |>
-    dplyr::mutate(
-      bhd_rate = if (has_bhd && has_population) bhd_sum * 1e5 / population_sum else NA
-    )
+    get_other_parameters()
 
   ### All parameters together
   # Put together input rates and other parameters
@@ -296,19 +305,7 @@ socialize <- function(listed_output_healthiar = NULL,
   other_parameters_overall <-
     data |>
     # Without grouping because it is overall
-    dplyr::summarize(
-      impact_mean = base::mean(impact, na.rm = TRUE),
-      impact_sum = base::sum(impact, na.rm = TRUE),
-      bhd_sum = if (has_bhd) base::sum(bhd, na.rm = TRUE) else NA,
-      population_sum = if (has_population) sum(population, na.rm = TRUE) else NA,
-      bhd_mean = if (has_bhd) base::mean(bhd, na.rm = TRUE) else NA,
-      exp_mean = if (has_exp) base::mean(exp, na.rm = TRUE) else NA,
-      exp_sd = if (has_exp) stats::sd(exp, na.rm = TRUE) else NA,
-      pop_fraction_mean = if (has_pop_fraction) base::mean(pop_fraction, na.rm = TRUE) else NA,
-      .groups = "drop") |>
-    dplyr::mutate(
-      bhd_rate = if (has_bhd && has_population) bhd_sum * 1e5 / population_sum else NA
-    )
+    get_other_parameters()
 
   ### All parameters together
   parameters_overall <-
@@ -431,7 +428,5 @@ socialize <- function(listed_output_healthiar = NULL,
 
 
   return(output_social)
-
-
 
 }
