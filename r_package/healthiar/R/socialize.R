@@ -146,20 +146,9 @@ socialize <- function(listed_output_healthiar = NULL,
     # If ref_prop_pop is not entered by the user, calculate it using populations
     # Otherwise, keep it
     if(is.null(ref_prop_pop)){
-      total_population_table <-
-        input_data |>
-        dplyr::summarize(total_population = sum(population, na.rm = TRUE))
-
-      ref_prop_pop_table_from_population <-
-        dplyr::left_join(input_data,
-                         population_by_geo_table,
-                         by = "age_group") |>
-        dplyr::mutate(ref_prop_pop = population / total_population) |>
-        base::unique(age_group) |>
-        dplyr::select(age_group, ref_prop_pop)
 
       ref_prop_pop_table <-
-        ref_prop_pop_table_from_population
+        healthiar:::get_ref_prop_pop(df = input_data)
 
     } else {
       # Here without unique() because the ref_prop_pop comes probably from another table
