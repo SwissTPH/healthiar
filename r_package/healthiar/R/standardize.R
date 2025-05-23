@@ -31,22 +31,9 @@ standardize <- function(listed_output_healthiar,
       age_groups = age_groups)
 
   if(is.null(ref_prop_pop)){
-    total_population_table <-
-      impact_by_age_group |>
-      dplyr::summarize(total_population = sum(population, na.rm = TRUE))
-
-    ref_prop_pop_table_from_population <-
-      dplyr::left_join(impact_by_age_group,
-                       population_by_geo_table,
-                       by = "age_group") |>
-      dplyr::mutate(ref_prop_pop = population / total_population) |>
-      base::unique(age_group) |>
-      dplyr::select(age_group, ref_prop_pop)
 
     ref_prop_pop <-
-      ref_prop_pop_table_from_population |>
-      dplyr::select(ref_prop_pop) |>
-      dplyr::pull()
+      healthiar:::get_ref_prop_pop(df = input_data)$ref_prop_pop
 
   }
 
