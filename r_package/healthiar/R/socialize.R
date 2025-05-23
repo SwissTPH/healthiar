@@ -258,7 +258,7 @@ socialize <- function(listed_output_healthiar = NULL,
     has_exp <- "exp" %in% names(data)
     has_pop_fraction <- "pop_fraction" %in% names(data)
 
-    other_indicators_by_quantile <-
+    other_parameters_by_quantile <-
       data |>
       ## Group by geo_id to ensure that you get one result per geo_id
       ## keeping uncertainties
@@ -278,14 +278,14 @@ socialize <- function(listed_output_healthiar = NULL,
       )
 
 
-    indicators_by_quantile <-
+    parameters_by_quantile <-
       dplyr::left_join(impact_rates_by_quantile,
-                       other_indicators_by_quantile,
+                       other_parameters_by_quantile,
                        by = "social_quantile")
 
 
 
-    other_indicators_overall <-
+    other_parameters_overall <-
       data |>
       ## Group by geo_id to ensure that you get one result per geo_id
       ## keeping uncertainties
@@ -308,12 +308,12 @@ socialize <- function(listed_output_healthiar = NULL,
       dplyr::summarize(impact_rate_sum = sum(impact_rate, na.rm = TRUE),
                        impact_rate_std_sum = sum(impact_rate_std, na.rm = TRUE))
 
-    indicators_overall <-
+    parameters_overall <-
       dplyr::bind_cols(impact_rates_overall,
-                       other_indicators_overall)
+                       other_parameters_overall)
 
-    indicators_overall_prepared <-
-      indicators_overall |>
+    parameters_overall_prepared <-
+      parameters_overall |>
       ## Pivot longer to prepare data to be joined below
       tidyr::pivot_longer(
         cols = tidyr::everything(),
@@ -323,7 +323,7 @@ socialize <- function(listed_output_healthiar = NULL,
     # * Determine differences in statistics between quantiles ##################
 
     social_calculation <-
-      indicators_by_quantile |>
+      parameters_by_quantile |>
       # Remove columns age_group and ref_prop_pop
       # They are not needed and avoid flattening the table
       #dplyr::select(-age_group, -ref_prop_pop) |>
@@ -344,7 +344,7 @@ socialize <- function(listed_output_healthiar = NULL,
       ## Add the overall (not by quantile) sums and means
       dplyr::left_join(
         x = _,
-        y = indicators_overall_prepared,
+        y = parameters_overall_prepared,
         by = "parameter") |>
       ## Calculate absolute and relative differences
       dplyr::mutate(
@@ -416,9 +416,9 @@ socialize <- function(listed_output_healthiar = NULL,
       ## NOTE: if the population argument is not specified (i.e. it is NULL), then this table is full of NA's 3 ####
       dplyr::filter(parameter == "impact_rate_std_sum")
 
-    output_social[["social_detailed"]][["results_all_indicators"]] <- social_results
-    output_social[["social_detailed"]][["indicators_per_quantile"]] <- indicators_by_quantile
-    output_social[["social_detailed"]][["indicators_overall"]] <- indicators_overall
+    output_social[["social_detailed"]][["results_all_parameters"]] <- social_results
+    output_social[["social_detailed"]][["parameters_per_quantile"]] <- parameters_by_quantile
+    output_social[["social_detailed"]][["parameters_overall"]] <- parameters_overall
     output_social[["social_detailed"]][["input_table"]] <- data
 
 
