@@ -46,7 +46,7 @@ summarize_uncertainty <- function(
 
   # Store seed
   for(i in 1:length(var_names)){
-    seeds[[var_names[i]]] <- seed #+i*1E
+    seeds[[var_names[i]]] <- seed +i*1E3
   }
 
   ## Data sets ##########
