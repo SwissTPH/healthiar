@@ -77,7 +77,7 @@ socialize <- function(listed_output_healthiar = NULL,
     # Compile social component
     # Here use unique() because the user will enter a vector with unique values
     # and not a vector that fits with a table
-    # (the user entered the output of healthiar)
+    # (the user entered the output from healthiar)
     social_component_before_quantile <-
       tibble::tibble(
         geo_id_disaggregated = base::unique(input_data$geo_id_disaggregated),
@@ -86,19 +86,20 @@ socialize <- function(listed_output_healthiar = NULL,
     # * Add international or derived ref_prop_pop ################
 
 
-    # If ref_prop_pop is not entered by the user, calculate it using populations
-    # Otherwise, keep it
-    if(base::is.null(ref_prop_pop)){
+    # If ref_prop_pop is entered by the user, use it
+    if(has_ref_prop_pop){
 
-    } else if (has_ref_prop_pop){
       ref_prop_pop_table <-
         tibble::tibble(
           age_group = base::unique(input_data$age_group),
           ref_prop_pop = base::unique(ref_prop_pop))
-    }
 
-        healthiar:::get_ref_prop_pop(df = input_data)
+      # Otherwise, calculate it using populations
+      } else if (base::is.null(ref_prop_pop)){
 
+        ref_prop_pop_table <-
+          healthiar:::get_ref_prop_pop(df = input_data)
+        }
 
 
   } else if ( has_impact ) {
@@ -133,14 +134,8 @@ socialize <- function(listed_output_healthiar = NULL,
       base::unique()
 
 
-    # If ref_prop_pop is not entered by the user, calculate it using populations
-    # Otherwise, keep it
-    if(is.null(ref_prop_pop)){
-
-      ref_prop_pop_table <-
-        healthiar:::get_ref_prop_pop(df = input_data)
-
-    } else if(has_ref_prop_pop) {
+    # If ref_prop_pop is entered by the user, use it
+    if(has_ref_prop_pop){
       # Here without unique() because the ref_prop_pop comes probably from another table
       # so age_group and ref_prop_pop have the same length (including likely repetitions)
       # because of geo_ids
@@ -148,6 +143,13 @@ socialize <- function(listed_output_healthiar = NULL,
         tibble::tibble(
           age_group = input_data$age_group,
           ref_prop_pop = ref_prop_pop)
+
+
+    # Otherwise calculate it using populations
+    } else if(is.null(ref_prop_pop)) {
+      ref_prop_pop_table <-
+        healthiar:::get_ref_prop_pop(df = input_data)
+
     }
 
   }
