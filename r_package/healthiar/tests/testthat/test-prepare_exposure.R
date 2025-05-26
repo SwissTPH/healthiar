@@ -1,6 +1,6 @@
 testthat::test_that("results correct", {
 
-  sector <- sf::st_read(testthat::test_path("data", "sector_brussels.gpkg"))
+  sector <- sf::st_read(testthat::test_path("data", "sector_brussels.gpkg"), quiet = TRUE)
   pm_be <- terra::rast(testthat::test_path("data", "pm25_brussels_region_2020.tif"))
   results <- data.table::fread(testthat::test_path("data", "exp_pwm_results.csv"))
 
@@ -18,7 +18,7 @@ testthat::test_that("results correct", {
 
 testthat::test_that("results correct", {
 
-  sector <- sf::st_read(testthat::test_path("data", "sector_brussels.gpkg"))
+  sector <- sf::st_read(testthat::test_path("data", "sector_brussels.gpkg"), quiet = TRUE)
   pm_eu <- terra::rast(testthat::test_path("data", "sce0.nc"))
   results <- data.table::fread(testthat::test_path("data", "exp_pwm_results.csv"))
 
