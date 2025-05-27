@@ -978,6 +978,134 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
   )
 })
 
+testthat::test_that("results the same Sciensano tobacco example |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
+
+  data <- readRDS(testthat::test_path("data/rr_data.RDS"))
+  data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
+
+  output_attribute_1 =
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      exp_central = 6.167882,
+      erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
+      bhd_central = 1000)
+
+  output_attribute_2 =
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      exp_central = 3.167488,
+      erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
+      bhd_central = 1000)
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_1 = output_attribute_1,
+        output_attribute_2 = output_attribute_2,
+        approach_comparison = "pif"
+      )$health_main$impact_rounded,
+    expected = 231
+  )
+})
+
+testthat::test_that("results the same Sciensano tobacco example |pathway_compare|comp_appr_pif|exp_dist|iteration_FALSE|", {
+
+  data <- readRDS(testthat::test_path("data/rr_data.RDS"))
+  data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
+
+  output_attribute_1 =
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      exp_central = c(23.68696, 0),
+      prop_pop_exp = c(0.2603914, 0.7396086),
+      erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
+      bhd_central = 1000)
+
+  output_attribute_2 =
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      exp_central = c(17.19273, 0),
+      prop_pop_exp = c(0.1842342, 0.8157658),
+      erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
+      bhd_central = 1000)
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_1 = output_attribute_1,
+        output_attribute_2 = output_attribute_2,
+        approach_comparison = "pif"
+      )$health_main$impact_rounded,
+    expected = 226
+  )
+})
+
+testthat::test_that("results the same Sciensano tobacco example |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
+
+  data <- readRDS(testthat::test_path("data/rr_data.RDS"))
+  data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
+
+  output_attribute_1 =
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      exp_central = list(6.848995, 6.565633, 6.167882),
+      erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
+      bhd_central = list(650, 1200, 1000),
+      geo_id_disaggregated = list('BR', 'FL', 'WA'))
+
+  output_attribute_2 =
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      exp_central = list(3.125626, 2.948348, 3.167488),
+      erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
+      bhd_central = list(650, 1200, 1000),
+      geo_id_disaggregated = list('BR', 'FL', 'WA'))
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_1 = output_attribute_1,
+        output_attribute_2 = output_attribute_2,
+        approach_comparison = "pif"
+      )$health_main$impact_rounded,
+    expected = c(177, 325, 231)
+  )
+})
+
+testthat::test_that("results the same Sciensano tobacco example |pathway_compare|comp_appr_pif|exp_dist|iteration_TRUE|", {
+
+  data <- readRDS(testthat::test_path("data/rr_data.RDS"))
+  data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
+
+  output_attribute_1 =
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      exp_central = list(c(0, 26.79813), c(0, 25.89477), c(0, 23.68696)),
+      prop_pop_exp = list(c(0.7444227, 0.2555773), c(0.7464495, 0.2535505), c(0.7396086, 0.2603914)),
+      erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
+      bhd_central = list(650, 1200, 1000),
+      geo_id_disaggregated = list('BR', 'FL', 'WA'))
+
+  output_attribute_2 =
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      exp_central = list(c(0, 19.22196), c(0, 17.91513), c(0, 17.19273)),
+      prop_pop_exp = list(c(0.8373929, 0.1626071), c(0.8354269, 0.1645731), c(0.8157658, 0.1842342)),
+      erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
+      bhd_central = list(650, 1200, 1000),
+      geo_id_disaggregated = list('BR', 'FL', 'WA'))
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_1 = output_attribute_1,
+        output_attribute_2 = output_attribute_2,
+        approach_comparison = "pif"
+      )$health_main$impact_rounded,
+    expected = c(173, 317, 226)
+  )
+})
+
 # ERROR OR WARNING ########
 ## ERROR #########
 
