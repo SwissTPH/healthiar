@@ -9,7 +9,7 @@ Description: The R package healthiar enables users to quantify and monetize the 
     By using the R package healthiar or accessing its corresponding GitHub website https://github.com/best-cost/ the user agrees not to disseminate the package or any parts of it to third parties.
     ***** DISCLAIMER *****
     This is work in progress. The developers are not liable for any calculation errors or inaccuracies resulting from the use of this package."
-License: `use_gpl3_license()`
+License: GPL (>= 3)
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Imports:
