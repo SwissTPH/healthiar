@@ -29,7 +29,7 @@ attribute_lifetable(
   exp_lower = NULL,
   exp_upper = NULL,
   prop_pop_exp = 1,
-  cutoff_central,
+  cutoff_central = NULL,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
   geo_id_disaggregated = NULL,

@@ -47,7 +47,7 @@ attribute_lifetable <-
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            exp_central, exp_lower = NULL, exp_upper = NULL,
            prop_pop_exp = 1,
-           cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+           cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
            geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
            info = NULL
            ) {
