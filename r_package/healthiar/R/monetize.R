@@ -3,7 +3,7 @@
 #' @description
 #' This function monetizes health impacts
 
-#' @param output_healthiar \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.
+#' @param output_attribute \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while discount_years does not include the year 0. Thus, length of impact = discount_years + 1.
 #' @param valuation \code{Numberic value} referring to unit value of a health impact
 #' @param discount_rate \code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.
@@ -23,7 +23,7 @@
 
 
 monetize <-
-  function(output_healthiar = NULL,
+  function(output_attribute = NULL,
            impact = NULL,
            valuation,
            discount_rate = NULL,
@@ -33,14 +33,14 @@ monetize <-
 
     # Store variables to increase readability of conditions
     using_impact_from_healthiar <-
-      !is.null(output_healthiar) & is.null(impact)
+      !is.null(output_attribute) & is.null(impact)
     using_impact_from_user <-
       !using_impact_from_healthiar
 
     using_impact_vector_from_user <- length(impact)>1
 
     is_lifetable <-
-      !is.null(output_healthiar[["health_detailed"]][["input_args"]]$deaths_male)
+      !is.null(output_attribute[["health_detailed"]][["input_args"]]$deaths_male)
     is_not_lifetable <-
       !is_lifetable
 
@@ -61,10 +61,10 @@ monetize <-
     if(is_lifetable){
 
       health_outcome <-
-        output_healthiar[["health_detailed"]][["input_args"]]$health_outcome
+        output_attribute[["health_detailed"]][["input_args"]]$health_outcome
 
       # Store the original data (they refer to health)
-      output_health <- output_healthiar
+      output_health <- output_attribute
 
       # Output will be adapted according to monetized impacts
       impact_detailed <-
@@ -186,11 +186,11 @@ monetize <-
 
       # Duplicate output to work with monetization
       output_monetization <-
-        output_healthiar
+        output_attribute
 
       # Apply the function in main and detailed results
       output_monetization[["monetization_main"]] <-
-        healthiar:::add_monetized_impact(df = output_healthiar[["health_main"]],
+        healthiar:::add_monetized_impact(df = output_attribute[["health_main"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
@@ -199,7 +199,7 @@ monetize <-
 
       #Detailed results showing the by-year results of monetization
       output_monetization[["monetization_detailed"]][["by_year"]] <-
-        healthiar:::add_monetized_impact(df = output_healthiar[["health_main"]],
+        healthiar:::add_monetized_impact(df = output_attribute[["health_main"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},
@@ -208,7 +208,7 @@ monetize <-
 
       #Detailed results showing all the details of the health results
       output_monetization[["monetization_detailed"]][["health_raw"]]<-
-        healthiar:::add_monetized_impact(df = output_healthiar[["health_detailed"]][["impact_raw"]],
+        healthiar:::add_monetized_impact(df = output_attribute[["health_detailed"]][["impact_raw"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},

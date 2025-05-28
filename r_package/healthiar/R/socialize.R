@@ -1,13 +1,13 @@
 #' Consider socio-economic aspects in healthiar assessments
 
 #' @description
-#' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{listed_output_healthiar}, it is assumed that all data come from a table and the argument refer to the columns of that table.
+#' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{listed_output_attribute}, it is assumed that all data come from a table and the argument refer to the columns of that table.
 
 #' @inheritParams attribute_master
-#' @param listed_output_healthiar \code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.
+#' @param listed_output_attribute \code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.
 #' @param impact \code{Numeric vector} containing the attributable health impacts by both age group and geo id.
 #' @param population \code{Integer vector} containing the population by age group and geographic unit.
-#' @param age_group \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_healthiar}.
+#' @param age_group \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_attribute}.
 #' @param ref_prop_pop \code{Numeric vector} with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.
 #' @param social_indicator \code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. Based on this and \code{n_quantile}, \code{social_quantile} will be calculated.
 #' @param n_quantile \code{Integer value} specifying to the number of quantiles in the analysis.
@@ -27,7 +27,7 @@
 
 #' @export
 
-socialize <- function(listed_output_healthiar = NULL,
+socialize <- function(listed_output_attribute = NULL,
                       impact = NULL,
                       geo_id_disaggregated,
                       social_indicator = NULL,
@@ -47,8 +47,8 @@ socialize <- function(listed_output_healthiar = NULL,
   # Create readable variables for if statements below
 
   # output from healthiar or impact directly entered by user (without healthiar)
-  has_output_healthiar <- base::is.null(impact) & !base::is.null(listed_output_healthiar)
-  has_impact <- !base::is.null(impact) & base::is.null(listed_output_healthiar)
+  has_output_attribute <- base::is.null(impact) & !base::is.null(listed_output_attribute)
+  has_impact <- !base::is.null(impact) & base::is.null(listed_output_attribute)
 
   # already social quantile (e.g. 1-10) or
   # social indicator (e.g. 1-986) which has to be transformed into quantile
@@ -65,19 +65,19 @@ socialize <- function(listed_output_healthiar = NULL,
 
   # Compile data (except social) ##########
 
-  # * If available listed_output_healthiar ########
-  if ( has_output_healthiar ) {
+  # * If available listed_output_attribute ########
+  if ( has_output_attribute ) {
 
 
-    # Convert listed_output_healthiar in a tibble
-    output_healthiar <-
-      healthiar:::flatten_by_age(listed_output_healthiar = listed_output_healthiar,
+    # Convert listed_output_attribute in a tibble
+    output_attribute <-
+      healthiar:::flatten_by_age(listed_output_attribute = listed_output_attribute,
                                  age_group = age_group)
 
     # Compile input data
     # without social component
     input_data <-
-      output_healthiar |>
+      output_attribute |>
       dplyr::select(
         dplyr::any_of(c("geo_id_disaggregated", "age_group", "population",
                         "impact", "exp", "bhd", "pop_fraction")))
@@ -113,7 +113,7 @@ socialize <- function(listed_output_healthiar = NULL,
 
     } else if ( has_impact ) {
 
-      # * If NOT available list_output_healthiar, i.e. if argument impact #########
+      # * If NOT available list_output_attribute, i.e. if argument impact #########
 
       # Compile input data
       # without social component
@@ -128,7 +128,7 @@ socialize <- function(listed_output_healthiar = NULL,
           pop_fraction = pop_fraction)
 
       # Here no unique() in the variables is needed because the users enter the data from a table
-      # If they enter the healthiar_output, they do not have a table with the social indicator
+      # If they enter the output_attribute, they do not have a table with the social indicator
       social_component_before_quantile <-
         tibble::tibble(
           geo_id_disaggregated = geo_id_disaggregated,
@@ -400,13 +400,13 @@ socialize <- function(listed_output_healthiar = NULL,
   # List output ##############################################
 
 
-  ## * If available output_healthiar ######
-  if ( has_output_healthiar ) {
+  ## * If available output_attribute ######
+  if ( has_output_attribute ) {
     output_social <-
-      base::list(health_main = output_healthiar[["healt_main"]],
-                 health_detailed = output_healthiar[["healt_detailed"]])
+      base::list(health_main = output_attribute[["healt_main"]],
+                 health_detailed = output_attribute[["healt_detailed"]])
 
-    ## * If NOT available output_healthiar, i.e. if argument impact #######
+    ## * If NOT available output_attribute, i.e. if argument impact #######
 
   } else if (has_impact ){
 

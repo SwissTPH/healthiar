@@ -554,7 +554,7 @@ You can monetize the obtained health impacts via the `include_monetization` func
 ```{r}
 results_pm_copd <- 
   monetize(
-    output_healthiar = results_pm_copd,
+    output_attribute = results_pm_copd,
     discount_shape = "exponential",
     discount_rate = 0.03,
     discount_years = 5,
@@ -572,7 +572,7 @@ results_pm_copd$monetization_main |>
 
 We see that the monetized impact (discounted) is more than 160 million EURO.
 
-The outcome of the monetization is added to the variable entered to the `output_healthiar` argument, which is `results_pm_copd` in our case.
+The outcome of the monetization is added to the variable entered to the `output_attribute` argument, which is `results_pm_copd` in our case.
 
 Two folders are added:
 
@@ -592,7 +592,7 @@ What would be the monetary benefit of such a policy, considering also the cost t
 ```{r}
 cba <- 
   cba(
-    output_healthiar = results_pm_copd,
+    output_attribute = results_pm_copd,
     valuation = 50000,
     cost = 100000000,
     discount_shape = "exponential",
@@ -653,7 +653,7 @@ Then run `socialize()`
 
 ```{r}
 results_social <- socialize(
-  output_healthiar = results_social,
+  output_attribute = results_social,
   geo_id_disaggregated = exdat_mdi$CS01012020,
   social_indicator = exdat_mdi$score,
   n_quantile = 10

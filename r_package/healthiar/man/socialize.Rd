@@ -5,7 +5,7 @@
 \title{Consider socio-economic aspects in healthiar assessments}
 \usage{
 socialize(
-  listed_output_healthiar = NULL,
+  listed_output_attribute = NULL,
   impact = NULL,
   geo_id_disaggregated,
   social_indicator = NULL,
@@ -21,7 +21,7 @@ socialize(
 )
 }
 \arguments{
-\item{listed_output_healthiar}{\code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.}
+\item{listed_output_attribute}{\code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.}
 
 \item{impact}{\code{Numeric vector} containing the attributable health impacts by both age group and geo id.}
 
@@ -38,7 +38,7 @@ If a vector is entered here, the data for geo-specific input data (e.g. \code{bh
 
 \item{population}{\code{Integer vector} containing the population by age group and geographic unit.}
 
-\item{age_group}{\code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_healthiar}.}
+\item{age_group}{\code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_attribute}.}
 
 \item{ref_prop_pop}{\code{Numeric vector} with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.}
 }
@@ -46,7 +46,7 @@ If a vector is entered here, the data for geo-specific input data (e.g. \code{bh
 Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 }
 \description{
-This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{listed_output_healthiar}, it is assumed that all data come from a table and the argument refer to the columns of that table.
+This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{listed_output_attribute}, it is assumed that all data come from a table and the argument refer to the columns of that table.
 }
 \examples{
 # Example of how to use the function

@@ -19,7 +19,7 @@
 
 
 cba <-
-  function(output_healthiar = NULL,
+  function(output_attribute = NULL,
            positive_impact = NULL,
            valuation,
            cost,
@@ -48,7 +48,7 @@ cba <-
 
     cba_detailed_benefit <-
       healthiar::monetize(
-        output_healthiar = output_healthiar,
+        output_attribute = output_attribute,
         impact = positive_impact,
         discount_rate = discount_rate_benefit,
         discount_years = discount_years_benefit,
@@ -57,7 +57,7 @@ cba <-
 
     cba_main_benefit <-
       healthiar::monetize(
-        output_healthiar = output_healthiar,
+        output_attribute = output_attribute,
         impact = positive_impact,
         discount_rate = discount_rate_benefit,
         discount_years = discount_years_benefit,
@@ -135,12 +135,12 @@ cba <-
 
 
 
-    if(is.null(positive_impact) & !is.null(output_healthiar)){
+    if(is.null(positive_impact) & !is.null(output_attribute)){
       output <-
-        c(output_healthiar,
+        c(output_attribute,
           output_cba)
 
-    }else if(!is.null(positive_impact) & is.null(output_healthiar)){
+    }else if(!is.null(positive_impact) & is.null(output_attribute)){
      output <- output_cba
     }
 

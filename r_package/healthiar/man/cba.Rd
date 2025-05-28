@@ -5,7 +5,7 @@
 \title{Cost-benefit analysis}
 \usage{
 cba(
-  output_healthiar = NULL,
+  output_attribute = NULL,
   positive_impact = NULL,
   valuation,
   cost,
@@ -17,7 +17,7 @@ cba(
 )
 }
 \arguments{
-\item{output_healthiar}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
+\item{output_attribute}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
 
 \item{valuation}{\code{Numberic value} referring to unit value of a health impact}
 
