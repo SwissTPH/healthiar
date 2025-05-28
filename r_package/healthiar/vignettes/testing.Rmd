@@ -871,6 +871,26 @@ testthat::test_that("results correct [pathway_id]", {
 
 Depending on your calculation pathway you will have to replace some of the `NULL` values in the template.
 
+### Explanation of pathway ID
+
+The pathway ID for monetization pathways contain the following elements:
+    
+-   *discount_shape* specifies the formula shape to be used for discounting
+
+    -   exponential = exponential discount equation
+    -   hyp_harvey = hyperbolic discount equation based on the work of Harvey (1986)
+    -   hyp_mazur = hyperbolic discount equation based on the work of Mazur (1986)
+
+-   *discount_rate_benefit* specifies whether discounting for future years is done for the entered benefit
+
+    -   if yes –\> TRUE
+    -   if no –\> FALSE
+    
+-   *discount_rate_cost* specifies whether discounting for future years is done for the entered cost
+
+    -   if yes –\> TRUE
+    -   if no –\> FALSE
+
 ### Basic function template
 
 ```{r template cba complete basic, include=TRUE, echo=TRUE, eval=FALSE}
