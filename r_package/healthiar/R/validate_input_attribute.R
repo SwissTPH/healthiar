@@ -176,7 +176,11 @@ validate_input_attribute <-
       if(# Deactivated because only available var_names are passed below
         #!base::is.null(var_value_1) && !base::is.null(var_value_2) &&
 
-         !same_length(var_value_1, var_value_2)){
+         !same_length(var_value_1, var_value_2) &&
+         # For the case of prop_pop_exp which can be NULL
+         # and get default value in compile_input()
+         !is.null(var_value_1) &&
+         !is.null(var_value_2)){
 
           # Create error message
           stop(base::paste0(var_name_1,

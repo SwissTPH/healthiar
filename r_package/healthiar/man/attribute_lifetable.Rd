@@ -28,7 +28,7 @@ attribute_lifetable(
   exp_central,
   exp_lower = NULL,
   exp_upper = NULL,
-  prop_pop_exp = 1,
+  prop_pop_exp = NULL,
   cutoff_central = NULL,
   cutoff_lower = NULL,
   cutoff_upper = NULL,

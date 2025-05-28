@@ -155,9 +155,21 @@ compile_input <-
 
     # PROCESS CUTOFF ######################################################################
     # If no cutoff and no absolute risk (cutoff is not used in this approach)
-    # Assign default value
+    # Assign default value = 0
 
     if(is.null(cutoff_central) && !approach_risk == "absolute_risk") {cutoff_central <- 0}
+
+
+    # PROCESS PROP_POP_EXP ######################################################################
+    # If no prop_pop_exp
+    # Assign default value = 1
+    # Do it here instead of in the arguments of the function
+    # To better track the data:
+    # input_args = what the user entered
+    # input_table = compilation of data including default values
+
+
+    if(is.null(prop_pop_exp)) {prop_pop_exp <- 1}
 
 
     # ARGUMENTS ################################################################

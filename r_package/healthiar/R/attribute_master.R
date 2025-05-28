@@ -75,7 +75,7 @@ attribute_master <-
            rr_increment = NULL, erf_shape = NULL,
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            pop_exp = NULL,
-           prop_pop_exp = 1,
+           prop_pop_exp = NULL,
            ## Other central input
            exp_central, exp_lower = NULL, exp_upper = NULL,
            cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,

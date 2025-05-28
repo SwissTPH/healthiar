@@ -16,7 +16,7 @@ attribute_master(
   erf_eq_lower = NULL,
   erf_eq_upper = NULL,
   pop_exp = NULL,
-  prop_pop_exp = 1,
+  prop_pop_exp = NULL,
   exp_central,
   exp_lower = NULL,
   exp_upper = NULL,
