@@ -50,6 +50,8 @@ compare <-
     output_attribute_2,
     approach_comparison = "delta"){
 
+    # Extract input data (for subsequent get_impact call) ########################
+
     input_args_1 <- output_attribute_1[["health_detailed"]][["input_args"]]
     input_args_2 <- output_attribute_2[["health_detailed"]][["input_args"]]
 
@@ -69,10 +71,6 @@ compare <-
       input_args_1$erf_eq_lower <- input_args_2$erf_eq_lower
       input_args_1$erf_eq_upper <- input_args_2$erf_eq_upper
       input_table_2$erf_eq <- input_table_1$erf_eq    }
-
-
-    # Extract input data (for subsequent get_impact call) ########################
-
 
     # Key variables #############################
     # Identify the arguments that have _1 or _2 in the name (scenario specific)
@@ -97,6 +95,7 @@ compare <-
         "year_of_analysis")
 
 
+    # Data validation ########################
     # Arguments that should be identical in both scenarios
     common_arguments_1 <-
       names(input_table_1)[!names(input_table_1) %in% scenario_specific_arguments]
