@@ -133,11 +133,28 @@ compare <-
         args_b = input_args_2,
         names_to_check = common_arguments)
 
+    # Check that (relevant) input values from scenarios A & B are equal
+    # Works also if no input was provided (might be the case for e.g. ..._lower arguments)
+    # Check if the common arguments in both scenarios are identical
     if(!all(common_arguments_identical))
     {stop(paste0("The arguments ",
                  paste(names(common_arguments_identical)[common_arguments_identical],
                        collapse = ", "),
                  " must be identical in both scenarios"))}
+
+    # Check that bhd is the same in both scenarios for the PIF approach (only one place in the equation)
+
+    if(approach_comparison == "pif" &&
+       "bhd" %in% c(names(input_table_1),names(input_table_2))  &&
+       !base::identical(input_table_1$bhd, input_table_2$bhd)){
+      stop("For the PIF approach, bhd must be identical in both scenarios.")
+    }
+    # Check if absolute risk with pif (not possible)
+
+    if(approach_comparison == "pif" &&
+       unique(input_table_1$approach_risk) == "absolute_risk"){
+      stop("For the PIF approach, the absolute risk approach cannot be used.")
+    }
 
     # Delta approach ########################
 
