@@ -152,6 +152,7 @@ testthat::test_that("results correct |fake_multiexposure|approach_multiplicative
       exp_central = 8.1,
       exp_lower = 7, # Fake lower and upper bound in exp and rr
       exp_upper = 9,
+      cutoff_central = 0,
       bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
       rr_central = 1.063,
       rr_lower = 1.05,
@@ -165,6 +166,7 @@ testthat::test_that("results correct |fake_multiexposure|approach_multiplicative
       exp_central = 10.9,
       exp_lower = 9,
       exp_upper = 12,
+      cutoff_central = 0,
       rr_lower = 1.02,
       rr_upper = 1.04,
       rr_central = 1.031)
@@ -231,7 +233,7 @@ testthat::test_that("results correct |fake_multiexposure|approach_combined|", {
       exp_central = 8.1,
       exp_lower = 7, # Fake lower and upper bound in exp and rr
       exp_upper = 9,
-
+      cutoff_central = 0,
       bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
       rr_central = 1.063,
       rr_lower = 1.05,
@@ -245,6 +247,7 @@ testthat::test_that("results correct |fake_multiexposure|approach_combined|", {
       exp_central = 10.9,
       exp_lower = 9,
       exp_upper = 12,
+      cutoff_central = 0,
       rr_lower = 1.02,
       rr_upper = 1.04,
       rr_central = 1.031)

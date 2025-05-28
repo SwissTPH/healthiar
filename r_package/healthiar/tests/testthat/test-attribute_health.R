@@ -462,6 +462,7 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
         exp_central = data$exposure_mean,
         prop_pop_exp = data$prop_exposed,
         bhd_central = data$gbd_daly[1],
+        cutoff_central = 0,
         rr_central = 1.08,
         rr_increment = 10,
         erf_shape = "log_linear",
@@ -548,6 +549,7 @@ testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|e
     object =
       healthiar::attribute_health(
         exp_central = data$exposure_mean,
+        cutoff_central = 0,
         prop_pop_exp = data$prop_exposed,
         bhd_central = data$gbd_daly[1],
         rr_central = 1.08,
@@ -606,6 +608,7 @@ testthat::test_that("results the same mrbrt no cutoff |fake_rr|erf_function|exp_
       healthiar::attribute_health(
         approach_risk = "relative_risk",
         exp_central = data_pop$Concentration,
+        cutoff_central = 0,
         prop_pop_exp = data_pop$Viken,
         bhd_central = 4500,
         erf_eq_central =
@@ -690,6 +693,7 @@ testthat::test_that("results the same |fake_rr|erf_function|exp_dist|iteration_F
       healthiar::attribute_health(
         approach_risk = "relative_risk",
         exp_central = data_pop$Concentration,
+        cutoff_central = 5,
         cutoff_lower = 5 - 1,
         cutoff_upper = 5 + 1,
         prop_pop_exp = data_pop$Viken,
@@ -711,7 +715,7 @@ testthat::test_that("results the same |fake_rr|erf_function|exp_dist|iteration_F
           method = "natural")
       )$health_main$impact_rounded,
     expected =
-      c(249,249,289) # Results on 15 Jan 2024 ; no comparison study
+      c(32,32,76) # Results on 28 May 2025 ; no comparison study
   )
 })
 

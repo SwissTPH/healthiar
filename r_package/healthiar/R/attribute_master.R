@@ -75,10 +75,10 @@ attribute_master <-
            rr_increment = NULL, erf_shape = NULL,
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            pop_exp = NULL,
-           prop_pop_exp = 1,
+           prop_pop_exp = NULL,
            ## Other central input
            exp_central, exp_lower = NULL, exp_upper = NULL,
-           cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+           cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
            ## Iteration arguments
            geo_id_disaggregated = NULL,

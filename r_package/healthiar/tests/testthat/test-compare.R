@@ -987,6 +987,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = 6.167882,
+      cutoff_central = 0,
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = 1000)
 
@@ -994,6 +995,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = 3.167488,
+      cutoff_central = 0,
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = 1000)
 
@@ -1017,6 +1019,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = c(23.68696, 0),
+      cutoff_central = 0,
       prop_pop_exp = c(0.2603914, 0.7396086),
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = 1000)
@@ -1025,6 +1028,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = c(17.19273, 0),
+      cutoff_central = 0,
       prop_pop_exp = c(0.1842342, 0.8157658),
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = 1000)
@@ -1049,6 +1053,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = list(6.848995, 6.565633, 6.167882),
+      cutoff_central = 0,
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = list(650, 1200, 1000),
       geo_id_disaggregated = list('BR', 'FL', 'WA'))
@@ -1057,6 +1062,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = list(3.125626, 2.948348, 3.167488),
+      cutoff_central = 0,
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = list(650, 1200, 1000),
       geo_id_disaggregated = list('BR', 'FL', 'WA'))
@@ -1081,6 +1087,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = list(c(0, 26.79813), c(0, 25.89477), c(0, 23.68696)),
+      cutoff_central = 0,
       prop_pop_exp = list(c(0.7444227, 0.2555773), c(0.7464495, 0.2535505), c(0.7396086, 0.2603914)),
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = list(650, 1200, 1000),
@@ -1090,6 +1097,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = list(c(0, 19.22196), c(0, 17.91513), c(0, 17.19273)),
+      cutoff_central = 0,
       prop_pop_exp = list(c(0.8373929, 0.1626071), c(0.8354269, 0.1645731), c(0.8157658, 0.1842342)),
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = list(650, 1200, 1000),

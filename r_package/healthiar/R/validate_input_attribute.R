@@ -176,7 +176,11 @@ validate_input_attribute <-
       if(# Deactivated because only available var_names are passed below
         #!base::is.null(var_value_1) && !base::is.null(var_value_2) &&
 
-         !same_length(var_value_1, var_value_2)){
+         !same_length(var_value_1, var_value_2) &&
+         # For the case of prop_pop_exp which can be NULL
+         # and get default value in compile_input()
+         !is.null(var_value_1) &&
+         !is.null(var_value_2)){
 
           # Create error message
           stop(base::paste0(var_name_1,
@@ -376,6 +380,14 @@ validate_input_attribute <-
       for(cutoff_ci_suffix in base::paste0("cutoff", ci_suffix)){
         warning_if_ar_and_existing(cutoff_ci_suffix)
       }
+    }
+
+    if(is.null(input$cutoff_central) && !input$approach_risk == "absolute_risk"){
+
+      base::warning(
+        "You entered no value for cut-off. Therefore, zero has been assumed as cut-off. Be aware that this can determine your results.",
+        call. = FALSE)
+
     }
 
 

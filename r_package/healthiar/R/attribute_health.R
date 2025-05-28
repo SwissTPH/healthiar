@@ -104,7 +104,7 @@ attribute_health <-
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            exp_central,
            exp_lower = NULL, exp_upper = NULL,
-           prop_pop_exp = 1,
+           prop_pop_exp = NULL,
            pop_exp = NULL,
            cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
