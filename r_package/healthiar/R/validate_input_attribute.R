@@ -378,6 +378,14 @@ validate_input_attribute <-
       }
     }
 
+    if(is.null(input$cutoff_central) && !input$approach_risk == "absolute_risk"){
+
+      base::warning(
+        "You entered no value for cut-off. Therefore, zero has been assumed as cut-off. Be aware that this can determine your results.",
+        call. = FALSE)
+
+    }
+
 
 
 
