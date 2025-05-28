@@ -1116,5 +1116,133 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
 
 # ERROR OR WARNING ########
 ## ERROR #########
+testthat::test_that("error if not the same arguments", {
+
+  output_attribute_1 =
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      exp_lower = 7.75,
+      exp_upper = 9,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2010")
+
+  output_attribute_2 =
+    healthiar::attribute_health(
+      exp_central = 6,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2020")
+
+  testthat::expect_error(
+    object =
+      healthiar::compare(
+        output_attribute_1 = output_attribute_1,
+        output_attribute_2 = output_attribute_2,
+        approach_comparison = "delta"))
+})
+
+testthat::test_that("error if common arguments with different value", {
+
+  output_attribute_1 =
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2010")
+
+  output_attribute_2 =
+    healthiar::attribute_health(
+      exp_central = 6,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.15, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2020")
+
+  testthat::expect_error(
+    object =
+      healthiar::compare(
+        output_attribute_1 = output_attribute_1,
+        output_attribute_2 = output_attribute_2,
+        approach_comparison = "delta"))
+})
+
+
+testthat::test_that("error pif and different bhd", {
+
+  output_attribute_1 =
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2010")
+
+  output_attribute_2 =
+    healthiar::attribute_health(
+      exp_central = 6,
+      cutoff_central = 5,
+      bhd_central = 1000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.15, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2020")
+
+  testthat::expect_error(
+    object =
+      healthiar::compare(
+        output_attribute_1 = output_attribute_1,
+        output_attribute_2 = output_attribute_2,
+        approach_comparison = "pif"))
+})
+
+testthat::test_that("error pif and absolute risk", {
+
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  scen_1_singlebhd_ar <-
+    healthiar::attribute_health(
+      approach_risk = "absolute_risk",
+      exp_central = data$exposure_mean,
+      pop_exp = data$population_exposed_total,
+      erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+      info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
+
+  scen_2_singlebhd_ar <-
+    healthiar::attribute_mod(
+      output_attribute_1 = scen_1_singlebhd_ar,
+      exp_central = c(50, 55, 60, 65, 75))
+
+  testthat::expect_error(
+    object =
+      healthiar::compare(
+        output_attribute_1 = scen_1_singlebhd_ar,
+        output_attribute_2 = scen_2_singlebhd_ar,
+        approach_comparison = "pif"))
+})
+
+
+
 
 ## WARNING #########
