@@ -82,6 +82,9 @@
 #' @details N = the number of cases of the exposure-specific health outcome that are attributed to the exposure
 #' @details \eqn{AR_i} = absolute risk at the mean of exposure bin i
 #' @details \eqn{PE_i} = fraction of the population exposed to exposure levels of the exposure category i
+#' @details
+#' Conversion of alternative risk measures to relative risks
+#' For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
 #' @inherit attribute_master return
 

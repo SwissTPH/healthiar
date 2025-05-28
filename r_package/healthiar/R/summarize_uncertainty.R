@@ -36,7 +36,6 @@
 
 #' @export
 
-#' @keywords internal
 
 
 summarize_uncertainty <- function(
