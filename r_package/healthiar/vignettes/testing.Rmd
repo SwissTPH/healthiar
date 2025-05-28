@@ -120,17 +120,13 @@ Example: you have a look at the calculation pathways in the Excel *overview_test
 
 -   Exposure: exposure distribution
 
--   With cutoff
-
--   No input variable uncertainty
-
 -   No iteration
 
--   No multiexposure
-
-The `pathway_id` of this calculation pathway is: *\|pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|*.
+The `pathway_id` of this calculation pathway is: *\|pathway_rr\|erf_log_lin\|exp_single\|iteration_FALSE\|*.
 
 You claim this pathway by filling in your institution abbreviation and your name in the corresponding columns.
+
+Each calculation pathway has a unique *pathway_id* linked to it, which contain all the infos from the characterisation columns in a condensed way. These pathways are used internally to keep track of the testing progress, and to find specific pathways quickly.
 
 You ask around and find out that a colleague of you just recently did an assessment that matches your selected pathway. She digs up the assessment and sends you both the input data and the results. You get set to add a test. In this case, the assessment details are saved in a .xlsx file (Excel file).
 
@@ -145,27 +141,21 @@ The Excel *overview_testing.xlsx*, which is located on Teams under [Documents\>W
     -   lin_lin = linear-linear ERF shape
     -   log_lin = log-linear ERF shape
     -   function = case where the ERF is defined by multiple points (x and y coordinates), e.g. the MR-BRT curves from GBD
+    -   formula = case where ERF is a formula of the type a * x + b * x^2 ...
 
 -   *exp* specifies the type of exposure input data
 
     -   single = single exposure input value, e.g. yearly average population-weighted PM2.5 exposure
     -   dist = exposure distribution, e.g. 5 different exposure categories (\~ exposure ranges) with the information how many people are exposed to each of the 5 exposure range
 
--   *cutoff* specifies whether a cutoff is considered in the calculations (yes –\> TRUE) or not (no –\> FALSE)
+-   *iteration* specifies whether the assessment is done for more than one geo unit (e.g. municipality, region, province, ...)
 
--   *iteration* specifies whether the assessment is done for more than one geo unit (e.g. municipality, region, province, ...); if yes –\> TRUE, if no –\> FALSE
+    -   if yes –\> TRUE
+    -   if no –\> FALSE
 
--   *varuncer* (= variable uncertainty) specifies whether 95% confidence intervals are considered in all / some of the input variables, e.g. the central COPD incidence estimate and the upper and lower 95% confidence interval values are entered as baseline health data
+Similarly, pathways are also defined (with some different columns) for cost-benefit analysis, monetization, and the other pathway groups.
 
-    -   Note: set to *FALSE* for all core pathways
-
--   *multiexp* (= multi-exposure) specifies whether the calculation considers two correlated pollutants at the same time, e.g. PM2.5 and NO2
-
-    -   Note: set to *FALSE* for all core pathways
-
-Similarly, pathways are also defined (with some different columns) for cost-benefit analysis, monetization, assessments with lifetables and calculation of summary uncertainty. Detailed explanations of these other pathways (like the bullet points above for the RR pathway) will be added soon.
-
-Each calculation pathway has a unique *pathway_id* linked to it, which contain all the infos from the characterisation columns in a condensed way. These pathways are used internally to keep track of the testing progress, and to find specific pathways quickly.
+Detailed explanations of these other pathway IDs (like the bullet points above for the RR pathways) are found below at the start of each pathway groups' template.
 
 ## 2. Fill out the function template with the assessment input data
 
@@ -212,7 +202,7 @@ If you have just started your R journey, feel free to use the basic function tem
 # data <- ...
 
 ## healthiar FUNCTION CALL
-healthiar::attribute_health(
+results <- healthiar::attribute_health(
   erf_shape = ,
   rr_central = ,
   rr_increment = ,
@@ -288,7 +278,7 @@ Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
 
 In this example, we'll start by entering the `pathway_id` (which is found in the *overview_testing* Excel located in [this Teams folder](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk)) to the function template.
 
-In this example the `pathway_id` is *\|pathway_rr\|erf_log_lin\|exp_single\|cutoff_TRUE\|varuncer_FALSE\|iteration_FALSE\|*
+In this example the `pathway_id` is *\|pathway_rr\|erf_log_lin\|exp_single\|iteration_FALSE\|*
 
 In case of the basic template you add the `pathway_id` to the top of it:
 
@@ -349,7 +339,7 @@ Here's the filled out template with hard-coded input data, i.e. raw numbers are 
 
 ```{r test with hard-coded inputs, include=TRUE, echo=TRUE, eval=FALSE}
 ## healthiar FUNCTION CALL
-healthiar::attribute_health(
+results <- healthiar::attribute_health(
   erf_shape = "log_linear",
   rr_central = 1.08,
   rr_increment = 10,
@@ -382,7 +372,7 @@ data  <- data_raw |>
   dplyr::filter(!is.na(data_raw$exposure_mean))
 
 ## healthiar FUNCTION CALL
-healthiar::attribute_health(
+results <- healthiar::attribute_health(
   erf_shape = "log_linear",
   rr_central = 1.08,
   rr_increment = 10,
@@ -448,7 +438,7 @@ Please try to judge what could cause the difference and leave a comment in the E
 
 ```{r compare results manually, include=TRUE, echo=TRUE, eval=TRUE}
 ## healthiar FUNCTION CALL
-healthiar::attribute_health(
+results <- healthiar::attribute_health(
   erf_shape = "log_linear",
   rr_central = 1.08,
   rr_increment = 10,
@@ -458,7 +448,9 @@ healthiar::attribute_health(
   bhd_central = 85362.08,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL
-)$health_main$impact_rounded |> 
+)
+
+results$health_main$impact_rounded |> 
   print()
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -595,6 +587,27 @@ For more information on how to use the `healthiar` package (including several ex
 
 Depending on your calculation pathway you will have to replace some of the `NULL` values in the template.
 
+### Explanation of pathway ID
+
+The pathway ID for relative risk pathways contain the following elements:
+
+-   *erf* contains the exposure-response function shape
+
+    -   lin_lin = linear-linear ERF shape
+    -   log_lin = log-linear ERF shape
+    -   function = case where the ERF is defined by multiple points (x and y coordinates), e.g. the MR-BRT curves from GBD
+    -   formula = case where ERF is a formula of the type a * x + b * x^2 ...
+
+-   *exp* specifies the type of exposure input data
+
+    -   single = single exposure input value, e.g. yearly average population-weighted PM2.5 exposure
+    -   dist = exposure distribution, e.g. 5 different exposure categories (\~ exposure ranges) with the information how many people are exposed to each of the 5 exposure range
+
+-   *iteration* specifies whether the assessment is done for more than one geo unit (e.g. municipality, region, province, ...)
+
+    -   if yes –\> TRUE
+    -   if no –\> FALSE
+
 ### Basic function template
 
 ```{r template rr complete basic, include=TRUE, echo=TRUE, eval=FALSE}
@@ -680,6 +693,25 @@ testthat::test_that("results correct [pathway_id]", {
 
 Depending on your calculation pathway you will have to replace some of the `NULL` values in the template.
 
+### Explanation of pathway ID
+
+The pathway ID for absolute risk pathways contain the following elements:
+
+-   *erf* contains the exposure-response function shape
+
+    -   function = case where the ERF is defined by multiple points (x and y coordinates), e.g. the MR-BRT curves from GBD
+    -   formula = case where ERF is a formula of the type a * x + b * x^2 ...
+
+-   *exp* specifies the type of exposure input data
+
+    -   single = single exposure input value, e.g. yearly average population-weighted PM2.5 exposure
+    -   dist = exposure distribution, e.g. 5 different exposure categories (\~ exposure ranges) with the information how many people are exposed to each of the 5 exposure range
+
+-   *iteration* specifies whether the assessment is done for more than one geo unit (e.g. municipality, region, province, ...)
+
+    -   if yes –\> TRUE
+    -   if no –\> FALSE
+
 ### Basic function template
 
 ```{r template ar complete basic, include=TRUE, echo=TRUE, eval=FALSE}
@@ -749,6 +781,28 @@ testthat::test_that("results correct [pathway_id]", {
 ## Monetization pathways
 
 See start of the section [Testing templates] for guidance on how to access function-specific info about the `include_monetization` function.
+
+Depending on your calculation pathway you will have to replace some of the `NULL` values in the template.
+
+### Explanation of pathway ID
+
+The pathway ID for monetization pathways contain the following elements:
+
+-   *discount_rate* specifies whether discounting for future years is done
+
+    -   if yes –\> TRUE
+    -   if no –\> FALSE
+    
+-   *discount_shape* specifies the formula shape to be used for discounting
+
+    -   exponential = exponential discount equation
+    -   hyp_harvey = hyperbolic discount equation based on the work of Harvey (1986)
+    -   hyp_mazur = hyperbolic discount equation based on the work of Mazur (1986)
+
+-   *inflation* specifies whether annual inflation (increase of prices) is applied
+
+    -   if yes –\> TRUE
+    -   if no –\> FALSE
 
 ### Basic function template
 
