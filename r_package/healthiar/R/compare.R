@@ -96,10 +96,6 @@ compare <-
         "population_midyear_male", "population_midyear_female",
         "year_of_analysis")
 
-    # Excluding the baseline health data and lifetable
-    scenario_specific_arguments_wo_bhd_and_lifetable <-
-      dplyr::setdiff(scenario_specific_arguments,
-              scenario_arguments_for_bhd_and_lifetable)
 
     # Arguments that should be identical in both scenarios
     common_arguments_1 <-
