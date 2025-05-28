@@ -520,7 +520,7 @@ Two folders are added:
 ```{r}
 results_pm_copd_summarized <- 
   summarize_uncertainty(
-    results = results_pm_copd,
+    output_attribute = results_pm_copd,
     n_sim = 100
 )
 ```
@@ -836,7 +836,8 @@ results_pm_copd_yld$health_main |> select(erf_ci, impact) |> kable()
 ```{r}
 results_daly <- daly(
      output_attribute_yll = results_pm_yll,
-     output_attribute_yld = results_pm_copd_yld)
+     output_attribute_yld = results_pm_copd_yld
+)
 ```
 
 ### Main results
