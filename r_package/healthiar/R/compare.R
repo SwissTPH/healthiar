@@ -96,6 +96,13 @@ compare <-
 
 
     # Data validation ########################
+
+    # Argument used (user enntered data)
+    used_arguments_1 <-
+      base::names(purrr::discard(input_args_1, is.null))
+
+    used_arguments_2 <-
+      base::names(purrr::discard(input_args_2, is.null))
     # Arguments that should be identical in both scenarios
     common_arguments_1 <-
       names(input_table_1)[!names(input_table_1) %in% scenario_specific_arguments]
