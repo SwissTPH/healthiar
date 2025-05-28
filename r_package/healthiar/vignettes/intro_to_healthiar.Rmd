@@ -243,7 +243,7 @@ Each row shows a result from a specific calculation pathway that used all the in
 
 ## Example: `attribute_health()` with absolute risk
 
-Goal: attribute cases of high annoyance to (road) noise exposure
+Goal: attribute cases of high annoyance to (road traffic) noise exposure
 
 ### Function call
 
