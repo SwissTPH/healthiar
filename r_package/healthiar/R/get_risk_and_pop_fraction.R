@@ -61,7 +61,8 @@ get_risk_and_pop_fraction <-
     # Check if erf_eq is NULL before going into get_risk
     # Otherwise the variable is created without value and cannot be evaluated
     # We need to know erf_eq is NULL if statements within get_risk
-    if ( !"erf_eq" %in% base::names(input_table) ) { erf_eq <- NULL }
+    if ( !base::any(base::grepl("erf_eq", base::names(input_table))) ) {
+      erf_eq <- NULL }
 
     input_with_risk_and_pop_fraction <-
       input_table |>
