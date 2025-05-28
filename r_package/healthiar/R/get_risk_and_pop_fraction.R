@@ -79,7 +79,7 @@ get_risk_and_pop_fraction <-
         dplyr::mutate(rr_at_exp =
                         healthiar::get_risk(rr = rr,
                                            exp = exp,
-                                           cutoff = if ( "cutoff" %in% base::names(input_with_risk_and_pop_fraction) ) cutoff else 0, # if cutoff argument not specified in attribute argument call (and therefore not present in the tibble) then input 0 to the healthiar::get_risk function to avoid error
+                                           cutoff = cutoff,
                                            rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq)) |>
@@ -92,14 +92,14 @@ get_risk_and_pop_fraction <-
         dplyr::mutate(rr_at_exp_1 =
                         healthiar::get_risk(rr = rr,
                                            exp = exp_1,
-                                           cutoff = if ( "cutoff" %in% base::names(input_with_risk_and_pop_fraction) ) cutoff else 0,
+                                           cutoff = cutoff,
                                            rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq),
                       rr_at_exp_2 =
                         healthiar::get_risk(rr = rr,
                                            exp = exp_2,
-                                           cutoff = if ( "cutoff" %in% base::names(input_with_risk_and_pop_fraction) ) cutoff else 0,
+                                           cutoff = cutoff,
                                            rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq)) |>
