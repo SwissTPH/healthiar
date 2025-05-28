@@ -78,7 +78,7 @@ attribute_master <-
            prop_pop_exp = 1,
            ## Other central input
            exp_central, exp_lower = NULL, exp_upper = NULL,
-           cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
+           cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
            ## Iteration arguments
            geo_id_disaggregated = NULL,
