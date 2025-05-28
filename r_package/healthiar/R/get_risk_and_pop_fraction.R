@@ -76,7 +76,7 @@ get_risk_and_pop_fraction <-
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         ## Obtain the relative risk for the relevant concentration
         dplyr::rowwise() |>
-        dplyr::mutate(rr_conc =
+        dplyr::mutate(rr_at_exp =
                         healthiar::get_risk(rr = rr,
                                            exp = exp,
                                            cutoff = if ( "cutoff" %in% base::names(input_with_risk_and_pop_fraction) ) cutoff else 0, # if cutoff argument not specified in attribute argument call (and therefore not present in the tibble) then input 0 to the healthiar::get_risk function to avoid error
@@ -89,14 +89,14 @@ get_risk_and_pop_fraction <-
     } else {
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::rowwise() |>
-        dplyr::mutate(rr_conc_1 =
+        dplyr::mutate(rr_at_exp_1 =
                         healthiar::get_risk(rr = rr,
                                            exp = exp_1,
                                            cutoff = if ( "cutoff" %in% base::names(input_with_risk_and_pop_fraction) ) cutoff else 0,
                                            rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq),
-                      rr_conc_2 =
+                      rr_at_exp_2 =
                         healthiar::get_risk(rr = rr,
                                            exp = exp_2,
                                            cutoff = if ( "cutoff" %in% base::names(input_with_risk_and_pop_fraction) ) cutoff else 0,
@@ -120,7 +120,7 @@ get_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction <-
             input_with_risk_and_pop_fraction |>
             ## group by columns that define diversity
-            ## Only combine pm2.5 and no2 for rr_conc in the same ci
+            ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
             dplyr::group_by(
               dplyr::across(dplyr::any_of(c(
                 "erf_ci",
@@ -132,14 +132,14 @@ get_risk_and_pop_fraction <-
                 "erf_eq_ci")))) |>
             # prod() multiplies all elements in a vector
             dplyr::mutate(
-              rr_conc_before_multiplying = rr_conc,
-              rr_conc = base::prod(rr_conc))
+              rr_at_exp_before_multiplying = rr_at_exp,
+              rr_at_exp = base::prod(rr_at_exp))
 
           } else { ## if PIF
           input_with_risk_and_pop_fraction <-
             input_with_risk_and_pop_fraction |>
             ## group by columns that define diversity
-            ## Only combine pm2.5 and no2 for rr_conc in the same ci
+            ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
             dplyr::group_by(
               dplyr::across(dplyr::any_of(c(
                 "erf_ci",
@@ -151,10 +151,10 @@ get_risk_and_pop_fraction <-
                 "erf_eq_ci")))) |>
             ## prod() multiplies all elements in a vector
             dplyr::mutate(
-              rr_conc_1_before_multiplying = rr_conc_1,
-              rr_conc_2_before_multiplying = rr_conc_2,
-              rr_conc_1 = base::prod(rr_conc_1),
-              rr_conc_2 = base::prod(rr_conc_2))
+              rr_at_exp_1_before_multiplying = rr_at_exp_1,
+              rr_at_exp_2_before_multiplying = rr_at_exp_2,
+              rr_at_exp_1 = base::prod(rr_at_exp_1),
+              rr_at_exp_2 = base::prod(rr_at_exp_2))
           }
 
         ## Data wrangling for multiple exposures
@@ -167,7 +167,7 @@ get_risk_and_pop_fraction <-
               "geo_id_disaggregated",
               "sex",
               "lifetable_with_pop_nest",
-              "rr_conc"),
+              "rr_at_exp"),
             sep = ", ")
       }
     }
@@ -202,8 +202,8 @@ get_risk_and_pop_fraction <-
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
           pop_fraction =
-            healthiar:::get_pop_fraction(rr_conc_1 = rr_conc,
-                                       rr_conc_2 = 1,
+            healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp,
+                                       rr_at_exp_2 = 1,
                                        prop_pop_exp_1 = prop_pop_exp,
                                        prop_pop_exp_2 = prop_pop_exp))
 
@@ -213,8 +213,8 @@ get_risk_and_pop_fraction <-
         input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
           pop_fraction =
-            healthiar:::get_pop_fraction(rr_conc_1 = rr_conc_1,
-                                       rr_conc_2 = rr_conc_2,
+            healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp_1,
+                                       rr_at_exp_2 = rr_at_exp_2,
                                        prop_pop_exp_1 = prop_pop_exp_1,
                                        prop_pop_exp_2 = prop_pop_exp_2)) }
 
@@ -230,7 +230,7 @@ get_risk_and_pop_fraction <-
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
           ## group by columns that define diversity
-          ## Only combine pm2.5 and no2 for rr_conc in the same ci
+          ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
           dplyr::group_by(
             dplyr::across(dplyr::any_of(c(
               "erf_ci",
@@ -251,7 +251,7 @@ get_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
           dplyr::mutate(exposure_name = base::paste(base::unique(exposure_name), collapse = ", "),
                         exp = base::paste(base::unique(exp), collapse = ", "),
-                        rr_conc = base::paste(base::unique(rr_conc), collapse = ", "),
+                        rr_at_exp = base::paste(base::unique(rr_at_exp), collapse = ", "),
                         pop_fraction_before_combining = base::paste(base::unique(pop_fraction_before_combining), collapse = ", ")) |>
           collapse_df_by_columns(
             columns_for_group = c(

@@ -111,7 +111,7 @@ get_output <-
               paste0("population", c("", "_1", "_2")),
               paste0("prop_pop_exp", c("", "_1", "_2")),
               paste0("pop_exp", c("", "_1", "_2")),
-              paste0("rr_conc", c("", "_1", "_2")),
+              paste0("rr_at_exp", c("", "_1", "_2")),
               paste0("pop_fraction", c("", "_1", "_2")),
               paste0("absolute_risk_as_percent", c("", "_1", "_2")),
               paste0("impact", c("", "_1", "_2")),
