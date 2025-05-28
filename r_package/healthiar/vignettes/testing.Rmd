@@ -605,7 +605,7 @@ The pathway ID for relative risk pathways contain the following elements:
 
 -   *iteration* specifies whether the assessment is done for more than one geo unit (e.g. municipality, region, province, ...)
 
-    -   if yes –\> TRUE
+    -   if yes –\> TRUE: the iteration function calls require two additional arguments compared to the function calls for single geo units: you have to additionally specify the `geo_id_disaggregated` (e.g. "Brussels", "Antwerp", ...) and `geo_id_aggregated` (e.g. "Belgium") arguments. Also, the geo unit-specific arguments (e.g. `exp_central`, `bhd_central`, ...) have to be provided as lists, with each list element representing a geo unit. For more detailed information on iterations using `attribute_...` functions please see section *Example iteration: assess impact in multiple geographic units* in the *intro_to_healthiar* vignette.
     -   if no –\> FALSE
 
 ### Basic function template
@@ -709,7 +709,7 @@ The pathway ID for absolute risk pathways contain the following elements:
 
 -   *iteration* specifies whether the assessment is done for more than one geo unit (e.g. municipality, region, province, ...)
 
-    -   if yes –\> TRUE
+    -   if yes –\> TRUE: the iteration function calls require two additional arguments compared to the function calls for single geo units: you have to additionally specify the `geo_id_disaggregated` (e.g. "Brussels", "Antwerp", ...) and `geo_id_aggregated` (e.g. "Belgium") arguments. Also, the geo unit-specific arguments (e.g. `exp_central`, `bhd_central`, ...) have to be provided as lists, with each list element representing a geo unit. For more detailed information on iterations using `attribute_...` functions please see section *Example iteration: assess impact in multiple geographic units* in the *intro_to_healthiar* vignette.
     -   if no –\> FALSE
 
 ### Basic function template
@@ -942,91 +942,6 @@ testthat::test_that("results correct [pathway_id]", {
         discount_rate_cost = ,
         discount_years_benefit = 1,
         discount_years_cost = 1)$cba_main$net_benefit_rounded,
-    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
-    expected =
-      c( )
-    )
-})
-
-## ASSESSOR:
-## Add here your name and your institute abbreviation
-## ASSESSMENT DETAILS: 
-## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
-## INPUT DATA DETAILS: 
-## Add here input data details: data sources, measured vs. modelled, ...
-```
-
-## Iteration
-
-The iteration function calls require two additional arguments compared to the function calls for single geo units: you have to additionally specify the `geo_id_disaggregated` (e.g. "Brussels", "Antwerp", ...) and `geo_id_aggregated` (e.g. "Belgium") arguments. Also, the geo unit-specific arguments (e.g. `exp_central`, `bhd_central`, ...) have to be provided as lists, with each list element representing a geo unit. For more detailed information on iterations using `attribute_...` functions please see section *Example iteration: assess impact in multiple geographic units* in the *intro_to_healthiar* vignette.
-
-### Basic function template
-
-```{r template iteration rr basic, include=TRUE, echo=TRUE, eval=FALSE}
-  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  # data <- ...
-
-    ## healthiar FUNCTION CALL
-      healthiar::attribute_health(
-        approach_risk = "relative_risk",
-        erf_shape = , # Note: numeric vector must be wrapped by as.list() fct
-        rr_central = ,
-        rr_lower = NULL, 
-        rr_upper = NULL,
-        rr_increment = ,
-        exp_central = , # Note: numeric vector must be wrapped by as.list() fct
-        exp_lower = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
-        exp_upper = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
-        cutoff_central = ,
-        cutoff_lower = NULL, 
-        cutoff_upper = NULL,
-        bhd_central = , # Note: numeric vector must be wrapped by as.list() fct
-        bhd_lower = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
-        bhd_upper = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
-        geo_id_disaggregated = ,
-        geo_id_aggregated = 
-      )
-
-## RESULT(S) COMPARISON ASSESSMENT:
-## List here the results of the comparison assessment you selected
-## ASSESSOR:
-## Add here your name and your institute abbreviation
-## ASSESSMENT DETAILS: 
-## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
-## INPUT DATA DETAILS: 
-## Add here input data details: data sources, measured vs. modelled, ...
-```
-
-### Extended function template
-
-```{r template iteration rr extended, include=TRUE, echo=TRUE, eval=FALSE}
-testthat::test_that("results correct [pathway_id]", {
-  
-  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  # data <- ...
-
-  testthat::expect_equal(
-    ## healthiar FUNCTION CALL
-    object =
-      healthiar::attribute_health(
-        approach_risk = "relative_risk",
-        erf_shape = , # Note: numeric vector must be wrapped by as.list() fct
-        rr_central = ,
-        rr_lower = NULL, 
-        rr_upper = NULL,
-        rr_increment = ,
-        exp_central = , # Note: numeric vector must be wrapped by as.list() fct
-        exp_lower = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
-        exp_upper = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
-        cutoff_central = ,
-        cutoff_lower = NULL, 
-        cutoff_upper = NULL,
-        bhd_central = , # Note: numeric vector must be wrapped by as.list() fct
-        bhd_lower = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
-        bhd_upper = NULL, # Note: if numeric vector entered it must be wrapped by as.list() fct
-        geo_id_disaggregated = ,
-        geo_id_aggregated = 
-      )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c( )
