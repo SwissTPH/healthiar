@@ -116,67 +116,50 @@ get_impact <-
       }
 
 
+
     # Store results ############################################################
 
     ## Note: column is called prop_pop_exp (rr case) or pop_exp (ar case)
 
-    # * Single geo unit ########################################################
+    # * If exposure distribution ########################################################
     if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) &
          ( unique(impact_raw$exposure_type) == "exposure_distribution" ) &
-         ( !unique(impact_raw$is_lifetable) ) &
-         ( max(impact_raw$geo_id_disaggregated) == 1 ) ) {
+         ( !unique(impact_raw$is_lifetable) ) ) {
+
+      # Define your dynamic vectors
+      group_vars <-
+        names(input_table)[names(input_table) %in%
+                             c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")]
+
+      group_vars_except_geo <-
+        names(input_table)[names(input_table) %in%
+                             c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci")]
+
+      summary_vars <-
+        names(input_table)[grepl("exp|prop_pop_exp|exposure_dimension", names(input_table))]
+      summary_vars <- summary_vars[!summary_vars %in% group_vars]
 
 
-      input_table_to_join <-
-        input_table |>
-        dplyr::group_by(
+      # Build the grouped summarization dynamically
+      input_table_to_join <- input_table |>
+        dplyr::group_by(dplyr::across(dplyr::any_of(group_vars))) |>
+        dplyr::summarize(
           dplyr::across(
-            # if cutoff argument not specified in attribute argument call then "cutoff_ci" is not used to group
-            dplyr::any_of(c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci",
-                            "geo_id_disaggregated")))) |>
-        dplyr::summarize(exp = list(exp),
-                         prop_pop_exp = list(prop_pop_exp),
-                         exposure_dimension = list(exposure_dimension),
-                         .groups = "drop") |>
-        dplyr::select(c(exp_ci, erf_ci, exp, prop_pop_exp, exposure_dimension)) |>
+            .cols = dplyr::any_of(summary_vars),
+            .fns = list,  # Wrap values into a list per group
+            .names = "{.col}"  # Keep original column names
+          ),
+          .groups = "drop")|>
         base::unique()
 
         impact_raw <- impact_raw |>
-          dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
+          dplyr::select(-dplyr::any_of(summary_vars)) |>
           dplyr::left_join(
-            x = _,
-            y = input_table_to_join,
-            by = c("exp_ci", "erf_ci"))|>
+            input_table_to_join,
+            by = group_vars)|>
           dplyr::mutate(exposure_type = base::unique(input_table$exposure_type))
+        }
 
-      # * Multiple geo units ###################################################
-
-    } else if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) &
-                ( unique(impact_raw$exposure_type) == "exposure_distribution" ) &
-                ( !unique(impact_raw$is_lifetable) ) &
-                ( max(impact_raw$geo_id_disaggregated) > 1 ) ) {
-
-      input_table_to_join <-
-        input_table |>
-        dplyr::group_by(dplyr::across(dplyr::any_of(c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")))) |> # if cutoff argument not specified in attribute argument call then "cutoff_ci" is not used to group
-        dplyr::summarize(exp = list(exp),
-                         prop_pop_exp = list(prop_pop_exp), # Introduced error in ar pathway
-                         exposure_dimension = list(exposure_dimension),
-                         .groups = "drop") |>
-        dplyr::select(c(exp_ci, erf_ci, exp, prop_pop_exp, exposure_dimension, geo_id_disaggregated)) |>
-        base::unique()
-
-
-      impact_raw <- impact_raw |>
-        dplyr::select(-c(exp, prop_pop_exp, exposure_dimension)) |>
-        dplyr::left_join(
-          x = _,
-          y = input_table_to_join,
-          by = c("exp_ci", "erf_ci", "geo_id_disaggregated")
-        )|>
-        dplyr::mutate(exposure_type = input_table$exposure_type |> dplyr::first())
-
-    }
 
     if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) ) {
       impact_raw <- impact_raw |>
