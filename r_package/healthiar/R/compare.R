@@ -140,7 +140,7 @@ compare <-
     # Check if the common arguments in both scenarios are identical
     if(!all(common_arguments_identical))
     {stop(paste0("The arguments ",
-                 paste(names(common_arguments_identical)[common_arguments_identical],
+                 paste(names(common_arguments_identical)[!common_arguments_identical],
                        collapse = ", "),
                  " must be identical in both scenarios"),
           call. = FALSE)}
