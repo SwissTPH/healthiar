@@ -20,7 +20,7 @@ attribute_master(
   exp_central,
   exp_lower = NULL,
   exp_upper = NULL,
-  cutoff_central,
+  cutoff_central = NULL,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
   bhd_central = NULL,
