@@ -103,31 +103,35 @@ compare <-
 
     used_arguments_2 <-
       base::names(purrr::discard(input_args_2, is.null))
-    # Arguments that should be identical in both scenarios
-    common_arguments_1 <-
-      names(input_table_1)[!names(input_table_1) %in% scenario_specific_arguments]
 
-    common_arguments_2 <-
-      names(input_table_2)[!names(input_table_2) %in% scenario_specific_arguments]
 
-    # Check that (relevant) input values from scenarios A & B are equal ##########
-    ## Works also if no input was provided (might be the case for e.g. ..._lower arguments)
+   # Check that the two scenarios used the same arguments (calculation pathways)
 
-    #Check if the common arguments in both scenarios are identical
-    if(identical(common_arguments_1, common_arguments_2)){
-      common_arguments <- common_arguments_1
-    }else{
+    if(!base::identical(used_arguments_1, used_arguments_2)){
       stop("The two scenarios have to use the same arguments")
     }
 
+
+    # Arguments that should be identical in both scenarios
+    common_arguments_1 <-
+      used_arguments_1[!used_arguments_1 %in% scenario_specific_arguments]
+
+    common_arguments_2 <-
+      used_arguments_2[!used_arguments_2 %in% scenario_specific_arguments]
+
+
+
+    if(base::identical(common_arguments_1, common_arguments_2)){
+      common_arguments <- common_arguments_1
+    }else{
+      stop("The two scenarios have to use the same common arguments")
+    }
 
     common_arguments_identical <-
       healthiar:::check_if_args_identical(
         args_a = input_args_1,
         args_b = input_args_2,
         names_to_check = common_arguments)
-
-
 
     if(!all(common_arguments_identical))
     {stop(paste0("The arguments ",
