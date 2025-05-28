@@ -33,10 +33,12 @@ daly <-
     column_names_impact_raw <-
       unique(c(names(impact_raw_yll), names(impact_raw_yll)))
 
+    # Identify the columns names using keywords
     common_columns <-
       column_names_impact_raw[grepl("exp|exposure|cutoff|geo|approach_risk",
                                     column_names_impact_raw)]
-    common_columns <- common_columns[!common_columns %in% "approach_exposure"]
+    # Remove exceptions (columns with any of the keywords that should not be selected)
+    common_columns <- common_columns[!grepl("approach_exposure|rr_at_exp", common_columns)]
     common_columns_for_join <- c(common_columns, "erf_ci")
 
 
