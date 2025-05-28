@@ -153,9 +153,11 @@ compile_input <-
            erf_eq_lower = list(erf_eq_lower),
            erf_eq_upper = list(erf_eq_upper))}
 
+    # PROCESS CUTOFF ######################################################################
+    # If no cutoff and no absolute risk (cutoff is not used in this approach)
+    # Assign default value
 
-
-
+    if(is.null(cutoff_central) && !approach_risk == "absolute_risk") {cutoff_central <- 0}
 
 
     # ARGUMENTS ################################################################
