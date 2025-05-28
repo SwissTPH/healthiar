@@ -61,7 +61,8 @@ get_risk_and_pop_fraction <-
     # Check if erf_eq is NULL before going into get_risk
     # Otherwise the variable is created without value and cannot be evaluated
     # We need to know erf_eq is NULL if statements within get_risk
-    if ( !"erf_eq" %in% base::names(input_table) ) { erf_eq <- NULL }
+    if ( !base::any(base::grepl("erf_eq", base::names(input_table))) ) {
+      erf_eq <- NULL }
 
     input_with_risk_and_pop_fraction <-
       input_table |>
@@ -91,14 +92,14 @@ get_risk_and_pop_fraction <-
         dplyr::mutate(rr_conc_1 =
                         healthiar::get_risk(rr = rr,
                                            exp = exp_1,
-                                           cutoff = cutoff,
+                                           cutoff = if ( "cutoff" %in% base::names(input_with_risk_and_pop_fraction) ) cutoff else 0,
                                            rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq),
                       rr_conc_2 =
                         healthiar::get_risk(rr = rr,
                                            exp = exp_2,
-                                           cutoff = cutoff,
+                                           cutoff = if ( "cutoff" %in% base::names(input_with_risk_and_pop_fraction) ) cutoff else 0,
                                            rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq)) |>

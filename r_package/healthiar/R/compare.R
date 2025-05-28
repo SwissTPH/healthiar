@@ -60,6 +60,17 @@ compare <-
     raw_2 <- output_attribute_2[["health_detailed"]][["impact_raw"]]
 
 
+    # Force the same environment in the functions of erf_eq.
+    # Otherwise, not identified as identical and error joining below.
+    if(!is.null(input_args_1$erf_eq_central)){
+      erf_eq_vars <- paste0("erf_eq_", c("central", "lower", "upper"))
+
+      input_args_1$erf_eq_central <- input_args_2$erf_eq_central
+      input_args_1$erf_eq_lower <- input_args_2$erf_eq_lower
+      input_args_1$erf_eq_upper <- input_args_2$erf_eq_upper
+      input_table_2$erf_eq <- input_table_1$erf_eq    }
+
+
     # Extract input data (for subsequent get_impact call) ########################
 
 
@@ -216,6 +227,7 @@ compare <-
               input_table = input_table |> dplyr::rename(year_of_analysis = year_of_analysis_1),
               pop_fraction_type = "pif")
         } else { # Non-lifetable cases
+
           impact_raw <-
             healthiar:::get_impact(
               input_table = input_table,
