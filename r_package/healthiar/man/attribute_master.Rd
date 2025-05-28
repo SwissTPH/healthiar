@@ -78,7 +78,7 @@ The cutoff level refers to the exposure level below which no health effects occu
 If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.
 Only applicable to relative risk pathways.}
 
-\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value(s)} providing the basline (incidence) level of the health outcome in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
+\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value(s)} providing the baseline health data of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds. See Details for more info.}
 
 \item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
 If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}

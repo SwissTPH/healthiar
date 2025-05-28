@@ -4,41 +4,37 @@
 \alias{attribute_health}
 \title{Attribute health impacts to an environmental stressor}
 \usage{
-Relative risk case:
 attribute_health(
   approach_risk = "relative_risk",
-  erf_shape,
-  rr_central, rr_lower = NULL, rr_upper = NULL,
-  rr_increment,
-  exp_central, exp_lower = NULL, exp_upper = NULL,
-  cutoff_central, cutoff_lower = NULL, cutoff_upper = NULL,
-  bhd_central
-)
-
-Absolute risk case:
-healthiar::attribute_health(
-  approach_risk = "absolute_risk",
-  erf_eq_central, erf_eq_lower = NULL, erf_eq_upper = NULL,
-  exp_central, exp_lower = NULL, exp_upper = NULL,
-  population,
-  prop_pop_exp
-)
-
-All available arguments:
-attribute_health(
-  approach_risk = "relative_risk", # Default; alternative: "absolute_risk"
   erf_shape = NULL,
-  rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+  rr_central = NULL,
+  rr_lower = NULL,
+  rr_upper = NULL,
   rr_increment = NULL,
-  erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-  exp_central, exp_lower = NULL, exp_upper = NULL,
+  erf_eq_central = NULL,
+  erf_eq_lower = NULL,
+  erf_eq_upper = NULL,
+  exp_central,
+  exp_lower = NULL,
+  exp_upper = NULL,
   prop_pop_exp = 1,
-  cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
-  bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+  pop_exp = NULL,
+  cutoff_central = NULL,
+  cutoff_lower = NULL,
+  cutoff_upper = NULL,
+  bhd_central = NULL,
+  bhd_lower = NULL,
+  bhd_upper = NULL,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
   population = NULL,
-  info = NULL
+  info = NULL,
+  dw_central = NULL,
+  dw_lower = NULL,
+  dw_upper = NULL,
+  duration_central = 1,
+  duration_lower = NULL,
+  duration_upper = NULL
 )
 }
 \arguments{
@@ -66,7 +62,7 @@ The cutoff level refers to the exposure level below which no health effects occu
 If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.
 Only applicable to relative risk pathways.}
 
-\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value(s)} providing the basline (incidence) level of the health outcome in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
+\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value(s)} providing the baseline health data of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds. See Details for more info.}
 
 \item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
 If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
@@ -101,11 +97,13 @@ The result tibbles include columns such as:
 \description{
 This function calculates the health impacts (mortality or morbidity)
 of exposure to an environmental stressor (air pollution or noise), using either relative or absolute risk.
+
+For examples please see the vignette and/or below.
 }
 \details{
 What you put in is what you get out
 
-Generally, the health metric inputted and outputted are the same, e.g. if the baseline health data are mortalities then the result will be mortalities as well. Analogeously for disease cases, DALYs, etc. Exception: if a disability weight is inputted alongside a morbidity health outcome, then the main output will be YLD.
+Generally, the health metric you put in (e.g. absolute disease cases, deaths per 100'000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if a disability weight is inputted alongside a morbidity health outcome, then the main output will be YLD.
 
 Equations (relative risk)
 
@@ -161,9 +159,10 @@ Conversion of alternative risk measures to relative risks
 For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 }
 \examples{
-# Goal: attribute lung cancer cases to population-weighted PM2.5 exposure using relative risk
+# Goal: attribute lung cancer cases to population-weighted PM2.5 exposure
+# using relative risk
 
-results <- attribute_health(
+attribute_health(
   erf_shape = "log_linear",
   rr_central = 1.369,            # Central relative risk estimate
   rr_increment = 10,             # per μg / m^3 increase in PM2.5 exposure
@@ -172,8 +171,28 @@ results <- attribute_health(
   bhd_central = 30747            # Baseline health data: lung cancer incidence
  )
 
-# Attributable cases
-print(results$health_main$impact_rounded)
+# Goal: attribute cases of high annoyance to (road traffic) noise exposure
+
+attribute_health(
+  approach_risk = "absolute_risk",
+  exp_central = c(57.5, 62.5, 67.5, 72.5, 77.5),
+  pop_exp = c(387500, 286000, 191800, 72200, 7700),
+  erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
+)
+
+# Goal: attribute disease cases to PM2.5 exposure in multiple geographic
+# units, such as municipalities, provinces, countries, …
+
+attribute_health(
+  geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"),
+  geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
+  rr_central = 1.369,
+  rr_increment = 10,
+  cutoff_central = 5,
+  erf_shape = "log_linear",
+  exp_central = list(11, 11, 10, 8, 7),
+  bhd_central = list(4000, 2500, 3000, 1500, 500)
+)
 }
 \author{
 Alberto Castro & Axel Luyten
