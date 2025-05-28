@@ -17,7 +17,7 @@ attribute_health(
   exp_central,
   exp_lower = NULL,
   exp_upper = NULL,
-  prop_pop_exp = 1,
+  prop_pop_exp = NULL,
   pop_exp = NULL,
   cutoff_central = NULL,
   cutoff_lower = NULL,
@@ -162,7 +162,7 @@ For conversion of hazard ratios and/or odds ratios to relative risks refer to ht
 # Goal: attribute lung cancer cases to population-weighted PM2.5 exposure
 # using relative risk
 
-attribute_health(
+results <- attribute_health(
   erf_shape = "log_linear",
   rr_central = 1.369,            # Central relative risk estimate
   rr_increment = 10,             # per μg / m^3 increase in PM2.5 exposure
@@ -171,19 +171,20 @@ attribute_health(
   bhd_central = 30747            # Baseline health data: lung cancer incidence
  )
 
+print(results$health_main$impact_rounded) # Attributable cases
 # Goal: attribute cases of high annoyance to (road traffic) noise exposure
 
-attribute_health(
+results <- attribute_health(
   approach_risk = "absolute_risk",
   exp_central = c(57.5, 62.5, 67.5, 72.5, 77.5),
   pop_exp = c(387500, 286000, 191800, 72200, 7700),
   erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
 )
 
+print(results$health_main$impact_rounded) # Attributable cases
 # Goal: attribute disease cases to PM2.5 exposure in multiple geographic
 # units, such as municipalities, provinces, countries, …
-
-attribute_health(
+results <- attribute_health(
   geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"),
   geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
   rr_central = 1.369,
@@ -192,6 +193,16 @@ attribute_health(
   erf_shape = "log_linear",
   exp_central = list(11, 11, 10, 8, 7),
   bhd_central = list(4000, 2500, 3000, 1500, 500)
+)
+
+# Attributable cases (aggregated)
+results$health_main$impact_rounded
+
+# Attributable cases (disaggregated)
+results$health_detailed$impact_raw |> select(
+  geo_id_disaggregated,
+  geo_id_aggregated,
+  impact_rounded
 )
 }
 \author{

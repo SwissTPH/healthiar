@@ -30,7 +30,7 @@ The result tibbles include columns such as:
 This function calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
 }
 \details{
-Note that several input parameters (such as baseline health data and relative risk must be the same to correctly compare the two scenarios.
+Note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2 (e.g. comparison of two scenarios at the same time).
 
 Equations population impact fraction (PIF)
 
@@ -68,6 +68,10 @@ Where:
 \eqn{RR_{PWC}} = relative risk associated with the population weighted mean exposure
 
 \eqn{RR_{PWC}} = relative risk associated with the population weighted mean for the alternative exposure scenario
+
+Delta comparison approach
+
+With the delta comparison the difference between two scenarios is obtained by substraction. The delta approach is suited for all comparison cases, and specifically for comparison of a situation now with a situation in the future.
 }
 \examples{
 TBD

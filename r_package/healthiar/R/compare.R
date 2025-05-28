@@ -8,7 +8,7 @@
 #' @param approach_comparison \code{String} showing the method of comparison. Options: "delta" or "pif".
 
 #' @details
-#' Note that several input parameters (such as baseline health data and relative risk must be the same to correctly compare the two scenarios.
+#' Note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2 (e.g. comparison of two scenarios at the same time).
 #' @details
 #' Equations population impact fraction (PIF)
 #' @details The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality when exposure to a risk factor is changed (for instance due to an intervention). The most general equation describing this mathematically is an integral form:
@@ -32,6 +32,10 @@
 #' @details Where:
 #' @details \eqn{RR_{PWC}} = relative risk associated with the population weighted mean exposure
 #' @details \eqn{RR_{PWC}} = relative risk associated with the population weighted mean for the alternative exposure scenario
+#' @details
+#' Delta comparison approach
+#' @details
+#' With the delta comparison the difference between two scenarios is obtained by substraction. The delta approach is suited for all comparison cases, and specifically for comparison of a situation now with a situation in the future.
 
 #' @inherit attribute_master return
 
