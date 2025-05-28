@@ -54,6 +54,8 @@ compare <-
     output_attribute_2,
     approach_comparison = "delta"){
 
+    # Extract input data (for subsequent get_impact call) ########################
+
     input_args_1 <- output_attribute_1[["health_detailed"]][["input_args"]]
     input_args_2 <- output_attribute_2[["health_detailed"]][["input_args"]]
 
@@ -73,10 +75,6 @@ compare <-
       input_args_1$erf_eq_lower <- input_args_2$erf_eq_lower
       input_args_1$erf_eq_upper <- input_args_2$erf_eq_upper
       input_table_2$erf_eq <- input_table_1$erf_eq    }
-
-
-    # Extract input data (for subsequent get_impact call) ########################
-
 
     # Key variables #############################
     # Identify the arguments that have _1 or _2 in the name (scenario specific)
@@ -100,28 +98,40 @@ compare <-
         "population_midyear_male", "population_midyear_female",
         "year_of_analysis")
 
-    # Excluding the baseline health data and lifetable
-    scenario_specific_arguments_wo_bhd_and_lifetable <-
-      dplyr::setdiff(scenario_specific_arguments,
-              scenario_arguments_for_bhd_and_lifetable)
+
+    # Data validation ########################
+
+    # Argument used (user enntered data)
+    used_arguments_1 <-
+      base::names(purrr::discard(input_args_1, is.null))
+
+    used_arguments_2 <-
+      base::names(purrr::discard(input_args_2, is.null))
+
+
+   # Check that the two scenarios used the same arguments (calculation pathways)
+
+    if(!base::identical(used_arguments_1, used_arguments_2)){
+      stop("The two scenarios have to use the same arguments",
+           call. = FALSE)
+    }
+
 
     # Arguments that should be identical in both scenarios
     common_arguments_1 <-
-      names(input_table_1)[!names(input_table_1) %in% scenario_specific_arguments]
+      used_arguments_1[!used_arguments_1 %in% scenario_specific_arguments]
 
     common_arguments_2 <-
-      names(input_table_2)[!names(input_table_2) %in% scenario_specific_arguments]
+      used_arguments_2[!used_arguments_2 %in% scenario_specific_arguments]
 
-    # Check that (relevant) input values from scenarios A & B are equal ##########
-    ## Works also if no input was provided (might be the case for e.g. ..._lower arguments)
 
-    #Check if the common arguments in both scenarios are identical
-    if(identical(common_arguments_1, common_arguments_2)){
+
+    if(base::identical(common_arguments_1, common_arguments_2)){
       common_arguments <- common_arguments_1
     }else{
-      stop("The two scenarios have to use the same arguments")
+      stop("The two scenarios have to use the same common arguments",
+           call. = FALSE)
     }
-
 
     common_arguments_identical <-
       healthiar:::check_if_args_identical(
@@ -129,13 +139,31 @@ compare <-
         args_b = input_args_2,
         names_to_check = common_arguments)
 
-
-
+    # Check that (relevant) input values from scenarios A & B are equal
+    # Works also if no input was provided (might be the case for e.g. ..._lower arguments)
+    # Check if the common arguments in both scenarios are identical
     if(!all(common_arguments_identical))
     {stop(paste0("The arguments ",
-                 paste(names(common_arguments_identical)[common_arguments_identical],
+                 paste(names(common_arguments_identical)[!common_arguments_identical],
                        collapse = ", "),
-                 " must be identical in both scenarios"))}
+                 " must be identical in both scenarios"),
+          call. = FALSE)}
+
+    # Check that bhd is the same in both scenarios for the PIF approach (only one place in the equation)
+
+    if(approach_comparison == "pif" &&
+       "bhd" %in% c(names(input_table_1),names(input_table_2))  &&
+       !base::identical(input_table_1$bhd, input_table_2$bhd)){
+      stop("For the PIF approach, bhd must be identical in both scenarios.",
+           call. = FALSE)
+    }
+    # Check if absolute risk with pif (not possible)
+
+    if(approach_comparison == "pif" &&
+       unique(input_table_1$approach_risk) == "absolute_risk"){
+      stop("For the PIF approach, the absolute risk approach cannot be used.",
+           call. = FALSE)
+    }
 
     # Delta approach ########################
 
