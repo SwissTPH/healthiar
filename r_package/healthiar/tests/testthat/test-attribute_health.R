@@ -690,6 +690,7 @@ testthat::test_that("results the same |fake_rr|erf_function|exp_dist|iteration_F
       healthiar::attribute_health(
         approach_risk = "relative_risk",
         exp_central = data_pop$Concentration,
+        cutoff_central = 5,
         cutoff_lower = 5 - 1,
         cutoff_upper = 5 + 1,
         prop_pop_exp = data_pop$Viken,
@@ -711,7 +712,7 @@ testthat::test_that("results the same |fake_rr|erf_function|exp_dist|iteration_F
           method = "natural")
       )$health_main$impact_rounded,
     expected =
-      c(249,249,289) # Results on 15 Jan 2024 ; no comparison study
+      c(32,32,76) # Results on 28 May 2025 ; no comparison study
   )
 })
 
