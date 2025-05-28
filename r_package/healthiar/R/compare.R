@@ -108,7 +108,8 @@ compare <-
    # Check that the two scenarios used the same arguments (calculation pathways)
 
     if(!base::identical(used_arguments_1, used_arguments_2)){
-      stop("The two scenarios have to use the same arguments")
+      stop("The two scenarios have to use the same arguments",
+           call. = FALSE)
     }
 
 
@@ -124,7 +125,8 @@ compare <-
     if(base::identical(common_arguments_1, common_arguments_2)){
       common_arguments <- common_arguments_1
     }else{
-      stop("The two scenarios have to use the same common arguments")
+      stop("The two scenarios have to use the same common arguments",
+           call. = FALSE)
     }
 
     common_arguments_identical <-
@@ -140,20 +142,23 @@ compare <-
     {stop(paste0("The arguments ",
                  paste(names(common_arguments_identical)[common_arguments_identical],
                        collapse = ", "),
-                 " must be identical in both scenarios"))}
+                 " must be identical in both scenarios"),
+          call. = FALSE)}
 
     # Check that bhd is the same in both scenarios for the PIF approach (only one place in the equation)
 
     if(approach_comparison == "pif" &&
        "bhd" %in% c(names(input_table_1),names(input_table_2))  &&
        !base::identical(input_table_1$bhd, input_table_2$bhd)){
-      stop("For the PIF approach, bhd must be identical in both scenarios.")
+      stop("For the PIF approach, bhd must be identical in both scenarios.",
+           call. = FALSE)
     }
     # Check if absolute risk with pif (not possible)
 
     if(approach_comparison == "pif" &&
        unique(input_table_1$approach_risk) == "absolute_risk"){
-      stop("For the PIF approach, the absolute risk approach cannot be used.")
+      stop("For the PIF approach, the absolute risk approach cannot be used.",
+           call. = FALSE)
     }
 
     # Delta approach ########################
