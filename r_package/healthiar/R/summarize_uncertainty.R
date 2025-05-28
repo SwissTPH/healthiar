@@ -7,7 +7,7 @@
 #' @description
 #' Input variables that can included in the Monte Carlo simulation: relative risk, exposure, cutoff, baseline health data, disability weight, duration.
 
-#' @param results \code{variable} in which the results of an \code{healthiar::attribute_...()} function are stored.
+#' @param output_attribute \code{variable} in which the results of an \code{healthiar::attribute_...()} function are stored.
 #' @param n_sim \code{numeric value} indicating the number of simulations to be performed.
 #' @param seed \code{numeric value} for fixing the randomization. If empty, 123 is used as a default.
 
@@ -40,7 +40,7 @@
 
 
 summarize_uncertainty <- function(
-    results,
+    output_attribute,
     n_sim,
     seed = NULL) {
 
@@ -68,8 +68,8 @@ summarize_uncertainty <- function(
 
   ## Data sets ##########
   # Store the input data as entered in the arguments
-  input_args <- results[["health_detailed"]][["input_args"]]
-  input_table <- results[["health_detailed"]][["input_table"]]
+  input_args <- output_attribute[["health_detailed"]][["input_args"]]
+  input_table <- output_attribute[["health_detailed"]][["input_table"]]
 
 
 
@@ -379,7 +379,7 @@ summarize_uncertainty <- function(
   # Identify the geo_id (aggregated or disaggregated) that is present in health_main
   # (to be used below)
   grouping_geo_var <-
-    names(results$health_main)[grepl("geo_id", names(results$health_main))]
+    names(output_attribute$health_main)[grepl("geo_id", names(output_attribute$health_main))]
 
   # Summarize results getting the central, lower and upper estimate
   summary <-
@@ -464,7 +464,7 @@ summarize_uncertainty <- function(
 
     # Identify the geo_ids used in health_main (to be used below)
     grouping_geo_var <-
-      names(results$health_main)[grepl("geo_id", names(results$health_main))]
+      names(output_attribute$health_main)[grepl("geo_id", names(output_attribute$health_main))]
 
     # Summarize results getting the central, lower and upper estimate
     summary <-

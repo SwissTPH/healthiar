@@ -34,7 +34,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
   testthat::expect_equal(
     object =
       healthiar::summarize_uncertainty(
-        results = bestcost_pm_copd_with_summary_uncertainty,
+        output_attribute = bestcost_pm_copd_with_summary_uncertainty,
         n_sim = 100,
         seed = 122
         )$uncertainty_main |>
@@ -69,7 +69,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
   testthat::expect_equal(
     object =
       healthiar::summarize_uncertainty(
-        results = summary_uncertainty_small_iteration,
+        output_attribute = summary_uncertainty_small_iteration,
         n_sim = 100,
         seed = 123
       )$uncertainty_main |>
@@ -103,7 +103,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
   testthat::expect_equal(
     object =
       healthiar::summarize_uncertainty(
-        results = bestcost_pm_copd_geo_short,
+        output_attribute = bestcost_pm_copd_geo_short,
         n_sim = 100
       )$uncertainty_main |>
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
@@ -145,7 +145,7 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_
 
     object =
       healthiar::summarize_uncertainty(
-        results = bestcost_pm_yld_singlebhd_with_summary_uncertainty,
+        output_attribute = bestcost_pm_yld_singlebhd_with_summary_uncertainty,
         n_sim = 100,
         seed = 122
       )$uncertainty_main |>
@@ -182,7 +182,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
 
     object =
       healthiar::summarize_uncertainty(
-        results = bestcost_noise_ihd_expDist,
+        output_attribute = bestcost_noise_ihd_expDist,
         n_sim = 100,
         seed = 122)$uncertainty_main |>
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
@@ -216,7 +216,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formul
   testthat::expect_equal(
     object =
       summarize_uncertainty(
-        results = bestcost_noise_ha_ar_with_summary_uncertainty,
+        output_attribute = bestcost_noise_ha_ar_with_summary_uncertainty,
         n_sim = 100,
         seed = 122)$uncertainty_main |>
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
@@ -249,7 +249,7 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_dist|erf_ar_fo
   testthat::expect_equal(
     object =
       summarize_uncertainty(
-        results = bestcost_noise_ha_ar,
+        output_attribute = bestcost_noise_ha_ar,
         n_sim = 100,
         seed = 122)$uncertainty_main|>
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
@@ -297,7 +297,7 @@ testthat::test_that("results correct |pathway_uncertainty_compare|exp_dist|erf_a
   testthat::expect_equal(
     object =
       healthiar::summarize_uncertainty(
-        results = rr_comparison,
+        output_attribute = rr_comparison,
         n_sim = 100,
         seed = 122)$uncertainty_main |>
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>

@@ -18,7 +18,7 @@
 
 
 discount <-
-  function(output_healthiar = NULL,
+  function(output_attribute = NULL,
            impact = NULL,
            discount_rate = NULL,
            discount_years = 1,
@@ -27,7 +27,7 @@ discount <-
 
     output_discounting <-
       healthiar::monetize(
-        output_healthiar = output_healthiar,
+        output_attribute = output_attribute,
         impact = impact,
         discount_rate = discount_rate,
         discount_years = discount_years,

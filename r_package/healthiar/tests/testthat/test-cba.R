@@ -40,7 +40,7 @@ testthat::test_that("results the same |fake_cba|discount_shape_exponential|disco
   testthat::expect_equal(
     object =
       healthiar::cba(
-        output_healthiar = bestcost_pm_copd,
+        output_attribute = bestcost_pm_copd,
         valuation = 20,
         cost = 100,
         discount_shape = "exponential",
@@ -72,7 +72,7 @@ testthat::test_that("results the same |fake_cba|discount_shape_exp|discount_rate
   testthat::expect_equal(
     object =
       healthiar::cba(
-        output_healthiar = bestcost_pm_copd,
+        output_attribute = bestcost_pm_copd,
         valuation = 20,
         cost = 100,
         discount_shape = "exponential",

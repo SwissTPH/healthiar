@@ -31,7 +31,7 @@ testthat::test_that("results the same", {
       healthiar::socialize(
         age_group = c("below_40", "above_40"),
         ref_prop_pop = c(0.5, 0.5),
-        listed_output_healthiar = list(att_age_below_40, att_age_above_40),
+        listed_output_attribute = list(att_age_below_40, att_age_above_40),
         geo_id_disaggregated = data$CS01012020,
         social_indicator = data$score,
         n_quantile = 10,
@@ -84,7 +84,7 @@ testthat::test_that("results correct", {
 #   testthat::expect_equal(
 #     object =
 #       healthiar::socialize(
-#         output_healthiar = bestcost_pm_death,
+#         output_attribute = bestcost_pm_death,
 #         geo_id_disaggregated = data$CS01012020,
 #         social_indicator = data$score,
 #         n_quantile = 10,

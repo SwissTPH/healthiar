@@ -5,7 +5,7 @@
 \title{Discount health impacts}
 \usage{
 discount(
-  output_healthiar = NULL,
+  output_attribute = NULL,
   impact = NULL,
   discount_rate = NULL,
   discount_years = 1,
@@ -14,7 +14,7 @@ discount(
 )
 }
 \arguments{
-\item{output_healthiar}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
+\item{output_attribute}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
 
 \item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while discount_years does not include the year 0. Thus, length of impact = discount_years + 1.}
 

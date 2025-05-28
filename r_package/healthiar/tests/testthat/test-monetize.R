@@ -22,7 +22,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
   testthat::expect_equal(
     object =
       healthiar::monetize(
-        output_healthiar = bestcost_pm_copd,
+        output_attribute = bestcost_pm_copd,
         valuation = 1000,
         discount_rate = NULL,
         discount_shape = NULL
@@ -211,7 +211,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
   testthat::expect_equal(
     object =
       healthiar::monetize(
-        output_healthiar = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
+        output_attribute = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
         discount_shape = "exponential",
         discount_rate = 0.01,
         valuation = 1
@@ -239,7 +239,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
   testthat::expect_equal(
     object =
       healthiar::monetize(
-        output_healthiar = bestcost_pm_copd,
+        output_attribute = bestcost_pm_copd,
         discount_shape = "exponential",
         discount_rate = 0.03,
         discount_years = 5,
@@ -270,7 +270,7 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
 
   testthat::expect_equal(
     object = healthiar::monetize(
-      output_healthiar = bestcost_pm_copd,
+      output_attribute = bestcost_pm_copd,
       discount_shape = "exponential",
       discount_rate = 0.05,
       discount_years = 5,
