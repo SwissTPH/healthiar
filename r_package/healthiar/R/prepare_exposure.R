@@ -1,11 +1,11 @@
 #' Prepare exposure data
 
 #' @description
-#' This function prepares tabular population exposure data compatible with the attribute() and compare() functions, based on gridded pollution concentration data and vector data representing geographic units. The function calculates an average concentration value in each geographic unit, weighted by the fraction of the population in each sub-unit.
-#' @param poll_grid \code(SpatRaster) of the pollution concentration data.
-#' @param geo_units \code(sf) of the geographic sub-units.
-#' @param population \code(Vector) containing the total population number in each geographic sub-unit.
-#' @param geo_id_aggregated \code(Vector) containing the id code of the geographic unit the sub-unit belongs to.
+#' This function prepares tabular population exposure data compatible with the \code{attribute()} and \code{compare()} functions, based on gridded pollution concentration data and vector data representing geographic units. The function calculates an average concentration value in each geographic unit, weighted by the fraction of the population in each sub-unit.
+#' @param poll_grid \code{SpatRaster} of the pollution concentration data.
+#' @param geo_units \code{sf} of the geographic sub-units.
+#' @param population \code{Vector} containing the total population number in each geographic sub-unit.
+#' @param geo_id_aggregated \code{Vector} containing the id code of the geographic unit the sub-unit belongs to.
 #' @return
 #' This function returns a vector of population exposure values.
 #' @export

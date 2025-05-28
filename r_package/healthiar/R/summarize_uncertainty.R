@@ -1,13 +1,30 @@
 #' Get Monte Carlo confidence intervals
 
 #' @description
-#' This function determines summary uncertainty (based on at least one variable
+#' This function determines summary uncertainty (based on at least one input variable
 #' with central, lower and upper estimate) based on attribute() or compare()
 #' function output.
+#' @description
+#' Input variables that can included in the Monte Carlo simulation: relative risk, exposure, cutoff, baseline health data, disability weight, duration.
 
-#' @param results \code{variable} in which the results of an attribute function is stored.
+#' @param results \code{variable} in which the results of an \code{healthiar::attribute_...()} function are stored.
 #' @param n_sim \code{numeric value} indicating the number of simulations to be performed.
-#' @param seed \code{numeric value} fixing the randomization. If empty, a fix default value is assigned.
+#' @param seed \code{numeric value} for fixing the randomization. If empty, 123 is used as a default.
+
+#' @details
+#' Distributions used for simulation
+#' @details
+#' Relative risk values are simulated based on an optimized gamma distribution, which fits well as relative risks are positive and its distributions usually right-skewed. The gamma distribution best fitting the inputted central relative risk estimate and corresponding lower and upper 95\% confidence interval values is fitted using \code{stats::qgamma()} (with \code{rate = shape / rr_central}) and then \code{stats::optimize} is used to optimize the distribution parameters. Finally, \code{n_sim} relative risk values are simulated using \code{stats::rgamma()}.
+#' @details
+#' Exposure values are simulated based on a normal distribution using \code{stats::rnorm()} with \code{mean = exp_central} and a standard deviation based on corresponding lower and upper 95\% exposure confidence interval values.
+#' @details
+#' Cutoff values are simulated based on a normal distribution using \code{stats::rnorm()} with \code{mean = cutoff_central} and a standard deviation based on corresponding lower and upper 95\% cutoff confidence interval values.
+#' @details
+#' Baseline health data values are simulated based on a normal distribution using \code{stats::rnorm()} with \code{mean = bhd_central} and a standard deviation based on corresponding lower and upper 95\% exposure confidence interval values.
+#' @details
+#' Disability weights values of the morbidity health outcome of interest are simulated based on a beta distribution, as both the disability weights and the beta distribution are bounded by 0 and 1. The beta distribution best fitting the inputted central disability weight estimate and corresponding lower and upper 95\% confidence interval values is fitted using \code{stats::qgamma()} (the best fitting distribution parameters \code{shape1} and \code{shape2} are determined using \code{stats::optimize()}). Finally, \code{n_sim} disability weight values are simulated using \code{stats::rbeta()}.
+#' @details
+#' Duration values of the morbidity health outcome of interest are simulated based on a normal distribution using \code{stats::rnorm()} with \code{mean = duration_central} and a standard deviation based on corresponding lower and upper 95\% exposure confidence interval values.
 
 #' @returns
 #' This function returns confidence intervals for the attributable health impacts using a Monte Carlo simulation.
