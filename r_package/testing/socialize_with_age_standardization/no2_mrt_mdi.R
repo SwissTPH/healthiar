@@ -1,4 +1,5 @@
 ## AIR POLLUTION BURDEN INEQUALITIES
+## edit: overall (total) value calculated instead of mean rate
 
 ## required packages
 library(dplyr)
@@ -9,7 +10,14 @@ mrt <- base::readRDS(testthat::test_path("data", "no2_mrt_mdi.rds"))
 ref <- base::readRDS(testthat::test_path("data", "pop_ref.rds"))
 
 ## aggregate burden & population by MDI
-mrt_mdi <- aggregate(cbind(POP,ATT_MORT)~AGE+MDI, mrt, sum)
+mrt$MDI <- paste0('D', mrt$MDI)
+mrt_mdi <- rbind(
+  aggregate(cbind(POP,ATT_MORT)~AGE+MDI, mrt, sum),
+  cbind(
+    aggregate(cbind(POP,ATT_MORT)~AGE, mrt, sum),
+    MDI = 'ALL'
+  )
+)
 
 ## calculate crude rates
 rate_cr <- aggregate(cbind(POP,ATT_MORT)~MDI, mrt_mdi, sum)
@@ -30,13 +38,12 @@ rate <- merge(
 
 ## calculate inequalities
 ineq <- pivot_longer(rate, cols = CRUDE:AGE_STD, names_to = "RATE", values_to = "VALUE")
-ineq$MDI <- paste0("D", ineq$MDI)
 ineq <- pivot_wider(ineq, names_from = "MDI", values_from = "VALUE")
-ineq$MEAN <- ineq$MEAN <- rowMeans(ineq[startsWith(names(ineq), 'D')])
-ineq$OVERALL <- ineq$MEAN - ineq$D10
+# ineq$MEAN <- ineq$MEAN <- rowMeans(ineq[startsWith(names(ineq), 'D')])
+ineq$OVERALL <- ineq$ALL - ineq$D10
 ineq$BOTTOM <- ineq$D1 - ineq$D10
 ineq_rel <- ineq
-ineq_rel$OVERALL <- ineq_rel$OVERALL/ineq_rel$MEAN
+ineq_rel$OVERALL <- ineq_rel$OVERALL/ineq_rel$ALL
 ineq_rel$BOTTOM <- ineq_rel$BOTTOM/ineq_rel$D10
 ineq <- rbind(
   cbind(DIFF_TYPE = "ABS", ineq),
