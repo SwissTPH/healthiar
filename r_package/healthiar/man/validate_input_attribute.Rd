@@ -4,10 +4,12 @@
 \alias{validate_input_attribute}
 \title{Check the input data of attribute_master()}
 \usage{
-validate_input_attribute(input_args)
+validate_input_attribute(input_args, unused_args)
 }
 \arguments{
-\item{input}{\code{List} with the argument names and values entered in the function}
+\item{unused_args}{\code{String vector} with the argument names that were not actively entered by the user.}
+
+\item{input}{\code{List} with the argument names and values entered in the function.}
 }
 \value{
 This function returns warning or error messages if needed.

@@ -2,13 +2,14 @@
 
 #' @description
 #' Check the input data in attribute_master() and provides specific warnings or errors if needed.
-#' @param input \code{List} with the argument names and values entered in the function
+#' @param input \code{List} with the argument names and values entered in the function.
+#' @param unused_args \code{String vector} with the argument names that were not actively entered by the user.
 #' @returns This function returns warning or error messages if needed.
 #' @author Alberto Castro & Axel Luyten
 #' @keywords internal
 
 validate_input_attribute <-
-  function(input_args){
+  function(input_args, unused_args){
 
     # Data sets ###########
 
@@ -362,13 +363,15 @@ validate_input_attribute <-
       # Store var_value
       var_value <- input[[var_name]]
 
-      if(!base::is.null(var_value)){ # Only if available
+      if(!base::is.null(var_value) && !var_value == 0){ # Only if available
         # Create warning message
         base::warning(
           base::paste0(
             "For absolute risk, the value of ",
             var_name,
-            " is not considered (cutoff defined by exposure-response function)"),
+            " is not considered (",
+            var_name,
+            " defined by exposure-response function)"),
           call. = FALSE)
       }
     }
@@ -382,7 +385,9 @@ validate_input_attribute <-
       }
     }
 
-    if(is.null(input$cutoff_central) && !input$approach_risk == "absolute_risk"){
+    # For absolute risk no cutoff is used (not relevant)
+    if("cutoff_central" %in% unused_args &&
+       input_args$approach_risk == "relative_risk"){
 
       base::warning(
         "You entered no value for cut-off. Therefore, zero has been assumed as cut-off. Be aware that this can determine your results.",

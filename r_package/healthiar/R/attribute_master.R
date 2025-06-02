@@ -103,9 +103,16 @@ attribute_master <-
     # Capture all arguments and values
     input_args <- as.list(environment())
 
+    # Identify the missing arguments
+    # (i.e. those that were not explicitely passed by the user)
+    arg_names <- base::names(input_args)
+    unused_args <-
+      arg_names[!(arg_names %in% base::names(base::match.call()))]
+
 
     # Check input data
-    healthiar:::validate_input_attribute(input_args)
+    healthiar:::validate_input_attribute(input_args = input_args,
+                                         unused_args = unused_args)
 
 
     # Compile input data
