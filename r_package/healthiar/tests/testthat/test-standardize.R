@@ -30,7 +30,7 @@ testthat::test_that("results correct |pathway_standardize|single_geo|", {
     object =
       healthiar::standardize(
         listed_output_attribute = list(bestcost_pm_mortality_below_40,
-                                bestcost_pm_mortality_40_plus),
+                                       bestcost_pm_mortality_40_plus),
         age_group = c("below_40", "40_plus"),
         ref_prop_pop = c(0.5, 0.5))$health_main$impact_per_100k_inhab,
 
