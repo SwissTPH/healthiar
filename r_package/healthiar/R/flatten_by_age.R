@@ -4,7 +4,7 @@
 #' This function obtains age-standardized health impacts based on multiple age-group specific assessments
 
 #' @param listed_output_attribute \code{List} containing as sub-lists the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.#'
-#' @param age_groups \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{output_attribute}.
+#' @param age_group \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{output_attribute}.
 
 #' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 
@@ -19,11 +19,11 @@
 
 
 flatten_by_age <- function(listed_output_attribute,
-                                age_groups){
+                                age_group){
 
 
   impact_by_age_group <- listed_output_attribute
-  base::names(impact_by_age_group) <- age_groups
+  base::names(impact_by_age_group) <- age_group
 
   # Add age groups as columns and bind rows
   impact_by_age_group <-
