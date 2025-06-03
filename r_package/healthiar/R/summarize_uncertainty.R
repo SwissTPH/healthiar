@@ -347,6 +347,21 @@ summarize_uncertainty <- function(
     purrr::keep(input_args,
                 !names(input_args) %in% vars_to_be_removed_in_input_args)
 
+  # Deactivated code: Activate it if attribute is vectorialized
+  # input_args_clean <-
+  #   purrr::map(input_args_prepared_for_replacement,
+  #              \(.x) if (base::is.null(.x)) return(NA) else .x)
+  #
+  #
+  # input_args_tibble <- tibble::as_tibble(input_args_clean)
+  #
+  # input_args_for_all_sim <-
+  #   dplyr::left_join(
+  #     template_with_sim,
+  #     input_args_tibble,
+  #     by = "geo_id_disaggregated"
+  #   )
+
   template_with_sim <-
     # Bind the template with the simulated values
     dplyr::bind_cols(sim_template, tibble::as_tibble(sim)) |>
