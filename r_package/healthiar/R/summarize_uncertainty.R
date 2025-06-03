@@ -368,32 +368,35 @@ summarize_uncertainty <- function(
     # Unnest to have table layout
     tidyr::unnest(dplyr::any_of(cols_to_unnest))
 
+
+  new_values_for_replacement <- template_with_sim |>
+    dplyr::select(-geo_id_disaggregated, -geo_id_number, -sim_id)
+
+
+  input_args_for_all_sim <-
+    purrr::pmap(new_values_for_replacement,
+                \(...) {c(input_args_prepared_for_replacement, base::list(...))})
+
+  output_sim <-
+    purrr::map(
+    input_args_for_all_sim,
+    \(.x) base::do.call(healthiar:::attribute_master, args = .x ))
+
+
   attribute_by_sim <-
     # Add columns (one row for each assessment)
     # input_args
     dplyr::mutate(template_with_sim,
-      input_args =
-        purrr::pmap(template_with_sim,
-                    \(...) {c(input_args_prepared_for_replacement, base::list(...))})) |>
-    # simulation id
-    dplyr::mutate(
-      sim_id = dplyr::row_number(), .before = dplyr::everything())|>
-    # input_table, impact_raw and output (as in attribute_master)
-    dplyr::mutate(
-      input_table =
-        purrr::map(input_args, healthiar:::compile_input),
-      impact_raw =
-        purrr::map2(input_table, "paf", healthiar:::get_impact),
-      output =
-        purrr::pmap(base::list(input_args,input_table, impact_raw), healthiar:::get_output),
-      # Extract impact main to use these data in a easier way below
-      impact_main =
-        purrr::map(output,"health_main"))
+                  input = input_args_for_all_sim,
+                  output = output_sim,
+                  impact_main = purrr::map(output_sim,"health_main"))
+
 
   # Identify the geo_id (aggregated or disaggregated) that is present in health_main
   # (to be used below)
   grouping_geo_var <-
     names(output_attribute$health_main)[grepl("geo_id", names(output_attribute$health_main))]
+
 
   # Summarize results getting the central, lower and upper estimate
   summary <-
