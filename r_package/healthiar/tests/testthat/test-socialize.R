@@ -57,6 +57,7 @@ testthat::test_that("results correct", {
         impact = data$ATT_MORT,
         geo_id_disaggregated = data$SECTOR,
         social_quantile = data$MDI,
+        increasing_deprivation = TRUE,
         age_group = data$AGE,
         population = data$POP,
         ref_prop_pop = data$REF
