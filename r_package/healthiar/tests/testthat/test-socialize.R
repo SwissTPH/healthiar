@@ -35,7 +35,7 @@ testthat::test_that("results the same", {
         geo_id_disaggregated = data$CS01012020,
         social_indicator = data$score,
         n_quantile = 10,
-        increasing_deprivation = FALSE)$social_main$difference_value |> base::round(2),
+        increasing_deprivation = TRUE)$social_main$difference_value |> base::round(2),
     expect = c(11.72, 0.20, 560.88,0.90) # Results on 21 Nov 2024
   )
 })
@@ -57,6 +57,7 @@ testthat::test_that("results correct", {
         impact = data$ATT_MORT,
         geo_id_disaggregated = data$SECTOR,
         social_quantile = data$MDI,
+        increasing_deprivation = TRUE,
         age_group = data$AGE,
         population = data$POP,
         ref_prop_pop = data$REF
