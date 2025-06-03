@@ -183,15 +183,16 @@ socialize <- function(listed_output_attribute = NULL,
       if (increasing_deprivation) {
         social_component <- social_component_before_quantile |>
           dplyr::mutate(
-            social_ranking = dplyr::dense_rank(social_indicator),
-            social_quantile = dplyr::ntile(social_indicator, n = n_quantile))
+            social_ranking = dplyr::dense_rank(dplyr::desc(social_indicator)),
+            social_quantile = dplyr::ntile(dplyr::desc(social_indicator), n = n_quantile))
+
 
       } else if(decreasing_deprivation) {
         # * If NOT increasing_deprivation, i.e. decreasing #########
         social_component <- social_component_before_quantile |>
           dplyr::mutate(
-            social_ranking = dplyr::dense_rank(dplyr::desc(social_indicator)),
-            social_quantile = dplyr::ntile(dplyr::desc(social_indicator), n = n_quantile))
+            social_ranking = dplyr::dense_rank(social_indicator),
+            social_quantile = dplyr::ntile(social_indicator, n = n_quantile))
       }
 
 
