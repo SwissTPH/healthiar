@@ -382,6 +382,8 @@ summarize_uncertainty <- function(
     input_args_for_all_sim,
     \(.x) base::do.call(healthiar:::attribute_master, args = .x ))
 
+  impact_main <- purrr::map(output_sim,"health_main")
+
 
   attribute_by_sim <-
     # Add columns (one row for each assessment)
