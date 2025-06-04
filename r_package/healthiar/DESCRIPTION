@@ -1,6 +1,6 @@
 Package: healthiar
 Title: R package healthiar to quantify and monetize the burden of disease attributable to exposures
-Version: 0.0.2.785
+Version: 0.0.2.787
 Authors@R: c(
     person(given = "Alberto", family = "Castro", email = "alberto.castrofernandez@swisstph.ch", role = c("cre", "aut"), comment = c(ORCID = "0000-0002-4665-3299")),
     person(given = "Axel", family = "Luyten", role = c("aut"), comment = c(ORCID = "0000-0002-7005-5889")))
