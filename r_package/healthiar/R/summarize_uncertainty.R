@@ -37,7 +37,6 @@
 #' @export
 
 
-
 summarize_uncertainty <- function(
     output_attribute,
     n_sim,
@@ -288,10 +287,20 @@ summarize_uncertainty <- function(
   var_names_with_ci_central <- base::paste0(var_names_with_ci, "_central")
   # Identify those var_names_with_ci that have simulated values different in all geo units
   var_names_with_ci_geo_different <- var_names_with_ci[var_names_with_ci %in% c("exp", "bhd")]
-  var_names_with_ci_geo_different_central <- base::paste0(var_names_with_ci_geo_different, "_central")
+
+  if(base::length(var_names_with_ci_geo_different) >= 1){
+    var_names_with_ci_geo_different_central <-
+      base::paste0(var_names_with_ci_geo_different, "_central")
+  }
+
   # And now identical
   var_names_with_ci_geo_identical <- var_names_with_ci[var_names_with_ci %in% c("rr", "cutoff", "dw", "duration")]
-  var_names_with_ci_geo_identical_central <- base::paste0(var_names_with_ci_geo_identical, "_central")
+
+  if(base::length(var_names_with_ci_geo_identical) >= 1){
+    var_names_with_ci_geo_identical_central <-
+      base::paste0(var_names_with_ci_geo_identical, "_central")
+  }
+
 
 
   # Define the mapping between variable names and their distributions
@@ -379,30 +388,60 @@ summarize_uncertainty <- function(
     dplyr::bind_cols(sim_template, tibble::as_tibble(sim[var_names_with_ci_central])) |>
     # Unnest to have table layout
     tidyr::unnest(dplyr::any_of(c("sim_id",
-                                  var_names_with_ci_central))) |>
-    dplyr::group_by(sim_id) |>
-    dplyr::summarize(
-      # Pack in lists the values that are different in geo unit (as input_args)
-      dplyr::across(dplyr::all_of(c("geo_id_disaggregated", var_names_with_ci_geo_different_central)),
-                    ~ base::list(.x)),
-      # Take the unique value of the duplicated ones because they are identical across geo units
-      dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical_central),
-                    ~ base::unique(.x)),
-      .groups = "drop") |>
-    # Keep the same list format of the geo dependent variables
-    dplyr::mutate(
-      dplyr::across(dplyr::all_of(c(var_names_with_ci_geo_different_central)),
-                    ~ purrr::map(.x, as.list))
-    )
+                                  var_names_with_ci_central)))
 
+  if(base::length(var_names_with_ci_geo_different) >= 1 ){
+
+    sim_vars_geo_different <-
+      template_with_sim |>
+      dplyr::group_by(sim_id) |>
+      dplyr::summarize(
+        # Pack in lists the values that are different in geo unit (as input_args)
+        dplyr::across(dplyr::all_of(c("geo_id_disaggregated", var_names_with_ci_geo_different_central)),
+                      ~ base::list(.x)),
+        .groups = "drop")|>
+      # Keep the same list format of the geo dependent variables
+      dplyr::mutate(
+        dplyr::across(dplyr::all_of(c(var_names_with_ci_geo_different_central)),
+                      ~ purrr::map(.x, as.list)))
+
+    } else { sim_vars_geo_different <- NULL }
+
+  if( base::length(var_names_with_ci_geo_identical) >= 1 ){
+
+    sim_vars_geo_identical <-
+      template_with_sim |>
+      dplyr::group_by(sim_id) |>
+      dplyr::summarize(
+        # Take the unique value of the duplicated ones because they are identical across geo units
+        dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical_central),
+                      ~ base::unique(.x)),
+        .groups = "drop")
+  } else { sim_vars_geo_identical <- NULL }
 
   # Remove the columns are not to be used in the replacement
-  new_values_for_replacement <- template_with_sim |>
-    dplyr::select(-sim_id, -geo_id_disaggregated)
+
+  if (!base::is.null(sim_vars_geo_different) && !base::is.null(sim_vars_geo_identical)) {
+    template_with_sim_grouped <- dplyr::left_join(
+      sim_vars_geo_different,
+      sim_vars_geo_identical,
+      by = "sim_id")
+  } else if (!base::is.null(sim_vars_geo_different)) {
+    template_with_sim_grouped <- sim_vars_geo_different
+  } else if (!base::is.null(sim_vars_geo_identical)) {
+    template_with_sim_grouped <- sim_vars_geo_identical
+  } else {
+    template_with_sim_grouped <- NULL
+  }
+
+
+  only_new_values_for_replacement <-
+    dplyr::select(template_with_sim_grouped,
+                  -dplyr::any_of(c("sim_id", "geo_id_disaggregated")))
 
   # Replace the values
   input_args_for_all_sim <-
-    purrr::pmap(new_values_for_replacement,
+    purrr::pmap(only_new_values_for_replacement,
                 \(...) {c(input_args_prepared_for_replacement, base::list(...))})
 
 
@@ -443,6 +482,7 @@ summarize_uncertainty <- function(
   # Run healthiar::attribute_master() through all simulations
   # but including geo_ids inside attribute_master()
   # to save calls to attribute_master
+
   output_sim <-
     purrr::map(
       input_args_for_all_sim,
@@ -454,7 +494,7 @@ summarize_uncertainty <- function(
   attribute_by_sim <-
     # Add columns (one row for each assessment)
     # input_args
-    dplyr::mutate(template_with_sim,
+    dplyr::mutate(template_with_sim_grouped,
                   input = input_args_for_all_sim,
                   output = output_sim,
                   impact_main = impact_main)
