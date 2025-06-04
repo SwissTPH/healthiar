@@ -29,7 +29,7 @@
 #' @returns
 #' This function returns confidence intervals for the attributable health impacts using a Monte Carlo simulation.
 
-#' @author Axel Luyten
+#' @author Alberto Castro & Axel Luyten
 
 #' @examples
 #' TODO
