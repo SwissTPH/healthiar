@@ -310,7 +310,8 @@ summarize_uncertainty <- function(
   # Prepare the list to store the data in the for loop
   sim <- list()
 
-  # Apply simulation for variables enabled in ci_in
+
+  # Apply simulation for variables that have confidence interval
   for (var in var_names_with_ci) {
     # Store distribution
     dist <- sim_config[[var]]
@@ -321,6 +322,7 @@ summarize_uncertainty <- function(
     central <- as.numeric(input_args[[paste0(var, "_central")]])
     lower   <- as.numeric(input_args[[paste0(var, "_lower")]])
     upper   <- as.numeric(input_args[[paste0(var, "_upper")]])
+
 
     # Run simulate across all rows
 
@@ -392,9 +394,24 @@ summarize_uncertainty <- function(
 
   template_with_sim <-
     # Bind the template with the simulated values
-    dplyr::bind_cols(sim_template, tibble::as_tibble(sim)) |>
+    dplyr::bind_cols(sim_template, tibble::as_tibble(sim[var_names_with_ci_central])) |>
     # Unnest to have table layout
-    tidyr::unnest(dplyr::any_of(cols_to_unnest))
+    tidyr::unnest(dplyr::any_of(cols_to_unnest)) |>
+    dplyr::group_by(sim_id) |>
+    dplyr::summarize(
+      # Pack in lists the values that are different in geo unit (as input_args)
+      dplyr::across(dplyr::all_of(c("geo_id_disaggregated", var_names_with_ci_geo_different_central)),
+                    ~ base::list(.x)),
+      # Take the unique value of the duplicated ones because they are identical across geo units
+      dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical_central),
+                    ~ base::unique(.x)),
+      .groups = "drop") |>
+    dplyr::mutate(
+      dplyr::across(dplyr::all_of(c(var_names_with_ci_geo_different_central)),
+                    ~ purrr::map(.x, as.list))
+    )
+
+
 
 
   new_values_for_replacement <- template_with_sim |>
