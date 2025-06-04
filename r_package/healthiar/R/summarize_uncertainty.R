@@ -323,21 +323,43 @@ summarize_uncertainty <- function(
     upper   <- as.numeric(input_args[[paste0(var, "_upper")]])
 
     # Run simulate across all rows
-    # (iteration across simulations, geo_units, exp categories...)
-    sim[[col_name]] <- purrr::map(
-      .x = sim_template$geo_id_number,
-      ~ simulate(
-        central = central,
-        lower = lower,
-        upper = upper,
-        distribution = dist,
-        n = n_sim,
-        # Different seed for each geo_unit to avoid similar results across geo_units
-        seed = seeds[[var]] + .x
-      )
-    )
-  }
 
+    # First those variable that are different for all geo units (exp and bhd)
+    # Simulations must be DIFFERENT  in all geo units
+    if(var %in% var_names_with_ci_geo_different){
+
+      sim[[col_name]] <- purrr::map(
+        .x = sim_template$geo_id_number,
+        ~ simulate(
+          central = central,
+          lower = lower,
+          upper = upper,
+          distribution = dist,
+          n = n_sim,
+          # Different seed for each geo_unit to avoid similar results across geo_units
+          seed = seeds[[var]] + .x)
+      )
+
+      # Second for those variable that are common for all geo units (rr, cutoff, dw and duration)
+      # The simulated value must be IDENTICAL in all geo units
+      # Not across geo_id but across sim_id
+    } else if (var %in% var_names_with_ci_geo_identical ){
+
+      sim[[col_name]] <-
+        base::list(
+          simulate(
+          central = central,
+          lower = lower,
+          upper = upper,
+          distribution = dist,
+          n = n_sim,
+          # Different seed for each geo_unit to avoid similar results across geo_units
+          seed = seeds[[var]]))
+
+    }
+
+
+  }
 
 
   # Identify the variables that have to be removed in input_args
