@@ -292,9 +292,6 @@ summarize_uncertainty <- function(
   # And now identical
   var_names_with_ci_geo_identical <- var_names_with_ci[var_names_with_ci %in% c("rr", "cutoff", "dw", "duration")]
   var_names_with_ci_geo_identical_central <- base::paste0(var_names_with_ci_geo_identical, "_central")
-  # Columns to unnest below
-  cols_to_unnest <- c("sim_id",
-                      var_names_with_ci_central)
 
 
   # Define the mapping between variable names and their distributions
@@ -377,26 +374,12 @@ summarize_uncertainty <- function(
     purrr::keep(input_args,
                 !names(input_args) %in% vars_to_be_removed_in_input_args)
 
-  # Deactivated code: Activate it if attribute is vectorialized
-  # input_args_clean <-
-  #   purrr::map(input_args_prepared_for_replacement,
-  #              \(.x) if (base::is.null(.x)) return(NA) else .x)
-  #
-  #
-  # input_args_tibble <- tibble::as_tibble(input_args_clean)
-  #
-  # input_args_for_all_sim <-
-  #   dplyr::left_join(
-  #     template_with_sim,
-  #     input_args_tibble,
-  #     by = "geo_id_disaggregated"
-  #   )
-
   template_with_sim <-
     # Bind the template with the simulated values
     dplyr::bind_cols(sim_template, tibble::as_tibble(sim[var_names_with_ci_central])) |>
     # Unnest to have table layout
-    tidyr::unnest(dplyr::any_of(cols_to_unnest)) |>
+    tidyr::unnest(dplyr::any_of(c("sim_id",
+                                  var_names_with_ci_central))) |>
     dplyr::group_by(sim_id) |>
     dplyr::summarize(
       # Pack in lists the values that are different in geo unit (as input_args)
@@ -406,26 +389,27 @@ summarize_uncertainty <- function(
       dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical_central),
                     ~ base::unique(.x)),
       .groups = "drop") |>
+    # Keep the same list format of the geo dependent variables
     dplyr::mutate(
       dplyr::across(dplyr::all_of(c(var_names_with_ci_geo_different_central)),
                     ~ purrr::map(.x, as.list))
     )
 
 
-
-
+  # Remove the columns are not to be used in the replacement
   new_values_for_replacement <- template_with_sim |>
-    dplyr::select(-geo_id_disaggregated, -geo_id_number, -sim_id)
+    dplyr::select(-sim_id, -geo_id_disaggregated)
 
-
+  # Replace the values
   input_args_for_all_sim <-
     purrr::pmap(new_values_for_replacement,
                 \(...) {c(input_args_prepared_for_replacement, base::list(...))})
 
 
-  # Deactivated: This code is super slightly faster (0.5 sec for 100 simulations)
-  # by longer than the code above and thus more difficult to maintain
+  # Deactivated: This code is super slightly faster (0.5 sec for 100 simulations),
+  # but longer than the code below and thus more difficult to maintain.
   # Let's keep it here for a while just in case we ever consider to take it back
+  #
   # Create function to speed up the multiple calling of attribute_master
   # call_attribute_master <- function(args){
   #   healthiar:::attribute_master(
@@ -456,6 +440,9 @@ summarize_uncertainty <- function(
   # output_sim <-
   #   purrr::map(input_args_for_all_sim, call_attribute_master)
 
+  # Run healthiar::attribute_master() through all simulations
+  # but including geo_ids inside attribute_master()
+  # to save calls to attribute_master
   output_sim <-
     purrr::map(
       input_args_for_all_sim,
