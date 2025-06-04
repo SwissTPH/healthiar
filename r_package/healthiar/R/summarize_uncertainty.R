@@ -422,9 +422,11 @@ summarize_uncertainty <- function(
     purrr::pmap(new_values_for_replacement,
                 \(...) {c(input_args_prepared_for_replacement, base::list(...))})
 
-  # Deactivated: This code is super slightly faster by longer than the code above and thus more difficult to maintain
+
+  # Deactivated: This code is super slightly faster (0.5 sec for 100 simulations)
+  # by longer than the code above and thus more difficult to maintain
   # Let's keep it here for a while just in case we ever consider to take it back
-  # # Create function to speed up the multiple calling of attribute_master
+  # Create function to speed up the multiple calling of attribute_master
   # call_attribute_master <- function(args){
   #   healthiar:::attribute_master(
   #     is_lifetable = args$is_lifetable,
@@ -454,9 +456,6 @@ summarize_uncertainty <- function(
   # output_sim <-
   #   purrr::map(input_args_for_all_sim, call_attribute_master)
 
-  # Deactivated: This code is shorter than the code above
-  # but it is slightly slower.
-  # According to profvis: 1400 vs. 1280 ms for 100 simulations
   output_sim <-
     purrr::map(
       input_args_for_all_sim,
