@@ -31,6 +31,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       erf_shape = "log_linear"
     )
 
+
   testthat::expect_equal(
     object =
       healthiar::summarize_uncertainty(
@@ -40,10 +41,11 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
         )$uncertainty_main |>
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
       base::as.numeric() |> base::round(),
-    expected = # Results on 2025-05-08; no comparison study
-      c(1183, 633, 2082)
+    expected = # Results on 2025-06-04; no comparison study
+      c(1303, 528, 2246)
   )
 })
+
 #### ITERATION ##################################################################
 testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
@@ -66,6 +68,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       geo_id_disaggregated = c("a", "b")
     )
 
+
   testthat::expect_equal(
     object =
       healthiar::summarize_uncertainty(
@@ -75,8 +78,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       )$uncertainty_main |>
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
       base::unlist() |> base::as.numeric() |> base::round(),
-    expected = # Results on 2025-05-15; no comparison study
-      c(2655, 2655, 453, 453, 6895, 6895)
+    expected = # Results on 2025-06-04; no comparison study
+      c(2591, 2599, 745, 537, 7400, 6566)
   )
 })
 
@@ -106,8 +109,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       )$uncertainty_main |>
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
       base::as.numeric() |> base::round(),
-    expected = # Results on 2025-05-08; no comparison study
-      c(31596, 9871, 51531)
+    expected = # Results on 2025-06-04; no comparison study
+      c(30150, 14250, 48289)
   )
 })
 
@@ -150,8 +153,8 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
       base::as.numeric() |> base::round(),
 
-    expected = # Results on 2025-05-15; no comparison study
-      c(597, 224, 1261)
+    expected = # Results on 2025-06-04; no comparison study
+      c(643, 264, 1255)
   )
 })
 
@@ -186,8 +189,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
       base::as.numeric() |> base::round(),
 
-    expected = # Results on 2025-05-15; no comparison study
-      c(1126, 898, 1388)
+    expected = # Results on 2025-06-04; no comparison study
+      c( 1199, 890, 1430)
   )
 })
 
@@ -220,7 +223,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formul
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
       base::as.numeric() |> base::round(),
 
-    expected = # Results on 2025-05-15; no comparison study
+    expected = # Results on 2025-06-04; no comparison study
       c(228440, 118383, 412966)
   )
 })
@@ -253,8 +256,8 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_dist|erf_ar_fo
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
       base::as.numeric() |> base::round(),
 
-    expected = # Results on 2025-05-15; no comparison study
-      c(165144, 6617, 528207)
+    expected = # Results on 2025-06-04; no comparison study
+      c(177388, 15557, 527362)
   )
 })
 
@@ -301,8 +304,8 @@ testthat::test_that("results correct |pathway_uncertainty_compare|exp_dist|erf_a
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
       base::as.numeric() |> base::round(),
 
-    expected = # Results on 2025-05-15; no comparison study
-      c(481, 137, 1167)
+    expected = # Results on 2025-06-04; no comparison study
+      c(528, 148, 1173)
   )
 })
 
