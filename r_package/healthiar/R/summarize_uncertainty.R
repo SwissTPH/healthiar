@@ -305,33 +305,32 @@ summarize_uncertainty <- function(
 
   # Apply simulation for variables enabled in ci_in
   for (var in var_names_with_ci) {
-    if (ci_in[[var]]) {
-      # Store distribution
-      dist <- sim_config[[var]]
-      # Store column name
-      col_name <- paste0(var, "_central")
+    # Store distribution
+    dist <- sim_config[[var]]
+    # Store column name
+    col_name <- paste0(var, "_central")
 
-      # Store central, lower and upper estimate for the simulation below
-      central <- as.numeric(input_args[[paste0(var, "_central")]])
-      lower   <- as.numeric(input_args[[paste0(var, "_lower")]])
-      upper   <- as.numeric(input_args[[paste0(var, "_upper")]])
+    # Store central, lower and upper estimate for the simulation below
+    central <- as.numeric(input_args[[paste0(var, "_central")]])
+    lower   <- as.numeric(input_args[[paste0(var, "_lower")]])
+    upper   <- as.numeric(input_args[[paste0(var, "_upper")]])
 
-      # Run simulate across all rows
-      # (iteration across simulations, geo_units, exp categories...)
-      sim[[col_name]] <- purrr::map(
-        .x = sim_template$geo_id_number,
-        ~ simulate(
-          central = central,
-          lower = lower,
-          upper = upper,
-          distribution = dist,
-          n = n_sim,
-          # Different seed for each geo_unit to avoid similar results across geo_units
-          seed = seeds[[var]] + .x
-        )
+    # Run simulate across all rows
+    # (iteration across simulations, geo_units, exp categories...)
+    sim[[col_name]] <- purrr::map(
+      .x = sim_template$geo_id_number,
+      ~ simulate(
+        central = central,
+        lower = lower,
+        upper = upper,
+        distribution = dist,
+        n = n_sim,
+        # Different seed for each geo_unit to avoid similar results across geo_units
+        seed = seeds[[var]] + .x
       )
-    }
+    )
   }
+
 
 
   # Identify the variables that have to be removed in input_args
