@@ -286,6 +286,13 @@ summarize_uncertainty <- function(
   var_names_with_ci <- base::names(ci_in)[unlist(ci_in)]
   # Identify the central variable names with confidence interval
   var_names_with_ci_central <- base::paste0(var_names_with_ci, "_central")
+  # Identify those var_names_with_ci that have simulated values different in all geo units
+  var_names_with_ci_geo_different <- var_names_with_ci[var_names_with_ci %in% c("exp", "bhd")]
+  var_names_with_ci_geo_different_central <- base::paste0(var_names_with_ci_geo_different, "_central")
+  # And now identical
+  var_names_with_ci_geo_identical <- var_names_with_ci[var_names_with_ci %in% c("rr", "cutoff", "dw", "duration")]
+  var_names_with_ci_geo_identical_central <- base::paste0(var_names_with_ci_geo_identical, "_central")
+  # Columns to unnest below
   cols_to_unnest <- c("sim_id",
                       var_names_with_ci_central)
 
