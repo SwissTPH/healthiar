@@ -29,13 +29,12 @@
 #' @returns
 #' This function returns confidence intervals for the attributable health impacts using a Monte Carlo simulation.
 
-#' @author Axel Luyten
+#' @author Alberto Castro & Axel Luyten
 
 #' @examples
 #' TODO
 
 #' @export
-
 
 
 summarize_uncertainty <- function(
@@ -286,8 +285,22 @@ summarize_uncertainty <- function(
   var_names_with_ci <- base::names(ci_in)[unlist(ci_in)]
   # Identify the central variable names with confidence interval
   var_names_with_ci_central <- base::paste0(var_names_with_ci, "_central")
-  cols_to_unnest <- c("sim_id",
-                      var_names_with_ci_central)
+  # Identify those var_names_with_ci that have simulated values different in all geo units
+  var_names_with_ci_geo_different <- var_names_with_ci[var_names_with_ci %in% c("exp", "bhd")]
+
+  if(base::length(var_names_with_ci_geo_different) >= 1){
+    var_names_with_ci_geo_different_central <-
+      base::paste0(var_names_with_ci_geo_different, "_central")
+  }
+
+  # And now identical
+  var_names_with_ci_geo_identical <- var_names_with_ci[var_names_with_ci %in% c("rr", "cutoff", "dw", "duration")]
+
+  if(base::length(var_names_with_ci_geo_identical) >= 1){
+    var_names_with_ci_geo_identical_central <-
+      base::paste0(var_names_with_ci_geo_identical, "_central")
+  }
+
 
 
   # Define the mapping between variable names and their distributions
@@ -303,21 +316,26 @@ summarize_uncertainty <- function(
   # Prepare the list to store the data in the for loop
   sim <- list()
 
-  # Apply simulation for variables enabled in ci_in
+
+  # Apply simulation for variables that have confidence interval
   for (var in var_names_with_ci) {
-    if (ci_in[[var]]) {
-      # Store distribution
-      dist <- sim_config[[var]]
-      # Store column name
-      col_name <- paste0(var, "_central")
+    # Store distribution
+    dist <- sim_config[[var]]
+    # Store column name
+    col_name <- paste0(var, "_central")
 
-      # Store central, lower and upper estimate for the simulation below
-      central <- as.numeric(input_args[[paste0(var, "_central")]])
-      lower   <- as.numeric(input_args[[paste0(var, "_lower")]])
-      upper   <- as.numeric(input_args[[paste0(var, "_upper")]])
+    # Store central, lower and upper estimate for the simulation below
+    central <- as.numeric(input_args[[paste0(var, "_central")]])
+    lower   <- as.numeric(input_args[[paste0(var, "_lower")]])
+    upper   <- as.numeric(input_args[[paste0(var, "_upper")]])
 
-      # Run simulate across all rows
-      # (iteration across simulations, geo_units, exp categories...)
+
+    # Run simulate across all rows
+
+    # First those variable that are different for all geo units (exp and bhd)
+    # Simulations must be DIFFERENT  in all geo units
+    if(var %in% var_names_with_ci_geo_different){
+
       sim[[col_name]] <- purrr::map(
         .x = sim_template$geo_id_number,
         ~ simulate(
@@ -327,10 +345,28 @@ summarize_uncertainty <- function(
           distribution = dist,
           n = n_sim,
           # Different seed for each geo_unit to avoid similar results across geo_units
-          seed = seeds[[var]] + .x
-        )
+          seed = seeds[[var]] + .x)
       )
+
+      # Second for those variable that are common for all geo units (rr, cutoff, dw and duration)
+      # The simulated value must be IDENTICAL in all geo units
+      # Not across geo_id but across sim_id
+    } else if (var %in% var_names_with_ci_geo_identical ){
+
+      sim[[col_name]] <-
+        base::list(
+          simulate(
+          central = central,
+          lower = lower,
+          upper = upper,
+          distribution = dist,
+          n = n_sim,
+          # Different seed for each geo_unit to avoid similar results across geo_units
+          seed = seeds[[var]]))
+
     }
+
+
   }
 
 
@@ -349,36 +385,126 @@ summarize_uncertainty <- function(
 
   template_with_sim <-
     # Bind the template with the simulated values
-    dplyr::bind_cols(sim_template, tibble::as_tibble(sim)) |>
+    dplyr::bind_cols(sim_template, tibble::as_tibble(sim[var_names_with_ci_central])) |>
     # Unnest to have table layout
-    tidyr::unnest(dplyr::any_of(cols_to_unnest))
+    tidyr::unnest(dplyr::any_of(c("sim_id",
+                                  var_names_with_ci_central)))
+
+  if(base::length(var_names_with_ci_geo_different) >= 1 ){
+
+    sim_vars_geo_different <-
+      template_with_sim |>
+      dplyr::group_by(sim_id) |>
+      dplyr::summarize(
+        # Pack in lists the values that are different in geo unit (as input_args)
+        dplyr::across(dplyr::all_of(c("geo_id_disaggregated", var_names_with_ci_geo_different_central)),
+                      ~ base::list(.x)),
+        .groups = "drop")|>
+      # Keep the same list format of the geo dependent variables
+      dplyr::mutate(
+        dplyr::across(dplyr::all_of(c(var_names_with_ci_geo_different_central)),
+                      ~ purrr::map(.x, as.list)))
+
+    } else { sim_vars_geo_different <- NULL }
+
+  if( base::length(var_names_with_ci_geo_identical) >= 1 ){
+
+    sim_vars_geo_identical <-
+      template_with_sim |>
+      dplyr::group_by(sim_id) |>
+      dplyr::summarize(
+        # Take the unique value of the duplicated ones because they are identical across geo units
+        dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical_central),
+                      ~ base::unique(.x)),
+        .groups = "drop")
+  } else { sim_vars_geo_identical <- NULL }
+
+  # Remove the columns are not to be used in the replacement
+
+  if (!base::is.null(sim_vars_geo_different) && !base::is.null(sim_vars_geo_identical)) {
+    template_with_sim_grouped <- dplyr::left_join(
+      sim_vars_geo_different,
+      sim_vars_geo_identical,
+      by = "sim_id")
+  } else if (!base::is.null(sim_vars_geo_different)) {
+    template_with_sim_grouped <- sim_vars_geo_different
+  } else if (!base::is.null(sim_vars_geo_identical)) {
+    template_with_sim_grouped <- sim_vars_geo_identical
+  } else {
+    template_with_sim_grouped <- NULL
+  }
+
+
+  only_new_values_for_replacement <-
+    dplyr::select(template_with_sim_grouped,
+                  -dplyr::any_of(c("sim_id", "geo_id_disaggregated")))
+
+  # Replace the values
+  input_args_for_all_sim <-
+    purrr::pmap(only_new_values_for_replacement,
+                \(...) {c(input_args_prepared_for_replacement, base::list(...))})
+
+
+  # Deactivated: This code is super slightly faster (0.5 sec for 100 simulations),
+  # but longer than the code below and thus more difficult to maintain.
+  # Let's keep it here for a while just in case we ever consider to take it back
+  #
+  # Create function to speed up the multiple calling of attribute_master
+  # call_attribute_master <- function(args){
+  #   healthiar:::attribute_master(
+  #     is_lifetable = args$is_lifetable,
+  #     approach_risk = args$approach_risk,
+  #     exp_central = args$exp_central, exp_lower = args$exp_lower, exp_upper = args$exp_upper,
+  #     prop_pop_exp = args$prop_pop_exp,
+  #     pop_exp = args$pop_exp,
+  #     cutoff_central = args$cutoff_central, cutoff_lower = args$cutoff_lower, cutoff_upper = args$cutoff_upper,
+  #     rr_central = args$rr_central, rr_lower = args$rr_lower, rr_upper = args$rr_upper,
+  #     rr_increment = args$rr_increment,
+  #     erf_shape = args$erf_shape,
+  #     erf_eq_central = args$erf_eq_central, erf_eq_lower = args$erf_eq_lower, erf_eq_upper = args$erf_eq_upper,
+  #     bhd_central = args$bhd_central, bhd_lower = args$bhd_lower, bhd_upper = args$bhd_upper,
+  #     population = args$population,
+  #     approach_exposure = args$approach_exposure,
+  #     approach_newborns = args$approach_newborns,
+  #     first_age_pop = args$first_age_pop, last_age_pop = args$last_age_pop,
+  #     population_midyear_male = args$population_midyear_male, population_midyear_female = args$population_midyear_female,
+  #     year_of_analysis = args$year_of_analysis,
+  #     min_age = args$min_age, max_age = args$max_age,
+  #     dw_central = args$dw_central, dw_lower = args$dw_lower, dw_upper = args$dw_upper,
+  #     duration_central = args$duration_central, duration_lower = args$duration_lower, duration_upper = args$duration_upper,
+  #     geo_id_disaggregated = args$geo_id_disaggregated , geo_id_aggregated = args$geo_id_aggregated,
+  #     info = args$info)
+  # }
+  #
+  # output_sim <-
+  #   purrr::map(input_args_for_all_sim, call_attribute_master)
+
+  # Run healthiar::attribute_master() through all simulations
+  # but including geo_ids inside attribute_master()
+  # to save calls to attribute_master
+
+  output_sim <-
+    purrr::map(
+      input_args_for_all_sim,
+      \(.x) base::do.call(healthiar:::attribute_master, args = .x ))
+
+  impact_main <- purrr::map(output_sim,"health_main")
+
 
   attribute_by_sim <-
     # Add columns (one row for each assessment)
     # input_args
-    dplyr::mutate(template_with_sim,
-      input_args =
-        purrr::pmap(template_with_sim,
-                    \(...) {c(input_args_prepared_for_replacement, base::list(...))})) |>
-    # simulation id
-    dplyr::mutate(
-      sim_id = dplyr::row_number(), .before = dplyr::everything())|>
-    # input_table, impact_raw and output (as in attribute_master)
-    dplyr::mutate(
-      input_table =
-        purrr::map(input_args, healthiar:::compile_input),
-      impact_raw =
-        purrr::map2(input_table, "paf", healthiar:::get_impact),
-      output =
-        purrr::pmap(base::list(input_args,input_table, impact_raw), healthiar:::get_output),
-      # Extract impact main to use these data in a easier way below
-      impact_main =
-        purrr::map(output,"health_main"))
+    dplyr::mutate(template_with_sim_grouped,
+                  input = input_args_for_all_sim,
+                  output = output_sim,
+                  impact_main = impact_main)
+
 
   # Identify the geo_id (aggregated or disaggregated) that is present in health_main
   # (to be used below)
   grouping_geo_var <-
     names(output_attribute$health_main)[grepl("geo_id", names(output_attribute$health_main))]
+
 
   # Summarize results getting the central, lower and upper estimate
   summary <-
