@@ -377,10 +377,43 @@ summarize_uncertainty <- function(
     purrr::pmap(new_values_for_replacement,
                 \(...) {c(input_args_prepared_for_replacement, base::list(...))})
 
+  # Create function to speed up the multiple calling of attribute_master
+  call_attribute_master <- function(args){
+    healthiar:::attribute_master(
+      is_lifetable = args$is_lifetable,
+      approach_risk = args$approach_risk,
+      exp_central = args$exp_central, exp_lower = args$exp_lower, exp_upper = args$exp_upper,
+      prop_pop_exp = args$prop_pop_exp,
+      pop_exp = args$pop_exp,
+      cutoff_central = args$cutoff_central, cutoff_lower = args$cutoff_lower, cutoff_upper = args$cutoff_upper,
+      rr_central = args$rr_central, rr_lower = args$rr_lower, rr_upper = args$rr_upper,
+      rr_increment = args$rr_increment,
+      erf_shape = args$erf_shape,
+      erf_eq_central = args$erf_eq_central, erf_eq_lower = args$erf_eq_lower, erf_eq_upper = args$erf_eq_upper,
+      bhd_central = args$bhd_central, bhd_lower = args$bhd_lower, bhd_upper = args$bhd_upper,
+      population = args$population,
+      approach_exposure = args$approach_exposure,
+      approach_newborns = args$approach_newborns,
+      first_age_pop = args$first_age_pop, last_age_pop = args$last_age_pop,
+      population_midyear_male = args$population_midyear_male, population_midyear_female = args$population_midyear_female,
+      year_of_analysis = args$year_of_analysis,
+      min_age = args$min_age, max_age = args$max_age,
+      dw_central = args$dw_central, dw_lower = args$dw_lower, dw_upper = args$dw_upper,
+      duration_central = args$duration_central, duration_lower = args$duration_lower, duration_upper = args$duration_upper,
+      geo_id_disaggregated = args$geo_id_disaggregated , geo_id_aggregated = args$geo_id_aggregated,
+      info = args$info)
+  }
+
   output_sim <-
-    purrr::map(
-    input_args_for_all_sim,
-    \(.x) base::do.call(healthiar:::attribute_master, args = .x ))
+    purrr::map(input_args_for_all_sim, call_attribute_master)
+
+  # Deactivated: This code is shorter than the code above
+  # but it is slightly slower.
+  # According to profvis: 1400 vs. 1280 ms for 100 simulations
+  # output_sim <-
+  #   purrr::map(
+  #   input_args_for_all_sim,
+  #   \(.x) base::do.call(healthiar:::attribute_master, args = .x ))
 
   impact_main <- purrr::map(output_sim,"health_main")
 
@@ -391,7 +424,7 @@ summarize_uncertainty <- function(
     dplyr::mutate(template_with_sim,
                   input = input_args_for_all_sim,
                   output = output_sim,
-                  impact_main = purrr::map(output_sim,"health_main"))
+                  impact_main = impact_main)
 
 
   # Identify the geo_id (aggregated or disaggregated) that is present in health_main
