@@ -82,8 +82,6 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
 
 testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
-
   bestcost_pm_copd_geo_short <-
     healthiar::attribute_health(
       exp_central = as.list(runif_with_seed(1E1, 8.0, 9.0, 1)),
