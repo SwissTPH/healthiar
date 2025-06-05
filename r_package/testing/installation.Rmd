@@ -22,7 +22,7 @@ credentials::set_github_pat() # paste github PAT if prompted
 remotes::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
-  ref = "512-add-description-to-all-function", # By default "HEAD"; name of branch to install package from as a string
+  ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   # dependencies = TRUE,
@@ -34,6 +34,32 @@ remotes::install_github(
 library(healthiar)
 
 ```
+
+# Alternative using keyring package
+
+```{r eval=FALSE, include=FALSE}
+
+# Store your pat using keyring::key_set()
+## Only has to be done once
+
+## Run this command and paste your GitHub PAT in the "Password" window that opens
+keyring::key_set("GITHUB_PAT_HEALTHIAR")
+
+remotes::install_github(
+  repo = "best-cost/best-cost_WPs",
+  subdir = "/r_package/healthiar",
+  ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
+  force = TRUE,
+  # auth_token = "", # Paste your GitHub PAT between the quotation marks
+  auth_token = keyring::key_get("GITHUB_PAT_HEALTHIAR"),
+  # dependencies = TRUE,
+  build_vignettes = TRUE,
+  # upgrade = c("always") # Update packages
+  upgrade = c("never") # Never update packages
+)
+
+```
+
 
 # Build & install healthiar from local source
 

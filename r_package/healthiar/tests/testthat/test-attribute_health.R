@@ -875,7 +875,7 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
   )
 })
 
-## Using only the prop_pop_exp and pop_exp arguments in combination
+## Using the prop_pop_exp and pop_exp arguments in combination
 testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formula|exp_dist|iteration_FALSE|", {
 
   base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
@@ -892,7 +892,7 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
       approach_risk = "absolute_risk",
       exp_central = data$exposure_mean,
       prop_pop_exp = data$population_exposed_total/sum(data$population_exposed_total),
-      pop_exp = data$population_exposed_total, # For prop_pop_exp case (this vector is summed in the background to get total pop exposed)
+      pop_exp = data$population_exposed_total, # For prop_pop_exp case, this vector is summed in the background to get total pop exposed, which is then combined with prop_pop_exp to get the number exposed per exp category)
       erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
       dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
       duration_central = 1,
