@@ -536,12 +536,19 @@ print(
 
 ### Detailed results
 
-```{r}
+```{r, eval=FALSE}
+results_pm_copd_summarized |> 
+  purrr::pluck("uncertainty_detailed") |> 
+  purrr::pluck("by_simulation")
+```
+```{r, echo=FALSE}
 results_pm_copd_summarized |> 
   purrr::pluck("uncertainty_detailed") |> 
   purrr::pluck("by_simulation") |> 
-  knitr::kable()
+  dplyr::select(sim_id, impact_main) |> 
+  dplyr::slice(1:5)
 ```
+We see that the detailed results contain the complete `n_sim` simulation (one row for each simulation), which are saved in nested tibbles in the column `impact_main`.
 ```{r, echo=FALSE, eval=TRUE, include=FALSE}
 rm(results_pm_copd_summarized)
 ```
