@@ -65,25 +65,16 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       geo_id_disaggregated = c("a", "b")
     )
 
-
   testthat::expect_equal(
     object =
-      ## OLD STRUCTURE
-      # healthiar::summarize_uncertainty(
-      #   output_attribute = summary_uncertainty_small_iteration,
-      #   n_sim = 100,
-      #   seed = 123
-      # )$uncertainty_main |>
-      # dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
-      # base::unlist() |> base::as.numeric() |> base::round(),
-      ## NEW STRUCTURE
       healthiar::summarize_uncertainty(
         output_attribute = summary_uncertainty_small_iteration,
         n_sim = 100,
         seed = 123
-      )$uncertainty_main
+      )$uncertainty_main$impact_rounded,
+
     expected = # Results on 2025-06-04; no comparison study
-      c(2591, 2599, 745, 537, 7400, 6566)
+      c(2591.0, 745.0, 7400.0, 2599.0, 537.0, 6566.0)
   )
 })
 
@@ -110,9 +101,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       healthiar::summarize_uncertainty(
         output_attribute = bestcost_pm_copd_geo_short,
         n_sim = 100
-      )$uncertainty_main |>
-      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
-      base::as.numeric() |> base::round(),
+      )$uncertainty_main$impact_rounded,
+
     expected = # Results on 2025-06-04; no comparison study
       c(30150, 14250, 48289)
   )
@@ -153,9 +143,7 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_
         output_attribute = bestcost_pm_yld_singlebhd_with_summary_uncertainty,
         n_sim = 100,
         seed = 122
-      )$uncertainty_main |>
-      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
-      base::as.numeric() |> base::round(),
+      )$uncertainty_main$impact_rounded,
 
     expected = # Results on 2025-06-04; no comparison study
       c(643, 264, 1255)
@@ -189,12 +177,10 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
       healthiar::summarize_uncertainty(
         output_attribute = bestcost_noise_ihd_expDist,
         n_sim = 100,
-        seed = 122)$uncertainty_main |>
-      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
-      base::as.numeric() |> base::round(),
+        seed = 122)$uncertainty_main$impact_rounded,
 
     expected = # Results on 2025-06-04; no comparison study
-      c( 1199, 890, 1430)
+      c(1199, 890, 1430)
   )
 })
 
@@ -223,15 +209,12 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formul
       summarize_uncertainty(
         output_attribute = bestcost_noise_ha_ar_with_summary_uncertainty,
         n_sim = 100,
-        seed = 122)$uncertainty_main |>
-      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
-      base::as.numeric() |> base::round(),
+        seed = 122)$uncertainty_main$impact_rounded,
 
     expected = # Results on 2025-06-04; no comparison study
       c(228440, 118383, 412966)
   )
 })
-
 
 ### YLD #########################################################################
 
@@ -256,9 +239,7 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_dist|erf_ar_fo
       summarize_uncertainty(
         output_attribute = bestcost_noise_ha_ar,
         n_sim = 100,
-        seed = 122)$uncertainty_main|>
-      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
-      base::as.numeric() |> base::round(),
+        seed = 122)$uncertainty_main$impact_rounded,
 
     expected = # Results on 2025-06-04; no comparison study
       c(177388, 15557, 527362)
@@ -304,9 +285,7 @@ testthat::test_that("results correct |pathway_uncertainty_compare|exp_dist|erf_a
       healthiar::summarize_uncertainty(
         output_attribute = rr_comparison,
         n_sim = 100,
-        seed = 122)$uncertainty_main |>
-      dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
-      base::as.numeric() |> base::round(),
+        seed = 122)$uncertainty_main$impact_rounded,
 
     expected = # Results on 2025-06-04; no comparison study
       c(528, 148, 1173)
@@ -345,9 +324,9 @@ testthat::test_that("summary uncertainty comparison iteration", {
     object =
       healthiar::summarize_uncertainty(
         output_attribute = comparison_iteration,
-        n_sim = 100),
-    expected =
-      c(528, 148, 1173)
+        n_sim = 100)$uncertainty_main$impact_rounded,
+    expected = # Results on 2025-06-05; no comparison study
+      c(1052.0, 634.0, 1510.0)
   )
 })
 
