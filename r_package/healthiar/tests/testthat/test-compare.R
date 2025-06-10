@@ -218,7 +218,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
     healthiar::attribute_health(
       exp_central = c(8.85, 8.0),
       cutoff_central = 5,
-      bhd_central = 25000,
+      bhd_central = c(25000, 25000),
       rr_central = 1.118,
       rr_lower = 1.060,
       rr_upper = 1.179,
@@ -255,7 +255,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
     healthiar::attribute_health(
       exp_central = c(8.85, 8.0),
       cutoff_central = 5,
-      bhd_central = 25000,
+      bhd_central = c(25000, 25000),
       rr_central = 1.118,
       rr_lower = 1.060,
       rr_upper = 1.179,
@@ -395,7 +395,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
     healthiar::attribute_health(
       exp_central = c(8.85, 8.0),
       cutoff_central = 5,
-      bhd_central = 25000,
+      bhd_central = c(25000, 25000),
       rr_central = 1.118,
       rr_lower = 1.060,
       rr_upper = 1.179,
@@ -467,7 +467,7 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
     healthiar::attribute_health(
       exp_central = c(8.85, 8.0),
       cutoff_central = 5,
-      bhd_central = 25000,
+      bhd_central = c(25000, 25000),
       rr_central = 1.118,
       rr_lower = 1.060,
       rr_upper = 1.179,
