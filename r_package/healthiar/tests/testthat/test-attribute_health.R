@@ -1053,6 +1053,23 @@ testthat::test_that("error if sum(prop_pop_exp) higher than 1", {
   )
 })
 
+testthat::test_that("error if multi geo units but different length of geo-depending arguments", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        geo_id_disaggregated = c("a", "b")
+      )
+  )
+})
+
 ## WARNING #########
 
 testthat::test_that("warning if absolute risk and cutoff", {
