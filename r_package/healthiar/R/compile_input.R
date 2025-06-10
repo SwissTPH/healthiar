@@ -95,20 +95,16 @@ compile_input <-
     ## geo_id_disaggregated is needed to group results in case of multiple geo_ids
     if(is.null(geo_id_disaggregated)){
       geo_id_disaggregated <-
-        ifelse(is.list({{exp_central}}), 1:length({{exp_central}}), 1) |>
-        as.character()
-    } else {
-      # geo_ids need to be character because
-      # a) no operations are expected
-      # b) otherwise error somewhere else in the package when mixing character and numeric
-      geo_id_disaggregated <- as.character(geo_id_disaggregated)
-    }
+        base::as.character(1:length({{exp_central}}))
 
-    if(!is.null(geo_id_aggregated)){
+    } else if(!is.null(geo_id_aggregated)){
       # For geo_id_aggegated there is no default value as for geo_id_aggregated
       # so it needs the if statement below.
       # Otherwise, instead of not including the column when NULL
       # no the tibble becomes empty and then error somewhere else
+      # geo_ids need to be character because
+      # a) no operations are expected
+      # b) otherwise error somewhere else in the package when mixing character and numeric
       geo_id_aggregated <- as.character(geo_id_aggregated)
     }
 
