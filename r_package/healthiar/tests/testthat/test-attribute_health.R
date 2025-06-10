@@ -966,6 +966,31 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
   )
 })
 
+testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_ha_Lden_StavangerandVicinity.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = data$average_cat,
+        population  = unique(data$totpop),
+        prop_pop_exp = data$prop_pop_exp,
+        pop_exp = data$ANTALL_PER,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        info = data.frame(pollutant = "road_noise",
+                          outcome = "highly_annoyance")
+      )$health_main$impact_rounded,
+    expected =
+      c(14136)
+  )
+
+  ## ASSESSOR: Liliana Vázquez, NIPH
+  ## ASSESSMENT DETAILS:
+  ## INPUT DATA DETAILS:
+})
+
 ### ITERATION ###################################################################
 
 testthat::test_that("no error ar iteration", {
@@ -1105,6 +1130,36 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
       round() / 2 # With dw_central = 0.5 & duration_central = 1 the expected results are half of those we would obtain without dw & duration arguments
   )
 })
+
+testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "Bergen støy_Testberegninger HA og HSD.rds"))
+  totalpop_Bergen <- 269189
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = as.numeric(gsub(",",".",data$Lden..dB..middle.point)),
+        population  = totalpop_Bergen,
+        prop_pop_exp = as.numeric(gsub(",",".",data$Bergen.))/sum(as.numeric(gsub(",",".",data$Bergen.))),
+        pop_exp = as.numeric(gsub(",",".",data$Bergen.)),
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        dw_central = 0.02,
+        dw_lower = 0.01,
+        dw_upper = 0.12,
+        info = data.frame(pollutant = "road_noise",
+                          outcome = "highly_annoyance")
+      )$health_detailed$impact_agg_exp_cat$impact_rounded,
+    expected =
+      c(398, 199, 2388)
+  )
+
+  ## ASSESSOR: Liliana Vázquez, NIPH
+  ## ASSESSMENT DETAILS:
+  ## INPUT DATA DETAILS:
+})
+
 
 # ERROR OR WARNING ########
 ## ERROR #########
