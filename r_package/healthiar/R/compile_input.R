@@ -227,11 +227,13 @@ compile_input <-
       # Information derived from input data
       dplyr::mutate(
         approach_risk = approach_risk, # RR or AR
-        health_outcome = health_outcome,
+        health_outcome = health_outcome) |>
+      dplyr::group_by(geo_id_disaggregated) |>
+      dplyr::mutate(
         exposure_dimension =
-          base::rep(1:length_exp_dist, length_exp_list),
+          base::rep(1:length(exp_central)),
         exposure_type =
-          base::ifelse(length_exp_dist == 1,
+          base::ifelse(length(exp_central) == 1,
                  "population_weighted_mean",
                  "exposure_distribution")) |>
       # Remove all columns with all values being NA
@@ -252,6 +254,7 @@ compile_input <-
                           names_to = "exp_ci",
                           names_prefix = "exp_",
                           values_to = "exp")
+
 
     if (is.null(erf_eq_central)) {
       ## Exposure response function
