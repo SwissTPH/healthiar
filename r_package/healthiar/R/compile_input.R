@@ -89,7 +89,6 @@ compile_input <-
     # }
 
 
-
     # PROCESS GEO ID ###################################################################
     # If no geo_id_disaggregated is provided (if is NULL) then
     # single case (only 1 geo unit) is assumed
@@ -228,14 +227,31 @@ compile_input <-
       dplyr::mutate(
         approach_risk = approach_risk, # RR or AR
         health_outcome = health_outcome) |>
-      dplyr::group_by(geo_id_disaggregated) |>
-      dplyr::mutate(
-        exposure_dimension =
-          base::rep(1:length(exp_central)),
-        exposure_type =
-          base::ifelse(length(exp_central) == 1,
-                 "population_weighted_mean",
-                 "exposure_distribution")) |>
+      # Keep only unique rows
+      # Here only the geo unit level is relevant
+      # (avoid duplicated rows e.g. from life table arguments)
+      base::unique()
+
+    # Obtain the exposure dimension and exposure type in a separate table
+    exp_dimension_table <-
+      input_wo_lifetable |>
+      dplyr::select(geo_id_disaggregated, exp_central) |>
+      # Add population_midyear_male (it could be any of the other life table arguments)
+      # Add it in a separated mutate because
+      # if it is NULL then it is not added
+      dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated"))))|>
+      dplyr::mutate(exposure_dimension = 1 : base::length(exp_central),
+                       exposure_type =
+                         base::ifelse(length(exp_central) == 1,
+                                      "population_weighted_mean",
+                                      "exposure_distribution"))
+
+    # Join with exposure dimension and type
+    input_wo_lifetable <-
+      dplyr::left_join(
+        input_wo_lifetable,
+        exp_dimension_table,
+        by = c("geo_id_disaggregated", "exp_central"))
       # Remove all columns with all values being NA
       # dplyr::select(where(~ !all(is.na(.)))) |>
 
@@ -250,11 +266,12 @@ compile_input <-
       # central, lower and upper estimates (relevant for iteration)
 
       ## For exposure,
+    input_wo_lifetable <-
+      input_wo_lifetable |>
       tidyr::pivot_longer(cols = dplyr::starts_with("exp_"),
                           names_to = "exp_ci",
                           names_prefix = "exp_",
                           values_to = "exp")
-
 
     if (is.null(erf_eq_central)) {
       ## Exposure response function
@@ -266,12 +283,14 @@ compile_input <-
                             names_prefix = "rr_",
                             values_to = "rr")
     } else {
+
       input_wo_lifetable <-
         tidyr::pivot_longer(data = input_wo_lifetable,
                             cols = dplyr::starts_with("erf_eq_"),
                             names_to = "erf_ci",
                             names_prefix = "erf_eq_",
-                            values_to = "erf_eq") }
+                            values_to = "erf_eq")
+      }
 
     ## Baseline health data
     if(!is.null(bhd_central)) {
@@ -413,6 +432,7 @@ compile_input <-
       } else {
       # If no lifetable, only use input_wo_lifetable
       input_table <- input_wo_lifetable}
+
 
 
   return(input_table)
