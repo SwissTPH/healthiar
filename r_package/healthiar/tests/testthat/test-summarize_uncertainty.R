@@ -51,15 +51,15 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
 
   summary_uncertainty_small_iteration <-
     healthiar::attribute_health(
-      exp_central = list(8, 7.5),
-      exp_lower = list(7, 6.2),
-      exp_upper = list(9, 8.1),
+      exp_central = c(8, 7.5),
+      exp_lower = c(7, 6.2),
+      exp_upper = c(9, 8.1),
       cutoff_central = 5,
       cutoff_lower = 4,
       cutoff_upper = 6,
-      bhd_central = list(1E5, 1E5),
-      bhd_lower = list(5E4, 5E4),
-      bhd_upper = list(2E5, 2E5),
+      bhd_central = c(1E5, 1E5),
+      bhd_lower = c(5E4, 5E4),
+      bhd_upper = c(2E5, 2E5),
       rr_central = 1.118,
       rr_lower = 1.060,
       rr_upper = 1.179,
@@ -87,11 +87,11 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
 
   bestcost_pm_copd_geo_short <-
     healthiar::attribute_health(
-      exp_central = as.list(runif_with_seed(1E1, 8.0, 9.0, 1)),
-      exp_lower = as.list(runif_with_seed(1E1, 8.0, 9.0, 1)-0.1),
-      exp_upper = as.list(runif_with_seed(1E1, 8.0, 9.0, 1)+0.1),
+      exp_central = runif_with_seed(1E1, 8.0, 9.0, 1),
+      exp_lower = runif_with_seed(1E1, 8.0, 9.0, 1)-0.1,
+      exp_upper = runif_with_seed(1E1, 8.0, 9.0, 1)+0.1,
       cutoff_central = 5,
-      bhd_central = as.list(runif_with_seed(1E1, 25000, 35000, 1)),
+      bhd_central = runif_with_seed(1E1, 25000, 35000, 1),
       rr_central = 1.369,
       rr_lower = 1.124,
       rr_upper = 1.664,
@@ -346,17 +346,17 @@ testthat::test_that("error_if_erf_eq  |pathway_uncertainty|exp_dist|erf_ar_formu
   bestcost_noise_ha_ar_iteration_with_erf_eq <-
     healthiar::attribute_health(
       approach_risk = "absolute_risk",
-      exp_central = list(data$exposure_mean,
-                         data$exposure_mean + 5,
-                         data$exposure_mean + 10),
-      pop_exp = list(data$population_exposed_total,
-                     data$population_exposed_total + 0.1,
-                     data$population_exposed_total + 0.2),
+      exp_central = c(data$exposure_mean,
+                      data$exposure_mean + 5,
+                      data$exposure_mean + 10),
+      pop_exp = c(data$population_exposed_total,
+                  data$population_exposed_total + 0.1,
+                  data$population_exposed_total + 0.2),
       erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
       erf_eq_lower = "78.9270-3.1162*c+0.034*c^2",
       erf_eq_upper = "78.9270-3.1162*c+0.04*c^2",
-      geo_id_disaggregated = 1:3,
-      geo_id_aggregated = rep("CH", 3),
+      geo_id_disaggregated = rep(1:3, each = 5),
+      geo_id_aggregated = rep("CH", 3*5),
       info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"),
     )
 
