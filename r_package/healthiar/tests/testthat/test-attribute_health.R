@@ -310,6 +310,64 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
   )
 })
 
+## no cutoff
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021.rds"))
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "log_linear",
+        rr_central = 1.118,
+        rr_increment = 10.0,
+        exp_central = as.list(data$PM25),
+        bhd_central = as.list(data$VALUE_BASELINE),
+        geo_id_disaggregated = data$CS01012020
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      round(data$VALUE)
+  )
+
+  ## ASSESSOR: Arno Pauwels, SCI
+  ## ASSESSMENT DETAILS: All-cause mortality attributable to PM2.5, by census tract (iteration)
+  ## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2021
+})
+
+## with cutoff
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021_cutoff.rds"))
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "log_linear",
+        rr_central = 1.118,
+
+        rr_increment = 10.0,
+        exp_central = as.list(data$PM25),
+        cutoff_central = 2.5,
+        bhd_central = as.list(data$VALUE_BASELINE),
+        geo_id_disaggregated = data$CS01012020
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      round(data$VALUE)
+  )
+
+  ## ASSESSOR: Arno Pauwels, SCI
+  ## ASSESSMENT DETAILS: All-cause mortality attributable to PM2.5, by census tract (iteration) WITH CUTOFF
+  ## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2021
+})
+
 #### YLD ########################################################################
 
 testthat::test_that("results the same prevalence-based YLD (duration_central=1) |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
