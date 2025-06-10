@@ -265,23 +265,58 @@ validate_input_attribute <-
 
 
     error_if_sum_higher_than_1 <- function(var_name){
+
       var_value <- input[[var_name]]
+
 
       if(base::is.null(input[["geo_id_disaggregated"]])){
         geo_id_disaggregated <- as.character(1)
-      } else { geo_id_disaggregated <- input[["geo_id_disaggregated"]]}
+        } else {
+          geo_id_disaggregated <- as.character(input[["geo_id_disaggregated"]])
+        }
 
-      input <- tibble::tibble(
-        geo_id_disaggregated = geo_id_disaggregated,
-        var = var_value
-      )
 
-      if(!base::is.null(var_value)){ # Only if available
-         if(input |>
-            dplyr::group_by(geo_id_disaggregated) |>
-            dplyr::summarize(sum = base::sum(var, na.rm = TRUE) > 1) |>
-            dplyr::pull(sum) |>
-            base::any()){
+      if(base::length(base::unique(geo_id_disaggregated)) > 1){
+        var_table <-
+          tibble::tibble(
+            geo_id_disaggregated = geo_id_disaggregated ,
+            population_midyear_male = input[["population_midyear_male"]],
+            var = var_value)
+
+      } else if (base::length(base::unique(geo_id_disaggregated)) == 1) {
+
+
+        if(base::is.null(input[["population_midyear_male"]])){
+          population_midyear_male <- NULL
+          var_vector <- var_value
+
+        } else if (!base::is.null(input[["population_midyear_male"]])) {
+
+          population_midyear_male <-
+            base::rep(input[["population_midyear_male"]],
+                      each = base::length(var_value),
+                      times = base::length(geo_id_disaggregated))
+
+          var_vector <-
+            base::rep(var_value,
+                      each = base::length(geo_id_disaggregated),
+                      times = base::length(input[["population_midyear_male"]]))
+        }
+
+        var_table <-
+          tibble::tibble(
+            geo_id_disaggregated = geo_id_disaggregated,
+            population_midyear_male = population_midyear_male,
+            var = var_vector)
+
+      }
+
+      if(base::is.null(input[["pop_exp"]]) &&
+         var_table |>
+         dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "population_midyear_male")))) |>
+         dplyr::summarize(sum = base::sum(var, na.rm = TRUE) > 1) |>
+         dplyr::pull(sum) |>
+         base::any()){
 
         # Create error message
         stop(base::paste0(
@@ -289,7 +324,7 @@ validate_input_attribute <-
           var_name,
           " cannot be higher than 1 for each geo unit."),
           call. = FALSE)
-      }
+
       }
     }
 
@@ -370,6 +405,43 @@ validate_input_attribute <-
       error_if_only_lower_or_upper(var_short = x)
     }
 
+    ### Error if multiple geo units and length of some geo dependent variables are different ####
+    # # (geo_ids, exp_central, prop_pop_exp, pop_exp and bhd) must be the same
+    # # i.e. enter the data as in the table
+    # error_if_multi_geo_and_different_length  <- function(...) {
+    #
+    #   var_value <- base::list(...)
+    #   var_name <- base::names(var_value)
+    #
+    #   # Remove NULLs
+    #   non_nulls <- purrr::compact(var_value)
+    #
+    #   # Get lengths of non-NULLs
+    #   lengths <- purrr::map_int(non_nulls, length)
+    #
+    #
+    # #   if (base::length(geo_id_disaggregated) > 1 &&
+    # #       !base::all(lengths) == base::length(geo_id_disaggregated)) {
+    # #
+    # #     base::stop(
+    # #       base::paste0("The following variables must all have the same length as geo_id_disaggregated:",
+    # #                    paste0(var_names, collapse = ", "))
+    # #     )
+    # #   }
+    # # }
+    # #
+    # #
+    # # error_if_multi_geo_and_different_length(geo_id_aggregated,
+    # #                                         exp_central,
+    # #                                         prop_pop_exp,
+    # #                                         pop_exp,
+    # #                                         bhd_central)
+
+    #TODO: Check that geo_id_disaggregated is provided if multiple geo units
+
+
+
+    ## Warnings ######
     warning_if_ar_and_existing <- function(var_name){
 
       # Store var_value
@@ -406,6 +478,9 @@ validate_input_attribute <-
         call. = FALSE)
 
     }
+
+
+
 
 
 
