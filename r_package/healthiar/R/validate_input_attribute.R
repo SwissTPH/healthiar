@@ -87,6 +87,8 @@ validate_input_attribute <-
 
 
     # Functions and calls ###########
+
+    ## Errors #####
     error_if_var_1_but_not_var_2 <- function(var_name_1, var_name_2){
       var_value_1 <- input_args[[var_name_1]]
       var_value_2 <- input_args[[var_name_2]]
@@ -166,6 +168,8 @@ validate_input_attribute <-
         get_length(var_value_1) == get_length(var_value_2)
       } else {TRUE}
     }
+
+
 
     error_if_different_length <- function(var_name_1, var_name_2){
 
@@ -263,18 +267,27 @@ validate_input_attribute <-
     error_if_sum_higher_than_1 <- function(var_name){
       var_value <- input[[var_name]]
 
-      if(!base::is.null(var_value)){ # Only if available
-         if((base::is.list(var_value) &&
-            base::any(purrr::map_lgl(var_value, ~ base::sum(.x, na.rm = TRUE) > 1))) |
+      if(base::is.null(input[["geo_id_disaggregated"]])){
+        geo_id_disaggregated <- as.character(1)
+      } else { geo_id_disaggregated <- input[["geo_id_disaggregated"]]}
 
-            (!base::is.list(var_value) &&
-             base::sum(var_value, na.rm = TRUE) > 1)){
+      input <- tibble::tibble(
+        geo_id_disaggregated = geo_id_disaggregated,
+        var = var_value
+      )
+
+      if(!base::is.null(var_value)){ # Only if available
+         if(input |>
+            dplyr::group_by(geo_id_disaggregated) |>
+            dplyr::summarize(sum = base::sum(var, na.rm = TRUE) > 1) |>
+            dplyr::pull(sum) |>
+            base::any()){
 
         # Create error message
         stop(base::paste0(
           "The sum of values in ",
           var_name,
-          " cannot be higher than 1"),
+          " cannot be higher than 1 for each geo unit."),
           call. = FALSE)
       }
       }
