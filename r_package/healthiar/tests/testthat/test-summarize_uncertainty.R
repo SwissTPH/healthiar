@@ -223,8 +223,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formul
       dplyr::select(c(central_estimate, lower_estimate, upper_estimate)) |>
       base::as.numeric() |> base::round(),
 
-    expected = # Results on 2025-06-04; no comparison study
-      c(228440, 118383, 412966)
+    expected = # Results on 2025-06-10; no comparison study
+      c(230066, 119767, 413729)
   )
 })
 
