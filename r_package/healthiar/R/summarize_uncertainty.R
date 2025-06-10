@@ -274,11 +274,13 @@ summarize_uncertainty <- function(
 
   }
 
+
   ## Template and simulations #####
   sim_template <-
     tibble::tibble(
       geo_id_disaggregated = base::unique(input_table$geo_id_disaggregated),
       geo_id_number = 1:n_geo,
+      exp_dimension = base::unique(input_table$exposure_dimension),
       sim_id = list(1:n_sim))
 
   # Identify the variable names with confidence interval
@@ -319,6 +321,7 @@ summarize_uncertainty <- function(
 
   # Apply simulation for variables that have confidence interval
   for (var in var_names_with_ci) {
+
     # Store distribution
     dist <- sim_config[[var]]
     # Store column name
@@ -336,16 +339,18 @@ summarize_uncertainty <- function(
     # Simulations must be DIFFERENT  in all geo units
     if(var %in% var_names_with_ci_geo_different){
 
-      sim[[col_name]] <- purrr::map(
-        .x = sim_template$geo_id_number,
-        ~ simulate(
+      sim[[col_name]] <- purrr::pmap(
+        list(sim_template$geo_id_number, sim_template$exp_dimension),
+        function(geo_id_number, exp_dimension) {
+          simulate(
           central = central,
           lower = lower,
           upper = upper,
           distribution = dist,
           n = n_sim,
           # Different seed for each geo_unit to avoid similar results across geo_units
-          seed = seeds[[var]] + .x)
+          # Minus 1 to keep the same seed as exposure dimension = 1
+          seed = seeds[[var]] + geo_id_number + base::as.integer(exp_dimension)-1)}
       )
 
       # Second for those variable that are common for all geo units (rr, cutoff, dw and duration)
@@ -399,11 +404,12 @@ summarize_uncertainty <- function(
         # Pack in lists the values that are different in geo unit (as input_args)
         dplyr::across(dplyr::all_of(c("geo_id_disaggregated", var_names_with_ci_geo_different_central)),
                       ~ base::list(.x)),
-        .groups = "drop")|>
-      # Keep the same list format of the geo dependent variables
-      dplyr::mutate(
-        dplyr::across(dplyr::all_of(c(var_names_with_ci_geo_different_central)),
-                      ~ purrr::map(.x, as.list)))
+        .groups = "drop")
+    # |>
+    # # Keep the same list format of the geo dependent variables
+    # dplyr::mutate(
+    #   dplyr::across(dplyr::all_of(c(var_names_with_ci_geo_different_central)),
+    #                 ~ purrr::map(.x, as.list)))
 
     } else { sim_vars_geo_different <- NULL }
 
