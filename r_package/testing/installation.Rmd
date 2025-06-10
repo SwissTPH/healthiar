@@ -41,9 +41,8 @@ library(healthiar)
 
 # Store your pat using keyring::key_set()
 ## Only has to be done once
-
 ## Run this command and paste your GitHub PAT in the "Password" window that opens
-keyring::key_set("GITHUB_PAT_HEALTHIAR")
+# keyring::key_set("GITHUB_PAT_HEALTHIAR")
 
 remotes::install_github(
   repo = "best-cost/best-cost_WPs",

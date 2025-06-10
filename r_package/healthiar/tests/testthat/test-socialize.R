@@ -1,5 +1,5 @@
 # QUANTITATIVE TEST ############################################################
-testthat::test_that("results the same", {
+testthat::test_that("results the same |fake_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "social_data.rds"))
 
@@ -40,7 +40,7 @@ testthat::test_that("results the same", {
   )
 })
 
-testthat::test_that("results correct", {
+testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|", {
 
   pop_ref <- base::readRDS(testthat::test_path("data", "pop_ref.rds"))
   no2_mrt_mdi <- base::readRDS(testthat::test_path("data", "no2_mrt_mdi.rds"))
@@ -65,6 +65,112 @@ testthat::test_that("results correct", {
     expect = round(c(42.4484118, 0.7791663), 3)
   )
 })
+
+#TODO
+## Adjust this code to the new socialize structure
+### Currently gives wrong result, but no error
+# testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_FALSE|social_indicator_TRUE|ref_pop_TRUE|", {
+#
+#   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+#   data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021_bimd.rds"))
+#
+#   testthat::expect_equal(
+#     ## healthiar FUNCTION CALL
+#     object =
+#       healthiar::socialize(
+#         impact = data$VALUE,
+#         geo_id_disaggregated = data$CS01012020, # geo IDs of the preparatory iteration call above and this function call must match!
+#         social_indicator = data$score,
+#         n_quantile = 10, # Specify number of quantiles, e.g. 10
+#         # approach = "quantile", # default (and currently only) approach,
+#         population = data$POPULATION,
+#         age_group = c("total"),
+#         ref_prop_pop = c(1)
+#       ) |>
+#       purrr::pluck("social_main") |>
+#       dplyr::filter(
+#         difference_type == "relative" &
+#           difference_compared_with == "overall")  |>
+#       dplyr::select(difference_value) |>
+#       base::unlist() |>
+#       base::as.numeric(),
+#
+#     ## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+#     # expected = 1.34031 ## absolute + bottom_quantile
+#     # expected = 0.01424282 ## relative + bottom_quantile
+#     # expected = 10.26268 ## absolute + overall
+#     expected = 0.0983327 ## relative + overall
+#   )
+#
+#   ## ASSESSOR: Arno Pauwels, SCI
+#   ## ASSESSMENT DETAILS: All-cause mortality attributable to PM2.5, by census tract (iteration)
+#   ## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2021 + BIMD2011
+#
+# })
+
+
+#TODO
+## Adjust this code to the new socialize structure
+### Right now gives error
+# testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|", {
+#
+#   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+#   data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021_bimd.rds"))
+#
+#   result_interim <- healthiar::attribute_health(
+#     approach_risk = "relative_risk",
+#     erf_shape = "log_linear",
+#     rr_central = 1.118,
+#     # rr_lower = NULL,
+#     # rr_upper = NULL,
+#     rr_increment = 10.0,
+#     exp_central = as.list(data$PM25),
+#     # exp_lower = NULL,
+#     # exp_upper = NULL,
+#     # cutoff_central = NULL,
+#     # cutoff_lower = NULL,
+#     # cutoff_upper = NULL,
+#     bhd_central = as.list(data$VALUE_BASELINE),
+#     # bhd_lower = NULL,
+#     # bhd_upper = NULL,
+#     geo_id_disaggregated = data$CS01012020,
+#     # geo_id_aggregated = NULL,
+#     population = data$POPULATION
+#     # approach_multiexposure = NULL
+#   )
+#
+#   testthat::expect_equal(
+#     ## healthiar FUNCTION CALL
+#     object =
+#       healthiar::socialize(
+#         listed_output_attribute = result_interim,
+#         geo_id_disaggregated = data$CS01012020, # geo IDs of the preparatory iteration call above and this function call must match!
+#         social_indicator = data$score,
+#         n_quantile = 10, # Specify number of quantiles, e.g. 10
+#         population = data$POPULATION,
+#         age_group = c("total"),
+#         ref_prop_pop = c(1)
+#       ) |>
+#       purrr::pluck("social_main") |>
+#       dplyr::filter(
+#         difference_type == "relative" &
+#           difference_compared_with == "overall")  |>
+#       dplyr::select(difference_value) |>
+#       base::unlist() |>
+#       base::as.numeric(),
+#
+#     ## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+#     # expected = 1.34031 ## absolute + bottom_quantile
+#     # expected = 0.01424282 ## relative + bottom_quantile
+#     # expected = 10.26268 ## absolute + overall
+#     expected = 0.0983327 ## relative + overall
+#   )
+# })
+
+## ASSESSOR: Arno Pauwels, SCI
+## ASSESSMENT DETAILS: All-cause mortality attributable to PM2.5, by census tract (iteration)
+## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2021 + BIMD2011
+
 
 
 # testthat::test_that("results correct", {
