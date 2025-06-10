@@ -11,6 +11,7 @@
 validate_input_attribute <-
   function(input_args, unused_args){
 
+
     # Data sets ###########
 
     # Create a copy of input args to modify data set when needed
@@ -264,6 +265,43 @@ validate_input_attribute <-
     }
 
 
+    ## Error if multiple geo units and length of some geo dependent variables are different ####
+    # (geo_ids, exp_central, prop_pop_exp, pop_exp and bhd) must be the same
+    # i.e. enter the data as in the table
+    error_if_multi_geo_and_different_length  <- function(list, var_names){
+
+      # Remove NULLs
+      non_nulls <-
+        list[var_names] |>
+        purrr::discard(is.null)
+
+      # Get lengths of non-NULLs
+      lengths <- purrr::map_int(non_nulls, length)
+
+      if (base::length(base::unique(list$geo_id_disaggregated)) > 1 &&
+          !base::all(lengths == base::length(list$geo_id_disaggregated))) {
+
+        base::stop(
+          base::paste0("The following variables must all have the same length: ",
+                       base::paste0(base::names(non_nulls),
+                                    collapse = ", ")),
+          call. = FALSE
+        )
+      }
+    }
+
+
+    error_if_multi_geo_and_different_length(list = input_args,
+                                            var_names = c("geo_id_disaggregated",
+                                                          "exp_central",
+                                                          "pop_exp",
+                                                          "bhd_central",
+                                                          "deaths_male",
+                                                          "deaths_female",
+                                                          "population_midyear_male",
+                                                          "population_midyear_female"))
+
+
     error_if_sum_higher_than_1 <- function(var_name){
 
       var_value <- input[[var_name]]
@@ -405,37 +443,6 @@ validate_input_attribute <-
       error_if_only_lower_or_upper(var_short = x)
     }
 
-    ### Error if multiple geo units and length of some geo dependent variables are different ####
-    # # (geo_ids, exp_central, prop_pop_exp, pop_exp and bhd) must be the same
-    # # i.e. enter the data as in the table
-    # error_if_multi_geo_and_different_length  <- function(...) {
-    #
-    #   var_value <- base::list(...)
-    #   var_name <- base::names(var_value)
-    #
-    #   # Remove NULLs
-    #   non_nulls <- purrr::compact(var_value)
-    #
-    #   # Get lengths of non-NULLs
-    #   lengths <- purrr::map_int(non_nulls, length)
-    #
-    #
-    # #   if (base::length(geo_id_disaggregated) > 1 &&
-    # #       !base::all(lengths) == base::length(geo_id_disaggregated)) {
-    # #
-    # #     base::stop(
-    # #       base::paste0("The following variables must all have the same length as geo_id_disaggregated:",
-    # #                    paste0(var_names, collapse = ", "))
-    # #     )
-    # #   }
-    # # }
-    # #
-    # #
-    # # error_if_multi_geo_and_different_length(geo_id_aggregated,
-    # #                                         exp_central,
-    # #                                         prop_pop_exp,
-    # #                                         pop_exp,
-    # #                                         bhd_central)
 
     #TODO: Check that geo_id_disaggregated is provided if multiple geo units
 
