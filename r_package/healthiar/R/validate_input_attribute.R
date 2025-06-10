@@ -73,8 +73,7 @@ validate_input_attribute <-
     categorical_args <- names(options_of_categorical_args)
 
     lifetable_var_names_with_same_length <-
-      c("age_range",
-        "deaths_male", "deaths_female",
+      c("deaths_male", "deaths_female",
         "population_midyear_male", "population_midyear_female")
 
     available_var_names <-
