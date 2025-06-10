@@ -91,20 +91,23 @@ compile_input <-
 
 
     # PROCESS GEO ID ###################################################################
-    # If no geo_id_disaggregated is provided (if is NULL) then assign some value.
-    ## geo_id_disaggregated is needed to group results in case of multiple geo_ids
+    # If no geo_id_disaggregated is provided (if is NULL) then
+    # single case (only 1 geo unit) is assumed
+    # because an id is always needed to link information
     if(is.null(geo_id_disaggregated)){
-      geo_id_disaggregated <-
-        base::as.character(1:length({{exp_central}}))
-
-    } else if(!is.null(geo_id_aggregated)){
-      # For geo_id_aggegated there is no default value as for geo_id_aggregated
-      # so it needs the if statement below.
-      # Otherwise, instead of not including the column when NULL
-      # no the tibble becomes empty and then error somewhere else
+      geo_id_disaggregated <- base::as.character(1)
+    } else {
       # geo_ids need to be character because
       # a) no operations are expected
       # b) otherwise error somewhere else in the package when mixing character and numeric
+      geo_id_disaggregated <- base::as.character(geo_id_disaggregated)
+    }
+
+    if(!is.null(geo_id_aggregated)){
+      # geo_id_aggegated there is no default value as for geo_id_aggregated
+      # so it needs the if statement below.
+      # Otherwise, instead of not including the column when NULL
+      # no the tibble becomes empty and then error somewhere else
       geo_id_aggregated <- as.character(geo_id_aggregated)
     }
 
