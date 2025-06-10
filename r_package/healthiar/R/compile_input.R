@@ -165,22 +165,18 @@ compile_input <-
       # Tibble removed columns that are NULL.
       # So if variable is NULL, column not initiated
       tibble::tibble(
-        ## First compile input data that are geo-dependent
-        ## Use rep() match dimensions
+        # First compile input data that are geo-dependent
+        # Use rep() match dimensions
         geo_id_disaggregated = base::rep(geo_id_disaggregated,
-                                   each = length_exp_dist),
-        geo_id_aggregated = base::rep(geo_id_aggregated,
-                                each = length_exp_dist),
-        bhd_central = base::rep(unlist(bhd_central), each = length_exp_dist),
-        bhd_lower = base::rep(unlist(bhd_lower), each = length_exp_dist),
-        bhd_upper = base::rep(unlist(bhd_upper), each = length_exp_dist),
-        # min_age = rep(min_age, each = length_exp_dist),
-        # max_age = rep(max_age, each = length_exp_dist),
-        # approach_exposure = rep(approach_exposure, each = length_exp_dist),
-        # approach_newborns = rep(approach_newborns, each = length_exp_dist),
-        population = base::rep(unlist(population), each = length_exp_dist),
+                                         length.out = n_rows_input),
+        geo_id_aggregated = geo_id_aggregated,
+        bhd_central = bhd_central,
+        bhd_lower = bhd_lower,
+        bhd_upper = bhd_upper,
+        population = population,
 
-        ## Second those variables with length = 1 (non-problematic)
+        # Second those variables with length = 1 (non-problematic)
+        # or same length as exp_central
         cutoff_central = cutoff_central,
         cutoff_lower = cutoff_lower,
         cutoff_upper = cutoff_upper,
@@ -214,11 +210,11 @@ compile_input <-
       dw_upper = dw_upper,
 
       ## Finally, those variables that are multi-dimensional (exposure distribution)
-      exp_central = unlist(exp_central),
-      exp_lower = unlist(exp_lower),
-      exp_upper = unlist(exp_upper),
-      pop_exp = unlist(pop_exp),
-      prop_pop_exp = unlist(prop_pop_exp)) |>
+      exp_central = exp_central,
+      exp_lower = exp_lower,
+      exp_upper = exp_upper,
+      pop_exp = pop_exp,
+      prop_pop_exp = prop_pop_exp) |>
 
       ## Remove min_age & max_age columns if they are NA
       dplyr::select(-dplyr::where(~ all(is.na(x = .))))
@@ -339,8 +335,6 @@ compile_input <-
           age = age_sequence) |>
         # Add age end with mutate instead of crossing
         # because no additional combinations are needed (already included in age)
-        # The function rep(, length.out=)
-        # is needed to ensure that the vector length matches with number of rows of the tibble.
         dplyr::mutate(
           age_end = base::rep(age_end_sequence, length.out = dplyr::n()))
 
@@ -349,16 +343,16 @@ compile_input <-
         lifetable_with_pop_template |>
         dplyr::mutate(
           sex = "male",
-          deaths = base::rep(unlist(deaths_male), length.out = dplyr::n()),
-          population = base::rep(unlist(population_midyear_male), length.out = dplyr::n()))
+          deaths = deaths_male,
+          population = population_midyear_male)
 
       # The same for female
       lifetable_with_pop_female <-
         lifetable_with_pop_template |>
         dplyr::mutate(
           sex = "female",
-          deaths = base::rep(unlist(deaths_female), length.out = dplyr::n()),
-          population = base::rep(unlist(population_midyear_female), length.out = dplyr::n()))
+          deaths = deaths_female,
+          population = population_midyear_female)
 
       lifetable_with_pop_male_female <-
         # Bind male and female tibbles
