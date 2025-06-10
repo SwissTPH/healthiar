@@ -154,17 +154,12 @@ compile_input <-
 
 
     # ARGUMENTS ################################################################
+    # Get maximal length (number of rows) of input table
+    # If there is only one geo unit --> the only variable that can be a vector is exp_central
+    # If there are multiple geo units --> already table data format with the maximal length
+    #TODO If age age groups are ever implemented, this variable has to be adapted
+    n_rows_input <- base::length(exp_central)
 
-    # Store the length of the exposure argument (to be used below)
-    length_exp_dist <-
-      ifelse(is.list(exp_central),
-             length(exp_central[[1]]), # If exposure distribution
-             length(exp_central))      # If single exposure
-
-    length_exp_list <-
-      ifelse(is.list(exp_central),
-             length(exp_central),      # If multiple geo units
-             1)                        # If only one geo unit
 
     input_wo_lifetable <-
       # Tibble removed columns that are NULL.
