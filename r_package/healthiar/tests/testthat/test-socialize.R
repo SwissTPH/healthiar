@@ -5,24 +5,24 @@ testthat::test_that("results the same", {
 
   att_age_below_40 <-
     healthiar::attribute_health(
-      exp_central = as.list(data$PM25_MEAN),
+      exp_central = data$PM25_MEAN,
       cutoff_central = 0,
       rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
       erf_shape = "log_linear",
       rr_increment = 10,
-      bhd_central = as.list(data$MORTALITY_TOTAL),
+      bhd_central = data$MORTALITY_TOTAL,
       population = data$POPULATION,
       geo_id_disaggregated = data$CS01012020)
 
   att_age_above_40 <-
     healthiar::attribute_health(
-      exp_central = base::as.list(data$PM25_MEAN-0.1),
+      exp_central = data$PM25_MEAN-0.1,
       cutoff_central = 0,
       rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
       erf_shape = "log_linear",
       rr_increment = 10,
-      bhd_central = base::as.list(ifelse(data$MORTALITY_TOTAL-10<0, 0, data$MORTALITY_TOTAL-10)),
-      population = base::as.list(ifelse(data$POPULATION-10<0, 0, data$POPULATION-10)),
+      bhd_central = ifelse(data$MORTALITY_TOTAL-10<0, 0, data$MORTALITY_TOTAL-10),
+      population = ifelse(data$POPULATION-10<0, 0, data$POPULATION-10),
       geo_id_disaggregated = data$CS01012020)
 
 

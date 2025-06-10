@@ -47,21 +47,21 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
 
   bestcost_pm_mortality_below_40_multigeo <-
     healthiar::attribute_health(
-      exp_central = list(8.1, 7.1),
+      exp_central = c(8.1, 7.1),
       cutoff_central =  0,
-      bhd_central = list(1000, 2000),
+      bhd_central = c(1000, 2000),
       rr_central = 1.063,
       rr_increment = 10,
       erf_shape = "log_linear",
-      population = list(1E5, 2E5),
+      population = c(1E5, 2E5),
       geo_id_disaggregated = c("a", "b"))
 
   bestcost_pm_mortality_40_plus_multigeo <-
     healthiar::attribute_mod(
       output_attribute_1 = bestcost_pm_mortality_below_40_multigeo,
-      bhd_central = list(4000, 8000),
-      exp_central = list(10.9, 9.9),
-      population = list(5E5, 1E6))
+      bhd_central = c(4000, 8000),
+      exp_central = c(10.9, 9.9),
+      population = c(5E5, 1E6))
 
   population_below_40_multigeo <- bestcost_pm_mortality_below_40_multigeo$health_main$population
   population_40_plus_multigeo <- bestcost_pm_mortality_40_plus_multigeo$health_main$population
@@ -71,7 +71,7 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
     object =
       healthiar::standardize(
         listed_output_attribute = list(bestcost_pm_mortality_below_40_multigeo,
-                                bestcost_pm_mortality_40_plus_multigeo),
+                                       bestcost_pm_mortality_40_plus_multigeo),
         age_group = c("below_40", "40_plus"),
         ref_prop_pop = c(0.5, 0.5))$health_main$impact_per_100k_inhab,
 
