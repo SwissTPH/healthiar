@@ -271,17 +271,18 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        exp_central = list(8.1, 7.1),
+        exp_central = c(8.1, 7.1),
         cutoff_central =  0,
-        bhd_central = list(1000, 2000),
+        bhd_central = c(1000, 2000),
         rr_central = 1.063,
         rr_increment = 10,
         erf_shape = "log_linear",
-        population = list(1E5, 2E5),
+        population = c(1E5, 2E5),
         geo_id_disaggregated = c("a", "b"))$health_main$impact|>round(4),
     expected =
       c(48.2825, 84.9003) # Results on 30 April 2025; no comparison study
-)
+  )
+
 })
 
 testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
@@ -289,19 +290,19 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        exp_central = as.list(runif_with_seed(1E2, 8.0, 9.0, 1)),
-        exp_lower = as.list(runif_with_seed(1E2, 8.0, 9.0, 1)-0.1),
-        exp_upper = as.list(runif_with_seed(1E2, 8.0, 9.0, 1)+0.1),
+        exp_central = runif_with_seed(1E2, 8.0, 9.0, 1),
+        exp_lower = runif_with_seed(1E2, 8.0, 9.0, 1)-0.1,
+        exp_upper = runif_with_seed(1E2, 8.0, 9.0, 1)+0.1,
         cutoff_central = 5,
-        bhd_central = as.list(runif_with_seed(1E2, 25000, 35000, 1)),
-        bhd_lower = as.list(runif_with_seed(1E2, 25000, 35000, 1) - 1000),
-        bhd_upper = as.list(runif_with_seed(1E2, 25000, 35000, 1) + 1000),
+        bhd_central = runif_with_seed(1E2, 25000, 35000, 1),
+        bhd_lower = runif_with_seed(1E2, 25000, 35000, 1) - 1000,
+        bhd_upper = runif_with_seed(1E2, 25000, 35000, 1) + 1000,
         rr_central = 1.369,
         rr_lower = 1.124,
         rr_upper = 1.664,
         rr_increment = 10,
         erf_shape = "log_linear",
-        population = as.list(rep(1E6, 1E2)),
+        population = rep(1E6, 1E2),
         geo_id_disaggregated = 1:1E2,
         geo_id_aggregated = rep("CH", 1E2),
         info = "PM2.5_copd")$health_main$impact_rounded,
@@ -481,19 +482,19 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        exp_central = list(runif_with_seed(5,8,10,1),
-                           runif_with_seed(5,8,10,2),
-                           runif_with_seed(5,8,10,3)),
+        exp_central = c(runif_with_seed(5,8,10,1),
+                        runif_with_seed(5,8,10,2),
+                        runif_with_seed(5,8,10,3)),
         cutoff_central = 5,
-        pop_exp = list(runif_with_seed(5,1E2,1E3,1),
-                       runif_with_seed(5,1E2,1E3,2),
-                       runif_with_seed(5,1E2,1E3,3)),
-        bhd_central = list(runif_with_seed(3,1E4,1E5,1)),
+        pop_exp = c(runif_with_seed(5,1E2,1E3,1),
+                    runif_with_seed(5,1E2,1E3,2),
+                    runif_with_seed(5,1E2,1E3,3)),
+        bhd_central = rep(runif_with_seed(3,1E4,1E5,1), each = 5),
         rr_central = 1.08,
         rr_increment = 10,
         erf_shape = "log_linear",
-        geo_id_disaggregated = 1:3,
-        geo_id_aggregated = rep("ch", 3)
+        geo_id_disaggregated = rep(1:3, each = 5),
+        geo_id_aggregated = rep("ch", each = 15)
         )$health_detailed$impact_raw$impact_rounded,
     expected =
       round(c(1066.970, 1421.845, 1908.409)) # Results on 2025-04-14; no comparison study
@@ -774,16 +775,16 @@ testthat::test_that("no error ar iteration", {
     object =
       healthiar::attribute_health(
         approach_risk = "absolute_risk",
-        exp_central = list(runif_with_seed(5,8,10,1),
+        exp_central = c(runif_with_seed(5,8,10,1),
                            runif_with_seed(5,8,10,2),
                            runif_with_seed(5,8,10,3)),
-        pop_exp = list(
+        pop_exp = c(
           runif_with_seed(1,5E3,1E4,1) * runif_with_seed(5,0,1,1), # total pop * proportion pop exposed
           runif_with_seed(1,5E3,1E4,2) * runif_with_seed(5,0,1,2),
           runif_with_seed(1,5E3,1E4,3) * runif_with_seed(5,0,1,3)
         ),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        geo_id_disaggregated = 1:3,
+        geo_id_disaggregated = rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
 )
 })
@@ -794,16 +795,16 @@ testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iter
     object =
       healthiar::attribute_health(
         approach_risk = "absolute_risk",
-        exp_central = list(runif_with_seed(5,8,10,1),
+        exp_central = c(runif_with_seed(5,8,10,1),
                            runif_with_seed(5,8,10,2),
                            runif_with_seed(5,8,10,3)),
-        pop_exp = list(
+        pop_exp = c(
           runif_with_seed(1,5E3,1E4,1) * runif_with_seed(5,0,1,1), # total pop * proportion pop exposed
           runif_with_seed(1,5E3,1E4,2) * runif_with_seed(5,0,1,2),
           runif_with_seed(1,5E3,1E4,3) * runif_with_seed(5,0,1,3)
           ),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        geo_id_disaggregated = 1:3,
+        geo_id_disaggregated = rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
         )$health_detailed$impact_raw$impact |> round(),
     expected =
@@ -817,22 +818,22 @@ testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iter
     object =
       healthiar::attribute_health(
         approach_risk = "absolute_risk",
-        exp_central = list(runif_with_seed(5,9,10,1),
+        exp_central = c(runif_with_seed(5,9,10,1),
                            runif_with_seed(5,9,10,2),
                            runif_with_seed(5,9,10,3)),
-        exp_lower = list(runif_with_seed(5,7,8,1),
+        exp_lower = c(runif_with_seed(5,7,8,1),
                          runif_with_seed(5,7,8,2),
                          runif_with_seed(5,7,8,3)),
-        exp_upper = list(runif_with_seed(5,11,12,1),
+        exp_upper = c(runif_with_seed(5,11,12,1),
                          runif_with_seed(5,11,12,2),
                          runif_with_seed(5,11,12,3)),
-        pop_exp = list(
+        pop_exp = c(
           runif_with_seed(1,5E3,1E4,1) * runif_with_seed(5,0,1,1), # total pop * proportion pop exposed
           runif_with_seed(1,5E3,1E4,2) * runif_with_seed(5,0,1,2),
           runif_with_seed(1,5E3,1E4,3) * runif_with_seed(5,0,1,3)
         ),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        geo_id_disaggregated = 1:3,
+        geo_id_disaggregated = rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
         )$health_detailed$impact_raw$impact |> round(),
     expected = # Results on 2025-01-20; no comparison study

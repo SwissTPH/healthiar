@@ -112,9 +112,9 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
 
   scen_1_singlebhd_rr_geo <-
     healthiar::attribute_health(
-      exp_central = list(8.85, 8.0),
+      exp_central = c(8.85, 8.0),
       cutoff_central = 5,
-      bhd_central = list(25000, 20000),
+      bhd_central = c(25000, 20000),
       rr_central = 1.118,
       rr_lower = 1.060,
       rr_upper = 1.179,
@@ -127,7 +127,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_singlebhd_rr_geo,
       # What is different in scenario 2 compared to scenario 1
-      exp_central = list(6, 6.5))
+      exp_central = c(6, 6.5))
 
   testthat::expect_equal(
     object =
@@ -144,13 +144,13 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
 
   scen_1_singlebhd_rr_geo_large <-
     healthiar::attribute_health(
-      exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)),
-      exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)-0.1),
-      exp_upper = as.list(runif_with_seed(1E4, 8.0, 9.0, 1)+0.1),
+      exp_central = c(runif_with_seed(1E4, 8.0, 9.0, 1)),
+      exp_lower = c(runif_with_seed(1E4, 8.0, 9.0, 1)-0.1),
+      exp_upper = c(runif_with_seed(1E4, 8.0, 9.0, 1)+0.1),
       cutoff_central = 5,
-      bhd_central = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-      bhd_lower = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
-      bhd_upper = as.list(runif_with_seed(1E4, 25000, 35000, 1)),
+      bhd_central = c(runif_with_seed(1E4, 25000, 35000, 1)),
+      bhd_lower = c(runif_with_seed(1E4, 25000, 35000, 1)),
+      bhd_upper = c(runif_with_seed(1E4, 25000, 35000, 1)),
       rr_central = 1.369,
       rr_lower = 1.124,
       rr_upper = 1.664,
@@ -163,9 +163,9 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
   scen_2_singlebhd_rr_geo_large <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_singlebhd_rr_geo_large,
-      exp_central = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)),
-      exp_lower = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)-0.1),
-      exp_upper = as.list(runif_with_seed(1E4, 8.0, 9.0, 2)+0.1))
+      exp_central = c(runif_with_seed(1E4, 8.0, 9.0, 2)),
+      exp_lower = c(runif_with_seed(1E4, 8.0, 9.0, 2)-0.1),
+      exp_upper = c(runif_with_seed(1E4, 8.0, 9.0, 2)+0.1))
 
   testthat::expect_equal(
     object =
@@ -216,7 +216,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
 
   scen_1_singlebhd_yld_geo <-
     healthiar::attribute_health(
-      exp_central = list(8.85, 8.0),
+      exp_central = c(8.85, 8.0),
       cutoff_central = 5,
       bhd_central = 25000,
       rr_central = 1.118,
@@ -233,7 +233,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
   scen_2_singlebhd_yld_geo <-
     attribute_mod(
       output_attribute_1 = scen_1_singlebhd_yld_geo,
-      exp_central = list(6, 6.5),
+      exp_central = c(6, 6.5),
       info = "PM2.5_yld_after")
 
   testthat::expect_equal(
@@ -253,7 +253,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
 
   scen_1_singlebhd_yld_geo <-
     healthiar::attribute_health(
-      exp_central = list(8.85, 8.0),
+      exp_central = c(8.85, 8.0),
       cutoff_central = 5,
       bhd_central = 25000,
       rr_central = 1.118,
@@ -270,7 +270,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
   scen_2_singlebhd_yld_geo <-
     attribute_mod(
       output_attribute_1 = scen_1_singlebhd_yld_geo,
-      exp_central = list(6, 6.5),
+      exp_central = c(6, 6.5),
       info = "PM2.5_yld_after")
 
   testthat::expect_equal(
@@ -360,9 +360,9 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
 
   scen_1_singlebhd_rr_geo <-
     healthiar::attribute_health(
-      exp_central = list(8.85, 8.0),
+      exp_central = c(8.85, 8.0),
       cutoff_central = 5,
-      bhd_central = list(25000, 20000),
+      bhd_central = c(25000, 20000),
       rr_central = 1.118,
       rr_lower = 1.060,
       rr_upper = 1.179,
@@ -375,7 +375,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_singlebhd_rr_geo,
       # What is different in scenario 2 compared to scenario 1
-      exp_central = list(6, 6.5))
+      exp_central = c(6, 6.5))
 
   testthat::expect_equal(
     object =
@@ -393,7 +393,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
 
   scen_1_singlebhd_yld_geo <-
     healthiar::attribute_health(
-      exp_central = list(8.85, 8.0),
+      exp_central = c(8.85, 8.0),
       cutoff_central = 5,
       bhd_central = 25000,
       rr_central = 1.118,
@@ -410,7 +410,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
   scen_2_singlebhd_yld_geo <-
     attribute_mod(
       output_attribute_1 = scen_1_singlebhd_yld_geo,
-      exp_central = list(6, 6.5),
+      exp_central = c(6, 6.5),
       info = "PM2.5_yld_after")
 
   testthat::expect_equal(
@@ -465,7 +465,7 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
 
   scen_1_singlebhd_yld_geo <-
     healthiar::attribute_health(
-      exp_central = list(8.85, 8.0),
+      exp_central = c(8.85, 8.0),
       cutoff_central = 5,
       bhd_central = 25000,
       rr_central = 1.118,
@@ -482,7 +482,7 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
   scen_2_singlebhd_yld_geo <-
     attribute_mod(
       output_attribute_1 = scen_1_singlebhd_yld_geo,
-      exp_central = list(6, 6.5),
+      exp_central = c(6, 6.5),
       info = "PM2.5_yld_after")
 
   testthat::expect_equal(
@@ -575,24 +575,24 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|i
   scen_1_singlebhd_ar_geo <-
     healthiar::attribute_health(
       approach_risk = "absolute_risk",
-      exp_central = list(c(57.5, 62.5, 67.5, 72.5, 77.5),
-                         c(57, 62, 67, 72, 77)),# Fake values
-      population = list(945200, 929800),
-      pop_exp= list(c(387500, 286000, 191800, 72200, 7700),
-                    c(380000, 280000, 190800, 72000, 7000)), # Fake values
+      exp_central = c(c(57.5, 62.5, 67.5, 72.5, 77.5),
+                      c(57, 62, 67, 72, 77)),# Fake values
+      population = rep(c(945200, 929800), each = 5),
+      pop_exp = c(c(387500, 286000, 191800, 72200, 7700),
+                  c(380000, 280000, 190800, 72000, 7000)), # Fake values
       erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
       info = data.frame(pollutant = "road_noise",
                         outcome = "highly_annoyance",
                         year = 2020),
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2)
+      geo_id_disaggregated = rep(c("a", "b"), each = 5),
+      geo_id_aggregated = rep("ch", each = 2*5)
     )
 
   scen_2_singlebhd_ar_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_singlebhd_ar_geo,
-      exp_central = list(c(50, 55, 60, 65, 75),
-                         c(50.5, 55.5, 60.5, 65.5, 75.5)), # Fake values
+      exp_central = c(c(50, 55, 60, 65, 75),
+                      c(50.5, 55.5, 60.5, 65.5, 75.5)), # Fake values
       info = data.frame(pollutant = "road_noise",
                         outcome = "highly_annoyance",
                         year = 2022))
@@ -667,7 +667,7 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
   scen_1_yll_lifetable_geo <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
-      exp_central = list(8.85, 8.0), # Fake data just for testing purposes
+      exp_central = rep(c(8.85, 8.0), each = 100) , # Fake data just for testing purposes
       prop_pop_exp = 1, # Fake data just for testing purposes
       cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
       rr_central = 1.118,
@@ -679,19 +679,19 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
       approach_newborns = "without_newborns",
       first_age_pop = 0,
       last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      deaths_male = rep(data[["pop"]]$number_of_deaths_male, times = 2),
+      deaths_female = rep(data[["pop"]]$number_of_deaths_female, times = 2),
+      population_midyear_male = rep(data_lifetable[["male"]]$population, times = 2),
+      population_midyear_female = rep(data_lifetable[["female"]]$population, times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
+      geo_id_disaggregated = rep(c("a", "b"), each = 100),
+      geo_id_aggregated = rep("ch", each = 2 * 100))
 
   scen_2_yll_lifetable_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_yll_lifetable_geo,
-      exp_central = list(6, 6.5)) # Fake data just for testing purposes
+      exp_central = rep(c(6, 6.5), each = 100)) # Fake data just for testing purposes
 
   testthat::expect_equal(
     object =
@@ -760,7 +760,7 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
   scen_1_yll_lifetable_geo <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
-      exp_central = list(8.85, 8.0), # Fake data just for testing purposes
+      exp_central = rep(c(8.85, 8.0), each = 100), # Fake data just for testing purposes
       prop_pop_exp = 1, # Fake data just for testing purposes
       cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
       rr_central = 1.118,
@@ -772,19 +772,19 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
       approach_newborns = "without_newborns",
       first_age_pop = 0,
       last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      deaths_male = rep(data[["pop"]]$number_of_deaths_male, times = 2),
+      deaths_female = rep(data[["pop"]]$number_of_deaths_female, times = 2),
+      population_midyear_male = rep(data_lifetable[["male"]]$population, times = 2),
+      population_midyear_female = rep(data_lifetable[["female"]]$population, times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
+      geo_id_disaggregated = rep(c("a", "b"), each = 100),
+      geo_id_aggregated = rep("ch", each = 2 * 100))
 
   scen_2_yll_lifetable_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_yll_lifetable_geo,
-      exp_central = list(6, 6.5)) # Fake data just for testing purposes
+      exp_central = rep(c(6, 6.5), each = 100)) # Fake data just for testing purposes
 
   testthat::expect_equal(
     object =
@@ -853,7 +853,7 @@ testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_singl
   scen_1_deaths_lifetable_geo <-
     healthiar::attribute_lifetable(
       health_outcome = "deaths",
-      exp_central = list(8.85, 8.0),# Fake data just for testing purposes
+      exp_central = rep(c(8.85, 8.0), each = 100),# Fake data just for testing purposes
       prop_pop_exp = 1, # Fake data just for testing purposes
       cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
       rr_central = 1.118,
@@ -863,19 +863,19 @@ testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_singl
       erf_shape = "log_linear",
       first_age_pop = 0,
       last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      deaths_male = rep(data[["pop"]]$number_of_deaths_male, times = 2),
+      deaths_female = rep(data[["pop"]]$number_of_deaths_female, times = 2),
+      population_midyear_male = rep(data_lifetable[["male"]]$population, times = 2),
+      population_midyear_female = rep(data_lifetable[["female"]]$population, times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
+      geo_id_disaggregated = rep(c("a", "b"), each = 100),
+      geo_id_aggregated = rep("ch", 2 * 100))
 
   scen_2_deaths_lifetable_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_deaths_lifetable_geo,
-      exp_central = list(6, 6.5)) # Fake data just for testing purposes
+      exp_central = rep(c(6, 6.5), each = 100)) # Fake data just for testing purposes
 
   testthat::expect_equal(
     object =
@@ -942,7 +942,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
   scen_1_deaths_lifetable_geo <-
     healthiar::attribute_lifetable(
       health_outcome = "deaths",
-      exp_central = list(8.85, 8.0),# Fake data just for testing purposes
+      exp_central = rep(c(8.85, 8.0), each = 100),# Fake data just for testing purposes
       prop_pop_exp = 1, # Fake data just for testing purposes
       cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
       rr_central = 1.118,
@@ -952,19 +952,19 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
       erf_shape = "log_linear",
       first_age_pop = 0,
       last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      deaths_male = rep(data[["pop"]]$number_of_deaths_male, times = 2),
+      deaths_female = rep(data[["pop"]]$number_of_deaths_female, times = 2),
+      population_midyear_male = rep(data_lifetable[["male"]]$population, times = 2),
+      population_midyear_female = rep(data_lifetable[["female"]]$population, times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
+      geo_id_disaggregated = rep(c("a", "b"), each = 100),
+      geo_id_aggregated = rep("ch", 2 * 100))
 
   scen_2_deaths_lifetable_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_deaths_lifetable_geo,
-      exp_central = list(6, 6.5)) # Fake data just for testing purposes
+      exp_central = rep(c(6, 6.5), each = 100)) # Fake data just for testing purposes
 
   testthat::expect_equal(
     object =
@@ -1052,20 +1052,20 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
   output_attribute_1 =
     healthiar::attribute_health(
       approach_risk = "relative_risk",
-      exp_central = list(6.848995, 6.565633, 6.167882),
+      exp_central = c(6.848995, 6.565633, 6.167882),
       cutoff_central = 0,
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
-      bhd_central = list(650, 1200, 1000),
-      geo_id_disaggregated = list('BR', 'FL', 'WA'))
+      bhd_central = c(650, 1200, 1000),
+      geo_id_disaggregated = c('BR', 'FL', 'WA'))
 
   output_attribute_2 =
     healthiar::attribute_health(
       approach_risk = "relative_risk",
-      exp_central = list(3.125626, 2.948348, 3.167488),
+      exp_central = c(3.125626, 2.948348, 3.167488),
       cutoff_central = 0,
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
-      bhd_central = list(650, 1200, 1000),
-      geo_id_disaggregated = list('BR', 'FL', 'WA'))
+      bhd_central = c(650, 1200, 1000),
+      geo_id_disaggregated = c('BR', 'FL', 'WA'))
 
   testthat::expect_equal(
     object =
@@ -1086,22 +1086,22 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
   output_attribute_1 =
     healthiar::attribute_health(
       approach_risk = "relative_risk",
-      exp_central = list(c(0, 26.79813), c(0, 25.89477), c(0, 23.68696)),
+      exp_central = c(c(0, 26.79813), c(0, 25.89477), c(0, 23.68696)),
       cutoff_central = 0,
-      prop_pop_exp = list(c(0.7444227, 0.2555773), c(0.7464495, 0.2535505), c(0.7396086, 0.2603914)),
+      prop_pop_exp = c(c(0.7444227, 0.2555773), c(0.7464495, 0.2535505), c(0.7396086, 0.2603914)),
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
-      bhd_central = list(650, 1200, 1000),
-      geo_id_disaggregated = list('BR', 'FL', 'WA'))
+      bhd_central = rep(c(650, 1200, 1000), each = 2),
+      geo_id_disaggregated = rep(c('BR', 'FL', 'WA'), each = 2))
 
   output_attribute_2 =
     healthiar::attribute_health(
       approach_risk = "relative_risk",
-      exp_central = list(c(0, 19.22196), c(0, 17.91513), c(0, 17.19273)),
+      exp_central = c(c(0, 19.22196), c(0, 17.91513), c(0, 17.19273)),
       cutoff_central = 0,
-      prop_pop_exp = list(c(0.8373929, 0.1626071), c(0.8354269, 0.1645731), c(0.8157658, 0.1842342)),
+      prop_pop_exp = c(c(0.8373929, 0.1626071), c(0.8354269, 0.1645731), c(0.8157658, 0.1842342)),
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
-      bhd_central = list(650, 1200, 1000),
-      geo_id_disaggregated = list('BR', 'FL', 'WA'))
+      bhd_central = rep(c(650, 1200, 1000), each = 2),
+      geo_id_disaggregated = rep(c('BR', 'FL', 'WA'), each = 2))
 
   testthat::expect_equal(
     object =
