@@ -1227,7 +1227,8 @@ progress_overall_non_lifetable <- rbind(
   progress_monetization,
   progress_cba,
   progress_daly,
-  progress_multiexposure
+  progress_multiexposure,
+  progress_socialize
 )
 
 overall_row_non_lifetable <- tibble(
@@ -1284,6 +1285,9 @@ overall_row_lifetable <- tibble(
 
 # Overall progress (both non-lifetable and lifetable pathways)
 progress_overall <- rbind(overall_row_non_lifetable, progress_overall_non_lifetable, empty_row, overall_row_lifetable, progress_lifetable)
+
+## Create Excel for overall progress
+openxlsx::write.xlsx(progress_overall, "tests/progress_overall.xlsx")
 ```
 
 
