@@ -1133,7 +1133,7 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
 
 testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "Bergen støy_Testberegninger HA og HSD.rds"))
+  data <- base::readRDS(testthat::test_path("data", "Bergen_HA_og_HSD.rds"))
   totalpop_Bergen <- 269189
 
   testthat::expect_equal(
