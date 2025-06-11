@@ -48,45 +48,25 @@ compile_input <-
 
     # PROCESS ERF ######################################################################
 
-    # If the erf is defined by rr, increment, shape and cutoff
-    if(is.null(erf_eq_central)){
-
-      erf_data <- # 1 x 6 tibble
-        tibble::tibble(
-          rr_increment = rr_increment,
-          erf_shape = erf_shape,
-          rr_central = rr_central,
-          rr_lower =  rr_lower,
-          rr_upper = rr_upper)
-    }
-
-    # If it is defined by the erf function as string
-    if(!is.null(erf_eq_central) & is.character(erf_eq_central)){
-
-        erf_data <- # 1 x 3 tibble
-          tibble::tibble(
-            erf_eq_central = erf_eq_central,
-            erf_eq_lower = erf_eq_lower,
-            erf_eq_upper = erf_eq_upper)
-    }
-
-    # If it is defined by the erf function as function
-    if(!is.null(erf_eq_central) & is.function(erf_eq_central)){
-
-        erf_data <- # 1 x 3 tibble
-          tibble::tibble(
-            ## Functions can't be saved raw in column -> save as list
-            erf_eq_central = list(erf_eq_central))
-        }
-
-    # If a confidence interval for the erf is provided, add the erf columns
-    if (!is.null(erf_eq_lower) & !is.null(erf_eq_upper) & is.function(erf_eq_central)){
-      erf_data <-
-        erf_data |>
-        dplyr::mutate(
-           erf_eq_lower = list(erf_eq_lower),
-           erf_eq_upper = list(erf_eq_upper))}
-
+    # Compile erf_data in one tibble
+    # A nice feature of tibbles is that, when you define them,
+    # if column is NULL, then it will not show up.
+    # erf can be defined by one of the following combination of data
+    # a) rr, increment, shape and cutoff
+    # b) an erf function as string
+    # c) an erf function as function
+    erf_data <-
+      tibble::tibble(
+        rr_increment = rr_increment,
+        erf_shape = erf_shape,
+        rr_central = rr_central,
+        rr_lower =  rr_lower,
+        rr_upper = rr_upper,
+        # Functions can't be saved raw in column -> save as list
+        erf_eq_central = if (base::is.function(erf_eq_central)) base::list(erf_eq_central) else erf_eq_central,
+        erf_eq_lower = if (base::is.function(erf_eq_lower)) base::list(erf_eq_lower) else erf_eq_lower,
+        erf_eq_upper = if (base::is.function(erf_eq_upper)) base::list(erf_eq_upper) else erf_eq_upper
+      )
 
     # ARGUMENTS ################################################################
     # Get maximal length (number of rows) of input table
