@@ -12,7 +12,7 @@ bibentry(
     person(given = "Maria", family = "Lepnurm", role = c("ctb"), comment = c(ORCID = "0009-0009-4372-6227"))),
     person(given = "Iracy", family = "Pimenta", role = c("ctb"), comment = c(ORCID = "0000-0003-0032-1536"))),
     person(given = "Andreia", family = "Novais", role = c("ctb"), comment = c(ORCID = "0009-0007-7775-108X"))),
-    person(given = "Ana", family = "Barbosa", role = c("ctb"))),
+    person(given = "Ana", family = "Barbosa", role = c("ctb"), comment = c(ORCID = "0000-0002-9623-9002"))),
     person(given = "Joao", family = "Vasco Santos", role = c("ctb"), comment = c(ORCID = "0000-0003-4696-1002"))),
     person(given = "Anette", family = "Kocbach Bolling", role = c("ctb"), comment = c(ORCID = "0000-0003-4209-7448"))),
   year     = 2026,
