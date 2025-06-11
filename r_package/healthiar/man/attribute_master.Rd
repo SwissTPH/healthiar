@@ -48,7 +48,8 @@ attribute_master(
   duration_upper = NULL,
   approach_exposure = NULL,
   population = NULL,
-  info = NULL
+  info = NULL,
+  .unused_args = NULL
 )
 }
 \arguments{

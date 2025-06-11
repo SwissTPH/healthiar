@@ -145,12 +145,19 @@ attribute_health <-
            pop_exp = NULL,
            cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
-           geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
+           geo_id_disaggregated = "a", geo_id_aggregated = NULL,
            population = NULL,
            info = NULL,
            # Only for for YLD
            dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
            duration_central = 1, duration_lower = NULL, duration_upper = NULL){
+
+    # Get what the arguments that the user passed
+    used_args <- base::names(base::as.list(base::match.call()))[-1] # drop function name
+    # Get all arguments
+    all_args <- base::names(base::formals(attribute_health))
+    # Get unused arguement as the difference
+    unused_args <- base::setdiff(all_args, used_args)
 
     output <-
       healthiar:::attribute_master(
@@ -175,7 +182,8 @@ attribute_health <-
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
         duration_central = duration_central, duration_lower =  duration_lower, duration_upper = duration_upper,
         geo_id_disaggregated = geo_id_disaggregated , geo_id_aggregated = geo_id_aggregated,
-        info = info)
+        info = info,
+        .unused_args = unused_args)
 
     return(output)
 

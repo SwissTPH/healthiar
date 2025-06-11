@@ -145,17 +145,19 @@ attribute_master <-
            approach_exposure = NULL,
            ## Meta-information
            population = NULL,
-           info = NULL){
+           info = NULL,
+           .unused_args = NULL){
 
     # Capture all arguments and values
-    input_args <- as.list(environment())
+    input_args <- base::as.list(base::environment())
 
-    # Identify the missing arguments
-    # (i.e. those that were not explicitely passed by the user)
-    arg_names <- base::names(input_args)
-    unused_args <-
-      arg_names[!(arg_names %in% base::names(base::match.call()))]
-
+    # Identify the unused arguments
+    # (i.e. those that were not explicitly passed by the user)
+    # This is a hidden argument in attribute_master() to pass the information
+    # from attribute_health() and attribute_lifetable()
+    # without "polluting" input_args with a variable
+    # that is not relevant for the calculation
+    unused_args <- .unused_args
 
     # Check input data
     healthiar:::validate_input_attribute(input_args = input_args,

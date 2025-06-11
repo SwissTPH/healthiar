@@ -91,16 +91,17 @@ validate_input_attribute <-
 
     ## Errors #####
     error_if_var_1_but_not_var_2 <- function(var_name_1, var_name_2){
-      var_value_1 <- input_args[[var_name_1]]
-      var_value_2 <- input_args[[var_name_2]]
 
-      if(!is.null(var_value_1) && is.null(var_value_2)){
+      if(!var_name_1 %in% unused_args &&
+         var_name_2 %in% unused_args
+         # Check unused_args in case that there is a default value (safer)
+         ){
         stop(
           paste0(
-            "If ",
+            "If you do not pass a value for ",
             var_name_2,
-            " is empty, you cannot use ",
-            var_name_2,
+            ", you cannot use ",
+            var_name_1,
             "."),
           call. = FALSE)
       }
