@@ -66,6 +66,7 @@ rm(core_rr)
 
 file_path <- "../healthiar/tests/testthat/test-attribute_health.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
+file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commented-out lines
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
 test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_rr\\|", x)), test_names)
@@ -183,6 +184,7 @@ pathways_ar <- pathways_ar |>
 # * Document existing pathways #################################################
 file_path <- "../healthiar/tests/testthat/test-attribute_health.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
+file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commented-out lines
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
 test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_ar\\|", x)), test_names)
@@ -300,6 +302,7 @@ pathways_uncertainty <- pathways_uncertainty |>
 
 file_path <- "../healthiar/tests/testthat/test-summarize_uncertainty.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
+file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commented-out lines
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
 test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_uncertainty\\|", x)), test_names)
@@ -417,6 +420,7 @@ pathways_compare <- pathways_compare |>
 # * Document existing pathways #################################################
 file_path <- "../healthiar/tests/testthat/test-compare.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
+file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commented-out lines
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
 test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_compare\\|", x)), test_names)
@@ -533,6 +537,7 @@ pathways_monetization <- pathways_monetization |>
 
 file_path <- "../healthiar/tests/testthat/test-monetize.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
+file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commented-out lines
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
 test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_monetization\\|", x)), test_names)
@@ -650,6 +655,7 @@ pathways_cba <- pathways_cba |>
 # * Document existing pathways #################################################
 file_path <- "../healthiar/tests/testthat/test-cba.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
+file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commented-out lines
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
 test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_cba\\|", x)), test_names)
@@ -771,6 +777,7 @@ pathways_daly <- pathways_daly |>
 # * Document existing pathways #################################################
 file_path <- "../healthiar/tests/testthat/test-daly.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
+file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commented-out lines
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
 test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_daly\\|", x)), test_names)
@@ -885,6 +892,7 @@ pathways_multiexposure <- pathways_multiexposure |>
 # * Document existing pathways #################################################
 file_path <- "../healthiar/tests/testthat/test-multiexpose.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
+file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commented-out lines
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
 test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_multiexposure\\|", x)), test_names)
@@ -1006,6 +1014,7 @@ pathways_lifetable <- pathways_lifetable |>
 
 file_path <- "../healthiar/tests/testthat/test-attribute_lifetable.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
+file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commented-out lines
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
 test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_lifetable\\|", x)), test_names)
@@ -1131,6 +1140,7 @@ pathways_socialize <- pathways_socialize |>
 
 file_path <- "../healthiar/tests/testthat/test-socialize.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
+file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commented-out lines
 
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
 test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_socialize\\|", x)), test_names)
@@ -1510,6 +1520,38 @@ pathways_daly <- pathways_daly |>
   mutate(comment_5 = NA_character_)
 
 pathways_multiexposure <- pathways_multiexposure |> 
+  mutate(`     ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_1 = NA_character_) |> 
+  mutate(name_1 = NA_character_) |> 
+  mutate(finished_1 = "FALSE") |> 
+  mutate(results_the_same_1 = NA_character_) |> 
+  mutate(comment_1 = NA_character_) |> 
+  mutate(`      ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_2 = NA_character_) |> 
+  mutate(name_2 = NA_character_) |> 
+  mutate(finished_2 = "FALSE") |> 
+  mutate(results_the_same_2 = NA_character_) |> 
+  mutate(comment_2 = NA_character_) |> 
+  mutate(`       ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_3 = NA_character_) |> 
+  mutate(name_3 = NA_character_) |> 
+  mutate(finished_3 = "FALSE") |> 
+  mutate(results_the_same_3 = NA_character_) |> 
+  mutate(comment_3 = NA_character_) |> 
+  mutate(`        ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_4 = NA_character_) |> 
+  mutate(name_4 = NA_character_) |> 
+  mutate(finished_4 = "FALSE") |> 
+  mutate(results_the_same_4 = NA_character_) |> 
+  mutate(comment_4 = NA_character_) |> 
+  mutate(`         ` = NA_character_) |> # Empty column to improve overview
+  mutate(institute_5 = NA_character_) |> 
+  mutate(name_5 = NA_character_) |> 
+  mutate(finished_5 = "FALSE") |> 
+  mutate(results_the_same_5 = NA_character_) |> 
+  mutate(comment_5 = NA_character_)
+
+pathways_socialize <- pathways_socialize |> 
   mutate(`     ` = NA_character_) |> # Empty column to improve overview
   mutate(institute_1 = NA_character_) |> 
   mutate(name_1 = NA_character_) |> 
