@@ -15,16 +15,17 @@
 #' Conversion of alternative risk measures to relative risks
 #' For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
-#' @returns
-#' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
-#' concentration-response function (i.e. central, lower and upper bound confidence interval.
-#' Moreover, the data frame include columns such as:
-#' \itemize{
-#'  \item Attributable fraction
-#'  \item Health impact
-#'  \item Outcome metric
-#'  \item And many more.
-#' }
+#' @details
+#' Function arguments
+#' @details
+#' \code{time_horizon}
+#' @details
+#' For example, would be 10 if one is interested in the impacts of exposure during the year of analysis and the next 9 years (= 10 years in total).
+#' @details
+#' \code{min_age}, \code{max_age}
+#' The \code{min_age} default value 30 implies that all adults aged 30 or older will be affected by the exposure. Values for \code{max_age} analogeously specify the age above which no health effects of the exposure are considered.
+
+#' @inherit attribute_master return
 
 #' @examples
 #' TBD

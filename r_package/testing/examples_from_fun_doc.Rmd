@@ -1,0 +1,41 @@
+---
+title: "examples_from_fun_doc"
+output: html_document
+---
+
+# atrribute_health examples
+
+```{r}
+results <- attribute_health(
+erf_shape = "log_linear",
+rr_central = 1.369,            # Central relative risk estimate
+rr_increment = 10,             # per μg / m^3 increase in PM2.5 exposure
+exp_central = 8.85,            # Central exposure estimate in μg / m^3
+cutoff_central = 5,            # μg / m^3
+bhd_central = 30747            # Baseline health data: lung cancer incidence
+)
+
+print(results$health_main$impact_rounded) # Attributable cases
+```
+
+```{r}
+results <- healthiar::attribute_health(
+  geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"),
+  geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
+  rr_central = 1.369,
+  rr_increment = 10,
+  cutoff_central = 5,
+  erf_shape = "log_linear",
+  exp_central = c(11, 11, 10, 8, 7),
+  bhd_central = c(4000, 2500, 3000, 1500, 500)
+)
+
+results$health_main$impact_rounded
+
+results$health_detailed$impact_raw |> dplyr::select(
+  geo_id_disaggregated,
+  geo_id_aggregated,
+  impact_rounded
+)
+```
+

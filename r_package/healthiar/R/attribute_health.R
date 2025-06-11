@@ -48,7 +48,32 @@
 #' @details \eqn{PE_i} = fraction of the population exposed to exposure levels of the exposure category i
 #' @details
 #' Conversion of alternative risk measures to relative risks
+#' @details
 #' For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
+
+#' @details
+#' Function arguments
+#' @details
+#' \code{erf_eq_...}
+#' @details
+#' If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use a cubic spline natural interpolation to derive the exposure-response function using, e.g. \code{stats::splinefun(x, y, method="natural")}.
+#' @details
+#' \code{bhd_...}
+#' @details
+#' text
+#' @details
+#' \code{duration_...}
+#' @details
+#' The default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).
+#' @details
+#' \code{geo_id_aggregated}
+#' @details
+#' For example, if you provide the municipality names to \code{geo_id_disaggregated}, you might provide to \code{geo_id_aggregated} the corresponding region / canton / province.
+#' Consequently, the vectors fed to \code{geo_id_disaggregated} and \code{geo_id_aggregated} must be of the same length..
+#'
+#'
+#'
+#'
 
 #' @inherit attribute_master return
 
@@ -88,8 +113,8 @@
 #'   rr_increment = 10,
 #'   cutoff_central = 5,
 #'   erf_shape = "log_linear",
-#'   exp_central = list(11, 11, 10, 8, 7),
-#'   bhd_central = list(4000, 2500, 3000, 1500, 500)
+#'   exp_central = c(11, 11, 10, 8, 7),
+#'   bhd_central = c(4000, 2500, 3000, 1500, 500)
 #' )
 #'
 #' # Attributable cases (aggregated)

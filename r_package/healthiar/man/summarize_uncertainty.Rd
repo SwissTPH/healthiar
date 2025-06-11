@@ -42,5 +42,5 @@ Duration values of the morbidity health outcome of interest are simulated based 
 TODO
 }
 \author{
-Axel Luyten
+Alberto Castro & Axel Luyten
 }
