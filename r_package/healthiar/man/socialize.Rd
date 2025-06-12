@@ -25,8 +25,6 @@ socialize(
 
 \item{impact}{\code{Numeric vector} containing the attributable health impacts by both age group and geo id.}
 
-\item{geo_id_disaggregated}{\code{Numeric or string vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.}
-
 \item{social_indicator}{\code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. Based on this and \code{n_quantile}, \code{social_quantile} will be calculated.}
 
 \item{increasing_deprivation}{\code{Boolean} variable (TRUE/FALSE) that specifies if deprivation is higher when the \code{social_indicator} is higher (TRUE) or lower (FALSE). Default value = TRUE.}

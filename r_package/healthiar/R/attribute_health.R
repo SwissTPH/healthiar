@@ -2,18 +2,80 @@
 
 #' @description
 #' This function calculates the health impacts (mortality or morbidity)
-#' of exposure to an environmental stressor (air pollution or noise), using either relative or absolute risk.
+#' of exposure to an environmental stressor (air pollution or noise), using either relative risk (RR) or absolute risk (AR).
 #' @description
 #' For examples please see the vignette and/or below.
+#' @description
+#' Generally, the health metric you put in (e.g. absolute disease cases, deaths per 100'000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if you enter a disability weight the main output will be years lived with disability.
 
 #' @inheritParams attribute_master
 
 #' @details
-#' What you put in is what you get out
+#' \strong{Iteration}
 #' @details
-#' Generally, the health metric you put in (e.g. absolute disease cases, deaths per 100'000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if a disability weight is inputted alongside a morbidity health outcome, then the main output will be YLD.
+#' To iterate an assessment across multiple geographic units with \code{attribute_health()}, you must enter vectors of unit-specific
 #' @details
-#' Equations (relative risk)
+#' - unique geo IDs to \code{geo_id_disaggregated} (\emph{both RR and AR pathways}), and optionally \code{geo_id_aggregated} (\emph{both RR and AR pathways});
+#' @details
+#' - exposure values to \code{exp_...} (\emph{both RR and AR pathways});
+#' @details
+#' - baseline health data values to \code{bhd_...} (\emph{RR pathway only})
+#' @details
+#' - (in case of multiple exposure categories) values specifying the population exposed per exposure category to \code{pop_exp} (\emph{both RR and AR pathways})
+#' @details
+#' - (in case of mutliple exposure categories) values specifying the proportion of the total exposed population that is exposed to each exposure category to \code{prop_pop_exp} (\emph{both RR and AR pathways; in AR pathway in combination with \code{pop_exp}})
+#' @details
+#' - population values specifying total population (exposed + non-exposed)
+#' @details
+#' The length of each of these vectors listed above must be: length = (number of geo units) x (number of exposure categories).
+#' @details
+#' To the other function arguments not listed above you can feed either a vector of the same length or a single value (will be recycled).
+
+#' @details
+#' \strong{Function arguments}
+#' @details
+#' \code{erf_eq_central}, \code{erf_eq_lower}, \code{erf_eq_upper}
+#' @details
+#' If a value is entered here do not enter any values to \code{rr_central}, \code{rr_lower}, \code{rr_upper}, \code{rr_increment}, \code{erf_shape} arguments.
+#' Enter the exposure-response function as a \code{string} formula containing only one variable \emph{c} representing concentration/exposure, e.g. \code{"3+c+c^2"},  or as a \code{function}, e.g. output from \code{stats::splinefun()} or \code{stats::approxfun()}.
+#' @details
+#' If you have x-axis (exposure) and y-axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use a cubic spline natural interpolation to derive the exposure-response function using, e.g. \code{stats::splinefun(x, y, method="natural")}.
+#' @details
+#' \code{exp_central}, \code{exp_lower}, \code{exp_upper}
+#' @details
+#' In case of exposure bands enter the one exposure value per band (e.g. the mean of the lower and upper bounds).
+#' @details
+#' \code{prop_pop_exp}
+#' @details
+#' Indicates the share of the population exposed to each exposure category. In the AR pathway must be used in combination with \code{pop_exp}.
+#' @details
+#' \code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper}
+#' @details
+#' The cutoff level refers to the exposure level below which no health effects occur. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
+#' @details
+#' \code{bhd_central}, \code{bhd_lower}, \code{bhd_upper}
+#' @details
+#' Baseline health data for each exposure category must be entered.
+#' @details
+#' \code{geo_id_aggregated}, \code{geo_id_disaggregated}
+#' @details
+#' For example, if you provide the municipality names to \code{geo_id_disaggregated}, you might provide to \code{geo_id_aggregated} the corresponding region / canton / province.
+#' Consequently, the vectors fed to \code{geo_id_disaggregated} and \code{geo_id_aggregated} must be of the same length.
+#' @details
+#' \code{population}
+#' @details
+#' Used to assess impact rate per 100'000 inhabitants.
+#' @details
+#' \code{duration_central}, \code{duration_lower}, \code{duration_upper}
+#' @details
+#' The default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).
+#' @details
+#' \code{info}
+#' @details
+#' Information entered to this argument will be added as column(s) (with the suffix "_info") to the results table.
+
+#' @details
+#' \strong{Equations (relative risk)}
 #' @details
 #' The most general equation describing the population attributable fraction (PAF) mathematically is an integral form
 #' \deqn{PAF = \frac{\int RR(x)PE(x)dx - 1}{\int RR(x)PE(x)dx}}
@@ -40,40 +102,17 @@
 #' \deqn{PAF = \frac{RR_{PWC} - 1}{RR_{PWC}}}
 #' Where \eqn{RR_PWC} is the relative risk associated with the population weighted mean exposure.
 #' @details
-#' Equation (absolute risk)
+#' \strong{Equation (absolute risk)}
 #' \deqn{N = \sum AR_i\times PE_i}
 #' @details Where:
 #' @details N = the number of cases of the exposure-specific health outcome that are attributed to the exposure
 #' @details \eqn{AR_i} = absolute risk at the mean of exposure bin i
 #' @details \eqn{PE_i} = fraction of the population exposed to exposure levels of the exposure category i
-#' @details
-#' Conversion of alternative risk measures to relative risks
-#' @details
-#' For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
 #' @details
-#' Function arguments
+#' \strong{Conversion of alternative risk measures to relative risks}
 #' @details
-#' \code{erf_eq_...}
-#' @details
-#' If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use a cubic spline natural interpolation to derive the exposure-response function using, e.g. \code{stats::splinefun(x, y, method="natural")}.
-#' @details
-#' \code{bhd_...}
-#' @details
-#' text
-#' @details
-#' \code{duration_...}
-#' @details
-#' The default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).
-#' @details
-#' \code{geo_id_aggregated}
-#' @details
-#' For example, if you provide the municipality names to \code{geo_id_disaggregated}, you might provide to \code{geo_id_aggregated} the corresponding region / canton / province.
-#' Consequently, the vectors fed to \code{geo_id_disaggregated} and \code{geo_id_aggregated} must be of the same length..
-#'
-#'
-#'
-#'
+#' For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
 #' @inherit attribute_master return
 
@@ -141,16 +180,17 @@ attribute_health <-
            erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
            exp_central,
            exp_lower = NULL, exp_upper = NULL,
-           prop_pop_exp = 1,
            pop_exp = NULL,
+           prop_pop_exp = 1,
            cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
            bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
            geo_id_disaggregated = "a", geo_id_aggregated = NULL,
            population = NULL,
-           info = NULL,
-           # Only for for YLD
+           ## Only for for YLD
            dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
-           duration_central = 1, duration_lower = NULL, duration_upper = NULL){
+           duration_central = 1, duration_lower = NULL, duration_upper = NULL,
+           ## Meta info
+           info = NULL){
 
     # Get what the arguments that the user passed
     used_args <- base::names(base::as.list(base::match.call()))[-1] # drop function name

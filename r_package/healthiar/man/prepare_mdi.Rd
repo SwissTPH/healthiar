@@ -15,8 +15,6 @@ prepare_mdi(
 )
 }
 \arguments{
-\item{geo_id_disaggregated}{\code{Numeric or string vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.}
-
 \item{edu}{\code{Numeric vector} indicating educational attainment as \% of individuals (≥18) without a high school diploma (ISCED 0-2) per geo unit}
 
 \item{unemployed}{\code{Numeric vector} containing \% of unemployed individuals in the active population (18-65) per geo unit}
