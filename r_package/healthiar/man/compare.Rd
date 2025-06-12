@@ -14,12 +14,13 @@ compare(output_attribute_1, output_attribute_2, approach_comparison = "delta")
 \item{approach_comparison}{\code{String} showing the method of comparison. Options: "delta" or "pif".}
 }
 \value{
-This function returns two lists:
+This function returns two \code{lists}:
 
-1) \code{health_main}, which contains a tibble with the main results and
+1) \code{health_main}, which contains a \code{tibble} with the main results and
+
 2) \code{health_detailed}, which contains detailed (and interim) results.
 
-The result tibbles include columns such as:
+The results contain columns such as:
 \itemize{
  \item \code{pop_fraction} population attributable fraction; only for assessments using relative risk
  \item \code{impact} attributable health burden/impact
