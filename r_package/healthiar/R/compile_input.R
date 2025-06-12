@@ -61,23 +61,27 @@ compile_input <-
 
     for (erf_eq_ in c("erf_eq_central", "erf_eq_lower", "erf_eq_upper")) {
       if (!is.null(input_args_edited[[erf_eq_]]) &&
-          base::is.function(input_args[[erf_eq_]])) {
+          base::is.function(input_args_edited[[erf_eq_]])) {
         input_args_edited[[erf_eq_]] <- list(input_args_edited[[erf_eq_]])
       }
     }
+
+    # Remove list elements that are null,
+    # otherwise the list cannot be converted into a tibble
+    input_args_edited <-
+      purrr::discard(input_args_edited , is.null)
 
     # ARGUMENTS ################################################################
     # Store all arguments excluding those for life table
     # (done below only if life table approach)
     # Use input_args_edited as basis because of the required edits
+
+
     input_wo_lifetable <- input_args_edited |>
       # Remove arguments for life table and info.
       # Info is to added later with a function add_info()
       # because it can be a data frame.
       purrr::discard(names(input_args_edited) %in% c(args_for_lifetable, "info")) |>
-      # Remove list elements that are null,
-      # otherwise the list cannot be converted into a tibble
-      purrr::discard(is.null) |>
       # Convert into a tibble
       tibble:::as_tibble() |>
       # Add info
@@ -166,9 +170,6 @@ compile_input <-
       input_for_lifetable  <- input_args_edited |>
         # Also keep geo_id_disaggragated to enable join below
         purrr::keep(names(input_args_edited) %in% c(args_for_lifetable_wo_sex, "geo_id_disaggregated")) |>
-        # Remove list elements that are null,
-        # otherwise the list cannot be converted into a tibble
-        purrr::discard(is.null) |>
         # Convert into a tibble
         tibble:::as_tibble() |>
         # If min_age or max_age are NULL,
