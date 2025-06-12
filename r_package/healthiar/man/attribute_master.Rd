@@ -55,33 +55,27 @@ attribute_master(
 \arguments{
 \item{is_lifetable}{\code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)}
 
-\item{approach_risk}{\code{String} specifying the risk method. Options: \code{"relative_risk"} (default) or \code{"absolute_risk"}.}
+\item{approach_risk}{\code{String value} specifying the risk method. Options: \code{"relative_risk"} (default) or \code{"absolute_risk"}.}
 
-\item{rr_central, rr_lower, rr_upper}{\code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.}
+\item{rr_central, rr_lower, rr_upper}{\code{Numeric value} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Argument is applicable only in RR pathway.}
 
-\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}) (no default).}
+\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}) (no default). Argument is applicable only in RR pathway.}
 
-\item{erf_shape}{\code{String} specifying the shape of the exposure-response function to be assumed. Options: \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}.}
+\item{erf_shape}{\code{String value} specifying the shape of the exposure-response function to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. Argument is applicable only in RR pathway.}
 
-\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the equation of the user-defined exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions.
-If a \code{string} is entered, the function must contains only one variable c (concentration/exposure), e.g. \code{"3+c+c^2"}.
-If a \code{function} is fed to the argument, it must be of the class \code{function}, e.g. output from \code{stats::splinefun()} or \code{stats::approxfun()} (see details).}
+\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info.}
 
-\item{pop_exp}{\code{Numeric vector} referring to the population exposed for each exposure category. For absolute risk, the value of this argument must be entered, for relative risk only optional.}
+\item{pop_exp}{\code{Numeric vector} referring to the population exposed for each exposure category. For absolute risk, the value of this argument must be entered, for relative risk it is optional.}
 
-\item{prop_pop_exp}{\code{Numeric value} or \code{Numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to each exposure categories. Only to be used for exposure distribution (if pop_exp not available) or if not the whole population is exposed. Otherwise, 1 will be assumed as default.}
+\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to the exposure (categories). Default: 1. See Details for more info.}
 
-\item{exp_central, exp_lower, exp_upper}{\code{Numeric value(s)} specifying the exposure level(s) to the environmental stressor and (optionally) to lower and upper bound of the 95\% confidence interval. If only one value is provided, it will be assumed that it refers to population-weighted mean exposure in \eqn{µg/m^3}. If a {vector} is provided, it will be assumed that it refers to the exposure categories (average exposure in the category) in a exposure distribution (this information is linked to the proportion of population exposed).}
+\item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the exposure level(s) to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
 
-\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value(s)} showing the central exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. Only applicable to relative risk pathways.
-If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s).
-The cutoff level refers to the exposure level below which no health effects occur.}
+\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. Only applicable in relative risk pathway. See Details for more info.}
 
-\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value(s)} providing the baseline health data of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds. See Details section for more info.}
+\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the baseline health data of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds. Argument is only applicable in RR pathway. See Details for more info.}
 
-\item{geo_id_disaggregated}{\code{Numeric or string vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.}
-
-\item{geo_id_aggregated}{\code{Numeric or string vector} providing a higher-level ID at which the geographic areas specified in \code{geo_id_disaggregated} will be aggregated. See Details section for more info.}
+\item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing the unique ID codes of each geographic area considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing a higher-level ID at which the geographic areas will be aggregated (\code{geo_id_disaggregated}). Argument must be entered for iterations. See Details for more info.}
 
 \item{health_outcome}{\code{String} specifying if the result of the assessment with life table is premature deaths ("deaths") or years of life lost ("yll")}
 
@@ -103,17 +97,15 @@ The cutoff level refers to the exposure level below which no health effects occu
 
 \item{time_horizon}{\code{Numeric value} corresponding to the time horizon (number of years) for which the impacts of exposure are to be considered. See the Details section for more info.}
 
-\item{dw_central, dw_lower, dw_upper}{\code{Numeric value(s)} providing the disability weight associated with the morbidity health outcome of interest and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
+\item{dw_central, dw_lower, dw_upper}{\code{Numeric value} or \code{numeric vector} providing the disability weight associated with the morbidity health outcome of interest and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
 
-\item{duration_central, duration_lower, duration_upper}{\code{Numeric value(s)} providing the duration associated with the morbidity health outcome of interest in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval. Default: 1. See Details section for more info.}
+\item{duration_central, duration_lower, duration_upper}{\code{Numeric value} or \code{numeric vector} providing the duration associated with the morbidity health outcome of interest in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval. Default: 1. Optional argument. See Details for more info.}
 
 \item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: "single_year" (default), "constant".}
 
-\item{population}{\code{Numeric value} or \code{Vector} referring to the total population, including both exposed and non-exposed (in each geographical unit). Only to be used to assess relative impact per 100k inhabitants.}
+\item{population}{\code{Numeric value} or \code{numeric vector} specifying the total population, including both exposed and non-exposed. See Details for more info.}
 
-\item{info}{\code{String} or \code{data.frame} providing additional information to be linked with the assessment.
-The suffix "info" will be added to the column name.
-Default: \code{NULL}.}
+\item{info}{\code{String} or \code{data frame} specifying information to be linked with the assessment. Optional argument. See Details for more info.}
 }
 \value{
 This function returns two \code{lists}:
