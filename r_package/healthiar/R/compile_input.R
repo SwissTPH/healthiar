@@ -129,8 +129,7 @@ compile_input <-
             cols = dplyr::any_of(base::paste0(var, c("_central", "_lower", "_upper"))),
             names_to = paste0(var, "_ci"),
             names_prefix = paste0(var, "_"),
-            values_to = var
-          )
+            values_to = var)
       }
     }
 
@@ -153,8 +152,6 @@ compile_input <-
                             names_prefix = "erf_eq_",
                             values_to = "erf_eq")
     }
-
-
 
     # CREATE LIFE TABLES ##########################################################
     # As nested tibble
@@ -257,80 +254,6 @@ compile_input <-
         dplyr::rename("population" = "population_total")
 
 
-
-
-
-
-
-
-
-      # # Create a template of the lifetables
-      # # Use crossing to enable all combination of the vectors
-      # lifetable_with_pop_template <-
-      #   tidyr::crossing(
-      #     geo_id_disaggregated = input_args_edited$geo_id_disaggregated,
-      #     age = age_sequence) |>
-      #   # Add age end with mutate instead of crossing
-      #   # because no additional combinations are needed (already included in age)
-      #   dplyr::mutate(
-      #     age_end = base::rep(age_end_sequence, length.out = dplyr::n()))
-
-
-#
-#
-#       # Based on the template create lifetable for male
-#       lifetable_with_pop_male <-
-#         lifetable_with_pop_template[,c("geo_id_disaggregated", "age", "age_end")] |>
-#         dplyr::mutate(
-#           sex = "male",
-#           deaths = input_args_edited$deaths_male,
-#           population = input_args_edited$population_midyear_male)
-#
-#       # The same for female
-#       lifetable_with_pop_female <-
-#         lifetable_with_pop_template[,c("geo_id_disaggregated", "age", "age_end")] |>
-#         dplyr::mutate(
-#           sex = "female",
-#           deaths = input_args_edited$deaths_female,
-#           population = input_args_edited$population_midyear_female)
-#
-#       lifetable_with_pop_male_female <-
-#         # Bind male and female tibbles
-#         dplyr::bind_rows(
-#           lifetable_with_pop_male,
-#           lifetable_with_pop_female)
-#
-#       lifetable_with_pop <-
-#         lifetable_with_pop_male_female |>
-#         # Nest the lifetable elements
-#         tidyr::nest(
-#           lifetable_with_pop_nest =
-#             c(age, age_end, population))
-#
-#         # The same for total
-#         lifetable_with_pop_total <-
-#           lifetable_with_pop_template[,c("geo_id_disaggregated", "age", "age_end")] |>
-#           dplyr::mutate(
-#             sex = "total",
-#             population = lifetable_with_pop_male$population + lifetable_with_pop_female$population,
-#             deaths = lifetable_with_pop_male$deaths + lifetable_with_pop_female$deaths)
-#
-#         lifetable_with_pop_male_female_total <-
-#           dplyr::bind_rows(lifetable_with_pop_male,
-#                            lifetable_with_pop_female,
-#                            lifetable_with_pop_total)
-#
-#         lifetable_with_pop <-
-#           lifetable_with_pop_male_female_total |>
-#           # Nest the lifetable elements
-#           tidyr::nest(
-#             lifetable_with_pop_nest =
-#               c(age, age_end, population, deaths))
-#
-#
-#       # }
-
-
       # JOIN TIBBLES ###########################################################
 
         # Calculate total population for impacts per 100k inhab.
@@ -348,10 +271,6 @@ compile_input <-
           dplyr::left_join(lifetable_with_pop,
                            by = "geo_id_disaggregated",
                            relationship = "many-to-many")
-      # |>
-      #     dplyr::left_join(population,
-      #                      by = "geo_id_disaggregated",
-      #                      relationship = "many-to-many")
 
       } else {
       # If no lifetable, only use input_wo_lifetable
