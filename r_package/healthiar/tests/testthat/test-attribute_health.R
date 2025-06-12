@@ -517,8 +517,6 @@ testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function
         prop_pop_exp = data$prop_exposed,
         cutoff_central = min(data$exposure_mean),
         bhd_central = data$gbd_daly[1],
-        rr_central = 1.08,
-        rr_increment = 10,
         erf_eq_central =
           stats::splinefun(
             x = data_erf$exposure,
@@ -553,8 +551,6 @@ testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|e
         cutoff_central = 0,
         prop_pop_exp = data$prop_exposed,
         bhd_central = data$gbd_daly[1],
-        rr_central = 1.08,
-        rr_increment = 10,
         erf_eq_central =
           stats::splinefun(
             x = data_erf$exposure,
