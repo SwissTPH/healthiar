@@ -107,21 +107,32 @@ compile_input <-
         exp_dimension_table,
         by = c("geo_id_disaggregated", "exp_central"))
 
+    # PIVOT LONGER ###########################################################
+    # I.e. increase nr of rows to show all combinations of
+    # central, lower and upper estimates (relevant for iteration)
 
-      # PIVOT LONGER ###########################################################
-      # I.e. increase nr of rows to show all combinations of
-      # central, lower and upper estimates (relevant for iteration)
+    # Identify the variable to pivot longer
+    vars_to_pivot <-
+      c("exp", "bhd", "cutoff", "duration", "dw")
 
-      ## For exposure,
-    input_wo_lifetable <-
-      input_wo_lifetable |>
-      tidyr::pivot_longer(cols = dplyr::starts_with("exp_"),
-                          names_to = "exp_ci",
-                          names_prefix = "exp_",
-                          values_to = "exp")
+    # Loop over the variables pivoting longer
+    for (var in vars_to_pivot) {
+      if (base::paste0(var, "_central") %in% base::names(input_wo_lifetable)){
+
+        input_wo_lifetable <-
+          tidyr::pivot_longer(
+            data = input_wo_lifetable,
+            cols = dplyr::any_of(base::paste0(var, c("_central", "_lower", "_upper"))),
+            names_to = paste0(var, "_ci"),
+            names_prefix = paste0(var, "_"),
+            values_to = var
+          )
+      }
+    }
 
     if ("rr_central" %in% base::names(input_wo_lifetable)) {
-      ## Exposure response function
+      # Out of the loop for exposure response function
+      # because both rr_ and erf_eq_ ends with a variable erf_ci
 
       input_wo_lifetable <-
         tidyr::pivot_longer(data = input_wo_lifetable,
@@ -129,7 +140,7 @@ compile_input <-
                             names_to = "erf_ci",
                             names_prefix = "rr_",
                             values_to = "rr")
-    } else {
+    } else if ("erf_eq_central" %in% base::names(input_wo_lifetable)) {
 
       input_wo_lifetable <-
         tidyr::pivot_longer(data = input_wo_lifetable,
@@ -139,43 +150,6 @@ compile_input <-
                             values_to = "erf_eq")
     }
 
-
-    ## Baseline health data
-    if("bhd_central" %in% names(input_wo_lifetable)) {
-      input_wo_lifetable <-
-        input_wo_lifetable |>
-        tidyr::pivot_longer(cols = dplyr::starts_with("bhd_"),
-                            names_to = "bhd_ci",
-                            names_prefix = "bhd_",
-                            values_to = "bhd")}
-
-    ## Cutoff health data
-    if("cutoff_central" %in% names(input_wo_lifetable)) {
-      input_wo_lifetable <-
-        input_wo_lifetable |>
-        tidyr::pivot_longer(cols = dplyr::starts_with("cutoff_"),
-                            names_to = "cutoff_ci",
-                            names_prefix = "cutoff_",
-                            values_to = "cutoff")}
-
-
-    ## Disability weight
-    if ("dw_central" %in% names(input_wo_lifetable)) {
-      input_wo_lifetable <-
-        input_wo_lifetable |>
-        tidyr::pivot_longer(cols = dplyr::starts_with("dw_"),
-                            names_to = "dw_ci",
-                            names_prefix = "dw_",
-                            values_to = "dw")}
-
-    ## Duration (of morbidity health outcome)
-    if ("duration_central" %in% names(input_wo_lifetable)) {
-      input_wo_lifetable <-
-        input_wo_lifetable |>
-        tidyr::pivot_longer(cols = dplyr::starts_with("duration_"),
-                            names_to = "duration_ci",
-                            names_prefix = "duration_",
-                            values_to = "duration")}
 
 
     # CREATE LIFE TABLES ##########################################################
