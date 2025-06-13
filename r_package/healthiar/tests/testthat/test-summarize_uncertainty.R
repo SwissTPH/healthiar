@@ -298,9 +298,10 @@ testthat::test_that("summary uncertainty comparison iteration", {
 
   scen_1_singlebhd_rr_geo <-
     healthiar::attribute_health(
-      exp_central = list(8.85, 8.0),
+      approach_risk = "relative_risk",
+      exp_central = c(8.85, 8.0),
       cutoff_central = 5,
-      bhd_central = list(25000, 20000),
+      bhd_central = c(25000, 20000),
       rr_central = 1.118,
       rr_lower = 1.060,
       rr_upper = 1.179,
@@ -313,7 +314,7 @@ testthat::test_that("summary uncertainty comparison iteration", {
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_singlebhd_rr_geo,
       # What is different in scenario 2 compared to scenario 1
-      exp_central = list(6, 6.5))
+      exp_central = c(6, 6.5))
 
   comparison_iteration <-
     healthiar::compare(

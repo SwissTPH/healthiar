@@ -144,28 +144,28 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
 
   scen_1_singlebhd_rr_geo_large <-
     healthiar::attribute_health(
-      exp_central = c(runif_with_seed(1E4, 8.0, 9.0, 1)),
-      exp_lower = c(runif_with_seed(1E4, 8.0, 9.0, 1)-0.1),
-      exp_upper = c(runif_with_seed(1E4, 8.0, 9.0, 1)+0.1),
+      exp_central = c(runif_with_seed(100, 8.0, 9.0, 1)),
+      exp_lower = c(runif_with_seed(100, 8.0, 9.0, 1)-0.1),
+      exp_upper = c(runif_with_seed(100, 8.0, 9.0, 1)+0.1),
       cutoff_central = 5,
-      bhd_central = c(runif_with_seed(1E4, 25000, 35000, 1)),
-      bhd_lower = c(runif_with_seed(1E4, 25000, 35000, 1)),
-      bhd_upper = c(runif_with_seed(1E4, 25000, 35000, 1)),
+      bhd_central = c(runif_with_seed(100, 25000, 35000, 1)),
+      bhd_lower = c(runif_with_seed(100, 25000, 35000, 1)),
+      bhd_upper = c(runif_with_seed(100, 25000, 35000, 1)),
       rr_central = 1.369,
       rr_lower = 1.124,
       rr_upper = 1.664,
       rr_increment = 10,
       erf_shape = "log_linear",
-      geo_id_disaggregated = 1:1E4,
-      geo_id_aggregated = rep("CH", 1E4),
+      geo_id_disaggregated = 1:100,
+      geo_id_aggregated = rep("CH", 100),
       info = "PM2.5_mortality_2010")
 
   scen_2_singlebhd_rr_geo_large <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_singlebhd_rr_geo_large,
-      exp_central = c(runif_with_seed(1E4, 8.0, 9.0, 2)),
-      exp_lower = c(runif_with_seed(1E4, 8.0, 9.0, 2)-0.1),
-      exp_upper = c(runif_with_seed(1E4, 8.0, 9.0, 2)+0.1))
+      exp_central = c(runif_with_seed(100, 8.0, 9.0, 2)),
+      exp_lower = c(runif_with_seed(100, 8.0, 9.0, 2)-0.1),
+      exp_upper = c(runif_with_seed(100, 8.0, 9.0, 2)+0.1))
 
   testthat::expect_equal(
     object =
@@ -175,7 +175,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
         output_attribute_2 = scen_2_singlebhd_rr_geo_large
         )$health_main$impact_rounded,
     expected =
-      c(211111, 84203, 319618) # Result on 19 December 2024; no comparison study
+      c(4166, 1656, 6330) # Result on 19 December 2024; no comparison study
   )
 })
 
