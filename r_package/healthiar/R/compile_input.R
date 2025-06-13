@@ -129,8 +129,7 @@ compile_input <-
             cols = dplyr::any_of(base::paste0(var, c("_central", "_lower", "_upper"))),
             names_to = paste0(var, "_ci"),
             names_prefix = paste0(var, "_"),
-            values_to = var
-          )
+            values_to = var)
       }
     }
 
@@ -154,22 +153,37 @@ compile_input <-
                             values_to = "erf_eq")
     }
 
-
-
     # CREATE LIFE TABLES ##########################################################
     # As nested tibble
 
     if (input_args$is_lifetable) {
 
+
+      # Build the data set for lifetable-related data
+      # The life table has to be provided (by sex)
+      # Rename column names to standard names
+
+      # Define variables to be used below
+      age_sequence <- seq(from = input_args_edited$first_age_pop,
+                          to = input_args_edited$last_age_pop,
+                          by = 1)
+      age_end_sequence <- seq(from = input_args_edited$first_age_pop + 1,
+                              to = input_args_edited$last_age_pop + 1,
+                              by = 1)
+
       # Define the arguments for life table excluding those that are sex-specific
-      args_for_lifetable_wo_sex <-
+      non_age_specific_lifetable_args <-
         args_for_lifetable[!grepl("male|female", args_for_lifetable)]
+      # Now including those arguments that are sex-specific
+      age_specific_lifetable_args <-
+        args_for_lifetable[grepl("male|female", args_for_lifetable)]
 
       # Store arguments for life table
       # Use input_args_edited as basis because of the required edits
-      input_for_lifetable  <- input_args_edited |>
+      non_age_specific_input_for_lifetable <- input_args_edited |>
         # Also keep geo_id_disaggragated to enable join below
-        purrr::keep(names(input_args_edited) %in% c(args_for_lifetable_wo_sex, "geo_id_disaggregated")) |>
+        purrr::keep(base::names(input_args_edited) %in%
+                      c(non_age_specific_lifetable_args, "geo_id_disaggregated")) |>
         # Convert into a tibble
         tibble:::as_tibble() |>
         # If min_age or max_age are NULL,
@@ -188,106 +202,73 @@ compile_input <-
       #     age = age_sequence,
       #     age_end = age_end_sequence)
 
-
-      # Build the data set for lifetable-related data
-      # The life table has to be provided (by sex)
-      # Rename column names to standard names
-
-      # Define variables to be used below
-      age_sequence <- seq(from = input_args_edited$first_age_pop,
-                          to = input_args_edited$last_age_pop,
-                          by = 1)
-      age_end_sequence <- seq(from = input_args_edited$first_age_pop + 1,
-                              to = input_args_edited$last_age_pop + 1,
-                              by = 1)
-
-
-
-      # Create a template of the lifetables
-      # Use crossing to enable all combination of the vectors
-      lifetable_with_pop_template <-
-        tidyr::crossing(
-          geo_id_disaggregated = input_args_edited$geo_id_disaggregated,
-          age = age_sequence) |>
-        # Add age end with mutate instead of crossing
-        # because no additional combinations are needed (already included in age)
+      age_specific_input_for_lifetable  <- input_args_edited |>
+        # Also keep geo_id_disaggragated to enable join below
+        purrr::keep(base::names(input_args_edited) %in%
+                      c(age_specific_lifetable_args, "geo_id_disaggregated")) |>
+        # Convert into a tibble
+        tibble:::as_tibble() |>
+        # Keep only unique rows
+        # (they can be duplicated in case of multiple geo units, exposure categories..)
+        base::unique() |>
+        # Add age columns to age specific data
         dplyr::mutate(
-          age_end = base::rep(age_end_sequence, length.out = dplyr::n()))
+          age = base::rep(age_sequence, length.out = dplyr::n()),
+          age_end = base::rep(age_end_sequence, length.out = dplyr::n())) |>
+        # Rename population to make it shorter
+        dplyr::rename_with(~ base::gsub("population_midyear_", "population_", .x))
 
-
-
-
-      # Based on the template create lifetable for male
-      lifetable_with_pop_male <-
-        lifetable_with_pop_template[,c("geo_id_disaggregated", "age", "age_end")] |>
+      # Pivot longer sex
+      # Define first the life table (age-specific) data based on the input to loop
+      lifetable_with_pop <- age_specific_input_for_lifetable |>
+        # Calculate totals
         dplyr::mutate(
-          sex = "male",
-          deaths = input_args_edited$deaths_male,
-          population = input_args_edited$population_midyear_male)
+          deaths_total = deaths_male + deaths_female,
+          population_total = population_male + population_female)
 
-      # The same for female
-      lifetable_with_pop_female <-
-        lifetable_with_pop_template[,c("geo_id_disaggregated", "age", "age_end")] |>
-        dplyr::mutate(
-          sex = "female",
-          deaths = input_args_edited$deaths_female,
-          population = input_args_edited$population_midyear_female)
 
-      lifetable_with_pop_male_female <-
-        # Bind male and female tibbles
-        dplyr::bind_rows(
-          lifetable_with_pop_male,
-          lifetable_with_pop_female)
-
+      # First pivot longer
       lifetable_with_pop <-
-        lifetable_with_pop_male_female |>
-        # Nest the lifetable elements
+        tidyr::pivot_longer(
+        data = lifetable_with_pop,
+        cols = dplyr::all_of(
+          c(base::paste0("deaths_", c("male", "female", "total")),
+            base::paste0("population_", c("male", "female", "total")))),
+        names_sep = "_",
+        names_to = c("var", "sex"),
+        values_to = "value") |>
+        # And second pivot wider to keep the variables as columns
+        tidyr::pivot_wider(
+          names_from = var,
+          values_from = value) |>
+        # Add total population by geo unit
+        # For impacts per 100k inhab.
+        dplyr::group_by(geo_id_disaggregated) |>
+        dplyr::mutate(population_total = sum(population, rm.na = TRUE)) |>
+        # Next age-specific information to get the table smaller
         tidyr::nest(
           lifetable_with_pop_nest =
-            c(age, age_end, population))
-
-        # The same for total
-        lifetable_with_pop_total <-
-          lifetable_with_pop_template[,c("geo_id_disaggregated", "age", "age_end")] |>
-          dplyr::mutate(
-            sex = "total",
-            population = lifetable_with_pop_male$population + lifetable_with_pop_female$population,
-            deaths = lifetable_with_pop_male$deaths + lifetable_with_pop_female$deaths)
-
-        lifetable_with_pop_male_female_total <-
-          dplyr::bind_rows(lifetable_with_pop_male,
-                           lifetable_with_pop_female,
-                           lifetable_with_pop_total)
-
-        lifetable_with_pop <-
-          lifetable_with_pop_male_female_total |>
-          # Nest the lifetable elements
-          tidyr::nest(
-            lifetable_with_pop_nest =
-              c(age, age_end, population, deaths))
-
-
-      # }
+            c(age, age_end, population, deaths)) |>
+        # Rename population_total to population
+        # now that age-specific information is nested it is already clear
+        dplyr::rename("population" = "population_total")
 
 
       # JOIN TIBBLES ###########################################################
 
         # Calculate total population for impacts per 100k inhab.
-        population <-
-          lifetable_with_pop_total |>
-          dplyr::group_by(geo_id_disaggregated) |>
-          dplyr::summarize(population = sum(population, rm.na = TRUE))
+        # population <-
+        #   lifetable_with_pop_total |>
+        #   dplyr::group_by(geo_id_disaggregated) |>
+        #   dplyr::summarize(population = sum(population, rm.na = TRUE))
 
         # Join the input without and with lifetable variable into one tibble
         input_table <-
           dplyr::left_join(input_wo_lifetable,
-                           input_for_lifetable,
+                           non_age_specific_input_for_lifetable,
                            by = "geo_id_disaggregated",
                            relationship = "many-to-many") |>
           dplyr::left_join(lifetable_with_pop,
-                           by = "geo_id_disaggregated",
-                           relationship = "many-to-many") |>
-          dplyr::left_join(population,
                            by = "geo_id_disaggregated",
                            relationship = "many-to-many")
 

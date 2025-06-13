@@ -17,10 +17,6 @@ validate_input_attribute <-
     # Create a copy of input args to modify data set when needed
     input <- input_args
 
-    # Add age range (needed below)
-    if(!base::is.null(input$first_age_pop) && !base::is.null(input$last_age_pop)){
-    input$age_range <- input$last_age_pop:input$first_age_pop
-    }
 
     available_input <-
       purrr::keep(input, ~!base::is.null(.x))
@@ -212,9 +208,11 @@ validate_input_attribute <-
       }
     }
 
-    # --> error if length of life table variables is different
+
 
     if(all(lifetable_var_names_with_same_length %in% available_var_names)){
+
+      # --> error if length of life table variables is different
       combi_vars <-
         utils::combn(lifetable_var_names_with_same_length, 2)|>
         base::t() |>
@@ -225,7 +223,38 @@ validate_input_attribute <-
         error_if_different_length(combi_vars$var_1[i],
                                   combi_vars$var_2[i])
       }
+
     }
+
+    error_if_incompatible_length_of_age_range <-
+      function(age_dependent_var){
+
+        # Get length of age range
+        length_age_range <- base::length(input$first_age_pop : input$last_age_pop)
+
+        # Get of the unique vector of geo_id
+        # (it can be duplicated in case of e.g. exposure distribution or life table)
+        length_geo_id_disaggregated <- base::length(base::unique(input$geo_id_disaggregated))
+
+        # Get length of age-depending variable
+        length_age_dependent_var <-  base::length(input[[age_dependent_var]])
+
+      if( !base::identical(length_age_range * length_geo_id_disaggregated,
+                           length_age_dependent_var)){
+
+        # Create error message
+        stop("The length of age range (sequence of first_age_pop and last_age_pop) must be compatible with the age-dependent variables",
+             call. = FALSE)
+      }
+      }
+
+
+
+    if(all(lifetable_var_names_with_same_length %in% available_var_names)){
+      error_if_incompatible_length_of_age_range(age_dependent_var = "deaths_male")
+    }
+
+
 
 
     error_if_lower_than_0 <- function(var_name){
