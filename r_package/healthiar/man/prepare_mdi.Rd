@@ -15,6 +15,8 @@ prepare_mdi(
 )
 }
 \arguments{
+\item{geo_id_disaggregated}{\code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_disaggregated}) Argument must be entered for iterations. See Details for more info.}
+
 \item{edu}{\code{Numeric vector} indicating educational attainment as \% of individuals (≥18) without a high school diploma (ISCED 0-2) per geo unit}
 
 \item{unemployed}{\code{Numeric vector} containing \% of unemployed individuals in the active population (18-65) per geo unit}
@@ -25,7 +27,7 @@ prepare_mdi(
 
 \item{no_heating}{\code{Numeric vector} containing \% of households without central heating per geo unit}
 
-\item{n_quantile}{\code{Integer value} specifying to the number of quantiles in the analysis.}
+\item{n_quantile}{\code{Integer value} specifying the number of quantiles in the analysis.}
 }
 \value{
 Tibble with the columns
