@@ -29,242 +29,113 @@
 compile_input <-
   function(input_args){
 
-    is_lifetable <- input_args$is_lifetable
-    approach_risk <- input_args$approach_risk
-    rr_central <- input_args$rr_central
-    rr_lower <- input_args$rr_lower
-    rr_upper <- input_args$rr_upper
-    rr_increment <- input_args$rr_increment
-    erf_shape <- input_args$erf_shape
-    erf_eq_central <- input_args$erf_eq_central
-    erf_eq_lower <- input_args$erf_eq_lower
-    erf_eq_upper <- input_args$erf_eq_upper
-    pop_exp <- input_args$pop_exp
-    prop_pop_exp <- input_args$prop_pop_exp
-    exp_central <- input_args$exp_central
-    exp_lower <- input_args$exp_lower
-    exp_upper <- input_args$exp_upper
-    cutoff_central <- input_args$cutoff_central
-    cutoff_lower <- input_args$cutoff_lower
-    cutoff_upper <- input_args$cutoff_upper
-    bhd_central <- input_args$bhd_central
-    bhd_lower <- input_args$bhd_lower
-    bhd_upper <- input_args$bhd_upper
-    geo_id_disaggregated <- input_args$geo_id_disaggregated
-    geo_id_aggregated <- input_args$geo_id_aggregated
-    health_outcome <- input_args$health_outcome
-    population_midyear_male <- input_args$population_midyear_male
-    population_midyear_female <- input_args$population_midyear_female
-    deaths_male <- input_args$deaths_male
-    deaths_female <- input_args$deaths_female
-    first_age_pop <- input_args$first_age_pop
-    last_age_pop <- input_args$last_age_pop
-    min_age <- input_args$min_age
-    max_age <- input_args$max_age
-    year_of_analysis <- input_args$year_of_analysis
-    approach_newborns <- input_args$approach_newborns
-    time_horizon <- input_args$time_horizon
-    dw_central <- input_args$dw_central
-    dw_lower <- input_args$dw_lower
-    dw_upper <- input_args$dw_upper
-    duration_central <- input_args$duration_central
-    duration_lower <- input_args$duration_lower
-    duration_upper <- input_args$duration_upper
-    approach_exposure <- input_args$approach_exposure
-    population <- input_args$population
-    info <- input_args$info
 
-    # Alternatives that do not in summarize_uncertainty
-    # probably because of the environment
-
-    #base::list2env(input_args, envir = base::environment())
-
-    # for (a in names(input_args)) {
-    #   base::assign(a, input_args[[a]], envir = base::environment())
-    # }
-
-    # for (a in names(input_args)) {
-    #   base::eval( base::bquote(.(base::as.name(a)) <- input_args[[.(a)]]),
-    #               envir = base::environment())
-    # }
+    args_for_lifetable <-
+      c("approach_exposure", "approach_newborns",
+        "first_age_pop", "last_age_pop",
+        "population_midyear_male", "population_midyear_female",
+        "deaths_male", "deaths_female",
+        "year_of_analysis",
+        "min_age", "max_age")
 
 
+    input_args_edited <- input_args
 
     # PROCESS GEO ID ###################################################################
-    # If no geo_id_disaggregated is provided (if is NULL) then assign some value.
-    ## geo_id_disaggregated is needed to group results in case of multiple geo_ids
-    if(is.null(geo_id_disaggregated)){
-      geo_id_disaggregated <-
-        ifelse(is.list({{exp_central}}), 1:length({{exp_central}}), 1) |>
-        as.character()
-    } else {
-      # geo_ids need to be character because
-      # a) no operations are expected
-      # b) otherwise error somewhere else in the package when mixing character and numeric
-      geo_id_disaggregated <- as.character(geo_id_disaggregated)
-    }
-
-    if(!is.null(geo_id_aggregated)){
-      # For geo_id_aggegated there is no default value as for geo_id_aggregated
-      # so it needs the if statement below.
-      # Otherwise, instead of not including the column when NULL
-      # no the tibble becomes empty and then error somewhere else
-      geo_id_aggregated <- as.character(geo_id_aggregated)
+    # geo_ids need to be character because
+    # a) no operations are expected
+    # b) otherwise error somewhere else in the package when mixing character and numeric
+    for (geo_id_ in c("geo_id_disaggregated", "geo_id_aggregated")) {
+      if (!is.null(input_args_edited[[geo_id_]])){
+        input_args_edited[[geo_id_]] <- base::as.character(input_args_edited[[geo_id_]])
+      }
     }
 
     # PROCESS ERF ######################################################################
+    # erf can be defined by one of the following combination of data
+    # a) rr, increment, shape and cutoff
+    # b) an erf function as string
+    # c) an erf function as function
+    # If a function is entered (case c), it must be encapsulated in a list
+    # to make the code work below
 
-    # If the erf is defined by rr, increment, shape and cutoff
-    if(is.null(erf_eq_central)){
-
-      erf_data <- # 1 x 6 tibble
-        tibble::tibble(
-          rr_increment = rr_increment,
-          erf_shape = erf_shape,
-          rr_central = rr_central,
-          rr_lower =  rr_lower,
-          rr_upper = rr_upper)
+    for (erf_eq_ in c("erf_eq_central", "erf_eq_lower", "erf_eq_upper")) {
+      if (!is.null(input_args_edited[[erf_eq_]]) &&
+          base::is.function(input_args_edited[[erf_eq_]])) {
+        input_args_edited[[erf_eq_]] <- list(input_args_edited[[erf_eq_]])
+      }
     }
 
-    # If it is defined by the erf function as string
-    if(!is.null(erf_eq_central) & is.character(erf_eq_central)){
-
-        erf_data <- # 1 x 3 tibble
-          tibble::tibble(
-            erf_eq_central = erf_eq_central,
-            erf_eq_lower = erf_eq_lower,
-            erf_eq_upper = erf_eq_upper)
-    }
-
-    # If it is defined by the erf function as function
-    if(!is.null(erf_eq_central) & is.function(erf_eq_central)){
-
-        erf_data <- # 1 x 3 tibble
-          tibble::tibble(
-            ## Functions can't be saved raw in column -> save as list
-            erf_eq_central = list(erf_eq_central))
-        }
-
-    # If a confidence interval for the erf is provided, add the erf columns
-    if (!is.null(erf_eq_lower) & !is.null(erf_eq_upper) & is.function(erf_eq_central)){
-      erf_data <-
-        erf_data |>
-        dplyr::mutate(
-           erf_eq_lower = list(erf_eq_lower),
-           erf_eq_upper = list(erf_eq_upper))}
-
+    # Remove list elements that are null,
+    # otherwise the list cannot be converted into a tibble
+    input_args_edited <-
+      purrr::discard(input_args_edited , is.null)
 
     # ARGUMENTS ################################################################
+    # Store all arguments excluding those for life table
+    # (done below only if life table approach)
+    # Use input_args_edited as basis because of the required edits
 
-    # Store the length of the exposure argument (to be used below)
-    length_exp_dist <-
-      ifelse(is.list(exp_central),
-             length(exp_central[[1]]), # If exposure distribution
-             length(exp_central))      # If single exposure
 
-    length_exp_list <-
-      ifelse(is.list(exp_central),
-             length(exp_central),      # If multiple geo units
-             1)                        # If only one geo unit
+    input_wo_lifetable <- input_args_edited |>
+      # Remove arguments for life table and info.
+      # Info is to added later with a function add_info()
+      # because it can be a data frame.
+      purrr::discard(names(input_args_edited) %in% c(args_for_lifetable, "info")) |>
+      # Convert into a tibble
+      tibble:::as_tibble() |>
+      # Add info
+      healthiar:::add_info(info = input_args_edited$info)|>
+      # Keep only unique rows
+      # (they can be duplicated in case of multiple geo units, exposure categories..)
+      base::unique()
 
+    # Obtain the exposure dimension and exposure type in a separate table
+    exp_dimension_table <-
+      input_wo_lifetable |>
+      dplyr::select(geo_id_disaggregated, exp_central) |>
+      # Add population_midyear_male (it could be any of the other life table arguments)
+      # Add it in a separated mutate because
+      # if it is NULL then it is not added
+      dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated"))))|>
+      dplyr::mutate(exposure_dimension = 1 : base::length(exp_central),
+                       exposure_type =
+                         base::ifelse(length(exp_central) == 1,
+                                      "population_weighted_mean",
+                                      "exposure_distribution"))
+
+    # Join with exposure dimension and type
     input_wo_lifetable <-
-      # Tibble removed columns that are NULL.
-      # So if variable is NULL, column not initiated
-      tibble::tibble(
-        ## First compile input data that are geo-dependent
-        ## Use rep() match dimensions
-        geo_id_disaggregated = base::rep(geo_id_disaggregated,
-                                   each = length_exp_dist),
-        geo_id_aggregated = base::rep(geo_id_aggregated,
-                                each = length_exp_dist),
-        bhd_central = base::rep(unlist(bhd_central), each = length_exp_dist),
-        bhd_lower = base::rep(unlist(bhd_lower), each = length_exp_dist),
-        bhd_upper = base::rep(unlist(bhd_upper), each = length_exp_dist),
-        # min_age = rep(min_age, each = length_exp_dist),
-        # max_age = rep(max_age, each = length_exp_dist),
-        # approach_exposure = rep(approach_exposure, each = length_exp_dist),
-        # approach_newborns = rep(approach_newborns, each = length_exp_dist),
-        population = base::rep(unlist(population), each = length_exp_dist),
+      dplyr::left_join(
+        input_wo_lifetable,
+        exp_dimension_table,
+        by = c("geo_id_disaggregated", "exp_central"))
 
-        ## Second those variables with length = 1 (non-problematic)
-        cutoff_central = cutoff_central,
-        cutoff_lower = cutoff_lower,
-        cutoff_upper = cutoff_upper,
-        approach_exposure = approach_exposure,
-        approach_newborns = approach_newborns,
-        is_lifetable = is_lifetable,
-        year_of_analysis = year_of_analysis,
-        time_horizon = time_horizon,
-        min_age = ifelse(
-          test = !is.null( min_age ),
-          yes = min_age,
-          no = ifelse(
-            test = ( is.null ( min_age ) & {{is_lifetable}} ),
-            yes = first_age_pop,
-            # no = NULL)
-          no = NA)
-      ),
-        max_age = ifelse(
-          test = !is.null( max_age ),
-          yes = max_age,
-          no = ifelse(
-            test = ( is.null ( max_age ) & {{is_lifetable}} ),
-            yes = last_age_pop,
-            # no = NULL)
-          no = NA)),
-      duration_central = duration_central,
-      duration_lower = duration_lower,
-      duration_upper = duration_upper,
-      dw_central = dw_central,
-      dw_lower = dw_lower,
-      dw_upper = dw_upper,
+    # PIVOT LONGER ###########################################################
+    # I.e. increase nr of rows to show all combinations of
+    # central, lower and upper estimates (relevant for iteration)
 
-      ## Finally, those variables that are multi-dimensional (exposure distribution)
-      exp_central = unlist(exp_central),
-      exp_lower = unlist(exp_lower),
-      exp_upper = unlist(exp_upper),
-      pop_exp = unlist(pop_exp),
-      prop_pop_exp = unlist(prop_pop_exp)) |>
+    # Identify the variable to pivot longer
+    vars_to_pivot <-
+      c("exp", "bhd", "cutoff", "duration", "dw")
 
-      ## Remove min_age & max_age columns if they are NA
-      dplyr::select(-dplyr::where(~ all(is.na(x = .))))
+    # Loop over the variables pivoting longer
+    for (var in vars_to_pivot) {
+      if (base::paste0(var, "_central") %in% base::names(input_wo_lifetable)){
 
-      # Add erf data
-    input_wo_lifetable <-
-      dplyr::bind_cols(input_wo_lifetable, erf_data) |>
-      # Add additional (meta-)information
-      healthiar:::add_info(info = info) |>
-      # Information derived from input data
-      dplyr::mutate(
-        approach_risk = approach_risk, # RR or AR
-        health_outcome = health_outcome,
-        exposure_dimension =
-          base::rep(1:length_exp_dist, length_exp_list),
-        exposure_type =
-          base::ifelse(length_exp_dist == 1,
-                 "population_weighted_mean",
-                 "exposure_distribution")) |>
-      # Remove all columns with all values being NA
-      # dplyr::select(where(~ !all(is.na(.)))) |>
+        input_wo_lifetable <-
+          tidyr::pivot_longer(
+            data = input_wo_lifetable,
+            cols = dplyr::any_of(base::paste0(var, c("_central", "_lower", "_upper"))),
+            names_to = paste0(var, "_ci"),
+            names_prefix = paste0(var, "_"),
+            values_to = var)
+      }
+    }
 
-      # Add lifetable-related data as nested tibble
-      # Build the data set
-      # The life table has to be provided (by sex)
-      # Rename column names to standard names
-
-
-      # PIVOT LONGER ###########################################################
-      # I.e. increase nr of rows to show all combinations of
-      # central, lower and upper estimates (relevant for iteration)
-
-      ## For exposure,
-      tidyr::pivot_longer(cols = dplyr::starts_with("exp_"),
-                          names_to = "exp_ci",
-                          names_prefix = "exp_",
-                          values_to = "exp")
-
-    if (is.null(erf_eq_central)) {
-      ## Exposure response function
+    if ("rr_central" %in% base::names(input_wo_lifetable)) {
+      # Out of the loop for exposure response function
+      # because both rr_ and erf_eq_ ends with a variable erf_ci
 
       input_wo_lifetable <-
         tidyr::pivot_longer(data = input_wo_lifetable,
@@ -272,156 +143,139 @@ compile_input <-
                             names_to = "erf_ci",
                             names_prefix = "rr_",
                             values_to = "rr")
-    } else {
+    } else if ("erf_eq_central" %in% base::names(input_wo_lifetable)) {
+
       input_wo_lifetable <-
         tidyr::pivot_longer(data = input_wo_lifetable,
                             cols = dplyr::starts_with("erf_eq_"),
                             names_to = "erf_ci",
                             names_prefix = "erf_eq_",
-                            values_to = "erf_eq") }
+                            values_to = "erf_eq")
+    }
 
-    ## Baseline health data
-    if(!is.null(bhd_central)) {
-      input_wo_lifetable <-
-        input_wo_lifetable |>
-        tidyr::pivot_longer(cols = dplyr::starts_with("bhd_"),
-                            names_to = "bhd_ci",
-                            names_prefix = "bhd_",
-                            values_to = "bhd")}
-
-    ## Cutoff health data
-    if(!is.null(cutoff_central)) {
-      input_wo_lifetable <-
-        input_wo_lifetable |>
-        tidyr::pivot_longer(cols = dplyr::starts_with("cutoff_"),
-                            names_to = "cutoff_ci",
-                            names_prefix = "cutoff_",
-                            values_to = "cutoff")}
-
-
-    ## Disability weight
-    if (!is.null(dw_central)) {
-      input_wo_lifetable <-
-        input_wo_lifetable |>
-        tidyr::pivot_longer(cols = dplyr::starts_with("dw_"),
-                            names_to = "dw_ci",
-                            names_prefix = "dw_",
-                            values_to = "dw")}
-
-    ## Duration (of morbidity health outcome)
-    if (!is.null(duration_central)) {
-      input_wo_lifetable <-
-        input_wo_lifetable |>
-        tidyr::pivot_longer(cols = dplyr::starts_with("duration_"),
-                            names_to = "duration_ci",
-                            names_prefix = "duration_",
-                            values_to = "duration")}
-
-
-    # CREATE LIFETABLES ##########################################################
+    # CREATE LIFE TABLES ##########################################################
     # As nested tibble
 
-    if (is_lifetable) {
+    if (input_args$is_lifetable) {
+
 
       # Build the data set for lifetable-related data
       # The life table has to be provided (by sex)
       # Rename column names to standard names
 
       # Define variables to be used below
-      age_sequence <- seq(from = first_age_pop,
-                          to = last_age_pop,
+      age_sequence <- seq(from = input_args_edited$first_age_pop,
+                          to = input_args_edited$last_age_pop,
                           by = 1)
-      age_end_sequence <- seq(from = first_age_pop + 1,
-                              to = last_age_pop + 1,
+      age_end_sequence <- seq(from = input_args_edited$first_age_pop + 1,
+                              to = input_args_edited$last_age_pop + 1,
                               by = 1)
 
+      # Define the arguments for life table excluding those that are sex-specific
+      non_age_specific_lifetable_args <-
+        args_for_lifetable[!grepl("male|female", args_for_lifetable)]
+      # Now including those arguments that are sex-specific
+      age_specific_lifetable_args <-
+        args_for_lifetable[grepl("male|female", args_for_lifetable)]
 
-
-      # Create a template of the lifetables
-      # Use crossing to enable all combination of the vectors
-      lifetable_with_pop_template <-
-        tidyr::crossing(
-          geo_id_disaggregated,
-          age = age_sequence) |>
-        # Add age end with mutate instead of crossing
-        # because no additional combinations are needed (already included in age)
-        # The function rep(, length.out=)
-        # is needed to ensure that the vector length matches with number of rows of the tibble.
+      # Store arguments for life table
+      # Use input_args_edited as basis because of the required edits
+      non_age_specific_input_for_lifetable <- input_args_edited |>
+        # Also keep geo_id_disaggragated to enable join below
+        purrr::keep(base::names(input_args_edited) %in%
+                      c(non_age_specific_lifetable_args, "geo_id_disaggregated")) |>
+        # Convert into a tibble
+        tibble:::as_tibble() |>
+        # If min_age or max_age are NULL,
+        # then use value of first_age_pop and last_age_pop resp.
         dplyr::mutate(
-          age_end = base::rep(age_end_sequence, length.out = dplyr::n()))
+          year_of_analysis = input_args_edited$year_of_analysis,
+          min_age = if(base::is.null(input_args_edited$min_age)){
+            input_args_edited$first_age_pop} else {min_age},
+          max_age = if(base::is.null(input_args_edited$max_age)){
+            input_args_edited$last_age_pop} else {max_age}) |>
+        # Keep only unique rows
+        # (they can be duplicated in case of multiple geo units, exposure categories..)
+        base::unique()
+      # |>
+      #   dplyr::mutate(
+      #     age = age_sequence,
+      #     age_end = age_end_sequence)
 
-      # Based on the template create lifetable for male
-      lifetable_with_pop_male <-
-        lifetable_with_pop_template |>
+      age_specific_input_for_lifetable  <- input_args_edited |>
+        # Also keep geo_id_disaggragated to enable join below
+        purrr::keep(base::names(input_args_edited) %in%
+                      c(age_specific_lifetable_args, "geo_id_disaggregated")) |>
+        # Convert into a tibble
+        tibble:::as_tibble() |>
+        # Keep only unique rows
+        # (they can be duplicated in case of multiple geo units, exposure categories..)
+        base::unique() |>
+        # Add age columns to age specific data
         dplyr::mutate(
-          sex = "male",
-          deaths = base::rep(unlist(deaths_male), length.out = dplyr::n()),
-          population = base::rep(unlist(population_midyear_male), length.out = dplyr::n()))
+          age = base::rep(age_sequence, length.out = dplyr::n()),
+          age_end = base::rep(age_end_sequence, length.out = dplyr::n())) |>
+        # Rename population to make it shorter
+        dplyr::rename_with(~ base::gsub("population_midyear_", "population_", .x))
 
-      # The same for female
-      lifetable_with_pop_female <-
-        lifetable_with_pop_template |>
+      # Pivot longer sex
+      # Define first the life table (age-specific) data based on the input to loop
+      lifetable_with_pop <- age_specific_input_for_lifetable |>
+        # Calculate totals
         dplyr::mutate(
-          sex = "female",
-          deaths = base::rep(unlist(deaths_female), length.out = dplyr::n()),
-          population = base::rep(unlist(population_midyear_female), length.out = dplyr::n()))
+          deaths_total = deaths_male + deaths_female,
+          population_total = population_male + population_female)
 
-      lifetable_with_pop_male_female <-
-        # Bind male and female tibbles
-        dplyr::bind_rows(
-          lifetable_with_pop_male,
-          lifetable_with_pop_female)
 
+      # First pivot longer
       lifetable_with_pop <-
-        lifetable_with_pop_male_female |>
-        # Nest the lifetable elements
+        tidyr::pivot_longer(
+        data = lifetable_with_pop,
+        cols = dplyr::all_of(
+          c(base::paste0("deaths_", c("male", "female", "total")),
+            base::paste0("population_", c("male", "female", "total")))),
+        names_sep = "_",
+        names_to = c("var", "sex"),
+        values_to = "value") |>
+        # And second pivot wider to keep the variables as columns
+        tidyr::pivot_wider(
+          names_from = var,
+          values_from = value) |>
+        # Add total population by geo unit
+        # For impacts per 100k inhab.
+        dplyr::group_by(geo_id_disaggregated) |>
+        dplyr::mutate(population_total = sum(population, rm.na = TRUE)) |>
+        # Next age-specific information to get the table smaller
         tidyr::nest(
           lifetable_with_pop_nest =
-            c(age, age_end, population))
-
-        # The same for total
-        lifetable_with_pop_total <-
-          lifetable_with_pop_template |>
-          dplyr::mutate(
-            sex = "total",
-            population = lifetable_with_pop_male$population + lifetable_with_pop_female$population,
-            deaths = lifetable_with_pop_male$deaths + lifetable_with_pop_female$deaths)
-
-        lifetable_with_pop_male_female_total <-
-          dplyr::bind_rows(lifetable_with_pop_male,
-                           lifetable_with_pop_female,
-                           lifetable_with_pop_total)
-
-        lifetable_with_pop <-
-          lifetable_with_pop_male_female_total |>
-          # Nest the lifetable elements
-          tidyr::nest(
-            lifetable_with_pop_nest =
-              c(age, age_end, population, deaths))
-      # }
+            c(age, age_end, population, deaths)) |>
+        # Rename population_total to population
+        # now that age-specific information is nested it is already clear
+        dplyr::rename("population" = "population_total")
 
 
       # JOIN TIBBLES ###########################################################
 
         # Calculate total population for impacts per 100k inhab.
-        population <-
-          lifetable_with_pop_total |>
-          dplyr::group_by(geo_id_disaggregated) |>
-          dplyr::summarize(population = sum(population, rm.na = TRUE))
+        # population <-
+        #   lifetable_with_pop_total |>
+        #   dplyr::group_by(geo_id_disaggregated) |>
+        #   dplyr::summarize(population = sum(population, rm.na = TRUE))
 
         # Join the input without and with lifetable variable into one tibble
         input_table <-
           dplyr::left_join(input_wo_lifetable,
-                           lifetable_with_pop,
+                           non_age_specific_input_for_lifetable,
                            by = "geo_id_disaggregated",
                            relationship = "many-to-many") |>
-          dplyr::left_join(population,
+          dplyr::left_join(lifetable_with_pop,
                            by = "geo_id_disaggregated",
                            relationship = "many-to-many")
 
       } else {
       # If no lifetable, only use input_wo_lifetable
       input_table <- input_wo_lifetable}
+
 
 
   return(input_table)

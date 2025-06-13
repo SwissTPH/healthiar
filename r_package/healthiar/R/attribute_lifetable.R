@@ -6,25 +6,36 @@
 #' @inheritParams attribute_master
 
 #' @details
-#' The life table methodology follows the one implemented in the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200
+#' \strong{Life table methodology}
+#' @details
+#' The life table methodology of \code{attribute_lifetable()} follows that of the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200.
 #' @details
 #' A more expansive life table case study by Miller is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
 #' @details
 #' See the AirQ+ manual "Health impact assessment of air pollution: AirQ+ life table manual" for guidance on how to convert larger age groups to 1 year age groups ("section "Estimation of yearly values"): https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf (accessed April 2025):
 #' @details
-#' Conversion of alternative risk measures to relative risks
+#' \strong{Conversion of alternative risk measures to relative risks}
 #' For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
-#' @returns
-#' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
-#' concentration-response function (i.e. central, lower and upper bound confidence interval.
-#' Moreover, the data frame include columns such as:
-#' \itemize{
-#'  \item Attributable fraction
-#'  \item Health impact
-#'  \item Outcome metric
-#'  \item And many more.
-#' }
+#' @details
+#' \strong{Function arguments}
+#' @details
+#' \code{population_midyear_female},\code{population_midyear_male}
+#' @details
+#' Mid-year population of year x can be approximated as the mean of end-year populations of years x-1 and x.
+#' @details
+#' \code{approach_newborns}
+#' @details
+#' If \code{"with_newborns"} is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.
+#' @details
+#' \code{time_horizon}
+#' @details
+#' For example, would be 10 if one is interested in the impacts of exposure during the year of analysis and the next 9 years (= 10 years in total).
+#' @details
+#' \code{min_age}, \code{max_age}
+#' The \code{min_age} default value 30 implies that all adults aged 30 or older will be affected by the exposure; \code{max_age} analogeously specifies the age above which no health effects of the exposure are considered.
+
+#' @inherit attribute_master return
 
 #' @examples
 #' TBD
@@ -36,24 +47,32 @@
 
 
 attribute_lifetable <-
-  function(first_age_pop, last_age_pop,
-           population_midyear_male, population_midyear_female,
-           deaths_male = NULL, deaths_female = NULL,
-           min_age = NULL, max_age = NULL,
-           approach_exposure = "single_year",
-           approach_newborns = "without_newborns",
-           health_outcome = NULL,
-           year_of_analysis,
-           erf_shape = NULL,
-           rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           rr_increment = NULL,
-           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-           exp_central = 0, exp_lower = NULL, exp_upper = NULL,
-           prop_pop_exp = 1,
-           cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
-           geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
-           info = NULL
-           ) {
+  function(
+    health_outcome = NULL,
+    first_age_pop, last_age_pop,
+    population_midyear_male, population_midyear_female,
+    deaths_male = NULL, deaths_female = NULL,
+    min_age = NULL, max_age = NULL,
+    approach_exposure = "single_year",
+    approach_newborns = "without_newborns",
+    year_of_analysis,
+    erf_shape = NULL,
+    rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+    rr_increment = NULL,
+    erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
+    exp_central = 0, exp_lower = NULL, exp_upper = NULL,
+    pop_exp = NULL, prop_pop_exp = 1,
+    cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
+    geo_id_disaggregated = "a", geo_id_aggregated = NULL,
+    info = NULL
+  ) {
+
+    # Get what the arguments that the user passed
+    used_args <- base::names(base::as.list(base::match.call()  ))[-1] # drop function name
+    # Get all arguments
+    all_args <- base::names(base::formals(attribute_lifetable))
+    # Get unused arguement as the difference
+    unused_args <- base::setdiff(all_args, used_args)
 
     output <-
       healthiar:::attribute_master(
@@ -61,7 +80,7 @@ attribute_lifetable <-
         health_outcome = health_outcome,
         approach_risk = "relative_risk",
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
-        prop_pop_exp = prop_pop_exp,
+        pop_exp = pop_exp, prop_pop_exp = prop_pop_exp,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
         rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
         rr_increment = rr_increment,
@@ -78,7 +97,8 @@ attribute_lifetable <-
         year_of_analysis = year_of_analysis,
         min_age = min_age, max_age = max_age,
         geo_id_disaggregated = geo_id_disaggregated, geo_id_aggregated = geo_id_aggregated,
-        info = info)
+        info = info,
+        .unused_args = unused_args)
 
     return(output)
 

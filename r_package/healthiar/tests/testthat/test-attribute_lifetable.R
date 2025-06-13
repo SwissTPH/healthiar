@@ -243,5 +243,37 @@ testthat::test_that("error if length of age range higher than deaths", {
   )
 })
 
+testthat::test_that("error if length geo arguments are different", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "deaths",
+        exp_central = rep(c(8.85, 8.0), each = 100),# Fake data just for testing purposes
+        prop_pop_exp = 1, # Fake data just for testing purposes
+        cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
+        rr_central = 1.118,
+        rr_lower = 1.060,
+        rr_upper = 1.179,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        first_age_pop = 0,
+        last_age_pop = 99,
+        deaths_male = data[["pop"]]$number_of_deaths_male,
+        deaths_female = data[["pop"]]$number_of_deaths_female,
+        population_midyear_male = data_lifetable[["male"]]$population,
+        population_midyear_female = data_lifetable[["female"]]$population,
+        year_of_analysis = 2019,
+        min_age = 20,
+        geo_id_disaggregated = rep(c("a", "b"), each = 100),
+        geo_id_aggregated = rep("ch", 2 * 100))
+  )
+})
+
+
+
 ## WARNING #########
 

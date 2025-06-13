@@ -224,12 +224,12 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
-  bestcost_pm_yld  <-
+  scen_1_yld_geo <-
     healthiar::attribute_health(
-      exp_central = 8.85,
+      exp_central = c(8.5, 8),
       prop_pop_exp = 1,
       cutoff_central = 5,
-      bhd_central = 1E3,
+      bhd_central = c(1E3, 1E3),
       rr_central = 1.1,
       rr_lower = 1.05,
       rr_upper = 1.19,
@@ -239,13 +239,21 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
       duration_central = 100,
       population = sum(data_lifetable[["male"]]$population,
                        data_lifetable[["female"]]$population),
-      dw_central = 1)
+      dw_central = 1,
+      geo_id_disaggregated = c("a", "b"),
+      geo_id_aggregated = c("ch", "ch"))
 
-  bestcost_pm_yll <-
+  scen_2_yld_geo <-
+    healthiar::attribute_mod(
+      output_attribute_1 = scen_1_yld_geo,
+      exp_central = c(6, 6.5))
+
+
+  scen_1_yll_geo <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
       approach_exposure = "single_year",
-      exp_central = 8.85,
+      exp_central = rep(c(8.5, 8), each = base::length(data[["pop"]]$number_of_deaths_male)),
       prop_pop_exp = 1,
       cutoff_central = 5,
       rr_central =  1.118,
@@ -255,38 +263,20 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
       erf_shape = "log_linear",
       first_age_pop = 0,
       last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      deaths_male = base::rep(data[["pop"]]$number_of_deaths_male, times = 2),
+      deaths_female = base::rep(data[["pop"]]$number_of_deaths_female, times = 2),
+      population_midyear_male = base::rep(data_lifetable[["male"]]$population, times = 2),
+      population_midyear_female = base::rep(data_lifetable[["female"]]$population, times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      info = "pm2.5_yll")
-
-  ## Define scenarios
-  scen_1_yll_geo <-
-    healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_yll,
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = c("ch", "ch"),
-      exp_central = list(8.5, 8))
+      info = "pm2.5_yll",
+      geo_id_disaggregated = rep(c("a", "b"), each = base::length(data[["pop"]]$number_of_deaths_male)),
+      geo_id_aggregated = rep("ch", each = 2 * base::length(data[["pop"]]$number_of_deaths_male)))
 
   scen_2_yll_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_yll_geo,
-      exp_central = list(6, 6.5))
-
-  scen_1_yld_geo <-
-    healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_yld,
-      exp_central = list(8.5, 8),
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = c("ch", "ch"))
-
-  scen_2_yld_geo <-
-    healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yld_geo,
-      exp_central = list(6, 6.5))
+      exp_central = rep(c(6, 6.5), each = base::length(data[["pop"]]$number_of_deaths_male)))
 
   ## Delta comparison
   testthat::expect_equal(
@@ -314,12 +304,12 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
-  bestcost_pm_yld  <-
+  scen_1_yld_geo <-
     healthiar::attribute_health(
-      exp_central = 8.85,
+      exp_central = c(8.5, 8),
       prop_pop_exp = 1,
       cutoff_central = 5,
-      bhd_central = 1E3,
+      bhd_central = c(1E3, 1E3),
       rr_central = 1.1,
       rr_lower = 1.05,
       rr_upper = 1.19,
@@ -329,13 +319,21 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
       duration_central = 100,
       population = sum(data_lifetable[["male"]]$population,
                        data_lifetable[["female"]]$population),
-      dw_central = 1)
+      dw_central = 1,
+      geo_id_disaggregated = c("a", "b"),
+      geo_id_aggregated = c("ch", "ch"))
 
-  bestcost_pm_yll <-
+  scen_2_yld_geo <-
+    healthiar::attribute_mod(
+      output_attribute_1 = scen_1_yld_geo,
+      exp_central = c(6, 6.5))
+
+
+  scen_1_yll_geo <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
       approach_exposure = "single_year",
-      exp_central = 8.85,
+      exp_central = rep(c(8.5, 8), each = base::length(data[["pop"]]$number_of_deaths_male)),
       prop_pop_exp = 1,
       cutoff_central = 5,
       rr_central =  1.118,
@@ -345,38 +343,21 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
       erf_shape = "log_linear",
       first_age_pop = 0,
       last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      deaths_male = base::rep(data[["pop"]]$number_of_deaths_male, times = 2),
+      deaths_female = base::rep(data[["pop"]]$number_of_deaths_female, times = 2),
+      population_midyear_male = base::rep(data_lifetable[["male"]]$population, times = 2),
+      population_midyear_female = base::rep(data_lifetable[["female"]]$population, times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      info = "pm2.5_yll")
-
-  ## Define scenarios
-  scen_1_yll_geo <-
-    healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_yll,
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = c("ch", "ch"),
-      exp_central = list(8.5, 8))
+      info = "pm2.5_yll",
+      geo_id_disaggregated = rep(c("a", "b"), each = base::length(data[["pop"]]$number_of_deaths_male)),
+      geo_id_aggregated = rep("ch", each = 2 * base::length(data[["pop"]]$number_of_deaths_male)))
 
   scen_2_yll_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_yll_geo,
-      exp_central = list(6, 6.5))
+      exp_central = rep(c(6, 6.5), each = base::length(data[["pop"]]$number_of_deaths_male)))
 
-  scen_1_yld_geo <-
-    healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_yld,
-      exp_central = list(8.5, 8),
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = c("ch", "ch"))
-
-  scen_2_yld_geo <-
-    healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yld_geo,
-      exp_central = list(6, 6.5))
 
   ## PIF comparison
   testthat::expect_equal(

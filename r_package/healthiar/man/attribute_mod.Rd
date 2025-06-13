@@ -45,68 +45,52 @@ attribute_mod(
 \arguments{
 \item{output_attribute_1}{\code{List} containing the output of the function attribute() for scenario 1.}
 
-\item{erf_shape}{\code{String} specifying the shape of the exposure-response function to be assumed. Options: "linear", log_linear", "linear_log", "log_log".}
+\item{erf_shape}{\code{String value} specifying the shape of the exposure-response function to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. Argument is applicable only in RR pathway.}
 
-\item{rr_central, rr_lower, rr_upper}{\code{Numeric value(s)} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds.}
+\item{rr_central, rr_lower, rr_upper}{\code{Numeric value} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Argument is applicable only in RR pathway.}
 
-\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}).}
+\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}) (no default). Argument is applicable only in RR pathway.}
 
-\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the equation of the user-defined exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions.
-If a \code{string} is entered, the function must contains only one variable c (concentration/exposure), e.g. "3+c+c^2".
-If a \code{function} is fed to the argument, it has be of the class function class, e.g. output from the functions \code{stats::splinefun()} or \code{stats::approxfun()}.
-If you have x-axis (exposure) and y axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use a cubic spline natural interpolation to derive the exposure-response function using, e.g. \code{stats::splinefun(x, y, method="natural")}.}
+\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info.}
 
-\item{exp_central, exp_lower, exp_upper}{\code{Numeric value(s)} specifying the exposure level(s) to the environmental stressor and (optionally) to lower and upper bound of the 95\% confidence interval. If only one value is provided, it will be assumed that it refers to population-weighted mean exposure in \eqn{µg/m^3}. If a {vector} is provided, it will be assumed that it refers to the exposure categories (average exposure in the category) in a exposure distribution (this information is linked to the proportion of population exposed).}
+\item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the exposure level(s) to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
 
-\item{prop_pop_exp}{\code{Numeric value} or \code{Numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to each exposure categories. Only to be used for exposure distribution (if pop_exp not available) or if not the whole population is exposed. Otherwise, 1 will be assumed as default.}
+\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to the exposure (categories). Default: 1. See Details for more info.}
 
-\item{pop_exp}{\code{Numeric vector} referring to the population exposed for each exposure category. For absolute risk, the value of this argument must be entered, for relative risk only optional.}
+\item{pop_exp}{\code{Numeric vector} referring to the population exposed for each exposure category. For absolute risk, the value of this argument must be entered, for relative risk it is optional.}
 
-\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} showing the central exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
-The cutoff level refers to the exposure level below which no health effects occur.
-If exposure categories are used, the dimension of this input must be the same as in the \code{exp_...} argument(s). Default: 1 for a single exposure value.
-Only applicable to relative risk pathways.}
+\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. Only applicable in relative risk pathway. See Details for more info.}
 
-\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value(s)} providing the baseline health data of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds. See Details for more info.}
+\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the baseline health data of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds. Argument is only applicable in RR pathway. See Details for more info.}
 
-\item{geo_id_disaggregated}{\code{Numeric vector} providing the unique ID codes of each geographic area (e.g. municipalities) considered in the assessment.
-If a vector is entered here, the data for geo-specific input data (e.g. \code{bhd_...}), \code{exp_...}) has to be provided as a list.}
+\item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing the unique ID codes of each geographic area considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing a higher-level ID at which the geographic areas will be aggregated (\code{geo_id_disaggregated}). Argument must be entered for iterations. See Details for more info.}
 
-\item{geo_id_aggregated}{\code{Numeric vector} an ID for each geographic area that specifies which geographic areas should be aggregated together.
-E.g. if you provide the municipality names to \code{geo_id_disaggregated}, you might provide here the corresponding region / canton / province.
-Consequently The vector has to have the same length as the one fed to \code{geo_id_disaggregated}.}
+\item{population}{\code{Numeric value} or \code{numeric vector} specifying the total population, including both exposed and non-exposed. See Details for more info.}
 
-\item{population}{\code{Numeric value} or \code{Vector} referring to the total population, including both exposed and non-exposed (in each geographical unit). Only to be used to assess relative impact per 100k inhabitants.}
+\item{info}{\code{String} or \code{data frame} specifying information to be linked with the assessment. Optional argument. See Details for more info.}
 
-\item{info}{\code{String} or {data.frame} providing additional information linked with the assessment.
-The suffix "info" will be added to the column name.
-Default value = \code{NULL}.}
+\item{first_age_pop, last_age_pop}{\code{Numeric value} specifying the age of the youngest and oldest age group (age interval = 1 year) of the data, respectively.}
 
-\item{first_age_pop}{\code{Numeric value} specifying the age of the youngest age group from population and life table data (age interval = 1 year).}
+\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See Details for more info.}
 
-\item{last_age_pop}{\code{Numeric value} specifying the age of the oldest age group from population and life table data (age interval = 1 year).}
+\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively.}
 
-\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See the details section for guidance on how to adjust age groups.}
+\item{min_age, max_age}{\code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.}
 
-\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively. See the details section for guidance on how to adjust age groups.}
+\item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: \code{"single_year"} (default), \code{"constant"}.}
 
-\item{min_age}{\code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. By default 30, which implies that all adults aged 30 or older will be affected by the exposure.}
-
-\item{max_age}{\code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure.}
-
-\item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: "single_year" (default), "constant".}
-
-\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". If "with_newborns" is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.}
+\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". See Details for more info.}
 
 \item{year_of_analysis}{\code{Numeric value} providing the year of analysis.}
 }
 \value{
-This function returns two lists:
+This function returns two \code{lists}:
 
-1) \code{health_main}, which contains a tibble with the main results and
+1) \code{health_main}, which contains a \code{tibble} with the main results and
+
 2) \code{health_detailed}, which contains detailed (and interim) results.
 
-The result tibbles include columns such as:
+The results contain columns such as:
 \itemize{
  \item \code{pop_fraction} population attributable fraction; only for assessments using relative risk
  \item \code{impact} attributable health burden/impact

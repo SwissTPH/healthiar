@@ -11,15 +11,12 @@
 validate_input_attribute <-
   function(input_args, unused_args){
 
+
     # Data sets ###########
 
     # Create a copy of input args to modify data set when needed
     input <- input_args
 
-    # Add age range (needed below)
-    if(!base::is.null(input$first_age_pop) && !base::is.null(input$last_age_pop)){
-    input$age_range <- input$last_age_pop:input$first_age_pop
-    }
 
     available_input <-
       purrr::keep(input, ~!base::is.null(.x))
@@ -73,8 +70,7 @@ validate_input_attribute <-
     categorical_args <- names(options_of_categorical_args)
 
     lifetable_var_names_with_same_length <-
-      c("age_range",
-        "deaths_male", "deaths_female",
+      c("deaths_male", "deaths_female",
         "population_midyear_male", "population_midyear_female")
 
     available_var_names <-
@@ -88,17 +84,20 @@ validate_input_attribute <-
 
 
     # Functions and calls ###########
-    error_if_var_1_but_not_var_2 <- function(var_name_1, var_name_2){
-      var_value_1 <- input_args[[var_name_1]]
-      var_value_2 <- input_args[[var_name_2]]
 
-      if(!is.null(var_value_1) && is.null(var_value_2)){
+    ## Errors #####
+    error_if_var_1_but_not_var_2 <- function(var_name_1, var_name_2){
+
+      if(!var_name_1 %in% unused_args &&
+         var_name_2 %in% unused_args
+         # Check unused_args in case that there is a default value (safer)
+         ){
         stop(
           paste0(
-            "If ",
+            "If you do not pass a value for ",
             var_name_2,
-            " is empty, you cannot use ",
-            var_name_2,
+            ", you cannot use ",
+            var_name_1,
             "."),
           call. = FALSE)
       }
@@ -168,6 +167,8 @@ validate_input_attribute <-
       } else {TRUE}
     }
 
+
+
     error_if_different_length <- function(var_name_1, var_name_2){
 
       # Store var_value
@@ -207,9 +208,11 @@ validate_input_attribute <-
       }
     }
 
-    # --> error if length of life table variables is different
+
 
     if(all(lifetable_var_names_with_same_length %in% available_var_names)){
+
+      # --> error if length of life table variables is different
       combi_vars <-
         utils::combn(lifetable_var_names_with_same_length, 2)|>
         base::t() |>
@@ -220,7 +223,38 @@ validate_input_attribute <-
         error_if_different_length(combi_vars$var_1[i],
                                   combi_vars$var_2[i])
       }
+
     }
+
+    error_if_incompatible_length_of_age_range <-
+      function(age_dependent_var){
+
+        # Get length of age range
+        length_age_range <- base::length(input$first_age_pop : input$last_age_pop)
+
+        # Get of the unique vector of geo_id
+        # (it can be duplicated in case of e.g. exposure distribution or life table)
+        length_geo_id_disaggregated <- base::length(base::unique(input$geo_id_disaggregated))
+
+        # Get length of age-depending variable
+        length_age_dependent_var <-  base::length(input[[age_dependent_var]])
+
+      if( !base::identical(length_age_range * length_geo_id_disaggregated,
+                           length_age_dependent_var)){
+
+        # Create error message
+        stop("The length of age range (sequence of first_age_pop and last_age_pop) must be compatible with the age-dependent variables",
+             call. = FALSE)
+      }
+      }
+
+
+
+    if(all(lifetable_var_names_with_same_length %in% available_var_names)){
+      error_if_incompatible_length_of_age_range(age_dependent_var = "deaths_male")
+    }
+
+
 
 
     error_if_lower_than_0 <- function(var_name){
@@ -261,23 +295,104 @@ validate_input_attribute <-
     }
 
 
+    ## Error if multiple geo units and length of some geo dependent variables are different ####
+    # (geo_ids, exp_central, prop_pop_exp, pop_exp and bhd) must be the same
+    # i.e. enter the data as in the table
+    error_if_multi_geo_and_different_length  <- function(list, var_names){
+
+      # Remove NULLs
+      non_nulls <-
+        list[var_names] |>
+        purrr::discard(is.null)
+
+      # Get lengths of non-NULLs
+      lengths <- purrr::map_int(non_nulls, length)
+
+      if (base::length(base::unique(list$geo_id_disaggregated)) > 1 &&
+          !base::all(lengths == base::length(list$geo_id_disaggregated))) {
+
+        base::stop(
+          base::paste0("The following variables must all have the same length: ",
+                       base::paste0(base::names(non_nulls),
+                                    collapse = ", ")),
+          call. = FALSE
+        )
+      }
+    }
+
+
+    error_if_multi_geo_and_different_length(list = input_args,
+                                            var_names = c("geo_id_disaggregated",
+                                                          "exp_central",
+                                                          "pop_exp",
+                                                          "bhd_central",
+                                                          "deaths_male",
+                                                          "deaths_female",
+                                                          "population_midyear_male",
+                                                          "population_midyear_female"))
+
+
     error_if_sum_higher_than_1 <- function(var_name){
+
       var_value <- input[[var_name]]
 
-      if(!base::is.null(var_value)){ # Only if available
-         if((base::is.list(var_value) &&
-            base::any(purrr::map_lgl(var_value, ~ base::sum(.x, na.rm = TRUE) > 1))) |
 
-            (!base::is.list(var_value) &&
-             base::sum(var_value, na.rm = TRUE) > 1)){
+      if(base::is.null(input[["geo_id_disaggregated"]])){
+        geo_id_disaggregated <- as.character(1)
+        } else {
+          geo_id_disaggregated <- as.character(input[["geo_id_disaggregated"]])
+        }
+
+
+      if(base::length(base::unique(geo_id_disaggregated)) > 1){
+        var_table <-
+          tibble::tibble(
+            geo_id_disaggregated = geo_id_disaggregated ,
+            population_midyear_male = input[["population_midyear_male"]],
+            var = var_value)
+
+      } else if (base::length(base::unique(geo_id_disaggregated)) == 1) {
+
+
+        if(base::is.null(input[["population_midyear_male"]])){
+          population_midyear_male <- NULL
+          var_vector <- var_value
+
+        } else if (!base::is.null(input[["population_midyear_male"]])) {
+
+          population_midyear_male <-
+            base::rep(input[["population_midyear_male"]],
+                      each = base::length(var_value),
+                      times = base::length(geo_id_disaggregated))
+
+          var_vector <-
+            base::rep(var_value,
+                      each = base::length(geo_id_disaggregated),
+                      times = base::length(input[["population_midyear_male"]]))
+        }
+
+        var_table <-
+          tibble::tibble(
+            geo_id_disaggregated = geo_id_disaggregated,
+            population_midyear_male = population_midyear_male,
+            var = var_vector)
+
+      }
+
+      if(base::is.null(input[["pop_exp"]]) &&
+         var_table |>
+         dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "population_midyear_male")))) |>
+         dplyr::summarize(sum = base::sum(var, na.rm = TRUE) > 1) |>
+         dplyr::pull(sum) |>
+         base::any()){
 
         # Create error message
         stop(base::paste0(
           "The sum of values in ",
           var_name,
-          " cannot be higher than 1"),
+          " cannot be higher than 1 for each geo unit."),
           call. = FALSE)
-      }
+
       }
     }
 
@@ -358,6 +473,12 @@ validate_input_attribute <-
       error_if_only_lower_or_upper(var_short = x)
     }
 
+
+    #TODO: Check that geo_id_disaggregated is provided if multiple geo units
+
+
+
+    ## Warnings ######
     warning_if_ar_and_existing <- function(var_name){
 
       # Store var_value
@@ -394,6 +515,9 @@ validate_input_attribute <-
         call. = FALSE)
 
     }
+
+
+
 
 
 
