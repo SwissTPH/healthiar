@@ -22,7 +22,10 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 options(rmarkdown.html_vignette.check_title = FALSE)
+options(knitr.kable.max_rows = 10)
+set.seed(1)
 
+## Avoid using pacman here, as it causes error in installation if it's not installed already
 library(healthiar)
 library(tibble)
 library(dplyr)
@@ -31,24 +34,17 @@ library(tidyr)
 library(stringr)
 library(knitr)
 # library(pillar) # Used in some code that's currently commented out
-
-## Avoid using pacman here, as it causes error in installation if it's not installed already
-# library(pacman)
-# pacman::p_load(healthiar, tibble, dplyr, purrr, tidyr, stringr, pillar, knitr)
-
-options(knitr.kable.max_rows = 10)
-set.seed(1)
 ```
 
 Hi there!
 
-This vignette will 1) tell you about `healthiar`, 2) help you install the `healthiar` package, and 3) show you how to use `healthiar` with the help of examples.
+This vignette will tell you about `healthiar` and show you how to use `healthiar` with the help of examples.
 
 *NOTE*: By using healthiar you agree to the [terms of use](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme) and confirm you have read the [disclaimer](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme).
 
 *NOTE*: the development of `healthiar` is still ongoing. Any feedback regarding bugs, unclear documentation, ... is welcome and highly appreciated. Please provide feedback via a [GitHub issue](https://github.com/best-cost/best-cost_WPs/issues).
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 # About `healthiar`
 
@@ -66,20 +62,7 @@ The `healthiar` functions allow you to quantify and monetize the health impacts 
 -   `socialize()` to discover inequalities in health impacts
 -   `prepare_mdi()` creates the BEST-COST MDI (Multidimensional Deprivation Index)
 -   `daly()` by adding up YLL & YLD
--   `multiexpose` approaches to consider exposure to 2 air pollutants
-
-## Updating `healthiar`
-
-After the initial installation we recommend to regularly update the `healthiar` R package by running the following code
-
-```{r eval=FALSE}
-remotes::install_github(
-  repo = "best-cost/best-cost_WPs",
-  subdir = "/r_package/healthiar",
-  force = TRUE,
-  build_vignettes = TRUE
-)
-```
+-   `multiexpose()` approaches to consider exposure to 2 air pollutants at the same time
 
 
 ## Refresher - Burden of disease with relative risk
@@ -93,24 +76,26 @@ remotes::install_github(
 ## Package overview
 ![Figure: `healthiar` overview](images/package_overview.png){width="700"}
 
-
-
-
-# `healthiar` Examples
-
 ## Example data sets
 `healthiar` comes with some example data that start with `exdat_` that allow you to test functions.
+Some of these example data will be used in the examples in this vignette.
 
-```{r, eval=TRUE, echo=FALSE, include=TRUE}
-package_data <- data(package = "healthiar")[["results"]] |> 
-  as_tibble() |> 
-  select(Item) |> 
-  filter(str_detect(Item, "exdat")) |> 
-  mutate(Item = stringr::str_replace(Item, " \\(example_data\\)", "")) |> 
-  rename(example_variables = Item) |> 
-  pull(example_variables) |>
-  print()
+```{r, eval=FALSE, echo=FALSE, include=TRUE}
+# NOTE 2025-06-13 AL: seemingly there is only one variable "example_data now"
+# package_data <- data(package = "healthiar")[["results"]] |> 
+#   as_tibble() |> 
+#   select(Item) |> 
+#   # filter(str_detect(Item, "exdat")) |>
+#   filter(str_detect(Item, "example_data")) |>
+#   mutate(Item = stringr::str_replace(Item, " \\(example_data\\)", "")) |> 
+#   rename(example_variables = Item) |> 
+#   pull(example_variables) |>
+#   print()
 ```
+
+--------------------------------------------------------------------------------
+
+# `healthiar` Examples
 
 ## Example: `attribute_health()` with relative risk
 
@@ -129,10 +114,9 @@ results_pm_copd <- attribute_health(
 ) 
 ```
 
-
 ### Function call - Pre-loaded data
 
-We call the `attribute_health` with input data from the package example data. Note that we provide input data to the function argument using the `$` operator.
+We call the `attribute_health` with input data from the `healthiar` example data. Note that we can easily provide input data to the function argument using the `$` operator.
 
 ```{r, eval=TRUE, include=TRUE, echo=TRUE}
 results_pm_copd <- attribute_health(
@@ -146,11 +130,21 @@ results_pm_copd <- attribute_health(
 ```
 ### Output structure
 
-Every attribute output consists of two lists ("folders")
+Every `attribute_health()` output consists of two lists ("folders")
 
 -   `health_main` contains the main results
 
--   `health_detailed` detailed results (saved in the tibble `raw)` and (in some cases) even more information about the assessment/calculation
+-   `health_detailed` detailed results and additional info about the assessment
+
+    - `impact_raw` tibble that contains the detailed results
+    
+    - `input_args` contains a complete list of all arguments used in the assessment (including some internal arguments)
+    
+    - `input_table` tibble that contains all input data entered by the user
+    
+    - ONLY FOR ITERATION: `impact_agg_geo` tibble that contains detailed aggregated results
+    
+*NOTE*: the output of `attribute_lifetable()` contains additional results that are specific to life table calculations.
 
 ### Main results
 
@@ -158,9 +152,9 @@ Let's inspect the main results
 
 There exist different, equivalent ways of accessing the output
 
--    By mouse: go to the *Environment* tab in RStudio and click on the variable you want to inspect, and then open the `health_main results` table
+-    With `$` operator: `results_pm_copd$health_main$impact_rounded` (as in the example above)
 
--    With `$` operator: `results_pm_copd$health_main$impact_rounded`
+-    By mouse: go to the *Environment* tab in RStudio and click on the variable you want to inspect, and then open the `health_main results` table
 
 -    With `[[]]` operator `results_pm_copd[["health_main"]]`
 
@@ -170,7 +164,7 @@ There exist different, equivalent ways of accessing the output
 results_pm_copd$health_main
 ```
 
-It is a tibble of 3 rows and 22 columns. Let's zoom in on some relevant aspects
+It is a tibble of 3 rows and 23 columns. Let's zoom in on some relevant aspects
 
 ```{r}
 results_pm_copd$health_main |> 
@@ -226,6 +220,7 @@ results_pm_copd |>
   purrr::pluck("health_detailed") |>
   purrr::pluck("impact_raw") |> 
   dplyr::select(contains("_ci"), impact_rounded) |> 
+  dplyr::slice(1:9) |> 
   knitr::kable() # Prints tibble in a minimal layout
 ```
 Each row shows a result from a specific calculation pathway that used all the input data & calculation pathway specifications shown in that row
@@ -236,10 +231,7 @@ Each row shows a result from a specific calculation pathway that used all the in
 
 -   ...
 
-(*NOTE*: that only 9 of the 27 possible combinations are displayed due to space constraints.)
-
-
-
+(*NOTE*: only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$impact_raw$impact)` possible combinations are displayed due to space constraints.)
 
 ## Example: `attribute_health()` with absolute risk
 
@@ -300,15 +292,12 @@ rm(results_noise_ha)
 
 Goal: attribute disease cases to PM2.5 exposure in multiple geographic units, such as municipalities, provinces, countries, ...
 
--   For iterations, enter geo unit-specific inputs as a list
-
--   Feed unique geo ID's as a vector to the `geo_id_disaggregated` argument (e.g. municipality names)
+-   Enter unique geo ID's as a vector to the `geo_id_disaggregated` argument (e.g. municipality names)
 
 -   Optional: aggregate geo unit-specific results by providing higher-level ID's (e.g. region names) to the `geo_id_aggregated` argument (as a vector)
 
-### Function call with `list()`
+### Function call
 
-Use `list()` in case you enter each single input value specifically as a list element.
 ```{r}
 results_iteration <- attribute_health(
     geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"), 
@@ -317,33 +306,16 @@ results_iteration <- attribute_health(
     rr_increment = 10, 
     cutoff_central = 5,
     erf_shape = "log_linear",
-    exp_central = list(11, 11, 10, 8, 7),
-    bhd_central = list(4000, 2500, 3000, 1500, 500)
+    exp_central = c(11, 11, 10, 8, 7),
+    bhd_central = c(4000, 2500, 3000, 1500, 500)
 )
 ```
-
-### Function call with `as.list()`
-
-Use `as.list()` in case the inputs are vectors.
-```{r}
-results_iteration <- attribute_health(
-    geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"), 
-    geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
-    rr_central = 1.369,
-    rr_increment = 10, 
-    cutoff_central = 5,
-    erf_shape = "log_linear",
-    exp_central = as.list(c(11, 11, 10, 8, 7)),
-    bhd_central = as.list(c(4000, 2500, 3000, 1500, 500))
-)
-```
-
-In this example we want to aggregate results by language region (`"Ger", "Fra", "Ita"`)
+In this example we want to aggregate the lower-level geographic units (municipalities) by the higher-level language region (`"Ger", "Fra", "Ita"`)
 
 
 ### Main results
 
-The main output contains aggregated results if available, or disaggregated results if no aggregation ID was provided
+The main output contains aggregated results if available, or disaggregated results if no aggregation IDs were provided
 
 ```{r echo=TRUE,eval=FALSE,include=TRUE}
 results_iteration$health_main
@@ -353,21 +325,21 @@ results_iteration[["health_main"]] |>
   dplyr::select(geo_id_aggregated, impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
   knitr::kable()
 ```
-Main (= *aggregated*). The cumulative / summed number of stroke cases attributable to PM2.5 exposure in the 5 geo units is 14560 (using a relative risk of 1.369).
+Main (= *aggregated*). The cumulative / summed number of stroke cases attributable to PM2.5 exposure in the 5 geo units is `r sum(results_iteration[["health_main"]]$impact_rounded)` (using a relative risk of 1.369).
 
 ### Detailed results
-The geo unit specific information and results are stored in `health_detailed`. Filter for the main result for each geo unit as follows
+The geo unit-specific information and results are stored under `health_detailed`. Filter for the geo unit-specific results as follows
 
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
 results_iteration$health_detailed$impact_raw
 ```
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
 results_iteration[["health_detailed"]][["impact_raw"]] |> 
-  select(geo_id_disaggregated, geo_id_aggregated, impact_rounded) |> 
+  dplyr::select(geo_id_disaggregated, geo_id_aggregated, impact_rounded) |> 
   knitr::kable()
 ```
 
-Besides the results per geo unit, `health_detailed` also contains impacts obtained through all combinations of input data central, lower and upper estimates.
+Besides the results per geo unit, `health_detailed` also contains impacts obtained through all combinations of input data central, lower and upper estimates (not shown).
 ```{r, echo=FALSE, eval=TRUE, include=FALSE}
 rm(results_iteration)
 ```
@@ -380,21 +352,22 @@ Goal: attribute high annoyance cases to noise exposure in rural and urban areas
 ### Function call
 ```{r}
 results_iteration_ar <- attribute_health(
-    geo_id_disaggregated = c("rural", "urban"), # 2 geographic areas
+    geo_id_disaggregated = c(rep("rural", times = 5), rep("urban", times = 5)), # 2 geographic areas
     ## Both the rural and urban areas belong to the higher-level "total" region
-    geo_id_aggregated = c("total", "total"),
+    geo_id_aggregated = "total",
     approach_risk = "absolute_risk",
     exp_central = 
       ## List of 2 elements
       ## Each element a numeric vector that contains the 5 exposure means
-      rep(list(exdat_noise_ha$exposure_mean), 2), 
-    pop_exp = list(
+      rep(exdat_noise_ha$exposure_mean, times = 2), 
+    pop_exp = c(
       exdat_noise_ha$population_exposed_rural, # Rural population exposed
       exdat_noise_ha$population_exposed_urban # Urban population exposed
       ),
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
 )
 ```
+*NOTE*: the length of the input vectors fed to `geo_id_disaggregated`, `exp_central`, `pop_exp` must match and must be (number of geo units) x (number of exposure categories) = 2 x 5 = **10**, because we have 2 lower level geo units (`"rural"` and `"urban"`) and `r length(exdat_noise_ha$exposure_mean)` exposure categories.
 
 ### Main results
 Contains the aggregated results (i.e. sum of impacts in rural and urban areas).
@@ -536,11 +509,14 @@ print(
 
 ### Detailed results
 
+The folder `uncertainty_detailed` contains all single simulations.
+Let's look at the first simulation.
 ```{r}
 results_pm_copd_summarized |> 
   purrr::pluck("uncertainty_detailed") |> 
   purrr::pluck("by_simulation") |> 
-  knitr::kable()
+  dplyr::slice_head() |> 
+  dplyr::pull(impact_main)
 ```
 ```{r, echo=FALSE, eval=TRUE, include=FALSE}
 rm(results_pm_copd_summarized)
@@ -676,14 +652,14 @@ Detailed total YLL results per year, per age (per sex also available)
 
 TODO: note that even thought the column name says `population_...` these are actually the YLL... column names to be adjusted
 ```{r eval=FALSE}
-results_pm_yll$health_detailed$impact_raw$yll_nest
+results_pm_yll$health_detailed$impact_raw$yll_nest$total_a_central_central_central
 ```
 
 ```{r, echo=FALSE}
-results_pm_yll$health_detailed$impact_raw$yll_nest$total_1_central_central_central |> 
+results_pm_yll$health_detailed$impact_raw$yll_nest$total_a_central_central_central |> 
   select(age, population_2019, population_2020, population_2021) |> 
-  slice( ( nrow(results_pm_yll$health_detailed$impact_raw$yll_nest$total_1_central_central_central)-8 ) : 
-           nrow(results_pm_yll$health_detailed$impact_raw$yll_nest$total_1_central_central_central)) |> 
+  slice( ( nrow(results_pm_yll$health_detailed$impact_raw$yll_nest$total_a_central_central_central)-8 ) : 
+           nrow(results_pm_yll$health_detailed$impact_raw$yll_nest$total_a_central_central_central)) |> 
   knitr::kable()
 ```
 
@@ -693,7 +669,7 @@ Other relevant detailed results include
 
 - `results_pm_yll[["health_detailed"]][["impact_raw"]][["pop_impacted_scenario_nest"]]` population over time in impact scenario (with exposure)
 
-- `results_pm_yll[["health_detailed"]][["impact_raw"]][["premature_deaths_nest"]][["total_1_central_central_central"]] |> select(age, age_end, deaths_2019)` pre-mature deaths in the year of exposure (here: 2019) attributable to exposure
+- `results_pm_yll[["health_detailed"]][["impact_raw"]][["premature_deaths_nest"]][["total_a_central_central_central"]] |> select(age, age_end, deaths_2019)` pre-mature deaths in the year of exposure (here: 2019) attributable to exposure
 
 Note: you can also access these data frames using the `$` operator
 
@@ -733,13 +709,13 @@ results_pm_deaths$health_main$impact
 ### Detailed results
 
 ```{r eval=FALSE}
-results_pm_deaths$health_detailed$impact_raw$premature_deaths_nest$total_1_central_central_central
+results_pm_deaths$health_detailed$impact_raw$premature_deaths_nest$total_a_central_central_central
 ```
 
 ```{r, echo=FALSE}
-results_pm_deaths$health_detailed$impact_raw$premature_deaths_nest$total_1_central_central_central |> 
-  slice( ( nrow(results_pm_deaths$health_detailed$impact_raw$premature_deaths_nest$total_1_central_central_central)-8 ) : 
-           nrow(results_pm_deaths$health_detailed$impact_raw$premature_deaths_nest$total_1_central_central_central)) |> 
+results_pm_deaths$health_detailed$impact_raw$premature_deaths_nest$total_a_central_central_central |> 
+  slice( ( nrow(results_pm_deaths$health_detailed$impact_raw$premature_deaths_nest$total_a_central_central_central)-8 ) : 
+           nrow(results_pm_deaths$health_detailed$impact_raw$premature_deaths_nest$total_a_central_central_central)) |> 
   knitr::kable()
 ```
 ```{r, echo=FALSE, eval=TRUE, include=FALSE}

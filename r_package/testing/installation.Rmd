@@ -17,16 +17,17 @@ Install the healthiar package
 
 ## Option A: Using remotes package (size: 426 KB)
 ### Advantage: no installation of Git required
-credentials::set_github_pat() # paste github PAT if prompted
+# credentials::set_github_pat() # paste github PAT if prompted
 # ?remotes::install_github
 remotes::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
-  ref = "512-add-description-to-all-function", # By default "HEAD"; name of branch to install package from as a string
+  ref = "735-avoid-lists-for-geo_ids-in-arguments", # By default "HEAD"; name of branch to install package from as a string
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   # dependencies = TRUE,
-  build_vignettes = TRUE,
+  # build_vignettes = TRUE,
+  build_vignettes = FALSE,
   # upgrade = c("always") # Update packages
   upgrade = c("never") # Never update packages
 )

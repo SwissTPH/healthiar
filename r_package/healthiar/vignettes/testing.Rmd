@@ -445,9 +445,7 @@ results <- healthiar::attribute_health(
   exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
   pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700),
   cutoff_central = 53,
-  bhd_central = 85362.08,
-  geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL
+  bhd_central = 85362.08
 )
 
 results$health_main$impact_rounded |> 
@@ -477,9 +475,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
         bhd_central = 85362.08,
         rr_central = 1.08,
         rr_increment = 10,
-        erf_shape = "log_linear",
-        geo_id_disaggregated = NULL,
-        geo_id_aggregated = NULL
+        erf_shape = "log_linear"
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
@@ -513,9 +509,7 @@ healthiar::attribute_health(
   exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
   pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700),
   cutoff_central = 53,
-  bhd_central = 85362.08,
-  geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL
+  bhd_central = 85362.08
 )$health_main$impact_rounded |> 
   print()
 
@@ -553,9 +547,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
         exp_central = data$exposure_mean,
         pop_exp = data$population_exposed_total,
         cutoff_central = min(data$exposure_mean),
-        bhd_central = data$gbd_daly[1],
-        geo_id_disaggregated = NULL,
-        geo_id_aggregated = NULL
+        bhd_central = data$gbd_daly[1]
         )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
