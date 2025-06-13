@@ -5,6 +5,7 @@
 \title{Attributable premature deaths or YLL using a life table approach}
 \usage{
 attribute_lifetable(
+  health_outcome = NULL,
   first_age_pop,
   last_age_pop,
   population_midyear_male,
@@ -15,7 +16,6 @@ attribute_lifetable(
   max_age = NULL,
   approach_exposure = "single_year",
   approach_newborns = "without_newborns",
-  health_outcome = NULL,
   year_of_analysis,
   erf_shape = NULL,
   rr_central = NULL,
@@ -28,6 +28,7 @@ attribute_lifetable(
   exp_central = 0,
   exp_lower = NULL,
   exp_upper = NULL,
+  pop_exp = NULL,
   prop_pop_exp = 1,
   cutoff_central = NULL,
   cutoff_lower = NULL,
@@ -38,23 +39,19 @@ attribute_lifetable(
 )
 }
 \arguments{
-\item{first_age_pop}{\code{Numeric value} specifying the age of the youngest age group from population and life table data (age interval = 1 year).}
+\item{health_outcome}{\code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).}
 
-\item{last_age_pop}{\code{Numeric value} specifying the age of the oldest age group from population and life table data (age interval = 1 year).}
+\item{first_age_pop, last_age_pop}{\code{Numeric value} specifying the age of the youngest and oldest age group (age interval = 1 year) of the data, respectively.}
 
-\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See the Details section for more info.}
+\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See Details for more info.}
 
-\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively. See the Details section for more info.}
+\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively.}
 
-\item{min_age}{\code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. Default: 30. See the Details section for more info.}
+\item{min_age, max_age}{\code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.}
 
-\item{max_age}{\code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure. No default. See the Details section for more info.}
+\item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: \code{"single_year"} (default), \code{"constant"}.}
 
-\item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: "single_year" (default), "constant".}
-
-\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". If "with_newborns" is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.}
-
-\item{health_outcome}{\code{String} specifying if the result of the assessment with life table is premature deaths ("deaths") or years of life lost ("yll")}
+\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". See Details for more info.}
 
 \item{year_of_analysis}{\code{Numeric value} providing the year of analysis.}
 
@@ -67,6 +64,8 @@ attribute_lifetable(
 \item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info.}
 
 \item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the exposure level(s) to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
+
+\item{pop_exp}{\code{Numeric vector} referring to the population exposed for each exposure category. For absolute risk, the value of this argument must be entered, for relative risk it is optional.}
 
 \item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to the exposure (categories). Default: 1. See Details for more info.}
 
@@ -94,23 +93,33 @@ The results contain columns such as:
 This function assesses premature deaths or years of life lost (YLL) attributable to exposure to an environmental stressor using a life table approach.
 }
 \details{
-The life table methodology follows the one implemented in the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200
+\strong{Life table methodology}
+
+The life table methodology of \code{attribute_lifetable()} follows that of the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200.
 
 A more expansive life table case study by Miller is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
 
 See the AirQ+ manual "Health impact assessment of air pollution: AirQ+ life table manual" for guidance on how to convert larger age groups to 1 year age groups ("section "Estimation of yearly values"): https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf (accessed April 2025):
 
-Conversion of alternative risk measures to relative risks
+\strong{Conversion of alternative risk measures to relative risks}
 For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
-Function arguments
+\strong{Function arguments}
+
+\code{population_midyear_female},\code{population_midyear_male}
+
+Mid-year population of year x can be approximated as the mean of end-year populations of years x-1 and x.
+
+\code{approach_newborns}
+
+If \code{"with_newborns"} is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.
 
 \code{time_horizon}
 
 For example, would be 10 if one is interested in the impacts of exposure during the year of analysis and the next 9 years (= 10 years in total).
 
 \code{min_age}, \code{max_age}
-The \code{min_age} default value 30 implies that all adults aged 30 or older will be affected by the exposure. Values for \code{max_age} analogeously specify the age above which no health effects of the exposure are considered.
+The \code{min_age} default value 30 implies that all adults aged 30 or older will be affected by the exposure; \code{max_age} analogeously specifies the age above which no health effects of the exposure are considered.
 }
 \examples{
 TBD

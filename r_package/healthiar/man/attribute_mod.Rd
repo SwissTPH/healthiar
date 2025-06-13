@@ -69,21 +69,17 @@ attribute_mod(
 
 \item{info}{\code{String} or \code{data frame} specifying information to be linked with the assessment. Optional argument. See Details for more info.}
 
-\item{first_age_pop}{\code{Numeric value} specifying the age of the youngest age group from population and life table data (age interval = 1 year).}
+\item{first_age_pop, last_age_pop}{\code{Numeric value} specifying the age of the youngest and oldest age group (age interval = 1 year) of the data, respectively.}
 
-\item{last_age_pop}{\code{Numeric value} specifying the age of the oldest age group from population and life table data (age interval = 1 year).}
+\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See Details for more info.}
 
-\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See the Details section for more info.}
+\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively.}
 
-\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively. See the Details section for more info.}
+\item{min_age, max_age}{\code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.}
 
-\item{min_age}{\code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. Default: 30. See the Details section for more info.}
+\item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: \code{"single_year"} (default), \code{"constant"}.}
 
-\item{max_age}{\code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure. No default. See the Details section for more info.}
-
-\item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: "single_year" (default), "constant".}
-
-\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". If "with_newborns" is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.}
+\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". See Details for more info.}
 
 \item{year_of_analysis}{\code{Numeric value} providing the year of analysis.}
 }

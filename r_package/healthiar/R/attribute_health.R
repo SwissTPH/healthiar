@@ -72,7 +72,7 @@
 #' @details
 #' \code{info}
 #' @details
-#' Information entered to this argument will be added as column(s) (with the suffix "_info") to the results table.
+#' Information entered to this argument will be added as column(s) (with the suffix \code{_info}) to the results table.
 
 #' @details
 #' \strong{Equations (relative risk)}
@@ -111,7 +111,6 @@
 
 #' @details
 #' \strong{Conversion of alternative risk measures to relative risks}
-#' @details
 #' For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
 #' @inherit attribute_master return

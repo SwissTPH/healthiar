@@ -151,7 +151,7 @@ The default of \code{duratoin_central} is 1 year, which is aligned with the prev
 
 \code{info}
 
-Information entered to this argument will be added as column(s) (with the suffix "_info") to the results table.
+Information entered to this argument will be added as column(s) (with the suffix \code{_info}) to the results table.
 
 \strong{Equations (relative risk)}
 
@@ -204,7 +204,6 @@ N = the number of cases of the exposure-specific health outcome that are attribu
 \eqn{PE_i} = fraction of the population exposed to exposure levels of the exposure category i
 
 \strong{Conversion of alternative risk measures to relative risks}
-
 For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 }
 \examples{

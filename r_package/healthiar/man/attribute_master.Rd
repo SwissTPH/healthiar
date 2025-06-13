@@ -77,31 +77,27 @@ attribute_master(
 
 \item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing the unique ID codes of each geographic area considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing a higher-level ID at which the geographic areas will be aggregated (\code{geo_id_disaggregated}). Argument must be entered for iterations. See Details for more info.}
 
-\item{health_outcome}{\code{String} specifying if the result of the assessment with life table is premature deaths ("deaths") or years of life lost ("yll")}
+\item{health_outcome}{\code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).}
 
-\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See the Details section for more info.}
+\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See Details for more info.}
 
-\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively. See the Details section for more info.}
+\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively.}
 
-\item{first_age_pop}{\code{Numeric value} specifying the age of the youngest age group from population and life table data (age interval = 1 year).}
+\item{first_age_pop, last_age_pop}{\code{Numeric value} specifying the age of the youngest and oldest age group (age interval = 1 year) of the data, respectively.}
 
-\item{last_age_pop}{\code{Numeric value} specifying the age of the oldest age group from population and life table data (age interval = 1 year).}
-
-\item{min_age}{\code{Numberic value} specifying the minimum age for which the exposure will affect the exposed population. Default: 30. See the Details section for more info.}
-
-\item{max_age}{\code{Numberic value} specifying the maximum age until which age the population will be affected by the environmental exposure. No default. See the Details section for more info.}
+\item{min_age, max_age}{\code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.}
 
 \item{year_of_analysis}{\code{Numeric value} providing the year of analysis.}
 
-\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". If "with_newborns" is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.}
+\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". See Details for more info.}
 
-\item{time_horizon}{\code{Numeric value} corresponding to the time horizon (number of years) for which the impacts of exposure are to be considered. See the Details section for more info.}
+\item{time_horizon}{\code{Numeric value} specifying the time horizon (number of years) for which the impacts of exposure are to be considered. See Details for more info.}
 
 \item{dw_central, dw_lower, dw_upper}{\code{Numeric value} or \code{numeric vector} providing the disability weight associated with the morbidity health outcome of interest and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
 
 \item{duration_central, duration_lower, duration_upper}{\code{Numeric value} or \code{numeric vector} providing the duration associated with the morbidity health outcome of interest in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval. Default: 1. Optional argument. See Details for more info.}
 
-\item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: "single_year" (default), "constant".}
+\item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: \code{"single_year"} (default), \code{"constant"}.}
 
 \item{population}{\code{Numeric value} or \code{numeric vector} specifying the total population, including both exposed and non-exposed. See Details for more info.}
 
