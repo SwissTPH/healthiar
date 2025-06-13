@@ -10,6 +10,32 @@ Install the healthiar package
 
 # Install healthiar from GitHub
 
+## Using keyring package
+
+```{r eval=FALSE, include=FALSE}
+
+# Store your pat using keyring::key_set()
+## Only has to be done once
+## Run this command and paste your GitHub PAT in the "Password" window that opens
+# keyring::key_set("GITHUB_PAT_HEALTHIAR")
+
+remotes::install_github(
+  repo = "best-cost/best-cost_WPs",
+  subdir = "/r_package/healthiar",
+  ref = "807-installation-error-with-niph-data-set", # By default "HEAD"; name of branch to install package from as a string
+  force = TRUE,
+  # auth_token = "", # Paste your GitHub PAT between the quotation marks
+  auth_token = keyring::key_get("GITHUB_PAT_HEALTHIAR"),
+  # dependencies = TRUE,
+  build_vignettes = TRUE,
+  # upgrade = c("always") # Update packages
+  upgrade = c("never") # Never update packages
+)
+
+```
+
+## Using credentials package
+
 ```{r Install {healthiar} from GitHub, eval=FALSE, include=FALSE}
 
 ## NOTE: if an older version of {healthiar} already installed and loaded, detach first 
@@ -22,7 +48,7 @@ Install the healthiar package
 remotes::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
-  ref = "735-avoid-lists-for-geo_ids-in-arguments", # By default "HEAD"; name of branch to install package from as a string
+  ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   # dependencies = TRUE,
@@ -35,6 +61,7 @@ remotes::install_github(
 library(healthiar)
 
 ```
+
 
 # Build & install healthiar from local source
 

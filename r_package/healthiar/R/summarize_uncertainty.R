@@ -511,7 +511,6 @@ summarize_uncertainty <- function(
   grouping_geo_var <-
     names(output_attribute$health_main)[grepl("geo_id", names(output_attribute$health_main))]
 
-
   # Summarize results getting the central, lower and upper estimate
   summary <-
     attribute_by_sim |>
@@ -519,10 +518,19 @@ summarize_uncertainty <- function(
     tidyr::unnest(cols = impact_main) |>
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping_geo_var))) |>
     dplyr::summarise(
-      central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE),
-      lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE),
-      upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE),
-      .groups = "drop")
+      central = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
+      lower = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE, names = FALSE),
+      upper = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE),
+      .groups = "drop") |>
+    ## Change to same format as other output from healthiar
+    tidyr::pivot_longer(
+      # data = summary,
+      cols = !dplyr::contains("geo_id"),
+      names_to = "impact_ci", values_to = "impact"
+      ) |>
+    dplyr::mutate(
+      impact_rounded = base::round(impact, digits = 0)
+    )
 
   # Store the results in a list keeping consistency in the structure with
   # other healthiar functions
@@ -596,7 +604,7 @@ summarize_uncertainty <- function(
     # Identify the geo_ids used in health_main (to be used below)
     grouping_geo_var <-
       names(output_attribute$health_main)[grepl("geo_id", names(output_attribute$health_main))]
-
+# browser()
     # Summarize results getting the central, lower and upper estimate
     summary <-
       attribute_by_sim |>
@@ -604,10 +612,19 @@ summarize_uncertainty <- function(
       tidyr::unnest(cols = impact_main) |>
       dplyr::group_by(dplyr::across(dplyr::all_of(grouping_geo_var))) |>
       dplyr::summarise(
-        central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE),
-        lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE),
-        upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE),
-        .groups = "drop")
+        central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
+        lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE, names = FALSE),
+        upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE),
+        .groups = "drop") |>
+      ## Change to same format as other output from healthiar
+      tidyr::pivot_longer(
+        # data = summary,
+        cols = !dplyr::contains("geo_id"),
+        names_to = "impact_ci", values_to = "impact"
+      ) |>
+      dplyr::mutate(
+        impact_rounded = base::round(impact, digits = 0)
+      )
 
     # Store the results in a list keeping consistency in the structure with
     # other healthiar functions

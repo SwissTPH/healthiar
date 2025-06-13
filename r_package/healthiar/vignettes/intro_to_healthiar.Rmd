@@ -518,6 +518,7 @@ results_pm_copd_summarized |>
   dplyr::slice_head() |> 
   dplyr::pull(impact_main)
 ```
+We see that the detailed results contain the complete `n_sim` simulation (one row for each simulation), which are saved in nested tibbles in the column `impact_main`.
 ```{r, echo=FALSE, eval=TRUE, include=FALSE}
 rm(results_pm_copd_summarized)
 ```

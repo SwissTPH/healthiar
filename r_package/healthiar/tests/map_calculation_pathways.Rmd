@@ -1087,6 +1087,123 @@ cat("Total number core of pathways:", progress_lifetable$n_core_pw, "\n")
 cat("Total number of pathways:", progress_lifetable$n_all_pw, "\n")
 ```
 
+
+# socialize
+
+```{r Pathways socialize}
+
+ov_socialize <- list(
+  input_is_attribute_output = c("TRUE", "FALSE"), # If FALSE: impact vector is the input
+  social_indicator = c("TRUE", "FALSE"), # Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}
+  ref_pop = c("TRUE", "FALSE") # ref_prop_pop
+)
+
+pathways_socialize <- expand.grid(ov_socialize) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character)
+
+pathways_socialize <- pathways_socialize %>% # Important to use magrittr pipe
+  mutate(
+    pathway_id = purrr::pmap_chr(., function(...) {
+      vals <- list(...)
+      paste0("|pathway_socialize|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
+    })
+  ) 
+
+#* Define core pathways ########################################################
+core_socialize <- list(
+  input_is_attribute_output = c("TRUE", "FALSE"),
+  social_indicator = c("TRUE", "FALSE"), # Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}
+  ref_pop = c("TRUE", "FALSE") # ref_prop_pop
+)
+
+core_socialize <- expand.grid(core_socialize) |> 
+  tibble::as_tibble() |>
+  mutate_all(as.character) |> 
+  mutate(core_pathway = "TRUE")
+
+pathways_socialize <- pathways_socialize |> 
+  left_join(x = _, y = core_socialize, by = c("input_is_attribute_output", "social_indicator", "ref_pop")) |> 
+  mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
+  mutate(implemented = "FALSE")
+
+# * Document existing pathways ####
+
+file_path <- "../healthiar/tests/testthat/test-socialize.R"
+file_content <- readLines(file_path) # String vector where each element is all code from a line
+
+test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
+test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_socialize\\|", x)), test_names)
+
+## Create an empty tibble with NA placeholders
+n_row <- length(test_names_with_pw)
+existing_tests <- tibble(
+  input_is_attribute_output = rep(NA_character_, n_row),
+  social_indicator = rep(NA_character_, n_row),
+  ref_pop = rep(NA_character_, n_row),
+  implemented = rep("FALSE", n_row)
+)
+
+## Extract values and assign them directly to the tibble
+for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
+
+  # Extract values for each column
+  existing_tests$input_is_attribute_output[i] <- str_extract(strings[str_detect(strings, "\\|input_is_attribute_output_")], "(?<=\\|input_is_attribute_output_)[^\\|]+")
+  existing_tests$social_indicator[i] <- str_extract(strings[str_detect(strings, "\\|social_indicator_")], "(?<=\\|social_indicator_)[^\\|]+")
+  existing_tests$ref_pop[i] <- str_extract(strings[str_detect(strings, "\\|ref_pop_")], "(?<=\\|ref_pop_)[^\\|]+")
+  
+  existing_tests$implemented[i] <- "TRUE"
+}
+
+## Merge the pathways tibble and the existing_tests tibble
+pathways_socialize <- pathways_socialize %>%
+  left_join(existing_tests, by = c("input_is_attribute_output", "social_indicator", "ref_pop"),
+            suffix = c("", ".existing")) %>%
+  mutate(implemented = coalesce(implemented.existing, implemented)) %>%
+  select(-implemented.existing)|> 
+  distinct() # Removes duplicate rows (rows that have the same pathway ID)
+
+## Rearrange columns
+pathways_socialize <- pathways_socialize |> 
+  relocate(implemented) |> 
+  relocate(core_pathway, .after = implemented) |> 
+  arrange(desc(input_is_attribute_output), desc(social_indicator), desc(ref_pop))
+
+# * Measure progress ###########################################################
+
+## Create socialize current testing state overview
+progress_socialize <-
+  tibble(
+    domain = "socialize",
+    n_implemented = nrow(pathways_socialize |> filter(implemented == TRUE)),
+    `%_of_core` = 
+      paste0(
+        round(
+          pathways_socialize |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_socialize |> filter(core_pathway == "TRUE")) * 100, 
+          digits = 0
+        ),
+        " %"),
+    `%_of_total` = paste0(
+        round(
+          pathways_socialize |> filter(implemented== "TRUE") |> nrow() / 
+            nrow(pathways_socialize) * 100, 
+          digits = 0
+        ),
+        " %"),
+    n_core_pw = nrow(pathways_socialize |> filter(core_pathway == "TRUE")),
+    n_all_pw = nrow(pathways_socialize)
+  )
+
+## Output short report
+cat("Number of socialize pathways implemented as tests:", progress_socialize$n_implemented, "\n")
+cat("% of core pathways:", progress_socialize$`%_of_core`, "\n")
+cat("% of all pathways:", progress_socialize$`%_of_total`, "\n")
+cat("Total number core of pathways:", progress_socialize$n_core_pw, "\n")
+cat("Total number of pathways:", progress_socialize$n_all_pw, "\n")
+```
+
 # Overall progress 
 
 ```{r}
