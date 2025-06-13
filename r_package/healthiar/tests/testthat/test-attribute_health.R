@@ -264,6 +264,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
         erf_eq_upper = erf_u,
         prop_pop_exp = 1,
         exp_central = 84.1, # exposure distribution for ozone
+        cutoff_central = 0,
         bhd_central =  29908, #COPD mortality in Germany 2016
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
@@ -354,8 +355,9 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
         erf_shape = "log_linear",
         rr_central = 1.118,
         rr_increment = 10.0,
-        exp_central = as.list(data$PM25),
-        bhd_central = as.list(data$VALUE_BASELINE),
+        exp_central = data$PM25,
+        cutoff_central = 0,
+        bhd_central = data$VALUE_BASELINE,
         geo_id_disaggregated = data$CS01012020
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
@@ -372,7 +374,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021_cutoff.rds"))
+  data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021_cutoff.rds"))
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -381,11 +383,10 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
         approach_risk = "relative_risk",
         erf_shape = "log_linear",
         rr_central = 1.118,
-
         rr_increment = 10.0,
-        exp_central = as.list(data$PM25),
+        exp_central = data$PM25,
         cutoff_central = 2.5,
-        bhd_central = as.list(data$VALUE_BASELINE),
+        bhd_central = data$VALUE_BASELINE,
         geo_id_disaggregated = data$CS01012020
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
@@ -413,8 +414,9 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
         erf_eq_lower = erf_l,
         erf_eq_upper = erf_u,
         prop_pop_exp = 1,
-        exp_central = list(82.6,88.7,84.1), # exposure distribution for ozone
-        bhd_central =  list(27001,31064,29908), #COPD mortality in Germany 2016
+        exp_central = c(82.6,88.7,84.1), # exposure distribution for ozone
+        cutoff_central = 0,
+        bhd_central =  c(27001,31064,29908), #COPD mortality in Germany 2016
         geo_id_disaggregated = c("2014","2015","2016")
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
@@ -593,9 +595,9 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
 testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
-  erf<-splinefun(data$x, data$y, method="natural")
-  erf_l<-splinefun(data$x, data$y_l, method="natural")
-  erf_u<-splinefun(data$x, data$y_u, method="natural")
+  erf <- splinefun(data$x, data$y, method="natural")
+  erf_l <- splinefun(data$x, data$y_l, method="natural")
+  erf_u <- splinefun(data$x, data$y_u, method="natural")
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -606,6 +608,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
         erf_eq_upper = erf_u,
         prop_pop_exp = data$Population.affected,
         exp_central = data$Mean.O3, # exposure distribution for ozone
+        cutoff_central = 0,
         bhd_central =  29908, #COPD mortality in Germany 2016
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
@@ -635,10 +638,6 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
         exp_central = data$Mean.O3, # exposure distribution for ozone
         cutoff_central = 65,
         bhd_central =  29908, #COPD mortality in Germany 2016
-        bhd_lower = NULL,
-        bhd_upper = NULL,
-        geo_id_disaggregated = NULL,
-        geo_id_aggregated = NULL,
       )$health_main$impact_rounded,
     expected =
       c(2007,1537,2415)
@@ -688,10 +687,11 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
         erf_eq_central = erf,
         erf_eq_lower = erf_l,
         erf_eq_upper = erf_u,
-        prop_pop_exp = list(data$Population.affected[1:21],data$Population.affected[22:42]),
-        exp_central = list(data$Mean.O3[1:21],data$Mean.O3[22:42]), # exposure distribution for ozone
-        bhd_central =  list(31064,29908), #COPD mortality in Germany 2015 and 2016
-        geo_id_disaggregated = list('2015','2016'),
+        prop_pop_exp = data$Population.affected,
+        exp_central = data$Mean.O3, # exposure distribution for ozone
+        cutoff_central = 0,
+        bhd_central =  data$bhd, #COPD mortality in Germany 2015 and 2016
+        geo_id_disaggregated = data$X,
       )$health_main$impact_rounded,
     expected =
       c(350,267,424,313,238,379)
