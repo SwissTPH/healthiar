@@ -510,15 +510,16 @@ print(
 ### Detailed results
 
 The folder `uncertainty_detailed` contains all single simulations.
-Let's look at the first simulation.
+Let's look at the impact of the first simulation.
 ```{r}
-results_pm_copd_summarized |> 
-  purrr::pluck("uncertainty_detailed") |> 
-  purrr::pluck("by_simulation") |> 
-  dplyr::slice_head() |> 
-  dplyr::pull(impact_main)
+results_pm_copd_summarized$uncertainty_detailed$by_simulation$impact[1]
 ```
-We see that the detailed results contain the complete `n_sim` simulation (one row for each simulation), which are saved in nested tibbles in the column `impact_main`.
+We can also look at any simulation in detail. Here's the first one:
+```{r}
+results_pm_copd_summarized$uncertainty_detailed$by_simulation$health_main[1]
+```
+
+We see that the detailed results contain the complete `n_sim` simulations (one row for each simulation), which are saved in nested tibbles in the column `health_main`.
 ```{r, echo=FALSE, eval=TRUE, include=FALSE}
 rm(results_pm_copd_summarized)
 ```
