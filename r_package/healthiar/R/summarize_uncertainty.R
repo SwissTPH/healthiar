@@ -494,20 +494,31 @@ summarize_uncertainty <- function(
       input_args_for_all_sim,
       \(.x) base::do.call(healthiar:::attribute_master, args = .x ))
 
+  # Extract health_main
   health_main <- purrr::map(output_sim,"health_main")
+  # and impact
+  impact <- purrr::map(health_main,"impact")
 
 
+  # Create a tibble with the input, output health_main and impact
   attribute_by_sim <-
     # Add columns (one row for each assessment)
     # input_args
     dplyr::mutate(template_with_sim_grouped,
                   input = input_args_for_all_sim,
                   output = output_sim,
-                  health_main = health_main)
+                  health_main = health_main,
+                  impact = impact)
 
-  attribute_by_geo <-
-    attribute_by_sim
-
+  attribute_by_geo <- attribute_by_sim |>
+    # Remove super-detailed information by simulation
+    dplyr::select(-c(input, output, health_main))|>
+    # Unnest to have the information per row
+    tidyr::unnest(cols = -c(sim_id)) |>
+    # Sort rows by geo_id
+    dplyr::arrange(geo_id_disaggregated) |>
+    # Put column geo_id first because it is now the sort criteria
+    dplyr::select(geo_id_disaggregated, dplyr::everything())
 
 
   # Identify the geo_id (aggregated or disaggregated) that is present in health_main
@@ -539,7 +550,7 @@ summarize_uncertainty <- function(
   # Store the results in a list keeping consistency in the structure with
   # other healthiar functions
 
-  browser()
+
   uncertainty <-
     list(
       uncertainty_main = summary,
@@ -612,7 +623,7 @@ summarize_uncertainty <- function(
     # Identify the geo_ids used in health_main (to be used below)
     grouping_geo_var <-
       names(output_attribute$health_main)[grepl("geo_id", names(output_attribute$health_main))]
-# browser()
+
     # Summarize results getting the central, lower and upper estimate
     summary <-
       attribute_by_sim |>
