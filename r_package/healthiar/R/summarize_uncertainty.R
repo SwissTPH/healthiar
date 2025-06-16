@@ -405,6 +405,7 @@ summarize_uncertainty <- function(
         dplyr::across(dplyr::all_of(c("geo_id_disaggregated", var_names_with_ci_geo_different_central)),
                       ~ base::list(.x)),
         .groups = "drop")
+
     # |>
     # # Keep the same list format of the geo dependent variables
     # dplyr::mutate(
@@ -422,7 +423,13 @@ summarize_uncertainty <- function(
         # Take the unique value of the duplicated ones because they are identical across geo units
         dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical_central),
                       ~ base::unique(.x)),
-        .groups = "drop")
+        .groups = "drop") |>
+      # Keep geo_id also when one geo unit, otherwise missing in code below
+      # Convert geo_id_dissagregated to list (instead of vector)
+      # to join below if needed
+      dplyr::mutate(geo_id_disaggregated = base::list(base::unique(template_with_sim$geo_id_disaggregated)),
+                    .after = sim_id)
+
   } else { sim_vars_geo_identical <- NULL }
 
   # Remove the columns are not to be used in the replacement
@@ -431,7 +438,7 @@ summarize_uncertainty <- function(
     template_with_sim_grouped <- dplyr::left_join(
       sim_vars_geo_different,
       sim_vars_geo_identical,
-      by = "sim_id")
+      by = c("sim_id", "geo_id_disaggregated"))
   } else if (!base::is.null(sim_vars_geo_different)) {
     template_with_sim_grouped <- sim_vars_geo_different
   } else if (!base::is.null(sim_vars_geo_identical)) {
@@ -494,16 +501,31 @@ summarize_uncertainty <- function(
       input_args_for_all_sim,
       \(.x) base::do.call(healthiar:::attribute_master, args = .x ))
 
-  impact_main <- purrr::map(output_sim,"health_main")
+  # Extract health_main
+  health_main <- purrr::map(output_sim,"health_main")
+  # and impact
+  impact <- purrr::map(health_main,"impact")
 
 
+  # Create a tibble with the input, output health_main and impact
   attribute_by_sim <-
     # Add columns (one row for each assessment)
     # input_args
     dplyr::mutate(template_with_sim_grouped,
                   input = input_args_for_all_sim,
                   output = output_sim,
-                  impact_main = impact_main)
+                  health_main = health_main,
+                  impact = impact)
+
+  attribute_by_geo <- attribute_by_sim |>
+    # Remove super-detailed information by simulation
+    dplyr::select(-c(input, output, health_main))|>
+    # Unnest to have the information per row
+    tidyr::unnest(cols = -c(sim_id)) |>
+    # Sort rows by geo_id
+    dplyr::arrange(geo_id_disaggregated) |>
+    # Put column geo_id first because it is now the sort criteria
+    dplyr::select(geo_id_disaggregated, dplyr::everything())
 
 
   # Identify the geo_id (aggregated or disaggregated) that is present in health_main
@@ -514,8 +536,8 @@ summarize_uncertainty <- function(
   # Summarize results getting the central, lower and upper estimate
   summary <-
     attribute_by_sim |>
-    dplyr::select(dplyr::all_of(c("sim_id", "impact_main"))) |>
-    tidyr::unnest(cols = impact_main) |>
+    dplyr::select(dplyr::all_of(c("sim_id", "health_main"))) |>
+    tidyr::unnest(cols = health_main) |>
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping_geo_var))) |>
     dplyr::summarise(
       central = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
@@ -534,10 +556,13 @@ summarize_uncertainty <- function(
 
   # Store the results in a list keeping consistency in the structure with
   # other healthiar functions
+
+
   uncertainty <-
     list(
       uncertainty_main = summary,
-      uncertainty_detailed = list(by_simulation = attribute_by_sim))
+      uncertainty_detailed = list(by_simulation = attribute_by_sim,
+                                  by_geo = attribute_by_geo))
 
   return(uncertainty)
     }
@@ -549,6 +574,7 @@ summarize_uncertainty <- function(
   # Identify if this is one-case or two-case (comparison) assessment
   is_two_cases <- any(c("input_table_1", "input_table_2") %in% names(input_table))
   is_one_case <- !is_two_cases
+
 
   if(is_one_case){
     # Use summarize_uncertainty_based_on_input() only once
@@ -599,17 +625,17 @@ summarize_uncertainty <- function(
         output_compare =
           purrr::pmap(base::list(output_1, output_2, input_args$approach_comparison),
                       healthiar::compare),
-        impact_main = purrr::map(output_compare,"health_main"))
+        health_main = purrr::map(output_compare,"health_main"))
 
     # Identify the geo_ids used in health_main (to be used below)
     grouping_geo_var <-
       names(output_attribute$health_main)[grepl("geo_id", names(output_attribute$health_main))]
-# browser()
+
     # Summarize results getting the central, lower and upper estimate
     summary <-
       attribute_by_sim |>
-      dplyr::select(dplyr::all_of(c("sim_id", "impact_main"))) |>
-      tidyr::unnest(cols = impact_main) |>
+      dplyr::select(dplyr::all_of(c("sim_id", "health_main"))) |>
+      tidyr::unnest(cols = health_main) |>
       dplyr::group_by(dplyr::across(dplyr::all_of(grouping_geo_var))) |>
       dplyr::summarise(
         central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
@@ -625,6 +651,7 @@ summarize_uncertainty <- function(
       dplyr::mutate(
         impact_rounded = base::round(impact, digits = 0)
       )
+
 
     # Store the results in a list keeping consistency in the structure with
     # other healthiar functions
