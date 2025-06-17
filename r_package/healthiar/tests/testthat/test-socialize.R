@@ -109,6 +109,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 # })
 
 
+
 #TODO
 ## Adjust this code to the new socialize structure
 ### Right now gives error
@@ -121,35 +122,25 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 #     approach_risk = "relative_risk",
 #     erf_shape = "log_linear",
 #     rr_central = 1.118,
-#     # rr_lower = NULL,
-#     # rr_upper = NULL,
 #     rr_increment = 10.0,
-#     exp_central = as.list(data$PM25),
-#     # exp_lower = NULL,
-#     # exp_upper = NULL,
-#     # cutoff_central = NULL,
-#     # cutoff_lower = NULL,
-#     # cutoff_upper = NULL,
-#     bhd_central = as.list(data$VALUE_BASELINE),
-#     # bhd_lower = NULL,
-#     # bhd_upper = NULL,
+#     exp_central = data$PM25,
+#     cutoff_central = 0,
+#     bhd_central = data$VALUE_BASELINE,
 #     geo_id_disaggregated = data$CS01012020,
-#     # geo_id_aggregated = NULL,
 #     population = data$POPULATION
-#     # approach_multiexposure = NULL
 #   )
 #
 #   testthat::expect_equal(
 #     ## healthiar FUNCTION CALL
 #     object =
 #       healthiar::socialize(
-#         listed_output_attribute = result_interim,
+#         listed_output_attribute = list(result_interim),
 #         geo_id_disaggregated = data$CS01012020, # geo IDs of the preparatory iteration call above and this function call must match!
 #         social_indicator = data$score,
 #         n_quantile = 10, # Specify number of quantiles, e.g. 10
-#         population = data$POPULATION,
+#         # population = data$POPULATION, # Socialize extracts the population directly from "result_interim"
 #         age_group = c("total"),
-#         ref_prop_pop = c(1)
+#         ref_prop_pop = 1
 #       ) |>
 #       purrr::pluck("social_main") |>
 #       dplyr::filter(
@@ -165,11 +156,11 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 #     # expected = 10.26268 ## absolute + overall
 #     expected = 0.0983327 ## relative + overall
 #   )
+#
+#   ## ASSESSOR: Arno Pauwels, SCI
+#   ## ASSESSMENT DETAILS: All-cause mortality attributable to PM2.5, by census tract (iteration)
+#   ## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2021 + BIMD2011
 # })
-
-## ASSESSOR: Arno Pauwels, SCI
-## ASSESSMENT DETAILS: All-cause mortality attributable to PM2.5, by census tract (iteration)
-## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2021 + BIMD2011
 
 
 
