@@ -22,41 +22,45 @@
 
 
 
-monetize <-
-  function(output_attribute = NULL,
-           impact = NULL,
-           valuation,
-           discount_rate = NULL,
-           discount_shape = "exponential",
-           discount_years = 0,
-           inflation = NULL) {
+monetize <- function(output_attribute = NULL,
+                     impact = NULL,
+                     valuation,
+                     discount_rate = NULL,
+                     discount_shape = "exponential",
+                     discount_years = 0,
+                     inflation = NULL) {
 
-    # Store variables to increase readability of conditions
-    using_impact_from_healthiar <-
-      !is.null(output_attribute) & is.null(impact)
-    using_impact_from_user <-
-      !using_impact_from_healthiar
+  # Define variables ####
 
-    using_impact_vector_from_user <- length(impact)>1
+  # Store variables to increase readability of conditions
+  using_impact_from_healthiar <-
+    !is.null(output_attribute) & is.null(impact)
+  using_impact_from_user <-
+    !using_impact_from_healthiar
 
-    is_lifetable <-
-      !is.null(output_attribute[["health_detailed"]][["input_args"]]$deaths_male)
-    is_not_lifetable <-
-      !is_lifetable
+  using_impact_vector_from_user <- length(impact)>1
 
-
-    # If a vector is entered in impact
-    # The discount years are already defined by the lenght of the vector
-    # Users do not need to enter it.
-    if(using_impact_vector_from_user){
-      discount_years <- length(impact)-1
-    }
+  is_lifetable <-
+    !is.null(output_attribute[["health_detailed"]][["input_args"]]$deaths_male)
+  is_not_lifetable <-
+    !is_lifetable
 
 
-  # Using the output of attribute ####
+  # If a vector is entered in impact
+  # The discount years are already defined by the lenght of the vector
+  # Users do not need to enter it.
+  if(using_impact_vector_from_user){
+    discount_years <- length(impact)-1
+  }
+
+  # Monetize ####
+
+  #* Using the output of attribute ####
+
   if(using_impact_from_healthiar){
 
-    # Using life table method for the health assessment #######
+    ##** Using life table method for the health assessment #######
+
     # If bhd is null, it means that a life table (age-specific mortality) was entered.
     if(is_lifetable){
 
@@ -101,7 +105,9 @@ monetize <-
 
               }))
 
-      ## If yll or yld
+
+      ##*** If yll or yld ####
+
       if({{health_outcome}} %in% c("yll")){ # And "yld" if ever implemented
 
         impact_detailed <-
@@ -133,6 +139,7 @@ monetize <-
           )
       }
 
+
       impact_detailed <-
         impact_detailed |>
         # Remove column impact to avoid duplication
@@ -147,9 +154,6 @@ monetize <-
           monetized_impact_rounded = round(monetized_impact),
           monetized_impact_before_discount_rounded = round(monetized_impact_before_inflation_and_discount),
           monetized_impact_after_discount_rounded = round(monetized_impact_after_inflation_and_discount))
-
-
-
 
 
       # Calculate impact per 100K inhab.
@@ -178,11 +182,11 @@ monetize <-
         c(output_health,
           output_monetization)
 
-
-    # Without using life table #######
-    # If bhd_central is not NULL, then we are not using life table method
     }else if (is_not_lifetable){
 
+      ##** Without using life table #######
+
+      # If bhd_central is not NULL, then we are not using life table method
 
       # Duplicate output to work with monetization
       output_monetization <-
@@ -239,8 +243,8 @@ monetize <-
         any_of(relevant_columns))
 
 
+    #* Using user input ####
 
-    # Using user input ####
     # If the user only provide a number of the impact (not based on output of attribute)
     # No life table approach when user is entering the health impacts
     # because we cannot access the life table calculation to discount by year
