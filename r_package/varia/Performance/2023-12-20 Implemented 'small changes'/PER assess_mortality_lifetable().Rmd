@@ -9,13 +9,13 @@ Here the function assess_mortality_lifetable() (date: 2023-12-20) is profiled.
 
 ```{r}
 # First save package in current state as .zip file
-#devtools::build(binary = TRUE, path = "../testing/Performance/2023-12-20 Implemented 'small changes'/")
+#devtools::build(binary = TRUE, path = "../varia/Performance/2023-12-20 Implemented 'small changes'/")
 
 # Load input data for function to be tested
-load("../testing/Performance/2023-12-20 Implemented 'small changes'/data.Rdata")
+load("../varia/Performance/2023-12-20 Implemented 'small changes'/data.Rdata")
 
 # Install package (specify location where the .zip file was saved to)
-install.packages("C:/Users/luytax/switchdrive/bestcost_euproject/r_package/testing/Performance/2023-12-20 Implemented 'small changes'/bestcost_0.0.0.1.zip",
+install.packages("C:/Users/luytax/switchdrive/bestcost_euproject/r_package/varia/Performance/2023-12-20 Implemented 'small changes'/bestcost_0.0.0.1.zip",
                  repos=NULL,
                  type='source'
                  )
@@ -48,14 +48,14 @@ profvis(bestcost::assess_mortality_lifetable(
     min_age = input_data_mortality$min_age[2],
     max_age = input_data_mortality$max_age[2],
     corrected_discount_rate = 0), 
-  # prof_output = "../testing/Performance/2023-12-20 Implemented 'small changes'/PER.Rprof"
+  # prof_output = "../varia/Performance/2023-12-20 Implemented 'small changes'/PER.Rprof"
 )
 
-profvis(prof_input="../testing/Performance/2023-12-20 Implemented 'small changes'/PER.Rprof") # Current version
+profvis(prof_input="../varia/Performance/2023-12-20 Implemented 'small changes'/PER.Rprof") # Current version
 
-profvis(prof_input="../testing/Performance/2023-12-13 Compare ARE method with new method/PER new method.Rprof") # Old version
+profvis(prof_input="../varia/Performance/2023-12-13 Compare ARE method with new method/PER new method.Rprof") # Old version
 
-profvis(prof_input="../testing/Performance/2023-12-13 Compare ARE method with new method/PER ARE method.Rprof") # Initial version
+profvis(prof_input="../varia/Performance/2023-12-13 Compare ARE method with new method/PER ARE method.Rprof") # Initial version
 ```
 
 

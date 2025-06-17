@@ -503,20 +503,20 @@ runif_with_seed <-
 
 # Generic data
 percentage_pm2.5_in_pm10 <- 
-  read.csv("../testing/input/data/generic_data.csv", sep = ";") %>% 
+  read.csv("../varia/input/data/generic_data.csv", sep = ";") %>% 
   dplyr::filter(parameter_name %in% "percentage_pm2.5_in_pm10") %>%
   dplyr::select(value) %>%
   dplyr::pull()
 
 # RR data (inserted manually in the csv table)
 rr_rawdata <- 
-  read.csv("../testing/input/data/rr.csv",
+  read.csv("../varia/input/data/rr.csv",
            sep = ";",
            na.strings=c("NA", ""))
 
 # Population data by age (To be used in the life table approach)
 population_byAge_rawdata <-
-  read.csv2("../testing/input/data/population/population_byAge_bySex_CH_2018_2019.csv") %>%
+  read.csv2("../varia/input/data/population/population_byAge_bySex_CH_2018_2019.csv") %>%
   # Rename columns
   dplyr::rename("age" = "Alter",
                 "male_end2018" = "Mann.2018",
@@ -529,7 +529,7 @@ population_byAge_rawdata <-
 
 # Baseline health data 
 bhd_rawdata <- 
-  read.csv("../testing/input/data/bhd.csv", sep = ";")
+  read.csv("../varia/input/data/bhd.csv", sep = ";")
 
 # Read raw life table data
 lifetable <- list()
@@ -539,7 +539,7 @@ for(s in sex){
   lifetable[[s]] <- 
     read.csv2(
       # The raw data are for the period 2013-2020 but we focused on 2015-2019 (five years period)
-      paste0("../testing/input/data/life_tables/life_table_2013_2020_",
+      paste0("../varia/input/data/life_tables/life_table_2013_2020_",
              s,
              ".csv"))
 }
@@ -548,34 +548,34 @@ for(s in sex){
 # Read raw non-natural mortality data for 2019 (average of the period 2009-2019)
 nonNatural_mortality_rawdata<- 
    list(
-     male = read.csv2("../testing/input/data/mortality/nonNatural_mortality_byAge_2009_2019_male.csv",
+     male = read.csv2("../varia/input/data/mortality/nonNatural_mortality_byAge_2009_2019_male.csv",
                       na.strings =".", 
                       check.names = FALSE),
-     female = read.csv2("../testing/input/data/mortality/nonNatural_mortality_byAge_2009_2019_female.csv",
+     female = read.csv2("../varia/input/data/mortality/nonNatural_mortality_byAge_2009_2019_female.csv",
                         na.strings =".", 
                       check.names = FALSE))
 
 # Read total mortality raw data for 2019 (average of the period 2009-2019)
 total_mortality_rawdata <- 
   list(
-    male = read.csv2("../testing/input/data/mortality/total_mortality_byAge_2009_2019_male.csv",
+    male = read.csv2("../varia/input/data/mortality/total_mortality_byAge_2009_2019_male.csv",
                      na.strings =".", 
                       check.names = FALSE),
-    female = read.csv2("../testing/input/data/mortality/total_mortality_byAge_2009_2019_female.csv",
+    female = read.csv2("../varia/input/data/mortality/total_mortality_byAge_2009_2019_female.csv",
                        na.strings =".", 
                       check.names = FALSE))
 
 # Concentration data
 # Scenario
 exp_rawdata <- 
-  read.csv("../testing/input/data/exp.csv",
+  read.csv("../varia/input/data/exp.csv",
            sep = ";",
            na.strings=c("NA", ""))
 
 # cutoff
 cutoff_rawdata <- 
   # Read data
-  read.csv("../testing/input/data/cutoff.csv",
+  read.csv("../varia/input/data/cutoff.csv",
            sep = ";",
            na.strings=c("NA", ""))
 
@@ -583,11 +583,11 @@ cutoff_rawdata <-
 # cutoff
 social_mort_rawdata <- 
   ## import burden
-  read.csv("../testing/input/inequalities/mort_pm25_sector_2019.csv")
+  read.csv("../varia/input/inequalities/mort_pm25_sector_2019.csv")
 
 ## import derpivation index
 social_bimd_rawdata <- 
-  read.csv("../testing/input/inequalities/BIMD_2011_WITHOUT_HEALTH_ELLIS_WIDE.csv")
+  read.csv("../varia/input/inequalities/BIMD_2011_WITHOUT_HEALTH_ELLIS_WIDE.csv")
 
 
 ```
@@ -598,7 +598,7 @@ social_bimd_rawdata <-
 
 airqplus_copd_export <-
   # Read csv file from AirQ+ export for incidence of COPD
-  readr::read_delim("../testing/input/airqplus_cases/airqplus_COPD.csv",
+  readr::read_delim("../varia/input/airqplus_cases/airqplus_COPD.csv",
                     delim = ";",
                     col_types = cols())
 # Digest the data (make it ready for testing the package)
@@ -611,16 +611,16 @@ airqplus_pm_copd <- airqplus_pm_copd |>
  
 # Data sets from the AirQ+ manual (for testing of function get_prob_dying())
 airqplus_deaths_pop_multipleYear <-
-  read.csv2("../testing/input/airqplus_cases/airqplus_manual_multipleYear.csv")
+  read.csv2("../varia/input/airqplus_cases/airqplus_manual_multipleYear.csv")
 airqplus_deaths_pop_singleYear <-
-  read.csv2("../testing/input/airqplus_cases/airqplus_manual_age0to40_singleYear.csv")
+  read.csv2("../varia/input/airqplus_cases/airqplus_manual_age0to40_singleYear.csv")
 
 
 
 # Read csv file from AirQ+ export for deaths and YLLs
 airqplus_deaths_yll_export <-
   readr::read_delim(
-    "../testing/input/airqplus_cases/airqplus_deaths_yll_lifetable_adults.csv",
+    "../varia/input/airqplus_cases/airqplus_deaths_yll_lifetable_adults.csv",
     delim = ";",
     col_types = cols())
 
@@ -640,19 +640,19 @@ airqplus_pm_deaths_yll <-
 ## High annoyance (HA)
 niph_noise_ha_excel <-
   # Read csv file
-  readxl::read_xlsx(path = "../testing/input/noise_niph/example_road_noise_niph.xlsx",
+  readxl::read_xlsx(path = "../varia/input/noise_niph/example_road_noise_niph.xlsx",
                     sheet = "Absolute_risk_HA")
 
 ## High sleep disturbance (HSD)
 niph_noise_hsd_excel <-
   # Read csv file
-  readxl::read_xlsx(path = "../testing/input/noise_niph/example_road_noise_niph.xlsx",
+  readxl::read_xlsx(path = "../varia/input/noise_niph/example_road_noise_niph.xlsx",
                     sheet = "Absolute_risk_HSD")
 
 ## Ischemic Heart Disease (IHD)
 niph_noise_ihd_excel <-
   # Read csv file
-  readxl::read_xlsx(path = "../testing/input/noise_niph/example_road_noise_niph.xlsx",
+  readxl::read_xlsx(path = "../varia/input/noise_niph/example_road_noise_niph.xlsx",
                     sheet = "Relative_risk_IHD_WHO_2003a")
 
 
@@ -788,7 +788,7 @@ rr_data_morbidities <-
    dplyr::filter(rr_data,
     !outcome_metric %in% "premature deaths")
 
-mrbrt_stroke <- readRDS(file = "../testing/input/MRBRT_stroke.RDS")
+mrbrt_stroke <- readRDS(file = "../varia/input/MRBRT_stroke.RDS")
 ```
 
 ## Population data 
@@ -819,7 +819,7 @@ total_population <-
     sum(population_byAge[["male"]]$population),
     sum(population_byAge[["female"]]$population))
 
-pop_data_norway <- readRDS(file = "../testing/input/pop_data.RDS")
+pop_data_norway <- readRDS(file = "../varia/input/pop_data.RDS")
 ```
 
 ## Baseline morbidity data
@@ -1179,7 +1179,7 @@ input_data_mortality <-
 ```
 
 ```{r Add data for testing get_mdi function}
-exdat_get_mdi <- read.csv("../testing/input/data/mdi/Belgium_MDI_2021.csv")
+exdat_get_mdi <- read.csv("../varia/input/data/mdi/Belgium_MDI_2021.csv")
 ```
 
 
@@ -1284,6 +1284,6 @@ save.image(file = "../healthiar/data/example_data.RData")
 #                   "mrbrt_stroke",
 #                   "pop_data_norway"
 #                   )))
-# save.image(file = "../testing/input/data/input_data_for_testing_Rpackage.RData")
+# save.image(file = "../varia/input/data/input_data_for_testing_Rpackage.RData")
 ```
 

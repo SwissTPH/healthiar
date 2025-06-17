@@ -18,7 +18,7 @@ All pathways have the same calculation basis: 2019 mid-year population, 2019 sur
 
 ```{r Load}
 knitr::opts_knit$set(root.dir = getwd())
-load("../testing/comparison_lifetable_approaches/input_data_get_pop_impact.Rdata")
+load("../varia/comparison_lifetable_approaches/input_data_get_pop_impact.Rdata")
 options(digits = 15)
 
 pacman::p_load("dplyr", "purrr", "tidyr", "tibble")

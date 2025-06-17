@@ -6,9 +6,9 @@ library(lme4)
 #data
 dta_merge <-
   # read.csv("//sciensano.be/fs/1147_BESTCOST_Employee/03_Content/WP3/Task3.4_protocol/Analysis/best-cost-mdi-belgium-2021_prem_mortality.csv")
-  read.csv("../testing/input/wp2/analysis_carl/best-cost-mdi-belgium-2021.csv") # Error on line 15 with this data
-  # read.csv("../testing/input/wp2/analysis_carl/best-cost-mdi-belgium-2021_attr_prem_mortality.csv")
-  # read.csv("../testing/input/wp2/analysis_carl/mort_pm25_nis_2021.csv")
+  read.csv("../varia/input/wp2/analysis_carl/best-cost-mdi-belgium-2021.csv") # Error on line 15 with this data
+  # read.csv("../varia/input/wp2/analysis_carl/best-cost-mdi-belgium-2021_attr_prem_mortality.csv")
+  # read.csv("../varia/input/wp2/analysis_carl/mort_pm25_nis_2021.csv")
 
 str(dta_merge)
 
@@ -19,7 +19,7 @@ with(dta_merge, (MORTALITY_TOTAL/POPULATION)*1e4)
 ##merge with attributable premature mortality
 #mortality attributable to PM2.5 in Belgium, in 2021 by LAU2
 mort_pm25_nis_2021 <-
-  read.csv("../testing/input/wp2/analysis_carl/mort_pm25_nis_2021.csv")
+  read.csv("../varia/input/wp2/analysis_carl/mort_pm25_nis_2021.csv")
 str(mort_pm25_nis_2021)
 
 mort_pm25_nis_2021$PREM_MORTALITY_ATTR <-

@@ -9,8 +9,8 @@ Document the AirQ+ and GeLuft life table approaches in parallel for future refer
 
 ```{r Load data}
 knitr::opts_knit$set(root.dir = getwd())
-# load("../testing/comparison_lifetable_approaches/input_data_get_pop_impact.Rdata")
-load("../testing/comparison_lifetable_approaches/documentation_AirQ+_and_GeLuft_approaches.Rdata")
+# load("../varia/comparison_lifetable_approaches/input_data_get_pop_impact.Rdata")
+load("../varia/comparison_lifetable_approaches/documentation_AirQ+_and_GeLuft_approaches.Rdata")
 options(digits = 10)
 pacman::p_load("dplyr", "purrr", "tidyr", "tibble")
 ```
