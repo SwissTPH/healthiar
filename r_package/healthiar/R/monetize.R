@@ -99,6 +99,21 @@ monetize <- function(output_attribute = NULL,
   }
 
 
+  ## Warning if no value for discount_years, but value for other discount arguments####
+
+  # Then discount values are ignored because no discount is happening (by default `discount_years = 0`)
+
+  if(discount_years == 0 &&
+     base::any(!base::is.null(c(discount_shape, discount_rate)))){
+    warning(
+      base::paste0("You entered some value in arguments for discount,",
+      " but discount_year is 0 (default value).\n",
+      "Therefore no discount is applied."),
+      call. = FALSE)
+  }
+
+
+
 
 
 

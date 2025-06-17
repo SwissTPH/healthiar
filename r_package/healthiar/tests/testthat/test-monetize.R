@@ -395,7 +395,7 @@ testthat::test_that("error if both impact and output_attribute are entered", {
   )
 })
 
-testthat::test_that("error if inflation higher than 1", {
+testthat::test_that("error if no right category", {
 
   testthat::expect_error(
     object =
@@ -403,10 +403,45 @@ testthat::test_that("error if inflation higher than 1", {
         impact = c(800, 1000, 1200, 1500, 1800, 2000),
         discount_shape = "exp",
         discount_rate = 0.05,
-        discount_years = 5,
         valuation = 10
       ),
     "Please, check spelling. discount_shape must have one of this values: exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987"
   )
 })
+
 ## WARNING #########
+
+testthat::test_that("warning if no discount year but other discount arguments", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  bestcost_pm_copd <- healthiar::attribute_health(
+    exp_central = data$mean_concentration,
+    exp_lower = data$mean_concentration-0.5,
+    exp_upper = data$mean_concentration+0.5,
+    cutoff_central = data$cut_off_value,
+    bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+    rr_central = data$relative_risk,
+    rr_lower = data$relative_risk_lower,
+    rr_upper = data$relative_risk_upper,
+    rr_increment = 10,
+    erf_shape = "log_linear",
+    info = paste0(data$pollutant,"_", data$evaluation_name))
+
+  testthat::expect_warning(
+    object =
+      healthiar::monetize(
+        output_attribute = bestcost_pm_copd,
+        discount_shape = "exponential",
+        discount_rate = 0.05,
+        inflation = 0.08,
+        valuation = 1E3
+      ),
+    base::paste0("You entered some value in arguments for discount,",
+                 " but discount_year is 0 (default value).\n",
+                 "Therefore no discount is applied."),
+    # To match the messages fixed  = TRUE.
+    # Otherwise, for some reason, testthat does not recognize the same text
+    fixed = TRUE
+  )
+})
