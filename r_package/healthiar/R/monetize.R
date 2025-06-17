@@ -53,13 +53,16 @@ monetize <- function(output_attribute = NULL,
     discount_years <- length(impact)-1
   }
 
+  # Validate input data ####
+
+
   # Monetize ####
 
-  #* Using the output of attribute ####
+  #* IF OUTPUT of attribute ####
 
   if(using_impact_from_healthiar){
 
-    ##** Using life table method for the health assessment #######
+    ##** IF LIFE TABLE method for the health assessment #######
 
     # If bhd is null, it means that a life table (age-specific mortality) was entered.
     if(is_lifetable){
@@ -80,7 +83,7 @@ monetize <- function(output_attribute = NULL,
             list(.x = lifeyears_nest),
             function(.x){
 
-              ## Calculate total, discounted life years (single value) per sex & ci ####
+              ## Calculate total, discounted life years (single value) per sex & ci
               lifeyear_nest_with_and_without_discount <-
                 .x |>
                 # Convert year to numeric
@@ -106,7 +109,7 @@ monetize <- function(output_attribute = NULL,
               }))
 
 
-      ##*** If yll or yld ####
+      ##*** IF YLL or YLD ####
 
       if({{health_outcome}} %in% c("yll")){ # And "yld" if ever implemented
 
@@ -184,7 +187,7 @@ monetize <- function(output_attribute = NULL,
 
     }else if (is_not_lifetable){
 
-      ##** Without using life table #######
+      ##** IF WITHOUT LIFE TABLE #######
 
       # If bhd_central is not NULL, then we are not using life table method
 
@@ -243,7 +246,7 @@ monetize <- function(output_attribute = NULL,
         any_of(relevant_columns))
 
 
-    #* Using user input ####
+    #* IF USER INPUT ####
 
     # If the user only provide a number of the impact (not based on output of attribute)
     # No life table approach when user is entering the health impacts
