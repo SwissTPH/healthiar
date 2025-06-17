@@ -102,13 +102,27 @@ monetize <- function(output_attribute = NULL,
   ## Warning if no value for discount_years, but value for other discount arguments####
 
   # Then discount values are ignored because no discount is happening (by default `discount_years = 0`)
-
+browser()
   if(discount_years == 0 &&
      base::any(!base::is.null(c(discount_shape, discount_rate)))){
     warning(
       base::paste0("You entered some value in arguments for discount,",
       " but discount_year is 0 (default value).\n",
       "Therefore no discount is applied."),
+      call. = FALSE)
+  }
+
+
+
+  ## Warning if user pass discount_years with impact ####
+
+  # Then the value will be ignored and the length of impact will be used as discount_years
+
+  if(!discount_years == 0 &&
+     !base::is.null(impact)){
+    warning(
+      base::paste0("discount_years (aimed for output_attribute) will be here ignored,\n",
+      "because the length of impact is used."),
       call. = FALSE)
   }
 

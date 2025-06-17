@@ -445,3 +445,23 @@ testthat::test_that("warning if no discount year but other discount arguments", 
     fixed = TRUE
   )
 })
+
+
+testthat::test_that("warning if user pass discount_years with impact", {
+
+  testthat::expect_warning(
+    object =
+      healthiar::monetize(
+        impact = c(800, 1000, 1200, 1500, 1800, 2000),
+        discount_shape = "exponential",
+        discount_rate = 0.05,
+        discount_years = 5,
+        valuation = 10
+      ),
+    base::paste0("discount_years (aimed for output_attribute) will be here ignored,\n",
+                 "because the length of impact is used."),
+    # To match the messages fixed  = TRUE.
+    # Otherwise, for some reason, testthat does not recognize the same text
+    fixed = TRUE
+  )
+})
