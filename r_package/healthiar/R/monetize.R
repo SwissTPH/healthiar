@@ -99,14 +99,16 @@ monetize <- function(output_attribute = NULL,
   }
 
 
-  ## Warning if no value for discount_years, but value for other discount arguments####
+  ## Warning if no value for discount_years, but discount_rate####
 
   # Then discount values are ignored because no discount is happening (by default `discount_years = 0`)
-browser()
+  # discount_shape has a default value, so it is never NULL
   if(discount_years == 0 &&
-     base::any(!base::is.null(c(discount_shape, discount_rate)))){
+     base::any(!base::is.null(discount_rate))&&
+     # Exclude life table because the discount_year are calculated based on life table
+     !is_lifetable){
     warning(
-      base::paste0("You entered some value in arguments for discount,",
+      base::paste0("You entered some value in discount_rate,",
       " but discount_year is 0 (default value).\n",
       "Therefore no discount is applied."),
       call. = FALSE)
@@ -118,11 +120,14 @@ browser()
 
   # Then the value will be ignored and the length of impact will be used as discount_years
 
-  if(!discount_years == 0 &&
+  if("discount_years" %in% base::names(base::match.call()) &&
+     base::length(impact) > 1 &&
      !base::is.null(impact)){
     warning(
-      base::paste0("discount_years (aimed for output_attribute) will be here ignored,\n",
-      "because the length of impact is used."),
+      base::paste0("discount_years is aimed for any output_attribute\n",
+                   "and for impact with single value (no vector).\n",
+                   "Therefore discount_years is ignored here and\n",
+                   "the length of the vector impact is used."),
       call. = FALSE)
   }
 

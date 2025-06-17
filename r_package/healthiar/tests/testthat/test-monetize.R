@@ -24,7 +24,6 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
       healthiar::monetize(
         output_attribute = bestcost_pm_copd,
         valuation = 1000,
-        discount_rate = NULL
         )$monetization_main$monetized_impact_rounded,
     expect = # 1000 * airqplus_pm_copd
       round(1000 * bestcost_pm_copd[["health_main"]]$impact)
@@ -56,7 +55,6 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         impact = c(800, 1000, 1200, 1500, 1800, 2000),
         discount_shape = "exponential",
         discount_rate = 0.05,
-        discount_years = 5,
         valuation = 1
         )$monetization_detailed$monetized_impact |> round(digits = 2),
     expect =
@@ -72,7 +70,6 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         impact = c(800, 1000, 1200, 1500, 1800, 2000),
         discount_shape = "hyperbolic_harvey_1986",
         discount_rate = 0.05,
-        discount_years = 5,
         valuation = 1
         )$monetization_detailed$monetized_impact |> round(digits = 2),
     expect =
@@ -88,7 +85,6 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         impact = c(800, 1000, 1200, 1500, 1800, 2000),
         discount_shape = "hyperbolic_mazur_1987",
         discount_rate = 0.05,
-        discount_years = 5,
         valuation = 1
         )$monetization_detailed$monetized_impact |> round(digits = 2),
     expect =
@@ -411,7 +407,7 @@ testthat::test_that("error if no right category", {
 
 ## WARNING #########
 
-testthat::test_that("warning if no discount year but other discount arguments", {
+testthat::test_that("warning if no discount_rate but other discount arguments", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -437,7 +433,7 @@ testthat::test_that("warning if no discount year but other discount arguments", 
         inflation = 0.08,
         valuation = 1E3
       ),
-    base::paste0("You entered some value in arguments for discount,",
+    base::paste0("You entered some value in discount_rate,",
                  " but discount_year is 0 (default value).\n",
                  "Therefore no discount is applied."),
     # To match the messages fixed  = TRUE.
@@ -458,8 +454,10 @@ testthat::test_that("warning if user pass discount_years with impact", {
         discount_years = 5,
         valuation = 10
       ),
-    base::paste0("discount_years (aimed for output_attribute) will be here ignored,\n",
-                 "because the length of impact is used."),
+    base::paste0("discount_years is aimed for any output_attribute\n",
+                 "and for impact with single value (no vector).\n",
+                 "Therefore discount_years is ignored here and\n",
+                 "the length of the vector impact is used."),
     # To match the messages fixed  = TRUE.
     # Otherwise, for some reason, testthat does not recognize the same text
     fixed = TRUE
