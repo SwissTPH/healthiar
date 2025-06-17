@@ -172,71 +172,79 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 ## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2021 + BIMD2011
 
 
-
+#TODO
+## Adjust this code to the new socialize structure, if possible
+### Right now gives error
+### This is an older test, which uses the data set "social_data.rds", which is a merge of the data sets "mort_pm25_sector_2019.csv" and "BIMD_2011_WITHOUT_HEALTH_ELLIS_WIDE.csv"
+### So unclear whether the test can be run with this data...
 # testthat::test_that("results correct", {
 #
 #   data <- base::readRDS(testthat::test_path("data", "social_data.rds"))
 #
 #   bestcost_pm_death <-
 #     healthiar::attribute_health(
-#       exp_central = as.list(data$PM25_MEAN),
+#       exp_central = data$PM25_MEAN,
 #       cutoff_central = 0,
 #       rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
 #       erf_shape = "log_linear",
 #       rr_increment = 10,
-#       bhd_central = as.list(data$MORTALITY_TOTAL),
+#       bhd_central = data$MORTALITY_TOTAL,
 #       population = data$POPULATION,
 #       geo_id_disaggregated = data$CS01012020)
 #
 #   testthat::expect_equal(
 #     object =
 #       healthiar::socialize(
-#         output_attribute = bestcost_pm_death,
+#         listed_output_attribute = list(bestcost_pm_death),
 #         geo_id_disaggregated = data$CS01012020,
 #         social_indicator = data$score,
 #         n_quantile = 10,
-#         approach = "quantile"
+#         age_group = c("total"),
+#         ref_prop_pop = 1
 #       )$social_main$difference_value,
 #     expect = c(22.52416423, 0.32236823, 14.5680866,0.17252793) # Results on 21 Nov 2024
 #   )
 # })
-#
-# testthat::test_that("results the same twice a socialize call", {
-#
-#   data <- base::readRDS(testthat::test_path("data", "social_data.rds"))
-#
-#   bestcost_pm_death <-
-#     healthiar::attribute_health(
-#       exp_central = as.list(data$PM25_MEAN),
-#       cutoff_central = 0,
-#       rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
-#       erf_shape = "log_linear",
-#       rr_increment = 10,
-#       bhd_central = as.list(data$MORTALITY_TOTAL),
-#       population = data$POPULATION,
-#       geo_id_disaggregated = data$CS01012020)
-#
-#   testthat::expect_equal(
-#     object =
-#       healthiar::socialize(
-#         output = bestcost_pm_death,
-#         geo_id_disaggregated = data$CS01012020,
-#         social_indicator = data$score,
-#         n_quantile = 10,
-#         approach = "quantile"
-#         )$social_main$difference_value,
-#     expect = healthiar::socialize(
-#       impact = bestcost_pm_death[["health_main"]]$impact,
-#       population = bestcost_pm_death[["health_main"]]$population,
-#       bhd = bestcost_pm_death[["health_main"]]$bhd,
-#       exp = bestcost_pm_death[["health_main"]]$exp,
-#       pop_fraction = bestcost_pm_death[["health_main"]]$pop_fraction,
-#       geo_id_disaggregated = data$CS01012020,
-#       social_indicator = data$score,
-#       n_quantile = 10,
-#       approach = "quantile")$social_main$difference_value
-#   )
-# })
+
+testthat::test_that("results the same twice a socialize call", {
+
+  data <- base::readRDS(testthat::test_path("data", "social_data.rds"))
+
+  bestcost_pm_death <-
+    healthiar::attribute_health(
+      exp_central = data$PM25_MEAN,
+      cutoff_central = 0,
+      rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
+      erf_shape = "log_linear",
+      rr_increment = 10,
+      bhd_central = data$MORTALITY_TOTAL,
+      population = data$POPULATION,
+      geo_id_disaggregated = data$CS01012020)
+
+  testthat::expect_equal(
+    object =
+      healthiar::socialize(
+        listed_output_attribute = list(bestcost_pm_death),
+        geo_id_disaggregated = data$CS01012020,
+        social_indicator = data$score,
+        n_quantile = 10,
+        age_group = c("total"),
+        ref_prop_pop = 1
+        )$social_main$difference_value,
+    expect = healthiar::socialize(
+      impact = bestcost_pm_death[["health_main"]]$impact,
+      population = bestcost_pm_death[["health_main"]]$population,
+      bhd = bestcost_pm_death[["health_main"]]$bhd,
+      exp = bestcost_pm_death[["health_main"]]$exp,
+      pop_fraction = bestcost_pm_death[["health_main"]]$pop_fraction,
+      geo_id_disaggregated = data$CS01012020,
+      social_indicator = data$score,
+      n_quantile = 10,
+      age_group = c("total"),
+      ref_prop_pop = 1
+      )$social_main$difference_value
+  )
+})
 
 # ERROR OR WARNING ########
 ## ERROR #########
