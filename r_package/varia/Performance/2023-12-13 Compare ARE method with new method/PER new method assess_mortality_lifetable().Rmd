@@ -8,7 +8,7 @@ output: pdf_document
 Here the new method (from the branch natural_deaths_as_input), where mortalities are calculated directly, is profiled.
 
 ```{r}
-load("../testing/Performance/Compare ARE method with new method/workspace.RData")
+load("../varia/Performance/Compare ARE method with new method/workspace.RData")
 
 library(profvis)
 ```
@@ -37,10 +37,10 @@ library(profvis)
 #     min_age = 20,
 #     max_age = 0,
 #     corrected_discount_rate = 0), 
-#   prof_output = "../testing/Performance/Compare ARE method with new method/PER new method.Rprof",
+#   prof_output = "../varia/Performance/Compare ARE method with new method/PER new method.Rprof",
 # )
 
-profvis(prof_input="../testing/Performance/2023-12-13 Compare ARE method with new method/PER new method.Rprof")
+profvis(prof_input="../varia/Performance/2023-12-13 Compare ARE method with new method/PER new method.Rprof")
 ```
 
 

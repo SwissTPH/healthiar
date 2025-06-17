@@ -8,7 +8,7 @@ output: pdf_document
 Here the ARE method (from the master branch), where mortalities are calculated indirectly, is profiled. These functions are from before merge #66 (before the new method was implemeted.)
 
 ```{r}
-load("testing/input/performance/PER assess_mortality_lifetable() data.RData")
+load("varia/input/performance/PER assess_mortality_lifetable() data.RData")
 
 library(profvis)
 
@@ -42,5 +42,5 @@ ci <- c("mean", "lowci", "highci")
 #   prof_output = "../../../BEST-COST/Varia/PER ARE method.Rprof"
 # )
 
-profvis(prof_input="../testing/Performance/2023-12-13 Compare ARE method with new method/PER ARE method.Rprof")
+profvis(prof_input="../varia/Performance/2023-12-13 Compare ARE method with new method/PER ARE method.Rprof")
 ```

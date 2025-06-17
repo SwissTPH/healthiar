@@ -5,7 +5,7 @@ library(dplyr)
 
 ## import burden
 mort <-
-  read.csv("../testing/input/inequalities/mort_pm25_sector_2019.csv")
+  read.csv("../varia/input/inequalities/mort_pm25_sector_2019.csv")
 
 ## subset Flanders (NUTS1 = BE2)
 mort <- subset(
@@ -15,7 +15,7 @@ mort <- subset(
 )
 
 ## import derpivation index
-bimd <- read.csv("../testing/input/inequalities/BIMD_2011_WITHOUT_HEALTH_ELLIS_WIDE.csv")
+bimd <- read.csv("../varia/input/inequalities/BIMD_2011_WITHOUT_HEALTH_ELLIS_WIDE.csv")
 
 ## merge
 mort_bimd <-
@@ -29,12 +29,12 @@ exposure_mean_bimd
 mort_attr_rt_bimd <-
 1e5 * with(mort_bimd, tapply(MORTALITY_ATTR, deciles, sum))/
   with(mort_bimd, tapply(POPULATION, deciles, sum))
-mort_attr_rt_bimd 
+mort_attr_rt_bimd
 
 mort_total_rt_bimd <-
 1e5 * with(mort_bimd, tapply(MORTALITY_TOTAL, deciles, sum))/
   with(mort_bimd, tapply(POPULATION, deciles, sum))
-mort_total_rt_bimd 
+mort_total_rt_bimd
 
 ## inequalities
 exposure_mean_bimd[1] - exposure_mean_bimd[10] ## absolute diff

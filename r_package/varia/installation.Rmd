@@ -71,12 +71,12 @@ library(healthiar)
 # detach("package:healthiar", unload = TRUE) # Throws error if package was not loaded
 
 ## Install package from .zip file
-# devtools::build(binary = TRUE, path = "../testing/Workshops_and_demos/2025_04_10_UBD_policy") # Save current state of package as .zip file (e.g. to directly test changes in functions)
-# install.packages("../testing/input/healthiar_0.0.0.1.zip", repos=NULL, type='source') # Modify file path
+# devtools::build(binary = TRUE, path = "../varia/Workshops_and_demos/2025_04_10_UBD_policy") # Save current state of package as .zip file (e.g. to directly test changes in functions)
+# install.packages("../varia/input/healthiar_0.0.0.1.zip", repos=NULL, type='source') # Modify file path
 
 ## Install package from .tar.gz file
-# devtools::build(path = "../testing/input/") # Save current state of package as tar.gz file (e.g. to directly test changes in functions)
-# install.packages("../testing/input/healthiar_0.0.0.1.tar.gz", repos=NULL, type='source') # Modify file path
+# devtools::build(path = "../varia/input/") # Save current state of package as tar.gz file (e.g. to directly test changes in functions)
+# install.packages("../varia/input/healthiar_0.0.0.1.tar.gz", repos=NULL, type='source') # Modify file path
 
 # library(healthiar)
 ```

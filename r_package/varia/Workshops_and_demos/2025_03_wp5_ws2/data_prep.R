@@ -1,5 +1,5 @@
 ## setup
-setwd("C:/Users/luytax/switchdrive/BEST-COST/best-cost_WPs/r_package/testing/Workshops_and_demos/WS_WP5/ws_2/")
+setwd("C:/Users/luytax/switchdrive/BEST-COST/best-cost_WPs/r_package/varia/Workshops_and_demos/WS_WP5/ws_2/")
 library(tidyr)
 library(dplyr)
 
