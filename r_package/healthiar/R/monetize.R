@@ -58,9 +58,9 @@ monetize <- function(output_attribute = NULL,
   ## Error if value lower than 0 ####
   for(var_name in c("valuation", "discount_years")){
 
-    var_value <- base::get(var_name)
+    if(!is.null(base::get(var_name)) &&
+       base::get(var_name) < 0){
 
-    if(var_value < 0){
       stop(paste0(var_name, " must be higher than 0."),
            call. = FALSE)
     }
@@ -70,9 +70,9 @@ monetize <- function(output_attribute = NULL,
   ## Error if value higher than 1 and lower than 0 ####
   for(var_name in c("discount_rate", "inflation")){
 
-    var_value <- base::get(var_name)
+    if(!is.null(base::get(var_name)) &&
+       (base::get(var_name) < 0 | base::get(var_name) > 1)){
 
-    if(var_value < 0 | var_value > 1){
       stop(paste0(var_name, " must be higher than 0 and lower than 1."),
            call. = FALSE)
     }
