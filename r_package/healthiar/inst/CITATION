@@ -1,20 +1,7 @@
 bibentry(
   bibtype  = "Unpublished",
   title    = "R package healthiar to quantify and monetize the burden of disease attributable to environmental exposures",
-  author   = c(
-    person(given = "Alberto", family = "Castro", email = "alberto.castrofernandez@swisstph.ch", role = c("cre", "aut"), comment = c(ORCID = "0000-0002-4665-3299")),
-    person(given = "Axel", family = "Luyten", role = c("aut"), comment = c(ORCID = "0000-0002-7005-5889"))),
-    person(given = "Arno", family = "Pauwels", role = c("ctb"), comment = c(ORCID = "0000-0001-7519-8080"))),
-    person(given = "Liliana", family = "Vázquez Fernández", role = c("ctb"), comment = c(ORCID = "0000-0003-3778-9415"))),
-    person(given = "Vanessa", family = "Gorasso", role = c("ctb"), comment = c(ORCID = "0000-0001-6884-9316"))),
-    person(given = "Carl", family = "Michael Baravelli", role = c("ctb"), comment = c(ORCID = "0000-0001-7772-5315"))),
-    person(given = "Susanne", family = "Breitner", role = c("ctb"), comment = c(ORCID = "0000-0002-0956-6911"))),
-    person(given = "Maria", family = "Lepnurm", role = c("ctb"), comment = c(ORCID = "0009-0009-4372-6227"))),
-    person(given = "Iracy", family = "Pimenta", role = c("ctb"), comment = c(ORCID = "0000-0003-0032-1536"))),
-    person(given = "Andreia", family = "Novais", role = c("ctb"), comment = c(ORCID = "0009-0007-7775-108X"))),
-    person(given = "Ana", family = "Barbosa", role = c("ctb"), comment = c(ORCID = "0000-0002-9623-9002"))),
-    person(given = "Joao", family = "Vasco Santos", role = c("ctb"), comment = c(ORCID = "0000-0003-4696-1002"))),
-    person(given = "Anette", family = "Kocbach Bolling", role = c("ctb"), comment = c(ORCID = "0000-0003-4209-7448"))),
+  author   = utils::personList(base::eval(base::parse(text = utils::packageDescription("healthiar")$`Authors@R`))),
   year     = 2026,
   note     = "Planned release as open source in early 2026 (currently under development, more info at https://best-cost.eu/)"
 )
