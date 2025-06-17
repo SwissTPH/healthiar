@@ -7,7 +7,7 @@
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while discount_years does not include the year 0. Thus, length of impact = discount_years + 1.
 #' @param valuation \code{Numberic value} referring to unit value of a health impact
 #' @param discount_rate \code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.
-#' @param discount_shape \code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
+#' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
 #' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting. Be aware that the year 0 (without discounting) is not be counted here. If a vector is entered in the argument impact, discount_years does not need to be entered (length of impact = discount_years + 1)
 #' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)
 
@@ -22,41 +22,142 @@
 
 
 
-monetize <-
-  function(output_attribute = NULL,
-           impact = NULL,
-           valuation,
-           discount_rate = NULL,
-           discount_shape = "exponential",
-           discount_years = 0,
-           inflation = NULL) {
+monetize <- function(output_attribute = NULL,
+                     impact = NULL,
+                     valuation,
+                     discount_rate = NULL,
+                     discount_shape = "exponential",
+                     discount_years = 0,
+                     inflation = NULL) {
 
-    # Store variables to increase readability of conditions
-    using_impact_from_healthiar <-
-      !is.null(output_attribute) & is.null(impact)
-    using_impact_from_user <-
-      !using_impact_from_healthiar
+  # Define variables ####
 
-    using_impact_vector_from_user <- length(impact)>1
+  # Store variables to increase readability of conditions
+  using_impact_from_healthiar <-
+    !is.null(output_attribute) & is.null(impact)
+  using_impact_from_user <-
+    !using_impact_from_healthiar
 
-    is_lifetable <-
-      !is.null(output_attribute[["health_detailed"]][["input_args"]]$deaths_male)
-    is_not_lifetable <-
-      !is_lifetable
+  using_impact_vector_from_user <- length(impact)>1
+
+  is_lifetable <-
+    !is.null(output_attribute[["health_detailed"]][["input_args"]]$deaths_male)
+  is_not_lifetable <-
+    !is_lifetable
 
 
-    # If a vector is entered in impact
-    # The discount years are already defined by the lenght of the vector
-    # Users do not need to enter it.
-    if(using_impact_vector_from_user){
-      discount_years <- length(impact)-1
+  # If a vector is entered in impact
+  # The discount years are already defined by the lenght of the vector
+  # Users do not need to enter it.
+  if(using_impact_vector_from_user){
+    discount_years <- length(impact)-1
+  }
+
+  # Validate input data ####
+
+  ## Error if value lower than 0 ####
+  for(var_name in c("valuation", "discount_years")){
+
+    if(!is.null(base::get(var_name)) &&
+       base::get(var_name) < 0){
+
+      stop(paste0(var_name, " must be higher than 0."),
+           call. = FALSE)
     }
 
+  }
 
-  # Using the output of attribute ####
+  ## Error if value higher than 1 and lower than 0 ####
+  for(var_name in c("discount_rate", "inflation")){
+
+    if(!is.null(base::get(var_name)) &&
+       (base::get(var_name) < 0 | base::get(var_name) > 1)){
+
+      stop(base::paste0(var_name, " must be higher than 0 and lower than 1."),
+           call. = FALSE)
+    }
+
+  }
+
+
+
+  ## Error if values for both impact and output_attribute are passed ####
+
+  if(!base::is.null(impact) && !is.null(output_attribute)){
+    stop(base::paste0("Enter a value for impact or for output_attribute but not both."),
+         call. = FALSE)
+  }
+
+  ## Error if no right category is passed passed ####
+
+  if(!discount_shape %in%
+     c("exponential", "hyperbolic_harvey_1986", "hyperbolic_mazur_1987")){
+
+    stop(base::paste0("Please, check spelling. discount_shape must have one of this values: ",
+                      "exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987"),
+         call. = FALSE)
+  }
+
+
+  ## Warning if no value for discount_years, but discount_rate####
+
+  # Then discount values are ignored because no discount is happening (by default `discount_years = 0`)
+  # discount_shape has a default value, so it is never NULL
+  if(discount_years == 0 &&
+     base::any(!base::is.null(discount_rate))&&
+     # Exclude life table because the discount_year are calculated based on life table
+     !is_lifetable){
+    warning(
+      base::paste0("You entered some value in discount_rate,",
+      " but discount_year is 0 (default value).\n",
+      "Therefore no discount is applied."),
+      call. = FALSE)
+  }
+
+
+
+  ## Warning if user pass discount_years with impact ####
+
+  # Then the value will be ignored and the length of impact will be used as discount_years
+
+  if("discount_years" %in% base::names(base::match.call()) &&
+     base::length(impact) > 1 &&
+     !base::is.null(impact)){
+    warning(
+      base::paste0("discount_years is aimed for output_attribute (excluding life table)\n",
+                   "and for impact (excluding vector form).\n",
+                   "Therefore discount_years is ignored here and\n",
+                   "the length of the vector impact is used."),
+      call. = FALSE)
+  }
+
+  ## Warning if user pass discount_years with impact ####
+
+  # Then the value will be ignored and the length of impact will be used as discount_years
+
+  if("discount_years" %in% base::names(base::match.call()) &&
+     is_lifetable){
+    warning(
+      base::paste0("discount_years is aimed for any output_attribute\n",
+                   "and for impact with single value (no vector).\n",
+                   "Therefore discount_years is ignored here and\n",
+                   "the length life table is used."),
+      call. = FALSE)
+  }
+
+
+
+
+
+
+  # Monetize ####
+
+  #* IF OUTPUT of attribute ####
+
   if(using_impact_from_healthiar){
 
-    # Using life table method for the health assessment #######
+    ##** IF LIFE TABLE method for the health assessment #######
+
     # If bhd is null, it means that a life table (age-specific mortality) was entered.
     if(is_lifetable){
 
@@ -76,7 +177,7 @@ monetize <-
             list(.x = lifeyears_nest),
             function(.x){
 
-              ## Calculate total, discounted life years (single value) per sex & ci ####
+              ## Calculate total, discounted life years (single value) per sex & ci
               lifeyear_nest_with_and_without_discount <-
                 .x |>
                 # Convert year to numeric
@@ -101,7 +202,9 @@ monetize <-
 
               }))
 
-      ## If yll or yld
+
+      ##*** IF YLL or YLD ####
+
       if({{health_outcome}} %in% c("yll")){ # And "yld" if ever implemented
 
         impact_detailed <-
@@ -133,6 +236,7 @@ monetize <-
           )
       }
 
+
       impact_detailed <-
         impact_detailed |>
         # Remove column impact to avoid duplication
@@ -147,9 +251,6 @@ monetize <-
           monetized_impact_rounded = round(monetized_impact),
           monetized_impact_before_discount_rounded = round(monetized_impact_before_inflation_and_discount),
           monetized_impact_after_discount_rounded = round(monetized_impact_after_inflation_and_discount))
-
-
-
 
 
       # Calculate impact per 100K inhab.
@@ -178,11 +279,11 @@ monetize <-
         c(output_health,
           output_monetization)
 
-
-    # Without using life table #######
-    # If bhd_central is not NULL, then we are not using life table method
     }else if (is_not_lifetable){
 
+      ##** IF WITHOUT LIFE TABLE #######
+
+      # If bhd_central is not NULL, then we are not using life table method
 
       # Duplicate output to work with monetization
       output_monetization <-
@@ -239,8 +340,8 @@ monetize <-
         any_of(relevant_columns))
 
 
+    #* IF USER INPUT ####
 
-    # Using user input ####
     # If the user only provide a number of the impact (not based on output of attribute)
     # No life table approach when user is entering the health impacts
     # because we cannot access the life table calculation to discount by year
