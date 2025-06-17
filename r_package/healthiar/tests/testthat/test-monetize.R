@@ -283,6 +283,7 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
 })
 
 # ERROR OR WARNING ########
+
 ## ERROR #########
 
 
@@ -329,6 +330,37 @@ testthat::test_that("error if negative discount_years", {
         valuation = 1E3
       ),
     "discount_years must be higher than 0."
+  )
+})
+
+testthat::test_that("error if discount_rate higher than 1", {
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        impact = c(800, 1000, 1200, 1500, 1800, 2000),
+        discount_shape = "exponential",
+        discount_rate = 1.5,
+        discount_years = 5,
+        valuation = 10
+      ),
+    "discount_rate must be higher than 0 and lower than 1."
+  )
+})
+
+testthat::test_that("error if discount_rate higher than 1", {
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        impact = c(800, 1000, 1200, 1500, 1800, 2000),
+        discount_shape = "exponential",
+        discount_rate = 0.05,
+        discount_years = 5,
+        valuation = 10,
+        inflation = 1.15
+      ),
+    "inflation must be higher than 0 and lower than 1."
   )
 })
 
