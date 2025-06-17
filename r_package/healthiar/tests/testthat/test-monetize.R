@@ -285,4 +285,51 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
 # ERROR OR WARNING ########
 ## ERROR #########
 
+
+testthat::test_that("error if negative valuation", {
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        impact = c(800, 1000, 1200, 1500, 1800, 2000),
+        discount_shape = "exponential",
+        discount_rate = 0.05,
+        discount_years = 5,
+        valuation = -10
+      ),
+    "valuation must be higher than 0."
+  )
+})
+
+testthat::test_that("error if negative discount_years", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  bestcost_pm_copd <- healthiar::attribute_health(
+    exp_central = data$mean_concentration,
+    exp_lower = data$mean_concentration-0.5,
+    exp_upper = data$mean_concentration+0.5,
+    cutoff_central = data$cut_off_value,
+    bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+    rr_central = data$relative_risk,
+    rr_lower = data$relative_risk_lower,
+    rr_upper = data$relative_risk_upper,
+    rr_increment = 10,
+    erf_shape = "log_linear",
+    info = paste0(data$pollutant,"_", data$evaluation_name))
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        output_attribute = bestcost_pm_copd,
+        discount_shape = "exponential",
+        discount_rate = 0.05,
+        discount_years = -5,
+        inflation = 0.08,
+        valuation = 1E3
+      ),
+    "discount_years must be higher than 0."
+  )
+})
+
 ## WARNING #########

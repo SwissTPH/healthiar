@@ -54,6 +54,13 @@ monetize <- function(output_attribute = NULL,
   }
 
   # Validate input data ####
+  for(var_name in c("valuation", "discount_years")){
+    var_value <- base::get(var_name)
+    if(var_value <0){
+      stop(paste0(var_name, " must be higher than 0."),
+           call. = FALSE)
+    }
+  }
 
 
   # Monetize ####
