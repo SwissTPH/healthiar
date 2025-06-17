@@ -454,10 +454,56 @@ testthat::test_that("warning if user pass discount_years with impact", {
         discount_years = 5,
         valuation = 10
       ),
+    base::paste0("discount_years is aimed for output_attribute (excluding life table)\n",
+                 "and for impact (excluding vector form).\n",
+                 "Therefore discount_years is ignored here and\n",
+                 "the length of the vector impact is used."),
+    # To match the messages fixed  = TRUE.
+    # Otherwise, for some reason, testthat does not recognize the same text
+    fixed = TRUE
+  )
+})
+
+testthat::test_that("warning if user pass discount_years with life table", {
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+
+  bestcost_pm_yll_exposure_single_year_lifetable_geluft <-
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
+      approach_exposure = "single_year",
+      exp_central = data_mort$exp[2], #exp CH 2019
+      prop_pop_exp = 1,
+      cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
+      rr_central = data_mort[2,"rr_central"],
+      rr_lower = data_mort[2,"rr_lower"],
+      rr_upper =data_mort[2,"rr_upper"],
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      first_age_pop = 0,
+      last_age_pop = 99,
+      population_midyear_male = data_lifetable[["male"]]$population,
+      population_midyear_female = data_lifetable[["female"]]$population,
+      deaths_male = data[["pop"]]$number_of_deaths_male,
+      deaths_female = data[["pop"]]$number_of_deaths_female,
+      year_of_analysis = 2019,
+      info = data_mort$pollutant[2],
+      min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2])
+
+  testthat::expect_warning(
+    object =
+      healthiar::monetize(
+        output_attribute = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
+        discount_shape = "exponential",
+        discount_rate = 0.01,
+        discount_years = 5,
+        valuation = 1,
+      ),
     base::paste0("discount_years is aimed for any output_attribute\n",
                  "and for impact with single value (no vector).\n",
                  "Therefore discount_years is ignored here and\n",
-                 "the length of the vector impact is used."),
+                 "the length life table is used."),
     # To match the messages fixed  = TRUE.
     # Otherwise, for some reason, testthat does not recognize the same text
     fixed = TRUE

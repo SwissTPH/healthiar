@@ -124,10 +124,24 @@ monetize <- function(output_attribute = NULL,
      base::length(impact) > 1 &&
      !base::is.null(impact)){
     warning(
+      base::paste0("discount_years is aimed for output_attribute (excluding life table)\n",
+                   "and for impact (excluding vector form).\n",
+                   "Therefore discount_years is ignored here and\n",
+                   "the length of the vector impact is used."),
+      call. = FALSE)
+  }
+
+  ## Warning if user pass discount_years with impact ####
+
+  # Then the value will be ignored and the length of impact will be used as discount_years
+
+  if("discount_years" %in% base::names(base::match.call()) &&
+     is_lifetable){
+    warning(
       base::paste0("discount_years is aimed for any output_attribute\n",
                    "and for impact with single value (no vector).\n",
                    "Therefore discount_years is ignored here and\n",
-                   "the length of the vector impact is used."),
+                   "the length life table is used."),
       call. = FALSE)
   }
 
