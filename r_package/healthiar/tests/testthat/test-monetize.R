@@ -24,8 +24,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
       healthiar::monetize(
         output_attribute = bestcost_pm_copd,
         valuation = 1000,
-        discount_rate = NULL,
-        discount_shape = NULL
+        discount_rate = NULL
         )$monetization_main$monetized_impact_rounded,
     expect = # 1000 * airqplus_pm_copd
       round(1000 * bestcost_pm_copd[["health_main"]]$impact)
@@ -393,6 +392,21 @@ testthat::test_that("error if both impact and output_attribute are entered", {
         valuation = 1E3
       ),
     "Enter a value for impact or for output_attribute but not both."
+  )
+})
+
+testthat::test_that("error if inflation higher than 1", {
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        impact = c(800, 1000, 1200, 1500, 1800, 2000),
+        discount_shape = "exp",
+        discount_rate = 0.05,
+        discount_years = 5,
+        valuation = 10
+      ),
+    "Please, check spelling. discount_shape must have one of this values: exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987"
   )
 })
 ## WARNING #########

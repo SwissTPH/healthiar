@@ -7,7 +7,7 @@
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while discount_years does not include the year 0. Thus, length of impact = discount_years + 1.
 #' @param valuation \code{Numberic value} referring to unit value of a health impact
 #' @param discount_rate \code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.
-#' @param discount_shape \code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
+#' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
 #' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting. Be aware that the year 0 (without discounting) is not be counted here. If a vector is entered in the argument impact, discount_years does not need to be entered (length of impact = discount_years + 1)
 #' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)
 
@@ -73,7 +73,7 @@ monetize <- function(output_attribute = NULL,
     if(!is.null(base::get(var_name)) &&
        (base::get(var_name) < 0 | base::get(var_name) > 1)){
 
-      stop(paste0(var_name, " must be higher than 0 and lower than 1."),
+      stop(base::paste0(var_name, " must be higher than 0 and lower than 1."),
            call. = FALSE)
     }
 
@@ -83,10 +83,20 @@ monetize <- function(output_attribute = NULL,
 
   ## Error if values for both impact and output_attribute are passed ####
 
-    if(!base::is.null(impact) && !is.null(output_attribute)){
-      stop(paste0("Enter a value for impact or for output_attribute but not both."),
-           call. = FALSE)
-    }
+  if(!base::is.null(impact) && !is.null(output_attribute)){
+    stop(base::paste0("Enter a value for impact or for output_attribute but not both."),
+         call. = FALSE)
+  }
+
+  ## Error if no right category is passed passed ####
+
+  if(!discount_shape %in%
+     c("exponential", "hyperbolic_harvey_1986", "hyperbolic_mazur_1987")){
+
+    stop(base::paste0("Please, check spelling. discount_shape must have one of this values: ",
+                      "exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987"),
+         call. = FALSE)
+  }
 
 
 
