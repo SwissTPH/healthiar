@@ -81,6 +81,17 @@ monetize <- function(output_attribute = NULL,
 
 
 
+  ## Error if values for both impact and output_attribute are passed ####
+
+    if(!base::is.null(impact) && !is.null(output_attribute)){
+      stop(paste0("Enter a value for impact or for output_attribute but not both."),
+           call. = FALSE)
+    }
+
+
+
+
+
   # Monetize ####
 
   #* IF OUTPUT of attribute ####
