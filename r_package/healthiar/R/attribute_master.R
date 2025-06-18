@@ -5,53 +5,53 @@
 
 # RR & AR
 #' @param approach_risk
-#' \code{String value} specifying the risk method. Options: \code{"relative_risk"} (default) or \code{"absolute_risk"}.
+#' \code{String value} specifying the \strong{risk method}. Options: \code{"relative_risk"} (default) or \code{"absolute_risk"}.
 
 #' @param exp_central,exp_lower,exp_upper
-#' \code{Numeric value} or \code{numeric vector} specifying the exposure level(s) to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.
+#' \code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.
 
 #' @param cutoff_central,cutoff_lower,cutoff_upper
-#' \code{Numeric value} specifying the exposure cut-off value and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.
+#' \code{Numeric value} specifying the \strong{exposure cut-off value} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.
 
 #' @param pop_exp
-#' \code{Numeric vector} referring to the population exposed to each exposure category. \emph{Required in AR pathways; optional in RR pathways.}
+#' \code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. \emph{Required in AR pathways; optional in RR pathways.}
 
 #' @param prop_pop_exp
-#' \code{Numeric value} or \code{numeric vector} specifying the fraction(s) of the total population exposed to the exposure (categories). Default: 1. See Details for more info. \emph{Optional in AR pathways.}
+#' \code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} to the exposure (categories). Default: 1. See Details for more info. \emph{Optional in AR pathways.}
 
 #' @param erf_eq_central,erf_eq_lower,erf_eq_upper
-#' \code{String} or \code{function} specifying the exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info. \emph{Required in AR pathways; in RR pathways required only if \code{rr_...} argument(s) not specified.}
+#' \code{String} or \code{function} specifying the \strong{exposure-response function} and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info. \emph{Required in AR pathways; in RR pathways required only if \code{rr_...} argument(s) not specified.}
 
 # RR only
 #' @param rr_central,rr_lower,rr_upper
-#' \code{Numeric value} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}
+#' \code{Numeric value} specifying the \strong{central relative risk} estimate and (optionally) the corresponding lower and upper 95\% confidence interval bounds. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}
 
 #' @param rr_increment
-#' \code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. See Details for more info. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}
+#' \code{Numeric value} specifying the \strong{exposure increment} for which the provided relative risk is valid. See Details for more info. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}
 
 #' @param erf_shape
-#' \code{String value} specifying the shape of the exposure-response function to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}
+#' \code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}
 
 #' @param bhd_central,bhd_lower,bhd_upper
-#' \code{Numeric value} or \code{numeric vector} providing the baseline health data of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}
+#' \code{Numeric value} or \code{numeric vector} providing the \strong{baseline health data} of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}
 
 # ITERATION (OPTIONAL)
 #' @param geo_id_disaggregated,geo_id_aggregated
-#' \code{Numeric vector} or \code{string vector} providing unique IDs of each geographic area considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_disaggregated}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}
+#' \code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_disaggregated}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}
 
 # META (OPTIONAL)
 #' @param info
-#' \code{String}, \code{data frame} or \code{tibble} specifying information to be linked with the assessment. See Details for more info. \emph{Optional argument.}
+#' \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}
 
 #' @param population
-#' \code{Numeric value} or \code{numeric vector} specifying the total population (exposed + non-exposed), to calculate attributable impacts per 100 000 population. See Details for more info. \emph{Optional argument.}
+#' \code{Numeric value} or \code{numeric vector} specifying the total population (exposed + non-exposed), \strong{to calculate attributable impacts rate} per 100 000 population. See Details for more info. \emph{Optional argument.}
 
 # YLD (OPTIONAL)
 #' @param dw_central,dw_lower,dw_upper
-#' \code{Numeric value} or \code{numeric vector} providing the disability weight associated with the morbidity health outcome of interest and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. \emph{Only applicable in assessments of YLD (years lived with disability).}
+#' \code{Numeric value} or \code{numeric vector} providing the \strong{disability weight} associated with the morbidity health outcome of interest and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. \emph{Only applicable in assessments of YLD (years lived with disability).}
 
 #' @param duration_central,duration_lower,duration_upper
-#' \code{Numeric value} or \code{numeric vector} providing the duration associated with the morbidity health outcome of interest in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval. Default: 1. See Details for more info. \emph{Only applicable in assessments of YLD (years lived with disability).}
+#' \code{Numeric value} or \code{numeric vector} providing the \strong{duration} associated with the morbidity health outcome of interest in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval. Default: 1. See Details for more info. \emph{Only applicable in assessments of YLD (years lived with disability).}
 
 # Life table parameters
 
