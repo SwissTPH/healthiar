@@ -93,7 +93,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       rr_increment = 10,
       erf_shape = "log_linear",
       geo_id_disaggregated = 1:1E1,
-      geo_id_aggregated = rep("CH", 1E1),
+      geo_id_aggregated = c(rep("CH", 5), rep("DE", 5)),
       info = "PM2.5_copd")
 
   testthat::expect_equal(
