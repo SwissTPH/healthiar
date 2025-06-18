@@ -83,6 +83,47 @@ summarize_uncertainty <- function(
 
 
   # FUNCTION TO SUMMARIZE UNCERTAINTY ######
+  # Create sub-functions to be used inside summarize_uncertainty_based_on_input (see below)
+  # and in compare() out that function
+
+  # Get results of simulations organized by geo unit
+  get_attribute_by_geo <- function(attribute_by_sim){
+    attribute_by_geo <- attribute_by_sim |>
+      # Remove super-detailed information by simulation
+      # any_of() because input is not available in compare
+      # (otherwise too large output and slow)
+      dplyr::select( !dplyr::contains(c("input", "output", "health_main")))|>
+      # Unnest to have the information per" row
+      tidyr::unnest(cols = -c(sim_id)) |>
+      # Sort rows by geo_id
+      dplyr::arrange(geo_id_disaggregated) |>
+      # Put column geo_id first because it is now the sort criteria
+      dplyr::select(geo_id_disaggregated, dplyr::everything())
+  }
+
+  # Get uncertainty
+  get_summary <- function(attribute, grouping_var){
+
+    summary_by_geo <-
+      attribute |>
+      dplyr::group_by(dplyr::across(dplyr::all_of(grouping_var))) |>
+      dplyr::summarise(
+        central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
+        lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE, names = FALSE),
+        upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE),
+        .groups = "drop") |>
+      # Change to same format as other output from healthiar
+      tidyr::pivot_longer(
+        # data = summary,
+        cols = !dplyr::contains("geo_id"),
+        names_to = "impact_ci", values_to = "impact"
+      ) |>
+      dplyr::mutate(
+        impact_rounded = base::round(impact, digits = 0)
+      )
+  }
+
+
   # Create the function that make the whole job
   # It is important to create it because for two cases (comparison)
   # the function has to be run more than once (avoid copy-pasted code)
@@ -479,66 +520,21 @@ summarize_uncertainty <- function(
                   impact = impact)
 
   # Obtain results of simulations organized by geo unit
-  attribute_by_geo <- attribute_by_sim |>
-    # Remove super-detailed information by simulation
-    # any_of() because input is not available in compare
-    # (otherwise too large output and slow)
-    dplyr::select( !dplyr::contains(c("input", "output", "health_main")))|>
-    # Unnest to have the information per" row
-    tidyr::unnest(cols = -c(sim_id)) |>
-    # Sort rows by geo_id
-    dplyr::arrange(geo_id_disaggregated) |>
-    # Put column geo_id first because it is now the sort criteria
-    dplyr::select(geo_id_disaggregated, dplyr::everything())
+  attribute_by_geo <- get_attribute_by_geo(attribute_by_sim = attribute_by_sim)
 
-  # Get uncertainty for each geo_id_disaggregated
-  summary_by_geo <-
-    attribute_by_geo |>
-    dplyr::group_by(geo_id_disaggregated) |>
-    dplyr::summarise(
-      central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
-      lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE, names = FALSE),
-      upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE),
-      .groups = "drop") |>
-    ## Change to same format as other output from healthiar
-    tidyr::pivot_longer(
-      # data = summary,
-      cols = !dplyr::contains("geo_id"),
-      names_to = "impact_ci", values_to = "impact"
-    ) |>
-    dplyr::mutate(
-      impact_rounded = base::round(impact, digits = 0)
-    )
+  # Get summary (uncertainty) for each geo_id_disaggregated
+  summary_by_geo <- get_summary(attribute = attribute_by_geo,
+                                grouping_var = "geo_id_disaggregated")
 
 
   if(! "geo_id_aggregated" %in% names(output_attribute$health_main)){
     summary <- summary_by_geo
-  } else{
-    # Identify the geo_id (aggregated or disaggregated) that is present in health_main
-    # (to be used below)
-    grouping_geo_var <-
-      names(output_attribute$health_main)[grepl("geo_id", names(output_attribute$health_main))]
+  } else {
 
     # Summarize results getting the central, lower and upper estimate
-    summary <-
-      attribute_by_sim |>
-      dplyr::select(dplyr::all_of(c("sim_id", "health_main"))) |>
-      tidyr::unnest(cols = health_main) |>
-      dplyr::group_by(dplyr::across(dplyr::all_of(grouping_geo_var))) |>
-      dplyr::summarise(
-        central = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
-        lower = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE, names = FALSE),
-        upper = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE),
-        .groups = "drop") |>
-      ## Change to same format as other output from healthiar
-      tidyr::pivot_longer(
-        # data = summary,
-        cols = !dplyr::contains("geo_id"),
-        names_to = "impact_ci", values_to = "impact"
-      ) |>
-      dplyr::mutate(
-        impact_rounded = base::round(impact, digits = 0)
-      )
+    summary_by_geo <- get_summary(attribute = attribute_by_geo,
+                                  grouping_var = "geo_id_aggregated")
+
   }
 
 
@@ -625,7 +621,7 @@ summarize_uncertainty <- function(
                        by = id_cols,
                        suffix = c("_1", "_2"))
 
-    # Put ouputs together in one single tibble and run compare across rows
+    # Put outputs together in one single tibble and run compare across rows
     attribute_by_sim <-
       id_cols_and_sim |>
       dplyr::mutate(
@@ -639,65 +635,19 @@ summarize_uncertainty <- function(
         impact = purrr::map(health_main, "impact"))
 
     # Obtain results of simulations organized by geo unit
-    attribute_by_geo <- attribute_by_sim |>
-      # Remove super-detailed information by simulation
-      # any_of() because input is not available in compare
-      # (otherwise too large output and slow)
-      dplyr::select( !dplyr::contains(c("input", "output", "health_main")))|>
-      # Unnest to have the information per" row
-      tidyr::unnest(cols = -c(sim_id)) |>
-      # Sort rows by geo_id
-      dplyr::arrange(geo_id_disaggregated) |>
-      # Put column geo_id first because it is now the sort criteria
-      dplyr::select(geo_id_disaggregated, dplyr::everything())
+    attribute_by_geo <- get_attribute_by_geo(attribute_by_sim = attribute_by_sim)
 
-    summary_by_geo <-
-      attribute_by_geo |>
-      dplyr::group_by(geo_id_disaggregated) |>
-      dplyr::summarise(
-        central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
-        lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE, names = FALSE),
-        upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE),
-        .groups = "drop") |>
-      ## Change to same format as other output from healthiar
-      tidyr::pivot_longer(
-        # data = summary,
-        cols = !dplyr::contains("geo_id"),
-        names_to = "impact_ci", values_to = "impact"
-      ) |>
-      dplyr::mutate(
-        impact_rounded = base::round(impact, digits = 0)
-      )
+    # Get summary (uncertainty) for each geo_id_disaggregated
+    summary_by_geo <- get_summary(attribute = attribute_by_geo,
+                                  grouping_var = "geo_id_disaggregated")
+
 
     if(! "geo_id_aggregated" %in% names(output_attribute$health_main)){
       summary <- summary_by_geo
     } else{
-
-
-      # Identify the geo_ids used in health_main (to be used below)
-      grouping_geo_var <-
-        names(output_attribute$health_main)[grepl("geo_id", names(output_attribute$health_main))]
-
-      # Summarize results getting the central, lower and upper estimate
-      summary <-
-        attribute_by_sim |>
-        dplyr::select(dplyr::all_of(c("sim_id", "health_main"))) |>
-        tidyr::unnest(cols = health_main) |>
-        dplyr::group_by(dplyr::across(dplyr::all_of(grouping_geo_var))) |>
-        dplyr::summarise(
-          central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
-          lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE, names = FALSE),
-          upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE),
-          .groups = "drop") |>
-        ## Change to same format as other output from healthiar
-        tidyr::pivot_longer(
-          # data = summary,
-          cols = !dplyr::contains("geo_id"),
-          names_to = "impact_ci", values_to = "impact"
-        ) |>
-        dplyr::mutate(
-          impact_rounded = base::round(impact, digits = 0)
-        )
+      # Get summary (uncertainty) for each geo_id_disaggregated
+      summary_by_geo <- get_summary(attribute = attribute_by_geo,
+                                    grouping_var = "geo_id_aggregated")
     }
 
 
