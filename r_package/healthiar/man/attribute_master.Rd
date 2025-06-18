@@ -55,21 +55,21 @@ attribute_master(
 \arguments{
 \item{is_lifetable}{\code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)}
 
-\item{approach_risk}{\code{String value} specifying the risk method. Options: \code{"relative_risk"} (default) or \code{"absolute_risk"}.}
+\item{approach_risk}{\emph{AR & RR} \code{String value} specifying the risk method. Options: \code{"relative_risk"} (default) or \code{"absolute_risk"}.}
 
-\item{rr_central, rr_lower, rr_upper}{\code{Numeric value} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Argument is applicable only in RR pathway.}
+\item{rr_central, rr_lower, rr_upper}{\emph{RR ONLY} \code{Numeric value} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds. \emph{RR ONLY}}
 
-\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}) (no default). Argument is applicable only in RR pathway.}
+\item{rr_increment}{\emph{RR} \code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. See Details for more info. Argument is applicable only in RR pathway.}
 
-\item{erf_shape}{\code{String value} specifying the shape of the exposure-response function to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. Argument is applicable only in RR pathway.}
+\item{erf_shape}{\emph{RR} | \code{String value} specifying the shape of the exposure-response function to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Argument is applicable only in RR pathway}.}
 
-\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info.}
+\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\emph{AR & RR} | \code{String} or \code{function} specifying the exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info.}
 
 \item{pop_exp}{\code{Numeric vector} referring to the population exposed for each exposure category. For absolute risk, the value of this argument must be entered, for relative risk it is optional.}
 
 \item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to the exposure (categories). Default: 1. See Details for more info.}
 
-\item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the exposure level(s) to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
+\item{exp_central, exp_lower, exp_upper}{\strong{AR & RR} \code{Numeric value} or \code{numeric vector} specifying the exposure level(s) to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
 
 \item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. Only applicable in relative risk pathway. See Details for more info.}
 

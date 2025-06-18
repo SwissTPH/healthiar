@@ -1,14 +1,37 @@
 #' Attribute health impacts to an environmental stressor
 
 #' @description
-#' This function calculates the health impacts (mortality or morbidity)
-#' of exposure to an environmental stressor (air pollution or noise), using either relative risk (RR) or absolute risk (AR).
+#' This function calculates the attributable health impacts (mortality or morbidity) due to
+#' exposure to an environmental stressor (air pollution or noise), using either relative risk (\strong{RR}) or absolute risk (\strong{AR}).
 #' @description
-#' For examples please see the vignette and/or below.
-#' @description
-#' Generally, the health metric you put in (e.g. absolute disease cases, deaths per 100'000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if you enter a disability weight the main output will be years lived with disability.
+#' For (short) \strong{examples} please see below or consult the vignette for more detailed examples.
 
 #' @inheritParams attribute_master
+
+#' @usage
+#' attribute_health(
+#'   # RR & AR
+#'   approach_risk = "relative_risk", # OR: "absolute_risk"
+#'   exp_central, exp_lower = NULL, exp_upper = NULL,
+#'   cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
+#'   pop_exp = NULL,
+#'   prop_pop_exp = 1,
+#'   erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
+#'   # RR ONLY
+#'   rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+#'   rr_increment = NULL,
+#'   erf_shape = NULL,
+#'   bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+#'   # ITERATION (OPTIONAL)
+#'   geo_id_disaggregated = "a",
+#'   geo_id_aggregated = NULL,
+#'   # META (OPTIONAL)
+#'   info = NULL,
+#'   population = NULL,
+#'   # YLD (OPTIONAL)
+#'   dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
+#'   duration_central = 1, duration_lower = NULL, duration_upper = NULL,
+#' )
 
 #' @details
 #' \strong{Iteration}
@@ -32,6 +55,9 @@
 #' To the other function arguments not listed above you can feed either a vector of the same length or a single value (will be recycled).
 
 #' @details
+#' The health metric you put in (e.g. absolute disease cases, deaths per 100'000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if you enter a disability weight the attributable impact will be in YLD (years lived with disability).
+
+#' @details
 #' \strong{Function arguments}
 #' @details
 #' \code{erf_eq_central}, \code{erf_eq_lower}, \code{erf_eq_upper}
@@ -52,6 +78,10 @@
 #' \code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper}
 #' @details
 #' The cutoff level refers to the exposure level below which no health effects occur. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
+#' @details
+#' \code{rr_increment}
+#' @details
+#' Relative risks from the literature are valid for a specific increment in the exposure, in case of air pollution often 10 or 5 \eqn{µg/m^3}).
 #' @details
 #' \code{bhd_central}, \code{bhd_lower}, \code{bhd_upper}
 #' @details
@@ -130,7 +160,7 @@
 #'
 #' print(results$health_main$impact_rounded) # Attributable cases
 #' @examples
-#' # Goal: attribute cases of high annoyance to (road traffic) noise exposure
+#' # Goal: attribute cases of high annoyance to (road traffic) noise exposure using absolute risk
 #'
 #' results <- attribute_health(
 #'   approach_risk = "absolute_risk",
@@ -145,21 +175,21 @@
 #' # units, such as municipalities, provinces, countries, …
 #' @examples
 #' results <- attribute_health(
-#'   geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"),
-#'   geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
+#'   geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino"),
+#'   geo_id_aggregated = c("Ger","Ger","Fra","Ita"),
 #'   rr_central = 1.369,
 #'   rr_increment = 10,
 #'   cutoff_central = 5,
 #'   erf_shape = "log_linear",
-#'   exp_central = c(11, 11, 10, 8, 7),
-#'   bhd_central = c(4000, 2500, 3000, 1500, 500)
+#'   exp_central = c(11, 11, 10, 8),
+#'   bhd_central = c(4000, 2500, 3000, 1500)
 #' )
 #'
 #' # Attributable cases (aggregated)
 #' results$health_main$impact_rounded
 #'
 #' # Attributable cases (disaggregated)
-#' results$health_detailed$impact_raw |> select(
+#' results$health_detailed$impact_raw |> dplyr::select(
 #'   geo_id_disaggregated,
 #'   geo_id_aggregated,
 #'   impact_rounded

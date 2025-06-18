@@ -13,7 +13,7 @@ get_discount_factor(
 \arguments{
 \item{discount_rate}{\code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.}
 
-\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. Per default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
+\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 }
 \description{
 This function calculates the discount factor based on discount rate (already corrected for inflation)

@@ -5,50 +5,41 @@
 \title{Attribute health impacts to an environmental stressor}
 \usage{
 attribute_health(
-  approach_risk = "relative_risk",
-  erf_shape = NULL,
-  rr_central = NULL,
-  rr_lower = NULL,
-  rr_upper = NULL,
-  rr_increment = NULL,
-  erf_eq_central = NULL,
-  erf_eq_lower = NULL,
-  erf_eq_upper = NULL,
-  exp_central,
-  exp_lower = NULL,
-  exp_upper = NULL,
+  # RR & AR
+  approach_risk = "relative_risk", # OR: "absolute_risk"
+  exp_central, exp_lower = NULL, exp_upper = NULL,
+  cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
   pop_exp = NULL,
   prop_pop_exp = 1,
-  cutoff_central = 0,
-  cutoff_lower = NULL,
-  cutoff_upper = NULL,
-  bhd_central = NULL,
-  bhd_lower = NULL,
-  bhd_upper = NULL,
+  erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
+  # RR ONLY
+  rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+  rr_increment = NULL,
+  erf_shape = NULL,
+  bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+  # ITERATION (OPTIONAL)
   geo_id_disaggregated = "a",
   geo_id_aggregated = NULL,
+  # META (OPTIONAL)
+  info = NULL,
   population = NULL,
-  dw_central = NULL,
-  dw_lower = NULL,
-  dw_upper = NULL,
-  duration_central = 1,
-  duration_lower = NULL,
-  duration_upper = NULL,
-  info = NULL
+  # YLD (OPTIONAL)
+  dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
+  duration_central = 1, duration_lower = NULL, duration_upper = NULL,
 )
 }
 \arguments{
-\item{approach_risk}{\code{String value} specifying the risk method. Options: \code{"relative_risk"} (default) or \code{"absolute_risk"}.}
+\item{approach_risk}{\emph{AR & RR} \code{String value} specifying the risk method. Options: \code{"relative_risk"} (default) or \code{"absolute_risk"}.}
 
-\item{erf_shape}{\code{String value} specifying the shape of the exposure-response function to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. Argument is applicable only in RR pathway.}
+\item{erf_shape}{\emph{RR} | \code{String value} specifying the shape of the exposure-response function to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Argument is applicable only in RR pathway}.}
 
-\item{rr_central, rr_lower, rr_upper}{\code{Numeric value} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Argument is applicable only in RR pathway.}
+\item{rr_central, rr_lower, rr_upper}{\emph{RR ONLY} \code{Numeric value} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds. \emph{RR ONLY}}
 
-\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. Often 10 or 5 \eqn{µg/m^3}) (no default). Argument is applicable only in RR pathway.}
+\item{rr_increment}{\emph{RR} \code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. See Details for more info. Argument is applicable only in RR pathway.}
 
-\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info.}
+\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\emph{AR & RR} | \code{String} or \code{function} specifying the exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info.}
 
-\item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the exposure level(s) to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
+\item{exp_central, exp_lower, exp_upper}{\strong{AR & RR} \code{Numeric value} or \code{numeric vector} specifying the exposure level(s) to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
 
 \item{pop_exp}{\code{Numeric vector} referring to the population exposed for each exposure category. For absolute risk, the value of this argument must be entered, for relative risk it is optional.}
 
@@ -83,12 +74,10 @@ The results contain columns such as:
  }
 }
 \description{
-This function calculates the health impacts (mortality or morbidity)
-of exposure to an environmental stressor (air pollution or noise), using either relative risk (RR) or absolute risk (AR).
+This function calculates the attributable health impacts (mortality or morbidity) due to
+exposure to an environmental stressor (air pollution or noise), using either relative risk (\strong{RR}) or absolute risk (\strong{AR}).
 
-For examples please see the vignette and/or below.
-
-Generally, the health metric you put in (e.g. absolute disease cases, deaths per 100'000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if you enter a disability weight the main output will be years lived with disability.
+For (short) \strong{examples} please see below or consult the vignette for more detailed examples.
 }
 \details{
 \strong{Iteration}
@@ -111,6 +100,8 @@ The length of each of these vectors listed above must be: length = (number of ge
 
 To the other function arguments not listed above you can feed either a vector of the same length or a single value (will be recycled).
 
+The health metric you put in (e.g. absolute disease cases, deaths per 100'000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if you enter a disability weight the attributable impact will be in YLD (years lived with disability).
+
 \strong{Function arguments}
 
 \code{erf_eq_central}, \code{erf_eq_lower}, \code{erf_eq_upper}
@@ -131,6 +122,10 @@ Indicates the share of the population exposed to each exposure category. In the 
 \code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper}
 
 The cutoff level refers to the exposure level below which no health effects occur. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
+
+\code{rr_increment}
+
+Relative risks from the literature are valid for a specific increment in the exposure, in case of air pollution often 10 or 5 \eqn{µg/m^3}).
 
 \code{bhd_central}, \code{bhd_lower}, \code{bhd_upper}
 
@@ -220,7 +215,7 @@ results <- attribute_health(
  )
 
 print(results$health_main$impact_rounded) # Attributable cases
-# Goal: attribute cases of high annoyance to (road traffic) noise exposure
+# Goal: attribute cases of high annoyance to (road traffic) noise exposure using absolute risk
 
 results <- attribute_health(
   approach_risk = "absolute_risk",
@@ -233,21 +228,21 @@ print(results$health_main$impact_rounded) # Attributable cases
 # Goal: attribute disease cases to PM2.5 exposure in multiple geographic
 # units, such as municipalities, provinces, countries, …
 results <- attribute_health(
-  geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"),
-  geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
+  geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino"),
+  geo_id_aggregated = c("Ger","Ger","Fra","Ita"),
   rr_central = 1.369,
   rr_increment = 10,
   cutoff_central = 5,
   erf_shape = "log_linear",
-  exp_central = c(11, 11, 10, 8, 7),
-  bhd_central = c(4000, 2500, 3000, 1500, 500)
+  exp_central = c(11, 11, 10, 8),
+  bhd_central = c(4000, 2500, 3000, 1500)
 )
 
 # Attributable cases (aggregated)
 results$health_main$impact_rounded
 
 # Attributable cases (disaggregated)
-results$health_detailed$impact_raw |> select(
+results$health_detailed$impact_raw |> dplyr::select(
   geo_id_disaggregated,
   geo_id_aggregated,
   impact_rounded
