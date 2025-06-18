@@ -583,8 +583,9 @@ summarize_uncertainty <- function(
   uncertainty <-
     list(
       uncertainty_main = summary,
-      uncertainty_detailed = list(by_simulation = attribute_by_sim,
-                                  by_geo = attribute_by_geo))
+      uncertainty_detailed = list(attribute_by_simulation = attribute_by_sim,
+                                  attribute_by_geo = attribute_by_geo,
+                                  uncertainty_by_geo = summary_by_geo))
 
   return(uncertainty)
     }
@@ -623,22 +624,22 @@ summarize_uncertainty <- function(
 
     # Extract output 1 and 2
     output_1 <-
-      attribute_1[["uncertainty_detailed"]][["by_simulation"]]|>
+      attribute_1[["uncertainty_detailed"]][["attribute_by_simulation"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
 
     output_2 <-
-      attribute_2[["uncertainty_detailed"]][["by_simulation"]]|>
+      attribute_2[["uncertainty_detailed"]][["attribute_by_simulation"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
 
 
     # Extract simulation values 1 and 2
     id_cols_and_sim_1 <-
-      attribute_1[["uncertainty_detailed"]][["by_simulation"]] |>
+      attribute_1[["uncertainty_detailed"]][["attribute_by_simulation"]] |>
       dplyr::select(
         !dplyr::all_of(c("input", "output", "health_main", "impact")))
 
     id_cols_and_sim_2 <-
-      attribute_2[["uncertainty_detailed"]][["by_simulation"]] |>
+      attribute_2[["uncertainty_detailed"]][["attribute_by_simulation"]] |>
       dplyr::select(
         !dplyr::all_of(c("input", "output", "health_main", "impact")))
 
@@ -734,8 +735,9 @@ summarize_uncertainty <- function(
     uncertainty <-
       list(
         uncertainty_main = summary,
-        uncertainty_detailed = list(by_simulation = attribute_by_sim,
-                                    by_geo = attribute_by_geo))
+        uncertainty_detailed = list(attribute_by_simulation = attribute_by_sim,
+                                    attribute_by_geo = attribute_by_geo,
+                                    uncertainty_by_geo = summary_by_geo))
 
   }
 
