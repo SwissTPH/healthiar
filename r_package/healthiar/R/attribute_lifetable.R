@@ -63,11 +63,11 @@ attribute_lifetable <-
     cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
     pop_exp = NULL,
-    prop_pop_exp = 1,
     # RR ONLY
     rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
     rr_increment = NULL,
     erf_shape = NULL,
+    prop_pop_exp = 1,
     # ITERATION (OPTIONAL)
     geo_id_disaggregated = "a", geo_id_aggregated = NULL,
     # META (OPTIONAL)
@@ -88,13 +88,13 @@ attribute_lifetable <-
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
         pop_exp = pop_exp,
-        prop_pop_exp = prop_pop_exp,
         erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
         # RR ONLY
         rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
         rr_increment = rr_increment,
         erf_shape = erf_shape,
         bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+        prop_pop_exp = prop_pop_exp,
         # Life table
         health_outcome = health_outcome,
         is_lifetable = TRUE,

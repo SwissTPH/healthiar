@@ -14,10 +14,7 @@
 #' \code{Numeric value} specifying the \strong{exposure cut-off value} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.
 
 #' @param pop_exp
-#' \code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. \emph{Required in AR pathways; optional in RR pathways.}
-
-#' @param prop_pop_exp
-#' \code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} to the exposure (categories). Default: 1. See Details for more info. \emph{Optional in AR pathways.}
+#' \code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. See Details for more info. \emph{Required in AR pathways; optional in RR pathways.}
 
 #' @param erf_eq_central,erf_eq_lower,erf_eq_upper
 #' \code{String} or \code{function} specifying the \strong{exposure-response function} and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info. \emph{Required in AR pathways; in RR pathways required only if \code{rr_...} argument(s) not specified.}
@@ -34,6 +31,9 @@
 
 #' @param bhd_central,bhd_lower,bhd_upper
 #' \code{Numeric value} or \code{numeric vector} providing the \strong{baseline health data} of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}
+
+#' @param prop_pop_exp
+#' \code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}
 
 # ITERATION (OPTIONAL)
 #' @param geo_id_disaggregated,geo_id_aggregated
@@ -112,13 +112,13 @@ attribute_master <-
     exp_central, exp_lower = NULL, exp_upper = NULL,
     cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
     pop_exp = NULL,
-    prop_pop_exp = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
     # RR ONLY
     rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
     rr_increment = NULL,
     erf_shape = NULL,
     bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+    prop_pop_exp = NULL,
     # ITERATION (OPTIONAL)
     geo_id_disaggregated = NULL,
     geo_id_aggregated = NULL,

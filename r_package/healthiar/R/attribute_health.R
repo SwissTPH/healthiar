@@ -15,13 +15,13 @@
 #'   exp_central, exp_lower = NULL, exp_upper = NULL,
 #'   cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
 #'   pop_exp = NULL,
-#'   prop_pop_exp = 1,
 #'   erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
 #'   # RR ONLY
 #'   rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
 #'   rr_increment = NULL,
 #'   erf_shape = NULL,
 #'   bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+#'   prop_pop_exp = 1,
 #'   # ITERATION (OPTIONAL)
 #'   geo_id_disaggregated = "a",
 #'   geo_id_aggregated = NULL,
@@ -34,28 +34,20 @@
 #' )
 
 #' @details
-#' \strong{Iteration}
+#' \strong{Assessment of multiple geographic units}
 #' @details
-#' To iterate an assessment across multiple geographic units with \code{attribute_health()}, you must enter vectors of unit-specific
+#' To assess the attributable health impact/burden across multiple geographic units with \code{attribute_health()}, you must specify the argument \code{geo_id_disaggregated} and (optionally) \code{geo_id_aggregated}, in addition to the other required function arguments.
 #' @details
-#' - unique geo IDs to \code{geo_id_disaggregated} (\emph{both RR and AR pathways}), and optionally \code{geo_id_aggregated} (\emph{both RR and AR pathways});
+#' The length of the input vectors to the function arguments must be
 #' @details
-#' - exposure values to \code{exp_...} (\emph{both RR and AR pathways});
+#' \deqn{\text{length input vectors} = \text{number of geo units} \times \text{number of exposure categories}}
 #' @details
-#' - baseline health data values to \code{bhd_...} (\emph{RR pathway only})
-#' @details
-#' - (in case of multiple exposure categories) values specifying the population exposed per exposure category to \code{pop_exp} (\emph{both RR and AR pathways})
-#' @details
-#' - (in case of mutliple exposure categories) values specifying the proportion of the total exposed population that is exposed to each exposure category to \code{prop_pop_exp} (\emph{both RR and AR pathways; in AR pathway in combination with \code{pop_exp}})
-#' @details
-#' - population values specifying total population (exposed + non-exposed)
-#' @details
-#' The length of each of these vectors listed above must be: length = (number of geo units) x (number of exposure categories).
-#' @details
-#' To the other function arguments not listed above you can feed either a vector of the same length or a single value (will be recycled).
+#' Alternatively, for those arguments that are independent of location (e.g. \code{approach_risk}, \code{rr_...}, \code{erf_shape}, ...), you can enter a single value, which will be recycled to match the length of the other geo unit-specific input data.
 
 #' @details
-#' The health metric you put in (e.g. absolute disease cases, deaths per 100 000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if you enter a disability weight the attributable impact will be in YLD (years lived with disability).
+#' \strong{What you put in is what you get out}
+#' @details
+#' The health metric you put in (e.g. absolute disease cases, deaths per 100 000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if you enter a disability weight (to the \code{dw_...} arguments) the attributable impact will be in YLD (years lived with disability).
 
 #' @details
 #' \strong{Function arguments}
@@ -68,9 +60,11 @@
 #' @details
 #' The cutoff level refers to the exposure level below which no health effects occur in the same unit as the exposure. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
 #' @details
-#' \code{prop_pop_exp}
+#' \code{pop_exp}
 #' @details
-#' \emph{Optional in AR pathways.} In RR pathways indicates the share(s) (value(s) from 0 until and including 1) of the total population which is exposed to the exposure (categories). In AR pathways it is optional and only to be used combination with \code{pop_exp}: the sum of \code{pop_exp} will be used as the reference population to which the shares specified in \code{prop_pop_exp} apply.
+#' \emph{Required in AR pathways; optional in RR pathways.} In AR pathways the population exposed per exposure category is multiplied with the corresonding category-specific risk to obtain the absolute number of people affected by the health outcome.
+#' @details
+#' In RR pathways, only to be specified if \code{prop_pop_exp} is not specified: based on the values entered the proportion of people exposed to each exposure category (needed for calculation of the population attributable fraction) is derived. See the equation for the population attributable fraction below.
 #' @details
 #' \code{erf_eq_central}, \code{erf_eq_lower}, \code{erf_eq_upper}
 #' @details
@@ -85,6 +79,10 @@
 #' \code{bhd_central}, \code{bhd_lower}, \code{bhd_upper}
 #' @details
 #' \emph{Only applicable in RR pathways.} Baseline health data for each exposure category must be entered.
+#' @details
+#' \code{prop_pop_exp}
+#' @details
+#' \emph{Only applicable in RR pathways.} In RR pathways indicates the fraction(s) (value(s) from 0 until and including 1) of the total population exposed to the exposure categories. Only to be specified if \code{pop_exp} is not specified. See equation of the population attributable fraction for categorical exposure below.
 #' @details
 #' \code{geo_id_aggregated}, \code{geo_id_disaggregated}
 #' @details
@@ -118,25 +116,26 @@
 #' @details Where:
 #' @details i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
 #' @details \eqn{PE_i} = fraction of population in exposure category i
-#' @details \eqn{RR_i} = relative risk for exposure category level i compared to the reference level
+#' @details \eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
 #' @details
 #' There is one alternative for the PAF for categorical exposure distribution that is commonly used. It is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical.
 #' \deqn{PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}}
 #' @details Where:
 #' @details i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
 #' @details \eqn{PE_i} = fraction of population in exposure category i
-#' @details \eqn{RR_i} = relative risk for exposure category level i compared to the reference level
+#' @details \eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
 #' @details
 #' Finally, if the exposure is provided as the population weighted mean concentration (PWC), the equation for the PAF is reduced to
 #' \deqn{PAF = \frac{RR_{PWC} - 1}{RR_{PWC}}}
 #' Where \eqn{RR_PWC} is the relative risk associated with the population weighted mean exposure.
+
 #' @details
 #' \strong{Equation (absolute risk)}
 #' \deqn{N = \sum AR_i\times PE_i}
 #' @details Where:
 #' @details N = the number of cases of the exposure-specific health outcome that are attributed to the exposure
-#' @details \eqn{AR_i} = absolute risk at the mean of exposure bin i
-#' @details \eqn{PE_i} = fraction of the population exposed to exposure levels of the exposure category i
+#' @details \eqn{AR_i} = absolute risk associated with the mean exposure level of exposure category i
+#' @details \eqn{PE_i} = population exposed (absolute number) to exposure levels of exposure category i
 
 #' @details
 #' \strong{Conversion of alternative risk measures to relative risks}
@@ -207,13 +206,13 @@ attribute_health <-
     exp_central, exp_lower = NULL, exp_upper = NULL,
     cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
     pop_exp = NULL,
-    prop_pop_exp = 1,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
     # RR ONLY
     rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
     rr_increment = NULL,
     erf_shape = NULL,
     bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+    prop_pop_exp = 1,
     # ITERATION (OPTIONAL)
     geo_id_disaggregated = "a", geo_id_aggregated = NULL,
     ## YLD (OPTIONAL)
@@ -237,13 +236,13 @@ attribute_health <-
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
         pop_exp = pop_exp,
-        prop_pop_exp = prop_pop_exp,
         erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
         # RR ONLY
         rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
         rr_increment = rr_increment,
         erf_shape = erf_shape,
         bhd_central = bhd_central, bhd_lower = bhd_lower, bhd_upper = bhd_upper,
+        prop_pop_exp = prop_pop_exp,
         # ITERATION (OPTIONAL)
         geo_id_disaggregated = geo_id_disaggregated , geo_id_aggregated = geo_id_aggregated,
         # META (OPTIONAL)

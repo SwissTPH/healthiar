@@ -28,12 +28,12 @@ attribute_lifetable(
   erf_eq_lower = NULL,
   erf_eq_upper = NULL,
   pop_exp = NULL,
-  prop_pop_exp = 1,
   rr_central = NULL,
   rr_lower = NULL,
   rr_upper = NULL,
   rr_increment = NULL,
   erf_shape = NULL,
+  prop_pop_exp = 1,
   geo_id_disaggregated = "a",
   geo_id_aggregated = NULL,
   info = NULL
@@ -64,15 +64,15 @@ attribute_lifetable(
 
 \item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the \strong{exposure-response function} and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info. \emph{Required in AR pathways; in RR pathways required only if \code{rr_...} argument(s) not specified.}}
 
-\item{pop_exp}{\code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. \emph{Required in AR pathways; optional in RR pathways.}}
-
-\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} to the exposure (categories). Default: 1. See Details for more info. \emph{Optional in AR pathways.}}
+\item{pop_exp}{\code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. See Details for more info. \emph{Required in AR pathways; optional in RR pathways.}}
 
 \item{rr_central, rr_lower, rr_upper}{\code{Numeric value} specifying the \strong{central relative risk} estimate and (optionally) the corresponding lower and upper 95\% confidence interval bounds. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
 \item{rr_increment}{\code{Numeric value} specifying the \strong{exposure increment} for which the provided relative risk is valid. See Details for more info. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
 \item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
+
+\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}}
 
 \item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_disaggregated}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 

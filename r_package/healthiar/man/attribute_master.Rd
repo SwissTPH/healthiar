@@ -13,7 +13,6 @@ attribute_master(
   cutoff_lower = NULL,
   cutoff_upper = NULL,
   pop_exp = NULL,
-  prop_pop_exp = NULL,
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
   erf_eq_upper = NULL,
@@ -25,6 +24,7 @@ attribute_master(
   bhd_central = NULL,
   bhd_lower = NULL,
   bhd_upper = NULL,
+  prop_pop_exp = NULL,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
   population = NULL,
@@ -59,9 +59,7 @@ attribute_master(
 
 \item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.}
 
-\item{pop_exp}{\code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. \emph{Required in AR pathways; optional in RR pathways.}}
-
-\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} to the exposure (categories). Default: 1. See Details for more info. \emph{Optional in AR pathways.}}
+\item{pop_exp}{\code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. See Details for more info. \emph{Required in AR pathways; optional in RR pathways.}}
 
 \item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the \strong{exposure-response function} and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info. \emph{Required in AR pathways; in RR pathways required only if \code{rr_...} argument(s) not specified.}}
 
@@ -72,6 +70,8 @@ attribute_master(
 \item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{baseline health data} of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}}
+
+\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}}
 
 \item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_disaggregated}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
