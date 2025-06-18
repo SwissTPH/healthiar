@@ -517,10 +517,13 @@ summarize_uncertainty <- function(
                   health_main = health_main,
                   impact = impact)
 
+  # Obtain results of simulations organized by geo unit
   attribute_by_geo <- attribute_by_sim |>
     # Remove super-detailed information by simulation
-    dplyr::select(-c(input, output, health_main))|>
-    # Unnest to have the information per row
+    # any_of() because input is not available in compare
+    # (otherwise too large output and slow)
+    dplyr::select( !dplyr::contains(c("input", "output", "health_main")))|>
+    # Unnest to have the information per" row
     tidyr::unnest(cols = -c(sim_id)) |>
     # Sort rows by geo_id
     dplyr::arrange(geo_id_disaggregated) |>
@@ -608,16 +611,37 @@ summarize_uncertainty <- function(
       attribute_2[["uncertainty_detailed"]][["by_simulation"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
 
+
+    # Extract simulation values 1 and 2
+    id_cols_and_sim_1 <-
+      attribute_1[["uncertainty_detailed"]][["by_simulation"]] |>
+      dplyr::select(
+        !dplyr::all_of(c("input", "output", "health_main", "impact")))
+
+    id_cols_and_sim_2 <-
+      attribute_2[["uncertainty_detailed"]][["by_simulation"]] |>
+      dplyr::select(
+        !dplyr::all_of(c("input", "output", "health_main", "impact")))
+
+
     # Identify the id columns of the outputs (to be used below)
     id_cols <-
       # We use output 1 but we could use output 2
       # (same structure because same type of assessment)
       output_1 |>
-      dplyr::select(dplyr::contains("_id"))
+      dplyr::select(dplyr::contains("_id")) |>
+      base::names()
+
+    # Put together ids and sim cols
+    id_cols_and_sim <-
+      dplyr::left_join(id_cols_and_sim_1,
+                       id_cols_and_sim_2,
+                       by = id_cols,
+                       suffix = c("_1", "_2"))
 
     # Put ouputs together in one single tibble and run compare across rows
     attribute_by_sim <-
-      id_cols |>
+      id_cols_and_sim |>
       dplyr::mutate(
         output_1 = output_1$output,
         output_2 = output_2$output)|>
@@ -625,7 +649,22 @@ summarize_uncertainty <- function(
         output_compare =
           purrr::pmap(base::list(output_1, output_2, input_args$approach_comparison),
                       healthiar::compare),
-        health_main = purrr::map(output_compare,"health_main"))
+        health_main = purrr::map(output_compare,"health_main"),
+        impact = purrr::map(health_main, "impact"))
+
+    # Obtain results of simulations organized by geo unit
+    attribute_by_geo <- attribute_by_sim |>
+      # Remove super-detailed information by simulation
+      # any_of() because input is not available in compare
+      # (otherwise too large output and slow)
+      dplyr::select( !dplyr::contains(c("input", "output", "health_main")))|>
+      # Unnest to have the information per" row
+      tidyr::unnest(cols = -c(sim_id)) |>
+      # Sort rows by geo_id
+      dplyr::arrange(geo_id_disaggregated) |>
+      # Put column geo_id first because it is now the sort criteria
+      dplyr::select(geo_id_disaggregated, dplyr::everything())
+
 
     # Identify the geo_ids used in health_main (to be used below)
     grouping_geo_var <-
@@ -658,7 +697,8 @@ summarize_uncertainty <- function(
     uncertainty <-
       list(
         uncertainty_main = summary,
-        uncertainty_detailed = list(by_simulation = attribute_by_sim))
+        uncertainty_detailed = list(by_simulation = attribute_by_sim,
+                                    by_geo = attribute_by_geo))
 
   }
 
