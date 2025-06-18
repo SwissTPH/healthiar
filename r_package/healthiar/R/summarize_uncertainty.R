@@ -530,6 +530,25 @@ summarize_uncertainty <- function(
     # Put column geo_id first because it is now the sort criteria
     dplyr::select(geo_id_disaggregated, dplyr::everything())
 
+  # Get uncertainty for each geo_id_disaggregated
+  summary_by_geo <-
+    attribute_by_geo |>
+    dplyr::group_by(geo_id_disaggregated) |>
+    dplyr::summarise(
+      central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
+      lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE, names = FALSE),
+      upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE),
+      .groups = "drop") |>
+    ## Change to same format as other output from healthiar
+    tidyr::pivot_longer(
+      # data = summary,
+      cols = !dplyr::contains("geo_id"),
+      names_to = "impact_ci", values_to = "impact"
+    ) |>
+    dplyr::mutate(
+      impact_rounded = base::round(impact, digits = 0)
+    )
+
 
   # Identify the geo_id (aggregated or disaggregated) that is present in health_main
   # (to be used below)
@@ -664,6 +683,24 @@ summarize_uncertainty <- function(
       dplyr::arrange(geo_id_disaggregated) |>
       # Put column geo_id first because it is now the sort criteria
       dplyr::select(geo_id_disaggregated, dplyr::everything())
+
+    summary_by_geo <-
+      attribute_by_geo |>
+      dplyr::group_by(geo_id_disaggregated) |>
+      dplyr::summarise(
+        central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
+        lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE, names = FALSE),
+        upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE),
+        .groups = "drop") |>
+      ## Change to same format as other output from healthiar
+      tidyr::pivot_longer(
+        # data = summary,
+        cols = !dplyr::contains("geo_id"),
+        names_to = "impact_ci", values_to = "impact"
+      ) |>
+      dplyr::mutate(
+        impact_rounded = base::round(impact, digits = 0)
+      )
 
 
     # Identify the geo_ids used in health_main (to be used below)
