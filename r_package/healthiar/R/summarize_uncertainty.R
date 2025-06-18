@@ -47,9 +47,9 @@ summarize_uncertainty <- function(
   ## Decimals ######
 
   ## Set options
-  user_options <- options()
+  user_options <- base::options()
   # Make sure that no rounding occurs
-  options(digits = 15)
+  baes::options(digits = 15)
 
 
   ## Seeds ########
@@ -57,10 +57,10 @@ summarize_uncertainty <- function(
   if(base::is.null(seed)){seed <- 123}
 
   var_names <- c("rr", "exp", "cutoff", "bhd", "dw", "duration")
-  seeds <- list()
+  seeds <- base::list()
 
   # Store seed
-  for(i in 1:length(var_names)){
+  for(i in 1:base::length(var_names)){
     seeds[[var_names[i]]] <- seed +i*1E3
   }
 
@@ -151,8 +151,8 @@ summarize_uncertainty <- function(
 
   for (v in var_names){
     ci_in[[v]] <-
-      !base::is.null(input_args[[paste0(v, "_lower")]]) &&
-      !base::is.null(input_args[[paste0(v, "_upper")]])
+      !base::is.null(input_args[[base::paste0(v, "_lower")]]) &&
+      !base::is.null(input_args[[base::paste0(v, "_upper")]])
   }
 
   # Beta and gamma functions ############################
@@ -322,7 +322,7 @@ summarize_uncertainty <- function(
       geo_id_disaggregated = base::unique(input_table$geo_id_disaggregated),
       geo_id_number = 1:n_geo,
       exp_dimension = base::unique(input_table$exposure_dimension),
-      sim_id = list(1:n_sim))
+      sim_id = base::list(1:n_sim))
 
   # Identify the variable names with confidence interval
   var_names_with_ci <- base::names(ci_in)[unlist(ci_in)]
@@ -357,7 +357,7 @@ summarize_uncertainty <- function(
   )
 
   # Prepare the list to store the data in the for loop
-  sim <- list()
+  sim <- base::list()
 
 
   # Apply simulation for variables that have confidence interval
@@ -366,12 +366,12 @@ summarize_uncertainty <- function(
     # Store distribution
     dist <- sim_config[[var]]
     # Store column name
-    col_name <- paste0(var, "_central")
+    col_name <- base::paste0(var, "_central")
 
     # Store central, lower and upper estimate for the simulation below
-    central <- as.numeric(input_args[[paste0(var, "_central")]])
-    lower   <- as.numeric(input_args[[paste0(var, "_lower")]])
-    upper   <- as.numeric(input_args[[paste0(var, "_upper")]])
+    central <- base::as.numeric(input_args[[base::paste0(var, "_central")]])
+    lower   <- base::as.numeric(input_args[[base::paste0(var, "_lower")]])
+    upper   <- base::as.numeric(input_args[[base::paste0(var, "_upper")]])
 
 
     # Run simulate across all rows
@@ -381,7 +381,7 @@ summarize_uncertainty <- function(
     if(var %in% var_names_with_ci_geo_different){
 
       sim[[col_name]] <- purrr::pmap(
-        list(sim_template$geo_id_number, sim_template$exp_dimension),
+        base::list(sim_template$geo_id_number, sim_template$exp_dimension),
         function(geo_id_number, exp_dimension) {
           simulate(
           central = central,
@@ -427,7 +427,7 @@ summarize_uncertainty <- function(
   # (to be used below)
   input_args_prepared_for_replacement <-
     purrr::keep(input_args,
-                !names(input_args) %in% vars_to_be_removed_in_input_args)
+                !base::names(input_args) %in% vars_to_be_removed_in_input_args)
 
   template_with_sim <-
     # Bind the template with the simulated values
@@ -543,11 +543,12 @@ summarize_uncertainty <- function(
 
 
   uncertainty <-
-    list(
+    base::list(
       uncertainty_main = summary,
-      uncertainty_detailed = list(attribute_by_simulation = attribute_by_sim,
-                                  attribute_by_geo = attribute_by_geo,
-                                  uncertainty_by_geo = summary_by_geo))
+      uncertainty_detailed =
+        base::list(attribute_by_simulation = attribute_by_sim,
+                   attribute_by_geo = attribute_by_geo,
+                   uncertainty_by_geo = summary_by_geo))
 
   return(uncertainty)
     }
@@ -557,7 +558,7 @@ summarize_uncertainty <- function(
   ## One case (no comparison) ####
 
   # Identify if this is one-case or two-case (comparison) assessment
-  is_two_cases <- any(c("input_table_1", "input_table_2") %in% names(input_table))
+  is_two_cases <- base::any(c("input_table_1", "input_table_2") %in% base::names(input_table))
   is_one_case <- !is_two_cases
 
 
@@ -654,11 +655,12 @@ summarize_uncertainty <- function(
     # Store the results in a list keeping consistency in the structure with
     # other healthiar functions
     uncertainty <-
-      list(
+      base::list(
         uncertainty_main = summary,
-        uncertainty_detailed = list(attribute_by_simulation = attribute_by_sim,
-                                    attribute_by_geo = attribute_by_geo,
-                                    uncertainty_by_geo = summary_by_geo))
+        uncertainty_detailed =
+          base::list(attribute_by_simulation = attribute_by_sim,
+                     attribute_by_geo = attribute_by_geo,
+                     uncertainty_by_geo = summary_by_geo))
 
   }
 
