@@ -130,12 +130,15 @@ get_output <-
       output_last <- output[["health_detailed"]][["impact_agg_exp_cat"]]
 
     }
+      output[["health_detailed"]][["impact_disaggregated"]]  <-
+        output_last
 
     # Aggregate results by higher geo_level
     # only if geo_id_aggregated is defined
     if("geo_id_aggregated" %in% names(output_last)){
 
-      output[["health_detailed"]][["impact_agg_geo"]]  <-
+
+      output[["health_detailed"]][["impact_aggregated"]]  <-
         output_last |>
         # Group by higher geo level
         dplyr::group_by(dplyr::across(dplyr::any_of(
@@ -143,13 +146,13 @@ get_output <-
           )))
 
         if (!"population" %in% names(output_last)) {
-          output[["health_detailed"]][["impact_agg_geo"]]  <- output[["health_detailed"]][["impact_agg_geo"]] |>
+          output[["health_detailed"]][["impact_aggregated"]]  <- output[["health_detailed"]][["impact_aggregated"]] |>
           dplyr::summarise(impact = sum(impact),
                            impact_rounded = round(impact),
                            .groups = "drop")
 
         } else {
-          output[["health_detailed"]][["impact_agg_geo"]]  <- output[["health_detailed"]][["impact_agg_geo"]] |>
+          output[["health_detailed"]][["impact_aggregated"]]  <- output[["health_detailed"]][["impact_aggregated"]] |>
           dplyr::summarise(impact = sum(impact),
                            impact_rounded = round(impact),
                            population = sum(population),
@@ -161,13 +164,13 @@ get_output <-
       ## Identify the joining columns
       # common_columns_for_aggregation <-
       #   dplyr::intersect(
-      #     base::names(output[["health_detailed"]][["impact_agg_geo"]]),
+      #     base::names(output[["health_detailed"]][["impact_aggregated"]]),
       #     base::names(output_last))
       ## Join data frames
       # TBD
 
 
-      output_last <- output[["health_detailed"]][["impact_agg_geo"]]
+      output_last <- output[["health_detailed"]][["impact_aggregated"]]
 
     }
 
