@@ -11,7 +11,7 @@
 #' @usage
 #' attribute_health(
 #'   # RR & AR
-#'   approach_risk = "relative_risk", # OR: "absolute_risk"
+#'   approach_risk = "relative_risk", # alternative: "absolute_risk"
 #'   exp_central, exp_lower = NULL, exp_upper = NULL,
 #'   cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
 #'   pop_exp = NULL,
@@ -30,7 +30,7 @@
 #'   population = NULL,
 #'   # YLD (OPTIONAL)
 #'   dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
-#'   duration_central = 1, duration_lower = NULL, duration_upper = NULL,
+#'   duration_central = 1, duration_lower = NULL, duration_upper = NULL
 #' )
 
 #' @details
@@ -55,54 +55,53 @@
 #' To the other function arguments not listed above you can feed either a vector of the same length or a single value (will be recycled).
 
 #' @details
-#' The health metric you put in (e.g. absolute disease cases, deaths per 100'000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if you enter a disability weight the attributable impact will be in YLD (years lived with disability).
+#' The health metric you put in (e.g. absolute disease cases, deaths per 100 000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if you enter a disability weight the attributable impact will be in YLD (years lived with disability).
 
 #' @details
 #' \strong{Function arguments}
 #' @details
-#' \code{erf_eq_central}, \code{erf_eq_lower}, \code{erf_eq_upper}
-#' @details
-#' If a value is entered here do not enter any values to \code{rr_central}, \code{rr_lower}, \code{rr_upper}, \code{rr_increment}, \code{erf_shape} arguments.
-#' Enter the exposure-response function as a \code{string} formula containing only one variable \emph{c} representing concentration/exposure, e.g. \code{"3+c+c^2"},  or as a \code{function}, e.g. output from \code{stats::splinefun()} or \code{stats::approxfun()}.
-#' @details
-#' If you have x-axis (exposure) and y-axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use a cubic spline natural interpolation to derive the exposure-response function using, e.g. \code{stats::splinefun(x, y, method="natural")}.
-#' @details
 #' \code{exp_central}, \code{exp_lower}, \code{exp_upper}
 #' @details
-#' In case of exposure bands enter the one exposure value per band (e.g. the mean of the lower and upper bounds).
-#' @details
-#' \code{prop_pop_exp}
-#' @details
-#' Indicates the share of the population exposed to each exposure category. In the AR pathway must be used in combination with \code{pop_exp}.
+#' In case of exposure bands enter only one exposure value per band (e.g. the means of the lower and upper bounds of the exposure bands).
 #' @details
 #' \code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper}
 #' @details
-#' The cutoff level refers to the exposure level below which no health effects occur. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
+#' The cutoff level refers to the exposure level below which no health effects occur in the same unit as the exposure. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
+#' @details
+#' \code{prop_pop_exp}
+#' @details
+#' \emph{Optional in AR pathways.} In RR pathways indicates the share(s) (value(s) from 0 until and including 1) of the total population which is exposed to the exposure (categories). In AR pathways it is optional and only to be used combination with \code{pop_exp}: the sum of \code{pop_exp} will be used as the reference population to which the shares specified in \code{prop_pop_exp} apply.
+#' @details
+#' \code{erf_eq_central}, \code{erf_eq_lower}, \code{erf_eq_upper}
+#' @details
+#' \emph{Required in AR pathways; in RR pathways required only if rr_... arguments not specified.} Enter the exposure-response function as a \code{function}, e.g. output from \code{stats::splinefun()} or \code{stats::approxfun()}, or as a \code{string} formula, e.g. \code{"3+c+c^2"} (with the \emph{c} representing the concentration/exposure).
+#' @details
+#' If you have x-axis (exposure) and y-axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use e.g. \code{stats::splinefun(x, y, method="natural")} to derive the exposure-response function (in this example using a cubic spline natural interpolation).
 #' @details
 #' \code{rr_increment}
 #' @details
-#' Relative risks from the literature are valid for a specific increment in the exposure, in case of air pollution often 10 or 5 \eqn{µg/m^3}).
+#' \emph{Only applicable in RR pathways.} Relative risks from the literature are valid for a specific increment in the exposure, in case of air pollution often 10 or 5 \eqn{µg/m^3}).
 #' @details
 #' \code{bhd_central}, \code{bhd_lower}, \code{bhd_upper}
 #' @details
-#' Baseline health data for each exposure category must be entered.
+#' \emph{Only applicable in RR pathways.} Baseline health data for each exposure category must be entered.
 #' @details
 #' \code{geo_id_aggregated}, \code{geo_id_disaggregated}
 #' @details
-#' For example, if you provide the municipality names to \code{geo_id_disaggregated}, you might provide to \code{geo_id_aggregated} the corresponding region / canton / province.
+#' \emph{Only applicable in assessments with multiple geographic units.} For example, if you provide the names of the municipalities under analysis to \code{geo_id_disaggregated}, you might provide to \code{geo_id_aggregated} the corresponding region / canton / province names.
 #' Consequently, the vectors fed to \code{geo_id_disaggregated} and \code{geo_id_aggregated} must be of the same length.
-#' @details
-#' \code{population}
-#' @details
-#' Used to assess impact rate per 100'000 inhabitants.
-#' @details
-#' \code{duration_central}, \code{duration_lower}, \code{duration_upper}
-#' @details
-#' The default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).
 #' @details
 #' \code{info}
 #' @details
-#' Information entered to this argument will be added as column(s) (with the suffix \code{_info}) to the results table.
+#' \emph{Optional argument.} Information entered to this argument will be added as column(s) (with the suffix \code{_info}) to the results table.
+#' @details
+#' \code{population}
+#' @details
+#' \emph{Optional argument.} The total population entered here is used to determine impact rate per 100 000 population.
+#' @details
+#' \code{duration_central}, \code{duration_lower}, \code{duration_upper}
+#' @details
+#' \emph{Only applicable in assessments of YLD (years lived with disability).} The default of \code{duration_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).
 
 #' @details
 #' \strong{Equations (relative risk)}
@@ -202,24 +201,27 @@
 
 
 attribute_health <-
-  function(approach_risk = "relative_risk",
-           erf_shape = NULL,
-           rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-           rr_increment = NULL,
-           erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-           exp_central,
-           exp_lower = NULL, exp_upper = NULL,
-           pop_exp = NULL,
-           prop_pop_exp = 1,
-           cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
-           bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
-           geo_id_disaggregated = "a", geo_id_aggregated = NULL,
-           population = NULL,
-           ## Only for for YLD
-           dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
-           duration_central = 1, duration_lower = NULL, duration_upper = NULL,
-           ## Meta info
-           info = NULL){
+  function(
+    # RR & AR
+    approach_risk = "relative_risk",
+    exp_central, exp_lower = NULL, exp_upper = NULL,
+    cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
+    pop_exp = NULL,
+    prop_pop_exp = 1,
+    erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
+    # RR ONLY
+    rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
+    rr_increment = NULL,
+    erf_shape = NULL,
+    bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
+    # ITERATION (OPTIONAL)
+    geo_id_disaggregated = "a", geo_id_aggregated = NULL,
+    ## YLD (OPTIONAL)
+    dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
+    duration_central = 1, duration_lower = NULL, duration_upper = NULL,
+    # META (OPTIONAL)
+    info = NULL,
+    population = NULL){
 
     # Get what the arguments that the user passed
     used_args <- base::names(base::as.list(base::match.call()))[-1] # drop function name
@@ -230,28 +232,36 @@ attribute_health <-
 
     output <-
       healthiar:::attribute_master(
-        is_lifetable = FALSE,
+        # RR & AR
         approach_risk = approach_risk,
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
-        prop_pop_exp = prop_pop_exp,
-        pop_exp,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
+        pop_exp = pop_exp,
+        prop_pop_exp = prop_pop_exp,
+        erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
+        # RR ONLY
         rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
         rr_increment = rr_increment,
         erf_shape = erf_shape,
-        erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
         bhd_central = bhd_central, bhd_lower = bhd_lower, bhd_upper = bhd_upper,
+        # ITERATION (OPTIONAL)
+        geo_id_disaggregated = geo_id_disaggregated , geo_id_aggregated = geo_id_aggregated,
+        # META (OPTIONAL)
+        info = info,
         population = population,
-        approach_exposure = NULL,
-        approach_newborns = NULL,
-        first_age_pop = NULL, last_age_pop = NULL,
-        population_midyear_male = NULL, population_midyear_female = NULL,
-        year_of_analysis = NULL,
-        min_age = NULL, max_age = NULL,
+        # YLD (OPTIONAL)
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
         duration_central = duration_central, duration_lower =  duration_lower, duration_upper = duration_upper,
-        geo_id_disaggregated = geo_id_disaggregated , geo_id_aggregated = geo_id_aggregated,
-        info = info,
+        # LIFE TABLE (OPTIONAL)
+        is_lifetable = FALSE,
+        first_age_pop = NULL, last_age_pop = NULL,
+        population_midyear_male = NULL, population_midyear_female = NULL,
+        deaths_male = NULL, deaths_female = NULL,
+        min_age = NULL, max_age = NULL,
+        approach_exposure = NULL,
+        approach_newborns = NULL,
+        year_of_analysis = NULL,
+        # HIDDEN ARGUMENTS
         .unused_args = unused_args)
 
     return(output)

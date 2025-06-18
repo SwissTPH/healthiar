@@ -6,7 +6,7 @@
 \usage{
 attribute_health(
   # RR & AR
-  approach_risk = "relative_risk", # OR: "absolute_risk"
+  approach_risk = "relative_risk", # alternative: "absolute_risk"
   exp_central, exp_lower = NULL, exp_upper = NULL,
   cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
   pop_exp = NULL,
@@ -25,39 +25,39 @@ attribute_health(
   population = NULL,
   # YLD (OPTIONAL)
   dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
-  duration_central = 1, duration_lower = NULL, duration_upper = NULL,
+  duration_central = 1, duration_lower = NULL, duration_upper = NULL
 )
 }
 \arguments{
-\item{approach_risk}{\emph{AR & RR} \code{String value} specifying the risk method. Options: \code{"relative_risk"} (default) or \code{"absolute_risk"}.}
+\item{approach_risk}{\code{String value} specifying the risk method. Options: \code{"relative_risk"} (default) or \code{"absolute_risk"}.}
 
-\item{erf_shape}{\emph{RR} | \code{String value} specifying the shape of the exposure-response function to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Argument is applicable only in RR pathway}.}
+\item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the exposure level(s) to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
 
-\item{rr_central, rr_lower, rr_upper}{\emph{RR ONLY} \code{Numeric value} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds. \emph{RR ONLY}}
+\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the exposure cut-off value and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.}
 
-\item{rr_increment}{\emph{RR} \code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. See Details for more info. Argument is applicable only in RR pathway.}
+\item{pop_exp}{\code{Numeric vector} referring to the population exposed to each exposure category. \emph{Required in AR pathways; optional in RR pathways.}}
 
-\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\emph{AR & RR} | \code{String} or \code{function} specifying the exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info.}
+\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the fraction(s) of the total population exposed to the exposure (categories). Default: 1. See Details for more info. \emph{Optional in AR pathways.}}
 
-\item{exp_central, exp_lower, exp_upper}{\strong{AR & RR} \code{Numeric value} or \code{numeric vector} specifying the exposure level(s) to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
+\item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the exposure-response function and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info. \emph{Required in AR pathways; in RR pathways required only if \code{rr_...} argument(s) not specified.}}
 
-\item{pop_exp}{\code{Numeric vector} referring to the population exposed for each exposure category. For absolute risk, the value of this argument must be entered, for relative risk it is optional.}
+\item{rr_central, rr_lower, rr_upper}{\code{Numeric value} specifying the central estimate of the relative risk and (optionally) the corresponding lower and upper 95\% confidence interval bounds. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
-\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the fraction(s) (value from 0 until and including 1) of the total population exposed to the exposure (categories). Default: 1. See Details for more info.}
+\item{rr_increment}{\code{Numeric value} specifying the concentration increment for which the provided relative risk is valid. See Details for more info. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
-\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the exposure cut-off in \eqn{µg/m^3} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. Only applicable in relative risk pathway. See Details for more info.}
+\item{erf_shape}{\code{String value} specifying the shape of the exposure-response function to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
-\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the baseline health data of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds. Argument is only applicable in RR pathway. See Details for more info.}
+\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the baseline health data of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}}
 
-\item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing the unique ID codes of each geographic area considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing a higher-level ID at which the geographic areas will be aggregated (\code{geo_id_disaggregated}). Argument must be entered for iterations. See Details for more info.}
+\item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing unique IDs of each geographic area considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_disaggregated}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
-\item{population}{\code{Numeric value} or \code{numeric vector} specifying the total population, including both exposed and non-exposed. See Details for more info.}
+\item{dw_central, dw_lower, dw_upper}{\code{Numeric value} or \code{numeric vector} providing the disability weight associated with the morbidity health outcome of interest and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. \emph{Only applicable in assessments of YLD (years lived with disability).}}
 
-\item{dw_central, dw_lower, dw_upper}{\code{Numeric value} or \code{numeric vector} providing the disability weight associated with the morbidity health outcome of interest and (optionally) the corresponding lower bound and the upper 5\% confidence interval bounds.}
+\item{duration_central, duration_lower, duration_upper}{\code{Numeric value} or \code{numeric vector} providing the duration associated with the morbidity health outcome of interest in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval. Default: 1. See Details for more info. \emph{Only applicable in assessments of YLD (years lived with disability).}}
 
-\item{duration_central, duration_lower, duration_upper}{\code{Numeric value} or \code{numeric vector} providing the duration associated with the morbidity health outcome of interest in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval. Default: 1. Optional argument. See Details for more info.}
+\item{info}{\code{String}, \code{data frame} or \code{tibble} specifying information to be linked with the assessment. See Details for more info. \emph{Optional argument.}}
 
-\item{info}{\code{String} or \code{data frame} specifying information to be linked with the assessment. Optional argument. See Details for more info.}
+\item{population}{\code{Numeric value} or \code{numeric vector} specifying the total population (exposed + non-exposed), to calculate attributable impacts per 100 000 population. See Details for more info. \emph{Optional argument.}}
 }
 \value{
 This function returns two \code{lists}:
@@ -68,7 +68,7 @@ This function returns two \code{lists}:
 
 The results contain columns such as:
 \itemize{
- \item \code{pop_fraction} population attributable fraction; only for assessments using relative risk
+ \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
  \item \code{impact} attributable health burden/impact
  \item And many more
  }
@@ -100,53 +100,52 @@ The length of each of these vectors listed above must be: length = (number of ge
 
 To the other function arguments not listed above you can feed either a vector of the same length or a single value (will be recycled).
 
-The health metric you put in (e.g. absolute disease cases, deaths per 100'000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if you enter a disability weight the attributable impact will be in YLD (years lived with disability).
+The health metric you put in (e.g. absolute disease cases, deaths per 100 000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if you enter a disability weight the attributable impact will be in YLD (years lived with disability).
 
 \strong{Function arguments}
 
-\code{erf_eq_central}, \code{erf_eq_lower}, \code{erf_eq_upper}
-
-If a value is entered here do not enter any values to \code{rr_central}, \code{rr_lower}, \code{rr_upper}, \code{rr_increment}, \code{erf_shape} arguments.
-Enter the exposure-response function as a \code{string} formula containing only one variable \emph{c} representing concentration/exposure, e.g. \code{"3+c+c^2"},  or as a \code{function}, e.g. output from \code{stats::splinefun()} or \code{stats::approxfun()}.
-
-If you have x-axis (exposure) and y-axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use a cubic spline natural interpolation to derive the exposure-response function using, e.g. \code{stats::splinefun(x, y, method="natural")}.
-
 \code{exp_central}, \code{exp_lower}, \code{exp_upper}
 
-In case of exposure bands enter the one exposure value per band (e.g. the mean of the lower and upper bounds).
-
-\code{prop_pop_exp}
-
-Indicates the share of the population exposed to each exposure category. In the AR pathway must be used in combination with \code{pop_exp}.
+In case of exposure bands enter only one exposure value per band (e.g. the means of the lower and upper bounds of the exposure bands).
 
 \code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper}
 
-The cutoff level refers to the exposure level below which no health effects occur. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
+The cutoff level refers to the exposure level below which no health effects occur in the same unit as the exposure. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
+
+\code{prop_pop_exp}
+
+\emph{Optional in AR pathways.} In RR pathways indicates the share(s) (value(s) from 0 until and including 1) of the total population which is exposed to the exposure (categories). In AR pathways it is optional and only to be used combination with \code{pop_exp}: the sum of \code{pop_exp} will be used as the reference population to which the shares specified in \code{prop_pop_exp} apply.
+
+\code{erf_eq_central}, \code{erf_eq_lower}, \code{erf_eq_upper}
+
+\emph{Required in AR pathways; in RR pathways required only if rr_... arguments not specified.} Enter the exposure-response function as a \code{function}, e.g. output from \code{stats::splinefun()} or \code{stats::approxfun()}, or as a \code{string} formula, e.g. \code{"3+c+c^2"} (with the \emph{c} representing the concentration/exposure).
+
+If you have x-axis (exposure) and y-axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use e.g. \code{stats::splinefun(x, y, method="natural")} to derive the exposure-response function (in this example using a cubic spline natural interpolation).
 
 \code{rr_increment}
 
-Relative risks from the literature are valid for a specific increment in the exposure, in case of air pollution often 10 or 5 \eqn{µg/m^3}).
+\emph{Only applicable in RR pathways.} Relative risks from the literature are valid for a specific increment in the exposure, in case of air pollution often 10 or 5 \eqn{µg/m^3}).
 
 \code{bhd_central}, \code{bhd_lower}, \code{bhd_upper}
 
-Baseline health data for each exposure category must be entered.
+\emph{Only applicable in RR pathways.} Baseline health data for each exposure category must be entered.
 
 \code{geo_id_aggregated}, \code{geo_id_disaggregated}
 
-For example, if you provide the municipality names to \code{geo_id_disaggregated}, you might provide to \code{geo_id_aggregated} the corresponding region / canton / province.
+\emph{Only applicable in assessments with multiple geographic units.} For example, if you provide the names of the municipalities under analysis to \code{geo_id_disaggregated}, you might provide to \code{geo_id_aggregated} the corresponding region / canton / province names.
 Consequently, the vectors fed to \code{geo_id_disaggregated} and \code{geo_id_aggregated} must be of the same length.
-
-\code{population}
-
-Used to assess impact rate per 100'000 inhabitants.
-
-\code{duration_central}, \code{duration_lower}, \code{duration_upper}
-
-The default of \code{duratoin_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).
 
 \code{info}
 
-Information entered to this argument will be added as column(s) (with the suffix \code{_info}) to the results table.
+\emph{Optional argument.} Information entered to this argument will be added as column(s) (with the suffix \code{_info}) to the results table.
+
+\code{population}
+
+\emph{Optional argument.} The total population entered here is used to determine impact rate per 100 000 population.
+
+\code{duration_central}, \code{duration_lower}, \code{duration_upper}
+
+\emph{Only applicable in assessments of YLD (years lived with disability).} The default of \code{duration_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).
 
 \strong{Equations (relative risk)}
 
