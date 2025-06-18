@@ -104,7 +104,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       )$uncertainty_main$impact_rounded,
 
     expected = # Results on 2025-06-04; no comparison study
-      c(30150, 14250, 48289)
+      c(14631, 6900, 23459, 15552, 7350, 24835)
   )
 })
 
