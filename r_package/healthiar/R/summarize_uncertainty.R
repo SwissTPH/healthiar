@@ -92,13 +92,13 @@ summarize_uncertainty <- function(
     if(geo_id == "geo_id_disaggregated"){
 
       columns_to_unnest <- attribute_by_sim |>
-      dplyr::select(dplyr::contains(c(geo_id, "_central", "impact"))) |>
+      dplyr::select(dplyr::contains(c("geo_id", "_central", "impact"))) |>
       base::names()
 
     }else if(geo_id == "geo_id_aggregated"){
 
       columns_to_unnest <- attribute_by_sim |>
-        dplyr::select(dplyr::contains(c(geo_id, "impact"))) |>
+        dplyr::select(dplyr::contains(c("geo_id_aggregated", "impact"))) |>
         base::names()
 
     }
@@ -529,6 +529,8 @@ summarize_uncertainty <- function(
   }
 
 
+
+
   only_new_values_for_replacement <-
     dplyr::select(template_with_sim_grouped,
                   -dplyr::any_of(c("sim_id", "geo_id_disaggregated")))
@@ -553,12 +555,19 @@ summarize_uncertainty <- function(
     \(x) x$health_detailed$impact_disaggregated$impact
   )
 
+  # Extract geo_id_aggregated already with the right format to be added below
+  geo_id_aggregated <- purrr::map(
+    output_sim,
+    \(x) x$health_detailed$impact_disaggregated$geo_id_aggregated
+  )
+
 
   # Create a tibble with the input, output health_main and impact
   attribute_by_sim_disaggregated <-
     # Add columns (one row for each assessment)
     # input_args
     dplyr::mutate(template_with_sim_grouped,
+                  geo_id_aggregated = geo_id_aggregated,
                   input = input_args_for_all_sim,
                   output = output_sim,
                   health_main = health_main,
@@ -605,21 +614,10 @@ summarize_uncertainty <- function(
       \(x) x$health_main$impact
     )
 
-    # Extract geo_id_aggregated already with the right format to be added below
-    geo_id_aggregated <- purrr::map(
-      output_sim,
-      \(x) x$health_main$geo_id_aggregated
-    )
-
     # Create a tibble with the input, output health_main and impact
     attribute_by_sim_aggregated <-
-      # Add columns (one row for each assessment)
-      # input_args
-      dplyr::mutate(template_with_sim_grouped,
-                    input = input_args_for_all_sim,
-                    output = output_sim,
-                    health_main = health_main,
-                    geo_id_aggregated = geo_id_aggregated,
+      # Modify impact column to have the aggregated ones
+      dplyr::mutate(attribute_by_sim_disaggregated,
                     impact = impact_aggregated)
 
     # Obtain results of simulations organized by geo unit
@@ -671,7 +669,7 @@ summarize_uncertainty <- function(
   } else if (is_two_cases){
 
     # Use summarize_uncertainty_based_on_input() twice:
-browser()
+
     # Once for the scenario 1
     attribute_1 <-
       summarize_uncertainty_based_on_input(
@@ -739,9 +737,11 @@ browser()
                            geo_id = "geo_id_disaggregated")
 
     # Get summary (uncertainty) for each geo_id_disaggregated
-    summary_by_geo <- get_summary(attribute = attribute_by_geo_disaggregated,
-                                  grouping_var = "geo_id_disaggregated")
+    summary_by_geo_disaggregated <-
+      get_summary(attribute = attribute_by_geo_disaggregated,
+                  grouping_var = "geo_id_disaggregated")
 
+    summary_by_geo <- summary_by_geo_disaggregated
 
     if(! "geo_id_aggregated" %in% names(output_attribute$health_main)){
       summary <- summary_by_geo
@@ -775,11 +775,11 @@ browser()
     # other healthiar functions
     uncertainty <-
       base::list(
-        uncertainty_main = summary,
+        uncertainty_main = summary_by_geo,
         uncertainty_detailed =
           base::list(attribute_by_sim_disaggregated = attribute_by_sim_disaggregated,
-                     attribute_by_geo = attribute_by_geo,
-                     uncertainty_by_geo = summary_by_geo))
+                     attribute_by_geo = attribute_by_geo_disaggregated,
+                     uncertainty_by_geo = summary_by_geo_disaggregated))
 
   }
 
