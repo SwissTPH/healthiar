@@ -40,7 +40,37 @@
 #' @inherit attribute_master return
 
 #' @examples
-#' TBD
+#' # Goal: comparison of two scenarios with delta approach
+#'
+#' scenario_A <- attribute_health(
+#'   exp_central = 8.85,   # EXPOSURE 1
+#'   cutoff_central = 5,
+#'   bhd_central = 25000,
+#'   approach_risk = "relative_risk",
+#'   erf_shape = "log_linear",
+#'   rr_central = 1.118,
+#'   rr_increment = 10
+#' )
+#'
+#' scenario_B <- attribute_health(
+#'   exp_central = 6,     # EXPOSURE 2
+#'   cutoff_central = 5,
+#'   bhd_central = 25000,
+#'   approach_risk = "relative_risk",
+#'   erf_shape = "log_linear",
+#'   rr_central = 1.118,
+#'   rr_increment = 10
+#' )
+#'
+#' results_comparison <- compare(
+#' approach_comparison = "delta",
+#' output_attribute_1 = scenario_A,
+#' output_attribute_2 = scenario_B
+#' )
+#'
+#' # Inspect the difference, stored in the "impact" column
+#' results_comparison$health_main |>
+#'   dplyr::select(impact, impact_1, impact_2)
 
 #' @author Alberto Castro & Axel Luyten
 

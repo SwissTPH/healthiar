@@ -39,7 +39,32 @@ Disability weights values of the morbidity health outcome of interest are simula
 Duration values of the morbidity health outcome of interest are simulated based on a normal distribution using \code{stats::rnorm()} with \code{mean = duration_central} and a standard deviation based on corresponding lower and upper 95\% exposure confidence interval values.
 }
 \examples{
-TODO
+# Goal: obtain summary uncertainty for an existing attribute_health()
+# output
+
+## First create an assessment
+attribute_health_output <- attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.369,
+  rr_lower = 1.124,
+  rr_upper = 1.664,
+  rr_increment = 10,
+  exp_central = 8.85,
+  exp_lower = 8,
+  exp_upper = 10,
+  cutoff_central = 5,
+  bhd_central = 30747,
+  bhd_lower = 28000,
+  bhd_upper = 32000
+)
+
+## Then run Monte Carlo simulation
+results <- summarize_uncertainty(
+  output_attribute = attribute_health_output,
+  n_sim = 100
+)
+
+results$uncertainty_main$impact # Central, lower and upper estimates
 }
 \author{
 Alberto Castro & Axel Luyten

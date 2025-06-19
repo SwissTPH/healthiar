@@ -125,7 +125,54 @@ For example, would be 10 if one is interested in the impacts of exposure during 
 The \code{min_age} default value 30 implies that all adults aged 30 or older will be affected by the exposure; \code{max_age} analogeously specifies the age above which no health effects of the exposure are considered.
 }
 \examples{
-TBD
+# Goal: determine YLL attributable to air pollution exposure during
+# one year using the life table approach
+
+results <- attribute_lifetable(
+  health_outcome = "yll",
+  approach_exposure = "single_year",
+  approach_newborns = "without_newborns",
+  exp_central = 8.85,
+  prop_pop_exp = 1,
+  cutoff_central = 5,
+  rr_central =  1.118,
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  first_age_pop = 0,
+  last_age_pop = 99,
+  deaths_male = exdat_pop_1$number_of_deaths_male,
+  deaths_female = exdat_pop_1$number_of_deaths_female,
+  population_midyear_male = exdat_pop_male$population_2019,
+  population_midyear_female = exdat_pop_female$population_2019,
+  year_of_analysis = 2019,
+  min_age = 20
+)
+
+results$health_main$impact # Attributable YLL
+
+# Goal: determine attributable pre-mature deaths due to air pollution
+# exposure during one year using the life table approach
+
+results_pm_deaths <- attribute_lifetable(
+health_outcome = "deaths",
+approach_exposure = "single_year",
+exp_central = 8.85,
+prop_pop_exp = 1,
+cutoff_central = 5,
+rr_central =  1.118,
+rr_increment = 10,
+erf_shape = "log_linear",
+first_age_pop = 0,
+last_age_pop = 99,
+deaths_male = exdat_pop_1$number_of_deaths_male,
+deaths_female = exdat_pop_1$number_of_deaths_female,
+population_midyear_male = exdat_pop_male$population_2019,
+population_midyear_female = exdat_pop_female$population_2019,
+year_of_analysis = 2019,
+min_age = 20
+)
+
+results_pm_deaths$health_main$impact # Attributable pre-mature deaths
 }
 \author{
 Alberto Castro & Axel Luyten

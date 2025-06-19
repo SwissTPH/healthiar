@@ -3,7 +3,7 @@ title: "examples_from_fun_doc"
 output: html_document
 ---
 
-# atrribute_health examples
+# atrribute_health
 
 ```{r}
 results <- attribute_health(
@@ -15,7 +15,19 @@ cutoff_central = 5,            # μg / m^3
 bhd_central = 30747            # Baseline health data: lung cancer incidence
 )
 
-print(results$health_main$impact_rounded) # Attributable cases
+results$health_main$impact_rounded # Attributable cases
+```
+
+```{r}
+
+results <- attribute_health(
+  approach_risk = "absolute_risk",
+  exp_central = c(57.5, 62.5, 67.5, 72.5, 77.5),
+  pop_exp = c(387500, 286000, 191800, 72200, 7700),
+  erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
+)
+
+results$health_main$impact_rounded # Attributable cases
 ```
 
 ```{r}
@@ -37,5 +49,332 @@ results$health_detailed$impact_raw |> dplyr::select(
   geo_id_aggregated,
   impact_rounded
 )
+```
+
+```{r}
+# Goal: determine attributable YLD (years lived with disability)
+results  <- attribute_health(
+  exp_central = 8.85,
+  prop_pop_exp = 1,
+  cutoff_central = 5,
+  bhd_central = 1000,
+  rr_central = 1.1, 
+  rr_increment = 10, 
+  erf_shape = "log_linear",
+  duration_central = 100,
+  dw_central = 0.5,
+  info = "pm2.5_yld"
+) 
+
+results$health_main$impact
+```
+
+
+# attribute_lifetable
+
+```{r}
+results <- attribute_lifetable(
+  health_outcome = "yll",
+  approach_exposure = "single_year",
+  approach_newborns = "without_newborns",
+  exp_central = 8.85,
+  prop_pop_exp = 1,
+  cutoff_central = 5,
+  rr_central =  1.118,
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  first_age_pop = 0,
+  last_age_pop = 99,
+  deaths_male = exdat_pop_1$number_of_deaths_male,
+  deaths_female = exdat_pop_1$number_of_deaths_female,
+  population_midyear_male = exdat_pop_male$population_2019,
+  population_midyear_female = exdat_pop_female$population_2019,
+  year_of_analysis = 2019,
+  min_age = 20
+)
+
+results$health_main$impact # Attributable YLL
+```
+
+```{r}
+
+results_pm_deaths <- attribute_lifetable(
+health_outcome = "deaths",
+approach_exposure = "single_year",
+exp_central = 8.85,
+prop_pop_exp = 1,
+cutoff_central = 5,
+rr_central =  1.118,
+rr_increment = 10,
+erf_shape = "log_linear",
+first_age_pop = 0,
+last_age_pop = 99,
+deaths_male = exdat_pop_1$number_of_deaths_male,
+deaths_female = exdat_pop_1$number_of_deaths_female,
+population_midyear_male = exdat_pop_male$population_2019,
+population_midyear_female = exdat_pop_female$population_2019,
+year_of_analysis = 2019,
+min_age = 20
+)
+
+results_pm_deaths$health_main$impact # Attributable pre-mature deaths
+```
+
+# summarize_uncertainty
+
+```{r}
+attribute_health_output <- attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.369, 
+  rr_lower = 1.124, 
+  rr_upper = 1.664,
+  rr_increment = 10, 
+  exp_central = 8.85, 
+  exp_lower = 8, 
+  exp_upper = 10,
+  cutoff_central = 5,
+  bhd_central = 30747, 
+  bhd_lower = 28000, 
+  bhd_upper = 32000
+) 
+
+## Then run Monte Carlo simulation
+results <- summarize_uncertainty(
+  output_attribute = attribute_health_output,
+  n_sim = 100
+)
+
+results$uncertainty_main$impact
+```
+
+# attribute_mod
+
+```{r}
+
+scenario_A <- attribute_health(
+  exp_central = 8.85,   # EXPOSURE 1
+  cutoff_central = 5, 
+  bhd_central = 25000,
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.118,
+  rr_increment = 10
+)
+
+scenario_A$health_main$impact # Attributable impact in scenario A
+
+## Modify scenario (adjust exposure value)
+scenario_B <- attribute_mod(
+  output_attribute_1 = scenario_A, 
+  exp_central = 6
+)
+
+scenario_B$health_main$impact # Attributable impact in scenario B
+```
+
+# daly
+
+```{r}
+
+## Create YLL (years of life lost) assessment
+results_yll <- attribute_lifetable(
+  health_outcome = "yll",
+  approach_exposure = "single_year",
+  exp_central = 8.85,
+  prop_pop_exp = 1,
+  cutoff_central = 5,
+  rr_central =  1.118, 
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  first_age_pop = 0,
+  last_age_pop = 99,
+  deaths_male = exdat_pop_1$number_of_deaths_male,
+  deaths_female = exdat_pop_1$number_of_deaths_female,
+  population_midyear_male = exdat_pop_male$population_2019, 
+  population_midyear_female = exdat_pop_female$population_2019,
+  year_of_analysis = 2019, 
+  min_age = 20
+) 
+
+## Create YLD (years lived with disability) assessment
+results_yld  <- attribute_health(
+  exp_central = 8.85,
+  prop_pop_exp = 1,
+  cutoff_central = 5,
+  bhd_central = 1000,
+  rr_central = 1.1, 
+  rr_increment = 10, 
+  erf_shape = "log_linear",
+  duration_central = 100,
+  dw_central = 0.5,
+  info = "pm2.5_yld"
+)
+
+results <- daly(
+  output_attribute_yll = results_yll,
+  output_attribute_yld = results_yld
+)
+
+results$health_main |> 
+  dplyr::select(impact, impact_yll, impact_yld)
+
+```
+
+# monetize
+
+```{r}
+output_attribute <- attribute_health(
+  erf_shape = "log_linear",
+  rr_central = exdat_pm_copd$relative_risk, 
+  rr_increment = 10, 
+  exp_central = exdat_pm_copd$mean_concentration,
+  cutoff_central = exdat_pm_copd$cut_off_value,
+  bhd_central = exdat_pm_copd$incidence
+)
+
+results <- 
+  monetize(
+    output_attribute = output_attribute,
+    discount_shape = "exponential",
+    discount_rate = 0.03,
+    discount_years = 5,
+    valuation = 50000 # E.g. EURO
+  )
+
+results$monetization_main |> 
+  dplyr::select(impact, monetized_impact)
+```
+
+# multiexpose
+
+```{r}
+
+results_pm_copd <- attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.369, 
+  rr_increment = 10,
+  exp_central = 8.85,
+  cutoff_central = 5,
+  bhd_central = 30747
+)
+results_pm_copd$health_main$impact
+
+results_no2_copd <- attribute_mod(
+  output_attribute_1 = results_pm_copd,
+  exp_central = 10.9,
+  rr_central = 1.031
+)
+results_no2_copd$health_main$impact
+
+results <- multiexpose(
+  output_attribute_1 = results_pm_copd,
+  output_attribute_2 = results_no2_copd,
+  exposure_name_1 = "pm2.5",
+  exposure_name_2 = "no2",
+  approach = "multiplicative"
+)
+results$health_main$impact
+```
+
+# socialize
+
+```{r}
+
+exdat_mdi
+
+results_below_40 <-
+    healthiar::attribute_health(
+      exp_central = exdat_mdi$PM25_MEAN,
+      cutoff_central = 0,
+      rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
+      erf_shape = "log_linear",
+      rr_increment = 10,
+      bhd_central = exdat_mdi$MORTALITY_TOTAL,
+      population = exdat_mdi$POPULATION,
+      geo_id_disaggregated = exdat_mdi$CS01012020)
+
+results_40_plus <-
+    healthiar::attribute_health(
+      exp_central = exdat_mdi$PM25_MEAN-0.1,
+      cutoff_central = 0,
+      rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
+      erf_shape = "log_linear",
+      rr_increment = 10,
+      bhd_central = ifelse(exdat_mdi$MORTALITY_TOTAL-10<0, 0, exdat_mdi$MORTALITY_TOTAL-10),
+      population = ifelse(exdat_mdi$POPULATION-10<0, 0, exdat_mdi$POPULATION-10),
+      geo_id_disaggregated = exdat_mdi$CS01012020)
+  
+results <- socialize(
+        age_group = c("below_40", "40_plus"),
+        ref_prop_pop = c(0.5, 0.5),
+        listed_output_attribute = list(results_below_40, results_40_plus),
+        geo_id_disaggregated = data$CS01012020,
+        social_indicator = data$score,
+        n_quantile = 10,
+        increasing_deprivation = TRUE)
+
+results$social_main |> 
+  dplyr::filter(difference_type == "relative") |> 
+  dplyr::filter(difference_compared_with == "overall") |> 
+  dplyr::select(first, last, difference_type, difference_value, comment)
+```
+
+# discount
+
+```{r}
+
+results <- discount(
+        impact = 2E4,
+        discount_shape = "exponential",
+        discount_rate = 0.03,
+        discount_years = 20)
+
+results$monetization_main$monetized_impact
+```
+
+# cba
+
+```{r}
+
+output_attribute <- attribute_health(
+  erf_shape = "log_linear", 
+  rr_central = 1.369, 
+  rr_increment = 10,  
+  exp_central = 8.85, 
+  cutoff_central = 5, 
+  bhd_central = 30747 
+) 
+
+results <- cba(
+  output_attribute = output_attribute,
+  valuation = 50000,
+  cost = 100000000,
+  discount_shape = "exponential",
+  discount_rate_benefit = 0.03,
+  discount_rate_cost = 0.03,
+  discount_years_benefit = 5,
+  discount_years_cost = 5
+)
+
+results$cba_main |>  
+  dplyr::select(benefit, cost, net_benefit)
+```
+
+get_mdi
+
+```{r}
+
+results <- prepare_mdi(
+        geo_id_disaggregated = exdat_get_mdi$id,
+        edu = exdat_get_mdi$edu,
+        unemployed = exdat_get_mdi$unemployed,
+        single_parent = exdat_get_mdi$single_parent,
+        pop_change = exdat_get_mdi$pop_change,
+        no_heating = exdat_get_mdi$no_heating,
+        n_quantile = 10)
+
+results |> 
+  dplyr::select(geo_id_disaggregated, MDI, MDI_index) |> 
+  dplyr::slice(1:15)
 ```
 

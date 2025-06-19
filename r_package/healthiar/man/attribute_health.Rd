@@ -211,8 +211,10 @@ results <- attribute_health(
   bhd_central = 30747            # Baseline health data: lung cancer incidence
  )
 
-print(results$health_main$impact_rounded) # Attributable cases
-# Goal: attribute cases of high annoyance to (road traffic) noise exposure using absolute risk
+results$health_main$impact_rounded # Attributable cases
+
+# Goal: attribute cases of high annoyance to (road traffic) noise exposure
+# using absolute risk
 
 results <- attribute_health(
   approach_risk = "absolute_risk",
@@ -221,9 +223,11 @@ results <- attribute_health(
   erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
 )
 
-print(results$health_main$impact_rounded) # Attributable cases
+results$health_main$impact_rounded # Attributable high annoyance cases
+
 # Goal: attribute disease cases to PM2.5 exposure in multiple geographic
 # units, such as municipalities, provinces, countries, …
+
 results <- attribute_health(
   geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino"),
   geo_id_aggregated = c("Ger","Ger","Fra","Ita"),
@@ -244,6 +248,22 @@ results$health_detailed$impact_raw |> dplyr::select(
   geo_id_aggregated,
   impact_rounded
 )
+
+# Goal: determine attributable YLD (years lived with disability)
+results  <- attribute_health(
+  exp_central = 8.85,
+  prop_pop_exp = 1,
+  cutoff_central = 5,
+  bhd_central = 1000,
+  rr_central = 1.1,
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  duration_central = 100,
+  dw_central = 1,
+  info = "pm2.5_yld"
+)
+
+results$health_main$impact
 }
 \author{
 Alberto Castro & Axel Luyten

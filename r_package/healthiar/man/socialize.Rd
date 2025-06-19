@@ -54,8 +54,49 @@ Returns the impact (absolute and relative) theoretically attributable to the dif
 This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{listed_output_attribute}, it is assumed that all data come from a table and the argument refer to the columns of that table.
 }
 \examples{
-# Example of how to use the function
-function_name(param1 = value1, param2 = value2)
+# Goal: determine fraction of attributable health impact that can
+# be attributed to differences in deprivation between the geographic
+# units under analysis
+
+## Create assessments for multiple geographic units for the age group
+## 40 years and younger
+results_below_40 <- attribute_health(
+  exp_central = exdat_mdi$PM25_MEAN,
+  cutoff_central = 0,
+  rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
+  erf_shape = "log_linear",
+  rr_increment = 10,
+  bhd_central = exdat_mdi$MORTALITY_TOTAL,
+  population = exdat_mdi$POPULATION,
+  geo_id_disaggregated = exdat_mdi$CS01012020)
+
+## Create assessments for multiple geographic units for the age group
+## 40 years and older
+results_40_plus <- attribute_health(
+    exp_central = exdat_mdi$PM25_MEAN-0.1,
+    cutoff_central = 0,
+    rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
+    erf_shape = "log_linear",
+    rr_increment = 10,
+    bhd_central = ifelse(exdat_mdi$MORTALITY_TOTAL-10<0, 0, exdat_mdi$MORTALITY_TOTAL-10),
+    population = ifelse(exdat_mdi$POPULATION-10<0, 0, exdat_mdi$POPULATION-10),
+    geo_id_disaggregated = exdat_mdi$CS01012020)
+
+## Difference in attributable impacts between geographic units
+## that is attributable to differences in deprivation
+results <- socialize(
+  age_group = c("below_40", "40_plus"),
+  ref_prop_pop = c(0.5, 0.5),
+  listed_output_attribute = list(results_below_40, results_40_plus),
+  geo_id_disaggregated = data$CS01012020,
+  social_indicator = data$score,
+  n_quantile = 10,
+  increasing_deprivation = TRUE)
+
+results$social_main |>
+  dplyr::filter(difference_type == "relative") |>
+  dplyr::filter(difference_compared_with == "overall") |>
+  dplyr::select(first, last, difference_type, difference_value, comment)
 }
 \author{
 TODO

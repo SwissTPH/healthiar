@@ -9,7 +9,52 @@
 
 #' @author Alberto Castro & Axel Luyten
 
-#' @note Experimental function
+#' @examples
+#' # Goal: obtain DALY (disability-adjusted life years) from two existing
+#' # attribute_... outputs
+#'
+#' ## Create YLL (years of life lost) assessment
+#' results_yll <- attribute_lifetable(
+#'   health_outcome = "yll",
+#'   approach_exposure = "single_year",
+#'   exp_central = 8.85,
+#'   prop_pop_exp = 1,
+#'   cutoff_central = 5,
+#'   rr_central =  1.118,
+#'   rr_increment = 10,
+#'   erf_shape = "log_linear",
+#'   first_age_pop = 0,
+#'   last_age_pop = 99,
+#'   deaths_male = exdat_pop_1$number_of_deaths_male,
+#'   deaths_female = exdat_pop_1$number_of_deaths_female,
+#'   population_midyear_male = exdat_pop_male$population_2019,
+#'   population_midyear_female = exdat_pop_female$population_2019,
+#'   year_of_analysis = 2019,
+#'   min_age = 20
+#' )
+#'
+#' ## Create YLD (years lived with disability) assessment
+#' results_yld  <- attribute_health(
+#'   exp_central = 8.85,
+#'   prop_pop_exp = 1,
+#'   cutoff_central = 5,
+#'   bhd_central = 1000,
+#'   rr_central = 1.1,
+#'   rr_increment = 10,
+#'   erf_shape = "log_linear",
+#'   duration_central = 100,
+#'   dw_central = 0.5,
+#'   info = "pm2.5_yld"
+#' )
+#'
+#' results <- daly(
+#'   output_attribute_yll = results_yll,
+#'   output_attribute_yld = results_yld
+#' )
+#'
+#' # Attributable impact in DALY
+#' results$health_main |>
+#'   dplyr::select(impact, impact_yll, impact_yld)
 
 #' @export
 
