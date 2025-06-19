@@ -489,25 +489,6 @@ summarize_uncertainty <- function(
       dplyr::mutate(dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical_central),
                                   ~ purrr::map(.x, base::unique)))
 
-
-
-    # sim_vars_geo_identical <-
-    #   template_with_sim |>
-    #   dplyr::group_by(sim_id) |>
-    #   dplyr::summarize(
-    #     # Take the unique value of the duplicated ones because they are identical across geo units
-    #     dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical_central),
-    #                   ~ base::unique(.x)))|>
-    #   dplyr::right_join(
-    #     x = template_with_sim[, c("sim_id", geo_ids)],
-    #     by = "sim_id") |>
-    #   # Keep geo_id also when one geo unit, otherwise missing in code below
-    #   # Convert geo_id_disaggregated to list (instead of vector)
-    #   # to join below if needed
-    #   dplyr::mutate(geo_id_aggregated = base::list(base::unique(template_with_sim$geo_id_aggregated)),
-    #                 geo_id_disaggregated = base::list(base::unique(template_with_sim$geo_id_disaggregated)),
-    #                 .after = sim_id)
-
   } else { sim_vars_geo_identical <- NULL }
 
   # Remove the columns are not to be used in the replacement
