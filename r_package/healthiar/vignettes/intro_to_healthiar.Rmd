@@ -111,7 +111,7 @@ results_pm_copd <- attribute_health(
   exp_central = 8.85, # μg / m^3
   cutoff_central = 5, # μg / m^3
   bhd_central = 30747 # baseline health data: COPD incidence
-) 
+)
 ```
 
 ### Function call - Pre-loaded data

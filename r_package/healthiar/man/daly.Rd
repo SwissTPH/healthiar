@@ -15,7 +15,7 @@ This function returns two \code{lists}:
 
 The results contain columns such as:
 \itemize{
- \item \code{pop_fraction} population attributable fraction; only for assessments using relative risk
+ \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
  \item \code{impact} attributable health burden/impact
  \item And many more
  }
