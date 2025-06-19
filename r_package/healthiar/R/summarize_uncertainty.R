@@ -574,8 +574,12 @@ summarize_uncertainty <- function(
 
     # Create a tibble with the input, output health_main and impact
     attribute_by_sim <- attribute_by_sim_disaggregated |>
-      # Modify impact column to have the aggregated ones
+      # Modify geo_id_aggregated and impact column to the right format
+      # i.e. by geo_id_aggregated (less rows) and not by geo_id_disaggregated (more rows)
       dplyr::mutate(
+        geo_id_aggregated = purrr::map(
+          output_sim,
+          \(x) x$health_main$geo_id_aggregated),
         impact = purrr::map(
           output_sim,
           \(x) x$health_main$impact)
