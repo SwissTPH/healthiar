@@ -81,7 +81,7 @@ summarize_uncertainty <- function(
   }
 
   if(# If exposure distribution
-    base::max(input_table$exposure_dimension) > 1 &&
+    base::unique(output_attribute$health_detailed$impact_disaggregated$exposure_type) == "exposure_distribution" &&
     # If uncertainty in exposure
     (!base::is.null(input_args$exp_lower) |
       !base::is.null(input_args$exp_upper))){
@@ -168,9 +168,10 @@ summarize_uncertainty <- function(
     # In that cases compile_input() provide a geo_id and it is shown in impact_raw
     base::length(base::unique(input_table$geo_id_disaggregated))
 
+  # If exposure dimension is implemented:
   # Get the dimension of the exposure
   # (i.e. if pop-weighted mean => 1, if exposure distribution => >1 )
-  n_exp <- base::max(input_table$exposure_dimension)
+  # n_exp <- base::max(output_attribute$health_detailed$impact_disaggregated$exposure_dimension)
 
 
   ## Boolean variables ####
