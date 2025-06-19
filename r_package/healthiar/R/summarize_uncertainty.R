@@ -556,10 +556,13 @@ summarize_uncertainty <- function(
   )
 
   # Extract geo_id_aggregated already with the right format to be added below
-  geo_id_aggregated <- purrr::map(
-    output_sim,
+  # Avoid warning if geo_id_aggregated is NULL with the if statement
+  if(is.null(input_args[["geo_id_aggregated"]])){
+    geo_id_aggregated <- NULL
+  } else {
+    geo_id_aggregated <- purrr::map(output_sim,
     \(x) x$health_detailed$impact_disaggregated$geo_id_aggregated
-  )
+  )}
 
 
   # Create a tibble with the input, output health_main and impact
