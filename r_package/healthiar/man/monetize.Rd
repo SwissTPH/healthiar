@@ -36,6 +36,26 @@ TODO
 This function monetizes health impacts
 }
 \examples{
-# Example of how to use the function
-function_name(param1 = value1, param2 = value2)
+# Goal: monetize the attributable impacts of an existing healthiar
+# assessment
+output_attribute <- attribute_health(
+erf_shape = "log_linear",
+rr_central = exdat_pm_copd$relative_risk,
+rr_increment = 10,
+exp_central = exdat_pm_copd$mean_concentration,
+cutoff_central = exdat_pm_copd$cut_off_value,
+bhd_central = exdat_pm_copd$incidence
+)
+
+results <- monetize(
+  output_attribute = output_attribute,
+  discount_shape = "exponential",
+  discount_rate = 0.03,
+  discount_years = 5,
+  valuation = 50000 # E.g. EURO
+)
+
+# Attributable COPD cases its monetized impact
+results$monetization_main |>
+  dplyr::select(impact, monetized_impact)
 }

@@ -145,7 +145,6 @@ results <- attribute_lifetable(
   min_age = 20
 )
 
-print(results$health_main$impact)
 results$health_main$impact # Attributable YLL
 
 # Goal: determine attributable pre-mature deaths due to air pollution
