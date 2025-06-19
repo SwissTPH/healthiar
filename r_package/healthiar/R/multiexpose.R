@@ -11,6 +11,33 @@
 
 #' @note Experimental function
 
+#' @examples
+#' results_pm_copd <- attribute_health(
+#'   erf_shape = "log_linear",
+#'   rr_central = 1.369,
+#'   rr_increment = 10,
+#'   exp_central = 8.85,
+#'   cutoff_central = 5,
+#'   bhd_central = 30747
+#' )
+#' results_pm_copd$health_main$impact
+#'
+#' results_no2_copd <- attribute_mod(
+#'   output_attribute_1 = results_pm_copd,
+#'   exp_central = 10.9,
+#'   rr_central = 1.031
+#' )
+#' results_no2_copd$health_main$impact
+#'
+#' results <- multiexpose(
+#'   output_attribute_1 = results_pm_copd,
+#'   output_attribute_2 = results_no2_copd,
+#'   exposure_name_1 = "pm2.5",
+#'   exposure_name_2 = "no2",
+#'   approach = "multiplicative"
+#' )
+#' results$health_main$impact
+
 #' @export
 
 
