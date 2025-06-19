@@ -475,55 +475,22 @@ summarize_uncertainty <- function(
   geo_ids <-
     base::names(template_with_sim)[base::names(template_with_sim) %in% c("geo_id_aggregated", "geo_id_disaggregated")]
 
-
-  if(base::length(var_names_with_ci_geo_different) >= 1 ){
-
-    sim_vars_geo_different <-
-      template_with_sim |>
-      dplyr::group_by(sim_id) |>
-      dplyr::summarize(
-        # Pack in lists the values that are different in geo unit (as input_args)
-        dplyr::across(dplyr::all_of(c("geo_id_disaggregated",
-                                      var_names_with_ci_geo_different_central)),
-                      ~ base::list(.x)),
-        .groups = "drop")
-
-
-    } else { sim_vars_geo_different <- NULL }
+  template_with_sim_grouped <-
+    template_with_sim |>
+    dplyr::group_by(sim_id) |>
+    dplyr::summarize(
+      # Pack in lists the values that are different in geo unit (as input_args)
+      dplyr::across(dplyr::all_of(c("geo_id_disaggregated",
+                                    var_names_with_ci_central)),
+                    ~ base::list(.x)))
 
   if( base::length(var_names_with_ci_geo_identical) >= 1 ){
-
-    sim_vars_geo_identical <-
-      template_with_sim |>
-      dplyr::group_by(sim_id) |>
-      dplyr::summarize(
-        # Pack in lists the values that are different in geo unit (as input_args)
-        dplyr::across(dplyr::all_of(c("geo_id_disaggregated",
-                                      var_names_with_ci_geo_identical_central)),
-                      ~ base::list(.x))) |>
+    template_with_sim_grouped <-  template_with_sim_grouped |>
+      # Keep only unique values because they identical for all geo_id_disaggregated
       dplyr::mutate(dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical_central),
                                   ~ purrr::map(.x, base::unique)))
 
-  } else { sim_vars_geo_identical <- NULL }
-
-  # Remove the columns are not to be used in the replacement
-  if (!base::is.null(sim_vars_geo_different) && !base::is.null(sim_vars_geo_identical)) {
-    template_with_sim_grouped <- dplyr::left_join(
-      sim_vars_geo_different,
-      sim_vars_geo_identical,
-      by = c("sim_id",
-             #geo_ids))
-             "geo_id_disaggregated"))
-  } else if (!base::is.null(sim_vars_geo_different)) {
-    template_with_sim_grouped <- sim_vars_geo_different
-  } else if (!base::is.null(sim_vars_geo_identical)) {
-    template_with_sim_grouped <- sim_vars_geo_identical
-  } else {
-    template_with_sim_grouped <- NULL
   }
-
-
-
 
   only_new_values_for_replacement <-
     dplyr::select(template_with_sim_grouped,
