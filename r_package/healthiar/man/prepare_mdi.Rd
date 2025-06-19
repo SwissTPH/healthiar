@@ -66,15 +66,6 @@ Data completeness and imputation: ensure the dataset is as complete as possible.
 Imputation models should have an R² ≥ 0.7. If R² < 0.7, consider alternative data sources or methods.
 }
 \examples{
-mdi <- healthiar::prepare_mdi(
-  geo_id_disaggregated = exdat_prepare_mdi$id,
-  edu = exdat_prepare_mdi$edu,
-  unemployed = exdat_prepare_mdi$unemployed,
-  single_parent = exdat_prepare_mdi$single_parent,
-  pop_change = exdat_prepare_mdi$pop_change,
-  no_heating = exdat_prepare_mdi$no_heating,
-  n_quantile = 10
-  )
 # Goal: create the BEST-COST Multidimensional Deprivation Index for
 # a selection of geographic units
 
