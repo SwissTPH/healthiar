@@ -80,6 +80,16 @@ summarize_uncertainty <- function(
                call. = FALSE)
   }
 
+  if(# If exposure distribution
+    base::max(input_table$exposure_dimension) > 1 &&
+    # If uncertainty in exposure
+    (!base::is.null(input_args$exp_lower) |
+      !base::is.null(input_args$exp_upper))){
+    base::stop("Sorry, the summary of uncertainty for exposure in exposure distributions is not currently supported",
+               call. = FALSE)
+  }
+
+
 
 
   # FUNCTION TO SUMMARIZE UNCERTAINTY ######
