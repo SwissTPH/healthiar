@@ -75,6 +75,22 @@ mdi <- healthiar::prepare_mdi(
   no_heating = exdat_prepare_mdi$no_heating,
   n_quantile = 10
   )
+# Goal: create the BEST-COST Multidimensional Deprivation Index for
+# a selection of geographic units
+
+results <- prepare_mdi(
+  geo_id_disaggregated = exdat_get_mdi$id,
+  edu = exdat_get_mdi$edu,
+  unemployed = exdat_get_mdi$unemployed,
+  single_parent = exdat_get_mdi$single_parent,
+  pop_change = exdat_get_mdi$pop_change,
+  no_heating = exdat_get_mdi$no_heating,
+  n_quantile = 10
+)
+
+results |>
+  dplyr::select(geo_id_disaggregated, MDI, MDI_index) |>
+  dplyr::slice(1:15)
 }
 \author{
 TODO

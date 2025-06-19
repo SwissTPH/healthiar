@@ -36,6 +36,29 @@ Description of the return value.
 This function performs a cost-benefit analysis
 }
 \examples{
-# Example of how to use the function
-function_name(param1 = value1, param2 = value2)
+# Goal: performs a cost-benefit analysis using an existing output
+# of a attribute_... function
+
+output_attribute <- attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.369,
+  rr_increment = 10,
+  exp_central = 8.85,
+  cutoff_central = 5,
+  bhd_central = 30747
+)
+
+results <- cba(
+  output_attribute = output_attribute,
+  valuation = 50000,
+  cost = 100000000,
+  discount_shape = "exponential",
+  discount_rate_benefit = 0.03,
+  discount_rate_cost = 0.03,
+  discount_years_benefit = 5,
+  discount_years_cost = 5
+)
+
+results$cba_main |>
+  dplyr::select(benefit, cost, net_benefit)
 }

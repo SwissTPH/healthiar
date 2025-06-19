@@ -8,10 +8,19 @@
 #' @returns
 #' TBD
 
-#' @examples
-#' TBD
-
 #' @author Alberto Castro & Axel Luyten
+
+#' @examples
+#' # Goal: discount current attributable health impacts
+#'
+#' results <- discount(
+#'   impact = 2E4,
+#'   discount_shape = "exponential",
+#'   discount_rate = 0.03,
+#'   discount_years = 20
+#' )
+#'
+#' results$monetization_main$monetized_impact
 
 #' @export
 

@@ -3,7 +3,7 @@ title: "examples_from_fun_doc"
 output: html_document
 ---
 
-# atrribute_health examples
+# atrribute_health
 
 ```{r}
 results <- attribute_health(
@@ -70,7 +70,7 @@ results$health_main$impact
 ```
 
 
-# attribute_lifetable examples
+# attribute_lifetable
 
 ```{r}
 results <- attribute_lifetable(
@@ -120,7 +120,7 @@ min_age = 20
 results_pm_deaths$health_main$impact # Attributable pre-mature deaths
 ```
 
-# summarize_uncertainty examples
+# summarize_uncertainty
 
 ```{r}
 attribute_health_output <- attribute_health(
@@ -147,7 +147,7 @@ results <- summarize_uncertainty(
 results$uncertainty_main$impact
 ```
 
-# attribute_mod examples
+# attribute_mod
 
 ```{r}
 
@@ -317,5 +317,64 @@ results$social_main |>
   dplyr::filter(difference_type == "relative") |> 
   dplyr::filter(difference_compared_with == "overall") |> 
   dplyr::select(first, last, difference_type, difference_value, comment)
+```
+
+# discount
+
+```{r}
+
+results <- discount(
+        impact = 2E4,
+        discount_shape = "exponential",
+        discount_rate = 0.03,
+        discount_years = 20)
+
+results$monetization_main$monetized_impact
+```
+
+# cba
+
+```{r}
+
+output_attribute <- attribute_health(
+  erf_shape = "log_linear", 
+  rr_central = 1.369, 
+  rr_increment = 10,  
+  exp_central = 8.85, 
+  cutoff_central = 5, 
+  bhd_central = 30747 
+) 
+
+results <- cba(
+  output_attribute = output_attribute,
+  valuation = 50000,
+  cost = 100000000,
+  discount_shape = "exponential",
+  discount_rate_benefit = 0.03,
+  discount_rate_cost = 0.03,
+  discount_years_benefit = 5,
+  discount_years_cost = 5
+)
+
+results$cba_main |>  
+  dplyr::select(benefit, cost, net_benefit)
+```
+
+get_mdi
+
+```{r}
+
+results <- prepare_mdi(
+        geo_id_disaggregated = exdat_get_mdi$id,
+        edu = exdat_get_mdi$edu,
+        unemployed = exdat_get_mdi$unemployed,
+        single_parent = exdat_get_mdi$single_parent,
+        pop_change = exdat_get_mdi$pop_change,
+        no_heating = exdat_get_mdi$no_heating,
+        n_quantile = 10)
+
+results |> 
+  dplyr::select(geo_id_disaggregated, MDI, MDI_index) |> 
+  dplyr::slice(1:15)
 ```
 

@@ -33,7 +33,16 @@ TBD
 This function calculates discounted health impacts (without valuation).
 }
 \examples{
-TBD
+# Goal: discount current attributable health impacts
+
+results <- discount(
+  impact = 2E4,
+  discount_shape = "exponential",
+  discount_rate = 0.03,
+  discount_years = 20
+)
+
+results$monetization_main$monetized_impact
 }
 \author{
 Alberto Castro & Axel Luyten
