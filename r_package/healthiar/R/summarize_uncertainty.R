@@ -513,7 +513,6 @@ summarize_uncertainty <- function(
     purrr::pmap(only_new_values_for_replacement,
                 \(...) {c(input_args_prepared_for_replacement, base::list(...))})
 
-
   output_sim <-
     purrr::map(
       input_args_for_all_sim,
@@ -544,7 +543,6 @@ summarize_uncertainty <- function(
                   output = output_sim,
                   impact = impact_disaggregated)
 
-
   # Obtain results of simulations organized by geo unit
   attribute_by_geo_id_disaggregated <-
     get_attribute_by_geo(attribute_by_sim = attribute_by_sim_disaggregated,
@@ -557,6 +555,7 @@ summarize_uncertainty <- function(
 
 
   if( !"geo_id_aggregated" %in% names(output_attribute$health_main) ){
+
     attribute_by_sim <- attribute_by_sim_disaggregated
 
     summary <- summary_by_geo_id_disaggregated
@@ -579,8 +578,9 @@ summarize_uncertainty <- function(
         )
 
     # Obtain results of simulations organized by geo unit
+
     attribute_by_geo_id_aggregated <-
-      get_attribute_by_geo(attribute_by_sim = attribute_by_sim_aggregated,
+      get_attribute_by_geo(attribute_by_sim = attribute_by_sim,
                            geo_id = "geo_id_aggregated")
 
 
