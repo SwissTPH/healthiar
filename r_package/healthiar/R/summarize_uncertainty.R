@@ -76,7 +76,7 @@ summarize_uncertainty <- function(
   # It would require a more complex modelling
   if((!base::is.null(input_args$erf_eq_lower) |
       !base::is.null(input_args$erf_eq_lower))){
-    base::stop("Sorry, the summary of uncertainty for erf_eq is not currently supported",
+    base::stop("Sorry, the summary of uncertainty for erf_eq_... is not currently supported",
                call. = FALSE)
   }
 
@@ -85,7 +85,7 @@ summarize_uncertainty <- function(
     # If uncertainty in exposure
     (!base::is.null(input_args$exp_lower) |
       !base::is.null(input_args$exp_upper))){
-    base::stop("Sorry, the summary of uncertainty for exposure in exposure distributions is not currently supported",
+    base::stop("Sorry, the summary of uncertainty for exp_... in exposure distributions is not currently supported",
                call. = FALSE)
   }
 

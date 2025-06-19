@@ -326,7 +326,7 @@ testthat::test_that("error_if_erf_eq |pathway_uncertainty|exp_dist|erf_ar_formul
       summarize_uncertainty(
         bestcost_noise_ha_ar_with_erf_eq,
         n_sim = 1000),
-    "Sorry, the summary of uncertainty for erf_eq is not currently supported"
+    "Sorry, the summary of uncertainty for erf_eq_... is not currently supported"
   )
 })
 
@@ -358,7 +358,7 @@ testthat::test_that("error_if_erf_eq  |pathway_uncertainty|exp_dist|erf_ar_formu
       summarize_uncertainty(
         bestcost_noise_ha_ar_iteration_with_erf_eq,
         n_sim = 100),
-    "Sorry, the summary of uncertainty for erf_eq is not currently supported")
+    "Sorry, the summary of uncertainty for erf_eq_... is not currently supported")
 })
 
 
@@ -386,7 +386,7 @@ testthat::test_that("error_if_uncertainty_in_exp_distribution |pathway_uncertain
         output_attribute = bestcost_noise_ha_ar_with_summary_uncertainty,
         n_sim = 100,
         seed = 122)$uncertainty_main$impact_rounded,
-    "Sorry, the summary of uncertainty for exposure in exposure distributions is not currently supported"
+    "Sorry, the summary of uncertainty for exp_... in exposure distributions is not currently supported"
     )
 })
 ## WARNING #########
