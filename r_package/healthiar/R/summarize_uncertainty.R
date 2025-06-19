@@ -119,7 +119,7 @@ summarize_uncertainty <- function(
       # (otherwise too large output and slow)
       dplyr::select( !dplyr::contains(c("input", "output")))|>
       # Unnest to have the information per" row
-      tidyr::unnest(cols = columns_to_unnest) |>
+      tidyr::unnest(cols = dplyr::all_of(columns_to_unnest)) |>
       # Keep only unique rows
       # If geo_id_aggregated avaialable,
       # then geo_ and aggregated impact have the same dimension as geo_id_disaggregated
@@ -128,7 +128,7 @@ summarize_uncertainty <- function(
       # Put column geo_id first because it is now the sort criteria
       dplyr::select(dplyr::all_of(geo_id), dplyr::everything()) |>
       # Sort rows by geo_id
-      dplyr::arrange(dplyr::across(geo_id))
+      dplyr::arrange(dplyr::across(dplyr::all_of(geo_id)))
   }
 
   # Get uncertainty
