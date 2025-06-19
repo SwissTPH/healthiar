@@ -679,48 +679,51 @@ summarize_uncertainty <- function(
         )
 
     # Obtain results of simulations organized by geo unit
-    attribute_by_geo_disaggregated <-
+    attribute_by_geo_id_disaggregated <-
       get_attribute_by_geo(attribute_by_sim = attribute_by_sim_disaggregated,
                            geo_id = "geo_id_disaggregated")
 
     # Get summary (uncertainty) for each geo_id_disaggregated
-    summary_by_geo_disaggregated <-
-      get_summary(attribute = attribute_by_geo_disaggregated,
+    summary_by_geo_id_disaggregated <-
+      get_summary(attribute = attribute_by_geo_id_disaggregated,
                   grouping_var = "geo_id_disaggregated")
 
-    summary_by_geo <- summary_by_geo_disaggregated
 
     if(! "geo_id_aggregated" %in% names(output_attribute$health_main)){
-      summary <- summary_by_geo
+      attribute_by_sim <- attribute_by_geo_id_disaggregated
+      summary <- summary_by_geo_id_disaggregated
+
     } else{
 
-      attribute_by_sim_aggregated <- attribute_by_sim_disaggregated |>
+      attribute_by_sim <- attribute_by_sim_disaggregated |>
         dplyr::mutate(
           impact = purrr::map(output_compare,
                                           \(x) x$health_main$impact)
           )
 
       # Obtain results of simulations organized by geo unit
-      attribute_by_geo_aggregated <-
-        get_attribute_by_geo(attribute_by_sim = attribute_by_sim_aggregated,
+      attribute_by_geo_id_aggregated <-
+        get_attribute_by_geo(attribute_by_sim = attribute_by_sim,
                              geo_id = "geo_id_aggregated")
 
 
       # Get summary (uncertainty) for each geo_id_disaggregated
-      summary_by_geo <- get_summary(attribute = attribute_by_geo_aggregated,
+      summary <- get_summary(attribute = attribute_by_geo_id_aggregated,
                                     grouping_var = "geo_id_aggregated")
     }
 
 
     # Store the results in a list keeping consistency in the structure with
     # other healthiar functions
+
     uncertainty <-
       base::list(
-        uncertainty_main = summary_by_geo,
+        uncertainty_main = summary,
         uncertainty_detailed =
-          base::list(attribute_by_sim_disaggregated = attribute_by_sim_disaggregated,
-                     attribute_by_geo = attribute_by_geo_disaggregated,
-                     uncertainty_by_geo = summary_by_geo_disaggregated))
+          base::list(attribute_by_sim = attribute_by_sim,
+                     attribute_by_sim_disaggregated = attribute_by_sim_disaggregated,
+                     attribute_by_geo_id_disaggregated = attribute_by_geo_id_disaggregated,
+                     uncertainty_by_geo_id_disaggregated = summary_by_geo_id_disaggregated))
 
   }
 
