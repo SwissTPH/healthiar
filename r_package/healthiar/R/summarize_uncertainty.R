@@ -564,21 +564,22 @@ summarize_uncertainty <- function(
 
 
   if( !"geo_id_aggregated" %in% names(output_attribute$health_main) ){
-    summary <- summary_by_geo_id_disaggregated
     attribute_by_sim <- attribute_by_sim_disaggregated
-  } else {
 
-    # Extract impact_aggregated
-    impact_aggregated <- purrr::map(
-      output_sim,
-      \(x) x$health_main$impact
-    )
+    summary <- summary_by_geo_id_disaggregated
+
+  } else {
+    # If there is geo_id_aggregated,
+    # export these attribute_by_sim and summary
 
     # Create a tibble with the input, output health_main and impact
-    attribute_by_sim_aggregated <-
+    attribute_by_sim <- attribute_by_sim_disaggregated |>
       # Modify impact column to have the aggregated ones
-      dplyr::mutate(attribute_by_sim_disaggregated,
-                    impact = impact_aggregated)
+      dplyr::mutate(
+        impact = purrr::map(
+          output_sim,
+          \(x) x$health_main$impact)
+        )
 
     # Obtain results of simulations organized by geo unit
     attribute_by_geo_id_aggregated <-
@@ -590,7 +591,6 @@ summarize_uncertainty <- function(
     summary <- get_summary(attribute = attribute_by_geo_id_aggregated,
                            grouping_var = "geo_id_aggregated")
 
-    attribute_by_sim <- attribute_by_sim_aggregated
 
   }
 
