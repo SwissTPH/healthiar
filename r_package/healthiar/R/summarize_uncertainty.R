@@ -461,17 +461,11 @@ summarize_uncertainty <- function(
       dplyr::group_by(sim_id) |>
       dplyr::summarize(
         # Pack in lists the values that are different in geo unit (as input_args)
-        dplyr::across(dplyr::all_of(c(#geo_ids,
-                                      "geo_id_disaggregated",
+        dplyr::across(dplyr::all_of(c("geo_id_disaggregated",
                                       var_names_with_ci_geo_different_central)),
                       ~ base::list(.x)),
         .groups = "drop")
 
-    # |>
-    # # Keep the same list format of the geo dependent variables
-    # dplyr::mutate(
-    #   dplyr::across(dplyr::all_of(c(var_names_with_ci_geo_different_central)),
-    #                 ~ purrr::map(.x, as.list)))
 
     } else { sim_vars_geo_different <- NULL }
 
@@ -482,8 +476,7 @@ summarize_uncertainty <- function(
       dplyr::group_by(sim_id) |>
       dplyr::summarize(
         # Pack in lists the values that are different in geo unit (as input_args)
-        dplyr::across(dplyr::all_of(c(#geo_ids,
-                                      "geo_id_disaggregated",
+        dplyr::across(dplyr::all_of(c("geo_id_disaggregated",
                                       var_names_with_ci_geo_identical_central)),
                       ~ base::list(.x))) |>
       dplyr::mutate(dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical_central),
