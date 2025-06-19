@@ -93,7 +93,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       rr_increment = 10,
       erf_shape = "log_linear",
       geo_id_disaggregated = 1:1E1,
-      geo_id_aggregated = rep("CH", 1E1),
+      geo_id_aggregated = c(rep("CH", 5), rep("DE", 5)),
       info = "PM2.5_copd")
 
   testthat::expect_equal(
@@ -104,7 +104,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       )$uncertainty_main$impact_rounded,
 
     expected = # Results on 2025-06-04; no comparison study
-      c(30150, 14250, 48289)
+      c(14631, 6900, 23459, 15552, 7350, 24835)
   )
 })
 
@@ -185,36 +185,6 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
 })
 
 
-## AR ###########################################################################
-
-testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
-
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
-  data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
-
-  bestcost_noise_ha_ar_with_summary_uncertainty <-
-    healthiar::attribute_health(
-      approach_risk = "absolute_risk",
-      exp_central = data$exposure_mean,
-      exp_lower = data$exposure_mean - 1,
-      exp_upper = data$exposure_mean + 1,
-      pop_exp = data$population_exposed_total,
-      erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-      info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
-    )
-
-  testthat::expect_equal(
-    object =
-      summarize_uncertainty(
-        output_attribute = bestcost_noise_ha_ar_with_summary_uncertainty,
-        n_sim = 100,
-        seed = 122)$uncertainty_main$impact_rounded,
-
-    expected = # Results on 2025-06-10; no comparison study
-      c(230066, 119767, 413729)
-  )
-})
 
 ### YLD #########################################################################
 
@@ -355,7 +325,8 @@ testthat::test_that("error_if_erf_eq |pathway_uncertainty|exp_dist|erf_ar_formul
     object =
       summarize_uncertainty(
         bestcost_noise_ha_ar_with_erf_eq,
-        n_sim = 1000)
+        n_sim = 1000),
+    "Sorry, the summary of uncertainty for erf_eq_... is not currently supported"
   )
 })
 
@@ -386,10 +357,37 @@ testthat::test_that("error_if_erf_eq  |pathway_uncertainty|exp_dist|erf_ar_formu
     object =
       summarize_uncertainty(
         bestcost_noise_ha_ar_iteration_with_erf_eq,
-        n_sim = 100))
+        n_sim = 100),
+    "Sorry, the summary of uncertainty for erf_eq_... is not currently supported")
 })
 
 
 
+testthat::test_that("error_if_uncertainty_in_exp_distribution |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
+
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  bestcost_noise_ha_ar_with_summary_uncertainty <-
+    healthiar::attribute_health(
+      approach_risk = "absolute_risk",
+      exp_central = data$exposure_mean,
+      exp_lower = data$exposure_mean - 1,
+      exp_upper = data$exposure_mean + 1,
+      pop_exp = data$population_exposed_total,
+      erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+      info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
+    )
+
+  testthat::expect_error(
+    object =
+      summarize_uncertainty(
+        output_attribute = bestcost_noise_ha_ar_with_summary_uncertainty,
+        n_sim = 100,
+        seed = 122)$uncertainty_main$impact_rounded,
+    "Sorry, the summary of uncertainty for exp_... in exposure distributions is not currently supported"
+    )
+})
 ## WARNING #########
 

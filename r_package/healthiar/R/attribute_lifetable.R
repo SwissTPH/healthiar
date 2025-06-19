@@ -96,6 +96,7 @@
 
 attribute_lifetable <-
   function(
+    # Life table
     health_outcome = NULL,
     first_age_pop, last_age_pop,
     population_midyear_male, population_midyear_female,
@@ -104,14 +105,20 @@ attribute_lifetable <-
     approach_exposure = "single_year",
     approach_newborns = "without_newborns",
     year_of_analysis,
-    erf_shape = NULL,
+    time_horizon = NULL,
+    # AR & RR
+    exp_central = 0, exp_lower = NULL, exp_upper = NULL,
+    cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
+    erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
+    pop_exp = NULL,
+    # RR ONLY
     rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
     rr_increment = NULL,
-    erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-    exp_central = 0, exp_lower = NULL, exp_upper = NULL,
-    pop_exp = NULL, prop_pop_exp = 1,
-    cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
+    erf_shape = NULL,
+    prop_pop_exp = 1,
+    # ITERATION (OPTIONAL)
     geo_id_disaggregated = "a", geo_id_aggregated = NULL,
+    # META (OPTIONAL)
     info = NULL
   ) {
 
@@ -124,28 +131,34 @@ attribute_lifetable <-
 
     output <-
       healthiar:::attribute_master(
-        is_lifetable = TRUE,
-        health_outcome = health_outcome,
+        # RR & AR
         approach_risk = "relative_risk",
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
-        pop_exp = pop_exp, prop_pop_exp = prop_pop_exp,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
+        pop_exp = pop_exp,
+        erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
+        # RR ONLY
         rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
         rr_increment = rr_increment,
         erf_shape = erf_shape,
-        erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
         bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
-        # Lifetable arguments
-        approach_exposure = approach_exposure,
-        approach_newborns = approach_newborns,
+        prop_pop_exp = prop_pop_exp,
+        # Life table
+        health_outcome = health_outcome,
+        is_lifetable = TRUE,
         first_age_pop = first_age_pop, last_age_pop = last_age_pop,
-        deaths_male = deaths_male,
-        deaths_female = deaths_female,
         population_midyear_male = population_midyear_male, population_midyear_female = population_midyear_female,
-        year_of_analysis = year_of_analysis,
+        deaths_female = deaths_female,
         min_age = min_age, max_age = max_age,
+        approach_exposure = approach_exposure,
+        approach_newborns = approach_newborns,deaths_male = deaths_male,
+        year_of_analysis = year_of_analysis,
+        time_horizon = time_horizon,
+        # ITERATION (OPTIONAL)
         geo_id_disaggregated = geo_id_disaggregated, geo_id_aggregated = geo_id_aggregated,
+        # META (OPTIONAL)
         info = info,
+        # Hidden arguments
         .unused_args = unused_args)
 
     return(output)
