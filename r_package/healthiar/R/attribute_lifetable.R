@@ -123,11 +123,7 @@ attribute_lifetable <-
   ) {
 
     # Get what the arguments that the user passed
-    used_args <- base::names(base::as.list(base::match.call()  ))[-1] # drop function name
-    # Get all arguments
-    all_args <- base::names(base::formals(attribute_lifetable))
-    # Get unused arguement as the difference
-    unused_args <- base::setdiff(all_args, used_args)
+    input_args_used <- base::names(base::as.list(base::match.call()  ))[-1] # drop function name
 
     output <-
       healthiar:::attribute_master(
@@ -158,8 +154,8 @@ attribute_lifetable <-
         geo_id_disaggregated = geo_id_disaggregated, geo_id_aggregated = geo_id_aggregated,
         # META (OPTIONAL)
         info = info,
-        # Hidden arguments
-        .unused_args = unused_args)
+        # INTERNAL ARGUMENTS
+        .input_args_used = input_args_used)
 
     return(output)
 

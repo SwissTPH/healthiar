@@ -243,11 +243,7 @@ attribute_health <-
     population = NULL){
 
     # Get what the arguments that the user passed
-    used_args <- base::names(base::as.list(base::match.call()))[-1] # drop function name
-    # Get all arguments
-    all_args <- base::names(base::formals(attribute_health))
-    # Get unused arguement as the difference
-    unused_args <- base::setdiff(all_args, used_args)
+    input_args_used <- base::names(base::as.list(base::match.call()))[-1] # drop function name
 
     output <-
       healthiar:::attribute_master(
@@ -280,8 +276,8 @@ attribute_health <-
         approach_exposure = NULL,
         approach_newborns = NULL,
         year_of_analysis = NULL,
-        # HIDDEN ARGUMENTS
-        .unused_args = unused_args)
+        # INTERNAL ARGUMENTS
+        .input_args_used = input_args_used)
 
     return(output)
 

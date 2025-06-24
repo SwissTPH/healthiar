@@ -91,8 +91,10 @@ summarize_uncertainty <- function(
 
   ## Data sets ##########
   # Store the input data as entered in the arguments
-  input_args <- output_attribute[["health_detailed"]][["input_args"]]
-  input_table <- output_attribute[["health_detailed"]][["input_table"]]
+
+  input_args_used <- output_attribute$health_detailed$input_args_used
+  input_args <- output_attribute$health_detailed$input_args
+  input_table <- output_attribute$health_detailed$input_table
 
 
 
@@ -183,7 +185,7 @@ summarize_uncertainty <- function(
   # It is important to create it because for two cases (comparison)
   # the function has to be run more than once (avoid copy-pasted code)
   summarize_uncertainty_based_on_input <-
-    function(input_args, input_table){
+    function(input_args_used, input_args, input_table){
 
   ## N #####
   # Determine number of geographic units
@@ -489,6 +491,10 @@ summarize_uncertainty <- function(
   input_args_prepared_for_replacement <-
     purrr::keep(input_args,
                 !base::names(input_args) %in% vars_to_be_removed_in_input_args)
+    # Add the input_args_used
+    # Otherwise the data validation of attribute_master() can give some error
+  input_args_prepared_for_replacement[[".input_args_used"]] <-
+    input_args_used
 
   template_with_sim <-
     # Bind the template with the simulated values
@@ -634,6 +640,7 @@ summarize_uncertainty <- function(
     uncertainty <-
       c(output_attribute,
         summarize_uncertainty_based_on_input(
+          input_args_used = input_args_used,
           input_args = input_args,
           input_table = input_table))
 
@@ -645,11 +652,14 @@ summarize_uncertainty <- function(
     # Once for the scenario 1
     attribute_1 <-
       summarize_uncertainty_based_on_input(
+        input_args_used = input_args_used[["input_args_used_1"]],
         input_args = input_args[["input_args_1"]],
         input_table = input_table[["input_table_1"]])
+
     # Once for the scenario 2
     attribute_2 <-
       summarize_uncertainty_based_on_input(
+        input_args_used = input_args_used[["input_args_used_2"]],
         input_args = input_args[["input_args_2"]],
         input_table = input_table[["input_table_2"]])
 
