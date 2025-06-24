@@ -3,6 +3,7 @@
 #' @description
 #' This function distributes and store outputs by level of detail by aggregating or filtering impacts.
 
+#' @param input_args_used \code{String vector} with the argument names that were actively entered by the user.
 #' @param input_args \code{List} containingall arguments and values entered in attribute().
 #' @param input_table \code{List} containing the input_table data compiled and packed in a data frame.
 #' @param results_raw \code{List} containing all the calculation of health impacts.
@@ -28,7 +29,8 @@
 
 
 get_output <-
-  function(input_args = NULL,
+  function(input_args_used = NULL,
+           input_args = NULL,
            input_table = NULL,
            results_raw){
 
@@ -49,7 +51,8 @@ get_output <-
     # Get main results from detailed results ###################################
 
     health_detailed_from_impact  <-
-      list(input_args = input_args,
+      list(input_args_used = input_args_used,
+           input_args = input_args,
            input_table = input_table,
            results_raw = results_raw)
 

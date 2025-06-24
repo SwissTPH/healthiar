@@ -139,8 +139,8 @@ attribute_master <-
     approach_exposure = NULL,
     year_of_analysis = NULL,
     time_horizon = NULL,
-    # HIDDEN ARGUMENTS
-    .unused_args = NULL){
+    # INTERNAL ARGUMENTS
+    .input_args_used = NULL){
 
     # Capture all arguments and values
     input_args <- base::as.list(base::environment())
@@ -151,11 +151,11 @@ attribute_master <-
     # from attribute_health() and attribute_lifetable()
     # without "polluting" input_args with a variable
     # that is not relevant for the calculation
-    unused_args <- .unused_args
+    input_args_used <- .input_args_used
 
     # Check input data
-    healthiar:::validate_input_attribute(input_args = input_args,
-                                         unused_args = unused_args)
+    healthiar:::validate_input_attribute(input_args_used = input_args_used,
+                                         input_args = input_args)
 
 
     # Compile input data
@@ -169,7 +169,8 @@ attribute_master <-
 
     # Get the main and detailed output by aggregating and/or filtering cases (rows)
     output <-
-      healthiar:::get_output(input_args = input_args,
+      healthiar:::get_output(input_args_used = input_args_used,
+                             input_args = input_args,
                              input_table = input_table,
                              results_raw = results_raw)
 

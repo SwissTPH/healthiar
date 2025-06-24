@@ -3,13 +3,13 @@
 #' @description
 #' Check the input data in attribute_master() and provides specific warnings or errors if needed.
 #' @param input \code{List} with the argument names and values entered in the function.
-#' @param unused_args \code{String vector} with the argument names that were not actively entered by the user.
+#' @param input_args_used \code{String vector} with the argument names that were actively entered by the user.
 #' @returns This function returns warning or error messages if needed.
 #' @author Alberto Castro & Axel Luyten
 #' @keywords internal
 
 validate_input_attribute <-
-  function(input_args, unused_args){
+  function(input_args, input_args_used){
 
 
     # Data sets ###########
@@ -88,9 +88,9 @@ validate_input_attribute <-
     ## Errors #####
     error_if_var_1_but_not_var_2 <- function(var_name_1, var_name_2){
 
-      if(!var_name_1 %in% unused_args &&
-         var_name_2 %in% unused_args
-         # Check unused_args in case that there is a default value (safer)
+      if(var_name_1 %in% input_args_used &&
+         !var_name_2 %in% input_args_used
+         # Check input_args_used in case that there is a default value (safer)
          ){
         stop(
           paste0(
@@ -487,9 +487,9 @@ validate_input_attribute <-
 
     # Error if prop_pop_exp in ar
     if(input_args$approach_risk == "absolute_risk" &&
-       # Check prop_pop_exp in unused_args instead of input_args
+       # Check prop_pop_exp in input_args_used instead of input_args
        # because prop_pop_exp = 1 by default if the user does not enter any value
-       ! "prop_pop_exp" %in% unused_args){
+       "prop_pop_exp" %in% input_args_used){
       stop(
         "The argument prop_pop_exp is aimed for relative risk. Use pop_exp instead.",
         call. = FALSE
@@ -526,7 +526,7 @@ validate_input_attribute <-
     }
 
     # For absolute risk no cutoff is used (not relevant)
-    if("cutoff_central" %in% unused_args &&
+    if(! "cutoff_central" %in% input_args_used &&
        input_args$approach_risk == "relative_risk"){
 
       base::warning(

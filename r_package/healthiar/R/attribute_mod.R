@@ -73,6 +73,19 @@ attribute_mod <-
     #those in args_1
     args_2 <- purrr::discard(args_2, is.null)
 
+
+    # # Identify the unused arguments (not entered by the user)
+    # unused_args <-
+    #   base::setdiff(base::names(output_attribute_1$health_detailed$input_args),
+    #                 output_attribute_1$health_detailed$input_args_used)
+    #
+    # # Assign value NULL to those arguments that were note entered by the user
+    # # to avoid that default values are wrongly considered as user data
+    # args_2 <-
+    #   c(args_2,
+    #     setNames(vector("list", length(unused_args)), unused_args))
+
+
     # Extract args_1
     args_1 <- output_attribute_1[["health_detailed"]][["input_args"]]
 
@@ -91,6 +104,10 @@ attribute_mod <-
 
     args_2_after_merge_with_arg1 <-
       replace_list(args_1, args_2)
+
+    # Add the input_args_used
+    args_2_after_merge_with_arg1[[".input_args_used"]] <-
+      output_attribute_1$health_detailed$input_args_used
 
 
 
