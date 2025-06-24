@@ -49,7 +49,7 @@ get_impact <-
       input_with_risk_and_pop_fraction <-
         healthiar:::get_risk_and_pop_fraction(input_table = input_with_prop_pop_exp ,
                                               pop_fraction_type = pop_fraction_type)
-browser()
+
       # * Without life table #################################################
 
       if(!unique(input_table$is_lifetable)) {
