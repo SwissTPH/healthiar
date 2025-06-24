@@ -476,6 +476,25 @@ validate_input_attribute <-
 
     #TODO: Check that geo_id_disaggregated is provided if multiple geo units
 
+    # Error if pop_exp in rr
+    if(input_args$approach_risk == "relative_risk" &&
+       !is.null(input_args$pop_exp)){
+      stop(
+        "The argument pop_exp is aimed for absolute risk. Use prop_pop_exp instead.",
+        call. = FALSE
+      )
+    }
+
+    # Error if prop_pop_exp in ar
+    if(input_args$approach_risk == "absolute_risk" &&
+       # Check prop_pop_exp in unused_args instead of input_args
+       # because prop_pop_exp = 1 by default if the user does not enter any value
+       ! "prop_pop_exp" %in% unused_args){
+      stop(
+        "The argument prop_pop_exp is aimed for relative risk. Use pop_exp instead.",
+        call. = FALSE
+      )
+    }
 
 
     ## Warnings ######
