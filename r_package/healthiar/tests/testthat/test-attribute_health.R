@@ -93,7 +93,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
         rr_increment = 10,
         erf_shape = "log_linear",
         info = paste0(data$pollutant,"_", data$evaluation_name)
-      )$health_detailed$impact_raw$impact_rounded,
+      )$health_detailed$results_raw$impact_rounded,
     expected = # Results on 2025-06-12; no comparison study
       c(3502, 1353, 5474, 4344, 1695, 6729, 2633, 1007, 4154, 3502, 1353, 5474, 4344, 1695, 6728, 2633, 1007, 4153, 3502, 1353, 5474, 4345, 1695, 6729, 2633, 1007, 4154, 2633, 1007, 4154, 3502, 1353, 5474, 1736, 658, 2764, 2633, 1007, 4153, 3502, 1353, 5474, 1736, 658, 2764, 2633, 1007, 4154, 3502, 1353, 5474, 1736, 658, 2764, 4344, 1695, 6729, 5161, 2032, 7921, 3502, 1353, 5474, 4344, 1695, 6728, 5161, 2032, 7921, 3502, 1353, 5474, 4345, 1695, 6729, 5161, 2032, 7921, 3502, 1353, 5474)
   )
@@ -121,7 +121,7 @@ testthat::test_that("detailed result the same |fake_rr|erf_log_lin|exp_single|it
         rr_increment = 10,
         erf_shape = "log_linear",
         info = paste0(data$pollutant,"_", data$evaluation_name)
-      )$health_detailed$impact_raw$impact_rounded,
+      )$health_detailed$results_raw$impact_rounded,
     expected = # Results on 2025-06-12; no comparison study
       c(3502, 1353, 5474, 4344, 1695, 6729, 2633, 1007, 4154, 3502, 1353, 5474, 4344, 1695, 6728, 2633, 1007, 4153, 3502, 1353, 5474, 4345, 1695, 6729, 2633, 1007, 4154, 2633, 1007, 4154, 3502, 1353, 5474, 1736, 658, 2764, 2633, 1007, 4153, 3502, 1353, 5474, 1736, 658, 2764, 2633, 1007, 4154, 3502, 1353, 5474, 1736, 658, 2764, 4344, 1695, 6729, 5161, 2032, 7921, 3502, 1353, 5474, 4344, 1695, 6728, 5161, 2032, 7921, 3502, 1353, 5474, 4345, 1695, 6729, 5161, 2032, 7921, 3502, 1353, 5474)
   )
@@ -175,7 +175,7 @@ testthat::test_that("number of rows in detailed results correct |meta_rr|erf_log
         rr_increment = 10,
         erf_shape = "log_linear",
         info = paste0(data$pollutant,"_", data$evaluation_name)
-        )$health_detailed$impact_raw |> base::nrow(),
+        )$health_detailed$results_raw |> base::nrow(),
     expected =
       3^4 # CI's in 4 input variables
       )
@@ -513,7 +513,7 @@ testthat::test_that("detailed results the same prevalence-based YLD |pathway_rr|
         erf_shape = "log_linear",
         dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
         duration_central = 1,
-      )$health_detailed$impact_raw$impact |> round(), # 2025-04-02 Round at the end to obtain rounded results
+      )$health_detailed$results_raw$impact |> round(), # 2025-04-02 Round at the end to obtain rounded results
     expected = # Result on 2025-06-12; no comparison study
       c(525, 277, 768, 105, 55, 154, 1051, 555, 1536, 658, 348, 959, 132, 70, 192, 1317, 697, 1919, 391, 206, 573, 78, 41, 115, 782, 412, 1146, 391, 206, 573, 78, 41, 115, 782, 412, 1146, 525, 277, 768, 105, 55, 154, 1051, 555, 1536, 255, 134, 375, 51, 27, 75, 511, 268, 750, 658, 348, 959, 132, 70, 192, 1317, 697, 1919, 790, 419, 1148, 158, 84, 230, 1579, 838, 2296, 525, 277, 768, 105, 55, 154, 1051, 555, 1536)
     )
@@ -667,7 +667,7 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
         erf_shape = "log_linear",
         geo_id_disaggregated = rep(1:3, each = 5),
         geo_id_aggregated = rep("ch", each = 15)
-        )$health_detailed$impact_raw$impact_rounded,
+        )$health_detailed$results_raw$impact_rounded,
     expected =
       round(c(1066.970, 1421.845, 1908.409)) # Results on 2025-04-14; no comparison study
   )
@@ -952,7 +952,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         pop_exp = data$population_exposed_total,
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
-      )$health_detailed$impact_raw |> dplyr::slice_head() |> dplyr::select(impact) |> dplyr::pull() |> base::round(),
+      )$health_detailed$results_raw |> dplyr::slice_head() |> dplyr::select(impact) |> dplyr::pull() |> base::round(),
     expected =
       data_raw |>
       dplyr::filter(exposure_category %in% "55-59")|>
@@ -1027,7 +1027,7 @@ testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iter
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         geo_id_disaggregated = rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
-        )$health_detailed$impact_raw$impact |> round(),
+        )$health_detailed$results_raw$impact |> round(),
     expected =
       c(921, 1278, 1932, 2967, 704, 605, 2191, 1810, 551, 2877, 543, 2458, 1219, 1043, 1869) # Results on 2025-02-05; no comparison study
   )
@@ -1056,7 +1056,7 @@ testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iter
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         geo_id_disaggregated = rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
-        )$health_detailed$impact_raw$impact |> round(),
+        )$health_detailed$results_raw$impact |> round(),
     expected = # Results on 2025-01-20; no comparison study
       c(890, 976,  809, 1241, 1361, 1128, 1893, 2077, 1720, 2954, 3242, 2682,  678,  743,
         617, 583, 639,  530, 2160, 2370, 1962, 1774, 1946, 1611, 530, 581, 482, 2870,

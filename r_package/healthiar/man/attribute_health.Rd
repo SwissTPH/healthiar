@@ -243,7 +243,7 @@ results <- attribute_health(
 results$health_main$impact_rounded
 
 # Attributable cases (disaggregated)
-results$health_detailed$impact_raw |> dplyr::select(
+results$health_detailed$results_raw |> dplyr::select(
   geo_id_disaggregated,
   geo_id_aggregated,
   impact_rounded

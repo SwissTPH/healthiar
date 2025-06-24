@@ -80,7 +80,7 @@ multiexpose <-
         approach_multiexposure = approach)
 
       # Calculate the health impacts for each case (uncertainty, category, geo area...)
-      impact_raw <-
+      results_raw <-
         healthiar:::get_impact(input_table = input_table,
                                pop_fraction_type = "paf")
 
@@ -88,11 +88,11 @@ multiexpose <-
       output <-
         healthiar:::get_output(input_args = input_args,
                                input_table = input_table,
-                               impact_raw = impact_raw)
+                               results_raw = results_raw)
 
       # Put the column exposure_name as first column because it is now relevant
-      output[["health_detailed"]][c("input_table", "impact_raw")] <-
-        purrr::map(output[["health_detailed"]][c("input_table", "impact_raw")],
+      output[["health_detailed"]][c("input_table", "results_raw")] <-
+        purrr::map(output[["health_detailed"]][c("input_table", "results_raw")],
                    ~ dplyr::select(.x,
                                    exposure_name, dplyr::everything()))
 
