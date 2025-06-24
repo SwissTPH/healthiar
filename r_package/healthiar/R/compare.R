@@ -86,6 +86,9 @@ compare <-
 
     # Extract input data (for subsequent get_impact call) ########################
 
+    input_args_used_1 <- output_attribute_1[["health_detailed"]][["input_args_used"]]
+    input_args_used_2 <- output_attribute_2[["health_detailed"]][["input_args_used"]]
+
     input_args_1 <- output_attribute_1[["health_detailed"]][["input_args"]]
     input_args_2 <- output_attribute_2[["health_detailed"]][["input_args"]]
 
@@ -306,6 +309,8 @@ compare <-
 
     output <-
       healthiar:::get_output(
+        input_args_used = list(input_args_used_1 = input_args_used_1,
+                               input_args_used_2 = input_args_used_2),
         input_args = list(approach_comparison = approach_comparison,
                           input_args_1 = input_args_1,
                           input_args_2 = input_args_2),
