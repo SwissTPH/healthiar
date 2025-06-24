@@ -634,22 +634,20 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        exp_central = c(runif_with_seed(5,8,10,1),
-                        runif_with_seed(5,8,10,2),
-                        runif_with_seed(5,8,10,3)),
+        exp_central = base::rep(c(5, 6, 7, 8, 9), times = 3),
         cutoff_central = 5,
-        pop_exp = c(runif_with_seed(5,1E2,1E3,1),
-                    runif_with_seed(5,1E2,1E3,2),
-                    runif_with_seed(5,1E2,1E3,3)),
+        prop_pop_exp = c(c(0.1, 0.3, 0.2, 0.2, 0.2),
+                         c(0.2, 0.2, 0.3, 0.1, 0.2),
+                         c(0.2, 0.2, 0.2, 0.1, 0.3)),
         bhd_central = rep(runif_with_seed(3,1E4,1E5,1), each = 5),
         rr_central = 1.08,
         rr_increment = 10,
         erf_shape = "log_linear",
         geo_id_disaggregated = rep(1:3, each = 5),
-        geo_id_aggregated = rep("ch", each = 15)
+        geo_id_aggregated = rep("ch", each = 5 * 3)
         )$health_detailed$results_raw$impact_rounded,
     expected =
-      round(c(1066.970, 1421.845, 1908.409)) # Results on 2025-04-14; no comparison study
+      round(c(545,  634,  991)) # Results on 2025-06-24; no comparison study
   )
 })
 
