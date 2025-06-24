@@ -67,21 +67,21 @@ daly <-
     input_args <- as.list(environment())
 
 
-    # Store impact_raw of yll and yld
+    # Store results_raw of yll and yld
     # Shorter and handy to code
-    impact_raw_yll <- output_attribute_yll[["health_detailed"]][["impact_raw"]] |>
+    results_raw_yll <- output_attribute_yll[["health_detailed"]][["results_raw"]] |>
       dplyr::filter(sex=="total")
-    impact_raw_yld <- output_attribute_yld[["health_detailed"]][["impact_raw"]]
+    results_raw_yld <- output_attribute_yld[["health_detailed"]][["results_raw"]]
 
     # Capture all column names
     # They should be the same for yll and yld but just in case
-    column_names_impact_raw <-
-      unique(c(names(impact_raw_yll), names(impact_raw_yll)))
+    column_names_results_raw <-
+      unique(c(names(results_raw_yll), names(results_raw_yll)))
 
     # Identify the columns names using keywords
     common_columns <-
-      column_names_impact_raw[grepl("exp|exposure|cutoff|geo|approach_risk",
-                                    column_names_impact_raw)]
+      column_names_results_raw[grepl("exp|exposure|cutoff|geo|approach_risk",
+                                    column_names_results_raw)]
     # Remove exceptions (columns with any of the keywords that should not be selected)
     common_columns <- common_columns[!grepl("approach_exposure|rr_at_exp", common_columns)]
     common_columns_for_join <- c(common_columns, "erf_ci")
@@ -103,19 +103,19 @@ daly <-
 
 
     # Remove those containing the word impact
-    column_names_impact_raw_without_impact <-
-      column_names_impact_raw[!grepl("impact|lifeyears|lifetable", column_names_impact_raw)]
+    column_names_results_raw_without_impact <-
+      column_names_results_raw[!grepl("impact|lifeyears|lifetable", column_names_results_raw)]
 
 
-    # Obtain the new impact_raw for DALY
-    impact_raw <-
-      # Join impact_raw tables from yll and yld
+    # Obtain the new results_raw for DALY
+    results_raw <-
+      # Join results_raw tables from yll and yld
       # but giving a suffix _yll and _yld to free the name "impact" to YLD
       # We need to use "impact" as final result to be consistent with the other
       # healthiar functions
       dplyr::full_join(
-        impact_raw_yll,
-        impact_raw_yld,
+        results_raw_yll,
+        results_raw_yld,
         by = common_columns_for_join,
         suffix = c("_yll", "_yld")) |>
       dplyr::mutate(
@@ -126,9 +126,9 @@ daly <-
         impact_rounded = round(impact))
 
     # Add impact per 100k inhabitants if population is available
-    if("population" %in% names(impact_raw)){
-      impact_raw <-
-        impact_raw |>
+    if("population" %in% names(results_raw)){
+      results_raw <-
+        results_raw |>
         dplyr::mutate(
           impact_per_100k = (impact / population) * 1E5)
     }
@@ -138,7 +138,7 @@ daly <-
     output <-
       healthiar:::get_output(
         input_args = input_args,
-        impact_raw = impact_raw)
+        results_raw = results_raw)
 
     return(output)
 

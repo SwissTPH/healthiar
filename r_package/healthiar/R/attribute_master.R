@@ -163,7 +163,7 @@ attribute_master <-
       healthiar:::compile_input(input_args)
 
     # Calculate the health impacts for each case (uncertainty, category, geo area...)
-    impact_raw <-
+    results_raw <-
       healthiar:::get_impact(input_table = input_table,
                              pop_fraction_type = "paf")
 
@@ -171,7 +171,7 @@ attribute_master <-
     output <-
       healthiar:::get_output(input_args = input_args,
                              input_table = input_table,
-                             impact_raw = impact_raw)
+                             results_raw = results_raw)
 
     return(output)
   }

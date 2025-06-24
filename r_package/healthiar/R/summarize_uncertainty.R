@@ -190,7 +190,7 @@ summarize_uncertainty <- function(
   n_geo <-
     # Exceptionally, let's use here unique() instead of input_args
     # because in some cases the users do not enter the geo_id.
-    # In that cases compile_input() provide a geo_id and it is shown in impact_raw
+    # In that cases compile_input() provide a geo_id and it is shown in results_raw
     base::length(base::unique(input_table$geo_id_disaggregated))
 
   # If exposure dimension is implemented:
