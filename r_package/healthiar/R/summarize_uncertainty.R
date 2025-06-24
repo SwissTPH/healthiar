@@ -632,9 +632,10 @@ summarize_uncertainty <- function(
   if(is_one_case){
     # Use summarize_uncertainty_based_on_input() only once
     uncertainty <-
-      summarize_uncertainty_based_on_input(
-        input_args = input_args,
-        input_table = input_table)
+      c(output_attribute,
+        summarize_uncertainty_based_on_input(
+          input_args = input_args,
+          input_table = input_table))
 
   ## Two cases (comparison) ####
   } else if (is_two_cases){
@@ -742,13 +743,14 @@ summarize_uncertainty <- function(
     # other healthiar functions
 
     uncertainty <-
-      base::list(
-        uncertainty_main = summary,
-        uncertainty_detailed =
-          base::list(attribute_by_sim = attribute_by_sim,
-                     attribute_by_sim_disaggregated = attribute_by_sim_disaggregated,
-                     attribute_by_geo_id_disaggregated = attribute_by_geo_id_disaggregated,
-                     uncertainty_by_geo_id_disaggregated = summary_by_geo_id_disaggregated))
+      c(output_attribute,
+        base::list(
+          uncertainty_main = summary,
+          uncertainty_detailed =
+            base::list(attribute_by_sim = attribute_by_sim,
+                       attribute_by_sim_disaggregated = attribute_by_sim_disaggregated,
+                       attribute_by_geo_id_disaggregated = attribute_by_geo_id_disaggregated,
+                       uncertainty_by_geo_id_disaggregated = summary_by_geo_id_disaggregated)))
 
   }
 
