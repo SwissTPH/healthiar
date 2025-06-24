@@ -547,26 +547,6 @@ testthat::test_that("results correct with cutoff |pathway_rr|erf_log_lin|exp_dis
       base::round()
     )
 
-  ## With pop_exp
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_health(
-        exp_central = data$exposure_mean,
-        pop_exp = data$population_exposed_total,
-        cutoff_central = min(data$exposure_mean),
-        bhd_central = data$gbd_daly[1],
-        rr_central = 1.08,
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        info = data.frame(pollutant = "road_noise", outcome = "YLD")
-        )$health_main$impact_rounded,
-    expected =
-      data_raw |>
-      dplyr::filter(exposure_category %in% "Total exposed")|>
-      dplyr::select(daly)|>
-      dplyr::pull() |>
-      round()
-  )
 })
 
 testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
@@ -973,7 +953,6 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         approach_risk = "absolute_risk",
         exp_central = data$average_cat,
         population  = unique(data$totpop),
-        prop_pop_exp = data$prop_pop_exp,
         pop_exp = data$ANTALL_PER,
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         info = data.frame(pollutant = "road_noise",
@@ -1113,7 +1092,6 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
     object = healthiar::attribute_health(
       approach_risk = "absolute_risk",
       exp_central = data$exposure_mean,
-      prop_pop_exp = data$population_exposed_total/sum(data$population_exposed_total),
       pop_exp = data$population_exposed_total, # For prop_pop_exp case, this vector is summed in the background to get total pop exposed, which is then combined with prop_pop_exp to get the number exposed per exp category)
       erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
       dw_central = 0.5, dw_lower = 0.1, dw_upper = 1,
@@ -1139,7 +1117,6 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         approach_risk = "absolute_risk",
         exp_central = as.numeric(gsub(",",".",data$Lden..dB..middle.point)),
         population  = totalpop_Bergen,
-        prop_pop_exp = as.numeric(gsub(",",".",data$Bergen.))/sum(as.numeric(gsub(",",".",data$Bergen.))),
         pop_exp = as.numeric(gsub(",",".",data$Bergen.)),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         dw_central = 0.02,
