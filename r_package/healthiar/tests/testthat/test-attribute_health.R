@@ -1321,6 +1321,75 @@ testthat::test_that("error if multi geo units but different length of geo-depend
   )
 })
 
+testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
+
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  ## With pop_exp
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$exposure_mean,
+        pop_exp = data$population_exposed_total,
+        cutoff_central = min(data$exposure_mean),
+        bhd_central = data$gbd_daly[1],
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        info = data.frame(pollutant = "road_noise", outcome = "YLD")
+      )$health_main$impact_rounded,
+    "The argument pop_exp is aimed for absolute risk. Use prop_pop_exp instead."
+  )
+})
+
+testthat::test_that("error if prop_pop_exp and ar |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
+
+    base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
+    data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+    data  <- data_raw |>
+      dplyr::filter(!is.na(data_raw$exposure_mean))
+
+    testthat::expect_error(
+      object =
+        healthiar::attribute_health(
+          approach_risk = "absolute_risk",
+          exp_central = data$exposure_mean,
+          prop_pop_exp = data$population_exposed_total/sum(data$population_exposed_total),
+          erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+          info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
+        ),
+      "The argument prop_pop_exp is aimed for relative risk. Use pop_exp instead."
+    )
+  })
+
+testthat::test_that("error if pop_exp and prop_pop_exp |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
+
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  ## With pop_exp
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$exposure_mean,
+        pop_exp = data$population_exposed_total,
+        cutoff_central = min(data$exposure_mean),
+        bhd_central = data$gbd_daly[1],
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        info = data.frame(pollutant = "road_noise", outcome = "YLD")
+      )$health_main$impact_rounded,
+    "The argument pop_exp is aimed for absolute risk. Use prop_pop_exp instead."
+  )
+})
+
+
+
+
 ## WARNING #########
 
 testthat::test_that("warning if absolute risk and cutoff", {
