@@ -22,8 +22,8 @@ Install the healthiar package
 remotes::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
-  # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
-  ref = "519-add-examples-to-the-function-descriptions", # By default "HEAD"; name of branch to install package from as a string
+  ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
+  # ref = "519-add-examples-to-the-function-descriptions", # By default "HEAD"; name of branch to install package from as a string
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   auth_token = keyring::key_get("GITHUB_PAT_HEALTHIAR"),
