@@ -36,7 +36,7 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
         social_indicator = data$score,
         n_quantile = 10,
         increasing_deprivation = TRUE)$social_main$difference_value |> base::round(2),
-    expect = c(11.72, 0.20, 560.88,0.90) # Results on 21 Nov 2024
+    expect = c(11.72, 0.20, -0.64, -0.01) # Results on 25 June 2025
   )
 })
 

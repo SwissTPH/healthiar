@@ -331,15 +331,15 @@ socialize <- function(listed_output_attribute = NULL,
       dplyr::summarize(
         impact_mean = base::mean(impact, na.rm = TRUE),
         impact_sum = base::sum(impact, na.rm = TRUE),
-        bhd_sum = if (has_bhd) base::sum(bhd, na.rm = TRUE) else NA,
-        population_sum = if (has_population) sum(population, na.rm = TRUE) else NA,
-        bhd_mean = if (has_bhd) base::mean(bhd, na.rm = TRUE) else NA,
-        exp_mean = if (has_exp) base::mean(exp, na.rm = TRUE) else NA,
-        exp_sd = if (has_exp) stats::sd(exp, na.rm = TRUE) else NA,
-        pop_fraction_mean = if (has_pop_fraction) base::mean(pop_fraction, na.rm = TRUE) else NA,
+        bhd_sum = if (has_bhd) base::sum(bhd, na.rm = TRUE) else NULL,
+        population_sum = if (has_population) sum(population, na.rm = TRUE) else NULL,
+        bhd_mean = if (has_bhd) base::mean(bhd, na.rm = TRUE) else NULL,
+        exp_mean = if (has_exp) base::mean(exp, na.rm = TRUE) else NULL,
+        exp_sd = if (has_exp) stats::sd(exp, na.rm = TRUE) else NULL,
+        pop_fraction_mean = if (has_pop_fraction) base::mean(pop_fraction, na.rm = TRUE) else NULL,
         .groups = "drop") |>
         dplyr::mutate(
-          bhd_rate = if (has_bhd && has_population) bhd_sum * 1e5 / population_sum else NA
+          bhd_rate = if (has_bhd && has_population) bhd_sum * 1e5 / population_sum else NULL
         )
     return(other_parameters)
   }
@@ -408,7 +408,7 @@ socialize <- function(listed_output_attribute = NULL,
     ## Pivot longer to prepare the data and have a column for parameter
     tidyr::pivot_longer(cols = -social_quantile,
                         names_to = "parameter",
-                        values_to = "difference_value") |>
+                        values_to = "value") |>
     ## Put column parameter first
     dplyr::select(parameter, everything()) |>
     ## Order columns by parameter
@@ -417,8 +417,8 @@ socialize <- function(listed_output_attribute = NULL,
     ## for each parameter
     dplyr::group_by(parameter) |>
     dplyr::summarize(
-      first = dplyr::first(difference_value),
-      last = dplyr::last(difference_value)) |>
+      first = dplyr::first(value),
+      last = dplyr::last(value)) |>
     ## Add the overall (not by quantile) sums and means
     dplyr::left_join(
       parameters_overall_prepared,
