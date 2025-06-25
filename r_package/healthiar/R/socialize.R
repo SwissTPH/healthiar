@@ -303,7 +303,7 @@ socialize <- function(listed_output_attribute = NULL,
       impact_rate_std = impact_rate * ref_prop_pop) |>
     dplyr::ungroup()
 
-  ## 1) by quantile (as other parameters)
+  ## 2) by quantile (as other parameters)
   impact_rates_by_quantile <-
     impact_rates_by_quantile_and_age |>
     ## Group only by social_quantile to get impact_rates by quantile (higher level)
@@ -365,9 +365,21 @@ socialize <- function(listed_output_attribute = NULL,
   impact_rates_overall <-
     ## Two steps but for the overall level impact_rates_by_quantile_and_age can be reused
     impact_rates_by_quantile_and_age |>
+    dplyr::group_by(age_group, age_order, ref_prop_pop) |>
     ## Without grouping because it is overall
-    dplyr::summarize(impact_rate_sum = base::sum(impact_rate, na.rm = TRUE),
-                     impact_rate_std_sum = base::sum(impact_rate_std, na.rm = TRUE))
+    dplyr::summarize(
+      impact_sum = base::sum(impact_sum, na.rm = TRUE),
+      population_sum = base::sum(population_sum, na.rm = TRUE)) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      impact_rate = impact_sum / population_sum * 1E5,
+      impact_rate_std = impact_rate * ref_prop_pop) |>
+    # Now total
+    dplyr::summarize(
+      impact_rate_sum = base::sum(impact_rate, na.rm = TRUE),
+      impact_rate_std_sum = base::sum(impact_rate_std, na.rm = TRUE))
+
+
 
   # * * other parameters (beyond impact rates) #################
   other_parameters_overall <-
