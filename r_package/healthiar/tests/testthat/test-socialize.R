@@ -273,7 +273,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
         # approach = "quantile", # default (and currently only) approach,
         # population = data$POPULATION,
         age_group = base::names(attribute_result_age),
-        ref_prop_pop = base::subset(data, AGE == '[0,5)')$REF
+        ref_prop_pop = base::subset(data, SECTOR == '21001A00-')$REF
       ) |>
       purrr::pluck("social_main") |>
       # dplyr::filter(
@@ -284,7 +284,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
       base::as.numeric(),
 
     ## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
-    expected = c(43.9522987, 0.7934956, 24.8351024, 0.3095649)
+    expected = c(43.3956942, 0.7786042, 24.4845985, 0.3052187)
   )
 
   ## ASSESSOR: Arno Pauwels, SCI
