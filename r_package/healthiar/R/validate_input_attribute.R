@@ -525,15 +525,21 @@ validate_input_attribute <-
     }
 
     # For absolute risk no cutoff is used (not relevant)
-    if(! "cutoff_central" %in% input_args_used &&
+    if(! var_name %in% input_args_used &&
        input_args$approach_risk == "relative_risk"){
 
       base::warning(
-        "You entered no value for cut-off. Therefore, zero has been assumed as cut-off. Be aware that this can determine your results.",
+        base::paste0("You entered no value for ",
+        var_name,
+        ". Therefore, ",
+        default,
+        " has been assumed as default. Be aware that this can determine your results."),
         call. = FALSE)
 
+      }
     }
 
+    warning_if_rr_and_no_var_with_default(var_name = "cutoff_central", default = 0)
 
 
 
