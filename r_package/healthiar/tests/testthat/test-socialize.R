@@ -341,7 +341,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
         impact = data$IMPACT,
         geo_id_disaggregated = data$SECTOR, # geo IDs of the preparatory iteration call above and this function call must match!
         # social_indicator = data$SCORE,
-        social_quantile = data$DECILE,
+        social_quantile = base::as.numeric(base::gsub("D", "", data$DECILE)),
         # n_quantile = 10, # Specify number of quantiles, e.g. 10
         # approach = "quantile", # default (and currently only) approach,
         population = data$POP,
