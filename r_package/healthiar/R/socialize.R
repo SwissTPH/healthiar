@@ -455,8 +455,8 @@ socialize <- function(listed_output_attribute = NULL,
       parameter %in% c("exp_mean",
                        "bhd_rate",
                        "pop_fraction_mean",
-                       "impact_rate_sum",
-                       "impact_rate_std_sum")) |>
+                       "impact_rate",
+                       "impact_rate_std")) |>
     ## Long instead of wide layout
     tidyr::pivot_longer(
       cols = contains("_"),
@@ -513,7 +513,7 @@ socialize <- function(listed_output_attribute = NULL,
     social_results |>
     ## Keep only impact_rate_std as parameter
     ## This is the most relevant result.
-    dplyr::filter(parameter == "impact_rate_std_sum")
+    dplyr::filter(parameter == "impact_rate_std")
 
   ## The other parameters can be stored in detailed
   ## (just in case some users have interest on this)
