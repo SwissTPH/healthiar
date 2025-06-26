@@ -1362,7 +1362,22 @@ testthat::test_that("error if pop_exp and prop_pop_exp |pathway_rr|erf_log_lin|e
   )
 })
 
+testthat::test_that("error if rr and erf_eq", {
 
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"),
+    regexp = "The argument rr_central cannot be used together with the argument erf_eq_central (either one or the other but not both)",
+    fixed = TRUE)
+})
 
 
 ## WARNING #########

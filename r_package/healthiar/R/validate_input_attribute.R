@@ -518,6 +518,29 @@ validate_input_attribute <-
 
 
 
+    ### error_if_var_1_and_var_2 #####
+
+    error_if_var_1_and_var_2 <- function(var_name_1, var_name_2){
+      # Identify the alternative options
+
+      if(var_name_1 %in% input_args_used &&
+         var_name_2 %in% input_args_used){
+        stop(base::paste0("The argument ",
+                          var_name_1,
+                          " cannot be used together with the argument ",
+                          var_name_2,
+                          " (either one or the other but not both)."),
+             call. = FALSE
+        )
+      }
+    }
+
+    # Call function
+    for (a in c("rr_central", "erf_shape", "rr_increment")){
+      error_if_var_1_and_var_2(var_name_1 = a, var_name_2 = "erf_eq_central")
+    }
+
+
 
     ## Warnings ########################
 
