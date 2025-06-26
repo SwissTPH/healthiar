@@ -1148,7 +1148,7 @@ testthat::test_that("error if geo_id_aggregated but no geo_id_disaggregated", {
         rr_increment = 10,
         erf_shape = "log_linear",
         geo_id_aggregated = c("a", "b")),
-    regexp = "If geo_id_disaggregated is empty, you cannot use geo_id_disaggregated."
+    regexp = "If you do not pass a value for geo_id_disaggregated, you cannot use geo_id_aggregated."
   )
 })
 
@@ -1242,7 +1242,7 @@ testthat::test_that("error if numeric argument is not numeric", {
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear"),
-    regexp = "exp_central must contain numeric values",
+    regexp = "exp_central must contain numeric value(s)",
     # Use fixed because otherwise the brackets regexp give an error in the test
     fixed = TRUE
     )

@@ -115,7 +115,7 @@ validate_input_attribute <-
         base::stop(
           base::paste0(
             var_name,
-            " must contain numeric value(s)."),
+            " must contain numeric values."),
           call. = FALSE)
       }
     }
