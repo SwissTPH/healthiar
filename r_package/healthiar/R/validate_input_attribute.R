@@ -115,7 +115,7 @@ validate_input_attribute <-
         base::stop(
           base::paste0(
             var_name,
-            " must contain numeric values."),
+            " must contain numeric value(s)."),
           call. = FALSE)
       }
     }
@@ -136,8 +136,8 @@ validate_input_attribute <-
         base::stop(
           base::paste0(
             "For ", var_name,
-            "please, type between quotation marks one of these options: ",
-            base::paste0(var_options, collapse = ", ")),
+            ", please, type (between quotation marks) one of these options: ",
+            base::paste0(var_options, collapse = ", "), "."),
           call. = FALSE)
       }
     }

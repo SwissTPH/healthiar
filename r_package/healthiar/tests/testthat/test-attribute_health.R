@@ -1259,7 +1259,9 @@ testthat::test_that("error if numeric argument is not numeric", {
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "hello"),
-    regexp = "For erf_shapeplease, type between quotation marks one of these options: linear, log_linear, log_log, linear_log"
+    regexp = "For erf_shape, please, type (between quotation marks) one of these options: linear, log_linear, log_log, linear_log.",
+    # Use fixed = TRUE because brackets in the message
+    fixed = TRUE
 
   )
 })
