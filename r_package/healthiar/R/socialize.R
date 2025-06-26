@@ -369,7 +369,8 @@ socialize <- function(listed_output_attribute = NULL,
   parameters_by_quantile <-
     dplyr::left_join(impact_rates_by_quantile,
                      other_parameters_by_quantile,
-                     by = "social_quantile")
+                     # common columns
+                     by = c("social_quantile", "population_sum"))
 
   # * _overall ############
 
@@ -405,8 +406,10 @@ socialize <- function(listed_output_attribute = NULL,
 
   ## All parameters together
   parameters_overall <-
-    dplyr::bind_cols(impact_rates_overall,
-                     other_parameters_overall)
+    dplyr::left_join(impact_rates_overall,
+                     other_parameters_overall,
+                     # common columns
+                     by = c("population_sum"))
 
   ## Prepared to be joined below
   parameters_overall_prepared <-
