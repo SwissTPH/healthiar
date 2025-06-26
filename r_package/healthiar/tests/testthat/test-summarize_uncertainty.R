@@ -389,5 +389,30 @@ testthat::test_that("error_if_uncertainty_in_exp_distribution |pathway_uncertain
     regexp = "Sorry, the summary of uncertainty for exp_... in exposure distributions is not currently supported"
     )
 })
+
+testthat::test_that("error_if_no_uncertainty |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  bestcost_pm_copd_with_summary_uncertainty <-
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+      rr_central = 1.060,
+      rr_increment = 10,
+      erf_shape = "log_linear"
+    )
+
+  testthat::expect_error(
+    object =
+      healthiar::summarize_uncertainty(
+        output_attribute = bestcost_pm_copd_with_summary_uncertainty,
+        n_sim = 100
+      ),
+    regexp = "Please enter an assessment with uncertainty (..._lower and ..._upper) in any argument.",
+    fixed = TRUE
+  )
+})
 ## WARNING #########
 
