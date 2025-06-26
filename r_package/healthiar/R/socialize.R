@@ -482,8 +482,8 @@ socialize <- function(listed_output_attribute = NULL,
   ## * If available output_attribute ######
   if ( has_output_attribute ) {
     output_social <-
-      base::list(health_main = output_attribute[["healt_main"]],
-                 health_detailed = output_attribute[["healt_detailed"]])
+      base::list(health_main = output_attribute[["health_main"]],
+                 health_detailed = output_attribute[["health_detailed"]])
 
     ## * If NOT available output_attribute, i.e. if argument impact #######
 
