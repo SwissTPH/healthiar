@@ -238,8 +238,9 @@ testthat::test_that("error if length of age range higher than deaths", {
         population_midyear_female = data_lifetable[["female"]]$population,
         year_of_analysis = 2019,
         info = data_mort$pollutant[2],
-        min_age = 20
-      )
+        min_age = 20),
+    regexp = "The length of age range (sequence of first_age_pop and last_age_pop) must be compatible with the age-dependent variables.",
+    fixed = TRUE
   )
 })
 
@@ -269,7 +270,9 @@ testthat::test_that("error if length geo arguments are different", {
         year_of_analysis = 2019,
         min_age = 20,
         geo_id_disaggregated = rep(c("a", "b"), each = 100),
-        geo_id_aggregated = rep("ch", 2 * 100))
+        geo_id_aggregated = rep("ch", 2 * 100)),
+    regexp = "The length of age range (sequence of first_age_pop and last_age_pop) must be compatible with the age-dependent variables.",
+    fixed = TRUE
   )
 })
 
