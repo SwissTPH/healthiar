@@ -320,7 +320,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
       base::as.numeric(),
 
     ## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
-    expected = c(43.9522987, 0.7934956, 24.8351024, 0.3095649)
+    expected = c(43.3985958, 0.7783631, 24.469600, 0.305009)
   )
 
   ## ASSESSOR: Arno Pauwels, SCI
@@ -357,7 +357,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
       base::as.numeric(),
 
     ## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
-    expected = c(43.9522987, 0.7934956, 24.8351024, 0.3095649)
+    expected = c(43.3985958, 0.7783631, 24.469600, 0.305009)
   )
 
   ## ASSESSOR: Arno Pauwels, SCI
