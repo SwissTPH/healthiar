@@ -305,19 +305,25 @@ socialize <- function(listed_output_attribute = NULL,
     dplyr::summarize(
       population_sum = base::sum(population, na.rm = TRUE),
       impact_sum = base::sum(impact, na.rm = TRUE)) |>
+    dplyr::ungroup() |>
     dplyr::mutate(
       impact_rate = impact_sum / population_sum * 1e5,
-      impact_rate_std = impact_rate * ref_prop_pop) |>
-    dplyr::ungroup()
+      impact_rate_std = impact_rate * ref_prop_pop)
 
   ## 2) by quantile (as other parameters)
   impact_rates_by_quantile <-
     impact_rates_by_quantile_and_age |>
-    ## Group only by social_quantile to get impact_rates by quantile (higher level)
+    # Group only by social_quantile to get population and impact by quantile (higher level)
+    # and impact_rate_std (but not impact_rate)
     dplyr::group_by(social_quantile) |>
-    dplyr::summarize(impact_rate_sum = base::sum(impact_rate, na.rm = TRUE),
-                     impact_rate_std_sum = base::sum(impact_rate_std, na.rm = TRUE))|>
-    dplyr::ungroup()
+    dplyr::summarize(population_sum = base::sum(population_sum, na.rm = TRUE),
+                     impact_sum = base::sum(impact_sum, na.rm = TRUE),
+                     impact_rate_std = base::sum(impact_rate_std, na.rm = TRUE))|>
+    dplyr::ungroup()|>
+    # Calculate impact rate based on population and impact
+    # Not summing!
+    dplyr::mutate(impact_rate = impact_sum / population_sum * 1e5, .before = impact_rate_std)
+
 
 
   # * * other parameters (beyond impact rates) #################
@@ -377,14 +383,17 @@ socialize <- function(listed_output_attribute = NULL,
     dplyr::summarize(
       impact_sum = base::sum(impact_sum, na.rm = TRUE),
       population_sum = base::sum(population_sum, na.rm = TRUE)) |>
-    dplyr::ungroup() |>
     dplyr::mutate(
       impact_rate = impact_sum / population_sum * 1E5,
       impact_rate_std = impact_rate * ref_prop_pop) |>
+    dplyr::ungroup() |>
     # Now total
     dplyr::summarize(
-      impact_rate_sum = base::sum(impact_rate, na.rm = TRUE),
-      impact_rate_std_sum = base::sum(impact_rate_std, na.rm = TRUE))
+      impact_sum = base::sum(impact_sum, na.rm = TRUE),
+      population_sum = base::sum(population_sum, na.rm = TRUE),
+      impact_rate_std = base::sum(impact_rate_std, na.rm = TRUE)) |>
+    dplyr::mutate(
+      impact_rate = impact_sum / population_sum * 1E5)
 
 
 
