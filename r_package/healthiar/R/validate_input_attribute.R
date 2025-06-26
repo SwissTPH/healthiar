@@ -502,7 +502,8 @@ validate_input_attribute <-
         stop(base::paste0("The argument ",
         var_name,
         " is aimed for ",
-        another_approach_risk,
+        # Remove the underscore
+        base::gsub("_", " ", another_approach_risk),
         ". Use ",
         another_var_name,
         " instead."),
