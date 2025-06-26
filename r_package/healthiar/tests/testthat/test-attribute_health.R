@@ -1147,8 +1147,8 @@ testthat::test_that("error if geo_id_aggregated but no geo_id_disaggregated", {
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear",
-        geo_id_aggregated = c("a", "b")
-      )
+        geo_id_aggregated = c("a", "b")),
+    regexp = "If you do not pass a value for geo_id_disaggregated, you cannot use geo_id_aggregated."
   )
 })
 
@@ -1164,8 +1164,8 @@ testthat::test_that("error if length of exp lower than length of prop pop", {
         bhd_central = 1000,
         rr_central = 1.05,
         rr_increment = 10,
-        erf_shape = "log_linear"
-      )
+        erf_shape = "log_linear"),
+    regexp = "exp_central and prop_pop_exp must have the same length."
   )
 })
 
@@ -1179,8 +1179,8 @@ testthat::test_that("error if rr lower than 0", {
         bhd_central = 1000,
         rr_central = -1.05,
         rr_increment = 10,
-        erf_shape = "log_linear"
-      )
+        erf_shape = "log_linear"),
+    regexp = "rr_central cannot be lower than 0"
   )
 })
 
@@ -1195,9 +1195,8 @@ testthat::test_that("error if dw higher than 1", {
         rr_central = 1.05,
         rr_increment = 10,
         dw_central = 1.1,
-        erf_shape = "log_linear"
-      )
-  )
+        erf_shape = "log_linear"),
+    regexp = "dw_central cannot be higher than 1")
 })
 
 testthat::test_that("error if not lower>central>upper", {
@@ -1212,8 +1211,8 @@ testthat::test_that("error if not lower>central>upper", {
         rr_lower = 1.10,
         rr_upper = 1.20,
         rr_increment = 10,
-        erf_shape = "log_linear"
-      )
+        erf_shape = "log_linear"),
+    regexp = "rr_central must be higher than rr_lower and lower than rr_upper."
   )
 })
 
@@ -1228,9 +1227,8 @@ testthat::test_that("error if onyl lower or upper", {
         rr_central = 1.05,
         rr_upper = 1.20,
         rr_increment = 10,
-        erf_shape = "log_linear"
-      )
-  )
+        erf_shape = "log_linear"),
+    regexp = "Either both, rr_lower and rr_upper, or none of them must entered, but not only one.")
 })
 
 testthat::test_that("error if numeric argument is not numeric", {
@@ -1243,9 +1241,11 @@ testthat::test_that("error if numeric argument is not numeric", {
         bhd_central = 1000,
         rr_central = 1.05,
         rr_increment = 10,
-        erf_shape = "log_linear"
-      )
-  )
+        erf_shape = "log_linear"),
+    regexp = "exp_central must contain numeric value(s)",
+    # Use fixed because otherwise the brackets regexp give an error in the test
+    fixed = TRUE
+    )
 })
 
 testthat::test_that("error if numeric argument is not numeric", {
@@ -1258,8 +1258,11 @@ testthat::test_that("error if numeric argument is not numeric", {
         bhd_central = 1000,
         rr_central = 1.05,
         rr_increment = 10,
-        erf_shape = "hello"
-      )
+        erf_shape = "hello"),
+    regexp = "For erf_shape, please, type (between quotation marks) one of these options: linear, log_linear, log_log, linear_log.",
+    # Use fixed = TRUE because brackets in the message
+    fixed = TRUE
+
   )
 })
 
@@ -1274,9 +1277,8 @@ testthat::test_that("error if sum(prop_pop_exp) higher than 1", {
         bhd_central = 1000,
         rr_central = 1.05,
         rr_increment = 10,
-        erf_shape = "log_linear"
-      )
-  )
+        erf_shape = "log_linear"),
+    regexp = "The sum of values in prop_pop_exp cannot be higher than 1 for each geo unit.")
 })
 
 testthat::test_that("error if multi geo units but different length of geo-depending arguments", {
@@ -1291,9 +1293,8 @@ testthat::test_that("error if multi geo units but different length of geo-depend
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear",
-        geo_id_disaggregated = c("a", "b")
-      )
-  )
+        geo_id_disaggregated = c("a", "b")),
+    regexp = "The following variables must all have the same length: geo_id_disaggregated, exp_central, bhd_central")
 })
 
 testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
@@ -1315,8 +1316,7 @@ testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|it
         erf_shape = "log_linear",
         info = data.frame(pollutant = "road_noise", outcome = "YLD")
       )$health_main$impact_rounded,
-    "The argument pop_exp is aimed for absolute risk. Use prop_pop_exp instead."
-  )
+    regexp = "The argument pop_exp is aimed for absolute risk. Use prop_pop_exp instead.")
 })
 
 testthat::test_that("error if prop_pop_exp and ar |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
@@ -1335,7 +1335,7 @@ testthat::test_that("error if prop_pop_exp and ar |pathway_rr|erf_log_lin|exp_di
           erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
           info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
         ),
-      "The argument prop_pop_exp is aimed for relative risk. Use pop_exp instead."
+      regexp = "The argument prop_pop_exp is aimed for relative risk. Use pop_exp instead."
     )
   })
 
@@ -1358,7 +1358,7 @@ testthat::test_that("error if pop_exp and prop_pop_exp |pathway_rr|erf_log_lin|e
         erf_shape = "log_linear",
         info = data.frame(pollutant = "road_noise", outcome = "YLD")
       )$health_main$impact_rounded,
-    "The argument pop_exp is aimed for absolute risk. Use prop_pop_exp instead."
+    regexp = "The argument pop_exp is aimed for absolute risk. Use prop_pop_exp instead."
   )
 })
 
@@ -1383,7 +1383,8 @@ testthat::test_that("warning if absolute risk and cutoff", {
         pop_exp = data$population_exposed_total,
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
-      )
+      ),
+    regexp = "For absolute risk, the value of cutoff_central is not considered; cutoff_central is defined by the exposure-response function."
   )
 })
 

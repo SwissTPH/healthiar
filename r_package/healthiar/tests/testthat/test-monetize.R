@@ -293,7 +293,7 @@ testthat::test_that("error if negative valuation", {
         discount_years = 5,
         valuation = -10
       ),
-    "valuation must be higher than 0."
+    regexp = "valuation must be higher than 0."
   )
 })
 
@@ -324,7 +324,7 @@ testthat::test_that("error if negative discount_years", {
         inflation = 0.08,
         valuation = 1E3
       ),
-    "discount_years must be higher than 0."
+    regexp = "discount_years must be higher than 0."
   )
 })
 
@@ -339,7 +339,7 @@ testthat::test_that("error if discount_rate higher than 1", {
         discount_years = 5,
         valuation = 10
       ),
-    "discount_rate must be higher than 0 and lower than 1."
+    regexp = "discount_rate must be higher than 0 and lower than 1."
   )
 })
 
@@ -355,7 +355,7 @@ testthat::test_that("error if inflation higher than 1", {
         valuation = 10,
         inflation = 1.15
       ),
-    "inflation must be higher than 0 and lower than 1."
+    regexp = "inflation must be higher than 0 and lower than 1."
   )
 })
 
@@ -387,7 +387,7 @@ testthat::test_that("error if both impact and output_attribute are entered", {
         inflation = 0.08,
         valuation = 1E3
       ),
-    "Enter a value for impact or for output_attribute but not both."
+    regexp = "Enter a value for impact or for output_attribute but not both."
   )
 })
 
@@ -401,7 +401,7 @@ testthat::test_that("error if no right category", {
         discount_rate = 0.05,
         valuation = 10
       ),
-    "Please, check spelling. discount_shape must have one of this values: exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987"
+    regexp = "Please, check spelling. discount_shape must have one of this values: exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987"
   )
 })
 
@@ -433,9 +433,9 @@ testthat::test_that("warning if no discount_rate but other discount arguments", 
         inflation = 0.08,
         valuation = 1E3
       ),
-    base::paste0("You entered some value in discount_rate,",
-                 " but discount_year is 0 (default value).\n",
-                 "Therefore no discount is applied."),
+    regexp = base::paste0("You entered some value in discount_rate,",
+                          " but discount_year is 0 (default value).",
+                          " Therefore no discount is applied."),
     # To match the messages fixed  = TRUE.
     # Otherwise, for some reason, testthat does not recognize the same text
     fixed = TRUE
@@ -454,10 +454,10 @@ testthat::test_that("warning if user pass discount_years with impact", {
         discount_years = 5,
         valuation = 10
       ),
-    base::paste0("discount_years is aimed for output_attribute (excluding life table)\n",
-                 "and for impact (excluding vector form).\n",
-                 "Therefore discount_years is ignored here and\n",
-                 "the length of the vector impact is used."),
+    regexp = base::paste0(
+      "discount_years is aimed for output_attribute (excluding life table)",
+      " and for impact (excluding vector form).",
+      " Therefore discount_years is ignored here and the length of the vector impact is used instead."),
     # To match the messages fixed  = TRUE.
     # Otherwise, for some reason, testthat does not recognize the same text
     fixed = TRUE
@@ -500,10 +500,9 @@ testthat::test_that("warning if user pass discount_years with life table", {
         discount_years = 5,
         valuation = 1,
       ),
-    base::paste0("discount_years is aimed for any output_attribute\n",
-                 "and for impact with single value (no vector).\n",
-                 "Therefore discount_years is ignored here and\n",
-                 "the length life table is used."),
+    regexp = base::paste0(
+      "discount_years is aimed for any output_attribute and for impact with single value (no vector).",
+      " Therefore discount_years is ignored here and the length life table is used instead."),
     # To match the messages fixed  = TRUE.
     # Otherwise, for some reason, testthat does not recognize the same text
     fixed = TRUE

@@ -129,8 +129,8 @@ monetize <- function(output_attribute = NULL,
      !is_lifetable){
     warning(
       base::paste0("You entered some value in discount_rate,",
-      " but discount_year is 0 (default value).\n",
-      "Therefore no discount is applied."),
+                   " but discount_year is 0 (default value).",
+                   " Therefore no discount is applied."),
       call. = FALSE)
   }
 
@@ -144,10 +144,9 @@ monetize <- function(output_attribute = NULL,
      base::length(impact) > 1 &&
      !base::is.null(impact)){
     warning(
-      base::paste0("discount_years is aimed for output_attribute (excluding life table)\n",
-                   "and for impact (excluding vector form).\n",
-                   "Therefore discount_years is ignored here and\n",
-                   "the length of the vector impact is used."),
+      base::paste0("discount_years is aimed for output_attribute (excluding life table)",
+      " and for impact (excluding vector form).",
+      " Therefore discount_years is ignored here and the length of the vector impact is used instead."),
       call. = FALSE)
   }
 
@@ -158,10 +157,9 @@ monetize <- function(output_attribute = NULL,
   if("discount_years" %in% base::names(base::match.call()) &&
      is_lifetable){
     warning(
-      base::paste0("discount_years is aimed for any output_attribute\n",
-                   "and for impact with single value (no vector).\n",
-                   "Therefore discount_years is ignored here and\n",
-                   "the length life table is used."),
+      base::paste0("discount_years is aimed for any output_attribute",
+                   " and for impact with single value (no vector).",
+                   " Therefore discount_years is ignored here and the length life table is used instead."),
       call. = FALSE)
   }
 
