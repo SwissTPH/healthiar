@@ -107,7 +107,6 @@ validate_input_attribute <-
                                  var_name_2 = "geo_id_disaggregated")
 
 
-
     error_if_not_numeric <- function(var_name){
       var_value <- input_args[[var_name]]
 
@@ -136,8 +135,8 @@ validate_input_attribute <-
 
         base::stop(
           base::paste0(
-            "For ", var_name,",\n",
-            "please, type (between quotation marks) one of this options: \n",
+            "For ", var_name,
+            "please, type between quotation marks one of these options: ",
             base::paste0(var_options, collapse = ", ")),
           call. = FALSE)
       }
@@ -462,7 +461,7 @@ validate_input_attribute <-
               var_name_lower,
               " and ",
               var_name_upper,
-              ", or non of them must entered, but not only one."),
+              ", or none of them must entered, but not only one."),
             call. = FALSE)
         }
       }
@@ -509,9 +508,9 @@ validate_input_attribute <-
           base::paste0(
             "For absolute risk, the value of ",
             var_name,
-            " is not considered (",
+            " is not considered; ",
             var_name,
-            " defined by exposure-response function)"),
+            " is defined by the exposure-response function."),
           call. = FALSE)
       }
     }
