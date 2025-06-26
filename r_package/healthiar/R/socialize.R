@@ -247,20 +247,27 @@ socialize <- function(listed_output_attribute = NULL,
 
       # * * If increasing_deprivation #########
       if (increasing_deprivation) {
+
         social_component <- social_component_before_quantile |>
           dplyr::mutate(
-            social_ranking = dplyr::dense_rank(dplyr::desc(social_indicator)),
-            social_quantile = dplyr::ntile(dplyr::desc(social_indicator), n = n_quantile))
+            social_ranking = base::rank(-social_indicator, na.last = "keep", ties.method = "random"))
 
 
       } else if(decreasing_deprivation) {
         # * * If NOT increasing_deprivation, i.e. decreasing #########
         social_component <- social_component_before_quantile |>
           dplyr::mutate(
-            social_ranking = dplyr::dense_rank(social_indicator),
-            social_quantile = dplyr::ntile(social_indicator, n = n_quantile))
+            social_ranking = base::rank(social_indicator, na.last = "keep", ties.method = "random"))
       }
 
+      # Add quantile which is common for both case increasing and decreasing deprivation
+      social_component <- social_component|>
+        dplyr::mutate(
+          social_quantile = base::cut(
+            social_ranking,
+            breaks = stats::quantile(social_ranking, probs = seq(0, 1, by = 0.1)),
+            labels = FALSE, include.lowest = TRUE
+          ))
 
     }
 
@@ -270,7 +277,7 @@ socialize <- function(listed_output_attribute = NULL,
     ## Add social_quantile (removing the other columns in social_component)
     dplyr::left_join(
       input_data,
-      social_component[, c("geo_id_disaggregated", "social_quantile", "social_ranking")],
+      social_component[, c("geo_id_disaggregated", "social_quantile")],
       by = "geo_id_disaggregated") |>
     ## Add age_order
     dplyr::left_join(
