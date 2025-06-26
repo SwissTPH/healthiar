@@ -1388,3 +1388,17 @@ testthat::test_that("warning if absolute risk and cutoff", {
   )
 })
 
+testthat::test_that("error if multi geo units but different length of geo-depending arguments", {
+
+  testthat::expect_warning(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"),
+    regexp = "You entered no value for cutoff_central. Therefore, 0 has been assumed as default. Be aware that this can determine your results.")
+})
+
