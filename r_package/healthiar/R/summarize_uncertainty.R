@@ -99,6 +99,7 @@ summarize_uncertainty <- function(
 
 
   # DATA VALIDATION ####
+  ## Error if uncertainty in erf_eq_... ####
   # Uncertainty in erf_eq is currently not supported
   # It would require a more complex modelling
   if((!base::is.null(input_args$erf_eq_lower) |
@@ -107,6 +108,8 @@ summarize_uncertainty <- function(
                call. = FALSE)
   }
 
+
+  ## Error if exposure distribution and uncertainty in exp_...####
   if(# If exposure distribution
     base::unique(output_attribute$health_detailed$impact_disaggregated$exposure_type) == "exposure_distribution" &&
     # If uncertainty in exposure
@@ -115,6 +118,14 @@ summarize_uncertainty <- function(
     base::stop("Sorry, the summary of uncertainty for exp_... in exposure distributions is not currently supported",
                call. = FALSE)
   }
+
+  ## Error if no argument with uncertainty ####
+  if(# No argument used has _lower or _upper)
+    ! base::any(base::grepl("_upper|_lower", input_args_used))){
+    base::stop("Please enter an assessment with uncertainty (..._lower and ..._upper) in any argument.",
+               call. = FALSE)
+  }
+
 
 
 
