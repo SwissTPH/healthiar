@@ -266,7 +266,7 @@ socialize <- function(listed_output_attribute = NULL,
 
   # Put all data together ####################
 
-  data <-
+  input_data_with_quantile <-
     ## Add social_quantile (removing the other columns in social_component)
     dplyr::left_join(
       input_data,
@@ -292,7 +292,7 @@ socialize <- function(listed_output_attribute = NULL,
   ## Two steps:
   ## 1) by quantile and age to calculte impact rates
   impact_rates_by_quantile_and_age <-
-    data |>
+    input_data_with_quantile |>
     ## Group by geo_id and age group to obtain impact rates at that level
     dplyr::group_by(social_quantile, age_group, age_order, ref_prop_pop) |>
     dplyr::summarize(
@@ -346,7 +346,7 @@ socialize <- function(listed_output_attribute = NULL,
 
 
   other_parameters_by_quantile <-
-    data |>
+    input_data_with_quantile |>
     ## Group by social_quantile
     dplyr::group_by(social_quantile) |>
     get_other_parameters()
@@ -504,7 +504,7 @@ socialize <- function(listed_output_attribute = NULL,
   output_social[["social_detailed"]][["results_all_parameters"]] <- social_results
   output_social[["social_detailed"]][["parameters_per_quantile"]] <- parameters_by_quantile
   output_social[["social_detailed"]][["parameters_overall"]] <- parameters_overall
-  output_social[["social_detailed"]][["input_table"]] <- data
+  output_social[["social_detailed"]][["input_data_with_quantile"]] <- input_data_with_quantile
 
 
   return(output_social)
