@@ -319,10 +319,10 @@ socialize <- function(listed_output_attribute = NULL,
   ## Only one step by quantile
 
   ## Define first the variables for if statements
-  has_bhd <- "bhd" %in% names(data)
-  has_population <- "population" %in% names(data)
-  has_exp <- "exp" %in% names(data)
-  has_pop_fraction <- "pop_fraction" %in% names(data)
+  has_bhd <- "bhd" %in% names(input_data_with_quantile)
+  has_population <- "population" %in% names(input_data_with_quantile)
+  has_exp <- "exp" %in% names(input_data_with_quantile)
+  has_pop_fraction <- "pop_fraction" %in% names(input_data_with_quantile)
 
 
   ## Define function to get_other_parameters()
@@ -383,7 +383,7 @@ socialize <- function(listed_output_attribute = NULL,
 
   # * * other parameters (beyond impact rates) #################
   other_parameters_overall <-
-    data |>
+    input_data_with_quantile |>
     ## Without grouping because it is overall
     get_other_parameters()
 
