@@ -270,7 +270,7 @@ socialize <- function(listed_output_attribute = NULL,
     ## Add social_quantile (removing the other columns in social_component)
     dplyr::left_join(
       input_data,
-      social_component[, c("geo_id_disaggregated", "social_quantile")],
+      social_component[, c("geo_id_disaggregated", "social_quantile", "social_ranking")],
       by = "geo_id_disaggregated") |>
     ## Add age_order
     dplyr::left_join(
