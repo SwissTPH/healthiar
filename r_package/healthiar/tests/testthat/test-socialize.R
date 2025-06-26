@@ -238,6 +238,134 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 #   )
 # })
 
+## tests with age groups
+testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  attribute_result_age <- base::by(
+    data,
+    data$AGE,
+    function(data) {
+      healthiar::attribute_health(
+        approach_risk = 'relative_risk',
+        exp_central = data$EXPOSURE,
+        rr_central = 1.045,
+        rr_increment = 10,
+        cutoff_central = 0,
+        erf_shape = 'log_linear',
+        bhd_central = data$MORT,
+        population = data$POP,
+        geo_id_disaggregated = data$SECTOR
+      )
+    }
+  )
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        listed_output_attribute = attribute_result_age,
+        # geo_id_disaggregated = data$CS01012020, # geo IDs of the preparatory iteration call above and this function call must match!
+        social_indicator = base::subset(data, AGE == '[0,5)')$SCORE,
+        n_quantile = 10, # Specify number of quantiles, e.g. 10
+        # approach = "quantile", # default (and currently only) approach,
+        # population = data$POPULATION,
+        age_group = base::names(attribute_result_age),
+        ref_prop_pop = base::subset(data, AGE == '[0,5)')$REF
+      ) |>
+      purrr::pluck("social_main") |>
+      # dplyr::filter(
+      #   difference_type == "absolute" &
+      #     difference_compared_with == "bottom_quantile")  |>
+      dplyr::select(difference_value) |>
+      base::unlist() |>
+      base::as.numeric(),
+
+    ## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected = c(43.9522987, 0.7934956, 24.8351024, 0.3095649)
+  )
+
+  ## ASSESSOR: Arno Pauwels, SCI
+  ## ASSESSMENT DETAILS: All-cause mortality attributable to NO2, by census tract (iteration)
+  ## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2022 + BIMD2011
+
+})
+
+testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_FALSE|social_indicator_TRUE|ref_pop_TRUE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = data$IMPACT,
+        geo_id_disaggregated = data$SECTOR, # geo IDs of the preparatory iteration call above and this function call must match!
+        social_indicator = data$SCORE,
+        n_quantile = 10, # Specify number of quantiles, e.g. 10
+        # approach = "quantile", # default (and currently only) approach,
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF
+      ) |>
+      purrr::pluck("social_main") |>
+      # dplyr::filter(
+      #   difference_type == "absolute" &
+      #     difference_compared_with == "bottom_quantile")  |>
+      dplyr::select(difference_value) |>
+      base::unlist() |>
+      base::as.numeric(),
+
+    ## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected = c(43.9522987, 0.7934956, 24.8351024, 0.3095649)
+  )
+
+  ## ASSESSOR: Arno Pauwels, SCI
+  ## ASSESSMENT DETAILS: All-cause mortality attributable to NO2, by census tract (iteration)
+  ## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2022 + BIMD2011
+
+})
+
+testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_FALSE|social_indicator_FALSE|ref_pop_TRUE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = data$IMPACT,
+        geo_id_disaggregated = data$SECTOR, # geo IDs of the preparatory iteration call above and this function call must match!
+        # social_indicator = data$SCORE,
+        social_quantile = data$DECILE,
+        # n_quantile = 10, # Specify number of quantiles, e.g. 10
+        # approach = "quantile", # default (and currently only) approach,
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF
+      ) |>
+      purrr::pluck("social_main") |>
+      # dplyr::filter(
+      #   difference_type == "absolute" &
+      #     difference_compared_with == "bottom_quantile")  |>
+      dplyr::select(difference_value) |>
+      base::unlist() |>
+      base::as.numeric(),
+
+    ## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected = c(43.9522987, 0.7934956, 24.8351024, 0.3095649)
+  )
+
+  ## ASSESSOR: Arno Pauwels, SCI
+  ## ASSESSMENT DETAILS: All-cause mortality attributable to NO2, by census tract (iteration)
+  ## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2022 + BIMD2011
+
+})
+
 # ERROR OR WARNING ########
 ## ERROR #########
 
