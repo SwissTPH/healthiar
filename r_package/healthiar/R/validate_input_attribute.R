@@ -242,7 +242,7 @@ validate_input_attribute <-
                            length_age_dependent_var)){
 
         # Create error message
-        stop("The length of age range (sequence of first_age_pop and last_age_pop) must be compatible with the age-dependent variables",
+        stop("The length of age range (sequence of first_age_pop and last_age_pop) must be compatible with the age-dependent variables.",
              call. = FALSE)
       }
       }
