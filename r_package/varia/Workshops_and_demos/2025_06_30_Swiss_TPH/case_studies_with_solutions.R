@@ -61,7 +61,7 @@ results_interim_1.2$health_main$impact_rounded ## 221 (142 - 307)
 ## Difference
 results_1.2 <- compare(
   output_attribute_1 = results_1.1,
-  output_attribute_2 = results_1.2
+  output_attribute_2 = results_interim_1.2
 )
 results_1.2$health_main$impact_rounded # 333 (216 - 460)
 
@@ -90,7 +90,8 @@ results_1.4 <- attribute_health(
 ### Absolute number
 results_1.4$health_main |>
   dplyr::filter(erf_ci == "central") |>
-  dplyr::select(geo_id_disaggregated, impact_rounded)
+  dplyr::select(geo_id_disaggregated, impact_rounded) |>
+  dplyr::arrange(desc(impact_rounded))
 ### Rate per 100'000 inhabitants
 results_1.4$health_main |>
   dplyr::filter(erf_ci == "central") |>
@@ -113,7 +114,8 @@ results_1.5 <- attribute_health(
 ## Attributable LC cases in each canton with new limit value
 results_1.5$health_main |>
   dplyr::filter(erf_ci == "central") |>
-  dplyr::select(geo_id_disaggregated, impact_rounded)
+  dplyr::select(geo_id_disaggregated, impact_rounded) |>
+  dplyr::arrange(desc(impact_rounded))
 
 
 
@@ -123,15 +125,64 @@ results_1.5$health_main |>
 ## DATA SETS TO BE USED: pm_lc_ch & pm_lc_cantons
 
 ## CONTEXT
-## The interest group Silent Switzerland wants to know how many HA cases and years lived with disability (YLD; disability weight for HA case: 0.02) associated with them can be attributed to noise exposure in Switzerland and in each canton in 2023.
+## The interest group Silent Switzerland wants to know how many HA can be attributed to noise exposure in Switzerland and in each canton in 2023.
+## The group also want to know what the attributable impact in years lived with disability (YLD; disability weight for HA case: 0.02) associated with the HA cases is on a national level.
 ## They say that with their new noise initiative Quiet Nights nobody will be exposed to the highest noise exposure category.
-## They estimate implementation costs for the whole of Switzerland at XXX'XXX CHF and they want to know whether the costs would be offset by the financial benefits of avoided HA cases (cost per HA case: 150 CHF).
+## They estimate implementation costs for the whole of Switzerland at 1'000'000 CHF and they want to know whether the costs would be offset by the financial benefits of avoided HA cases (yearly cost per HA case: 250 CHF).
 
 ## RESEARCH QUESTIONS:
-### 2.1 How many HA cases and YLD were attributable to noise exposure in CH in 2023?
-### 2.2 How many HA cases and YLD were attributable to noise exposure in each canton in 2023?
-### ADVANCED: 2.3 Is their initiative Quiet Nights financially advantageous in CH?
+### 2.1 How many HA cases were attributable to noise exposure in CH in 2023?
+### 2.2 How many HA cases were due to noise exposure in each canton in 2023?
+### 2.3 How many YLD from HA cases due to noise were there in CH in 2023?
+### ADVANCED: 2.4 Is the Quiet Nights initiative financially advantageous in CH?
 
 # 2.1 ##########################################################################
+results_2.1 <- attribute_health(
+  approach_risk = "absolute_risk",
+  erf_eq_central = noise_ha_ch$formula,
+  exp_central = noise_ha_ch$exposure_level,
+  pop_exp = noise_ha_ch$population_exposed,
+)
+## Attributable HA cases in CH
+results_2.1$health_main$impact # 299485
 
+# 2.2 ##########################################################################
+results_2.2 <- attribute_health(
+  geo_id_disaggregated = noise_ha_cantons$canton,
+  approach_risk = "absolute_risk",
+  erf_eq_central = noise_ha_cantons$formula,
+  exp_central = noise_ha_cantons$exposure_level,
+  pop_exp = noise_ha_cantons$population_exposed
+)
+## Attributable HA cases in each canton
+results_2.2$health_detailed$impact_raw |>
+  dplyr::group_by(geo_id_disaggregated) |>
+  dplyr::summarize(impact = sum(impact)) |>
+  dplyr::arrange(dplyr::desc(impact))
+
+# 2.3 ##########################################################################
+results_2.3 <- attribute_health(
+  approach_risk = "absolute_risk",
+  erf_eq_central = noise_ha_ch$formula,
+  exp_central = noise_ha_ch$exposure_level,
+  pop_exp = noise_ha_ch$population_exposed,
+  dw_central = 0.02
+)
+## Attributable YLD in CH
+results_2.3$health_main$impact_rounded # 5990 YLD
+
+# 2.4 ##########################################################################
+results_interim_2.4 <- monetize(
+  output_attribute = results_2.1,
+  valuation = 250
+)
+## Benefit of implementing Quiet Nights initiative
+results_interim_2.4 <- results_interim_2.4$monetization_detailed$health_raw |>
+  dplyr::filter(exposure_dimension == 5) |>
+  dplyr::select(monetized_impact_rounded) |>
+  dplyr::pull()
+results_interim_2.4 # 1'417'311 CHF
+## Net benefit of implementing the Quiet Nights initiative
+results_interim_2.4 - 1000000 # 417'311 CHF
+## The initiative is financially advantageous.
 
