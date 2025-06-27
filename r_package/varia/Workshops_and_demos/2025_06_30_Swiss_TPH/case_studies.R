@@ -4,6 +4,11 @@
 ## INSTALL & LOAD healthiar:
 ### For the installation see the Appendix of the healthiar presentation
 library(healthiar)
+## INSTALL PACKAGES THAT HEALTHIAR RELIES ON
+pkgs <- c("readxl", "dplyr", "tidyr", "purrr", "stringr",
+          "tibble", "zoo", "rlang", "devtools", "credentials")
+new_pkgs <- pkgs[!pkgs %in% installed.packages()[, "Package"]]
+if (length(new_pkgs)) install.packages(new_pkgs)
 ## LOAD DATA SETS: run the 4 lines below to load the case study data
 pm_lc_ch <- pm_lc_ch
 pm_lc_cantons <- pm_lc_cantons
