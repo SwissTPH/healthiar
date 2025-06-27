@@ -550,7 +550,7 @@ discuss it together and maybe another WP4 partner can help.
 
 ### Option A: Compare results manually
 
-```{r compare results manually, include=TRUE, echo=TRUE, eval=TRUE}
+```{r compare results manually, include=TRUE, echo=TRUE, eval=FALSE}
 ## healthiar FUNCTION CALL
 results <- healthiar::attribute_health(
   erf_shape = "log_linear",
@@ -579,7 +579,7 @@ main / detailed results of an attribute output.
 If you have advanced knowledge of R we are very grateful if you can compare the
 results automatically by running the `test_that` function.
 
-```{r compare results automatically, include=TRUE, echo=TRUE, eval=TRUE}
+```{r compare results automatically, include=TRUE, echo=TRUE, eval=FALSE}
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -624,7 +624,7 @@ to the folder of your institute.
 
 Filled out basic template (with hard-coded input data):
 
-```{r filled out template basic, include=TRUE, echo=TRUE, eval=TRUE}
+```{r filled out template basic, include=TRUE, echo=TRUE, eval=FALSE}
 ## Pathway ID: |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|
 
 ## healthiar FUNCTION CALL
@@ -654,7 +654,7 @@ main / detailed results of an attribute output.
 
 Filled out extended template (with input data loaded into RStudio):
 
-```{r filled out template extended, include=TRUE, echo=TRUE, eval=TRUE}
+```{r filled out template extended, include=TRUE, echo=TRUE, eval=FALSE}
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
@@ -760,7 +760,7 @@ results <- healthiar::summarize_uncertainty(
 
 #### ... then extract the results ...
 
-```{r uncertainty example part 2 extract results}
+```{r uncertainty example part 2 extract results, eval=FALSE}
 results$uncertainty_main$impact_rounded
 ## 26676 (central impact estimates), 22183 (lower), 31407 (upper)
 ```
