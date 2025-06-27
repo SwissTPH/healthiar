@@ -22,14 +22,14 @@ Install the healthiar package
 remotes::install_github(
   repo = "best-cost/best-cost_WPs",
   subdir = "/r_package/healthiar",
-  # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
-  ref = "862-export-package-as-zip-file", # By default "HEAD"; name of branch to install package from as a string
+  ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
+  # ref = "862-export-package-as-zip-file", # By default "HEAD"; name of branch to install package from as a string
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   auth_token = keyring::key_get("GITHUB_PAT_HEALTHIAR"),
   # dependencies = TRUE,
-  # build_vignettes = TRUE,
-  build_vignettes = FALSE,
+  build_vignettes = TRUE,
+  # build_vignettes = FALSE,
   upgrade = c("always") # Update packages
   # upgrade = c("never") # Never update packages
 )
