@@ -803,6 +803,18 @@ Please spread the word!
 
 # Appendix
 
+## Install `healthiar` from a local source file
+
+1. Copy the *healthiar_0.0.2.84X.zip* file from the TRANS folder Axel Luyten to a local folder
+
+2. In RStudio, go to the *Packages* tab and go to the *Install* tab and choose *Package Archive File (.zip; .tar.gz)* from the *Install from:* drop-down menu
+
+3. In the Windows explorer window that pops up go to the local folder where you saved the `healthiar` source file and select the *healthiar_0.0.2.84X.zip* file
+
+4. Click on `Install` (leave the `Install Dependencies` box ticked)
+
+5. Done!
+
 ## Export results
 
 ::: panel-tabset
