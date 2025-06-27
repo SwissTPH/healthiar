@@ -8,7 +8,7 @@
 
 load("C:/Users/luytax/switchdrive/Hitze/HiMoMo/2025_himomo2024/data/clean/population_1969_2024_canton.RData")
 population_1969_2024_canton <- population_1969_2024_canton |>
-  dplyr::filter(year==2013 | year == 2023) |>
+  dplyr::filter(year == 2023) |>
   dplyr::mutate(CH = rowSums(dplyr::across(AG:ZH)))
 
 population_1969_2024_canton <- tidyr::pivot_longer(
@@ -34,13 +34,13 @@ pm_lc <- pm_lc |>
     geo
   ) |>
   ## Add data
-  dplyr::filter(year == 2023 | year == 2013) |>
+  dplyr::filter(year == 2023) |>
   dplyr::filter(geo == "kt") |>
   dplyr::select(-geo) |>
   dplyr::mutate(exposure = dplyr::if_else(
-    year == 2013,
-    true = data_20_plus |> dplyr::filter(year == 2013) |> dplyr::pull(pm2.5),
-    false = data_20_plus |> dplyr::filter(year == 2023) |> dplyr::pull(pm2.5))
+    year == 2023,
+    true = data_20_plus |> dplyr::filter(year == 2023) |> dplyr::pull(pm2.5),
+    false = 0)
   ) |>
   dplyr::mutate(exposure_type = "population_weighted_mean") |>
   dplyr::left_join(
@@ -55,7 +55,8 @@ pm_lc <- pm_lc |>
     rr_u = 1.23,
     increment = 10,
     function_shape = "log_linear"
-  )
+  ) |>
+  dplyr::mutate(cutoff = 5)
 
 ## AR
 noise_ha <- pm_lc |>
@@ -101,7 +102,10 @@ noise_ha <- noise_ha |>
   dplyr::relocate(exposure_category_range, .before = exposure_type) |>
   dplyr::select(-rr, -rr_u, -rr_l, -increment, -function_shape) |>
   dplyr::mutate(formula = "78.927-3.1162*c+0.0342*c^2") |>
-  dplyr::relocate(exposure_type, .after = formula)
+  dplyr::relocate(exposure_type, .after = formula) |>
+  dplyr::mutate(disability_weight = 0.02) |>
+  dplyr::mutate(cost_per_case = 150) |>
+  dplyr::mutate(curreny = "Swiss Francs")
 
 ## Save data sets ####
 pm_lc_ch <- pm_lc |>

@@ -2,7 +2,7 @@
 
 # SETUP ########################################################################
 ## INSTALL & LOAD healthiar:
-### For the installation see Appendix of the healthiar presentation.
+### For the installation see the Appendix of the healthiar presentation
 library(healthiar)
 ## LOAD DATA SETS: run the 4 lines below to load the case study data
 pm_lc_ch <- pm_lc_ch
