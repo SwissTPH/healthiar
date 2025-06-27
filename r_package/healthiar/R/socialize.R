@@ -247,26 +247,33 @@ socialize <- function(listed_output_attribute = NULL,
 
       # * * If increasing_deprivation #########
       if (increasing_deprivation) {
+
         social_component <- social_component_before_quantile |>
           dplyr::mutate(
-            social_ranking = dplyr::dense_rank(dplyr::desc(social_indicator)),
-            social_quantile = dplyr::ntile(dplyr::desc(social_indicator), n = n_quantile))
+            social_ranking = base::rank(-social_indicator, na.last = "keep", ties.method = "random"))
 
 
       } else if(decreasing_deprivation) {
         # * * If NOT increasing_deprivation, i.e. decreasing #########
         social_component <- social_component_before_quantile |>
           dplyr::mutate(
-            social_ranking = dplyr::dense_rank(social_indicator),
-            social_quantile = dplyr::ntile(social_indicator, n = n_quantile))
+            social_ranking = base::rank(social_indicator, na.last = "keep", ties.method = "random"))
       }
 
+      # Add quantile which is common for both case increasing and decreasing deprivation
+      social_component <- social_component|>
+        dplyr::mutate(
+          social_quantile = base::cut(
+            social_ranking,
+            breaks = stats::quantile(social_ranking, probs = seq(0, 1, by = 0.1)),
+            labels = FALSE, include.lowest = TRUE
+          ))
 
     }
 
   # Put all data together ####################
 
-  data <-
+  input_data_with_quantile <-
     ## Add social_quantile (removing the other columns in social_component)
     dplyr::left_join(
       input_data,
@@ -292,25 +299,31 @@ socialize <- function(listed_output_attribute = NULL,
   ## Two steps:
   ## 1) by quantile and age to calculte impact rates
   impact_rates_by_quantile_and_age <-
-    data |>
+    input_data_with_quantile |>
     ## Group by geo_id and age group to obtain impact rates at that level
     dplyr::group_by(social_quantile, age_group, age_order, ref_prop_pop) |>
     dplyr::summarize(
       population_sum = base::sum(population, na.rm = TRUE),
       impact_sum = base::sum(impact, na.rm = TRUE)) |>
+    dplyr::ungroup() |>
     dplyr::mutate(
       impact_rate = impact_sum / population_sum * 1e5,
-      impact_rate_std = impact_rate * ref_prop_pop) |>
-    dplyr::ungroup()
+      impact_rate_std = impact_rate * ref_prop_pop)
 
-  ## 1) by quantile (as other parameters)
+  ## 2) by quantile (as other parameters)
   impact_rates_by_quantile <-
     impact_rates_by_quantile_and_age |>
-    ## Group only by social_quantile to get impact_rates by quantile (higher level)
+    # Group only by social_quantile to get population and impact by quantile (higher level)
+    # and impact_rate_std (but not impact_rate)
     dplyr::group_by(social_quantile) |>
-    dplyr::summarize(impact_rate_sum = base::sum(impact_rate, na.rm = TRUE),
-                     impact_rate_std_sum = base::sum(impact_rate_std, na.rm = TRUE))|>
-    dplyr::ungroup()
+    dplyr::summarize(population_sum = base::sum(population_sum, na.rm = TRUE),
+                     impact_sum = base::sum(impact_sum, na.rm = TRUE),
+                     impact_rate_std = base::sum(impact_rate_std, na.rm = TRUE))|>
+    dplyr::ungroup()|>
+    # Calculate impact rate based on population and impact
+    # Not summing!
+    dplyr::mutate(impact_rate = impact_sum / population_sum * 1e5, .before = impact_rate_std)
+
 
 
   # * * other parameters (beyond impact rates) #################
@@ -319,10 +332,10 @@ socialize <- function(listed_output_attribute = NULL,
   ## Only one step by quantile
 
   ## Define first the variables for if statements
-  has_bhd <- "bhd" %in% names(data)
-  has_population <- "population" %in% names(data)
-  has_exp <- "exp" %in% names(data)
-  has_pop_fraction <- "pop_fraction" %in% names(data)
+  has_bhd <- "bhd" %in% names(input_data_with_quantile)
+  has_population <- "population" %in% names(input_data_with_quantile)
+  has_exp <- "exp" %in% names(input_data_with_quantile)
+  has_pop_fraction <- "pop_fraction" %in% names(input_data_with_quantile)
 
 
   ## Define function to get_other_parameters()
@@ -330,23 +343,22 @@ socialize <- function(listed_output_attribute = NULL,
     other_parameters <- df |>
       dplyr::summarize(
         impact_mean = base::mean(impact, na.rm = TRUE),
-        impact_sum = base::sum(impact, na.rm = TRUE),
-        bhd_sum = if (has_bhd) base::sum(bhd, na.rm = TRUE) else NA,
-        population_sum = if (has_population) sum(population, na.rm = TRUE) else NA,
-        bhd_mean = if (has_bhd) base::mean(bhd, na.rm = TRUE) else NA,
-        exp_mean = if (has_exp) base::mean(exp, na.rm = TRUE) else NA,
-        exp_sd = if (has_exp) stats::sd(exp, na.rm = TRUE) else NA,
-        pop_fraction_mean = if (has_pop_fraction) base::mean(pop_fraction, na.rm = TRUE) else NA,
+        bhd_sum = if (has_bhd) base::sum(bhd, na.rm = TRUE) else NULL,
+        population_sum = if (has_population) base::sum(population, na.rm = TRUE) else NULL,
+        bhd_mean = if (has_bhd) base::mean(bhd, na.rm = TRUE) else NULL,
+        exp_mean = if (has_exp) base::mean(exp, na.rm = TRUE) else NULL,
+        exp_sd = if (has_exp) stats::sd(exp, na.rm = TRUE) else NULL,
+        pop_fraction_mean = if (has_pop_fraction) base::mean(pop_fraction, na.rm = TRUE) else NULL,
         .groups = "drop") |>
         dplyr::mutate(
-          bhd_rate = if (has_bhd && has_population) bhd_sum * 1e5 / population_sum else NA
+          bhd_rate = if (has_bhd && has_population) bhd_sum * 1e5 / population_sum else NULL
         )
     return(other_parameters)
   }
 
 
   other_parameters_by_quantile <-
-    data |>
+    input_data_with_quantile |>
     ## Group by social_quantile
     dplyr::group_by(social_quantile) |>
     get_other_parameters()
@@ -356,7 +368,8 @@ socialize <- function(listed_output_attribute = NULL,
   parameters_by_quantile <-
     dplyr::left_join(impact_rates_by_quantile,
                      other_parameters_by_quantile,
-                     by = "social_quantile")
+                     # common columns
+                     by = c("social_quantile", "population_sum"))
 
   # * _overall ############
 
@@ -365,20 +378,37 @@ socialize <- function(listed_output_attribute = NULL,
   impact_rates_overall <-
     ## Two steps but for the overall level impact_rates_by_quantile_and_age can be reused
     impact_rates_by_quantile_and_age |>
+    dplyr::group_by(age_group, age_order, ref_prop_pop) |>
     ## Without grouping because it is overall
-    dplyr::summarize(impact_rate_sum = base::sum(impact_rate, na.rm = TRUE),
-                     impact_rate_std_sum = base::sum(impact_rate_std, na.rm = TRUE))
+    dplyr::summarize(
+      impact_sum = base::sum(impact_sum, na.rm = TRUE),
+      population_sum = base::sum(population_sum, na.rm = TRUE)) |>
+    dplyr::mutate(
+      impact_rate = impact_sum / population_sum * 1E5,
+      impact_rate_std = impact_rate * ref_prop_pop) |>
+    dplyr::ungroup() |>
+    # Now total
+    dplyr::summarize(
+      impact_sum = base::sum(impact_sum, na.rm = TRUE),
+      population_sum = base::sum(population_sum, na.rm = TRUE),
+      impact_rate_std = base::sum(impact_rate_std, na.rm = TRUE)) |>
+    dplyr::mutate(
+      impact_rate = impact_sum / population_sum * 1E5)
+
+
 
   # * * other parameters (beyond impact rates) #################
   other_parameters_overall <-
-    data |>
+    input_data_with_quantile |>
     ## Without grouping because it is overall
     get_other_parameters()
 
   ## All parameters together
   parameters_overall <-
-    dplyr::bind_cols(impact_rates_overall,
-                     other_parameters_overall)
+    dplyr::left_join(impact_rates_overall,
+                     other_parameters_overall,
+                     # common columns
+                     by = c("population_sum"))
 
   ## Prepared to be joined below
   parameters_overall_prepared <-
@@ -396,7 +426,7 @@ socialize <- function(listed_output_attribute = NULL,
     ## Pivot longer to prepare the data and have a column for parameter
     tidyr::pivot_longer(cols = -social_quantile,
                         names_to = "parameter",
-                        values_to = "difference_value") |>
+                        values_to = "value") |>
     ## Put column parameter first
     dplyr::select(parameter, everything()) |>
     ## Order columns by parameter
@@ -405,8 +435,8 @@ socialize <- function(listed_output_attribute = NULL,
     ## for each parameter
     dplyr::group_by(parameter) |>
     dplyr::summarize(
-      first = dplyr::first(difference_value),
-      last = dplyr::last(difference_value)) |>
+      first = dplyr::first(value),
+      last = dplyr::last(value)) |>
     ## Add the overall (not by quantile) sums and means
     dplyr::left_join(
       parameters_overall_prepared,
@@ -427,8 +457,8 @@ socialize <- function(listed_output_attribute = NULL,
       parameter %in% c("exp_mean",
                        "bhd_rate",
                        "pop_fraction_mean",
-                       "impact_rate_sum",
-                       "impact_rate_std_sum")) |>
+                       "impact_rate",
+                       "impact_rate_std")) |>
     ## Long instead of wide layout
     tidyr::pivot_longer(
       cols = contains("_"),
@@ -470,8 +500,8 @@ socialize <- function(listed_output_attribute = NULL,
   ## * If available output_attribute ######
   if ( has_output_attribute ) {
     output_social <-
-      base::list(health_main = output_attribute[["healt_main"]],
-                 health_detailed = output_attribute[["healt_detailed"]])
+      base::list(health_main = output_attribute[["health_main"]],
+                 health_detailed = output_attribute[["health_detailed"]])
 
     ## * If NOT available output_attribute, i.e. if argument impact #######
 
@@ -485,14 +515,14 @@ socialize <- function(listed_output_attribute = NULL,
     social_results |>
     ## Keep only impact_rate_std as parameter
     ## This is the most relevant result.
-    dplyr::filter(parameter == "impact_rate_std_sum")
+    dplyr::filter(parameter == "impact_rate_std")
 
   ## The other parameters can be stored in detailed
   ## (just in case some users have interest on this)
   output_social[["social_detailed"]][["results_all_parameters"]] <- social_results
   output_social[["social_detailed"]][["parameters_per_quantile"]] <- parameters_by_quantile
   output_social[["social_detailed"]][["parameters_overall"]] <- parameters_overall
-  output_social[["social_detailed"]][["input_table"]] <- data
+  output_social[["social_detailed"]][["input_data_with_quantile"]] <- input_data_with_quantile
 
 
   return(output_social)

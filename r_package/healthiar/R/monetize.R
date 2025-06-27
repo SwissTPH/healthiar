@@ -129,8 +129,8 @@ monetize <- function(output_attribute = NULL,
      !is_lifetable){
     warning(
       base::paste0("You entered some value in discount_rate,",
-      " but discount_year is 0 (default value).\n",
-      "Therefore no discount is applied."),
+                   " but discount_year is 0 (default value).",
+                   " Therefore no discount is applied."),
       call. = FALSE)
   }
 
@@ -144,10 +144,9 @@ monetize <- function(output_attribute = NULL,
      base::length(impact) > 1 &&
      !base::is.null(impact)){
     warning(
-      base::paste0("discount_years is aimed for output_attribute (excluding life table)\n",
-                   "and for impact (excluding vector form).\n",
-                   "Therefore discount_years is ignored here and\n",
-                   "the length of the vector impact is used."),
+      base::paste0("discount_years is aimed for output_attribute (excluding life table)",
+      " and for impact (excluding vector form).",
+      " Therefore discount_years is ignored here and the length of the vector impact is used instead."),
       call. = FALSE)
   }
 
@@ -158,10 +157,9 @@ monetize <- function(output_attribute = NULL,
   if("discount_years" %in% base::names(base::match.call()) &&
      is_lifetable){
     warning(
-      base::paste0("discount_years is aimed for any output_attribute\n",
-                   "and for impact with single value (no vector).\n",
-                   "Therefore discount_years is ignored here and\n",
-                   "the length life table is used."),
+      base::paste0("discount_years is aimed for any output_attribute",
+                   " and for impact with single value (no vector).",
+                   " Therefore discount_years is ignored here and the length life table is used instead."),
       call. = FALSE)
   }
 
@@ -189,7 +187,7 @@ monetize <- function(output_attribute = NULL,
 
       # Output will be adapted according to monetized impacts
       impact_detailed <-
-        output_health[["health_detailed"]][["impact_raw"]] |>
+        output_health[["health_detailed"]][["results_raw"]] |>
 
         ## Calculate total, discounted life years (single value) per sex & ci
         dplyr::mutate(
@@ -286,13 +284,13 @@ monetize <- function(output_attribute = NULL,
 
       # Get the main and detailed output by aggregating and/or filtering cases (rows)
       output_monetization <-
-        healthiar:::get_output(impact_raw = impact_detailed) |>
+        healthiar:::get_output(results_raw = impact_detailed) |>
         # Rename the list elements (not anymore health but health including monetization)
         setNames(c("monetization_main", "monetization_detailed"))
 
       # Keep only the main detailed data frame (raw) for monetization
       output_monetization[["monetization_detailed"]] <-
-        output_monetization[["monetization_detailed"]][["impact_raw"]]
+        output_monetization[["monetization_detailed"]][["results_raw"]]
 
       # Add the list elements health_main and health_detailed
       output_monetization <-
@@ -329,7 +327,7 @@ monetize <- function(output_attribute = NULL,
 
       #Detailed results showing all the details of the health results
       output_monetization[["monetization_detailed"]][["health_raw"]]<-
-        healthiar:::add_monetized_impact(df = output_attribute[["health_detailed"]][["impact_raw"]],
+        healthiar:::add_monetized_impact(df = output_attribute[["health_detailed"]][["results_raw"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
                                          discount_years = {{discount_years}},

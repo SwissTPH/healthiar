@@ -91,12 +91,15 @@ summarize_uncertainty <- function(
 
   ## Data sets ##########
   # Store the input data as entered in the arguments
-  input_args <- output_attribute[["health_detailed"]][["input_args"]]
-  input_table <- output_attribute[["health_detailed"]][["input_table"]]
+
+  input_args_used <- output_attribute$health_detailed$input_args_used
+  input_args <- output_attribute$health_detailed$input_args
+  input_table <- output_attribute$health_detailed$input_table
 
 
 
   # DATA VALIDATION ####
+  ## Error if uncertainty in erf_eq_... ####
   # Uncertainty in erf_eq is currently not supported
   # It would require a more complex modelling
   if((!base::is.null(input_args$erf_eq_lower) |
@@ -105,6 +108,8 @@ summarize_uncertainty <- function(
                call. = FALSE)
   }
 
+
+  ## Error if exposure distribution and uncertainty in exp_...####
   if(# If exposure distribution
     base::unique(output_attribute$health_detailed$impact_disaggregated$exposure_type) == "exposure_distribution" &&
     # If uncertainty in exposure
@@ -113,6 +118,14 @@ summarize_uncertainty <- function(
     base::stop("Sorry, the summary of uncertainty for exp_... in exposure distributions is not currently supported",
                call. = FALSE)
   }
+
+  ## Error if no argument with uncertainty ####
+  if(# No argument used has _lower or _upper)
+    ! base::any(base::grepl("_upper|_lower", input_args_used))){
+    base::stop("Please enter an assessment with uncertainty (..._lower and ..._upper) in any argument.",
+               call. = FALSE)
+  }
+
 
 
 
@@ -183,14 +196,14 @@ summarize_uncertainty <- function(
   # It is important to create it because for two cases (comparison)
   # the function has to be run more than once (avoid copy-pasted code)
   summarize_uncertainty_based_on_input <-
-    function(input_args, input_table){
+    function(input_args_used, input_args, input_table){
 
   ## N #####
   # Determine number of geographic units
   n_geo <-
     # Exceptionally, let's use here unique() instead of input_args
     # because in some cases the users do not enter the geo_id.
-    # In that cases compile_input() provide a geo_id and it is shown in impact_raw
+    # In that cases compile_input() provide a geo_id and it is shown in results_raw
     base::length(base::unique(input_table$geo_id_disaggregated))
 
   # If exposure dimension is implemented:
@@ -489,6 +502,10 @@ summarize_uncertainty <- function(
   input_args_prepared_for_replacement <-
     purrr::keep(input_args,
                 !base::names(input_args) %in% vars_to_be_removed_in_input_args)
+    # Add the input_args_used
+    # Otherwise the data validation of attribute_master() can give some error
+  input_args_prepared_for_replacement[[".input_args_used"]] <-
+    input_args_used
 
   template_with_sim <-
     # Bind the template with the simulated values
@@ -632,9 +649,11 @@ summarize_uncertainty <- function(
   if(is_one_case){
     # Use summarize_uncertainty_based_on_input() only once
     uncertainty <-
-      summarize_uncertainty_based_on_input(
-        input_args = input_args,
-        input_table = input_table)
+      c(output_attribute,
+        summarize_uncertainty_based_on_input(
+          input_args_used = input_args_used,
+          input_args = input_args,
+          input_table = input_table))
 
   ## Two cases (comparison) ####
   } else if (is_two_cases){
@@ -644,11 +663,14 @@ summarize_uncertainty <- function(
     # Once for the scenario 1
     attribute_1 <-
       summarize_uncertainty_based_on_input(
+        input_args_used = input_args_used[["input_args_used_1"]],
         input_args = input_args[["input_args_1"]],
         input_table = input_table[["input_table_1"]])
+
     # Once for the scenario 2
     attribute_2 <-
       summarize_uncertainty_based_on_input(
+        input_args_used = input_args_used[["input_args_used_2"]],
         input_args = input_args[["input_args_2"]],
         input_table = input_table[["input_table_2"]])
 
@@ -742,13 +764,14 @@ summarize_uncertainty <- function(
     # other healthiar functions
 
     uncertainty <-
-      base::list(
-        uncertainty_main = summary,
-        uncertainty_detailed =
-          base::list(attribute_by_sim = attribute_by_sim,
-                     attribute_by_sim_disaggregated = attribute_by_sim_disaggregated,
-                     attribute_by_geo_id_disaggregated = attribute_by_geo_id_disaggregated,
-                     uncertainty_by_geo_id_disaggregated = summary_by_geo_id_disaggregated))
+      c(output_attribute,
+        base::list(
+          uncertainty_main = summary,
+          uncertainty_detailed =
+            base::list(attribute_by_sim = attribute_by_sim,
+                       attribute_by_sim_disaggregated = attribute_by_sim_disaggregated,
+                       attribute_by_geo_id_disaggregated = attribute_by_geo_id_disaggregated,
+                       uncertainty_by_geo_id_disaggregated = summary_by_geo_id_disaggregated)))
 
   }
 

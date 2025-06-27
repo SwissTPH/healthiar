@@ -3,9 +3,10 @@
 #' @description
 #' This function distributes and store outputs by level of detail by aggregating or filtering impacts.
 
+#' @param input_args_used \code{String vector} with the argument names that were actively entered by the user.
 #' @param input_args \code{List} containingall arguments and values entered in attribute().
 #' @param input_table \code{List} containing the input_table data compiled and packed in a data frame.
-#' @param impact_raw \code{List} containing all the calculation of health impacts.
+#' @param results_raw \code{List} containing all the calculation of health impacts.
 
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
@@ -28,9 +29,10 @@
 
 
 get_output <-
-  function(input_args = NULL,
+  function(input_args_used = NULL,
+           input_args = NULL,
            input_table = NULL,
-           impact_raw){
+           results_raw){
 
     # Store set of columns ###################################
     # Variables to be used below
@@ -49,13 +51,14 @@ get_output <-
     # Get main results from detailed results ###################################
 
     health_detailed_from_impact  <-
-      list(input_args = input_args,
+      list(input_args_used = input_args_used,
+           input_args = input_args,
            input_table = input_table,
-           impact_raw = impact_raw)
+           results_raw = results_raw)
 
-    if(any(grepl("nest", names(impact_raw)))){
+    if(any(grepl("nest", names(results_raw)))){
       impact_main <-
-        impact_raw |>
+        results_raw |>
         dplyr::select(-dplyr::contains("nest"))|>
         dplyr::filter(sex %in% "total")
 
@@ -74,7 +77,7 @@ get_output <-
       # Store output so far
       # The main will change below that we give a first value
       output <-
-        list(health_main = impact_raw,
+        list(health_main = results_raw,
              health_detailed = health_detailed_from_impact)}
 
     # Keep the last version
@@ -84,7 +87,7 @@ get_output <-
 
     # Absolute risk ############
 
-    if(unique(impact_raw$approach_risk) == "absolute_risk") {
+    if(unique(results_raw$approach_risk) == "absolute_risk") {
 
       output[["health_detailed"]][["impact_agg_exp_cat"]] <-
         output_last |>
@@ -175,8 +178,8 @@ get_output <-
     }
 
     # Aggregate results across pollutants (exposures)
-    if("approach_multiexposure" %in% names(impact_raw)){
-      if(unique(impact_raw$approach_multiexposure) %in% "additive"){
+    if("approach_multiexposure" %in% names(results_raw)){
+      if(unique(results_raw$approach_multiexposure) %in% "additive"){
 
       output[["health_detailed"]][["impact_agg_exp_names"]]  <-
         output_last |>

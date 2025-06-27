@@ -136,7 +136,7 @@ Every `attribute_health()` output consists of two lists ("folders")
 
 -   `health_detailed` detailed results and additional info about the assessment
 
-    - `impact_raw` tibble that contains the detailed results
+    - `results_raw` tibble that contains the detailed results
     
     - `input_args` contains a complete list of all arguments used in the assessment (including some internal arguments)
     
@@ -218,7 +218,7 @@ Let's inspect the detailed results:
 ```{r}
 results_pm_copd |> 
   purrr::pluck("health_detailed") |>
-  purrr::pluck("impact_raw") |> 
+  purrr::pluck("results_raw") |> 
   dplyr::select(contains("_ci"), impact_rounded) |> 
   dplyr::slice(1:9) |> 
   knitr::kable() # Prints tibble in a minimal layout
@@ -231,7 +231,7 @@ Each row shows a result from a specific calculation pathway that used all the in
 
 -   ...
 
-(*NOTE*: only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$impact_raw$impact)` possible combinations are displayed due to space constraints.)
+(*NOTE*: only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_raw$impact)` possible combinations are displayed due to space constraints.)
 
 ## Example: `attribute_health()` with absolute risk
 
@@ -259,10 +259,10 @@ results_noise_ha |>
 ### Results per noise exposure band
 
 ```{r, echo=TRUE, eval=FALSE, include=TRUE}
-results_noise_ha$health_detailed$impact_raw
+results_noise_ha$health_detailed$results_raw
 ```
 ```{r, echo=FALSE, eval=TRUE, include=TRUE}
-results_noise_ha[["health_detailed"]][["impact_raw"]] |> 
+results_noise_ha[["health_detailed"]][["results_raw"]] |> 
   select(exposure_dimension, exp, pop_exp, impact) |> 
   knitr::kable()
 ```
@@ -331,10 +331,10 @@ Main (= *aggregated*). The cumulative / summed number of stroke cases attributab
 The geo unit-specific information and results are stored under `health_detailed`. Filter for the geo unit-specific results as follows
 
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
-results_iteration$health_detailed$impact_raw
+results_iteration$health_detailed$results_raw
 ```
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
-results_iteration[["health_detailed"]][["impact_raw"]] |> 
+results_iteration[["health_detailed"]][["results_raw"]] |> 
   dplyr::select(geo_id_disaggregated, geo_id_aggregated, impact_rounded) |> 
   knitr::kable()
 ```
@@ -383,10 +383,10 @@ results_iteration_ar[["health_main"]] |>
 ### Detailed results
 Impact by geo area, in this case impact in rural and in urban area.
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
-results_iteration_ar$health_detailed$impact_raw
+results_iteration_ar$health_detailed$results_raw
 ```
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
-results_iteration_ar[["health_detailed"]][["impact_raw"]] |> 
+results_iteration_ar[["health_detailed"]][["results_raw"]] |> 
   select(geo_id_disaggregated, geo_id_aggregated, impact) |> 
   knitr::kable()
 ```
@@ -452,7 +452,7 @@ The `compare()` results are very similar to `attribute_health()` results:
 
 -   `health_detailed`
 
-    -   `impact_raw` raw comparison results
+    -   `results_raw` raw comparison results
 
     -   `scenario_1` contains results of scenario 1 (scenario A in our case)
 
@@ -654,24 +654,24 @@ Detailed total YLL results per year, per age (per sex also available)
 
 TODO: note that even thought the column name says `population_...` these are actually the YLL... column names to be adjusted
 ```{r eval=FALSE}
-results_pm_yll$health_detailed$impact_raw$yll_nest$total_a_central_central_central
+results_pm_yll$health_detailed$results_raw$yll_nest$total_a_central_central_central
 ```
 
 ```{r, echo=FALSE}
-results_pm_yll$health_detailed$impact_raw$yll_nest$total_a_central_central_central |> 
+results_pm_yll$health_detailed$results_raw$yll_nest$total_a_central_central_central |> 
   select(age, population_2019, population_2020, population_2021) |> 
-  slice( ( nrow(results_pm_yll$health_detailed$impact_raw$yll_nest$total_a_central_central_central)-8 ) : 
-           nrow(results_pm_yll$health_detailed$impact_raw$yll_nest$total_a_central_central_central)) |> 
+  slice( ( nrow(results_pm_yll$health_detailed$results_raw$yll_nest$total_a_central_central_central)-8 ) : 
+           nrow(results_pm_yll$health_detailed$results_raw$yll_nest$total_a_central_central_central)) |> 
   knitr::kable()
 ```
 
 Other relevant detailed results include
 
-- `results_pm_yll[["health_detailed"]][["impact_raw"]][["pop_baseline_scenario_nest"]]` population over time in baseline scenario (no exposure)
+- `results_pm_yll[["health_detailed"]][["results_raw"]][["pop_baseline_scenario_nest"]]` population over time in baseline scenario (no exposure)
 
-- `results_pm_yll[["health_detailed"]][["impact_raw"]][["pop_impacted_scenario_nest"]]` population over time in impact scenario (with exposure)
+- `results_pm_yll[["health_detailed"]][["results_raw"]][["pop_impacted_scenario_nest"]]` population over time in impact scenario (with exposure)
 
-- `results_pm_yll[["health_detailed"]][["impact_raw"]][["premature_deaths_nest"]][["total_a_central_central_central"]] |> select(age, age_end, deaths_2019)` pre-mature deaths in the year of exposure (here: 2019) attributable to exposure
+- `results_pm_yll[["health_detailed"]][["results_raw"]][["premature_deaths_nest"]][["total_a_central_central_central"]] |> select(age, age_end, deaths_2019)` pre-mature deaths in the year of exposure (here: 2019) attributable to exposure
 
 Note: you can also access these data frames using the `$` operator
 
@@ -711,13 +711,13 @@ results_pm_deaths$health_main$impact
 ### Detailed results
 
 ```{r eval=FALSE}
-results_pm_deaths$health_detailed$impact_raw$premature_deaths_nest$total_a_central_central_central
+results_pm_deaths$health_detailed$results_raw$premature_deaths_nest$total_a_central_central_central
 ```
 
 ```{r, echo=FALSE}
-results_pm_deaths$health_detailed$impact_raw$premature_deaths_nest$total_a_central_central_central |> 
-  slice( ( nrow(results_pm_deaths$health_detailed$impact_raw$premature_deaths_nest$total_a_central_central_central)-8 ) : 
-           nrow(results_pm_deaths$health_detailed$impact_raw$premature_deaths_nest$total_a_central_central_central)) |> 
+results_pm_deaths$health_detailed$results_raw$premature_deaths_nest$total_a_central_central_central |> 
+  slice( ( nrow(results_pm_deaths$health_detailed$results_raw$premature_deaths_nest$total_a_central_central_central)-8 ) : 
+           nrow(results_pm_deaths$health_detailed$results_raw$premature_deaths_nest$total_a_central_central_central)) |> 
   knitr::kable()
 ```
 ```{r, echo=FALSE, eval=TRUE, include=FALSE}

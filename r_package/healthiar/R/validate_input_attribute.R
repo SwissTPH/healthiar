@@ -3,13 +3,13 @@
 #' @description
 #' Check the input data in attribute_master() and provides specific warnings or errors if needed.
 #' @param input \code{List} with the argument names and values entered in the function.
-#' @param unused_args \code{String vector} with the argument names that were not actively entered by the user.
+#' @param input_args_used \code{String vector} with the argument names that were actively entered by the user.
 #' @returns This function returns warning or error messages if needed.
 #' @author Alberto Castro & Axel Luyten
 #' @keywords internal
 
 validate_input_attribute <-
-  function(input_args, unused_args){
+  function(input_args, input_args_used){
 
 
     # Data sets ###########
@@ -86,11 +86,14 @@ validate_input_attribute <-
     # Functions and calls ###########
 
     ## Errors #####
+
+    ### error_if_var_1_but_not_var_2 #####
+
     error_if_var_1_but_not_var_2 <- function(var_name_1, var_name_2){
 
-      if(!var_name_1 %in% unused_args &&
-         var_name_2 %in% unused_args
-         # Check unused_args in case that there is a default value (safer)
+      if(var_name_1 %in% input_args_used &&
+         !var_name_2 %in% input_args_used
+         # Check input_args_used in case that there is a default value (safer)
          ){
         stop(
           paste0(
@@ -107,7 +110,7 @@ validate_input_attribute <-
                                  var_name_2 = "geo_id_disaggregated")
 
 
-
+    ### error_if_not_numeric #####
     error_if_not_numeric <- function(var_name){
       var_value <- input_args[[var_name]]
 
@@ -120,13 +123,14 @@ validate_input_attribute <-
           call. = FALSE)
       }
     }
-    # --> Error if numeric argument has non-numeric value
+
+
     for (x in available_numeric_var_names) {
       error_if_not_numeric(var_name = x)
     }
 
 
-
+    ### error_if_not_an_option #####
 
     error_if_not_an_option <- function(var_name){
       var_value <- input_args[[var_name]]
@@ -136,17 +140,19 @@ validate_input_attribute <-
 
         base::stop(
           base::paste0(
-            "For ", var_name,",\n",
-            "please, type (between quotation marks) one of this options: \n",
-            base::paste0(var_options, collapse = ", ")),
+            "For ", var_name,
+            ", please, type (between quotation marks) one of these options: ",
+            base::paste0(var_options, collapse = ", "), "."),
           call. = FALSE)
       }
     }
 
-    # --> Error if numeric argument has non-numeric value
+
     for (x in available_categorical_var_names) {
       error_if_not_an_option(var_name = x)
     }
+
+    ### error_if_different_length #####
 
 
     get_length <- function(var){
@@ -193,6 +199,8 @@ validate_input_attribute <-
         }
     }
 
+
+
     # If rr --> length(exp) and length(prop_pop_exp) must be the same
 
     # Exposure has to have the same length as prop_pop_exp
@@ -207,6 +215,7 @@ validate_input_attribute <-
         error_if_different_length(x, "prop_pop_exp")
       }
     }
+
 
 
 
@@ -226,6 +235,8 @@ validate_input_attribute <-
 
     }
 
+    ### error_if_incompatible_length_of_age_range #####
+
     error_if_incompatible_length_of_age_range <-
       function(age_dependent_var){
 
@@ -243,7 +254,7 @@ validate_input_attribute <-
                            length_age_dependent_var)){
 
         # Create error message
-        stop("The length of age range (sequence of first_age_pop and last_age_pop) must be compatible with the age-dependent variables",
+        stop("The length of age range (sequence of first_age_pop and last_age_pop) must be compatible with the age-dependent variables.",
              call. = FALSE)
       }
       }
@@ -255,7 +266,7 @@ validate_input_attribute <-
     }
 
 
-
+    ### error_if_lower_than_0 #####
 
     error_if_lower_than_0 <- function(var_name){
       var_value <- input[[var_name]]
@@ -269,13 +280,13 @@ validate_input_attribute <-
         }
     }
 
-    # --> Error if rr if lower than 0
-    # Check one-by-one in loop
-    #(purrr does not allow deactivating part of the error message)
+
     for (x in numeric_var_names) {
       error_if_lower_than_0(x)
     }
 
+
+    ### error_if_higher_than_1 #####
 
     error_if_higher_than_1 <- function(var_name){
       var_value <- input[[var_name]]
@@ -289,13 +300,14 @@ validate_input_attribute <-
       }
     }
 
-    # --> Error if base::any(prop_pop_exp) and dw are higher than 1
+    # Error if base::any(prop_pop_exp) and dw are higher than 1
     for (x in c("prop_pop_exp", base::paste0("dw", ci_suffix))) {
       error_if_higher_than_1(x)
     }
 
+    ### error_if_multi_geo_and_different_length #####
 
-    ## Error if multiple geo units and length of some geo dependent variables are different ####
+    # Error if multiple geo units and length of some geo dependent variables are different
     # (geo_ids, exp_central, prop_pop_exp, pop_exp and bhd) must be the same
     # i.e. enter the data as in the table
     error_if_multi_geo_and_different_length  <- function(list, var_names){
@@ -331,7 +343,7 @@ validate_input_attribute <-
                                                           "population_midyear_male",
                                                           "population_midyear_female"))
 
-
+    ### error_if_sum_higher_than_1 #####
     error_if_sum_higher_than_1 <- function(var_name){
 
       var_value <- input[[var_name]]
@@ -396,10 +408,13 @@ validate_input_attribute <-
       }
     }
 
-    # --> Error if base::sum(prop_pop_exp) > 1
+    # Call function checking if base::sum(prop_pop_exp) > 1
     error_if_sum_higher_than_1(var_name = "prop_pop_exp")
 
 
+
+
+    ### error_if_not_increasing_lower_central_upper #####
     error_if_not_increasing_lower_central_upper <-
       function(var_ci){
         # Store var_name from vector var_ci
@@ -439,12 +454,12 @@ validate_input_attribute <-
         }
       }
 
-    # --> Error if not lower>central>upper
+    # Call function checking if error if not lower>central>upper
     for (x in c("rr", "bhd", "exp", "cutoff", "dw", "duration")) {
       error_if_not_increasing_lower_central_upper(var_ci = base::paste0(x, ci_suffix))
     }
 
-
+    ### error_if_only_lower_or_upper #####
     error_if_only_lower_or_upper <- function(var_short){
       var_name_lower <- base::paste0(var_short, "_lower")
       var_name_upper <- base::paste0(var_short, "_upper")
@@ -462,60 +477,119 @@ validate_input_attribute <-
               var_name_lower,
               " and ",
               var_name_upper,
-              ", or non of them must entered, but not only one."),
+              ", or none of them must entered, but not only one."),
             call. = FALSE)
         }
       }
     }
 
-    # --> Error if lower but not upper (or vice versa)
+    # Call function checking if lower but not upper (or vice versa)
     for (x in c("rr", "bhd", "exp", "cutoff", "dw", "duration")) {
       error_if_only_lower_or_upper(var_short = x)
     }
 
+    ### error_if_var_and_risk #####
 
-    #TODO: Check that geo_id_disaggregated is provided if multiple geo units
+    error_if_var_and_risk <- function(var_name, approach_risk){
+      # Identify the alternative options
+      all_approach_risks <- c("relative_risk", "absolute_risk")
+      all_var_names <- c("prop_pop_exp", "pop_exp")
+      another_approach_risk <- all_approach_risks[!all_approach_risks %in% approach_risk]
+      another_var_name <- all_var_names[!all_var_names %in% var_name]
+
+      if(var_name %in% input_args_used &&
+         input_args$approach_risk == approach_risk){
+        stop(base::paste0("The argument ",
+        var_name,
+        " is aimed for ",
+        # Remove the underscore
+        base::gsub("_", " ", another_approach_risk),
+        ". Use ",
+        another_var_name,
+        " instead."),
+          call. = FALSE
+        )
+      }
+    }
+
+    # Call function
+    error_if_var_and_risk(var_name = "pop_exp", approach_risk = "relative_risk")
+    error_if_var_and_risk(var_name = "prop_pop_exp", approach_risk = "absolute_risk")
 
 
 
-    ## Warnings ######
-    warning_if_ar_and_existing <- function(var_name){
+    ### error_if_var_1_and_var_2 #####
+
+    error_if_var_1_and_var_2 <- function(var_name_1, var_name_2){
+      # Identify the alternative options
+
+      if(var_name_1 %in% input_args_used &&
+         var_name_2 %in% input_args_used){
+        stop(base::paste0("The argument ",
+                          var_name_1,
+                          " cannot be used together with the argument ",
+                          var_name_2,
+                          " (either one or the other but not both)."),
+             call. = FALSE
+        )
+      }
+    }
+
+    # Call function
+    for (a in c("rr_central", "erf_shape", "rr_increment")){
+      error_if_var_1_and_var_2(var_name_1 = a, var_name_2 = "erf_eq_central")
+    }
+
+
+
+    ## Warnings ########################
+
+    ### warning_if_ar_and_var #####
+    warning_if_ar_and_var <- function(var_name){
 
       # Store var_value
       var_value <- input[[var_name]]
 
-      if(!base::is.null(var_value) && !var_value == 0){ # Only if available
+      if(input$approach_risk == "absolute_risk" &&
+         !base::is.null(var_value) && !var_value == 0){ # Only if available
         # Create warning message
         base::warning(
           base::paste0(
             "For absolute risk, the value of ",
             var_name,
-            " is not considered (",
+            " is not considered; ",
             var_name,
-            " defined by exposure-response function)"),
+            " is defined by the exposure-response function."),
           call. = FALSE)
       }
     }
 
-    if(input$approach_risk == "absolute_risk"){
-
-      # --> Warning if cutoff is entered (will not be considered)
+    # Call function only if absolute risk
 
       for(cutoff_ci_suffix in base::paste0("cutoff", ci_suffix)){
-        warning_if_ar_and_existing(cutoff_ci_suffix)
-      }
+        warning_if_ar_and_var(cutoff_ci_suffix)
     }
 
+
+    ### warning_if_rr_and_no_var_with_default #####
+    warning_if_rr_and_no_var_with_default <- function(var_name, default){
+
     # For absolute risk no cutoff is used (not relevant)
-    if("cutoff_central" %in% unused_args &&
+    if(! var_name %in% input_args_used &&
        input_args$approach_risk == "relative_risk"){
 
       base::warning(
-        "You entered no value for cut-off. Therefore, zero has been assumed as cut-off. Be aware that this can determine your results.",
+        base::paste0("You entered no value for ",
+        var_name,
+        ". Therefore, ",
+        default,
+        " has been assumed as default. Be aware that this can determine your results."),
         call. = FALSE)
 
+      }
     }
 
+    warning_if_rr_and_no_var_with_default(var_name = "cutoff_central", default = 0)
 
 
 

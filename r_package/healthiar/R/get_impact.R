@@ -34,15 +34,15 @@ get_impact <-
 
     if(unique(input_table$approach_risk) == "relative_risk"){
 
-      if("pop_exp" %in% names(input_table) ){
+      input_with_prop_pop_exp <- input_table
 
-        input_with_prop_pop_exp <- input_table |>
-          dplyr::group_by(geo_id_disaggregated) |>
-          dplyr::mutate(prop_pop_exp = pop_exp/sum(pop_exp))
-
-      } else{
-        input_with_prop_pop_exp <- input_table
-      }
+      # Deactivated code
+      # Activate if it is allowed to derive prop_pop_exp from pop_exp
+      # if("pop_exp" %in% names(input_table) ){
+      #   input_with_prop_pop_exp <- input_table |>
+      #     dplyr::group_by(geo_id_disaggregated) |>
+      #     dplyr::mutate(prop_pop_exp = pop_exp/sum(pop_exp))
+      # }
 
 
       # Get pop_fraction and add to the input_table data frame
@@ -55,7 +55,7 @@ get_impact <-
       if(!unique(input_table$is_lifetable)) {
 
         # Get pop_fraction and add it to the input data frame
-        impact_raw <-
+        results_raw <-
           input_with_risk_and_pop_fraction |>
           # Build the result table adding the impact to the input table
           dplyr::mutate(impact = pop_fraction * bhd) |>
@@ -72,7 +72,7 @@ get_impact <-
             input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
 
-        impact_raw <-
+        results_raw <-
           healthiar:::get_deaths_yll_from_lifetable(
             pop_impact = pop_impact,
             input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
@@ -87,7 +87,7 @@ get_impact <-
         ( !unique(input_table$is_lifetable)) ) {
 
         # Calculate absolute risk for each exposure category
-        impact_raw <-
+        results_raw <-
           input_table |>
           dplyr::rowwise() |>
           dplyr::mutate(
@@ -109,8 +109,8 @@ get_impact <-
           "duration" %in% names(input_table) &
           !unique(input_table$is_lifetable)) {
 
-        impact_raw <-
-          impact_raw |>
+        results_raw <-
+          results_raw |>
           dplyr::mutate(impact = impact * dw * duration)
 
       }
@@ -122,9 +122,9 @@ get_impact <-
     ## Note: column is called prop_pop_exp (rr case) or pop_exp (ar case)
 
     # * If exposure distribution ########################################################
-    if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) &
-         ( unique(impact_raw$exposure_type) == "exposure_distribution" ) &
-         ( !unique(impact_raw$is_lifetable) ) ) {
+    if ( ( unique(results_raw$approach_risk) == "relative_risk" ) &
+         ( unique(results_raw$exposure_type) == "exposure_distribution" ) &
+         ( !unique(results_raw$is_lifetable) ) ) {
 
       # Define your dynamic vectors
       group_vars <-
@@ -152,7 +152,7 @@ get_impact <-
           .groups = "drop")|>
         base::unique()
 
-        impact_raw <- impact_raw |>
+        results_raw <- results_raw |>
           dplyr::select(-dplyr::any_of(summary_vars)) |>
           dplyr::left_join(
             input_table_to_join,
@@ -161,22 +161,22 @@ get_impact <-
         }
 
 
-    if ( ( unique(impact_raw$approach_risk) == "relative_risk" ) ) {
-      impact_raw <- impact_raw |>
+    if ( ( unique(results_raw$approach_risk) == "relative_risk" ) ) {
+      results_raw <- results_raw |>
         dplyr::mutate(impact_rounded = round(impact, 0))
     }
 
     # * Calculate impact per 100K inhabitants ##################################
 
-    if("population" %in% colnames(impact_raw)){
-      impact_raw <-
-        impact_raw |>
+    if("population" %in% colnames(results_raw)){
+      results_raw <-
+        results_raw |>
         dplyr::mutate(
           impact_per_100k_inhab = (impact / population) *1E5
         )
     }
 
 
-  return(impact_raw)
+  return(results_raw)
 
   }

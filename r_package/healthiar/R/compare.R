@@ -86,14 +86,17 @@ compare <-
 
     # Extract input data (for subsequent get_impact call) ########################
 
+    input_args_used_1 <- output_attribute_1[["health_detailed"]][["input_args_used"]]
+    input_args_used_2 <- output_attribute_2[["health_detailed"]][["input_args_used"]]
+
     input_args_1 <- output_attribute_1[["health_detailed"]][["input_args"]]
     input_args_2 <- output_attribute_2[["health_detailed"]][["input_args"]]
 
     input_table_1 <- output_attribute_1[["health_detailed"]][["input_table"]]
     input_table_2 <- output_attribute_2[["health_detailed"]][["input_table"]]
 
-    raw_1 <- output_attribute_1[["health_detailed"]][["impact_raw"]]
-    raw_2 <- output_attribute_2[["health_detailed"]][["impact_raw"]]
+    raw_1 <- output_attribute_1[["health_detailed"]][["results_raw"]]
+    raw_2 <- output_attribute_2[["health_detailed"]][["results_raw"]]
 
 
     # Force the same environment in the functions of erf_eq.
@@ -208,7 +211,7 @@ compare <-
           except = scenario_specific_arguments)
 
       # Merge the result tables by common columns
-      impact_raw <-
+      results_raw <-
         dplyr::left_join(
          raw_1,
          raw_2,
@@ -284,13 +287,13 @@ compare <-
         # So let's use e.g. input_args_1
         if(input_args_1$is_lifetable) {
           # Calculate the health impacts for each case (uncertainty, category, geo area...)
-          impact_raw <-
+          results_raw <-
             healthiar:::get_impact(
               input_table = input_table |> dplyr::rename(year_of_analysis = year_of_analysis_1),
               pop_fraction_type = "pif")
         } else { # Non-lifetable cases
 
-          impact_raw <-
+          results_raw <-
             healthiar:::get_impact(
               input_table = input_table,
               pop_fraction_type = "pif")
@@ -306,11 +309,13 @@ compare <-
 
     output <-
       healthiar:::get_output(
+        input_args_used = list(input_args_used_1 = input_args_used_1,
+                               input_args_used_2 = input_args_used_2),
         input_args = list(approach_comparison = approach_comparison,
                           input_args_1 = input_args_1,
                           input_args_2 = input_args_2),
         input_table = input_table,
-        impact_raw = impact_raw)
+        results_raw = results_raw)
 
     output[["health_detailed"]][["scenario_1"]] <- raw_1
     output[["health_detailed"]][["scenario_2"]] <- raw_1
