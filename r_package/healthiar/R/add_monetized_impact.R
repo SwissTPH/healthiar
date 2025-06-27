@@ -60,7 +60,7 @@ add_monetized_impact  <-
 
 
 
-
+# browser()
   df_with_input <-
     df |>
     # Add columns for input data in the table
