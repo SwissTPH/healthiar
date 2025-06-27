@@ -168,7 +168,7 @@ results_2.2 <- attribute_health(
   pop_exp = noise_ha_cantons$population_exposed
 )
 ## Attributable HA cases in each canton
-results_2.2$health_detailed$impact_raw |>
+results_2.2$health_detailed$results_raw |>
   dplyr::group_by(geo_id_disaggregated) |>
   dplyr::summarize(impact = sum(impact)) |>
   dplyr::arrange(dplyr::desc(impact))
