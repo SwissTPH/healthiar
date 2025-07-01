@@ -30,7 +30,7 @@
 
 
 compile_input <-
-  function(input_args){
+  function(input_args, is_lifetable){
 
 
     args_for_lifetable <-
@@ -159,7 +159,7 @@ compile_input <-
     # CREATE LIFE TABLES ##########################################################
     # As nested tibble
 
-    if (input_args_edited$is_lifetable) {
+    if (is_lifetable) {
 
 
       # Build the data set for lifetable-related data
