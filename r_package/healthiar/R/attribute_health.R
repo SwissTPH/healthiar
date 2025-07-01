@@ -242,8 +242,13 @@ attribute_health <-
     info = NULL,
     population = NULL){
 
-    # Get what the arguments that the user passed
-    input_args_used <- base::names(base::as.list(base::match.call()))[-1] # drop function name
+
+
+    # Get input_args
+    # i.e. a list with all argument values and characteristics
+    input_args <-
+      healthiar:::get_input_args(environment = base::environment(),
+                                 call = match.call())
 
     output <-
       healthiar:::attribute_master(
@@ -277,7 +282,7 @@ attribute_health <-
         approach_newborns = NULL,
         year_of_analysis = NULL,
         # INTERNAL ARGUMENTS
-        .input_args_used = input_args_used)
+        input_args = input_args)
 
     return(output)
 
