@@ -39,7 +39,7 @@ compile_input <-
         "min_age", "max_age")
 
 
-    input_args_edited <- input_args
+    input_args_edited <- input_args$value
 
     # PROCESS GEO ID ###################################################################
     # geo_ids need to be character because
@@ -156,7 +156,7 @@ compile_input <-
     # CREATE LIFE TABLES ##########################################################
     # As nested tibble
 
-    if (input_args$is_lifetable) {
+    if (input_args_edited$is_lifetable) {
 
 
       # Build the data set for lifetable-related data
