@@ -265,15 +265,23 @@ compile_input <-
         #   dplyr::group_by(geo_id_disaggregated) |>
         #   dplyr::summarize(population = sum(population, rm.na = TRUE))
 
-        # Join the input without and with lifetable variable into one tibble
-        input_table <-
-          dplyr::left_join(input_wo_lifetable,
-                           non_age_specific_input_for_lifetable,
-                           by = "geo_id_disaggregated",
-                           relationship = "many-to-many") |>
-          dplyr::left_join(lifetable_with_pop,
-                           by = "geo_id_disaggregated",
-                           relationship = "many-to-many")
+      # Join the input without and with lifetable variable into one tibble
+      input_table <-
+        dplyr::left_join(input_wo_lifetable,
+                         non_age_specific_input_for_lifetable,
+                         by = "geo_id_disaggregated",
+                         relationship = "many-to-many") |>
+        dplyr::left_join(lifetable_with_pop,
+                         by = "geo_id_disaggregated",
+                         relationship = "many-to-many")
+      # Add approach_risk
+      # This is not in input_args for life table because
+      # it is first defined in attribute_master()
+      # not an option in attribute_lifetable()
+      input_table <- input_table |>
+        dplyr::mutate(approach_risk = "relative_risk")
+
+
 
       } else {
       # If no lifetable, only use input_wo_lifetable
