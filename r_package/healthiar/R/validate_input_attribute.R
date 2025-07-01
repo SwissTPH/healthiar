@@ -83,6 +83,7 @@ validate_input_attribute <-
     # approach_risk can only be relative_risk
     # and it defined at the level of attribute_master()
     # and therefore not available input$args
+
     if(is_lifetable) {
       approach_risk <- "relative_risk" }
     else{ approach_risk <- input_args$value$approach_risk}
