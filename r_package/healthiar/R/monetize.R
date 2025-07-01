@@ -61,7 +61,7 @@ monetize <- function(output_attribute = NULL,
   using_impact_vector_from_user <- length(impact)>1
 
   is_lifetable <-
-    !is.null(output_attribute[["health_detailed"]][["input_args"]]$deaths_male)
+    !is.null(output_attribute[["health_detailed"]][["input_args"]][["value"]]$deaths_male)
   is_not_lifetable <-
     !is_lifetable
 
@@ -180,7 +180,7 @@ monetize <- function(output_attribute = NULL,
     if(is_lifetable){
 
       health_outcome <-
-        output_attribute[["health_detailed"]][["input_args"]]$health_outcome
+        output_attribute[["health_detailed"]][["input_args"]][["value"]]$health_outcome
 
       # Store the original data (they refer to health)
       output_health <- output_attribute

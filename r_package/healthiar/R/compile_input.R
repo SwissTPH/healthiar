@@ -3,7 +3,10 @@
 #' @description
 #' This function compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
 
-#' @inheritParams attribute_master
+#' @param input_args
+#' \code{List} with all input data by argument
+#' @param is_lifetable
+#' \code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)
 
 #' @returns
 #' This function returns a \code{data.frame} with all input data together
@@ -27,7 +30,7 @@
 
 
 compile_input <-
-  function(input_args){
+  function(input_args, is_lifetable){
 
 
     args_for_lifetable <-
@@ -39,7 +42,7 @@ compile_input <-
         "min_age", "max_age")
 
 
-    input_args_edited <- input_args
+    input_args_edited <- input_args$value
 
     # PROCESS GEO ID ###################################################################
     # geo_ids need to be character because
@@ -156,7 +159,7 @@ compile_input <-
     # CREATE LIFE TABLES ##########################################################
     # As nested tibble
 
-    if (input_args$is_lifetable) {
+    if (is_lifetable) {
 
 
       # Build the data set for lifetable-related data
@@ -262,19 +265,33 @@ compile_input <-
         #   dplyr::group_by(geo_id_disaggregated) |>
         #   dplyr::summarize(population = sum(population, rm.na = TRUE))
 
-        # Join the input without and with lifetable variable into one tibble
-        input_table <-
-          dplyr::left_join(input_wo_lifetable,
-                           non_age_specific_input_for_lifetable,
-                           by = "geo_id_disaggregated",
-                           relationship = "many-to-many") |>
-          dplyr::left_join(lifetable_with_pop,
-                           by = "geo_id_disaggregated",
-                           relationship = "many-to-many")
+      # Join the input without and with lifetable variable into one tibble
+      input_table <-
+        dplyr::left_join(input_wo_lifetable,
+                         non_age_specific_input_for_lifetable,
+                         by = "geo_id_disaggregated",
+                         relationship = "many-to-many") |>
+        dplyr::left_join(lifetable_with_pop,
+                         by = "geo_id_disaggregated",
+                         relationship = "many-to-many")
+      # Add approach_risk
+      # This is not in input_args for life table because
+      # it is first defined in attribute_master()
+      # not an option in attribute_lifetable()
+      input_table <- input_table |>
+        dplyr::mutate(approach_risk = "relative_risk")
+
+
 
       } else {
       # If no lifetable, only use input_wo_lifetable
       input_table <- input_wo_lifetable}
+
+
+    ## Add is_lifetable
+    input_table <- input_table |>
+      dplyr::mutate(is_lifetable = is_lifetable,
+                    .before = dplyr::everything())
 
 
 

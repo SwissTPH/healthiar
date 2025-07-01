@@ -2,20 +2,20 @@
 % Please edit documentation in R/validate_input_attribute.R
 \name{validate_input_attribute}
 \alias{validate_input_attribute}
-\title{Check the input data of attribute_master()}
+\title{Check the input_args data of attribute_master()}
 \usage{
-validate_input_attribute(input_args, input_args_used)
+validate_input_attribute(input_args, is_lifetable)
 }
 \arguments{
-\item{input_args_used}{\code{String vector} with the argument names that were actively entered by the user.}
+\item{input_args}{\code{List} with the argument names and values entered in the function.}
 
-\item{input}{\code{List} with the argument names and values entered in the function.}
+\item{is_lifetable}{\code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)}
 }
 \value{
 This function returns warning or error messages if needed.
 }
 \description{
-Check the input data in attribute_master() and provides specific warnings or errors if needed.
+Check the input_args data in attribute_master() and provides specific warnings or errors if needed.
 }
 \author{
 Alberto Castro & Axel Luyten

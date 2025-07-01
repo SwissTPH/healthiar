@@ -64,8 +64,9 @@ daly <-
     output_attribute_yld){
 
     # Capture all arguments and values
-    input_args <- as.list(environment())
-
+    input_args <-
+      healthiar:::get_input_args(environment = base::environment(),
+                                 call = match.call())
 
     # Store results_raw of yll and yld
     # Shorter and handy to code
@@ -89,8 +90,8 @@ daly <-
 
     common_columns_identical <-
       healthiar:::check_if_args_identical(
-        args_a = input_args$output_attribute_yld,
-        args_b = input_args$output_attribute_yld,
+        args_a = input_args$value$output_attribute_yld,
+        args_b = input_args$value$output_attribute_yld,
         names_to_check = common_columns)
 
 

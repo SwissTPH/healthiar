@@ -4,7 +4,12 @@
 \alias{compile_input}
 \title{Compile input}
 \usage{
-compile_input(input_args)
+compile_input(input_args, is_lifetable)
+}
+\arguments{
+\item{input_args}{\code{List} with all input data by argument}
+
+\item{is_lifetable}{\code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)}
 }
 \value{
 This function returns a \code{data.frame} with all input data together

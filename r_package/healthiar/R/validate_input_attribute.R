@@ -1,29 +1,26 @@
-#' Check the input data of attribute_master()
+#' Check the input_args data of attribute_master()
 
 #' @description
-#' Check the input data in attribute_master() and provides specific warnings or errors if needed.
-#' @param input \code{List} with the argument names and values entered in the function.
-#' @param input_args_used \code{String vector} with the argument names that were actively entered by the user.
+#' Check the input_args data in attribute_master() and provides specific warnings or errors if needed.
+#' @param input_args \code{List} with the argument names and values entered in the function.
+#' @param is_lifetable \code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)
 #' @returns This function returns warning or error messages if needed.
 #' @author Alberto Castro & Axel Luyten
 #' @keywords internal
 
 validate_input_attribute <-
-  function(input_args, input_args_used){
-
-
-    # Data sets ###########
-
-    # Create a copy of input args to modify data set when needed
-    input <- input_args
-
-
-    available_input <-
-      purrr::keep(input, ~!base::is.null(.x))
-
-
+  function(input_args, is_lifetable){
 
     # Relevant variables ###########
+
+    input_args_value <- input_args$value
+
+    available_input_args <-
+      purrr::keep(input_args_value, ~!base::is.null(.x))
+
+    arg_names_passed <-
+      purrr::keep(input_args$is_passed_by_user, ~.x) |>
+      base::names()
 
     # ci_suffix to avoid repetitions
     ci_suffix <- c("_central", "_lower", "_upper")
@@ -31,11 +28,11 @@ validate_input_attribute <-
     # numeric_var_names to use it in error_if_lower_than_0()
     # which can be used only if the variable is numeric
     numeric_var_names <-
-      input |>
+      input_args_value  |>
       purrr::keep(is.numeric) |>
       base::names()
 
-    args <- base::names(input_args)
+    args <- base::names(input_args_value )
     ci_args <- args[base::grep("_central|_lower|_upper", args)]
     ci_args_wo_eq <- ci_args[!base::grepl("erf_eq", ci_args)]
     numeric_args <-
@@ -74,13 +71,22 @@ validate_input_attribute <-
         "population_midyear_male", "population_midyear_female")
 
     available_var_names <-
-      names(available_input)
+      names(available_input_args)
 
     available_numeric_var_names <-
       available_var_names[available_var_names %in% numeric_args]
 
     available_categorical_var_names <-
       available_var_names[available_var_names %in% categorical_args]
+
+    # Define approach_risk here because in the life table approach
+    # approach_risk can only be relative_risk
+    # and it defined at the level of attribute_master()
+    # and therefore not available input$args
+
+    if(is_lifetable) {
+      approach_risk <- "relative_risk" }
+    else{ approach_risk <- input_args$value$approach_risk}
 
 
     # Functions and calls ###########
@@ -91,9 +97,9 @@ validate_input_attribute <-
 
     error_if_var_1_but_not_var_2 <- function(var_name_1, var_name_2){
 
-      if(var_name_1 %in% input_args_used &&
-         !var_name_2 %in% input_args_used
-         # Check input_args_used in case that there is a default value (safer)
+      if(var_name_1 %in% arg_names_passed &&
+         !var_name_2 %in% arg_names_passed
+         # Check arg_names_passed in case that there is a default value (safer)
          ){
         stop(
           paste0(
@@ -112,7 +118,7 @@ validate_input_attribute <-
 
     ### error_if_not_numeric #####
     error_if_not_numeric <- function(var_name){
-      var_value <- input_args[[var_name]]
+      var_value <- input_args_value [[var_name]]
 
       if(any(!is.numeric(unlist(var_value)))){
 
@@ -133,7 +139,7 @@ validate_input_attribute <-
     ### error_if_not_an_option #####
 
     error_if_not_an_option <- function(var_name){
-      var_value <- input_args[[var_name]]
+      var_value <- input_args_value [[var_name]]
       var_options <- options_of_categorical_args[[var_name]]
 
       if(!var_value %in% var_options){
@@ -178,8 +184,8 @@ validate_input_attribute <-
     error_if_different_length <- function(var_name_1, var_name_2){
 
       # Store var_value
-      var_value_1 <- input[[var_name_1]]
-      var_value_2 <- input[[var_name_2]]
+      var_value_1 <- input_args_value [[var_name_1]]
+      var_value_2 <- input_args_value [[var_name_2]]
 
       if(# Deactivated because only available var_names are passed below
         #!base::is.null(var_value_1) && !base::is.null(var_value_2) &&
@@ -205,7 +211,8 @@ validate_input_attribute <-
 
     # Exposure has to have the same length as prop_pop_exp
     # Only for relative risk
-    if(input$approach_risk == "relative_risk"){
+
+    if(approach_risk == "relative_risk"){
 
       available_exp_var_names <-
         available_var_names[available_var_names %in%
@@ -241,14 +248,14 @@ validate_input_attribute <-
       function(age_dependent_var){
 
         # Get length of age range
-        length_age_range <- base::length(input$first_age_pop : input$last_age_pop)
+        length_age_range <- base::length(input_args_value $first_age_pop : input_args_value $last_age_pop)
 
         # Get of the unique vector of geo_id
         # (it can be duplicated in case of e.g. exposure distribution or life table)
-        length_geo_id_disaggregated <- base::length(base::unique(input$geo_id_disaggregated))
+        length_geo_id_disaggregated <- base::length(base::unique(input_args_value $geo_id_disaggregated))
 
         # Get length of age-depending variable
-        length_age_dependent_var <-  base::length(input[[age_dependent_var]])
+        length_age_dependent_var <-  base::length(input_args_value [[age_dependent_var]])
 
       if( !base::identical(length_age_range * length_geo_id_disaggregated,
                            length_age_dependent_var)){
@@ -269,7 +276,7 @@ validate_input_attribute <-
     ### error_if_lower_than_0 #####
 
     error_if_lower_than_0 <- function(var_name){
-      var_value <- input[[var_name]]
+      var_value <- input_args_value [[var_name]]
 
       if(!base::is.null(var_value) && # Only if available
          base::any(base::unlist(var_value) < 0)){ # base::any(unlist( To make it robust for lists
@@ -289,7 +296,7 @@ validate_input_attribute <-
     ### error_if_higher_than_1 #####
 
     error_if_higher_than_1 <- function(var_name){
-      var_value <- input[[var_name]]
+      var_value <- input_args_value [[var_name]]
 
       if(!base::is.null(var_value) && # Only if available
          base::any(unlist(var_value) > 1)){ # base::any(unlist( To make it robust for lists
@@ -333,7 +340,7 @@ validate_input_attribute <-
     }
 
 
-    error_if_multi_geo_and_different_length(list = input_args,
+    error_if_multi_geo_and_different_length(list = input_args_value ,
                                             var_names = c("geo_id_disaggregated",
                                                           "exp_central",
                                                           "pop_exp",
@@ -346,13 +353,13 @@ validate_input_attribute <-
     ### error_if_sum_higher_than_1 #####
     error_if_sum_higher_than_1 <- function(var_name){
 
-      var_value <- input[[var_name]]
+      var_value <- input_args_value [[var_name]]
 
 
-      if(base::is.null(input[["geo_id_disaggregated"]])){
+      if(base::is.null(input_args_value [["geo_id_disaggregated"]])){
         geo_id_disaggregated <- as.character(1)
         } else {
-          geo_id_disaggregated <- as.character(input[["geo_id_disaggregated"]])
+          geo_id_disaggregated <- as.character(input_args_value [["geo_id_disaggregated"]])
         }
 
 
@@ -360,27 +367,27 @@ validate_input_attribute <-
         var_table <-
           tibble::tibble(
             geo_id_disaggregated = geo_id_disaggregated ,
-            population_midyear_male = input[["population_midyear_male"]],
+            population_midyear_male = input_args_value [["population_midyear_male"]],
             var = var_value)
 
       } else if (base::length(base::unique(geo_id_disaggregated)) == 1) {
 
 
-        if(base::is.null(input[["population_midyear_male"]])){
+        if(base::is.null(input_args_value [["population_midyear_male"]])){
           population_midyear_male <- NULL
           var_vector <- var_value
 
-        } else if (!base::is.null(input[["population_midyear_male"]])) {
+        } else if (!base::is.null(input_args_value [["population_midyear_male"]])) {
 
           population_midyear_male <-
-            base::rep(input[["population_midyear_male"]],
+            base::rep(input_args_value [["population_midyear_male"]],
                       each = base::length(var_value),
                       times = base::length(geo_id_disaggregated))
 
           var_vector <-
             base::rep(var_value,
                       each = base::length(geo_id_disaggregated),
-                      times = base::length(input[["population_midyear_male"]]))
+                      times = base::length(input_args_value [["population_midyear_male"]]))
         }
 
         var_table <-
@@ -391,7 +398,7 @@ validate_input_attribute <-
 
       }
 
-      if(base::is.null(input[["pop_exp"]]) &&
+      if(base::is.null(input_args_value [["pop_exp"]]) &&
          var_table |>
          dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "population_midyear_male")))) |>
          dplyr::summarize(sum = base::sum(var, na.rm = TRUE) > 1) |>
@@ -423,9 +430,9 @@ validate_input_attribute <-
         var_name_upper <- var_ci[base::grep("upper", var_ci)]
 
         # Store var_value
-        var_value_lower <- input[[var_name_lower]]
-        var_value_central <- input[[var_name_central]]
-        var_value_upper <- input[[var_name_upper]]
+        var_value_lower <- input_args_value [[var_name_lower]]
+        var_value_central <- input_args_value [[var_name_central]]
+        var_value_upper <- input_args_value [[var_name_upper]]
 
         if(!base::is.null(var_value_central) &&
            !base::is.null(var_value_lower) &&
@@ -464,8 +471,8 @@ validate_input_attribute <-
       var_name_lower <- base::paste0(var_short, "_lower")
       var_name_upper <- base::paste0(var_short, "_upper")
 
-      var_value_lower <- input[[var_name_lower]]
-      var_value_upper <- input[[var_name_upper]]
+      var_value_lower <- input_args_value [[var_name_lower]]
+      var_value_upper <- input_args_value [[var_name_upper]]
 
       if((!base::is.null(var_value_lower) && base::is.null(var_value_upper)) |
          (base::is.null(var_value_lower) && !base::is.null(var_value_upper)) ){ # Only if available
@@ -490,15 +497,16 @@ validate_input_attribute <-
 
     ### error_if_var_and_risk #####
 
-    error_if_var_and_risk <- function(var_name, approach_risk){
+    error_if_var_and_risk <- function(var_name, risk){
+
       # Identify the alternative options
       all_approach_risks <- c("relative_risk", "absolute_risk")
       all_var_names <- c("prop_pop_exp", "pop_exp")
-      another_approach_risk <- all_approach_risks[!all_approach_risks %in% approach_risk]
+      another_approach_risk <- all_approach_risks[!all_approach_risks %in% risk]
       another_var_name <- all_var_names[!all_var_names %in% var_name]
 
-      if(var_name %in% input_args_used &&
-         input_args$approach_risk == approach_risk){
+      if(var_name %in% arg_names_passed &&
+         approach_risk == risk){
         stop(base::paste0("The argument ",
         var_name,
         " is aimed for ",
@@ -513,8 +521,8 @@ validate_input_attribute <-
     }
 
     # Call function
-    error_if_var_and_risk(var_name = "pop_exp", approach_risk = "relative_risk")
-    error_if_var_and_risk(var_name = "prop_pop_exp", approach_risk = "absolute_risk")
+    error_if_var_and_risk(var_name = "pop_exp", risk = "relative_risk")
+    error_if_var_and_risk(var_name = "prop_pop_exp", risk = "absolute_risk")
 
 
 
@@ -523,8 +531,8 @@ validate_input_attribute <-
     error_if_var_1_and_var_2 <- function(var_name_1, var_name_2){
       # Identify the alternative options
 
-      if(var_name_1 %in% input_args_used &&
-         var_name_2 %in% input_args_used){
+      if(var_name_1 %in% arg_names_passed &&
+         var_name_2 %in% arg_names_passed){
         stop(base::paste0("The argument ",
                           var_name_1,
                           " cannot be used together with the argument ",
@@ -548,9 +556,9 @@ validate_input_attribute <-
     warning_if_ar_and_var <- function(var_name){
 
       # Store var_value
-      var_value <- input[[var_name]]
+      var_value <- input_args_value [[var_name]]
 
-      if(input$approach_risk == "absolute_risk" &&
+      if(approach_risk == "absolute_risk" &&
          !base::is.null(var_value) && !var_value == 0){ # Only if available
         # Create warning message
         base::warning(
@@ -575,8 +583,8 @@ validate_input_attribute <-
     warning_if_rr_and_no_var_with_default <- function(var_name, default){
 
     # For absolute risk no cutoff is used (not relevant)
-    if(! var_name %in% input_args_used &&
-       input_args$approach_risk == "relative_risk"){
+    if(! var_name %in% arg_names_passed &&
+       approach_risk == "relative_risk"){
 
       base::warning(
         base::paste0("You entered no value for ",

@@ -122,8 +122,11 @@ attribute_lifetable <-
     info = NULL
   ) {
 
-    # Get what the arguments that the user passed
-    input_args_used <- base::names(base::as.list(base::match.call()  ))[-1] # drop function name
+    # Get input_args
+    # i.e. a list with all argument values and characteristics
+    input_args <-
+      healthiar:::get_input_args(environment = base::environment(),
+                                 call = match.call())
 
     output <-
       healthiar:::attribute_master(
@@ -155,7 +158,7 @@ attribute_lifetable <-
         # META (OPTIONAL)
         info = info,
         # INTERNAL ARGUMENTS
-        .input_args_used = input_args_used)
+        input_args = input_args)
 
     return(output)
 

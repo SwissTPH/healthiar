@@ -63,31 +63,21 @@ attribute_mod <-
     year_of_analysis = NULL
     ) {
 
+    is_lifetable <- base::unique(output_attribute_1$health_detailed$input_table$is_lifetable)
+
     # Capture all arguments and values
-    args_2 <- as.list(environment())
+    input_args_2_value <- as.list(environment())
 
     # Removing output_attribute_1 from args
-    args_2$output_attribute_1 <- NULL
+    input_args_2_value$output_attribute_1 <- NULL
 
-    #Remove all arguments that are NULL in args_2 to avoid that they overwrite
-    #those in args_1
-    args_2 <- purrr::discard(args_2, is.null)
-
-
-    # # Identify the unused arguments (not entered by the user)
-    # unused_args <-
-    #   base::setdiff(base::names(output_attribute_1$health_detailed$input_args),
-    #                 output_attribute_1$health_detailed$input_args_used)
-    #
-    # # Assign value NULL to those arguments that were note entered by the user
-    # # to avoid that default values are wrongly considered as user data
-    # args_2 <-
-    #   c(args_2,
-    #     setNames(vector("list", length(unused_args)), unused_args))
+    #Remove all arguments that are NULL in input_args_2_value to avoid that they overwrite
+    #those in input_args_1_value
+    input_args_2_value <- purrr::discard(input_args_2_value, is.null)
 
 
-    # Extract args_1
-    args_1 <- output_attribute_1[["health_detailed"]][["input_args"]]
+    # Extract input_args_1_value
+    input_args_1 <- output_attribute_1[["health_detailed"]][["input_args"]]
 
     # Create a function to replace values in list of arguments
     # modifyList() and purrr::list_modify() do not work because require named lists
@@ -102,19 +92,34 @@ attribute_mod <-
                       }else {.x <- .x}})
     }
 
-    args_2_after_merge_with_arg1 <-
-      replace_list(args_1, args_2)
 
-    # Add the input_args_used
-    args_2_after_merge_with_arg1[[".input_args_used"]] <-
-      output_attribute_1$health_detailed$input_args_used
+    input_args_2_value <-
+      replace_list(input_args_1[["value"]], input_args_2_value)
 
+    # Prepare input_args_2 for attribute_master()
+    input_args_2_for_attribute <-
+      input_args_2_value
+
+    # Add is_lifetable
+    # which is not available in input_args
+    # because it depends on the function call
+    input_args_2_for_attribute[["is_lifetable"]] <- is_lifetable
+
+
+    input_args_2_for_attribute[["input_args"]] <-
+      # Add input_args (including the rest of input_args sub-lists)
+      # as additional argument for attribute_master()
+      list(
+        value = input_args_2_value,
+        is_passed_by_user = input_args_1[["is_passed_by_user"]],
+        is_default = input_args_1[["is_default"]]
+      )
 
 
     # Use the arguments attribute()
     output_attribute_2 <-
       do.call(healthiar:::attribute_master,
-              args_2_after_merge_with_arg1)
+              input_args_2_for_attribute)
 
     return(output_attribute_2)
 

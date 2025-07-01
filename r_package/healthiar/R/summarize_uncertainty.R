@@ -89,12 +89,31 @@ summarize_uncertainty <- function(
     seeds[[var_names[i]]] <- seed +i*1E3
   }
 
-  ## Data sets ##########
+  ## Revant variables ##########
   # Store the input data as entered in the arguments
 
-  input_args_used <- output_attribute$health_detailed$input_args_used
   input_args <- output_attribute$health_detailed$input_args
   input_table <- output_attribute$health_detailed$input_table
+
+  is_two_cases <- base::any(c("input_table_1", "input_table_2") %in% base::names(input_table))
+  is_one_case <- !is_two_cases
+
+  if(is_one_case){
+    input_args_to_check <- output_attribute$health_detailed$input_args
+    input_table_to_check <- output_attribute$health_detailed$input_table
+  } else {
+    input_args_to_check <- output_attribute$health_detailed$input_args$input_args_1
+    input_table_to_check <- output_attribute$health_detailed$input_table$input_table_2
+    #Same as input_args_2 (data validation of compare())
+  }
+
+
+
+  input_arg_names_passed <- input_args_to_check$is_passed_by_user |>
+    purrr::keep(~.x == TRUE) |>
+    base::names()
+
+  is_lifetable <- base::unique(input_table_to_check$is_lifetable)
 
 
 
@@ -102,8 +121,8 @@ summarize_uncertainty <- function(
   ## Error if uncertainty in erf_eq_... ####
   # Uncertainty in erf_eq is currently not supported
   # It would require a more complex modelling
-  if((!base::is.null(input_args$erf_eq_lower) |
-      !base::is.null(input_args$erf_eq_lower))){
+  if((!base::is.null(input_args_to_check$value$erf_eq_lower) |
+      !base::is.null(input_args_to_check$value$erf_eq_lower))){
     base::stop("Sorry, the summary of uncertainty for erf_eq_... is not currently supported",
                call. = FALSE)
   }
@@ -113,15 +132,15 @@ summarize_uncertainty <- function(
   if(# If exposure distribution
     base::unique(output_attribute$health_detailed$impact_disaggregated$exposure_type) == "exposure_distribution" &&
     # If uncertainty in exposure
-    (!base::is.null(input_args$exp_lower) |
-      !base::is.null(input_args$exp_upper))){
+    (!base::is.null(input_args$value$exp_lower) |
+      !base::is.null(input_args$value$exp_upper))){
     base::stop("Sorry, the summary of uncertainty for exp_... in exposure distributions is not currently supported",
                call. = FALSE)
   }
 
   ## Error if no argument with uncertainty ####
   if(# No argument used has _lower or _upper)
-    ! base::any(base::grepl("_upper|_lower", input_args_used))){
+    ! base::any(base::grepl("_upper|_lower", input_arg_names_passed))){
     base::stop("Please enter an assessment with uncertainty (..._lower and ..._upper) in any argument.",
                call. = FALSE)
   }
@@ -196,7 +215,7 @@ summarize_uncertainty <- function(
   # It is important to create it because for two cases (comparison)
   # the function has to be run more than once (avoid copy-pasted code)
   summarize_uncertainty_based_on_input <-
-    function(input_args_used, input_args, input_table){
+    function(input_args, input_table){
 
   ## N #####
   # Determine number of geographic units
@@ -220,8 +239,8 @@ summarize_uncertainty <- function(
 
   for (v in var_names){
     ci_in[[v]] <-
-      !base::is.null(input_args[[base::paste0(v, "_lower")]]) &&
-      !base::is.null(input_args[[base::paste0(v, "_upper")]])
+      !base::is.null(input_args$value[[base::paste0(v, "_lower")]]) &&
+      !base::is.null(input_args$value[[base::paste0(v, "_upper")]])
   }
 
   # Beta and gamma functions ############################
@@ -438,9 +457,9 @@ summarize_uncertainty <- function(
     col_name <- base::paste0(var, "_central")
 
     # Store central, lower and upper estimate for the simulation below
-    central <- base::as.numeric(input_args[[base::paste0(var, "_central")]])
-    lower   <- base::as.numeric(input_args[[base::paste0(var, "_lower")]])
-    upper   <- base::as.numeric(input_args[[base::paste0(var, "_upper")]])
+    central <- base::as.numeric(input_args$value[[base::paste0(var, "_central")]])
+    lower   <- base::as.numeric(input_args$value[[base::paste0(var, "_lower")]])
+    upper   <- base::as.numeric(input_args$value[[base::paste0(var, "_upper")]])
 
 
     # Run simulate across all rows
@@ -489,23 +508,26 @@ summarize_uncertainty <- function(
 
   }
 
-
-  # Identify the variables that have to be removed in input_args
+  # Identify the variables that have to be deleted in input_args
   # (to be used below)
-  vars_to_be_removed_in_input_args <-
+  args_to_be_replaced_by_sim <-
     base::paste0(
       base::rep(var_names_with_ci, each = 3),
       c("_central", "_lower", "_upper"))
+  # variable that were not passed by the user
+  args_not_passed <-
+    base::names(input_args$is_passed_by_user)[!base::unlist(input_args$is_passed_by_user)]
+  # All args to be removed
+  args_to_be_removed_in_input_args <-
+    base::unique(c(args_to_be_replaced_by_sim, args_not_passed))
 
   # Prepare input_args to accommodate the new simulated values
   # (to be used below)
   input_args_prepared_for_replacement <-
-    purrr::keep(input_args,
-                !base::names(input_args) %in% vars_to_be_removed_in_input_args)
-    # Add the input_args_used
-    # Otherwise the data validation of attribute_master() can give some error
-  input_args_prepared_for_replacement[[".input_args_used"]] <-
-    input_args_used
+    # Remove the arguments that will be replace with the simulation including upper and lower
+    input_args$value[! base::names(input_args$value) %in% args_to_be_removed_in_input_args]
+
+
 
   template_with_sim <-
     # Bind the template with the simulated values
@@ -540,14 +562,23 @@ summarize_uncertainty <- function(
                                    #geo_ids)))
 
   # Replace the values
-  input_args_for_all_sim <-
+  input_args_for_attribute <-
     purrr::pmap(only_new_values_for_replacement,
                 \(...) {c(input_args_prepared_for_replacement, base::list(...))})
 
-  output_sim <-
-    purrr::map(
-      input_args_for_all_sim,
-      \(.x) base::do.call(healthiar:::attribute_master, args = .x ))
+
+  if(!is_lifetable){
+    output_sim <-
+      purrr::map(
+        input_args_for_attribute,
+        \(.x) base::do.call(healthiar:::attribute_health, args = .x ))
+  } else {
+    output_sim <-
+      purrr::map(
+        input_args_for_attribute,
+        \(.x) base::do.call(healthiar:::attribute_lifetable, args = .x ))
+  }
+
 
   # Extract impact
   impact_disaggregated <- purrr::map(
@@ -557,7 +588,7 @@ summarize_uncertainty <- function(
 
   # Extract geo_id_aggregated already with the right format to be added below
   # Avoid warning if geo_id_aggregated is NULL with the if statement
-  if(is.null(input_args[["geo_id_aggregated"]])){
+  if(is.null(input_args$value[["geo_id_aggregated"]])){
     geo_id_aggregated <- NULL
   } else {
     geo_id_aggregated <- purrr::map(output_sim,
@@ -570,7 +601,7 @@ summarize_uncertainty <- function(
     # Add columns (one row for each assessment)
     dplyr::mutate(template_with_sim_grouped,
                   geo_id_aggregated = geo_id_aggregated,
-                  input = input_args_for_all_sim,
+                  input = input_args_for_attribute,
                   output = output_sim,
                   impact = impact_disaggregated)
 
@@ -642,8 +673,7 @@ summarize_uncertainty <- function(
   ## One case (no comparison) ####
 
   # Identify if this is one-case or two-case (comparison) assessment
-  is_two_cases <- base::any(c("input_table_1", "input_table_2") %in% base::names(input_table))
-  is_one_case <- !is_two_cases
+
 
 
   if(is_one_case){
@@ -651,7 +681,6 @@ summarize_uncertainty <- function(
     uncertainty <-
       c(output_attribute,
         summarize_uncertainty_based_on_input(
-          input_args_used = input_args_used,
           input_args = input_args,
           input_table = input_table))
 
@@ -663,14 +692,12 @@ summarize_uncertainty <- function(
     # Once for the scenario 1
     attribute_1 <-
       summarize_uncertainty_based_on_input(
-        input_args_used = input_args_used[["input_args_used_1"]],
         input_args = input_args[["input_args_1"]],
         input_table = input_table[["input_table_1"]])
 
     # Once for the scenario 2
     attribute_2 <-
       summarize_uncertainty_based_on_input(
-        input_args_used = input_args_used[["input_args_used_2"]],
         input_args = input_args[["input_args_2"]],
         input_table = input_table[["input_table_2"]])
 

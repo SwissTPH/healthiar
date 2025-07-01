@@ -50,12 +50,12 @@ multiexpose <-
     exposure_name_2,
     approach = "additive"){
 
-    # Capture all input arguments and tables
-    input_args <- as.list(environment())
-    pop_fraction_type <- input_args$pop_fraction_type
+    # Capture all arguments and values
+    input_args <-
+      healthiar:::get_input_args(environment = base::environment(),
+                                 call = match.call())
 
-    input_args_1 <- output_attribute_1[["health_detailed"]][["input_args"]]
-    input_args_2 <- output_attribute_2[["health_detailed"]][["input_args"]]
+    pop_fraction_type <- input_args$value$pop_fraction_type
 
     input_table_1 <- output_attribute_1[["health_detailed"]][["input_table"]]
     input_table_2 <- output_attribute_2[["health_detailed"]][["input_table"]]

@@ -11,6 +11,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
     testthat::expect_equal(
       object =
         healthiar::attribute_health(
+          approach_risk = "relative_risk",
           exp_central = data$mean_concentration,
           cutoff_central = data$cut_off_value,
           bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
