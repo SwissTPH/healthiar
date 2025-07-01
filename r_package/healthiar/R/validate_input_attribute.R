@@ -79,6 +79,14 @@ validate_input_attribute <-
     available_categorical_var_names <-
       available_var_names[available_var_names %in% categorical_args]
 
+    # Define approach_risk here because in the life table approach
+    # approach_risk can only be relative_risk
+    # and it defined at the level of attribute_master()
+    # and therefore not available input$args
+    if(is_lifetable) {
+      approach_risk <- "relative_risk" }
+    else{ approach_risk <- input_args$value$approach_risk}
+
 
     # Functions and calls ###########
 
@@ -202,7 +210,8 @@ validate_input_attribute <-
 
     # Exposure has to have the same length as prop_pop_exp
     # Only for relative risk
-    if(input_args_value $approach_risk == "relative_risk"){
+
+    if(approach_risk == "relative_risk"){
 
       available_exp_var_names <-
         available_var_names[available_var_names %in%
@@ -547,7 +556,7 @@ validate_input_attribute <-
       # Store var_value
       var_value <- input_args_value [[var_name]]
 
-      if(input_args_value $approach_risk == "absolute_risk" &&
+      if(approach_risk == "absolute_risk" &&
          !base::is.null(var_value) && !var_value == 0){ # Only if available
         # Create warning message
         base::warning(
@@ -573,7 +582,7 @@ validate_input_attribute <-
 
     # For absolute risk no cutoff is used (not relevant)
     if(! var_name %in% arg_names_passed &&
-       input_args_value $approach_risk == "relative_risk"){
+       approach_risk == "relative_risk"){
 
       base::warning(
         base::paste0("You entered no value for ",
