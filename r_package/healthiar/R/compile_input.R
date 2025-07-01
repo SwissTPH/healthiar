@@ -277,6 +277,12 @@ compile_input <-
       input_table <- input_wo_lifetable}
 
 
+    ## Add is_lifetable
+    input_table <- input_table |>
+      dplyr::mutate(is_lifetable = is_lifetable,
+                    .before = dplyr::everything())
+
+
 
   return(input_table)
 
