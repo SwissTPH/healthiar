@@ -63,6 +63,7 @@ attribute_mod <-
     year_of_analysis = NULL
     ) {
 
+    is_lifetable <- base::unique(output_attribute_1$health_main$is_lifetable)
 
     # Capture all arguments and values
     input_args_2_value <- as.list(environment())
@@ -99,6 +100,10 @@ attribute_mod <-
     input_args_2_for_attribute <-
       input_args_2_value
 
+    # Add is_lifetable
+    # which is not available in input_args
+    # because it depends on the function call
+    input_args_2_for_attribute[["is_lifetable"]] <- is_lifetable
 
 
     input_args_2_for_attribute[["input_args"]] <-
