@@ -143,8 +143,7 @@ attribute_master <-
     input_args = NULL){
 
     # Check input data
-    healthiar:::validate_input_attribute(input_args_used = input_args_used,
-                                         input_args = input_args)
+    healthiar:::validate_input_attribute(input_args = input_args)
 
 
     # Compile input data
@@ -158,8 +157,7 @@ attribute_master <-
 
     # Get the main and detailed output by aggregating and/or filtering cases (rows)
     output <-
-      healthiar:::get_output(input_args_used = input_args_used,
-                             input_args = input_args,
+      healthiar:::get_output(input_args = input_args,
                              input_table = input_table,
                              results_raw = results_raw)
 
