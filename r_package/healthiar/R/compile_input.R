@@ -3,7 +3,10 @@
 #' @description
 #' This function compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
 
-#' @inheritParams attribute_master
+#' @param input_args
+#' \code{List} with all input data by argument
+#' @param is_lifetable
+#' \code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)
 
 #' @returns
 #' This function returns a \code{data.frame} with all input data together
