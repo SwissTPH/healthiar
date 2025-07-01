@@ -86,9 +86,6 @@ compare <-
 
     # Extract input data (for subsequent get_impact call) ########################
 
-    input_args_used_1 <- output_attribute_1[["health_detailed"]][["input_args_used"]]
-    input_args_used_2 <- output_attribute_2[["health_detailed"]][["input_args_used"]]
-
     input_args_1 <- output_attribute_1[["health_detailed"]][["input_args"]]
     input_args_2 <- output_attribute_2[["health_detailed"]][["input_args"]]
 
@@ -101,12 +98,12 @@ compare <-
 
     # Force the same environment in the functions of erf_eq.
     # Otherwise, not identified as identical and error joining below.
-    if(!is.null(input_args_1$erf_eq_central)){
+    if(!is.null(input_args_1$value$erf_eq_central)){
       erf_eq_vars <- paste0("erf_eq_", c("central", "lower", "upper"))
 
-      input_args_1$erf_eq_central <- input_args_2$erf_eq_central
-      input_args_1$erf_eq_lower <- input_args_2$erf_eq_lower
-      input_args_1$erf_eq_upper <- input_args_2$erf_eq_upper
+      input_args_1$value$erf_eq_central <- input_args_2$value$erf_eq_central
+      input_args_1$value$erf_eq_lower <- input_args_2$value$erf_eq_lower
+      input_args_1$value$erf_eq_upper <- input_args_2$value$erf_eq_upper
       input_table_2$erf_eq <- input_table_1$erf_eq    }
 
     # Key variables #############################
@@ -134,17 +131,17 @@ compare <-
 
     # Data validation ########################
 
-    # Argument used (user enntered data)
-    used_arguments_1 <-
-      base::names(purrr::discard(input_args_1, is.null))
+    # Argument used (user entered data)
+    passed_arguments_1 <-
+      base::names(purrr::keep(input_args_1$is_passed_by_user, ~ .x == TRUE))
 
-    used_arguments_2 <-
-      base::names(purrr::discard(input_args_2, is.null))
+    passed_arguments_2 <-
+      base::names(purrr::keep(input_args_2$is_passed_by_user, ~ .x == TRUE))
 
 
    # Check that the two scenarios used the same arguments (calculation pathways)
 
-    if(!base::identical(used_arguments_1, used_arguments_2)){
+    if(!base::identical(passed_arguments_1, passed_arguments_2)){
       stop("The two scenarios have to use the same arguments",
            call. = FALSE)
     }
@@ -152,10 +149,10 @@ compare <-
 
     # Arguments that should be identical in both scenarios
     common_arguments_1 <-
-      used_arguments_1[!used_arguments_1 %in% scenario_specific_arguments]
+      passed_arguments_1[!passed_arguments_1 %in% scenario_specific_arguments]
 
     common_arguments_2 <-
-      used_arguments_2[!used_arguments_2 %in% scenario_specific_arguments]
+      passed_arguments_2[!passed_arguments_2 %in% scenario_specific_arguments]
 
 
 
@@ -168,13 +165,14 @@ compare <-
 
     common_arguments_identical <-
       healthiar:::check_if_args_identical(
-        args_a = input_args_1,
-        args_b = input_args_2,
+        args_a = input_args_1$value,
+        args_b = input_args_2$value,
         names_to_check = common_arguments)
 
     # Check that (relevant) input values from scenarios A & B are equal
     # Works also if no input was provided (might be the case for e.g. ..._lower arguments)
     # Check if the common arguments in both scenarios are identical
+
     if(!all(common_arguments_identical))
     {stop(paste0("The arguments ",
                  paste(names(common_arguments_identical)[!common_arguments_identical],
@@ -246,8 +244,8 @@ compare <-
 
         scenario_arguments_for_bhd_and_lifetable_identical <-
           healthiar:::check_if_args_identical(
-            args_a = input_args_1,
-            args_b = input_args_2,
+            args_a = input_args_1$value,
+            args_b = input_args_2$value,
             names_to_check = scenario_arguments_for_bhd_and_lifetable)
 
 
@@ -285,7 +283,7 @@ compare <-
         ## Added if statement below to avoid error in the non-lifetable cases
         # input_args_1 and input_args_2 should have the same health_outcome (see checks above)
         # So let's use e.g. input_args_1
-        if(input_args_1$is_lifetable) {
+        if(base::unique(input_table_1$is_lifetable)) {
           # Calculate the health impacts for each case (uncertainty, category, geo area...)
           results_raw <-
             healthiar:::get_impact(
@@ -309,8 +307,6 @@ compare <-
 
     output <-
       healthiar:::get_output(
-        input_args_used = list(input_args_used_1 = input_args_used_1,
-                               input_args_used_2 = input_args_used_2),
         input_args = list(approach_comparison = approach_comparison,
                           input_args_1 = input_args_1,
                           input_args_2 = input_args_2),
