@@ -10,7 +10,6 @@
 validate_input_attribute <-
   function(input_args){
 
-
     # Relevant variables ###########
 
     input_args_value <- input_args$value
@@ -71,7 +70,7 @@ validate_input_attribute <-
         "population_midyear_male", "population_midyear_female")
 
     available_var_names <-
-      names(available_input)
+      names(available_input_args)
 
     available_numeric_var_names <-
       available_var_names[available_var_names %in% numeric_args]
