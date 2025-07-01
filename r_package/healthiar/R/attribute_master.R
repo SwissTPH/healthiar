@@ -148,7 +148,7 @@ attribute_master <-
 
     # Compile input data
     input_table <-
-      healthiar:::compile_input(input_args)
+      healthiar:::compile_input(input_args = input_args)
 
     # Calculate the health impacts for each case (uncertainty, category, geo area...)
     results_raw <-
