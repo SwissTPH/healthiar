@@ -496,15 +496,16 @@ validate_input_attribute <-
 
     ### error_if_var_and_risk #####
 
-    error_if_var_and_risk <- function(var_name, approach_risk){
+    error_if_var_and_risk <- function(var_name, risk){
+
       # Identify the alternative options
       all_approach_risks <- c("relative_risk", "absolute_risk")
       all_var_names <- c("prop_pop_exp", "pop_exp")
-      another_approach_risk <- all_approach_risks[!all_approach_risks %in% approach_risk]
+      another_approach_risk <- all_approach_risks[!all_approach_risks %in% risk]
       another_var_name <- all_var_names[!all_var_names %in% var_name]
 
       if(var_name %in% arg_names_passed &&
-         input_args_value $approach_risk == approach_risk){
+         approach_risk == risk){
         stop(base::paste0("The argument ",
         var_name,
         " is aimed for ",
@@ -519,8 +520,8 @@ validate_input_attribute <-
     }
 
     # Call function
-    error_if_var_and_risk(var_name = "pop_exp", approach_risk = "relative_risk")
-    error_if_var_and_risk(var_name = "prop_pop_exp", approach_risk = "absolute_risk")
+    error_if_var_and_risk(var_name = "pop_exp", risk = "relative_risk")
+    error_if_var_and_risk(var_name = "prop_pop_exp", risk = "absolute_risk")
 
 
 
