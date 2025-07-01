@@ -4,10 +4,12 @@
 \alias{validate_input_attribute}
 \title{Check the input_args data of attribute_master()}
 \usage{
-validate_input_attribute(input_args)
+validate_input_attribute(input_args, is_lifetable)
 }
 \arguments{
 \item{input_args}{\code{List} with the argument names and values entered in the function.}
+
+\item{is_lifetable}{\code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)}
 }
 \value{
 This function returns warning or error messages if needed.

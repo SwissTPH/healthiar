@@ -3,12 +3,13 @@
 #' @description
 #' Check the input_args data in attribute_master() and provides specific warnings or errors if needed.
 #' @param input_args \code{List} with the argument names and values entered in the function.
+#' @param is_lifetable \code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)
 #' @returns This function returns warning or error messages if needed.
 #' @author Alberto Castro & Axel Luyten
 #' @keywords internal
 
 validate_input_attribute <-
-  function(input_args){
+  function(input_args, is_lifetable){
 
     # Relevant variables ###########
 

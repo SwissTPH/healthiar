@@ -143,7 +143,8 @@ attribute_master <-
     input_args = NULL){
 
     # Check input data
-    healthiar:::validate_input_attribute(input_args = input_args)
+    healthiar:::validate_input_attribute(input_args = input_args,
+                                         is_lifetable = is_lifetable)
 
 
     # Compile input data
