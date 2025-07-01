@@ -1,0 +1,24 @@
+ul, ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+li {
+  margin-bottom: 2px; /* Adjust spacing between list items */
+}
+
+/* Set size of code blocks inside pre */
+.reveal pre code {
+  font-size: 1.5em !important;
+}
+
+/* Set size of text within callout tip boxes */
+.callout-tip {
+  font-size: 1.0em !important;
+}
+
+/* Optional: Set size of inline code */
+/*.reveal code {
+/*  font-size: 1.6em;
+/*}
+
