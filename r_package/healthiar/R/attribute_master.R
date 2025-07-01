@@ -140,18 +140,7 @@ attribute_master <-
     year_of_analysis = NULL,
     time_horizon = NULL,
     # INTERNAL ARGUMENTS
-    .input_args_used = NULL){
-
-    # Capture all arguments and values
-    input_args <- base::as.list(base::environment())
-
-    # Identify the unused arguments
-    # (i.e. those that were not explicitly passed by the user)
-    # This is a hidden argument in attribute_master() to pass the information
-    # from attribute_health() and attribute_lifetable()
-    # without "polluting" input_args with a variable
-    # that is not relevant for the calculation
-    input_args_used <- .input_args_used
+    input_args = NULL){
 
     # Check input data
     healthiar:::validate_input_attribute(input_args_used = input_args_used,

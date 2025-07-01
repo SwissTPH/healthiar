@@ -49,7 +49,7 @@ attribute_master(
   approach_exposure = NULL,
   year_of_analysis = NULL,
   time_horizon = NULL,
-  .input_args_used = NULL
+  input_args = NULL
 )
 }
 \arguments{
