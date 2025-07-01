@@ -63,7 +63,7 @@ attribute_mod <-
     year_of_analysis = NULL
     ) {
 
-    is_lifetable <- base::unique(output_attribute_1$health_main$is_lifetable)
+    is_lifetable <- base::unique(output_attribute_1$health_detailed$input_table$is_lifetable)
 
     # Capture all arguments and values
     input_args_2_value <- as.list(environment())
