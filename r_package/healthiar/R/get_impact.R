@@ -89,12 +89,9 @@ get_impact <-
         # Calculate absolute risk for each exposure category
         results_raw <-
           input_table |>
-          dplyr::rowwise() |>
           dplyr::mutate(
             absolute_risk_as_percent = healthiar::get_risk(exp = exp, erf_eq = erf_eq),
-            impact = absolute_risk_as_percent/100 * pop_exp) |>
-          # Remove the grouping of rowwise
-          dplyr::ungroup()}
+            impact = absolute_risk_as_percent/100 * pop_exp)}
 
 
 

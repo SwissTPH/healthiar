@@ -29,123 +29,65 @@ get_risk <-
     rr = NULL,
     rr_increment = NULL,
     erf_eq = NULL,
-    cutoff = NULL,
+    cutoff = 0,
     exp
   ) {
 
     # Check if exposure is upper than cutoff
     # Otherwise the value of the exposure must be the cutoff (minimum possible)
-    # Of course, only applicable if there is a cutoff
-    if(!is.null(cutoff)){
-      exp <-
-        ifelse(exp > cutoff,
-               exp,
-               # if exp < cutoff, then exp should be cutoff
-               cutoff)
+    exp <-
+      base::ifelse(exp > cutoff,
+                   exp,
+                   # if exp < cutoff, then exp should be cutoff
+                   cutoff)
+
+    # Obtain rr_at_exp, i.e. the relative risk the level of exposure
+    # instead of for the increment
+
+    # If erf_eq is passed as argument
+    if (! base::is.null(erf_eq)) {
+
+      # If get_risk is used independently of attribute_health()
+      # and only one function is entered by the user
+      if(base::is.function(erf_eq)){
+        rr_at_exp <- erf_eq(exp - cutoff)
+        # when get_risk() is used inside attribute_health(),
+        # erf_eq that are functions are encapsulated in lists to be included in tibbles
+        # That is why we need is.list() and map()
+        } else if (base::is.list(erf_eq) && base::all(purrr::map_lgl(erf_eq, is.function))) {
+
+           rr_at_exp <- base::mapply(function(f, cval) f(cval), erf_eq, exp - cutoff)
+           # A map() approach does not work here. Therefore, mapply
+           # rr_at_exp <- erf_eq |>
+           #   purrr::map_dbl(~ .x(exp - cutoff))
+
+
+          # If the function is a string (vector)
+
+        } else if (base::is.character(erf_eq)) {
+        # The function must in this case created to be used below
+        erf_fun <- base::eval(base::parse(text = base::paste0("function(c) { ", erf_eq, " }")))
+
+        rr_at_exp <- erf_fun(exp - cutoff)
+      }
+
+    # If erf_eq is not entered by the user
+    } else if (base::is.null(erf_eq)){
+
+      # Calculate the rr_at_exp based on erf_shape
+      rr_at_exp <-
+        dplyr::case_when(
+          erf_shape == "linear" ~
+            1 + ((rr - 1) * (exp - cutoff) / rr_increment),
+          erf_shape == "log_linear" ~
+            base::exp(base::log(rr) * (exp - cutoff) / rr_increment),
+          erf_shape == "linear_log" ~
+            1 + ((rr - 1) * (base::log(exp) - base::log(cutoff)) / base::log(rr_increment)),
+          erf_shape == "log_log" ~
+            base::exp(base::log(rr) * (base::log(exp) - base::log(cutoff)) / base::log(rr_increment))
+      )
     }
 
-
-    # The function assumes that the user of the package does not define the function entirely,
-    # but using arguments such as exp, cutoff, rr_increment and erf_shape
-    # Therefore, the default value of the argument erf_eq should be NULL
-    # If the user enter a TRUE, erf_eq is read. Otherwise the arguments
-    # exp, cutoff, rr_increment and erf_shape.
-
-    # Let's write the exposure-response function (erf)
-    # based on c (concentration) as single data
-
-    # A first (and most usual) option is to define the erf using
-    # the shape of the function (erf_shape) and
-    # the relative risk from the literature
-
-    if ( is.null(erf_eq) ) {
-
-
-      if ( erf_shape == "linear" ) {
-        erf <-
-          function(c){
-            1+( (rr-1) * (c-cutoff)/rr_increment )
-          }
-        rr_c <- erf(exp)
-        return(rr_c)
-      }
-
-
-      if ( erf_shape == "log_linear" ) {
-        erf <-
-          function(c){
-            exp(log(rr) *(c-cutoff)/rr_increment)
-          }
-        rr_c <- erf(exp)
-        return(rr_c)
-      }
-
-
-      if ( erf_shape == "linear_log" ) {
-        erf <-
-          function(c){
-            1+( (rr-1) * (log(c)-log(cutoff))/log(rr_increment) )
-          }
-        rr_c <- erf(exp)
-        return(rr_c)
-      }
-
-      if ( erf_shape == "log_log" ) {
-        erf <-
-          function(c){
-            exp( log(rr) *(log(c)-log(cutoff))/log(rr_increment) )
-          }
-        rr_c <- erf(exp)
-        return(rr_c)
-      }
-
-    }
-
-
-    # A second option is to define the erf using
-    # an own defined option
-
-    if ( !is.null(erf_eq) & is.character(erf_eq) ) {
-
-      ## Original function
-      erf <- function(c){
-        # eval() and parse() convert the string into a function
-        base::eval(base::parse(text = erf_eq))
-      }
-      rr_c <- erf(exp)
-        return(rr_c)
-      ## Option using mapply (runs correctly without rowwise(), see #377 )
-      # erf <- function(c, erf_eq) {
-      #   mapply(function(eq, val) {
-      #     base::eval(base::parse(text = eq), list(c = val))
-      #   }, erf_eq, c)
-      # }
-      # rr_c <- erf(c = exp, erf_eq = erf_eq)
-      # return(rr_c)
-
-
-    }
-
-    # A third option is to define the erf using
-    # a set of points (x = exposure, y = relative risk)
-    # It will be assumed that
-
-    if ( !is.null(erf_eq) & is.function(erf_eq) ){
-
-
-     erf <- erf_eq
-
-     if(!is.null(cutoff)){
-       exp <- exp - cutoff
-
-       if (exp < 0){
-         exp <- 0 # Avoid negative exposures
-       }
-       rr_c <- erf(exp)
-       return(rr_c)
-     }
-
-
-    }
+    return(rr_at_exp)
 
   }
