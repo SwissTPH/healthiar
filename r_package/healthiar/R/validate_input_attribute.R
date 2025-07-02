@@ -277,8 +277,8 @@ validate_input_attribute <-
       if(
         base::any(input_args_value$deaths_male == 0) |
         base::any(input_args_value$deaths_female == 0) |
-        base::any(input_args_value$population_midyear_male) |
-        base::any(input_args_value$population_midyear_female)
+        base::any(input_args_value$population_midyear_male == 0) |
+        base::any(input_args_value$population_midyear_female == 0)
       ) {
         base::stop(
           base::paste0(var_name , " must contain ≥ 1 death(s) per age group")

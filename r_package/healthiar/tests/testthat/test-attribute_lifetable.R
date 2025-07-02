@@ -101,7 +101,8 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
         min_age = data[["input"]]$apply_rr_from_age
       )$health_main$impact,
   expected =
-      c(2776839.17,	1452410.83,	4094163.08) # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_no_newborns_default.csv"
+      # c(2776839.17,	1452410.83,	4094163.08) # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_no_newborns_default.csv" when female deaths for age 8 was still 0 (not OK, should be 1 or more)
+    c(2776836.1, 1452409.2, 4094158.6) # ~ AirQ+ results but slightly adjusted on 2025-07-02, because the female deaths for age 8 was set at 1 in "airqplus_pm_deaths_yll.rds" data set, which is used for this example  (before it was 0, which is not OK, because the calculated survival prob is then 1 which is not realistic)
   )
 })
 
@@ -134,7 +135,8 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
         min_age = data[["input"]]$apply_rr_from_age
         )$health_main$impact,
     expected =
-      c(3248408.53,	1700230.04,	4786195.41) # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_with_newborns_default.csv"
+      # c(3248408.53,	1700230.04,	4786195.41) # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_with_newborns_default.csv"
+      c(3248400.0, 1700225.6, 4786182.9) ## ~ AirQ+ results but slightly adjusted on 2025-07-02, because the female deaths for age 8 was set at 1 in "airqplus_pm_deaths_yll.rds" data set, which is used for this example  (before it was 0, which is not OK, because the calculated survival prob is then 1 which is not realistic)
   )
 })
 
