@@ -41,42 +41,33 @@ get_risk <-
                    # if exp < cutoff, then exp should be cutoff
                    cutoff)
 
+    # Obtain rr_at_exp, i.e. the relative risk the level of exposure
+    # instead of for the increment
 
-
-    # The function assumes that the user of the package does not define the function entirely,
-    # but using arguments such as exp, cutoff, rr_increment and erf_shape
-    # Therefore, the default value of the argument erf_eq should be NULL
-    # If the user enter a TRUE, erf_eq is read. Otherwise the arguments
-    # exp, cutoff, rr_increment and erf_shape.
-
-    # Let's write the exposure-response function (erf)
-    # based on c (concentration) as single data
-
-    # A first (and most usual) option is to define the erf using
-    # the shape of the function (erf_shape) and
-    # the relative risk from the literature
-
-
-    # Build the exposure-response function once outside
+    # If erf_eq is passed as argument
     if (!is.null(erf_eq)) {
-
+      # And if erf_eq is a function
+      # i.e. a single raw in the vectorial structure
       if (is.function(erf_eq)) {
 
         rr_c <- erf_eq(exp - cutoff)
-
+      # erf_eq that are functions are encapsulated in lists to be included in tibbles
+      # That is why we need is.list() and sapply() and mapply()
       } else if (is.list(erf_eq) && all(sapply(erf_eq, is.function))) {
 
         rr_c <- mapply(function(f, cval) f(cval), erf_eq, exp - cutoff)
-
+      # If the function is a string (vector)
       } else if (is.character(erf_eq)) {
-
+        # The function must in this case created to be used below
         erf_fun <- eval(parse(text = paste0("function(c) { ", erf_eq, " }")))
 
         rr_c <- erf_fun(exp - cutoff)
       }
+
+    # If erf_eq is not entered by the user
     } else if (is.null(erf_eq)){
 
-      # predefined shapes
+      # Calculate the rr_at_exp based on erf_shape
       rr_c <-
         dplyr::case_when(
           erf_shape == "linear" ~ 1 + ((rr - 1) * (exp - cutoff) / rr_increment),
