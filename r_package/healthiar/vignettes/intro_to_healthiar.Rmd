@@ -558,6 +558,15 @@ Two folders are added:
 
 -   `monetization_detailed` contains the monetized results for each unique combination of the input variable estimates that were provided to the initial `attribute_health()` call
 
+Alternatively, you can also monetize (attributable) health impacts from a non-`healthiar` source.
+
+```{r}
+results <- monetize(
+  impact = 1151,
+  valuation = 100
+)
+```
+
 ## Example: `cba()`
 
 Adding a cost-benefit analysis (CBA) using the results
