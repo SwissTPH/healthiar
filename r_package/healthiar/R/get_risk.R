@@ -50,25 +50,25 @@ get_risk <-
       # i.e. a single raw in the vectorial structure
       if (is.function(erf_eq)) {
 
-        rr_c <- erf_eq(exp - cutoff)
+        rr_at_exp <- erf_eq(exp - cutoff)
       # erf_eq that are functions are encapsulated in lists to be included in tibbles
       # That is why we need is.list() and sapply() and mapply()
       } else if (is.list(erf_eq) && all(sapply(erf_eq, is.function))) {
 
-        rr_c <- mapply(function(f, cval) f(cval), erf_eq, exp - cutoff)
+        rr_at_exp <- mapply(function(f, cval) f(cval), erf_eq, exp - cutoff)
       # If the function is a string (vector)
       } else if (is.character(erf_eq)) {
         # The function must in this case created to be used below
         erf_fun <- eval(parse(text = paste0("function(c) { ", erf_eq, " }")))
 
-        rr_c <- erf_fun(exp - cutoff)
+        rr_at_exp <- erf_fun(exp - cutoff)
       }
 
     # If erf_eq is not entered by the user
     } else if (is.null(erf_eq)){
 
       # Calculate the rr_at_exp based on erf_shape
-      rr_c <-
+      rr_at_exp <-
         dplyr::case_when(
           erf_shape == "linear" ~ 1 + ((rr - 1) * (exp - cutoff) / rr_increment),
           erf_shape == "log_linear" ~ exp(log(rr) * (exp - cutoff) / rr_increment),
@@ -77,6 +77,6 @@ get_risk <-
       )
     }
 
-    return(rr_c)
+    return(rr_at_exp)
 
   }
