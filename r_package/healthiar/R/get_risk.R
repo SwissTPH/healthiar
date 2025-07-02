@@ -46,12 +46,23 @@ get_risk <-
 
     # If erf_eq is passed as argument
     if (! base::is.null(erf_eq)) {
-      # erf_eq that are functions are encapsulated in lists to be included in tibbles
-      # That is why we need is.list() and sapply() and mapply()
-        if (base::is.list(erf_eq) && base::all(purrr::map_lgl(erf_eq, is.function))) {
 
-        rr_at_exp <- mapply(function(f, cval) f(cval), erf_eq, exp - cutoff)
-        # If the function is a string (vector)
+      # If get_risk is used independently of attribute_health()
+      # and only one function is entered by the user
+      if(base::is.function(erf_eq)){
+        rr_at_exp <- erf_eq(exp - cutoff)
+        # when get_risk() is used inside attribute_health(),
+        # erf_eq that are functions are encapsulated in lists to be included in tibbles
+        # That is why we need is.list() and map()
+        } else if (base::is.list(erf_eq) && base::all(purrr::map_lgl(erf_eq, is.function))) {
+
+           rr_at_exp <- base::mapply(function(f, cval) f(cval), erf_eq, exp - cutoff)
+           # A map() approach does not work here. Therefore, mapply
+           # rr_at_exp <- erf_eq |>
+           #   purrr::map_dbl(~ .x(exp - cutoff))
+
+
+          # If the function is a string (vector)
 
         } else if (base::is.character(erf_eq)) {
         # The function must in this case created to be used below
