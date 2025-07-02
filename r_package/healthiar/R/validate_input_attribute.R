@@ -271,7 +271,27 @@ validate_input_attribute <-
     if(all(lifetable_var_names_with_same_length %in% available_var_names)){
       error_if_incompatible_length_of_age_range(age_dependent_var = "deaths_male")
     }
+# browser()
+    ### error_if_0 #####
+    error_if_0 <- function(var_name){
+      if(
+        base::any(input_args_value$deaths_male == 0) |
+        base::any(input_args_value$deaths_female == 0) |
+        base::any(input_args_value$population_midyear_male) |
+        base::any(input_args_value$population_midyear_female)
+      ) {
+        base::stop(
+          base::paste0(var_name , " must contain ≥ 1 death(s) per age group")
+          )
+        }
+    }
 
+    for (x in numeric_var_names[
+      base::grepl("^deaths_", numeric_var_names) |
+      base::grepl("^population_", numeric_var_names)
+      ]) {
+      error_if_0(x)
+    }
 
     ### error_if_lower_than_0 #####
 
