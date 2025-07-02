@@ -550,14 +550,15 @@ discuss it together and maybe another WP4 partner can help.
 
 ### Option A: Compare results manually
 
-```{r compare results manually, include=TRUE, echo=TRUE, eval=FALSE}
+```{r compare results manually, include=TRUE, echo=TRUE, eval=TRUE}
 ## healthiar FUNCTION CALL
 results <- healthiar::attribute_health(
   erf_shape = "log_linear",
   rr_central = 1.08,
   rr_increment = 10,
   exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
-  pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700),
+  prop_pop_exp = c(0.818718312, 0.074319355, 0.054852478, 
+                   0.036785683, 0.013847374, 0.001476797),
   cutoff_central = 53,
   bhd_central = 85362.08
 )
@@ -579,14 +580,15 @@ main / detailed results of an attribute output.
 If you have advanced knowledge of R we are very grateful if you can compare the
 results automatically by running the `test_that` function.
 
-```{r compare results automatically, include=TRUE, echo=TRUE, eval=FALSE}
+```{r compare results automatically, include=TRUE, echo=TRUE, eval=TRUE}
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
       healthiar::attribute_health(
         exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
-        pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700),
+        prop_pop_exp = c(0.818718312, 0.074319355, 0.054852478, 
+                         0.036785683, 0.013847374, 0.001476797),
         cutoff_central = 53,
         bhd_central = 85362.08,
         rr_central = 1.08,
@@ -624,7 +626,7 @@ to the folder of your institute.
 
 Filled out basic template (with hard-coded input data):
 
-```{r filled out template basic, include=TRUE, echo=TRUE, eval=FALSE}
+```{r filled out template basic, include=TRUE, echo=TRUE, eval=TRUE}
 ## Pathway ID: |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|
 
 ## healthiar FUNCTION CALL
@@ -633,7 +635,8 @@ healthiar::attribute_health(
   rr_central = 1.08,
   rr_increment = 10,
   exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
-  pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700),
+  prop_pop_exp = c(0.818718312, 0.074319355, 0.054852478, 
+                   0.036785683, 0.013847374, 0.001476797),
   cutoff_central = 53,
   bhd_central = 85362.08
 )$health_main$impact_rounded |> 
@@ -654,7 +657,7 @@ main / detailed results of an attribute output.
 
 Filled out extended template (with input data loaded into RStudio):
 
-```{r filled out template extended, include=TRUE, echo=TRUE, eval=FALSE}
+```{r filled out template extended, include=TRUE, echo=TRUE, eval=TRUE}
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
@@ -672,7 +675,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
         rr_central = 1.08,
         rr_increment = 10,
         exp_central = data$exposure_mean,
-        pop_exp = data$population_exposed_total,
+        prop_pop_exp = data$prop_exposed,
         cutoff_central = min(data$exposure_mean),
         bhd_central = data$gbd_daly[1]
         )$health_main$impact_rounded,
@@ -760,7 +763,7 @@ results <- healthiar::summarize_uncertainty(
 
 #### ... then extract the results ...
 
-```{r uncertainty example part 2 extract results, eval=FALSE}
+```{r uncertainty example part 2 extract results, eval=TRUE}
 results$uncertainty_main$impact_rounded
 ## 26676 (central impact estimates), 22183 (lower), 31407 (upper)
 ```
