@@ -3,7 +3,7 @@
 #' @description
 #' This function calculates the disability-adjusted life years (DALY) attributable to the exposure to an environmental stressor by adding the two DALY components YLL and YLD.
 
-#' @inheritParams attribute_master
+#' @param output_attribute_yll,output_attribute_yld \code{variable} containing YLL or YLD results of a \code{attribute_...()} function call, respectively.
 
 #' @inherit attribute_master return
 

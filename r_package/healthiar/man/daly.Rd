@@ -6,6 +6,9 @@
 \usage{
 daly(output_attribute_yll, output_attribute_yld)
 }
+\arguments{
+\item{output_attribute_yll, output_attribute_yld}{\code{variable} containing YLL or YLD results of a \code{attribute_...()} function call, respectively.}
+}
 \value{
 This function returns two \code{lists}:
 
