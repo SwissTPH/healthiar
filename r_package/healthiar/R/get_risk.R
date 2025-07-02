@@ -45,35 +45,39 @@ get_risk <-
     # instead of for the increment
 
     # If erf_eq is passed as argument
-    if (!is.null(erf_eq)) {
+    if (! base::is.null(erf_eq)) {
       # And if erf_eq is a function
       # i.e. a single raw in the vectorial structure
-      if (is.function(erf_eq)) {
+      if (base::is.function(erf_eq)) {
 
         rr_at_exp <- erf_eq(exp - cutoff)
       # erf_eq that are functions are encapsulated in lists to be included in tibbles
       # That is why we need is.list() and sapply() and mapply()
-      } else if (is.list(erf_eq) && all(sapply(erf_eq, is.function))) {
+      } else if (base::is.list(erf_eq) && all(sapply(erf_eq, is.function))) {
 
         rr_at_exp <- mapply(function(f, cval) f(cval), erf_eq, exp - cutoff)
       # If the function is a string (vector)
-      } else if (is.character(erf_eq)) {
+      } else if (base::is.character(erf_eq)) {
         # The function must in this case created to be used below
-        erf_fun <- eval(parse(text = paste0("function(c) { ", erf_eq, " }")))
+        erf_fun <- base::eval(base::parse(text = base::paste0("function(c) { ", erf_eq, " }")))
 
-        rr_at_exp <- erf_fun(exp - cutoff)
+        rr_at_exp <- base::erf_fun(exp - cutoff)
       }
 
     # If erf_eq is not entered by the user
-    } else if (is.null(erf_eq)){
+    } else if (base::is.null(erf_eq)){
 
       # Calculate the rr_at_exp based on erf_shape
       rr_at_exp <-
         dplyr::case_when(
-          erf_shape == "linear" ~ 1 + ((rr - 1) * (exp - cutoff) / rr_increment),
-          erf_shape == "log_linear" ~ exp(log(rr) * (exp - cutoff) / rr_increment),
-          erf_shape == "linear_log" ~ 1 + ((rr - 1) * (log(exp) - log(cutoff)) / log(rr_increment)),
-          erf_shape == "log_log" ~ exp(log(rr) * (log(exp) - log(cutoff)) / log(rr_increment))
+          erf_shape == "linear" ~
+            1 + ((rr - 1) * (exp - cutoff) / rr_increment),
+          erf_shape == "log_linear" ~
+            base::exp(base::log(rr) * (exp - cutoff) / rr_increment),
+          erf_shape == "linear_log" ~
+            1 + ((rr - 1) * (base::log(exp) - base::log(cutoff)) / base::log(rr_increment)),
+          erf_shape == "log_log" ~
+            base::exp(base::log(rr) * (base::log(exp) - base::log(cutoff)) / base::log(rr_increment))
       )
     }
 
