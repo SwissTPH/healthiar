@@ -29,20 +29,18 @@ get_risk <-
     rr = NULL,
     rr_increment = NULL,
     erf_eq = NULL,
-    cutoff = NULL,
+    cutoff = 0,
     exp
   ) {
 
     # Check if exposure is upper than cutoff
     # Otherwise the value of the exposure must be the cutoff (minimum possible)
-    # Of course, only applicable if there is a cutoff
-    if(!is.null(cutoff)){
-      exp <-
-        ifelse(exp > cutoff,
-               exp,
-               # if exp < cutoff, then exp should be cutoff
-               cutoff)
-    }
+    exp <-
+      base::ifelse(exp > cutoff,
+                   exp,
+                   # if exp < cutoff, then exp should be cutoff
+                   cutoff)
+
 
 
     # The function assumes that the user of the package does not define the function entirely,
@@ -58,94 +56,36 @@ get_risk <-
     # the shape of the function (erf_shape) and
     # the relative risk from the literature
 
-    if ( is.null(erf_eq) ) {
 
+    # Build the exposure-response function once outside
+    if (!is.null(erf_eq)) {
 
-      if ( erf_shape == "linear" ) {
-        erf <-
-          function(c){
-            1+( (rr-1) * (c-cutoff)/rr_increment )
-          }
-        rr_c <- erf(exp)
-        return(rr_c)
+      if (is.function(erf_eq)) {
+
+        rr_c <- erf_eq(exp - cutoff)
+
+      } else if (is.list(erf_eq) && all(sapply(erf_eq, is.function))) {
+
+        rr_c <- mapply(function(f, cval) f(cval), erf_eq, exp - cutoff)
+
+      } else if (is.character(erf_eq)) {
+
+        erf_fun <- eval(parse(text = paste0("function(c) { ", erf_eq, " }")))
+
+        rr_c <- erf_fun(exp - cutoff)
       }
+    } else if (is.null(erf_eq)){
 
-
-      if ( erf_shape == "log_linear" ) {
-        erf <-
-          function(c){
-            exp(log(rr) *(c-cutoff)/rr_increment)
-          }
-        rr_c <- erf(exp)
-        return(rr_c)
-      }
-
-
-      if ( erf_shape == "linear_log" ) {
-        erf <-
-          function(c){
-            1+( (rr-1) * (log(c)-log(cutoff))/log(rr_increment) )
-          }
-        rr_c <- erf(exp)
-        return(rr_c)
-      }
-
-      if ( erf_shape == "log_log" ) {
-        erf <-
-          function(c){
-            exp( log(rr) *(log(c)-log(cutoff))/log(rr_increment) )
-          }
-        rr_c <- erf(exp)
-        return(rr_c)
-      }
-
+      # predefined shapes
+      rr_c <-
+        dplyr::case_when(
+          erf_shape == "linear" ~ 1 + ((rr - 1) * (exp - cutoff) / rr_increment),
+          erf_shape == "log_linear" ~ exp(log(rr) * (exp - cutoff) / rr_increment),
+          erf_shape == "linear_log" ~ 1 + ((rr - 1) * (log(exp) - log(cutoff)) / log(rr_increment)),
+          erf_shape == "log_log" ~ exp(log(rr) * (log(exp) - log(cutoff)) / log(rr_increment))
+      )
     }
 
-
-    # A second option is to define the erf using
-    # an own defined option
-
-    if ( !is.null(erf_eq) & is.character(erf_eq) ) {
-
-      ## Original function
-      erf <- function(c){
-        # eval() and parse() convert the string into a function
-        base::eval(base::parse(text = erf_eq))
-      }
-      rr_c <- erf(exp)
-        return(rr_c)
-      ## Option using mapply (runs correctly without rowwise(), see #377 )
-      # erf <- function(c, erf_eq) {
-      #   mapply(function(eq, val) {
-      #     base::eval(base::parse(text = eq), list(c = val))
-      #   }, erf_eq, c)
-      # }
-      # rr_c <- erf(c = exp, erf_eq = erf_eq)
-      # return(rr_c)
-
-
-    }
-
-    # A third option is to define the erf using
-    # a set of points (x = exposure, y = relative risk)
-    # It will be assumed that
-
-    if ( !is.null(erf_eq) & is.function(erf_eq) ){
-
-
-     erf <- erf_eq
-
-     if(!is.null(cutoff)){
-       exp <- exp - cutoff
-
-       if (exp < 0){
-         exp <- 0 # Avoid negative exposures
-       }
-       rr_c <- erf(exp)
-       return(rr_c)
-     }
-
-
-    }
+    return(rr_c)
 
   }
