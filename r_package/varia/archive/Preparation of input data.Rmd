@@ -620,16 +620,17 @@ airqplus_deaths_pop_singleYear <-
 # Read csv file from AirQ+ export for deaths and YLLs
 airqplus_deaths_yll_export <-
   readr::read_delim(
+    # "../varia/airqplus_cases/airqplus_deaths_yll_lifetable_adults.csv", # OLD PATH
     "../varia/input/airqplus_cases/airqplus_deaths_yll_lifetable_adults.csv",
     delim = ";",
-    col_types = cols())
+    col_types = readr::cols())
 
 # Digest the data (make it ready for testing the package)
 airqplus_pm_deaths_yll <- 
   digest_airqplus_export_lifetable(airqplus_export = airqplus_deaths_yll_export)
 
-
-
+## Replace 0 with 1 for age 8 in airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female
+airqplus_pm_deaths_yll[["pop"]]$number_of_deaths_female[9] <- 1 # row 9 corresponds to age 8
 ```
 
 

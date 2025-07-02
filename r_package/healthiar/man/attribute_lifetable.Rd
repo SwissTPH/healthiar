@@ -44,9 +44,9 @@ attribute_lifetable(
 
 \item{first_age_pop, last_age_pop}{\code{Numeric value} specifying the age of the youngest and oldest age group (age interval = 1 year) of the data, respectively.}
 
-\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See Details for more info.}
+\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations (≥ 1) per age (age interval = 1 year) for the year of analysis for females and males, respectively. See Details for more info.}
 
-\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively.}
+\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively. In each age group deaths(s) must be ≥ 1 to avoid problems in the calculation.}
 
 \item{min_age, max_age}{\code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.}
 
@@ -111,7 +111,7 @@ For conversion of hazard ratios and/or odds ratios to relative risks refer to ht
 
 \code{population_midyear_female},\code{population_midyear_male}
 
-Mid-year population of year x can be approximated as the mean of end-year populations of years x-1 and x.
+Mid-year population of year x can be approximated as the mean of either end-year populations of years x-1 and x or start-of-year populations of years x and x+1. In each age group population must be ≥ 1 to avoid problems in the calculation.
 
 \code{approach_newborns}
 
