@@ -54,7 +54,6 @@
 #' \code{Numeric value} or \code{numeric vector} providing the \strong{duration} associated with the morbidity health outcome of interest in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval. Default: 1. See Details for more info. \emph{Only applicable in assessments of YLD (years lived with disability).}
 
 # Life table parameters
-
 #' @param health_outcome
 #' \code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).
 
@@ -62,10 +61,10 @@
 #' \code{Numeric value} specifying the age of the youngest and oldest age group (age interval = 1 year) of the data, respectively.
 
 #' @param population_midyear_female,population_midyear_male
-#' \code{Numeric vector} containing the mid-year populations per age (age interval = 1 year) for the year of analysis for females and males, respectively. See Details for more info.
+#' \code{Numeric vector} containing the mid-year populations (≥ 1) per age (age interval = 1 year) for the year of analysis for females and males, respectively. See Details for more info.
 
 #' @param deaths_female,deaths_male
-#' \code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively.
+#' \code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively. In each age group deaths(s) must be ≥ 1 to avoid problems in the calculation.
 
 #' @param min_age,max_age
 #' \code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.
