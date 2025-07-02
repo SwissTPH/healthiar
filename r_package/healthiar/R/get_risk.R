@@ -61,7 +61,7 @@ get_risk <-
         # The function must in this case created to be used below
         erf_fun <- base::eval(base::parse(text = base::paste0("function(c) { ", erf_eq, " }")))
 
-        rr_at_exp <- base::erf_fun(exp - cutoff)
+        rr_at_exp <- erf_fun(exp - cutoff)
       }
 
     # If erf_eq is not entered by the user
