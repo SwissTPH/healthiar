@@ -48,12 +48,13 @@ get_risk <-
     if (! base::is.null(erf_eq)) {
       # And if erf_eq is a function
       # i.e. a single raw in the vectorial structure
-      if (base::is.function(erf_eq)) {
-
-        rr_at_exp <- erf_eq(exp - cutoff)
+      # if (base::is.function(erf_eq)) {
+      #
+      #   rr_at_exp <- erf_eq(exp - cutoff)
       # erf_eq that are functions are encapsulated in lists to be included in tibbles
       # That is why we need is.list() and sapply() and mapply()
-      } else if (base::is.list(erf_eq) && all(sapply(erf_eq, is.function))) {
+      # } else
+        if (base::is.list(erf_eq) && base::all(sapply(erf_eq, is.function))) {
 
         rr_at_exp <- mapply(function(f, cval) f(cval), erf_eq, exp - cutoff)
       # If the function is a string (vector)
