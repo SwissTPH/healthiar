@@ -35,7 +35,7 @@ get_input_args <-
     # Tag arguments showing if they are explicitly passed by the user (TRUE/FALSE)
     is_passed <- base::names(input_args$value) %in% base::names(input_args_passed)
 
-    input_args$is_passed_by_user <-
+    input_args$is_entered_by_user <-
       base::as.list(stats::setNames(
         is_passed,
         base::names(input_args$value)))

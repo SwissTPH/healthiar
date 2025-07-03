@@ -111,7 +111,7 @@ attribute_mod <-
       # as additional argument for attribute_master()
       list(
         value = input_args_2_value,
-        is_passed_by_user = input_args_1[["is_passed_by_user"]],
+        is_entered_by_user = input_args_1[["is_entered_by_user"]],
         is_default = input_args_1[["is_default"]]
       )
 

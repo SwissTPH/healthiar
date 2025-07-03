@@ -109,7 +109,7 @@ summarize_uncertainty <- function(
 
 
 
-  input_arg_names_passed <- input_args_to_check$is_passed_by_user |>
+  input_arg_names_passed <- input_args_to_check$is_entered_by_user |>
     purrr::keep(~.x == TRUE) |>
     base::names()
 
@@ -516,7 +516,7 @@ summarize_uncertainty <- function(
       c("_central", "_lower", "_upper"))
   # variable that were not passed by the user
   args_not_passed <-
-    base::names(input_args$is_passed_by_user)[!base::unlist(input_args$is_passed_by_user)]
+    base::names(input_args$is_entered_by_user)[!base::unlist(input_args$is_entered_by_user)]
   # All args to be removed
   args_to_be_removed_in_input_args <-
     base::unique(c(args_to_be_replaced_by_sim, args_not_passed))
