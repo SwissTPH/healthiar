@@ -1,7 +1,9 @@
 ### My MRBRT for road noise
 
 
-data <- read.csv(file = "./tests_data/roadnoise_HA_Lden_Stavanger_Bergen_.csv", header=T, sep=",")
+data <- read.csv(file = "../varia/bug_with_noise/roadnoise_HA_Lden_Stavanger_Bergen_.csv", header=T, sep=",")
+
+library(data.table)
 setDT(data)
 
 # We create the AR from GUSKI
@@ -60,7 +62,7 @@ healthiar::attribute_health(
   population  = data$totpop,
   geo_id_disaggregated = data$GEO_ID,
   geo_id_aggregated = "Norway", #,
-  erf_eq_central =  approx(erf_df$dB, erf_df$AR)
+  erf_eq_central =  approx(erf_df$dB, erf_df$AR) #AC: Error because this is a vector and should be a function or a string with the function (e.g. "3+0.5c")
   # bhd_central = 448216.7
 )
 
@@ -83,7 +85,7 @@ approx_fun(data$average_cat)
 healthiar::attribute_health(
   approach_risk = "absolute_risk",
   exp_central = data$average_cat,
-  erf_eq_central = approx_fun,  
+  erf_eq_central = approx_fun, #AC: Error because again this is a vector and should be a function or a string with the function (e.g. "3+0.5c") 
   pop_exp = data$ANTALL_PER,
   prop_pop_exp = data$prop_pop_exp,
   population = data$totpop,
@@ -95,7 +97,7 @@ healthiar::attribute_health(
 
 
 
-healthiar::attribute_health(
+result <-  healthiar::attribute_health(
   approach_risk = "absolute_risk",
   exp_central = data$average_cat,
 
@@ -105,7 +107,7 @@ healthiar::attribute_health(
     method = "natural" ),
 
   pop_exp     = data$ANTALL_PER,
-  prop_pop_exp = data$prop_pop_exp,
+  # prop_pop_exp = data$prop_pop_exp, # AC: If you deactivate this argument, it works. For absolute risk, you have to enter pop_exp, not prop_pop_exp. See new error message when passing prop_pop_exp.
   population  = data$totpop,
   geo_id_disaggregated = data$GEO_ID,
   geo_id_aggregated = "Norway"
@@ -127,11 +129,11 @@ my_erf <- function(c) {
 
 
 
-healthiar::attribute_health(
+result <- healthiar::attribute_health(
   approach_risk = "absolute_risk",
   exp_central = data$average_cat,
   population = data$totpop,
-  prop_pop_exp = data$prop_pop_exp,
+  #prop_pop_exp = data$prop_pop_exp, # AC: Same as above. If you deactivate this argument, it works. For absolute risk, you have to enter pop_exp, not prop_pop_exp. See new error message when passing prop_pop_exp.
   pop_exp = data$ANTALL_PER,
   geo_id_disaggregated = data$GEO_ID,
   geo_id_aggregated = "Norway",
@@ -159,9 +161,9 @@ erf_fun <- approxfun(
 result <- healthiar::attribute_health(
   approach_risk = "absolute_risk",
   exp_central = data$average_cat,
-  erf_eq_central = erf_fun(data$average_cat),  # this is a function!
+  erf_eq_central = erf_fun(data$average_cat),  # this is a function! # AC: This is not a function but a vector
   pop_exp = data$ANTALL_PER,
-  prop_pop_exp = data$prop_pop_exp,
+  #prop_pop_exp = data$prop_pop_exp, # AC: Same as above. If you deactivate this argument, it works. For absolute risk, you have to enter pop_exp, not prop_pop_exp. See new error message when passing prop_pop_exp.
   population = data$totpop,
   geo_id_disaggregated = data$GEO_ID,
   geo_id_aggregated = "Norway"
@@ -180,7 +182,7 @@ erf_df[, AR := 78.9270 - 3.1162 * dB + 0.0342 * dB^2]
 
 erf <-splinefun(data$average_cat, data$AR, method="natural")
 
-healthiar::attribute_health(
+results <- healthiar::attribute_health(
   approach_risk = "absolute_risk",
   exp_central = data$average_cat,
   # cutoff_central = 45,
@@ -190,7 +192,7 @@ healthiar::attribute_health(
   #                      y = erf_df$AR,
   #                      method = "natural" ),  
   pop_exp = data$ANTALL_PER,
-  prop_pop_exp = data$prop_pop_exp,
+  #prop_pop_exp = data$prop_pop_exp, # AC: Same as above. If you deactivate this argument, it works. For absolute risk, you have to enter pop_exp, not prop_pop_exp. See new error message when passing prop_pop_exp.
   population = data$totpop,
   geo_id_disaggregated = data$GEO_ID,
   geo_id_aggregated = "Norway"
