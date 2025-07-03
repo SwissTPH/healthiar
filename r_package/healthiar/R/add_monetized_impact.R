@@ -24,12 +24,12 @@ add_monetized_impact  <-
     # If df has only one column (impact)
     # it means that this is the direct input from user
     # no previous health assessment with healthiar
-    using_impact_from_user <- ncol(df) == 1
-    using_impact_vector <- length(df$impact)>1
+    using_impact_from_user <- base::ncol(df) == 1
+    using_impact_vector <- base::length(df$impact)>1
     using_impact_vector_from_user <- using_impact_from_user & using_impact_vector
     using_impact_value_from_user <- using_impact_from_user & !using_impact_vector
     using_impact_from_healthiar <- !using_impact_from_user
-    using_lifetable <- "year" %in% names(df)
+    using_lifetable <- "year" %in% base::names(df)
     using_impact_from_healthiar_with_lifetable <- using_impact_from_healthiar & using_lifetable
     using_impact_from_healthiar_without_lifetable <- using_impact_from_healthiar & !using_lifetable
 
@@ -44,14 +44,14 @@ add_monetized_impact  <-
   # Convert NULL into 1 so that it can be integrated in the calculations.
   # If no inflation is wished, no problem, the 0 will not change the results
   inflation <-
-    ifelse(is.null(inflation),
-           0,
-           inflation)
+    base::ifelse(base::is.null(inflation),
+                 0,
+                 inflation)
 
   discount_rate <-
-    ifelse(is.null(discount_rate),
-           0,
-           discount_rate)
+    base::ifelse(base::is.null(discount_rate),
+                 0,
+                 discount_rate)
 
   # Obtain the nominal discount rate if needed for the case of nominal_discount_rate
   # If the user refers to a real discount rate (without inflation), then
@@ -127,9 +127,9 @@ add_monetized_impact  <-
     grouping_variables <-
       df_by_year |>
       dplyr::select(starts_with("geo_id"),
-                    ends_with("_ci"),
-                    any_of(c("discount_shape"))) |>
-      names()
+                    dplyr::ends_with("_ci"),
+                    dplyr::any_of(c("discount_shape"))) |>
+      base::names()
 
 
     if(taking_last_discounted_year){
@@ -144,9 +144,9 @@ add_monetized_impact  <-
     }else if(summing_across_discounted_years){
       df_relevant <-
         df_by_year |>
-        dplyr::group_by(across(any_of(grouping_variables)))|>
+        dplyr::group_by(dplyr::across(dplyr::any_of(grouping_variables)))|>
         dplyr::summarize(
-          across(starts_with("monetized"), sum)
+          dplyr::across(dplyr::starts_with("monetized"), sum)
         )
     }
 
@@ -154,13 +154,13 @@ add_monetized_impact  <-
     df_relevant |>
     # Round monetized impacts
     dplyr::mutate(
-      monetized_impact_before_inflation_and_discount_rounded = round(monetized_impact_before_inflation_and_discount),
-      monetized_impact_after__inflation_and_discount_rounded = round(monetized_impact_after_inflation_and_discount),
-      monetized_impact_rounded = round(monetized_impact),
+      monetized_impact_before_inflation_and_discount_rounded = base::round(monetized_impact_before_inflation_and_discount),
+      monetized_impact_after__inflation_and_discount_rounded = base::round(monetized_impact_after_inflation_and_discount),
+      monetized_impact_rounded = base::round(monetized_impact),
       .after = monetized_impact)
 
   monetization <-
-    list(
+    base::list(
       monetization_main = monetization_main,
       monetization_detailed = df_by_year
     )
