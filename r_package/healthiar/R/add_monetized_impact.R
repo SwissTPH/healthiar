@@ -94,19 +94,11 @@ add_monetized_impact  <-
     df_by_year |>
     # Add monetized impact and inflation factor
     dplyr::mutate(
-      monetized_impact_before_inflation_and_discount = impact * valuation) |>
-    # rowwise() because discount_years is a vector
-    # otherwise vectors from columns and vectors from discount_years cannot be digested
-    # better step by step
-    dplyr::rowwise() |>
-    # Calculate discount factor
-    # If any arguments "discount_rate" and "discount_shape" are NULL,
-    # no discount (i.e. discount_factor=1)
-    dplyr::mutate(
-      inflation_factor =
-        (1+inflation)^discount_year) |>
-    dplyr::rowwise() |>
-    dplyr::mutate(
+      monetized_impact_before_inflation_and_discount = impact * valuation,
+      # Calculate discount factor
+      # If any arguments "discount_rate" and "discount_shape" are NULL,
+      # no discount (i.e. discount_factor=1)
+      inflation_factor =  (1+inflation)^discount_year,
 
       discount_factor_wo_inflation =
         healthiar::get_discount_factor(
@@ -118,8 +110,7 @@ add_monetized_impact  <-
         healthiar::get_discount_factor(
           discount_rate = discount_rate_with_inflation,
           discount_year = discount_year,
-          discount_shape = discount_shape)) |>
-    dplyr::ungroup()
+          discount_shape = discount_shape))
 
 
     df_by_year <-
