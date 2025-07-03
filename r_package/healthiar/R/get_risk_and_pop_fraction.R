@@ -72,19 +72,6 @@ get_risk_and_pop_fraction <-
       ## If PAF
     if ( {{pop_fraction_type}} == "paf" ) {
 
-
-      # input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
-      #   ## Obtain the relative risk for the relevant concentration
-      #   dplyr::rowwise() |>
-      #   dplyr::mutate(rr_at_exp =
-      #                   healthiar::get_risk(rr = rr,
-      #                                      exp = exp,
-      #                                      cutoff = cutoff,
-      #                                      rr_increment = rr_increment,
-      #                                      erf_shape = erf_shape,
-      #                                      erf_eq = erf_eq)) |>
-      #   dplyr::ungroup()
-
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         ## Obtain the relative risk for the relevant concentration
         dplyr::mutate(rr_at_exp =

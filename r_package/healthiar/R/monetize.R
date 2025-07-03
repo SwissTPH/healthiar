@@ -199,7 +199,6 @@ monetize <- function(output_attribute = NULL,
               lifeyear_nest_with_and_without_discount <-
                 .x |>
                 # Convert year to numeric
-                dplyr::rowwise() |>
                 dplyr::mutate(year = as.numeric(year),
                               # Ignore user defined discount_years
                               # Here the difference between year of analysis and
