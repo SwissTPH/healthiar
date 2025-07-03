@@ -1418,3 +1418,20 @@ testthat::test_that("error if multi geo units but different length of geo-depend
     regexp = "You entered no value for cutoff_central. Therefore, 0 has been assumed as default. Be aware that this can determine your results.")
 })
 
+
+testthat::test_that("error if erf_eq is not function or string", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        erf_eq_central = c(1,2,3)),
+    regexp = "erf_eq_central must be a (list of) function(s) or a (vector of) string(s)." ,
+    fixed = TRUE)
+})

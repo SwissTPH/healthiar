@@ -79,6 +79,7 @@ validate_input_attribute <-
     available_categorical_var_names <-
       available_var_names[available_var_names %in% categorical_args]
 
+
     # Define approach_risk here because in the life table approach
     # approach_risk can only be relative_risk
     # and it defined at the level of attribute_master()
@@ -271,7 +272,34 @@ validate_input_attribute <-
     if(all(lifetable_var_names_with_same_length %in% available_var_names)){
       error_if_incompatible_length_of_age_range(age_dependent_var = "deaths_male")
     }
-# browser()
+
+    ### error_if_erf_eq_not_function_or_string #####
+
+    error_if_erf_eq_not_function_or_string <- function(erf_eq_name){
+      erf_eq_value <- input_args$value[[erf_eq_name]]
+      # If erf_eq_... is not null (user may not enter a value for this argument)
+      if(! base::is.null(erf_eq_value)){
+        # If it is a function (single function or multiple functions in a list)
+        # and it is not a character
+        if((! base::is.function(erf_eq_value) &&
+           ! (base::is.list(erf_eq_value) && base::all(purrr::map_lgl(erf_eq_value, is.function)))) &&
+           ! is.character(erf_eq_value)){
+
+          base::stop(
+            base::paste0(erf_eq_name , " must be a (list of) function(s) or a (vector of) string(s)."),
+            call. = FALSE
+          )
+        }
+      }
+    }
+
+
+      error_if_erf_eq_not_function_or_string(erf_eq_name = "erf_eq_central")
+      error_if_erf_eq_not_function_or_string(erf_eq_name = "erf_eq_lower")
+      error_if_erf_eq_not_function_or_string(erf_eq_name = "erf_eq_upper")
+
+
+
     ### error_if_0 #####
     error_if_0 <- function(var_name){
       if(
@@ -281,7 +309,8 @@ validate_input_attribute <-
         base::any(input_args_value$population_midyear_female == 0)
       ) {
         base::stop(
-          base::paste0(var_name , " must contain ≥ 1 death(s) per age group")
+          base::paste0(var_name , " must contain ≥ 1 death(s) per age group"),
+          call. = FALSE
           )
         }
     }
