@@ -19,7 +19,7 @@ validate_input_attribute <-
       purrr::keep(input_args_value, ~!base::is.null(.x))
 
     arg_names_passed <-
-      purrr::keep(input_args$is_passed_by_user, ~.x) |>
+      purrr::keep(input_args$is_entered_by_user, ~.x) |>
       base::names()
 
     # ci_suffix to avoid repetitions
