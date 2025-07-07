@@ -53,15 +53,15 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
     object =
       healthiar::attribute_health(
         approach_risk = "relative_risk",
-        age = c("below_50", "50_plus"),
-        sex = c("male", "female"),
+        age = c("below_50", "below_50", "50_plus", "50_plus"),
+        sex = c("male", "female", "male", "female"),
         exp_central = base::rep(data$mean_concentration, 4),
         cutoff_central = base::rep(data$cut_off_value, 4),
         bhd_central = base::rep(data$incidents_per_100_000_per_year/1E5*data$population_at_risk, 4),
         rr_central = base::rep(data$relative_risk, 4),
         rr_increment = base::rep(10, 4),
-        erf_shape = base::rep("log_linear", 4),
-        info = base::rep(paste0(data$pollutant,"_", data$evaluation_name), 4)
+        erf_shape = "log_linear",
+        info = paste0(data$pollutant,"_", data$evaluation_name)
       )$health_main$impact_rounded,
     expected = # airqplus_pm_copd
       data$estimated_number_of_attributable_cases_central * 4
