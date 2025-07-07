@@ -235,6 +235,8 @@ attribute_health <-
     prop_pop_exp = 1,
     # ITERATION (OPTIONAL)
     geo_id_disaggregated = "a", geo_id_aggregated = NULL,
+    age_group = "all",
+    sex = "all",
     ## YLD (OPTIONAL)
     dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
     duration_central = 1, duration_lower = NULL, duration_upper = NULL,
@@ -266,6 +268,8 @@ attribute_health <-
         prop_pop_exp = prop_pop_exp,
         # ITERATION (OPTIONAL)
         geo_id_disaggregated = geo_id_disaggregated , geo_id_aggregated = geo_id_aggregated,
+        age_group = age_group,
+        sex = sex,
         # META (OPTIONAL)
         info = info,
         population = population,
