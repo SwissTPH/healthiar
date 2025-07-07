@@ -147,7 +147,8 @@ get_output <-
     # age_group and sex #####
     # Aggregate results by age_group and sex
 
-    output[["health_detailed"]][["impact_agg_age_sex"]]  <-
+    if(! "population" %in% names(output_last)){
+      output[["health_detailed"]][["impact_agg_age_sex"]]  <-
       output_last |>
       dplyr::summarise(impact = sum(impact),
                        impact_rounded = round(impact),
@@ -155,16 +156,23 @@ get_output <-
                        # It sorts rows by the columns defined there
                        # It does not need ungroup() afterwards
                        # It does not require across() for any_of() as group_by() does
-                       .by = dplyr::any_of(group_columns_for_age_sex_aggregation)) |>
+                       .by = dplyr::any_of(group_columns_for_age_sex_aggregation))
+
+      } else if ("population" %in% names(output_last)) {
+        output[["health_detailed"]][["impact_agg_age_sex"]]  <-
+          output_last |>
+          dplyr::summarise(impact = sum(impact),
+                           impact_rounded = round(impact),
+                           population = sum(population),
+                           impact_per_100k_inhab = (impact / population) * 1E5,
+                           .by = dplyr::any_of(group_columns_for_age_sex_aggregation))
+      }
+
+    output[["health_detailed"]][["impact_agg_age_sex"]]  <-
+      output[["health_detailed"]][["impact_agg_age_sex"]] |>
       dplyr::mutate(age_group = "total",
                     sex = "total")
 
-    if ("population" %in% names(output_last)) {
-      output[["health_detailed"]][["impact_agg_age_sex"]]  <- output[["health_detailed"]][["impact_agg_age_sex"]] |>
-        dplyr::summarise(population = sum(population),
-                         impact_per_100k_inhab = (impact / population) * 1E5,
-                         .by = dplyr::any_of(group_columns_for_age_sex_aggregation))
-    }
 
     output_last <- output[["health_detailed"]][["impact_agg_age_sex"]]
 
