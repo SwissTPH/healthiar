@@ -3,7 +3,7 @@
 #' @description
 #' This function obtains age-standardized health impacts based on multiple age-group specific assessments
 
-#' @param listed_output_attribute \code{List} containing as sub-lists the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.#'
+#' @param output_attribute \code{List} containing as sub-lists the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.#'
 #' @param age_group \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{output_attribute}.
 #' @param ref_prop_pop \code{Numeric vector} with the reference proportion of population for each age group. The sum of the values must be 1 and the length of the vector must be same as for \code{age_group}.
 
@@ -20,14 +20,14 @@
 
 
 
-standardize <- function(listed_output_attribute,
+standardize <- function(output_attribute,
                         age_group,
                         ref_prop_pop = NULL){
 
 
   impact_by_age_group <-
     healthiar:::flatten_by_age(
-      listed_output_attribute = listed_output_attribute,
+      output_attribute = output_attribute,
       age_group = age_group)
 
   if(is.null(ref_prop_pop)){
