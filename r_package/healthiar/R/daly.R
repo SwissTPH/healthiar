@@ -70,18 +70,19 @@ daly <-
 
     # Store results_raw of yll and yld
     # Shorter and handy to code
-    results_raw_yll <- output_attribute_yll[["health_detailed"]][["results_raw"]] |>
+    results_raw_yll <- output_attribute_yll[["health_detailed"]][["impact_agg_sex"]] |>
       dplyr::filter(sex=="total")
-    results_raw_yld <- output_attribute_yld[["health_detailed"]][["results_raw"]]
+    results_raw_yld <- output_attribute_yld[["health_detailed"]][["impact_agg_sex"]]
 
     # Capture all column names
     # They should be the same for yll and yld but just in case
     column_names_results_raw <-
-      unique(c(names(results_raw_yll), names(results_raw_yll)))
+      unique(c(names(results_raw_yll), names(results_raw_yld)))
 
     # Identify the columns names using keywords
     common_columns <-
-      column_names_results_raw[grepl("exp|exposure|cutoff|geo|approach_risk",
+      column_names_results_raw[grepl("exp|exposure|cutoff|geo|approach_risk|sex",
+                                     #TODO: age_group is to be added here as soon as it is an output in lifetable approach
                                     column_names_results_raw)]
     # Remove exceptions (columns with any of the keywords that should not be selected)
     common_columns <- common_columns[!grepl("approach_exposure|rr_at_exp", common_columns)]

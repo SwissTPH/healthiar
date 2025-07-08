@@ -403,53 +403,26 @@ validate_input_attribute <-
     error_if_sum_higher_than_1 <- function(var_name){
 
       var_value <- input_args_value [[var_name]]
+      geo_id_disaggregated <- as.character(input_args_value [["geo_id_disaggregated"]])
+      #TODO: Only provisional to be deleted as soon as
+      # age_group and sex is integrated into attribute_lifetable()
+      rep_var_value <-
+        base::ifelse(
+          ! base::is.null(input_args_value[["population_midyear_male"]]),
+          base::length(input_args_value[["population_midyear_male"]]),
+          1)
 
-
-      if(base::is.null(input_args_value [["geo_id_disaggregated"]])){
-        geo_id_disaggregated <- as.character(1)
-        } else {
-          geo_id_disaggregated <- as.character(input_args_value [["geo_id_disaggregated"]])
-        }
-
-
-      if(base::length(base::unique(geo_id_disaggregated)) > 1){
-        var_table <-
-          tibble::tibble(
-            geo_id_disaggregated = geo_id_disaggregated ,
-            population_midyear_male = input_args_value [["population_midyear_male"]],
-            var = var_value)
-
-      } else if (base::length(base::unique(geo_id_disaggregated)) == 1) {
-
-
-        if(base::is.null(input_args_value [["population_midyear_male"]])){
-          population_midyear_male <- NULL
-          var_vector <- var_value
-
-        } else if (!base::is.null(input_args_value [["population_midyear_male"]])) {
-
-          population_midyear_male <-
-            base::rep(input_args_value [["population_midyear_male"]],
-                      each = base::length(var_value),
-                      times = base::length(geo_id_disaggregated))
-
-          var_vector <-
-            base::rep(var_value,
-                      each = base::length(geo_id_disaggregated),
-                      times = base::length(input_args_value [["population_midyear_male"]]))
-        }
-
-        var_table <-
-          tibble::tibble(
-            geo_id_disaggregated = geo_id_disaggregated,
-            population_midyear_male = population_midyear_male,
-            var = var_vector)
-
-      }
+      var_table <-
+        tibble::tibble(
+          geo_id_disaggregated = geo_id_disaggregated ,
+          age_group = input_args_value$age_group,
+          sex = input_args_value$sex,
+          population_midyear_male = base::rep(input_args_value[["population_midyear_male"]], times = base::length(var_value)),
+          var = base::rep(var_value, each = rep_var_value))
 
       if(base::is.null(input_args_value [["pop_exp"]]) &&
          var_table |>
-         dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "population_midyear_male")))) |>
+         dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "population_midyear_male", "age_group", "sex")))) |>
          dplyr::summarize(sum = base::sum(var, na.rm = TRUE) > 1) |>
          dplyr::pull(sum) |>
          base::any()){

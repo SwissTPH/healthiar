@@ -136,14 +136,14 @@ socialize <- function(listed_output_attribute = NULL,
   if ( has_output_attribute ) {
 
     ## Convert listed_output_attribute in a tibble
-    output_attribute <-
-      healthiar:::flatten_by_age(listed_output_attribute = listed_output_attribute,
-                                 age_group = age_group)
+    # output_attribute <-
+    #   healthiar:::flatten_by_age(listed_output_attribute = listed_output_attribute,
+    #                              age_group = age_group)
 
     ## Compile input data
     ## without social component
     input_data <-
-      output_attribute |>
+      listed_output_attribute$health_detailed$impact_agg_sex |>
       dplyr::select(
         dplyr::any_of(c("geo_id_disaggregated", "age_group", "population",
                         "impact", "exp", "bhd", "pop_fraction")))
@@ -282,7 +282,7 @@ socialize <- function(listed_output_attribute = NULL,
     ## Add age_order
     dplyr::left_join(
       tibble::tibble(
-        age_group = base::unique(age_group),
+        age_group = base::unique(input_data$age_group),
         age_order = 1 : base::length(age_group)),
       by = "age_group") |>
     ## Add ref_prop_pop
@@ -500,8 +500,8 @@ socialize <- function(listed_output_attribute = NULL,
   ## * If available output_attribute ######
   if ( has_output_attribute ) {
     output_social <-
-      base::list(health_main = output_attribute[["health_main"]],
-                 health_detailed = output_attribute[["health_detailed"]])
+      base::list(health_main = listed_output_attribute[["health_main"]],
+                 health_detailed = listed_output_attribute[["health_detailed"]])
 
     ## * If NOT available output_attribute, i.e. if argument impact #######
 

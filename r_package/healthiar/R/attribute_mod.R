@@ -52,6 +52,7 @@ attribute_mod <-
     cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
     bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
     geo_id_disaggregated = NULL, geo_id_aggregated = NULL,
+    age_group = NULL, sex = NULL,
     population = NULL,
     info = NULL,
     first_age_pop = NULL, last_age_pop = NULL,

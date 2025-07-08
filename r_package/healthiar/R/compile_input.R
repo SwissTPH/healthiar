@@ -79,7 +79,6 @@ compile_input <-
     # (done below only if life table approach)
     # Use input_args_edited as basis because of the required edits
 
-
     input_wo_lifetable <- input_args_edited |>
       # Remove arguments for life table and info.
       # Info is to added later with a function add_info()
@@ -96,11 +95,11 @@ compile_input <-
     # Obtain the exposure dimension and exposure type in a separate table
     exp_dimension_table <-
       input_wo_lifetable |>
-      dplyr::select(geo_id_disaggregated, exp_central) |>
+      dplyr::select(dplyr::any_of(c("geo_id_disaggregated", "age_group", "sex", "exp_central"))) |>
       # Add population_midyear_male (it could be any of the other life table arguments)
       # Add it in a separated mutate because
       # if it is NULL then it is not added
-      dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated"))))|>
+      dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "age_group", "sex"))))|>
       dplyr::mutate(exposure_dimension = 1 : base::length(exp_central),
                        exposure_type =
                          base::ifelse(length(exp_central) == 1,
@@ -112,7 +111,8 @@ compile_input <-
       dplyr::left_join(
         input_wo_lifetable,
         exp_dimension_table,
-        by = c("geo_id_disaggregated", "exp_central"))
+        by = base::intersect(c("geo_id_disaggregated", "age_group", "sex", "exp_central"),
+                             base::names(input_wo_lifetable)))
 
     # PIVOT LONGER ###########################################################
     # I.e. increase nr of rows to show all combinations of
