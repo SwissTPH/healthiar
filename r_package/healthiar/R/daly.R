@@ -70,9 +70,9 @@ daly <-
 
     # Store results_raw of yll and yld
     # Shorter and handy to code
-    results_raw_yll <- output_attribute_yll[["health_detailed"]][["impact_agg_age_sex"]] |>
+    results_raw_yll <- output_attribute_yll[["health_detailed"]][["impact_agg_sex"]] |>
       dplyr::filter(sex=="total")
-    results_raw_yld <- output_attribute_yld[["health_detailed"]][["impact_agg_age_sex"]]
+    results_raw_yld <- output_attribute_yld[["health_detailed"]][["impact_agg_sex"]]
 
     # Capture all column names
     # They should be the same for yll and yld but just in case
