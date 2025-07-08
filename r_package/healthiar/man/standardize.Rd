@@ -7,11 +7,11 @@
 standardize(output_attribute, age_group, ref_prop_pop = NULL)
 }
 \arguments{
-\item{output_attribute}{\code{List} containing as sub-lists the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.#'}
+\item{output_attribute}{\code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.}
 
-\item{age_group}{\code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{output_attribute}.}
+\item{age_group}{\code{String vector} with the age groups included in the age standardization. The vector refers to age-dependent data in this function and to \code{output_attribute} (if provided) .}
 
-\item{ref_prop_pop}{\code{Numeric vector} with the reference proportion of population for each age group. The sum of the values must be 1 and the length of the vector must be same as for \code{age_group}.}
+\item{ref_prop_pop}{\code{Numeric vector} specifying with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.}
 }
 \value{
 Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
