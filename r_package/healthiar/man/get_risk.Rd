@@ -9,7 +9,7 @@ get_risk(
   rr = NULL,
   rr_increment = NULL,
   erf_eq = NULL,
-  cutoff = NULL,
+  cutoff = 0,
   exp
 )
 }
