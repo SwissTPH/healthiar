@@ -41,8 +41,11 @@ get_output <-
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
 
     # This includes all columns names except age_group and sex
-    group_columns_for_age_sex_aggregation <-
-      base::names(results_raw)[!base::names(results_raw) %in% c("age_group", "sex")]
+    group_columns_for_sex_aggregation <-
+      base::names(results_raw)[!base::names(results_raw) %in% c("sex")]
+
+    group_columns_for_age_aggregation <-
+      base::names(results_raw)[!base::names(results_raw) %in% c("age_group")]
     # This include only the id_columns except geo_id_disaggregated
     # Not all columns like above to avoid geo_id_disaggregated variables
     # that make the summary at lower (disaggregated) geo level
@@ -144,11 +147,11 @@ get_output <-
     output[["health_detailed"]][["impact_disaggregated"]]  <-
       output_last
 
-    # age_group and sex #####
-    # Aggregate results by age_group and sex
+    # sex #####
+    # Aggregate results by sex
 
     if(! "population" %in% names(output_last)){
-      output[["health_detailed"]][["impact_agg_age_sex"]]  <-
+      output[["health_detailed"]][["impact_agg_sex"]]  <-
       output_last |>
       dplyr::summarise(impact = sum(impact),
                        impact_rounded = round(impact),
@@ -156,25 +159,54 @@ get_output <-
                        # It sorts rows by the columns defined there
                        # It does not need ungroup() afterwards
                        # It does not require across() for any_of() as group_by() does
-                       .by = dplyr::any_of(group_columns_for_age_sex_aggregation))
+                       .by = dplyr::any_of(group_columns_for_sex_aggregation))
 
       } else if ("population" %in% names(output_last)) {
-        output[["health_detailed"]][["impact_agg_age_sex"]]  <-
+        output[["health_detailed"]][["impact_agg_sex"]]  <-
           output_last |>
           dplyr::summarise(impact = sum(impact),
                            impact_rounded = round(impact),
                            population = sum(population),
                            impact_per_100k_inhab = (impact / population) * 1E5,
-                           .by = dplyr::any_of(group_columns_for_age_sex_aggregation))
+                           .by = dplyr::any_of(group_columns_for_sex_aggregation))
       }
 
-    output[["health_detailed"]][["impact_agg_age_sex"]]  <-
-      output[["health_detailed"]][["impact_agg_age_sex"]] |>
-      dplyr::mutate(age_group = "total",
-                    sex = "total")
+    output[["health_detailed"]][["impact_agg_sex"]]  <-
+      output[["health_detailed"]][["impact_agg_sex"]] |>
+      dplyr::mutate(sex = "total")
 
 
-    output_last <- output[["health_detailed"]][["impact_agg_age_sex"]]
+    output_last <- output[["health_detailed"]][["impact_agg_sex"]]
+
+    # age_group #####
+    # Aggregate results by age_group
+
+    if(! "population" %in% names(output_last)){
+      output[["health_detailed"]][["impact_agg_age"]]  <-
+        output_last |>
+        dplyr::summarise(impact = sum(impact),
+                         impact_rounded = round(impact),
+                         # Many advantages using .by =
+                         # It sorts rows by the columns defined there
+                         # It does not need ungroup() afterwards
+                         # It does not require across() for any_of() as group_by() does
+                         .by = dplyr::any_of(group_columns_for_age_aggregation))
+
+    } else if ("population" %in% names(output_last)) {
+      output[["health_detailed"]][["impact_agg_age"]]  <-
+        output_last |>
+        dplyr::summarise(impact = sum(impact),
+                         impact_rounded = round(impact),
+                         population = sum(population),
+                         impact_per_100k_inhab = (impact / population) * 1E5,
+                         .by = dplyr::any_of(group_columns_for_age_aggregation))
+    }
+
+    output[["health_detailed"]][["impact_agg_age"]]  <-
+      output[["health_detailed"]][["impact_agg_age"]] |>
+      dplyr::mutate(age = "total")
+
+    output_last <- output[["health_detailed"]][["impact_agg_age"]]
 
 
     # geo_id_aggregated #####
