@@ -16,29 +16,6 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
       population = c(data$POPULATION, ifelse(data$POPULATION-10<0, 0, data$POPULATION-10)),
       geo_id_disaggregated = rep(data$CS01012020, 2))
 
-  att_age_below_40 <-
-    healthiar::attribute_health(
-      exp_central = data$PM25_MEAN,
-      cutoff_central = 0,
-      rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
-      erf_shape = "log_linear",
-      rr_increment = 10,
-      bhd_central = data$MORTALITY_TOTAL,
-      population = data$POPULATION,
-      geo_id_disaggregated = data$CS01012020)
-
-  att_age_above_40 <-
-    healthiar::attribute_health(
-      exp_central = data$PM25_MEAN-0.1,
-      cutoff_central = 0,
-      rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
-      erf_shape = "log_linear",
-      rr_increment = 10,
-      bhd_central = ifelse(data$MORTALITY_TOTAL-10<0, 0, data$MORTALITY_TOTAL-10),
-      population = ifelse(data$POPULATION-10<0, 0, data$POPULATION-10),
-      geo_id_disaggregated = data$CS01012020)
-
-
   testthat::expect_equal(
     object =
       healthiar::socialize(
