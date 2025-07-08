@@ -163,8 +163,8 @@ socialize <- function(output_attribute = NULL,
     if(has_ref_prop_pop){
       ref_prop_pop_table <-
         tibble::tibble(
-          age_group = base::unique(input_data$age_group),
-          ref_prop_pop = base::unique(ref_prop_pop)) |>
+          age_group = age_group,
+          ref_prop_pop = ref_prop_pop) |>
         base::unique()
 
       # * * If NOT available ref_prop_pop ################
