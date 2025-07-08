@@ -27,6 +27,8 @@ attribute_master(
   prop_pop_exp = NULL,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
+  age_group = "all",
+  sex = "all",
   population = NULL,
   info = NULL,
   dw_central = NULL,
@@ -75,6 +77,8 @@ attribute_master(
 
 \item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_disaggregated}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
+\item{sex}{\code{Numeric vector} or \code{string vector} providing the \strong{sex} considered in the assessment.\emph{Optional argument.}}
+
 \item{population}{\code{Numeric value} or \code{numeric vector} specifying the total population (exposed + non-exposed), \strong{to calculate attributable impacts rate} per 100 000 population. See Details for more info. \emph{Optional argument.}}
 
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
@@ -102,6 +106,8 @@ attribute_master(
 \item{year_of_analysis}{\code{Numeric value} providing the first with exposure to the environmental stressor.}
 
 \item{time_horizon}{\code{Numeric value} specifying the time horizon (number of years) for which the impacts of exposure are to be considered. See Details for more info.}
+
+\item{age_grop}{\code{Numeric vector} or \code{string vector} providing the \strong{age group} considered in the assessment. If it is numeric, it refers to the first age of the age group. E.g. c(0, 40, 80) means age groups \code{[0, 40), [40, 80), >=80]}.  \emph{Optional argument.}}
 }
 \value{
 This function returns two \code{lists}:

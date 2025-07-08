@@ -27,6 +27,8 @@ attribute_mod(
   bhd_upper = NULL,
   geo_id_disaggregated = NULL,
   geo_id_aggregated = NULL,
+  age_group = NULL,
+  sex = NULL,
   population = NULL,
   info = NULL,
   first_age_pop = NULL,
@@ -64,6 +66,8 @@ attribute_mod(
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{baseline health data} of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}}
 
 \item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_disaggregated}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
+
+\item{sex}{\code{Numeric vector} or \code{string vector} providing the \strong{sex} considered in the assessment.\emph{Optional argument.}}
 
 \item{population}{\code{Numeric value} or \code{numeric vector} specifying the total population (exposed + non-exposed), \strong{to calculate attributable impacts rate} per 100 000 population. See Details for more info. \emph{Optional argument.}}
 
