@@ -419,43 +419,6 @@ validate_input_attribute <-
           sex = input_args_value$sex,
           population_midyear_male = base::rep(input_args_value[["population_midyear_male"]], times = base::length(var_value)),
           var = base::rep(var_value, each = rep_var_value))
-#
-#       if(base::length(base::unique(geo_id_disaggregated)) > 1){
-#         var_table <-
-#           tibble::tibble(
-#             geo_id_disaggregated = geo_id_disaggregated ,
-#             # age_group = age_group,
-#             # sex = sex,
-#             population_midyear_male = input_args_value [["population_midyear_male"]],
-#             var = var_value)
-#
-#       } else if (base::length(base::unique(geo_id_disaggregated)) == 1) {
-#
-#
-#         if(base::is.null(input_args_value [["population_midyear_male"]])){
-#           population_midyear_male <- NULL
-#           var_vector <- var_value
-#
-#         } else if (!base::is.null(input_args_value [["population_midyear_male"]])) {
-#
-#           population_midyear_male <-
-#             base::rep(input_args_value [["population_midyear_male"]],
-#                       each = base::length(var_value),
-#                       times = base::length(geo_id_disaggregated))
-#
-#           var_vector <-
-#             base::rep(var_value,
-#                       each = base::length(geo_id_disaggregated),
-#                       times = base::length(input_args_value [["population_midyear_male"]]))
-#         }
-#
-#         var_table <-
-#           tibble::tibble(
-#             geo_id_disaggregated = geo_id_disaggregated,
-#             population_midyear_male = population_midyear_male,
-#             var = var_vector)
-#
-#       }
 
       if(base::is.null(input_args_value [["pop_exp"]]) &&
          var_table |>
