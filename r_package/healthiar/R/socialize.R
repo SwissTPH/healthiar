@@ -7,7 +7,7 @@
 #' \code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.
 
 #' @param age_group
-#' \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{output_attribute}.
+#' \code{String vector} with the age groups included in the age standardization. The vector element refer to \code{output_attribute}.
 
 #' @param social_indicator
 #' \code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. Based on this and \code{n_quantile}, \code{social_quantile} will be calculated.
