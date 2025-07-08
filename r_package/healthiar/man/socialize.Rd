@@ -5,7 +5,7 @@
 \title{Consider socio-economic aspects in healthiar assessments}
 \usage{
 socialize(
-  listed_output_attribute = NULL,
+  output_attribute = NULL,
   age_group,
   geo_id_disaggregated,
   social_indicator = NULL,
@@ -21,9 +21,9 @@ socialize(
 )
 }
 \arguments{
-\item{listed_output_attribute}{\code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.}
+\item{output_attribute}{\code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.}
 
-\item{age_group}{\code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_attribute}.}
+\item{age_group}{\code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{output_attribute}.}
 
 \item{geo_id_disaggregated, }{\code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_disaggregated}) Argument must be entered for iterations. See Details for more info.}
 
@@ -39,19 +39,19 @@ socialize(
 
 \item{ref_prop_pop}{\code{Numeric vector} specifying with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.}
 
-\item{impact}{\emph{(only if \code{listed_output_attribute} not specified)} \code{Numeric vector} containing the attributable health impacts by both age group and geo id.}
+\item{impact}{\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} containing the attributable health impacts by both age group and geo id.}
 
-\item{exp}{\emph{(only if \code{listed_output_attribute} not specified)} \code{Numeric vector} specifying the exposure level(s) to the environmental stressor.}
+\item{exp}{\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the exposure level(s) to the environmental stressor.}
 
-\item{bhd}{\emph{(only if \code{listed_output_attribute} not specified)} \code{Numeric vector} specifying the baseline health data of the health outcome of interest per age group. See Details for more info.}
+\item{bhd}{\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the baseline health data of the health outcome of interest per age group. See Details for more info.}
 
-\item{pop_fraction}{\emph{(only if \code{listed_output_attribute} not specified)} \code{Numeric vector} specifying the population attributable fraction by age group and geographic unit.}
+\item{pop_fraction}{\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the population attributable fraction by age group and geographic unit.}
 }
 \value{
 Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 }
 \description{
-This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{listed_output_attribute}, it is assumed that all data come from a table and the argument refer to the columns of that table.
+This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{output_attribute}, it is assumed that all data come from a table and the argument refer to the columns of that table.
 }
 \examples{
 # Goal: determine fraction of attributable health impact that can
@@ -87,7 +87,7 @@ results_40_plus <- attribute_health(
 results <- socialize(
   age_group = c("below_40", "40_plus"),
   ref_prop_pop = c(0.5, 0.5),
-  listed_output_attribute = list(results_below_40, results_40_plus),
+  output_attribute = list(results_below_40, results_40_plus),
   geo_id_disaggregated = data$CS01012020,
   social_indicator = data$score,
   n_quantile = 10,

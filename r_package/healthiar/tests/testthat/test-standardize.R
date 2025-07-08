@@ -5,6 +5,17 @@
 
 testthat::test_that("results correct |pathway_standardize|single_geo|", {
 
+  bestcost_pm_mortality <-
+    healthiar::attribute_health(
+      age_group = c("below_40", "above_40"),
+      exp_central = c(8.1, 10.9),
+      cutoff_central =  0,
+      bhd_central = c(1000, 4000),
+      rr_central = 1.063,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      population = c(1E5, 5E5))
+
   bestcost_pm_mortality_below_40 <-
     healthiar::attribute_health(
       exp_central = 8.1,
@@ -29,9 +40,8 @@ testthat::test_that("results correct |pathway_standardize|single_geo|", {
   testthat::expect_equal(
     object =
       healthiar::standardize(
-        output_attribute = list(bestcost_pm_mortality_below_40,
-                                       bestcost_pm_mortality_40_plus),
-        age_group = c("below_40", "40_plus"),
+        output_attribute = bestcost_pm_mortality,
+        age_group = c("below_40", "above_40"),
         ref_prop_pop = c(0.5, 0.5))$health_main$impact_per_100k_inhab,
 
     expected =  base::sum(
@@ -44,6 +54,18 @@ testthat::test_that("results correct |pathway_standardize|single_geo|", {
 
 ### MULTIPLE GEO UNITS ############################################################
 testthat::test_that("results correct |pathway_standardize|multi_geo|", {
+
+  bestcost_pm_mortality_multigeo <-
+    healthiar::attribute_health(
+      geo_id_disaggregated = c("a", "a", "b", "b"),
+      age_group = c("below_40", "above_40", "below_40", "above_40"),
+      exp_central = c(8.1, 10.9, 7.1, 9.9),
+      cutoff_central =  0,
+      bhd_central = c(1000, 4000, 2000, 8000),
+      rr_central = 1.063,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      population = c(1E5, 5E5, 2E5, 1E6))
 
   bestcost_pm_mortality_below_40_multigeo <-
     healthiar::attribute_health(
@@ -70,9 +92,8 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
   testthat::expect_equal(
     object =
       healthiar::standardize(
-        output_attribute = list(bestcost_pm_mortality_below_40_multigeo,
-                                bestcost_pm_mortality_40_plus_multigeo),
-        age_group = c("below_40", "40_plus"),
+        output_attribute = bestcost_pm_mortality_multigeo,
+        age_group = c("below_40", "above_40"),
         ref_prop_pop = c(0.5, 0.5))$health_main$impact_per_100k_inhab,
 
     expected =
