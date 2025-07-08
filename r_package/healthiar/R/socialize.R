@@ -1,13 +1,13 @@
 #' Consider socio-economic aspects in healthiar assessments
 
 #' @description
-#' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{listed_output_attribute}, it is assumed that all data come from a table and the argument refer to the columns of that table.
+#' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{output_attribute}, it is assumed that all data come from a table and the argument refer to the columns of that table.
 
-#' @param listed_output_attribute
+#' @param output_attribute
 #' \code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.
 
 #' @param age_group
-#' \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{listed_output_attribute}.
+#' \code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{output_attribute}.
 
 #' @param social_indicator
 #' \code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. Based on this and \code{n_quantile}, \code{social_quantile} will be calculated.
@@ -31,16 +31,16 @@
 #' \code{Numeric vector} specifying with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.
 
 #' @param impact
-#' \emph{(only if \code{listed_output_attribute} not specified)} \code{Numeric vector} containing the attributable health impacts by both age group and geo id.
+#' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} containing the attributable health impacts by both age group and geo id.
 
 #' @param bhd
-#' \emph{(only if \code{listed_output_attribute} not specified)} \code{Numeric vector} specifying the baseline health data of the health outcome of interest per age group. See Details for more info.
+#' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the baseline health data of the health outcome of interest per age group. See Details for more info.
 
 #' @param exp
-#'\emph{(only if \code{listed_output_attribute} not specified)} \code{Numeric vector} specifying the exposure level(s) to the environmental stressor.
+#'\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the exposure level(s) to the environmental stressor.
 
 #' @param pop_fraction
-#' \emph{(only if \code{listed_output_attribute} not specified)} \code{Numeric vector} specifying the population attributable fraction by age group and geographic unit.
+#' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the population attributable fraction by age group and geographic unit.
 
 #' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 
@@ -81,7 +81,7 @@
 #' results <- socialize(
 #'   age_group = c("below_40", "40_plus"),
 #'   ref_prop_pop = c(0.5, 0.5),
-#'   listed_output_attribute = list(results_below_40, results_40_plus),
+#'   output_attribute = list(results_below_40, results_40_plus),
 #'   geo_id_disaggregated = data$CS01012020,
 #'   social_indicator = data$score,
 #'   n_quantile = 10,
@@ -94,7 +94,7 @@
 
 #' @export
 
-socialize <- function(listed_output_attribute = NULL,
+socialize <- function(output_attribute = NULL,
                       age_group,
                       geo_id_disaggregated,
                       social_indicator = NULL,
@@ -114,8 +114,8 @@ socialize <- function(listed_output_attribute = NULL,
   ## Create readable variables for if statements below
 
   ## output from healthiar or impact directly entered by user (without healthiar)
-  has_output_attribute <- base::is.null(impact) & !base::is.null(listed_output_attribute)
-  has_impact <- !base::is.null(impact) & base::is.null(listed_output_attribute)
+  has_output_attribute <- base::is.null(impact) & !base::is.null(output_attribute)
+  has_impact <- !base::is.null(impact) & base::is.null(output_attribute)
 
   ## already social quantile (e.g. 1-10) or
   ## social indicator (e.g. 1-986) which has to be transformed into quantile
@@ -132,18 +132,18 @@ socialize <- function(listed_output_attribute = NULL,
 
   # Compile data (except social) ##########
 
-  # * If available listed_output_attribute ########
+  # * If available output_attribute ########
   if ( has_output_attribute ) {
 
-    ## Convert listed_output_attribute in a tibble
+    ## Convert output_attribute in a tibble
     # output_attribute <-
-    #   healthiar:::flatten_by_age(listed_output_attribute = listed_output_attribute,
+    #   healthiar:::flatten_by_age(output_attribute = output_attribute,
     #                              age_group = age_group)
 
     ## Compile input data
     ## without social component
     input_data <-
-      listed_output_attribute$health_detailed$impact_agg_sex |>
+      output_attribute$health_detailed$impact_agg_sex |>
       dplyr::select(
         dplyr::any_of(c("geo_id_disaggregated", "age_group", "population",
                         "impact", "exp", "bhd", "pop_fraction")))
@@ -500,8 +500,8 @@ socialize <- function(listed_output_attribute = NULL,
   ## * If available output_attribute ######
   if ( has_output_attribute ) {
     output_social <-
-      base::list(health_main = listed_output_attribute[["health_main"]],
-                 health_detailed = listed_output_attribute[["health_detailed"]])
+      base::list(health_main = output_attribute[["health_main"]],
+                 health_detailed = output_attribute[["health_detailed"]])
 
     ## * If NOT available output_attribute, i.e. if argument impact #######
 

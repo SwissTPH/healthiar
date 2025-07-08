@@ -4,10 +4,10 @@
 \alias{flatten_by_age}
 \title{Obtain age-standardized health impacts}
 \usage{
-flatten_by_age(listed_output_attribute, age_group)
+flatten_by_age(output_attribute, age_group)
 }
 \arguments{
-\item{listed_output_attribute}{\code{List} containing as sub-lists the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.#'}
+\item{output_attribute}{\code{List} containing as sub-lists the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.#'}
 
 \item{age_group}{\code{String vector} with the age groups included in the age standardization. Each vector element refers to each of the list elements of \code{output_attribute}.}
 }
