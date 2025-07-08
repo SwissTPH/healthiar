@@ -177,6 +177,8 @@ get_risk_and_pop_fraction <-
 
     likely_columns_to_group_input <-
       c("geo_id_disaggregated",
+        "age_group",
+        "sex",
         "exposure_name",
         cols_uncertainty)
 
