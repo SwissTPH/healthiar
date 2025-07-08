@@ -21,7 +21,7 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
       healthiar::socialize(
         #age_group = c("below_40", "above_40"),
         ref_prop_pop = c(0.5, 0.5),
-        listed_output_attribute = att_age,
+        output_attribute = att_age,
         geo_id_disaggregated = data$CS01012020,
         social_indicator = data$score,
         n_quantile = 10,
@@ -252,7 +252,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
     ## healthiar FUNCTION CALL
     object =
       healthiar::socialize(
-        listed_output_attribute = attribute_result_age,
+        output_attribute = attribute_result_age,
         # geo_id_disaggregated = data$CS01012020, # geo IDs of the preparatory iteration call above and this function call must match!
         social_indicator = base::subset(data, AGE == '[0,5)')$SCORE,
         n_quantile = 10, # Specify number of quantiles, e.g. 10

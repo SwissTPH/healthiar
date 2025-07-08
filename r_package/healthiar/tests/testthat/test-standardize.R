@@ -29,7 +29,7 @@ testthat::test_that("results correct |pathway_standardize|single_geo|", {
   testthat::expect_equal(
     object =
       healthiar::standardize(
-        listed_output_attribute = list(bestcost_pm_mortality_below_40,
+        output_attribute = list(bestcost_pm_mortality_below_40,
                                        bestcost_pm_mortality_40_plus),
         age_group = c("below_40", "40_plus"),
         ref_prop_pop = c(0.5, 0.5))$health_main$impact_per_100k_inhab,
@@ -70,8 +70,8 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
   testthat::expect_equal(
     object =
       healthiar::standardize(
-        listed_output_attribute = list(bestcost_pm_mortality_below_40_multigeo,
-                                       bestcost_pm_mortality_40_plus_multigeo),
+        output_attribute = list(bestcost_pm_mortality_below_40_multigeo,
+                                bestcost_pm_mortality_40_plus_multigeo),
         age_group = c("below_40", "40_plus"),
         ref_prop_pop = c(0.5, 0.5))$health_main$impact_per_100k_inhab,
 
