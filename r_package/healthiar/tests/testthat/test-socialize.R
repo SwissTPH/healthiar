@@ -3,6 +3,19 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
 
   data <- base::readRDS(testthat::test_path("data", "social_data.rds"))
 
+  att_age <-
+    healthiar::attribute_health(
+      age_group = rep(c("below_40", "above_40"), each = 9037),
+      exp_central = c(data$PM25_MEAN, data$PM25_MEAN-0.1),
+      cutoff_central = 0,
+      rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
+      erf_shape = "log_linear",
+      rr_increment = 10,
+      bhd_central = c(data$MORTALITY_TOTAL,
+                      ifelse(data$MORTALITY_TOTAL-10<0, 0, data$MORTALITY_TOTAL-10)),
+      population = c(data$POPULATION, ifelse(data$POPULATION-10<0, 0, data$POPULATION-10)),
+      geo_id_disaggregated = rep(data$CS01012020, 2))
+
   att_age_below_40 <-
     healthiar::attribute_health(
       exp_central = data$PM25_MEAN,
@@ -29,9 +42,9 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
   testthat::expect_equal(
     object =
       healthiar::socialize(
-        age_group = c("below_40", "above_40"),
+        #age_group = c("below_40", "above_40"),
         ref_prop_pop = c(0.5, 0.5),
-        listed_output_attribute = list(att_age_below_40, att_age_above_40),
+        listed_output_attribute = att_age,
         geo_id_disaggregated = data$CS01012020,
         social_indicator = data$score,
         n_quantile = 10,
@@ -244,23 +257,19 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
 
-  attribute_result_age <- base::by(
-    data,
-    data$AGE,
-    function(data) {
-      healthiar::attribute_health(
-        approach_risk = 'relative_risk',
-        exp_central = data$EXPOSURE,
-        rr_central = 1.045,
-        rr_increment = 10,
-        cutoff_central = 0,
-        erf_shape = 'log_linear',
-        bhd_central = data$MORT,
-        population = data$POP,
-        geo_id_disaggregated = data$SECTOR
+  attribute_result_age <-
+    healthiar::attribute_health(
+      approach_risk = 'relative_risk',
+      age_group = data$AGE,
+      exp_central = data$EXPOSURE,
+      rr_central = 1.045,
+      rr_increment = 10,
+      cutoff_central = 0,
+      erf_shape = 'log_linear',
+      bhd_central = data$MORT,
+      population = data$POP,
+      geo_id_disaggregated = data$SECTOR
       )
-    }
-  )
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -272,7 +281,6 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
         n_quantile = 10, # Specify number of quantiles, e.g. 10
         # approach = "quantile", # default (and currently only) approach,
         # population = data$POPULATION,
-        age_group = base::names(attribute_result_age),
         ref_prop_pop = base::subset(data, SECTOR == '21001A00-')$REF
       ) |>
       purrr::pluck("social_main") |>
