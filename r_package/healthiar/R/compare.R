@@ -124,8 +124,6 @@ compare <-
     scenario_arguments_for_bhd_and_lifetable <-
       c("bhd_central", "bhd_lower", "bhd_upper",
         "approach_exposure", "approach_newborns",
-        "first_age_pop", "last_age_pop",
-        "population_midyear_male", "population_midyear_female",
         "year_of_analysis")
 
 
@@ -256,18 +254,12 @@ compare <-
               " must be identical in both scenarios")}
 
 
-
-        # Delete bhd arguments because they are not used in the lifetable
-        scenario_specific_arguments_lifetable <-
-          dplyr::setdiff(scenario_specific_arguments, c("bhd_central", "bhd_lower", "bhd_upper"))
-
-
         # Get identical columns to join data frames (as above)
         joining_columns_input <-
           healthiar:::find_joining_columns(
             df_1 = input_table_1,
             df_2 = input_table_2,
-            except =  c(scenario_specific_arguments_lifetable,
+            except =  c(scenario_specific_arguments,
                         ## Keep year_of_analysis in the table so it can be accessed in the get_impact script
                         "year_of_analysis"))
 
