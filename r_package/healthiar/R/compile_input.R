@@ -155,6 +155,53 @@ compile_input <-
 
     # CREATE LIFE TABLES ##########################################################
     # As nested tibble
+
+    if (is_lifetable) {
+      # # Calculate totals across sex
+      # input_wo_lifetable_totals <- input_wo_lifetable |>
+      #   dplyr::summarize(
+      #     bhd = base::sum(bhd),
+      #     population = bhd::sum(population)
+      #   )
+      #
+
+      input_table <- input_wo_lifetable |>
+        dplyr::mutate(
+          # Add approach risk which cannot be entered by the user
+          # TODO: To be removed if attribute_health() and attribute_lifetable() are merged
+          approach_risk = "relative_risk",
+          # Convert age_group to numeric (obligatory in life table approach)
+          age_group = base::as.numeric(age_group),
+          # Duplicate age_group for life table calculations
+          age_start = age_group,
+          # Obtain the end age summing one because the function only works with
+          # single-year age
+          age_end = age_group + 1,
+          min_age = if(base::is.null(input_args_edited$min_age)){
+            dplyr::first(base::unique(age_start))} else {min_age},
+          max_age = if(base::is.null(input_args_edited$max_age)){
+            dplyr::last(base::unique(age_start))} else {max_age},
+          # Duplicate bhd for life table calculations
+          deaths = bhd) |>
+
+        # Nest life tables
+        tidyr::nest(
+          lifetable_with_pop_nest =
+          c(age_group, age_start, age_end, population, bhd, deaths))
+
+
+    } else {
+      # If no lifetable, only use input_wo_lifetable
+      input_table <- input_wo_lifetable
+    }
+
+    ## Add is_lifetable
+    input_table <- input_table |>
+      dplyr::mutate(is_lifetable = is_lifetable)
+
+
+
+
 #
 #     if (is_lifetable) {
 #
@@ -276,10 +323,7 @@ compile_input <-
 #       input_table <- input_wo_lifetable}
 
 
-    ## Add is_lifetable
-    input_table <- input_wo_lifetable |>
-      dplyr::mutate(is_lifetable = is_lifetable,
-                    approach_risk = "relative_risk")
+
 
 
 
