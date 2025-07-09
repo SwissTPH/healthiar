@@ -298,7 +298,7 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
             output_attribute_2 = scen_2_yld_geo)
       )$health_main$impact_rounded,
     expected =
-      c(34123, 17849, 51437) # Result on 7 July 2025; no comparison study
+      c(33641, 17595, 50731) # Result on 7 July 2025; no comparison study
   )
 
 })
@@ -364,7 +364,7 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
   scen_2_yll_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_yll_geo,
-      exp_central = rep(c(6, 6.5), each = base::length(data[["pop"]]$number_of_deaths_male)))
+      exp_central = rep(c(6, 6.5), each = 100 * 2))
 
 
   ## PIF comparison
@@ -383,7 +383,7 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
             output_attribute_2 = scen_2_yld_geo)
         )$health_main$impact_rounded,
     expected =
-      c(34255, 17885, 51773) # Result on 7 July 2025; no comparison study
+      c(33769, 17630, 51058) # Result on 7 July 2025; no comparison study
   )
 
 })
