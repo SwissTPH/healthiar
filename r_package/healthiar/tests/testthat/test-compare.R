@@ -632,12 +632,12 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
       erf_shape = "log_linear",
       approach_exposure = "single_year",
       approach_newborns = "without_newborns",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      sex = base::rep(c("male", "female"), each = 100),
+      age_group = base::rep(0:99, times = 2),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+              data[["pop"]]$number_of_deaths_female),
+      population = c(data_lifetable[["male"]]$population,
+                     data_lifetable[["female"]]$population),
       year_of_analysis = 2019,
       min_age = 20)
 
@@ -653,7 +653,7 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
         output_attribute_2 = scen_2_yll_lifetable_test
         )$health_main$impact_rounded,
     expected =
-      c(21644, 11340, 31860) # Result on 20 August 2024; no comparison study to
+      c(21301, 11159, 31358) # Result on 7 July 2025; no comparison study to
   )
 })
 
@@ -667,7 +667,7 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
   scen_1_yll_lifetable_geo <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
-      exp_central = rep(c(8.85, 8.0), each = 100) , # Fake data just for testing purposes
+      exp_central = rep(c(8.85, 8.0), each = 2 * 100) , # Fake data just for testing purposes
       prop_pop_exp = 1, # Fake data just for testing purposes
       cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
       rr_central = 1.118,
@@ -677,21 +677,25 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
       erf_shape = "log_linear",
       approach_exposure = "single_year",
       approach_newborns = "without_newborns",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = rep(data[["pop"]]$number_of_deaths_male, times = 2),
-      deaths_female = rep(data[["pop"]]$number_of_deaths_female, times = 2),
-      population_midyear_male = rep(data_lifetable[["male"]]$population, times = 2),
-      population_midyear_female = rep(data_lifetable[["female"]]$population, times = 2),
+      sex = base::rep(c("male", "female"), each = 100, times = 2),
+      age_group = base::rep(0:99, times = 2*2),
+      bhd_central = base::rep(
+        c(data[["pop"]]$number_of_deaths_male,
+          data[["pop"]]$number_of_deaths_female),
+        times = 2),
+      population = base::rep(
+        c(data_lifetable[["male"]]$population,
+          data_lifetable[["female"]]$population),
+        times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = rep(c("a", "b"), each = 100),
-      geo_id_aggregated = rep("ch", each = 2 * 100))
+      geo_id_disaggregated = rep(c("a", "b"), each = 2* 100),
+      geo_id_aggregated = rep("ch", each = 2 * 2 * 100))
 
   scen_2_yll_lifetable_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_yll_lifetable_geo,
-      exp_central = rep(c(6, 6.5), each = 100)) # Fake data just for testing purposes
+      exp_central = rep(c(6, 6.5), each = 2*100)) # Fake data just for testing purposes
 
   testthat::expect_equal(
     object =
@@ -700,7 +704,7 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
         output_attribute_2 = scen_2_yll_lifetable_geo
         )$health_main$impact_rounded,
     expected =
-      c(33041, 17309, 48639) # Result on 20 August 2024; no comparison study to
+      c(32517, 17033, 47873) # Result on 7 July 2025; no comparison study to
   )
 })
 
@@ -724,12 +728,12 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
       erf_shape = "log_linear",
       approach_exposure = "single_year",
       approach_newborns = "without_newborns",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      sex = base::rep(c("male", "female"), each = 100),
+      age_group = base::rep(0:99, times = 2),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      population = c(data_lifetable[["male"]]$population,
+                     data_lifetable[["female"]]$population),
       year_of_analysis = 2019,
       min_age = 20)
 
@@ -746,7 +750,7 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
         approach_comparison = "pif"
         )$health_main$impact_rounded,
     expected =
-      c(21698, 11354, 31978) # Result on 20 August 2024; no comparison study to
+      c(21353, 11173, 31471) # Result on 7 July 2025; no comparison study to
   )
 })
 
@@ -760,7 +764,7 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
   scen_1_yll_lifetable_geo <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
-      exp_central = rep(c(8.85, 8.0), each = 100), # Fake data just for testing purposes
+      exp_central = rep(c(8.85, 8.0), each = 2 * 100) , # Fake data just for testing purposes
       prop_pop_exp = 1, # Fake data just for testing purposes
       cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
       rr_central = 1.118,
@@ -770,21 +774,25 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
       erf_shape = "log_linear",
       approach_exposure = "single_year",
       approach_newborns = "without_newborns",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = rep(data[["pop"]]$number_of_deaths_male, times = 2),
-      deaths_female = rep(data[["pop"]]$number_of_deaths_female, times = 2),
-      population_midyear_male = rep(data_lifetable[["male"]]$population, times = 2),
-      population_midyear_female = rep(data_lifetable[["female"]]$population, times = 2),
+      sex = base::rep(c("male", "female"), each = 100, times = 2),
+      age_group = base::rep(0:99, times = 2*2),
+      bhd_central = base::rep(
+        c(data[["pop"]]$number_of_deaths_male,
+          data[["pop"]]$number_of_deaths_female),
+        times = 2),
+      population = base::rep(
+        c(data_lifetable[["male"]]$population,
+          data_lifetable[["female"]]$population),
+        times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = rep(c("a", "b"), each = 100),
-      geo_id_aggregated = rep("ch", each = 2 * 100))
+      geo_id_disaggregated = rep(c("a", "b"), each = 2* 100),
+      geo_id_aggregated = rep("ch", each = 2 * 2 * 100))
 
   scen_2_yll_lifetable_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_yll_lifetable_geo,
-      exp_central = rep(c(6, 6.5), each = 100)) # Fake data just for testing purposes
+      exp_central = rep(c(6, 6.5), each = 2 * 100)) # Fake data just for testing purposes
 
   testthat::expect_equal(
     object =
@@ -794,7 +802,7 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
         approach_comparison = "pif"
         )$health_main$impact_rounded,
     expected =
-      c(33137, 17335, 48851) # Result on 20 August 2024; no comparison study to
+      c(32609, 17058, 48074) # Result on 7 July 2025; no comparison study to
   )
 })
 
@@ -818,12 +826,14 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      approach_exposure = "single_year",
+      approach_newborns = "without_newborns",
+      sex = base::rep(c("male", "female"), each = 100),
+      age_group = base::rep(0:99, times = 2),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      population = c(data_lifetable[["male"]]$population,
+                     data_lifetable[["female"]]$population),
       year_of_analysis = 2019,
       min_age = 20)
 
@@ -839,7 +849,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
         output_attribute_2 = scen_2_deaths_lifetable
         )$health_main$impact_rounded,
     expected =
-      c(1915, 1013, 2795) # Result on 20 August 2024; no comparison study to
+      c(1914, 1012, 2793) # Result on 7 July 2025; no comparison study to
   )
 })
 
@@ -853,7 +863,7 @@ testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_singl
   scen_1_deaths_lifetable_geo <-
     healthiar::attribute_lifetable(
       health_outcome = "deaths",
-      exp_central = rep(c(8.85, 8.0), each = 100),# Fake data just for testing purposes
+      exp_central = rep(c(8.85, 8.0), each = 2 * 100) , # Fake data just for testing purposes
       prop_pop_exp = 1, # Fake data just for testing purposes
       cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
       rr_central = 1.118,
@@ -861,21 +871,27 @@ testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_singl
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = rep(data[["pop"]]$number_of_deaths_male, times = 2),
-      deaths_female = rep(data[["pop"]]$number_of_deaths_female, times = 2),
-      population_midyear_male = rep(data_lifetable[["male"]]$population, times = 2),
-      population_midyear_female = rep(data_lifetable[["female"]]$population, times = 2),
+      approach_exposure = "single_year",
+      approach_newborns = "without_newborns",
+      sex = base::rep(c("male", "female"), each = 100, times = 2),
+      age_group = base::rep(0:99, times = 2*2),
+      bhd_central = base::rep(
+        c(data[["pop"]]$number_of_deaths_male,
+          data[["pop"]]$number_of_deaths_female),
+        times = 2),
+      population = base::rep(
+        c(data_lifetable[["male"]]$population,
+          data_lifetable[["female"]]$population),
+        times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = rep(c("a", "b"), each = 100),
-      geo_id_aggregated = rep("ch", 2 * 100))
+      geo_id_disaggregated = rep(c("a", "b"), each = 2* 100),
+      geo_id_aggregated = rep("ch", each = 2 * 2 * 100))
 
   scen_2_deaths_lifetable_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_deaths_lifetable_geo,
-      exp_central = rep(c(6, 6.5), each = 100)) # Fake data just for testing purposes
+      exp_central = rep(c(6, 6.5), each = 2 * 100)) # Fake data just for testing purposes
 
   testthat::expect_equal(
     object =
@@ -884,7 +900,7 @@ testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_singl
         output_attribute_2 = scen_2_deaths_lifetable_geo
         )$health_main$impact_rounded,
     expected =
-      c(2925, 1546, 4269) # Result on 20 August 2024; no comparison study to
+      c(2924, 1545, 4267) # Result on 7 July 2025; no comparison study to
   )
 })
 
@@ -906,12 +922,14 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      approach_exposure = "single_year",
+      approach_newborns = "without_newborns",
+      sex = base::rep(c("male", "female"), each = 100),
+      age_group = base::rep(0:99, times = 2),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      population = c(data_lifetable[["male"]]$population,
+                     data_lifetable[["female"]]$population),
       year_of_analysis = 2019,
       min_age = 20)
 
@@ -928,7 +946,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
         approach_comparison = "pif"
         )$health_main$impact_rounded,
     expected =
-      c(1935, 1018, 2837) # Result on 20 August 2024; no comparison study to
+      c(1934, 1017, 2836) # Result on 7 July 2025; no comparison study to
   )
 })
 
@@ -942,7 +960,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
   scen_1_deaths_lifetable_geo <-
     healthiar::attribute_lifetable(
       health_outcome = "deaths",
-      exp_central = rep(c(8.85, 8.0), each = 100),# Fake data just for testing purposes
+      exp_central = rep(c(8.85, 8.0), each = 2 * 100) , # Fake data just for testing purposes
       prop_pop_exp = 1, # Fake data just for testing purposes
       cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
       rr_central = 1.118,
@@ -950,21 +968,27 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = rep(data[["pop"]]$number_of_deaths_male, times = 2),
-      deaths_female = rep(data[["pop"]]$number_of_deaths_female, times = 2),
-      population_midyear_male = rep(data_lifetable[["male"]]$population, times = 2),
-      population_midyear_female = rep(data_lifetable[["female"]]$population, times = 2),
+      approach_exposure = "single_year",
+      approach_newborns = "without_newborns",
+      sex = base::rep(c("male", "female"), each = 100, times = 2),
+      age_group = base::rep(0:99, times = 2*2),
+      bhd_central = base::rep(
+        c(data[["pop"]]$number_of_deaths_male,
+          data[["pop"]]$number_of_deaths_female),
+        times = 2),
+      population = base::rep(
+        c(data_lifetable[["male"]]$population,
+          data_lifetable[["female"]]$population),
+        times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = rep(c("a", "b"), each = 100),
-      geo_id_aggregated = rep("ch", 2 * 100))
+      geo_id_disaggregated = rep(c("a", "b"), each = 2* 100),
+      geo_id_aggregated = rep("ch", each = 2 * 2 * 100))
 
   scen_2_deaths_lifetable_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_deaths_lifetable_geo,
-      exp_central = rep(c(6, 6.5), each = 100)) # Fake data just for testing purposes
+      exp_central = rep(c(6, 6.5), each = 100 * 2)) # Fake data just for testing purposes
 
   testthat::expect_equal(
     object =
@@ -974,7 +998,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
         approach_comparison = "pif"
         )$health_main$impact_rounded,
     expected =
-      c(2961, 1556, 4346) # Result on 20 AUgust 2024; no comparison study to
+      c(2959, 1555, 4343) # Result on 7 July 2025; no comparison study to
   )
 })
 
