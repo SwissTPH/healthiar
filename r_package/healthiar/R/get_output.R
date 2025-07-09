@@ -40,12 +40,15 @@ get_output <-
                     "age_group", "sex",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
 
+    column_names_wo_lifetable_impact <-
+      base::names(results_raw)[! base::grepl("nest|modification_factor|impact", base::names(results_raw))]
+
     # This includes all columns names except age_group and sex
     group_columns_for_sex_aggregation <-
-      base::names(results_raw)[!base::names(results_raw) %in% c("sex")]
+      column_names_wo_lifetable_impact[! base::grepl("sex", column_names_wo_lifetable_impact)]
 
     group_columns_for_age_aggregation <-
-      base::names(results_raw)[!base::names(results_raw) %in% c("age_group")]
+      column_names_wo_lifetable_impact[! base::grepl("age", column_names_wo_lifetable_impact)]
     # This include only the id_columns except geo_id_disaggregated
     # Not all columns like above to avoid geo_id_disaggregated variables
     # that make the summary at lower (disaggregated) geo level
@@ -68,8 +71,7 @@ get_output <-
     if(any(grepl("nest", names(results_raw)))){
       impact_main <-
         results_raw |>
-        dplyr::select(-dplyr::contains("nest"))|>
-        dplyr::filter(sex %in% "total")
+        dplyr::select(-dplyr::contains("nest"))
 
       if ("duration_ci" %in% names(impact_main)){impact_main <- impact_main |> dplyr::filter(duration_ci %in% "central")}
       if ("dw_ci" %in% names(impact_main)){impact_main <- impact_main |> dplyr::filter(dw_ci %in% "central")}
