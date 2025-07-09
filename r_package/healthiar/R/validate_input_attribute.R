@@ -67,7 +67,7 @@ validate_input_attribute <-
     categorical_args <- names(options_of_categorical_args)
 
     lifetable_var_names_with_same_length <-
-      c("bhd", "population", "age_range", "sex")
+      c("bhd_central", "bhd_lower", "bhd_upper", "population", "age_range", "sex")
 
     available_var_names <-
       names(available_input_args)
@@ -224,6 +224,18 @@ validate_input_attribute <-
     }
 
 
+    ### error_if_0 #####
+    error_if_0 <- function(var_name){
+      var_value <- input_args$value[[var_name]]
+      if(base::any(var_value < 1)) {
+        base::stop(
+          base::paste0("All values of ", var_name , " must be 1 or higher."),
+          call. = FALSE
+        )
+      }
+    }
+
+
 
 
     if(is_lifetable){
@@ -238,6 +250,13 @@ validate_input_attribute <-
       for (i in 1:base::nrow(combi_vars)) {
         error_if_different_length(combi_vars$var_1[i],
                                   combi_vars$var_2[i])
+      }
+
+
+
+
+      for (x in lifetable_var_names_with_same_length) {
+        error_if_0(var_name = x)
       }
 
     }
@@ -275,27 +294,7 @@ validate_input_attribute <-
 
 
 
-    ### error_if_0 #####
-    error_if_0 <- function(var_name){
-      if(
-        base::any(input_args_value$deaths_male == 0) |
-        base::any(input_args_value$deaths_female == 0) |
-        base::any(input_args_value$population_midyear_male == 0) |
-        base::any(input_args_value$population_midyear_female == 0)
-      ) {
-        base::stop(
-          base::paste0(var_name , " must contain ≥ 1 death(s) per age group"),
-          call. = FALSE
-          )
-        }
-    }
 
-    for (x in numeric_var_names[
-      base::grepl("^deaths_", numeric_var_names) |
-      base::grepl("^population_", numeric_var_names)
-      ]) {
-      error_if_0(x)
-    }
 
     ### error_if_lower_than_0 #####
 
