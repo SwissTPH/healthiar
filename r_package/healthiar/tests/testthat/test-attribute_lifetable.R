@@ -242,24 +242,35 @@ testthat::test_that("error if length of age range higher than deaths", {
     object =
       healthiar::attribute_lifetable(
         health_outcome = "deaths",
-        exp_central = c(8, 9, 10), # Fake data just for testing purposes
-        prop_pop_exp = c(0.2, 0.3, 0.5), # Fake data just for testing purposes
-        cutoff_central = data_mort$cutoff[2],   # PM2.5=5, NO2=10, i.e. WHO AQG 2021
-        rr_central = data[["input"]]$relative_risk,
-        rr_lower = data[["input"]]$relative_risk_lower,
-        rr_upper = data[["input"]]$relative_risk_upper,
+        exp_central = base::rep(c(8, 9, 10), each = 100*2), # Fake data just for testing purposes
+        prop_pop_exp = base::rep(c(0.2, 0.3, 0.5), each = 100*2), # Fake data just for testing purposes
+        cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
+        rr_central = data_mort[2,"rr_central"],
+        rr_lower = data_mort[2,"rr_lower"],
+        rr_upper = data_mort[2,"rr_upper"],
         rr_increment = 10,
         erf_shape = "log_linear",
-        first_age_pop = 0,
-        last_age_pop = 150,
-        deaths_male = data[["pop"]]$number_of_deaths_male,
-        deaths_female = data[["pop"]]$number_of_deaths_female,
-        population_midyear_male = data_lifetable[["male"]]$population,
-        population_midyear_female = data_lifetable[["female"]]$population,
+        age_group = base::rep(
+          c(data_lifetable[["male"]]$age,
+            data_lifetable[["female"]]$age),
+          times = 3),
+        sex = base::rep(
+          c("male", "female"),
+          each = 100,
+          times = 20), # Should be 3
+        population = base::rep(
+          c(data_lifetable[["male"]]$population,
+            data_lifetable[["female"]]$population),
+          times = 3),
+        bhd_central = base::rep(
+          c(data[["pop"]]$number_of_deaths_male,
+            data[["pop"]]$number_of_deaths_female),
+          times = 3),
         year_of_analysis = 2019,
         info = data_mort$pollutant[2],
-        min_age = 20),
-    regexp = "The length of age range (sequence of first_age_pop and last_age_pop) must be compatible with the age-dependent variables.",
+        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
+      ),
+    regexp = "population and sex must have the same length.",
     fixed = TRUE
   )
 })
