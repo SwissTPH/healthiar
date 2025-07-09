@@ -42,7 +42,6 @@ get_deaths_yll_from_lifetable <-
 
     }
 
-
     ## ALTERNATIVE CODE
     ## Filter for relevant ages
     impact_detailed <- pop_impact |>
@@ -85,12 +84,12 @@ get_deaths_yll_from_lifetable <-
               if ( !base::is.null( max_age) ) {
 
                 .x <-
-                  dplyr::filter(.x, age <= max_age)
+                  dplyr::filter(.x, age_start <= max_age)
               }
 
               if ( !base::is.null( min_age ) ) {
                 .x <-
-                  dplyr::filter(.x, age >= min_age)
+                  dplyr::filter(.x, age_start >= min_age)
               }
 
               # Calculate YLL/YLD impact per year ################################

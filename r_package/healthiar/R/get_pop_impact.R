@@ -62,7 +62,7 @@ get_pop_impact <-
                         }
                       )
       )
-# browser()
+
     # Store variables for population_year
     # Year Of Analysis (YOA)
     population_yoa <- base::paste0("population_", input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first())
@@ -82,7 +82,7 @@ get_pop_impact <-
             function(.x){
 
               .x <- .x |>
-                dplyr::select(age, age_end, deaths, population, modification_factor) |>
+                dplyr::select(age_start, age_end, deaths, population, modification_factor) |>
                 dplyr::rename(!!population_yoa := population) |>
 
                 # CALCULATE ENTRY POPULATION OF YEAR OF ANALYSIS (YOA)
@@ -231,7 +231,7 @@ get_pop_impact <-
               .x = pop_impacted_scenario_nest,
               .y = pop_baseline_scenario_nest,
               ~ tibble::tibble(
-                age = .x$age,
+                age_start = .x$age_start,
                 age_end = .x$age_end,
                 deaths_2019 = .x$population_2019_end - .y$population_2019_end)),
           .after = pop_impacted_scenario_nest)
@@ -390,7 +390,7 @@ get_pop_impact <-
             function(.x, .y){
 
               ages <- .x |>
-                dplyr::select(age, age_end)
+                dplyr::select(age_start, age_end)
 
               pop_impacted <- .x |>
                 dplyr::select(dplyr::contains("population"),
@@ -433,7 +433,7 @@ get_pop_impact <-
                               -deaths)
 
               ages <- .x |>
-                dplyr::select(age, age_end)
+                dplyr::select(age_start, age_end)
 
               # Calculate difference in deaths
               # Baseline scenario minus impacted scenario
@@ -484,7 +484,7 @@ get_pop_impact <-
             yll_nest = purrr::map(
               .x = yll_nest,
               function(.x){
-                .x[, dplyr::setdiff(names(.x), c("age", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age", "age_end"))])
+                .x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))])
                 return(.x)
               }
               )
@@ -494,7 +494,7 @@ get_pop_impact <-
           dplyr::mutate(premature_deaths_nest = purrr::map(
             .x = premature_deaths_nest,
             function(.x){
-              .x[, dplyr::setdiff(names(.x), c("age", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age", "age_end"))])
+              .x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))])
               return(.x)
             }
           )
@@ -551,7 +551,6 @@ get_pop_impact <-
     #     }
     #
     # }
-
 
     on.exit(options(user_options))
 
