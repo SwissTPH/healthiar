@@ -206,7 +206,7 @@ get_output <-
 
     output[["health_detailed"]][["impact_agg_age"]]  <-
       output[["health_detailed"]][["impact_agg_age"]] |>
-      dplyr::mutate(age = "total")
+      dplyr::mutate(age_group = "total")
 
     output_last <- output[["health_detailed"]][["impact_agg_age"]]
 
