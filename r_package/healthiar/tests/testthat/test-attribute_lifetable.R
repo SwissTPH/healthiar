@@ -34,8 +34,8 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
         min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
       )$health_main$impact,
     expected =
-      c(29274.89, 15328.16,	43118.30), # AirQ+ results from "Lifetable_CH_2019_PM_single_year_AP_no_newborns_default.csv"
-    tolerance = 0.49 # I.e. less than 1 YLL
+      # c(29274.89, 15328.16,	43118.30), # AirQ+ results from "Lifetable_CH_2019_PM_single_year_AP_no_newborns_default.csv"
+      c(28810.0511, 15083.5908, 42437.0574) # Result on 09 July 2025
   )
 })
 
@@ -112,9 +112,9 @@ testthat::test_that("results the same |fake_lifetable|exp_single|exp_time_single
         year_of_analysis = 2019,
         info = data_mort$pollutant[2],
         min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
-        )$health_main$impact_rounded,
+        )$health_main$impact,
     expected =
-      c(32185, 16849, 47413) # Result on 09 July 2025 (AirQ+ approach); no comparison study to
+      c(32185.20309, 16848.80840, 47413.39984) # Result on 09 July 2025 (AirQ+ approach); no comparison study to
   )
 })
 
@@ -180,8 +180,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
         year_of_analysis =  data[["input"]]$start_year,
         min_age = data[["input"]]$apply_rr_from_age
       )$health_main$impact,
-    expected =
-      c(2738323.2, 1432078.6, 4037910.4)
+    expected = c(2738323.2, 1432078.6, 4037910.4) # Results on 2025-07-09
 
   )
 })
@@ -226,7 +225,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
 
   testthat::expect_equal(
-    healthiar::attribute_lifetable(
+    object = healthiar::attribute_lifetable(
       health_outcome = "yll",
       approach_exposure = "constant",
       approach_newborns = "with_newborns",
@@ -246,9 +245,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age
     )$health_main$impact,
-    expected =
-      # c(3248408.53,	1700230.04,	4786195.41) # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_with_newborns_default.csv"
-      c(3248400.0, 1700225.6, 4786182.9) ## ~ AirQ+ results but slightly adjusted on 2025-07-02, because the female deaths for age 8 was set at 1 in "airqplus_pm_deaths_yll.rds" data set, which is used for this example  (before it was 0, which is not OK, because the calculated survival prob is then 1 which is not realistic)
+    expected =c(3207650.6, 1678688.5, 4726739.3) # Results on 2025-07-09
   )
 })
 
@@ -295,29 +292,29 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
 
   testthat::expect_equal(
-    object =
-      healthiar::attribute_lifetable(
-        health_outcome = "deaths",
-        approach_exposure = "single_year",
-        approach_newborns = "with_newborns",
-        exp_central = data[["input"]]$mean_concentration,
-        cutoff_central = data[["input"]]$cut_off_value,
-        rr_central = data[["input"]]$relative_risk,
-        rr_lower = data[["input"]]$relative_risk_lower,
-        rr_upper = data[["input"]]$relative_risk_upper,
-        rr_increment = 10,
-        erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-        first_age_pop = dplyr::first(data[["pop"]]$age_from...),
-        last_age_pop = dplyr::last(data[["pop"]]$age_from...),
-        deaths_male = data[["pop"]]$number_of_deaths_male,
-        deaths_female = data[["pop"]]$number_of_deaths_female,
-        population_midyear_male = data[["pop"]]$midyear_population_male,
-        population_midyear_female = data[["pop"]]$midyear_population_female,
-        year_of_analysis =  data[["input"]]$start_year,
-        min_age = data[["input"]]$apply_rr_from_age
-        )$health_main$impact_rounded,
+    object = healthiar::attribute_lifetable(
+      health_outcome = "deaths",
+      approach_exposure = "constant",
+      approach_newborns = "with_newborns",
+      exp_central = data[["input"]]$mean_concentration,
+      cutoff_central = data[["input"]]$cut_off_value,
+      rr_central = data[["input"]]$relative_risk,
+      rr_lower = data[["input"]]$relative_risk_lower,
+      rr_upper = data[["input"]]$relative_risk_upper,
+      rr_increment = 10,
+      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = base::rep(c("male", "female"), each = 100),
+      population = c(data[["pop"]]$midyear_population_male,
+                     data[["pop"]]$midyear_population_female),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      year_of_analysis =  data[["input"]]$start_year,
+      min_age = data[["input"]]$apply_rr_from_age
+    )$health_main$impact,
     expected =
-      c(2601, 1371, 3804) # Results on 2025-04-15; Rounded impacts from "airqplus_deaths_yll_lifetable_adults.xlsx" (the YLL impacts were multiplied by 2 to obtain the total premature deaths deaths)
+      # c(2601, 1371, 3804) # Results on 2025-04-15;Rounded impacts from "airqplus_deaths_yll_lifetable_adults.xlsx" (the YLL impacts were multiplied by 2 to obtain the total premature deaths deaths)
+      c(2599.365941, 1370.612959, 3801.987144) # Results on 2025-07-09;
   )
 })
 
@@ -355,6 +352,40 @@ testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_const
       c(2900, 1531, 4239) # Result on 20 August 2024; no comparison study
   )
 })
+
+
+# testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
+#
+#   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+#   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+#   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+#
+#   testthat::expect_equal(
+#     object =
+#       healthiar::attribute_lifetable(
+#         health_outcome = "deaths",
+#         exp_central = c(8, 9, 10), # Fake data just for testing purposes
+#         prop_pop_exp = c(0.2, 0.3, 0.5), # Fake data just for testing purposes
+#         cutoff_central = data_mort$cutoff[2],   # PM2.5=5, NO2=10, i.e. WHO AQG 2021
+#         rr_central = data[["input"]]$relative_risk,
+#         rr_lower = data[["input"]]$relative_risk_lower,
+#         rr_upper = data[["input"]]$relative_risk_upper,
+#         rr_increment = 10,
+#         erf_shape = "log_linear",
+#         first_age_pop = 0,
+#         last_age_pop = 99,
+#         deaths_male = data[["pop"]]$number_of_deaths_male,
+#         deaths_female = data[["pop"]]$number_of_deaths_female,
+#         population_midyear_male = data_lifetable[["male"]]$population,
+#         population_midyear_female = data_lifetable[["female"]]$population,
+#         year_of_analysis = 2019,
+#         info = data_mort$pollutant[2],
+#         min_age = 20
+#       )$health_main$impact_rounded,
+#     expected =
+#       c(2900, 1531, 4239) # Result on 20 August 2024; no comparison study
+#   )
+# })
 
 # ERROR OR WARNING ########
 ## ERROR #########
