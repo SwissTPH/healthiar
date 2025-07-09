@@ -78,16 +78,6 @@ daly <-
     column_names_results_raw <-
       unique(c(names(results_raw_yll), names(results_raw_yld)))
 
-    # common_cols <- base::intersect(base::names(results_raw_yll),
-    #                                base::names(results_raw_yld))
-
-    # identical_cols <- common_cols[base::sapply(common_cols, function(col) {
-    #   base::identical(results_raw_yll[[col]], results_raw_yll[[col]])
-    # })]
-    #
-    # cols_for_join <-
-    #   identical_cols[!grepl("approach_exposure|rr_at_exp|pop_fraction", identical_cols)]
-
     # Identify the columns names using keywords
     common_cols <-
       column_names_results_raw[grepl("exp|exposure|cutoff|geo|approach_risk|sex|age_group|bhd_ci",
@@ -114,10 +104,6 @@ daly <-
                 , collapse = ", "),
           " must be identical in both scenarios")}
 
-
-#     # Remove those containing the word impact
-#     column_names_results_raw_without_impact <-
-#       column_names_results_raw[!grepl("impact|lifeyears|lifetable", column_names_results_raw)]
 
 
     # Obtain the new results_raw for DALY
