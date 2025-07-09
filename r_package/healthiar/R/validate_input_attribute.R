@@ -67,8 +67,7 @@ validate_input_attribute <-
     categorical_args <- names(options_of_categorical_args)
 
     lifetable_var_names_with_same_length <-
-      c("deaths_male", "deaths_female",
-        "population_midyear_male", "population_midyear_female")
+      c("bhd", "population", "age_range", "sex")
 
     available_var_names <-
       names(available_input_args)
@@ -227,7 +226,7 @@ validate_input_attribute <-
 
 
 
-    if(all(lifetable_var_names_with_same_length %in% available_var_names)){
+    if(is_lifetable){
 
       # --> error if length of life table variables is different
       combi_vars <-
@@ -242,30 +241,6 @@ validate_input_attribute <-
       }
 
     }
-
-    ### error_if_incompatible_length_of_age_range #####
-
-    error_if_incompatible_length_of_age_range <-
-      function(age_dependent_var){
-
-        # Get length of age range
-        length_age_range <- base::length(input_args_value $first_age_pop : input_args_value $last_age_pop)
-
-        # Get of the unique vector of geo_id
-        # (it can be duplicated in case of e.g. exposure distribution or life table)
-        length_geo_id_disaggregated <- base::length(base::unique(input_args_value $geo_id_disaggregated))
-
-        # Get length of age-depending variable
-        length_age_dependent_var <-  base::length(input_args_value [[age_dependent_var]])
-
-      if( !base::identical(length_age_range * length_geo_id_disaggregated,
-                           length_age_dependent_var)){
-
-        # Create error message
-        stop("The length of age range (sequence of first_age_pop and last_age_pop) must be compatible with the age-dependent variables.",
-             call. = FALSE)
-      }
-      }
 
 
 
