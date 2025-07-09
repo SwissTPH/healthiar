@@ -270,135 +270,77 @@ testthat::test_that("error if length of age range higher than deaths", {
         info = data_mort$pollutant[2],
         min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
       ),
-    regexp = "population and sex must have the same length.",
+    regexp = "bhd_central and sex must have the same length.",
     fixed = TRUE
   )
 })
 
 
-testthat::test_that("error if deaths_... argument contains 0", {
+testthat::test_that("error if bhd argument contains 0", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
   data[["pop"]]$number_of_deaths_male[47] <- 0 # 47 chosen randomly
 
   ## argument deaths_male contains 0
   testthat::expect_error(
-    object =
-      healthiar::attribute_lifetable(
-        health_outcome = "yll",
-        approach_exposure = "single_year",
-        exp_central = data_mort$exp[2], #exp CH 2019
-        prop_pop_exp = 1,
-        cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
-        rr_central = data_mort[2,"rr_central"],
-        rr_lower = data_mort[2,"rr_lower"],
-        rr_upper =data_mort[2,"rr_upper"],
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        first_age_pop = 0,
-        last_age_pop = 99,
-        population_midyear_male = data_lifetable[["male"]]$population,
-        population_midyear_female = data_lifetable[["female"]]$population,
-        deaths_male = data[["pop"]]$number_of_deaths_male,
-        deaths_female = data[["pop"]]$number_of_deaths_female,
-        year_of_analysis = 2019,
-        info = data_mort$pollutant[2],
-        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
-      )$health_main$impact
+    object = healthiar::attribute_lifetable(
+      health_outcome = "deaths",
+      approach_exposure = "constant",
+      approach_newborns = "with_newborns",
+      exp_central = data[["input"]]$mean_concentration,
+      cutoff_central = data[["input"]]$cut_off_value,
+      rr_central = data[["input"]]$relative_risk,
+      rr_lower = data[["input"]]$relative_risk_lower,
+      rr_upper = data[["input"]]$relative_risk_upper,
+      rr_increment = 10,
+      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = base::rep(c("male", "female"), each = 100),
+      population = c(data[["pop"]]$midyear_population_male,
+                     data[["pop"]]$midyear_population_female),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      year_of_analysis =  data[["input"]]$start_year,
+      min_age = data[["input"]]$apply_rr_from_age),
+
+    regexp = "All values of bhd_central must be 1 or higher."
   )
 
-  data[["pop"]]$number_of_deaths_female[84] <- 0 # 84 chosen randomly
-
-  ## argument deaths_female contains 0
-  testthat::expect_error(
-    object =
-      healthiar::attribute_lifetable(
-        health_outcome = "yll",
-        approach_exposure = "single_year",
-        exp_central = data_mort$exp[2], #exp CH 2019
-        prop_pop_exp = 1,
-        cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
-        rr_central = data_mort[2,"rr_central"],
-        rr_lower = data_mort[2,"rr_lower"],
-        rr_upper =data_mort[2,"rr_upper"],
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        first_age_pop = 0,
-        last_age_pop = 99,
-        population_midyear_male = data_lifetable[["male"]]$population,
-        population_midyear_female = data_lifetable[["female"]]$population,
-        deaths_male = data[["pop"]]$number_of_deaths_male,
-        deaths_female = data[["pop"]]$number_of_deaths_female,
-        year_of_analysis = 2019,
-        info = data_mort$pollutant[2],
-        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
-      )$health_main$impact
-  )
 })
 
-testthat::test_that("error if population_... argument contains 0", {
+testthat::test_that("error if population argument contains 0", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
-  data_lifetable[["male"]]$population[47] <- 0 # 47 chosen randomly
+  data[["pop"]]$midyear_population_male[47] <- 0 # 47 chosen randomly
 
   ## argument population_midyear_male contains 0
+  ## argument deaths_male contains 0
   testthat::expect_error(
-    object =
-      healthiar::attribute_lifetable(
-        health_outcome = "yll",
-        approach_exposure = "single_year",
-        exp_central = data_mort$exp[2], #exp CH 2019
-        prop_pop_exp = 1,
-        cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
-        rr_central = data_mort[2,"rr_central"],
-        rr_lower = data_mort[2,"rr_lower"],
-        rr_upper =data_mort[2,"rr_upper"],
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        first_age_pop = 0,
-        last_age_pop = 99,
-        population_midyear_male = data_lifetable[["male"]]$population,
-        population_midyear_female = data_lifetable[["female"]]$population,
-        deaths_male = data[["pop"]]$number_of_deaths_male,
-        deaths_female = data[["pop"]]$number_of_deaths_female,
-        year_of_analysis = 2019,
-        info = data_mort$pollutant[2],
-        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
-      )$health_main$impact
-  )
+    object = healthiar::attribute_lifetable(
+      health_outcome = "deaths",
+      approach_exposure = "constant",
+      approach_newborns = "with_newborns",
+      exp_central = data[["input"]]$mean_concentration,
+      cutoff_central = data[["input"]]$cut_off_value,
+      rr_central = data[["input"]]$relative_risk,
+      rr_lower = data[["input"]]$relative_risk_lower,
+      rr_upper = data[["input"]]$relative_risk_upper,
+      rr_increment = 10,
+      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = base::rep(c("male", "female"), each = 100),
+      population = c(data[["pop"]]$midyear_population_male,
+                     data[["pop"]]$midyear_population_female),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      year_of_analysis =  data[["input"]]$start_year,
+      min_age = data[["input"]]$apply_rr_from_age),
 
-  data_lifetable[["female"]]$population[84] <- 0 # 84 chosen randomly
-
-  ## argument population_midyear_female contains 0
-  testthat::expect_error(
-    object =
-      healthiar::attribute_lifetable(
-        health_outcome = "yll",
-        approach_exposure = "single_year",
-        exp_central = data_mort$exp[2], #exp CH 2019
-        prop_pop_exp = 1,
-        cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
-        rr_central = data_mort[2,"rr_central"],
-        rr_lower = data_mort[2,"rr_lower"],
-        rr_upper =data_mort[2,"rr_upper"],
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        first_age_pop = 0,
-        last_age_pop = 99,
-        population_midyear_male = data_lifetable[["male"]]$population,
-        population_midyear_female = data_lifetable[["female"]]$population,
-        deaths_male = data[["pop"]]$number_of_deaths_male,
-        deaths_female = data[["pop"]]$number_of_deaths_female,
-        year_of_analysis = 2019,
-        info = data_mort$pollutant[2],
-        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
-      )$health_main$impact
+    regexp = "All values of population must be 1 or higher."
   )
 })
 
