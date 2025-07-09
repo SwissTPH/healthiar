@@ -85,20 +85,30 @@ testthat::test_that("results the same |fake_lifetable|exp_single|exp_time_single
     object =
       healthiar::attribute_lifetable(
         health_outcome = "yll",
-        exp_central = c(8, 9, 10), # Fake data just for testing purposes
-        prop_pop_exp = c(0.2, 0.3, 0.5), # Fake data just for testing purposes
+        exp_central = base::rep(c(8, 9, 10), each = 100*2), # Fake data just for testing purposes
+        prop_pop_exp = base::rep(c(0.2, 0.3, 0.5), each = 100*2), # Fake data just for testing purposes
         cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
         rr_central = data_mort[2,"rr_central"],
         rr_lower = data_mort[2,"rr_lower"],
         rr_upper = data_mort[2,"rr_upper"],
         rr_increment = 10,
         erf_shape = "log_linear",
-        first_age_pop = 0,
-        last_age_pop = 99,
-        deaths_male = data[["pop"]]$number_of_deaths_male,
-        deaths_female = data[["pop"]]$number_of_deaths_female,
-        population_midyear_male = data_lifetable[["male"]]$population,
-        population_midyear_female = data_lifetable[["female"]]$population,
+        age_group = base::rep(
+          c(data_lifetable[["male"]]$age,
+            data_lifetable[["female"]]$age),
+          times = 3),
+        sex = base::rep(
+          c("male", "female"),
+          each = 100,
+          times = 3),
+        population = base::rep(
+          c(data_lifetable[["male"]]$population,
+            data_lifetable[["female"]]$population),
+          times = 3),
+        bhd_central = base::rep(
+          c(data[["pop"]]$number_of_deaths_male,
+            data[["pop"]]$number_of_deaths_female),
+          times = 3),
         year_of_analysis = 2019,
         info = data_mort$pollutant[2],
         min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
@@ -107,6 +117,41 @@ testthat::test_that("results the same |fake_lifetable|exp_single|exp_time_single
       round(c(32704.07, 17121.94, 48173.38)) # Result on 20 August 2024 (AirQ+ approach); no comparison study to
   )
 })
+
+
+# Deactivated: Old code before age_group and sex
+# testthat::test_that("results the same |fake_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
+#
+#   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+#   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+#   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+#
+#   testthat::expect_equal(
+#     object =
+#       healthiar::attribute_lifetable(
+#         health_outcome = "yll",
+#         exp_central = c(8, 9, 10), # Fake data just for testing purposes
+#         prop_pop_exp = c(0.2, 0.3, 0.5), # Fake data just for testing purposes
+#         cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
+#         rr_central = data_mort[2,"rr_central"],
+#         rr_lower = data_mort[2,"rr_lower"],
+#         rr_upper = data_mort[2,"rr_upper"],
+#         rr_increment = 10,
+#         erf_shape = "log_linear",
+#         first_age_pop = 0,
+#         last_age_pop = 99,
+#         deaths_male = data[["pop"]]$number_of_deaths_male,
+#         deaths_female = data[["pop"]]$number_of_deaths_female,
+#         population_midyear_male = data_lifetable[["male"]]$population,
+#         population_midyear_female = data_lifetable[["female"]]$population,
+#         year_of_analysis = 2019,
+#         info = data_mort$pollutant[2],
+#         min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
+#       )$health_main$impact_rounded,
+#     expected =
+#       round(c(32704.07, 17121.94, 48173.38)) # Result on 20 August 2024 (AirQ+ approach); no comparison study to
+#   )
+# })
 
 ### CONSTANT EXPOSURE & NO NEWBORNS #############################################
 
