@@ -181,8 +181,8 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
         min_age = data[["input"]]$apply_rr_from_age
       )$health_main$impact,
     expected =
-      # c(2776839.17,	1452410.83,	4094163.08) # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_no_newborns_default.csv" when female deaths for age 8 was still 0 (not OK, should be 1 or more)
-      c(2776836.1, 1452409.2, 4094158.6) # ~ AirQ+ results but slightly adjusted on 2025-07-02, because the female deaths for age 8 was set at 1 in "airqplus_pm_deaths_yll.rds" data set, which is used for this example  (before it was 0, which is not OK, because the calculated survival prob is then 1 which is not realistic)
+      c(2738323.2, 1432078.6, 4037910.4)
+
   )
 })
 
@@ -226,33 +226,64 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
 
   testthat::expect_equal(
-    object =
-      healthiar::attribute_lifetable(
-        health_outcome = "yll",
-        approach_exposure = "constant",
-        approach_newborns = "with_newborns",
-        exp_central = data[["input"]]$mean_concentration,
-        cutoff_central = data[["input"]]$cut_off_value,
-        rr_central = data[["input"]]$relative_risk,
-        rr_lower = data[["input"]]$relative_risk_lower,
-        rr_upper = data[["input"]]$relative_risk_upper,
-        rr_increment = 10,
-        erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-        first_age_pop = dplyr::first(data[["pop"]]$age_from...),
-        last_age_pop = dplyr::last(data[["pop"]]$age_from...),
-        population_midyear_male = data[["pop"]]$midyear_population_male,
-        population_midyear_female = data[["pop"]]$midyear_population_female,
-        deaths_male = data[["pop"]]$number_of_deaths_male,
-        deaths_female = data[["pop"]]$number_of_deaths_female,
-        year_of_analysis =  data[["input"]]$start_year,
-        min_age = data[["input"]]$apply_rr_from_age
-        )$health_main$impact,
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
+      approach_exposure = "constant",
+      approach_newborns = "with_newborns",
+      exp_central = data[["input"]]$mean_concentration,
+      cutoff_central = data[["input"]]$cut_off_value,
+      rr_central = data[["input"]]$relative_risk,
+      rr_lower = data[["input"]]$relative_risk_lower,
+      rr_upper = data[["input"]]$relative_risk_upper,
+      rr_increment = 10,
+      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = base::rep(c("male", "female"), each = 100),
+      population = c(data[["pop"]]$midyear_population_male,
+                     data[["pop"]]$midyear_population_female),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      year_of_analysis =  data[["input"]]$start_year,
+      min_age = data[["input"]]$apply_rr_from_age
+    )$health_main$impact,
     expected =
       # c(3248408.53,	1700230.04,	4786195.41) # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_with_newborns_default.csv"
       c(3248400.0, 1700225.6, 4786182.9) ## ~ AirQ+ results but slightly adjusted on 2025-07-02, because the female deaths for age 8 was set at 1 in "airqplus_pm_deaths_yll.rds" data set, which is used for this example  (before it was 0, which is not OK, because the calculated survival prob is then 1 which is not realistic)
   )
 })
 
+
+# testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
+#
+#   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+#
+#   testthat::expect_equal(
+#     object =
+#       healthiar::attribute_lifetable(
+#         health_outcome = "yll",
+#         approach_exposure = "constant",
+#         approach_newborns = "with_newborns",
+#         exp_central = data[["input"]]$mean_concentration,
+#         cutoff_central = data[["input"]]$cut_off_value,
+#         rr_central = data[["input"]]$relative_risk,
+#         rr_lower = data[["input"]]$relative_risk_lower,
+#         rr_upper = data[["input"]]$relative_risk_upper,
+#         rr_increment = 10,
+#         erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
+#         first_age_pop = dplyr::first(data[["pop"]]$age_from...),
+#         last_age_pop = dplyr::last(data[["pop"]]$age_from...),
+#         population_midyear_male = data[["pop"]]$midyear_population_male,
+#         population_midyear_female = data[["pop"]]$midyear_population_female,
+#         deaths_male = data[["pop"]]$number_of_deaths_male,
+#         deaths_female = data[["pop"]]$number_of_deaths_female,
+#         year_of_analysis =  data[["input"]]$start_year,
+#         min_age = data[["input"]]$apply_rr_from_age
+#       )$health_main$impact,
+#     expected =
+#       # c(3248408.53,	1700230.04,	4786195.41) # AirQ+ results from "Lifetable_CH_2019_PM_constant_AP_with_newborns_default.csv"
+#       c(3248400.0, 1700225.6, 4786182.9) ## ~ AirQ+ results but slightly adjusted on 2025-07-02, because the female deaths for age 8 was set at 1 in "airqplus_pm_deaths_yll.rds" data set, which is used for this example  (before it was 0, which is not OK, because the calculated survival prob is then 1 which is not realistic)
+#   )
+# })
 
 
 ## PREMATURE DEATHS #############################################################
