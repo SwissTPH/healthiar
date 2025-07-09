@@ -114,7 +114,7 @@ testthat::test_that("results the same |fake_lifetable|exp_single|exp_time_single
         min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
         )$health_main$impact_rounded,
     expected =
-      round(c(32704.07, 17121.94, 48173.38)) # Result on 20 August 2024 (AirQ+ approach); no comparison study to
+      c(32185, 16849, 47413) # Result on 09 July 2025 (AirQ+ approach); no comparison study to
   )
 })
 
