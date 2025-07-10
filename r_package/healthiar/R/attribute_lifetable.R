@@ -51,12 +51,10 @@
 #'   rr_central =  1.118,
 #'   rr_increment = 10,
 #'   erf_shape = "log_linear",
-#'   first_age_pop = 0,
-#'   last_age_pop = 99,
-#'   deaths_male = exdat_pop_1$number_of_deaths_male,
-#'   deaths_female = exdat_pop_1$number_of_deaths_female,
-#'   population_midyear_male = exdat_pop_male$population_2019,
-#'   population_midyear_female = exdat_pop_female$population_2019,
+#'   sex = rep(c("male", "female"), each = 100),
+#'   age_group = rep(0:99, times = 2),
+#'   bhd_central = c(exdat_pop_1$number_of_deaths_male, exdat_pop_1$number_of_deaths_female),
+#'   population = c(exdat_pop_male$population_2019, exdat_pop_female$population_2019),
 #'   year_of_analysis = 2019,
 #'   min_age = 20
 #' )
@@ -76,12 +74,10 @@
 #' rr_central =  1.118,
 #' rr_increment = 10,
 #' erf_shape = "log_linear",
-#' first_age_pop = 0,
-#' last_age_pop = 99,
-#' deaths_male = exdat_pop_1$number_of_deaths_male,
-#' deaths_female = exdat_pop_1$number_of_deaths_female,
-#' population_midyear_male = exdat_pop_male$population_2019,
-#' population_midyear_female = exdat_pop_female$population_2019,
+#' sex = rep(c("male", "female"), each = 100),
+#' age_group = rep(0:99, times = 2),
+#' bhd_central = c(exdat_pop_1$number_of_deaths_male, exdat_pop_1$number_of_deaths_female),
+#' population = c(exdat_pop_male$population_2019, exdat_pop_female$population_2019),
 #' year_of_analysis = 2019,
 #' min_age = 20
 #' )
