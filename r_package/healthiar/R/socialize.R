@@ -135,11 +135,6 @@ socialize <- function(output_attribute = NULL,
   # * If available output_attribute ########
   if ( has_output_attribute ) {
 
-    ## Convert output_attribute in a tibble
-    # output_attribute <-
-    #   healthiar:::flatten_by_age(output_attribute = output_attribute,
-    #                              age_group = age_group)
-
     ## Compile input data
     ## without social component
     input_data <-
