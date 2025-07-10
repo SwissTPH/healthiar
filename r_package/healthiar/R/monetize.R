@@ -61,7 +61,7 @@ monetize <- function(output_attribute = NULL,
   using_impact_vector_from_user <- length(impact)>1
 
   is_lifetable <-
-    !is.null(output_attribute[["health_detailed"]][["input_args"]][["value"]]$deaths_male)
+    base::unique(output_attribute[["health_detailed"]][["input_table"]]$is_lifetable)
   is_not_lifetable <-
     !is_lifetable
 
@@ -176,7 +176,7 @@ monetize <- function(output_attribute = NULL,
 
     ##** IF LIFE TABLE method for the health assessment #######
 
-    # If bhd is null, it means that a life table (age-specific mortality) was entered.
+    # If life table.
     if(is_lifetable){
 
       health_outcome <-
