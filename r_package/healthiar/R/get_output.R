@@ -127,7 +127,10 @@ get_output <-
             # In attribute_health() only one impact colum
             # but get_output is also used by monetize()
             # this function also have other columns with impact discounted and monetized
+            # and even comparison scenarios
             # which also have to be included in this aggregation
+            # The use of matches() is important.
+            # It works as contains() but allowing regex | (OR)
             .cols = dplyr::matches("impact|absolute_risk_as_percent"),
             .fns = ~ sum(.x, na.rm = TRUE),
             .names = "{.col}"
