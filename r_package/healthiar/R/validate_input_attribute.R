@@ -235,6 +235,23 @@ validate_input_attribute <-
       }
     }
 
+    ### error_if_not_consecutive_sequence #####
+    error_if_not_consecutive_sequence <- function(var_name){
+      var_value <- base::as.numeric(input_args$value[[var_name]])
+
+      if(# Check that values are integers
+        base::any(var_value != base::floor(var_value)) &&
+        # Check difference between consecutive elements is exactly 1
+        base::all(base::diff(var_value))) {
+
+        base::stop(
+          base::paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements if 1."),
+          call. = FALSE
+        )
+      }
+    }
+
+
 
 
 
@@ -258,6 +275,13 @@ validate_input_attribute <-
       for (x in lifetable_var_names_with_same_length) {
         error_if_0(var_name = x)
       }
+
+      for (x in "age_group") {
+        error_if_not_consecutive_sequence(var_name = x)
+      }
+
+
+
 
     }
 
