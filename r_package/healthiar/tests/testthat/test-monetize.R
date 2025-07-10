@@ -190,15 +190,16 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
       cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
       rr_central = data_mort[2,"rr_central"],
       rr_lower = data_mort[2,"rr_lower"],
-      rr_upper =data_mort[2,"rr_upper"],
+      rr_upper = data_mort[2,"rr_upper"],
       rr_increment = 10,
       erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
+      age_group = c(data_lifetable[["male"]]$age,
+                    data_lifetable[["female"]]$age),
+      sex = base::rep(c("male", "female"), each = 100),
+      population = c(data_lifetable[["male"]]$population,
+                     data_lifetable[["female"]]$population),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
       year_of_analysis = 2019,
       info = data_mort$pollutant[2],
       min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2])
@@ -211,7 +212,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
         discount_rate = 0.01,
         valuation = 1
       )$monetization_main$monetized_impact_rounded,
-    expect = c(26493, 13877, 39006) # Result on 13 Dec 2024 ; no comparison study
+    expect = c(28810, 15084, 42437) # Result on 9 July 2025 ; no comparison study
   )
 })
 
@@ -478,15 +479,16 @@ testthat::test_that("warning if user pass discount_years with life table", {
       cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
       rr_central = data_mort[2,"rr_central"],
       rr_lower = data_mort[2,"rr_lower"],
-      rr_upper =data_mort[2,"rr_upper"],
+      rr_upper = data_mort[2,"rr_upper"],
       rr_increment = 10,
       erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
+      age_group = c(data_lifetable[["male"]]$age,
+                    data_lifetable[["female"]]$age),
+      sex = base::rep(c("male", "female"), each = 100),
+      population = c(data_lifetable[["male"]]$population,
+                     data_lifetable[["female"]]$population),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
       year_of_analysis = 2019,
       info = data_mort$pollutant[2],
       min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2])
