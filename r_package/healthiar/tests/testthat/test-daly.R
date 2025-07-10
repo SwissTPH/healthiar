@@ -26,24 +26,24 @@ testthat::test_that("results correct |pathway_daly|yll_from_lifetable_TRUE|outpu
   bestcost_pm_yll <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
-      approach_exposure = "single_year",
-      exp_central = 8.85,
-      prop_pop_exp = 1,
-      cutoff_central = 5,
-      rr_central =  1.118,
-      rr_lower = 1.06,
+      exp_central = 8.85, # Fake data just for testing purposes
+      prop_pop_exp = 1, # Fake data just for testing purposes
+      cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
+      rr_central = 1.118,
+      rr_lower = 1.060,
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      approach_exposure = "single_year",
+      approach_newborns = "without_newborns",
+      sex = base::rep(c("male", "female"), each = 100),
+      age_group = base::rep(0:99, times = 2),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      population = c(data_lifetable[["male"]]$population,
+                     data_lifetable[["female"]]$population),
       year_of_analysis = 2019,
-      min_age = 20,
-      info = "pm2.5_yll")
+      min_age = 20)
 
   testthat::expect_equal(
     object =
@@ -52,7 +52,7 @@ testthat::test_that("results correct |pathway_daly|yll_from_lifetable_TRUE|outpu
         output_attribute_yld = bestcost_pm_yld
         )$health_main$impact_rounded,
     expected =
-      c(32878, 17189, 49596) # Result from 2025-04-04; no comparison study
+      c(32413, 16944, 48915) # Result from 2025-04-04; no comparison study
   )
 })
 
@@ -81,24 +81,24 @@ testthat::test_that("results correct using 2 delta comparisons as inputs|pathway
   bestcost_pm_yll <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
-      approach_exposure = "single_year",
-      exp_central = 8.85,
-      prop_pop_exp = 1,
-      cutoff_central = 5,
-      rr_central =  1.118,
-      rr_lower = 1.06,
+      exp_central = 8.85, # Fake data just for testing purposes
+      prop_pop_exp = 1, # Fake data just for testing purposes
+      cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
+      rr_central = 1.118,
+      rr_lower = 1.060,
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      approach_exposure = "single_year",
+      approach_newborns = "without_newborns",
+      sex = base::rep(c("male", "female"), each = 100),
+      age_group = base::rep(0:99, times = 2),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      population = c(data_lifetable[["male"]]$population,
+                     data_lifetable[["female"]]$population),
       year_of_analysis = 2019,
-      min_age = 20,
-      info = "pm2.5_yll")
+      min_age = 20)
 
   ## Define scenarios
   scen_1_yll <-
@@ -133,7 +133,7 @@ testthat::test_that("results correct using 2 delta comparisons as inputs|pathway
             output_attribute_2 = scen_2_yld)
       )$health_main$impact_rounded,
     expected =
-      c(24299, 12714, 36613) # Result on 21 March 2025; no comparison study
+      c(23956, 12533, 36112) # Result on 7 July 2025; no comparison study
   )
 })
 
@@ -162,24 +162,24 @@ testthat::test_that("results correct using 2 pif comparisons as inputs |pathway_
   bestcost_pm_yll <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
-      approach_exposure = "single_year",
-      exp_central = 8.85,
-      prop_pop_exp = 1,
-      cutoff_central = 5,
-      rr_central =  1.118,
-      rr_lower = 1.06,
+      exp_central = 8.85, # Fake data just for testing purposes
+      prop_pop_exp = 1, # Fake data just for testing purposes
+      cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
+      rr_central = 1.118,
+      rr_lower = 1.060,
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = data[["pop"]]$number_of_deaths_male,
-      deaths_female = data[["pop"]]$number_of_deaths_female,
-      population_midyear_male = data_lifetable[["male"]]$population,
-      population_midyear_female = data_lifetable[["female"]]$population,
+      approach_exposure = "single_year",
+      approach_newborns = "without_newborns",
+      sex = base::rep(c("male", "female"), each = 100),
+      age_group = base::rep(0:99, times = 2),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      population = c(data_lifetable[["male"]]$population,
+                     data_lifetable[["female"]]$population),
       year_of_analysis = 2019,
-      min_age = 20,
-      info = "pm2.5_yll")
+      min_age = 20)
 
   ## Define scenarios
   scen_1_yll <-
@@ -214,7 +214,7 @@ testthat::test_that("results correct using 2 pif comparisons as inputs |pathway_
             output_attribute_2 = scen_2_yld)
         )$health_main$impact_rounded,
     expected =
-      c(24378, 12735, 36815) # Result on 21 March 2025; no comparison study
+      c(24032, 12554, 36308) # Result on 7 July 2025; no comparison study
   )
 
 })
@@ -252,31 +252,35 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
   scen_1_yll_geo <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
-      approach_exposure = "single_year",
-      exp_central = rep(c(8.5, 8), each = base::length(data[["pop"]]$number_of_deaths_male)),
-      prop_pop_exp = 1,
-      cutoff_central = 5,
-      rr_central =  1.118,
-      rr_lower = 1.06,
+      exp_central = rep(c(8.5, 8.0), each = 2 * 100) , # Fake data just for testing purposes
+      prop_pop_exp = 1, # Fake data just for testing purposes
+      cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
+      rr_central = 1.118,
+      rr_lower = 1.060,
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = base::rep(data[["pop"]]$number_of_deaths_male, times = 2),
-      deaths_female = base::rep(data[["pop"]]$number_of_deaths_female, times = 2),
-      population_midyear_male = base::rep(data_lifetable[["male"]]$population, times = 2),
-      population_midyear_female = base::rep(data_lifetable[["female"]]$population, times = 2),
+      approach_exposure = "single_year",
+      approach_newborns = "without_newborns",
+      sex = base::rep(c("male", "female"), each = 100, times = 2),
+      age_group = base::rep(0:99, times = 2*2),
+      bhd_central = base::rep(
+        c(data[["pop"]]$number_of_deaths_male,
+          data[["pop"]]$number_of_deaths_female),
+        times = 2),
+      population = base::rep(
+        c(data_lifetable[["male"]]$population,
+          data_lifetable[["female"]]$population),
+        times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      info = "pm2.5_yll",
-      geo_id_disaggregated = rep(c("a", "b"), each = base::length(data[["pop"]]$number_of_deaths_male)),
-      geo_id_aggregated = rep("ch", each = 2 * base::length(data[["pop"]]$number_of_deaths_male)))
+      geo_id_disaggregated = rep(c("a", "b"), each = 2* 100),
+      geo_id_aggregated = rep("ch", each = 2 * 2 * 100))
 
   scen_2_yll_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_yll_geo,
-      exp_central = rep(c(6, 6.5), each = base::length(data[["pop"]]$number_of_deaths_male)))
+      exp_central = rep(c(6, 6.5), each = 2 * 100))
 
   ## Delta comparison
   testthat::expect_equal(
@@ -294,7 +298,7 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
             output_attribute_2 = scen_2_yld_geo)
       )$health_main$impact_rounded,
     expected =
-      c(34123, 17849, 51437) # Result on 21 March 2025; no comparison study
+      c(33641, 17595, 50731) # Result on 7 July 2025; no comparison study
   )
 
 })
@@ -332,31 +336,35 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
   scen_1_yll_geo <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
-      approach_exposure = "single_year",
-      exp_central = rep(c(8.5, 8), each = base::length(data[["pop"]]$number_of_deaths_male)),
-      prop_pop_exp = 1,
-      cutoff_central = 5,
-      rr_central =  1.118,
-      rr_lower = 1.06,
+      exp_central = rep(c(8.5, 8.0), each = 2 * 100) , # Fake data just for testing purposes
+      prop_pop_exp = 1, # Fake data just for testing purposes
+      cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
+      rr_central = 1.118,
+      rr_lower = 1.060,
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      first_age_pop = 0,
-      last_age_pop = 99,
-      deaths_male = base::rep(data[["pop"]]$number_of_deaths_male, times = 2),
-      deaths_female = base::rep(data[["pop"]]$number_of_deaths_female, times = 2),
-      population_midyear_male = base::rep(data_lifetable[["male"]]$population, times = 2),
-      population_midyear_female = base::rep(data_lifetable[["female"]]$population, times = 2),
+      approach_exposure = "single_year",
+      approach_newborns = "without_newborns",
+      sex = base::rep(c("male", "female"), each = 100, times = 2),
+      age_group = base::rep(0:99, times = 2*2),
+      bhd_central = base::rep(
+        c(data[["pop"]]$number_of_deaths_male,
+          data[["pop"]]$number_of_deaths_female),
+        times = 2),
+      population = base::rep(
+        c(data_lifetable[["male"]]$population,
+          data_lifetable[["female"]]$population),
+        times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      info = "pm2.5_yll",
-      geo_id_disaggregated = rep(c("a", "b"), each = base::length(data[["pop"]]$number_of_deaths_male)),
-      geo_id_aggregated = rep("ch", each = 2 * base::length(data[["pop"]]$number_of_deaths_male)))
+      geo_id_disaggregated = rep(c("a", "b"), each = 2* 100),
+      geo_id_aggregated = rep("ch", each = 2 * 2 * 100))
 
   scen_2_yll_geo <-
     healthiar::attribute_mod(
       output_attribute_1 = scen_1_yll_geo,
-      exp_central = rep(c(6, 6.5), each = base::length(data[["pop"]]$number_of_deaths_male)))
+      exp_central = rep(c(6, 6.5), each = 100 * 2))
 
 
   ## PIF comparison
@@ -375,7 +383,7 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
             output_attribute_2 = scen_2_yld_geo)
         )$health_main$impact_rounded,
     expected =
-      c(34255, 17885, 51773) # Result on 21 March 2025; no comparison study
+      c(33769, 17630, 51058) # Result on 7 July 2025; no comparison study
   )
 
 })

@@ -5,23 +5,23 @@
 \title{Attributable premature deaths or YLL using a life table approach}
 \usage{
 attribute_lifetable(
+  age_group,
+  sex,
+  bhd_central,
+  bhd_lower = NULL,
+  bhd_upper = NULL,
+  population,
   health_outcome = NULL,
-  first_age_pop,
-  last_age_pop,
-  population_midyear_male,
-  population_midyear_female,
-  deaths_male = NULL,
-  deaths_female = NULL,
   min_age = NULL,
   max_age = NULL,
   approach_exposure = "single_year",
   approach_newborns = "without_newborns",
   year_of_analysis,
   time_horizon = NULL,
-  exp_central = 0,
+  exp_central = NULL,
   exp_lower = NULL,
   exp_upper = NULL,
-  cutoff_central = NULL,
+  cutoff_central = 0,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
   erf_eq_central = NULL,
@@ -40,13 +40,13 @@ attribute_lifetable(
 )
 }
 \arguments{
+\item{sex}{\code{Numeric vector} or \code{string vector} providing the \strong{sex} considered in the assessment.\emph{Optional argument.}}
+
+\item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{baseline health data} of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}}
+
+\item{population}{\code{Numeric value} or \code{numeric vector} specifying the total population (exposed + non-exposed), \strong{to calculate attributable impacts rate} per 100 000 population. See Details for more info. \emph{Optional argument.}}
+
 \item{health_outcome}{\code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).}
-
-\item{first_age_pop, last_age_pop}{\code{Numeric value} specifying the age of the youngest and oldest age group (age interval = 1 year) of the data, respectively.}
-
-\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations (≥ 1) per age (age interval = 1 year) for the year of analysis for females and males, respectively. See Details for more info.}
-
-\item{deaths_female, deaths_male}{\code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively. In each age group deaths(s) must be ≥ 1 to avoid problems in the calculation.}
 
 \item{min_age, max_age}{\code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.}
 
@@ -138,12 +138,10 @@ results <- attribute_lifetable(
   rr_central =  1.118,
   rr_increment = 10,
   erf_shape = "log_linear",
-  first_age_pop = 0,
-  last_age_pop = 99,
-  deaths_male = exdat_pop_1$number_of_deaths_male,
-  deaths_female = exdat_pop_1$number_of_deaths_female,
-  population_midyear_male = exdat_pop_male$population_2019,
-  population_midyear_female = exdat_pop_female$population_2019,
+  sex = rep(c("male", "female"), each = 100),
+  age_group = rep(0:99, times = 2),
+  bhd_central = c(exdat_pop_1$number_of_deaths_male, exdat_pop_1$number_of_deaths_female),
+  population = c(exdat_pop_male$population_2019, exdat_pop_female$population_2019),
   year_of_analysis = 2019,
   min_age = 20
 )
@@ -162,12 +160,10 @@ cutoff_central = 5,
 rr_central =  1.118,
 rr_increment = 10,
 erf_shape = "log_linear",
-first_age_pop = 0,
-last_age_pop = 99,
-deaths_male = exdat_pop_1$number_of_deaths_male,
-deaths_female = exdat_pop_1$number_of_deaths_female,
-population_midyear_male = exdat_pop_male$population_2019,
-population_midyear_female = exdat_pop_female$population_2019,
+sex = rep(c("male", "female"), each = 100),
+age_group = rep(0:99, times = 2),
+bhd_central = c(exdat_pop_1$number_of_deaths_male, exdat_pop_1$number_of_deaths_female),
+population = c(exdat_pop_male$population_2019, exdat_pop_female$population_2019),
 year_of_analysis = 2019,
 min_age = 20
 )

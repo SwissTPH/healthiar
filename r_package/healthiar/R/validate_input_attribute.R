@@ -67,8 +67,7 @@ validate_input_attribute <-
     categorical_args <- names(options_of_categorical_args)
 
     lifetable_var_names_with_same_length <-
-      c("deaths_male", "deaths_female",
-        "population_midyear_male", "population_midyear_female")
+      c("bhd_central", "bhd_lower", "bhd_upper", "population", "age_range", "sex")
 
     available_var_names <-
       names(available_input_args)
@@ -225,9 +224,38 @@ validate_input_attribute <-
     }
 
 
+    ### error_if_0 #####
+    error_if_0 <- function(var_name){
+      var_value <- input_args$value[[var_name]]
+      if(base::any(var_value < 1)) {
+        base::stop(
+          base::paste0("All values of ", var_name , " must be 1 or higher."),
+          call. = FALSE
+        )
+      }
+    }
+
+    ### error_if_not_consecutive_sequence #####
+    error_if_not_consecutive_sequence <- function(var_name){
+      var_value <- base::as.numeric(input_args$value[[var_name]])
+
+      if(# Check that values are integers
+        base::any(var_value != base::floor(var_value)) &&
+        # Check difference between consecutive elements is exactly 1
+        base::all(base::diff(var_value))) {
+
+        base::stop(
+          base::paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements if 1."),
+          call. = FALSE
+        )
+      }
+    }
 
 
-    if(all(lifetable_var_names_with_same_length %in% available_var_names)){
+
+
+
+    if(is_lifetable){
 
       # --> error if length of life table variables is different
       combi_vars <-
@@ -241,31 +269,21 @@ validate_input_attribute <-
                                   combi_vars$var_2[i])
       }
 
+
+
+
+      for (x in lifetable_var_names_with_same_length) {
+        error_if_0(var_name = x)
+      }
+
+      for (x in "age_group") {
+        error_if_not_consecutive_sequence(var_name = x)
+      }
+
+
+
+
     }
-
-    ### error_if_incompatible_length_of_age_range #####
-
-    error_if_incompatible_length_of_age_range <-
-      function(age_dependent_var){
-
-        # Get length of age range
-        length_age_range <- base::length(input_args_value $first_age_pop : input_args_value $last_age_pop)
-
-        # Get of the unique vector of geo_id
-        # (it can be duplicated in case of e.g. exposure distribution or life table)
-        length_geo_id_disaggregated <- base::length(base::unique(input_args_value $geo_id_disaggregated))
-
-        # Get length of age-depending variable
-        length_age_dependent_var <-  base::length(input_args_value [[age_dependent_var]])
-
-      if( !base::identical(length_age_range * length_geo_id_disaggregated,
-                           length_age_dependent_var)){
-
-        # Create error message
-        stop("The length of age range (sequence of first_age_pop and last_age_pop) must be compatible with the age-dependent variables.",
-             call. = FALSE)
-      }
-      }
 
 
 
@@ -300,27 +318,7 @@ validate_input_attribute <-
 
 
 
-    ### error_if_0 #####
-    error_if_0 <- function(var_name){
-      if(
-        base::any(input_args_value$deaths_male == 0) |
-        base::any(input_args_value$deaths_female == 0) |
-        base::any(input_args_value$population_midyear_male == 0) |
-        base::any(input_args_value$population_midyear_female == 0)
-      ) {
-        base::stop(
-          base::paste0(var_name , " must contain ≥ 1 death(s) per age group"),
-          call. = FALSE
-          )
-        }
-    }
 
-    for (x in numeric_var_names[
-      base::grepl("^deaths_", numeric_var_names) |
-      base::grepl("^population_", numeric_var_names)
-      ]) {
-      error_if_0(x)
-    }
 
     ### error_if_lower_than_0 #####
 

@@ -70,9 +70,8 @@ daly <-
 
     # Store results_raw of yll and yld
     # Shorter and handy to code
-    results_raw_yll <- output_attribute_yll[["health_detailed"]][["impact_agg_sex"]] |>
-      dplyr::filter(sex=="total")
-    results_raw_yld <- output_attribute_yld[["health_detailed"]][["impact_agg_sex"]]
+    results_raw_yll <- output_attribute_yll[["health_detailed"]][["impact_agg_age"]]
+    results_raw_yld <- output_attribute_yld[["health_detailed"]][["impact_agg_age"]]
 
     # Capture all column names
     # They should be the same for yll and yld but just in case
@@ -80,33 +79,31 @@ daly <-
       unique(c(names(results_raw_yll), names(results_raw_yld)))
 
     # Identify the columns names using keywords
-    common_columns <-
-      column_names_results_raw[grepl("exp|exposure|cutoff|geo|approach_risk|sex",
-                                     #TODO: age_group is to be added here as soon as it is an output in lifetable approach
-                                    column_names_results_raw)]
+    common_cols <-
+      column_names_results_raw[grepl("exp|exposure|cutoff|geo|approach_risk|sex|age_group|bhd_ci",
+                                     column_names_results_raw)]
     # Remove exceptions (columns with any of the keywords that should not be selected)
-    common_columns <- common_columns[!grepl("approach_exposure|rr_at_exp", common_columns)]
-    common_columns_for_join <- c(common_columns, "erf_ci")
+    common_cols <- common_cols[!grepl("approach_exposure|rr_at_exp", common_cols)]
+    cols_for_join <- c(common_cols, "erf_ci")
 
 
-    common_columns_identical <-
+    identical_cols <-
       healthiar:::check_if_args_identical(
         args_a = input_args$value$output_attribute_yld,
         args_b = input_args$value$output_attribute_yld,
-        names_to_check = common_columns)
-
-
-    if(!all(common_columns_identical))
-    {stop("The arguments ",
-          paste(names(common_columns_identical)[common_columns_identical]
-                , collapse = ", "),
-          " must be identical in both scenarios")}
-
-
+        names_to_check = common_cols)
 
     # Remove those containing the word impact
     column_names_results_raw_without_impact <-
       column_names_results_raw[!grepl("impact|lifeyears|lifetable", column_names_results_raw)]
+
+
+    if(!all(identical_cols))
+    {stop("The arguments ",
+          paste(names(identical_cols)[identical_cols]
+                , collapse = ", "),
+          " must be identical in both scenarios")}
+
 
 
     # Obtain the new results_raw for DALY
@@ -118,7 +115,7 @@ daly <-
       dplyr::full_join(
         results_raw_yll,
         results_raw_yld,
-        by = common_columns_for_join,
+        by = cols_for_join,
         suffix = c("_yll", "_yld")) |>
       dplyr::mutate(
         # Add metric
