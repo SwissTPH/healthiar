@@ -269,33 +269,33 @@ get_output <-
       }
     }
 
-    # Keep only exp_ci = central and bhd_ci = central in main output ###########
-    output[["health_main"]] <-
-      output_last |>
-        #grepl instead of %in% because it needs
+
+    # Keep only the ci central in main output ###########
+
+    # Define all the ci columns have that have to be filtered to keep only central
+    ci_cols <- c("exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
+
+    # Identify which of the ci_cols are present in the assessment
+    available_ci_cols <- base::intersect(
+      ci_cols,
+      base::names(output[["health_main"]])
+    )
+
+    # Store the last output in health main before starting the loop
+    output[["health_main"]] <- output_last
+
+
+    # Loop by the available_ci_cols to filter them keeping only central
+    for (col in available_ci_cols) {
+
+      output[["health_main"]] <-
+        output[["health_main"]] |>
+        # grepl instead of %in% because it needs
         # to be flexible to also acccept the central_*id_ass* in the
-        #summarize_uncertainty
-      dplyr::filter(base::grepl("central", exp_ci))
+        # summarize_uncertainty
+        dplyr::filter(base::grepl("central", output[["health_main"]][[col]]))
 
-    if("bhd_ci" %in% names(output[["health_main"]])) {
-
-      output[["health_main"]] <- output[["health_main"]] |>
-        dplyr::filter(base::grepl("central", bhd_ci))}
-
-    if("cutoff_ci" %in% names(output[["health_main"]])) {
-
-      output[["health_main"]] <- output[["health_main"]] |>
-        dplyr::filter(base::grepl("central", cutoff_ci))}
-
-    if(any(grepl("dw_", names(output[["health_main"]])))) {
-
-      output[["health_main"]] <- output[["health_main"]] |>
-        dplyr::filter(base::grepl("central", dw_ci))}
-
-    if("duration_ci" %in% names(output[["health_main"]])) {
-
-      output[["health_main"]] <- output[["health_main"]] |>
-        dplyr::filter(base::grepl("central", duration_ci))}
+    }
 
     # Order columns ############################################################
     # putting first (on the left) those that determine different results across rows
