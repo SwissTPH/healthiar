@@ -60,10 +60,16 @@ monetize <- function(output_attribute = NULL,
 
   using_impact_vector_from_user <- length(impact)>1
 
-  is_lifetable <-
-    base::unique(output_attribute[["health_detailed"]][["input_table"]]$is_lifetable)
-  is_not_lifetable <-
-    !is_lifetable
+  # is_lifetable only can exist if output_attribute is provided
+  # and then it has to be checked of is_lifetable is TRUE or FALSE
+  if(! base::is.null(output_attribute)){
+    is_lifetable <-
+      base::unique(output_attribute[["health_detailed"]][["input_table"]]$is_lifetable)
+    # Witout output_attribute, no life table
+  } else { is_lifetable <- FALSE}
+
+  is_not_lifetable <- ! is_lifetable
+
 
 
   # If a vector is entered in impact
