@@ -650,14 +650,14 @@ results_pm_yll <- attribute_lifetable(
 ```
 
 ### Main results
-Total YLL impact attributable to exposure
+Total YLL impact (for females) attributable to exposure
 ```{r}
 results_pm_yll$health_main$impact
 ```
 
 ### Detailed results
 
-Detailed total YLL results per year, per age (per sex also available)
+Detailed total YLL results per year, per age for females (males also available)
 
 TODO: note that even thought the column name says `population_...` these are actually the YLL... column names to be adjusted
 ```{r eval=FALSE}
@@ -665,10 +665,10 @@ results_pm_yll$health_detailed$results_raw$yll_nest$total_a_central_central_cent
 ```
 
 ```{r, echo=FALSE}
-results_pm_yll$health_detailed$results_raw$yll_nest$total_a_central_central_central |> 
-  select(age, population_2019, population_2020, population_2021) |> 
-  slice( ( nrow(results_pm_yll$health_detailed$results_raw$yll_nest$total_a_central_central_central)-8 ) : 
-           nrow(results_pm_yll$health_detailed$results_raw$yll_nest$total_a_central_central_central)) |> 
+results_pm_yll$health_detailed$results_raw$yll_nest$female_a_central_central_central_central |> 
+  select(age_start, population_2019, population_2020, population_2021) |> 
+  slice( ( nrow(results_pm_yll$health_detailed$results_raw$yll_nest$female_a_central_central_central_central)-8 ) : 
+           nrow(results_pm_yll$health_detailed$results_raw$yll_nest$female_a_central_central_central_central)) |> 
   knitr::kable()
 ```
 
@@ -678,7 +678,7 @@ Other relevant detailed results include
 
 - `results_pm_yll[["health_detailed"]][["results_raw"]][["pop_impacted_scenario_nest"]]` population over time in impact scenario (with exposure)
 
-- `results_pm_yll[["health_detailed"]][["results_raw"]][["premature_deaths_nest"]][["total_a_central_central_central"]] |> select(age, age_end, deaths_2019)` pre-mature deaths in the year of exposure (here: 2019) attributable to exposure
+- `results_pm_yll[["health_detailed"]][["results_raw"]][["premature_deaths_nest"]][["female_a_central_central_central_central"]] |> select(age_start, age_end, deaths_2019)` pre-mature deaths (females) in the year of exposure (here: 2019) attributable to exposure
 
 Note: you can also access these data frames using the `$` operator
 
@@ -688,7 +688,7 @@ See example above "Example: `attribute_lifetable()` for YLL" for some additional
 
 ### Function call
 
-```{r}
+```{r eval=FALSE, include=FALSE, echo=TRUE}
 results_pm_deaths <- attribute_lifetable(
   health_outcome = "deaths",
   approach_exposure = "single_year",
@@ -711,23 +711,23 @@ results_pm_deaths <- attribute_lifetable(
 
 ### Main results
 Total pre-mature deaths attributable to exposure
-```{r}
+```{r eval=FALSE, include=FALSE, echo=TRUE}
 results_pm_deaths$health_main$impact
 ```
 
 ### Detailed results
 
-```{r eval=FALSE}
+```{r eval=FALSE, include=FALSE, echo=TRUE}
 results_pm_deaths$health_detailed$results_raw$premature_deaths_nest$total_a_central_central_central
 ```
 
-```{r, echo=FALSE}
+```{r eval=FALSE, include=FALSE, echo=TRUE}
 results_pm_deaths$health_detailed$results_raw$premature_deaths_nest$total_a_central_central_central |> 
   slice( ( nrow(results_pm_deaths$health_detailed$results_raw$premature_deaths_nest$total_a_central_central_central)-8 ) : 
            nrow(results_pm_deaths$health_detailed$results_raw$premature_deaths_nest$total_a_central_central_central)) |> 
   knitr::kable()
 ```
-```{r, echo=FALSE, eval=TRUE, include=FALSE}
+```{r, echo=FALSE, eval=FALSE, include=FALSE}
 rm(results_pm_deaths)
 ```
 ## Example: `attribute_health()` for YLD
