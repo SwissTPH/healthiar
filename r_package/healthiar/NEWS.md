@@ -1,8 +1,37 @@
 Main changes but not complete list. For this propose see Github.
+# healthiar 0.0.3
+
+* WP Meeting 14 July 2025
+
+## New Features
+- No lists (vectors) as input for multiple geo units
+- Arguments age_group & sex in attribute_health() and attribute_lifetable()
+- Detailed results of simulations by geo unit in summarize_uncertainty()
+- New structure of input_args
+
+ 
+## Bug Fixes 
+
+- Fixed bug in socialize()
+- Fixed bug attribute_lifetable()
+
+
+## Improvements
+- Higher performance of attribute_()
+- Data validation in monetize()
+- Data validation in summarize_uncertainty()
+- More validation in attribute_...()
+
+
+## Others
+- Rename: impact_raw is now results_raw
+- Rename: listed_output_attribute is now output_attribute
+
+
 
 # healthiar 0.0.2
 
-* WP Meeting 02.06.2025
+* WP Meeting 02 June 2025
 
 ## New Features
 - New function standardize()
@@ -31,7 +60,7 @@ Main changes but not complete list. For this propose see Github.
 
 # healthiar 0.0.1
 
-* WP Meeting 05.05.2025
+* WP Meeting 05 May 2025
 
 ## New Features
 - Version number was added
