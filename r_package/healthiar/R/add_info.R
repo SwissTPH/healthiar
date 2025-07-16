@@ -24,24 +24,18 @@ add_info <- function(df, info){
     output <-
       dplyr::mutate(df, info = NULL)
 
-  } else if(is.vector(info) & length(info) == 1) {
+  } else if(is.vector(info)) {
     output <-
       dplyr::mutate(df, info = info)
 
-    # nrow(vector) = NULL
-    # Use sum() to avoid NULL in case of vectors sum(NULL)=0
-  } else if(is.data.frame(info) & sum(nrow(info)) == 1){
+  } else if(is.data.frame(info)){
 
     output <-
       setNames(info, paste0("info_", names(info)))
 
     output <- dplyr::bind_cols(df, output)
 
-  }else{
-
-    warning("info must be a vector of length 1 or a data frame with one row")
   }
-
 
   return(output)
 
