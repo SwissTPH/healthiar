@@ -140,7 +140,7 @@ compare <-
    # Check that the two scenarios used the same arguments (calculation pathways)
 
     if(!base::identical(passed_arguments_1, passed_arguments_2)){
-      stop("The two scenarios have to use the same arguments",
+      stop("The two scenarios must use the same arguments.",
            call. = FALSE)
     }
 
@@ -157,7 +157,7 @@ compare <-
     if(base::identical(common_arguments_1, common_arguments_2)){
       common_arguments <- common_arguments_1
     }else{
-      stop("The two scenarios have to use the same common arguments",
+      stop("The two scenarios must use the same common arguments.",
            call. = FALSE)
     }
 
@@ -172,11 +172,12 @@ compare <-
     # Check if the common arguments in both scenarios are identical
 
     if(!all(common_arguments_identical))
-    {stop(paste0("The arguments ",
-                 paste(names(common_arguments_identical)[!common_arguments_identical],
-                       collapse = ", "),
-                 " must be identical in both scenarios"),
-          call. = FALSE)}
+    {stop(
+      base::paste0(
+        base::paste(names(common_arguments_identical)[!common_arguments_identical],
+                    collapse = ", "),
+        " must be identical in both scenarios."),
+      call. = FALSE)}
 
     # Check that bhd is the same in both scenarios for the PIF approach (only one place in the equation)
 
