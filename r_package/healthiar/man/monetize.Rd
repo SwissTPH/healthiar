@@ -11,7 +11,8 @@ monetize(
   discount_rate = NULL,
   discount_shape = "exponential",
   discount_years = 0,
-  inflation = NULL
+  inflation = NULL,
+  info = NULL
 )
 }
 \arguments{
