@@ -27,9 +27,7 @@ prepare_lifetable <-
            bhd,
            fraction_lived = 0.5) {
 
-    # TODO: Error if different length
-    # TODO: Give structure to code
-
+    # DATA VALIDATION ######
 
     input_args_value <- base::list(
       age_group = age_group,
@@ -38,7 +36,7 @@ prepare_lifetable <-
       fraction_lived = fraction_lived)
 
 
-    # Error if different length
+    ## Error if different length
     error_if_different_length  <- function(var_names){
 
       # Store variables in a list
@@ -63,7 +61,7 @@ prepare_lifetable <-
 
     error_if_different_length(c("age_group", "population", "bhd"))
 
-    # Error if_lower_than_min
+    ## Error if_lower_than_min
     error_if_lower_than_min <- function(var_name, min){
       # Store var_value
       var_value <- input_args_value[[var_name]]
@@ -83,7 +81,7 @@ prepare_lifetable <-
     error_if_lower_than_min("population", min = 1)
     error_if_lower_than_min("bhd", min = 1)
 
-    # Error if_lower_than_min
+    ## Error if_higher_than_max
     error_if_higher_than_max <- function(var_name, max){
       # Store var_value
       var_value <- input_args_value[[var_name]]
@@ -98,6 +96,8 @@ prepare_lifetable <-
 
     error_if_higher_than_max("fraction_lived", max = 1)
 
+
+    # STORE AND CALCULATE RELEVANT DATA FOR N-YEARS LEVEL ####
 
     # Get the interval_length base on the difference between values in age_group
     # It has to be constant across age_group values
@@ -135,6 +135,8 @@ prepare_lifetable <-
         age_interval_index = base::rep(1:age_interval_length, times = base::length(age_group)),
         #age_interval_length = age_interval_length
       )
+
+    # CONVERT TO 1-YEAR LEVEL ####
 
     # Join data to duplicate values in the intermediate ages of the interval
     data <-
@@ -228,21 +230,14 @@ prepare_lifetable <-
       dplyr::ungroup()
 
 
-      output <- calculation_fixed |>
-        dplyr::mutate(
-          # Copy columns to indicate which ones are to be used in attribute_... functions
-          population_for_attribute = population_1_year,
-          bhd_for_attribute = bhd_1_year
-        )
+    # Copy columns to indicate which ones are to be used in attribute_... functions
+    output <- calculation_fixed |>
+      dplyr::mutate(
 
-
-
-
-
-
+        population_for_attribute = population_1_year,
+        bhd_for_attribute = bhd_1_year
+      )
 
     return(output)
-
-
 
   }
