@@ -32,11 +32,11 @@ prepare_lifetable <-
       fraction_lived = fraction_lived)
 
 
+    # Error if different length
     error_if_different_length  <- function(var_names){
 
       # Store variables in a list
       vars_with_same_length <- input_args_value[var_names]
-
 
       # Get all lengths of at once
       lengths <- purrr::map_int(vars_with_same_length, length)
@@ -55,6 +55,26 @@ prepare_lifetable <-
     }
 
     error_if_different_length(c("age_group", "population", "bhd"))
+
+    # Error if_lower_than_min
+    error_if_lower_than_min <- function(var_name, min){
+      # Store var_value
+      var_value <- input_args_value[[var_name]]
+
+      if(base::any(var_value < min)){
+        base::stop(
+          base::paste0("The values of ", var_name, " cannot be lower than ", min, "."),
+          call. = FALSE
+        )
+      }
+
+    }
+    # age_group 0 exists
+    error_if_lower_than_min("age_group", 0)
+    # population and bhd cannot be 0 (or decimals close to)
+    error_if_lower_than_min("population", 1)
+    error_if_lower_than_min("bhd", 1)
+
 
     # Get the interval_length base on the difference between values in age_group
     # It has to be constant across age_group values
