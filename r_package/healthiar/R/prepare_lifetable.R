@@ -22,8 +22,39 @@ prepare_lifetable <-
            fraction_lived = 0.5) {
 
     # TODO: Error if different length
-    # TODO: Argument and pathway for alternative approaches
+    # TODO: Give structure to code
 
+
+    input_args_value <- base::list(
+      age_group = age_group,
+      population = population,
+      bhd = bhd,
+      fraction_lived = fraction_lived)
+
+
+    error_if_different_length  <- function(var_names){
+
+      # Store variables in a list
+      vars_with_same_length <- input_args_value[var_names]
+
+
+      # Get all lengths of at once
+      lengths <- purrr::map_int(vars_with_same_length, length)
+
+      # If not all lenghts are the same
+      if (! base::length( base::unique(lengths) ) == 1) {
+
+        #Error
+        base::stop(
+          base::paste0("The following variables must all have the same length: ",
+                       base::paste0(base::names(vars_with_same_length),
+                                    collapse = ", ")),
+          call. = FALSE
+        )
+      }
+    }
+
+    error_if_different_length(c("age_group", "population", "bhd"))
 
     # Get the interval_length base on the difference between values in age_group
     # It has to be constant across age_group values
