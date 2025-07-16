@@ -1171,7 +1171,8 @@ testthat::test_that("error if not the same arguments", {
       healthiar::compare(
         output_attribute_1 = output_attribute_1,
         output_attribute_2 = output_attribute_2,
-        approach_comparison = "delta"))
+        approach_comparison = "delta"),
+    regexp = "The two scenarios must use the same arguments.")
 })
 
 testthat::test_that("error if common arguments with different value", {
@@ -1203,7 +1204,8 @@ testthat::test_that("error if common arguments with different value", {
       healthiar::compare(
         output_attribute_1 = output_attribute_1,
         output_attribute_2 = output_attribute_2,
-        approach_comparison = "delta"))
+        approach_comparison = "delta"),
+    regexp = "rr_central must be identical in both scenarios.")
 })
 
 
@@ -1227,7 +1229,7 @@ testthat::test_that("error pif and different bhd", {
       bhd_central = 1000,
       approach_risk = "relative_risk",
       erf_shape = "log_linear",
-      rr_central = 1.15, rr_lower = 1.060, rr_upper = 1.179,
+      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
       rr_increment = 10,
       info = "PM2.5_mortality_2020")
 
@@ -1236,7 +1238,8 @@ testthat::test_that("error pif and different bhd", {
       healthiar::compare(
         output_attribute_1 = output_attribute_1,
         output_attribute_2 = output_attribute_2,
-        approach_comparison = "pif"))
+        approach_comparison = "pif"),
+    regexp = "For the PIF approach, bhd must be identical in both scenarios.")
 })
 
 testthat::test_that("error pif and absolute risk", {
@@ -1263,7 +1266,8 @@ testthat::test_that("error pif and absolute risk", {
       healthiar::compare(
         output_attribute_1 = scen_1_singlebhd_ar,
         output_attribute_2 = scen_2_singlebhd_ar,
-        approach_comparison = "pif"))
+        approach_comparison = "pif"),
+    regexp = "For the PIF approach, the absolute risk approach cannot be used.")
 })
 
 

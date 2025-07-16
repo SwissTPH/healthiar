@@ -190,7 +190,7 @@ compare <-
     # Check if absolute risk with pif (not possible)
 
     if(approach_comparison == "pif" &&
-       unique(input_table_1$approach_risk) == "absolute_risk"){
+       base::unique(input_table_1$approach_risk) == "absolute_risk"){
       stop("For the PIF approach, the absolute risk approach cannot be used.",
            call. = FALSE)
     }
@@ -216,10 +216,10 @@ compare <-
           suffix = c("_1", "_2")) |>
         # Calculate the delta (difference) between scenario 1 and 2
         dplyr::mutate(impact = impact_1 - impact_2,
-                      impact_rounded = round(impact, 0))
+                      impact_rounded = base::round(impact, 0))
 
-      input_table <- list(input_table_1 = input_table_1,
-                          input_table_2 = input_table_2)
+      input_table <- base::list(input_table_1 = input_table_1,
+                                input_table_2 = input_table_2)
 
 
       # PIF approach ########################
@@ -277,9 +277,9 @@ compare <-
 
     output <-
       healthiar:::get_output(
-        input_args = list(approach_comparison = approach_comparison,
-                          input_args_1 = input_args_1,
-                          input_args_2 = input_args_2),
+        input_args = base::list(approach_comparison = approach_comparison,
+                                input_args_1 = input_args_1,
+                                input_args_2 = input_args_2),
         input_table = input_table,
         results_raw = results_raw)
 
