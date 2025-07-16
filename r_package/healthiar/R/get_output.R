@@ -60,6 +60,13 @@ get_output <-
     group_columns_for_multiexposure_aggregation <-
       c("exposure_name", "geo_id_aggregated", "exp_ci", "bhd_ci", "erf_ci","dw_ci", "cutoff_ci", "duration_ci")
 
+    # Deactivated code
+    # It gives errors but something similar could be implemented to get the column names in a more efficient way
+    # group_columns_for_absolute_risk_aggregation <-  results_raw |>
+    #   dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) == 1)) |>
+    #   dplyr::select(dplyr::where(~ .x)) |>
+    #   base::names()
+
     group_columns_for_absolute_risk_aggregation <-
       column_names[!column_names %in%
                      c(c("geo_id_disaggregated", "age_group", "sex",
@@ -72,8 +79,6 @@ get_output <-
                          paste0("absolute_risk_as_percent", c("", "_1", "_2")),
                          paste0("impact", c("", "_1", "_2")),
                          paste0("impact_per_100k_inhab", c("", "_1", "_2"))))]
-
-
 
     impact_columns <-paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
                               "monetized_impact", "monetized_impact_rounded"),
@@ -140,7 +145,7 @@ get_output <-
         # Add ..._rounded columns
         dplyr::mutate(
           dplyr::across(
-            .cols = dplyr::matches("impact"),
+            .cols = "impact",
             .fns = ~ round(.x),
             .names = "{.col}_rounded"
           )
@@ -183,7 +188,7 @@ get_output <-
 
     if(unique(results_raw$approach_risk) == "absolute_risk") {
 
-      output[["health_detailed"]][["impact_agg_exp_cat"]] <-
+    output[["health_detailed"]][["results_agg_exp_cat"]] <-
         output_last |>
         # Remove all impact rounded because
         # we have to round final results
@@ -199,39 +204,39 @@ get_output <-
           ~ paste(., collapse = ", "))) |>
         dplyr::ungroup()
 
-      output[["health_detailed"]][["impact_agg_exp_cat"]] <-
+      output[["health_detailed"]][["results_agg_exp_cat"]] <-
         sum_round_and_relative_impact(
-          df = output[["health_detailed"]][["impact_agg_exp_cat"]],
+          df = output[["health_detailed"]][["results_agg_exp_cat"]],
           grouping_cols = group_columns_for_absolute_risk_aggregation,
           col_total = "ar_exp_cat_aggregation")
 
-      output_last <- output[["health_detailed"]][["impact_agg_exp_cat"]]
+      output_last <- output[["health_detailed"]][["results_agg_exp_cat"]]
     }
 
-    output[["health_detailed"]][["impact_disaggregated"]]  <-
+    output[["health_detailed"]][["results_disaggregated"]]  <-
       output_last
 
     # sex #####
     # Aggregate results by sex
 
-    output[["health_detailed"]][["impact_agg_sex"]] <-
+    output[["health_detailed"]][["results_agg_sex"]] <-
       sum_round_and_relative_impact(
         df = output_last,
         grouping_cols = group_columns_for_sex_aggregation,
         col_total = "sex")
 
 
-    output_last <- output[["health_detailed"]][["impact_agg_sex"]]
+    output_last <- output[["health_detailed"]][["results_agg_sex"]]
 
     # age_group #####
     # Aggregate results by age_group
-    output[["health_detailed"]][["impact_agg_age"]] <-
+    output[["health_detailed"]][["results_agg_age"]] <-
       sum_round_and_relative_impact(
         df = output_last,
         grouping_cols = group_columns_for_age_aggregation,
         col_total = "age")
 
-    output_last <- output[["health_detailed"]][["impact_agg_age"]]
+    output_last <- output[["health_detailed"]][["results_agg_age"]]
 
 
     # geo_id_aggregated #####
@@ -240,13 +245,13 @@ get_output <-
 
     if("geo_id_aggregated" %in% names(output_last)){
 
-      output[["health_detailed"]][["impact_agg_geo"]] <-
+      output[["health_detailed"]][["results_agg_geo"]] <-
         sum_round_and_relative_impact(
           df = output_last,
           grouping_cols = group_columns_for_geo_aggregation,
           col_total = "geo_aggregation")
 
-      output_last <- output[["health_detailed"]][["impact_agg_geo"]]
+      output_last <- output[["health_detailed"]][["results_agg_geo"]]
 
     }
 
@@ -258,19 +263,23 @@ get_output <-
         output_last <- output_last |>
           dplyr::mutate(exposure_name = base::paste(base::unique(exposure_name), collapse = ", "))
 
-        output[["health_detailed"]][["impact_agg_multiexposure"]] <-
+        output[["health_detailed"]][["results_agg_multiexposure"]] <-
           sum_round_and_relative_impact(
             df = output_last,
             grouping_cols = group_columns_for_multiexposure_aggregation,
             col_total = "multiexposure_aggregation")
 
-      output_last <- output[["health_detailed"]][["impact_agg_multiexposure"]]
+      output_last <- output[["health_detailed"]][["results_agg_multiexposure"]]
 
       }
     }
 
 
     # Keep only the ci central in main output ###########
+
+    # Store the last output in health main before starting the loop
+    output[["health_main"]] <- output_last
+
 
     # Define all the ci columns have that have to be filtered to keep only central
     ci_cols <- c("exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
@@ -281,8 +290,6 @@ get_output <-
       base::names(output[["health_main"]])
     )
 
-    # Store the last output in health main before starting the loop
-    output[["health_main"]] <- output_last
 
 
     # Loop by the available_ci_cols to filter them keeping only central
@@ -291,7 +298,7 @@ get_output <-
       output[["health_main"]] <-
         output[["health_main"]] |>
         # grepl instead of %in% because it needs
-        # to be flexible to also acccept the central_*id_ass* in the
+        # to be flexible to also accept the central_*id_ass* in the
         # summarize_uncertainty
         dplyr::filter(base::grepl("central", output[["health_main"]][[col]]))
 

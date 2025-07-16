@@ -139,7 +139,7 @@ socialize <- function(output_attribute = NULL,
     ## Compile input data
     ## without social component
     input_data <-
-      output_attribute$health_detailed$impact_agg_sex |>
+      output_attribute$health_detailed$results_agg_sex |>
       dplyr::select(
         dplyr::any_of(c("geo_id_disaggregated", "age_group", "population",
                         "impact", "exp", "bhd", "pop_fraction")))

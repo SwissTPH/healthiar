@@ -130,7 +130,7 @@ summarize_uncertainty <- function(
 
   ## Error if exposure distribution and uncertainty in exp_...####
   if(# If exposure distribution
-    base::unique(output_attribute$health_detailed$impact_disaggregated$exposure_type) == "exposure_distribution" &&
+    base::unique(output_attribute$health_detailed$results_disaggregated$exposure_type) == "exposure_distribution" &&
     # If uncertainty in exposure
     (!base::is.null(input_args$value$exp_lower) |
       !base::is.null(input_args$value$exp_upper))){
@@ -228,7 +228,7 @@ summarize_uncertainty <- function(
   # If exposure dimension is implemented:
   # Get the dimension of the exposure
   # (i.e. if pop-weighted mean => 1, if exposure distribution => >1 )
-  # n_exp <- base::max(output_attribute$health_detailed$impact_disaggregated$exposure_dimension)
+  # n_exp <- base::max(output_attribute$health_detailed$results_disaggregated$exposure_dimension)
 
 
   ## Boolean variables ####
@@ -581,9 +581,9 @@ summarize_uncertainty <- function(
 
 
   # Extract impact
-  impact_disaggregated <- purrr::map(
+  results_disaggregated <- purrr::map(
     output_sim,
-    \(x) x$health_detailed$impact_disaggregated$impact
+    \(x) x$health_detailed$results_disaggregated$impact
   )
 
   # Extract geo_id_aggregated already with the right format to be added below
@@ -592,7 +592,7 @@ summarize_uncertainty <- function(
     geo_id_aggregated <- NULL
   } else {
     geo_id_aggregated <- purrr::map(output_sim,
-    \(x) x$health_detailed$impact_disaggregated$geo_id_aggregated
+    \(x) x$health_detailed$results_disaggregated$geo_id_aggregated
   )}
 
 
@@ -603,7 +603,7 @@ summarize_uncertainty <- function(
                   geo_id_aggregated = geo_id_aggregated,
                   input = input_args_for_attribute,
                   output = output_sim,
-                  impact = impact_disaggregated)
+                  impact = results_disaggregated)
 
   # Obtain results of simulations organized by geo unit
   attribute_by_geo_id_disaggregated <-
@@ -749,7 +749,7 @@ summarize_uncertainty <- function(
           purrr::pmap(base::list(output_1, output_2, input_args$approach_comparison),
                       healthiar::compare),
         impact = purrr::map(output_compare,
-                            \(x) x$health_detailed$impact_disaggregated$impact)
+                            \(x) x$health_detailed$results_disaggregated$impact)
         )
 
     # Obtain results of simulations organized by geo unit
