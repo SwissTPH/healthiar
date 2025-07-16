@@ -39,6 +39,40 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
   )
 })
 
+testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "single_year",
+        exp_central = 4, # If exposure lower than cutoff, impact should be 0
+        cutoff_central = 5, # WHO AQG 2021
+        rr_central = data_mort[2,"rr_central"],
+        rr_lower = data_mort[2,"rr_lower"],
+        rr_upper = data_mort[2,"rr_upper"],
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = c(data_lifetable[["male"]]$age,
+                      data_lifetable[["female"]]$age),
+        sex = base::rep(c("male", "female"), each = 100),
+        population = c(data_lifetable[["male"]]$population,
+                       data_lifetable[["female"]]$population),
+        bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                        data[["pop"]]$number_of_deaths_female),
+        year_of_analysis = 2019,
+        info = data_mort$pollutant[2],
+        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
+      )$health_main$impact,
+    expected =
+      c(0, 0, 0) # Result on 09 July 2025
+  )
+})
+
 
 testthat::test_that("results the same |fake_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
