@@ -206,7 +206,6 @@ validate_input_attribute <-
     }
 
 
-
     # If rr --> length(exp) and length(prop_pop_exp) must be the same
 
     # Exposure has to have the same length as prop_pop_exp
@@ -223,6 +222,27 @@ validate_input_attribute <-
       }
     }
 
+
+    #### error_if_info_with_incompatible_length ####
+
+
+    if(!base::is.null(input_args_value$info)){
+
+      if(base::is.data.frame(input_args_value$info)){
+        length_info <- base::nrow(input_args_value$info)
+      } else if (base::is.vector(input_args_value$info)){
+        length_info <- base::length(input_args_value$info)
+      }
+
+      max_length <- base::max(purrr::map_vec(input_args_value, base::length))
+
+      if( !length_info == max_length && !length_info == 1){
+        base::stop(
+          base::paste0("For this assessment, the info vector or data frame columns must have a length of 1 or ", max_length, "."),
+          call. = FALSE
+        )
+      }
+    }
 
     ### error_if_0 #####
     error_if_0 <- function(var_name){

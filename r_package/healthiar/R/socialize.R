@@ -42,6 +42,7 @@
 #' @param pop_fraction
 #' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the population attributable fraction by age group and geographic unit.
 
+#'
 #' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 
 #' @author
@@ -174,7 +175,7 @@ socialize <- function(output_attribute = NULL,
 
     } else if ( has_impact ) {
 
-      # * If NOT available list_output_attribute, i.e. if argument impact #########
+      # * If NOT available output_attribute, i.e. if argument impact #########
 
       ## Compile input data
       ## without social component

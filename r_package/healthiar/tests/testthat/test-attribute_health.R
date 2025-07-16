@@ -937,7 +937,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         exp_central = data$exposure_mean,
         pop_exp = data$population_exposed_total,
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
+        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", id = 1:5)
         )$health_main$impact_rounded,
     expected =
       data_raw |>
@@ -1403,6 +1403,29 @@ testthat::test_that("error if rr and erf_eq", {
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"),
     regexp = "The argument rr_central cannot be used together with the argument erf_eq_central (either one or the other but not both).",
     fixed = TRUE)
+})
+
+testthat::test_that("error if info has incompatible length |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
+
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  ## With pop_exp
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = data$exposure_mean,
+        pop_exp = data$prop_exposed,
+        cutoff_central = min(data$exposure_mean),
+        bhd_central = data$gbd_daly[1],
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        info = data.frame(id = 1:20)
+      )$health_main$impact_rounded,
+    regexp = "For this assessment, the info vector or data frame columns must have a length of 1 or 6."
+  )
 })
 
 

@@ -9,7 +9,9 @@
 #' @param discount_rate \code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
 #' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting. Be aware that the year 0 (without discounting) is not be counted here. If a vector is entered in the argument impact, discount_years does not need to be entered (length of impact = discount_years + 1)
-#' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)
+#' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)
+#' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
+
 
 #' @returns
 #' TODO
@@ -48,7 +50,8 @@ monetize <- function(output_attribute = NULL,
                      discount_rate = NULL,
                      discount_shape = "exponential",
                      discount_years = 0,
-                     inflation = NULL) {
+                     inflation = NULL,
+                     info = NULL) {
 
   # Define variables ####
 
@@ -139,6 +142,26 @@ monetize <- function(output_attribute = NULL,
                    " Therefore no discount is applied."),
       call. = FALSE)
   }
+
+  #### error_if_info_with_incompatible_length ####
+
+  if(! base::is.null(info) &&
+     ! base::is.null(impact)){
+
+    if(base::is.data.frame(info)){
+      length_info <- base::nrow(info)
+    } else if (base::is.vector(info)){
+      length_info <- base::length(info)
+    }
+
+    if( !length_info == base::length(impact) && !length_info == 1){
+      base::stop(
+        base::paste0("The info vector or data frame columns must have a length of 1 or the same length as impact."),
+        call. = FALSE
+      )
+    }
+  }
+
 
 
 
@@ -371,13 +394,15 @@ monetize <- function(output_attribute = NULL,
     }else if(using_impact_from_user){
 
       output_monetization <-
+
         healthiar:::add_monetized_impact(
           df = data.frame(impact = impact),
           valuation = valuation,
           discount_rate = discount_rate,
           discount_years = discount_years,
           discount_shape = discount_shape,
-          inflation = inflation)
+          inflation = inflation,
+          info = info)
 
   }
 

@@ -11,7 +11,8 @@ monetize(
   discount_rate = NULL,
   discount_shape = "exponential",
   discount_years = 0,
-  inflation = NULL
+  inflation = NULL,
+  info = NULL
 )
 }
 \arguments{
@@ -27,7 +28,9 @@ monetize(
 
 \item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting. Be aware that the year 0 (without discounting) is not be counted here. If a vector is entered in the argument impact, discount_years does not need to be entered (length of impact = discount_years + 1)}
 
-\item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Ony to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
+\item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
+
+\item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}}
 }
 \value{
 TODO

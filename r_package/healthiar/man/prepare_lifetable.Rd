@@ -21,3 +21,11 @@ Baseline health data (deaths) by 1-year interval instead of interval.
 \description{
 This function performs a cost-benefit analysis
 }
+\examples{
+# Goal: Convert 5-year population and death data into 1-year data
+results  <- prepare_lifetable(
+  age_group = c(0, 5, 10, 15),
+  population = c(3387900, 3401300, 3212300, 3026100),
+  bhd = c(4727, 472, 557, 1323))
+
+}

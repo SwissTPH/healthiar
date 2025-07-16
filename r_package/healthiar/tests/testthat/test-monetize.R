@@ -55,7 +55,8 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         impact = c(800, 1000, 1200, 1500, 1800, 2000),
         discount_shape = "exponential",
         discount_rate = 0.05,
-        valuation = 1
+        valuation = 1,
+        info = base::data.frame(year = c(2020:2025))
         )$monetization_detailed$monetized_impact |> round(digits = 2),
     expect =
       c(800, 952.38,1088.44, 1295.76, 1480.86, 1567.05) # Results on 2025-03-04; Excel sheet of Uni Porto
@@ -406,6 +407,21 @@ testthat::test_that("error if no right category", {
   )
 })
 
+testthat::test_that("error if incompatible size of info", {
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        impact = c(800, 1000, 1200, 1500, 1800, 2000),
+        discount_shape = "exponential",
+        discount_rate = 0.05,
+        valuation = 10,
+        info = data.frame(id = 1:20)
+      ),
+    regexp = "The info vector or data frame columns must have a length of 1 or the same length as impact."
+  )
+})
+
 ## WARNING #########
 
 testthat::test_that("warning if no discount_rate but other discount arguments", {
@@ -510,3 +526,5 @@ testthat::test_that("warning if user pass discount_years with life table", {
     fixed = TRUE
   )
 })
+
+

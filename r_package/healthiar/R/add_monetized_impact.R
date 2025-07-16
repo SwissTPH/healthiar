@@ -20,7 +20,8 @@ add_monetized_impact  <-
            discount_rate,
            discount_years,
            discount_shape,
-           inflation) {
+           inflation,
+           info = NULL) {
     # If df has only one column (impact)
     # it means that this is the direct input from user
     # no previous health assessment with healthiar
@@ -59,8 +60,6 @@ add_monetized_impact  <-
   discount_rate_with_inflation <- ((1+discount_rate)*(1+inflation))-1
 
 
-
-# browser()
   df_with_input <-
     df |>
     # Add columns for input data in the table
@@ -71,7 +70,11 @@ add_monetized_impact  <-
                   discount_years = {{discount_years}},
                   discount_shape = {{discount_shape}},
                   inflation = inflation,
-                  discount_rate_with_inflation = discount_rate_with_inflation)
+                  discount_rate_with_inflation = discount_rate_with_inflation) |>
+    # Add info
+    healthiar:::add_info(
+      info = info
+    )
 
   # If impact is inserted as vector to refer to different monetized impacts by year
   # (case of real costs, not applicable for nominal costs)
