@@ -378,6 +378,37 @@ testthat::test_that("error if population argument contains 0", {
   )
 })
 
+testthat::test_that("error if exposuer lower than 0 | lifetable", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+
+  testthat::expect_error(
+    object = healthiar::attribute_lifetable(
+      health_outcome = "deaths",
+      approach_exposure = "constant",
+      approach_newborns = "with_newborns",
+      exp_central = - 4,
+      cutoff_central = 5,
+      rr_central = data[["input"]]$relative_risk,
+      rr_lower = data[["input"]]$relative_risk_lower,
+      rr_upper = data[["input"]]$relative_risk_upper,
+      rr_increment = 10,
+      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = base::rep(c("male", "female"), each = 100),
+      population = c(data[["pop"]]$midyear_population_male,
+                     data[["pop"]]$midyear_population_female),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      year_of_analysis =  data[["input"]]$start_year,
+      min_age = data[["input"]]$apply_rr_from_age),
+
+    regexp = "exp_central cannot be lower than 0"
+  )
+})
+
 
 ## WARNING #########
 
