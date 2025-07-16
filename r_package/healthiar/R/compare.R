@@ -232,29 +232,6 @@ compare <-
       # and produce an error because the variables are different
       }else if(approach_comparison == "pif"){
 
-
-        # Identify the arguments scenario specific arguments excluding bhd
-        # This will be used for the exceptions in the joining columns
-        # Scenario-specific arguments cannot be used as joining columns
-        # because we want to keep different columns for scenario_1 and _2
-        # bhd and lifetable_with_pop_nest are excluded
-        # because they have to be identical in scenario_1 and _2
-        # for the pif approach by definition
-
-        scenario_arguments_for_bhd_and_lifetable_identical <-
-          healthiar:::check_if_args_identical(
-            args_a = input_args_1$value,
-            args_b = input_args_2$value,
-            names_to_check = scenario_arguments_for_bhd_and_lifetable)
-
-
-        if(!all(scenario_arguments_for_bhd_and_lifetable_identical))
-        {stop("The arguments ",
-              paste(names(scenario_arguments_for_bhd_and_lifetable_identical)[scenario_arguments_for_bhd_and_lifetable_identical],
-                    collapse = ", "),
-              " must be identical in both scenarios")}
-
-
         # Get identical columns to join data frames (as above)
         joining_columns_input <-
           healthiar:::find_joining_columns(
