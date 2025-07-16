@@ -120,7 +120,7 @@ monetize <- function(output_attribute = NULL,
      c("exponential", "hyperbolic_harvey_1986", "hyperbolic_mazur_1987")){
 
     stop(base::paste0("Please, check spelling. discount_shape must have one of this values: ",
-                      "exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987"),
+                      "exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987."),
          call. = FALSE)
   }
 

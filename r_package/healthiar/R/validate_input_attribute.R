@@ -329,7 +329,7 @@ validate_input_attribute <-
          base::any(base::unlist(var_value) < 0)){ # base::any(unlist( To make it robust for lists
         # Create error message
           stop(base::paste0(var_name,
-                            " cannot be lower than 0"),
+                            " cannot be lower than 0."),
                call. = FALSE)
         }
     }
@@ -349,7 +349,7 @@ validate_input_attribute <-
          base::any(unlist(var_value) > 1)){ # base::any(unlist( To make it robust for lists
         # Create error message
         stop(base::paste0(var_name,
-                    " cannot be higher than 1"),
+                    " cannot be higher than 1."),
              call. = FALSE)
       }
     }
@@ -380,7 +380,8 @@ validate_input_attribute <-
         base::stop(
           base::paste0("The following variables must all have the same length: ",
                        base::paste0(base::names(non_nulls),
-                                    collapse = ", ")),
+                                    collapse = ", "),
+                       "."),
           call. = FALSE
         )
       }

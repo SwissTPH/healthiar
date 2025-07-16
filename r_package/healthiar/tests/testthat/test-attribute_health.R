@@ -1206,7 +1206,7 @@ testthat::test_that("error if rr lower than 0", {
         rr_central = -1.05,
         rr_increment = 10,
         erf_shape = "log_linear"),
-    regexp = "rr_central cannot be lower than 0"
+    regexp = "rr_central cannot be lower than 0."
   )
 })
 
@@ -1222,7 +1222,7 @@ testthat::test_that("error if dw higher than 1", {
         rr_increment = 10,
         dw_central = 1.1,
         erf_shape = "log_linear"),
-    regexp = "dw_central cannot be higher than 1")
+    regexp = "dw_central cannot be higher than 1.")
 })
 
 testthat::test_that("error if not lower>central>upper", {
@@ -1268,7 +1268,7 @@ testthat::test_that("error if numeric argument is not numeric", {
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear"),
-    regexp = "exp_central must contain numeric value(s)",
+    regexp = "exp_central must contain numeric value(s).",
     # Use fixed because otherwise the brackets regexp give an error in the test
     fixed = TRUE
     )
@@ -1320,7 +1320,7 @@ testthat::test_that("error if multi geo units but different length of geo-depend
         rr_increment = 10,
         erf_shape = "log_linear",
         geo_id_disaggregated = c("a", "b")),
-    regexp = "The following variables must all have the same length: geo_id_disaggregated, exp_central, bhd_central")
+    regexp = "The following variables must all have the same length: geo_id_disaggregated, exp_central, bhd_central.")
 })
 
 testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
@@ -1401,7 +1401,7 @@ testthat::test_that("error if rr and erf_eq", {
         rr_increment = 10,
         erf_shape = "log_linear",
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"),
-    regexp = "The argument rr_central cannot be used together with the argument erf_eq_central (either one or the other but not both)",
+    regexp = "The argument rr_central cannot be used together with the argument erf_eq_central (either one or the other but not both).",
     fixed = TRUE)
 })
 

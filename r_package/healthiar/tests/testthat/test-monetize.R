@@ -402,7 +402,7 @@ testthat::test_that("error if no right category", {
         discount_rate = 0.05,
         valuation = 10
       ),
-    regexp = "Please, check spelling. discount_shape must have one of this values: exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987"
+    regexp = "Please, check spelling. discount_shape must have one of this values: exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987."
   )
 })
 
