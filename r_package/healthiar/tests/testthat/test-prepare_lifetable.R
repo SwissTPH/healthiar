@@ -31,7 +31,7 @@ testthat::test_that("error if lenght different|prepare_lifetable", {
         bhd = c(4727, 472, 557, 1323))$bhd_for_attribute |>
       base::round(),
     regexp =
-      "The following variables must all have the same length: age_group, population, bhd"
+      "The following variables must all have the same length: age_group, population, bhd."
   )
 })
 
@@ -61,6 +61,22 @@ testthat::test_that("error if lower than min for population|prepare_lifetable", 
       base::round(),
     regexp =
       "The values of population cannot be lower than 1."
+  )
+})
+
+testthat::test_that("error if lenght different|prepare_lifetable", {
+
+  testthat::expect_error(
+    object =
+      healthiar::prepare_lifetable(
+        age_group = c(0, 5, 10, 15),
+        population = c(3387900, 3401300, 3212300, 3026100),
+        bhd = c(4727, 472, 557, 1323),
+        fraction_lived = 1.1 # This value should not be higher than 1
+        )$bhd_for_attribute |>
+      base::round(),
+    regexp =
+      "The values of fraction_lived cannot be higher than 1."
   )
 })
 

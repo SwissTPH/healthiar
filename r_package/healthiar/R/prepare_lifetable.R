@@ -48,7 +48,8 @@ prepare_lifetable <-
         base::stop(
           base::paste0("The following variables must all have the same length: ",
                        base::paste0(base::names(vars_with_same_length),
-                                    collapse = ", ")),
+                                    collapse = ", "),
+                       "."),
           call. = FALSE
         )
       }
@@ -67,13 +68,29 @@ prepare_lifetable <-
           call. = FALSE
         )
       }
-
     }
+
     # age_group 0 exists
-    error_if_lower_than_min("age_group", 0)
+    error_if_lower_than_min("age_group", min = 0)
+    error_if_lower_than_min("fraction_lived", min = 0)
     # population and bhd cannot be 0 (or decimals close to)
-    error_if_lower_than_min("population", 1)
-    error_if_lower_than_min("bhd", 1)
+    error_if_lower_than_min("population", min = 1)
+    error_if_lower_than_min("bhd", min = 1)
+
+    # Error if_lower_than_min
+    error_if_higher_than_max <- function(var_name, max){
+      # Store var_value
+      var_value <- input_args_value[[var_name]]
+
+      if(base::any(var_value > max)){
+        base::stop(
+          base::paste0("The values of ", var_name, " cannot be higher than ", max, "."),
+          call. = FALSE
+        )
+      }
+    }
+
+    error_if_higher_than_max("fraction_lived", max = 1)
 
 
     # Get the interval_length base on the difference between values in age_group
