@@ -140,7 +140,7 @@ compare <-
    # Check that the two scenarios used the same arguments (calculation pathways)
 
     if(!base::identical(passed_arguments_1, passed_arguments_2)){
-      stop("The two scenarios have to use the same arguments",
+      stop("The two scenarios must use the same arguments.",
            call. = FALSE)
     }
 
@@ -157,7 +157,7 @@ compare <-
     if(base::identical(common_arguments_1, common_arguments_2)){
       common_arguments <- common_arguments_1
     }else{
-      stop("The two scenarios have to use the same common arguments",
+      stop("The two scenarios must use the same common arguments.",
            call. = FALSE)
     }
 
@@ -172,11 +172,12 @@ compare <-
     # Check if the common arguments in both scenarios are identical
 
     if(!all(common_arguments_identical))
-    {stop(paste0("The arguments ",
-                 paste(names(common_arguments_identical)[!common_arguments_identical],
-                       collapse = ", "),
-                 " must be identical in both scenarios"),
-          call. = FALSE)}
+    {stop(
+      base::paste0(
+        base::paste(names(common_arguments_identical)[!common_arguments_identical],
+                    collapse = ", "),
+        " must be identical in both scenarios."),
+      call. = FALSE)}
 
     # Check that bhd is the same in both scenarios for the PIF approach (only one place in the equation)
 
@@ -189,7 +190,7 @@ compare <-
     # Check if absolute risk with pif (not possible)
 
     if(approach_comparison == "pif" &&
-       unique(input_table_1$approach_risk) == "absolute_risk"){
+       base::unique(input_table_1$approach_risk) == "absolute_risk"){
       stop("For the PIF approach, the absolute risk approach cannot be used.",
            call. = FALSE)
     }
@@ -215,10 +216,10 @@ compare <-
           suffix = c("_1", "_2")) |>
         # Calculate the delta (difference) between scenario 1 and 2
         dplyr::mutate(impact = impact_1 - impact_2,
-                      impact_rounded = round(impact, 0))
+                      impact_rounded = base::round(impact, 0))
 
-      input_table <- list(input_table_1 = input_table_1,
-                          input_table_2 = input_table_2)
+      input_table <- base::list(input_table_1 = input_table_1,
+                                input_table_2 = input_table_2)
 
 
       # PIF approach ########################
@@ -230,29 +231,6 @@ compare <-
       # Use if instead of else if becuase otherwise the package will read here inside
       # and produce an error because the variables are different
       }else if(approach_comparison == "pif"){
-
-
-        # Identify the arguments scenario specific arguments excluding bhd
-        # This will be used for the exceptions in the joining columns
-        # Scenario-specific arguments cannot be used as joining columns
-        # because we want to keep different columns for scenario_1 and _2
-        # bhd and lifetable_with_pop_nest are excluded
-        # because they have to be identical in scenario_1 and _2
-        # for the pif approach by definition
-
-        scenario_arguments_for_bhd_and_lifetable_identical <-
-          healthiar:::check_if_args_identical(
-            args_a = input_args_1$value,
-            args_b = input_args_2$value,
-            names_to_check = scenario_arguments_for_bhd_and_lifetable)
-
-
-        if(!all(scenario_arguments_for_bhd_and_lifetable_identical))
-        {stop("The arguments ",
-              paste(names(scenario_arguments_for_bhd_and_lifetable_identical)[scenario_arguments_for_bhd_and_lifetable_identical],
-                    collapse = ", "),
-              " must be identical in both scenarios")}
-
 
         # Get identical columns to join data frames (as above)
         joining_columns_input <-
@@ -299,9 +277,9 @@ compare <-
 
     output <-
       healthiar:::get_output(
-        input_args = list(approach_comparison = approach_comparison,
-                          input_args_1 = input_args_1,
-                          input_args_2 = input_args_2),
+        input_args = base::list(approach_comparison = approach_comparison,
+                                input_args_1 = input_args_1,
+                                input_args_2 = input_args_2),
         input_table = input_table,
         results_raw = results_raw)
 

@@ -405,7 +405,7 @@ testthat::test_that("error if exposuer lower than 0 | lifetable", {
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age),
 
-    regexp = "exp_central cannot be lower than 0"
+    regexp = "exp_central cannot be lower than 0."
   )
 })
 
