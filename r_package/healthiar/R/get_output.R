@@ -128,6 +128,13 @@ get_output <-
 
     sum_round_and_relative_impact <- function(df, grouping_cols, col_total){
 
+      likely_columns_to_be_summed <- df |>
+        # The use of matches() is important.
+        # It works as contains() but allowing regex | (OR)
+        dplyr::select(dplyr::matches("impact|absolute_risk_as_percent"),
+                      -dplyr::contains("_rounded")) |>
+        base::names()
+
       # Sum impact columns (keep original names)
       impact_agg <- df |>
         dplyr::summarise(
@@ -138,9 +145,7 @@ get_output <-
             # this function also have other columns with impact discounted and monetized
             # and even comparison scenarios
             # which also have to be included in this aggregation
-            # The use of matches() is important.
-            # It works as contains() but allowing regex | (OR)
-            .cols = dplyr::matches("impact|absolute_risk_as_percent"),
+            .cols = dplyr::any_of(likely_columns_to_be_summed),
             .fns = ~ sum(.x, na.rm = TRUE),
             .names = "{.col}"
           ),
@@ -149,7 +154,7 @@ get_output <-
         # Add ..._rounded columns
         dplyr::mutate(
           dplyr::across(
-            .cols = "impact",
+            .cols = dplyr::any_of(likely_columns_to_be_summed),
             .fns = ~ round(.x),
             .names = "{.col}_rounded"
           )
@@ -160,7 +165,7 @@ get_output <-
         impact_agg <- df |>
           dplyr::summarise(
             dplyr::across(
-              .cols = dplyr::matches("impact|absolute_risk_as_percent"),
+              .cols = dplyr::any_of(likely_columns_to_be_summed),
               .fns = ~ sum(.x, na.rm = TRUE),
               .names = "{.col}"
             ),
@@ -169,7 +174,7 @@ get_output <-
           ) |>
           dplyr::mutate(
             dplyr::across(
-              .cols = dplyr::matches("impact"),
+              .cols = dplyr::any_of(likely_columns_to_be_summed),
               .fns = list(
                 rounded = ~ round(.x),
                 per_100k_inhab = ~ (.x / population) * 1e5
