@@ -31,7 +31,7 @@ add_info <- function(df, info){
   } else if(is.data.frame(info)){
 
     output <-
-      setNames(info, paste0("info_", names(info)))
+      stats::setNames(info, base::paste0("info_", 1: base::length(base::names(info))))
 
     output <- dplyr::bind_cols(df, output)
 
