@@ -62,23 +62,24 @@ get_output <-
 
     # Deactivated code
     # It gives errors but something similar could be implemented to get the column names in a more efficient way
-    # group_columns_for_absolute_risk_aggregation <-  results_raw |>
-    #   dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) == 1)) |>
-    #   dplyr::select(dplyr::where(~ .x)) |>
-    #   base::names()
+    group_columns_for_absolute_risk_aggregation <-  results_raw |>
+      dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) == 1)) |>
+      dplyr::select(dplyr::where(~ .x)) |>
+      base::names() |>
+      dplyr::union(id_columns)
 
-    group_columns_for_absolute_risk_aggregation <-
-      column_names[!column_names %in%
-                     c(c("geo_id_disaggregated", "age_group", "sex",
-                         paste0("exp", c("", "_1", "_2")),
-                         paste0("population", c("", "_1", "_2")),
-                         paste0("prop_pop_exp", c("", "_1", "_2")),
-                         paste0("pop_exp", c("", "_1", "_2")),
-                         paste0("rr_at_exp", c("", "_1", "_2")),
-                         paste0("pop_fraction", c("", "_1", "_2")),
-                         paste0("absolute_risk_as_percent", c("", "_1", "_2")),
-                         paste0("impact", c("", "_1", "_2")),
-                         paste0("impact_per_100k_inhab", c("", "_1", "_2"))))]
+    # group_columns_for_absolute_risk_aggregation <-
+    #   column_names[!column_names %in%
+    #                  c(c("geo_id_disaggregated", "age_group", "sex",
+    #                      paste0("exp", c("", "_1", "_2")),
+    #                      paste0("population", c("", "_1", "_2")),
+    #                      paste0("prop_pop_exp", c("", "_1", "_2")),
+    #                      paste0("pop_exp", c("", "_1", "_2")),
+    #                      paste0("rr_at_exp", c("", "_1", "_2")),
+    #                      paste0("pop_fraction", c("", "_1", "_2")),
+    #                      paste0("absolute_risk_as_percent", c("", "_1", "_2")),
+    #                      paste0("impact", c("", "_1", "_2")),
+    #                      paste0("impact_per_100k_inhab", c("", "_1", "_2"))))]
 
     impact_columns <-paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
                               "monetized_impact", "monetized_impact_rounded"),
