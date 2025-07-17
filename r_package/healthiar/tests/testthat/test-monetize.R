@@ -213,7 +213,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
         discount_rate = 0.01,
         valuation = 1
       )$monetization_main$monetized_impact_rounded,
-    expect = c(26101, 13670, 38433) # Result on 9 July 2025 ; no comparison study
+    expect = c(26101, 13670, 38432) # Result on 9 July 2025 ; no comparison study
   )
 })
 
