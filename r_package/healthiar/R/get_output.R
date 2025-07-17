@@ -45,12 +45,55 @@ get_output <-
     column_names_wo_lifetable_impact <-
       column_names[! base::grepl("nest|modification_factor|impact", column_names)]
 
+
+    # Info columns to be excluded in the aggregation process because they have different values in column_names_wo_lifetable_impact
+    info_columns_different_value <- results_raw |>
+      dplyr::select(dplyr::contains("info")) |>
+      # Keep only columns where all values are the same
+      dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) > 1)) |>
+      dplyr::select(dplyr::where(~ .x)) |>
+      # Extract column names
+      base::names()
+
+    column_names_wo_lifetable_impact_info_diff <-
+      dplyr::setdiff(
+        column_names_wo_lifetable_impact,
+        info_columns_different_value
+      )
+
+
+
+    # Deactivated code
+    # It gives errors but something similar could be implemented to get the column names in a more efficient way
+    # group_columns_for_absolute_risk_aggregation <-  results_raw |>
+    #   # Keep only columns where all values are the same
+    #   dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) == 1)) |>
+    #   dplyr::select(dplyr::where(~ .x)) |>
+    #   # Extract column names
+    #   base::names() |>
+    #   # Join vectors avoiding duplicates
+    #   dplyr::union(id_columns)
+
+
+    group_columns_for_absolute_risk_aggregation <-
+      column_names_wo_lifetable_impact_info_diff[!column_names_wo_lifetable_impact_info_diff %in%
+                     c("geo_id_disaggregated", "age_group", "sex",
+                       base::paste0("exp", c("", "_1", "_2")),
+                       base::paste0("population", c("", "_1", "_2")),
+                       base::paste0("prop_pop_exp", c("", "_1", "_2")),
+                       base::paste0("pop_exp", c("", "_1", "_2")),
+                       base::paste0("rr_at_exp", c("", "_1", "_2")),
+                       base::paste0("pop_fraction", c("", "_1", "_2")),
+                       base::paste0("absolute_risk_as_percent", c("", "_1", "_2")),
+                       base::paste0("impact", c("", "_1", "_2")),
+                       base::paste0("impact_per_100k_inhab", c("", "_1", "_2")))]
+
     # This includes all columns names except age_group and sex
     group_columns_for_sex_aggregation <-
-      column_names_wo_lifetable_impact[! base::grepl("sex", column_names_wo_lifetable_impact)]
+      column_names_wo_lifetable_impact_info_diff [! base::grepl("sex", column_names_wo_lifetable_impact_info_diff)]
 
     group_columns_for_age_aggregation <-
-      column_names_wo_lifetable_impact[! base::grepl("age", column_names_wo_lifetable_impact)]
+      column_names_wo_lifetable_impact_info_diff[! base::grepl("age", column_names_wo_lifetable_impact_info_diff)]
     # This include only the id_columns except geo_id_disaggregated
     # Not all columns like above to avoid geo_id_disaggregated variables
     # that make the summary at lower (disaggregated) geo level
@@ -60,29 +103,6 @@ get_output <-
     group_columns_for_multiexposure_aggregation <-
       c("exposure_name", "geo_id_aggregated", "exp_ci", "bhd_ci", "erf_ci","dw_ci", "cutoff_ci", "duration_ci")
 
-    # Deactivated code
-    # It gives errors but something similar could be implemented to get the column names in a more efficient way
-    group_columns_for_absolute_risk_aggregation <-  results_raw |>
-      # Keep only columns where all values are the same
-      dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) == 1)) |>
-      dplyr::select(dplyr::where(~ .x)) |>
-      # Extract column names
-      base::names() |>
-      # Join vectors avoiding duplicates
-      dplyr::union(id_columns)
-
-    # group_columns_for_absolute_risk_aggregation <-
-    #   column_names[!column_names %in%
-    #                  c(c("geo_id_disaggregated", "age_group", "sex",
-    #                      paste0("exp", c("", "_1", "_2")),
-    #                      paste0("population", c("", "_1", "_2")),
-    #                      paste0("prop_pop_exp", c("", "_1", "_2")),
-    #                      paste0("pop_exp", c("", "_1", "_2")),
-    #                      paste0("rr_at_exp", c("", "_1", "_2")),
-    #                      paste0("pop_fraction", c("", "_1", "_2")),
-    #                      paste0("absolute_risk_as_percent", c("", "_1", "_2")),
-    #                      paste0("impact", c("", "_1", "_2")),
-    #                      paste0("impact_per_100k_inhab", c("", "_1", "_2"))))]
 
     impact_columns <-paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
                               "monetized_impact", "monetized_impact_rounded"),
@@ -140,7 +160,7 @@ get_output <-
         dplyr::summarise(
           dplyr::across(
             # Important: across() because this is to be done in all impact columns
-            # In attribute_health() only one impact colum
+            # In attribute_health() only one impact column
             # but get_output is also used by monetize()
             # this function also have other columns with impact discounted and monetized
             # and even comparison scenarios
@@ -221,6 +241,9 @@ get_output <-
 
       output_last <- output[["health_detailed"]][["results_agg_exp_cat"]]
     }
+
+    # results_disaggregated ####
+
 
     output[["health_detailed"]][["results_disaggregated"]]  <-
       output_last
