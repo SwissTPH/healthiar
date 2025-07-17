@@ -79,18 +79,10 @@ get_deaths_yll_from_lifetable <-
 
 
               # Filter for relevant ages #########################################
-              # use {{}} to refer to the argument and avoid warnings
+              .x <- .x |>
+                dplyr::filter(age_start <= max_age,
+                              age_start >= min_age)
 
-              if ( !base::is.null( max_age) ) {
-
-                .x <-
-                  dplyr::filter(.x, age_start <= max_age)
-              }
-
-              if ( !base::is.null( min_age ) ) {
-                .x <-
-                  dplyr::filter(.x, age_start >= min_age)
-              }
 
               # Calculate YLL/YLD impact per year ################################
 
