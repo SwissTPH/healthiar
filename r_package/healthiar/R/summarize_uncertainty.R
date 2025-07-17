@@ -623,10 +623,10 @@ summarize_uncertainty <- function(
     summary <- summary_by_geo_id_disaggregated
 
   } else {
-    # If there is geo_id_aggregated,
-    # export these attribute_by_sim and summary
-
-    # Create a tibble with the input, output health_main and impact
+    # # If there is geo_id_aggregated,
+    # # export these attribute_by_sim and summary
+    #
+    # # Create a tibble with the input, output health_main and impact
     attribute_by_sim <- attribute_by_sim_disaggregated |>
       # Modify geo_id_aggregated and impact column to the right format
       # i.e. by geo_id_aggregated (less rows) and not by geo_id_disaggregated (more rows)
@@ -639,18 +639,21 @@ summarize_uncertainty <- function(
           \(x) x$health_main$impact)
         )
 
-    # Obtain results of simulations organized by geo unit
+    summary_by_geo_id_aggregated <- input_table_to_check |>
+      # Create codebook geo_id_aggregated vs. disaggregated
+      dplyr::select(geo_id_aggregated, geo_id_disaggregated) |>
+      # Keep only unique rows
+      base::unique() |>
+      # Add the summary of geo_id_disaggregated to have the geo_id_aggregated in
+      dplyr::left_join(summary_by_geo_id_disaggregated,
+                       by = "geo_id_disaggregated") |>
+      # Sum impacts
+      dplyr::summarise(impact = base::sum(impact),
+                       .by = c("geo_id_aggregated", "impact_ci")) |>
+      # Round
+      dplyr::mutate(impact_rounded = round(impact))
 
-    attribute_by_geo_id_aggregated <-
-      get_attribute_by_geo(attribute_by_sim = attribute_by_sim,
-                           geo_id = "geo_id_aggregated")
-
-
-    # Summarize results getting the central, lower and upper estimate
-    summary <- get_summary(attribute = attribute_by_geo_id_aggregated,
-                           grouping_var = "geo_id_aggregated")
-
-
+    summary <- summary_by_geo_id_aggregated
   }
 
 
@@ -775,15 +778,21 @@ summarize_uncertainty <- function(
                                           \(x) x$health_main$impact)
           )
 
-      # Obtain results of simulations organized by geo unit
-      attribute_by_geo_id_aggregated <-
-        get_attribute_by_geo(attribute_by_sim = attribute_by_sim,
-                             geo_id = "geo_id_aggregated")
+      summary_by_geo_id_aggregated <- input_table_to_check |>
+        # Create codebook geo_id_aggregated vs. disaggregated
+        dplyr::select(geo_id_aggregated, geo_id_disaggregated) |>
+        # Keep only unique rows
+        base::unique() |>
+        # Add the summary of geo_id_disaggregated to have the geo_id_aggregated in
+        dplyr::left_join(summary_by_geo_id_disaggregated,
+                         by = "geo_id_disaggregated") |>
+        # Sum impacts
+        dplyr::summarise(impact = base::sum(impact),
+                         .by = c("geo_id_aggregated", "impact_ci")) |>
+        # Round
+        dplyr::mutate(impact_rounded = round(impact))
 
-
-      # Get summary (uncertainty) for each geo_id_disaggregated
-      summary <- get_summary(attribute = attribute_by_geo_id_aggregated,
-                                    grouping_var = "geo_id_aggregated")
+      summary <- summary_by_geo_id_aggregated
     }
 
 
