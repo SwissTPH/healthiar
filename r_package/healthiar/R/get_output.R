@@ -63,9 +63,12 @@ get_output <-
     # Deactivated code
     # It gives errors but something similar could be implemented to get the column names in a more efficient way
     group_columns_for_absolute_risk_aggregation <-  results_raw |>
+      # Keep only columns where all values are the same
       dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) == 1)) |>
       dplyr::select(dplyr::where(~ .x)) |>
+      # Extract column names
       base::names() |>
+      # Join vectors avoiding duplicates
       dplyr::union(id_columns)
 
     # group_columns_for_absolute_risk_aggregation <-
