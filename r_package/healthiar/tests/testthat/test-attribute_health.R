@@ -937,7 +937,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         exp_central = data$exposure_mean,
         pop_exp = data$population_exposed_total,
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
+        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance", id = 1:5)
         )$health_main$impact_rounded,
     expected =
       data_raw |>
