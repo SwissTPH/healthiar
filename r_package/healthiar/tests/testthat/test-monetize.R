@@ -57,6 +57,32 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
 
 })
 
+testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        impact = 197000,
+        valuation = 541000,
+        discount_shape = "exponential",
+        discount_years = 5
+      )$monetization_main$monetized_impact_rounded,
+    expect =
+      106577000000
+  )
+
+  ## RESULT(S) COMPARISON ASSESSMENT:
+  ## 106577 million $
+  ## ASSESSOR:
+  ## Iracy Pimenta
+  ## ASSESSMENT DETAILS:
+  ## Monetization of PM2.5 reduction policy on premature mortality in China
+  ## INPUT DATA DETAILS:
+  ## Example adapted from Chen et al (2015) data to 5 years policy, with no discount rate
+  ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+  ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+})
+
 testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_hyp_harvey|inflation_FALSE|", {
 
   testthat::expect_equal(
@@ -83,22 +109,22 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
   ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_FALSE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_hyp_harvey|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
       healthiar::monetize(
-        impact = 197000,
+        impact = 19800,
         valuation = 541000,
-        discount_shape = "exponential",
+        discount_shape = "hyperbolic_harvey_1986",
         discount_years = 5
       )$monetization_main$monetized_impact_rounded,
     expect =
-      106577000000
+      10711800000
   )
 
   ## RESULT(S) COMPARISON ASSESSMENT:
-  ## 106577 million $
+  ## 10711.8 million $
   ## ASSESSOR:
   ## Iracy Pimenta
   ## ASSESSMENT DETAILS:
@@ -107,7 +133,6 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
   ## Example adapted from Chen et al (2015) data to 5 years policy, with no discount rate
   ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
   ## DOI: https://doi.org/10.1007/s11270-015-2316-7
-
 })
 
 ### DISCOUNTING ############################################################
