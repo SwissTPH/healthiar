@@ -6,9 +6,238 @@
 
 #### EXPONENTIAL ###############################################################
 
+testthat::test_that("results correct |pathway_cba|discount_shape_exponential|discount_rate_benefit_FALSE|discount_rate_cost_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+
+      ## ORIGINAL
+      # healthiar::cba(
+      #   positive_impact = 19800,
+      #   valuation = 541000,
+      #   cost = 8200,
+      #   discount_years_benefit = 10,
+      #   discount_years_cost = 10
+      # )$cba_main$net_benefit_rounded,
+      ## RESULT(S) COMPARISON ASSESSMENT:
+      ## Total benefit:	107118 million $ / total cost:	82000 million $ / Net benefit: 25118 million $
+      ## ROI: 0.31	/ CBR: 1.31
+      ## ASSESSOR:
+      ## Iracy Pimenta
+      ## ASSESSMENT DETAILS:
+      ## CBA of ozone reduction policy on premature mortality in China
+      ## Example adapted from Chen et al (2015) data to 10 years policy, with no discount rate
+      ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+      ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+
+      ## Adapted
+      healthiar::cba(
+        positive_impact = 19800,
+        valuation = 541000,
+        cost = 8200000000,
+        discount_years_benefit = 10,
+        discount_years_cost = 10
+      )$cba_main$net_benefit_rounded,
+    expect = 2511800000 # benefit year 10 - cost year 10
+  )
+})
+
+testthat::test_that("results correct |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+
+      ## Original
+      # healthiar::cba(
+      #   positive_impact = 197000,
+      #   valuation = 541000,
+      #   cost = 523,
+      #   discount_shape = "exponential",
+      #   discount_years_benefit = 10,
+      #   discount_years_cost = 10
+      # )
+      ## RESULT(S) COMPARISON ASSESSMENT:
+      ## Total benefit:	909123.43 million $ / total cost:	4461.30 million $ / Net benefit: 904662.13 million $
+      ## ROI: 202.78	/ CBR: 203.78
+      ## ASSESSOR:
+      ## Iracy Pimenta
+      ## ASSESSMENT DETAILS:
+      ## CBA of PM2.5 reduction policy on premature mortality in China with exponential discount rate
+      ## INPUT DATA DETAILS:
+      ## Example adapted from Chen et al (2015) data to 10 years policy, with discount rate = 0,03 and exponential function
+      ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+      ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+
+      ## Adapted
+      healthiar::cba(
+        positive_impact = 197000,
+        valuation = 541000,
+        cost = 523000000,
+        discount_shape = "exponential",
+        discount_years_benefit = 10,
+        discount_years_cost = 10
+      )$cba_main$net_benefit_rounded,
+    expect = 106054000000 # benefit year 10 - cost year 10
+  )
+})
+
 #### HARVEY ###############################################################
 
+testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount_rate_benefit_FALSE|discount_rate_cost_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+
+      ## ORIGINAL
+      # healthiar::cba(
+      #   positive_impact = 19800,
+      #   valuation = 541000,
+      #   cost = 8200,
+      #   discount_shape = "hyperbolic_harvey_1986",
+      #   discount_years_benefit = 10,
+      #   discount_years_cost = 10
+      # )$cba_main$net_benefit_rounded,
+      ## RESULT(S) COMPARISON ASSESSMENT:
+      ## Total benefit:	107118 million $ / total cost:	82000 million $ / Net benefit: 25118 million $
+      ## ROI: 0.31	/ CBR: 1.31
+      ## ASSESSOR:
+      ## Iracy Pimenta
+      ## ASSESSMENT DETAILS:
+      ## CBA of ozone reduction policy on premature mortality in China
+      ## Example adapted from Chen et al (2015) data to 10 years policy, with no discount rate
+      ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+      ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+
+      ## Adapted
+      healthiar::cba(
+        positive_impact = 19800,
+        valuation = 541000,
+        cost = 8200000000,
+        discount_shape = "hyperbolic_harvey_1986",
+        discount_years_benefit = 10,
+        discount_years_cost = 10
+      )$cba_main$net_benefit_rounded,
+    expect = 2511800000 # benefit year 10 - cost year 10
+  )
+})
+
+testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+
+      ## Original
+      # healthiar::cba(
+      #   positive_impact = 197000,
+      #   valuation = 541000,
+      #   cost = 523,
+      #   discount_shape = "hyperbolic_harvey_1986",
+      #   discount_years_benefit = 10,
+      #   discount_years_cost = 10
+      # )
+      ## RESULT(S) COMPARISON ASSESSMENT:
+      ## Total benefit:	909123.43 million $ / total cost:	4461.30 million $ / Net benefit: 904662.13 million $
+      ## ROI: 202.78	/ CBR: 203.78
+      ## ASSESSOR:
+      ## Iracy Pimenta
+      ## ASSESSMENT DETAILS:
+      ## CBA of PM2.5 reduction policy on premature mortality in China with exponential discount rate
+      ## INPUT DATA DETAILS:
+      ## Example adapted from Chen et al (2015) data to 10 years policy, with discount rate = 0,03 and exponential function
+      ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+      ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+
+      ## Adapted
+      healthiar::cba(
+        positive_impact = 197000,
+        valuation = 541000,
+        cost = 523000000,
+        discount_shape = "hyperbolic_harvey_1986",
+        discount_years_benefit = 10,
+        discount_years_cost = 10
+      )$cba_main$net_benefit_rounded,
+    expect = 106054000000 # benefit year 10 - cost year 10
+  )
+})
+
 #### MAZUR ###############################################################
+
+testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_rate_benefit_FALSE|discount_rate_cost_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+
+      ## ORIGINAL
+      # healthiar::cba(
+      #   positive_impact = 19800,
+      #   valuation = 541000,
+      #   cost = 8200,
+      #   discount_shape = "hyperbolic_mazur_1987",
+      #   discount_years_benefit = 10,
+      #   discount_years_cost = 10
+      # )$cba_main$net_benefit_rounded,
+      ## RESULT(S) COMPARISON ASSESSMENT:
+      ## Total benefit:	107118 million $ / total cost:	82000 million $ / Net benefit: 25118 million $
+      ## ROI: 0.31	/ CBR: 1.31
+      ## ASSESSOR:
+      ## Iracy Pimenta
+      ## ASSESSMENT DETAILS:
+      ## CBA of ozone reduction policy on premature mortality in China
+      ## Example adapted from Chen et al (2015) data to 10 years policy, with no discount rate
+      ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+      ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+
+      ## Adapted
+      healthiar::cba(
+        positive_impact = 19800,
+        valuation = 541000,
+        cost = 8200000000,
+        discount_shape = "hyperbolic_mazur_1987",
+        discount_years_benefit = 10,
+        discount_years_cost = 10
+      )$cba_main$net_benefit_rounded,
+    expect = 2511800000 # benefit year 10 - cost year 10
+  )
+})
+
+testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+
+      ## Original
+      # healthiar::cba(
+      #   positive_impact = 197000,
+      #   valuation = 541000,
+      #   cost = 523,
+      #   discount_shape = "hyperbolic_mazur_1987",
+      #   discount_years_benefit = 10,
+      #   discount_years_cost = 10
+      # )
+      ## RESULT(S) COMPARISON ASSESSMENT:
+      ## Total benefit:	909123.43 million $ / total cost:	4461.30 million $ / Net benefit: 904662.13 million $
+      ## ROI: 202.78	/ CBR: 203.78
+      ## ASSESSOR:
+      ## Iracy Pimenta
+      ## ASSESSMENT DETAILS:
+      ## CBA of PM2.5 reduction policy on premature mortality in China with exponential discount rate
+      ## INPUT DATA DETAILS:
+      ## Example adapted from Chen et al (2015) data to 10 years policy, with discount rate = 0,03 and exponential function
+      ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+      ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+
+      ## Adapted
+      healthiar::cba(
+        positive_impact = 197000,
+        valuation = 541000,
+        cost = 523000000,
+        discount_shape = "hyperbolic_mazur_1987",
+        discount_years_benefit = 10,
+        discount_years_cost = 10
+      )$cba_main$net_benefit_rounded,
+    expect = 106054000000 # benefit year 10 - cost year 10
+  )
+})
 
 ### DISCOUNTING ################################################################
 
@@ -146,6 +375,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
       ## INPUT DATA DETAILS:
       ## Example adapted from Chen et al (2015) data to 10 years policy, with discount rate = 0,03 and hyperbolic (Harvey) function
       ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+      ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 
       ## Adapted
       healthiar::cba(
@@ -233,6 +463,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
       ## INPUT DATA DETAILS:
       ## Example adapted from Chen et al (2015) data to 10 years policy, with discount rate = 0,03 and hyperbolic (Harvey) function
       ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+      ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 
       ## Adapted
       healthiar::cba(
