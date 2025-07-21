@@ -399,7 +399,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
       10151212470
   )
   ## RESULT(S) COMPARISON ASSESSMENT:
-  ## 10151212470 million $ (5 years)
+  ## 10151212470 $ (5 years)
   ## ASSESSOR:
   ## Iracy Pimenta
   ## ASSESSMENT DETAILS:
@@ -425,7 +425,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
       100999437198
   )
   ## RESULT(S) COMPARISON ASSESSMENT:
-  ## 100999437198 million $ (5 years)
+  ## 100999437198 $ (5 years)
   ## ASSESSOR:
   ## Iracy Pimenta
   ## ASSESSMENT DETAILS:
@@ -456,6 +456,58 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
     expect =
       c(800, 952.38, 1090.91, 1304.35, 1500.00, 1600.00) # Results on 2025-04-15; Excel sheet of Uni Porto
   )
+})
+
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_mazur|inflation_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        impact = 19800,
+        valuation = 541000,
+        discount_rate = 0.03,
+        discount_shape = "hyperbolic_mazur_1987",
+        discount_years = 5
+      )$monetization_main$monetized_impact,
+    expect =
+      9314608696
+  )
+  ## RESULT(S) COMPARISON ASSESSMENT:
+  ## 9314608696 million $ (5 years)
+  ## ASSESSOR:
+  ## Iracy Pimenta
+  ## ASSESSMENT DETAILS:
+  ## Monetization of Ozone reduction policy on premature mortality in China with hyperbolic (Mazur) discount rate
+  ## INPUT DATA DETAILS:
+  ## Example adapted from Chen et al (2015) data to 5 years policy, with discount rate = 0,03 and hyperbolic (Mazur) function
+  ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+  ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+})
+
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_mazur|inflation_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        impact = 197000,
+        valuation = 541000,
+        discount_rate = 0.03,
+        discount_shape = "hyperbolic_mazur_1987",
+        discount_years = 5
+      )$monetization_main$monetized_impact,
+    expect =
+      92675652174
+  )
+  ## RESULT(S) COMPARISON ASSESSMENT:
+  ## 92675652174 $ (5 years)
+  ## ASSESSOR:
+  ## Iracy Pimenta
+  ## ASSESSMENT DETAILS:
+  ## Monetization of PM2.5 reduction policy on premature mortality in China with hyperbolic (Mazur) discount rate
+  ## INPUT DATA DETAILS:
+  ## Example adapted from Chen et al (2015) data to 5 years policy, with discount rate = 0,03 and hyperbolic (Mazur) function
+  ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+  ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
 ## HEALTHIAR INPUT ##############################################################
