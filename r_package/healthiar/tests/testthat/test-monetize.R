@@ -190,7 +190,11 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
 
 
 
-### DISCOUNTING ############################################################
+### DISCOUNTING ################################################################
+
+#### EXPONENTIAL ###############################################################
+
+##### NO INFLATION #############################################################
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
@@ -223,35 +227,58 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
   )
 })
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_harvey|inflation_FALSE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
       healthiar::monetize(
-        impact = c(800, 1000, 1200, 1500, 1800, 2000),
-        discount_shape = "hyperbolic_harvey_1986",
-        discount_rate = 0.05,
-        valuation = 1
-        )$monetization_detailed$monetized_impact |> round(digits = 2),
+        impact = 19800,
+        valuation = 541000,
+        discount_rate = 0.03,
+        discount_shape = "exponential",
+        discount_years = 5
+      )$monetization_main$monetized_impact_rounded,
     expect =
-      c(800,965.94, 1135.86, 1399.55, 1660.83, 1828.62) # Results on 2025-04-15; Excel sheet of Uni Porto
+      9240092777
   )
+    ## RESULT(S) COMPARISON ASSESSMENT:
+    ## 9240092777 $ (5 years)
+    ## ASSESSOR:
+    ## Iracy Pimenta
+    ## ASSESSMENT DETAILS:
+    ## Monetization of Ozone reduction policy on premature mortality in China with exponential discount rate
+    ## INPUT DATA DETAILS:
+    ## Example adapted from Chen et al (2015) data to 5 years policy, with discount rate = 0,03 and exponential function
+    ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+    ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_mazur|inflation_FALSE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
   testthat::expect_equal(
     object =
       healthiar::monetize(
-        impact = c(800, 1000, 1200, 1500, 1800, 2000),
-        discount_shape = "hyperbolic_mazur_1987",
-        discount_rate = 0.05,
-        valuation = 1
-        )$monetization_detailed$monetized_impact |> round(digits = 2),
+        impact = 197000,
+        valuation = 541000,
+        discount_rate = 0.03,
+        discount_shape = "exponential",
+        discount_years = 5
+      )$monetization_main$monetized_impact_rounded,
     expect =
-      c(800, 952.38, 1090.91, 1304.35, 1500.00, 1600.00) # Results on 2025-04-15; Excel sheet of Uni Porto
+      91934256413
   )
+  ## RESULT(S) COMPARISON ASSESSMENT:
+  ## 91934256413 $ (5 years)
+  ## ASSESSOR:
+  ## Iracy Pimenta
+  ## ASSESSMENT DETAILS:
+  ## Monetization of PM2.5 reduction policy on premature mortality in China with exponential discount rate
+  ## INPUT DATA DETAILS:
+  ## Example adapted from Chen et al (2015) data to 5 years policy, with discount rate = 0,03 and exponential function
+  ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+  ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
+
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_FALSE|", {
 
@@ -292,12 +319,12 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
         discount_shape = "exponential",
         discount_rate = 0.03,
         discount_years = 20
-        )$monetization_main$monetized_impact_rounded,
+      )$monetization_main$monetized_impact_rounded,
     expect = 11074 # Result on 15 Jan 2025 ; no comparison study
   )
 })
 
-#### INFLATION ##################################################################
+##### INFLATION ################################################################
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_TRUE|", {
 
@@ -310,11 +337,13 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_years = 5,
         inflation = 0.08,
         valuation = 1E3
-        )$monetization_main$monetized_impact |> base::round(digits = 2),
+      )$monetization_main$monetized_impact |> base::round(digits = 2),
     expect =
       783.53 # Results on 2025-03-04;  Excel sheet of Uni Porto
   )
+})
 
+testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_TRUE|", {
   testthat::expect_equal(
     object =
       healthiar::monetize(
@@ -324,11 +353,50 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_years = 5,
         inflation = 0.03,
         valuation = 1E4
-        )$monetization_main$monetized_impact_rounded,
+      )$monetization_main$monetized_impact_rounded,
     expect =
       8219 # Results on 2025-03-10; ChatGPT
   )
+})
 
+#### HARVEY ####################################################################
+
+##### NO INFLATION #############################################################
+
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_harvey|inflation_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        impact = c(800, 1000, 1200, 1500, 1800, 2000),
+        discount_shape = "hyperbolic_harvey_1986",
+        discount_rate = 0.05,
+        valuation = 1
+        )$monetization_detailed$monetized_impact |> round(digits = 2),
+    expect =
+      c(800,965.94, 1135.86, 1399.55, 1660.83, 1828.62) # Results on 2025-04-15; Excel sheet of Uni Porto
+  )
+})
+
+##### INFLATION ################################################################
+
+#### MAZUR #####################################################################
+
+##### NO INFLATION #############################################################
+
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_mazur|inflation_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        impact = c(800, 1000, 1200, 1500, 1800, 2000),
+        discount_shape = "hyperbolic_mazur_1987",
+        discount_rate = 0.05,
+        valuation = 1
+        )$monetization_detailed$monetized_impact |> round(digits = 2),
+    expect =
+      c(800, 952.38, 1090.91, 1304.35, 1500.00, 1600.00) # Results on 2025-04-15; Excel sheet of Uni Porto
+  )
 })
 
 ## HEALTHIAR INPUT ##############################################################
