@@ -1,0 +1,1383 @@
+---
+title: "Testing healthiar"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 4
+vignette: >
+  %\VignetteIndexEntry{testing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+--------------------------------------------------------------------------------
+
+```{r prepare, include=FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(healthiar)
+library(tibble)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(stringr)
+library(knitr)
+library(readxl)
+library(remotes)
+
+## Avoid using pacman here, as it causes error in installation if it's not installed already
+# library(pacman)
+# pacman::p_load(healthiar, tibble, dplyr, purrr, tidyr, stringr, knitr, readxl)
+
+options(knitr.kable.max_rows = 10)
+set.seed(1)
+
+```
+
+## Hi there : )
+
+This document will guide you step-by-step through the process of adding a test
+for a specific calculation pathway.
+
+In case you encounter difficulties, you find something unclear or you see a way
+to improve the testing process, please let us know:
+
+-   Preferably by opening a GitHub issue by going on this
+    [link](https://github.com/best-cost/best-cost_WPs/issues) and clicking the
+    green button that says *New issue* or
+
+-   write us at
+    [axel.luyten\@swisstph.ch](mailto:axel.luyten@swisstph.ch){.email} or
+    [alberto.castrofernandez\@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch){.email}
+
+Thank you in advance for your efforts! Together we can make healthiar more error
+proof and improve function and package documentation!
+
+## Prerequisite: newest version of `healthiar` installed
+
+If you haven't already, install the most recent version of the BEST-COST R
+package `healthiar`. If you get prompted to update packages that `healthiar`
+uses and/or relies on, we recommend to do so.
+
+```{r install package, include=TRUE, echo=TRUE, eval=FALSE}
+remotes::install_github(
+  repo = "best-cost/best-cost_WPs", 
+  subdir = "/r_package/healthiar", 
+  ref = "HEAD", 
+  build_vignettes = TRUE)
+```
+
+For more information on how to use the `healthiar` package (including several
+example cases of how to use the functions), please see the vignette
+`intro_to_healthiar`: you can access it (once you have the `healthiar` package
+installed) in RStudio by
+
+-   running `browseVignettes("healthiar")` in the console and clicking on *HTML*
+    on the page that pops up
+
+-   going to the *Packages* tab in RStudio, and clicking on `healthiar`\>*User
+    guides, package vignettes and other documentation*\>*HTML*
+
+--------------------------------------------------------------------------------
+
+# Example: Adding a test calculation
+
+Below you will be guided step-by-step through the process of adding a test
+calculation. There are four main steps. They are, in order:
+
+1.  Pick a pathway and look for comparison assessment
+
+2.  Fill out the function template with the assessment input data
+
+3.  IF POSSIBLE: Compare results of `healthiar` and your chosen assessment
+
+4.  Upload the test
+
+## 1. Pick a pathway and look for comparison assessment
+
+You can either
+
+-   Option A: first look for a comparison assessment & then select the
+    corresponding pathway
+
+-   Option B: first choose a pathway & then look for corresponding comparison
+    assessment
+
+    -   Recommended in case you have a specific assessment ready
+
+Both options are valid. In the best case the pathway that you want to test is
+not yet covered / claimed by another WP4 partner. Please check this before you
+start creating your test case in the the Excel *overview_testing.xlsx*, which is
+located on Teams under [Documents\>WP4
+PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk).
+
+Note: it is okay to test a specific pathway more than once, but of course
+testing a new pathway adds the most value.
+
+Of course, there are multiple possible sources of comparison assessments. These
+are, in order of decreasing preference:
+
+1.  own assessment / calculations
+
+2.  other studies / reports
+
+3.  artificial intelligence, e.g. ChatGPT
+
+4.  “fake” (but realistic) input data, to make sure calculation works (no error)
+    and that results stay the same over timeFor picking a calculation pathway
+    you can either
+
+### Option A: Look for comparison assessment & select corresponding pathway
+
+Example: you have done an assessment in the past and you claim the pathway in
+the Excel *overview_testing.xlsx* and get started with Step 2 right away.
+
+### Option B: Choose a pathway & look for corresponding comparison assessment
+
+Example: you have a look at the calculation pathways in the Excel
+*overview_testing.xlsx* and you select the following pathway:
+
+-   Relative risk
+
+-   ERF shape: log-linear
+
+-   Exposure: exposure distribution
+
+-   No iteration
+
+The `pathway_id` of this calculation pathway is:
+*\|pathway_rr\|erf_log_lin\|exp_single\|iteration_FALSE\|*.
+
+You claim this pathway by filling in your institution abbreviation and your name
+in the corresponding columns.
+
+Each calculation pathway has a unique *pathway_id* linked to it, which contain
+all the infos from the characterisation columns in a condensed way. These
+pathways are used internally to keep track of the testing progress, and to find
+specific pathways quickly.
+
+You ask around and find out that a colleague of you just recently did an
+assessment that matches your selected pathway. She digs up the assessment and
+sends you both the input data and the results. You get set to add a test. In
+this case, the assessment details are saved in a .xlsx file (Excel file).
+
+Please see the start of Step 1 for alternative sources of comparison
+assessments.
+
+### Detailed pathway characterizations
+
+The Excel *overview_testing.xlsx*, which is located on Teams under
+[Documents\>WP4
+PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk),
+contains an overview of the most relevant (= core) pathways that are available
+to users of *healthiar* functions. There are different sheets. In the first
+sheet is the overview of the core relative risk pathways. The columns might seem
+a bit cryptic at first glance, but bear with me:
+
+-   *erf* contains the exposure-response function shape
+
+    -   lin_lin = linear-linear ERF shape
+    -   log_lin = log-linear ERF shape
+    -   function = case where the ERF is defined by multiple points (x and y
+        coordinates), e.g. the MR-BRT curves from GBD
+    -   formula = case where ERF is a formula of the type a \* x + b \* x\^2 ...
+
+-   *exp* specifies the type of exposure input data
+
+    -   single = single exposure input value, e.g. yearly average
+        population-weighted PM2.5 exposure
+    -   dist = exposure distribution, e.g. 5 different exposure categories (\~
+        exposure ranges) with the information how many people are exposed to
+        each of the 5 exposure range
+
+-   *iteration* specifies whether the assessment is done for more than one geo
+    unit (e.g. municipality, region, province, ...)
+
+    -   if yes –\> TRUE
+    -   if no –\> FALSE
+
+Similarly, pathways are also defined (with some different columns) for
+cost-benefit analysis, monetization, and the other pathway groups.
+
+Detailed explanations of these other pathway IDs (like the bullet points above
+for the RR pathways) are found below at the start of each pathway groups'
+template.
+
+## 2. Fill out the function template with the assessment input data
+
+You create a new R script (`.R` file) or RMarkdown (`.Rmd` file) for your test
+(please create one file for each test, if possible).
+
+You select the appropriate template that Swiss TPH provided.
+
+Several testing templates can be found below in the section [Testing templates].
+
+Below you find two variants of an example function template for a relative risk
+pathway
+
+-   Option A: Basic function template
+
+-   Option B: Extended function template (preferred)
+
+Each template in the section [Testing templates] is available in both the basic
+and extended version.
+
+### Option A: Basic function template
+
+The basic template consists of the following elements
+
+-   pathway ID (of the specific pathway you want to test)
+
+-   if applicable: some code to load in input data
+
+-   an `attribute_...` function call (in this case `attribute_health`) with
+    (some of the) the function arguments needed for the assessment listed
+
+-   an info block where we'd like you to enter
+
+    -   result(s) (of the comparison assessment you selected)
+
+    -   your name and institution abbreviation
+
+    -   a short description of the comparison assessment you selected
+
+    -   info about the input data you used
+
+If you have just started your R journey, feel free to use the basic function
+template!
+
+```{r basic template, include=TRUE, echo=TRUE, eval=FALSE}
+## Pathway ID: copy here the pathway ID
+
+## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+# data <- ...
+
+## healthiar FUNCTION CALL
+results <- healthiar::attribute_health(
+  erf_shape = ,
+  rr_central = ,
+  rr_increment = ,
+  exp_central = ,
+  prop_pop_exp = ,
+  cutoff_central = ,
+  bhd_central = ,
+  geo_id_disaggregated = ,
+  geo_id_aggregated =  
+)
+
+## RESULT(S) COMPARISON ASSESSMENT:
+## List here the results of the comparison assessment you selected
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+### Option B: Extended function template (preferred)
+
+The extended function template contains the same elements as the basic function
+template plus it enables an automatic comparison of the `attribute_...` results
+and of the comparison assessment results. It contains the following additional
+elements
+
+-   a `testthat::test_that` call, which contains the test name (1st argument)
+    and contains the actual test (2nd argument), which is encapsulated by
+    `{ ... }` and consists of
+
+    -   a `testthat::expect_equal` call, which in turn encapsulates two main
+        arguments
+
+        1.  `object`: here you enter the `healthiar` function call. The output
+            of the call will be compared with the second argument
+
+        2.  `expected`: here you enter the result(s) of the comparison
+            assessment
+
+The extended function template is used in the automatic testing of the R package
+(for more info see [this chapter](https://r-pkgs.org/testing-basics.html) in
+Hadley Wickham's R packages book).
+
+```{r extended template, include=TRUE, echo=TRUE, eval=FALSE}
+testthat::test_that("results correct <pathway_id>", {
+  
+## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+# data <- ...
+
+testthat::expect_equal(
+  ## healthiar FUNCTION CALL
+  object =
+    healthiar::attribute_health(
+      erf_shape = ,
+      rr_central = ,
+      rr_increment = ,
+      exp_central = ,
+      prop_pop_exp = ,
+      cutoff_central = ,
+      bhd_central = ,
+      geo_id_disaggregated = ,
+      geo_id_aggregated = 
+    )$health_main$impact_rounded,
+  ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+  expected =
+    c( )
+)
+})
+
+## ASSESSOR: 
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
+main / detailed results of an attribute output.
+
+### Add test details
+
+In this example, we'll start by entering the `pathway_id` (which is found in the
+*overview_testing* Excel located in [this Teams
+folder](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=ByCQGk))
+to the function template.
+
+In this example the `pathway_id` is
+*\|pathway_rr\|erf_log_lin\|exp_single\|iteration_FALSE\|*
+
+In case of the basic template you add the `pathway_id` to the top of it:
+
+```{r add test name basic, include=TRUE, echo=TRUE, eval=FALSE}
+## Pathway ID: 
+## |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|
+```
+
+In case of the extended template you add the first argument of the
+`testthat::test_that` call:
+
+```{r add test name extended, include=TRUE, echo=TRUE, eval=FALSE}
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", { ... })
+```
+
+Then we'll continue by adding other details (same for basic & extended template)
+that describe the comparison case in more detail:
+
+```{r add test details, include=TRUE, echo=TRUE, eval=FALSE}
+## ASSESSOR: 
+## Axel Luyten, Swiss TPH
+## ASSESSMENT DETAILS: 
+## attribute DALYs from ischemic heart disease to road noise exposure
+## INPUT DATA DETAILS: 
+## noise exposure data from NIPH; cutoff based on exposure data; baseline DALYs from GBD; relative risk from WHO (2003)
+
+```
+
+In case your comparison assessment has a *DOI*, please add it.
+
+### Enter input data
+
+Then you fill out the rest of the template using the input data of your selected
+assessment. There are two options:
+
+-   Option A: Enter the input data hard-coded
+
+-   Option B: Enter the input data by loading the data first into RStudio and
+    then access it e.g. using the `$` operator
+
+Depending on the assessment, one of the two might be better suited. We will
+first look at option A, and then at option B.
+
+The step of entering the input data is the same for the basic & extended
+templates.
+
+If you don't have much R programming experience, it's easiest to create the test
+with hard-coded inputs.
+
+In case you load the input data before calling the `healthiar` function, please
+also upload the input data to the Teams testing folder of your institute,
+alongside the code for the test.
+
+For the sake of visibility in this section only the `attribute_...` function
+call will be shown.
+
+#### Option A: Function call with hard-coded data
+
+We can manually open the (Excel) file containing the assessment details, and
+then copy the relevant input data into the template.
+
+To see the Excel file used in this example, run
+
+`shell.exec(dirname(system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar")))`
+
+which will open the folder containing the *.xlsx* file of the example
+assessment.
+
+Here's the filled out template with hard-coded input data, i.e. raw numbers are
+fed to the function arguments and no external input data are loaded into
+RStudio.
+
+For this particular calculation pathway, one can either specify the argument
+`pop_exp` (option A) or `prop_pop_exp` (option B)
+
+```{r test with hard-coded inputs, include=TRUE, echo=TRUE, eval=FALSE}
+## healthiar FUNCTION CALL
+results <- healthiar::attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.08,
+  rr_increment = 10,
+  exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
+  pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700), # OPTION A
+  cutoff_central = 53,
+  bhd_central = 85362.08,
+  geo_id_disaggregated = NULL,
+  geo_id_aggregated = NULL
+)
+
+## healthiar FUNCTION CALL
+results <- healthiar::attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.08,
+  rr_increment = 10,
+  exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
+  prop_pop_exp = c( # OPTION B
+    0.818718312, 0.074319355, 0.054852478, 
+    0.036785683, 0.013847374, 0.001476797
+    ),
+  cutoff_central = 53,
+  bhd_central = 85362.08,
+  geo_id_disaggregated = NULL,
+  geo_id_aggregated = NULL
+)
+```
+
+#### Option B: Function call with pre-loaded data
+
+Another option is to load all your necessary input data before calling the
+`attribute_...` function.
+
+In case you select this approach, remember to also upload the input data to the
+Teams testing folder of your institute, alongside the code for the test.
+
+```{r inspect excel file, eval=FALSE, include=FALSE, eval=FALSE}
+# system.file("extdata", package = "healthiar") |> list.files()
+# test <- readxl::read_xlsx(path = system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar"), sheet = "Relative_risk_IHD_WHO_2003a")
+```
+
+```{r test with loaded inputs, include=TRUE, echo=TRUE, eval=FALSE}
+## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+data_raw  <-  readxl::read_xlsx(
+  path = system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar"),
+  sheet = "Relative_risk_IHD_WHO_2003a")
+data  <- data_raw |>
+  dplyr::filter(!is.na(data_raw$exposure_mean))
+
+## healthiar FUNCTION CALL
+results <- healthiar::attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.08,
+  rr_increment = 10,
+  exp_central = data$exposure_mean,
+  prop_pop_exp = data$prop_exposed,
+  cutoff_central = min(data$exposure_mean),
+  bhd_central = data$gbd_daly[1],
+  geo_id_disaggregated = NULL,
+  geo_id_aggregated = NULL
+) 
+```
+
+Note that in case of the extended template
+
+-   the input data is loaded just before the `testthat::expect_equal`
+
+-   the `attribute_...` function call is fed to the `object` argument of the
+    `testthat::expect_equal` call
+
+### Enter results of comparison assessment
+
+Next you enter the results of the comparison assessment you selected.
+
+In case of the basic function template, you add the results to the info block at
+the bottom of the template.
+
+```{r add results basic}
+## RESULT(S) COMPARISON ASSESSMENT:
+## 1151 attributable DALYs
+```
+
+In case of the extended function template, the results are fed to the `expected`
+argument of the `testthat::expect_equal` call.
+
+```{r add results extended, include=TRUE, echo=TRUE, eval=FALSE}
+# [...]
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object = ,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      data_raw |>
+      dplyr::filter(exposure_category %in% "Total exposed")|>
+      dplyr::select(daly)|>
+      dplyr::pull() |>
+      round()
+)
+# [...]
+```
+
+## 3. IF POSSIBLE: Compare results of healthiar and your chosen assessment
+
+Now you'll check whether the results of the `healthiar` function and your chosen
+comparison assessment are the same. You can either
+
+-   Option A: compare the results manually
+
+-   Option B: compare the results automatically (preferred)
+
+If the results are the same you indicate this by putting *TRUE* in the Excel
+column *results_the_same*.
+
+However, in case there is a deviation between the `healthiar` output and the
+results from the comparison assessment, you would put *FALSE* in the Excel
+column *results_the_same.*
+
+Please try to judge what could cause the difference and leave a comment in the
+Excel. If you're unsure what's the issue and can't fix it yourself, we can
+discuss it together and maybe another WP4 partner can help.
+
+### Option A: Compare results manually
+
+```{r compare results manually, include=TRUE, echo=TRUE, eval=TRUE}
+## healthiar FUNCTION CALL
+results <- healthiar::attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.08,
+  rr_increment = 10,
+  exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
+  prop_pop_exp = c(0.818718312, 0.074319355, 0.054852478, 
+                   0.036785683, 0.013847374, 0.001476797),
+  cutoff_central = 53,
+  bhd_central = 85362.08
+)
+
+results$health_main$impact_rounded |> 
+  print()
+
+## RESULT(S) COMPARISON ASSESSMENT:
+## 1151 attributable DALYs
+```
+
+In this case the results are the same!
+
+Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
+main / detailed results of an attribute output.
+
+### Option B: Compare results automatically (preferred)
+
+If you have advanced knowledge of R we are very grateful if you can compare the
+results automatically by running the `test_that` function.
+
+```{r compare results automatically, include=TRUE, echo=TRUE, eval=TRUE}
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
+        prop_pop_exp = c(0.818718312, 0.074319355, 0.054852478, 
+                         0.036785683, 0.013847374, 0.001476797),
+        cutoff_central = 53,
+        bhd_central = 85362.08,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c(1151)
+  )
+})
+```
+
+Yes, in this case they are the same (the function printed `Test passed`)
+
+Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
+main / detailed results of an attribute output.
+
+## 4. Upload the test
+
+Once you've completed the previous steps you can change the value in the column
+*finished* in the Excel *overview_testing* from *FALSE* to *TRUE* to indicate
+that you are done with the assessment.
+
+Please check that your test file clear sufficiently documented, i.e. someone who
+sees your test file for the first time should be able to understand what
+calculation pathway you covered, which input data was used, which comparison
+assessment you used, ... it is worth to invest a bit of time here, as it will
+also help you when you see this file again some time from now!
+
+Finally, you upload your test with the `pathway_id` as the file name to the
+[Teams folder WP4
+PROGRAMMING\>testing_of_functions](https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&web=1&e=hT3jaK)
+to the folder of your institute.
+
+Filled out basic template (with hard-coded input data):
+
+```{r filled out template basic, include=TRUE, echo=TRUE, eval=TRUE}
+## Pathway ID: |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|
+
+## healthiar FUNCTION CALL
+healthiar::attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.08,
+  rr_increment = 10,
+  exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
+  prop_pop_exp = c(0.818718312, 0.074319355, 0.054852478, 
+                   0.036785683, 0.013847374, 0.001476797),
+  cutoff_central = 53,
+  bhd_central = 85362.08
+)$health_main$impact_rounded |> 
+  print()
+
+## RESULT(S) COMPARISON ASSESSMENT:
+## 1151 attributable DALYs
+## ASSESSOR: 
+## Axel Luyten, Swiss TPH
+## ASSESSMENT DETAILS: 
+## attribute DALYs from ischemic heart disease to road noise exposure
+## INPUT DATA DETAILS: 
+## noise exposure data from NIPH; cutoff based on exposure data; baseline DALYs from GBD; relative risk from WHO (2003)
+```
+
+Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
+main / detailed results of an attribute output.
+
+Filled out extended template (with input data loaded into RStudio):
+
+```{r filled out template extended, include=TRUE, echo=TRUE, eval=TRUE}
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data_raw  <-  readxl::read_xlsx(
+    path = system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar"),
+    sheet = "Relative_risk_IHD_WHO_2003a")
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+  
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        erf_shape = "log_linear",
+        rr_central = 1.08,
+        rr_increment = 10,
+        exp_central = data$exposure_mean,
+        prop_pop_exp = data$prop_exposed,
+        cutoff_central = min(data$exposure_mean),
+        bhd_central = data$gbd_daly[1]
+        )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      data_raw |>
+      dplyr::filter(exposure_category %in% "Total exposed")|>
+      dplyr::select(daly)|>
+      dplyr::pull() |>
+      round()
+  )
+})
+
+## ASSESSOR: 
+## Axel Luyten, Swiss TPH
+## ASSESSMENT DETAILS: 
+## attribute DALYs from ischemic heart disease to road noise exposure
+## INPUT DATA DETAILS: 
+## noise exposure data from NIPH; cutoff based on exposure data; baseline DALYs from GBD; relative risk from WHO (2003)
+```
+
+Please refer to the *intro_to_healthiar* vignette for guidance on how to extract
+main / detailed results of an attribute output.
+
+--------------------------------------------------------------------------------
+
+## Uncertainty analysis
+
+For the uncertainty pathways, you can re-use your core pathway tests, or you can
+create a new `attribute_health()` or `compare()` output.
+
+IMPORTANT: The Monte Carlo uncertainty analysis needs an existing
+`attribute_health()` or `compare()` output that contains uncertainty one or more
+input variable, e.g.:
+
+-   `rr_central, rr_lower, rr_upper`
+-   `exp_central, exp_lower, exp_upper`
+    -   **only applicable for assessments with single exposure value**; for
+        assessments with exposure categories this feature still has to be
+        implemented: one would not adjust the exposure categories but rather the
+        persons exposed to each exposure category (i.e. via `pop_exp` or
+        `prop_pop_exp`)
+-   `cutoff_central, cutoff_lower, cutoff_upper`
+-   `bhd_central, bhd_lower, bhd_upper`
+-   `dw_central, dw_lower, dw_upper`
+-   `duration_central, duration_lower, duration_upper`
+
+For other input variables `summarize_uncertainty()` is not (yet) implemented.
+
+If the core pathway test you want to re-use doesn't have uncertainty in any
+input values, you can create fake uncertainty bounds (make sure to mention
+this).
+
+E.g. if you only had `rr_central = 1.06`, you could add the fake uncertainty
+bounds `rr_lower = 1.04` and `rr_lower = 1.08`.
+
+### Example uncertainty relative risk
+
+Because there is no real comparison case for the Monte Carlo simulation done by calling `summarize_uncertainty()`, we have to "cheat" a little: we first run `summarize_uncertainty()`, then take the results thereof as the comparison values; this way, we can at least check that the results stay constant over time, which is the best we can do for `summarize_uncertainty()`
+
+#### First run `summarize_uncertainty()` ...
+```{r uncertainty example part 1, include=TRUE, echo=TRUE, eval=FALSE}
+## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+# data <- ...
+
+## First create an assessment using attribute_health() or compare()
+results_interim <- healthiar::attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.08,
+  rr_lower = 1.08 - 0.02, # FAKE
+  rr_upper = 1.08 + 0.02,
+  rr_increment = 10,
+  exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
+  pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700), # OPTION A
+  cutoff_central = 5,
+  bhd_central = 85362.08
+)
+
+## healthiar::summarize_uncertainty() FUNCTION CALL
+results <- healthiar::summarize_uncertainty(
+  output_attribute = results_interim,
+  n_sim = 100 # Please take this value, to reduce time needed for all tests
+)
+```
+
+#### ... then extract the results ...
+
+```{r uncertainty example part 2 extract results, eval=TRUE}
+results$uncertainty_main$impact_rounded
+## 26676 (central impact estimates), 22183 (lower), 31407 (upper)
+```
+
+###... then add everything to the extended function template that we already know
+
+```{r uncertainty example part 3 fill out template, include=TRUE, echo=TRUE, eval=FALSE}
+
+testthat::test_that("results correct [pathway_id]", {
+  
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  # data <- ...
+  
+  ## First create an assessment using attribute_health() or compare()
+  result_interim <- healthiar::attribute_health(
+    erf_shape = "log_linear",
+    rr_central = 1.08,
+    rr_lower = 1.08 - 0.02, # FAKE
+    rr_upper = 1.08 + 0.02,
+    rr_increment = 10,
+    exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
+    pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700), # OPTION A
+    cutoff_central = 5,
+    bhd_central = 85362.08)
+    
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object = healthiar::summarize_uncertainty(
+      output_attribute = results_interim,
+      n_sim = 100 # Please take this value, to reduce time needed for all tests
+    )$uncertainty_main$impact_rounded,
+    
+    ## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c(26676, 22183, 31407)
+    )
+})
+
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+### Example uncertainty RR with iteration
+
+Here we follow the same steps as outlined in the first uncertainty example
+
+- Re-use an existing test with relative risk and add some input values to `..._lower` and `..._upper` arguments
+- Run the assessment, and input the results to `summarize_uncertainty()`
+- Use the results of the `summarize_uncertainty()` as the `expected` values in the extended function template
+
+```{r test uncertainty rr iteration, eval=FALSE, include=FALSE}
+testthat::test_that("results correct [pathway_id]", {
+
+  result_interim_iteration <-
+    healthiar::attribute_health(
+      exp_central = list(8, 7.5),
+      exp_lower = list(7, 6.2),
+      exp_upper = list(9, 8.1),
+      cutoff_central = 5,
+      cutoff_lower = 4,
+      cutoff_upper = 6,
+      bhd_central = list(1E5, 1E5),
+      bhd_lower = list(5E4, 5E4),
+      bhd_upper = list(2E5, 2E5),
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      geo_id_disaggregated = c("a", "b")
+    )
+
+  testthat::expect_equal(
+    object =
+      healthiar::summarize_uncertainty(
+        output_attribute = result_interim_iteration,
+        n_sim = 100,
+        seed = 123
+      )$uncertainty_main$impact_rounded,
+
+    expected = # Results on 2025-06-04; no comparison study
+      c(2591, 745, 7400, 2599, 537, 6566)
+  )
+})
+
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+--------------------------------------------------------------------------------
+
+# Testing templates
+
+For more information on how to use the `healthiar` package (including several
+example cases of how to use its functions), please see the vignette
+`intro_to_healthiar` (refer to section [Prerequisite: newest version of
+`healthiar` installed] for how to access it). For more information on a specific
+function, you can call `?healthiar::<function_name>` (e.g.
+`?healthiar::attribute_health`), which will open the function documentation. An
+alternative way to open the function documentation is to go to the *Packages*
+tab in RStudio, scroll down to & click on *healthiar*, and scroll down and click
+on the function you are interested in.
+
+## Relative risk pathways
+
+Depending on your calculation pathway you will have to replace some of the
+`NULL` values in the template.
+
+### Explanation of pathway ID
+
+The pathway ID for relative risk pathways contain the following elements:
+
+-   *erf* contains the exposure-response function shape
+
+    -   lin_lin = linear-linear ERF shape
+    -   log_lin = log-linear ERF shape
+    -   function = case where the ERF is defined by multiple points (x and y
+        coordinates), e.g. the MR-BRT curves from GBD
+    -   formula = case where ERF is a formula of the type a \* x + b \* x\^2 ...
+
+-   *exp* specifies the type of exposure input data
+
+    -   single = single exposure input value, e.g. yearly average
+        population-weighted PM2.5 exposure
+    -   dist = exposure distribution, e.g. 5 different exposure categories (\~
+        exposure ranges) with the information how many people are exposed to
+        each of the 5 exposure range
+
+-   *iteration* specifies whether the assessment is done for more than one geo
+    unit (e.g. municipality, region, province, ...)
+
+    -   if yes –\> TRUE: the iteration function calls require two additional
+        arguments compared to the function calls for single geo units: you have
+        to additionally specify the `geo_id_disaggregated` (e.g. "Brussels",
+        "Antwerp", ...) and `geo_id_aggregated` (e.g. "Belgium") arguments.
+        Also, the geo unit-specific arguments (e.g. `exp_central`,
+        `bhd_central`, ...) have to be provided as lists, with each list element
+        representing a geo unit. For more detailed information on iterations
+        using `attribute_...` functions please see section *Example iteration:
+        assess impact in multiple geographic units* in the *intro_to_healthiar*
+        vignette.
+    -   if no –\> FALSE
+
+### Basic function template
+
+```{r template rr complete basic, include=TRUE, echo=TRUE, eval=FALSE}
+## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+# data <- ...
+
+## healthiar FUNCTION CALL
+healthiar::attribute_health(
+  approach_risk = "relative_risk",
+  erf_shape = ,
+  rr_central = ,
+  rr_lower = NULL, 
+  rr_upper = NULL,
+  rr_increment = ,
+  exp_central = ,
+  exp_lower = NULL, 
+  exp_upper = NULL,
+  cutoff_central = ,
+  cutoff_lower = NULL, 
+  cutoff_upper = NULL,
+  bhd_central = ,
+  bhd_lower = NULL, 
+  bhd_upper = NULL,
+  geo_id_disaggregated = NULL,
+  geo_id_aggregated = NULL
+)
+    
+## RESULT(S) COMPARISON ASSESSMENT:
+## List here the results of the comparison assessment you selected
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+### Extended function template
+
+```{r template rr complete extended, include=TRUE, echo=TRUE, eval=FALSE}
+testthat::test_that("results correct [pathway_id]", {
+  
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  # data <- ...
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = ,
+        rr_central = ,
+        rr_lower = NULL, 
+        rr_upper = NULL,
+        rr_increment = ,
+        exp_central = ,
+        exp_lower = NULL, 
+        exp_upper = NULL,
+        cutoff_central = ,
+        cutoff_lower = NULL, 
+        cutoff_upper = NULL,
+        bhd_central = ,
+        bhd_lower = NULL, 
+        bhd_upper = NULL,
+        geo_id_disaggregated = NULL,
+        geo_id_aggregated = NULL
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c( )
+    )
+})
+
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+## Absolute risk pathways
+
+Depending on your calculation pathway you will have to replace some of the
+`NULL` values in the template.
+
+### Explanation of pathway ID
+
+The pathway ID for absolute risk pathways contain the following elements:
+
+-   *erf* contains the exposure-response function shape
+
+    -   function = case where the ERF is defined by multiple points (x and y
+        coordinates), e.g. the MR-BRT curves from GBD
+    -   formula = case where ERF is a formula of the type a \* x + b \* x\^2 ...
+
+-   *exp* specifies the type of exposure input data
+
+    -   single = single exposure input value, e.g. yearly average
+        population-weighted PM2.5 exposure
+    -   dist = exposure distribution, e.g. 5 different exposure categories (\~
+        exposure ranges) with the information how many people are exposed to
+        each of the 5 exposure range
+
+-   *iteration* specifies whether the assessment is done for more than one geo
+    unit (e.g. municipality, region, province, ...)
+
+    -   if yes –\> TRUE: the iteration function calls require two additional
+        arguments compared to the function calls for single geo units: you have
+        to additionally specify the `geo_id_disaggregated` (e.g. "Brussels",
+        "Antwerp", ...) and `geo_id_aggregated` (e.g. "Belgium") arguments.
+        Also, the geo unit-specific arguments (e.g. `exp_central`,
+        `bhd_central`, ...) have to be provided as lists, with each list element
+        representing a geo unit. For more detailed information on iterations
+        using `attribute_...` functions please see section *Example iteration:
+        assess impact in multiple geographic units* in the *intro_to_healthiar*
+        vignette.
+    -   if no –\> FALSE
+
+### Basic function template
+
+```{r template ar complete basic, include=TRUE, echo=TRUE, eval=FALSE}
+## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+# data <- ...
+
+healthiar::attribute_health(
+  approach_risk = "absolute_risk",
+  erf_eq_central = ,
+  erf_eq_lower = NULL,
+  erf_eq_upper = NULL,
+  exp_central = ,
+  exp_lower = NULL, 
+  exp_upper = NULL,
+  pop_exp = ,
+  geo_id_disaggregated = NULL,
+  geo_id_aggregated = NULL
+)
+
+## RESULT(S) COMPARISON ASSESSMENT:
+## List here the results of the comparison assessment you selected
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+### Extended function template
+
+```{r template ar complete extended, include=TRUE, echo=TRUE, eval=FALSE}
+testthat::test_that("results correct [pathway_id]", {
+  
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  # data <- ...
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        erf_eq_central = ,
+        erf_eq_lower = NULL,
+        erf_eq_upper = NULL,
+        exp_central = ,
+        exp_lower = NULL, 
+        exp_upper = NULL,
+        pop_exp = ,
+        geo_id_disaggregated = NULL,
+        geo_id_aggregated = NULL
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c( )
+    )
+})
+
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+## Monetization pathways
+
+See start of the section [Testing templates] for guidance on how to access
+function-specific info about the `include_monetization` function.
+
+Depending on your calculation pathway you will have to replace some of the
+`NULL` values in the template.
+
+### Explanation of pathway ID
+
+The pathway ID for monetization pathways contain the following elements:
+
+-   *discount_rate* specifies whether discounting for future years is done
+
+    -   if yes –\> TRUE
+    -   if no –\> FALSE
+
+-   *discount_shape* specifies the formula shape to be used for discounting
+
+    -   exponential = exponential discount equation
+    -   hyp_harvey = hyperbolic discount equation based on the work of Harvey
+        (1986)
+    -   hyp_mazur = hyperbolic discount equation based on the work of Mazur
+        (1986)
+
+-   *inflation* specifies whether annual inflation (increase of prices) is
+    applied
+
+    -   if yes –\> TRUE
+    -   if no –\> FALSE
+
+### Basic function template
+
+```{r template monetization complete basic, include=TRUE, echo=TRUE, eval=FALSE}
+## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+# data <- ...
+
+## healthiar FUNCTION CALL
+healthiar::monetize(
+  output_attribute = NULL, # Only specify one of either "output_attribute" or "impact" argument 
+  impact = , # Only specify one of either "output_attribute" or "impact" argument 
+  valuation = ,
+  cost = ,
+  discount_rate = NULL,
+  discount_shape = NULL,
+  discount_years = 1,
+  inflation = NULL
+)
+
+## RESULT(S) COMPARISON ASSESSMENT:
+## List here the results of the comparison assessment you selected
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+### Extended function template
+
+```{r template monetization complete extended, include=TRUE, echo=TRUE, eval=FALSE}
+testthat::test_that("results correct [pathway_id]", {
+  
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  # data <- ...
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::monetize(
+        output_attribute = NULL, # Only specify one of either "output_attribute" or "impact" argument 
+        impact = , # Only specify one of either "output_attribute" or "impact" argument 
+        valuation = ,
+        cost = ,
+        discount_rate = NULL,
+        discount_shape = NULL,
+        discount_years = 1,
+        inflation = NULL
+        )$monetization_main$monetized_impact,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c( )
+    )
+})
+
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+## Cost-benefit analysis pathways
+
+Depending on your calculation pathway you will have to replace some of the
+`NULL` values in the template.
+
+### Explanation of pathway ID
+
+The pathway ID for monetization pathways contain the following elements:
+
+-   *discount_shape* specifies the formula shape to be used for discounting
+
+    -   exponential = exponential discount equation
+    -   hyp_harvey = hyperbolic discount equation based on the work of Harvey
+        (1986)
+    -   hyp_mazur = hyperbolic discount equation based on the work of Mazur
+        (1986)
+
+-   *discount_rate_benefit* specifies whether discounting for future years is
+    done for the entered benefit
+
+    -   if yes –\> TRUE
+    -   if no –\> FALSE
+
+-   *discount_rate_cost* specifies whether discounting for future years is done
+    for the entered cost
+
+    -   if yes –\> TRUE
+    -   if no –\> FALSE
+
+### Basic function template
+
+```{r template cba complete basic, include=TRUE, echo=TRUE, eval=FALSE}
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  # data <- ...
+
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::cba(
+        output_attribute = NULL,
+        positive_impact = ,
+        valuation = ,
+        cost = ,
+        discount_shape = ,
+        discount_rate_benefit = ,
+        discount_rate_cost = ,
+        discount_years_benefit = 1,
+        discount_years_cost = 1) 
+
+## RESULT(S) COMPARISON ASSESSMENT:
+## List here the results of the comparison assessment you selected
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+### Extended function template
+
+```{r template cba complete extended, include=TRUE, echo=TRUE, eval=FALSE}
+testthat::test_that("results correct [pathway_id]", {
+  
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  # data <- ...
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::cba(
+        output_attribute = NULL,
+        positive_impact = ,
+        valuation = ,
+        cost = ,
+        discount_shape = ,
+        discount_rate_benefit = ,
+        discount_rate_cost = ,
+        discount_years_benefit = 1,
+        discount_years_cost = 1)$cba_main$net_benefit_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c( )
+    )
+})
+
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+## Social analysis
+
+Note that to test the `socialize` function you a social indicator for each of
+the geo units under analysis in addition to the usual data needed for an
+iteration of `attribute`.
+
+### Basic function template
+
+```{r template social analysis basic, include=TRUE, echo=TRUE, eval=FALSE}
+## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+# data <- ...
+
+## First run an iteration (see iteration template for full argument list)
+result_interim <- healthiar::attribute_health(
+  exp_central = as.list( ),
+  bhd_central = as.list( ),
+  cutoff_central = ,
+  rr_central = , 
+  erf_shape = , 
+  rr_increment = ,
+  geo_id_disaggregated = 
+)
+
+## healthiar FUNCTION CALL
+healthiar::socialize(
+  output_attribute = result_interim,
+  geo_id_disaggregated = , # geo IDs of the preparatory iteration call above and this function call must match!
+  social_indicator = ,
+  n_quantile = , # Specify number of quantiles, e.g. 10
+  approach = "quantile" # default (and currently only) approach
+)
+
+## RESULT(S) COMPARISON ASSESSMENT:
+## List here the results of the comparison assessment you selected
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```
+
+### Extended function template
+
+```{r template social analysis extended, include=TRUE, echo=TRUE, eval=FALSE}
+
+testthat::test_that("results correct [pathway_id]", {
+  
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  # data <- ...
+  
+  ## First run an iteration (see iteration template for full argument list)
+  result_interim <- healthiar::attribute_health(
+    exp_central = as.list( ),
+    bhd_central = as.list( ),
+    cutoff_central = ,
+    rr_central = , 
+    erf_shape = , 
+    rr_increment = ,
+    geo_id_disaggregated = 
+  )
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+        healthiar::socialize(
+          output_attribute = result_interim,
+          geo_id_disaggregated = , # geo IDs of the preparatory iteration call above and this function call must match!
+          social_indicator = ,
+          n_quantile = , # Specify number of quantiles, e.g. 10
+          approach = "quantile" # default (and currently only) approach
+        ) |>
+      purrr::pluck("social_main") |> 
+      dplyr::filter(
+        difference_type == "absolute" & 
+          difference_compared_with == "overall")  |>
+      dplyr::select(difference_value) |> 
+      base::unlist() |>
+      base::as.numeric(),
+    
+    ## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c( )
+    )
+})
+
+## ASSESSOR:
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: 
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: 
+## Add here input data details: data sources, measured vs. modelled, ...
+```

@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Testing healthiar</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Testing healthiar</h1>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#hi-there" id="toc-hi-there">Hi there : )</a></li>
+<li><a href="#prerequisite-newest-version-of-healthiar-installed" id="toc-prerequisite-newest-version-of-healthiar-installed">Prerequisite:
+newest version of <code>healthiar</code> installed</a></li>
+<li><a href="#example-adding-a-test-calculation" id="toc-example-adding-a-test-calculation">Example: Adding a test
+calculation</a>
+<ul>
+<li><a href="#pick-a-pathway-and-look-for-comparison-assessment" id="toc-pick-a-pathway-and-look-for-comparison-assessment">1. Pick a
+pathway and look for comparison assessment</a>
+<ul>
+<li><a href="#option-a-look-for-comparison-assessment-select-corresponding-pathway" id="toc-option-a-look-for-comparison-assessment-select-corresponding-pathway">Option
+A: Look for comparison assessment &amp; select corresponding
+pathway</a></li>
+<li><a href="#option-b-choose-a-pathway-look-for-corresponding-comparison-assessment" id="toc-option-b-choose-a-pathway-look-for-corresponding-comparison-assessment">Option
+B: Choose a pathway &amp; look for corresponding comparison
+assessment</a></li>
+<li><a href="#detailed-pathway-characterizations" id="toc-detailed-pathway-characterizations">Detailed pathway
+characterizations</a></li>
+</ul></li>
+<li><a href="#fill-out-the-function-template-with-the-assessment-input-data" id="toc-fill-out-the-function-template-with-the-assessment-input-data">2.
+Fill out the function template with the assessment input data</a>
+<ul>
+<li><a href="#option-a-basic-function-template" id="toc-option-a-basic-function-template">Option A: Basic function
+template</a></li>
+<li><a href="#option-b-extended-function-template-preferred" id="toc-option-b-extended-function-template-preferred">Option B:
+Extended function template (preferred)</a></li>
+<li><a href="#add-test-details" id="toc-add-test-details">Add test
+details</a></li>
+<li><a href="#enter-input-data" id="toc-enter-input-data">Enter input
+data</a>
+<ul>
+<li><a href="#option-a-function-call-with-hard-coded-data" id="toc-option-a-function-call-with-hard-coded-data">Option A: Function
+call with hard-coded data</a></li>
+<li><a href="#option-b-function-call-with-pre-loaded-data" id="toc-option-b-function-call-with-pre-loaded-data">Option B: Function
+call with pre-loaded data</a></li>
+</ul></li>
+<li><a href="#enter-results-of-comparison-assessment" id="toc-enter-results-of-comparison-assessment">Enter results of
+comparison assessment</a></li>
+</ul></li>
+<li><a href="#if-possible-compare-results-of-healthiar-and-your-chosen-assessment" id="toc-if-possible-compare-results-of-healthiar-and-your-chosen-assessment">3.
+IF POSSIBLE: Compare results of healthiar and your chosen assessment</a>
+<ul>
+<li><a href="#option-a-compare-results-manually" id="toc-option-a-compare-results-manually">Option A: Compare results
+manually</a></li>
+<li><a href="#option-b-compare-results-automatically-preferred" id="toc-option-b-compare-results-automatically-preferred">Option B:
+Compare results automatically (preferred)</a></li>
+</ul></li>
+<li><a href="#upload-the-test" id="toc-upload-the-test">4. Upload the
+test</a></li>
+<li><a href="#uncertainty-analysis" id="toc-uncertainty-analysis">Uncertainty analysis</a>
+<ul>
+<li><a href="#example-uncertainty-relative-risk" id="toc-example-uncertainty-relative-risk">Example uncertainty relative
+risk</a>
+<ul>
+<li><a href="#first-run-summarize_uncertainty" id="toc-first-run-summarize_uncertainty">First run
+<code>summarize_uncertainty()</code> …</a></li>
+<li><a href="#then-extract-the-results" id="toc-then-extract-the-results">… then extract the results …</a></li>
+</ul></li>
+<li><a href="#example-uncertainty-rr-with-iteration" id="toc-example-uncertainty-rr-with-iteration">Example uncertainty RR
+with iteration</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#testing-templates" id="toc-testing-templates">Testing
+templates</a>
+<ul>
+<li><a href="#relative-risk-pathways" id="toc-relative-risk-pathways">Relative risk pathways</a>
+<ul>
+<li><a href="#explanation-of-pathway-id" id="toc-explanation-of-pathway-id">Explanation of pathway ID</a></li>
+<li><a href="#basic-function-template" id="toc-basic-function-template">Basic function template</a></li>
+<li><a href="#extended-function-template" id="toc-extended-function-template">Extended function template</a></li>
+</ul></li>
+<li><a href="#absolute-risk-pathways" id="toc-absolute-risk-pathways">Absolute risk pathways</a>
+<ul>
+<li><a href="#explanation-of-pathway-id-1" id="toc-explanation-of-pathway-id-1">Explanation of pathway ID</a></li>
+<li><a href="#basic-function-template-1" id="toc-basic-function-template-1">Basic function template</a></li>
+<li><a href="#extended-function-template-1" id="toc-extended-function-template-1">Extended function
+template</a></li>
+</ul></li>
+<li><a href="#monetization-pathways" id="toc-monetization-pathways">Monetization pathways</a>
+<ul>
+<li><a href="#explanation-of-pathway-id-2" id="toc-explanation-of-pathway-id-2">Explanation of pathway ID</a></li>
+<li><a href="#basic-function-template-2" id="toc-basic-function-template-2">Basic function template</a></li>
+<li><a href="#extended-function-template-2" id="toc-extended-function-template-2">Extended function
+template</a></li>
+</ul></li>
+<li><a href="#cost-benefit-analysis-pathways" id="toc-cost-benefit-analysis-pathways">Cost-benefit analysis
+pathways</a>
+<ul>
+<li><a href="#explanation-of-pathway-id-3" id="toc-explanation-of-pathway-id-3">Explanation of pathway ID</a></li>
+<li><a href="#basic-function-template-3" id="toc-basic-function-template-3">Basic function template</a></li>
+<li><a href="#extended-function-template-3" id="toc-extended-function-template-3">Extended function
+template</a></li>
+</ul></li>
+<li><a href="#social-analysis" id="toc-social-analysis">Social
+analysis</a>
+<ul>
+<li><a href="#basic-function-template-4" id="toc-basic-function-template-4">Basic function template</a></li>
+<li><a href="#extended-function-template-4" id="toc-extended-function-template-4">Extended function
+template</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+
+<hr />
+<div id="hi-there" class="section level2">
+<h2>Hi there : )</h2>
+<p>This document will guide you step-by-step through the process of
+adding a test for a specific calculation pathway.</p>
+<p>In case you encounter difficulties, you find something unclear or you
+see a way to improve the testing process, please let us know:</p>
+<ul>
+<li><p>Preferably by opening a GitHub issue by going on this <a href="https://github.com/best-cost/best-cost_WPs/issues">link</a> and
+clicking the green button that says <em>New issue</em> or</p></li>
+<li><p>write us at <a href="mailto:axel.luyten@swisstph.ch" class="email">axel.luyten@swisstph.ch</a> or <a href="mailto:alberto.castrofernandez@swisstph.ch" class="email">alberto.castrofernandez@swisstph.ch</a></p></li>
+</ul>
+<p>Thank you in advance for your efforts! Together we can make healthiar
+more error proof and improve function and package documentation!</p>
+</div>
+<div id="prerequisite-newest-version-of-healthiar-installed" class="section level2">
+<h2>Prerequisite: newest version of <code>healthiar</code>
+installed</h2>
+<p>If you haven’t already, install the most recent version of the
+BEST-COST R package <code>healthiar</code>. If you get prompted to
+update packages that <code>healthiar</code> uses and/or relies on, we
+recommend to do so.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="at">repo =</span> <span class="st">&quot;best-cost/best-cost_WPs&quot;</span>, </span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="at">subdir =</span> <span class="st">&quot;/r_package/healthiar&quot;</span>, </span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="at">ref =</span> <span class="st">&quot;HEAD&quot;</span>, </span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="at">build_vignettes =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>For more information on how to use the <code>healthiar</code> package
+(including several example cases of how to use the functions), please
+see the vignette <code>intro_to_healthiar</code>: you can access it
+(once you have the <code>healthiar</code> package installed) in RStudio
+by</p>
+<ul>
+<li><p>running <code>browseVignettes(&quot;healthiar&quot;)</code> in the console
+and clicking on <em>HTML</em> on the page that pops up</p></li>
+<li><p>going to the <em>Packages</em> tab in RStudio, and clicking on
+<code>healthiar</code>&gt;<em>User guides, package vignettes and other
+documentation</em>&gt;<em>HTML</em></p></li>
+</ul>
+<hr />
+</div>
+<div id="example-adding-a-test-calculation" class="section level1">
+<h1>Example: Adding a test calculation</h1>
+<p>Below you will be guided step-by-step through the process of adding a
+test calculation. There are four main steps. They are, in order:</p>
+<ol style="list-style-type: decimal">
+<li><p>Pick a pathway and look for comparison assessment</p></li>
+<li><p>Fill out the function template with the assessment input
+data</p></li>
+<li><p>IF POSSIBLE: Compare results of <code>healthiar</code> and your
+chosen assessment</p></li>
+<li><p>Upload the test</p></li>
+</ol>
+<div id="pick-a-pathway-and-look-for-comparison-assessment" class="section level2">
+<h2>1. Pick a pathway and look for comparison assessment</h2>
+<p>You can either</p>
+<ul>
+<li><p>Option A: first look for a comparison assessment &amp; then
+select the corresponding pathway</p></li>
+<li><p>Option B: first choose a pathway &amp; then look for
+corresponding comparison assessment</p>
+<ul>
+<li>Recommended in case you have a specific assessment ready</li>
+</ul></li>
+</ul>
+<p>Both options are valid. In the best case the pathway that you want to
+test is not yet covered / claimed by another WP4 partner. Please check
+this before you start creating your test case in the the Excel
+<em>overview_testing.xlsx</em>, which is located on Teams under <a href="https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&amp;web=1&amp;e=ByCQGk">Documents&gt;WP4
+PROGRAMMING&gt;testing_of_functions</a>.</p>
+<p>Note: it is okay to test a specific pathway more than once, but of
+course testing a new pathway adds the most value.</p>
+<p>Of course, there are multiple possible sources of comparison
+assessments. These are, in order of decreasing preference:</p>
+<ol style="list-style-type: decimal">
+<li><p>own assessment / calculations</p></li>
+<li><p>other studies / reports</p></li>
+<li><p>artificial intelligence, e.g. ChatGPT</p></li>
+<li><p>“fake” (but realistic) input data, to make sure calculation works
+(no error) and that results stay the same over timeFor picking a
+calculation pathway you can either</p></li>
+</ol>
+<div id="option-a-look-for-comparison-assessment-select-corresponding-pathway" class="section level3">
+<h3>Option A: Look for comparison assessment &amp; select corresponding
+pathway</h3>
+<p>Example: you have done an assessment in the past and you claim the
+pathway in the Excel <em>overview_testing.xlsx</em> and get started with
+Step 2 right away.</p>
+</div>
+<div id="option-b-choose-a-pathway-look-for-corresponding-comparison-assessment" class="section level3">
+<h3>Option B: Choose a pathway &amp; look for corresponding comparison
+assessment</h3>
+<p>Example: you have a look at the calculation pathways in the Excel
+<em>overview_testing.xlsx</em> and you select the following pathway:</p>
+<ul>
+<li><p>Relative risk</p></li>
+<li><p>ERF shape: log-linear</p></li>
+<li><p>Exposure: exposure distribution</p></li>
+<li><p>No iteration</p></li>
+</ul>
+<p>The <code>pathway_id</code> of this calculation pathway is:
+<em>|pathway_rr|erf_log_lin|exp_single|iteration_FALSE|</em>.</p>
+<p>You claim this pathway by filling in your institution abbreviation
+and your name in the corresponding columns.</p>
+<p>Each calculation pathway has a unique <em>pathway_id</em> linked to
+it, which contain all the infos from the characterisation columns in a
+condensed way. These pathways are used internally to keep track of the
+testing progress, and to find specific pathways quickly.</p>
+<p>You ask around and find out that a colleague of you just recently did
+an assessment that matches your selected pathway. She digs up the
+assessment and sends you both the input data and the results. You get
+set to add a test. In this case, the assessment details are saved in a
+.xlsx file (Excel file).</p>
+<p>Please see the start of Step 1 for alternative sources of comparison
+assessments.</p>
+</div>
+<div id="detailed-pathway-characterizations" class="section level3">
+<h3>Detailed pathway characterizations</h3>
+<p>The Excel <em>overview_testing.xlsx</em>, which is located on Teams
+under <a href="https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&amp;web=1&amp;e=ByCQGk">Documents&gt;WP4
+PROGRAMMING&gt;testing_of_functions</a>, contains an overview of the
+most relevant (= core) pathways that are available to users of
+<em>healthiar</em> functions. There are different sheets. In the first
+sheet is the overview of the core relative risk pathways. The columns
+might seem a bit cryptic at first glance, but bear with me:</p>
+<ul>
+<li><p><em>erf</em> contains the exposure-response function shape</p>
+<ul>
+<li>lin_lin = linear-linear ERF shape</li>
+<li>log_lin = log-linear ERF shape</li>
+<li>function = case where the ERF is defined by multiple points (x and y
+coordinates), e.g. the MR-BRT curves from GBD</li>
+<li>formula = case where ERF is a formula of the type a * x + b * x^2
+…</li>
+</ul></li>
+<li><p><em>exp</em> specifies the type of exposure input data</p>
+<ul>
+<li>single = single exposure input value, e.g. yearly average
+population-weighted PM2.5 exposure</li>
+<li>dist = exposure distribution, e.g. 5 different exposure categories
+(~ exposure ranges) with the information how many people are exposed to
+each of the 5 exposure range</li>
+</ul></li>
+<li><p><em>iteration</em> specifies whether the assessment is done for
+more than one geo unit (e.g. municipality, region, province, …)</p>
+<ul>
+<li>if yes –&gt; TRUE</li>
+<li>if no –&gt; FALSE</li>
+</ul></li>
+</ul>
+<p>Similarly, pathways are also defined (with some different columns)
+for cost-benefit analysis, monetization, and the other pathway
+groups.</p>
+<p>Detailed explanations of these other pathway IDs (like the bullet
+points above for the RR pathways) are found below at the start of each
+pathway groups’ template.</p>
+</div>
+</div>
+<div id="fill-out-the-function-template-with-the-assessment-input-data" class="section level2">
+<h2>2. Fill out the function template with the assessment input
+data</h2>
+<p>You create a new R script (<code>.R</code> file) or RMarkdown
+(<code>.Rmd</code> file) for your test (please create one file for each
+test, if possible).</p>
+<p>You select the appropriate template that Swiss TPH provided.</p>
+<p>Several testing templates can be found below in the section <a href="#testing-templates">Testing templates</a>.</p>
+<p>Below you find two variants of an example function template for a
+relative risk pathway</p>
+<ul>
+<li><p>Option A: Basic function template</p></li>
+<li><p>Option B: Extended function template (preferred)</p></li>
+</ul>
+<p>Each template in the section <a href="#testing-templates">Testing
+templates</a> is available in both the basic and extended version.</p>
+<div id="option-a-basic-function-template" class="section level3">
+<h3>Option A: Basic function template</h3>
+<p>The basic template consists of the following elements</p>
+<ul>
+<li><p>pathway ID (of the specific pathway you want to test)</p></li>
+<li><p>if applicable: some code to load in input data</p></li>
+<li><p>an <code>attribute_...</code> function call (in this case
+<code>attribute_health</code>) with (some of the) the function arguments
+needed for the assessment listed</p></li>
+<li><p>an info block where we’d like you to enter</p>
+<ul>
+<li><p>result(s) (of the comparison assessment you selected)</p></li>
+<li><p>your name and institution abbreviation</p></li>
+<li><p>a short description of the comparison assessment you
+selected</p></li>
+<li><p>info about the input data you used</p></li>
+</ul></li>
+</ul>
+<p>If you have just started your R journey, feel free to use the basic
+function template!</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="do">## Pathway ID: copy here the pathway ID</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># data &lt;- ...</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>results <span class="ot">&lt;-</span> healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  <span class="at">erf_shape =</span> ,</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  <span class="at">rr_central =</span> ,</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  <span class="at">rr_increment =</span> ,</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>  <span class="at">exp_central =</span> ,</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>  <span class="at">prop_pop_exp =</span> ,</span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>  <span class="at">cutoff_central =</span> ,</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>  <span class="at">bhd_central =</span> ,</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>  <span class="at">geo_id_disaggregated =</span> ,</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>  <span class="at">geo_id_aggregated =</span>  </span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>)</span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="do">## RESULT(S) COMPARISON ASSESSMENT:</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="do">## List here the results of the comparison assessment you selected</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="do">## ASSESSOR:</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+</div>
+<div id="option-b-extended-function-template-preferred" class="section level3">
+<h3>Option B: Extended function template (preferred)</h3>
+<p>The extended function template contains the same elements as the
+basic function template plus it enables an automatic comparison of the
+<code>attribute_...</code> results and of the comparison assessment
+results. It contains the following additional elements</p>
+<ul>
+<li><p>a <code>testthat::test_that</code> call, which contains the test
+name (1st argument) and contains the actual test (2nd argument), which
+is encapsulated by <code>{ ... }</code> and consists of</p>
+<ul>
+<li><p>a <code>testthat::expect_equal</code> call, which in turn
+encapsulates two main arguments</p>
+<ol style="list-style-type: decimal">
+<li><p><code>object</code>: here you enter the <code>healthiar</code>
+function call. The output of the call will be compared with the second
+argument</p></li>
+<li><p><code>expected</code>: here you enter the result(s) of the
+comparison assessment</p></li>
+</ol></li>
+</ul></li>
+</ul>
+<p>The extended function template is used in the automatic testing of
+the R package (for more info see <a href="https://r-pkgs.org/testing-basics.html">this chapter</a> in Hadley
+Wickham’s R packages book).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>testthat<span class="sc">::</span><span class="fu">test_that</span>(<span class="st">&quot;results correct &lt;pathway_id&gt;&quot;</span>, {</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  </span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># data &lt;- ...</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>testthat<span class="sc">::</span><span class="fu">expect_equal</span>(</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="at">object =</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>    healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>      <span class="at">erf_shape =</span> ,</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>      <span class="at">rr_central =</span> ,</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>      <span class="at">rr_increment =</span> ,</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>      <span class="at">exp_central =</span> ,</span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>      <span class="at">prop_pop_exp =</span> ,</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>      <span class="at">cutoff_central =</span> ,</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>      <span class="at">bhd_central =</span> ,</span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>      <span class="at">geo_id_disaggregated =</span> ,</span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>      <span class="at">geo_id_aggregated =</span> </span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>    )<span class="sc">$</span>health_main<span class="sc">$</span>impact_rounded,</span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>  <span class="do">##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>  <span class="at">expected =</span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>    <span class="fu">c</span>( )</span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>)</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>})</span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="do">## ASSESSOR: </span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+<p>Please refer to the <em>intro_to_healthiar</em> vignette for guidance
+on how to extract main / detailed results of an attribute output.</p>
+</div>
+<div id="add-test-details" class="section level3">
+<h3>Add test details</h3>
+<p>In this example, we’ll start by entering the <code>pathway_id</code>
+(which is found in the <em>overview_testing</em> Excel located in <a href="https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&amp;web=1&amp;e=ByCQGk">this
+Teams folder</a>) to the function template.</p>
+<p>In this example the <code>pathway_id</code> is
+<em>|pathway_rr|erf_log_lin|exp_single|iteration_FALSE|</em></p>
+<p>In case of the basic template you add the <code>pathway_id</code> to
+the top of it:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="do">## Pathway ID: </span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="do">## |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|</span></span></code></pre></div>
+<p>In case of the extended template you add the first argument of the
+<code>testthat::test_that</code> call:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>testthat<span class="sc">::</span><span class="fu">test_that</span>(<span class="st">&quot;results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|&quot;</span>, { ... })</span></code></pre></div>
+<p>Then we’ll continue by adding other details (same for basic &amp;
+extended template) that describe the comparison case in more detail:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="do">## ASSESSOR: </span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="do">## Axel Luyten, Swiss TPH</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="do">## attribute DALYs from ischemic heart disease to road noise exposure</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="do">## noise exposure data from NIPH; cutoff based on exposure data; baseline DALYs from GBD; relative risk from WHO (2003)</span></span></code></pre></div>
+<p>In case your comparison assessment has a <em>DOI</em>, please add
+it.</p>
+</div>
+<div id="enter-input-data" class="section level3">
+<h3>Enter input data</h3>
+<p>Then you fill out the rest of the template using the input data of
+your selected assessment. There are two options:</p>
+<ul>
+<li><p>Option A: Enter the input data hard-coded</p></li>
+<li><p>Option B: Enter the input data by loading the data first into
+RStudio and then access it e.g. using the <code>$</code>
+operator</p></li>
+</ul>
+<p>Depending on the assessment, one of the two might be better suited.
+We will first look at option A, and then at option B.</p>
+<p>The step of entering the input data is the same for the basic &amp;
+extended templates.</p>
+<p>If you don’t have much R programming experience, it’s easiest to
+create the test with hard-coded inputs.</p>
+<p>In case you load the input data before calling the
+<code>healthiar</code> function, please also upload the input data to
+the Teams testing folder of your institute, alongside the code for the
+test.</p>
+<p>For the sake of visibility in this section only the
+<code>attribute_...</code> function call will be shown.</p>
+<div id="option-a-function-call-with-hard-coded-data" class="section level4">
+<h4>Option A: Function call with hard-coded data</h4>
+<p>We can manually open the (Excel) file containing the assessment
+details, and then copy the relevant input data into the template.</p>
+<p>To see the Excel file used in this example, run</p>
+<p><code>shell.exec(dirname(system.file(&quot;extdata&quot;, &quot;example_road_noise_niph.xlsx&quot;, package = &quot;healthiar&quot;)))</code></p>
+<p>which will open the folder containing the <em>.xlsx</em> file of the
+example assessment.</p>
+<p>Here’s the filled out template with hard-coded input data, i.e. raw
+numbers are fed to the function arguments and no external input data are
+loaded into RStudio.</p>
+<p>For this particular calculation pathway, one can either specify the
+argument <code>pop_exp</code> (option A) or <code>prop_pop_exp</code>
+(option B)</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>results <span class="ot">&lt;-</span> healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">erf_shape =</span> <span class="st">&quot;log_linear&quot;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">rr_central =</span> <span class="fl">1.08</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">rr_increment =</span> <span class="dv">10</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">exp_central =</span> <span class="fu">c</span>(<span class="fl">53.0</span>, <span class="fl">57.5</span>, <span class="fl">62.5</span>, <span class="fl">67.5</span>, <span class="fl">72.5</span>, <span class="fl">77.5</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="at">pop_exp =</span> <span class="fu">c</span>(<span class="dv">4268785</span>, <span class="dv">387500</span>, <span class="dv">286000</span>, <span class="dv">191800</span>, <span class="dv">72200</span>, <span class="dv">7700</span>), <span class="co"># OPTION A</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="at">cutoff_central =</span> <span class="dv">53</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="at">bhd_central =</span> <span class="fl">85362.08</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  <span class="at">geo_id_disaggregated =</span> <span class="cn">NULL</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  <span class="at">geo_id_aggregated =</span> <span class="cn">NULL</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>)</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>results <span class="ot">&lt;-</span> healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>  <span class="at">erf_shape =</span> <span class="st">&quot;log_linear&quot;</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>  <span class="at">rr_central =</span> <span class="fl">1.08</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>  <span class="at">rr_increment =</span> <span class="dv">10</span>,</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>  <span class="at">exp_central =</span> <span class="fu">c</span>(<span class="fl">53.0</span>, <span class="fl">57.5</span>, <span class="fl">62.5</span>, <span class="fl">67.5</span>, <span class="fl">72.5</span>, <span class="fl">77.5</span>),</span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>  <span class="at">prop_pop_exp =</span> <span class="fu">c</span>( <span class="co"># OPTION B</span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>    <span class="fl">0.818718312</span>, <span class="fl">0.074319355</span>, <span class="fl">0.054852478</span>, </span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>    <span class="fl">0.036785683</span>, <span class="fl">0.013847374</span>, <span class="fl">0.001476797</span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>    ),</span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>  <span class="at">cutoff_central =</span> <span class="dv">53</span>,</span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a>  <span class="at">bhd_central =</span> <span class="fl">85362.08</span>,</span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>  <span class="at">geo_id_disaggregated =</span> <span class="cn">NULL</span>,</span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a>  <span class="at">geo_id_aggregated =</span> <span class="cn">NULL</span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="option-b-function-call-with-pre-loaded-data" class="section level4">
+<h4>Option B: Function call with pre-loaded data</h4>
+<p>Another option is to load all your necessary input data before
+calling the <code>attribute_...</code> function.</p>
+<p>In case you select this approach, remember to also upload the input
+data to the Teams testing folder of your institute, alongside the code
+for the test.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>data_raw  <span class="ot">&lt;-</span>  readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_road_noise_niph.xlsx&quot;</span>, <span class="at">package =</span> <span class="st">&quot;healthiar&quot;</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="at">sheet =</span> <span class="st">&quot;Relative_risk_IHD_WHO_2003a&quot;</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>data  <span class="ot">&lt;-</span> data_raw <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(data_raw<span class="sc">$</span>exposure_mean))</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>results <span class="ot">&lt;-</span> healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="at">erf_shape =</span> <span class="st">&quot;log_linear&quot;</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>  <span class="at">rr_central =</span> <span class="fl">1.08</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>  <span class="at">rr_increment =</span> <span class="dv">10</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>  <span class="at">exp_central =</span> data<span class="sc">$</span>exposure_mean,</span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>  <span class="at">prop_pop_exp =</span> data<span class="sc">$</span>prop_exposed,</span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>  <span class="at">cutoff_central =</span> <span class="fu">min</span>(data<span class="sc">$</span>exposure_mean),</span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>  <span class="at">bhd_central =</span> data<span class="sc">$</span>gbd_daly[<span class="dv">1</span>],</span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>  <span class="at">geo_id_disaggregated =</span> <span class="cn">NULL</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>  <span class="at">geo_id_aggregated =</span> <span class="cn">NULL</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>) </span></code></pre></div>
+<p>Note that in case of the extended template</p>
+<ul>
+<li><p>the input data is loaded just before the
+<code>testthat::expect_equal</code></p></li>
+<li><p>the <code>attribute_...</code> function call is fed to the
+<code>object</code> argument of the <code>testthat::expect_equal</code>
+call</p></li>
+</ul>
+</div>
+</div>
+<div id="enter-results-of-comparison-assessment" class="section level3">
+<h3>Enter results of comparison assessment</h3>
+<p>Next you enter the results of the comparison assessment you
+selected.</p>
+<p>In case of the basic function template, you add the results to the
+info block at the bottom of the template.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="do">## RESULT(S) COMPARISON ASSESSMENT:</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="do">## 1151 attributable DALYs</span></span></code></pre></div>
+<p>In case of the extended function template, the results are fed to the
+<code>expected</code> argument of the
+<code>testthat::expect_equal</code> call.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># [...]</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  testthat<span class="sc">::</span><span class="fu">expect_equal</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>    <span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>    <span class="at">object =</span> ,</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>    <span class="do">##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>    <span class="at">expected =</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>      data_raw <span class="sc">|&gt;</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">filter</span>(exposure_category <span class="sc">%in%</span> <span class="st">&quot;Total exposed&quot;</span>)<span class="sc">|&gt;</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">select</span>(daly)<span class="sc">|&gt;</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">pull</span>() <span class="sc">|&gt;</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>      <span class="fu">round</span>()</span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>)</span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co"># [...]</span></span></code></pre></div>
+</div>
+</div>
+<div id="if-possible-compare-results-of-healthiar-and-your-chosen-assessment" class="section level2">
+<h2>3. IF POSSIBLE: Compare results of healthiar and your chosen
+assessment</h2>
+<p>Now you’ll check whether the results of the <code>healthiar</code>
+function and your chosen comparison assessment are the same. You can
+either</p>
+<ul>
+<li><p>Option A: compare the results manually</p></li>
+<li><p>Option B: compare the results automatically (preferred)</p></li>
+</ul>
+<p>If the results are the same you indicate this by putting
+<em>TRUE</em> in the Excel column <em>results_the_same</em>.</p>
+<p>However, in case there is a deviation between the
+<code>healthiar</code> output and the results from the comparison
+assessment, you would put <em>FALSE</em> in the Excel column
+<em>results_the_same.</em></p>
+<p>Please try to judge what could cause the difference and leave a
+comment in the Excel. If you’re unsure what’s the issue and can’t fix it
+yourself, we can discuss it together and maybe another WP4 partner can
+help.</p>
+<div id="option-a-compare-results-manually" class="section level3">
+<h3>Option A: Compare results manually</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>results <span class="ot">&lt;-</span> healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="at">erf_shape =</span> <span class="st">&quot;log_linear&quot;</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  <span class="at">rr_central =</span> <span class="fl">1.08</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>  <span class="at">rr_increment =</span> <span class="dv">10</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>  <span class="at">exp_central =</span> <span class="fu">c</span>(<span class="fl">53.0</span>, <span class="fl">57.5</span>, <span class="fl">62.5</span>, <span class="fl">67.5</span>, <span class="fl">72.5</span>, <span class="fl">77.5</span>),</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>  <span class="at">prop_pop_exp =</span> <span class="fu">c</span>(<span class="fl">0.818718312</span>, <span class="fl">0.074319355</span>, <span class="fl">0.054852478</span>, </span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>                   <span class="fl">0.036785683</span>, <span class="fl">0.013847374</span>, <span class="fl">0.001476797</span>),</span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>  <span class="at">cutoff_central =</span> <span class="dv">53</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>  <span class="at">bhd_central =</span> <span class="fl">85362.08</span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>)</span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>results<span class="sc">$</span>health_main<span class="sc">$</span>impact_rounded <span class="sc">|&gt;</span> </span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>  <span class="fu">print</span>()</span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt; [1] 1151</span></span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="do">## RESULT(S) COMPARISON ASSESSMENT:</span></span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="do">## 1151 attributable DALYs</span></span></code></pre></div>
+<p>In this case the results are the same!</p>
+<p>Please refer to the <em>intro_to_healthiar</em> vignette for guidance
+on how to extract main / detailed results of an attribute output.</p>
+</div>
+<div id="option-b-compare-results-automatically-preferred" class="section level3">
+<h3>Option B: Compare results automatically (preferred)</h3>
+<p>If you have advanced knowledge of R we are very grateful if you can
+compare the results automatically by running the <code>test_that</code>
+function.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>testthat<span class="sc">::</span><span class="fu">test_that</span>(<span class="st">&quot;results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|&quot;</span>, {</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  testthat<span class="sc">::</span><span class="fu">expect_equal</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>    <span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>    <span class="at">object =</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>      healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>        <span class="at">exp_central =</span> <span class="fu">c</span>(<span class="fl">53.0</span>, <span class="fl">57.5</span>, <span class="fl">62.5</span>, <span class="fl">67.5</span>, <span class="fl">72.5</span>, <span class="fl">77.5</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>        <span class="at">prop_pop_exp =</span> <span class="fu">c</span>(<span class="fl">0.818718312</span>, <span class="fl">0.074319355</span>, <span class="fl">0.054852478</span>, </span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>                         <span class="fl">0.036785683</span>, <span class="fl">0.013847374</span>, <span class="fl">0.001476797</span>),</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>        <span class="at">cutoff_central =</span> <span class="dv">53</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>        <span class="at">bhd_central =</span> <span class="fl">85362.08</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>        <span class="at">rr_central =</span> <span class="fl">1.08</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>        <span class="at">rr_increment =</span> <span class="dv">10</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>        <span class="at">erf_shape =</span> <span class="st">&quot;log_linear&quot;</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>      )<span class="sc">$</span>health_main<span class="sc">$</span>impact_rounded,</span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a>    <span class="do">##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED</span></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a>    <span class="at">expected =</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a>      <span class="fu">c</span>(<span class="dv">1151</span>)</span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a>  )</span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a>})</span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="co">#&gt; Test passed 😀</span></span></code></pre></div>
+<p>Yes, in this case they are the same (the function printed
+<code>Test passed</code>)</p>
+<p>Please refer to the <em>intro_to_healthiar</em> vignette for guidance
+on how to extract main / detailed results of an attribute output.</p>
+</div>
+</div>
+<div id="upload-the-test" class="section level2">
+<h2>4. Upload the test</h2>
+<p>Once you’ve completed the previous steps you can change the value in
+the column <em>finished</em> in the Excel <em>overview_testing</em> from
+<em>FALSE</em> to <em>TRUE</em> to indicate that you are done with the
+assessment.</p>
+<p>Please check that your test file clear sufficiently documented,
+i.e. someone who sees your test file for the first time should be able
+to understand what calculation pathway you covered, which input data was
+used, which comparison assessment you used, … it is worth to invest a
+bit of time here, as it will also help you when you see this file again
+some time from now!</p>
+<p>Finally, you upload your test with the <code>pathway_id</code> as the
+file name to the <a href="https://ugentbe.sharepoint.com/:f:/r/teams/Group.PR202302461/Gedeelde%20documenten/WP4%20PROGRAMMING/testing_of_functions?csf=1&amp;web=1&amp;e=hT3jaK">Teams
+folder WP4 PROGRAMMING&gt;testing_of_functions</a> to the folder of your
+institute.</p>
+<p>Filled out basic template (with hard-coded input data):</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="do">## Pathway ID: |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>  <span class="at">erf_shape =</span> <span class="st">&quot;log_linear&quot;</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>  <span class="at">rr_central =</span> <span class="fl">1.08</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>  <span class="at">rr_increment =</span> <span class="dv">10</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>  <span class="at">exp_central =</span> <span class="fu">c</span>(<span class="fl">53.0</span>, <span class="fl">57.5</span>, <span class="fl">62.5</span>, <span class="fl">67.5</span>, <span class="fl">72.5</span>, <span class="fl">77.5</span>),</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>  <span class="at">prop_pop_exp =</span> <span class="fu">c</span>(<span class="fl">0.818718312</span>, <span class="fl">0.074319355</span>, <span class="fl">0.054852478</span>, </span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>                   <span class="fl">0.036785683</span>, <span class="fl">0.013847374</span>, <span class="fl">0.001476797</span>),</span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>  <span class="at">cutoff_central =</span> <span class="dv">53</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a>  <span class="at">bhd_central =</span> <span class="fl">85362.08</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a>)<span class="sc">$</span>health_main<span class="sc">$</span>impact_rounded <span class="sc">|&gt;</span> </span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a>  <span class="fu">print</span>()</span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt; [1] 1151</span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="do">## RESULT(S) COMPARISON ASSESSMENT:</span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="do">## 1151 attributable DALYs</span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="do">## ASSESSOR: </span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="do">## Axel Luyten, Swiss TPH</span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="do">## attribute DALYs from ischemic heart disease to road noise exposure</span></span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="do">## noise exposure data from NIPH; cutoff based on exposure data; baseline DALYs from GBD; relative risk from WHO (2003)</span></span></code></pre></div>
+<p>Please refer to the <em>intro_to_healthiar</em> vignette for guidance
+on how to extract main / detailed results of an attribute output.</p>
+<p>Filled out extended template (with input data loaded into
+RStudio):</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>testthat<span class="sc">::</span><span class="fu">test_that</span>(<span class="st">&quot;results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|&quot;</span>, {</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>  data_raw  <span class="ot">&lt;-</span>  readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>    <span class="at">path =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_road_noise_niph.xlsx&quot;</span>, <span class="at">package =</span> <span class="st">&quot;healthiar&quot;</span>),</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>    <span class="at">sheet =</span> <span class="st">&quot;Relative_risk_IHD_WHO_2003a&quot;</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>  data  <span class="ot">&lt;-</span> data_raw <span class="sc">|&gt;</span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(data_raw<span class="sc">$</span>exposure_mean))</span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>  </span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a>  testthat<span class="sc">::</span><span class="fu">expect_equal</span>(</span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a>    <span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>    <span class="at">object =</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a>      healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a>        <span class="at">erf_shape =</span> <span class="st">&quot;log_linear&quot;</span>,</span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a>        <span class="at">rr_central =</span> <span class="fl">1.08</span>,</span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>        <span class="at">rr_increment =</span> <span class="dv">10</span>,</span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a>        <span class="at">exp_central =</span> data<span class="sc">$</span>exposure_mean,</span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a>        <span class="at">prop_pop_exp =</span> data<span class="sc">$</span>prop_exposed,</span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a>        <span class="at">cutoff_central =</span> <span class="fu">min</span>(data<span class="sc">$</span>exposure_mean),</span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a>        <span class="at">bhd_central =</span> data<span class="sc">$</span>gbd_daly[<span class="dv">1</span>]</span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a>        )<span class="sc">$</span>health_main<span class="sc">$</span>impact_rounded,</span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a>    <span class="do">##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED</span></span>
+<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a>    <span class="at">expected =</span></span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a>      data_raw <span class="sc">|&gt;</span></span>
+<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">filter</span>(exposure_category <span class="sc">%in%</span> <span class="st">&quot;Total exposed&quot;</span>)<span class="sc">|&gt;</span></span>
+<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">select</span>(daly)<span class="sc">|&gt;</span></span>
+<span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">pull</span>() <span class="sc">|&gt;</span></span>
+<span id="cb14-28"><a href="#cb14-28" tabindex="-1"></a>      <span class="fu">round</span>()</span>
+<span id="cb14-29"><a href="#cb14-29" tabindex="-1"></a>  )</span>
+<span id="cb14-30"><a href="#cb14-30" tabindex="-1"></a>})</span>
+<span id="cb14-31"><a href="#cb14-31" tabindex="-1"></a><span class="co">#&gt; Test passed 🌈</span></span>
+<span id="cb14-32"><a href="#cb14-32" tabindex="-1"></a></span>
+<span id="cb14-33"><a href="#cb14-33" tabindex="-1"></a><span class="do">## ASSESSOR: </span></span>
+<span id="cb14-34"><a href="#cb14-34" tabindex="-1"></a><span class="do">## Axel Luyten, Swiss TPH</span></span>
+<span id="cb14-35"><a href="#cb14-35" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb14-36"><a href="#cb14-36" tabindex="-1"></a><span class="do">## attribute DALYs from ischemic heart disease to road noise exposure</span></span>
+<span id="cb14-37"><a href="#cb14-37" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb14-38"><a href="#cb14-38" tabindex="-1"></a><span class="do">## noise exposure data from NIPH; cutoff based on exposure data; baseline DALYs from GBD; relative risk from WHO (2003)</span></span></code></pre></div>
+<p>Please refer to the <em>intro_to_healthiar</em> vignette for guidance
+on how to extract main / detailed results of an attribute output.</p>
+<hr />
+</div>
+<div id="uncertainty-analysis" class="section level2">
+<h2>Uncertainty analysis</h2>
+<p>For the uncertainty pathways, you can re-use your core pathway tests,
+or you can create a new <code>attribute_health()</code> or
+<code>compare()</code> output.</p>
+<p>IMPORTANT: The Monte Carlo uncertainty analysis needs an existing
+<code>attribute_health()</code> or <code>compare()</code> output that
+contains uncertainty one or more input variable, e.g.:</p>
+<ul>
+<li><code>rr_central, rr_lower, rr_upper</code></li>
+<li><code>exp_central, exp_lower, exp_upper</code>
+<ul>
+<li><strong>only applicable for assessments with single exposure
+value</strong>; for assessments with exposure categories this feature
+still has to be implemented: one would not adjust the exposure
+categories but rather the persons exposed to each exposure category
+(i.e. via <code>pop_exp</code> or <code>prop_pop_exp</code>)</li>
+</ul></li>
+<li><code>cutoff_central, cutoff_lower, cutoff_upper</code></li>
+<li><code>bhd_central, bhd_lower, bhd_upper</code></li>
+<li><code>dw_central, dw_lower, dw_upper</code></li>
+<li><code>duration_central, duration_lower, duration_upper</code></li>
+</ul>
+<p>For other input variables <code>summarize_uncertainty()</code> is not
+(yet) implemented.</p>
+<p>If the core pathway test you want to re-use doesn’t have uncertainty
+in any input values, you can create fake uncertainty bounds (make sure
+to mention this).</p>
+<p>E.g. if you only had <code>rr_central = 1.06</code>, you could add
+the fake uncertainty bounds <code>rr_lower = 1.04</code> and
+<code>rr_lower = 1.08</code>.</p>
+<div id="example-uncertainty-relative-risk" class="section level3">
+<h3>Example uncertainty relative risk</h3>
+<p>Because there is no real comparison case for the Monte Carlo
+simulation done by calling <code>summarize_uncertainty()</code>, we have
+to “cheat” a little: we first run <code>summarize_uncertainty()</code>,
+then take the results thereof as the comparison values; this way, we can
+at least check that the results stay constant over time, which is the
+best we can do for <code>summarize_uncertainty()</code></p>
+<div id="first-run-summarize_uncertainty" class="section level4">
+<h4>First run <code>summarize_uncertainty()</code> …</h4>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="co"># data &lt;- ...</span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="do">## First create an assessment using attribute_health() or compare()</span></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>results_interim <span class="ot">&lt;-</span> healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>  <span class="at">erf_shape =</span> <span class="st">&quot;log_linear&quot;</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>  <span class="at">rr_central =</span> <span class="fl">1.08</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>  <span class="at">rr_lower =</span> <span class="fl">1.08</span> <span class="sc">-</span> <span class="fl">0.02</span>, <span class="co"># FAKE</span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>  <span class="at">rr_upper =</span> <span class="fl">1.08</span> <span class="sc">+</span> <span class="fl">0.02</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>  <span class="at">rr_increment =</span> <span class="dv">10</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>  <span class="at">exp_central =</span> <span class="fu">c</span>(<span class="fl">53.0</span>, <span class="fl">57.5</span>, <span class="fl">62.5</span>, <span class="fl">67.5</span>, <span class="fl">72.5</span>, <span class="fl">77.5</span>),</span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a>  <span class="at">pop_exp =</span> <span class="fu">c</span>(<span class="dv">4268785</span>, <span class="dv">387500</span>, <span class="dv">286000</span>, <span class="dv">191800</span>, <span class="dv">72200</span>, <span class="dv">7700</span>), <span class="co"># OPTION A</span></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a>  <span class="at">cutoff_central =</span> <span class="dv">5</span>,</span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a>  <span class="at">bhd_central =</span> <span class="fl">85362.08</span></span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a>)</span>
+<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a><span class="do">## healthiar::summarize_uncertainty() FUNCTION CALL</span></span>
+<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a>results <span class="ot">&lt;-</span> healthiar<span class="sc">::</span><span class="fu">summarize_uncertainty</span>(</span>
+<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a>  <span class="at">output_attribute =</span> results_interim,</span>
+<span id="cb15-20"><a href="#cb15-20" tabindex="-1"></a>  <span class="at">n_sim =</span> <span class="dv">100</span> <span class="co"># Please take this value, to reduce time needed for all tests</span></span>
+<span id="cb15-21"><a href="#cb15-21" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="then-extract-the-results" class="section level4">
+<h4>… then extract the results …</h4>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>results<span class="sc">$</span>uncertainty_main<span class="sc">$</span>impact_rounded</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="do">## 26676 (central impact estimates), 22183 (lower), 31407 (upper)</span></span></code></pre></div>
+<p>###… then add everything to the extended function template that we
+already know</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>testthat<span class="sc">::</span><span class="fu">test_that</span>(<span class="st">&quot;results correct [pathway_id]&quot;</span>, {</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  </span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>  <span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>  <span class="co"># data &lt;- ...</span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>  </span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>  <span class="do">## First create an assessment using attribute_health() or compare()</span></span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>  result_interim <span class="ot">&lt;-</span> healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>    <span class="at">erf_shape =</span> <span class="st">&quot;log_linear&quot;</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>    <span class="at">rr_central =</span> <span class="fl">1.08</span>,</span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>    <span class="at">rr_lower =</span> <span class="fl">1.08</span> <span class="sc">-</span> <span class="fl">0.02</span>, <span class="co"># FAKE</span></span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a>    <span class="at">rr_upper =</span> <span class="fl">1.08</span> <span class="sc">+</span> <span class="fl">0.02</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a>    <span class="at">rr_increment =</span> <span class="dv">10</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a>    <span class="at">exp_central =</span> <span class="fu">c</span>(<span class="fl">53.0</span>, <span class="fl">57.5</span>, <span class="fl">62.5</span>, <span class="fl">67.5</span>, <span class="fl">72.5</span>, <span class="fl">77.5</span>),</span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a>    <span class="at">pop_exp =</span> <span class="fu">c</span>(<span class="dv">4268785</span>, <span class="dv">387500</span>, <span class="dv">286000</span>, <span class="dv">191800</span>, <span class="dv">72200</span>, <span class="dv">7700</span>), <span class="co"># OPTION A</span></span>
+<span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a>    <span class="at">cutoff_central =</span> <span class="dv">5</span>,</span>
+<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a>    <span class="at">bhd_central =</span> <span class="fl">85362.08</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" tabindex="-1"></a>    </span>
+<span id="cb17-19"><a href="#cb17-19" tabindex="-1"></a>  testthat<span class="sc">::</span><span class="fu">expect_equal</span>(</span>
+<span id="cb17-20"><a href="#cb17-20" tabindex="-1"></a>    <span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb17-21"><a href="#cb17-21" tabindex="-1"></a>    <span class="at">object =</span> healthiar<span class="sc">::</span><span class="fu">summarize_uncertainty</span>(</span>
+<span id="cb17-22"><a href="#cb17-22" tabindex="-1"></a>      <span class="at">output_attribute =</span> results_interim,</span>
+<span id="cb17-23"><a href="#cb17-23" tabindex="-1"></a>      <span class="at">n_sim =</span> <span class="dv">100</span> <span class="co"># Please take this value, to reduce time needed for all tests</span></span>
+<span id="cb17-24"><a href="#cb17-24" tabindex="-1"></a>    )<span class="sc">$</span>uncertainty_main<span class="sc">$</span>impact_rounded,</span>
+<span id="cb17-25"><a href="#cb17-25" tabindex="-1"></a>    </span>
+<span id="cb17-26"><a href="#cb17-26" tabindex="-1"></a>    <span class="do">## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED</span></span>
+<span id="cb17-27"><a href="#cb17-27" tabindex="-1"></a>    <span class="at">expected =</span></span>
+<span id="cb17-28"><a href="#cb17-28" tabindex="-1"></a>      <span class="fu">c</span>(<span class="dv">26676</span>, <span class="dv">22183</span>, <span class="dv">31407</span>)</span>
+<span id="cb17-29"><a href="#cb17-29" tabindex="-1"></a>    )</span>
+<span id="cb17-30"><a href="#cb17-30" tabindex="-1"></a>})</span>
+<span id="cb17-31"><a href="#cb17-31" tabindex="-1"></a></span>
+<span id="cb17-32"><a href="#cb17-32" tabindex="-1"></a><span class="do">## ASSESSOR:</span></span>
+<span id="cb17-33"><a href="#cb17-33" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb17-34"><a href="#cb17-34" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb17-35"><a href="#cb17-35" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb17-36"><a href="#cb17-36" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb17-37"><a href="#cb17-37" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+</div>
+</div>
+<div id="example-uncertainty-rr-with-iteration" class="section level3">
+<h3>Example uncertainty RR with iteration</h3>
+<p>Here we follow the same steps as outlined in the first uncertainty
+example</p>
+<ul>
+<li>Re-use an existing test with relative risk and add some input values
+to <code>..._lower</code> and <code>..._upper</code> arguments</li>
+<li>Run the assessment, and input the results to
+<code>summarize_uncertainty()</code></li>
+<li>Use the results of the <code>summarize_uncertainty()</code> as the
+<code>expected</code> values in the extended function template</li>
+</ul>
+<hr />
+</div>
+</div>
+</div>
+<div id="testing-templates" class="section level1">
+<h1>Testing templates</h1>
+<p>For more information on how to use the <code>healthiar</code> package
+(including several example cases of how to use its functions), please
+see the vignette <code>intro_to_healthiar</code> (refer to section <a href="#prerequisite-newest-version-of-healthiar-installed">Prerequisite:
+newest version of <code>healthiar</code> installed</a> for how to access
+it). For more information on a specific function, you can call
+<code>?healthiar::&lt;function_name&gt;</code> (e.g.
+<code>?healthiar::attribute_health</code>), which will open the function
+documentation. An alternative way to open the function documentation is
+to go to the <em>Packages</em> tab in RStudio, scroll down to &amp;
+click on <em>healthiar</em>, and scroll down and click on the function
+you are interested in.</p>
+<div id="relative-risk-pathways" class="section level2">
+<h2>Relative risk pathways</h2>
+<p>Depending on your calculation pathway you will have to replace some
+of the <code>NULL</code> values in the template.</p>
+<div id="explanation-of-pathway-id" class="section level3">
+<h3>Explanation of pathway ID</h3>
+<p>The pathway ID for relative risk pathways contain the following
+elements:</p>
+<ul>
+<li><p><em>erf</em> contains the exposure-response function shape</p>
+<ul>
+<li>lin_lin = linear-linear ERF shape</li>
+<li>log_lin = log-linear ERF shape</li>
+<li>function = case where the ERF is defined by multiple points (x and y
+coordinates), e.g. the MR-BRT curves from GBD</li>
+<li>formula = case where ERF is a formula of the type a * x + b * x^2
+…</li>
+</ul></li>
+<li><p><em>exp</em> specifies the type of exposure input data</p>
+<ul>
+<li>single = single exposure input value, e.g. yearly average
+population-weighted PM2.5 exposure</li>
+<li>dist = exposure distribution, e.g. 5 different exposure categories
+(~ exposure ranges) with the information how many people are exposed to
+each of the 5 exposure range</li>
+</ul></li>
+<li><p><em>iteration</em> specifies whether the assessment is done for
+more than one geo unit (e.g. municipality, region, province, …)</p>
+<ul>
+<li>if yes –&gt; TRUE: the iteration function calls require two
+additional arguments compared to the function calls for single geo
+units: you have to additionally specify the
+<code>geo_id_disaggregated</code> (e.g. “Brussels”, “Antwerp”, …) and
+<code>geo_id_aggregated</code> (e.g. “Belgium”) arguments. Also, the geo
+unit-specific arguments (e.g. <code>exp_central</code>,
+<code>bhd_central</code>, …) have to be provided as lists, with each
+list element representing a geo unit. For more detailed information on
+iterations using <code>attribute_...</code> functions please see section
+<em>Example iteration: assess impact in multiple geographic units</em>
+in the <em>intro_to_healthiar</em> vignette.</li>
+<li>if no –&gt; FALSE</li>
+</ul></li>
+</ul>
+</div>
+<div id="basic-function-template" class="section level3">
+<h3>Basic function template</h3>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="co"># data &lt;- ...</span></span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a><span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>  <span class="at">approach_risk =</span> <span class="st">&quot;relative_risk&quot;</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>  <span class="at">erf_shape =</span> ,</span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>  <span class="at">rr_central =</span> ,</span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>  <span class="at">rr_lower =</span> <span class="cn">NULL</span>, </span>
+<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a>  <span class="at">rr_upper =</span> <span class="cn">NULL</span>,</span>
+<span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a>  <span class="at">rr_increment =</span> ,</span>
+<span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a>  <span class="at">exp_central =</span> ,</span>
+<span id="cb18-13"><a href="#cb18-13" tabindex="-1"></a>  <span class="at">exp_lower =</span> <span class="cn">NULL</span>, </span>
+<span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a>  <span class="at">exp_upper =</span> <span class="cn">NULL</span>,</span>
+<span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a>  <span class="at">cutoff_central =</span> ,</span>
+<span id="cb18-16"><a href="#cb18-16" tabindex="-1"></a>  <span class="at">cutoff_lower =</span> <span class="cn">NULL</span>, </span>
+<span id="cb18-17"><a href="#cb18-17" tabindex="-1"></a>  <span class="at">cutoff_upper =</span> <span class="cn">NULL</span>,</span>
+<span id="cb18-18"><a href="#cb18-18" tabindex="-1"></a>  <span class="at">bhd_central =</span> ,</span>
+<span id="cb18-19"><a href="#cb18-19" tabindex="-1"></a>  <span class="at">bhd_lower =</span> <span class="cn">NULL</span>, </span>
+<span id="cb18-20"><a href="#cb18-20" tabindex="-1"></a>  <span class="at">bhd_upper =</span> <span class="cn">NULL</span>,</span>
+<span id="cb18-21"><a href="#cb18-21" tabindex="-1"></a>  <span class="at">geo_id_disaggregated =</span> <span class="cn">NULL</span>,</span>
+<span id="cb18-22"><a href="#cb18-22" tabindex="-1"></a>  <span class="at">geo_id_aggregated =</span> <span class="cn">NULL</span></span>
+<span id="cb18-23"><a href="#cb18-23" tabindex="-1"></a>)</span>
+<span id="cb18-24"><a href="#cb18-24" tabindex="-1"></a>    </span>
+<span id="cb18-25"><a href="#cb18-25" tabindex="-1"></a><span class="do">## RESULT(S) COMPARISON ASSESSMENT:</span></span>
+<span id="cb18-26"><a href="#cb18-26" tabindex="-1"></a><span class="do">## List here the results of the comparison assessment you selected</span></span>
+<span id="cb18-27"><a href="#cb18-27" tabindex="-1"></a><span class="do">## ASSESSOR:</span></span>
+<span id="cb18-28"><a href="#cb18-28" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb18-29"><a href="#cb18-29" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb18-30"><a href="#cb18-30" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb18-31"><a href="#cb18-31" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb18-32"><a href="#cb18-32" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+</div>
+<div id="extended-function-template" class="section level3">
+<h3>Extended function template</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>testthat<span class="sc">::</span><span class="fu">test_that</span>(<span class="st">&quot;results correct [pathway_id]&quot;</span>, {</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  </span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  <span class="co"># data &lt;- ...</span></span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>  testthat<span class="sc">::</span><span class="fu">expect_equal</span>(</span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>    <span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a>    <span class="at">object =</span></span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a>      healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a>        <span class="at">approach_risk =</span> <span class="st">&quot;relative_risk&quot;</span>,</span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a>        <span class="at">erf_shape =</span> ,</span>
+<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a>        <span class="at">rr_central =</span> ,</span>
+<span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a>        <span class="at">rr_lower =</span> <span class="cn">NULL</span>, </span>
+<span id="cb19-14"><a href="#cb19-14" tabindex="-1"></a>        <span class="at">rr_upper =</span> <span class="cn">NULL</span>,</span>
+<span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a>        <span class="at">rr_increment =</span> ,</span>
+<span id="cb19-16"><a href="#cb19-16" tabindex="-1"></a>        <span class="at">exp_central =</span> ,</span>
+<span id="cb19-17"><a href="#cb19-17" tabindex="-1"></a>        <span class="at">exp_lower =</span> <span class="cn">NULL</span>, </span>
+<span id="cb19-18"><a href="#cb19-18" tabindex="-1"></a>        <span class="at">exp_upper =</span> <span class="cn">NULL</span>,</span>
+<span id="cb19-19"><a href="#cb19-19" tabindex="-1"></a>        <span class="at">cutoff_central =</span> ,</span>
+<span id="cb19-20"><a href="#cb19-20" tabindex="-1"></a>        <span class="at">cutoff_lower =</span> <span class="cn">NULL</span>, </span>
+<span id="cb19-21"><a href="#cb19-21" tabindex="-1"></a>        <span class="at">cutoff_upper =</span> <span class="cn">NULL</span>,</span>
+<span id="cb19-22"><a href="#cb19-22" tabindex="-1"></a>        <span class="at">bhd_central =</span> ,</span>
+<span id="cb19-23"><a href="#cb19-23" tabindex="-1"></a>        <span class="at">bhd_lower =</span> <span class="cn">NULL</span>, </span>
+<span id="cb19-24"><a href="#cb19-24" tabindex="-1"></a>        <span class="at">bhd_upper =</span> <span class="cn">NULL</span>,</span>
+<span id="cb19-25"><a href="#cb19-25" tabindex="-1"></a>        <span class="at">geo_id_disaggregated =</span> <span class="cn">NULL</span>,</span>
+<span id="cb19-26"><a href="#cb19-26" tabindex="-1"></a>        <span class="at">geo_id_aggregated =</span> <span class="cn">NULL</span></span>
+<span id="cb19-27"><a href="#cb19-27" tabindex="-1"></a>      )<span class="sc">$</span>health_main<span class="sc">$</span>impact_rounded,</span>
+<span id="cb19-28"><a href="#cb19-28" tabindex="-1"></a>    <span class="do">##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED</span></span>
+<span id="cb19-29"><a href="#cb19-29" tabindex="-1"></a>    <span class="at">expected =</span></span>
+<span id="cb19-30"><a href="#cb19-30" tabindex="-1"></a>      <span class="fu">c</span>( )</span>
+<span id="cb19-31"><a href="#cb19-31" tabindex="-1"></a>    )</span>
+<span id="cb19-32"><a href="#cb19-32" tabindex="-1"></a>})</span>
+<span id="cb19-33"><a href="#cb19-33" tabindex="-1"></a></span>
+<span id="cb19-34"><a href="#cb19-34" tabindex="-1"></a><span class="do">## ASSESSOR:</span></span>
+<span id="cb19-35"><a href="#cb19-35" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb19-36"><a href="#cb19-36" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb19-37"><a href="#cb19-37" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb19-38"><a href="#cb19-38" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb19-39"><a href="#cb19-39" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+</div>
+</div>
+<div id="absolute-risk-pathways" class="section level2">
+<h2>Absolute risk pathways</h2>
+<p>Depending on your calculation pathway you will have to replace some
+of the <code>NULL</code> values in the template.</p>
+<div id="explanation-of-pathway-id-1" class="section level3">
+<h3>Explanation of pathway ID</h3>
+<p>The pathway ID for absolute risk pathways contain the following
+elements:</p>
+<ul>
+<li><p><em>erf</em> contains the exposure-response function shape</p>
+<ul>
+<li>function = case where the ERF is defined by multiple points (x and y
+coordinates), e.g. the MR-BRT curves from GBD</li>
+<li>formula = case where ERF is a formula of the type a * x + b * x^2
+…</li>
+</ul></li>
+<li><p><em>exp</em> specifies the type of exposure input data</p>
+<ul>
+<li>single = single exposure input value, e.g. yearly average
+population-weighted PM2.5 exposure</li>
+<li>dist = exposure distribution, e.g. 5 different exposure categories
+(~ exposure ranges) with the information how many people are exposed to
+each of the 5 exposure range</li>
+</ul></li>
+<li><p><em>iteration</em> specifies whether the assessment is done for
+more than one geo unit (e.g. municipality, region, province, …)</p>
+<ul>
+<li>if yes –&gt; TRUE: the iteration function calls require two
+additional arguments compared to the function calls for single geo
+units: you have to additionally specify the
+<code>geo_id_disaggregated</code> (e.g. “Brussels”, “Antwerp”, …) and
+<code>geo_id_aggregated</code> (e.g. “Belgium”) arguments. Also, the geo
+unit-specific arguments (e.g. <code>exp_central</code>,
+<code>bhd_central</code>, …) have to be provided as lists, with each
+list element representing a geo unit. For more detailed information on
+iterations using <code>attribute_...</code> functions please see section
+<em>Example iteration: assess impact in multiple geographic units</em>
+in the <em>intro_to_healthiar</em> vignette.</li>
+<li>if no –&gt; FALSE</li>
+</ul></li>
+</ul>
+</div>
+<div id="basic-function-template-1" class="section level3">
+<h3>Basic function template</h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="co"># data &lt;- ...</span></span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>  <span class="at">approach_risk =</span> <span class="st">&quot;absolute_risk&quot;</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>  <span class="at">erf_eq_central =</span> ,</span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>  <span class="at">erf_eq_lower =</span> <span class="cn">NULL</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>  <span class="at">erf_eq_upper =</span> <span class="cn">NULL</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a>  <span class="at">exp_central =</span> ,</span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a>  <span class="at">exp_lower =</span> <span class="cn">NULL</span>, </span>
+<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a>  <span class="at">exp_upper =</span> <span class="cn">NULL</span>,</span>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a>  <span class="at">pop_exp =</span> ,</span>
+<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a>  <span class="at">geo_id_disaggregated =</span> <span class="cn">NULL</span>,</span>
+<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a>  <span class="at">geo_id_aggregated =</span> <span class="cn">NULL</span></span>
+<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a>)</span>
+<span id="cb20-16"><a href="#cb20-16" tabindex="-1"></a></span>
+<span id="cb20-17"><a href="#cb20-17" tabindex="-1"></a><span class="do">## RESULT(S) COMPARISON ASSESSMENT:</span></span>
+<span id="cb20-18"><a href="#cb20-18" tabindex="-1"></a><span class="do">## List here the results of the comparison assessment you selected</span></span>
+<span id="cb20-19"><a href="#cb20-19" tabindex="-1"></a><span class="do">## ASSESSOR:</span></span>
+<span id="cb20-20"><a href="#cb20-20" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb20-21"><a href="#cb20-21" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb20-22"><a href="#cb20-22" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb20-23"><a href="#cb20-23" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb20-24"><a href="#cb20-24" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+</div>
+<div id="extended-function-template-1" class="section level3">
+<h3>Extended function template</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>testthat<span class="sc">::</span><span class="fu">test_that</span>(<span class="st">&quot;results correct [pathway_id]&quot;</span>, {</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>  </span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>  <span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>  <span class="co"># data &lt;- ...</span></span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>  testthat<span class="sc">::</span><span class="fu">expect_equal</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>    <span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a>    <span class="at">object =</span></span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>      healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a>        <span class="at">approach_risk =</span> <span class="st">&quot;absolute_risk&quot;</span>,</span>
+<span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a>        <span class="at">erf_eq_central =</span> ,</span>
+<span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a>        <span class="at">erf_eq_lower =</span> <span class="cn">NULL</span>,</span>
+<span id="cb21-13"><a href="#cb21-13" tabindex="-1"></a>        <span class="at">erf_eq_upper =</span> <span class="cn">NULL</span>,</span>
+<span id="cb21-14"><a href="#cb21-14" tabindex="-1"></a>        <span class="at">exp_central =</span> ,</span>
+<span id="cb21-15"><a href="#cb21-15" tabindex="-1"></a>        <span class="at">exp_lower =</span> <span class="cn">NULL</span>, </span>
+<span id="cb21-16"><a href="#cb21-16" tabindex="-1"></a>        <span class="at">exp_upper =</span> <span class="cn">NULL</span>,</span>
+<span id="cb21-17"><a href="#cb21-17" tabindex="-1"></a>        <span class="at">pop_exp =</span> ,</span>
+<span id="cb21-18"><a href="#cb21-18" tabindex="-1"></a>        <span class="at">geo_id_disaggregated =</span> <span class="cn">NULL</span>,</span>
+<span id="cb21-19"><a href="#cb21-19" tabindex="-1"></a>        <span class="at">geo_id_aggregated =</span> <span class="cn">NULL</span></span>
+<span id="cb21-20"><a href="#cb21-20" tabindex="-1"></a>      )<span class="sc">$</span>health_main<span class="sc">$</span>impact_rounded,</span>
+<span id="cb21-21"><a href="#cb21-21" tabindex="-1"></a>    <span class="do">##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED</span></span>
+<span id="cb21-22"><a href="#cb21-22" tabindex="-1"></a>    <span class="at">expected =</span></span>
+<span id="cb21-23"><a href="#cb21-23" tabindex="-1"></a>      <span class="fu">c</span>( )</span>
+<span id="cb21-24"><a href="#cb21-24" tabindex="-1"></a>    )</span>
+<span id="cb21-25"><a href="#cb21-25" tabindex="-1"></a>})</span>
+<span id="cb21-26"><a href="#cb21-26" tabindex="-1"></a></span>
+<span id="cb21-27"><a href="#cb21-27" tabindex="-1"></a><span class="do">## ASSESSOR:</span></span>
+<span id="cb21-28"><a href="#cb21-28" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb21-29"><a href="#cb21-29" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb21-30"><a href="#cb21-30" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb21-31"><a href="#cb21-31" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb21-32"><a href="#cb21-32" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+</div>
+</div>
+<div id="monetization-pathways" class="section level2">
+<h2>Monetization pathways</h2>
+<p>See start of the section <a href="#testing-templates">Testing
+templates</a> for guidance on how to access function-specific info about
+the <code>include_monetization</code> function.</p>
+<p>Depending on your calculation pathway you will have to replace some
+of the <code>NULL</code> values in the template.</p>
+<div id="explanation-of-pathway-id-2" class="section level3">
+<h3>Explanation of pathway ID</h3>
+<p>The pathway ID for monetization pathways contain the following
+elements:</p>
+<ul>
+<li><p><em>discount_rate</em> specifies whether discounting for future
+years is done</p>
+<ul>
+<li>if yes –&gt; TRUE</li>
+<li>if no –&gt; FALSE</li>
+</ul></li>
+<li><p><em>discount_shape</em> specifies the formula shape to be used
+for discounting</p>
+<ul>
+<li>exponential = exponential discount equation</li>
+<li>hyp_harvey = hyperbolic discount equation based on the work of
+Harvey
+<ol start="1986" style="list-style-type: decimal">
+<li></li>
+</ol></li>
+<li>hyp_mazur = hyperbolic discount equation based on the work of Mazur
+<ol start="1986" style="list-style-type: decimal">
+<li></li>
+</ol></li>
+</ul></li>
+<li><p><em>inflation</em> specifies whether annual inflation (increase
+of prices) is applied</p>
+<ul>
+<li>if yes –&gt; TRUE</li>
+<li>if no –&gt; FALSE</li>
+</ul></li>
+</ul>
+</div>
+<div id="basic-function-template-2" class="section level3">
+<h3>Basic function template</h3>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="co"># data &lt;- ...</span></span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a>healthiar<span class="sc">::</span><span class="fu">monetize</span>(</span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a>  <span class="at">output_attribute =</span> <span class="cn">NULL</span>, <span class="co"># Only specify one of either &quot;output_attribute&quot; or &quot;impact&quot; argument </span></span>
+<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a>  <span class="at">impact =</span> , <span class="co"># Only specify one of either &quot;output_attribute&quot; or &quot;impact&quot; argument </span></span>
+<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a>  <span class="at">valuation =</span> ,</span>
+<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a>  <span class="at">cost =</span> ,</span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a>  <span class="at">discount_rate =</span> <span class="cn">NULL</span>,</span>
+<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a>  <span class="at">discount_shape =</span> <span class="cn">NULL</span>,</span>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a>  <span class="at">discount_years =</span> <span class="dv">1</span>,</span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a>  <span class="at">inflation =</span> <span class="cn">NULL</span></span>
+<span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a>)</span>
+<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a><span class="do">## RESULT(S) COMPARISON ASSESSMENT:</span></span>
+<span id="cb22-17"><a href="#cb22-17" tabindex="-1"></a><span class="do">## List here the results of the comparison assessment you selected</span></span>
+<span id="cb22-18"><a href="#cb22-18" tabindex="-1"></a><span class="do">## ASSESSOR:</span></span>
+<span id="cb22-19"><a href="#cb22-19" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb22-20"><a href="#cb22-20" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb22-21"><a href="#cb22-21" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb22-22"><a href="#cb22-22" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb22-23"><a href="#cb22-23" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+</div>
+<div id="extended-function-template-2" class="section level3">
+<h3>Extended function template</h3>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>testthat<span class="sc">::</span><span class="fu">test_that</span>(<span class="st">&quot;results correct [pathway_id]&quot;</span>, {</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>  </span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>  <span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>  <span class="co"># data &lt;- ...</span></span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a>  testthat<span class="sc">::</span><span class="fu">expect_equal</span>(</span>
+<span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a>    <span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb23-8"><a href="#cb23-8" tabindex="-1"></a>    <span class="at">object =</span></span>
+<span id="cb23-9"><a href="#cb23-9" tabindex="-1"></a>      healthiar<span class="sc">::</span><span class="fu">monetize</span>(</span>
+<span id="cb23-10"><a href="#cb23-10" tabindex="-1"></a>        <span class="at">output_attribute =</span> <span class="cn">NULL</span>, <span class="co"># Only specify one of either &quot;output_attribute&quot; or &quot;impact&quot; argument </span></span>
+<span id="cb23-11"><a href="#cb23-11" tabindex="-1"></a>        <span class="at">impact =</span> , <span class="co"># Only specify one of either &quot;output_attribute&quot; or &quot;impact&quot; argument </span></span>
+<span id="cb23-12"><a href="#cb23-12" tabindex="-1"></a>        <span class="at">valuation =</span> ,</span>
+<span id="cb23-13"><a href="#cb23-13" tabindex="-1"></a>        <span class="at">cost =</span> ,</span>
+<span id="cb23-14"><a href="#cb23-14" tabindex="-1"></a>        <span class="at">discount_rate =</span> <span class="cn">NULL</span>,</span>
+<span id="cb23-15"><a href="#cb23-15" tabindex="-1"></a>        <span class="at">discount_shape =</span> <span class="cn">NULL</span>,</span>
+<span id="cb23-16"><a href="#cb23-16" tabindex="-1"></a>        <span class="at">discount_years =</span> <span class="dv">1</span>,</span>
+<span id="cb23-17"><a href="#cb23-17" tabindex="-1"></a>        <span class="at">inflation =</span> <span class="cn">NULL</span></span>
+<span id="cb23-18"><a href="#cb23-18" tabindex="-1"></a>        )<span class="sc">$</span>monetization_main<span class="sc">$</span>monetized_impact,</span>
+<span id="cb23-19"><a href="#cb23-19" tabindex="-1"></a>    <span class="do">##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED</span></span>
+<span id="cb23-20"><a href="#cb23-20" tabindex="-1"></a>    <span class="at">expected =</span></span>
+<span id="cb23-21"><a href="#cb23-21" tabindex="-1"></a>      <span class="fu">c</span>( )</span>
+<span id="cb23-22"><a href="#cb23-22" tabindex="-1"></a>    )</span>
+<span id="cb23-23"><a href="#cb23-23" tabindex="-1"></a>})</span>
+<span id="cb23-24"><a href="#cb23-24" tabindex="-1"></a></span>
+<span id="cb23-25"><a href="#cb23-25" tabindex="-1"></a><span class="do">## ASSESSOR:</span></span>
+<span id="cb23-26"><a href="#cb23-26" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb23-27"><a href="#cb23-27" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb23-28"><a href="#cb23-28" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb23-29"><a href="#cb23-29" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb23-30"><a href="#cb23-30" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+</div>
+</div>
+<div id="cost-benefit-analysis-pathways" class="section level2">
+<h2>Cost-benefit analysis pathways</h2>
+<p>Depending on your calculation pathway you will have to replace some
+of the <code>NULL</code> values in the template.</p>
+<div id="explanation-of-pathway-id-3" class="section level3">
+<h3>Explanation of pathway ID</h3>
+<p>The pathway ID for monetization pathways contain the following
+elements:</p>
+<ul>
+<li><p><em>discount_shape</em> specifies the formula shape to be used
+for discounting</p>
+<ul>
+<li>exponential = exponential discount equation</li>
+<li>hyp_harvey = hyperbolic discount equation based on the work of
+Harvey
+<ol start="1986" style="list-style-type: decimal">
+<li></li>
+</ol></li>
+<li>hyp_mazur = hyperbolic discount equation based on the work of Mazur
+<ol start="1986" style="list-style-type: decimal">
+<li></li>
+</ol></li>
+</ul></li>
+<li><p><em>discount_rate_benefit</em> specifies whether discounting for
+future years is done for the entered benefit</p>
+<ul>
+<li>if yes –&gt; TRUE</li>
+<li>if no –&gt; FALSE</li>
+</ul></li>
+<li><p><em>discount_rate_cost</em> specifies whether discounting for
+future years is done for the entered cost</p>
+<ul>
+<li>if yes –&gt; TRUE</li>
+<li>if no –&gt; FALSE</li>
+</ul></li>
+</ul>
+</div>
+<div id="basic-function-template-3" class="section level3">
+<h3>Basic function template</h3>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>  <span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>  <span class="co"># data &lt;- ...</span></span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>    <span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a>    object <span class="ot">=</span></span>
+<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>      healthiar<span class="sc">::</span><span class="fu">cba</span>(</span>
+<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a>        <span class="at">output_attribute =</span> <span class="cn">NULL</span>,</span>
+<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a>        <span class="at">positive_impact =</span> ,</span>
+<span id="cb24-10"><a href="#cb24-10" tabindex="-1"></a>        <span class="at">valuation =</span> ,</span>
+<span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a>        <span class="at">cost =</span> ,</span>
+<span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a>        <span class="at">discount_shape =</span> ,</span>
+<span id="cb24-13"><a href="#cb24-13" tabindex="-1"></a>        <span class="at">discount_rate_benefit =</span> ,</span>
+<span id="cb24-14"><a href="#cb24-14" tabindex="-1"></a>        <span class="at">discount_rate_cost =</span> ,</span>
+<span id="cb24-15"><a href="#cb24-15" tabindex="-1"></a>        <span class="at">discount_years_benefit =</span> <span class="dv">1</span>,</span>
+<span id="cb24-16"><a href="#cb24-16" tabindex="-1"></a>        <span class="at">discount_years_cost =</span> <span class="dv">1</span>) </span>
+<span id="cb24-17"><a href="#cb24-17" tabindex="-1"></a></span>
+<span id="cb24-18"><a href="#cb24-18" tabindex="-1"></a><span class="do">## RESULT(S) COMPARISON ASSESSMENT:</span></span>
+<span id="cb24-19"><a href="#cb24-19" tabindex="-1"></a><span class="do">## List here the results of the comparison assessment you selected</span></span>
+<span id="cb24-20"><a href="#cb24-20" tabindex="-1"></a><span class="do">## ASSESSOR:</span></span>
+<span id="cb24-21"><a href="#cb24-21" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb24-22"><a href="#cb24-22" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb24-23"><a href="#cb24-23" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb24-24"><a href="#cb24-24" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb24-25"><a href="#cb24-25" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+</div>
+<div id="extended-function-template-3" class="section level3">
+<h3>Extended function template</h3>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>testthat<span class="sc">::</span><span class="fu">test_that</span>(<span class="st">&quot;results correct [pathway_id]&quot;</span>, {</span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>  </span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>  <span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>  <span class="co"># data &lt;- ...</span></span>
+<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a>  testthat<span class="sc">::</span><span class="fu">expect_equal</span>(</span>
+<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a>    <span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a>    <span class="at">object =</span></span>
+<span id="cb25-9"><a href="#cb25-9" tabindex="-1"></a>      healthiar<span class="sc">::</span><span class="fu">cba</span>(</span>
+<span id="cb25-10"><a href="#cb25-10" tabindex="-1"></a>        <span class="at">output_attribute =</span> <span class="cn">NULL</span>,</span>
+<span id="cb25-11"><a href="#cb25-11" tabindex="-1"></a>        <span class="at">positive_impact =</span> ,</span>
+<span id="cb25-12"><a href="#cb25-12" tabindex="-1"></a>        <span class="at">valuation =</span> ,</span>
+<span id="cb25-13"><a href="#cb25-13" tabindex="-1"></a>        <span class="at">cost =</span> ,</span>
+<span id="cb25-14"><a href="#cb25-14" tabindex="-1"></a>        <span class="at">discount_shape =</span> ,</span>
+<span id="cb25-15"><a href="#cb25-15" tabindex="-1"></a>        <span class="at">discount_rate_benefit =</span> ,</span>
+<span id="cb25-16"><a href="#cb25-16" tabindex="-1"></a>        <span class="at">discount_rate_cost =</span> ,</span>
+<span id="cb25-17"><a href="#cb25-17" tabindex="-1"></a>        <span class="at">discount_years_benefit =</span> <span class="dv">1</span>,</span>
+<span id="cb25-18"><a href="#cb25-18" tabindex="-1"></a>        <span class="at">discount_years_cost =</span> <span class="dv">1</span>)<span class="sc">$</span>cba_main<span class="sc">$</span>net_benefit_rounded,</span>
+<span id="cb25-19"><a href="#cb25-19" tabindex="-1"></a>    <span class="do">##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED</span></span>
+<span id="cb25-20"><a href="#cb25-20" tabindex="-1"></a>    <span class="at">expected =</span></span>
+<span id="cb25-21"><a href="#cb25-21" tabindex="-1"></a>      <span class="fu">c</span>( )</span>
+<span id="cb25-22"><a href="#cb25-22" tabindex="-1"></a>    )</span>
+<span id="cb25-23"><a href="#cb25-23" tabindex="-1"></a>})</span>
+<span id="cb25-24"><a href="#cb25-24" tabindex="-1"></a></span>
+<span id="cb25-25"><a href="#cb25-25" tabindex="-1"></a><span class="do">## ASSESSOR:</span></span>
+<span id="cb25-26"><a href="#cb25-26" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb25-27"><a href="#cb25-27" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb25-28"><a href="#cb25-28" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb25-29"><a href="#cb25-29" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb25-30"><a href="#cb25-30" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+</div>
+</div>
+<div id="social-analysis" class="section level2">
+<h2>Social analysis</h2>
+<p>Note that to test the <code>socialize</code> function you a social
+indicator for each of the geo units under analysis in addition to the
+usual data needed for an iteration of <code>attribute</code>.</p>
+<div id="basic-function-template-4" class="section level3">
+<h3>Basic function template</h3>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="co"># data &lt;- ...</span></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a><span class="do">## First run an iteration (see iteration template for full argument list)</span></span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>result_interim <span class="ot">&lt;-</span> healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>  <span class="at">exp_central =</span> <span class="fu">as.list</span>( ),</span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>  <span class="at">bhd_central =</span> <span class="fu">as.list</span>( ),</span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>  <span class="at">cutoff_central =</span> ,</span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a>  <span class="at">rr_central =</span> , </span>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a>  <span class="at">erf_shape =</span> , </span>
+<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a>  <span class="at">rr_increment =</span> ,</span>
+<span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a>  <span class="at">geo_id_disaggregated =</span> </span>
+<span id="cb26-13"><a href="#cb26-13" tabindex="-1"></a>)</span>
+<span id="cb26-14"><a href="#cb26-14" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" tabindex="-1"></a><span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb26-16"><a href="#cb26-16" tabindex="-1"></a>healthiar<span class="sc">::</span><span class="fu">socialize</span>(</span>
+<span id="cb26-17"><a href="#cb26-17" tabindex="-1"></a>  <span class="at">output_attribute =</span> result_interim,</span>
+<span id="cb26-18"><a href="#cb26-18" tabindex="-1"></a>  <span class="at">geo_id_disaggregated =</span> , <span class="co"># geo IDs of the preparatory iteration call above and this function call must match!</span></span>
+<span id="cb26-19"><a href="#cb26-19" tabindex="-1"></a>  <span class="at">social_indicator =</span> ,</span>
+<span id="cb26-20"><a href="#cb26-20" tabindex="-1"></a>  <span class="at">n_quantile =</span> , <span class="co"># Specify number of quantiles, e.g. 10</span></span>
+<span id="cb26-21"><a href="#cb26-21" tabindex="-1"></a>  <span class="at">approach =</span> <span class="st">&quot;quantile&quot;</span> <span class="co"># default (and currently only) approach</span></span>
+<span id="cb26-22"><a href="#cb26-22" tabindex="-1"></a>)</span>
+<span id="cb26-23"><a href="#cb26-23" tabindex="-1"></a></span>
+<span id="cb26-24"><a href="#cb26-24" tabindex="-1"></a><span class="do">## RESULT(S) COMPARISON ASSESSMENT:</span></span>
+<span id="cb26-25"><a href="#cb26-25" tabindex="-1"></a><span class="do">## List here the results of the comparison assessment you selected</span></span>
+<span id="cb26-26"><a href="#cb26-26" tabindex="-1"></a><span class="do">## ASSESSOR:</span></span>
+<span id="cb26-27"><a href="#cb26-27" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb26-28"><a href="#cb26-28" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb26-29"><a href="#cb26-29" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb26-30"><a href="#cb26-30" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb26-31"><a href="#cb26-31" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+</div>
+<div id="extended-function-template-4" class="section level3">
+<h3>Extended function template</h3>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a></span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>testthat<span class="sc">::</span><span class="fu">test_that</span>(<span class="st">&quot;results correct [pathway_id]&quot;</span>, {</span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>  </span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>  <span class="do">## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION</span></span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>  <span class="co"># data &lt;- ...</span></span>
+<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a>  </span>
+<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a>  <span class="do">## First run an iteration (see iteration template for full argument list)</span></span>
+<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a>  result_interim <span class="ot">&lt;-</span> healthiar<span class="sc">::</span><span class="fu">attribute_health</span>(</span>
+<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a>    <span class="at">exp_central =</span> <span class="fu">as.list</span>( ),</span>
+<span id="cb27-10"><a href="#cb27-10" tabindex="-1"></a>    <span class="at">bhd_central =</span> <span class="fu">as.list</span>( ),</span>
+<span id="cb27-11"><a href="#cb27-11" tabindex="-1"></a>    <span class="at">cutoff_central =</span> ,</span>
+<span id="cb27-12"><a href="#cb27-12" tabindex="-1"></a>    <span class="at">rr_central =</span> , </span>
+<span id="cb27-13"><a href="#cb27-13" tabindex="-1"></a>    <span class="at">erf_shape =</span> , </span>
+<span id="cb27-14"><a href="#cb27-14" tabindex="-1"></a>    <span class="at">rr_increment =</span> ,</span>
+<span id="cb27-15"><a href="#cb27-15" tabindex="-1"></a>    <span class="at">geo_id_disaggregated =</span> </span>
+<span id="cb27-16"><a href="#cb27-16" tabindex="-1"></a>  )</span>
+<span id="cb27-17"><a href="#cb27-17" tabindex="-1"></a></span>
+<span id="cb27-18"><a href="#cb27-18" tabindex="-1"></a>  testthat<span class="sc">::</span><span class="fu">expect_equal</span>(</span>
+<span id="cb27-19"><a href="#cb27-19" tabindex="-1"></a>    <span class="do">## healthiar FUNCTION CALL</span></span>
+<span id="cb27-20"><a href="#cb27-20" tabindex="-1"></a>    <span class="at">object =</span></span>
+<span id="cb27-21"><a href="#cb27-21" tabindex="-1"></a>        healthiar<span class="sc">::</span><span class="fu">socialize</span>(</span>
+<span id="cb27-22"><a href="#cb27-22" tabindex="-1"></a>          <span class="at">output_attribute =</span> result_interim,</span>
+<span id="cb27-23"><a href="#cb27-23" tabindex="-1"></a>          <span class="at">geo_id_disaggregated =</span> , <span class="co"># geo IDs of the preparatory iteration call above and this function call must match!</span></span>
+<span id="cb27-24"><a href="#cb27-24" tabindex="-1"></a>          <span class="at">social_indicator =</span> ,</span>
+<span id="cb27-25"><a href="#cb27-25" tabindex="-1"></a>          <span class="at">n_quantile =</span> , <span class="co"># Specify number of quantiles, e.g. 10</span></span>
+<span id="cb27-26"><a href="#cb27-26" tabindex="-1"></a>          <span class="at">approach =</span> <span class="st">&quot;quantile&quot;</span> <span class="co"># default (and currently only) approach</span></span>
+<span id="cb27-27"><a href="#cb27-27" tabindex="-1"></a>        ) <span class="sc">|&gt;</span></span>
+<span id="cb27-28"><a href="#cb27-28" tabindex="-1"></a>      purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="st">&quot;social_main&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb27-29"><a href="#cb27-29" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
+<span id="cb27-30"><a href="#cb27-30" tabindex="-1"></a>        difference_type <span class="sc">==</span> <span class="st">&quot;absolute&quot;</span> <span class="sc">&amp;</span> </span>
+<span id="cb27-31"><a href="#cb27-31" tabindex="-1"></a>          difference_compared_with <span class="sc">==</span> <span class="st">&quot;overall&quot;</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb27-32"><a href="#cb27-32" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">select</span>(difference_value) <span class="sc">|&gt;</span> </span>
+<span id="cb27-33"><a href="#cb27-33" tabindex="-1"></a>      base<span class="sc">::</span><span class="fu">unlist</span>() <span class="sc">|&gt;</span></span>
+<span id="cb27-34"><a href="#cb27-34" tabindex="-1"></a>      base<span class="sc">::</span><span class="fu">as.numeric</span>(),</span>
+<span id="cb27-35"><a href="#cb27-35" tabindex="-1"></a>    </span>
+<span id="cb27-36"><a href="#cb27-36" tabindex="-1"></a>    <span class="do">## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED</span></span>
+<span id="cb27-37"><a href="#cb27-37" tabindex="-1"></a>    <span class="at">expected =</span></span>
+<span id="cb27-38"><a href="#cb27-38" tabindex="-1"></a>      <span class="fu">c</span>( )</span>
+<span id="cb27-39"><a href="#cb27-39" tabindex="-1"></a>    )</span>
+<span id="cb27-40"><a href="#cb27-40" tabindex="-1"></a>})</span>
+<span id="cb27-41"><a href="#cb27-41" tabindex="-1"></a></span>
+<span id="cb27-42"><a href="#cb27-42" tabindex="-1"></a><span class="do">## ASSESSOR:</span></span>
+<span id="cb27-43"><a href="#cb27-43" tabindex="-1"></a><span class="do">## Add here your name and your institute abbreviation</span></span>
+<span id="cb27-44"><a href="#cb27-44" tabindex="-1"></a><span class="do">## ASSESSMENT DETAILS: </span></span>
+<span id="cb27-45"><a href="#cb27-45" tabindex="-1"></a><span class="do">## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...</span></span>
+<span id="cb27-46"><a href="#cb27-46" tabindex="-1"></a><span class="do">## INPUT DATA DETAILS: </span></span>
+<span id="cb27-47"><a href="#cb27-47" tabindex="-1"></a><span class="do">## Add here input data details: data sources, measured vs. modelled, ...</span></span></code></pre></div>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
