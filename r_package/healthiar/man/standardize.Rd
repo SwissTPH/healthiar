@@ -7,9 +7,9 @@
 standardize(output_attribute, age_group, ref_prop_pop = NULL)
 }
 \arguments{
-\item{output_attribute}{\code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.}
+\item{output_attribute}{\code{List} containing the outputs of the \code{healthiar::attribute_health()} assessments for each age group (each list element should be an age group-specific assessment).}
 
-\item{age_group}{\code{String vector} with the age groups included in the age standardization. The vector refers to age-dependent data in this function and to \code{output_attribute} (if provided) .}
+\item{age_group}{\code{String vector} with the age groups included in the age standardization. The vector refers to age-dependent data in this function and to \code{output_attribute} (if provided).}
 
 \item{ref_prop_pop}{\code{Numeric vector} specifying with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.}
 }
