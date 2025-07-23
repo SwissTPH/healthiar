@@ -1068,6 +1068,32 @@ testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iter
   )
 })
 
+testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_TRUE|", {
+
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+
+  ## Convert data to long format following Ma-Loma's suggestion in #643
+  data <- data %>%
+    select(-erf_percent,-number,-yld) |>
+    pivot_longer( cols = starts_with("population_exposed_"), names_to = "region", values_to = "exposed" ) |>
+    mutate(region = str_split_i(region, "_", 3))  |>
+    mutate(regionID = region  |>  as.factor()  |>  as.numeric())
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        geo_id_disaggregated = data$regionID,
+        # geo_id_disaggregated = rep(c("c","a","b"), times = 5),
+        approach_risk = "absolute_risk",
+        exp_central = data$exposure_mean,
+        pop_exp = data$exposed,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2")$health_main$impact_rounded,
+  expected = 348464 # Results from NIPH
+  )
+})
+
 ### YLD #########################################################################
 
 ## Using only the pop_exp argument
