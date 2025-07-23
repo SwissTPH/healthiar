@@ -1,4 +1,4 @@
-## Ma-Loma^s code
+# Ma-Loma^s code ###############################################################
 
 library(healthiar)
 library(tidyverse) #Create a reproducible exposure dataframe
@@ -19,6 +19,7 @@ HA2 <- exdat_noise_long %>%
 
 HA3 <- exdat_noise_long %>% { attribute_health( geo_id_disaggregated = .$regionID, approach_risk = "absolute_risk", exp_central = .$exposure_mean %>% as.list, pop_exp = .$exposed %>% as.list, erf_eq_central = "78.9270-3.1162*c+0.0342*c^2" ) }
 
+# AL ###########################################################################
 ## Finding reason for error in HA2
 
 View(exdat_noise_long)
@@ -43,7 +44,26 @@ HA2 <-
   )
 
 ## Check that results of HA1 & HA2 match
+HA1$health_main$impact_rounded
+HA2$health_main$impact_rounded
 HA1$health_main$impact_rounded == HA2$health_main$impact_rounded
 
 ## Detailed results (per geo ID) for HA2
-View(HA2[["health_detailed"]][["impact_raw"]])
+View(HA2[["health_detailed"]][["results_raw"]])
+
+HA3 <- attribute_health(
+  # geo_id_disaggregated = exdat_noise_long$regionID,
+  # geo_id_disaggregated = c("c","a","b",
+  #                          "c","a","b",
+  #                          "c","a","b",
+  #                          "c","a","b",
+  #                          "c","a","b"),
+  geo_id_disaggregated = rep(c("c","a","b"), times = 5),
+  approach_risk = "absolute_risk",
+  exp_central = exdat_noise_long$exposure_mean,
+  pop_exp = exdat_noise_long$exposed,
+  erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
+)
+
+HA3 <- exdat_noise_long %>% { attribute_health( geo_id_disaggregated = .$regionID, approach_risk = "absolute_risk", exp_central = .$exposure_mean %>% as.list, pop_exp = .$exposed %>% as.list, erf_eq_central = "78.9270-3.1162*c+0.0342*c^2" ) }
+
