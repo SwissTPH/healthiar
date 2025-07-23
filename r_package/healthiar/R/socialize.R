@@ -4,10 +4,10 @@
 #' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{output_attribute}, it is assumed that all data come from a table and the argument refer to the columns of that table.
 
 #' @param output_attribute
-#' \code{List} containing \code{sub-lists} with the results of \code{healthiar::attribute_health()} for each age group. Each list element should refer to one specific age group.
+#' \code{List} containing the outputs of the \code{healthiar::attribute_health()} assessments for each age group (each list element should be an age group-specific assessment).
 
 #' @param age_group
-#' \code{String vector} with the age groups included in the age standardization. The vector refers to age-dependent data in this function and to \code{output_attribute} (if provided) .
+#' \code{String vector} with the age groups included in the age standardization. The vector refers to age-dependent data in this function and to \code{output_attribute} (if provided).
 
 #' @param social_indicator
 #' \code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. Based on this and \code{n_quantile}, \code{social_quantile} will be calculated.
