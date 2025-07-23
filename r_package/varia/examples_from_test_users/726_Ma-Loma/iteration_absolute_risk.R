@@ -46,4 +46,4 @@ HA2 <-
 HA1$health_main$impact_rounded == HA2$health_main$impact_rounded
 
 ## Detailed results (per geo ID) for HA2
-View(HA2[["health_detailed"]][["impact_raw"]])
+View(HA2[["health_detailed"]][["results_raw"]])

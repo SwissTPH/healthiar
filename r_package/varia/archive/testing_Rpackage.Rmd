@@ -808,14 +808,14 @@ bestcost_noise_ihd_expDist_iteration_uncertainty <- summarize_uncertainty(
 
 ## Check impacts per geo unit
 ### Central estimates from attribte()
-round(as.numeric(bestcost_noise_ihd_expDist_iteration[["health_detailed"]][["impact_raw"]] |> filter(erf_ci == "central") |> filter(exp_ci == "central") |> pull(impact_rounded)), digits = 0) 
+round(as.numeric(bestcost_noise_ihd_expDist_iteration[["health_detailed"]][["results_raw"]] |> filter(erf_ci == "central") |> filter(exp_ci == "central") |> pull(impact_rounded)), digits = 0) 
 ### Summary uncertainty estimates from summarize_uncertainty()
 round(as.numeric(bestcost_noise_ihd_expDist_iteration_uncertainty[["uncertainty_detailed"]][["geo_specific"]]$impact_central), digits = 0)
 ### Results seem plausible
 
 ## Check PAFs  of geo units
 print("Main (PAF's of 1st/2nd/3rd geo unit)")
-bestcost_noise_ihd_expDist_iteration[["health_detailed"]][["impact_raw"]] |> filter(erf_ci == "central") |> filter(exp_ci == "central") |> pull(pop_fraction)
+bestcost_noise_ihd_expDist_iteration[["health_detailed"]][["results_raw"]] |> filter(erf_ci == "central") |> filter(exp_ci == "central") |> pull(pop_fraction)
 ## The PAFs from the attribute call of the different geo units match with the one obtained in the example_road_noise_niph_test.xlsx
 
 ## Check aggregated impact
