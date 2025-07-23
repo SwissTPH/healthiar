@@ -12,7 +12,7 @@ vignette: >
 
 --------------------------------------------------------------------------------
 
-```{r prepare, include=FALSE}
+```{r prepare include=FALSE}
 options(rmarkdown.html_vignette.check_title = FALSE)
 
 knitr::opts_chunk$set(
@@ -63,7 +63,7 @@ If you haven't already, install the most recent version of the BEST-COST R
 package `healthiar`. If you get prompted to update packages that `healthiar`
 uses and/or relies on, we recommend to do so.
 
-```{r install package, include=TRUE, echo=TRUE, eval=FALSE}
+```{r install package, include=FALSE, echo=TRUE, eval=FALSE}
 remotes::install_github(
   repo = "best-cost/best-cost_WPs", 
   subdir = "/r_package/healthiar", 
@@ -425,18 +425,6 @@ For this particular calculation pathway, one can either specify the argument
 `pop_exp` (option A) or `prop_pop_exp` (option B)
 
 ```{r test with hard-coded inputs, include=TRUE, echo=TRUE, eval=FALSE}
-## healthiar FUNCTION CALL
-results <- healthiar::attribute_health(
-  erf_shape = "log_linear",
-  rr_central = 1.08,
-  rr_increment = 10,
-  exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
-  pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700), # OPTION A
-  cutoff_central = 53,
-  bhd_central = 85362.08,
-  geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL
-)
 
 ## healthiar FUNCTION CALL
 results <- healthiar::attribute_health(
@@ -444,14 +432,12 @@ results <- healthiar::attribute_health(
   rr_central = 1.08,
   rr_increment = 10,
   exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
-  prop_pop_exp = c( # OPTION B
+  prop_pop_exp = c(
     0.818718312, 0.074319355, 0.054852478, 
     0.036785683, 0.013847374, 0.001476797
     ),
   cutoff_central = 53,
-  bhd_central = 85362.08,
-  geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL
+  bhd_central = 85362.08
 )
 ```
 
@@ -463,7 +449,7 @@ Another option is to load all your necessary input data before calling the
 In case you select this approach, remember to also upload the input data to the
 Teams testing folder of your institute, alongside the code for the test.
 
-```{r inspect excel file, eval=FALSE, include=FALSE, eval=FALSE}
+```{r inspect excel file, include=FALSE, eval=TRUE}
 # system.file("extdata", package = "healthiar") |> list.files()
 # test <- readxl::read_xlsx(path = system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar"), sheet = "Relative_risk_IHD_WHO_2003a")
 ```
@@ -484,9 +470,7 @@ results <- healthiar::attribute_health(
   exp_central = data$exposure_mean,
   prop_pop_exp = data$prop_exposed,
   cutoff_central = min(data$exposure_mean),
-  bhd_central = data$gbd_daly[1],
-  geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL
+  bhd_central = data$gbd_daly[1]
 ) 
 ```
 
@@ -782,10 +766,13 @@ testthat::test_that("results correct [pathway_id]", {
     erf_shape = "log_linear",
     rr_central = 1.08,
     rr_lower = 1.08 - 0.02, # FAKE
-    rr_upper = 1.08 + 0.02,
+    rr_upper = 1.08 + 0.02, # FAKE
     rr_increment = 10,
     exp_central = c(53.0, 57.5, 62.5, 67.5, 72.5, 77.5),
-    pop_exp = c(4268785, 387500, 286000, 191800, 72200, 7700), # OPTION A
+  prop_pop_exp = c(
+    0.818718312, 0.074319355, 0.054852478, 
+    0.036785683, 0.013847374, 0.001476797
+    ),
     cutoff_central = 5,
     bhd_central = 85362.08)
     
@@ -818,20 +805,20 @@ Here we follow the same steps as outlined in the first uncertainty example
 - Run the assessment, and input the results to `summarize_uncertainty()`
 - Use the results of the `summarize_uncertainty()` as the `expected` values in the extended function template
 
-```{r test uncertainty rr iteration, eval=FALSE, include=FALSE}
+```{r test uncertainty rr iteration, eval=TRUE, include=FALSE}
 testthat::test_that("results correct [pathway_id]", {
 
   result_interim_iteration <-
     healthiar::attribute_health(
-      exp_central = list(8, 7.5),
-      exp_lower = list(7, 6.2),
-      exp_upper = list(9, 8.1),
+      exp_central = c(8, 7.5),
+      exp_lower = c(7, 6.2),
+      exp_upper = c(9, 8.1),
       cutoff_central = 5,
       cutoff_lower = 4,
       cutoff_upper = 6,
-      bhd_central = list(1E5, 1E5),
-      bhd_lower = list(5E4, 5E4),
-      bhd_upper = list(2E5, 2E5),
+      bhd_central = c(1E5, 1E5),
+      bhd_lower = c(5E4, 5E4),
+      bhd_upper = c(2E5, 2E5),
       rr_central = 1.118,
       rr_lower = 1.060,
       rr_upper = 1.179,
@@ -1302,8 +1289,8 @@ iteration of `attribute`.
 
 ## First run an iteration (see iteration template for full argument list)
 result_interim <- healthiar::attribute_health(
-  exp_central = as.list( ),
-  bhd_central = as.list( ),
+  exp_central = ,
+  bhd_central = ,
   cutoff_central = ,
   rr_central = , 
   erf_shape = , 
@@ -1341,8 +1328,8 @@ testthat::test_that("results correct [pathway_id]", {
   
   ## First run an iteration (see iteration template for full argument list)
   result_interim <- healthiar::attribute_health(
-    exp_central = as.list( ),
-    bhd_central = as.list( ),
+    exp_central = ,
+    bhd_central = ,
     cutoff_central = ,
     rr_central = , 
     erf_shape = , 
