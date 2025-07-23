@@ -27,10 +27,28 @@ get_risk(
 \item{exp}{Population exposure to the stressor (e.g. annual population-weighted mean).}
 }
 \value{
-This function returns three \code{values} corresponding to the central estimate as well as the lower and upper bound of the exposure-response function.
+This function returns the relative risk(s) at the specified exposure level(s), \emph{rr_at_exp} in the equations above.
 }
 \description{
 This function re-scales the relative risk from the increment value in the epidemiological study (e.g. for PM2.5 10 or 5 ug/m3) to the actual population exposure
+}
+\details{
+\strong{Equations for scaling of relative risk}
+
+\emph{linear ERF}
+\deqn{rr\_at\_exp =  1 + \frac{(rr - 1)}{rr\_increment} \cdot (exp - cutoff)}
+
+\emph{log-linear ERF}
+
+\deqn{rr\_at\_exp = e^{\frac{\log(\mathrm{rr})}{\mathrm{rr\_increment}} \cdot (\mathrm{exp} - \mathrm{cutoff})}}
+
+\emph{linear-log ERF}
+
+\deqn{rr\_at\_exp = 1 + \frac{(\mathrm{rr} - 1)}{\log(\mathrm{rr\_increment})} \cdot (\log(\mathrm{exp}) - \log(\mathrm{cutoff}))}
+
+\emph{log-log ERF}
+
+\deqn{rr\_at\_exp = e^{\frac{\log(\mathrm{rr})}{\log(\mathrm{rr\_increment})} \cdot (\log(\mathrm{exp}) - \log(\mathrm{cutoff}))}}
 }
 \note{
 Experimental function
