@@ -11,7 +11,7 @@
 #' Alberto Castro & Axel Luyten
 
 #' @examples
-#' Goal: age-standardize two age group-specific impacts
+#' # Goal: age-standardize two age group-specific impacts
 #' output_attribute <- attribute_health(
 #'   rr_central = 1.063,
 #'   rr_increment = 10,
