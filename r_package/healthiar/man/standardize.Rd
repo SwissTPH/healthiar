@@ -38,6 +38,7 @@ results <- standardize(
 )
 results$health_detailed$impact_per_100k_inhab # age group-specific impact rate
 results$health_main$impact_per_100k_inhab # age-standardized impact rate
+
 }
 \author{
 Alberto Castro & Axel Luyten

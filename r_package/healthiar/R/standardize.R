@@ -1,15 +1,15 @@
 #' Obtain age-standardized health impacts
-
+#'
 #' @description
 #' This function obtains age-standardized health impacts based on multiple age-group specific assessments
-
+#'
 #' @inheritParams socialize
-
+#'
 #' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
-
+#'
 #' @author
 #' Alberto Castro & Axel Luyten
-
+#'
 #' @examples
 #' # Goal: age-standardize two age group-specific impacts
 #' output_attribute <- attribute_health(
@@ -29,7 +29,7 @@
 #' )
 #' results$health_detailed$impact_per_100k_inhab # age group-specific impact rate
 #' results$health_main$impact_per_100k_inhab # age-standardized impact rate
-
+#'
 #' @export
 
 
