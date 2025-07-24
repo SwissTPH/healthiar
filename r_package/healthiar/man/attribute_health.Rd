@@ -20,6 +20,8 @@ attribute_health(
   # ITERATION (OPTIONAL)
   geo_id_disaggregated = "a",
   geo_id_aggregated = NULL,
+  age_group = "all",
+  sex = "all",
   # META (OPTIONAL)
   info = NULL,
   population = NULL,
@@ -51,7 +53,9 @@ attribute_health(
 
 \item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_disaggregated}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
-\item{sex}{\code{Numeric vector} or \code{string vector} providing the \strong{sex} considered in the assessment.\emph{Optional argument.}}
+\item{age_group}{\code{Numeric vector} or \code{string vector} providing the \strong{age groups} considered in the assessment. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}. \emph{Optional argument.}}
+
+\item{sex}{\code{Numeric vector} or \code{string vector} specifying the \strong{sex} of the groups considered in the assessment.\emph{Optional argument.}}
 
 \item{dw_central, dw_lower, dw_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{disability weight} associated with the morbidity health outcome of interest and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. \emph{Only applicable in assessments of YLD (years lived with disability).}}
 
@@ -86,11 +90,11 @@ For (short) \strong{examples} please see below or consult the vignette for more 
 
 To assess the attributable health impact/burden across multiple geographic units with \code{attribute_health()}, you must specify the argument \code{geo_id_disaggregated} and (optionally) \code{geo_id_aggregated}, in addition to the other required function arguments.
 
-The length of the input vectors to the function arguments must be
+There must be one line for each specific combination of ... The length of the input vectors to the function arguments must be
 
-\deqn{\text{length input vectors} = \text{number of geo units} \times \text{number of exposure categories}}
+\deqn{\text{length input vectors} = \text{number of geo units} \times \text{number of exposure categories} \times \text{number of age groups (if entered)} \times \text{number of sex groups (if entered)}}
 
-Alternatively, for those arguments that are independent of location (e.g. \code{approach_risk}, \code{rr_...}, \code{erf_shape}, ...), you can enter a single value, which will be recycled to match the length of the other geo unit-specific input data.
+Alternatively, for those arguments that are independent of location (e.g. \code{approach_risk}, \code{rr_...}, \code{erf_shape}, ...), you can enter a single value, which will be recycled to match the length of the other geo unit-specific input data. Additional categories can be passed on via the \code{info} argument.
 
 \strong{What you put in is what you get out}
 
@@ -137,7 +141,7 @@ Consequently, the vectors fed to \code{geo_id_disaggregated} and \code{geo_id_ag
 
 \code{info}
 
-\emph{Optional argument.} Information entered to this argument will be added as column(s) (with the suffix \code{_info}) to the results table.
+\emph{Optional argument.} Information entered to this argument will be added as column(s) (with the suffix \code{_info}) to the results table. These additional columns can be used to further stratify the analysis in a secondary step (see example below).
 
 \code{population}
 

@@ -25,6 +25,8 @@
 #'   # ITERATION (OPTIONAL)
 #'   geo_id_disaggregated = "a",
 #'   geo_id_aggregated = NULL,
+#'   age_group = "all",
+#'   sex = "all",
 #'   # META (OPTIONAL)
 #'   info = NULL,
 #'   population = NULL,
@@ -38,11 +40,11 @@
 #' @details
 #' To assess the attributable health impact/burden across multiple geographic units with \code{attribute_health()}, you must specify the argument \code{geo_id_disaggregated} and (optionally) \code{geo_id_aggregated}, in addition to the other required function arguments.
 #' @details
-#' The length of the input vectors to the function arguments must be
+#' There must be one line for each specific combination of ... The length of the input vectors to the function arguments must be
 #' @details
-#' \deqn{\text{length input vectors} = \text{number of geo units} \times \text{number of exposure categories}}
+#' \deqn{\text{length input vectors} = \text{number of geo units} \times \text{number of exposure categories} \times \text{number of age groups (if entered)} \times \text{number of sex groups (if entered)}}
 #' @details
-#' Alternatively, for those arguments that are independent of location (e.g. \code{approach_risk}, \code{rr_...}, \code{erf_shape}, ...), you can enter a single value, which will be recycled to match the length of the other geo unit-specific input data.
+#' Alternatively, for those arguments that are independent of location (e.g. \code{approach_risk}, \code{rr_...}, \code{erf_shape}, ...), you can enter a single value, which will be recycled to match the length of the other geo unit-specific input data. Additional categories can be passed on via the \code{info} argument.
 
 #' @details
 #' \strong{What you put in is what you get out}
@@ -91,7 +93,7 @@
 #' @details
 #' \code{info}
 #' @details
-#' \emph{Optional argument.} Information entered to this argument will be added as column(s) (with the suffix \code{_info}) to the results table.
+#' \emph{Optional argument.} Information entered to this argument will be added as column(s) (with the suffix \code{_info}) to the results table. These additional columns can be used to further stratify the analysis in a secondary step (see example below).
 #' @details
 #' \code{population}
 #' @details
