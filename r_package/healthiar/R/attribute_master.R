@@ -39,11 +39,11 @@
 #' @param geo_id_disaggregated,geo_id_aggregated
 #' \code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_disaggregated}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}
 
-#' @param age_grop
-#' \code{Numeric vector} or \code{string vector} providing the \strong{age group} considered in the assessment. If it is numeric, it refers to the first age of the age group. E.g. c(0, 40, 80) means age groups \code{[0, 40), [40, 80), >=80]}.  \emph{Optional argument.}
+#' @param age_group
+#' \code{Numeric vector} or \code{string vector} providing the \strong{age groups} considered in the assessment. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}. \emph{Optional argument.}
 
 #' @param sex
-#' \code{Numeric vector} or \code{string vector} providing the \strong{sex} considered in the assessment.\emph{Optional argument.}
+#' \code{Numeric vector} or \code{string vector} specifying the \strong{sex} of the groups considered in the assessment.\emph{Optional argument.}
 
 # META (OPTIONAL)
 #' @param info

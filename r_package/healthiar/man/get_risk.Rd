@@ -54,7 +54,14 @@ This function re-scales the relative risk from the increment value in the epidem
 Experimental function
 }
 \examples{
-get_risk(rr=1.05, exp=10, cutoff=5, erf_shape="linear" )
+# Goal: scale relative risk to observed exposure level
+get_risk(
+  rr = 1.05,
+  rr_increment = 10,
+  erf_shape = "linear",
+  exp = 10,
+  cutoff = 5
+)
 }
 \author{
 Alberto Castro & Axel Luyten
