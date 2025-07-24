@@ -7,24 +7,35 @@
 summarize_uncertainty(output_attribute, n_sim, seed = NULL)
 }
 \arguments{
-\item{output_attribute}{\code{variable} in which the results of an \code{healthiar::attribute_...()} function are stored.}
+\item{output_attribute}{\code{variable} in which the output of a \code{healthiar::attribute_...()} function call are stored.}
 
 \item{n_sim}{\code{numeric value} indicating the number of simulations to be performed.}
 
 \item{seed}{\code{numeric value} for fixing the randomization. If empty, 123 is used as a default.}
 }
 \value{
-This function returns confidence intervals for the attributable health impacts using a Monte Carlo simulation.
+This function returns a summary uncertainty central estimate and correcponding lower and upper confidence intervals for the attributable health impacts by Monte Carlo simulation.
 }
 \description{
-This function determines summary uncertainty (based on at least one input variable
-with central, lower and upper estimate) based on attribute() or compare()
-function output.
+This function determines summary uncertainty (based on central, lower and upper estimates of at least one input variable) using attribute() or compare()
+function output by Monte Carlo simulation.
 
-Input variables that can included in the Monte Carlo simulation: relative risk, exposure, cutoff, baseline health data, disability weight, duration.
+Input variables that will be processed are:
+\itemize{
+  \item{relative_risk (\code{rr_...})}
+  \item{exposure (\code{exp_...})}
+  \item{cutoff (\code{cutoff_...})}
+  \item{baseline health data (\code{bhd_...})}
+  \item{disability weight (\code{dw_...})}
+  \item{duration (\code{duration_...})}
+  }
 }
 \details{
-Distributions used for simulation
+\strong{Method}
+
+For each processed input variable with a provided 95\% confidence interval value, a distribution is fitted (see below). From these, \code{n_sim} input value sets are sampled to compute \code{n_sim} attributable impacts. The median value of these attributable impacts is reported as the central estimate, and the 2.5th and 97.5th percentiles define the lower and upper bounds of the 95\% summary uncertainty confidence interval, respectively. Aggregated central, lower and upper estimates are obtained by summing the corresponding values of each lower level unit.
+
+\strong{Distributions used for simulation}
 
 Relative risk values are simulated based on an optimized gamma distribution, which fits well as relative risks are positive and its distributions usually right-skewed. The gamma distribution best fitting the inputted central relative risk estimate and corresponding lower and upper 95\% confidence interval values is fitted using \code{stats::qgamma()} (with \code{rate = shape / rr_central}) and then \code{stats::optimize} is used to optimize the distribution parameters. Finally, \code{n_sim} relative risk values are simulated using \code{stats::rgamma()}.
 
