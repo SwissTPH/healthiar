@@ -401,3 +401,16 @@ results$health_detailed$impact_per_100k_inhab # age group-specific impact rate
 results$health_main$impact_per_100k_inhab # age-standardized impact rate 
 ```
 
+# get_risk
+
+```{r}
+# Goal: scale relative risk to observed exposure level
+get_risk(
+  rr = 1.05, 
+  rr_increment = 10,
+  erf_shape = "linear",
+  exp = 10, 
+  cutoff = 5, 
+)
+```
+
