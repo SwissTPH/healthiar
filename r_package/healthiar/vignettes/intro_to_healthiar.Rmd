@@ -427,6 +427,36 @@ results_iteration_ar[["health_detailed"]][["results_raw"]] |>
 rm(results_iteration_ar)
 ```
 
+## Example: `attribute_health()` and sub-group analysis
+
+Goal: determine mean attributable health impacts by education level
+
+*Note*: a (random) ID vector of unique values must be entered to the argument `geo_id_disaggregated`, to indicate that each row is an observation on its own (and not just exposure categories)
+
+A data frame (or a single vector) can be entered to the `info` argument
+
+In a second step one can group the results based on one or more columns and so summarize the results by the preferred sub-groups
+
+```{r}
+info <- data.frame(
+  education = rep(c("secondary", "bachelor", "master"), each = 5) # education level
+)
+output_attribute <- attribute_health(
+  rr_central = 1.063,
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  cutoff_central =  0,
+  exp_central = sample(6:10, 15, replace = TRUE),
+  bhd_central = sample(100:500, 15, replace = TRUE),
+  geo_id_disaggregated = c(1:nrow(info)), # (random) ID must be entered
+  info = info
+)
+output_stratified <- output_attribute$health_detailed$results_disaggregated |>
+  dplyr::group_by(info_1) |>
+  dplyr::summarize(mean_impact = mean(impact)) |>
+  print()
+```
+
 ## Example: `attribute_health()` with user-defined ERF
 
 Goal: attribute COPD cases to air pollution exposure by applying a user-defined exposure response function (e.g. MR-BRT curves from Global Burden of Disease study)

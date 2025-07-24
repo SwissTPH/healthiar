@@ -51,7 +51,7 @@ get_impact <-
                                               pop_fraction_type = pop_fraction_type)
 
       # * Without life table #################################################
-
+# browser()
       if(!unique(input_table$is_lifetable)) {
 
         # Get pop_fraction and add it to the input data frame

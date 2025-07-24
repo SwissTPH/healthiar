@@ -40,9 +40,11 @@
 #' @details
 #' To assess the attributable health impact/burden across multiple geographic units with \code{attribute_health()}, you must specify the argument \code{geo_id_disaggregated} and (optionally) \code{geo_id_aggregated}, in addition to the other required function arguments.
 #' @details
-#' There must be one line for each specific combination of ... The length of the input vectors to the function arguments must be
+#' The length of the input vectors to the function arguments must be
 #' @details
-#' \deqn{\text{length input vectors} = \text{number of geo units} \times \text{number of exposure categories} \times \text{number of age groups (if entered)} \times \text{number of sex groups (if entered)}}
+#' \deqn{\text{length input vectors} = \text{number of geo units} \times \text{number of exposure categories} \times \text{number of age groups (if entered)} \times \text{number of sex groups (if entered),}}
+#' @details
+#' i.e. there must be one line / observation for each specific combination of geo unit, exposure category, age and sex group.
 #' @details
 #' Alternatively, for those arguments that are independent of location (e.g. \code{approach_risk}, \code{rr_...}, \code{erf_shape}, ...), you can enter a single value, which will be recycled to match the length of the other geo unit-specific input data. Additional categories can be passed on via the \code{info} argument.
 
@@ -93,7 +95,7 @@
 #' @details
 #' \code{info}
 #' @details
-#' \emph{Optional argument.} Information entered to this argument will be added as column(s) (with the suffix \code{_info}) to the results table. These additional columns can be used to further stratify the analysis in a secondary step (see example below).
+#' \emph{Optional argument.} Information entered to this argument will be added as column(s) names \code{info_1}, \code{info_2}, \code{info_...} to the results table. These additional columns can be used to further stratify the analysis in a secondary step (see example below).
 #' @details
 #' \code{population}
 #' @details
@@ -214,6 +216,26 @@
 #' )
 #'
 #' results$health_main$impact
+#'
+#' @examples
+#' # Goal: determine mean attributable health impacts by education level
+#' info <- data.frame(
+#'   education = rep(c("secondary", "bachelor", "master"), each = 5) # education level
+#' )
+#' output_attribute <- attribute_health(
+#'   rr_central = 1.063,
+#'   rr_increment = 10,
+#'   erf_shape = "log_linear",
+#'   cutoff_central =  0,
+#'   exp_central = sample(6:10, 15, replace = TRUE),
+#'   bhd_central = sample(100:500, 15, replace = TRUE),
+#'   geo_id_disaggregated = c(1:nrow(info)), # a vector of (random) unique IDs must be entered
+#'   info = info
+#' )
+#' output_stratified <- output_attribute$health_detailed$results_disaggregated |>
+#'   dplyr::group_by(info_1) |>
+#'   dplyr::summarize(mean_impact = mean(impact)) |>
+#'   print()
 
 #' @author Alberto Castro & Axel Luyten
 
