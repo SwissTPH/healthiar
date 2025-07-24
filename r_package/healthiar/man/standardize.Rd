@@ -20,8 +20,25 @@ Returns the impact (absolute and relative) theoretically attributable to the dif
 This function obtains age-standardized health impacts based on multiple age-group specific assessments
 }
 \examples{
-# Example of how to use the function
-function_name(param1 = value1, param2 = value2)
+# Goal: age-standardize two age group-specific impacts
+output_attribute <- attribute_health(
+  rr_central = 1.063,
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  cutoff_central =  0,
+  age_group = c("below_40", "above_40"),
+  exp_central = c(8.1, 10.9),
+  bhd_central = c(1000, 4000),
+  population = c(100000, 500000)
+)
+results <- standardize(
+  output_attribute = output_attribute,
+  age_group = c("below_40", "above_40"),
+  ref_prop_pop = c(0.5, 0.5)
+)
+results$health_detailed$impact_per_100k_inhab # age group-specific impact rate
+results$health_main$impact_per_100k_inhab # age-standardized impact rate
+
 }
 \author{
 Alberto Castro & Axel Luyten

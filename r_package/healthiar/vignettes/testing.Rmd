@@ -12,7 +12,7 @@ vignette: >
 
 --------------------------------------------------------------------------------
 
-```{r prepare include=FALSE}
+```{r prepare, include=FALSE}
 options(rmarkdown.html_vignette.check_title = FALSE)
 
 knitr::opts_chunk$set(

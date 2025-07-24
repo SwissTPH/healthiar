@@ -81,6 +81,8 @@ YLL/yll - years of life lost
 
 # `healthiar` Examples
 
+*Note*: most `healthiar` functions have examples that you can execute (with `healthiar` loaded) by running `example("function_name")`, e.g. `example("attribute_health")`
+
 ## Example: `attribute_health()` with relative risk
 
 Goal: attribute COPD cases to PM2.5 air pollution exposure

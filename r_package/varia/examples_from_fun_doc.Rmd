@@ -378,3 +378,39 @@ results |>
   dplyr::slice(1:15)
 ```
 
+# standardize
+
+```{r}
+# Goal: age-standardize two age group-specific impacts
+output_attribute <- attribute_health(
+      rr_central = 1.063,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      cutoff_central =  0,
+      age_group = c("below_40", "above_40"),
+      exp_central = c(8.1, 10.9),
+      bhd_central = c(1000, 4000),
+      population = c(100000, 500000)
+)
+results <- standardize(
+  output_attribute = output_attribute,
+  age_group = c("below_40", "above_40"),
+  ref_prop_pop = c(0.5, 0.5)
+)
+results$health_detailed$impact_per_100k_inhab # age group-specific impact rate
+results$health_main$impact_per_100k_inhab # age-standardized impact rate 
+```
+
+# get_risk
+
+```{r}
+# Goal: scale relative risk to observed exposure level
+get_risk(
+  rr = 1.05, 
+  rr_increment = 10,
+  erf_shape = "linear",
+  exp = 10, 
+  cutoff = 5, 
+)
+```
+

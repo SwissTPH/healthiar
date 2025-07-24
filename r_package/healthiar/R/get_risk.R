@@ -31,7 +31,14 @@
 #' This function returns the relative risk(s) at the specified exposure level(s), \emph{rr_at_exp} in the equations above.
 
 #' @examples
-#' get_risk(rr=1.05, exp=10, cutoff=5, erf_shape="linear" )
+#' # Goal: scale relative risk to observed exposure level
+#' get_risk(
+#'   rr = 1.05,
+#'   rr_increment = 10,
+#'   erf_shape = "linear",
+#'   exp = 10,
+#'   cutoff = 5
+#' )
 
 #' @author Alberto Castro & Axel Luyten
 
