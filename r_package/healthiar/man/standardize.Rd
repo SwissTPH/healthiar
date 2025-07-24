@@ -20,7 +20,7 @@ Returns the impact (absolute and relative) theoretically attributable to the dif
 This function obtains age-standardized health impacts based on multiple age-group specific assessments
 }
 \examples{
-Goal: age-standardize two age group-specific impacts
+# Goal: age-standardize two age group-specific impacts
 output_attribute <- attribute_health(
   rr_central = 1.063,
   rr_increment = 10,
