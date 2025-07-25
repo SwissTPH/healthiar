@@ -24,7 +24,7 @@ Moreover, the data frame includes columns such as:
 This function calculates the health impacts for each uncertainty and geo area.
 }
 \examples{
-TBD
+# TODO
 }
 \author{
 Alberto Castro & Axel Luyten

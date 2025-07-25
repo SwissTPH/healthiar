@@ -27,10 +27,8 @@ The results contain columns such as:
 This function calculates the disability-adjusted life years (DALY) attributable to the exposure to an environmental stressor by adding the two DALY components YLL and YLD.
 }
 \examples{
-# Goal: obtain DALY (disability-adjusted life years) from two existing
-# attribute_... outputs
-
-## Create YLL (years of life lost) assessment
+# Goal: obtain DALY (disability-adjusted life years) from two existing \code{attribute_...} outputs
+# Step 1: Create YLL (years of life lost) assessment
 results_yll <- attribute_lifetable(
   health_outcome = "yll",
   approach_exposure = "single_year",
@@ -49,8 +47,7 @@ results_yll <- attribute_lifetable(
   year_of_analysis = 2019,
   min_age = 20
 )
-
-## Create YLD (years lived with disability) assessment
+# Step 2: Create YLD (years lived with disability) assessment
 results_yld  <- attribute_health(
   exp_central = 8.85,
   prop_pop_exp = 1,
@@ -63,12 +60,11 @@ results_yld  <- attribute_health(
   dw_central = 0.5,
   info = "pm2.5_yld"
 )
-
+# Step 3: obtain DALY
 results <- daly(
   output_attribute_yll = results_yll,
   output_attribute_yld = results_yld
 )
-
 # Attributable impact in DALY
 results$health_main |>
   dplyr::select(impact, impact_yll, impact_yld)

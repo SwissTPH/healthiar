@@ -1,12 +1,15 @@
 #' Compare the attributable health impacts between two scenarios
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
 
+# ARGUMENTS ####################################################################
 #' @param output_attribute_1 Scenario 1 as in the output of attribute()
 #' @param output_attribute_2 Scenario 2 as in the output of attribute()
 #' @param approach_comparison \code{String} showing the method of comparison. Options: "delta" or "pif".
 
+# DETAILS ######################################################################
 #' @details
 #' Note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2 (e.g. comparison of two scenarios at the same time).
 #' @details
@@ -37,11 +40,12 @@
 #' @details
 #' With the delta comparison the difference between two scenarios is obtained by substraction. The delta approach is suited for all comparison cases, and specifically for comparison of a situation now with a situation in the future.
 
+# VALUE ########################################################################
 #' @inherit attribute_master return
 
+# EXAMPLES #####################################################################
 #' @examples
 #' # Goal: comparison of two scenarios with delta approach
-#'
 #' scenario_A <- attribute_health(
 #'   exp_central = 8.85,   # EXPOSURE 1
 #'   cutoff_central = 5,
@@ -51,7 +55,6 @@
 #'   rr_central = 1.118,
 #'   rr_increment = 10
 #' )
-#'
 #' scenario_B <- attribute_health(
 #'   exp_central = 6,     # EXPOSURE 2
 #'   cutoff_central = 5,
@@ -61,16 +64,42 @@
 #'   rr_central = 1.118,
 #'   rr_increment = 10
 #' )
-#'
-#' results_comparison <- compare(
+#' results <- compare(
 #' approach_comparison = "delta",
 #' output_attribute_1 = scenario_A,
 #' output_attribute_2 = scenario_B
 #' )
+#' # Inspect the difference, stored in the \code{impact} column
+#' results$health_main |>
+#'   dplyr::select(impact, impact_1, impact_2) |>
+#'   print()
 #'
-#' # Inspect the difference, stored in the "impact" column
-#' results_comparison$health_main |>
-#'   dplyr::select(impact, impact_1, impact_2)
+#' # Goal: comparison of two scenarios with population impact fraction (pif) approach
+#' output_attribute_1 <- attribute_health(
+#'   exp_central = 8.85,   # EXPOSURE 1
+#'   cutoff_central = 5,
+#'   bhd_central = 25000,
+#'   approach_risk = "relative_risk",
+#'   erf_shape = "log_linear",
+#'   rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+#'   rr_increment = 10
+#' )
+#' output_attribute_2 <- attribute_health(
+#'   exp_central = 6,      # EXPOSURE 2
+#'   cutoff_central = 5,
+#'   bhd_central = 25000,
+#'   approach_risk = "relative_risk",
+#'   erf_shape = "log_linear",
+#'   rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+#'   rr_increment = 10
+#' )
+#' results <- compare(
+#'   output_attribute_1 = output_attribute_1,
+#'   output_attribute_2 = output_attribute_2,
+#'   approach_comparison = "pif"
+#' )
+#' # Inspect the difference, stored in the impact column
+#' results$health_main$impact
 
 #' @author Alberto Castro & Axel Luyten
 

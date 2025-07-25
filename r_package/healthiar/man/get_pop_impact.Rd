@@ -23,11 +23,8 @@ Moreover, the data frame include columns such as:
 \description{
 Get population impact over time
 }
-\note{
-Experimental function
-}
 \examples{
-TBD
+# TBD
 }
 \author{
 Alberto Castro & Axel Luyten

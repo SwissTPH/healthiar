@@ -1,19 +1,21 @@
 #' Get deaths, YLL or YLD
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function determines attributable deaths, years of life lost or years lived with disability from life table
 
+# ARGUMENTS ####################################################################
 #' @inheritParams attribute_master
 
+# VALUE ########################################################################
 #' @returns
 #' This function returns a \code{List}
 
+# EXAMPLES #####################################################################
 #' @examples
-#' TBD
+#' #TOD
 
 #' @author Alberto Castro & Axel Luyten
-
-#' @note Experimental function
 
 #' @keywords internal
 

@@ -99,5 +99,5 @@ results$social_main |>
   dplyr::select(first, last, difference_type, difference_value, comment)
 }
 \author{
-TODO
+Alberto Castro & Axel Luyten
 }

@@ -1,19 +1,21 @@
-#' Get input data and PAF
+#' Calculates reference proportion of population
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function calculates reference proportion of population. To be used in \code{socialize()} and \code{standardize()} in case that \code{ref_prop_pop} is not provided.
 
+# ARGUMENTS ####################################################################
 #' @param df \code{Data frame} or \code{tibble} with the data by \code{geo_id_disaggregated} and \code{age_group} including a column for \code{population}
 
-
+# VALUE ########################################################################
 #' @returns
 #' A tibble with two columns: one for \code{age_group} and a second one for \code{ref_prop_pop}.
+
+# EXAMPLES #####################################################################
 #' @examples
-#' TODO
+#' # TODO
 
 #' @author Alberto Castro & Axel Luyten
-
-#' @note Experimental function
 
 #' @keywords internal
 

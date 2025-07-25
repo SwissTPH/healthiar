@@ -62,3 +62,6 @@ results <- cba(
 results$cba_main |>
   dplyr::select(benefit, cost, net_benefit)
 }
+\author{
+Alberto Castro & Axel Luyten
+}

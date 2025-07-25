@@ -1,15 +1,19 @@
 #' Cost-benefit analysis
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function performs a cost-benefit analysis
 
+# ARGUMENTS ####################################################################
 #' @inheritParams monetize
 #' @param discount_rate_benefit,discount_rate_cost \code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates)
 #' @param benefit \code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure
 #' @param cost \code{Numeric value} referring to the investment cost to achieve the reduction of exposure
 
+# VALUE ########################################################################
 #' @returns Description of the return value.
 
+# EXAMPLES #####################################################################
 #' @examples
 #' # Goal: performs a cost-benefit analysis using an existing output
 #' # of a attribute_... function
@@ -36,6 +40,8 @@
 #'
 #' results$cba_main |>
 #'   dplyr::select(benefit, cost, net_benefit)
+
+#' @author Alberto Castro & Axel Luyten
 
 #' @export
 

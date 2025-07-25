@@ -1,8 +1,10 @@
 #' Monetize health impacts
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function monetizes health impacts
 
+# ARGUMENTS ####################################################################
 #' @param output_attribute \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while discount_years does not include the year 0. Thus, length of impact = discount_years + 1.
 #' @param valuation \code{Numberic value} referring to unit value of a health impact
@@ -12,10 +14,16 @@
 #' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
 
-
+# VALUE ########################################################################
 #' @returns
-#' TODO
+#' This function returns two lists:
+#' \itemize{
+#'  \item \code{monetization_main} contains the central monetization estimate and the corresponding 95% confidence intervals
+#'  \item \code{monetization_detailed} contains the monetized results for each unique combination of the input variable estimates that were provided to the initial \code{attribute_health()} call
+#'  }
+#' If the argument \code{output_attribute} was specified, then the two lists are added next to the existing attribute output.
 
+# EXAMPLES #####################################################################
 #' @examples
 #' # Goal: monetize the attributable impacts of an existing healthiar
 #' # assessment
@@ -39,6 +47,8 @@
 #' # Attributable COPD cases its monetized impact
 #' results$monetization_main |>
 #'   dplyr::select(impact, monetized_impact)
+
+#' @author Alberto Castro & Axel Luyten
 
 #' @export
 

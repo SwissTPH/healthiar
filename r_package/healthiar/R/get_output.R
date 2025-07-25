@@ -1,12 +1,15 @@
-#' Attributable health cases based on relative risk
+#' Obtain and store output
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function distributes and store outputs by level of detail by aggregating or filtering impacts.
 
+# ARGUMENTS ####################################################################
 #' @param input_args \code{List} containingall arguments and values entered in attribute().
 #' @param input_table \code{List} containing the input_table data compiled and packed in a data frame.
 #' @param results_raw \code{List} containing all the calculation of health impacts.
 
+# VALUE ########################################################################
 #' @returns
 #' TBD. E.g. This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central, lower and upper bound confidence interval.
@@ -18,8 +21,9 @@
 #'  \item And many more.
 #' }
 
+# EXAMPLES #####################################################################
 #' @examples
-#' TBD
+#' # TODO
 
 #' @author Alberto Castro & Axel Luyten
 

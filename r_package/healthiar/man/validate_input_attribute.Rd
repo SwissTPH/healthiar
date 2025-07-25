@@ -17,6 +17,10 @@ This function returns warning or error messages if needed.
 \description{
 Check the input_args data in attribute_master() and provides specific warnings or errors if needed.
 }
+\examples{
+# TODO
+
+}
 \author{
 Alberto Castro & Axel Luyten
 }

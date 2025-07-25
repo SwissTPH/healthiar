@@ -1,8 +1,10 @@
 #' Create the BEST-COST Multidimensional Deprivation Index (MDI)
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
 
+# ARGUMENTS ####################################################################
 #' @inheritParams socialize
 #' @param edu \code{Numeric vector} indicating educational attainment as \% of individuals (≥18) without a high school diploma (ISCED 0-2) per geo unit
 #' @param unemployed \code{Numeric vector} containing \% of unemployed individuals in the active population (18-65) per geo unit
@@ -10,6 +12,7 @@
 #' @param pop_change \code{Numeric vector} containing population change as \% change in population over the previous 5 years (e.g., 2017-2021) per geo unit
 #' @param no_heating \code{Numeric vector} containing \% of households without central heating per geo unit
 
+# DETAILS ######################################################################
 #' @details
 #' The function prints Cronbach's \eqn{\alpha}.
 #' \describe{
@@ -27,6 +30,7 @@
 #' }
 #' Imputation models should have an R² ≥ 0.7. If R² < 0.7, consider alternative data sources or methods.
 
+# VALUE ########################################################################
 #' @return
 #' Tibble with the columns
 #' \itemize{
@@ -43,9 +47,7 @@
 #'   \item Person's correlation coefficient (pairwise-comparisons)
 #' }
 
-#' @author
-#' TODO
-
+# EXAMPLES #####################################################################
 #' @examples
 #' # Goal: create the BEST-COST Multidimensional Deprivation Index for
 #' # a selection of geographic units
@@ -63,6 +65,8 @@
 #' results |>
 #'   dplyr::select(geo_id_disaggregated, MDI, MDI_index) |>
 #'   dplyr::slice(1:15)
+
+#' @author Alberto Castro & Axel Luyten
 
 #' @export
 

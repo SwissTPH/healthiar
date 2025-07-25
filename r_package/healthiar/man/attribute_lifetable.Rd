@@ -127,9 +127,7 @@ For example, would be 10 if one is interested in the impacts of exposure during 
 The \code{min_age} default value 30 implies that all adults aged 30 or older will be affected by the exposure; \code{max_age} analogeously specifies the age above which no health effects of the exposure are considered.
 }
 \examples{
-# Goal: determine YLL attributable to air pollution exposure during
-# one year using the life table approach
-
+# Goal: determine YLL attributable to air pollution exposure during one year using the life table approach
 results <- attribute_lifetable(
   health_outcome = "yll",
   approach_exposure = "single_year",
@@ -140,37 +138,71 @@ results <- attribute_lifetable(
   rr_central =  1.118,
   rr_increment = 10,
   erf_shape = "log_linear",
-  sex = rep(c("male", "female"), each = 100),
   age_group = rep(0:99, times = 2),
-  bhd_central = c(exdat_pop_1$number_of_deaths_male, exdat_pop_1$number_of_deaths_female),
+  sex = rep(c("male", "female"), each = 100),
+  bhd_central = c(
+    exdat_pop_1$number_of_deaths_male,
+    exdat_pop_1$number_of_deaths_female),
   population = c(exdat_pop_male$population_2019, exdat_pop_female$population_2019),
   year_of_analysis = 2019,
   min_age = 20
 )
-
 results$health_main$impact # Attributable YLL
 
-# Goal: determine attributable pre-mature deaths due to air pollution
-# exposure during one year using the life table approach
-
+# Goal: determine attributable premature deaths due to air pollution exposure during one year using the life table approach
 results_pm_deaths <- attribute_lifetable(
-health_outcome = "deaths",
-approach_exposure = "single_year",
-exp_central = 8.85,
-prop_pop_exp = 1,
-cutoff_central = 5,
-rr_central =  1.118,
-rr_increment = 10,
-erf_shape = "log_linear",
-sex = rep(c("male", "female"), each = 100),
-age_group = rep(0:99, times = 2),
-bhd_central = c(exdat_pop_1$number_of_deaths_male, exdat_pop_1$number_of_deaths_female),
-population = c(exdat_pop_male$population_2019, exdat_pop_female$population_2019),
-year_of_analysis = 2019,
-min_age = 20
+  health_outcome = "deaths",
+  approach_exposure = "single_year",
+  exp_central = 8.85,
+  prop_pop_exp = 1,
+  cutoff_central = 5,
+  rr_central =  1.118,
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  age_group = rep(0:99, times = 2),
+  sex = rep(c("male", "female"), each = 100),
+  bhd_central = c(
+    exdat_pop_1$number_of_deaths_male,
+    exdat_pop_1$number_of_deaths_female),
+  population = c(exdat_pop_male$population_2019, exdat_pop_female$population_2019),
+  year_of_analysis = 2019,
+  min_age = 20
 )
+results_pm_deaths$health_main$impact # Attributable premature deaths
 
-results_pm_deaths$health_main$impact # Attributable pre-mature deaths
+
+# Goal: determine YLL attributable to air pollution exposure (exposure distribution) during one year using the life table approach
+results <- attribute_lifetable(
+  health_outcome = "yll",
+  exp_central = rep(c(8, 9, 10), each = 100*2), # each = length of sex or age_group vector
+  prop_pop_exp = rep(c(0.2, 0.3, 0.5), each = 100*2), # each = length of sex or age_group vector
+  cutoff_central = exdat_input_2$cutoff[2],
+  rr_central = exdat_input_2[2,"rr_central"],
+  rr_lower = exdat_input_2[2,"rr_lower"],
+  rr_upper = exdat_input_2[2,"rr_upper"],
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  age_group = rep(
+    c(exdat_pop_male$age,
+      exdat_pop_female$age),
+    times = 3), # times = number of exposure categories
+  sex = rep(
+    c("male", "female"),
+    each = 100, # each = number of age groups (for each sex, if applicable)
+    times = 3), # times = number of exposure categories
+  population = rep(
+    c(exdat_pop_male$population,
+      exdat_pop_female$population),
+    times = 3), # times = number of exposure categories
+  bhd_central = rep(
+    c(exdat_pop_1$number_of_deaths_male,
+      exdat_pop_1$number_of_deaths_female),
+    times = 3), # times = number of exposure categories
+  year_of_analysis = 2019,
+  info = exdat_input_2$pollutant[2],
+  min_age = if(is.na(exdat_input_2$min_age[2])) NULL else exdat_input_2$min_age[2]
+)
+results$health_main$impact_rounded # Attributable YLL
 }
 \author{
 Alberto Castro & Axel Luyten

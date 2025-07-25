@@ -18,8 +18,9 @@ get_discount_factor(
 \description{
 This function calculates the discount factor based on discount rate (already corrected for inflation)
 }
-\note{
-Experimental function
+\examples{
+# TODO
+
 }
 \author{
 Alberto Castro & Axel Luyten

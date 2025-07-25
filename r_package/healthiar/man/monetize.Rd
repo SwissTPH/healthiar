@@ -33,7 +33,12 @@ monetize(
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}}
 }
 \value{
-TODO
+This function returns two lists:
+\itemize{
+ \item \code{monetization_main} contains the central monetization estimate and the corresponding 95% confidence intervals
+ \item \code{monetization_detailed} contains the monetized results for each unique combination of the input variable estimates that were provided to the initial \code{attribute_health()} call
+ }
+If the argument \code{output_attribute} was specified, then the two lists are added next to the existing attribute output.
 }
 \description{
 This function monetizes health impacts
@@ -61,4 +66,7 @@ results <- monetize(
 # Attributable COPD cases its monetized impact
 results$monetization_main |>
   dplyr::select(impact, monetized_impact)
+}
+\author{
+Alberto Castro & Axel Luyten
 }

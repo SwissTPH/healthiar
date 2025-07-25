@@ -84,5 +84,5 @@ results |>
   dplyr::slice(1:15)
 }
 \author{
-TODO
+Alberto Castro & Axel Luyten
 }

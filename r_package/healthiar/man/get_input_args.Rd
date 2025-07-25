@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_input_args.R
 \name{get_input_args}
 \alias{get_input_args}
-\title{get input_args}
+\title{get_input_args}
 \usage{
 get_input_args(environment, call)
 }
@@ -12,11 +12,8 @@ This function returns a \code{list} with all input data together by argument
 \description{
 This function compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
 }
-\note{
-Experimental function
-}
 \examples{
-TBD
+# TODO
 }
 \author{
 Alberto Castro & Axel Luyten

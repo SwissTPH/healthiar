@@ -1,13 +1,16 @@
 #' Attribute health impacts to an environmental stressor
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function calculates the attributable health impacts (mortality or morbidity) due to
 #' exposure to an environmental stressor (air pollution or noise), using either relative risk (\strong{RR}) or absolute risk (\strong{AR}).
 #' @description
 #' For (short) \strong{examples} please see below or consult the vignette for more detailed examples.
 
+# ARGUMENTS ####################################################################
 #' @inheritParams attribute_master
 
+# USAGE ########################################################################
 #' @usage
 #' attribute_health(
 #'   # RR & AR
@@ -35,6 +38,7 @@
 #'   duration_central = 1, duration_lower = NULL, duration_upper = NULL
 #' )
 
+# DETAILS ######################################################################
 #' @details
 #' \strong{Assessment of multiple geographic units}
 #' @details
@@ -145,8 +149,10 @@
 #' \strong{Conversion of alternative risk measures to relative risks}
 #' For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
+# VALUE ########################################################################
 #' @inherit attribute_master return
 
+# EXAMPLES #####################################################################
 #' @examples
 #' # Goal: attribute lung cancer cases to population-weighted PM2.5 exposure
 #' # using relative risk

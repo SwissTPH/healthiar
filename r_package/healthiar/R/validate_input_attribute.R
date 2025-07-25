@@ -1,11 +1,23 @@
 #' Check the input_args data of attribute_master()
 
+# DESCRIPTION ##################################################################
 #' @description
 #' Check the input_args data in attribute_master() and provides specific warnings or errors if needed.
+
+# ARGUMENTS ####################################################################
 #' @param input_args \code{List} with the argument names and values entered in the function.
 #' @param is_lifetable \code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)
+
+# VALUE ########################################################################
 #' @returns This function returns warning or error messages if needed.
+
+# EXAMPLES #####################################################################
+#' @examples
+#' # TODO
+#'
+
 #' @author Alberto Castro & Axel Luyten
+
 #' @keywords internal
 
 validate_input_attribute <-

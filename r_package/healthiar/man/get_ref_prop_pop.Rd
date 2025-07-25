@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_ref_prop_pop.R
 \name{get_ref_prop_pop}
 \alias{get_ref_prop_pop}
-\title{Get input data and PAF}
+\title{Calculates reference proportion of population}
 \usage{
 get_ref_prop_pop(df)
 }
@@ -15,11 +15,8 @@ A tibble with two columns: one for \code{age_group} and a second one for \code{r
 \description{
 This function calculates reference proportion of population. To be used in \code{socialize()} and \code{standardize()} in case that \code{ref_prop_pop} is not provided.
 }
-\note{
-Experimental function
-}
 \examples{
-TODO
+# TODO
 }
 \author{
 Alberto Castro & Axel Luyten

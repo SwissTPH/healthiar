@@ -12,11 +12,8 @@ This function returns a \code{List}
 \description{
 This function determines attributable deaths, years of life lost or years lived with disability from life table
 }
-\note{
-Experimental function
-}
 \examples{
-TBD
+#TOD
 }
 \author{
 Alberto Castro & Axel Luyten

@@ -1,11 +1,17 @@
 #' Check if arguments are identical before stop
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function checks if two different sets of arguments are identical
 
+# ARGUMENTS ####################################################################
 #' @param args_a \code{List} first list of arguments
 #' @param args_b \code{List} second list of arguments
 #' @param names_to_check \code{Vector} with the names of arguments to be checked
+
+# EXAMPLES #####################################################################
+#' @examples
+#' # TODO
 
 #' @author Alberto Castro & Axel Luyten
 
