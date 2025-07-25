@@ -94,6 +94,8 @@ output_stratified <- output_attribute$health_detailed$results_disaggregated |>
 # attribute_lifetable
 
 ```{r}
+# Goal: determine YLL attributable to air pollution exposure during one year using the life table approach
+
 results <- attribute_lifetable(
   health_outcome = "yll",
   approach_exposure = "single_year",
@@ -113,12 +115,9 @@ results <- attribute_lifetable(
   year_of_analysis = 2019,
   min_age = 20
 )
-
 results$health_main$impact # Attributable YLL
-```
 
-```{r}
-
+# Goal: determine attributable pre-mature deaths due to air pollution exposure during one year using the life table approach
 results_pm_deaths <- attribute_lifetable(
 health_outcome = "deaths",
 approach_exposure = "single_year",
@@ -137,9 +136,44 @@ population_midyear_female = exdat_pop_female$population_2019,
 year_of_analysis = 2019,
 min_age = 20
 )
-
 results_pm_deaths$health_main$impact # Attributable pre-mature deaths
+
+# Goal: determine YLL attributable to air pollution exposure (exposure distribution) during one year using the life table approach
+results <- attribute_lifetable(
+  health_outcome = "yll",
+  exp_central = base::rep(c(8, 9, 10), each = 100*2), # Fake data just for testing purposes
+  prop_pop_exp = base::rep(c(0.2, 0.3, 0.5), each = 100*2), # Fake data just for testing purposes
+  cutoff_central = exdat_input_2$cutoff[2], # WHO AQG 2021
+  rr_central = exdat_input_2[2,"rr_central"],
+  rr_lower = exdat_input_2[2,"rr_lower"],
+  rr_upper = exdat_input_2[2,"rr_upper"],
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  age_group = base::rep(
+    c(exdat_pop_male$age,
+      exdat_pop_female$age),
+    times = 3),
+  sex = base::rep(
+    c("male", "female"),
+    each = 100,
+    times = 3),
+  population = base::rep(
+    c(exdat_pop_male$population,
+      exdat_pop_female$population),
+    times = 3),
+  bhd_central = base::rep(
+    c(exdat_pop_1$number_of_deaths_male,
+      exdat_pop_1$number_of_deaths_female),
+    times = 3),
+  year_of_analysis = 2019,
+  info = exdat_input_2$pollutant[2],
+  min_age = if(is.na(exdat_input_2$min_age[2])) NULL else exdat_input_2$min_age[2]
+)
+results$health_main$impact_rounded # Attributable YLL
 ```
+Example with exposure distribution taken from test-attribute_lifetable.R:
+|fake_lifetable|exp_dist|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|
+
 
 # summarize_uncertainty
 
