@@ -76,7 +76,6 @@ With the delta comparison the difference between two scenarios is obtained by su
 }
 \examples{
 # Goal: comparison of two scenarios with delta approach
-
 scenario_A <- attribute_health(
   exp_central = 8.85,   # EXPOSURE 1
   cutoff_central = 5,
@@ -86,7 +85,6 @@ scenario_A <- attribute_health(
   rr_central = 1.118,
   rr_increment = 10
 )
-
 scenario_B <- attribute_health(
   exp_central = 6,     # EXPOSURE 2
   cutoff_central = 5,
@@ -96,16 +94,42 @@ scenario_B <- attribute_health(
   rr_central = 1.118,
   rr_increment = 10
 )
-
-results_comparison <- compare(
+results <- compare(
 approach_comparison = "delta",
 output_attribute_1 = scenario_A,
 output_attribute_2 = scenario_B
 )
+# Inspect the difference, stored in the \code{impact} column
+results$health_main |>
+  dplyr::select(impact, impact_1, impact_2) |>
+  print()
 
-# Inspect the difference, stored in the "impact" column
-results_comparison$health_main |>
-  dplyr::select(impact, impact_1, impact_2)
+# Goal: comparison of two scenarios with population impact fraction (pif) approach
+output_attribute_1 <- attribute_health(
+  exp_central = 8.85,   # EXPOSURE 1
+  cutoff_central = 5,
+  bhd_central = 25000,
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+  rr_increment = 10
+)
+output_attribute_2 <- attribute_health(
+  exp_central = 6,      # EXPOSURE 2
+  cutoff_central = 5,
+  bhd_central = 25000,
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+  rr_increment = 10
+)
+results <- compare(
+  output_attribute_1 = output_attribute_1,
+  output_attribute_2 = output_attribute_2,
+  approach_comparison = "pif"
+)
+# Inspect the difference, stored in the impact column
+results$health_main$impact
 }
 \author{
 Alberto Castro & Axel Luyten

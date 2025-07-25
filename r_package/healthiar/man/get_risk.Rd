@@ -50,9 +50,6 @@ This function re-scales the relative risk from the increment value in the epidem
 
 \deqn{rr\_at\_exp = e^{\frac{\log(\mathrm{rr})}{\log(\mathrm{rr\_increment})} \cdot (\log(\mathrm{exp}) - \log(\mathrm{cutoff}))}}
 }
-\note{
-Experimental function
-}
 \examples{
 # Goal: scale relative risk to observed exposure level
 get_risk(

@@ -1,9 +1,12 @@
 #' Get population impact over time
 
+# DESCRIPTION ##################################################################
 #' @description Get population impact over time
 
+# ARGUMENTS ####################################################################
 #' @param input_with_risk_and_pop_fraction \code{Data frame} with the input data (including risk and population fraction)
 
+# VALUE ########################################################################
 #' @returns
 #' This function returns a \code{data.frame} with one row for each value of the
 #' concentration-response function (i.e. central estimate, lower and upper bound confidence interval).
@@ -15,12 +18,11 @@
 #'  \item And many more.
 #' }
 
+# EXAMPLES #####################################################################
 #' @examples
-#' TBD
+#' # TBD
 
 #' @author Alberto Castro & Axel Luyten
-
-#' @note Experimental function
 
 #' @keywords internal
 

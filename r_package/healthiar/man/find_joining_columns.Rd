@@ -23,9 +23,8 @@ This function finds columns in two data frames that have same name and identical
 Experimental function
 }
 \examples{
-TBD
+# TODO
 }
 \author{
 Alberto Castro & Axel Luyten
 }
-\keyword{internal}

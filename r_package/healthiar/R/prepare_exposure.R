@@ -1,19 +1,26 @@
 #' Prepare exposure data
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function prepares tabular population exposure data compatible with the \code{attribute()} and \code{compare()} functions, based on gridded pollution concentration data and vector data representing geographic units. The function calculates an average concentration value in each geographic unit, weighted by the fraction of the population in each sub-unit.
+
+# ARGUMENTS ####################################################################
 #' @param poll_grid \code{SpatRaster} of the pollution concentration data.
 #' @param geo_units \code{sf} of the geographic sub-units.
 #' @param population \code{Vector} containing the total population number in each geographic sub-unit.
 #' @param geo_id_aggregated \code{Vector} containing the id code of the geographic unit the sub-unit belongs to.
+
+# VALUE ########################################################################
 #' @return
 #' This function returns a vector of population exposure values.
-#' @export
-#' @author Arno Pauwels
-#' @note Experimental function
-#' @keywords internal
+
+# EXAMPLES #####################################################################
 #' @examples
-#' TBD
+#' # TODO
+
+#' @export
+
+#' @author Arno Pauwels
 
 prepare_exposure <-
   function(

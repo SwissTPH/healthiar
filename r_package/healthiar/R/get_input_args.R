@@ -1,18 +1,18 @@
-#' get input_args
+#' get_input_args
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
 
+# VALUE ########################################################################
 #' @returns
 #' This function returns a \code{list} with all input data together by argument
 
-
+# EXAMPLES #####################################################################
 #' @examples
-#' TBD
+#' # TODO
 
 #' @author Alberto Castro & Axel Luyten
-
-#' @note Experimental function
 
 #' @keywords internal
 

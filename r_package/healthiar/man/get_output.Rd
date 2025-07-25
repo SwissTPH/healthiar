@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_output.R
 \name{get_output}
 \alias{get_output}
-\title{Attributable health cases based on relative risk}
+\title{Obtain and store output}
 \usage{
 get_output(input_args = NULL, input_table = NULL, results_raw)
 }
@@ -28,7 +28,7 @@ Moreover, the data frame includes columns such as:
 This function distributes and store outputs by level of detail by aggregating or filtering impacts.
 }
 \examples{
-TBD
+# TODO
 }
 \author{
 Alberto Castro & Axel Luyten

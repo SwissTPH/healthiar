@@ -1,8 +1,10 @@
 #' Consider socio-economic aspects in healthiar assessments
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{output_attribute}, it is assumed that all data come from a table and the argument refer to the columns of that table.
 
+# ARGUMENTS ####################################################################
 #' @param output_attribute
 #' \code{List} containing the outputs of the \code{healthiar::attribute_health()} assessments for each age group (each list element should be an age group-specific assessment).
 
@@ -42,12 +44,10 @@
 #' @param pop_fraction
 #' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the population attributable fraction by age group and geographic unit.
 
-#'
+# VALUE ########################################################################
 #' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 
-#' @author
-#' TODO
-
+# EXAMPLES #####################################################################
 #' @examples
 #' # Goal: determine fraction of attributable health impact that can
 #' # be attributed to differences in deprivation between the geographic
@@ -92,6 +92,8 @@
 #'   dplyr::filter(difference_type == "relative") |>
 #'   dplyr::filter(difference_compared_with == "overall") |>
 #'   dplyr::select(first, last, difference_type, difference_value, comment)
+
+#' @author Alberto Castro & Axel Luyten
 
 #' @export
 

@@ -1,26 +1,28 @@
 #' Discount health impacts
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function calculates discounted health impacts (without valuation).
 
+# ARGUMENTS ####################################################################
 #' @inheritParams monetize
 
+# VALUE ########################################################################
 #' @returns
-#' TBD
+#' This function returns discounted health impacts.
 
-#' @author Alberto Castro & Axel Luyten
-
+# EXAMPLES #####################################################################
 #' @examples
 #' # Goal: discount current attributable health impacts
-#'
 #' results <- discount(
 #'   impact = 2E4,
 #'   discount_shape = "exponential",
 #'   discount_rate = 0.03,
 #'   discount_years = 20
 #' )
-#'
 #' results$monetization_main$monetized_impact
+
+#' @author Alberto Castro & Axel Luyten
 
 #' @export
 

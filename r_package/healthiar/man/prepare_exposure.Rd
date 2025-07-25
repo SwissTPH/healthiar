@@ -21,13 +21,9 @@ This function returns a vector of population exposure values.
 \description{
 This function prepares tabular population exposure data compatible with the \code{attribute()} and \code{compare()} functions, based on gridded pollution concentration data and vector data representing geographic units. The function calculates an average concentration value in each geographic unit, weighted by the fraction of the population in each sub-unit.
 }
-\note{
-Experimental function
-}
 \examples{
-TBD
+# TODO
 }
 \author{
 Arno Pauwels
 }
-\keyword{internal}

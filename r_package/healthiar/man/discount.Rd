@@ -27,21 +27,19 @@ discount(
 \item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
 }
 \value{
-TBD
+This function returns discounted health impacts.
 }
 \description{
 This function calculates discounted health impacts (without valuation).
 }
 \examples{
 # Goal: discount current attributable health impacts
-
 results <- discount(
   impact = 2E4,
   discount_shape = "exponential",
   discount_rate = 0.03,
   discount_years = 20
 )
-
 results$monetization_main$monetized_impact
 }
 \author{

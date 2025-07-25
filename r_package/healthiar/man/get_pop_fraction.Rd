@@ -21,11 +21,8 @@ This function returns a \code{value} corresponding to the population attributabl
 \description{
 This function calculates the population impact fraction of a health outcome due to exposure to an environmental stressor
 }
-\note{
-Experimental function
-}
 \examples{
-TBD
+# TBD
 }
 \author{
 Alberto Castro & Axel Luyten

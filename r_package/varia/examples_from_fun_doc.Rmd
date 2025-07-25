@@ -173,6 +173,80 @@ results$health_main$impact_rounded # Attributable YLL
 Example with exposure distribution taken from test-attribute_lifetable.R:
 |fake_lifetable|exp_dist|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|
 
+# compare
+
+```{r}
+
+# Goal: comparison of two scenarios with delta approach
+scenario_A <- attribute_health(
+  exp_central = 8.85,   # EXPOSURE 1
+  cutoff_central = 5,
+  bhd_central = 25000,
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.118,
+  rr_increment = 10
+)
+scenario_B <- attribute_health(
+  exp_central = 6,     # EXPOSURE 2
+  cutoff_central = 5,
+  bhd_central = 25000,
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.118,
+  rr_increment = 10
+)
+results <- compare(
+approach_comparison = "delta",
+output_attribute_1 = scenario_A,
+output_attribute_2 = scenario_B
+)
+# Inspect the difference, stored in the impact column
+results$health_main |>
+  dplyr::select(impact, impact_1, impact_2) |> 
+  print()
+
+# Goal: comparison of two scenarios with population impact fraction (pif) approach
+output_attribute_1 <- attribute_health(
+  exp_central = 8.85,   # EXPOSURE 1
+  cutoff_central = 5,
+  bhd_central = 25000,
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+  rr_increment = 10
+)
+output_attribute_2 <- attribute_health(
+  exp_central = 6,      # EXPOSURE 2
+  cutoff_central = 5,
+  bhd_central = 25000,
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+  rr_increment = 10
+)
+results <- compare(
+  output_attribute_1 = output_attribute_1,
+  output_attribute_2 = output_attribute_2,
+  approach_comparison = "pif"
+)
+# Inspect the difference, stored in the impact column
+results$health_main$impact 
+```
+# get_pif
+
+```{r}
+# Goal: calculate the population impact fraction (PIF)
+results <- get_pif(
+  rr_at_exp_1 = 1.043879,
+  rr_at_exp_2 = 1.011217,
+  prop_pop_exp_1 = 1,
+  prop_pop_exp_2 = 1
+)
+print(results)
+```
+
+
 # summarize_uncertainty
 
 ```{r}
@@ -301,8 +375,9 @@ results$monetization_main |>
 # multiexpose
 
 ```{r}
-
-results_pm_copd <- attribute_health(
+# Goal: determine aggregated health impacts from multiple exposures
+# Step 1: create assessment with exposure 1
+output_attribute_1 <- attribute_health(
   erf_shape = "log_linear",
   rr_central = 1.369, 
   rr_increment = 10,
@@ -310,18 +385,18 @@ results_pm_copd <- attribute_health(
   cutoff_central = 5,
   bhd_central = 30747
 )
-results_pm_copd$health_main$impact
-
-results_no2_copd <- attribute_mod(
-  output_attribute_1 = results_pm_copd,
+output_attribute_1$health_main$impact
+# Step 2: create assessment with exposure 2
+output_attribute_2 <- attribute_mod(
+  output_attribute_1 = output_attribute_1,
   exp_central = 10.9,
   rr_central = 1.031
 )
-results_no2_copd$health_main$impact
-
+output_attribute_2$health_main$impact
+# Step 3: aggregate impacts of the two assessments
 results <- multiexpose(
-  output_attribute_1 = results_pm_copd,
-  output_attribute_2 = results_no2_copd,
+  output_attribute_1 = output_attribute_1,
+  output_attribute_2 = output_attribute_2,
   exposure_name_1 = "pm2.5",
   exposure_name_2 = "no2",
   approach = "multiplicative"

@@ -1,8 +1,10 @@
 #' Attributabe health impact to an environmental stressor
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This INTERNAL function calculates the health impacts, mortality or morbidity, of an environmental stressor using a single value for baseline heath data, i.e. without life table.
 
+# ARGUMENTS ####################################################################
 # RR & AR
 #' @param approach_risk
 #' \code{String value} specifying the \strong{risk method}. Options: \code{"relative_risk"} (default) or \code{"absolute_risk"}.
@@ -90,6 +92,7 @@
 #' @param is_lifetable
 #' \code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)
 
+# VALUE ########################################################################
 #' @returns
 #' This function returns two \code{lists}:
 #' @returns

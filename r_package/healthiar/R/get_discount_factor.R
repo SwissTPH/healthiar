@@ -1,13 +1,18 @@
 #' Get discount factor
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function calculates the discount factor based on discount rate (already corrected for inflation)
 
+# ARGUMENTS ####################################################################
 #' @inheritParams monetize
 
-#' @author Alberto Castro & Axel Luyten
+# EXAMPLES #####################################################################
+#' @examples
+#' # TODO
+#'
 
-#' @note Experimental function
+#' @author Alberto Castro & Axel Luyten
 
 #' @export
 

@@ -1,10 +1,13 @@
 #' Attributable premature deaths or YLL using a life table approach
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function assesses premature deaths or years of life lost (YLL) attributable to exposure to an environmental stressor using a life table approach.
 
+# ARGUMENTS ####################################################################
 #' @inheritParams attribute_master
 
+# DETAILS ######################################################################
 #' @details
 #' \strong{Life table methodology}
 #' @details
@@ -35,8 +38,10 @@
 #' \code{min_age}, \code{max_age}
 #' The \code{min_age} default value 30 implies that all adults aged 30 or older will be affected by the exposure; \code{max_age} analogeously specifies the age above which no health effects of the exposure are considered.
 
+# VALUE ########################################################################
 #' @inherit attribute_master return
 
+# EXAMPLES #####################################################################
 #' @examples
 #' # Goal: determine YLL attributable to air pollution exposure during one year using the life table approach
 #' results <- attribute_lifetable(

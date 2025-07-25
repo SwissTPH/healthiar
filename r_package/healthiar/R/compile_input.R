@@ -1,13 +1,16 @@
 #' Compile input
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
 
+# ARGUMENTS ####################################################################
 #' @param input_args
 #' \code{List} with all input data by argument
 #' @param is_lifetable
 #' \code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)
 
+# VALUE ########################################################################
 #' @returns
 #' This function returns a \code{data.frame} with all input data together
 #' Moreover, the data frame includes columns such as:
@@ -18,12 +21,11 @@
 #'  \item And many more.
 #' }
 
+# EXAMPLES #####################################################################
 #' @examples
-#' TBD
+#' # TODO
 
 #' @author Alberto Castro & Axel Luyten
-
-#' @note Experimental function
 
 #' @keywords internal
 

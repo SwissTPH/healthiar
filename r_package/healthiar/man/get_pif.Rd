@@ -21,11 +21,15 @@ This function returns a \code{value} corresponding to the population attributabl
 \description{
 This function calculates the population impact fraction of a health outcome due to exposure to an environmental stressor
 }
-\note{
-Experimental function
-}
 \examples{
-TBD
+# Goal: calculate the population impact fraction (PIF)
+results <- get_pif(
+  rr_at_exp_1 = 1.043879,
+  rr_at_exp_2 = 1.011217,
+  prop_pop_exp_1 = 1,
+
+)
+print(results)
 }
 \author{
 Alberto Castro & Axel Luyten

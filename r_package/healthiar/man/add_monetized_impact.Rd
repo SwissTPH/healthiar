@@ -38,6 +38,9 @@ Description of the return value.
 This function calculates and adds the monetized health impacts
 }
 \examples{
-# To be added
+# TBD
+}
+\author{
+Alberto Castro & Axel Luyten
 }
 \keyword{internal}

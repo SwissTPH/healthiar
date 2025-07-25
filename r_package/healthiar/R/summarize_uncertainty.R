@@ -1,5 +1,6 @@
 #' Get Monte Carlo confidence intervals
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function determines summary uncertainty (based on central, lower and upper estimates of at least one input variable) using attribute() or compare()
 #' function output by Monte Carlo simulation.
@@ -14,10 +15,12 @@
 #'   \item{duration (\code{duration_...})}
 #'   }
 
+# ARGUMENTS ####################################################################
 #' @param output_attribute \code{variable} in which the output of a \code{healthiar::attribute_...()} function call are stored.
 #' @param n_sim \code{numeric value} indicating the number of simulations to be performed.
 #' @param seed \code{numeric value} for fixing the randomization. If empty, 123 is used as a default.
 
+# DETAILS ######################################################################
 #' @details
 #' \strong{Method}
 #' @details
@@ -38,16 +41,14 @@
 #' @details
 #' Duration values of the morbidity health outcome of interest are simulated based on a normal distribution using \code{stats::rnorm()} with \code{mean = duration_central} and a standard deviation based on corresponding lower and upper 95\% exposure confidence interval values.
 
+# VALUE ########################################################################
 #' @returns
 #' This function returns a summary uncertainty central estimate and correcponding lower and upper confidence intervals for the attributable health impacts by Monte Carlo simulation.
 
-#' @author Alberto Castro & Axel Luyten
-
+# EXAMPLES #####################################################################
 #' @examples
-#' # Goal: obtain summary uncertainty for an existing attribute_health()
-#' # output
-#'
-#' ## First create an assessment
+#' # Goal: obtain summary uncertainty for an existing attribute_health() output
+#' # First create an assessment
 #' attribute_health_output <- attribute_health(
 #'   erf_shape = "log_linear",
 #'   rr_central = 1.369,
@@ -62,16 +63,17 @@
 #'   bhd_lower = 28000,
 #'   bhd_upper = 32000
 #' )
-#'
-#' ## Then run Monte Carlo simulation
+#' # Then run Monte Carlo simulation
 #' results <- summarize_uncertainty(
 #'   output_attribute = attribute_health_output,
 #'   n_sim = 100
 #' )
-#'
 #' results$uncertainty_main$impact # Central, lower and upper estimates
 
+#' @author Alberto Castro & Axel Luyten
+
 #' @export
+
 
 
 summarize_uncertainty <- function(

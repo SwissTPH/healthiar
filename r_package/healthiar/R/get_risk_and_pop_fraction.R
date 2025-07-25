@@ -1,11 +1,14 @@
 #' Get input data and PAF
 
+# DESCRIPTION ##################################################################
 #' @description
 #' This function calculates the population attributable fraction (PAF) based on the input data and puts the results in additional columns joined to the input data frame.
 
+# ARGUMENTS ####################################################################
 #' @param input_table \code{Data frame} with the input data
 #' @param pop_fraction_type \code{String} indicating the type of the population fraction. Options: "paf" or "pif"
 
+# VALUE ########################################################################
 #' @returns
 #' This function returns a \code{data.frame} with the input data adding a column for the population attributable fraction
 #' Moreover, the data frame includes columns such as:
@@ -16,12 +19,11 @@
 #'  \item And many more.
 #' }
 
+# EXAMPLES #####################################################################
 #' @examples
-#' TBD
+#' # TODO
 
 #' @author Alberto Castro & Axel Luyten
-
-#' @note Experimental function
 
 #' @keywords internal
 

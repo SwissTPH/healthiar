@@ -1,21 +1,28 @@
-#' Deaths by single age
+#' Determine deaths by one year age groups
 
+# DESCRIPTION ##################################################################
 #' @description
-#' This function performs a cost-benefit analysis
+#' This function determines deaths by one year age groups
 
-#' @param age_group \code{Numeric vector} referring to the first year of n-years interval of the age groups. E.g. c(0, 20, 40, 60) means [0, 20), [20, 40), [40, 60), [60, )
+# ARGUMENTS ####################################################################
+#' @param age_group \code{Numeric vector} referring to the first years of the age groups. E.g. c(0, 20, 40, 60) means [0, 20), [20, 40), [40, 60), [60, )
 #' @param population \code{Numeric vector} referring to mid-year population by age group.
 #' @param bhd \code{Numeric vector} referring to the baseline health data (deaths) by age group.
 #' @param fraction_lived \code{Numeric vector} or \code{value} (if all values the same in the vector) referring to the fraction of last year lived.
 
+# VALUE ########################################################################
+#' @returns Returns deaths by one year age groups.
+
+# EXAMPLES #####################################################################
 #' @examples
 #' # Goal: Convert 5-year population and death data into 1-year data
 #' results  <- prepare_lifetable(
 #'   age_group = c(0, 5, 10, 15),
 #'   population = c(3387900, 3401300, 3212300, 3026100),
-#'   bhd = c(4727, 472, 557, 1323))
-#'
-#' @returns Baseline health data (deaths) by 1-year interval instead of interval.
+#'   bhd = c(4727, 472, 557, 1323)
+#' )
+
+#' @author Alberto Castro & Axel Luyten
 
 #' @export
 
