@@ -48,16 +48,11 @@ get_impact <-
       if(!unique(input_table$is_lifetable)) {
 
         # Get pop_fraction and add it to the input data frame
-        results_raw <-
-          input_with_risk_and_pop_fraction |>
+        results_raw <- input_with_risk_and_pop_fraction |>
           # Build the result table adding the impact to the input table
-          dplyr::mutate(impact = pop_fraction * bhd) |>
-          # Order columns
-          dplyr::select(dplyr::any_of(
-            c("exp_ci", "bhd_ci", "erf_ci", "pop_fraction", "impact")),
-            dplyr::everything())
+          dplyr::mutate(impact = pop_fraction * bhd)
 
-      # * Lifetable ##########################################################
+      # * With lifetable ##########################################################
       } else if (unique(input_table$is_lifetable)) {
 
         pop_impact <-
