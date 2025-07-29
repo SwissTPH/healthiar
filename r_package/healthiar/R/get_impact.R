@@ -38,15 +38,13 @@ get_impact <-
 
     if(unique(input_table$approach_risk) == "relative_risk"){
 
-      input_with_prop_pop_exp <- input_table
-
       # Get pop_fraction and add to the input_table data frame
       input_with_risk_and_pop_fraction <-
-        healthiar:::get_risk_and_pop_fraction(input_table = input_with_prop_pop_exp ,
+        healthiar:::get_risk_and_pop_fraction(input_table = input_table,
                                               pop_fraction_type = pop_fraction_type)
 
       # * Without life table #################################################
-# browser()
+
       if(!unique(input_table$is_lifetable)) {
 
         # Get pop_fraction and add it to the input data frame
