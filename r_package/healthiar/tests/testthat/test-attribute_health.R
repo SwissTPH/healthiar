@@ -1077,8 +1077,8 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
   ## Convert data to long format following Ma-Loma's suggestion in #643
     select(-erf_percent,-number,-yld) |>
     pivot_longer( cols = starts_with("population_exposed_"), names_to = "region", values_to = "exposed" ) |>
-    mutate(region = str_split_i(region, "_", 3))  |>
     mutate(regionID = region  |>  as.factor()  |>  as.numeric())
+    dplyr::mutate(region = base::strsplit(region, "_") |> purrr::map_chr(\(x) x[3]))  |>
 
   testthat::expect_equal(
     object =
