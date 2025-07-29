@@ -34,9 +34,24 @@ get_impact <-
   function(input_table,
            pop_fraction_type){
 
+    # Useful Variables ######
+    # To be used in the if statements below
+    is_relative_risk <- base::unique(input_table$approach_risk) == "relative_risk"
+    is_absolute_risk <- base::unique(input_table$approach_risk) == "absolute_risk"
+
+    is_lifetable <- base::unique(input_table$is_lifetable)
+    is_not_lifetable <- !is_lifetable
+
+    is_exposure_distribution <-
+      base::unique(input_table$exposure_type) == "exposure_distribution"
+
+    population_is_available <- "population" %in% base::names(input_table)
+    dw_is_available <- "dw" %in% base::names(input_table)
+
+
     # Relative risk ############################################################
 
-    if(unique(input_table$approach_risk) == "relative_risk"){
+    if(is_relative_risk){
 
       # Get pop_fraction and add to the input_table data frame
       input_with_risk_and_pop_fraction <-
@@ -45,7 +60,7 @@ get_impact <-
 
       # * Without life table #################################################
 
-      if(!unique(input_table$is_lifetable)) {
+      if(is_not_lifetable) {
 
         # Get pop_fraction and add it to the input data frame
         results_raw <- input_with_risk_and_pop_fraction |>
@@ -53,7 +68,7 @@ get_impact <-
           dplyr::mutate(impact = pop_fraction * bhd)
 
       # * With lifetable ##########################################################
-      } else if (unique(input_table$is_lifetable)) {
+      } else if (is_lifetable) {
 
         pop_impact <-
           healthiar:::get_pop_impact(
@@ -70,9 +85,7 @@ get_impact <-
 
         # Absolute risk ##########################################################
 
-      } else if (
-        unique(input_table$approach_risk) == "absolute_risk" &
-        ( !unique(input_table$is_lifetable)) ) {
+      } else if (is_absolute_risk) {
 
         # Calculate absolute risk for each exposure category
         results_raw <-
@@ -90,9 +103,8 @@ get_impact <-
       # and he/she wants to have YLD
       # Then convert impact into impact with dw and duration
 
-      if ("dw" %in% names(input_table) &
-          "duration" %in% names(input_table) &
-          !unique(input_table$is_lifetable)) {
+      if (dw_is_available &&
+          is_not_lifetable) {
 
         results_raw <-
           results_raw |>
@@ -107,9 +119,9 @@ get_impact <-
     ## Note: column is called prop_pop_exp (rr case) or pop_exp (ar case)
 
     # * If exposure distribution ########################################################
-    if ( ( unique(results_raw$approach_risk) == "relative_risk" ) &
-         ( unique(results_raw$exposure_type) == "exposure_distribution" ) &
-         ( !unique(results_raw$is_lifetable) ) ) {
+    if ( is_relative_risk &&
+         is_exposure_distribution &&
+         is_not_lifetable ) {
 
       # Define your dynamic vectors
       group_vars <-
@@ -146,14 +158,14 @@ get_impact <-
         }
 
 
-    if ( ( unique(results_raw$approach_risk) == "relative_risk" ) ) {
+    if ( is_relative_risk ) {
       results_raw <- results_raw |>
         dplyr::mutate(impact_rounded = round(impact, 0))
     }
 
     # * Calculate impact per 100K inhabitants ##################################
 
-    if("population" %in% colnames(results_raw)){
+    if(population_is_available){
       results_raw <-
         results_raw |>
         dplyr::mutate(
