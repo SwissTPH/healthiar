@@ -243,7 +243,7 @@ get_output <-
         sum_round_and_relative_impact(
           df = output[["health_detailed"]][["results_agg_exp_cat"]],
           grouping_cols = group_columns_for_absolute_risk_aggregation,
-          col_total = "ar_exp_cat_aggregation")
+          col_total = "exp_cat_aggregation")
 
       output_last <- output[["health_detailed"]][["results_agg_exp_cat"]]
     #}
