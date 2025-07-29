@@ -1075,7 +1075,6 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
   ## Convert data to long format following Ma-Loma's suggestion in #643
-  data <- data %>%
     select(-erf_percent,-number,-yld) |>
     pivot_longer( cols = starts_with("population_exposed_"), names_to = "region", values_to = "exposed" ) |>
     mutate(region = str_split_i(region, "_", 3))  |>
