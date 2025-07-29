@@ -40,15 +40,6 @@ get_impact <-
 
       input_with_prop_pop_exp <- input_table
 
-      # Deactivated code
-      # Activate if it is allowed to derive prop_pop_exp from pop_exp
-      # if("pop_exp" %in% names(input_table) ){
-      #   input_with_prop_pop_exp <- input_table |>
-      #     dplyr::group_by(geo_id_disaggregated) |>
-      #     dplyr::mutate(prop_pop_exp = pop_exp/sum(pop_exp))
-      # }
-
-
       # Get pop_fraction and add to the input_table data frame
       input_with_risk_and_pop_fraction <-
         healthiar:::get_risk_and_pop_fraction(input_table = input_with_prop_pop_exp ,
