@@ -116,43 +116,43 @@ get_impact <-
     ## Note: column is called prop_pop_exp (rr case) or pop_exp (ar case)
 
     # * If exposure distribution ########################################################
-    if ( is_relative_risk &&
-         is_exposure_distribution &&
-         is_not_lifetable ) {
-
-      # Define your dynamic vectors
-      group_vars <-
-        names(input_table)[names(input_table) %in%
-                             c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")]
-
-      group_vars_except_geo <-
-        names(input_table)[names(input_table) %in%
-                             c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci")]
-
-      summary_vars <-
-        names(input_table)[grepl("exp|prop_pop_exp|exposure_dimension", names(input_table))]
-      summary_vars <- summary_vars[!summary_vars %in% group_vars]
-
-
-      # Build the grouped summarization dynamically
-      input_table_to_join <- input_table |>
-        dplyr::group_by(dplyr::across(dplyr::any_of(group_vars))) |>
-        dplyr::summarize(
-          dplyr::across(
-            .cols = dplyr::any_of(summary_vars),
-            .fns = list,  # Wrap values into a list per group
-            .names = "{.col}"  # Keep original column names
-          ),
-          .groups = "drop")|>
-        base::unique()
-
-        results_raw <- results_raw |>
-          dplyr::select(-dplyr::any_of(summary_vars)) |>
-          dplyr::left_join(
-            input_table_to_join,
-            by = group_vars)|>
-          dplyr::mutate(exposure_type = base::unique(input_table$exposure_type))
-        }
+    # if ( is_relative_risk &&
+    #      is_exposure_distribution &&
+    #      is_not_lifetable ) {
+    #
+    #   # Define your dynamic vectors
+    #   group_vars <-
+    #     names(input_table)[names(input_table) %in%
+    #                          c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci", "geo_id_disaggregated")]
+    #
+    #   group_vars_except_geo <-
+    #     names(input_table)[names(input_table) %in%
+    #                          c("exp_ci", "erf_ci", "bhd_ci", "cutoff_ci")]
+    #
+    #   summary_vars <-
+    #     names(input_table)[grepl("exp|prop_pop_exp|exposure_dimension", names(input_table))]
+    #   summary_vars <- summary_vars[!summary_vars %in% group_vars]
+    #
+    #
+    #   # Build the grouped summarization dynamically
+    #   input_table_to_join <- input_table |>
+    #     dplyr::group_by(dplyr::across(dplyr::any_of(group_vars))) |>
+    #     dplyr::summarize(
+    #       dplyr::across(
+    #         .cols = dplyr::any_of(summary_vars),
+    #         .fns = list,  # Wrap values into a list per group
+    #         .names = "{.col}"  # Keep original column names
+    #       ),
+    #       .groups = "drop")|>
+    #     base::unique()
+    #
+    #     results_raw <- results_raw |>
+    #       dplyr::select(-dplyr::any_of(summary_vars)) |>
+    #       dplyr::left_join(
+    #         input_table_to_join,
+    #         by = group_vars)|>
+    #       dplyr::mutate(exposure_type = base::unique(input_table$exposure_type))
+    #     }
 
     # * If relative risk ##############
     if ( is_relative_risk ) {
