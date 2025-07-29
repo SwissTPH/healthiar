@@ -49,7 +49,7 @@ get_impact <-
     dw_is_available <- "dw" %in% base::names(input_table)
 
 
-    # Relative risk ############################################################
+    # * Relative risk ############################################################
 
     if(is_relative_risk){
 
@@ -58,17 +58,18 @@ get_impact <-
         healthiar:::get_risk_and_pop_fraction(input_table = input_table,
                                               pop_fraction_type = pop_fraction_type)
 
-      # * Without life table #################################################
+
 
       if(is_not_lifetable) {
+        ## ** No life table #################################################
 
         # Get pop_fraction and add it to the input data frame
         results_raw <- input_with_risk_and_pop_fraction |>
           # Build the result table adding the impact to the input table
           dplyr::mutate(impact = pop_fraction * bhd)
 
-      # * With lifetable ##########################################################
-      } else if (is_lifetable) {
+        } else if (is_lifetable) {
+          ## ** With life table ##########################################################
 
         pop_impact <-
           healthiar:::get_pop_impact(
@@ -80,12 +81,11 @@ get_impact <-
             pop_impact = pop_impact,
             input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
-      }
-
-
-        # Absolute risk ##########################################################
+        }
 
       } else if (is_absolute_risk) {
+
+        # * Absolute risk ##########################################################
 
         # Calculate absolute risk for each exposure category
         results_raw <-
@@ -94,8 +94,8 @@ get_impact <-
             absolute_risk_as_percent = healthiar::get_risk(exp = exp, erf_eq = erf_eq),
             impact = absolute_risk_as_percent/100 * pop_exp)}
 
-
-
+    if (dw_is_available &&
+        is_not_lifetable) {
 
       # * YLD ################################################################
       # If dw is a column in input_table
@@ -103,12 +103,9 @@ get_impact <-
       # and he/she wants to have YLD
       # Then convert impact into impact with dw and duration
 
-      if (dw_is_available &&
-          is_not_lifetable) {
-
-        results_raw <-
-          results_raw |>
-          dplyr::mutate(impact = impact * dw * duration)
+      results_raw <-
+        results_raw |>
+        dplyr::mutate(impact = impact * dw * duration)
 
       }
 
@@ -157,7 +154,7 @@ get_impact <-
           dplyr::mutate(exposure_type = base::unique(input_table$exposure_type))
         }
 
-
+    # * If relative risk ##############
     if ( is_relative_risk ) {
       results_raw <- results_raw |>
         dplyr::mutate(impact_rounded = round(impact, 0))
