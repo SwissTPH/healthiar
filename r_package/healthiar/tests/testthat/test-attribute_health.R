@@ -1075,11 +1075,11 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
   ## Convert data to long format following Ma-Loma's suggestion in #643
-  data <- data %>%
-    select(-erf_percent,-number,-yld) |>
-    pivot_longer( cols = starts_with("population_exposed_"), names_to = "region", values_to = "exposed" ) |>
-    mutate(region = str_split_i(region, "_", 3))  |>
-    mutate(regionID = region  |>  as.factor()  |>  as.numeric())
+  data <- data |>
+    dplyr::select(-erf_percent,-number,-yld) |>
+    tidyr::pivot_longer( cols = dplyr::starts_with("population_exposed_"), names_to = "region", values_to = "exposed" ) |>
+    dplyr::mutate(region = base::strsplit(region, "_") |> purrr::map_chr(\(x) x[3]))  |>
+    dplyr::mutate(regionID = region  |>  base::as.factor()  |>  base::as.numeric())
 
   testthat::expect_equal(
     object =
