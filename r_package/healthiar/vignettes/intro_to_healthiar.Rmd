@@ -137,7 +137,7 @@ Every `attribute_health()` output consists of two lists ("folders")
 
     -   `input_table` tibble that contains all input data entered by the user
 
-    -   `results_disaggregated` (relevant for assessments for more than one geographic unit) contains results per geo unit
+    -   `results_agg_exp_cat` contains results per geo unit after aggregating across exposure categories
 
     -   `results_agg_sex` & `results_agg_age` contains results aggregated by sex and age groups, respectively
 
@@ -451,7 +451,7 @@ output_attribute <- attribute_health(
   geo_id_disaggregated = c(1:nrow(info)), # (random) ID must be entered
   info = info
 )
-output_stratified <- output_attribute$health_detailed$results_disaggregated |>
+output_stratified <- output_attribute$health_detailed$results_agg_exp_cat |>
   dplyr::group_by(info_1) |>
   dplyr::summarize(mean_impact = mean(impact)) |>
   print()

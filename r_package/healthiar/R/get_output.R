@@ -237,20 +237,13 @@ get_output <-
           ~ paste(., collapse = ", "))) |>
         dplyr::ungroup()
 
-      output[["health_detailed"]][["results_agg_exp_cat"]] <-
-        sum_round_and_relative_impact(
-          df = output[["health_detailed"]][["results_agg_exp_cat"]],
-          grouping_cols = group_columns_for_exp_cat_aggregation,
-          col_total = "exp_cat_aggregation")
+    output[["health_detailed"]][["results_agg_exp_cat"]] <-
+      sum_round_and_relative_impact(
+        df = output[["health_detailed"]][["results_agg_exp_cat"]],
+        grouping_cols = group_columns_for_exp_cat_aggregation,
+        col_total = "exp_cat_aggregation")
 
-      output_last <- output[["health_detailed"]][["results_agg_exp_cat"]]
-
-
-    ## results_disaggregated ####
-
-
-    output[["health_detailed"]][["results_disaggregated"]]  <-
-      output_last
+    output_last <- output[["health_detailed"]][["results_agg_exp_cat"]]
 
     ##  sex #####
     # Aggregate results by sex
