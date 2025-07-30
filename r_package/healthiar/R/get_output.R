@@ -218,7 +218,7 @@ get_output <-
 
     # Sum across #####
 
-    # Exposure categories ############
+    ## exposure categories ############
 
     output[["health_detailed"]][["results_agg_exp_cat"]] <-
         output_last |>
@@ -246,13 +246,13 @@ get_output <-
       output_last <- output[["health_detailed"]][["results_agg_exp_cat"]]
 
 
-    # results_disaggregated ####
+    ## results_disaggregated ####
 
 
     output[["health_detailed"]][["results_disaggregated"]]  <-
       output_last
 
-    # sex #####
+    ##  sex #####
     # Aggregate results by sex
 
     output[["health_detailed"]][["results_agg_sex"]] <-
@@ -264,7 +264,7 @@ get_output <-
 
     output_last <- output[["health_detailed"]][["results_agg_sex"]]
 
-    # age_group #####
+    ## age_group #####
     # Aggregate results by age_group
     output[["health_detailed"]][["results_agg_age"]] <-
       sum_round_and_relative_impact(
@@ -275,7 +275,7 @@ get_output <-
     output_last <- output[["health_detailed"]][["results_agg_age"]]
 
 
-    # geo_id_aggregated #####
+    ## geo_id_aggregated #####
     # Aggregate results by higher geo_level
     # only if geo_id_aggregated is define
 
