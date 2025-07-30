@@ -69,7 +69,7 @@ get_output <-
 
     # Deactivated code
     # It gives errors but something similar could be implemented to get the column names in a more efficient way
-    # group_columns_for_absolute_risk_aggregation <-  results_raw |>
+    # group_columns_for_exp_cat_aggregation <-  results_raw |>
     #   # Keep only columns where all values are the same
     #   dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) == 1)) |>
     #   dplyr::select(dplyr::where(~ .x)) |>
@@ -79,7 +79,7 @@ get_output <-
     #   dplyr::union(id_columns)
 
 
-    group_columns_for_absolute_risk_aggregation <-
+    group_columns_for_exp_cat_aggregation <-
       column_names_wo_lifetable_impact_info_diff[!column_names_wo_lifetable_impact_info_diff %in%
                      #c("geo_id_disaggregated", "age_group", "sex",
                       c(
@@ -218,7 +218,7 @@ get_output <-
 
 
 
-    # Absolute risk ############
+    # Exposure categories ############
 
     #if(unique(results_raw$approach_risk) == "absolute_risk") {
 
@@ -242,7 +242,7 @@ get_output <-
       output[["health_detailed"]][["results_agg_exp_cat"]] <-
         sum_round_and_relative_impact(
           df = output[["health_detailed"]][["results_agg_exp_cat"]],
-          grouping_cols = group_columns_for_absolute_risk_aggregation,
+          grouping_cols = group_columns_for_exp_cat_aggregation,
           col_total = "exp_cat_aggregation")
 
       output_last <- output[["health_detailed"]][["results_agg_exp_cat"]]
