@@ -150,12 +150,20 @@ get_output <-
 
     sum_round_and_relative_impact <- function(df, grouping_cols, col_total){
 
-      likely_columns_to_be_summed <- df |>
+      columns_to_be_summed <- df |>
         # The use of matches() is important.
         # It works as contains() but allowing regex | (OR)
-        dplyr::select(dplyr::matches("impact|absolute_risk_as_percent"),
-                      -dplyr::contains("_rounded")) |>
+        dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
+                      -dplyr::matches("_rounded|_per_100k_inhab")) |>
         base::names()
+
+      # Only columns to be summed that include the string "impact"
+      # This is used for per_100k_inhab
+      # Use grepl() because there are many possible column names, no only impact
+      # e.g. "monetized_impact"
+      impact_columns_to_be_summed <-
+        columns_to_be_summed[base::grepl("impact", columns_to_be_summed)]
+
 
       # Sum impact columns (keep original names)
       impact_agg <- df |>
@@ -167,16 +175,15 @@ get_output <-
             # this function also have other columns with impact discounted and monetized
             # and even comparison scenarios
             # which also have to be included in this aggregation
-            .cols = dplyr::any_of(likely_columns_to_be_summed),
+            .cols = dplyr::any_of(columns_to_be_summed),
             .fns = ~ sum(.x, na.rm = TRUE),
-            .names = "{.col}"
-          ),
-          .by = dplyr::any_of(grouping_cols)
-        ) |>
+            .names = "{.col}"),
+          .by = dplyr::any_of(grouping_cols)) |>
+
         # Add ..._rounded columns
         dplyr::mutate(
           dplyr::across(
-            .cols = dplyr::any_of(likely_columns_to_be_summed),
+            .cols = dplyr::any_of(impact_columns_to_be_summed),
             .fns = ~ round(.x),
             .names = "{.col}_rounded"
           )
@@ -184,21 +191,11 @@ get_output <-
 
       # If population is available, recompute with population and normalized metrics
       if ("population" %in% names(df)) {
-        impact_agg <- df |>
-          dplyr::summarise(
-            dplyr::across(
-              .cols = dplyr::any_of(likely_columns_to_be_summed),
-              .fns = ~ sum(.x, na.rm = TRUE),
-              .names = "{.col}"
-            ),
-            population = sum(population, na.rm = TRUE),
-            .by = dplyr::any_of(grouping_cols)
-          ) |>
+        impact_agg <- impact_agg |>
           dplyr::mutate(
             dplyr::across(
-              .cols = dplyr::any_of(likely_columns_to_be_summed),
+              .cols = dplyr::any_of(impact_columns_to_be_summed),
               .fns = list(
-                rounded = ~ round(.x),
                 per_100k_inhab = ~ (.x / population) * 1e5
               ),
               .names = "{.col}_{.fn}"
