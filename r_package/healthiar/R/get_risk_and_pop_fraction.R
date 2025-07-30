@@ -44,7 +44,7 @@ get_risk_and_pop_fraction <-
     collapse_df_by_columns <-
       function(df, columns_for_group, sep){
 
-        df <-
+        collapsed_df <-
           df |>
           # group_by requires across() to use any_of()
           dplyr::group_by(dplyr::across(dplyr::any_of(columns_for_group)))|>
@@ -53,7 +53,7 @@ get_risk_and_pop_fraction <-
                    ~ if (base::length(base::unique(.)) == 1) {
                      dplyr::first(.)
                    } else {
-                     base::paste(collapse = sep)}),
+                     base::paste(., collapse = sep)}),
             .groups = "drop")
       }
 
