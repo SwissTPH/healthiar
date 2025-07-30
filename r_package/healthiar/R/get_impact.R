@@ -51,7 +51,7 @@ get_impact <-
 
     if(is_relative_risk){
 
-      # Get pop_fraction and add to the input_table data frame
+      # Get pop_fraction and add it to the input_table data frame
       input_with_risk_and_pop_fraction <-
         healthiar:::get_risk_and_pop_fraction(input_table = input_table,
                                               pop_fraction_type = pop_fraction_type)
@@ -59,17 +59,23 @@ get_impact <-
       if(is_not_lifetable) {
         ## ** If is_not_life_table #################################################
 
-        # Get pop_fraction and add it to the input data frame
+        # Calculate impact
+        # directly with pop_fraction and bhd
         results_raw <- input_with_risk_and_pop_fraction |>
-          # Build the result table adding the impact to the input table
           dplyr::mutate(impact = pop_fraction * bhd)
 
         } else if (is_lifetable) {
           ## ** If is_lifetable ##########################################################
 
-        results_raw <-
-          healthiar:::get_impact_with_lifetable(
-            input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
+          # Calculate impact
+          # using get_impact_with_lifetable().
+          # The function is not used somewhere else
+          # so itcould be integrated here, but it is kept separated
+          # because it is very long and
+          # would make this code not very reader friendly
+          results_raw <-
+            healthiar:::get_impact_with_lifetable(
+              input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
         }
 
@@ -78,27 +84,31 @@ get_impact <-
         # * If is_absolute_risk ##########################################################
 
         # Calculate absolute risk for each exposure category
-        results_raw <-
-          input_table |>
+        # Absolute risk is only possible without life table method
+        results_raw <- input_table |>
+          # To calculate health impacts with absolute risk
+          # no pop_fraction is used,
+          # therefore it is based on input_table instead of input_with_risk_and_pop_fraction
           dplyr::mutate(
             absolute_risk_as_percent = healthiar::get_risk(exp = exp, erf_eq = erf_eq),
-            impact = absolute_risk_as_percent/100 * pop_exp)}
-
-    if (dw_is_available) {
-
-      # * If YLD ################################################################
-      # If dw is a column in input_table
-      # it means that the user entered a value for this argument
-      # and he/she wants to have YLD
-      # Then convert impact into impact with dw and duration
-
-      results_raw <-
-        results_raw |>
-        dplyr::mutate(impact = impact * dw * duration)
-
+            impact = absolute_risk_as_percent/100 * pop_exp)
       }
 
 
+
+    if (dw_is_available) {
+      # * If YLD ################################################################
+      # If dw is a column in input_table
+      # it means that the user entered a value for this argument
+      # and he/she wants to have YLD.
+      # dw is not available as argument in life table method,
+      # so no need of if condition.
+
+      results_raw <- results_raw |>
+        # Calculate the new impact multiplying by dw and duration
+        dplyr::mutate(impact = impact * dw * duration)
+
+      }
 
     # Rounded impact ##############
     results_raw <- results_raw |>
@@ -107,10 +117,9 @@ get_impact <-
     # Impact per 100K inhabitants ##################################
 
     if(population_is_available){
-      results_raw <-
-        results_raw |>
-        dplyr::mutate(
-          impact_per_100k_inhab = (impact / population) *1E5
+
+      results_raw <- results_raw |>
+        dplyr::mutate(impact_per_100k_inhab = (impact / population) *1E5
         )
     }
 
