@@ -69,7 +69,7 @@ get_output <-
 
     # Deactivated code
     # It gives errors but something similar could be implemented to get the column names in a more efficient way
-    # group_columns_for_absolute_risk_aggregation <-  results_raw |>
+    # group_columns_for_exp_cat_aggregation <-  results_raw |>
     #   # Keep only columns where all values are the same
     #   dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) == 1)) |>
     #   dplyr::select(dplyr::where(~ .x)) |>
@@ -79,15 +79,16 @@ get_output <-
     #   dplyr::union(id_columns)
 
 
-    group_columns_for_absolute_risk_aggregation <-
+    group_columns_for_exp_cat_aggregation <-
       column_names_wo_lifetable_impact_info_diff[!column_names_wo_lifetable_impact_info_diff %in%
-                     c("geo_id_disaggregated", "age_group", "sex",
-                       base::paste0("exp", c("", "_1", "_2")),
+                     #c("geo_id_disaggregated", "age_group", "sex",
+                      c(
+                       #base::paste0("exp", c("", "_1", "_2")),
                        base::paste0("population", c("", "_1", "_2")),
-                       base::paste0("prop_pop_exp", c("", "_1", "_2")),
-                       base::paste0("pop_exp", c("", "_1", "_2")),
+                       #base::paste0("prop_pop_exp", c("", "_1", "_2")),
+                       #base::paste0("pop_exp", c("", "_1", "_2")),
                        base::paste0("rr_at_exp", c("", "_1", "_2")),
-                       base::paste0("pop_fraction", c("", "_1", "_2")),
+                       #base::paste0("pop_fraction", c("", "_1", "_2")),
                        base::paste0("absolute_risk_as_percent", c("", "_1", "_2")),
                        base::paste0("impact", c("", "_1", "_2")),
                        base::paste0("impact_per_100k_inhab", c("", "_1", "_2")))]
@@ -217,9 +218,9 @@ get_output <-
 
 
 
-    # Absolute risk ############
+    # Exposure categories ############
 
-    if(unique(results_raw$approach_risk) == "absolute_risk") {
+    #if(unique(results_raw$approach_risk) == "absolute_risk") {
 
     output[["health_detailed"]][["results_agg_exp_cat"]] <-
         output_last |>
@@ -227,12 +228,13 @@ get_output <-
         # we have to round final results
         # not summing rounded results ("too rounded")
         dplyr::select(-dplyr::any_of(paste0("impact_rounded", c("", "_1", "_2")))) |>
-        dplyr::group_by(geo_id_disaggregated, age_group, sex) |>
+        dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "age_group", "sex")))) |>
         # Collapse the exposure categories to have only a vector
         dplyr::mutate(dplyr::across(dplyr::any_of(
           c(paste0("exp", c("", "_1", "_2")),
             paste0("pop_exp", c("", "_1", "_2")),
             paste0("prop_pop_exp", c("", "_1", "_2")),
+            paste0("pop_fraction", c("", "_1", "_2")),
             "exposure_dimension")),
           ~ paste(., collapse = ", "))) |>
         dplyr::ungroup()
@@ -240,11 +242,11 @@ get_output <-
       output[["health_detailed"]][["results_agg_exp_cat"]] <-
         sum_round_and_relative_impact(
           df = output[["health_detailed"]][["results_agg_exp_cat"]],
-          grouping_cols = group_columns_for_absolute_risk_aggregation,
-          col_total = "ar_exp_cat_aggregation")
+          grouping_cols = group_columns_for_exp_cat_aggregation,
+          col_total = "exp_cat_aggregation")
 
       output_last <- output[["health_detailed"]][["results_agg_exp_cat"]]
-    }
+    #}
 
     # results_disaggregated ####
 
@@ -277,7 +279,7 @@ get_output <-
 
     # geo_id_aggregated #####
     # Aggregate results by higher geo_level
-    # only if geo_id_aggregated is defined
+    # only if geo_id_aggregated is define
 
     if("geo_id_aggregated" %in% names(output_last)){
 

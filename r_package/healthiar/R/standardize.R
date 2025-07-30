@@ -90,11 +90,16 @@ standardize <- function(output_attribute,
       total_impact = base::sum(impact)) |>
     # Calculate population weight and standardized impact
     dplyr::mutate(
+      # Convert to numeric
+      # TODO: To be fixed so that this can deleted
+      exp = base::as.numeric(exp),
+      pop_fraction = base::as.numeric(pop_fraction),
+      # Calculate
       pop_weight = population / total_population,
       impact_weight = impact/total_impact,
       impact_per_100k_inhab_std = impact_per_100k_inhab * ref_prop_pop,
-      exp_std = exp * pop_weight,
-      pop_fraction_std = pop_fraction * impact_weight)
+      exp_std = base::as.numeric(exp) * pop_weight,
+      pop_fraction_std = base::as.numeric(pop_fraction) * impact_weight)
 
   # Remove the rows per age group category keeping only the sum
   impact_std_sum <-
