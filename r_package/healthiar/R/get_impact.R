@@ -90,8 +90,7 @@ get_impact <-
             absolute_risk_as_percent = healthiar::get_risk(exp = exp, erf_eq = erf_eq),
             impact = absolute_risk_as_percent/100 * pop_exp)}
 
-    if (dw_is_available &&
-        is_not_lifetable) {
+    if (dw_is_available) {
 
       # * If YLD ################################################################
       # If dw is a column in input_table
@@ -107,11 +106,9 @@ get_impact <-
 
 
 
-    # * If relative risk ##############
-    if ( is_relative_risk ) {
-      results_raw <- results_raw |>
-        dplyr::mutate(impact_rounded = round(impact, 0))
-    }
+    # Rounded impact ##############
+    results_raw <- results_raw |>
+      dplyr::mutate(impact_rounded = round(impact, 0))
 
     # Impact per 100K inhabitants ##################################
 
