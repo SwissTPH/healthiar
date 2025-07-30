@@ -219,6 +219,11 @@ get_output <-
     # Sum across #####
 
     ## exposure categories ############
+    # This is only useful for absolute risk because
+    # if relative risk
+    # there is no exposure category specific results (bhd is not category specific).
+    if(unique(results_raw$approach_risk) == "absolute_risk") {
+
     # Collapse the exposure categories
     output[["health_detailed"]][["results_agg_exp_cat"]] <-
         output_last |>
@@ -238,6 +243,13 @@ get_output <-
         df = output[["health_detailed"]][["results_agg_exp_cat"]],
         grouping_cols = group_columns_for_exp_cat_aggregation,
         col_total = "exp_cat_aggregation")
+
+    } else if (unique(results_raw$approach_risk) == "relative_risk"){
+      # For relative risk no need of summing impacts across exposure categories
+      # because no exposure category bhd so no exposure category impact
+
+      output[["health_detailed"]][["results_agg_exp_cat"]] <- output_last
+    }
 
     output_last <- output[["health_detailed"]][["results_agg_exp_cat"]]
 
