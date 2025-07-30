@@ -45,8 +45,9 @@ get_impact <-
     population_is_available <- "population" %in% base::names(input_table)
     dw_is_available <- "dw" %in% base::names(input_table)
 
+    # Impacts ###########
 
-    # * Relative risk ############################################################
+    # * If is_relative_risk ############################################################
 
     if(is_relative_risk){
 
@@ -55,10 +56,8 @@ get_impact <-
         healthiar:::get_risk_and_pop_fraction(input_table = input_table,
                                               pop_fraction_type = pop_fraction_type)
 
-
-
       if(is_not_lifetable) {
-        ## ** No life table #################################################
+        ## ** If is_not_life_table #################################################
 
         # Get pop_fraction and add it to the input data frame
         results_raw <- input_with_risk_and_pop_fraction |>
@@ -66,7 +65,7 @@ get_impact <-
           dplyr::mutate(impact = pop_fraction * bhd)
 
         } else if (is_lifetable) {
-          ## ** With life table ##########################################################
+          ## ** If is_lifetable ##########################################################
 
         pop_impact <-
           healthiar:::get_pop_impact(
@@ -82,7 +81,7 @@ get_impact <-
 
       } else if (is_absolute_risk) {
 
-        # * Absolute risk ##########################################################
+        # * If is_absolute_risk ##########################################################
 
         # Calculate absolute risk for each exposure category
         results_raw <-
@@ -94,7 +93,7 @@ get_impact <-
     if (dw_is_available &&
         is_not_lifetable) {
 
-      # * YLD ################################################################
+      # * If YLD ################################################################
       # If dw is a column in input_table
       # it means that the user entered a value for this argument
       # and he/she wants to have YLD
@@ -114,7 +113,7 @@ get_impact <-
         dplyr::mutate(impact_rounded = round(impact, 0))
     }
 
-    # * Calculate impact per 100K inhabitants ##################################
+    # Impact per 100K inhabitants ##################################
 
     if(population_is_available){
       results_raw <-
