@@ -219,15 +219,11 @@ get_output <-
     # Sum across #####
 
     ## exposure categories ############
-
+    # Collapse the exposure categories
     output[["health_detailed"]][["results_agg_exp_cat"]] <-
         output_last |>
-        # Remove all impact rounded because
-        # we have to round final results
-        # not summing rounded results ("too rounded")
-        dplyr::select(-dplyr::any_of(paste0("impact_rounded", c("", "_1", "_2")))) |>
-        dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "age_group", "sex")))) |>
-        # Collapse the exposure categories to have only a vector
+        dplyr::group_by(dplyr::across(dplyr::any_of(
+          c("geo_id_disaggregated", "age_group", "sex")))) |>
         dplyr::mutate(dplyr::across(dplyr::any_of(
           c(paste0("exp", c("", "_1", "_2")),
             paste0("pop_exp", c("", "_1", "_2")),
