@@ -145,9 +145,6 @@ get_output <-
     }
 
 
-    # Keep the last version
-    output_last <- output[["health_main"]]
-
     # Create function to aggregate impacts
     # To be used multiple times below
 
@@ -218,14 +215,19 @@ get_output <-
 
     # Sum across #####
 
+    # Keep the last version
+    # This is important because some of the sums of health impacts below
+    # do not happen and the chain of sums cannot be broken (see if statements)
+    output_last <- output[["health_main"]]
+
     ## exposure categories ############
     # This is only useful for absolute risk because
     # if relative risk
     # there is no exposure category specific results (bhd is not category specific).
     if(unique(results_raw$approach_risk) == "absolute_risk") {
 
-    # Collapse the exposure categories
-    output[["health_detailed"]][["results_agg_exp_cat"]] <-
+      # Collapse the exposure categories
+      output[["health_detailed"]][["results_agg_exp_cat"]] <-
         output_last |>
         dplyr::group_by(dplyr::across(dplyr::any_of(
           c("geo_id_disaggregated", "age_group", "sex")))) |>
@@ -246,7 +248,9 @@ get_output <-
 
     } else if (unique(results_raw$approach_risk) == "relative_risk"){
       # For relative risk no need of summing impacts across exposure categories
-      # because no exposure category bhd so no exposure category impact
+      # because no exposure category bhd so no exposure category impact.
+      # This output is anyway created because it is used by other functions
+      # such as healthiar::socialize()
 
       output[["health_detailed"]][["results_agg_exp_cat"]] <- output_last
     }
