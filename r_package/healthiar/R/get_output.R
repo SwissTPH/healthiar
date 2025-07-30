@@ -216,11 +216,9 @@ get_output <-
 
     }
 
-
+    # Sum across #####
 
     # Exposure categories ############
-
-    #if(unique(results_raw$approach_risk) == "absolute_risk") {
 
     output[["health_detailed"]][["results_agg_exp_cat"]] <-
         output_last |>
@@ -246,7 +244,7 @@ get_output <-
           col_total = "exp_cat_aggregation")
 
       output_last <- output[["health_detailed"]][["results_agg_exp_cat"]]
-    #}
+
 
     # results_disaggregated ####
 
