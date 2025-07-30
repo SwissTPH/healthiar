@@ -67,14 +67,8 @@ get_impact <-
         } else if (is_lifetable) {
           ## ** If is_lifetable ##########################################################
 
-        pop_impact <-
-          healthiar:::get_pop_impact(
-            input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
-
-
         results_raw <-
-          healthiar:::get_deaths_yll_from_lifetable(
-            pop_impact = pop_impact,
+          healthiar:::get_impact_with_lifetable(
             input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
         }
