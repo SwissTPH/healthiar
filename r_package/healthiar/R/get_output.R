@@ -44,6 +44,18 @@ get_output <-
                     "age_group", "sex",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
 
+
+    impact_columns <-paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
+                              "monetized_impact", "monetized_impact_rounded"),
+                            rep(c("", "_1", "_2"), each = 3))
+
+    columns_to_be_summed <- results_raw |>
+      # The use of matches() is important.
+      # It works as contains() but allowing regex | (OR)
+      dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
+                    -dplyr::matches("_rounded|_per_100k_inhab")) |>
+      base::names()
+
     id_columns_in_results_raw <-
       base::names(results_raw)[base::names(results_raw) %in% id_columns]
 
@@ -62,16 +74,6 @@ get_output <-
     group_columns_for_multiexposure_aggregation <-
       base::setdiff(group_columns_for_geo_aggregation, c("exposure_name"))
 
-    impact_columns <-paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
-                              "monetized_impact", "monetized_impact_rounded"),
-                            rep(c("", "_1", "_2"), each = 3))
-
-    columns_to_be_summed <- results_raw |>
-      # The use of matches() is important.
-      # It works as contains() but allowing regex | (OR)
-      dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
-                    -dplyr::matches("_rounded|_per_100k_inhab")) |>
-      base::names()
 
 
     # Only columns to be summed that include the string "impact"
