@@ -123,7 +123,13 @@ get_output <-
       # Pre-identify target columns (to be collapsed or to take first value)
       cols_eventually_to_collapse <- base::setdiff(
         base::names(df),
-        c(columns_to_be_summed, impact_columns, grouping_cols, "erf_eq"))
+        # Columns to be excluded of the collapse
+        # because they are result or grouping columns
+        c(columns_to_be_summed, impact_columns, grouping_cols))
+
+      # Identify the columns that have to be collapsed
+      # i.e. columns with different values within the groups
+      # (e.g. exposure categories)
 
       has_multiple_values <- df |>
         dplyr::group_by(dplyr::across(dplyr::any_of(c(grouping_cols)))) |>
@@ -138,7 +144,8 @@ get_output <-
 
       cols_to_collapse <- base::names(has_multiple_values[has_multiple_values])
 
-      # Collapse the exposure categories
+      # Collapse columns
+      # i.e. paste the values so that they do not hinder the summarize below
       if(base::length(cols_to_collapse) > 0){
         df_collapsed <-
           df |>
@@ -330,8 +337,10 @@ get_output <-
     # Order columns ############################################################
     # putting first (on the left) those that determine different results across rows
 
+    # Choose columns to be put first
     first_columns <- c(id_columns, impact_columns)
 
+    # Create the functions
     put_first_cols <-
       function(x, cols){
         dplyr::select(x,
@@ -356,13 +365,12 @@ get_output <-
 
       }
 
+    # Use the funtions above to put first the columns
     output <-
       purrr::map(
         .x = output,
         .f = ~ put_first_cols_recursive(x = .x,
                                         cols = first_columns))
-
-
 
 
     return(output)
