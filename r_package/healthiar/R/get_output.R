@@ -44,29 +44,8 @@ get_output <-
                     "age_group", "sex",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
 
-    column_names <- base::names(results_raw)
-
     id_columns_in_results_raw <-
-      column_names[column_names %in% id_columns]
-
-    column_names_wo_lifetable_impact <-
-      column_names[! base::grepl("nest|modification_factor|impact", column_names)]
-
-
-    # Info columns to be excluded in the aggregation process because they have different values in column_names_wo_lifetable_impact
-    info_columns_different_value <- results_raw |>
-      dplyr::select(dplyr::contains("info")) |>
-      # Keep only columns where all values are the same
-      dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) > 1)) |>
-      dplyr::select(dplyr::where(~ .x)) |>
-      # Extract column names
-      base::names()
-
-    column_names_wo_lifetable_impact_info_diff <-
-      dplyr::setdiff(
-        column_names_wo_lifetable_impact,
-        info_columns_different_value
-      )
+      base::names(results_raw)[base::names(results_raw) %in% id_columns]
 
     group_columns_for_exp_cat_aggregation <-
       id_columns_in_results_raw
