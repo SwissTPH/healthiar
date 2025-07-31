@@ -46,6 +46,9 @@ get_output <-
 
     column_names <- base::names(results_raw)
 
+    id_columns_in_results_raw <-
+      column_names[column_names %in% id_columns]
+
     column_names_wo_lifetable_impact <-
       column_names[! base::grepl("nest|modification_factor|impact", column_names)]
 
@@ -65,53 +68,39 @@ get_output <-
         info_columns_different_value
       )
 
-
-
-    # Deactivated code
-    # It gives errors but something similar could be implemented to get the column names in a more efficient way
-    # group_columns_for_exp_cat_aggregation <-  results_raw |>
-    #   # Keep only columns where all values are the same
-    #   dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) == 1)) |>
-    #   dplyr::select(dplyr::where(~ .x)) |>
-    #   # Extract column names
-    #   base::names() |>
-    #   # Join vectors avoiding duplicates
-    #   dplyr::union(id_columns)
-
-
     group_columns_for_exp_cat_aggregation <-
-      column_names_wo_lifetable_impact_info_diff[!column_names_wo_lifetable_impact_info_diff %in%
-                     #c("geo_id_disaggregated", "age_group", "sex",
-                      c(
-                       #base::paste0("exp", c("", "_1", "_2")),
-                       base::paste0("population", c("", "_1", "_2")),
-                       #base::paste0("prop_pop_exp", c("", "_1", "_2")),
-                       #base::paste0("pop_exp", c("", "_1", "_2")),
-                       base::paste0("rr_at_exp", c("", "_1", "_2")),
-                       #base::paste0("pop_fraction", c("", "_1", "_2")),
-                       base::paste0("absolute_risk_as_percent", c("", "_1", "_2")),
-                       base::paste0("impact", c("", "_1", "_2")),
-                       base::paste0("impact_per_100k_inhab", c("", "_1", "_2")))]
+      id_columns_in_results_raw
 
-    # This includes all columns names except age_group and sex
     group_columns_for_sex_aggregation <-
-      column_names_wo_lifetable_impact_info_diff [! base::grepl("sex", column_names_wo_lifetable_impact_info_diff)]
+      base::setdiff(group_columns_for_exp_cat_aggregation, c("sex"))
 
     group_columns_for_age_aggregation <-
-      column_names_wo_lifetable_impact_info_diff[! base::grepl("age", column_names_wo_lifetable_impact_info_diff)]
-    # This include only the id_columns except geo_id_disaggregated
-    # Not all columns like above to avoid geo_id_disaggregated variables
-    # that make the summary at lower (disaggregated) geo level
+      base::setdiff(group_columns_for_sex_aggregation, c("age_group"))
+
     group_columns_for_geo_aggregation <-
-      id_columns[! id_columns %in% c("geo_id_disaggregated")]
+      base::setdiff(group_columns_for_age_aggregation, c("geo_id_disaggregated"))
 
     group_columns_for_multiexposure_aggregation <-
-      c("exposure_name", "geo_id_aggregated", "exp_ci", "bhd_ci", "erf_ci","dw_ci", "cutoff_ci", "duration_ci")
-
+      base::setdiff(group_columns_for_geo_aggregation, c("exposure_name"))
 
     impact_columns <-paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
                               "monetized_impact", "monetized_impact_rounded"),
                             rep(c("", "_1", "_2"), each = 3))
+
+    columns_to_be_summed <- results_raw |>
+      # The use of matches() is important.
+      # It works as contains() but allowing regex | (OR)
+      dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
+                    -dplyr::matches("_rounded|_per_100k_inhab")) |>
+      base::names()
+
+
+    # Only columns to be summed that include the string "impact"
+    # This is used for per_100k_inhab
+    # Use grepl() because there are many possible column names, no only impact
+    # e.g. "monetized_impact"
+    impact_columns_to_be_summed <-
+      columns_to_be_summed[base::grepl("impact", columns_to_be_summed)]
 
     # Get main results from detailed results ###################################
 
