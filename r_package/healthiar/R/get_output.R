@@ -139,23 +139,45 @@ get_output <-
 
     sum_round_and_relative_impact <- function(df, grouping_cols, col_total){
 
-      columns_to_be_summed <- df |>
-        # The use of matches() is important.
-        # It works as contains() but allowing regex | (OR)
-        dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
-                      -dplyr::matches("_rounded|_per_100k_inhab")) |>
-        base::names()
 
-      # Only columns to be summed that include the string "impact"
-      # This is used for per_100k_inhab
-      # Use grepl() because there are many possible column names, no only impact
-      # e.g. "monetized_impact"
-      impact_columns_to_be_summed <-
-        columns_to_be_summed[base::grepl("impact", columns_to_be_summed)]
+      # First identify columns
+      # Pre-identify target columns (to be collapsed or to take first value)
+      cols_eventually_to_collapse <- base::setdiff(
+        base::names(df),
+        c(columns_to_be_summed, impact_columns, grouping_cols, "erf_eq"))
 
+      has_multiple_values <- df |>
+        dplyr::group_by(dplyr::across(dplyr::any_of(c(grouping_cols)))) |>
+        dplyr::summarise(
+          dplyr::across(
+            .cols = dplyr::everything(),
+            .fns = ~ dplyr::n_distinct(.x) > 1),
+          .groups = "drop") |>
+        dplyr::select(dplyr::all_of(cols_eventually_to_collapse)) |>
+        dplyr::summarise(dplyr::across(dplyr::everything(), any))|>
+        base::unlist()
+
+      cols_to_collapse <- base::names(has_multiple_values[has_multiple_values])
+
+      # Collapse the exposure categories
+      if(base::length(cols_to_collapse) > 0){
+        df_collapsed <-
+          df |>
+          dplyr::group_by(dplyr::across(dplyr::any_of(grouping_cols))) |>
+          dplyr::mutate(
+            dplyr::across(
+              .cols = dplyr::all_of(cols_to_collapse),
+              .fns = ~ base::paste(.x, collapse = ", "),
+              .names = "{.col}")) |>
+          dplyr::ungroup()
+      } else { df_collapsed <- df}
 
       # Sum impact columns (keep original names)
-      impact_agg <- df |>
+      impact_agg <- df_collapsed |>
+        # Deselect columns to be summed
+        # Otherwise conflict with left_join behind
+        dplyr::select(- dplyr::contains("_rounded")) |>
+        dplyr::group_by(dplyr::across(dplyr::any_of(grouping_cols))) |>
         dplyr::summarise(
           dplyr::across(
             # Important: across() because this is to be done in all impact columns
@@ -166,9 +188,16 @@ get_output <-
             # which also have to be included in this aggregation
             .cols = dplyr::any_of(columns_to_be_summed),
             .fns = ~ sum(.x, na.rm = TRUE),
-            .names = "{.col}"),
-          .by = dplyr::any_of(grouping_cols)) |>
-
+            .names = "{.col}"))|>
+        dplyr::ungroup() |>
+        # Add the rest of columns
+        dplyr::left_join(
+          # Deselect columns included in columns_to_be_summed and
+          # _rounded & _per_100k_inhab.
+          # Otherwise, duplicated.
+          y = df_collapsed |> dplyr::select(-dplyr::any_of(c(columns_to_be_summed, col_total)),
+                                  -dplyr::matches("_rounded|_per_100k_inhab")) |> base::unique(),
+          by = grouping_cols) |>
         # Add ..._rounded columns
         dplyr::mutate(
           dplyr::across(
@@ -204,7 +233,10 @@ get_output <-
     # Keep the last version
     # This is important because some of the sums of health impacts below
     # do not happen and the chain of sums cannot be broken (see if statements)
-    output_last <- output[["health_main"]]
+    output_last <- output[["health_main"]] |>
+      dplyr::select(-dplyr::any_of("pop_fraction_by_exp_category"))
+
+
 
     ## exposure categories ############
     # This is only useful for absolute risk because
@@ -212,25 +244,11 @@ get_output <-
     # there is no exposure category specific results (bhd is not category specific).
     if(unique(results_raw$approach_risk) == "absolute_risk") {
 
-      # Collapse the exposure categories
-      output[["health_detailed"]][["results_agg_exp_cat"]] <-
-        output_last |>
-        dplyr::group_by(dplyr::across(dplyr::any_of(
-          c("geo_id_disaggregated", "age_group", "sex")))) |>
-        dplyr::mutate(dplyr::across(dplyr::any_of(
-          c(paste0("exp", c("", "_1", "_2")),
-            paste0("pop_exp", c("", "_1", "_2")),
-            paste0("prop_pop_exp", c("", "_1", "_2")),
-            paste0("pop_fraction", c("", "_1", "_2")),
-            "exposure_dimension")),
-          ~ paste(., collapse = ", "))) |>
-        dplyr::ungroup()
-
     output[["health_detailed"]][["results_agg_exp_cat"]] <-
       sum_round_and_relative_impact(
-        df = output[["health_detailed"]][["results_agg_exp_cat"]],
+        df = output_last,
         grouping_cols = group_columns_for_exp_cat_aggregation,
-        col_total = "exp_cat_aggregation")
+        col_total = "exp_cat")
 
     } else if (unique(results_raw$approach_risk) == "relative_risk"){
       # For relative risk no need of summing impacts across exposure categories
