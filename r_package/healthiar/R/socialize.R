@@ -341,12 +341,6 @@ socialize <- function(output_attribute = NULL,
 
     other_parameters <- df |>
 
-      # Convert to numeric
-      # TODO: To be fixed so that this can deleted
-      dplyr::mutate(
-        exp =if (has_exp) base::as.numeric(exp),
-        pop_fraction = if (has_pop_fraction) base::as.numeric(pop_fraction))|>
-
       dplyr::summarize(
         impact_mean = base::mean(impact, na.rm = TRUE),
         bhd_sum = if (has_bhd) base::sum(bhd, na.rm = TRUE) else NULL,
