@@ -44,74 +44,44 @@ get_output <-
                     "age_group", "sex",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
 
-    column_names <- base::names(results_raw)
-
-    column_names_wo_lifetable_impact <-
-      column_names[! base::grepl("nest|modification_factor|impact", column_names)]
-
-
-    # Info columns to be excluded in the aggregation process because they have different values in column_names_wo_lifetable_impact
-    info_columns_different_value <- results_raw |>
-      dplyr::select(dplyr::contains("info")) |>
-      # Keep only columns where all values are the same
-      dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) > 1)) |>
-      dplyr::select(dplyr::where(~ .x)) |>
-      # Extract column names
-      base::names()
-
-    column_names_wo_lifetable_impact_info_diff <-
-      dplyr::setdiff(
-        column_names_wo_lifetable_impact,
-        info_columns_different_value
-      )
-
-
-
-    # Deactivated code
-    # It gives errors but something similar could be implemented to get the column names in a more efficient way
-    # group_columns_for_exp_cat_aggregation <-  results_raw |>
-    #   # Keep only columns where all values are the same
-    #   dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) == 1)) |>
-    #   dplyr::select(dplyr::where(~ .x)) |>
-    #   # Extract column names
-    #   base::names() |>
-    #   # Join vectors avoiding duplicates
-    #   dplyr::union(id_columns)
-
-
-    group_columns_for_exp_cat_aggregation <-
-      column_names_wo_lifetable_impact_info_diff[!column_names_wo_lifetable_impact_info_diff %in%
-                     #c("geo_id_disaggregated", "age_group", "sex",
-                      c(
-                       #base::paste0("exp", c("", "_1", "_2")),
-                       base::paste0("population", c("", "_1", "_2")),
-                       #base::paste0("prop_pop_exp", c("", "_1", "_2")),
-                       #base::paste0("pop_exp", c("", "_1", "_2")),
-                       base::paste0("rr_at_exp", c("", "_1", "_2")),
-                       #base::paste0("pop_fraction", c("", "_1", "_2")),
-                       base::paste0("absolute_risk_as_percent", c("", "_1", "_2")),
-                       base::paste0("impact", c("", "_1", "_2")),
-                       base::paste0("impact_per_100k_inhab", c("", "_1", "_2")))]
-
-    # This includes all columns names except age_group and sex
-    group_columns_for_sex_aggregation <-
-      column_names_wo_lifetable_impact_info_diff [! base::grepl("sex", column_names_wo_lifetable_impact_info_diff)]
-
-    group_columns_for_age_aggregation <-
-      column_names_wo_lifetable_impact_info_diff[! base::grepl("age", column_names_wo_lifetable_impact_info_diff)]
-    # This include only the id_columns except geo_id_disaggregated
-    # Not all columns like above to avoid geo_id_disaggregated variables
-    # that make the summary at lower (disaggregated) geo level
-    group_columns_for_geo_aggregation <-
-      id_columns[! id_columns %in% c("geo_id_disaggregated")]
-
-    group_columns_for_multiexposure_aggregation <-
-      c("exposure_name", "geo_id_aggregated", "exp_ci", "bhd_ci", "erf_ci","dw_ci", "cutoff_ci", "duration_ci")
-
 
     impact_columns <-paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
                               "monetized_impact", "monetized_impact_rounded"),
                             rep(c("", "_1", "_2"), each = 3))
+
+    columns_to_be_summed <- results_raw |>
+      # The use of matches() is important.
+      # It works as contains() but allowing regex | (OR)
+      dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
+                    -dplyr::matches("_rounded|_per_100k_inhab")) |>
+      base::names()
+
+    id_columns_in_results_raw <-
+      base::names(results_raw)[base::names(results_raw) %in% id_columns]
+
+    group_columns_for_exp_cat_aggregation <-
+      id_columns_in_results_raw
+
+    group_columns_for_sex_aggregation <-
+      base::setdiff(group_columns_for_exp_cat_aggregation, c("sex"))
+
+    group_columns_for_age_aggregation <-
+      base::setdiff(group_columns_for_sex_aggregation, c("age_group"))
+
+    group_columns_for_geo_aggregation <-
+      base::setdiff(group_columns_for_age_aggregation, c("geo_id_disaggregated"))
+
+    group_columns_for_multiexposure_aggregation <-
+      base::setdiff(group_columns_for_geo_aggregation, c("exposure_name"))
+
+
+
+    # Only columns to be summed that include the string "impact"
+    # This is used for per_100k_inhab
+    # Use grepl() because there are many possible column names, no only impact
+    # e.g. "monetized_impact"
+    impact_columns_to_be_summed <-
+      columns_to_be_summed[base::grepl("impact", columns_to_be_summed)]
 
     # Get main results from detailed results ###################################
 
@@ -145,23 +115,57 @@ get_output <-
     }
 
 
-    # Keep the last version
-    output_last <- output[["health_main"]]
-
     # Create function to aggregate impacts
     # To be used multiple times below
 
     sum_round_and_relative_impact <- function(df, grouping_cols, col_total){
 
-      likely_columns_to_be_summed <- df |>
-        # The use of matches() is important.
-        # It works as contains() but allowing regex | (OR)
-        dplyr::select(dplyr::matches("impact|absolute_risk_as_percent"),
-                      -dplyr::contains("_rounded")) |>
-        base::names()
+
+      # First identify columns
+      # Pre-identify target columns (to be collapsed or to take first value)
+      cols_eventually_to_collapse <- base::setdiff(
+        base::names(df),
+        # Columns to be excluded of the collapse
+        # because they are result or grouping columns
+        c(columns_to_be_summed, impact_columns, grouping_cols))
+
+      # Identify the columns that have to be collapsed
+      # i.e. columns with different values within the groups
+      # (e.g. exposure categories)
+
+      has_multiple_values <- df |>
+        dplyr::group_by(dplyr::across(dplyr::any_of(c(grouping_cols)))) |>
+        dplyr::summarise(
+          dplyr::across(
+            .cols = dplyr::everything(),
+            .fns = ~ dplyr::n_distinct(.x) > 1),
+          .groups = "drop") |>
+        dplyr::select(dplyr::all_of(cols_eventually_to_collapse)) |>
+        dplyr::summarise(dplyr::across(dplyr::everything(), any))|>
+        base::unlist()
+
+      cols_to_collapse <- base::names(has_multiple_values[has_multiple_values])
+
+      # Collapse columns
+      # i.e. paste the values so that they do not hinder the summarize below
+      if(base::length(cols_to_collapse) > 0){
+        df_collapsed <-
+          df |>
+          dplyr::group_by(dplyr::across(dplyr::any_of(grouping_cols))) |>
+          dplyr::mutate(
+            dplyr::across(
+              .cols = dplyr::all_of(cols_to_collapse),
+              .fns = ~ base::paste(.x, collapse = ", "),
+              .names = "{.col}")) |>
+          dplyr::ungroup()
+      } else { df_collapsed <- df}
 
       # Sum impact columns (keep original names)
-      impact_agg <- df |>
+      impact_agg <- df_collapsed |>
+        # Deselect columns to be summed
+        # Otherwise conflict with left_join behind
+        dplyr::select(- dplyr::contains("_rounded")) |>
+        dplyr::group_by(dplyr::across(dplyr::any_of(grouping_cols))) |>
         dplyr::summarise(
           dplyr::across(
             # Important: across() because this is to be done in all impact columns
@@ -170,16 +174,22 @@ get_output <-
             # this function also have other columns with impact discounted and monetized
             # and even comparison scenarios
             # which also have to be included in this aggregation
-            .cols = dplyr::any_of(likely_columns_to_be_summed),
+            .cols = dplyr::any_of(columns_to_be_summed),
             .fns = ~ sum(.x, na.rm = TRUE),
-            .names = "{.col}"
-          ),
-          .by = dplyr::any_of(grouping_cols)
-        ) |>
+            .names = "{.col}"))|>
+        dplyr::ungroup() |>
+        # Add the rest of columns
+        dplyr::left_join(
+          # Deselect columns included in columns_to_be_summed and
+          # _rounded & _per_100k_inhab.
+          # Otherwise, duplicated.
+          y = df_collapsed |> dplyr::select(-dplyr::any_of(c(columns_to_be_summed, col_total)),
+                                  -dplyr::matches("_rounded|_per_100k_inhab")) |> base::unique(),
+          by = grouping_cols) |>
         # Add ..._rounded columns
         dplyr::mutate(
           dplyr::across(
-            .cols = dplyr::any_of(likely_columns_to_be_summed),
+            .cols = dplyr::any_of(impact_columns_to_be_summed),
             .fns = ~ round(.x),
             .names = "{.col}_rounded"
           )
@@ -187,21 +197,11 @@ get_output <-
 
       # If population is available, recompute with population and normalized metrics
       if ("population" %in% names(df)) {
-        impact_agg <- df |>
-          dplyr::summarise(
-            dplyr::across(
-              .cols = dplyr::any_of(likely_columns_to_be_summed),
-              .fns = ~ sum(.x, na.rm = TRUE),
-              .names = "{.col}"
-            ),
-            population = sum(population, na.rm = TRUE),
-            .by = dplyr::any_of(grouping_cols)
-          ) |>
+        impact_agg <- impact_agg |>
           dplyr::mutate(
             dplyr::across(
-              .cols = dplyr::any_of(likely_columns_to_be_summed),
+              .cols = dplyr::any_of(impact_columns_to_be_summed),
               .fns = list(
-                rounded = ~ round(.x),
                 per_100k_inhab = ~ (.x / population) * 1e5
               ),
               .names = "{.col}_{.fn}"
@@ -216,45 +216,40 @@ get_output <-
 
     }
 
+    # Sum across #####
+
+    # Keep the last version
+    # This is important because some of the sums of health impacts below
+    # do not happen and the chain of sums cannot be broken (see if statements)
+    output_last <- output[["health_main"]] |>
+      dplyr::select(-dplyr::any_of("pop_fraction_by_exp_category"))
 
 
-    # Exposure categories ############
 
-    #if(unique(results_raw$approach_risk) == "absolute_risk") {
+    ## exposure categories ############
+    # This is only useful for absolute risk because
+    # if relative risk
+    # there is no exposure category specific results (bhd is not category specific).
+    if(unique(results_raw$approach_risk) == "absolute_risk") {
 
     output[["health_detailed"]][["results_agg_exp_cat"]] <-
-        output_last |>
-        # Remove all impact rounded because
-        # we have to round final results
-        # not summing rounded results ("too rounded")
-        dplyr::select(-dplyr::any_of(paste0("impact_rounded", c("", "_1", "_2")))) |>
-        dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "age_group", "sex")))) |>
-        # Collapse the exposure categories to have only a vector
-        dplyr::mutate(dplyr::across(dplyr::any_of(
-          c(paste0("exp", c("", "_1", "_2")),
-            paste0("pop_exp", c("", "_1", "_2")),
-            paste0("prop_pop_exp", c("", "_1", "_2")),
-            paste0("pop_fraction", c("", "_1", "_2")),
-            "exposure_dimension")),
-          ~ paste(., collapse = ", "))) |>
-        dplyr::ungroup()
+      sum_round_and_relative_impact(
+        df = output_last,
+        grouping_cols = group_columns_for_exp_cat_aggregation,
+        col_total = "exp_cat")
 
-      output[["health_detailed"]][["results_agg_exp_cat"]] <-
-        sum_round_and_relative_impact(
-          df = output[["health_detailed"]][["results_agg_exp_cat"]],
-          grouping_cols = group_columns_for_exp_cat_aggregation,
-          col_total = "exp_cat_aggregation")
+    } else if (unique(results_raw$approach_risk) == "relative_risk"){
+      # For relative risk no need of summing impacts across exposure categories
+      # because no exposure category bhd so no exposure category impact.
+      # This output is anyway created because it is used by other functions
+      # such as healthiar::socialize()
 
-      output_last <- output[["health_detailed"]][["results_agg_exp_cat"]]
-    #}
+      output[["health_detailed"]][["results_agg_exp_cat"]] <- output_last
+    }
 
-    # results_disaggregated ####
+    output_last <- output[["health_detailed"]][["results_agg_exp_cat"]]
 
-
-    output[["health_detailed"]][["results_disaggregated"]]  <-
-      output_last
-
-    # sex #####
+    ##  sex #####
     # Aggregate results by sex
 
     output[["health_detailed"]][["results_agg_sex"]] <-
@@ -266,18 +261,18 @@ get_output <-
 
     output_last <- output[["health_detailed"]][["results_agg_sex"]]
 
-    # age_group #####
+    ## age_group #####
     # Aggregate results by age_group
     output[["health_detailed"]][["results_agg_age"]] <-
       sum_round_and_relative_impact(
         df = output_last,
         grouping_cols = group_columns_for_age_aggregation,
-        col_total = "age")
+        col_total = "age_group")
 
     output_last <- output[["health_detailed"]][["results_agg_age"]]
 
 
-    # geo_id_aggregated #####
+    ## geo_id_aggregated #####
     # Aggregate results by higher geo_level
     # only if geo_id_aggregated is define
 
@@ -287,7 +282,7 @@ get_output <-
         sum_round_and_relative_impact(
           df = output_last,
           grouping_cols = group_columns_for_geo_aggregation,
-          col_total = "geo_aggregation")
+          col_total = "geo_id_disaggregated")
 
       output_last <- output[["health_detailed"]][["results_agg_geo"]]
 
@@ -305,13 +300,12 @@ get_output <-
           sum_round_and_relative_impact(
             df = output_last,
             grouping_cols = group_columns_for_multiexposure_aggregation,
-            col_total = "multiexposure_aggregation")
+            col_total = "exposure_name")
 
       output_last <- output[["health_detailed"]][["results_agg_multiexposure"]]
 
       }
     }
-
 
     # Keep only the ci central in main output ###########
 
@@ -345,8 +339,10 @@ get_output <-
     # Order columns ############################################################
     # putting first (on the left) those that determine different results across rows
 
+    # Choose columns to be put first
     first_columns <- c(id_columns, impact_columns)
 
+    # Create the functions
     put_first_cols <-
       function(x, cols){
         dplyr::select(x,
@@ -371,13 +367,12 @@ get_output <-
 
       }
 
+    # Use the funtions above to put first the columns
     output <-
       purrr::map(
         .x = output,
         .f = ~ put_first_cols_recursive(x = .x,
                                         cols = first_columns))
-
-
 
 
     return(output)
