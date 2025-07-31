@@ -279,7 +279,7 @@ get_output <-
       sum_round_and_relative_impact(
         df = output_last,
         grouping_cols = group_columns_for_age_aggregation,
-        col_total = "age")
+        col_total = "age_group")
 
     output_last <- output[["health_detailed"]][["results_agg_age"]]
 
@@ -294,7 +294,7 @@ get_output <-
         sum_round_and_relative_impact(
           df = output_last,
           grouping_cols = group_columns_for_geo_aggregation,
-          col_total = "geo_aggregation")
+          col_total = "geo_id_disaggregated")
 
       output_last <- output[["health_detailed"]][["results_agg_geo"]]
 
@@ -312,13 +312,12 @@ get_output <-
           sum_round_and_relative_impact(
             df = output_last,
             grouping_cols = group_columns_for_multiexposure_aggregation,
-            col_total = "multiexposure_aggregation")
+            col_total = "exposure_name")
 
       output_last <- output[["health_detailed"]][["results_agg_multiexposure"]]
 
       }
     }
-
 
     # Keep only the ci central in main output ###########
 
