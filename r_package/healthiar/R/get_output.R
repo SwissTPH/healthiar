@@ -158,9 +158,6 @@ get_output <-
               .cols = dplyr::everything(),
               .fns = ~ base::unique(dplyr::n_distinct(.x) > 1)),
             .groups = "drop") |>
-          # This second summarise() is needed because there can be multiple rows
-          # after the summarise() above by groups
-          #dplyr::summarise(dplyr::across(cols_with_multiple_values, any))|>
           # Select columns where is TRUE
           # Use isTRUE() because it ignores NAs
           dplyr::select(dplyr::where(~ base::isTRUE(.x[1]))) |>
