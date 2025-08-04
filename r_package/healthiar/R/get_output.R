@@ -30,7 +30,6 @@
 #' @keywords internal
 
 
-
 get_output <-
   function(input_args = NULL,
            input_table = NULL,
