@@ -156,8 +156,8 @@ get_output <-
           dplyr::summarise(
             dplyr::across(
               .cols = dplyr::everything(),
-              .fns = ~ base::unique(dplyr::n_distinct(.x) > 1)),
             .groups = "drop") |>
+              .fns = ~ dplyr::n_distinct(.x) > 1)) |>
           # Select columns where is TRUE
           # Use isTRUE() because it ignores NAs
           dplyr::select(dplyr::where(~ base::isTRUE(.x[1]))) |>
