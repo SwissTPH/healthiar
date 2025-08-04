@@ -46,18 +46,14 @@ get_output <-
 
     colnames_results_raw <- base::names(results_raw)
 
-    columns_to_be_summed <- results_raw |>
-      # The use of matches() is important.
-      # It works as contains() but allowing regex | (OR)
-      dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
-                    -dplyr::matches("_rounded|_per_100k_inhab")) |>
-      base::names()
+    impact_columns <-
+      colnames_results_raw[base::grepl("impact", colnames_results_raw)]
 
     columns_to_be_summed <- results_raw |>
       # The use of matches() is important.
       # It works as contains() but allowing regex | (OR)
       dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
-                    -dplyr::matches("_rounded|_per_100k_inhab")) |>
+                    -dplyr::matches("_nest|_rounded|_per_100k_inhab")) |>
       base::names()
 
     # Only columns to be summed that include the string "impact"
@@ -156,7 +152,7 @@ get_output <-
       if(base::length(cols_with_multiple_values) > 0){
 
         cols_to_collapse <- df |>
-          dplyr::select(dplyr::any_of(c(grouping_cols, cols_with_multiple_values))) |>
+          dplyr::select(dplyr::all_of(c(grouping_cols, cols_with_multiple_values))) |>
           dplyr::group_by(dplyr::across(dplyr::all_of(c(grouping_cols)))) |>
           dplyr::summarise(
             dplyr::across(
@@ -176,7 +172,7 @@ get_output <-
         if(base::length(cols_to_collapse) > 0){
           df_collapsed <-
             df |>
-            dplyr::group_by(dplyr::across(dplyr::any_of(grouping_cols))) |>
+            dplyr::group_by(dplyr::across(dplyr::all_of(grouping_cols))) |>
             dplyr::mutate(
               dplyr::across(
                 .cols = dplyr::all_of(cols_to_collapse),
@@ -191,7 +187,7 @@ get_output <-
         # Deselect columns to be summed
         # Otherwise conflict with left_join behind
         dplyr::select(- dplyr::contains("_rounded")) |>
-        dplyr::group_by(dplyr::across(dplyr::any_of(grouping_cols))) |>
+        dplyr::group_by(dplyr::across(dplyr::all_of(grouping_cols))) |>
         dplyr::summarise(
           dplyr::across(
             # Important: across() because this is to be done in all impact columns
@@ -200,7 +196,7 @@ get_output <-
             # this function also have other columns with impact discounted and monetized
             # and even comparison scenarios
             # which also have to be included in this aggregation
-            .cols = dplyr::any_of(columns_to_be_summed),
+            .cols = dplyr::all_of(columns_to_be_summed),
             .fns = ~ sum(.x, na.rm = TRUE),
             .names = "{.col}"))|>
         dplyr::ungroup() |>
@@ -209,13 +205,13 @@ get_output <-
           # Deselect columns included in columns_to_be_summed and
           # _rounded & _per_100k_inhab.
           # Otherwise, duplicated.
-          y = df_collapsed |> dplyr::select(-dplyr::any_of(c(columns_to_be_summed, col_total)),
+          y = df_collapsed |> dplyr::select(-dplyr::all_of(c(columns_to_be_summed, col_total)),
                                   -dplyr::matches("_rounded|_per_100k_inhab")) |> base::unique(),
           by = grouping_cols) |>
         # Add ..._rounded columns
         dplyr::mutate(
           dplyr::across(
-            .cols = dplyr::any_of(impact_columns_to_be_summed),
+            .cols = dplyr::all_of(impact_columns_to_be_summed),
             .fns = ~ round(.x),
             .names = "{.col}_rounded"
           )
@@ -226,7 +222,7 @@ get_output <-
         impact_agg <- impact_agg |>
           dplyr::mutate(
             dplyr::across(
-              .cols = dplyr::any_of(impact_columns_to_be_summed),
+              .cols = dplyr::all_of(impact_columns_to_be_summed),
               .fns = list(
                 per_100k_inhab = ~ (.x / population) * 1e5
               ),
@@ -247,10 +243,7 @@ get_output <-
     # Keep the last version
     # This is important because some of the sums of health impacts below
     # do not happen and the chain of sums cannot be broken (see if statements)
-    output_last <- output[["health_main"]] |>
-      dplyr::select(-dplyr::any_of("pop_fraction_by_exp_category"))
-
-
+    output_last <- output[["health_main"]]
 
     ## exposure categories ############
     # This is only useful for absolute risk because
@@ -262,7 +255,7 @@ get_output <-
       sum_round_and_relative_impact(
         df = output_last,
         grouping_cols = group_columns_for_exp_cat_aggregation,
-        col_total = "exp_cat")
+        col_total = "exposure_dimension")
 
     } else if (unique(results_raw$approach_risk) == "relative_risk"){
       # For relative risk no need of summing impacts across exposure categories
