@@ -30,7 +30,6 @@
 #' @keywords internal
 
 
-
 get_output <-
   function(input_args = NULL,
            input_table = NULL,
@@ -44,20 +43,30 @@ get_output <-
                     "age_group", "sex",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
 
+    colnames_results_raw <- base::names(results_raw)
 
-    impact_columns <-paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
-                              "monetized_impact", "monetized_impact_rounded"),
-                            rep(c("", "_1", "_2"), each = 3))
+    impact_columns <-
+      colnames_results_raw[base::grepl("impact", colnames_results_raw)]
 
     columns_to_be_summed <- results_raw |>
       # The use of matches() is important.
       # It works as contains() but allowing regex | (OR)
       dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
-                    -dplyr::matches("_rounded|_per_100k_inhab")) |>
+                    -dplyr::matches("_nest|_rounded|_per_100k_inhab")) |>
       base::names()
 
+    # Only columns to be summed that include the string "impact"
+    # This is used for per_100k_inhab
+    # Use grepl() because there are many possible column names, no only impact
+    # e.g. "monetized_impact"
+    impact_columns_to_be_summed <-
+      columns_to_be_summed[base::grepl("impact", columns_to_be_summed)]
+
+    nest_cols <-
+      colnames_results_raw[base::grepl("_nest", colnames_results_raw)]
+
     id_columns_in_results_raw <-
-      base::names(results_raw)[base::names(results_raw) %in% id_columns]
+      colnames_results_raw[colnames_results_raw %in% id_columns]
 
     group_columns_for_exp_cat_aggregation <-
       id_columns_in_results_raw
@@ -75,13 +84,28 @@ get_output <-
       base::setdiff(group_columns_for_geo_aggregation, c("exposure_name"))
 
 
+    # Pre-identify columns to be collapsed
+    # First remove columns that are not to be collapsed
+    cols_without_results_and_nest  <- base::setdiff(
+      colnames_results_raw,
+      # Columns to be excluded of the collapse
+      # because they are results
+      c(columns_to_be_summed, impact_columns, nest_cols))
 
-    # Only columns to be summed that include the string "impact"
-    # This is used for per_100k_inhab
-    # Use grepl() because there are many possible column names, no only impact
-    # e.g. "monetized_impact"
-    impact_columns_to_be_summed <-
-      columns_to_be_summed[base::grepl("impact", columns_to_be_summed)]
+    # Among those columns that could be collapsed,
+    # identify the columns with multiple values.
+    # This is a subset of columns to be scaned if they have multipble values
+    # when grouping by the sum variables
+    cols_with_multiple_values <- results_raw |>
+      dplyr::select(dplyr::all_of(cols_without_results_and_nest)) |>
+      dplyr::summarise(
+        dplyr::across(
+          .cols = dplyr::everything(),
+          .fns = ~ dplyr::n_distinct(.x) > 1)) |>
+      # Select columns where is TRUE
+      # Use isTRUE() because it ignores NAs
+      dplyr::select(dplyr::where(~ base::isTRUE(.x))) |>
+      base::names()
 
     # Get main results from detailed results ###################################
 
@@ -120,53 +144,54 @@ get_output <-
 
     sum_round_and_relative_impact <- function(df, grouping_cols, col_total){
 
-
-      # First identify columns
-      # Pre-identify target columns (to be collapsed or to take first value)
-      cols_eventually_to_collapse <- base::setdiff(
-        base::names(df),
-        # Columns to be excluded of the collapse
-        # because they are result or grouping columns
-        c(columns_to_be_summed, impact_columns, grouping_cols))
-
       # Identify the columns that have to be collapsed
       # i.e. columns with different values within the groups
       # (e.g. exposure categories)
 
-      has_multiple_values <- df |>
-        dplyr::group_by(dplyr::across(dplyr::any_of(c(grouping_cols)))) |>
-        dplyr::summarise(
-          dplyr::across(
-            .cols = dplyr::everything(),
-            .fns = ~ dplyr::n_distinct(.x) > 1),
-          .groups = "drop") |>
-        dplyr::select(dplyr::all_of(cols_eventually_to_collapse)) |>
-        dplyr::summarise(dplyr::across(dplyr::everything(), any))|>
-        base::unlist()
+      if(base::length(cols_with_multiple_values) > 0){
 
-      cols_to_collapse <- base::names(has_multiple_values[has_multiple_values])
-
-      # Collapse columns
-      # i.e. paste the values so that they do not hinder the summarize below
-      if(base::length(cols_to_collapse) > 0){
-        df_collapsed <-
-          df |>
-          dplyr::group_by(dplyr::across(dplyr::any_of(grouping_cols))) |>
-          dplyr::mutate(
+        cols_to_collapse <- df |>
+          dplyr::select(dplyr::all_of(c(grouping_cols, cols_with_multiple_values))) |>
+          dplyr::summarise(
+            .by = dplyr::all_of(grouping_cols),
             dplyr::across(
-              .cols = dplyr::all_of(cols_to_collapse),
-              .fns = ~ base::paste(.x, collapse = ", "),
-              .names = "{.col}")) |>
-          dplyr::ungroup()
+              .cols = dplyr::everything(),
+              .fns = ~ dplyr::n_distinct(.x) > 1)) |>
+          # Select columns where is TRUE
+          # Use isTRUE() because it ignores NAs
+          dplyr::select(dplyr::where(~ base::isTRUE(.x[1]))) |>
+          base::names()
+
+        # Collapse columns
+        # i.e. paste the values so that they do not hinder the summarize below
+        if(base::length(cols_to_collapse) > 0){
+          df_collapsed <-
+            df |>
+            dplyr::mutate(
+              .by = dplyr::all_of(grouping_cols),
+              dplyr::across(
+                .cols = dplyr::all_of(cols_to_collapse),
+                .fns = ~ base::paste(.x, collapse = ", "),
+                .names = "{.col}"))
+        } else { df_collapsed <- df}
       } else { df_collapsed <- df}
+
+      # Create df_collapsed with unique values (to be used below)
+      # Remove columns included in columns_to_be_summed and
+      # _rounded & _per_100k_inhab.
+      # Otherwise, duplicated.
+      df_collapsed_and_distinct <- df_collapsed |>
+        dplyr::select(-dplyr::all_of(c(columns_to_be_summed, col_total)),
+                      -dplyr::matches("_rounded|_per_100k_inhab")) |>
+        dplyr::distinct()
 
       # Sum impact columns (keep original names)
       impact_agg <- df_collapsed |>
         # Deselect columns to be summed
         # Otherwise conflict with left_join behind
         dplyr::select(- dplyr::contains("_rounded")) |>
-        dplyr::group_by(dplyr::across(dplyr::any_of(grouping_cols))) |>
         dplyr::summarise(
+          .by = dplyr::all_of(grouping_cols),
           dplyr::across(
             # Important: across() because this is to be done in all impact columns
             # In attribute_health() only one impact column
@@ -174,22 +199,17 @@ get_output <-
             # this function also have other columns with impact discounted and monetized
             # and even comparison scenarios
             # which also have to be included in this aggregation
-            .cols = dplyr::any_of(columns_to_be_summed),
+            .cols = dplyr::all_of(columns_to_be_summed),
             .fns = ~ sum(.x, na.rm = TRUE),
             .names = "{.col}"))|>
-        dplyr::ungroup() |>
         # Add the rest of columns
         dplyr::left_join(
-          # Deselect columns included in columns_to_be_summed and
-          # _rounded & _per_100k_inhab.
-          # Otherwise, duplicated.
-          y = df_collapsed |> dplyr::select(-dplyr::any_of(c(columns_to_be_summed, col_total)),
-                                  -dplyr::matches("_rounded|_per_100k_inhab")) |> base::unique(),
+          y = df_collapsed_and_distinct,
           by = grouping_cols) |>
         # Add ..._rounded columns
         dplyr::mutate(
           dplyr::across(
-            .cols = dplyr::any_of(impact_columns_to_be_summed),
+            .cols = dplyr::all_of(impact_columns_to_be_summed),
             .fns = ~ round(.x),
             .names = "{.col}_rounded"
           )
@@ -200,7 +220,7 @@ get_output <-
         impact_agg <- impact_agg |>
           dplyr::mutate(
             dplyr::across(
-              .cols = dplyr::any_of(impact_columns_to_be_summed),
+              .cols = dplyr::all_of(impact_columns_to_be_summed),
               .fns = list(
                 per_100k_inhab = ~ (.x / population) * 1e5
               ),
@@ -221,10 +241,7 @@ get_output <-
     # Keep the last version
     # This is important because some of the sums of health impacts below
     # do not happen and the chain of sums cannot be broken (see if statements)
-    output_last <- output[["health_main"]] |>
-      dplyr::select(-dplyr::any_of("pop_fraction_by_exp_category"))
-
-
+    output_last <- output[["health_main"]]
 
     ## exposure categories ############
     # This is only useful for absolute risk because
@@ -236,7 +253,7 @@ get_output <-
       sum_round_and_relative_impact(
         df = output_last,
         grouping_cols = group_columns_for_exp_cat_aggregation,
-        col_total = "exp_cat")
+        col_total = "exposure_dimension")
 
     } else if (unique(results_raw$approach_risk) == "relative_risk"){
       # For relative risk no need of summing impacts across exposure categories

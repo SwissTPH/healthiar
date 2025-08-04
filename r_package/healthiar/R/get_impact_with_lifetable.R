@@ -769,7 +769,8 @@ get_impact_with_lifetable <-
       impact_detailed  |>
       dplyr::mutate(dplyr::across(dplyr::contains("_nest"),
                                   ~purrr::set_names(.x,
-                                                    id)))
+                                                    id)),
+                    age_group = "total")
 
     return(impact_detailed)
 

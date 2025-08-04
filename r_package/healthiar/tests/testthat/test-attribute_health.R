@@ -1090,7 +1090,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         exp_central = data$exposure_mean,
         pop_exp = data$exposed,
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2")$health_main$impact_rounded,
-  expected = c(23328, 174232, 150904) # Results from NIPH
+  expected = c(150904, 23328, 174232) # Results from NIPH
   )
 })
 
