@@ -44,13 +44,6 @@ get_output <-
                     "age_group", "sex",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
 
-    impact_columns <-
-      base::paste0(
-        base::rep(c("impact", "impact_rounded", "impact_per_100k_inhab",
-                              "monetized_impact", "monetized_impact_rounded"),
-                  each = 3),
-        c("", "_1", "_2"))
-
     colnames_results_raw <- base::names(results_raw)
 
     columns_to_be_summed <- results_raw |>
