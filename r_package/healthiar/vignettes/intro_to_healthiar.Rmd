@@ -1086,11 +1086,12 @@ rm(results_multiplicative)
 
 ## Example: `prepare_mdi`
 
-Note: the `ggplot2` package must be installed in order to use this function!
+*Note*: the `ggplot2` package must be installed in order to use this function!
 
 ### Function call
 
-```{r eval=TRUE, include=FALSE, echo=TRUE}
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
 mdi <- prepare_mdi(
   geo_id_disaggregated = exdat_get_mdi$id,
   edu = exdat_get_mdi$edu,
@@ -1102,13 +1103,13 @@ mdi <- prepare_mdi(
 )
 ```
 
-```{r, eval=TRUE, include=FALSE, echo=FALSE}
+```{r, eval=FALSE, include=FALSE, echo=FALSE}
 rm(mdi)
 ```
 
 ### Main results
 
-```{r eval=TRUE, include=TRUE, echo=FALSE}
+```{r eval=FALSE, include=TRUE, echo=FALSE}
 mdi <- prepare_mdi(
   geo_id_disaggregated = exdat_get_mdi$id,
   edu = exdat_get_mdi$edu,
@@ -1143,7 +1144,7 @@ mdi |>
   select(geo_id_disaggregated, MDI, MDI_index)
 ```
 
-```{r eval=TRUE, include=TRUE, echo=FALSE}
+```{r eval=FALSE, include=TRUE, echo=FALSE}
 mdi |> 
   dplyr::select(geo_id_disaggregated, MDI, MDI_index) |> 
   knitr::kable()
