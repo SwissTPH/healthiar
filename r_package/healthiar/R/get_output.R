@@ -152,11 +152,10 @@ get_output <-
 
         cols_to_collapse <- df |>
           dplyr::select(dplyr::all_of(c(grouping_cols, cols_with_multiple_values))) |>
-          dplyr::group_by(dplyr::across(dplyr::all_of(c(grouping_cols)))) |>
           dplyr::summarise(
+            .by = dplyr::all_of(grouping_cols),
             dplyr::across(
               .cols = dplyr::everything(),
-            .groups = "drop") |>
               .fns = ~ dplyr::n_distinct(.x) > 1)) |>
           # Select columns where is TRUE
           # Use isTRUE() because it ignores NAs
@@ -168,13 +167,12 @@ get_output <-
         if(base::length(cols_to_collapse) > 0){
           df_collapsed <-
             df |>
-            dplyr::group_by(dplyr::across(dplyr::all_of(grouping_cols))) |>
             dplyr::mutate(
+              .by = dplyr::all_of(grouping_cols),
               dplyr::across(
                 .cols = dplyr::all_of(cols_to_collapse),
                 .fns = ~ base::paste(.x, collapse = ", "),
-                .names = "{.col}")) |>
-            dplyr::ungroup()
+                .names = "{.col}"))
         } else { df_collapsed <- df}
       } else { df_collapsed <- df}
 
@@ -183,8 +181,8 @@ get_output <-
         # Deselect columns to be summed
         # Otherwise conflict with left_join behind
         dplyr::select(- dplyr::contains("_rounded")) |>
-        dplyr::group_by(dplyr::across(dplyr::all_of(grouping_cols))) |>
         dplyr::summarise(
+          .by = dplyr::all_of(grouping_cols),
           dplyr::across(
             # Important: across() because this is to be done in all impact columns
             # In attribute_health() only one impact column
@@ -195,7 +193,6 @@ get_output <-
             .cols = dplyr::all_of(columns_to_be_summed),
             .fns = ~ sum(.x, na.rm = TRUE),
             .names = "{.col}"))|>
-        dplyr::ungroup() |>
         # Add the rest of columns
         dplyr::left_join(
           # Deselect columns included in columns_to_be_summed and
