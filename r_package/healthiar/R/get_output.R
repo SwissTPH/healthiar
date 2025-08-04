@@ -153,15 +153,6 @@ get_output <-
     # To be used multiple times below
 
     sum_round_and_relative_impact <- function(df, grouping_cols, col_total){
-#
-#
-#       # Identify columns
-#       # Pre-identify target columns (to be collapsed or to take first value)
-#       cols_eventually_to_collapse <- base::setdiff(
-#         base::names(df),
-#         # Columns to be excluded of the collapse
-#         # because they are results or grouping columns
-#         c(columns_to_be_summed, impact_columns, grouping_cols))
 
       # Identify the columns that have to be collapsed
       # i.e. columns with different values within the groups
