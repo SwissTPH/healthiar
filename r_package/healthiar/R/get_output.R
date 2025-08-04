@@ -44,10 +44,12 @@ get_output <-
                     "age_group", "sex",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
 
-
-    impact_columns <-paste0(c("impact", "impact_rounded", "impact_per_100k_inhab",
+    impact_columns <-
+      base::paste0(
+        base::rep(c("impact", "impact_rounded", "impact_per_100k_inhab",
                               "monetized_impact", "monetized_impact_rounded"),
-                            rep(c("", "_1", "_2"), each = 3))
+                  each = 3),
+        c("", "_1", "_2"))
 
     colnames_results_raw <- base::names(results_raw)
 
