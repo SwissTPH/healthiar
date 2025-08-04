@@ -176,6 +176,15 @@ get_output <-
         } else { df_collapsed <- df}
       } else { df_collapsed <- df}
 
+      # Create df_collapsed with unique values (to be used below)
+      # Remove columns included in columns_to_be_summed and
+      # _rounded & _per_100k_inhab.
+      # Otherwise, duplicated.
+      df_collapsed_and_distinct <- df_collapsed |>
+        dplyr::select(-dplyr::all_of(c(columns_to_be_summed, col_total)),
+                      -dplyr::matches("_rounded|_per_100k_inhab")) |>
+        dplyr::distinct()
+
       # Sum impact columns (keep original names)
       impact_agg <- df_collapsed |>
         # Deselect columns to be summed
@@ -195,11 +204,7 @@ get_output <-
             .names = "{.col}"))|>
         # Add the rest of columns
         dplyr::left_join(
-          # Deselect columns included in columns_to_be_summed and
-          # _rounded & _per_100k_inhab.
-          # Otherwise, duplicated.
-          y = df_collapsed |> dplyr::select(-dplyr::all_of(c(columns_to_be_summed, col_total)),
-                                  -dplyr::matches("_rounded|_per_100k_inhab")) |> base::unique(),
+          y = df_collapsed_and_distinct,
           by = grouping_cols) |>
         # Add ..._rounded columns
         dplyr::mutate(
