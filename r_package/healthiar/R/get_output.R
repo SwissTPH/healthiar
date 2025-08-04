@@ -49,6 +49,15 @@ get_output <-
                               "monetized_impact", "monetized_impact_rounded"),
                             rep(c("", "_1", "_2"), each = 3))
 
+    colnames_results_raw <- base::names(results_raw)
+
+    columns_to_be_summed <- results_raw |>
+      # The use of matches() is important.
+      # It works as contains() but allowing regex | (OR)
+      dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
+                    -dplyr::matches("_rounded|_per_100k_inhab")) |>
+      base::names()
+
     columns_to_be_summed <- results_raw |>
       # The use of matches() is important.
       # It works as contains() but allowing regex | (OR)
@@ -64,10 +73,10 @@ get_output <-
       columns_to_be_summed[base::grepl("impact", columns_to_be_summed)]
 
     nest_cols <-
-      base::names(results_raw)[base::grepl("_nest", base::names(results_raw))]
+      colnames_results_raw[base::grepl("_nest", colnames_results_raw)]
 
     id_columns_in_results_raw <-
-      base::names(results_raw)[base::names(results_raw) %in% id_columns]
+      colnames_results_raw[colnames_results_raw %in% id_columns]
 
     group_columns_for_exp_cat_aggregation <-
       id_columns_in_results_raw
@@ -88,7 +97,7 @@ get_output <-
     # Pre-identify columns to be collapsed
     # First remove columns that are not to be collapsed
     cols_without_results_and_nest  <- base::setdiff(
-      base::names(results_raw),
+      colnames_results_raw,
       # Columns to be excluded of the collapse
       # because they are results
       c(columns_to_be_summed, impact_columns, nest_cols))
