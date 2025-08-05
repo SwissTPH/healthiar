@@ -85,7 +85,6 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
         # geo_id_disaggregated = data$CS01012020, # geo IDs of the preparatory iteration call above and this function call must match!
         social_indicator = base::subset(data, AGE == '[0,5)')$SCORE,
         n_quantile = 10, # Specify number of quantiles, e.g. 10
-        # approach = "quantile", # default (and currently only) approach,
         # population = data$POPULATION,
         ref_prop_pop = base::subset(data, SECTOR == '21001A00-')$REF
       ) |>
@@ -120,7 +119,6 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
         geo_id_disaggregated = data$SECTOR, # geo IDs of the preparatory iteration call above and this function call must match!
         social_indicator = data$SCORE,
         n_quantile = 10, # Specify number of quantiles, e.g. 10
-        # approach = "quantile", # default (and currently only) approach,
         population = data$POP,
         age_group = data$AGE,
         ref_prop_pop = data$REF
@@ -157,7 +155,6 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
         # social_indicator = data$SCORE,
         social_quantile = base::as.numeric(base::gsub("D", "", data$DECILE)),
         # n_quantile = 10, # Specify number of quantiles, e.g. 10
-        # approach = "quantile", # default (and currently only) approach,
         population = data$POP,
         age_group = data$AGE,
         ref_prop_pop = data$REF
