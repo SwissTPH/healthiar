@@ -180,4 +180,26 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 # ERROR OR WARNING ########
 ## ERROR #########
 
+testthat::test_that("error if non-numeric", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  testthat::expect_error(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = base::as.character(data$IMPACT), #
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        n_quantile = 10,
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "impact must contain numeric value(s).",
+    fixed = TRUE
+  )
+
+})
+
 ## WARNING #########
