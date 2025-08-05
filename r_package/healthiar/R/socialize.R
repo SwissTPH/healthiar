@@ -27,7 +27,7 @@
 #' \code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_disaggregated}) Argument must be entered for iterations. See Details for more info.
 
 #' @param population
-#' \code{Integer vector} specifying the population by age group and geographic unit.
+#' \code{Numeric vector} specifying the population by age group and geographic unit.
 
 #' @param ref_prop_pop
 #' \code{Numeric vector} specifying with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.
@@ -36,7 +36,7 @@
 #' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} containing the attributable health impacts by both age group and geo id.
 
 #' @param bhd
-#' \emph{(only if \code{output_attribute} not specified)} \code{Integer vector} specifying the baseline health data of the health outcome of interest per age group. See Details for more info.
+#' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the baseline health data of the health outcome of interest per age group. See Details for more info.
 
 #' @param exp
 #'\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the exposure level(s) to the environmental stressor.

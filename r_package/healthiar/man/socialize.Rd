@@ -35,7 +35,7 @@ socialize(
 
 \item{social_quantile}{\code{Integer vector} showing the values from 1 to the number of quantiles assigned to each geographic unit. Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}}
 
-\item{population}{\code{Integer vector} specifying the population by age group and geographic unit.}
+\item{population}{\code{Numeric vector} specifying the population by age group and geographic unit.}
 
 \item{ref_prop_pop}{\code{Numeric vector} specifying with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.}
 
@@ -43,7 +43,7 @@ socialize(
 
 \item{exp}{\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the exposure level(s) to the environmental stressor.}
 
-\item{bhd}{\emph{(only if \code{output_attribute} not specified)} \code{Integer vector} specifying the baseline health data of the health outcome of interest per age group. See Details for more info.}
+\item{bhd}{\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the baseline health data of the health outcome of interest per age group. See Details for more info.}
 
 \item{pop_fraction}{\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the population attributable fraction by age group and geographic unit.}
 }
