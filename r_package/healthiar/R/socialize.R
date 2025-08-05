@@ -21,13 +21,13 @@
 #' \code{Integer value} specifying the number of quantiles in the analysis.
 
 #' @param social_quantile
-#' \code{Numeric vector} showing the values from 1 to the number of quantiles assigned to each geographic unit. Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}
+#' \code{Integer vector} showing the values from 1 to the number of quantiles assigned to each geographic unit. Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}
 
 #' @param geo_id_disaggregated,
 #' \code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_disaggregated}) Argument must be entered for iterations. See Details for more info.
 
 #' @param population
-#' \code{Integer vector} specifying the population by age group and geographic unit.
+#' \code{Numeric vector} specifying the population by age group and geographic unit.
 
 #' @param ref_prop_pop
 #' \code{Numeric vector} specifying with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.
@@ -111,6 +111,198 @@ socialize <- function(output_attribute = NULL,
                       bhd = NULL,
                       pop_fraction = NULL
                       ) {
+
+  # Data validation ######################
+
+  input_args_value <-
+    healthiar:::get_input_args(environment = base::environment(),
+                               call = match.call())$value
+
+  # Identify available_vars
+  # i.e. variables/arguments that have been entered by the user
+  available_vars <- input_args_value |>
+    purrr::discard(~ base::is.null(.x)) |>
+    base::names()
+
+  # All variables by type
+  numeric_vars <- c("social_indicator", "pop_fraction", "ref_prop_pop", "exp", "impact")
+  integer_vars_otherwise_error <- c("social_quantile", "n_quantile")
+  integer_vars_otherwise_warning <- c("population", "bhd")
+  boolean_vars <- c("increasing_deprivation")
+  fraction_vars <- c("ref_prop_pop", "pop_fraction")
+
+  # Available variables by type
+  available_numeric_vars <- base::intersect(numeric_vars, available_vars)
+  available_integer_vars_otherwise_error <-
+    base::intersect(integer_vars_otherwise_error, available_vars)
+  available_integer_vars_otherwise_warning <-
+    base::intersect(integer_vars_otherwise_warning, available_vars)
+  available_integer_vars <- c(available_integer_vars_otherwise_error,
+                              available_integer_vars_otherwise_warning )
+  available_numeric_and_integer_vars <- c(available_numeric_vars, available_integer_vars)
+  ## social_indicator and impact might be lower than 0, therefore excluded here
+  available_positive_vars <-
+    base::setdiff(available_numeric_and_integer_vars, c("social_indicator", "impact"))
+  available_boolean_vars <- base::intersect(boolean_vars, available_vars)
+  available_fraction_vars <- base::intersect(fraction_vars, available_vars)
+
+  ## error_if_not_numeric #####
+  error_if_not_numeric <- function(var_name){
+
+    var_value <- input_args_value [[var_name]]
+
+    if(base::any(!base::is.numeric(var_value))){
+
+      base::stop(
+        base::paste0(
+          var_name,
+          " must contain numeric value(s)."),
+        call. = FALSE)
+    }
+  }
+
+  if(base::length(available_numeric_and_integer_vars) > 0){
+    for (x in available_numeric_and_integer_vars) {
+      error_if_not_numeric(var_name = x)
+    }
+  }
+
+  ## error_if_not_whole number #####
+  error_if_not_whole_number <- function(var_name){
+    var_value <- input_args_value [[var_name]]
+
+    if(base::any(base::is.numeric(var_value)) &
+       base::any(var_value != base::floor(var_value))){
+
+      base::stop(
+        base::paste0(
+          var_name,
+          " must contain whole numeric value(s)."),
+        call. = FALSE)
+    }
+  }
+
+  if(base::length(available_integer_vars_otherwise_error) > 0){
+    for (x in available_integer_vars_otherwise_error) {
+      error_if_not_whole_number(var_name = x)
+    }
+  }
+
+  ## error_if_not_fraction #####
+  error_if_not_fraction <- function(var_name){
+
+    var_value <- input_args_value [[var_name]]
+
+    if(base::any(var_value < 0 | var_value > 1)){
+
+      base::stop(
+        base::paste0(
+          var_name,
+          " must have values between 0 and 1."),
+        call. = FALSE)
+    }
+  }
+
+  if(base::length(available_fraction_vars) > 0){
+    for (x in available_fraction_vars) {
+      error_if_not_fraction(var_name = x)
+    }
+  }
+
+  ## error_if_lower_than_0 #####
+  error_if_lower_than_0 <- function(var_name){
+    var_value <- input_args_value [[var_name]]
+
+    if(base::any(var_value < 0)){
+
+      base::stop(
+        base::paste0(
+          "The value(s) of ",
+          var_name,
+          " cannot be lower than 0."),
+        call. = FALSE)
+    }
+  }
+
+  if(base::length(available_positive_vars) > 0){
+    for (x in available_positive_vars) {
+      error_if_lower_than_0(var_name = x)
+    }
+  }
+
+  ## error_if_not_boolean #####
+  error_if_not_boolean <- function(var_name){
+    var_value <- input_args_value [[var_name]]
+
+    if(base::any(!base::is.logical(var_value))){
+
+      base::stop(
+        base::paste0(
+          var_name,
+          " must be TRUE or FALSE."),
+        call. = FALSE)
+    }
+  }
+
+  if(base::length(available_boolean_vars) > 0){
+    for (x in available_boolean_vars) {
+      error_if_not_boolean(var_name = x)
+    }
+  }
+
+  ## error_if_no_match #####
+  error_if_no_match <- function(var_name){
+    var_value_user <- base::unique(input_args_value[[var_name]])
+    var_value_attribute <-
+      base::unique(output_attribute$health_detailed$results_raw$age_group)
+
+    if(! base::identical(var_value_user, var_value_attribute)){
+
+      base::stop(
+        base::paste0(
+          var_name,
+          " must be identical to the values in the column ",
+          var_name,
+          " in output_attribute."),
+        call. = FALSE)
+
+    }
+  }
+
+  if(! base::is.null(output_attribute)){
+    for (x in c("age_group")) {
+      error_if_no_match(var_name = x)
+    }
+  }
+
+
+
+  ## warning_if_not_integer #####
+  warning_if_not_integer <- function(var_name){
+    var_value <- input_args_value [[var_name]]
+
+    if(base::any(base::is.numeric(var_value)) &
+       base::any(var_value != base::floor(var_value))){
+
+      base::warning(
+        base::paste0(
+          "It is advisable to enter whole numeric values in ",
+          var_name,
+          "."),
+        call. = FALSE)
+    }
+  }
+
+  if(base::length(available_integer_vars_otherwise_warning) > 0){
+    for (x in available_integer_vars) {
+      warning_if_not_integer(var_name = x)
+    }
+  }
+
+
+
+
+
 
   # Variables for ifs #####################
 

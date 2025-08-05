@@ -85,7 +85,6 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
         # geo_id_disaggregated = data$CS01012020, # geo IDs of the preparatory iteration call above and this function call must match!
         social_indicator = base::subset(data, AGE == '[0,5)')$SCORE,
         n_quantile = 10, # Specify number of quantiles, e.g. 10
-        # approach = "quantile", # default (and currently only) approach,
         # population = data$POPULATION,
         ref_prop_pop = base::subset(data, SECTOR == '21001A00-')$REF
       ) |>
@@ -120,7 +119,6 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
         geo_id_disaggregated = data$SECTOR, # geo IDs of the preparatory iteration call above and this function call must match!
         social_indicator = data$SCORE,
         n_quantile = 10, # Specify number of quantiles, e.g. 10
-        # approach = "quantile", # default (and currently only) approach,
         population = data$POP,
         age_group = data$AGE,
         ref_prop_pop = data$REF
@@ -157,7 +155,6 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
         # social_indicator = data$SCORE,
         social_quantile = base::as.numeric(base::gsub("D", "", data$DECILE)),
         # n_quantile = 10, # Specify number of quantiles, e.g. 10
-        # approach = "quantile", # default (and currently only) approach,
         population = data$POP,
         age_group = data$AGE,
         ref_prop_pop = data$REF
@@ -183,4 +180,203 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 # ERROR OR WARNING ########
 ## ERROR #########
 
+testthat::test_that("error if non-numeric", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  testthat::expect_error(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = base::as.character(data$IMPACT), #
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        n_quantile = 10,
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "impact must contain numeric value(s).",
+    fixed = TRUE
+  )
+})
+
+
+testthat::test_that("error if non-numeric in numeric var", {
+
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  testthat::expect_error(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = base::as.character(data$IMPACT), # As character to force error
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        n_quantile = 10,
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "impact must contain numeric value(s).",
+    fixed = TRUE
+  )
+})
+
+testthat::test_that("error if non-numeric in integer var", {
+
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  testthat::expect_error(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = data$IMPACT,
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        n_quantile = as.character(10), # As character to force error
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "n_quantile must contain numeric value(s).",
+    fixed = TRUE
+  )
+
+})
+
+testthat::test_that("error if non-numeric in integer var", {
+
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  testthat::expect_error(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = data$IMPACT,
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        increasing_deprivation = 0.3, # Number instead of TRUE/FALSE to force error
+        n_quantile = 10,
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "increasing_deprivation must be TRUE or FALSE."
+  )
+
+})
+
+testthat::test_that("error if not integer var", {
+
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  testthat::expect_error(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = data$IMPACT,
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        n_quantile = 10.5, # Decimal to force error
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "n_quantile must contain whole numeric value(s).",
+    fixed = TRUE
+  )
+
+})
+
+testthat::test_that("error if age_group does not match in output_attribute", {
+
+  data <- base::readRDS(testthat::test_path("data", "social_data.rds"))
+
+  att_age <-
+    healthiar::attribute_health(
+      age_group = rep(c("below_40", "above_40"), each = 9037),
+      exp_central = c(data$PM25_MEAN, data$PM25_MEAN-0.1),
+      cutoff_central = 0,
+      rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
+      erf_shape = "log_linear",
+      rr_increment = 10,
+      bhd_central = c(data$MORTALITY_TOTAL,
+                      ifelse(data$MORTALITY_TOTAL-10<0, 0, data$MORTALITY_TOTAL-10)),
+      population = c(data$POPULATION, ifelse(data$POPULATION-10<0, 0, data$POPULATION-10)),
+      geo_id_disaggregated = rep(data$CS01012020, 2))
+
+  testthat::expect_error(
+    object =
+      healthiar::socialize(
+        age_group = c("40_minus", "40_plus"), # Different age_group to force error
+        ref_prop_pop = c(0.5, 0.5),
+        output_attribute = att_age,
+        geo_id_disaggregated = data$CS01012020,
+        social_indicator = data$score,
+        n_quantile = 10,
+        increasing_deprivation = TRUE),
+    regexp =  "age_group must be identical to the values in the column age_group in output_attribute."
+  )
+})
+
+testthat::test_that("error if not fraction", {
+
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data$REF[1] <- 1.2 # Value higher than 0 to force error
+
+  testthat::expect_error(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = data$IMPACT,
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        n_quantile = 10,
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "ref_prop_pop must have values between 0 and 1."
+  )
+
+})
+
+testthat::test_that("error if var lower than 0", {
+
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  testthat::expect_error(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = data$IMPACT,
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        n_quantile = -10, # Negative value to force error
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "The value(s) of n_quantile cannot be lower than 0.",
+    fixed = TRUE
+  )
+
+})
+
 ## WARNING #########
+testthat::test_that("warning if numeric but not integer (whole number)", {
+
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data$POP[1] <- 20.5 # Decimal to force error
+
+  testthat::expect_warning(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = data$IMPACT,
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        n_quantile = 10,
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "It is advisable to enter whole numeric values in population.",
+    fixed = TRUE
+  )
+
+})
