@@ -107,7 +107,7 @@
 #' @details
 #' \code{duration_central}, \code{duration_lower}, \code{duration_upper}
 #' @details
-#' \emph{Only applicable in assessments of YLD (years lived with disability).} The default of \code{duration_central} is 1 year, which is aligned with the prevalence-based approach , while a value above 1 year corresponds to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).
+#' \emph{Only applicable in assessments of YLD (years lived with disability).} If the value of \code{duration_central} is 1 year, it refers to the prevalence-based approach, while a value above 1 year to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).
 
 #' @details
 #' \strong{Equations (relative risk)}
