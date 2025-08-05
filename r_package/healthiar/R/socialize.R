@@ -126,19 +126,13 @@ socialize <- function(output_attribute = NULL,
 
   # All variables by type
   numeric_vars <- c("social_indicator", "pop_fraction", "ref_prop_pop", "exp", "impact")
-  integer_vars_otherwise_error <- c("social_quantile", "n_quantile")
-  integer_vars_otherwise_warning <- c("population", "bhd")
+  integer_vars <- c("social_quantile", "n_quantile")
   boolean_vars <- c("increasing_deprivation")
   fraction_vars <- c("ref_prop_pop", "pop_fraction")
 
   # Available variables by type
   available_numeric_vars <- base::intersect(numeric_vars, available_vars)
-  available_integer_vars_otherwise_error <-
-    base::intersect(integer_vars_otherwise_error, available_vars)
-  available_integer_vars_otherwise_warning <-
-    base::intersect(integer_vars_otherwise_warning, available_vars)
-  available_integer_vars <- c(available_integer_vars_otherwise_error,
-                              available_integer_vars_otherwise_warning )
+  available_integer_vars <- base::intersect(integer_vars, available_vars)
   available_numeric_and_integer_vars <- c(available_numeric_vars, available_integer_vars)
   ## social_indicator and impact might be lower than 0, therefore excluded here
   available_positive_vars <-
@@ -182,8 +176,8 @@ socialize <- function(output_attribute = NULL,
     }
   }
 
-  if(base::length(available_integer_vars_otherwise_error) > 0){
-    for (x in available_integer_vars_otherwise_error) {
+  if(base::length(available_integer_vars) > 0){
+    for (x in available_integer_vars) {
       error_if_not_whole_number(var_name = x)
     }
   }
@@ -274,33 +268,6 @@ socialize <- function(output_attribute = NULL,
       error_if_no_match(var_name = x)
     }
   }
-
-
-
-  ## warning_if_not_integer #####
-  warning_if_not_integer <- function(var_name){
-    var_value <- input_args_value [[var_name]]
-
-    if(base::any(base::is.numeric(var_value)) &
-       base::any(var_value != base::floor(var_value))){
-
-      base::warning(
-        base::paste0(
-          "It is advisable to enter whole numeric values in ",
-          var_name,
-          "."),
-        call. = FALSE)
-    }
-  }
-
-  if(base::length(available_integer_vars_otherwise_warning) > 0){
-    for (x in available_integer_vars) {
-      warning_if_not_integer(var_name = x)
-    }
-  }
-
-
-
 
 
 
