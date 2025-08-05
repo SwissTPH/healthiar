@@ -133,7 +133,6 @@ attribute_lifetable <-
     sex,
     bhd_central, bhd_lower = NULL, bhd_upper = NULL,
     population,
-
     health_outcome = NULL,
     min_age = NULL, max_age = NULL,
     approach_exposure = "single_year",
