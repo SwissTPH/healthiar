@@ -132,6 +132,7 @@ socialize <- function(output_attribute = NULL,
   # Available variables by type
   available_numeric_vars <- base::intersect(numeric_vars, available_vars)
   available_integer_vars <- base::intersect(integer_vars, available_vars)
+  available_numeric_and_integer_vars <- c(available_numeric_vars, available_integer_vars)
   available_boolean_vars <- base::intersect(boolean_vars, available_vars)
 
   ## error_if_not_numeric #####
@@ -148,9 +149,30 @@ socialize <- function(output_attribute = NULL,
     }
   }
 
-  if(base::length(available_numeric_vars) > 0){
+  if(base::length(available_numeric_and_integer_vars) > 0){
     for (x in available_numeric_vars) {
       error_if_not_numeric(var_name = x)
+    }
+  }
+
+  ## warning_if_not_integer #####
+  warning_if_not_integer <- function(var_name){
+    var_value <- input_args_value [[var_name]]
+
+    if(base::any(base::is.numeric(var_value)) &
+       base::any(var_value != base::floor(var_value))){
+
+      base::warning(
+        base::paste0(
+          var_name,
+          " must contain whole numeric value(s)."),
+        call. = FALSE)
+    }
+  }
+
+  if(base::length(available_integer_vars) > 0){
+    for (x in available_integer_vars) {
+      warning_if_not_integer(var_name = x)
     }
   }
 
