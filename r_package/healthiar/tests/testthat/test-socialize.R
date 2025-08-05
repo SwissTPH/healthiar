@@ -199,8 +199,8 @@ testthat::test_that("error if non-numeric", {
     regexp = "impact must contain numeric value(s).",
     fixed = TRUE
   )
-
 })
+
 
 testthat::test_that("error if non-numeric in numeric var", {
 
@@ -220,7 +220,6 @@ testthat::test_that("error if non-numeric in numeric var", {
     regexp = "impact must contain numeric value(s).",
     fixed = TRUE
   )
-
 })
 
 testthat::test_that("error if non-numeric in integer var", {
@@ -244,7 +243,26 @@ testthat::test_that("error if non-numeric in integer var", {
 
 })
 
+testthat::test_that("error if non-numeric in integer var", {
 
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  testthat::expect_error(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = data$IMPACT,
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        increasing_deprivation = 0.3, # Number instead of TRUE/FALSE to force error
+        n_quantile = 10,
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "increasing_deprivation must be TRUE or FALSE."
+  )
+
+})
 
 ## WARNING #########
 testthat::test_that("warning if numeric but not integer (whole number)", {
