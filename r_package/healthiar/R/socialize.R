@@ -21,7 +21,7 @@
 #' \code{Integer value} specifying the number of quantiles in the analysis.
 
 #' @param social_quantile
-#' \code{Numeric vector} showing the values from 1 to the number of quantiles assigned to each geographic unit. Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}
+#' \code{Integer vector} showing the values from 1 to the number of quantiles assigned to each geographic unit. Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}
 
 #' @param geo_id_disaggregated,
 #' \code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_disaggregated}) Argument must be entered for iterations. See Details for more info.
@@ -36,7 +36,7 @@
 #' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} containing the attributable health impacts by both age group and geo id.
 
 #' @param bhd
-#' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the baseline health data of the health outcome of interest per age group. See Details for more info.
+#' \emph{(only if \code{output_attribute} not specified)} \code{Integer vector} specifying the baseline health data of the health outcome of interest per age group. See Details for more info.
 
 #' @param exp
 #'\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the exposure level(s) to the environmental stressor.
