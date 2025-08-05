@@ -202,6 +202,31 @@ socialize <- function(output_attribute = NULL,
     }
   }
 
+  ## error_if_no_match #####
+  error_if_no_match <- function(var_name){
+    var_value_user <- base::unique(input_args_value[[var_name]])
+    var_value_attribute <-
+      base::unique(output_attribute$health_detailed$results_raw$age_group)
+
+    if(! base::identical(var_value_user, var_value_attribute)){
+
+      base::stop(
+        base::paste0(
+          var_name,
+          " must be identical to the values in the column ",
+          var_name,
+          " in output_attribute."),
+        call. = FALSE)
+
+    }
+  }
+
+  if(! base::is.null(output_attribute)){
+    for (x in c("age_group")) {
+      error_if_no_match(var_name = x)
+    }
+  }
+
   ## warning_if_not_integer #####
   warning_if_not_integer <- function(var_name){
     var_value <- input_args_value [[var_name]]

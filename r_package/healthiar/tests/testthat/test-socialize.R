@@ -285,6 +285,37 @@ testthat::test_that("error if not integer var", {
 
 })
 
+testthat::test_that("error if age_group does not match in output_attribute", {
+
+  data <- base::readRDS(testthat::test_path("data", "social_data.rds"))
+
+  att_age <-
+    healthiar::attribute_health(
+      age_group = rep(c("below_40", "above_40"), each = 9037),
+      exp_central = c(data$PM25_MEAN, data$PM25_MEAN-0.1),
+      cutoff_central = 0,
+      rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
+      erf_shape = "log_linear",
+      rr_increment = 10,
+      bhd_central = c(data$MORTALITY_TOTAL,
+                      ifelse(data$MORTALITY_TOTAL-10<0, 0, data$MORTALITY_TOTAL-10)),
+      population = c(data$POPULATION, ifelse(data$POPULATION-10<0, 0, data$POPULATION-10)),
+      geo_id_disaggregated = rep(data$CS01012020, 2))
+
+  testthat::expect_error(
+    object =
+      healthiar::socialize(
+        age_group = c("40_minus", "40_plus"), # Different age_group to force error
+        ref_prop_pop = c(0.5, 0.5),
+        output_attribute = att_age,
+        geo_id_disaggregated = data$CS01012020,
+        social_indicator = data$score,
+        n_quantile = 10,
+        increasing_deprivation = TRUE),
+    regexp =  "age_group must be identical to the values in the column age_group in output_attribute."
+  )
+})
+
 ## WARNING #########
 testthat::test_that("warning if numeric but not integer (whole number)", {
 
