@@ -269,7 +269,7 @@ attribute_health <-
     sex = "all",
     ## YLD (OPTIONAL)
     dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
-    duration_central = 1, duration_lower = NULL, duration_upper = NULL,
+    duration_central = NULL, duration_lower = NULL, duration_upper = NULL,
     # META (OPTIONAL)
     info = NULL,
     population = NULL){
