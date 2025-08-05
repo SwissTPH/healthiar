@@ -332,8 +332,7 @@ testthat::test_that("error if not fraction", {
         population = data$POP,
         age_group = data$AGE,
         ref_prop_pop = data$REF),
-    regexp = "ref_prop_pop must have values between 0 and 1.",
-    fixed = TRUE
+    regexp = "ref_prop_pop must have values between 0 and 1."
   )
 
 })
