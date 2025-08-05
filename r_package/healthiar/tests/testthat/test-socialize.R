@@ -264,10 +264,32 @@ testthat::test_that("error if non-numeric in integer var", {
 
 })
 
+testthat::test_that("error if not integer var", {
+
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  testthat::expect_error(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = data$IMPACT,
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        n_quantile = 10.5, # Decimal to force error
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "n_quantile must contain whole numeric value(s).",
+    fixed = TRUE
+  )
+
+})
+
 ## WARNING #########
 testthat::test_that("warning if numeric but not integer (whole number)", {
 
   data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data$POP[1] <- 20.5 # Decimal to force error
 
   testthat::expect_warning(
     ## healthiar FUNCTION CALL
@@ -276,11 +298,11 @@ testthat::test_that("warning if numeric but not integer (whole number)", {
         impact = data$IMPACT,
         geo_id_disaggregated = data$SECTOR,
         social_indicator = data$SCORE,
-        n_quantile = 10.1, # With decimal to force error
+        n_quantile = 10,
         population = data$POP,
         age_group = data$AGE,
         ref_prop_pop = data$REF),
-    regexp = "n_quantile must contain whole numeric value(s).",
+    regexp = "It is advisable to enter whole numeric values in population.",
     fixed = TRUE
   )
 

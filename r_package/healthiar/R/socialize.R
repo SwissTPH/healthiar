@@ -126,12 +126,18 @@ socialize <- function(output_attribute = NULL,
 
   # All variables by type
   numeric_vars <- c("social_indicator", "n_quantile", "pop_fraction", "ref_prop_pop", "exp", "impact")
-  integer_vars <- c("social_quantile", "n_quantile", "population", "bhd")
+  integer_vars_otherwise_error <- c("social_quantile", "n_quantile")
+  integer_vars_otherwise_warning <- c("population", "bhd")
   boolean_vars <- c("increasing_deprivation")
 
   # Available variables by type
   available_numeric_vars <- base::intersect(numeric_vars, available_vars)
-  available_integer_vars <- base::intersect(integer_vars, available_vars)
+  available_integer_vars_otherwise_error <-
+    base::intersect(integer_vars_otherwise_error, available_vars)
+  available_integer_vars_otherwise_warning <-
+    base::intersect(integer_vars_otherwise_warning, available_vars)
+  available_integer_vars <- c(available_integer_vars_otherwise_error,
+                              available_integer_vars_otherwise_warning )
   available_numeric_and_integer_vars <- c(available_numeric_vars, available_integer_vars)
   available_boolean_vars <- base::intersect(boolean_vars, available_vars)
 
@@ -155,8 +161,29 @@ socialize <- function(output_attribute = NULL,
     }
   }
 
+  ## error_if_not_whole number #####
+  error_if_not_whole_number <- function(var_name){
+    var_value <- input_args_value [[var_name]]
+
+    if(base::any(base::is.numeric(var_value)) &
+       base::any(var_value != base::floor(var_value))){
+
+      base::stop(
+        base::paste0(
+          var_name,
+          " must contain whole numeric value(s)."),
+        call. = FALSE)
+    }
+  }
+
+  if(base::length(available_integer_vars_otherwise_error) > 0){
+    for (x in available_integer_vars_otherwise_error) {
+      error_if_not_whole_number(var_name = x)
+    }
+  }
+
   ## error_if_not_boolean #####
-  error_if_not_numeric <- function(var_name){
+  error_if_not_boolean <- function(var_name){
     var_value <- input_args_value [[var_name]]
 
     if(base::any(!base::is.logical(var_value))){
@@ -171,7 +198,7 @@ socialize <- function(output_attribute = NULL,
 
   if(base::length(available_boolean_vars) > 0){
     for (x in available_boolean_vars) {
-      error_if_not_numeric(var_name = x)
+      error_if_not_boolean(var_name = x)
     }
   }
 
@@ -184,13 +211,14 @@ socialize <- function(output_attribute = NULL,
 
       base::warning(
         base::paste0(
+          "It is advisable to enter whole numeric values in ",
           var_name,
-          " must contain whole numeric value(s)."),
+          "."),
         call. = FALSE)
     }
   }
 
-  if(base::length(available_integer_vars) > 0){
+  if(base::length(available_integer_vars_otherwise_warning) > 0){
     for (x in available_integer_vars) {
       warning_if_not_integer(var_name = x)
     }
