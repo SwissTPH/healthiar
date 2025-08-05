@@ -125,7 +125,7 @@ socialize <- function(output_attribute = NULL,
     base::names()
 
   # All variables by type
-  numeric_vars <- c("social_indicator", "n_quantile", "pop_fraction", "ref_prop_pop", "exp", "impact")
+  numeric_vars <- c("social_indicator", "pop_fraction", "ref_prop_pop", "exp", "impact")
   integer_vars_otherwise_error <- c("social_quantile", "n_quantile")
   integer_vars_otherwise_warning <- c("population", "bhd")
   boolean_vars <- c("increasing_deprivation")
@@ -139,10 +139,14 @@ socialize <- function(output_attribute = NULL,
   available_integer_vars <- c(available_integer_vars_otherwise_error,
                               available_integer_vars_otherwise_warning )
   available_numeric_and_integer_vars <- c(available_numeric_vars, available_integer_vars)
+  ## social_indicator and impact might be lower than 0, therefore excluded here
+  available_positive_vars <-
+    base::setdiff(available_numeric_and_integer_vars, c("social_indicator", "impact"))
   available_boolean_vars <- base::intersect(boolean_vars, available_vars)
 
   ## error_if_not_numeric #####
   error_if_not_numeric <- function(var_name){
+
     var_value <- input_args_value [[var_name]]
 
     if(base::any(!base::is.numeric(var_value))){
@@ -156,7 +160,7 @@ socialize <- function(output_attribute = NULL,
   }
 
   if(base::length(available_numeric_and_integer_vars) > 0){
-    for (x in available_numeric_vars) {
+    for (x in available_numeric_and_integer_vars) {
       error_if_not_numeric(var_name = x)
     }
   }
@@ -179,6 +183,27 @@ socialize <- function(output_attribute = NULL,
   if(base::length(available_integer_vars_otherwise_error) > 0){
     for (x in available_integer_vars_otherwise_error) {
       error_if_not_whole_number(var_name = x)
+    }
+  }
+
+  ## error_if_lower_than_0 #####
+  error_if_lower_than_0 <- function(var_name){
+    var_value <- input_args_value [[var_name]]
+
+    if(base::any(var_value < 0)){
+
+      base::stop(
+        base::paste0(
+          "The value(s) of ",
+          var_name,
+          " cannot be lower than 0."),
+        call. = FALSE)
+    }
+  }
+
+  if(base::length(available_positive_vars) > 0){
+    for (x in available_positive_vars) {
+      error_if_lower_than_0(var_name = x)
     }
   }
 

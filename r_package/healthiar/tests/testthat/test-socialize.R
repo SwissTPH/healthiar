@@ -316,6 +316,27 @@ testthat::test_that("error if age_group does not match in output_attribute", {
   )
 })
 
+testthat::test_that("error if var lower than 0", {
+
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+  testthat::expect_error(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = data$IMPACT,
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        n_quantile = -10, # Negative value to force error
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "The value(s) of n_quantile cannot be lower than 0.",
+    fixed = TRUE
+  )
+
+})
+
 ## WARNING #########
 testthat::test_that("warning if numeric but not integer (whole number)", {
 
