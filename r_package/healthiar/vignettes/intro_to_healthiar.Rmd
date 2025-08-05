@@ -83,6 +83,16 @@ YLL/yll - years of life lost
 
 *Note*: most `healthiar` functions have examples that you can execute (with `healthiar` loaded) by running `example("function_name")`, e.g. `example("attribute_health")`
 
+*Note*: healthiar functions are easiest to use if your data is prepared in a tidy format:
+
+-   Each variable is a column; each column is a variable.
+
+-   Each observation is a row; each row is an observation.
+
+-   Each value is a cell; each cell is a single value.
+
+Source: Hadley Wickham (2014). Tidy Data. [Link](https://doi.org/10.18637/jss.v059.i10). For additional information see this [informal explanation of tidy data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) (by the author).
+
 ## Example: `attribute_health()` with relative risk
 
 Goal: attribute COPD cases to PM2.5 air pollution exposure
@@ -1020,6 +1030,7 @@ results_daly <- daly(
 ### Main results
 
 YLL, YLD & DALY
+
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
 results_daly$health_main |> 
   select(impact_yll_rounded, impact_yld_rounded, impact_rounded)
@@ -1089,7 +1100,6 @@ rm(results_multiplicative)
 *Note*: the `ggplot2` package must be installed in order to use this function!
 
 ### Function call
-
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
 mdi <- prepare_mdi(
