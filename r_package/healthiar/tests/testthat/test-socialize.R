@@ -316,6 +316,28 @@ testthat::test_that("error if age_group does not match in output_attribute", {
   )
 })
 
+testthat::test_that("error if not fraction", {
+
+  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data$REF[1] <- 1.2 # Value higher than 0 to force error
+
+  testthat::expect_error(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::socialize(
+        impact = data$IMPACT,
+        geo_id_disaggregated = data$SECTOR,
+        social_indicator = data$SCORE,
+        n_quantile = 10,
+        population = data$POP,
+        age_group = data$AGE,
+        ref_prop_pop = data$REF),
+    regexp = "ref_prop_pop must have values between 0 and 1.",
+    fixed = TRUE
+  )
+
+})
+
 testthat::test_that("error if var lower than 0", {
 
   data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))

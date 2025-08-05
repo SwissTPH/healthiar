@@ -129,6 +129,7 @@ socialize <- function(output_attribute = NULL,
   integer_vars_otherwise_error <- c("social_quantile", "n_quantile")
   integer_vars_otherwise_warning <- c("population", "bhd")
   boolean_vars <- c("increasing_deprivation")
+  fraction_vars <- c("ref_prop_pop", "pop_fraction")
 
   # Available variables by type
   available_numeric_vars <- base::intersect(numeric_vars, available_vars)
@@ -143,6 +144,7 @@ socialize <- function(output_attribute = NULL,
   available_positive_vars <-
     base::setdiff(available_numeric_and_integer_vars, c("social_indicator", "impact"))
   available_boolean_vars <- base::intersect(boolean_vars, available_vars)
+  available_fraction_vars <- base::intersect(fraction_vars, available_vars)
 
   ## error_if_not_numeric #####
   error_if_not_numeric <- function(var_name){
@@ -183,6 +185,27 @@ socialize <- function(output_attribute = NULL,
   if(base::length(available_integer_vars_otherwise_error) > 0){
     for (x in available_integer_vars_otherwise_error) {
       error_if_not_whole_number(var_name = x)
+    }
+  }
+
+  ## error_if_not_fraction #####
+  error_if_not_fraction <- function(var_name){
+
+    var_value <- input_args_value [[var_name]]
+
+    if(base::any(var_value < 0 | var_value > 1)){
+
+      base::stop(
+        base::paste0(
+          var_name,
+          " must have values between 0 and 1."),
+        call. = FALSE)
+    }
+  }
+
+  if(base::length(available_fraction_vars) > 0){
+    for (x in available_fraction_vars) {
+      error_if_not_fraction(var_name = x)
     }
   }
 
@@ -251,6 +274,8 @@ socialize <- function(output_attribute = NULL,
       error_if_no_match(var_name = x)
     }
   }
+
+
 
   ## warning_if_not_integer #####
   warning_if_not_integer <- function(var_name){
