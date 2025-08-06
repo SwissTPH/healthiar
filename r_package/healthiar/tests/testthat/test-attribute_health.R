@@ -303,9 +303,41 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
+testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = 20,
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "linear_log",
+        bhd_central = 10)$health_main$impact,
+    expected =
+      0.8599615 # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
+})
+
+testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = 20,
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_log",
+        bhd_central = 10)$health_main$impact,
+    expected =
+      0.8653773 # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
+})
+
 #### ITERATION ##################################################################
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|", {
 
   bestcost_pm_mortality_a <-
     healthiar::attribute_health(
@@ -341,7 +373,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|", {
 
   testthat::expect_equal(
     object =

@@ -1,15 +1,60 @@
 # QUANTITATIVE TEST ############################################################
-testthat::test_that("linear rescaling works", {
+testthat::test_that("linear rescaling correct", {
   testthat::expect_equal(
     object = healthiar::get_risk(
-      rr = 1.1,
-      erf_shape = "linear",
-      cutoff = 5,
       exp = 10,
-      rr_increment = 10
+      cutoff = 5,
+      rr = 1.1,
+      rr_increment = 10,
+      erf_shape = "linear"
     ),
     expected = 1.05
     )
+}
+)
+
+testthat::test_that("log-linear rescaling the same", {
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 20,
+      cutoff = 5,
+      rr = 1.08,
+      rr_increment = 10,
+      erf_shape = "log_linear"
+    ) |> base::round(x = _, digits = 4),
+    expected =
+      1.1224 # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
+}
+)
+
+testthat::test_that("linear-log rescaling the same", {
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 20,
+      cutoff = 5,
+      rr = 1.08,
+      rr_increment = 10,
+      erf_shape = "log_log"
+      ) |> base::round(x = _, digits = 4),
+    expected =
+      1.0941 # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
+}
+)
+
+testthat::test_that("log-log rescaling the same", {
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 20,
+      cutoff = 5,
+      rr = 1.08,
+      rr_increment = 10,
+      erf_shape = "log_log"
+    ) |> base::round(x = _, digits = 4),
+    expected =
+      1.0947 # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
 }
 )
 
