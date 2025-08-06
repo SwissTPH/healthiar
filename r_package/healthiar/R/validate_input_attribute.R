@@ -578,33 +578,43 @@ validate_input_attribute <-
     error_if_var_and_risk(var_name = "prop_pop_exp", risk = "absolute_risk")
 
     ### error_if_any_cutoff_value_is_greater_or_equal_than_any_exp_value ####
+    ### only for cases where the erf shape is log_log or lin_log
+# browser()
     error_if_any_cutoff_value_is_greater_or_equal_than_any_exp_value <- function(
     cutoff_vector,
     exp_vector
     ){
 
-      if ( base::any( base::outer( cutoff_vector, exp_vector, `>=` ) ) ) {
+      if (
+        ( base::any( base::outer( cutoff_vector, exp_vector, `>=` ) ) ) &
+        ( input_args$value$erf_shape == "log_log" | input_args$value$erf_shape == "linear_log" )
+        ) {
         stop(
-          "the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust.",
+          "if the exposure-response function shape is log-log or linear-log then the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust.",
         call. = FALSE
         )
       }
     }
 
     # Call function
-    error_if_any_cutoff_value_is_greater_or_equal_than_any_exp_value(
-      cutoff_vector = c(
-        input_args$value$cutoff_lower,
-        input_args$value$cutoff_central,
-        input_args$value$cutoff_upper
-        ),
-      exp_vector = c(
-        input_args$value$exp_lower,
-        input_args$value$exp_central,
-        input_args$value$exp_upper
+    ## only in rr cases with erf_shape specified (ar cases don't have a cutoff)
+    if ( input_args$value$approach_risk == "relative_risk" &
+         !base::is.null(input_args$value$erf_shape) &
+         !base::is.null(input_args$value$cutoff_central)
+         ) {
+      error_if_any_cutoff_value_is_greater_or_equal_than_any_exp_value(
+        cutoff_vector = c(
+            input_args$value$cutoff_lower,
+            input_args$value$cutoff_central,
+            input_args$value$cutoff_upper
+          ),
+        exp_vector = c(
+          input_args$value$exp_lower,
+          input_args$value$exp_central,
+          input_args$value$exp_upper
+        )
       )
-    )
-
+    }
 
 
     ### error_if_var_1_and_var_2 #####
