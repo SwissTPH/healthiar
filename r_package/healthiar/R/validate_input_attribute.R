@@ -577,6 +577,34 @@ validate_input_attribute <-
     error_if_var_and_risk(var_name = "pop_exp", risk = "relative_risk")
     error_if_var_and_risk(var_name = "prop_pop_exp", risk = "absolute_risk")
 
+    ### error_if_any_cutoff_value_is_greater_or_equal_than_any_exp_value ####
+    error_if_any_cutoff_value_is_greater_or_equal_than_any_exp_value <- function(
+    cutoff_vector,
+    exp_vector
+    ){
+
+      if ( base::any( base::outer( cutoff_vector, exp_vector, `>=` ) ) ) {
+        stop(
+          "the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust.",
+        call. = FALSE
+        )
+      }
+    }
+
+    # Call function
+    error_if_any_cutoff_value_is_greater_or_equal_than_any_exp_value(
+      cutoff_vector = c(
+        input_args$value$cutoff_lower,
+        input_args$value$cutoff_central,
+        input_args$value$cutoff_upper
+        ),
+      exp_vector = c(
+        input_args$value$exp_lower,
+        input_args$value$exp_central,
+        input_args$value$exp_upper
+      )
+    )
+
 
 
     ### error_if_var_1_and_var_2 #####

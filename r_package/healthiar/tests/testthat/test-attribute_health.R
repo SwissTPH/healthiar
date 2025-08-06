@@ -1237,6 +1237,66 @@ testthat::test_that("error if rr lower than 0", {
   )
 })
 
+testthat::test_that("error if cutoff higher than exposure", {
+
+  ## cutoff_central > exp_central
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 4, cutoff_central = 5,
+        exp_lower = NULL, cutoff_lower = NULL,
+        exp_upper = NULL, cutoff_upper = NULL,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"),
+    regexp = "the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust.")
+
+  ## cutoff_upper > exp_upper
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 3, cutoff_central = 1,
+        exp_lower = 2, cutoff_lower = 0,
+        exp_upper = 5, cutoff_upper = 7,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"),
+    regexp = "the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust.")
+
+  ## cutoff_lower == exp_lower
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 3,
+        exp_lower = 2,
+        exp_upper = 5,
+        cutoff_central = 2,
+        cutoff_lower = 0,
+        cutoff_upper = 4,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"),
+    regexp = "the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust.")
+
+})
+
+# error_if_any_cutoff_value_is_greater_or_equal_than_any_exp_value(
+#   cutoff_vector = c(
+#     3,
+#     NULL,
+#     NULL
+#   ),
+#   exp_vector = c(
+#     7,
+#     7,
+#     4
+#   )
+# )
+
+
 testthat::test_that("error if dw higher than 1", {
 
   testthat::expect_error(
@@ -1269,7 +1329,7 @@ testthat::test_that("error if not lower>central>upper", {
   )
 })
 
-testthat::test_that("error if onyl lower or upper", {
+testthat::test_that("error if only lower or upper", {
 
   testthat::expect_error(
     object =
