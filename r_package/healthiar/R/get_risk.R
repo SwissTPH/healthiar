@@ -106,13 +106,13 @@ get_risk <-
       rr_at_exp <-
         dplyr::case_when(
           erf_shape == "linear" ~
-            1 + ((rr - 1) * (exp - cutoff) / rr_increment),
+            1 + ( (rr - 1) * (exp - cutoff) / rr_increment ),
           erf_shape == "log_linear" ~
-            base::exp(base::log(rr) * (exp - cutoff) / rr_increment),
+            base::exp( base::log(rr) * (exp - cutoff) / rr_increment ),
           erf_shape == "linear_log" ~
-            1 + ((rr - 1) * (base::log(exp) - base::log(cutoff)) / base::log(rr_increment)),
+            1 + ( (rr - 1) * ( base::log(exp - cutoff) ) / base::log(rr_increment) ),
           erf_shape == "log_log" ~
-            base::exp(base::log(rr) * (base::log(exp) - base::log(cutoff)) / base::log(rr_increment))
+            base::exp( base::log(rr) * ( base::log(exp - cutoff) ) / base::log(rr_increment) )
       )
     }
 
