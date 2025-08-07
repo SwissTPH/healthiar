@@ -270,7 +270,7 @@ get_risk_and_pop_fraction <-
     ## then reduce the number of rows to keep the same number as in rr
     if(base::unique(input_table$exposure_type) == "exposure_distribution"){
 
-      pop_fraction_by_exp_category <- input_with_risk_and_pop_fraction
+      pop_fraction_by_exposure_category <- input_with_risk_and_pop_fraction
 
       input_with_risk_and_pop_fraction <-
         collapse_df_by_columns(df = input_with_risk_and_pop_fraction,
@@ -289,7 +289,7 @@ get_risk_and_pop_fraction <-
                                sep = ", ")|>
         #Add the paf or pif by exposure category as nested tibble
         dplyr::mutate(
-          pop_fraction_by_exp_category = list(pop_fraction_by_exp_category))
+          pop_fraction_by_exposure_category = list(pop_fraction_by_exposure_category))
     }
 
     return(input_with_risk_and_pop_fraction)
