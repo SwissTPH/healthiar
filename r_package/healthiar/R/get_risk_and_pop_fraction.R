@@ -89,16 +89,16 @@ get_risk_and_pop_fraction <-
       ## If PIF
     } else {
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
-        dplyr::mutate(rr_at_exp_1 =
+        dplyr::mutate(rr_at_exp_scen_1 =
                         healthiar::get_risk(rr = rr,
-                                           exp = exp_1,
+                                           exp = exp_scen_1,
                                            cutoff = cutoff,
                                            rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq),
-                      rr_at_exp_2 =
+                      rr_at_exp_scen_2 =
                         healthiar::get_risk(rr = rr,
-                                           exp = exp_2,
+                                           exp = exp_scen_2,
                                            cutoff = cutoff,
                                            rr_increment = rr_increment,
                                            erf_shape = erf_shape,
@@ -150,10 +150,10 @@ get_risk_and_pop_fraction <-
                 "erf_eq_ci")))) |>
             ## prod() multiplies all elements in a vector
             dplyr::mutate(
-              rr_at_exp_1_before_multiplying = rr_at_exp_1,
-              rr_at_exp_2_before_multiplying = rr_at_exp_2,
-              rr_at_exp_1 = base::prod(rr_at_exp_1),
-              rr_at_exp_2 = base::prod(rr_at_exp_2))
+              rr_at_exp_scen_1_before_multiplying = rr_at_exp_scen_1,
+              rr_at_exp_scen_2_before_multiplying = rr_at_exp_scen_2,
+              rr_at_exp_scen_1 = base::prod(rr_at_exp_scen_1),
+              rr_at_exp_scen_2 = base::prod(rr_at_exp_scen_2))
           }
 
         ## Data wrangling for multiple exposures
@@ -214,10 +214,10 @@ get_risk_and_pop_fraction <-
         input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
           pop_fraction =
-            healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp_1,
-                                       rr_at_exp_2 = rr_at_exp_2,
-                                       prop_pop_exp_1 = prop_pop_exp_1,
-                                       prop_pop_exp_2 = prop_pop_exp_2)) }
+            healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp_scen_1,
+                                       rr_at_exp_2 = rr_at_exp_scen_2,
+                                       prop_pop_exp_1 = prop_pop_exp_scen_1,
+                                       prop_pop_exp_2 = prop_pop_exp_scen_2)) }
 
     ## Ungroup
     input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>

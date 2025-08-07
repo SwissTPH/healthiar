@@ -279,7 +279,7 @@ results_noise_ha$health_detailed$results_raw
 
 ```{r echo=FALSE, include=TRUE, eval=TRUE}
 results_noise_ha[["health_detailed"]][["results_raw"]] |> 
-  select(exposure_dimension, exp, pop_exp, impact) |> 
+  select(exposure_category, exp, pop_exp, impact) |> 
   knitr::kable()
 ```
 
@@ -300,7 +300,7 @@ results_noise_ha$health_main
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
 results_noise_ha[["health_main"]] |> 
-  dplyr::select(exposure_dimension, impact) |> 
+  dplyr::select(exposure_category, impact) |> 
   knitr::kable()
 ```
 
@@ -560,8 +560,8 @@ scenario_B <- attribute_mod(
 
 results_comparison <- compare(
   approach_comparison = "delta", # or "pif" (population impact fraction)
-  output_attribute_1 = scenario_A,
-  output_attribute_2 = scenario_B
+  output_attribute_scen_1 = scenario_A,
+  output_attribute_scen_2 = scenario_B
 )
 ```
 
@@ -577,7 +577,7 @@ results_comparison$health_main
 results_comparison[["health_main"]] |> 
   dplyr::select(
     impact, impact_rounded,
-    impact_1, impact_2,
+    impact_scen_1, impact_scen_2,
     bhd,
     dplyr::starts_with("exp_"),
     -dplyr::starts_with("exp_ci"), # remove col "exp_ci"
@@ -592,9 +592,9 @@ The `compare()` results contain two additional outputs in addition to those we h
 
 -   `health_detailed`
 
-    -   `scenario_1` contains results of scenario 1 (scenario A in our case)
+    -   `scen_1` contains results of scenario 1 (scenario A in our case)
 
-    -   `scenario_2` contains results of scenario 2 (scenario B in our case)
+    -   `scen_2` contains results of scenario 2 (scenario B in our case)
 
 ```{r, echo=FALSE, eval=TRUE, include=FALSE}
 rm(results_comparison, scenario_A, scenario_B)

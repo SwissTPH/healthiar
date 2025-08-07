@@ -5,7 +5,7 @@
 
 testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
-  output_attribute_1 =
+  output_attribute_scen_1 =
     healthiar::attribute_health(
       exp_central = 8.85,
       cutoff_central = 5,
@@ -16,7 +16,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
       rr_increment = 10,
       info = "PM2.5_mortality_2010")
 
-  output_attribute_2 =
+  output_attribute_scen_2 =
     healthiar::attribute_health(
       exp_central = 6,
       cutoff_central = 5,
@@ -30,8 +30,8 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = output_attribute_1,
-        output_attribute_2 = output_attribute_2,
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
         approach_comparison = "delta"
       )$health_main$impact_rounded,
     expected =
@@ -41,7 +41,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
 
 testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
-  output_attribute_1 <-
+  output_attribute_scen_1 <-
     healthiar::attribute_health(
       exp_central = 8.85,
       cutoff_central = 5,
@@ -52,17 +52,17 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
       rr_increment = 10,
       info = "PM2.5_mortality_2010")
 
-  output_attribute_2 <-
+  output_attribute_scen_2 <-
     healthiar::attribute_mod(
-      output_attribute_1 = output_attribute_1,
+      output_attribute_1 = output_attribute_scen_1,
       ## What is different in scenario 2 compared to scenario 1
       exp_central = 6)
 
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = output_attribute_1,
-        output_attribute_2 = output_attribute_2,
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
         approach_comparison = "delta"
       )$health_main$impact_rounded,
     expected =
@@ -72,7 +72,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
 
 testthat::test_that("zero difference when scenarios are identical |meta_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
-  output_attribute_1 =
+  output_attribute_scen_1 =
     healthiar::attribute_health(
       exp_central = 8.85,
       cutoff_central = 5,
@@ -83,7 +83,7 @@ testthat::test_that("zero difference when scenarios are identical |meta_compare|
       rr_increment = 10,
       info = "PM2.5_mortality_2010")
 
-  output_attribute_2 =
+  output_attribute_scen_2 =
     healthiar::attribute_health(
       exp_central = 8.85,
       cutoff_central = 5,
@@ -97,8 +97,8 @@ testthat::test_that("zero difference when scenarios are identical |meta_compare|
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = output_attribute_1,
-        output_attribute_2 = output_attribute_2,
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
         approach_comparison = "delta"
       )$health_main$impact_rounded,
     expected =
@@ -132,8 +132,8 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_rr_geo,
-        output_attribute_2 = scen_2_singlebhd_rr_geo
+        output_attribute_scen_1 = scen_1_singlebhd_rr_geo,
+        output_attribute_scen_2 = scen_2_singlebhd_rr_geo
       )$health_main$impact_rounded,
     expected =
       c(1100, 582, 1603) # Results on 16 May 2024; no comparison study
@@ -171,8 +171,8 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
     object =
       comparison_singlebhd_rr_delta_geo <-
       healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_rr_geo_large,
-        output_attribute_2 = scen_2_singlebhd_rr_geo_large
+        output_attribute_scen_1 = scen_1_singlebhd_rr_geo_large,
+        output_attribute_scen_2 = scen_2_singlebhd_rr_geo_large
         )$health_main$impact_rounded,
     expected =
       c(4166, 1656, 6330) # Result on 19 December 2024; no comparison study
@@ -204,8 +204,8 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_yld,
-        output_attribute_2 = scen_2_singlebhd_yld
+        output_attribute_scen_1 = scen_1_singlebhd_yld,
+        output_attribute_scen_2 = scen_2_singlebhd_yld
         )$health_main$impact_rounded,
     expected =
       c(387, 205, 564) # Result on 16 May 2024; no comparison study
@@ -239,8 +239,8 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_yld_geo,
-        output_attribute_2 = scen_2_singlebhd_yld_geo
+        output_attribute_scen_1 = scen_1_singlebhd_yld_geo,
+        output_attribute_scen_2 = scen_2_singlebhd_yld_geo
         )$health_main$impact_rounded,
     expected =
       c(591, 313, 861) # Result on 26 June 2024; no comparison study
@@ -276,8 +276,8 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_yld_geo,
-        output_attribute_2 = scen_2_singlebhd_yld_geo
+        output_attribute_scen_1 = scen_1_singlebhd_yld_geo,
+        output_attribute_scen_2 = scen_2_singlebhd_yld_geo
         )$health_main$impact_rounded,
     expected =
       c(591, 313, 861) # Result on 26 June 2024; no comparison study
@@ -288,7 +288,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
 
 testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
-  output_attribute_1 =
+  output_attribute_scen_1 =
     healthiar::attribute_health(
       exp_central = 8.85,
       cutoff_central = 5,
@@ -299,7 +299,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
       rr_increment = 10,
       info = "PM2.5_mortality_2010")
 
-  output_attribute_2 =
+  output_attribute_scen_2 =
     healthiar::attribute_health(
       exp_central = 6,
       cutoff_central = 5,
@@ -313,8 +313,8 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = output_attribute_1,
-        output_attribute_2 = output_attribute_2,
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
         approach_comparison = "pif"
       )$health_main$impact_rounded,
     expected =
@@ -345,8 +345,8 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_yld,
-        output_attribute_2 = scen_2_singlebhd_yld,
+        output_attribute_scen_1 = scen_1_singlebhd_yld,
+        output_attribute_scen_2 = scen_2_singlebhd_yld,
         approach_comparison = "pif"
         )$health_main$impact_rounded,
     expected =
@@ -380,8 +380,8 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_rr_geo,
-        output_attribute_2 = scen_2_singlebhd_rr_geo,
+        output_attribute_scen_1 = scen_1_singlebhd_rr_geo,
+        output_attribute_scen_2 = scen_2_singlebhd_rr_geo,
         approach_comparison = "pif"
         )$health_main$impact_rounded,
     expected =
@@ -416,8 +416,8 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_yld_geo,
-        output_attribute_2 = scen_2_singlebhd_yld_geo,
+        output_attribute_scen_1 = scen_1_singlebhd_yld_geo,
+        output_attribute_scen_2 = scen_2_singlebhd_yld_geo,
         approach_comparison = "pif"
         )$health_main$impact_rounded,
     expected =
@@ -451,8 +451,8 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
     object =
       healthiar::compare(
         approach_comparison = "pif",
-        output_attribute_1 = scen_1_singlebhd_yld,
-        output_attribute_2 = scen_2_singlebhd_yld
+        output_attribute_scen_1 = scen_1_singlebhd_yld,
+        output_attribute_scen_2 = scen_2_singlebhd_yld
         )$health_main$impact_rounded,
     expected =
       c(391,206,573) # Result on 16 May 2024; no comparison study
@@ -489,8 +489,8 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
     object =
       healthiar::compare(
         approach_comparison = "pif",
-        output_attribute_1 = scen_1_singlebhd_yld_geo,
-        output_attribute_2 = scen_2_singlebhd_yld_geo
+        output_attribute_scen_1 = scen_1_singlebhd_yld_geo,
+        output_attribute_scen_2 = scen_2_singlebhd_yld_geo
         )$health_main$impact_rounded,
     expected =
       c(599, 315, 878) # Result on 20 June 2024; no comparison study
@@ -560,8 +560,8 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_di
     object =
       comparison_singlebhd_ar_delta <-
       healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_yld,
-        output_attribute_2 = scen_2_singlebhd_yld
+        output_attribute_scen_1 = scen_1_singlebhd_yld,
+        output_attribute_scen_2 = scen_2_singlebhd_yld
         )$health_main$impact_rounded,
     expected =
       c(387, 205, 564) # Result on 16 May 2024; no comparison study
@@ -600,8 +600,8 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|i
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_ar_geo,
-        output_attribute_2 = scen_2_singlebhd_ar_geo
+        output_attribute_scen_1 = scen_1_singlebhd_ar_geo,
+        output_attribute_scen_2 = scen_2_singlebhd_ar_geo
         )$health_main$impact_rounded,
     expected =
       c(115869) # Results on 19 June 2024; no comparison study
@@ -649,8 +649,8 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_yll_lifetable_test,
-        output_attribute_2 = scen_2_yll_lifetable_test
+        output_attribute_scen_1 = scen_1_yll_lifetable_test,
+        output_attribute_scen_2 = scen_2_yll_lifetable_test
         )$health_main$impact_rounded,
     expected =
       c(21301, 11159, 31358) # Result on 7 July 2025; no comparison study to
@@ -700,8 +700,8 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_yll_lifetable_geo,
-        output_attribute_2 = scen_2_yll_lifetable_geo
+        output_attribute_scen_1 = scen_1_yll_lifetable_geo,
+        output_attribute_scen_2 = scen_2_yll_lifetable_geo
         )$health_main$impact_rounded,
     expected =
       c(32517, 17033, 47873) # Result on 7 July 2025; no comparison study to
@@ -745,8 +745,8 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_yll_lifetable,
-        output_attribute_2 = scen_2_yll_lifetable,
+        output_attribute_scen_1 = scen_1_yll_lifetable,
+        output_attribute_scen_2 = scen_2_yll_lifetable,
         approach_comparison = "pif"
         )$health_main$impact_rounded,
     expected =
@@ -797,8 +797,8 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_yll_lifetable_geo,
-        output_attribute_2 = scen_2_yll_lifetable_geo,
+        output_attribute_scen_1 = scen_1_yll_lifetable_geo,
+        output_attribute_scen_2 = scen_2_yll_lifetable_geo,
         approach_comparison = "pif"
         )$health_main$impact_rounded,
     expected =
@@ -845,8 +845,8 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_deaths_lifetable,
-        output_attribute_2 = scen_2_deaths_lifetable
+        output_attribute_scen_1 = scen_1_deaths_lifetable,
+        output_attribute_scen_2 = scen_2_deaths_lifetable
         )$health_main$impact_rounded,
     expected =
       c(1914, 1012, 2793) # Result on 7 July 2025; no comparison study to
@@ -896,8 +896,8 @@ testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_singl
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_deaths_lifetable_geo,
-        output_attribute_2 = scen_2_deaths_lifetable_geo
+        output_attribute_scen_1 = scen_1_deaths_lifetable_geo,
+        output_attribute_scen_2 = scen_2_deaths_lifetable_geo
         )$health_main$impact_rounded,
     expected =
       c(2924, 1545, 4267) # Result on 7 July 2025; no comparison study to
@@ -941,8 +941,8 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_deaths_lifetable,
-        output_attribute_2 = scen_2_deaths_lifetable,
+        output_attribute_scen_1 = scen_1_deaths_lifetable,
+        output_attribute_scen_2 = scen_2_deaths_lifetable,
         approach_comparison = "pif"
         )$health_main$impact_rounded,
     expected =
@@ -993,8 +993,8 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_deaths_lifetable_geo,
-        output_attribute_2 = scen_2_deaths_lifetable_geo,
+        output_attribute_scen_1 = scen_1_deaths_lifetable_geo,
+        output_attribute_scen_2 = scen_2_deaths_lifetable_geo,
         approach_comparison = "pif"
         )$health_main$impact_rounded,
     expected =
@@ -1007,7 +1007,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
   data <- readRDS(testthat::test_path("data/rr_data.RDS"))
   data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
 
-  output_attribute_1 =
+  output_attribute_scen_1 =
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = 6.167882,
@@ -1015,7 +1015,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = 1000)
 
-  output_attribute_2 =
+  output_attribute_scen_2 =
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = 3.167488,
@@ -1026,8 +1026,8 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = output_attribute_1,
-        output_attribute_2 = output_attribute_2,
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
         approach_comparison = "pif"
       )$health_main$impact_rounded,
     expected = 231
@@ -1039,7 +1039,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
   data <- readRDS(testthat::test_path("data/rr_data.RDS"))
   data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
 
-  output_attribute_1 =
+  output_attribute_scen_1 =
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = c(23.68696, 0),
@@ -1048,7 +1048,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = 1000)
 
-  output_attribute_2 =
+  output_attribute_scen_2 =
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = c(17.19273, 0),
@@ -1060,8 +1060,8 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = output_attribute_1,
-        output_attribute_2 = output_attribute_2,
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
         approach_comparison = "pif"
       )$health_main$impact_rounded,
     expected = 226
@@ -1073,7 +1073,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
   data <- readRDS(testthat::test_path("data/rr_data.RDS"))
   data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
 
-  output_attribute_1 =
+  output_attribute_scen_1 =
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = c(6.848995, 6.565633, 6.167882),
@@ -1082,7 +1082,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
       bhd_central = c(650, 1200, 1000),
       geo_id_disaggregated = c('BR', 'FL', 'WA'))
 
-  output_attribute_2 =
+  output_attribute_scen_2 =
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = c(3.125626, 2.948348, 3.167488),
@@ -1094,8 +1094,8 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = output_attribute_1,
-        output_attribute_2 = output_attribute_2,
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
         approach_comparison = "pif"
       )$health_main$impact_rounded,
     expected = c(177, 325, 231)
@@ -1107,7 +1107,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
   data <- readRDS(testthat::test_path("data/rr_data.RDS"))
   data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
 
-  output_attribute_1 =
+  output_attribute_scen_1 =
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = c(c(0, 26.79813), c(0, 25.89477), c(0, 23.68696)),
@@ -1117,7 +1117,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
       bhd_central = rep(c(650, 1200, 1000), each = 2),
       geo_id_disaggregated = rep(c('BR', 'FL', 'WA'), each = 2))
 
-  output_attribute_2 =
+  output_attribute_scen_2 =
     healthiar::attribute_health(
       approach_risk = "relative_risk",
       exp_central = c(c(0, 19.22196), c(0, 17.91513), c(0, 17.19273)),
@@ -1130,8 +1130,8 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
   testthat::expect_equal(
     object =
       healthiar::compare(
-        output_attribute_1 = output_attribute_1,
-        output_attribute_2 = output_attribute_2,
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
         approach_comparison = "pif"
       )$health_main$impact_rounded,
     expected = c(173, 317, 226)
@@ -1142,7 +1142,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
 ## ERROR #########
 testthat::test_that("error if not the same arguments", {
 
-  output_attribute_1 =
+  output_attribute_scen_1 =
     healthiar::attribute_health(
       exp_central = 8.85,
       exp_lower = 7.75,
@@ -1155,7 +1155,7 @@ testthat::test_that("error if not the same arguments", {
       rr_increment = 10,
       info = "PM2.5_mortality_2010")
 
-  output_attribute_2 =
+  output_attribute_scen_2 =
     healthiar::attribute_health(
       exp_central = 6,
       cutoff_central = 5,
@@ -1169,15 +1169,15 @@ testthat::test_that("error if not the same arguments", {
   testthat::expect_error(
     object =
       healthiar::compare(
-        output_attribute_1 = output_attribute_1,
-        output_attribute_2 = output_attribute_2,
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
         approach_comparison = "delta"),
     regexp = "The two scenarios must use the same arguments.")
 })
 
 testthat::test_that("error if common arguments with different value", {
 
-  output_attribute_1 =
+  output_attribute_scen_1 =
     healthiar::attribute_health(
       exp_central = 8.85,
       cutoff_central = 5,
@@ -1188,7 +1188,7 @@ testthat::test_that("error if common arguments with different value", {
       rr_increment = 10,
       info = "PM2.5_mortality_2010")
 
-  output_attribute_2 =
+  output_attribute_scen_2 =
     healthiar::attribute_health(
       exp_central = 6,
       cutoff_central = 5,
@@ -1202,8 +1202,8 @@ testthat::test_that("error if common arguments with different value", {
   testthat::expect_error(
     object =
       healthiar::compare(
-        output_attribute_1 = output_attribute_1,
-        output_attribute_2 = output_attribute_2,
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
         approach_comparison = "delta"),
     regexp = "rr_central must be identical in both scenarios.")
 })
@@ -1211,7 +1211,7 @@ testthat::test_that("error if common arguments with different value", {
 
 testthat::test_that("error pif and different bhd", {
 
-  output_attribute_1 =
+  output_attribute_scen_1 =
     healthiar::attribute_health(
       exp_central = 8.85,
       cutoff_central = 5,
@@ -1222,7 +1222,7 @@ testthat::test_that("error pif and different bhd", {
       rr_increment = 10,
       info = "PM2.5_mortality_2010")
 
-  output_attribute_2 =
+  output_attribute_scen_2 =
     healthiar::attribute_health(
       exp_central = 6,
       cutoff_central = 5,
@@ -1236,8 +1236,8 @@ testthat::test_that("error pif and different bhd", {
   testthat::expect_error(
     object =
       healthiar::compare(
-        output_attribute_1 = output_attribute_1,
-        output_attribute_2 = output_attribute_2,
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
         approach_comparison = "pif"),
     regexp = "For the PIF approach, bhd must be identical in both scenarios.")
 })
@@ -1264,8 +1264,8 @@ testthat::test_that("error pif and absolute risk", {
   testthat::expect_error(
     object =
       healthiar::compare(
-        output_attribute_1 = scen_1_singlebhd_ar,
-        output_attribute_2 = scen_2_singlebhd_ar,
+        output_attribute_scen_1 = scen_1_singlebhd_ar,
+        output_attribute_scen_2 = scen_2_singlebhd_ar,
         approach_comparison = "pif"),
     regexp = "For the PIF approach, the absolute risk approach cannot be used.")
 })
