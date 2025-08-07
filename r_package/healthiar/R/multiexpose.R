@@ -7,7 +7,7 @@
 # ARGUMENTS ####################################################################
 #' @param output_attribute_1,output_attribute_2  Output of attribute() for exposure 1 and 2, respectively. Baseline health data and population must be identical in outputs 1 and 2.
 #' @param exp_name_1,exp_name_2 \code{String} referring to the name of the environmental exposures 1 and 2
-#' @param approach \code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined".
+#' @param approach_multiexposure \code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined".
 
 # VALUE ########################################################################
 #' @inherit attribute_master return
@@ -38,7 +38,7 @@
 #'   output_attribute_2 = output_attribute_2,
 #'   exp_name_1 = "pm2.5",
 #'   exp_name_2 = "no2",
-#'   approach = "multiplicative"
+#'   approach_multiexposure = "multiplicative"
 #' )
 #' results$health_main$impact
 
@@ -54,7 +54,7 @@ multiexpose <-
     output_attribute_2,
     exp_name_1,
     exp_name_2,
-    approach = "additive"){
+    approach_multiexposure = "additive"){
 
     # Capture all arguments and values
     input_args <-
@@ -83,7 +83,7 @@ multiexpose <-
         input_table_2_for_binding) |>
     # Add the approach
       dplyr::mutate(
-        approach_multiexposure = approach)
+        approach_multiexposure = approach_multiexposure)
 
       # Calculate the health impacts for each case (uncertainty, category, geo area...)
       results_raw <-
