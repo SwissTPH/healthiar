@@ -1172,7 +1172,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         dw_central = 0.02,
         dw_lower = 0.01,
         dw_upper = 0.12,
-        duration = 1,
+        duration_central = 1,
         info = data.frame(pollutant = "road_noise",
                           outcome = "highly_annoyance")
       )$health_detailed$results_agg_exp_cat$impact_rounded,
