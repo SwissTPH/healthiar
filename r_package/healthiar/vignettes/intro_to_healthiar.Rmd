@@ -549,7 +549,7 @@ Alternatively, the function `attribute_mod()` can be used to modify an existing 
 
 ```{r}
 scenario_B <- attribute_mod(
-  output_attribute_1 = scenario_A, 
+  output_attribute = scenario_A, 
   exp_central = 6
 )
 ```
@@ -1061,7 +1061,7 @@ results_pm_copd <- attribute_health(
 ) 
 
 results_no2_copd <- attribute_mod(
-  output_attribute_1 = results_pm_copd,
+  output_attribute = results_pm_copd,
   exp_central = 10.9,
   rr_central = 1.031
 )

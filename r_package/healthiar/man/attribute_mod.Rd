@@ -5,7 +5,7 @@
 \title{Create a scenario 2 by modifying an existing scenario 1 and determine attributable health impacts in it}
 \usage{
 attribute_mod(
-  output_attribute_1,
+  output_attribute,
   erf_shape = NULL,
   rr_central = NULL,
   rr_lower = NULL,
@@ -45,7 +45,7 @@ attribute_mod(
 )
 }
 \arguments{
-\item{output_attribute_1}{\code{List} containing the output of the function attribute() for scenario 1.}
+\item{output_attribute}{\code{List} containing the output of the function attribute() for scenario 1.}
 
 \item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
@@ -125,7 +125,7 @@ scenario_A$health_main$impact # Attributable impact in scenario A
 
 ## Modify scenario (adjust exposure value)
 scenario_B <- attribute_mod(
-  output_attribute_1 = scenario_A,
+  output_attribute = scenario_A,
   exp_central = 6
 )
 
