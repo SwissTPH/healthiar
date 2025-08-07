@@ -287,7 +287,7 @@ output_attribute <- attribute_health(
   geo_id_disaggregated = c(1:nrow(info)), # a vector of (random) unique IDs must be entered
   info = info
 )
-output_stratified <- output_attribute$health_detailed$results_agg_cat_exp |>
+output_stratified <- output_attribute$health_detailed$results_summed_across_cat_exp |>
   dplyr::group_by(info_1) |>
   dplyr::summarize(mean_impact = mean(impact)) |>
   print()
