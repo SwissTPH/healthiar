@@ -882,33 +882,33 @@ results_pm_yll$health_detailed$results_raw$yll_nest$female_a_central_central_cen
 Baseline scenario refers to the scenario with exposure (i.e. the scenario specified in the assessment)
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$results_raw$pop_baseline_scenario_nest$female_a_central_central_central_central
+results_pm_yll$health_detailed$results_raw$pop_exposed_scenario_nest$female_a_central_central_central_central
 ```
 
 ```{r echo=FALSE}
-results_pm_yll$health_detailed$results_raw$pop_baseline_scenario_nest$female_a_central_central_central_central |>    
+results_pm_yll$health_detailed$results_raw$pop_exposed_scenario_nest$female_a_central_central_central_central |>    
   dplyr::select(age_start, population_2019, population_2020, population_2021, population_2022) |>    
   dplyr::slice(
-    ( nrow(results_pm_yll$health_detailed$results_raw$pop_baseline_scenario_nest$female_a_central_central_central_central ) -8 ) : 
-      nrow(results_pm_yll$health_detailed$results_raw$pop_baseline_scenario_nest$female_a_central_central_central_central )
+    ( nrow(results_pm_yll$health_detailed$results_raw$pop_exposed_scenario_nest$female_a_central_central_central_central ) -8 ) : 
+      nrow(results_pm_yll$health_detailed$results_raw$pop_exposed_scenario_nest$female_a_central_central_central_central )
     ) |>    
   knitr::kable()
 ```
 
-#### Population (impacted scenario)
+#### Population (unexposed scenario)
 
 Impacted scenario refers to the scenario without exposure
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$results_raw$pop_impacted_scenario_nest$female_a_central_central_central_central
+results_pm_yll$health_detailed$results_raw$pop_unexposed_scenario_nest$female_a_central_central_central_central
 ```
 
 ```{r echo=FALSE}
-results_pm_yll$health_detailed$results_raw$pop_impacted_scenario_nest$female_a_central_central_central_central |>    
+results_pm_yll$health_detailed$results_raw$pop_unexposed_scenario_nest$female_a_central_central_central_central |>    
   dplyr::select(age_start, population_2019, population_2020, population_2021, population_2022) |>    
   dplyr::slice(
-    ( nrow(results_pm_yll$health_detailed$results_raw$pop_impacted_scenario_nest$female_a_central_central_central_central ) -8 ) : 
-      nrow(results_pm_yll$health_detailed$results_raw$pop_impacted_scenario_nest$female_a_central_central_central_central )
+    ( nrow(results_pm_yll$health_detailed$results_raw$pop_unexposed_scenario_nest$female_a_central_central_central_central ) -8 ) : 
+      nrow(results_pm_yll$health_detailed$results_raw$pop_unexposed_scenario_nest$female_a_central_central_central_central )
     ) |>    
   knitr::kable()
 ```
