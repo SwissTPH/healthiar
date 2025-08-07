@@ -551,7 +551,7 @@ get_impact_with_lifetable <-
     #     }else{
     #       pop_impact <- input_backup |>
     #       # attribute_... cases
-    #       dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp_1", "prop_pop_exp_1", "rr", "erf_ci", "sex", "exposure_name")) # compare_... cases
+    #       dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp_scen_1", "prop_pop_exp_scen_1", "rr", "erf_ci", "sex", "exposure_name")) # compare_... cases
     #     }
     #
     # }

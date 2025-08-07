@@ -246,8 +246,8 @@ testthat::test_that("results correct |pathway_uncertainty_compare|exp_dist|erf_a
 
   rr_comparison <-
     healthiar::compare(
-      output_attribute_1 = rr_scenario_1,
-      output_attribute_2 = rr_scenario_2,
+      output_attribute_scen_1 = rr_scenario_1,
+      output_attribute_scen_2 = rr_scenario_2,
       approach_comparison = "delta")
 
   testthat::expect_equal(
@@ -288,8 +288,8 @@ testthat::test_that("summary uncertainty comparison iteration", {
 
   comparison_iteration <-
     healthiar::compare(
-      output_attribute_1 = scen_1_singlebhd_rr_geo,
-      output_attribute_2 = scen_2_singlebhd_rr_geo)
+      output_attribute_scen_1 = scen_1_singlebhd_rr_geo,
+      output_attribute_scen_2 = scen_2_singlebhd_rr_geo)
 
   testthat::expect_equal(
     object =

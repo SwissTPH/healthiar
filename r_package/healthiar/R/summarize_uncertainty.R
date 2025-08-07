@@ -109,16 +109,16 @@ summarize_uncertainty <- function(
   input_args <- output_attribute$health_detailed$input_args
   input_table <- output_attribute$health_detailed$input_table
 
-  is_two_cases <- base::any(c("input_table_1", "input_table_2") %in% base::names(input_table))
+  is_two_cases <- base::any(c("input_table_scen_1", "input_table_scen_2") %in% base::names(input_table))
   is_one_case <- !is_two_cases
 
   if(is_one_case){
     input_args_to_check <- output_attribute$health_detailed$input_args
     input_table_to_check <- output_attribute$health_detailed$input_table
   } else {
-    input_args_to_check <- output_attribute$health_detailed$input_args$input_args_1
-    input_table_to_check <- output_attribute$health_detailed$input_table$input_table_2
-    #Same as input_args_2 (data validation of compare())
+    input_args_to_check <- output_attribute$health_detailed$input_args$input_args_scen_1
+    input_table_to_check <- output_attribute$health_detailed$input_table$input_table_scen_2
+    #Same as input_args_scen_2 (data validation of compare())
   }
 
 
@@ -706,35 +706,35 @@ summarize_uncertainty <- function(
     # Use summarize_uncertainty_based_on_input() twice:
 
     # Once for the scenario 1
-    attribute_1 <-
+    attribute_scen_1 <-
       summarize_uncertainty_based_on_input(
-        input_args = input_args[["input_args_1"]],
-        input_table = input_table[["input_table_1"]])
+        input_args = input_args[["input_args_scen_1"]],
+        input_table = input_table[["input_table_scen_1"]])
 
     # Once for the scenario 2
-    attribute_2 <-
+    attribute_scen_2 <-
       summarize_uncertainty_based_on_input(
-        input_args = input_args[["input_args_2"]],
-        input_table = input_table[["input_table_2"]])
+        input_args = input_args[["input_args_scen_2"]],
+        input_table = input_table[["input_table_scen_2"]])
 
     # Extract output 1 and 2
-    output_1 <-
-      attribute_1[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]|>
+    output_scen_1 <-
+      attribute_scen_1[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
 
-    output_2 <-
-      attribute_2[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]|>
+    output_scen_2 <-
+      attribute_scen_2[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
 
 
     # Extract simulation values 1 and 2
-    id_cols_and_sim_1 <-
-      attribute_1[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]] |>
+    id_cols_and_sim_scen_1 <-
+      attribute_scen_1[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]] |>
       dplyr::select(
         !dplyr::all_of(c("input", "output", "impact")))
 
-    id_cols_and_sim_2 <-
-      attribute_2[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]] |>
+    id_cols_and_sim_scen_2 <-
+      attribute_scen_2[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]] |>
       dplyr::select(
         !dplyr::all_of(c("input", "output", "impact")))
 
@@ -743,26 +743,26 @@ summarize_uncertainty <- function(
     id_cols <-
       # We use output 1 but we could use output 2
       # (same structure because same type of assessment)
-      output_1 |>
+      output_scen_1 |>
       dplyr::select(dplyr::contains("_id")) |>
       base::names()
 
     # Put together ids and sim cols
     id_cols_and_sim <-
-      dplyr::left_join(id_cols_and_sim_1,
-                       id_cols_and_sim_2,
+      dplyr::left_join(id_cols_and_sim_scen_1,
+                       id_cols_and_sim_scen_2,
                        by = id_cols,
-                       suffix = c("_1", "_2"))
+                       suffix = c("_scen_1", "_scen_2"))
 
     # Put outputs together in one single tibble and run compare across rows
     attribute_by_sim_disaggregated <-
       id_cols_and_sim |>
       dplyr::mutate(
-        output_1 = output_1$output,
-        output_2 = output_2$output)|>
+        output_scen_1 = output_scen_1$output,
+        output_scen_2 = output_scen_2$output)|>
       dplyr::mutate(
         output_compare =
-          purrr::pmap(base::list(output_1, output_2, input_args$approach_comparison),
+          purrr::pmap(base::list(output_scen_1, output_scen_2, input_args$approach_comparison),
                       healthiar::compare),
         impact = purrr::map(output_compare,
                             \(x) x$health_detailed$results_agg_exp_cat$impact)

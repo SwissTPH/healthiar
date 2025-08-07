@@ -143,12 +143,12 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
 #
 #   bestcost_pm_mortality_below_40_compared <-
 #     healthiar::compare(
-#       output_attribute_1 =
+#       output_attribute_scen_1 =
 #         healthiar::standardize(
 #           list(bestcost_pm_mortality_below_40_before,
 #                bestcost_pm_mortality_40_plus_before),
 #           age_group = c("below_40", "40_plus")),
-#       output_attribute_2 =
+#       output_attribute_scen_2 =
 #         healthiar::standardize(
 #           list(bestcost_pm_mortality_below_40_after,
 #                bestcost_pm_mortality_40_plus_after),
