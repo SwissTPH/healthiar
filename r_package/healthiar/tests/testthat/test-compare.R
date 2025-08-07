@@ -54,7 +54,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
 
   output_attribute_scen_2 <-
     healthiar::attribute_mod(
-      output_attribute_1 = output_attribute_scen_1,
+      output_attribute = output_attribute_scen_1,
       ## What is different in scenario 2 compared to scenario 1
       exp_central = 6)
 
@@ -125,7 +125,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
 
   scen_2_singlebhd_rr_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_rr_geo,
+      output_attribute = scen_1_singlebhd_rr_geo,
       # What is different in scenario 2 compared to scenario 1
       exp_central = c(6, 6.5))
 
@@ -162,7 +162,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
 
   scen_2_singlebhd_rr_geo_large <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_rr_geo_large,
+      output_attribute = scen_1_singlebhd_rr_geo_large,
       exp_central = c(runif_with_seed(100, 8.0, 9.0, 2)),
       exp_lower = c(runif_with_seed(100, 8.0, 9.0, 2)-0.1),
       exp_upper = c(runif_with_seed(100, 8.0, 9.0, 2)+0.1))
@@ -198,7 +198,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
 
   scen_2_singlebhd_yld <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_yld,
+      output_attribute = scen_1_singlebhd_yld,
       exp_central = 6)
 
   testthat::expect_equal(
@@ -232,7 +232,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
 
   scen_2_singlebhd_yld_geo <-
     attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_yld_geo,
+      output_attribute = scen_1_singlebhd_yld_geo,
       exp_central = c(6, 6.5),
       info = "PM2.5_yld_after")
 
@@ -269,7 +269,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
 
   scen_2_singlebhd_yld_geo <-
     attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_yld_geo,
+      output_attribute = scen_1_singlebhd_yld_geo,
       exp_central = c(6, 6.5),
       info = "PM2.5_yld_after")
 
@@ -339,7 +339,7 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
 
   scen_2_singlebhd_yld <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_yld,
+      output_attribute = scen_1_singlebhd_yld,
       exp_central = 6)
 
   testthat::expect_equal(
@@ -373,7 +373,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
 
   scen_2_singlebhd_rr_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_rr_geo,
+      output_attribute = scen_1_singlebhd_rr_geo,
       # What is different in scenario 2 compared to scenario 1
       exp_central = c(6, 6.5))
 
@@ -409,7 +409,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
 
   scen_2_singlebhd_yld_geo <-
     attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_yld_geo,
+      output_attribute = scen_1_singlebhd_yld_geo,
       exp_central = c(6, 6.5),
       info = "PM2.5_yld_after")
 
@@ -444,7 +444,7 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
 
   scen_2_singlebhd_yld <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_yld,
+      output_attribute = scen_1_singlebhd_yld,
       exp_central = 6)
 
   testthat::expect_equal(
@@ -481,7 +481,7 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
 
   scen_2_singlebhd_yld_geo <-
     attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_yld_geo,
+      output_attribute = scen_1_singlebhd_yld_geo,
       exp_central = c(6, 6.5),
       info = "PM2.5_yld_after")
 
@@ -519,7 +519,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|i
 
   scen_2_singlebhd_ar <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_ar,
+      output_attribute = scen_1_singlebhd_ar,
       exp_central = c(50, 55, 60, 65, 75))
 
   testthat::expect_equal(
@@ -553,7 +553,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_di
 
   scen_2_singlebhd_yld <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_yld,
+      output_attribute = scen_1_singlebhd_yld,
       exp_central = 6)
 
   testthat::expect_equal(
@@ -590,7 +590,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|i
 
   scen_2_singlebhd_ar_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_ar_geo,
+      output_attribute = scen_1_singlebhd_ar_geo,
       exp_central = c(c(50, 55, 60, 65, 75),
                       c(50.5, 55.5, 60.5, 65.5, 75.5)), # Fake values
       info = data.frame(pollutant = "road_noise",
@@ -643,7 +643,7 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
 
   scen_2_yll_lifetable_test <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yll_lifetable_test,
+      output_attribute = scen_1_yll_lifetable_test,
       exp_central = 6) # Fake data just for testing purposes
 
   testthat::expect_equal(
@@ -694,7 +694,7 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
 
   scen_2_yll_lifetable_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yll_lifetable_geo,
+      output_attribute = scen_1_yll_lifetable_geo,
       exp_central = rep(c(6, 6.5), each = 2*100)) # Fake data just for testing purposes
 
   testthat::expect_equal(
@@ -739,7 +739,7 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
 
   scen_2_yll_lifetable <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yll_lifetable,
+      output_attribute = scen_1_yll_lifetable,
       exp_central = 6) # Fake data just for testing purposes
 
   testthat::expect_equal(
@@ -791,7 +791,7 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
 
   scen_2_yll_lifetable_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yll_lifetable_geo,
+      output_attribute = scen_1_yll_lifetable_geo,
       exp_central = rep(c(6, 6.5), each = 2 * 100)) # Fake data just for testing purposes
 
   testthat::expect_equal(
@@ -839,7 +839,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
 
   scen_2_deaths_lifetable <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_deaths_lifetable,
+      output_attribute = scen_1_deaths_lifetable,
       exp_central = 6)
 
   testthat::expect_equal(
@@ -890,7 +890,7 @@ testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_singl
 
   scen_2_deaths_lifetable_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_deaths_lifetable_geo,
+      output_attribute = scen_1_deaths_lifetable_geo,
       exp_central = rep(c(6, 6.5), each = 2 * 100)) # Fake data just for testing purposes
 
   testthat::expect_equal(
@@ -935,7 +935,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
 
   scen_2_deaths_lifetable <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_deaths_lifetable,
+      output_attribute = scen_1_deaths_lifetable,
       exp_central = 6)
 
   testthat::expect_equal(
@@ -987,7 +987,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
 
   scen_2_deaths_lifetable_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_deaths_lifetable_geo,
+      output_attribute = scen_1_deaths_lifetable_geo,
       exp_central = rep(c(6, 6.5), each = 100 * 2)) # Fake data just for testing purposes
 
   testthat::expect_equal(
@@ -1258,7 +1258,7 @@ testthat::test_that("error pif and absolute risk", {
 
   scen_2_singlebhd_ar <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_ar,
+      output_attribute = scen_1_singlebhd_ar,
       exp_central = c(50, 55, 60, 65, 75))
 
   testthat::expect_error(

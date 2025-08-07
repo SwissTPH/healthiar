@@ -319,7 +319,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 
   bestcost_pm_mortality_b <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality_a,
+      output_attribute = bestcost_pm_mortality_a,
       exp_central = 7.1,
       bhd_central = 2000,
       population = 2E5)

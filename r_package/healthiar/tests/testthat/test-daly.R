@@ -106,7 +106,7 @@ testthat::test_that("results correct using 2 delta comparisons as inputs|pathway
 
   scen_2_yll <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_yll,
+      output_attribute = bestcost_pm_yll,
       exp_central = 6)
 
   scen_1_yld <-
@@ -114,7 +114,7 @@ testthat::test_that("results correct using 2 delta comparisons as inputs|pathway
 
   scen_2_yld <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_yld,
+      output_attribute = bestcost_pm_yld,
       exp_central = 6)
 
   ## Delta comparison
@@ -187,7 +187,7 @@ testthat::test_that("results correct using 2 pif comparisons as inputs |pathway_
 
   scen_2_yll <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_yll,
+      output_attribute = bestcost_pm_yll,
       exp_central = 6)
 
   scen_1_yld <-
@@ -195,7 +195,7 @@ testthat::test_that("results correct using 2 pif comparisons as inputs |pathway_
 
   scen_2_yld <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_yld,
+      output_attribute = bestcost_pm_yld,
       exp_central = 6)
 
   ## PIF comparison
@@ -245,7 +245,7 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
 
   scen_2_yld_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yld_geo,
+      output_attribute = scen_1_yld_geo,
       exp_central = c(6, 6.5))
 
 
@@ -279,7 +279,7 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
 
   scen_2_yll_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yll_geo,
+      output_attribute = scen_1_yll_geo,
       exp_central = rep(c(6, 6.5), each = 2 * 100))
 
   ## Delta comparison
@@ -329,7 +329,7 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
 
   scen_2_yld_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yld_geo,
+      output_attribute = scen_1_yld_geo,
       exp_central = c(6, 6.5))
 
 
@@ -363,7 +363,7 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
 
   scen_2_yll_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yll_geo,
+      output_attribute = scen_1_yll_geo,
       exp_central = rep(c(6, 6.5), each = 100 * 2))
 
 

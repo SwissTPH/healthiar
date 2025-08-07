@@ -14,7 +14,7 @@ testthat::test_that("results correct |pathway_multiexposure|approach_additive|",
 
   bestcost_no2_mortality <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality,
+      output_attribute = bestcost_pm_mortality,
       exp_central = 10.9,
       rr_central = 1.031)
 
@@ -49,7 +49,7 @@ testthat::test_that("results correct |fake_multiexposure|approach_additive|", {
 
   bestcost_no2_mortality <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality,
+      output_attribute = bestcost_pm_mortality,
       exp_central = 10.9,
       exp_lower = 9,
       exp_upper = 12,
@@ -87,7 +87,7 @@ testthat::test_that("detailed results correct |fake_multiexposure|approach_addit
   )
 
   bestcost_no2_mortality <- healthiar::attribute_mod(
-    output_attribute_1 = bestcost_pm_mortality,
+    output_attribute = bestcost_pm_mortality,
     exp_central = 10.9,
     exp_lower = 10.9 - 1,
     exp_upper = 10.9 + 1,
@@ -126,7 +126,7 @@ testthat::test_that("results correct |pathway_multiexposure|approach_multiplicat
 
   bestcost_no2_mortality <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality,
+      output_attribute = bestcost_pm_mortality,
       exp_central = 10.9,
       rr_central = 1.031,
     )
@@ -162,7 +162,7 @@ testthat::test_that("results correct |fake_multiexposure|approach_multiplicative
 
   bestcost_no2_mortality <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality,
+      output_attribute = bestcost_pm_mortality,
       exp_central = 10.9,
       exp_lower = 9,
       exp_upper = 12,
@@ -204,7 +204,7 @@ testthat::test_that("results correct |pathway_multiexposure|approach_combined|",
 
   bestcost_no2_mortality <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality,
+      output_attribute = bestcost_pm_mortality,
       exp_central = 10.9,
       exp_lower = 9,
       exp_upper = 12,
@@ -243,7 +243,7 @@ testthat::test_that("results correct |fake_multiexposure|approach_combined|", {
 
   bestcost_no2_mortality <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality,
+      output_attribute = bestcost_pm_mortality,
       exp_central = 10.9,
       exp_lower = 9,
       exp_upper = 12,
@@ -283,7 +283,7 @@ testthat::test_that("detailed results correct |fake_multiexposure|approach_combi
 
   bestcost_no2_mortality <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality,
+      output_attribute = bestcost_pm_mortality,
       exp_central = 10.9,
       exp_lower = 9,
       exp_upper = 12,

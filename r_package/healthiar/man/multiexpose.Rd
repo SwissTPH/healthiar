@@ -50,7 +50,7 @@ output_attribute_1 <- attribute_health(
 output_attribute_1$health_main$impact
 # Step 2: create assessment with exposure 2
 output_attribute_2 <- attribute_mod(
-  output_attribute_1 = output_attribute_1,
+  output_attribute = output_attribute_1,
   exp_central = 10.9,
   rr_central = 1.031
 )

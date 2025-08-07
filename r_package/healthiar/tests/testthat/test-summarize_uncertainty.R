@@ -239,7 +239,7 @@ testthat::test_that("results correct |pathway_uncertainty_compare|exp_dist|erf_a
 
   rr_scenario_2 <-
     healthiar::attribute_mod(
-      output_attribute_1 =  rr_scenario_1,
+      output_attribute =  rr_scenario_1,
       exp_central = 7.5,
       exp_lower = 6.2,
       exp_upper = 8.1)
@@ -282,7 +282,7 @@ testthat::test_that("summary uncertainty comparison iteration", {
 
   scen_2_singlebhd_rr_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_rr_geo,
+      output_attribute = scen_1_singlebhd_rr_geo,
       # What is different in scenario 2 compared to scenario 1
       exp_central = c(6, 6.5))
 

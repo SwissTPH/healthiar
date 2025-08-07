@@ -6,7 +6,7 @@
 
 # ARGUMENTS ####################################################################
 #' @inheritParams attribute_master
-#' @param output_attribute_1 \code{List} containing the output of the function attribute() for scenario 1.
+#' @param output_attribute \code{List} containing the output of the function attribute() for scenario 1.
 
 # VALUE ########################################################################
 #' @inherit attribute_master return
@@ -31,7 +31,7 @@
 #'
 #' ## Modify scenario (adjust exposure value)
 #' scenario_B <- attribute_mod(
-#'   output_attribute_1 = scenario_A,
+#'   output_attribute = scenario_A,
 #'   exp_central = 6
 #' )
 #'
@@ -45,7 +45,7 @@
 
 attribute_mod <-
   function(
-    output_attribute_1,
+    output_attribute,
     erf_shape = NULL,
     rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
     rr_increment = NULL,
@@ -68,13 +68,13 @@ attribute_mod <-
     year_of_analysis = NULL
     ) {
 
-    is_lifetable <- base::unique(output_attribute_1$health_detailed$input_table$is_lifetable)
+    is_lifetable <- base::unique(output_attribute$health_detailed$input_table$is_lifetable)
 
     # Capture all arguments and values
     input_args_2_value <- as.list(environment())
 
-    # Removing output_attribute_1 from args
-    input_args_2_value$output_attribute_1 <- NULL
+    # Removing output_attribute from args
+    input_args_2_value$output_attribute <- NULL
 
     #Remove all arguments that are NULL in input_args_2_value to avoid that they overwrite
     #those in input_args_1_value
@@ -82,7 +82,7 @@ attribute_mod <-
 
 
     # Extract input_args_1_value
-    input_args_1 <- output_attribute_1[["health_detailed"]][["input_args"]]
+    input_args_1 <- output_attribute[["health_detailed"]][["input_args"]]
 
     # Create a function to replace values in list of arguments
     # modifyList() and purrr::list_modify() do not work because require named lists
