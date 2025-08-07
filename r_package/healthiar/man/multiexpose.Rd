@@ -9,7 +9,7 @@ multiexpose(
   output_attribute_2,
   exp_name_1,
   exp_name_2,
-  approach = "additive"
+  approach_multiexposure = "additive"
 )
 }
 \arguments{
@@ -17,7 +17,7 @@ multiexpose(
 
 \item{exp_name_1, exp_name_2}{\code{String} referring to the name of the environmental exposures 1 and 2}
 
-\item{approach}{\code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined".}
+\item{approach_multiexposure}{\code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined".}
 }
 \value{
 This function returns two \code{lists}:
@@ -61,7 +61,7 @@ results <- multiexpose(
   output_attribute_2 = output_attribute_2,
   exp_name_1 = "pm2.5",
   exp_name_2 = "no2",
-  approach = "multiplicative"
+  approach_multiexposure = "multiplicative"
 )
 results$health_main$impact
 }
