@@ -159,13 +159,6 @@ compile_input <-
     # As nested tibble
 
     if (is_lifetable) {
-      # # Calculate totals across sex
-      # input_wo_lifetable_totals <- input_wo_lifetable |>
-      #   dplyr::summarize(
-      #     bhd = base::sum(bhd),
-      #     population = bhd::sum(population)
-      #   )
-      #
 
       input_table <- input_wo_lifetable |>
         dplyr::mutate(
