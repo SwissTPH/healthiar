@@ -99,7 +99,7 @@ compile_input <-
       # Add it in a separated mutate because
       # if it is NULL then it is not added
       dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "age_group", "sex"))))|>
-      dplyr::mutate(exposure_dimension = 1 : base::length(exp_central),
+      dplyr::mutate(exposure_category = 1 : base::length(exp_central),
                        exposure_type =
                          base::ifelse(length(exp_central) == 1,
                                       "population_weighted_mean",

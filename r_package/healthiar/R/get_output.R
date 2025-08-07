@@ -253,7 +253,7 @@ get_output <-
       sum_round_and_relative_impact(
         df = output_last,
         grouping_cols = group_columns_for_exp_cat_aggregation,
-        col_total = "exposure_dimension")
+        col_total = "exposure_category")
 
     } else if (unique(results_raw$approach_risk) == "relative_risk"){
       # For relative risk no need of summing impacts across exposure categories

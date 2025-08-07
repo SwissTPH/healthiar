@@ -541,7 +541,7 @@ get_impact_with_lifetable <-
     #            -dplyr::contains("_2"), # Remove all "..._2" variables (e.g. "exp_2"); relevant in "compare_..." function calls
     #            dplyr::contains("_nest"),
     #            -dplyr::contains("approach_exposure"),
-    #            -dplyr::contains("exposure_dimension"),
+    #            -dplyr::contains("exposure_category"),
     #            -dplyr::contains("exposure_type"),
     #            -dplyr::contains("exp_ci"))
     #
