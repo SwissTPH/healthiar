@@ -5,7 +5,7 @@
 #' This function aggregates health impacts from multiple exposures to environmental stressors.
 
 # ARGUMENTS ####################################################################
-#' @param output_attribute_1,output_attribute_2  Output of attribute() for exposure 1 and 2, respectively. Baseline health data and population must be identical in outputs 1 and 2.
+#' @param output_attribute_exp_1,output_attribute_exp_2  Output of attribute() for exposure 1 and 2, respectively. Baseline health data and population must be identical in outputs 1 and 2.
 #' @param exp_name_1,exp_name_2 \code{String} referring to the name of the environmental exposures 1 and 2
 #' @param approach_multiexposure \code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined".
 
@@ -16,7 +16,7 @@
 #' @examples
 #' # Goal: determine aggregated health impacts from multiple exposures
 #' # Step 1: create assessment with exposure 1
-#' output_attribute_1 <- attribute_health(
+#' output_attribute_exp_1 <- attribute_health(
 #'   erf_shape = "log_linear",
 #'   rr_central = 1.369,
 #'   rr_increment = 10,
@@ -24,18 +24,18 @@
 #'   cutoff_central = 5,
 #'   bhd_central = 30747
 #' )
-#' output_attribute_1$health_main$impact
+#' output_attribute_exp_1$health_main$impact
 #' # Step 2: create assessment with exposure 2
-#' output_attribute_2 <- attribute_mod(
-#'   output_attribute = output_attribute_1,
+#' output_attribute_exp_2 <- attribute_mod(
+#'   output_attribute = output_attribute_exp_1,
 #'   exp_central = 10.9,
 #'   rr_central = 1.031
 #' )
-#' output_attribute_2$health_main$impact
+#' output_attribute_exp_2$health_main$impact
 #' # Step 3: aggregate impacts of the two assessments
 #' results <- multiexpose(
-#'   output_attribute_1 = output_attribute_1,
-#'   output_attribute_2 = output_attribute_2,
+#'   output_attribute_exp_1 = output_attribute_exp_1,
+#'   output_attribute_exp_2 = output_attribute_exp_2,
 #'   exp_name_1 = "pm2.5",
 #'   exp_name_2 = "no2",
 #'   approach_multiexposure = "multiplicative"
@@ -50,8 +50,8 @@
 
 multiexpose <-
   function(
-    output_attribute_1,
-    output_attribute_2,
+    output_attribute_exp_1,
+    output_attribute_exp_2,
     exp_name_1,
     exp_name_2,
     approach_multiexposure = "additive"){
@@ -63,8 +63,8 @@ multiexpose <-
 
     pop_fraction_type <- input_args$value$pop_fraction_type
 
-    input_table_1 <- output_attribute_1[["health_detailed"]][["input_table"]]
-    input_table_2 <- output_attribute_2[["health_detailed"]][["input_table"]]
+    input_table_1 <- output_attribute_exp_1[["health_detailed"]][["input_table"]]
+    input_table_2 <- output_attribute_exp_2[["health_detailed"]][["input_table"]]
 
 
     # Add the exposure names to the input_table

@@ -1067,8 +1067,8 @@ results_no2_copd <- attribute_mod(
 )
 
 results_multiplicative <- multiexpose(
-  output_attribute_1 = results_pm_copd,
-  output_attribute_2 = results_no2_copd,
+  output_attribute_exp_1 = results_pm_copd,
+  output_attribute_exp_2 = results_no2_copd,
   exp_name_1 = "pm2.5",
   exp_name_2 = "no2",
   approach_multiexposure = "multiplicative"

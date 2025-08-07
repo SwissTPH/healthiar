@@ -21,8 +21,8 @@ testthat::test_that("results correct |pathway_multiexposure|approach_additive|",
   testthat::expect_equal(
     object =
       healthiar::multiexpose(
-        output_attribute_1 = bestcost_pm_mortality,
-        output_attribute_2 = bestcost_no2_mortality,
+        output_attribute_exp_1 = bestcost_pm_mortality,
+        output_attribute_exp_2 = bestcost_no2_mortality,
         exp_name_1 = "pm2.5",
         exp_name_2 = "no2",
         approach_multiexposure = "additive"
@@ -60,8 +60,8 @@ testthat::test_that("results correct |fake_multiexposure|approach_additive|", {
   testthat::expect_equal(
     object =
       healthiar::multiexpose(
-        output_attribute_1 = bestcost_pm_mortality,
-        output_attribute_2 = bestcost_no2_mortality,
+        output_attribute_exp_1 = bestcost_pm_mortality,
+        output_attribute_exp_2 = bestcost_no2_mortality,
         exp_name_1 = "pm2.5",
         exp_name_2 = "no2",
         approach_multiexposure = "additive"
@@ -99,8 +99,8 @@ testthat::test_that("detailed results correct |fake_multiexposure|approach_addit
   testthat::expect_equal(
     object =
       healthiar::multiexpose(
-        output_attribute_1 = bestcost_pm_mortality,
-        output_attribute_2 = bestcost_no2_mortality,
+        output_attribute_exp_1 = bestcost_pm_mortality,
+        output_attribute_exp_2 = bestcost_no2_mortality,
         exp_name_1 = "pm2.5",
         exp_name_2 = "no2",
         approach_multiexposure = "additive"
@@ -134,8 +134,8 @@ testthat::test_that("results correct |pathway_multiexposure|approach_multiplicat
   testthat::expect_equal(
     object =
       healthiar::multiexpose(
-        output_attribute_1 = bestcost_pm_mortality,
-        output_attribute_2 = bestcost_no2_mortality,
+        output_attribute_exp_1 = bestcost_pm_mortality,
+        output_attribute_exp_2 = bestcost_no2_mortality,
         exp_name_1 = "pm2.5",
         exp_name_2 = "no2",
         approach_multiexposure = "multiplicative"
@@ -174,8 +174,8 @@ testthat::test_that("results correct |fake_multiexposure|approach_multiplicative
   testthat::expect_equal(
     object =
       healthiar::multiexpose(
-        output_attribute_1 = bestcost_pm_mortality,
-        output_attribute_2 = bestcost_no2_mortality,
+        output_attribute_exp_1 = bestcost_pm_mortality,
+        output_attribute_exp_2 = bestcost_no2_mortality,
         exp_name_1 = "pm2.5",
         exp_name_2 = "no2",
         approach_multiexposure = "multiplicative"
@@ -215,8 +215,8 @@ testthat::test_that("results correct |pathway_multiexposure|approach_combined|",
   testthat::expect_equal(
     object =
       healthiar::multiexpose(
-        output_attribute_1 = bestcost_pm_mortality,
-        output_attribute_2 = bestcost_no2_mortality,
+        output_attribute_exp_1 = bestcost_pm_mortality,
+        output_attribute_exp_2 = bestcost_no2_mortality,
         exp_name_1 = "pm2.5",
         exp_name_2 = "no2",
         approach_multiexposure = "combined"
@@ -255,8 +255,8 @@ testthat::test_that("results correct |fake_multiexposure|approach_combined|", {
   testthat::expect_equal(
     object =
       healthiar::multiexpose(
-        output_attribute_1 = bestcost_pm_mortality,
-        output_attribute_2 = bestcost_no2_mortality,
+        output_attribute_exp_1 = bestcost_pm_mortality,
+        output_attribute_exp_2 = bestcost_no2_mortality,
         exp_name_1 = "pm2.5",
         exp_name_2 = "no2",
         approach_multiexposure = "combined"
@@ -294,8 +294,8 @@ testthat::test_that("detailed results correct |fake_multiexposure|approach_combi
   testthat::expect_equal(
     object =
       healthiar::multiexpose(
-        output_attribute_1 = bestcost_pm_mortality,
-        output_attribute_2 = bestcost_no2_mortality,
+        output_attribute_exp_1 = bestcost_pm_mortality,
+        output_attribute_exp_2 = bestcost_no2_mortality,
         exp_name_1 = "pm2.5",
         exp_name_2 = "no2",
         approach_multiexposure = "combined")$health_detailed$results_raw$impact |> base::round(),
