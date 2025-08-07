@@ -143,7 +143,7 @@ summarize_uncertainty <- function(
 
   ## Error if exposure distribution and uncertainty in exp_...####
   if(# If exposure distribution
-    base::unique(output_attribute$health_detailed$results_agg_exp_cat$exposure_type) == "exposure_distribution" &&
+    base::unique(output_attribute$health_detailed$results_agg_exp_cat$exp_type) == "exposure_distribution" &&
     # If uncertainty in exposure
     (!base::is.null(input_args$value$exp_lower) |
       !base::is.null(input_args$value$exp_upper))){
@@ -241,7 +241,7 @@ summarize_uncertainty <- function(
   # If exposure dimension is implemented:
   # Get the dimension of the exposure
   # (i.e. if pop-weighted mean => 1, if exposure distribution => >1 )
-  # n_exp <- base::max(output_attribute$health_detailed$results_agg_exp_cat$exposure_dimension)
+  # n_exp <- base::max(output_attribute$health_detailed$results_agg_exp_cat$exp_dimension)
 
 
   ## Boolean variables ####
@@ -420,7 +420,7 @@ summarize_uncertainty <- function(
   ## Template and simulations #####
   sim_template <- input_table |>
   dplyr::select(geo_id_disaggregated) |>
-  # If exposure dimension is implemented: dplyr::select(geo_id_disaggregated, exposure_dimension) |>
+  # If exposure dimension is implemented: dplyr::select(geo_id_disaggregated, exp_dimension) |>
   base::unique()|>
   dplyr::mutate(geo_id_number = 1:n_geo, .after = geo_id_disaggregated) |>
   dplyr::mutate(sim_id = base::list(1:n_sim))
@@ -485,8 +485,8 @@ summarize_uncertainty <- function(
         base::list(sim_template$geo_id_number),
         function(geo_id_number) {
         # If exposure dimension is implemented
-        #base::list(sim_template$geo_id_number, sim_template$exposure_dimension),
-        #function(geo_id_number, exposure_dimension) {
+        #base::list(sim_template$geo_id_number, sim_template$exp_dimension),
+        #function(geo_id_number, exp_dimension) {
           simulate(
           central = central,
           lower = lower,
@@ -497,7 +497,7 @@ summarize_uncertainty <- function(
           # Minus 1 to keep the same seed as exposure dimension = 1
           seed = seeds[[var]] + geo_id_number)}
          # If exposure dimension is implemented
-         # seed = seeds[[var]] + geo_id_number + base::as.integer(exposure_dimension)-1)}
+         # seed = seeds[[var]] + geo_id_number + base::as.integer(exp_dimension)-1)}
       )
 
       # Second for those variable that are common for all geo units (rr, cutoff, dw and duration)

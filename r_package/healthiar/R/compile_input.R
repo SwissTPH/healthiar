@@ -100,11 +100,11 @@ compile_input <-
     # Obtain the exposure dimension and exposure type in a separate table
     input_wo_lifetable <-
       input_wo_lifetable |>
-      # Add exposure_category and exposure_type
+      # Add exp_category and exp_type
       dplyr::mutate(
         .by = c(geo_id_disaggregated, age_group, sex),
-        exposure_category = 1 : length_exp,
-        exposure_type =
+        exp_category = 1 : length_exp,
+        exp_type =
           base::ifelse(length_exp == 1,
                        "population_weighted_mean",
                        "exposure_distribution"))

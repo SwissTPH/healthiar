@@ -23,8 +23,8 @@ testthat::test_that("results correct |pathway_multiexposure|approach_additive|",
       healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
-        exposure_name_1 = "pm2.5",
-        exposure_name_2 = "no2",
+        exp_name_1 = "pm2.5",
+        exp_name_2 = "no2",
         approach = "additive"
         )$health_main$impact_rounded,
     expected =
@@ -62,8 +62,8 @@ testthat::test_that("results correct |fake_multiexposure|approach_additive|", {
       healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
-        exposure_name_1 = "pm2.5",
-        exposure_name_2 = "no2",
+        exp_name_1 = "pm2.5",
+        exp_name_2 = "no2",
         approach = "additive"
         )$health_main$impact_rounded,
     expected =
@@ -101,8 +101,8 @@ testthat::test_that("detailed results correct |fake_multiexposure|approach_addit
       healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
-        exposure_name_1 = "pm2.5",
-        exposure_name_2 = "no2",
+        exp_name_1 = "pm2.5",
+        exp_name_2 = "no2",
         approach = "additive"
       )$health_detailed$results_raw$impact |> base::round(),
     expected = # Results on 2025-01-20; Results from BEST-COST task 1.4 report (NIVM), but lower and upper bounds are fake
@@ -136,8 +136,8 @@ testthat::test_that("results correct |pathway_multiexposure|approach_multiplicat
       healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
-        exposure_name_1 = "pm2.5",
-        exposure_name_2 = "no2",
+        exp_name_1 = "pm2.5",
+        exp_name_2 = "no2",
         approach = "multiplicative"
         )$health_main$impact_rounded,
     expected =
@@ -176,8 +176,8 @@ testthat::test_that("results correct |fake_multiexposure|approach_multiplicative
       healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
-        exposure_name_1 = "pm2.5",
-        exposure_name_2 = "no2",
+        exp_name_1 = "pm2.5",
+        exp_name_2 = "no2",
         approach = "multiplicative"
         )$health_main |> dplyr::arrange(erf_ci) |> dplyr::select(impact_rounded) |> base::unlist() |> base::as.numeric(),
     expected =
@@ -217,8 +217,8 @@ testthat::test_that("results correct |pathway_multiexposure|approach_combined|",
       healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
-        exposure_name_1 = "pm2.5",
-        exposure_name_2 = "no2",
+        exp_name_1 = "pm2.5",
+        exp_name_2 = "no2",
         approach = "combined"
         )$health_main |> dplyr::arrange(erf_ci) |> dplyr::select(impact_rounded) |> base::unlist() |> base::as.numeric(),
     expected =
@@ -257,8 +257,8 @@ testthat::test_that("results correct |fake_multiexposure|approach_combined|", {
       healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
-        exposure_name_1 = "pm2.5",
-        exposure_name_2 = "no2",
+        exp_name_1 = "pm2.5",
+        exp_name_2 = "no2",
         approach = "combined"
         )$health_main |> dplyr::arrange(erf_ci) |> dplyr::select(impact_rounded) |> base::unlist() |> base::as.numeric(),
     expected =
@@ -296,8 +296,8 @@ testthat::test_that("detailed results correct |fake_multiexposure|approach_combi
       healthiar::multiexpose(
         output_attribute_1 = bestcost_pm_mortality,
         output_attribute_2 = bestcost_no2_mortality,
-        exposure_name_1 = "pm2.5",
-        exposure_name_2 = "no2",
+        exp_name_1 = "pm2.5",
+        exp_name_2 = "no2",
         approach = "combined")$health_detailed$results_raw$impact |> base::round(),
     expected =
       c(0.051, 0.059, 0.065, 0.068, 0.079, 0.079, 0.088, 0.093, 0.102) * 1000 # Results on 2025-01-16; Results from BEST-COST task 1.4 report (NIVM), but lower and upper bounds are fake

@@ -39,7 +39,7 @@ get_output <-
     # Variables to be used below
 
     id_columns <- c("geo_id_aggregated", "geo_id_disaggregated",
-                    "exposure_name",
+                    "exp_name",
                     "age_group", "sex",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
 
@@ -80,8 +80,8 @@ get_output <-
     group_columns_for_geo_aggregation <-
       base::setdiff(group_columns_for_age_aggregation, c("geo_id_disaggregated"))
 
-    group_columns_for_multiexposure_aggregation <-
-      base::setdiff(group_columns_for_geo_aggregation, c("exposure_name"))
+    group_columns_for_multiexp_aggregation <-
+      base::setdiff(group_columns_for_geo_aggregation, c("exp_name"))
 
 
     # Pre-identify columns to be collapsed
@@ -253,7 +253,7 @@ get_output <-
       sum_round_and_relative_impact(
         df = output_last,
         grouping_cols = group_columns_for_exp_cat_aggregation,
-        col_total = "exposure_category")
+        col_total = "exp_category")
 
     } else if (unique(results_raw$approach_risk) == "relative_risk"){
       # For relative risk no need of summing impacts across exposure categories
@@ -311,13 +311,13 @@ get_output <-
 
         # Paste exposure names before aggregating
         output_last <- output_last |>
-          dplyr::mutate(exposure_name = base::paste(base::unique(exposure_name), collapse = ", "))
+          dplyr::mutate(exp_name = base::paste(base::unique(exp_name), collapse = ", "))
 
         output[["health_detailed"]][["results_agg_multiexposure"]] <-
           sum_round_and_relative_impact(
             df = output_last,
-            grouping_cols = group_columns_for_multiexposure_aggregation,
-            col_total = "exposure_name")
+            grouping_cols = group_columns_for_multiexp_aggregation,
+            col_total = "exp_name")
 
       output_last <- output[["health_detailed"]][["results_agg_multiexposure"]]
 

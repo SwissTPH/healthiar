@@ -363,7 +363,7 @@ testthat::test_that("error_if_erf_eq  |pathway_uncertainty|exp_dist|erf_ar_formu
 
 
 
-testthat::test_that("error_if_uncertainty_in_exp_distribution |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
+testthat::test_that("error_if_uncertainty_in_exposure_distribution |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>

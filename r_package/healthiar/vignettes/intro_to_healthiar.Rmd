@@ -279,7 +279,7 @@ results_noise_ha$health_detailed$results_raw
 
 ```{r echo=FALSE, include=TRUE, eval=TRUE}
 results_noise_ha[["health_detailed"]][["results_raw"]] |> 
-  select(exposure_category, exp, pop_exp, impact) |> 
+  select(exp_category, exp, pop_exp, impact) |> 
   knitr::kable()
 ```
 
@@ -300,7 +300,7 @@ results_noise_ha$health_main
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
 results_noise_ha[["health_main"]] |> 
-  dplyr::select(exposure_category, impact) |> 
+  dplyr::select(exp_category, impact) |> 
   knitr::kable()
 ```
 
@@ -1069,8 +1069,8 @@ results_no2_copd <- attribute_mod(
 results_multiplicative <- multiexpose(
   output_attribute_1 = results_pm_copd,
   output_attribute_2 = results_no2_copd,
-  exposure_name_1 = "pm2.5",
-  exposure_name_2 = "no2",
+  exp_name_1 = "pm2.5",
+  exp_name_2 = "no2",
   approach = "multiplicative"
 )
 ```
