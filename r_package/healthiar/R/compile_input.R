@@ -86,10 +86,16 @@ compile_input <-
       # Convert into a tibble
       tibble:::as_tibble() |>
       # Add info
-      healthiar:::add_info(info = input_args_edited$info)|>
-      # Keep only unique rows
-      # (they can be duplicated in case of multiple geo units, exposure categories..)
+      healthiar:::add_info(info = input_args_edited$info)
+
+    length_exp <- input_wo_lifetable |>
+      dplyr::summarise(
+        .by = c(geo_id_disaggregated, sex, age_group),
+        length = base::length(exp_central)
+      )|>
+      dplyr::pull(length) |>
       base::unique()
+
 
     # Obtain the exposure dimension and exposure type in a separate table
     exp_dimension_table <-
