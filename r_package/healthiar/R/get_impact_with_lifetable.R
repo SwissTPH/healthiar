@@ -541,17 +541,17 @@ get_impact_with_lifetable <-
     #            -dplyr::contains("_2"), # Remove all "..._2" variables (e.g. "exp_2"); relevant in "compare_..." function calls
     #            dplyr::contains("_nest"),
     #            -dplyr::contains("approach_exposure"),
-    #            -dplyr::contains("exposure_category"),
-    #            -dplyr::contains("exposure_type"),
+    #            -dplyr::contains("exp_category"),
+    #            -dplyr::contains("exp_type"),
     #            -dplyr::contains("exp_ci"))
     #
     #   if( is_empty((grep("_1", names(pop))))){
     #     pop_impact <- input_backup |>
-    #     dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp", "prop_pop_exp", "rr", "erf_ci", "sex", "exposure_name"))
+    #     dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp", "prop_pop_exp", "rr", "erf_ci", "sex", "exp_name"))
     #     }else{
     #       pop_impact <- input_backup |>
     #       # attribute_... cases
-    #       dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp_scen_1", "prop_pop_exp_scen_1", "rr", "erf_ci", "sex", "exposure_name")) # compare_... cases
+    #       dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp_scen_1", "prop_pop_exp_scen_1", "rr", "erf_ci", "sex", "exp_name")) # compare_... cases
     #     }
     #
     # }

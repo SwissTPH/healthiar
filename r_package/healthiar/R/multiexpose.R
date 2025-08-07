@@ -6,7 +6,7 @@
 
 # ARGUMENTS ####################################################################
 #' @param output_attribute_1,output_attribute_2  Output of attribute() for exposure 1 and 2, respectively. Baseline health data and population must be identical in outputs 1 and 2.
-#' @param exposure_name_1,exposure_name_2 \code{String} referring to the name of the environmental exposures 1 and 2
+#' @param exp_name_1,exp_name_2 \code{String} referring to the name of the environmental exposures 1 and 2
 #' @param approach \code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined".
 
 # VALUE ########################################################################
@@ -36,8 +36,8 @@
 #' results <- multiexpose(
 #'   output_attribute_1 = output_attribute_1,
 #'   output_attribute_2 = output_attribute_2,
-#'   exposure_name_1 = "pm2.5",
-#'   exposure_name_2 = "no2",
+#'   exp_name_1 = "pm2.5",
+#'   exp_name_2 = "no2",
 #'   approach = "multiplicative"
 #' )
 #' results$health_main$impact
@@ -52,8 +52,8 @@ multiexpose <-
   function(
     output_attribute_1,
     output_attribute_2,
-    exposure_name_1,
-    exposure_name_2,
+    exp_name_1,
+    exp_name_2,
     approach = "additive"){
 
     # Capture all arguments and values
@@ -70,11 +70,11 @@ multiexpose <-
     # Add the exposure names to the input_table
     input_table_1_for_binding <-
       input_table_1 |>
-      dplyr::mutate(exposure_name = exposure_name_1)
+      dplyr::mutate(exp_name = exp_name_1)
 
     input_table_2_for_binding <-
       input_table_2 |>
-      dplyr::mutate(exposure_name = exposure_name_2)
+      dplyr::mutate(exp_name = exp_name_2)
 
     #Bind the tables together
     input_table <-
@@ -96,11 +96,11 @@ multiexpose <-
                                input_table = input_table,
                                results_raw = results_raw)
 
-      # Put the column exposure_name as first column because it is now relevant
+      # Put the column exp_name as first column because it is now relevant
       output[["health_detailed"]][c("input_table", "results_raw")] <-
         purrr::map(output[["health_detailed"]][c("input_table", "results_raw")],
                    ~ dplyr::select(.x,
-                                   exposure_name, dplyr::everything()))
+                                   exp_name, dplyr::everything()))
 
 
 

@@ -58,8 +58,8 @@ prepare_exposure <-
     exposure <- exposure |>
       dplyr::group_by(geo_id_aggregated) |>
       dplyr::mutate(poll_weighted = population / sum(population) * poll_mean) |>
-      dplyr::summarise(exposure_value = base::sum(poll_weighted)) |>
-      dplyr::mutate(exposure_type = 'Population-weighted mean concentration')
+      dplyr::summarise(exp_value = base::sum(poll_weighted)) |>
+      dplyr::mutate(exp_type = 'Population-weighted mean concentration')
 
     ## build output list
     main <- base::as.list(exposure)

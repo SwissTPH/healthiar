@@ -521,7 +521,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
-  bestcost_pm_yll_exposure_single_year_lifetable_geluft <-
+  bestcost_pm_yll_exp_single_year_lifetable_geluft <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
       approach_exposure = "single_year",
@@ -547,7 +547,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
   testthat::expect_equal(
     object =
       healthiar::monetize(
-        output_attribute = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
+        output_attribute = bestcost_pm_yll_exp_single_year_lifetable_geluft,
         discount_shape = "exponential",
         discount_rate = 0.01,
         valuation = 1
@@ -825,7 +825,7 @@ testthat::test_that("warning if user pass discount_years with life table", {
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
-  bestcost_pm_yll_exposure_single_year_lifetable_geluft <-
+  bestcost_pm_yll_exp_single_year_lifetable_geluft <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
       approach_exposure = "single_year",
@@ -851,7 +851,7 @@ testthat::test_that("warning if user pass discount_years with life table", {
   testthat::expect_warning(
     object =
       healthiar::monetize(
-        output_attribute = bestcost_pm_yll_exposure_single_year_lifetable_geluft,
+        output_attribute = bestcost_pm_yll_exp_single_year_lifetable_geluft,
         discount_shape = "exponential",
         discount_rate = 0.01,
         discount_years = 5,

@@ -7,15 +7,15 @@
 multiexpose(
   output_attribute_1,
   output_attribute_2,
-  exposure_name_1,
-  exposure_name_2,
+  exp_name_1,
+  exp_name_2,
   approach = "additive"
 )
 }
 \arguments{
 \item{output_attribute_1, output_attribute_2}{Output of attribute() for exposure 1 and 2, respectively. Baseline health data and population must be identical in outputs 1 and 2.}
 
-\item{exposure_name_1, exposure_name_2}{\code{String} referring to the name of the environmental exposures 1 and 2}
+\item{exp_name_1, exp_name_2}{\code{String} referring to the name of the environmental exposures 1 and 2}
 
 \item{approach}{\code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined".}
 }
@@ -59,8 +59,8 @@ output_attribute_2$health_main$impact
 results <- multiexpose(
   output_attribute_1 = output_attribute_1,
   output_attribute_2 = output_attribute_2,
-  exposure_name_1 = "pm2.5",
-  exposure_name_2 = "no2",
+  exp_name_1 = "pm2.5",
+  exp_name_2 = "no2",
   approach = "multiplicative"
 )
 results$health_main$impact
