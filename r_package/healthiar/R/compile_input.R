@@ -98,26 +98,17 @@ compile_input <-
 
 
     # Obtain the exposure dimension and exposure type in a separate table
-    exp_dimension_table <-
-      input_wo_lifetable |>
-      dplyr::select(dplyr::any_of(c("geo_id_disaggregated", "age_group", "sex", "exp_central"))) |>
-      # Add population_midyear_male (it could be any of the other life table arguments)
-      # Add it in a separated mutate because
-      # if it is NULL then it is not added
-      dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "age_group", "sex"))))|>
-      dplyr::mutate(exposure_category = 1 : base::length(exp_central),
-                       exposure_type =
-                         base::ifelse(length(exp_central) == 1,
-                                      "population_weighted_mean",
-                                      "exposure_distribution"))
-
-    # Join with exposure dimension and type
     input_wo_lifetable <-
-      dplyr::left_join(
-        input_wo_lifetable,
-        exp_dimension_table,
-        by = base::intersect(c("geo_id_disaggregated", "age_group", "sex", "exp_central"),
-                             base::names(input_wo_lifetable)))
+      input_wo_lifetable |>
+      # Add exposure_category and exposure_type
+      dplyr::mutate(
+        .by = c(geo_id_disaggregated, age_group, sex),
+        exposure_category = 1 : length_exp,
+        exposure_type =
+          base::ifelse(length_exp == 1,
+                       "population_weighted_mean",
+                       "exposure_distribution"))
+
 
     # PIVOT LONGER ###########################################################
     # I.e. increase nr of rows to show all combinations of
