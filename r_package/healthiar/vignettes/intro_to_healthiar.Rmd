@@ -1071,7 +1071,7 @@ results_multiplicative <- multiexpose(
   output_attribute_2 = results_no2_copd,
   exp_name_1 = "pm2.5",
   exp_name_2 = "no2",
-  approach = "multiplicative"
+  approach_multiexposure = "multiplicative"
 )
 ```
 
