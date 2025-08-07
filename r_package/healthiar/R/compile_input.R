@@ -86,32 +86,29 @@ compile_input <-
       # Convert into a tibble
       tibble:::as_tibble() |>
       # Add info
-      healthiar:::add_info(info = input_args_edited$info)|>
-      # Keep only unique rows
-      # (they can be duplicated in case of multiple geo units, exposure categories..)
+      healthiar:::add_info(info = input_args_edited$info)
+
+    length_exp <- input_wo_lifetable |>
+      dplyr::summarise(
+        .by = c(geo_id_disaggregated, sex, age_group),
+        length = base::length(exp_central)
+      )|>
+      dplyr::pull(length) |>
       base::unique()
 
-    # Obtain the exposure dimension and exposure type in a separate table
-    exp_dimension_table <-
-      input_wo_lifetable |>
-      dplyr::select(dplyr::any_of(c("geo_id_disaggregated", "age_group", "sex", "exp_central"))) |>
-      # Add population_midyear_male (it could be any of the other life table arguments)
-      # Add it in a separated mutate because
-      # if it is NULL then it is not added
-      dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "age_group", "sex"))))|>
-      dplyr::mutate(exposure_category = 1 : base::length(exp_central),
-                       exposure_type =
-                         base::ifelse(length(exp_central) == 1,
-                                      "population_weighted_mean",
-                                      "exposure_distribution"))
 
-    # Join with exposure dimension and type
+    # Obtain the exposure dimension and exposure type in a separate table
     input_wo_lifetable <-
-      dplyr::left_join(
-        input_wo_lifetable,
-        exp_dimension_table,
-        by = base::intersect(c("geo_id_disaggregated", "age_group", "sex", "exp_central"),
-                             base::names(input_wo_lifetable)))
+      input_wo_lifetable |>
+      # Add exposure_category and exposure_type
+      dplyr::mutate(
+        .by = c(geo_id_disaggregated, age_group, sex),
+        exposure_category = 1 : length_exp,
+        exposure_type =
+          base::ifelse(length_exp == 1,
+                       "population_weighted_mean",
+                       "exposure_distribution"))
+
 
     # PIVOT LONGER ###########################################################
     # I.e. increase nr of rows to show all combinations of
@@ -159,13 +156,6 @@ compile_input <-
     # As nested tibble
 
     if (is_lifetable) {
-      # # Calculate totals across sex
-      # input_wo_lifetable_totals <- input_wo_lifetable |>
-      #   dplyr::summarize(
-      #     bhd = base::sum(bhd),
-      #     population = bhd::sum(population)
-      #   )
-      #
 
       input_table <- input_wo_lifetable |>
         dplyr::mutate(
