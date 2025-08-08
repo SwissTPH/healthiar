@@ -4,12 +4,16 @@
 \alias{compare}
 \title{Compare the attributable health impacts between two scenarios}
 \usage{
-compare(output_attribute_1, output_attribute_2, approach_comparison = "delta")
+compare(
+  output_attribute_scen_1,
+  output_attribute_scen_2,
+  approach_comparison = "delta"
+)
 }
 \arguments{
-\item{output_attribute_1}{Scenario 1 as in the output of attribute()}
+\item{output_attribute_scen_1}{Scenario 1 as in the output of attribute()}
 
-\item{output_attribute_2}{Scenario 2 as in the output of attribute()}
+\item{output_attribute_scen_2}{Scenario 2 as in the output of attribute()}
 
 \item{approach_comparison}{\code{String} showing the method of comparison. Options: "delta" or "pif".}
 }
@@ -96,16 +100,16 @@ scenario_B <- attribute_health(
 )
 results <- compare(
 approach_comparison = "delta",
-output_attribute_1 = scenario_A,
-output_attribute_2 = scenario_B
+output_attribute_scen_1 = scenario_A,
+output_attribute_scen_2 = scenario_B
 )
 # Inspect the difference, stored in the \code{impact} column
 results$health_main |>
-  dplyr::select(impact, impact_1, impact_2) |>
+  dplyr::select(impact, impact_scen_1, impact_scen_2) |>
   print()
 
 # Goal: comparison of two scenarios with population impact fraction (pif) approach
-output_attribute_1 <- attribute_health(
+output_attribute_scen_1 <- attribute_health(
   exp_central = 8.85,   # EXPOSURE 1
   cutoff_central = 5,
   bhd_central = 25000,
@@ -114,7 +118,7 @@ output_attribute_1 <- attribute_health(
   rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
   rr_increment = 10
 )
-output_attribute_2 <- attribute_health(
+output_attribute_scen_2 <- attribute_health(
   exp_central = 6,      # EXPOSURE 2
   cutoff_central = 5,
   bhd_central = 25000,
@@ -124,8 +128,8 @@ output_attribute_2 <- attribute_health(
   rr_increment = 10
 )
 results <- compare(
-  output_attribute_1 = output_attribute_1,
-  output_attribute_2 = output_attribute_2,
+  output_attribute_scen_1 = output_attribute_scen_1,
+  output_attribute_scen_2 = output_attribute_scen_2,
   approach_comparison = "pif"
 )
 # Inspect the difference, stored in the impact column

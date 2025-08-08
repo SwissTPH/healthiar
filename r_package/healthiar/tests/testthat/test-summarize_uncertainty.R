@@ -239,15 +239,15 @@ testthat::test_that("results correct |pathway_uncertainty_compare|exp_dist|erf_a
 
   rr_scenario_2 <-
     healthiar::attribute_mod(
-      output_attribute_1 =  rr_scenario_1,
+      output_attribute =  rr_scenario_1,
       exp_central = 7.5,
       exp_lower = 6.2,
       exp_upper = 8.1)
 
   rr_comparison <-
     healthiar::compare(
-      output_attribute_1 = rr_scenario_1,
-      output_attribute_2 = rr_scenario_2,
+      output_attribute_scen_1 = rr_scenario_1,
+      output_attribute_scen_2 = rr_scenario_2,
       approach_comparison = "delta")
 
   testthat::expect_equal(
@@ -282,14 +282,14 @@ testthat::test_that("summary uncertainty comparison iteration", {
 
   scen_2_singlebhd_rr_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_singlebhd_rr_geo,
+      output_attribute = scen_1_singlebhd_rr_geo,
       # What is different in scenario 2 compared to scenario 1
       exp_central = c(6, 6.5))
 
   comparison_iteration <-
     healthiar::compare(
-      output_attribute_1 = scen_1_singlebhd_rr_geo,
-      output_attribute_2 = scen_2_singlebhd_rr_geo)
+      output_attribute_scen_1 = scen_1_singlebhd_rr_geo,
+      output_attribute_scen_2 = scen_2_singlebhd_rr_geo)
 
   testthat::expect_equal(
     object =
@@ -363,7 +363,7 @@ testthat::test_that("error_if_erf_eq  |pathway_uncertainty|exp_dist|erf_ar_formu
 
 
 
-testthat::test_that("error_if_uncertainty_in_exp_distribution |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
+testthat::test_that("error_if_uncertainty_in_exposure_distribution |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
