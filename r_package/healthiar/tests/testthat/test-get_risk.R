@@ -1,5 +1,7 @@
 # QUANTITATIVE TEST ############################################################
 testthat::test_that("linear rescaling correct", {
+
+  ## exp = 10, cutoff = 5
   testthat::expect_equal(
     object = healthiar::get_risk(
       exp = 10,
@@ -10,10 +12,49 @@ testthat::test_that("linear rescaling correct", {
     ),
     expected = 1.05
     )
+
+  ## exp = 15, cutoff = 5
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 15,
+      cutoff = 5,
+      rr = 1.1,
+      rr_increment = 10,
+      erf_shape = "linear"
+    ),
+    expected = 1.1
+  )
+
+  ## exp = 0, cutoff = 0
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 0,
+      cutoff = 0,
+      rr = 1.1,
+      rr_increment = 10,
+      erf_shape = "linear"
+    ),
+    expected = 1
+  )
+
+  ## exp = 0, cutoff = 5
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 0,
+      cutoff = 5,
+      rr = 1.1,
+      rr_increment = 10,
+      erf_shape = "linear"
+    ),
+    expected = 1
+  )
+
 }
 )
 
 testthat::test_that("log-linear rescaling the same", {
+
+  ## exp = 20, cutoff = 5
   testthat::expect_equal(
     object = healthiar::get_risk(
       exp = 20,
@@ -23,28 +64,66 @@ testthat::test_that("log-linear rescaling the same", {
       erf_shape = "log_linear"
     ) |> base::round(x = _, digits = 4),
     expected =
-      1.1224 # Results on 06 August 2024 (ChatGPT); no comparison study
+      1.1224
   )
-}
-)
 
-testthat::test_that("linear-log rescaling the same", {
+  ## exp = 15, cutoff = 5
   testthat::expect_equal(
     object = healthiar::get_risk(
-      exp = 20,
+      exp = 15,
       cutoff = 5,
       rr = 1.08,
       rr_increment = 10,
-      erf_shape = "log_log"
-      ) |> base::round(x = _, digits = 4),
+      erf_shape = "log_linear"
+    ) |> base::round(x = _, digits = 4),
     expected =
-      1.0941 # Results on 06 August 2024 (ChatGPT); no comparison study
+      1.08
   )
+
+  ## exp = 5, cutoff = 5
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 5,
+      cutoff = 5,
+      rr = 1.08,
+      rr_increment = 10,
+      erf_shape = "log_linear"
+    ) |> base::round(x = _, digits = 4),
+    expected =
+      1
+  )
+
+  ## exp = 0, cutoff = 0
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 0,
+      cutoff = 0,
+      rr = 1.08,
+      rr_increment = 10,
+      erf_shape = "log_linear"
+    ) |> base::round(x = _, digits = 4),
+    expected =
+      1
+  )
+
+  ## exp = 0, cutoff = 5
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 0,
+      cutoff = 5,
+      rr = 1.08,
+      rr_increment = 10,
+      erf_shape = "log_linear"
+    ) |> base::round(x = _, digits = 4),
+    expected =
+      1
+  )
+
 }
 )
 
-## This example uses the log-log curve initially proposed by ChatGPT, which is not defined for exp = 0 or exp <= cutoff (that's why it's commented out)
-# testthat::test_that("log-log rescaling the same", {
+## NOTE 2025-08-08: This example uses the log-log curve initially proposed by ChatGPT, which is not defined for exp = 0 or exp <= cutoff (that's why it's commented out); once we've settled on these new ERFs remove these error messages
+# testthat::test_that("linear-log rescaling the same", {
 #   testthat::expect_equal(
 #     object = healthiar::get_risk(
 #       exp = 20,
@@ -52,12 +131,84 @@ testthat::test_that("linear-log rescaling the same", {
 #       rr = 1.08,
 #       rr_increment = 10,
 #       erf_shape = "log_log"
-#     ) |> base::round(x = _, digits = 4),
+#       ) |> base::round(x = _, digits = 4),
 #     expected =
-#       1.0947 # Results on 06 August 2024 (ChatGPT); no comparison study
+#       1.0941 # Results on 06 August 2024 (ChatGPT); no comparison study
 #   )
 # }
 # )
+
+## This example uses the adapted lin-log curve (adapted based on the on the Pozzer 2022 (http://doi.org/10.1029/2022GH000711) log-log ERF)
+testthat::test_that("linear-log rescaling the same", {
+
+  ## exp = 20, cutoff = 5
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 20,
+      cutoff = 5,
+      rr = 1.08,
+      rr_increment = 10,
+      erf_shape = "linear_log"
+      ),
+    expected =
+      1.102179903 # Results on 08 August 2024 (ChatGPT); no comparison study
+  )
+
+  ## exp = 15, cutoff = 5
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 15,
+      cutoff = 5,
+      rr = 1.08,
+      rr_increment = 10,
+      erf_shape = "linear_log"
+    ),
+    expected =
+      1.08
+  )
+
+  ## exp = 5, cutoff = 5
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 5,
+      cutoff = 5,
+      rr = 1.08,
+      rr_increment = 10,
+      erf_shape = "linear_log"
+    ),
+    expected =
+      1
+  )
+
+  ## exp = 0, cutoff = 5
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 5,
+      cutoff = 5,
+      rr = 1.08,
+      rr_increment = 10,
+      erf_shape = "linear_log"
+    ),
+    expected =
+      1
+  )
+
+  ## exp = 0, cutoff = 0
+  testthat::expect_equal(
+    object = healthiar::get_risk(
+      exp = 5,
+      cutoff = 5,
+      rr = 1.08,
+      rr_increment = 10,
+      erf_shape = "linear_log"
+    ),
+    expected =
+      1
+  )
+
+}
+)
+
 
 ## This example uses the log-log curve based on Pozzer 2022 (http://doi.org/10.1029/2022GH000711)
 testthat::test_that("log-log rescaling the same", {
@@ -142,6 +293,22 @@ testthat::test_that("log-log rescaling the same", {
   )
 }
 )
+
+## NOTE 2025-08-08: This example uses the log-log curve initially proposed by ChatGPT, which is not defined for exp = 0 or exp <= cutoff (that's why it's commented out); once we've settled on these new ERFs remove these error messages
+# testthat::test_that("log-log rescaling the same", {
+#   testthat::expect_equal(
+#     object = healthiar::get_risk(
+#       exp = 20,
+#       cutoff = 5,
+#       rr = 1.08,
+#       rr_increment = 10,
+#       erf_shape = "log_log"
+#     ) |> base::round(x = _, digits = 4),
+#     expected =
+#       1.0947 # Results on 06 August 2024 (ChatGPT); no comparison study
+#   )
+# }
+# )
 
 # ERROR OR WARNING ########
 ## ERROR #########
