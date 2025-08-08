@@ -315,7 +315,7 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_
         erf_shape = "linear_log",
         bhd_central = 10)$health_main$impact,
     expected =
-      0.8599615 # Results on 06 August 2024 (ChatGPT); no comparison study
+      0.927071 # Results on 08 August 2024 (ChatGPT); no comparison study
   )
 })
 
@@ -500,7 +500,7 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_
         erf_shape = "linear_log",
         bhd_central = c(10, 10))$health_detailed$results_raw$impact,
     expected =
-      c(0.859961547, 0.859961547) # Results on 06 August 2024 (ChatGPT); no comparison study
+      c(0.927071, 0.927071) # Results on 08 August 2024 (ChatGPT); no comparison study
   )
 })
 
@@ -734,7 +734,7 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_FA
         erf_shape = "linear_log",
         bhd_central = c(10))$health_main$impact,
     expected =
-      0.859961547 # Results on 06 August 2024 (ChatGPT); no comparison study
+      0.927071 # Results on 08 August 2024 (ChatGPT); no comparison study
   )
 })
 
@@ -821,7 +821,7 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_TR
         erf_shape = "linear_log",
         bhd_central = c(10, 10, 10, 10))$health_main$impact,
     expected =
-      c(0.859961547, 0.859961547) # Results on 06 August 2024 (ChatGPT); no comparison study
+      c(0.927071, 0.927071) # Results on 08 August 2024 (ChatGPT); no comparison study
   )
 })
 

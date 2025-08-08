@@ -22,13 +22,13 @@
 #' @details
 #' \deqn{rr\_at\_exp = e^{\frac{\log(\mathrm{rr})}{\mathrm{rr\_increment}} \cdot (\mathrm{exp} - \mathrm{cutoff})}}
 #' @details
-#' \emph{linear-log ERF}
-#' @details
-#' \deqn{rr\_at\_exp = 1 + \frac{(\mathrm{rr} - 1)}{\log(\mathrm{rr\_increment})} \cdot (\log(\mathrm{exp}) - \log(\mathrm{cutoff}))}
-#' @details
 #' \emph{log-log ERF}
 #' @details
-#' \deqn{rr\_at\_exp = e^{\frac{\log(\mathrm{rr})}{\log(\mathrm{rr\_increment})} \cdot (\log(\mathrm{exp}) - \log(\mathrm{cutoff}))}}
+#' \deqn{rr\_at\_exp = (\frac{exp + 1}{cutoff + 1})^{\frac{\log(\mathrm{rr})}{\log(\mathrm{rr\_increment + cutoff + 1}) - \log(cutoff + 1)}}}
+#' @details
+#' \emph{linear-log ERF}
+#' @details
+#' \deqn{rr\_at\_exp = 1 + \frac{\log(\mathrm{rr - 1})}{\log(\mathrm{rr\_increment + cutoff + 1}) - \log(cutoff + 1)} \cdot \frac{\log(exp + 1)}{\log(cutoff + 1)}}
 
 # VALUE ########################################################################
 #' @returns
