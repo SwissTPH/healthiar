@@ -106,7 +106,7 @@ testthat::test_that("results correct using 2 delta comparisons as inputs|pathway
 
   scen_2_yll <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_yll,
+      output_attribute = bestcost_pm_yll,
       exp_central = 6)
 
   scen_1_yld <-
@@ -114,7 +114,7 @@ testthat::test_that("results correct using 2 delta comparisons as inputs|pathway
 
   scen_2_yld <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_yld,
+      output_attribute = bestcost_pm_yld,
       exp_central = 6)
 
   ## Delta comparison
@@ -124,13 +124,13 @@ testthat::test_that("results correct using 2 delta comparisons as inputs|pathway
         output_attribute_yll =
           healthiar::compare(
             approach_comparison = "delta",
-            output_attribute_1 = scen_1_yll,
-            output_attribute_2 = scen_2_yll),
+            output_attribute_scen_1 = scen_1_yll,
+            output_attribute_scen_2 = scen_2_yll),
         output_attribute_yld =
           healthiar::compare(
             approach_comparison = "delta",
-            output_attribute_1 = scen_1_yld,
-            output_attribute_2 = scen_2_yld)
+            output_attribute_scen_1 = scen_1_yld,
+            output_attribute_scen_2 = scen_2_yld)
       )$health_main$impact_rounded,
     expected =
       c(23956, 12533, 36112) # Result on 7 July 2025; no comparison study
@@ -187,7 +187,7 @@ testthat::test_that("results correct using 2 pif comparisons as inputs |pathway_
 
   scen_2_yll <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_yll,
+      output_attribute = bestcost_pm_yll,
       exp_central = 6)
 
   scen_1_yld <-
@@ -195,7 +195,7 @@ testthat::test_that("results correct using 2 pif comparisons as inputs |pathway_
 
   scen_2_yld <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_yld,
+      output_attribute = bestcost_pm_yld,
       exp_central = 6)
 
   ## PIF comparison
@@ -205,13 +205,13 @@ testthat::test_that("results correct using 2 pif comparisons as inputs |pathway_
         output_attribute_yll =
           healthiar::compare(
             approach_comparison = "pif",
-            output_attribute_1 = scen_1_yll,
-            output_attribute_2 = scen_2_yll),
+            output_attribute_scen_1 = scen_1_yll,
+            output_attribute_scen_2 = scen_2_yll),
         output_attribute_yld =
           healthiar::compare(
             approach_comparison = "pif",
-            output_attribute_1 = scen_1_yld,
-            output_attribute_2 = scen_2_yld)
+            output_attribute_scen_1 = scen_1_yld,
+            output_attribute_scen_2 = scen_2_yld)
         )$health_main$impact_rounded,
     expected =
       c(24032, 12554, 36308) # Result on 7 July 2025; no comparison study
@@ -245,7 +245,7 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
 
   scen_2_yld_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yld_geo,
+      output_attribute = scen_1_yld_geo,
       exp_central = c(6, 6.5))
 
 
@@ -279,7 +279,7 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
 
   scen_2_yll_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yll_geo,
+      output_attribute = scen_1_yll_geo,
       exp_central = rep(c(6, 6.5), each = 2 * 100))
 
   ## Delta comparison
@@ -289,13 +289,13 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
         output_attribute_yll =
           healthiar::compare(
             approach_comparison = "delta",
-            output_attribute_1 = scen_1_yll_geo,
-            output_attribute_2 = scen_2_yll_geo),
+            output_attribute_scen_1 = scen_1_yll_geo,
+            output_attribute_scen_2 = scen_2_yll_geo),
         output_attribute_yld =
           healthiar::compare(
             approach_comparison = "delta",
-            output_attribute_1 = scen_1_yld_geo,
-            output_attribute_2 = scen_2_yld_geo)
+            output_attribute_scen_1 = scen_1_yld_geo,
+            output_attribute_scen_2 = scen_2_yld_geo)
       )$health_main$impact_rounded,
     expected =
       c(33641, 17595, 50731) # Result on 7 July 2025; no comparison study
@@ -329,7 +329,7 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
 
   scen_2_yld_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yld_geo,
+      output_attribute = scen_1_yld_geo,
       exp_central = c(6, 6.5))
 
 
@@ -363,7 +363,7 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
 
   scen_2_yll_geo <-
     healthiar::attribute_mod(
-      output_attribute_1 = scen_1_yll_geo,
+      output_attribute = scen_1_yll_geo,
       exp_central = rep(c(6, 6.5), each = 100 * 2))
 
 
@@ -374,13 +374,13 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
         output_attribute_yll =
           healthiar::compare(
             approach_comparison = "pif",
-            output_attribute_1 = scen_1_yll_geo,
-            output_attribute_2 = scen_2_yll_geo),
+            output_attribute_scen_1 = scen_1_yll_geo,
+            output_attribute_scen_2 = scen_2_yll_geo),
         output_attribute_yld =
           healthiar::compare(
             approach_comparison = "pif",
-            output_attribute_1 = scen_1_yld_geo,
-            output_attribute_2 = scen_2_yld_geo)
+            output_attribute_scen_1 = scen_1_yld_geo,
+            output_attribute_scen_2 = scen_2_yld_geo)
         )$health_main$impact_rounded,
     expected =
       c(33769, 17630, 51058) # Result on 7 July 2025; no comparison study

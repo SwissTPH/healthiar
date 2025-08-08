@@ -70,8 +70,8 @@ daly <-
 
     # Store results_raw of yll and yld
     # Shorter and handy to code
-    results_raw_yll <- output_attribute_yll[["health_detailed"]][["results_agg_age"]]
-    results_raw_yld <- output_attribute_yld[["health_detailed"]][["results_agg_age"]]
+    results_raw_yll <- output_attribute_yll[["health_detailed"]][["results_summed_across_age"]]
+    results_raw_yld <- output_attribute_yld[["health_detailed"]][["results_summed_across_age"]]
 
     # Capture all column names
     # They should be the same for yll and yld but just in case

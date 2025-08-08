@@ -860,7 +860,7 @@ All pathways are core pathways
 # * Define all relevant pathways ###############################################
 ## Create tibble containing (almost) all possible calculation pathways
 pathways_multiexposure <- list(
-  approach = c("additive", "multiplicative", "combined")
+  approach_multiexposure = c("additive", "multiplicative", "combined")
 )
 
 pathways_multiexposure <- expand.grid(pathways_multiexposure) |> 
@@ -876,7 +876,7 @@ paste0("|pathway_multiexposure|", paste(names(vals), vals, sep = "_", collapse =
   
 #* Define core pathways ########################################################
 core_multiexposure <- list(
-  approach = c("additive", "multiplicative", "combined")
+  approach_multiexposure = c("additive", "multiplicative", "combined")
 )
 
 core_multiexposure <- expand.grid(core_multiexposure) |> 
@@ -900,7 +900,7 @@ test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_multiexposure\\|"
 ## Create an empty tibble with NA placeholders
 n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
-  approach = rep(NA_character_, n_row),
+  approach_multiexposure = rep(NA_character_, n_row),
   implemented = rep("FALSE", n_row)
 )
 

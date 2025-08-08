@@ -89,16 +89,16 @@ get_risk_and_pop_fraction <-
       ## If PIF
     } else {
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
-        dplyr::mutate(rr_at_exp_1 =
+        dplyr::mutate(rr_at_exp_scen_1 =
                         healthiar::get_risk(rr = rr,
-                                           exp = exp_1,
+                                           exp = exp_scen_1,
                                            cutoff = cutoff,
                                            rr_increment = rr_increment,
                                            erf_shape = erf_shape,
                                            erf_eq = erf_eq),
-                      rr_at_exp_2 =
+                      rr_at_exp_scen_2 =
                         healthiar::get_risk(rr = rr,
-                                           exp = exp_2,
+                                           exp = exp_scen_2,
                                            cutoff = cutoff,
                                            rr_increment = rr_increment,
                                            erf_shape = erf_shape,
@@ -150,17 +150,17 @@ get_risk_and_pop_fraction <-
                 "erf_eq_ci")))) |>
             ## prod() multiplies all elements in a vector
             dplyr::mutate(
-              rr_at_exp_1_before_multiplying = rr_at_exp_1,
-              rr_at_exp_2_before_multiplying = rr_at_exp_2,
-              rr_at_exp_1 = base::prod(rr_at_exp_1),
-              rr_at_exp_2 = base::prod(rr_at_exp_2))
+              rr_at_exp_scen_1_before_multiplying = rr_at_exp_scen_1,
+              rr_at_exp_scen_2_before_multiplying = rr_at_exp_scen_2,
+              rr_at_exp_scen_1 = base::prod(rr_at_exp_scen_1),
+              rr_at_exp_scen_2 = base::prod(rr_at_exp_scen_2))
           }
 
         ## Data wrangling for multiple exposures
         ## Collapse data frame pasting the columns with different values
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
-          dplyr::mutate(exposure_name = base::paste(base::unique(exposure_name), collapse = ", ")) |>
+          dplyr::mutate(exp_name = base::paste(base::unique(exp_name), collapse = ", ")) |>
           collapse_df_by_columns(
             columns_for_group = c(
               "geo_id_disaggregated",
@@ -181,7 +181,7 @@ get_risk_and_pop_fraction <-
       c("geo_id_disaggregated",
         "age_group",
         "sex",
-        "exposure_name",
+        "exp_name",
         cols_uncertainty)
 
     available_columns_to_group_input <-
@@ -214,10 +214,10 @@ get_risk_and_pop_fraction <-
         input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
           pop_fraction =
-            healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp_1,
-                                       rr_at_exp_2 = rr_at_exp_2,
-                                       prop_pop_exp_1 = prop_pop_exp_1,
-                                       prop_pop_exp_2 = prop_pop_exp_2)) }
+            healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp_scen_1,
+                                       rr_at_exp_2 = rr_at_exp_scen_2,
+                                       prop_pop_exp_1 = prop_pop_exp_scen_1,
+                                       prop_pop_exp_2 = prop_pop_exp_scen_2)) }
 
     ## Ungroup
     input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
@@ -250,7 +250,7 @@ get_risk_and_pop_fraction <-
         ## Collapse data frame pasting the columns with different values
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
-          dplyr::mutate(exposure_name = base::paste(base::unique(exposure_name), collapse = ", "),
+          dplyr::mutate(exp_name = base::paste(base::unique(exp_name), collapse = ", "),
                         exp = base::paste(base::unique(exp), collapse = ", "),
                         rr_at_exp = base::paste(base::unique(rr_at_exp), collapse = ", "),
                         pop_fraction_before_combining = base::paste(base::unique(pop_fraction_before_combining), collapse = ", ")) |>
@@ -268,7 +268,7 @@ get_risk_and_pop_fraction <-
 
     ## Only if exposure distribution (multiple exposure categories)
     ## then reduce the number of rows to keep the same number as in rr
-    if(base::unique(input_table$exposure_type) == "exposure_distribution"){
+    if(base::unique(input_table$exp_type) == "exposure_distribution"){
 
       pop_fraction_by_exp_category <- input_with_risk_and_pop_fraction
 
@@ -276,7 +276,7 @@ get_risk_and_pop_fraction <-
         collapse_df_by_columns(df = input_with_risk_and_pop_fraction,
                                columns_for_group = c(
                                  "geo_id_disaggregated",
-                                 "exposure_name",
+                                 "exp_name",
                                  "sex",
                                  "lifetable_with_pop_nest",
                                  "erf_ci",

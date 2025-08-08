@@ -161,7 +161,7 @@ get_impact_with_lifetable <-
     # DETERMINE ENTRY POPULATION OF YOA+1 IN BASELINE SCENARIO
     pop <- input_with_risk_and_pop_fraction |>
       dplyr::mutate(
-        pop_baseline_scenario_nest =
+        pop_exposed_scenario_nest =
           purrr::map(
             .x = lifetable_with_pop_nest,
             function(.x){
@@ -194,7 +194,7 @@ get_impact_with_lifetable <-
     # YOA+1 ENTRY POPULATION USING MODIFIED SURVIVAL PROBABILITIES
     pop <- pop |>
       dplyr::mutate(
-        pop_impacted_scenario_nest =
+        pop_unexposed_scenario_nest =
           purrr::map(
             .x = lifetable_with_pop_nest ,
             function(.x){
@@ -219,7 +219,7 @@ get_impact_with_lifetable <-
 
             }
           )
-        , .after = pop_baseline_scenario_nest
+        , .after = pop_exposed_scenario_nest
       )
 
     # PREMATURE DEATHS (SINGLE YEAR EXPOSURE) ######################################################
@@ -232,13 +232,13 @@ get_impact_with_lifetable <-
         dplyr::mutate(
           premature_deaths_nest =
             purrr::map2(
-              .x = pop_impacted_scenario_nest,
-              .y = pop_baseline_scenario_nest,
+              .x = pop_unexposed_scenario_nest,
+              .y = pop_exposed_scenario_nest,
               ~ tibble::tibble(
                 age_start = .x$age_start,
                 age_end = .x$age_end,
                 deaths_2019 = .x$population_2019_end - .y$population_2019_end)),
-          .after = pop_impacted_scenario_nest)
+          .after = pop_unexposed_scenario_nest)
 
     }
 
@@ -324,9 +324,9 @@ get_impact_with_lifetable <-
         # USING MODIFIED SURVIVAL PROBABILITIES (BECAUSE AFTER YOA THERE IS NO MORE AIR POLLUTION)
         pop <- pop |>
           dplyr::mutate(
-            pop_baseline_scenario_nest =
+            pop_exposed_scenario_nest =
               purrr::map(
-                .x = pop_baseline_scenario_nest,
+                .x = pop_exposed_scenario_nest,
                 function(.x){
                   project_pop(df = .x,
                               prob_survival = .x$prob_survival_mod,
@@ -337,9 +337,9 @@ get_impact_with_lifetable <-
 
         pop <- pop |>
           dplyr::mutate(
-            pop_impacted_scenario_nest =
+            pop_unexposed_scenario_nest =
               purrr::map(
-                .x = pop_impacted_scenario_nest,
+                .x = pop_unexposed_scenario_nest,
                 function(.x){
                   project_pop(df = .x,
                               prob_survival = .x$prob_survival_mod,
@@ -356,9 +356,9 @@ get_impact_with_lifetable <-
         # PROJECT POPULATION IN BASELINE SCENARIO
         pop <- pop |>
           dplyr::mutate(
-            pop_baseline_scenario_nest =
+            pop_exposed_scenario_nest =
               purrr::map(
-                .x = pop_baseline_scenario_nest,
+                .x = pop_exposed_scenario_nest,
                 function(.x){
                   project_pop(df = .x,
                               prob_survival = .x$prob_survival,
@@ -370,9 +370,9 @@ get_impact_with_lifetable <-
         # PROJECT POPULATION IN IMPACTED SCENARIO
         pop <- pop |>
           dplyr::mutate(
-            pop_impacted_scenario_nest =
+            pop_unexposed_scenario_nest =
               purrr::map(
-                .x = pop_impacted_scenario_nest,
+                .x = pop_unexposed_scenario_nest,
                 function(.x){
                   project_pop(df = .x,
                               prob_survival = .x$prob_survival_mod,
@@ -388,26 +388,26 @@ get_impact_with_lifetable <-
       pop <- pop |>
         dplyr::mutate(
           yll_nest = purrr::map2(
-            .x = pop_impacted_scenario_nest,
-            .y = pop_baseline_scenario_nest,
+            .x = pop_unexposed_scenario_nest,
+            .y = pop_exposed_scenario_nest,
 
             function(.x, .y){
 
               ages <- .x |>
                 dplyr::select(age_start, age_end)
 
-              pop_impacted <- .x |>
+              pop_unexposed <- .x |>
                 dplyr::select(dplyr::contains("population"),
                               -population_2019_end,
                               -dplyr::contains("entry"))
-              pop_baseline <- .y |>
+              pop_exposed <- .y |>
                 dplyr::select(dplyr::contains("population"),
                               -population_2019_end,
                               -dplyr::contains("entry"))
 
               # Difference in mid-year populations of baseline and impacted scenario equals attributable YLL
               pop_diff <-
-                pop_impacted - pop_baseline
+                pop_unexposed - pop_exposed
 
               # Add ages (in other pipeline because it does not work in one)
               pop_diff <-
@@ -425,14 +425,14 @@ get_impact_with_lifetable <-
       pop <- pop |>
         dplyr::mutate(
           premature_deaths_nest = purrr::map2(
-            .x = pop_baseline_scenario_nest,
-            .y = pop_impacted_scenario_nest,
+            .x = pop_exposed_scenario_nest,
+            .y = pop_unexposed_scenario_nest,
             function(.x, .y){
 
-              pop_baseline <- .x |>
+              pop_exposed <- .x |>
                 dplyr::select(dplyr::contains("deaths"),
                               -deaths)
-              pop_impacted <- .y |>
+              pop_unexposed <- .y |>
                 dplyr::select(dplyr::contains("deaths"),
                               -deaths)
 
@@ -441,7 +441,7 @@ get_impact_with_lifetable <-
 
               # Calculate difference in deaths
               # Baseline scenario minus impacted scenario
-              pop_diff <- pop_baseline - pop_impacted
+              pop_diff <- pop_exposed - pop_unexposed
 
               # Add ages (in other pipeline because it does not work in one)
               pop_diff <-
@@ -541,17 +541,17 @@ get_impact_with_lifetable <-
     #            -dplyr::contains("_2"), # Remove all "..._2" variables (e.g. "exp_2"); relevant in "compare_..." function calls
     #            dplyr::contains("_nest"),
     #            -dplyr::contains("approach_exposure"),
-    #            -dplyr::contains("exposure_dimension"),
-    #            -dplyr::contains("exposure_type"),
+    #            -dplyr::contains("exp_category"),
+    #            -dplyr::contains("exp_type"),
     #            -dplyr::contains("exp_ci"))
     #
     #   if( is_empty((grep("_1", names(pop))))){
     #     pop_impact <- input_backup |>
-    #     dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp", "prop_pop_exp", "rr", "erf_ci", "sex", "exposure_name"))
+    #     dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp", "prop_pop_exp", "rr", "erf_ci", "sex", "exp_name"))
     #     }else{
     #       pop_impact <- input_backup |>
     #       # attribute_... cases
-    #       dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp_1", "prop_pop_exp_1", "rr", "erf_ci", "sex", "exposure_name")) # compare_... cases
+    #       dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp_scen_1", "prop_pop_exp_scen_1", "rr", "erf_ci", "sex", "exp_name")) # compare_... cases
     #     }
     #
     # }

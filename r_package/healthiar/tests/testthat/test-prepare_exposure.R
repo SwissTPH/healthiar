@@ -11,7 +11,7 @@ testthat::test_that("results correct", {
         geo_units = sector,
         population = sf::st_drop_geometry(sector$POP),
         geo_id_aggregated = sf::st_drop_geometry(sector$MUNICIP)
-      )$main$exposure_value,
+      )$main$exp_value,
     expect = results$EXP_BE
   )
 })
@@ -30,7 +30,7 @@ testthat::test_that("results correct", {
         geo_units = sector,
         population = sf::st_drop_geometry(sector$POP),
         geo_id_aggregated = sf::st_drop_geometry(sector$MUNICIP)
-      )$main$exposure_value
+      )$main$exp_value
       ),
     expect = results$EXP_EU
   )

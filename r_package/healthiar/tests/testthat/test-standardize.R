@@ -28,7 +28,7 @@ testthat::test_that("results correct |pathway_standardize|single_geo|", {
 
   bestcost_pm_mortality_40_plus <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality_below_40,
+      output_attribute = bestcost_pm_mortality_below_40,
       bhd_central = 4000,
       exp_central = 10.9,
       population = 5E5)
@@ -80,7 +80,7 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
 
   bestcost_pm_mortality_40_plus_multigeo <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality_below_40_multigeo,
+      output_attribute = bestcost_pm_mortality_below_40_multigeo,
       bhd_central = c(4000, 8000),
       exp_central = c(10.9, 9.9),
       population = c(5E5, 1E6))
@@ -121,7 +121,7 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
 #
 #   bestcost_pm_mortality_40_plus_before <-
 #     healthiar::attribute_mod(
-#       output_attribute_1 = bestcost_pm_mortality_below_40_before,
+#       output_attribute = bestcost_pm_mortality_below_40_before,
 #       bhd_central = 4000,
 #       exp_central = 10.9,
 #       population = 5E5)
@@ -129,26 +129,26 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
 #
 #   bestcost_pm_mortality_below_40_after <-
 #     healthiar::attribute_mod(
-#       output_attribute_1 = bestcost_pm_mortality_below_40_before,
+#       output_attribute = bestcost_pm_mortality_below_40_before,
 #       exp_central = 7.1,
 #       bhd_central = 2000,
 #       population = 2E5)
 #
 #   bestcost_pm_mortality_40_plus_after <-
 #     healthiar::attribute_mod(
-#       output_attribute_1 = bestcost_pm_mortality_40_plus_before,
+#       output_attribute = bestcost_pm_mortality_40_plus_before,
 #       bhd_central = 8000,
 #       exp_central = 9.9,
 #       population = 1E6)
 #
 #   bestcost_pm_mortality_below_40_compared <-
 #     healthiar::compare(
-#       output_attribute_1 =
+#       output_attribute_scen_1 =
 #         healthiar::standardize(
 #           list(bestcost_pm_mortality_below_40_before,
 #                bestcost_pm_mortality_40_plus_before),
 #           age_group = c("below_40", "40_plus")),
-#       output_attribute_2 =
+#       output_attribute_scen_2 =
 #         healthiar::standardize(
 #           list(bestcost_pm_mortality_below_40_after,
 #                bestcost_pm_mortality_40_plus_after),

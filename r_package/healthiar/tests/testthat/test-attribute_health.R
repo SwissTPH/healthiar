@@ -351,7 +351,7 @@ testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_
 
   bestcost_pm_mortality_b <-
     healthiar::attribute_mod(
-      output_attribute_1 = bestcost_pm_mortality_a,
+      output_attribute = bestcost_pm_mortality_a,
       exp_central = 7.1,
       bhd_central = 2000,
       population = 2E5)
@@ -1312,7 +1312,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         duration_central = 1,
         info = data.frame(pollutant = "road_noise",
                           outcome = "highly_annoyance")
-      )$health_detailed$results_agg_exp_cat$impact_rounded,
+      )$health_detailed$results_summed_across_exp_cat$impact_rounded,
     expected =
       c(398, 199, 2388)
   )

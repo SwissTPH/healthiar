@@ -109,16 +109,16 @@ summarize_uncertainty <- function(
   input_args <- output_attribute$health_detailed$input_args
   input_table <- output_attribute$health_detailed$input_table
 
-  is_two_cases <- base::any(c("input_table_1", "input_table_2") %in% base::names(input_table))
+  is_two_cases <- base::any(c("input_table_scen_1", "input_table_scen_2") %in% base::names(input_table))
   is_one_case <- !is_two_cases
 
   if(is_one_case){
     input_args_to_check <- output_attribute$health_detailed$input_args
     input_table_to_check <- output_attribute$health_detailed$input_table
   } else {
-    input_args_to_check <- output_attribute$health_detailed$input_args$input_args_1
-    input_table_to_check <- output_attribute$health_detailed$input_table$input_table_2
-    #Same as input_args_2 (data validation of compare())
+    input_args_to_check <- output_attribute$health_detailed$input_args$input_args_scen_1
+    input_table_to_check <- output_attribute$health_detailed$input_table$input_table_scen_2
+    #Same as input_args_scen_2 (data validation of compare())
   }
 
 
@@ -143,7 +143,7 @@ summarize_uncertainty <- function(
 
   ## Error if exposure distribution and uncertainty in exp_...####
   if(# If exposure distribution
-    base::unique(output_attribute$health_detailed$results_agg_exp_cat$exposure_type) == "exposure_distribution" &&
+    base::unique(output_attribute$health_detailed$results_summed_across_exp_cat$exp_type) == "exposure_distribution" &&
     # If uncertainty in exposure
     (!base::is.null(input_args$value$exp_lower) |
       !base::is.null(input_args$value$exp_upper))){
@@ -241,7 +241,7 @@ summarize_uncertainty <- function(
   # If exposure dimension is implemented:
   # Get the dimension of the exposure
   # (i.e. if pop-weighted mean => 1, if exposure distribution => >1 )
-  # n_exp <- base::max(output_attribute$health_detailed$results_agg_exp_cat$exposure_dimension)
+  # n_exp <- base::max(output_attribute$health_detailed$results_summed_across_exp_cat$exp_dimension)
 
 
   ## Boolean variables ####
@@ -420,7 +420,7 @@ summarize_uncertainty <- function(
   ## Template and simulations #####
   sim_template <- input_table |>
   dplyr::select(geo_id_disaggregated) |>
-  # If exposure dimension is implemented: dplyr::select(geo_id_disaggregated, exposure_dimension) |>
+  # If exposure dimension is implemented: dplyr::select(geo_id_disaggregated, exp_dimension) |>
   base::unique()|>
   dplyr::mutate(geo_id_number = 1:n_geo, .after = geo_id_disaggregated) |>
   dplyr::mutate(sim_id = base::list(1:n_sim))
@@ -485,8 +485,8 @@ summarize_uncertainty <- function(
         base::list(sim_template$geo_id_number),
         function(geo_id_number) {
         # If exposure dimension is implemented
-        #base::list(sim_template$geo_id_number, sim_template$exposure_dimension),
-        #function(geo_id_number, exposure_dimension) {
+        #base::list(sim_template$geo_id_number, sim_template$exp_dimension),
+        #function(geo_id_number, exp_dimension) {
           simulate(
           central = central,
           lower = lower,
@@ -497,7 +497,7 @@ summarize_uncertainty <- function(
           # Minus 1 to keep the same seed as exposure dimension = 1
           seed = seeds[[var]] + geo_id_number)}
          # If exposure dimension is implemented
-         # seed = seeds[[var]] + geo_id_number + base::as.integer(exposure_dimension)-1)}
+         # seed = seeds[[var]] + geo_id_number + base::as.integer(exp_dimension)-1)}
       )
 
       # Second for those variable that are common for all geo units (rr, cutoff, dw and duration)
@@ -594,9 +594,9 @@ summarize_uncertainty <- function(
 
 
   # Extract impact
-  results_agg_exp_cat <- purrr::map(
+  results_summed_across_exp_cat <- purrr::map(
     output_sim,
-    \(x) x$health_detailed$results_agg_exp_cat$impact
+    \(x) x$health_detailed$results_summed_across_exp_cat$impact
   )
 
   # Extract geo_id_aggregated already with the right format to be added below
@@ -605,7 +605,7 @@ summarize_uncertainty <- function(
     geo_id_aggregated <- NULL
   } else {
     geo_id_aggregated <- purrr::map(output_sim,
-    \(x) x$health_detailed$results_agg_exp_cat$geo_id_aggregated
+    \(x) x$health_detailed$results_summed_across_exp_cat$geo_id_aggregated
   )}
 
 
@@ -616,7 +616,7 @@ summarize_uncertainty <- function(
                   geo_id_aggregated = geo_id_aggregated,
                   input = input_args_for_attribute,
                   output = output_sim,
-                  impact = results_agg_exp_cat)
+                  impact = results_summed_across_exp_cat)
 
   # Obtain results of simulations organized by geo unit
   attribute_by_geo_id_disaggregated <-
@@ -706,35 +706,35 @@ summarize_uncertainty <- function(
     # Use summarize_uncertainty_based_on_input() twice:
 
     # Once for the scenario 1
-    attribute_1 <-
+    attribute_scen_1 <-
       summarize_uncertainty_based_on_input(
-        input_args = input_args[["input_args_1"]],
-        input_table = input_table[["input_table_1"]])
+        input_args = input_args[["input_args_scen_1"]],
+        input_table = input_table[["input_table_scen_1"]])
 
     # Once for the scenario 2
-    attribute_2 <-
+    attribute_scen_2 <-
       summarize_uncertainty_based_on_input(
-        input_args = input_args[["input_args_2"]],
-        input_table = input_table[["input_table_2"]])
+        input_args = input_args[["input_args_scen_2"]],
+        input_table = input_table[["input_table_scen_2"]])
 
     # Extract output 1 and 2
-    output_1 <-
-      attribute_1[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]|>
+    output_scen_1 <-
+      attribute_scen_1[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
 
-    output_2 <-
-      attribute_2[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]|>
+    output_scen_2 <-
+      attribute_scen_2[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]|>
       dplyr::select(dplyr::contains(c("_id", "output")))
 
 
     # Extract simulation values 1 and 2
-    id_cols_and_sim_1 <-
-      attribute_1[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]] |>
+    id_cols_and_sim_scen_1 <-
+      attribute_scen_1[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]] |>
       dplyr::select(
         !dplyr::all_of(c("input", "output", "impact")))
 
-    id_cols_and_sim_2 <-
-      attribute_2[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]] |>
+    id_cols_and_sim_scen_2 <-
+      attribute_scen_2[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]] |>
       dplyr::select(
         !dplyr::all_of(c("input", "output", "impact")))
 
@@ -743,29 +743,29 @@ summarize_uncertainty <- function(
     id_cols <-
       # We use output 1 but we could use output 2
       # (same structure because same type of assessment)
-      output_1 |>
+      output_scen_1 |>
       dplyr::select(dplyr::contains("_id")) |>
       base::names()
 
     # Put together ids and sim cols
     id_cols_and_sim <-
-      dplyr::left_join(id_cols_and_sim_1,
-                       id_cols_and_sim_2,
+      dplyr::left_join(id_cols_and_sim_scen_1,
+                       id_cols_and_sim_scen_2,
                        by = id_cols,
-                       suffix = c("_1", "_2"))
+                       suffix = c("_scen_1", "_scen_2"))
 
     # Put outputs together in one single tibble and run compare across rows
     attribute_by_sim_disaggregated <-
       id_cols_and_sim |>
       dplyr::mutate(
-        output_1 = output_1$output,
-        output_2 = output_2$output)|>
+        output_scen_1 = output_scen_1$output,
+        output_scen_2 = output_scen_2$output)|>
       dplyr::mutate(
         output_compare =
-          purrr::pmap(base::list(output_1, output_2, input_args$approach_comparison),
+          purrr::pmap(base::list(output_scen_1, output_scen_2, input_args$approach_comparison),
                       healthiar::compare),
         impact = purrr::map(output_compare,
-                            \(x) x$health_detailed$results_agg_exp_cat$impact)
+                            \(x) x$health_detailed$results_summed_across_exp_cat$impact)
         )
 
     # Obtain results of simulations organized by geo unit
