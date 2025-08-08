@@ -487,6 +487,40 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
+testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        geo_id_disaggregated = c("a", "b"),
+        exp_central = c(20, 20),
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "linear_log",
+        bhd_central = c(10, 10))$health_detailed$results_raw$impact,
+    expected =
+      c(0.859961547, 0.859961547) # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
+})
+
+testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        geo_id_disaggregated = c("a", "b"),
+        exp_central = c(20, 20),
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_log",
+        bhd_central = c(10, 10))$health_detailed$results_raw$impact,
+    expected =
+      c(0.8653773, 0.8653773) # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
+})
+
 #### YLD ########################################################################
 
 testthat::test_that("results the same prevalence-based YLD (duration_central=1) |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
@@ -686,6 +720,41 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
+
+testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = c(20, 20),
+        prop_pop_exp = c(0.5, 0.5),
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "linear_log",
+        bhd_central = c(10))$health_main$impact,
+    expected =
+      0.859961547 # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
+})
+
+testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = c(20, 20),
+        prop_pop_exp = c(0.5, 0.5),
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_log",
+        bhd_central = 10)$health_main$impact,
+    expected =
+      0.8653773 # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
+})
+
 #### ITERATION ##################################################################
 testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|", {
 
@@ -736,6 +805,42 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
   ## ASSESSOR: Susanne Breitner-Busch, LMU Munich
   ## ASSESSMENT DETAILS: https://www.umweltbundesamt.de/publikationen/quantifizierung-der-krankheitslast-verursacht-durch#:~:text=Beschrieben%20werden%20die%20gesundheitlichen%20Effekte%20in%20der%20deutschen,f%C3%BCr%20die%20Jahre%202007%20-%202016%20quantifiziert%20wurden.
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
+})
+
+testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        geo_id_disaggregated = c("a", "a", "b", "b"),
+        exp_central = c(20, 20, 20, 20),
+        prop_pop_exp = c(0.5, 0.5, 0.5, 0.5),
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "linear_log",
+        bhd_central = c(10, 10, 10, 10))$health_main$impact,
+    expected =
+      c(0.859961547, 0.859961547) # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
+})
+
+testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        geo_id_disaggregated = c("a", "a", "b", "b"),
+        exp_central = c(20, 20, 20, 20),
+        prop_pop_exp = c(0.5, 0.5, 0.5, 0.5),
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_log",
+        bhd_central = c(10, 10, 10, 10))$health_main$impact,
+    expected =
+      c(0.8653773, 0.8653773) # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
 })
 
 #### USER-DEFINED ERF FUNCTION ###############################################
