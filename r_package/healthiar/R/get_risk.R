@@ -22,13 +22,13 @@
 #' @details
 #' \deqn{rr\_at\_exp = e^{\frac{\log(\mathrm{rr})}{\mathrm{rr\_increment}} \cdot (\mathrm{exp} - \mathrm{cutoff})}}
 #' @details
-#' \emph{linear-log ERF}
-#' @details
-#' \deqn{rr\_at\_exp = 1 + \frac{(\mathrm{rr} - 1)}{\log(\mathrm{rr\_increment})} \cdot (\log(\mathrm{exp}) - \log(\mathrm{cutoff}))}
-#' @details
 #' \emph{log-log ERF}
 #' @details
-#' \deqn{rr\_at\_exp = e^{\frac{\log(\mathrm{rr})}{\log(\mathrm{rr\_increment})} \cdot (\log(\mathrm{exp}) - \log(\mathrm{cutoff}))}}
+#' \deqn{rr\_at\_exp = (\frac{exp + 1}{cutoff + 1})^{\frac{\log(\mathrm{rr})}{\log(\mathrm{rr\_increment + cutoff + 1}) - \log(cutoff + 1)}}}
+#' @details
+#' \emph{linear-log ERF}
+#' @details
+#' \deqn{rr\_at\_exp = 1 + \frac{\log(\mathrm{rr - 1})}{\log(\mathrm{rr\_increment + cutoff + 1}) - \log(cutoff + 1)} \cdot \frac{\log(exp + 1)}{\log(cutoff + 1)}}
 
 # VALUE ########################################################################
 #' @returns
@@ -71,7 +71,7 @@ get_risk <-
 
     # Obtain rr_at_exp, i.e. the relative risk the level of exposure
     # instead of for the increment
-
+# browser()
     # If erf_eq is passed as argument
     if (! base::is.null(erf_eq)) {
 
@@ -105,15 +105,41 @@ get_risk <-
       # Calculate the rr_at_exp based on erf_shape
       rr_at_exp <-
         dplyr::case_when(
+
+          # LINEAR ####
           erf_shape == "linear" ~
-            1 + ((rr - 1) * (exp - cutoff) / rr_increment),
+            1 + ( (rr - 1) * (exp - cutoff) / rr_increment ),
+
+          # LOG-LINEAR ####
           erf_shape == "log_linear" ~
-            base::exp(base::log(rr) * (exp - cutoff) / rr_increment),
-          erf_shape == "linear_log" ~
-            1 + ((rr - 1) * (base::log(exp) - base::log(cutoff)) / base::log(rr_increment)),
+            base::exp( base::log(rr) * (exp - cutoff) / rr_increment ),
+
+          # LOG-LOG ####
           erf_shape == "log_log" ~
-            base::exp(base::log(rr) * (base::log(exp) - base::log(cutoff)) / base::log(rr_increment))
-      )
+
+            ## The curve below was proposed by ChatGPT
+            ## It is not defined for exp = 0 or exp <= cutoff
+            ## --> commented out
+            # base::exp( base::log(rr) * ( base::log(exp - cutoff) ) / base::log(rr_increment) )
+
+            ## This curve below follows the definition by Pozzer 2022 (http://doi.org/10.1029/2022GH000711)
+            ## It is defined at all exposures and RR equals RR₁₀ when Ci=C0+10 exactly.
+            ## --> implemented
+            ## rr_at_exp = ((exp + 1) / (cutoff + 1)) ^ beta, where beta = log(rr) / ( log(rr_increment + cutoff + 1) - log(cutoff + 1) )
+            ( ( exp + 1 ) / ( cutoff + 1 ) )^( base::log(rr) / ( base::log(rr_increment + cutoff + 1) - base::log(cutoff + 1) ) ),
+
+          # LINEAR-LOG ####
+          erf_shape == "linear_log" ~
+            ## The curve below was initially proposed by ChatGPT
+            ## It is not defined for exp = 0 or exp <= cutoff
+            ## --> commented out
+            # 1 + ( (rr - 1) * ( base::log(exp - cutoff) ) / base::log(rr_increment) )
+            ## This curve below has been proposed by ChatGPT: it's an adaption of the initially proposed curve with the structure of Pozzer 2022's log-log ERF
+            ## I've found no study using a lin-log ERF curve, so until now this ERF can't be validated.
+
+        1 + ( ( rr - 1 ) / ( base::log(rr_increment + cutoff + 1) - base::log(cutoff + 1) ) ) * base::log( (exp + 1) / (cutoff + 1) )
+
+        )
     }
 
     return(rr_at_exp)

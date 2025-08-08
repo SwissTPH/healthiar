@@ -303,9 +303,41 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
+testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = 20,
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "linear_log",
+        bhd_central = 10)$health_main$impact,
+    expected =
+      0.927071 # Results on 08 August 2024 (ChatGPT); no comparison study
+  )
+})
+
+testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = 20,
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_log",
+        bhd_central = 10)$health_main$impact,
+    expected =
+      0.936215963 # Results on 08 August 2024 (ChatGPT); no comparison study
+  )
+})
+
 #### ITERATION ##################################################################
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|", {
 
   bestcost_pm_mortality_a <-
     healthiar::attribute_health(
@@ -341,7 +373,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -453,6 +485,40 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
   ## ASSESSOR: Susanne Breitner-Busch, LMU Munich
   ## ASSESSMENT DETAILS: https://www.umweltbundesamt.de/publikationen/quantifizierung-der-krankheitslast-verursacht-durch#:~:text=Beschrieben%20werden%20die%20gesundheitlichen%20Effekte%20in%20der%20deutschen,f%C3%BCr%20die%20Jahre%202007%20-%202016%20quantifiziert%20wurden.
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
+})
+
+testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        geo_id_disaggregated = c("a", "b"),
+        exp_central = c(20, 20),
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "linear_log",
+        bhd_central = c(10, 10))$health_detailed$results_raw$impact,
+    expected =
+      c(0.927071, 0.927071) # Results on 08 August 2024 (ChatGPT); no comparison study
+  )
+})
+
+testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        geo_id_disaggregated = c("a", "b"),
+        exp_central = c(20, 20),
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_log",
+        bhd_central = c(10, 10))$health_detailed$results_raw$impact,
+    expected =
+      c(0.936215963, 0.936215963) # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
 })
 
 #### YLD ########################################################################
@@ -654,6 +720,41 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
+
+testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = c(20, 20),
+        prop_pop_exp = c(0.5, 0.5),
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "linear_log",
+        bhd_central = c(10))$health_main$impact,
+    expected =
+      0.927071 # Results on 08 August 2024 (ChatGPT); no comparison study
+  )
+})
+
+testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = c(20, 20),
+        prop_pop_exp = c(0.5, 0.5),
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_log",
+        bhd_central = 10)$health_main$impact,
+    expected =
+      0.936215963 # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
+})
+
 #### ITERATION ##################################################################
 testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|", {
 
@@ -704,6 +805,42 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
   ## ASSESSOR: Susanne Breitner-Busch, LMU Munich
   ## ASSESSMENT DETAILS: https://www.umweltbundesamt.de/publikationen/quantifizierung-der-krankheitslast-verursacht-durch#:~:text=Beschrieben%20werden%20die%20gesundheitlichen%20Effekte%20in%20der%20deutschen,f%C3%BCr%20die%20Jahre%202007%20-%202016%20quantifiziert%20wurden.
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
+})
+
+testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        geo_id_disaggregated = c("a", "a", "b", "b"),
+        exp_central = c(20, 20, 20, 20),
+        prop_pop_exp = c(0.5, 0.5, 0.5, 0.5),
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "linear_log",
+        bhd_central = c(10, 10, 10, 10))$health_main$impact,
+    expected =
+      c(0.927071, 0.927071) # Results on 08 August 2024 (ChatGPT); no comparison study
+  )
+})
+
+testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        geo_id_disaggregated = c("a", "a", "b", "b"),
+        exp_central = c(20, 20, 20, 20),
+        prop_pop_exp = c(0.5, 0.5, 0.5, 0.5),
+        cutoff_central = 5,
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_log",
+        bhd_central = c(10, 10, 10, 10))$health_main$impact,
+    expected =
+      c(0.936215963, 0.936215963) # Results on 06 August 2024 (ChatGPT); no comparison study
+  )
 })
 
 #### USER-DEFINED ERF FUNCTION ###############################################
@@ -1237,6 +1374,102 @@ testthat::test_that("error if rr lower than 0", {
   )
 })
 
+## NOTE 2025-08-08: the two error message tests for log-log and log-lin have been commented out, as with the new ERFs it's no problem to calculate RR's for exp=0 or when exp <= cutoff; once we've settled on these new ERFs remove these error messages
+# testthat::test_that("error if cutoff higher than exposure when erf_shape == log_log", {
+#
+#   error <- "if the exposure-response function shape is log-log or linear-log then the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust."
+#
+#   ## cutoff_central > exp_central
+#   testthat::expect_error(
+#     object =
+#       healthiar::attribute_health(
+#         exp_central = 4, cutoff_central = 5,
+#         exp_lower = NULL, cutoff_lower = NULL,
+#         exp_upper = NULL, cutoff_upper = NULL,
+#         bhd_central = 1000,
+#         rr_central = 1.05,
+#         rr_increment = 10,
+#         erf_shape = "log_log"),
+#     regexp = error)
+#
+#   ## cutoff_upper > exp_upper
+#   testthat::expect_error(
+#     object =
+#       healthiar::attribute_health(
+#         exp_central = 3, cutoff_central = 1,
+#         exp_lower = 2, cutoff_lower = 0,
+#         exp_upper = 5, cutoff_upper = 7,
+#         bhd_central = 1000,
+#         rr_central = 1.05,
+#         rr_increment = 10,
+#         erf_shape = "log_log"),
+#     regexp = error)
+#
+#   ## cutoff_lower == exp_lower
+#   testthat::expect_error(
+#     object =
+#       healthiar::attribute_health(
+#         exp_central = 3,
+#         exp_lower = 2,
+#         exp_upper = 5,
+#         cutoff_central = 2,
+#         cutoff_lower = 0,
+#         cutoff_upper = 4,
+#         bhd_central = 1000,
+#         rr_central = 1.05,
+#         rr_increment = 10,
+#         erf_shape = "log_log"),
+#     regexp = error)
+# })
+#
+# testthat::test_that("error if cutoff higher than exposure when erf_shape == linear_log", {
+#
+#   error <- "if the exposure-response function shape is log-log or linear-log then the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust."
+#
+#   ## cutoff_central > exp_central
+#   testthat::expect_error(
+#     object =
+#       healthiar::attribute_health(
+#         exp_central = 4, cutoff_central = 5,
+#         exp_lower = NULL, cutoff_lower = NULL,
+#         exp_upper = NULL, cutoff_upper = NULL,
+#         bhd_central = 1000,
+#         rr_central = 1.05,
+#         rr_increment = 10,
+#         erf_shape = "linear_log"),
+#     regexp = error)
+#
+#   ## cutoff_upper > exp_upper
+#   testthat::expect_error(
+#     object =
+#       healthiar::attribute_health(
+#         exp_central = 3, cutoff_central = 1,
+#         exp_lower = 2, cutoff_lower = 0,
+#         exp_upper = 5, cutoff_upper = 7,
+#         bhd_central = 1000,
+#         rr_central = 1.05,
+#         rr_increment = 10,
+#         erf_shape = "linear_log"),
+#     regexp = error)
+#
+#   ## cutoff_lower == exp_lower
+#   testthat::expect_error(
+#     object =
+#       healthiar::attribute_health(
+#         exp_central = 3,
+#         exp_lower = 2,
+#         exp_upper = 5,
+#         cutoff_central = 2,
+#         cutoff_lower = 0,
+#         cutoff_upper = 4,
+#         bhd_central = 1000,
+#         rr_central = 1.05,
+#         rr_increment = 10,
+#         erf_shape = "linear_log"),
+#     regexp = error)
+#
+# })
+
 testthat::test_that("error if dw higher than 1", {
 
   testthat::expect_error(
@@ -1269,7 +1502,7 @@ testthat::test_that("error if not lower>central>upper", {
   )
 })
 
-testthat::test_that("error if onyl lower or upper", {
+testthat::test_that("error if only lower or upper", {
 
   testthat::expect_error(
     object =
