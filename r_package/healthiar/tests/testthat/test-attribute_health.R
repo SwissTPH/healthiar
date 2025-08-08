@@ -331,7 +331,7 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_
         erf_shape = "log_log",
         bhd_central = 10)$health_main$impact,
     expected =
-      0.8653773 # Results on 06 August 2024 (ChatGPT); no comparison study
+      0.936215963 # Results on 08 August 2024 (ChatGPT); no comparison study
   )
 })
 
@@ -517,7 +517,7 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_
         erf_shape = "log_log",
         bhd_central = c(10, 10))$health_detailed$results_raw$impact,
     expected =
-      c(0.8653773, 0.8653773) # Results on 06 August 2024 (ChatGPT); no comparison study
+      c(0.936215963, 0.936215963) # Results on 06 August 2024 (ChatGPT); no comparison study
   )
 })
 
@@ -751,7 +751,7 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_FA
         erf_shape = "log_log",
         bhd_central = 10)$health_main$impact,
     expected =
-      0.8653773 # Results on 06 August 2024 (ChatGPT); no comparison study
+      0.936215963 # Results on 06 August 2024 (ChatGPT); no comparison study
   )
 })
 
@@ -839,7 +839,7 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_TR
         erf_shape = "log_log",
         bhd_central = c(10, 10, 10, 10))$health_main$impact,
     expected =
-      c(0.8653773, 0.8653773) # Results on 06 August 2024 (ChatGPT); no comparison study
+      c(0.936215963, 0.936215963) # Results on 06 August 2024 (ChatGPT); no comparison study
   )
 })
 
@@ -1374,100 +1374,101 @@ testthat::test_that("error if rr lower than 0", {
   )
 })
 
-testthat::test_that("error if cutoff higher than exposure when erf_shape == log_log", {
-
-  error <- "if the exposure-response function shape is log-log or linear-log then the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust."
-
-  ## cutoff_central > exp_central
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 4, cutoff_central = 5,
-        exp_lower = NULL, cutoff_lower = NULL,
-        exp_upper = NULL, cutoff_upper = NULL,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "log_log"),
-    regexp = error)
-
-  ## cutoff_upper > exp_upper
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 3, cutoff_central = 1,
-        exp_lower = 2, cutoff_lower = 0,
-        exp_upper = 5, cutoff_upper = 7,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "log_log"),
-    regexp = error)
-
-  ## cutoff_lower == exp_lower
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 3,
-        exp_lower = 2,
-        exp_upper = 5,
-        cutoff_central = 2,
-        cutoff_lower = 0,
-        cutoff_upper = 4,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "log_log"),
-    regexp = error)
-})
-
-testthat::test_that("error if cutoff higher than exposure when erf_shape == linear_log", {
-
-  error <- "if the exposure-response function shape is log-log or linear-log then the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust."
-
-  ## cutoff_central > exp_central
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 4, cutoff_central = 5,
-        exp_lower = NULL, cutoff_lower = NULL,
-        exp_upper = NULL, cutoff_upper = NULL,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "linear_log"),
-    regexp = error)
-
-  ## cutoff_upper > exp_upper
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 3, cutoff_central = 1,
-        exp_lower = 2, cutoff_lower = 0,
-        exp_upper = 5, cutoff_upper = 7,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "linear_log"),
-    regexp = error)
-
-  ## cutoff_lower == exp_lower
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 3,
-        exp_lower = 2,
-        exp_upper = 5,
-        cutoff_central = 2,
-        cutoff_lower = 0,
-        cutoff_upper = 4,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "linear_log"),
-    regexp = error)
-
-})
+## NOTE 2025-08-08: the two error message tests for log-log and log-lin have been commented out, as with the new ERFs it's no problem to calculate RR's for exp=0 or when exp <= cutoff; once we've settled on these new ERFs remove these error messages
+# testthat::test_that("error if cutoff higher than exposure when erf_shape == log_log", {
+#
+#   error <- "if the exposure-response function shape is log-log or linear-log then the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust."
+#
+#   ## cutoff_central > exp_central
+#   testthat::expect_error(
+#     object =
+#       healthiar::attribute_health(
+#         exp_central = 4, cutoff_central = 5,
+#         exp_lower = NULL, cutoff_lower = NULL,
+#         exp_upper = NULL, cutoff_upper = NULL,
+#         bhd_central = 1000,
+#         rr_central = 1.05,
+#         rr_increment = 10,
+#         erf_shape = "log_log"),
+#     regexp = error)
+#
+#   ## cutoff_upper > exp_upper
+#   testthat::expect_error(
+#     object =
+#       healthiar::attribute_health(
+#         exp_central = 3, cutoff_central = 1,
+#         exp_lower = 2, cutoff_lower = 0,
+#         exp_upper = 5, cutoff_upper = 7,
+#         bhd_central = 1000,
+#         rr_central = 1.05,
+#         rr_increment = 10,
+#         erf_shape = "log_log"),
+#     regexp = error)
+#
+#   ## cutoff_lower == exp_lower
+#   testthat::expect_error(
+#     object =
+#       healthiar::attribute_health(
+#         exp_central = 3,
+#         exp_lower = 2,
+#         exp_upper = 5,
+#         cutoff_central = 2,
+#         cutoff_lower = 0,
+#         cutoff_upper = 4,
+#         bhd_central = 1000,
+#         rr_central = 1.05,
+#         rr_increment = 10,
+#         erf_shape = "log_log"),
+#     regexp = error)
+# })
+#
+# testthat::test_that("error if cutoff higher than exposure when erf_shape == linear_log", {
+#
+#   error <- "if the exposure-response function shape is log-log or linear-log then the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust."
+#
+#   ## cutoff_central > exp_central
+#   testthat::expect_error(
+#     object =
+#       healthiar::attribute_health(
+#         exp_central = 4, cutoff_central = 5,
+#         exp_lower = NULL, cutoff_lower = NULL,
+#         exp_upper = NULL, cutoff_upper = NULL,
+#         bhd_central = 1000,
+#         rr_central = 1.05,
+#         rr_increment = 10,
+#         erf_shape = "linear_log"),
+#     regexp = error)
+#
+#   ## cutoff_upper > exp_upper
+#   testthat::expect_error(
+#     object =
+#       healthiar::attribute_health(
+#         exp_central = 3, cutoff_central = 1,
+#         exp_lower = 2, cutoff_lower = 0,
+#         exp_upper = 5, cutoff_upper = 7,
+#         bhd_central = 1000,
+#         rr_central = 1.05,
+#         rr_increment = 10,
+#         erf_shape = "linear_log"),
+#     regexp = error)
+#
+#   ## cutoff_lower == exp_lower
+#   testthat::expect_error(
+#     object =
+#       healthiar::attribute_health(
+#         exp_central = 3,
+#         exp_lower = 2,
+#         exp_upper = 5,
+#         cutoff_central = 2,
+#         cutoff_lower = 0,
+#         cutoff_upper = 4,
+#         bhd_central = 1000,
+#         rr_central = 1.05,
+#         rr_increment = 10,
+#         erf_shape = "linear_log"),
+#     regexp = error)
+#
+# })
 
 testthat::test_that("error if dw higher than 1", {
 

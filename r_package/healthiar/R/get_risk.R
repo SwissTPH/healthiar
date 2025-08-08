@@ -105,14 +105,32 @@ get_risk <-
       # Calculate the rr_at_exp based on erf_shape
       rr_at_exp <-
         dplyr::case_when(
+          ## LINEAR ####
           erf_shape == "linear" ~
             1 + ( (rr - 1) * (exp - cutoff) / rr_increment ),
+          ## LOG-LINEAR ####
           erf_shape == "log_linear" ~
             base::exp( base::log(rr) * (exp - cutoff) / rr_increment ),
+          ## LINEAR-LOG ####
           erf_shape == "linear_log" ~
+            ## The curve below was proposed by ChatGPT
+            ## It is not defined for exp = 0 or exp <= cutoff
+            ## --> commented out
             1 + ( (rr - 1) * ( base::log(exp - cutoff) ) / base::log(rr_increment) ),
+
+          ## LOG-LOG ####
           erf_shape == "log_log" ~
-            base::exp( base::log(rr) * ( base::log(exp - cutoff) ) / base::log(rr_increment) )
+
+            ## The curve below was proposed by ChatGPT
+            ## It is not defined for exp = 0 or exp <= cutoff
+            ## --> commented out
+            # base::exp( base::log(rr) * ( base::log(exp - cutoff) ) / base::log(rr_increment) )
+
+            ## This curve below follows the definition by Pozzer 2022 (http://doi.org/10.1029/2022GH000711)
+            ## It is defined at all exposures and RR equals RR₁₀ when Ci=C0+10 exactly.
+            ## --> implemented
+            ## rr_at_exp = ((exp + 1) / (cutoff + 1)) ^ beta, where beta = log(rr) / ( log(rr_increment + cutoff + 1) - log(cutoff + 1) )
+            ( ( exp + 1 ) / ( cutoff + 1 ) )^( base::log(rr) / ( base::log(rr_increment + cutoff + 1) - base::log(cutoff + 1) ) )
       )
     }
 
