@@ -458,11 +458,10 @@ socialize <- function(output_attribute = NULL,
   impact_rates_by_quantile_and_age <-
     input_data_with_quantile |>
     ## Group by geo_id and age group to obtain impact rates at that level
-    dplyr::group_by(social_quantile, age_group, age_order, ref_prop_pop) |>
     dplyr::summarize(
+      .by = c(social_quantile, age_group, age_order, ref_prop_pop),
       population_sum = base::sum(population, na.rm = TRUE),
       impact_sum = base::sum(impact, na.rm = TRUE)) |>
-    dplyr::ungroup() |>
     dplyr::mutate(
       impact_rate = impact_sum / population_sum * 1e5,
       impact_rate_std = impact_rate * ref_prop_pop)
@@ -472,11 +471,13 @@ socialize <- function(output_attribute = NULL,
     impact_rates_by_quantile_and_age |>
     # Group only by social_quantile to get population and impact by quantile (higher level)
     # and impact_rate_std (but not impact_rate)
-    dplyr::group_by(social_quantile) |>
-    dplyr::summarize(population_sum = base::sum(population_sum, na.rm = TRUE),
-                     impact_sum = base::sum(impact_sum, na.rm = TRUE),
-                     impact_rate_std = base::sum(impact_rate_std, na.rm = TRUE))|>
-    dplyr::ungroup()|>
+    dplyr::summarize(
+      .by = social_quantile,
+      population_sum = base::sum(population_sum, na.rm = TRUE),
+      impact_sum = base::sum(impact_sum, na.rm = TRUE),
+      impact_rate_std = base::sum(impact_rate_std, na.rm = TRUE))|>
+    # Order rows by social quantile
+    dplyr::arrange(social_quantile)|>
     # Calculate impact rate based on population and impact
     # Not summing!
     dplyr::mutate(impact_rate = impact_sum / population_sum * 1e5, .before = impact_rate_std)
@@ -537,6 +538,7 @@ socialize <- function(output_attribute = NULL,
   impact_rates_overall <-
     ## Two steps but for the overall level impact_rates_by_quantile_and_age can be reused
     impact_rates_by_quantile_and_age |>
+    # group_by() instead of .by= to keep groups in summarize() and mutate() below
     dplyr::group_by(age_group, age_order, ref_prop_pop) |>
     ## Without grouping because it is overall
     dplyr::summarize(
@@ -592,8 +594,8 @@ socialize <- function(output_attribute = NULL,
     dplyr::arrange(parameter) |>
     ## Obtain the first (most deprived) and last (least deprived) values
     ## for each parameter
-    dplyr::group_by(parameter) |>
     dplyr::summarize(
+      .by = parameter,
       first = dplyr::first(value),
       last = dplyr::last(value)) |>
     ## Add the overall (not by quantile) sums and means

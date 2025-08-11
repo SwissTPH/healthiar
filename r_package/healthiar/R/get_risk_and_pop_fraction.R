@@ -33,6 +33,12 @@ get_risk_and_pop_fraction <-
   function(input_table,
            pop_fraction_type){
 
+    # Define useful variables #################
+    # To be used below
+    ci_variables <-
+      c("erf_ci", "exp_ci", "bhd_ci", "cutoff_ci",
+        "dw_ci", "duration_ci", "erf_eq_ci")
+
 
     # Define helper function ###################################################
 
@@ -46,15 +52,13 @@ get_risk_and_pop_fraction <-
 
         collapsed_df <-
           df |>
-          # group_by requires across() to use any_of()
-          dplyr::group_by(dplyr::across(dplyr::any_of(columns_for_group)))|>
           dplyr::summarize(
+            .by = dplyr::any_of(columns_for_group),
             dplyr::across(dplyr::everything(),
                    ~ if (base::length(base::unique(.)) == 1) {
                      dplyr::first(.)
                    } else {
-                     base::paste(., collapse = sep)}),
-            .groups = "drop")
+                     base::paste(., collapse = sep)}))
       }
 
 
@@ -119,18 +123,10 @@ get_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction <-
             input_with_risk_and_pop_fraction |>
             ## group by columns that define diversity
-            ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
-            dplyr::group_by(
-              dplyr::across(dplyr::any_of(c(
-                "erf_ci",
-                "exp_ci",
-                "bhd_ci",
-                "cutoff_ci",
-                "dw_ci",
-                "duration_ci",
-                "erf_eq_ci")))) |>
+            ## Only combine pm2.5 and no2 for rr_at_exp in the same ci |>
             # prod() multiplies all elements in a vector
             dplyr::mutate(
+              .by = dplyr::any_of(ci_variables),
               rr_at_exp_before_multiplying = rr_at_exp,
               rr_at_exp = base::prod(rr_at_exp))
 
@@ -139,17 +135,9 @@ get_risk_and_pop_fraction <-
             input_with_risk_and_pop_fraction |>
             ## group by columns that define diversity
             ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
-            dplyr::group_by(
-              dplyr::across(dplyr::any_of(c(
-                "erf_ci",
-                "exp_ci",
-                "bhd_ci",
-                "cutoff_ci",
-                "dw_ci",
-                "duration_ci",
-                "erf_eq_ci")))) |>
             ## prod() multiplies all elements in a vector
             dplyr::mutate(
+              .by = dplyr::any_of(ci_variables),
               rr_at_exp_scen_1_before_multiplying = rr_at_exp_scen_1,
               rr_at_exp_scen_2_before_multiplying = rr_at_exp_scen_2,
               rr_at_exp_scen_1 = base::prod(rr_at_exp_scen_1),
@@ -193,6 +181,7 @@ get_risk_and_pop_fraction <-
     input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
 
       ## Group by different pathways and geo_units
+      ## and keep this group for the operations below
       dplyr::group_by(dplyr::across(dplyr::any_of(available_columns_to_group_input)))
 
 
@@ -232,18 +221,11 @@ get_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
           ## group by columns that define diversity
           ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
-          dplyr::group_by(
-            dplyr::across(dplyr::any_of(c(
-              "erf_ci",
-              "exp_ci",
-              "bhd_ci",
-              "cutoff_ci",
-              "dw_ci",
-              "duration_ci",
-              "erf_eq_ci")))) |>
-          dplyr::mutate(pop_fraction_before_combining = pop_fraction,
-                        ## Multiply with prod() across all pollutants
-                        pop_fraction = 1-(prod(1-pop_fraction)))
+          dplyr::mutate(
+            .by = dplyr::any_of(ci_variables),
+            pop_fraction_before_combining = pop_fraction,
+            ## Multiply with prod() across all pollutants
+            pop_fraction = 1-(prod(1-pop_fraction)))
 
 
         ## Data wrangling for multiple exposures

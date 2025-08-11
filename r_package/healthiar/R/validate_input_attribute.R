@@ -453,8 +453,9 @@ validate_input_attribute <-
 
       if(base::is.null(input_args_value [["pop_exp"]]) &&
          var_table |>
-         dplyr::group_by(dplyr::across(dplyr::any_of(c("geo_id_disaggregated", "population_midyear_male", "age_group", "sex")))) |>
-         dplyr::summarize(sum = base::sum(var, na.rm = TRUE) > 1) |>
+         dplyr::summarize(
+           .by = dplyr::any_of(c("geo_id_disaggregated", "population_midyear_male", "age_group", "sex")),
+           sum = base::sum(var, na.rm = TRUE) > 1) |>
          dplyr::pull(sum) |>
          base::any()){
 

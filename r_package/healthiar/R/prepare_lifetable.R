@@ -226,15 +226,14 @@ prepare_lifetable <-
     # According to the AirQ+ Life Table Manual,
     # the last element of the each interval is the total deaths minus the sum of the previous interval elements
     calculation_fixed <- calculation |>
-      dplyr::group_by(age_group_n_years) |>
       dplyr::mutate(
+        .by = age_group_n_years,
         bhd_1_year = dplyr::if_else(
           age_interval_index == age_interval_length,
           bhd_n_years - base::sum(bhd_1_year[age_interval_index != age_interval_length]),
           bhd_1_year
         )
-      ) |>
-      dplyr::ungroup()
+      )
 
 
     # Copy columns to indicate which ones are to be used in attribute_... functions

@@ -56,9 +56,12 @@ prepare_exposure <-
 
     ## calculate population-weighted mean concentration in each aggregated geo unit
     exposure <- exposure |>
+      # group_by() instead of .by= because we need to keep the group
+      # for mutate() and summarize()
       dplyr::group_by(geo_id_aggregated) |>
       dplyr::mutate(poll_weighted = population / sum(population) * poll_mean) |>
       dplyr::summarise(exp_value = base::sum(poll_weighted)) |>
+      dplyr::ungroup() |>
       dplyr::mutate(exp_type = 'Population-weighted mean concentration')
 
     ## build output list
