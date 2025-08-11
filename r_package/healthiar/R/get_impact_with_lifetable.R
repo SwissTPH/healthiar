@@ -387,7 +387,7 @@ get_impact_with_lifetable <-
 
       pop <- pop |>
         dplyr::mutate(
-          yll_nested = purrr::map2(
+          yll_by_age_and_year = purrr::map2(
             .x = pop_unexposed_scenario_nested,
             .y = pop_exposed_scenario_nested,
 
@@ -485,8 +485,8 @@ get_impact_with_lifetable <-
 
         pop <- pop |>
           dplyr::mutate(
-            yll_nested = purrr::map(
-              .x = yll_nested,
+            yll_by_age_and_year = purrr::map(
+              .x = yll_by_age_and_year,
               function(.x){
                 .x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))])
                 return(.x)
@@ -513,7 +513,7 @@ get_impact_with_lifetable <-
     pop <- pop |>
       dplyr::mutate(
         pop_impact_nested =
-          if({{health_outcome}} == "deaths") deaths_by_age_and_year else yll_nested)
+          if({{health_outcome}} == "deaths") deaths_by_age_and_year else yll_by_age_and_year)
 
     # Remove from pop, as already present in input_with_risk_...
     pop <- pop |>
@@ -650,13 +650,13 @@ get_impact_with_lifetable <-
     # if ( health_outcome %in% "yld" ) {
     #
     #   impact_detailed <- impact_detailed |>
-    #     dplyr::mutate(yll_nested =
+    #     dplyr::mutate(yll_by_age_and_year =
     #                     purrr::map2(
-    #       .x = yll_nested, .y = dw,
-    #       function(yll_nested, dw){
+    #       .x = yll_by_age_and_year, .y = dw,
+    #       function(yll_by_age_and_year, dw){
     #         # YLL * DW = YLD
-    #         yll_nested <- yll_nested * dw
-    #         return(yll_nested)
+    #         yll_by_age_and_year <- yll_by_age_and_year * dw
+    #         return(yll_by_age_and_year)
     #       }
     #     )
     #     )
