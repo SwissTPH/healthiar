@@ -230,7 +230,7 @@ get_impact_with_lifetable <-
       pop <- pop |>
         # Premature deaths = ( impacted scenario YOA end-of-year population ) - ( baseline scenario YOA end-of-year pop )
         dplyr::mutate(
-          premature_deaths_nested =
+          deaths_by_age_and_year =
             purrr::map2(
               .x = pop_unexposed_scenario_nested,
               .y = pop_exposed_scenario_nested,
@@ -424,7 +424,7 @@ get_impact_with_lifetable <-
 
       pop <- pop |>
         dplyr::mutate(
-          premature_deaths_nested = purrr::map2(
+          deaths_by_age_and_year = purrr::map2(
             .x = pop_exposed_scenario_nested,
             .y = pop_unexposed_scenario_nested,
             function(.x, .y){
@@ -458,9 +458,9 @@ get_impact_with_lifetable <-
       # Rename column names
       pop <- pop |>
         dplyr::mutate(
-          premature_deaths_nested =
+          deaths_by_age_and_year =
             purrr::map(
-              .x = premature_deaths_nested,
+              .x = deaths_by_age_and_year,
               ~.x |>
                 # replace "deaths" with "population"
                 # dplyr::rename_with(~ stringr::str_replace(., "deaths", "population"))
@@ -495,8 +495,8 @@ get_impact_with_lifetable <-
             , .before = 1)
 
         pop <- pop |>
-          dplyr::mutate(premature_deaths_nested = purrr::map(
-            .x = premature_deaths_nested,
+          dplyr::mutate(deaths_by_age_and_year = purrr::map(
+            .x = deaths_by_age_and_year,
             function(.x){
               .x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))])
               return(.x)
@@ -513,7 +513,7 @@ get_impact_with_lifetable <-
     pop <- pop |>
       dplyr::mutate(
         pop_impact_nested =
-          if({{health_outcome}} == "deaths") premature_deaths_nested else yll_nested)
+          if({{health_outcome}} == "deaths") deaths_by_age_and_year else yll_nested)
 
     # Remove from pop, as already present in input_with_risk_...
     pop <- pop |>
