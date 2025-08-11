@@ -206,12 +206,11 @@ summarize_uncertainty <- function(
 
     summary <-
       attribute |>
-      dplyr::group_by(dplyr::across(dplyr::all_of(grouping_var))) |>
       dplyr::summarise(
+        .by = dplyr::all_of(grouping_var),
         central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
         lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE, names = FALSE),
-        upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE),
-        .groups = "drop") |>
+        upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE)) |>
       # Change to same format as other output from healthiar
       tidyr::pivot_longer(
         # data = summary,
@@ -554,12 +553,12 @@ summarize_uncertainty <- function(
 
   template_with_sim_grouped <-
     template_with_sim |>
-    dplyr::group_by(sim_id) |>
     dplyr::summarize(
+      .by = sim_id,
       # Pack in lists the values that are different in geo unit (as input_args)
-      dplyr::across(dplyr::all_of(c("geo_id_disaggregated",
-                                    var_names_with_ci_central)),
-                    ~ base::list(.x)))
+      dplyr::across(
+        .cols = dplyr::all_of(c("geo_id_disaggregated", var_names_with_ci_central)),
+        .fns = ~ base::list(.x)))
 
   if( base::length(var_names_with_ci_geo_identical) >= 1 ){
     template_with_sim_grouped <-  template_with_sim_grouped |>

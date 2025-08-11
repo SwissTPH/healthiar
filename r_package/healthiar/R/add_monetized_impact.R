@@ -153,8 +153,8 @@ add_monetized_impact  <-
     }else if(summing_across_discounted_years){
       df_relevant <-
         df_by_year |>
-        dplyr::group_by(dplyr::across(dplyr::any_of(grouping_variables)))|>
         dplyr::summarize(
+          .by = dplyr::any_of(grouping_variables),
           dplyr::across(dplyr::starts_with("monetized"), sum)
         )
     }
