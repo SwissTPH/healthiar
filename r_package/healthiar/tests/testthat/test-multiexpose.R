@@ -300,7 +300,7 @@ testthat::test_that("detailed results correct |fake_multiexposure|approach_combi
         exp_name_2 = "no2",
         approach_multiexposure = "combined")$health_detailed$results_raw$impact |> base::round(),
     expected =
-      c(0.051, 0.059, 0.065, 0.068, 0.079, 0.079, 0.088, 0.093, 0.102) * 1000 # Results on 2025-01-16; Results from BEST-COST task 1.4 report (NIVM), but lower and upper bounds are fake
+      c(0.079, 0.059, 0.093, 0.068, 0.051, 0.079, 0.088, 0.065, 0.102) * 1000 # Results on 2025-01-16; Results from BEST-COST task 1.4 report (NIVM), but lower and upper bounds are fake
   )
 })
 
