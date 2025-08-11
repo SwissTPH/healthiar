@@ -33,6 +33,12 @@ get_risk_and_pop_fraction <-
   function(input_table,
            pop_fraction_type){
 
+    # Define useful variables #################
+    # To be used below
+    ci_variables <-
+      c("erf_ci", "exp_ci", "bhd_ci", "cutoff_ci",
+        "dw_ci", "duration_ci", "erf_eq_ci")
+
 
     # Define helper function ###################################################
 
