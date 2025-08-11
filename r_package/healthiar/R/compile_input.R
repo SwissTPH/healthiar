@@ -178,7 +178,7 @@ compile_input <-
 
         # Nest life tables
         tidyr::nest(
-          lifetable_with_pop_nest =
+          lifetable_with_pop_nested =
           c(age_group, age_start, age_end, population, bhd, deaths))
 
 
