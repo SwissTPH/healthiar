@@ -584,7 +584,7 @@ get_impact_with_lifetable <-
     impact_detailed <- pop_impact |>
       dplyr::mutate(
         health_outcome = health_outcome,
-        lifeyears_nested =
+        impact_by_year_nested =
           purrr::pmap(
             base::list(.x =  pop_impact_nested,
                        max_age = base::unique(max_age),
@@ -663,13 +663,13 @@ get_impact_with_lifetable <-
     #
     #   ## Determine total YLD per year
     #   impact_detailed <- impact_detailed |>
-    #     dplyr::mutate(lifeyears_nested =
+    #     dplyr::mutate(impact_by_year_nested =
     #                     purrr::map2(
-    #                       .x = lifeyears_nested, .y = dw,
-    #                       function(lifeyears_nested, dw){
-    #                         lifeyears_nested <- lifeyears_nested |>
+    #                       .x = impact_by_year_nested, .y = dw,
+    #                       function(impact_by_year_nested, dw){
+    #                         impact_by_year_nested <- impact_by_year_nested |>
     #                           mutate(impact = impact * dw)
-    #                         return(lifeyears_nested)
+    #                         return(impact_by_year_nested)
     #                       }
     #                     ))
     #
@@ -685,7 +685,7 @@ get_impact_with_lifetable <-
         # Store in new column "impact_nested"
         dplyr::mutate(
           impact = purrr::map(
-            .x = lifeyears_nested,
+            .x = impact_by_year_nested,
             function(.x){
 
               .x <- .x |>
@@ -719,7 +719,7 @@ get_impact_with_lifetable <-
 
         dplyr::mutate(
           impact_nested = purrr::pmap(
-            base::list(.x = lifeyears_nested, .y = last_year, health_outcome = base::unique(health_outcome)),
+            base::list(.x = impact_by_year_nested, .y = last_year, health_outcome = base::unique(health_outcome)),
             function(.x, .y, health_outcome){
 
               ## If yll or yld
