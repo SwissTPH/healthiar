@@ -29,6 +29,10 @@
 #' \emph{linear-log ERF}
 #' @details
 #' \deqn{rr\_at\_exp = 1 + \frac{\log(\mathrm{rr - 1})}{\log(\mathrm{rr\_increment + cutoff + 1}) - \log(cutoff + 1)} \cdot \frac{\log(exp + 1)}{\log(cutoff + 1)}}
+#' @details
+#' \strong{Sources}
+#' @details
+#' Log-linear & log-log ERF: Pozzer et al. (2022), https://doi.org/10.1029/2022GH000711; linear-log ERF: adapted based on Pozzer et al. (2022), https://doi.org/10.1029/2022GH000711
 
 # VALUE ########################################################################
 #' @returns

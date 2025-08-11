@@ -49,6 +49,10 @@ This function re-scales the relative risk from the increment value in the epidem
 \emph{linear-log ERF}
 
 \deqn{rr\_at\_exp = 1 + \frac{\log(\mathrm{rr - 1})}{\log(\mathrm{rr\_increment + cutoff + 1}) - \log(cutoff + 1)} \cdot \frac{\log(exp + 1)}{\log(cutoff + 1)}}
+
+\strong{Sources}
+
+Log-linear & log-log ERF: Pozzer et al. (2022), https://doi.org/10.1029/2022GH000711; linear-log ERF: adapted based on Pozzer et al. (2022), https://doi.org/10.1029/2022GH000711
 }
 \examples{
 # Goal: scale relative risk to observed exposure level
