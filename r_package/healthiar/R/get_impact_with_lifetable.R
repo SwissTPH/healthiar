@@ -237,7 +237,7 @@ get_impact_with_lifetable <-
               ~ tibble::tibble(
                 age_start = .x$age_start,
                 age_end = .x$age_end,
-                deaths_2019 = .x$population_2019_end - .y$population_2019_end)),
+                impact_2019 = .x$population_2019_end - .y$population_2019_end)),
           .after = projection_if_unexposed_nested)
 
     }
@@ -411,7 +411,12 @@ get_impact_with_lifetable <-
 
               # Add ages (in other pipeline because it does not work in one)
               pop_diff <-
-                dplyr::bind_cols(ages, pop_diff)
+                dplyr::bind_cols(ages, pop_diff) |>
+                # Rename to impact
+                dplyr::rename_with(
+                  .cols = dplyr::starts_with("population_"),
+                  .fn = ~ base::gsub("population_", "impact_", .x)
+                )
 
               return(pop_diff)
             }
@@ -445,7 +450,12 @@ get_impact_with_lifetable <-
 
               # Add ages (in other pipeline because it does not work in one)
               pop_diff <-
-                dplyr::bind_cols(ages, pop_diff)
+                dplyr::bind_cols(ages, pop_diff) |>
+              # Rename to impact
+              dplyr::rename_with(
+                .cols = dplyr::starts_with("deaths_"),
+                .fn = ~ base::gsub("deaths_", "impact_", .x)
+              )
 
 
 
@@ -454,18 +464,6 @@ get_impact_with_lifetable <-
           )
           , .before = 1)
 
-
-      # Rename column names
-      pop <- pop |>
-        dplyr::mutate(
-          deaths_by_age_and_year =
-            purrr::map(
-              .x = deaths_by_age_and_year,
-              ~.x |>
-                # replace "deaths" with "population"
-                # dplyr::rename_with(~ stringr::str_replace(., "deaths", "population"))
-                dplyr::rename_with(~ gsub("population", "deaths", .), dplyr::contains("population"))
-            ))
 
       ## NEWBORNS #################################################################
 
@@ -510,7 +508,8 @@ get_impact_with_lifetable <-
 
     # COMPILE OUTPUT ##############################################################################
     # Data wrangling to get the results in the needed format
-    pop <- pop |>
+
+     pop <- pop |>
       dplyr::mutate(
         pop_impact_nested =
           if({{health_outcome}} == "deaths") deaths_by_age_and_year else yll_by_age_and_year)
@@ -608,7 +607,7 @@ get_impact_with_lifetable <-
 
                 .x <- .x |>
                   dplyr::mutate(
-                    dplyr::across(dplyr::contains("population"),
+                    dplyr::across(dplyr::contains("impact_"),
                                   ~ {mat <- base::as.matrix(.x)
                                   mat[base::upper.tri(mat, diag = FALSE)] <- NA
                                   return(mat)}))
@@ -626,7 +625,7 @@ get_impact_with_lifetable <-
               if ( health_outcome %in% c("yll") ) { # And ("yld")  if ever implemented
 
                 .x <- .x |>
-                  dplyr::select(dplyr::contains("population_")) |>
+                  dplyr::select(dplyr::contains("impact_")) |>
 
                   ## Sum over ages (i.e. vertically)
                   ## only ages between "max_age" and "input_with_risk_and_pop_fraction |>  pull(min_age) |> first()" filtered for above
@@ -634,10 +633,10 @@ get_impact_with_lifetable <-
 
                   ## Reshape to long format
                   ## (output is data frame with 2 columns "year" & "impact")
-                  tidyr::pivot_longer(cols = dplyr::starts_with("population_"),
+                  tidyr::pivot_longer(cols = dplyr::starts_with("impact_"),
                                       names_to = "year",
                                       values_to = "impact",
-                                      names_prefix = "population_") |>
+                                      names_prefix = "impact_") |>
 
                   ## Convert year to numeric
                   dplyr::mutate(year = base::as.numeric(year))
@@ -689,7 +688,7 @@ get_impact_with_lifetable <-
             function(.x){
 
               .x <- .x |>
-                dplyr::select(.data = _, dplyr::all_of(base::paste0("deaths_", year_of_analysis))) |>
+                dplyr::select(.data = _, dplyr::all_of(base::paste0("impact_", year_of_analysis))) |>
                 base::sum(na.rm = TRUE)
               return(.x)
             }
