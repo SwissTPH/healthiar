@@ -172,18 +172,8 @@ compile_input <-
           min_age = if(base::is.null(input_args_edited$min_age)){
             dplyr::first(base::unique(age_start))} else {min_age},
           max_age = if(base::is.null(input_args_edited$max_age)){
-            dplyr::last(base::unique(age_start))} else {max_age},
-          # Duplicate bhd  and year_of_analysis for life table calculations
-          deaths = bhd,
-          yoa = year_of_analysis) |>
-        # Rename population adding suffix yoa
-        # yoa means Year Of Analysis
-        # It is better to do it (before nesting tables) than in get_impact_with_lifetable()
-        dplyr::rename("population_yoa" = "population")|>
-        # Nest life tables
-        tidyr::nest(
-          lifetable_with_pop_nested =
-          c(yoa, age_group, age_start, age_end, bhd, deaths, population_yoa))
+            dplyr::last(base::unique(age_start))} else {max_age})
+
 
 
     } else {

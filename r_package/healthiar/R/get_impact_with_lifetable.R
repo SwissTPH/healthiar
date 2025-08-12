@@ -50,62 +50,112 @@ get_impact_with_lifetable <-
     is_with_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "with_newborns"
 
 
-    # LIFETABLE SETUP ##############################################################################
 
+    # LIFETABLE SETUP ##############################################################################
     data_prepared <- input_with_risk_and_pop_fraction |>
-      # Get modification factor
+      dplyr::mutate(
+      # Duplicate bhd  and year_of_analysis
+      # for more handy column names for life table calculations
+      deaths = bhd,
+      yoa = year_of_analysis,
+      # Rename population adding suffix yoa
+      # yoa means Year Of Analysis
+      # It is better to do it  now (before nesting tables)
+      population_yoa = population)
+
+
+
+    data_prepared <- data_prepared |>
+            # Get modification factor
       # it works with both single exposure and exposure distribution
       dplyr::mutate(modification_factor = 1 - pop_fraction,
                     .after = rr) |>
-      # Add modification factor to lifetable_with_pop_nested
-      dplyr::mutate(lifetable_with_pop_nested =
-                      purrr::pmap(
-                        base::list(lifetable_with_pop_nested, modification_factor),
-                        function(lifetable_with_pop_nested, modification_factor){
-                          lifetable_with_pop_nested <- lifetable_with_pop_nested |>
-                            dplyr::mutate(modification_factor = modification_factor)
-                        }
-                      )
-      )
-
-
-
-    # ADD ENTRY POPULATION OF YOA & SURVIVAL PROBABILITIES
-    data_prepared <- data_prepared |>
-
+      # CALCULATE ENTRY POPULATION OF YEAR OF ANALYSIS (YOA)
       dplyr::mutate(
+        population_yoa_entry = population_yoa + (deaths / 2),
+        .before = population_yoa) |>
+      # CALCULATE PROBABILITY OF SURVIVAL FROM START YEAR TO END YEAR & START YEAR TO MID YEAR
+      # probability of survival from start of year i to start of year i+1 (entry to entry)
+      dplyr::mutate(
+        prob_survival =
+          (population_yoa - (deaths / 2)) /
+          (population_yoa + (deaths / 2) ),
+        .after = deaths) |>
+      # Probability of survival from start to midyear
+      # For example entry_pop = 100, prob_survival = 0.8 then end_of_year_pop = 100 * 0.8 = 80.
+      # mid_year_pop = 100 - (20/2) = 90.
+      dplyr::mutate(
+        prob_survival_until_mid_year = 1 - ((1 - prob_survival) / 2),
+        .after = deaths) |>
+      # Hazard rate for calculating survival probabilities
+      dplyr::mutate(
+        hazard_rate = deaths / population_yoa,
+        .after = deaths)
+
+
+
+    # data_prepared <- input_with_risk_and_pop_fraction |>
+    #   # Get modification factor
+    #   # it works with both single exposure and exposure distribution
+    #   dplyr::mutate(modification_factor = 1 - pop_fraction,
+    #                 .after = rr) |>
+    #   # Add modification factor to lifetable_with_pop_nested
+    #   dplyr::mutate(lifetable_with_pop_nested =
+    #                   purrr::pmap(
+    #                     base::list(lifetable_with_pop_nested, modification_factor),
+    #                     function(lifetable_with_pop_nested, modification_factor){
+    #                       lifetable_with_pop_nested <- lifetable_with_pop_nested |>
+    #                         dplyr::mutate(modification_factor = modification_factor)
+    #                     }
+    #                   )
+    #   )
+    #
+    #
+    #
+    # # ADD ENTRY POPULATION OF YOA & SURVIVAL PROBABILITIES
+    # data_prepared <- data_prepared |>
+    #
+    #   dplyr::mutate(
+    #     lifetable_with_pop_nested =
+    #       purrr::map(
+    #         .x = lifetable_with_pop_nested,
+    #         function(.x){
+    #           .x <- .x |>
+    #             # CALCULATE ENTRY POPULATION OF YEAR OF ANALYSIS (YOA)
+    #             dplyr::mutate(
+    #               population_yoa_entry = population_yoa + (deaths / 2),
+    #               .before = population_yoa) |>
+    #
+    #             # CALCULATE PROBABILITY OF SURVIVAL FROM START YEAR TO END YEAR & START YEAR TO MID YEAR
+    #             # probability of survival from start of year i to start of year i+1 (entry to entry)
+    #             dplyr::mutate(
+    #               prob_survival =
+    #                 (population_yoa - (deaths / 2)) /
+    #                 (population_yoa + (deaths / 2) ),
+    #               .after = deaths) |>
+    #
+    #             # Probability of survival from start to midyear
+    #             # For example entry_pop = 100, prob_survival = 0.8 then end_of_year_pop = 100 * 0.8 = 80.
+    #             # mid_year_pop = 100 - (20/2) = 90.
+    #             dplyr::mutate(
+    #               prob_survival_until_mid_year = 1 - ((1 - prob_survival) / 2),
+    #               .after = deaths) |>
+    #
+    #             # Hazard rate for calculating survival probabilities
+    #             dplyr::mutate(
+    #               hazard_rate = deaths / population_yoa,
+    #               .after = deaths)
+    #         }
+    #       )
+    #   )
+
+    # Nest life tables
+    data_prepared <- data_prepared |>
+      tidyr::nest(
         lifetable_with_pop_nested =
-          purrr::map(
-            .x = lifetable_with_pop_nested,
-            function(.x){
-              .x <- .x |>
-                # CALCULATE ENTRY POPULATION OF YEAR OF ANALYSIS (YOA)
-                dplyr::mutate(
-                  population_yoa_entry = population_yoa + (deaths / 2),
-                  .before = population_yoa) |>
-
-                # CALCULATE PROBABILITY OF SURVIVAL FROM START YEAR TO END YEAR & START YEAR TO MID YEAR
-                # probability of survival from start of year i to start of year i+1 (entry to entry)
-                dplyr::mutate(
-                  prob_survival =
-                    (population_yoa - (deaths / 2)) /
-                    (population_yoa + (deaths / 2) ),
-                  .after = deaths) |>
-
-                # Probability of survival from start to midyear
-                # For example entry_pop = 100, prob_survival = 0.8 then end_of_year_pop = 100 * 0.8 = 80.
-                # mid_year_pop = 100 - (20/2) = 90.
-                dplyr::mutate(
-                  prob_survival_until_mid_year = 1 - ((1 - prob_survival) / 2),
-                  .after = deaths) |>
-
-                # Hazard rate for calculating survival probabilities
-                dplyr::mutate(
-                  hazard_rate = deaths / population_yoa,
-                  .after = deaths)
-            }
-          )
-      )
+        c(yoa, age_group, age_start, age_end, bhd, deaths, population, population_yoa,
+          modification_factor, population_yoa_entry,
+          prob_survival, prob_survival_until_mid_year, hazard_rate))
 
     # CALCULATE MODIFIED SURVIVAL PROBABILITIES
     data_prepared <- data_prepared |>
@@ -400,11 +450,11 @@ get_impact_with_lifetable <-
                 dplyr::select(age_start, age_end)
 
               unexposed <- .x |>
-                dplyr::select(dplyr::contains("population"),
+                dplyr::select(dplyr::contains("population_"),
                               -dplyr::contains("_end"),
                               -dplyr::contains("_entry"))
               exposed <- .y |>
-                dplyr::select(dplyr::contains("population"),
+                dplyr::select(dplyr::contains("population_"),
                               -dplyr::contains("_end"),
                               -dplyr::contains("_entry"))
 
@@ -470,6 +520,8 @@ get_impact_with_lifetable <-
 
       if (is_with_newborns) {
 
+
+
         fill_right_of_diag <- function(tbl) {
           for (i in seq_len(nrow(tbl))) {
             # Extract the diagonal value
@@ -487,6 +539,7 @@ get_impact_with_lifetable <-
             yll_by_age_and_year_nested = purrr::map(
               .x = yll_by_age_and_year_nested,
               function(.x){
+
                 .x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))])
                 return(.x)
               }
@@ -497,6 +550,7 @@ get_impact_with_lifetable <-
           dplyr::mutate(deaths_by_age_and_year_nested = purrr::map(
             .x = deaths_by_age_and_year_nested,
             function(.x){
+
               .x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))])
               return(.x)
             }

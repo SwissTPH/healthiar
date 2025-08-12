@@ -153,6 +153,7 @@ get_risk_and_pop_fraction <-
             columns_for_group = c(
               "geo_id_disaggregated",
               "sex",
+              "age_group",
               "lifetable_with_pop_nested",
               "rr_at_exp"),
             sep = ", ")
@@ -240,6 +241,7 @@ get_risk_and_pop_fraction <-
             columns_for_group = c(
               "geo_id_disaggregated",
               "sex",
+              "age_group",
               "lifetable_with_pop_nested",
               "pop_fraction"),
             sep = ", ")
@@ -260,6 +262,7 @@ get_risk_and_pop_fraction <-
                                  "geo_id_disaggregated",
                                  "exp_name",
                                  "sex",
+                                 "age_group",
                                  "lifetable_with_pop_nested",
                                  "erf_ci",
                                  "exp_ci",
