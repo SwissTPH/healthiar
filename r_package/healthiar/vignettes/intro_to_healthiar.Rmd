@@ -381,20 +381,21 @@ Goal: attribute high annoyance cases to noise exposure in rural and urban areas
 
 ### Function call
 
+
 ```{r}
-results_iteration_ar <- attribute_health(
-    # 2 geographic areas
-    geo_id_disaggregated = c(rep("rural", times = 5), rep("urban", times = 5)), 
+data <- exdat_noise |> 
+  ## Filter for urban and rural regions
+  dplyr::filter(region == "urban" | region == "rural")
+```
+
+```{r}
+results_iteration_ar <- attribute_health( 
     # Both the rural and urban areas belong to the higher-level "total" region
     geo_id_aggregated = "total",
+    geo_id_disaggregated = data$region,
     approach_risk = "absolute_risk",
-    exp_central = 
-      ## Repeat the numeric vector that contains the 5 exposure means 2 times
-      rep(exdat_noise_ha$exposure_mean, times = 2), 
-    pop_exp = c(
-      exdat_noise_ha$population_exposed_rural, # Rural population exposed
-      exdat_noise_ha$population_exposed_urban # Urban population exposed
-      ),
+    exp_central = data$exposure_mean,
+    pop_exp = data$exposed,
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
 )
 ```
@@ -403,7 +404,7 @@ results_iteration_ar <- attribute_health(
 
 (number of geo units) x (number of exposure categories) = 2 x 5 = **10**,
 
-because we have 2 geo units (`"rural"` and `"urban"`) and `r length(exdat_noise_ha$exposure_mean)` exposure categories.
+because we have 2 geo units (`"rural"` and `"urban"`) and 5 exposure categories.
 
 ### Main results
 
@@ -424,17 +425,17 @@ results_iteration_ar[["health_main"]] |>
 Impact by geo unit, in this case impact in the rural and in the urban area
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_iteration_ar$health_detailed$results_raw
+results_iteration_ar$health_detailed$results_summed_across_exp_cat
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_iteration_ar[["health_detailed"]][["results_raw"]] |> 
+results_iteration_ar[["health_detailed"]][["results_summed_across_exp_cat"]] |> 
   select(geo_id_disaggregated, geo_id_aggregated, impact) |> 
   knitr::kable()
 ```
 
 ```{r  eval=TRUE, include=FALSE, echo=FALSE}
-rm(results_iteration_ar)
+rm(results_iteration_ar, data)
 ```
 
 ## Example: `attribute_health()` and sub-group analysis
