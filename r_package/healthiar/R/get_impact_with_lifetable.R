@@ -237,10 +237,16 @@ get_impact_with_lifetable <-
             purrr::map2(
               .x = projection_if_unexposed_nested,
               .y = projection_if_exposed_nested,
-              ~ tibble::tibble(
-                age_start = .x$age_start,
-                age_end = .x$age_end,
-                impact_2019 = .x$population_2019_end - .y$population_2019_end)),
+              .f = ~ {
+                tibble::tibble(
+                  age_start = .x$age_start,
+                  age_end = .x$age_end) |>
+                  dplyr::bind_cols(
+                    tibble::as_tibble(
+                      stats::setNames(
+                        base::list(.x[[population_yoa_end]] - .y[[population_yoa_end]]),
+                        impact_yoa)))
+                }),
           .after = projection_if_unexposed_nested)
 
     }
@@ -401,11 +407,11 @@ get_impact_with_lifetable <-
 
               unexposed <- .x |>
                 dplyr::select(dplyr::contains("population"),
-                              -population_2019_end,
+                              -dplyr::all_of(population_yoa_end),
                               -dplyr::contains("entry"))
               exposed <- .y |>
                 dplyr::select(dplyr::contains("population"),
-                              -population_2019_end,
+                              -dplyr::all_of(population_yoa_end),
                               -dplyr::contains("entry"))
 
               # Difference in mid-year populations of baseline and impacted scenario equals attributable YLL
