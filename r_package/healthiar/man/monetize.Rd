@@ -48,11 +48,11 @@ This function monetizes health impacts
 # assessment
 output_attribute <- attribute_health(
 erf_shape = "log_linear",
-rr_central = exdat_pm_copd$relative_risk,
+rr_central = exdat_pm$relative_risk,
 rr_increment = 10,
-exp_central = exdat_pm_copd$mean_concentration,
-cutoff_central = exdat_pm_copd$cut_off_value,
-bhd_central = exdat_pm_copd$incidence
+exp_central = exdat_pm$mean_concentration,
+cutoff_central = exdat_pm$cut_off_value,
+bhd_central = exdat_pm$incidence
 )
 
 results <- monetize(
