@@ -1179,9 +1179,6 @@ input_data_mortality <-
   dplyr::filter(rr_id %in% rr_data_allCauseMortality$rr_id)
 ```
 
-```{r Add data for testing get_mdi function}
-exdat_get_mdi <- read.csv("../varia/input/data/mdi/Belgium_MDI_2021.csv")
-```
 
 
 Variables that are used in examples of testing_Rpackage
@@ -1206,15 +1203,16 @@ exdat_get_mdi
 exdat_pm_copd <- airqplus_pm_copd
 exdat_pop_1 <- airqplus_pm_deaths_yll[["pop"]]
 exdat_input_1 <- airqplus_pm_deaths_yll[["input"]]
-exdat_input_2 <- input_data_mortality
-exdat_pop_male <- lifetable_withPopulation[["male"]]
-exdat_pop_female <- lifetable_withPopulation[["female"]]
-exdat_erf <- mrbrt_stroke
-exdat_noise_ha <- niph_noise_ha_excel |> 
-  dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean))
+# exdat_input_2 <- input_data_mortality # DEACTIVATED 2025-08-12 AL as it's used to provide the exact same values as also available in exdat_input_1
+# exdat_pop_male <- lifetable_withPopulation[["male"]] # DEACTIVATED 2025-08-12 AL as all data from here is also contained in exdat_pop_1 (airqplus_pm_deaths_yll[["pop"]]
+# exdat_pop_female <- lifetable_withPopulation[["female"]] # DEACTIVATED 2025-08-12 AL as all data from here is also contained in exdat_pop_1 (airqplus_pm_deaths_yll[["pop"]]
+# exdat_erf <- mrbrt_stroke # DEACTIVATED 2025-08-12 AL as not used in vignettes nor fun doc
+# exdat_noise_ha <- niph_noise_ha_excel |> # DEACTIVATED 2025-08-12 AL as exdat_noise_ihd contains same data and more
+#   dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean)) 
 exdat_noise_ihd <- niph_noise_ihd_excel
-exdat_pop_2 <- pop_data_norway
+# exdat_pop_2 <- pop_data_norway # DEACTIVATED 2025-08-12 AL as exdat_pop_2 not used in vignette nor fun doc
 exdat_mdi <- social_data
+exdat_get_mdi <- read.csv("../varia/input/data/mdi/Belgium_MDI_2021.csv")
 
 rm(list=setdiff(ls(), 
                 c(
