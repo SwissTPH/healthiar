@@ -52,7 +52,7 @@ browser()
 
     # LIFETABLE SETUP ##############################################################################
 
-    input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
+    data_prepared <- input_with_risk_and_pop_fraction |>
       # Get modification factor
       # it works with both single exposure and exposure distribution
       dplyr::mutate(modification_factor = 1 - pop_fraction,
@@ -71,7 +71,7 @@ browser()
 
 
     # ADD ENTRY POPULATION OF YOA & SURVIVAL PROBABILITIES
-    input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
+    data_prepared <- data_prepared |>
       dplyr::relocate(lifetable_with_pop_nested, .before = 1) |>
       dplyr::mutate(
         lifetable_with_pop_nested =
@@ -111,7 +111,7 @@ browser()
       )
 
     # CALCULATE MODIFIED SURVIVAL PROBABILITIES
-    input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
+    data_prepared <- data_prepared |>
       dplyr::mutate(
         lifetable_with_pop_nested =
           purrr::map(
@@ -122,7 +122,7 @@ browser()
                 # Calculate modified hazard rate = modification factor * hazard rate = mod factor * (deaths / mid-year pop)
                 dplyr::mutate(
                   hazard_rate_mod =
-                    dplyr::if_else(age_end > c(rep_len(input_with_risk_and_pop_fraction |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
+                    dplyr::if_else(age_end > c(rep_len(data_prepared |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
                                    modification_factor * hazard_rate,
                                    hazard_rate),
                   .after = deaths) |>
@@ -131,14 +131,14 @@ browser()
                 # ( 2 - modified hazard rate ) / ( 2 + modified hazard rate )
                 dplyr::mutate(
                   prob_survival_mod =
-                    dplyr::if_else(age_end > c(rep_len(input_with_risk_and_pop_fraction |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
+                    dplyr::if_else(age_end > c(rep_len(data_prepared |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
                                    (2 - hazard_rate_mod) / (2 + hazard_rate_mod),
                                    prob_survival),
                   .after = deaths) |>
 
                 dplyr::mutate(
                   prob_survival_until_mid_year_mod =
-                    dplyr::if_else(age_end > c(rep_len(input_with_risk_and_pop_fraction |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
+                    dplyr::if_else(age_end > c(rep_len(data_prepared |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
                                    1 - ((1 - prob_survival_mod) / 2),
                                    prob_survival_until_mid_year),
                   .after = deaths)
@@ -152,7 +152,7 @@ browser()
     # i.e. the scenario with the exposure to the environmental stressor as (currently) measured
 
     # DETERMINE ENTRY POPULATION OF YOA+1 IN BASELINE SCENARIO
-    pop <- input_with_risk_and_pop_fraction |>
+    pop <- data_prepared |>
       dplyr::mutate(
         projection_if_exposed_nested =
           purrr::map(
@@ -218,7 +218,7 @@ browser()
     # PREMATURE DEATHS (SINGLE YEAR EXPOSURE) ######################################################
     # YOA = YEAR OF ANALYSIS
     if (health_outcome == "deaths" &
-        base::unique(input_with_risk_and_pop_fraction |> dplyr::select(dplyr::contains("approach_exposure"))== "single_year")[1]) {
+        base::unique(data_prepared |> dplyr::select(dplyr::contains("approach_exposure"))== "single_year")[1]) {
 
       pop <- pop |>
         # Premature deaths = ( impacted scenario YOA end-of-year population ) - ( baseline scenario YOA end-of-year pop )
@@ -244,7 +244,7 @@ browser()
     # YLL & PREMATURE DEATHS (CONSTANT EXPOSURE) ####################################################
 
     if ((health_outcome %in% c("yll")| #And  ("yld", "daly") if yld from lifetable ever implemented
-         (base::unique(input_with_risk_and_pop_fraction |> dplyr::select(dplyr::contains("approach_exposure")) == "constant")[1] & health_outcome == "deaths"))) {
+         (base::unique(data_prepared |> dplyr::select(dplyr::contains("approach_exposure")) == "constant")[1] & health_outcome == "deaths"))) {
 
       ## PROJECT POPULATIONS #########################################################################
 
@@ -260,7 +260,7 @@ browser()
         # Define the years based on number_years
         # e.g. 2020 to 2118
         years_projection <-
-          (input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first() + 1) : (input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first() + number_years)
+          (data_prepared |>  dplyr::pull(year_of_analysis) |> dplyr::first() + 1) : (data_prepared |>  dplyr::pull(year_of_analysis) |> dplyr::first() + number_years)
 
         # Initialize matrices for entry population, mid-year population, and deaths
         pop_entry <- matrix(NA, nrow = 100, ncol = number_years)
@@ -280,7 +280,7 @@ browser()
           base::paste0("deaths_", years_projection)
 
         # Set initial population for the first year (2020)
-        pop_entry[, 1] <- df[[base::paste0("population_", input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first() + 1, "_entry")]]
+        pop_entry[, 1] <- df[[base::paste0("population_", data_prepared |>  dplyr::pull(year_of_analysis) |> dplyr::first() + 1, "_entry")]]
         pop_mid[, 1] <- pop_entry[, 1] * prob_survival_until_mid_year
         deaths[, 1] <- pop_entry[, 1] * (1 - prob_survival)
 
@@ -317,7 +317,7 @@ browser()
       ### SINGLE YEAR EXPOSURE #######################################################################
       # Determine YLLs for baseline and impacted scenario's in the single year exposure case
 
-      if (base::unique(input_with_risk_and_pop_fraction |> dplyr::select(dplyr::contains("approach_exposure")) == "single_year")[1]){
+      if (base::unique(data_prepared |> dplyr::select(dplyr::contains("approach_exposure")) == "single_year")[1]){
 
         # PROJECT POPULATIONS IN BOTH IMPACTED AND BASELINE SCENARIO FROM YOA+1 UNTIL THE END
         # USING MODIFIED SURVIVAL PROBABILITIES (BECAUSE AFTER YOA THERE IS NO MORE AIR POLLUTION)
@@ -466,7 +466,7 @@ browser()
 
       ## NEWBORNS #################################################################
 
-      if (base::unique(input_with_risk_and_pop_fraction |> dplyr::select(dplyr::contains("approach_newborns")) == "with_newborns")[1]) {
+      if (base::unique(data_prepared |> dplyr::select(dplyr::contains("approach_newborns")) == "with_newborns")[1]) {
 
         fill_right_of_diag <- function(tbl) {
           for (i in seq_len(nrow(tbl))) {
@@ -520,12 +520,12 @@ browser()
     if (health_outcome %in% c("deaths", "yll")){
 
       joining_columns_pop_impact <-
-        healthiar:::find_joining_columns(input_with_risk_and_pop_fraction,
+        healthiar:::find_joining_columns(data_prepared,
                                          pop,
                                          except = "lifetable_with_pop_nested")
 
       pop_impact <-
-        input_with_risk_and_pop_fraction |>
+        data_prepared |>
         dplyr::right_join(pop, by = joining_columns_pop_impact) |>
         dplyr::relocate(dplyr::contains("nest"), .before = 1)}
 
@@ -535,20 +535,20 @@ browser()
     # GET DEATHS AND YLL FROM LIFETABLE
 
     ## Define health_outcome variable
-    health_outcome <- base::unique(input_with_risk_and_pop_fraction$health_outcome)
+    health_outcome <- base::unique(data_prepared$health_outcome)
 
     # Determine default time horizon for YLL/YLD if not specified ##############
     if ( health_outcome %in% c("yll") & # And ("yld")  if ever implemented
-         !"time_horizon" %in% base::names(input_with_risk_and_pop_fraction ) ) {
+         !"time_horizon" %in% base::names(data_prepared ) ) {
 
-      time_horizon <- input_with_risk_and_pop_fraction |>
+      time_horizon <- data_prepared |>
         dplyr::slice(1) |>                      # Select the first row
         dplyr::pull(lifetable_with_pop_nested) |> # Extract the nested tibble column
         purrr::pluck(1) |>                      # Get the tibble stored in the first element
         base::nrow()
 
       ## Add time_horizon to tibble
-      input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
+      data_prepared <- data_prepared |>
         dplyr::mutate(time_horizon = time_horizon)
 
     }
@@ -603,7 +603,7 @@ browser()
                   dplyr::select(dplyr::contains("impact_")) |>
 
                   ## Sum over ages (i.e. vertically)
-                  ## only ages between "max_age" and "input_with_risk_and_pop_fraction |>  pull(min_age) |> first()" filtered for above
+                  ## only ages between "max_age" and "data_prepared |>  pull(min_age) |> first()" filtered for above
                   dplyr::summarize_all(sum, na.rm = TRUE) |>
 
                   ## Reshape to long format
@@ -653,7 +653,7 @@ browser()
         ## Add column for year of analysis
         dplyr::mutate(year_of_analysis = year_of_analysis) |>
         ## Add column for time horizon
-        dplyr::mutate(time_horizon = input_with_risk_and_pop_fraction |>  dplyr::pull(time_horizon) |> dplyr::first()) |>
+        dplyr::mutate(time_horizon = data_prepared |>  dplyr::pull(time_horizon) |> dplyr::first()) |>
         ## Add column for last year of analysis
         dplyr::mutate(last_year = year_of_analysis + time_horizon - 1)
 
