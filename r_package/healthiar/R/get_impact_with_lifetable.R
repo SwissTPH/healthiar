@@ -76,7 +76,6 @@ get_impact_with_lifetable <-
             function(.x){
 
               .x <- .x |>
-                dplyr::select(age_start, age_end, deaths, population, modification_factor) |>
                 dplyr::rename(!!population_yoa := population) |>
 
                 # CALCULATE ENTRY POPULATION OF YEAR OF ANALYSIS (YOA)
