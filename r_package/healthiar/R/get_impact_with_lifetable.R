@@ -64,16 +64,6 @@ get_impact_with_lifetable <-
                       )
       )
 
-    # Store variables for population_year
-    # Year Of Analysis (YOA)
-    yoa <- input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first()
-    yoa_plus_1 <- base::as.numeric(yoa) + 1
-    population_yoa <- base::paste0("population_", yoa)
-    population_yoa_entry <- base::paste0(population_yoa,"_entry")
-    population_yoa_plus_1_entry <- base::paste0("population_", yoa_plus_1,"_entry")
-    population_yoa_end <- base::paste0(population_yoa,"_end")
-    deaths_yoa <- base::paste0("deaths_", yoa)
-    impact_yoa <- base::paste0("impact_", yoa)
 
 
     # ADD ENTRY POPULATION OF YOA & SURVIVAL PROBABILITIES
