@@ -42,12 +42,12 @@ get_impact_with_lifetable <-
     yoa <- input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first()
     yoa_plus_1 <- base::as.numeric(yoa) + 1
 
-    population_yoa <- base::paste0("population_", yoa)
-    population_yoa_entry <- base::paste0(population_yoa,"_entry")
-    population_yoa_plus_1_entry <- base::paste0("population_", yoa_plus_1,"_entry")
-    population_yoa_end <- base::paste0(population_yoa,"_end")
+    # population_yoa <- base::paste0("population_", yoa)
+    # population_yoa_entry <- base::paste0(population_yoa,"_entry")
+    # population_yoa_plus_1_entry <- base::paste0("population_", yoa_plus_1,"_entry")
+    # population_yoa_end <- base::paste0(population_yoa,"_end")
 
-    deaths_yoa <- base::paste0("deaths_", yoa)
+    #deaths_yoa <- base::paste0("deaths_", yoa)
     #impact_yoa <- base::paste0("impact_", yoa)
 
     health_outcome <- base::unique(input_with_risk_and_pop_fraction$health_outcome)
@@ -403,12 +403,12 @@ get_impact_with_lifetable <-
 
               unexposed <- .x |>
                 dplyr::select(dplyr::contains("population"),
-                              -dplyr::all_of(population_yoa_end),
-                              -dplyr::contains("entry"))
+                              -dplyr::contains("_end"),
+                              -dplyr::contains("_entry"))
               exposed <- .y |>
                 dplyr::select(dplyr::contains("population"),
-                              -dplyr::all_of(population_yoa_end),
-                              -dplyr::contains("entry"))
+                              -dplyr::contains("_end"),
+                              -dplyr::contains("_entry"))
 
               # Difference in mid-year populations of baseline and impacted scenario equals attributable YLL
               pop_diff <-
