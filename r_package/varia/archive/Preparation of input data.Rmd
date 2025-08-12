@@ -1215,7 +1215,7 @@ exdat_mdi <- social_data
 exdat_get_mdi <- read.csv("../varia/input/data/mdi/Belgium_MDI_2021.csv")
 ```
 
-```{r tidy up example data}
+```{r tidy up and rename example data}
 
 exdat_noise <- tibble::tibble(
   exposure_category = c("55-59", "60-64", "65-69", "70-74", "≥ 75"),
@@ -1232,7 +1232,7 @@ exdat_noise <- tibble::tibble(
     region == "total" ~ exposed / 5213985 #   total_norway_pop = 5213985
   ))
 
-exdat_pop_1 <- exdat_pop_1 |> 
+exdat_lifetable <- exdat_pop_1 |> 
   dplyr::rename(age_group = age_from...) |> 
   dplyr::rename(deaths_male = number_of_deaths_male) |> 
   dplyr::rename(deaths_female = number_of_deaths_female) |> 
@@ -1240,14 +1240,16 @@ exdat_pop_1 <- exdat_pop_1 |>
   tidyr::pivot_longer( cols = -age_group, names_to = c(".value", "sex"), names_pattern = "(midyear_population|deaths)_(male|female)" ) |> 
   dplyr::arrange(sex)
 
+exdat_pm <- exdat_pm_copd
+
 ```
 
 
 ```{r}
 rm(list=setdiff(ls(), 
                 c(
-                  "exdat_pm_copd",
-                  "exdat_pop_1", # OLD NAME: "exdat_pop_1",
+                  "exdat_pm", # OLD NAME: "exdat_pm_copd"
+                  "exdat_lifetable", # OLD NAME: "exdat_pop_1",
                   # "exdat_input_1",
                   # "exdat_input_2",
                   # "exdat_pop_male",

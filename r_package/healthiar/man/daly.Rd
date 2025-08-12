@@ -39,10 +39,10 @@ results_yll <- attribute_lifetable(
   rr_central =  1.118,
   rr_increment = 10,
   erf_shape = "log_linear",
-  age_group = exdat_pop_1$age_group,
-  sex = exdat_pop_1$sex,
-  bhd_central = exdat_pop_1$deaths,
-  population = exdat_pop_1$midyear_population,
+  age_group = exdat_lifetable$age_group,
+  sex = exdat_lifetable$sex,
+  bhd_central = exdat_lifetable$deaths,
+  population = exdat_lifetable$midyear_population,
   year_of_analysis = 2019,
   min_age = 20
 )

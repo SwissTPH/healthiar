@@ -766,11 +766,11 @@ results_pm_yll <- attribute_lifetable(
   cutoff_central = 5,
   min_age = 20, # age from which population is affected by the exposure
   # Life table information
-  age_group = exdat_pop_1$age_group,
-  sex = exdat_pop_1$sex,
-  population = exdat_pop_1$midyear_population,
+  age_group = exdat_lifetable$age_group,
+  sex = exdat_lifetable$sex,
+  population = exdat_lifetable$midyear_population,
   # In the life table case, BHD refers to deaths
-  bhd_central = exdat_pop_1$deaths
+  bhd_central = exdat_lifetable$deaths
 ) 
 ```
 
@@ -931,12 +931,10 @@ results_pm_deaths <- attribute_lifetable(
   cutoff_central = 5,
   min_age = 20, # age from which population is affected by the exposure   
   # Life table information
-  age_group = rep(0:99, times = 2),   
-  sex = rep(c("male", "female"), each = 100),
-  population = c(exdat_pop_1$midyear_population_male,
-                 exdat_pop_1$midyear_population_female), 
-  bhd_central = c(exdat_pop_1$number_of_deaths_male,
-                  exdat_pop_1$number_of_deaths_female)
+  age_group = exdat_lifetable$age_group,   
+  sex = exdat_lifetable$sex,
+  population = exdat_lifetable$midyear_population, 
+  bhd_central = exdat_lifetable$deaths
 )
 ```
 

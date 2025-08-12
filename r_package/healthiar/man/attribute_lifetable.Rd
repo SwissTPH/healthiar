@@ -138,10 +138,10 @@ results <- attribute_lifetable(
   rr_central =  1.118,
   rr_increment = 10,
   erf_shape = "log_linear",
-  age_group = exdat_pop_1$age_group,
-  sex = exdat_pop_1$sex,
-  bhd_central = exdat_pop_1$deaths,
-  population = exdat_pop_1$midyear_population,
+  age_group = exdat_lifetable$age_group,
+  sex = exdat_lifetable$sex,
+  bhd_central = exdat_lifetable$deaths,
+  population = exdat_lifetable$midyear_population,
   year_of_analysis = 2019,
   min_age = 20
 )
@@ -157,10 +157,10 @@ results_pm_deaths <- attribute_lifetable(
   rr_central =  1.118,
   rr_increment = 10,
   erf_shape = "log_linear",
-  age_group = exdat_pop_1$age_group,
-  sex = exdat_pop_1$sex,
-  bhd_central = exdat_pop_1$deaths,
-  population = exdat_pop_1$midyear_population,
+  age_group = exdat_lifetable$age_group,
+  sex = exdat_lifetable$sex,
+  bhd_central = exdat_lifetable$deaths,
+  population = exdat_lifetable$midyear_population,
   year_of_analysis = 2019,
   min_age = 20
 )
@@ -179,16 +179,16 @@ results <- attribute_lifetable(
   rr_increment = 10,
   erf_shape = "log_linear",
   age_group = rep(
-    exdat_pop_1$age_group,
+    exdat_lifetable$age_group,
     times = 3), # times = number of exposure categories
   sex = rep(
-    exdat_pop_1$sex,
+    exdat_lifetable$sex,
     times = 3), # times = number of exposure categories
   population = rep(
-    exdat_pop_1$midyear_population,
+    exdat_lifetable$midyear_population,
     times = 3), # times = number of exposure categories
   bhd_central = rep(
-    exdat_pop_1$deaths,
+    exdat_lifetable$deaths,
     times = 3), # times = number of exposure categories
   year_of_analysis = 2019,
   info = PM2.5,
