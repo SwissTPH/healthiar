@@ -94,10 +94,10 @@
 #'   health_outcome = "yll",
 #'   exp_central = rep(c(8, 9, 10), each = 100*2), # each = length of sex or age_group vector
 #'   prop_pop_exp = rep(c(0.2, 0.3, 0.5), each = 100*2), # each = length of sex or age_group vector
-#'   cutoff_central = exdat_input_2$cutoff[2],
-#'   rr_central = exdat_input_2[2,"rr_central"],
-#'   rr_lower = exdat_input_2[2,"rr_lower"],
-#'   rr_upper = exdat_input_2[2,"rr_upper"],
+#'   cutoff_central = 5,
+#'   rr_central = 1.118,
+#'   rr_lower = 1.06,
+#'   rr_upper = 1.179,
 #'   rr_increment = 10,
 #'   erf_shape = "log_linear",
 #'   age_group = rep(
@@ -117,8 +117,8 @@
 #'       exdat_pop_1$number_of_deaths_female),
 #'     times = 3), # times = number of exposure categories
 #'   year_of_analysis = 2019,
-#'   info = exdat_input_2$pollutant[2],
-#'   min_age = if(is.na(exdat_input_2$min_age[2])) NULL else exdat_input_2$min_age[2]
+#'   info = PM2.5,
+#'   min_age = 20
 #' )
 #' results$health_main$impact_rounded # Attributable YLL
 
