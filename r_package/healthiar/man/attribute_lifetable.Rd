@@ -143,7 +143,7 @@ results <- attribute_lifetable(
   bhd_central = c(
     exdat_pop_1$number_of_deaths_male,
     exdat_pop_1$number_of_deaths_female),
-  population = c(exdat_pop_male$population_2019, exdat_pop_female$population_2019),
+  population = c(exdat_pop_1$midyear_population_male, exdat_pop_1$midyear_population_female),
   year_of_analysis = 2019,
   min_age = 20
 )
@@ -164,7 +164,7 @@ results_pm_deaths <- attribute_lifetable(
   bhd_central = c(
     exdat_pop_1$number_of_deaths_male,
     exdat_pop_1$number_of_deaths_female),
-  population = c(exdat_pop_male$population_2019, exdat_pop_female$population_2019),
+  population = c(exdat_pop_1$midyear_population_male, exdat_pop_1$midyear_population_female),
   year_of_analysis = 2019,
   min_age = 20
 )
@@ -183,16 +183,16 @@ results <- attribute_lifetable(
   rr_increment = 10,
   erf_shape = "log_linear",
   age_group = rep(
-    c(exdat_pop_male$age,
-      exdat_pop_female$age),
+    c(exdat_pop_1$age_from...,
+      exdat_pop_1$age_from...),
     times = 3), # times = number of exposure categories
   sex = rep(
     c("male", "female"),
     each = 100, # each = number of age groups (for each sex, if applicable)
     times = 3), # times = number of exposure categories
   population = rep(
-    c(exdat_pop_male$population,
-      exdat_pop_female$population),
+    c(exdat_pop_1$midyear_population_male,
+      exdat_pop_1$midyear_population_female),
     times = 3), # times = number of exposure categories
   bhd_central = rep(
     c(exdat_pop_1$number_of_deaths_male,

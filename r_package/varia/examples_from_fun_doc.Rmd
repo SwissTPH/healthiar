@@ -110,7 +110,7 @@ results <- attribute_lifetable(
   bhd_central = c(
   exdat_pop_1$number_of_deaths_male, 
   exdat_pop_1$number_of_deaths_female),
-  population = c(exdat_pop_male$population_2019, exdat_pop_female$population_2019),
+  population = c(exdat_pop_1$midyear_population_male, exdat_pop_1$midyear_population_female),
   year_of_analysis = 2019,
   min_age = 20
 )
@@ -131,7 +131,7 @@ sex = rep(c("male", "female"), each = 100),
 bhd_central = c(
   exdat_pop_1$number_of_deaths_male, 
   exdat_pop_1$number_of_deaths_female),
-population = c(exdat_pop_male$population_2019, exdat_pop_female$population_2019),
+population = c(exdat_pop_1$midyear_population_male, exdat_pop_1$midyear_population_male),
 year_of_analysis = 2019,
 min_age = 20
 )
@@ -149,16 +149,16 @@ results <- attribute_lifetable(
   rr_increment = 10,
   erf_shape = "log_linear",
   age_group = rep(
-    c(exdat_pop_male$age,
-      exdat_pop_female$age),
+    c(exdat_pop_1$age_from...,
+      exdat_pop_1$age_from...),
     times = 3), # times = number of exposure categories
   sex = rep(
     c("male", "female"),
     each = 100, # each = number of age groups (for each sex, if applicable)
     times = 3), # times = number of exposure categories
   population = rep(
-    c(exdat_pop_male$population,
-      exdat_pop_female$population),
+    c(exdat_pop_1$midyear_population_male,
+      exdat_pop_1$midyear_population_male),
     times = 3), # times = number of exposure categories
   bhd_central = rep(
     c(exdat_pop_1$number_of_deaths_male,
@@ -302,28 +302,28 @@ scenario_B$health_main$impact # Attributable impact in scenario B
 # daly
 
 ```{r}
-
-## Create YLL (years of life lost) assessment
+# Goal: obtain DALY (disability-adjusted life years) from two existing \code{attribute_...} outputs
+# Step 1: Create YLL (years of life lost) assessment
 results_yll <- attribute_lifetable(
   health_outcome = "yll",
   approach_exposure = "single_year",
+  approach_newborns = "without_newborns",
   exp_central = 8.85,
   prop_pop_exp = 1,
   cutoff_central = 5,
-  rr_central =  1.118, 
+  rr_central =  1.118,
   rr_increment = 10,
   erf_shape = "log_linear",
-  first_age_pop = 0,
-  last_age_pop = 99,
-  deaths_male = exdat_pop_1$number_of_deaths_male,
-  deaths_female = exdat_pop_1$number_of_deaths_female,
-  population_midyear_male = exdat_pop_male$population_2019, 
-  population_midyear_female = exdat_pop_female$population_2019,
-  year_of_analysis = 2019, 
+  age_group = rep(0:99, times = 2),
+  sex = rep(c("male", "female"), each = 100),
+  bhd_central = c(
+  exdat_pop_1$number_of_deaths_male, 
+  exdat_pop_1$number_of_deaths_female),
+  population = c(exdat_pop_1$midyear_population_male, exdat_pop_1$midyear_population_female),
+  year_of_analysis = 2019,
   min_age = 20
-) 
-
-## Create YLD (years lived with disability) assessment
+)
+# Step 2: Create YLD (years lived with disability) assessment
 results_yld  <- attribute_health(
   exp_central = 8.85,
   prop_pop_exp = 1,
@@ -336,15 +336,14 @@ results_yld  <- attribute_health(
   dw_central = 0.5,
   info = "pm2.5_yld"
 )
-
+# Step 3: obtain DALY
 results <- daly(
   output_attribute_yll = results_yll,
   output_attribute_yld = results_yld
 )
-
+# Attributable impact in DALY
 results$health_main |> 
   dplyr::select(impact, impact_yll, impact_yld)
-
 ```
 
 # monetize

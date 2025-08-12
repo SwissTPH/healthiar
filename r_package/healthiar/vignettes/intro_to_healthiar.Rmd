@@ -767,8 +767,8 @@ results_pm_yll <- attribute_lifetable(
   # Life table information
   age_group = rep(0:99, times = 2),
   sex = rep(c("male", "female"), each = 100),
-  population = c(exdat_pop_male$population_2019,
-                 exdat_pop_female$population_2019),
+  population = c(exdat_pop_1$midyear_population_male,
+                 exdat_pop_1$midyear_population_female),
   # In the life table case, BHD refers to deaths
   bhd_central = c(exdat_pop_1$number_of_deaths_male, 
                   exdat_pop_1$number_of_deaths_female)
@@ -934,8 +934,8 @@ results_pm_deaths <- attribute_lifetable(
   # Life table information
   age_group = rep(0:99, times = 2),   
   sex = rep(c("male", "female"), each = 100),
-  population = c(exdat_pop_male$population_2019,
-                 exdat_pop_female$population_2019), 
+  population = c(exdat_pop_1$midyear_population_male,
+                 exdat_pop_1$midyear_population_female), 
   bhd_central = c(exdat_pop_1$number_of_deaths_male,
                   exdat_pop_1$number_of_deaths_female)
 )
