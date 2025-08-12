@@ -125,11 +125,11 @@ Now we call `attribute_health` with input data from the `healthiar` example data
 ```{r, eval=TRUE, include=TRUE, echo=TRUE}
 results_pm_copd <- attribute_health(
   erf_shape = "log_linear",
-  rr_central = exdat_pm_copd$relative_risk, 
+  rr_central = exdat_pm$relative_risk, 
   rr_increment = 10, 
-  exp_central = exdat_pm_copd$mean_concentration,
-  cutoff_central = exdat_pm_copd$cut_off_value,
-  bhd_central = exdat_pm_copd$incidence
+  exp_central = exdat_pm$mean_concentration,
+  cutoff_central = exdat_pm$cut_off_value,
+  bhd_central = exdat_pm$incidence
 )
 ```
 
@@ -381,20 +381,21 @@ Goal: attribute high annoyance cases to noise exposure in rural and urban areas
 
 ### Function call
 
+
 ```{r}
-results_iteration_ar <- attribute_health(
-    # 2 geographic areas
-    geo_id_disaggregated = c(rep("rural", times = 5), rep("urban", times = 5)), 
+data <- exdat_noise |> 
+  ## Filter for urban and rural regions
+  dplyr::filter(region == "urban" | region == "rural")
+```
+
+```{r}
+results_iteration_ar <- attribute_health( 
     # Both the rural and urban areas belong to the higher-level "total" region
     geo_id_aggregated = "total",
+    geo_id_disaggregated = data$region,
     approach_risk = "absolute_risk",
-    exp_central = 
-      ## Repeat the numeric vector that contains the 5 exposure means 2 times
-      rep(exdat_noise_ha$exposure_mean, times = 2), 
-    pop_exp = c(
-      exdat_noise_ha$population_exposed_rural, # Rural population exposed
-      exdat_noise_ha$population_exposed_urban # Urban population exposed
-      ),
+    exp_central = data$exposure_mean,
+    pop_exp = data$exposed,
     erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
 )
 ```
@@ -403,7 +404,7 @@ results_iteration_ar <- attribute_health(
 
 (number of geo units) x (number of exposure categories) = 2 x 5 = **10**,
 
-because we have 2 geo units (`"rural"` and `"urban"`) and `r length(exdat_noise_ha$exposure_mean)` exposure categories.
+because we have 2 geo units (`"rural"` and `"urban"`) and 5 exposure categories.
 
 ### Main results
 
@@ -424,17 +425,17 @@ results_iteration_ar[["health_main"]] |>
 Impact by geo unit, in this case impact in the rural and in the urban area
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_iteration_ar$health_detailed$results_raw
+results_iteration_ar$health_detailed$results_summed_across_exp_cat
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_iteration_ar[["health_detailed"]][["results_raw"]] |> 
+results_iteration_ar[["health_detailed"]][["results_summed_across_exp_cat"]] |> 
   select(geo_id_disaggregated, geo_id_aggregated, impact) |> 
   knitr::kable()
 ```
 
 ```{r  eval=TRUE, include=FALSE, echo=FALSE}
-rm(results_iteration_ar)
+rm(results_iteration_ar, data)
 ```
 
 ## Example: `attribute_health()` and sub-group analysis
@@ -765,13 +766,11 @@ results_pm_yll <- attribute_lifetable(
   cutoff_central = 5,
   min_age = 20, # age from which population is affected by the exposure
   # Life table information
-  age_group = rep(0:99, times = 2),
-  sex = rep(c("male", "female"), each = 100),
-  population = c(exdat_pop_male$population_2019,
-                 exdat_pop_female$population_2019),
+  age_group = exdat_lifetable$age_group,
+  sex = exdat_lifetable$sex,
+  population = exdat_lifetable$midyear_population,
   # In the life table case, BHD refers to deaths
-  bhd_central = c(exdat_pop_1$number_of_deaths_male, 
-                  exdat_pop_1$number_of_deaths_female)
+  bhd_central = exdat_lifetable$deaths
 ) 
 ```
 
@@ -823,11 +822,11 @@ are available
 *NOTE*: only a selection of years is shown
 
 ```{r}
-results_pm_yll$health_detailed$results_raw$lifeyears_nest$female_a_central_central_central_central
+results_pm_yll$health_detailed$results_raw$impact_by_year_nested$female_a_central_central_central_central
 ```
 
 ```{r}
-results_pm_yll$health_detailed$results_raw$lifeyears_nest$female_a_central_central_central_central |>    
+results_pm_yll$health_detailed$results_raw$impact_by_year_nested$female_a_central_central_central_central |>    
   knitr::kable()
 ```
 
@@ -844,15 +843,15 @@ Premature deaths (females) in the year of exposure (here: 2019) attributable to 
 *NOTE*: only a selection of ages is shown
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$results_raw$premature_deaths_nest$female_a_central_central_central_central
+results_pm_yll$health_detailed$results_raw$deaths_by_age_and_year_nested$female_a_central_central_central_central
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_yll$health_detailed$results_raw$premature_deaths_nest$female_a_central_central_central_central |> 
-  dplyr::select(age_start, age_end, deaths_2019) |> 
+results_pm_yll$health_detailed$results_raw$deaths_by_age_and_year_nested$female_a_central_central_central_central |> 
+  dplyr::select(age_start, age_end, impact_2019) |> 
   dplyr::slice(
-    ( nrow( results_pm_yll$health_detailed$results_raw$premature_deaths_nest$female_a_central_central_central_central ) -8 ) : 
-      nrow( results_pm_yll$health_detailed$results_raw$premature_deaths_nest$female_a_central_central_central_central )
+    ( nrow( results_pm_yll$health_detailed$results_raw$deaths_by_age_and_year_nested$female_a_central_central_central_central ) -8 ) : 
+      nrow( results_pm_yll$health_detailed$results_raw$deaths_by_age_and_year_nested$female_a_central_central_central_central )
     ) |> 
   knitr::kable()
 ```
@@ -864,15 +863,15 @@ results_pm_yll$health_detailed$results_raw$premature_deaths_nest$female_a_centra
 #### YLL
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$results_raw$yll_nest$female_a_central_central_central_central
+results_pm_yll$health_detailed$results_raw$yll_by_age_and_year_nested$female_a_central_central_central_central
 ```
 
 ```{r echo=FALSE}
-results_pm_yll$health_detailed$results_raw$yll_nest$female_a_central_central_central_central |>    
-  dplyr::select(age_start, population_2019, population_2020, population_2021, population_2022) |>    
+results_pm_yll$health_detailed$results_raw$yll_by_age_and_year_nested$female_a_central_central_central_central |>    
+  dplyr::select(age_start, impact_2019, impact_2020, impact_2021, impact_2022) |>    
   dplyr::slice(
-    ( nrow(results_pm_yll$health_detailed$results_raw$yll_nest$female_a_central_central_central_central ) -8 ) : 
-      nrow(results_pm_yll$health_detailed$results_raw$yll_nest$female_a_central_central_central_central )
+    ( nrow(results_pm_yll$health_detailed$results_raw$yll_by_age_and_year_nested$female_a_central_central_central_central ) -8 ) : 
+      nrow(results_pm_yll$health_detailed$results_raw$yll_by_age_and_year_nested$female_a_central_central_central_central )
     ) |>    
   knitr::kable()
 ```
@@ -882,15 +881,15 @@ results_pm_yll$health_detailed$results_raw$yll_nest$female_a_central_central_cen
 Baseline scenario refers to the scenario with exposure (i.e. the scenario specified in the assessment)
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$results_raw$pop_exposed_scenario_nest$female_a_central_central_central_central
+results_pm_yll$health_detailed$results_raw$projection_if_exposed_nested$female_a_central_central_central_central
 ```
 
 ```{r echo=FALSE}
-results_pm_yll$health_detailed$results_raw$pop_exposed_scenario_nest$female_a_central_central_central_central |>    
+results_pm_yll$health_detailed$results_raw$projection_if_exposed_nested$female_a_central_central_central_central |>    
   dplyr::select(age_start, population_2019, population_2020, population_2021, population_2022) |>    
   dplyr::slice(
-    ( nrow(results_pm_yll$health_detailed$results_raw$pop_exposed_scenario_nest$female_a_central_central_central_central ) -8 ) : 
-      nrow(results_pm_yll$health_detailed$results_raw$pop_exposed_scenario_nest$female_a_central_central_central_central )
+    ( nrow(results_pm_yll$health_detailed$results_raw$projection_if_exposed_nested$female_a_central_central_central_central ) -8 ) : 
+      nrow(results_pm_yll$health_detailed$results_raw$projection_if_exposed_nested$female_a_central_central_central_central )
     ) |>    
   knitr::kable()
 ```
@@ -900,15 +899,15 @@ results_pm_yll$health_detailed$results_raw$pop_exposed_scenario_nest$female_a_ce
 Impacted scenario refers to the scenario without exposure
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$results_raw$pop_unexposed_scenario_nest$female_a_central_central_central_central
+results_pm_yll$health_detailed$results_raw$projection_if_unexposed_nested$female_a_central_central_central_central
 ```
 
 ```{r echo=FALSE}
-results_pm_yll$health_detailed$results_raw$pop_unexposed_scenario_nest$female_a_central_central_central_central |>    
+results_pm_yll$health_detailed$results_raw$projection_if_unexposed_nested$female_a_central_central_central_central |>    
   dplyr::select(age_start, population_2019, population_2020, population_2021, population_2022) |>    
   dplyr::slice(
-    ( nrow(results_pm_yll$health_detailed$results_raw$pop_unexposed_scenario_nest$female_a_central_central_central_central ) -8 ) : 
-      nrow(results_pm_yll$health_detailed$results_raw$pop_unexposed_scenario_nest$female_a_central_central_central_central )
+    ( nrow( results_pm_yll$health_detailed$results_raw$projection_if_unexposed_nested$female_a_central_central_central_central ) -8 ) : 
+      nrow( results_pm_yll$health_detailed$results_raw$projection_if_unexposed_nested$female_a_central_central_central_central )
     ) |>    
   knitr::kable()
 ```
@@ -932,12 +931,10 @@ results_pm_deaths <- attribute_lifetable(
   cutoff_central = 5,
   min_age = 20, # age from which population is affected by the exposure   
   # Life table information
-  age_group = rep(0:99, times = 2),   
-  sex = rep(c("male", "female"), each = 100),
-  population = c(exdat_pop_male$population_2019,
-                 exdat_pop_female$population_2019), 
-  bhd_central = c(exdat_pop_1$number_of_deaths_male,
-                  exdat_pop_1$number_of_deaths_female)
+  age_group = exdat_lifetable$age_group,   
+  sex = exdat_lifetable$sex,
+  population = exdat_lifetable$midyear_population, 
+  bhd_central = exdat_lifetable$deaths
 )
 ```
 
@@ -973,13 +970,13 @@ are available
 *Note*: because we set the function argument `approach_exposure = "constant"` in the function call results are available for one year (the year of analysis)
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_deaths$health_detailed$results_raw$premature_deaths_nest$female_a_central_central_central_central
+results_pm_deaths$health_detailed$results_raw$impact_by_year_nested$female_a_central_central_central_central
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_deaths$health_detailed$results_raw$premature_deaths_nest$female_a_central_central_central_central |> 
-  slice( ( nrow(results_pm_deaths$health_detailed$results_raw$premature_deaths_nest$female_a_central_central_central_central)-8 ) : 
-           nrow(results_pm_deaths$health_detailed$results_raw$premature_deaths_nest$female_a_central_central_central_central)) |> 
+results_pm_deaths$health_detailed$results_raw$impact_by_year_nested$female_a_central_central_central_central |> 
+  dplyr::slice( ( nrow( results_pm_deaths$health_detailed$results_raw$impact_by_year_nested$female_a_central_central_central_central )-8 ) : 
+           nrow( results_pm_deaths$health_detailed$results_raw$impact_by_year_nested$female_a_central_central_central_central )) |> 
   knitr::kable()
 ```
 

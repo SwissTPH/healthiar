@@ -2,9 +2,9 @@
 #
 #' ##Example data sets used:
 #'
-#' ##exdat_pop_1 = data = airqplus_pm_deaths_yll[["pop"]]
-#' ##exdat_pop_1$number_of_deaths_male
-#' ##exdat_pop_1$number_of_deaths_female
+#' ##exdat_lifetable = exdat_pop_1 = data = airqplus_pm_deaths_yll[["pop"]]
+#' ##exdat_lifetable$number_of_deaths_male
+#' ##exdat_lifetable$number_of_deaths_female
 #'
 #' ##exdat_input_2 = data_mort = input_data_mortality
 #'
