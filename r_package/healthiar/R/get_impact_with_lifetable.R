@@ -438,11 +438,9 @@ get_impact_with_lifetable <-
             function(.x, .y){
 
               exposed <- .x |>
-                dplyr::select(dplyr::contains("deaths"),
-                              -deaths)
+                dplyr::select(dplyr::contains("deaths_"))
               unexposed <- .y |>
-                dplyr::select(dplyr::contains("deaths"),
-                              -deaths)
+                dplyr::select(dplyr::contains("deaths_"))
 
               ages <- .x |>
                 dplyr::select(age_start, age_end)
