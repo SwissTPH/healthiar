@@ -233,7 +233,7 @@ get_impact_with_lifetable <-
       pop <- pop |>
         # Premature deaths = ( impacted scenario YOA end-of-year population ) - ( baseline scenario YOA end-of-year pop )
         dplyr::mutate(
-          deaths_by_age_and_year =
+          deaths_by_age_and_year_nested =
             purrr::map2(
               .x = projection_if_unexposed_nested,
               .y = projection_if_exposed_nested,
@@ -396,7 +396,7 @@ get_impact_with_lifetable <-
 
       pop <- pop |>
         dplyr::mutate(
-          yll_by_age_and_year = purrr::map2(
+          yll_by_age_and_year_nested = purrr::map2(
             .x = projection_if_unexposed_nested,
             .y = projection_if_exposed_nested,
 
@@ -438,7 +438,7 @@ get_impact_with_lifetable <-
 
       pop <- pop |>
         dplyr::mutate(
-          deaths_by_age_and_year = purrr::map2(
+          deaths_by_age_and_year_nested = purrr::map2(
             .x = projection_if_exposed_nested,
             .y = projection_if_unexposed_nested,
             function(.x, .y){
@@ -492,8 +492,8 @@ get_impact_with_lifetable <-
 
         pop <- pop |>
           dplyr::mutate(
-            yll_by_age_and_year = purrr::map(
-              .x = yll_by_age_and_year,
+            yll_by_age_and_year_nested = purrr::map(
+              .x = yll_by_age_and_year_nested,
               function(.x){
                 .x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))])
                 return(.x)
@@ -502,8 +502,8 @@ get_impact_with_lifetable <-
             , .before = 1)
 
         pop <- pop |>
-          dplyr::mutate(deaths_by_age_and_year = purrr::map(
-            .x = deaths_by_age_and_year,
+          dplyr::mutate(deaths_by_age_and_year_nested = purrr::map(
+            .x = deaths_by_age_and_year_nested,
             function(.x){
               .x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))])
               return(.x)
@@ -521,7 +521,7 @@ get_impact_with_lifetable <-
      pop <- pop |>
       dplyr::mutate(
         pop_impact_nested =
-          if({{health_outcome}} == "deaths") deaths_by_age_and_year else yll_by_age_and_year)
+          if({{health_outcome}} == "deaths") deaths_by_age_and_year_nested else yll_by_age_and_year_nested)
 
     # Remove from pop, as already present in input_with_risk_...
     pop <- pop |>
@@ -658,13 +658,13 @@ get_impact_with_lifetable <-
     # if ( health_outcome %in% "yld" ) {
     #
     #   impact_detailed <- impact_detailed |>
-    #     dplyr::mutate(yll_by_age_and_year =
+    #     dplyr::mutate(yll_by_age_and_year_nested =
     #                     purrr::map2(
-    #       .x = yll_by_age_and_year, .y = dw,
-    #       function(yll_by_age_and_year, dw){
+    #       .x = yll_by_age_and_year_nested, .y = dw,
+    #       function(yll_by_age_and_year_nested, dw){
     #         # YLL * DW = YLD
-    #         yll_by_age_and_year <- yll_by_age_and_year * dw
-    #         return(yll_by_age_and_year)
+    #         yll_by_age_and_year_nested <- yll_by_age_and_year_nested * dw
+    #         return(yll_by_age_and_year_nested)
     #       }
     #     )
     #     )
