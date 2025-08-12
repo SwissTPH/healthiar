@@ -39,19 +39,6 @@ get_impact_with_lifetable <-
 
     health_outcome <- base::unique(input_with_risk_and_pop_fraction$health_outcome)
 
-    # Code deactivated because yld from lifetable is not implemented (yet)
-    # if (health_outcome %in% c("yld", "daly")){
-    #   # If there are disability weights or duration in the input (i.e. if it's a YLD calculation),
-    #   # the lifetable calculations will only be done for the rows where the
-    #   # column "dw_ci" & "duration_ci" has the value "central" (to improve performance).
-    #   # The resulting (nested) lifetable tibbles will be left_join()'ed with "input_backup"
-    #   # at the end of the script.
-    #   input_backup <- input_with_risk_and_pop_fraction
-    #   input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
-    #     filter(dw_ci == "central") |>
-    #     filter(duration_ci == "central")
-    # }
-
     # LIFETABLE SETUP ##############################################################################
 
     input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
@@ -540,30 +527,6 @@ get_impact_with_lifetable <-
         dplyr::relocate(dplyr::contains("nest"), .before = 1)}
 
 
-    # Code deactivated because yld from lifetable is not implemented (yet)
-
-    # else if(health_outcome %in% c("yld", "daly")) {
-    #
-    #   pop <- pop |>
-    #     dplyr::select(geo_id_disaggregated, dplyr::contains("exp"), dplyr::contains("prop_pop_exp"), rr, erf_ci, sex, # Variables to merge by
-    #            -dplyr::contains("_2"), # Remove all "..._2" variables (e.g. "exp_2"); relevant in "compare_..." function calls
-    #            dplyr::contains("_nested"),
-    #            -dplyr::contains("approach_exposure"),
-    #            -dplyr::contains("exp_category"),
-    #            -dplyr::contains("exp_type"),
-    #            -dplyr::contains("exp_ci"))
-    #
-    #   if( is_empty((grep("_1", names(pop))))){
-    #     pop_impact <- input_backup |>
-    #     dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp", "prop_pop_exp", "rr", "erf_ci", "sex", "exp_name"))
-    #     }else{
-    #       pop_impact <- input_backup |>
-    #       # attribute_... cases
-    #       dplyr::left_join(pop, by = c("geo_id_disaggregated", "exp_scen_1", "prop_pop_exp_scen_1", "rr", "erf_ci", "sex", "exp_name")) # compare_... cases
-    #     }
-    #
-    # }
-
     on.exit(options(user_options))
 
     # GET DEATHS AND YLL FROM LIFETABLE
@@ -651,37 +614,6 @@ get_impact_with_lifetable <-
                   dplyr::mutate(year = base::as.numeric(year))
               } else
                 .x<-.x}), .before = 1)
-
-    # YLD if ever implemented###################################################
-
-    # ## Determine year- and age specific YLD
-    # if ( health_outcome %in% "yld" ) {
-    #
-    #   impact_detailed <- impact_detailed |>
-    #     dplyr::mutate(yll_by_age_and_year_nested =
-    #                     purrr::map2(
-    #       .x = yll_by_age_and_year_nested, .y = dw,
-    #       function(yll_by_age_and_year_nested, dw){
-    #         # YLL * DW = YLD
-    #         yll_by_age_and_year_nested <- yll_by_age_and_year_nested * dw
-    #         return(yll_by_age_and_year_nested)
-    #       }
-    #     )
-    #     )
-    #
-    #   ## Determine total YLD per year
-    #   impact_detailed <- impact_detailed |>
-    #     dplyr::mutate(impact_by_year_nested =
-    #                     purrr::map2(
-    #                       .x = impact_by_year_nested, .y = dw,
-    #                       function(impact_by_year_nested, dw){
-    #                         impact_by_year_nested <- impact_by_year_nested |>
-    #                           mutate(impact = impact * dw)
-    #                         return(impact_by_year_nested)
-    #                       }
-    #                     ))
-    #
-    # }
 
 
     # Deaths ###################################################################
