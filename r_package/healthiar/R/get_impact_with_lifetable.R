@@ -36,6 +36,7 @@ get_impact_with_lifetable <-
     user_options <- options()
     options(digits = 15)
 
+browser()
     # USEFUL VARIABLES ##########
     # yoa means Year Of Analysis
     yoa <- input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first()
@@ -52,11 +53,14 @@ get_impact_with_lifetable <-
     # LIFETABLE SETUP ##############################################################################
 
     input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
-      dplyr::mutate(modification_factor = 1 - pop_fraction, .after = rr) |> # WORKS WITH BOTH SINGLE EXPOSURE VALUE AND EXPOSURE DISTRIBUTION AS INPUTS
-      # ADD THE MODIFICATION FACTOR TO THE NESTED TIBBLE "LIFETABLE_WITH_POP_nested" USING FCT PMAP()
+      # Get modification factor
+      # it works with both single exposure and exposure distribution
+      dplyr::mutate(modification_factor = 1 - pop_fraction,
+                    .after = rr) |>
+      # Add modification factor to lifetable_with_pop_nested
       dplyr::mutate(lifetable_with_pop_nested =
                       purrr::pmap(
-                        list(lifetable_with_pop_nested, modification_factor),
+                        base::list(lifetable_with_pop_nested, modification_factor),
                         function(lifetable_with_pop_nested, modification_factor){
                           lifetable_with_pop_nested <- lifetable_with_pop_nested |>
                             dplyr::mutate(modification_factor = modification_factor)
