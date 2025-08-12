@@ -1202,7 +1202,7 @@ exdat_get_mdi
 # exdat_pop <- airqplus_deaths_pop_singleYear # Doesn't seem to be used in testing_Rpackage
 exdat_pm_copd <- airqplus_pm_copd
 exdat_pop_1 <- airqplus_pm_deaths_yll[["pop"]]
-exdat_input_1 <- airqplus_pm_deaths_yll[["input"]]
+# exdat_input_1 <- airqplus_pm_deaths_yll[["input"]] # DEACTIVATED 2025-08-12 AL neither used in vignettes nor fun doc
 # exdat_input_2 <- input_data_mortality # DEACTIVATED 2025-08-12 AL as it's used to provide the exact same values as also available in exdat_input_1
 # exdat_pop_male <- lifetable_withPopulation[["male"]] # DEACTIVATED 2025-08-12 AL as all data from here is also contained in exdat_pop_1 (airqplus_pm_deaths_yll[["pop"]]
 # exdat_pop_female <- lifetable_withPopulation[["female"]] # DEACTIVATED 2025-08-12 AL as all data from here is also contained in exdat_pop_1 (airqplus_pm_deaths_yll[["pop"]]
@@ -1210,6 +1210,13 @@ exdat_input_1 <- airqplus_pm_deaths_yll[["input"]]
 # exdat_noise_ha <- niph_noise_ha_excel |> # DEACTIVATED 2025-08-12 AL new exdat_noise variable will be created
   # dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean))
 # exdat_noise_ihd <- niph_noise_ihd_excel # DEACTIVATED 2025-08-12 AL as exdat_noise_ihd not used in vignette nor fun doc
+# exdat_pop_2 <- pop_data_norway # DEACTIVATED 2025-08-12 AL as exdat_pop_2 not used in vignette nor fun doc
+exdat_mdi <- social_data
+exdat_get_mdi <- read.csv("../varia/input/data/mdi/Belgium_MDI_2021.csv")
+```
+
+```{r tidy up example data}
+
 exdat_noise <- tibble::tibble(
   exposure_category = c("55-59", "60-64", "65-69", "70-74", "≥ 75"),
   exposure_mean = c(57.5, 62.5, 67.5, 72.5, 77.5),
@@ -1224,15 +1231,23 @@ exdat_noise <- tibble::tibble(
     region == "rural" ~ exposed / 797581, #   total_rural_pop = 797581,
     region == "total" ~ exposed / 5213985 #   total_norway_pop = 5213985
   ))
-# exdat_pop_2 <- pop_data_norway # DEACTIVATED 2025-08-12 AL as exdat_pop_2 not used in vignette nor fun doc
-exdat_mdi <- social_data
-exdat_get_mdi <- read.csv("../varia/input/data/mdi/Belgium_MDI_2021.csv")
 
+exdat_pop_1 <- exdat_pop_1 |> 
+  dplyr::rename(age_group = age_from...) |> 
+  dplyr::rename(deaths_male = number_of_deaths_male) |> 
+  dplyr::rename(deaths_female = number_of_deaths_female) |> 
+  dplyr::select(-age_to_end_of..., -section_name, -subsection_name) |> 
+  tidyr::pivot_longer( cols = -age_group, names_to = c(".value", "sex"), names_pattern = "(midyear_population|deaths)_(male|female)" )
+
+```
+
+
+```{r}
 rm(list=setdiff(ls(), 
                 c(
                   "exdat_pm_copd",
-                  "exdat_pop_1",
-                  "exdat_input_1",
+                  "exdat_pop_1", # OLD NAME: "exdat_pop_1",
+                  # "exdat_input_1",
                   # "exdat_input_2",
                   # "exdat_pop_male",
                   # "exdat_pop_female",
