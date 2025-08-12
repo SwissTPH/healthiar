@@ -36,17 +36,19 @@ get_impact_with_lifetable <-
     user_options <- options()
     options(digits = 15)
 
-browser()
+
     # USEFUL VARIABLES ##########
     # yoa means Year Of Analysis
     yoa <- input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first()
     yoa_plus_1 <- base::as.numeric(yoa) + 1
+
     population_yoa <- base::paste0("population_", yoa)
     population_yoa_entry <- base::paste0(population_yoa,"_entry")
     population_yoa_plus_1_entry <- base::paste0("population_", yoa_plus_1,"_entry")
     population_yoa_end <- base::paste0(population_yoa,"_end")
+
     deaths_yoa <- base::paste0("deaths_", yoa)
-    impact_yoa <- base::paste0("impact_", yoa)
+    #impact_yoa <- base::paste0("impact_", yoa)
 
     health_outcome <- base::unique(input_with_risk_and_pop_fraction$health_outcome)
 
@@ -78,21 +80,18 @@ browser()
           purrr::map(
             .x = lifetable_with_pop_nested,
             function(.x){
-
               .x <- .x |>
-                dplyr::rename(!!population_yoa := population) |>
-
                 # CALCULATE ENTRY POPULATION OF YEAR OF ANALYSIS (YOA)
                 dplyr::mutate(
-                  !!population_yoa_entry := !!dplyr::sym(population_yoa) + (deaths / 2),
-                  .before = !!population_yoa) |>
+                  population_yoa_entry = population_yoa + (deaths / 2),
+                  .before = population_yoa) |>
 
                 # CALCULATE PROBABILITY OF SURVIVAL FROM START YEAR TO END YEAR & START YEAR TO MID YEAR
                 # probability of survival from start of year i to start of year i+1 (entry to entry)
                 dplyr::mutate(
                   prob_survival =
-                    (!!dplyr::sym(population_yoa) - (deaths / 2)) /
-                    (!!dplyr::sym(population_yoa) + (deaths / 2) ),
+                    (population_yoa - (deaths / 2)) /
+                    (population_yoa + (deaths / 2) ),
                   .after = deaths) |>
 
                 # Probability of survival from start to midyear
@@ -104,7 +103,7 @@ browser()
 
                 # Hazard rate for calculating survival probabilities
                 dplyr::mutate(
-                  hazard_rate = deaths / !!dplyr::sym(population_yoa),
+                  hazard_rate = deaths / population_yoa,
                   .after = deaths)
             }
           )
@@ -161,19 +160,19 @@ browser()
               .x <- .x |>
                 # End-of-year population YOA = entry pop YOA * ( survival probability )
                 dplyr::mutate(
-                  !!population_yoa_end :=
-                    !!dplyr::sym(population_yoa_entry) * prob_survival) |>
+                  population_yoa_end =
+                    population_yoa_entry * prob_survival) |>
 
                 # Deaths YOA = End pop YOA - Entry pop YOA
                 dplyr::mutate(
-                  !!deaths_yoa :=
-                    !!dplyr::sym(population_yoa_entry) - !!dplyr::sym(population_yoa_end),
-                  .after =  !!dplyr::sym(population_yoa)) |>
+                  deaths_yoa =
+                    population_yoa_entry - population_yoa_end,
+                  .after =  population_yoa) |>
 
                 # Entry population YOA+1 = lag ( End-of-year population YOA )
                 dplyr::mutate(
-                  !!population_yoa_plus_1_entry :=
-                    dplyr::lag(!!dplyr::sym(population_yoa_end)))
+                  population_yoa_plus_1_entry =
+                    dplyr::lag(population_yoa_end))
             }
           )
         , .after = lifetable_with_pop_nested)
@@ -194,21 +193,21 @@ browser()
               .x <- .x |>
 
                 # MID-YEAR POP = (ENTRY POP) * ( survival probability until mid year )
-                dplyr::mutate(!!population_yoa :=
-                                !!dplyr::sym(population_yoa_entry) * prob_survival_until_mid_year_mod) |>
+                dplyr::mutate(population_yoa =
+                                population_yoa_entry * prob_survival_until_mid_year_mod) |>
 
                 # Calculate end-of-year population in YOA to later determine premature deaths
-                dplyr::mutate(!!population_yoa_end :=
-                                !!dplyr::sym(population_yoa_entry) * prob_survival_mod) |>
+                dplyr::mutate(population_yoa_end =
+                                population_yoa_entry * prob_survival_mod) |>
 
                 # Deaths YOA = End pop YOA - Entry pop YOA
-                dplyr::mutate(!!deaths_yoa :=
-                                !!dplyr::sym(population_yoa_entry) - !!dplyr::sym(population_yoa_end),
-                              .after =  !!dplyr::sym(population_yoa)) |>
+                dplyr::mutate(deaths_yoa =
+                                population_yoa_entry - population_yoa_end,
+                              .after =  population_yoa) |>
 
                 # Entry population YOA+1 = lag ( End-of-year population YOA )
-                dplyr::mutate(!!population_yoa_plus_1_entry :=
-                                dplyr::lag(!!dplyr::sym(population_yoa_end)))
+                dplyr::mutate(population_yoa_plus_1_entry =
+                                dplyr::lag(population_yoa_end))
 
             }
           )
@@ -230,12 +229,13 @@ browser()
               .f = ~ {
                 tibble::tibble(
                   age_start = .x$age_start,
-                  age_end = .x$age_end) |>
-                  dplyr::bind_cols(
-                    tibble::as_tibble(
-                      stats::setNames(
-                        base::list(.x[[population_yoa_end]] - .y[[population_yoa_end]]),
-                        impact_yoa)))
+                  age_end = .x$age_end,
+                  impact_yoa = .x$population_yoa_end - .y$population_yoa_end) |>
+
+                  dplyr::rename_with(.cols = dplyr::everything(),
+                                     .fn = ~ base::gsub("yoa", yoa, .x))
+
+
                 }),
           .after = projection_if_unexposed_nested)
 
@@ -251,6 +251,12 @@ browser()
       ### DEFINE FUNCTION FOR POPULATION PROJECTION ##################################################
 
       project_pop <- function(df, prob_survival, prob_survival_until_mid_year) {
+
+        base::names(df) <-
+          base::gsub("_yoa_plus_1", base::paste0("_", yoa_plus_1), base::names(df))
+        base::names(df) <-
+          base::gsub("_yoa", base::paste0("_", yoa), base::names(df))
+
         # Store useful variables such number_years
         # The number_years argument defines for how many years the population should be projected;
         # might be easier to have two arguments "start year" and "end year"
@@ -632,7 +638,7 @@ browser()
             function(.x){
 
               .x <- .x |>
-                dplyr::select(.data = _, dplyr::all_of(base::paste0("impact_", year_of_analysis))) |>
+                dplyr::select(dplyr::all_of(base::paste0("impact_", yoa))) |>
                 base::sum(na.rm = TRUE)
               return(.x)
             }
