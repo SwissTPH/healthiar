@@ -1237,7 +1237,8 @@ exdat_pop_1 <- exdat_pop_1 |>
   dplyr::rename(deaths_male = number_of_deaths_male) |> 
   dplyr::rename(deaths_female = number_of_deaths_female) |> 
   dplyr::select(-age_to_end_of..., -section_name, -subsection_name) |> 
-  tidyr::pivot_longer( cols = -age_group, names_to = c(".value", "sex"), names_pattern = "(midyear_population|deaths)_(male|female)" )
+  tidyr::pivot_longer( cols = -age_group, names_to = c(".value", "sex"), names_pattern = "(midyear_population|deaths)_(male|female)" ) |> 
+  dplyr::arrange(sex)
 
 ```
 

@@ -24,12 +24,10 @@
 #'   rr_central =  1.118,
 #'   rr_increment = 10,
 #'   erf_shape = "log_linear",
-#'   age_group = rep(0:99, times = 2),
-#'   sex = rep(c("male", "female"), each = 100),
-#'   bhd_central = c(
-#'   exdat_pop_1$number_of_deaths_male,
-#'   exdat_pop_1$number_of_deaths_female),
-#'   population = c(exdat_pop_1$midyear_population_male, exdat_pop_1$midyear_population_female),
+#'   age_group = exdat_pop_1$age_group,
+#'   sex = exdat_pop_1$sex,
+#'   bhd_central = exdat_pop_1$deaths,
+#'   population = exdat_pop_1$midyear_population,
 #'   year_of_analysis = 2019,
 #'   min_age = 20
 #' )
