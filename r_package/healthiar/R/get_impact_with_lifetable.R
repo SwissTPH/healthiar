@@ -44,8 +44,11 @@ get_impact_with_lifetable <-
 
     health_outcome <- base::unique(input_with_risk_and_pop_fraction$health_outcome)
 
+    is_single_year_exposure <- base::unique(input_with_risk_and_pop_fraction$approach_exposure) == "single_year"
+    is_constant_exposure <- base::unique(input_with_risk_and_pop_fraction$approach_exposure) == "constant"
 
-    health_outcome <- base::unique(input_with_risk_and_pop_fraction$health_outcome)
+    is_with_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "with_newborns"
+
 
     # LIFETABLE SETUP ##############################################################################
 
@@ -212,7 +215,7 @@ get_impact_with_lifetable <-
     # PREMATURE DEATHS (SINGLE YEAR EXPOSURE) ######################################################
     # YOA = YEAR OF ANALYSIS
     if (health_outcome == "deaths" &
-        base::unique(data_prepared |> dplyr::select(dplyr::contains("approach_exposure"))== "single_year")[1]) {
+        is_single_year_exposure) {
 
       pop <- pop |>
         # Premature deaths = ( impacted scenario YOA end-of-year population ) - ( baseline scenario YOA end-of-year pop )
@@ -238,15 +241,15 @@ get_impact_with_lifetable <-
 
     # YLL & PREMATURE DEATHS (CONSTANT EXPOSURE) ####################################################
 
-    if ((health_outcome %in% c("yll")| #And  ("yld", "daly") if yld from lifetable ever implemented
-         (base::unique(data_prepared |> dplyr::select(dplyr::contains("approach_exposure")) == "constant")[1] & health_outcome == "deaths"))) {
+    if (health_outcome == "yll"| #And  ("yld", "daly") if yld from lifetable ever implemented
+         is_constant_exposure) {
 
       ## PROJECT POPULATIONS #########################################################################
 
       ### DEFINE FUNCTION FOR POPULATION PROJECTION ##################################################
 
       project_pop <- function(df, prob_survival, prob_survival_until_mid_year) {
-
+        # Rename yoa columns
         base::names(df) <-
           base::gsub("_yoa_plus_1", base::paste0("_", yoa_plus_1), base::names(df))
         base::names(df) <-
@@ -318,7 +321,7 @@ get_impact_with_lifetable <-
       ### SINGLE YEAR EXPOSURE #######################################################################
       # Determine YLLs for baseline and impacted scenario's in the single year exposure case
 
-      if (base::unique(data_prepared |> dplyr::select(dplyr::contains("approach_exposure")) == "single_year")[1]){
+      if (is_single_year_exposure){
 
         # PROJECT POPULATIONS IN BOTH IMPACTED AND BASELINE SCENARIO FROM YOA+1 UNTIL THE END
         # USING MODIFIED SURVIVAL PROBABILITIES (BECAUSE AFTER YOA THERE IS NO MORE AIR POLLUTION)
@@ -467,7 +470,7 @@ get_impact_with_lifetable <-
 
       ## NEWBORNS #################################################################
 
-      if (base::unique(data_prepared |> dplyr::select(dplyr::contains("approach_newborns")) == "with_newborns")[1]) {
+      if (is_with_newborns) {
 
         fill_right_of_diag <- function(tbl) {
           for (i in seq_len(nrow(tbl))) {
@@ -509,10 +512,15 @@ get_impact_with_lifetable <-
     # COMPILE OUTPUT ##############################################################################
     # Data wrangling to get the results in the needed format
 
-     pop <- pop |>
-      dplyr::mutate(
-        pop_impact_nested =
-          if({{health_outcome}} == "deaths") deaths_by_age_and_year_nested else yll_by_age_and_year_nested)
+    if (health_outcome == "deaths"){
+      pop <- pop |>
+        dplyr::mutate(
+          pop_impact_nested = deaths_by_age_and_year_nested) }
+    else if (health_outcome == "yll"){
+      pop <- pop |>
+        dplyr::mutate(
+          pop_impact_nested = yll_by_age_and_year_nested)
+        }
 
     # Remove from pop, as already present in input_with_risk_...
     pop <- pop |>
@@ -647,7 +655,7 @@ get_impact_with_lifetable <-
     # Store total, YLL/YLD in YOA in column impact_nested #########
     ## Single number
 
-    if ( health_outcome %in% c("yll")){ # And ("yld")  if ever implemented
+    if ( health_outcome == "yll"){ # And ("yld")  if ever implemented
 
       impact_detailed <- impact_detailed |>
 
@@ -667,7 +675,7 @@ get_impact_with_lifetable <-
             function(.x, .y, health_outcome){
 
               ## If yll or yld
-              if( health_outcome %in% c("yll")){ # And ("yld")  if ever implemented
+              if( health_outcome == "yll"){ # And ("yld")  if ever implemented
 
                 .x <-
                   .x |>
