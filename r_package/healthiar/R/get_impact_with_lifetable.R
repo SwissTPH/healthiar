@@ -72,7 +72,7 @@ browser()
 
     # ADD ENTRY POPULATION OF YOA & SURVIVAL PROBABILITIES
     data_prepared <- data_prepared |>
-      dplyr::relocate(lifetable_with_pop_nested, .before = 1) |>
+
       dplyr::mutate(
         lifetable_with_pop_nested =
           purrr::map(
@@ -527,7 +527,7 @@ browser()
       pop_impact <-
         data_prepared |>
         dplyr::right_join(pop, by = joining_columns_pop_impact) |>
-        dplyr::relocate(dplyr::contains("nest"), .before = 1)}
+        dplyr::relocate(dplyr::contains("_nested"), .before = 1)}
 
 
     on.exit(options(user_options))
