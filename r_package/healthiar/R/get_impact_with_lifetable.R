@@ -136,7 +136,7 @@ get_impact_with_lifetable <-
     # i.e. the scenario with the exposure to the environmental stressor as (currently) measured
 
     # DETERMINE ENTRY POPULATION OF YOA+1 IN BASELINE SCENARIO
-    pop <- data_for_projection |>
+    data_with_projection <- data_for_projection |>
       dplyr::mutate(
         projection_if_exposed_nested =
           purrr::map(
@@ -169,7 +169,7 @@ get_impact_with_lifetable <-
     # CALCULATE YOA MID-YEAR POPOULATION,
     # YOA END-OF-YEAR POPULATION, YOA DEATHS AND
     # YOA+1 ENTRY POPULATION USING MODIFIED SURVIVAL PROBABILITIES
-    pop <- pop |>
+    data_with_projection <- data_with_projection |>
       dplyr::mutate(
         projection_if_unexposed_nested =
           purrr::map(
@@ -204,7 +204,7 @@ get_impact_with_lifetable <-
     if (health_outcome == "deaths" &
         is_single_year_exposure) {
 
-      pop <- pop |>
+      data_with_projection <- data_with_projection |>
         # Premature deaths = ( impacted scenario YOA end-of-year population ) - ( baseline scenario YOA end-of-year pop )
         dplyr::mutate(
           deaths_by_age_and_year_nested =
@@ -312,7 +312,7 @@ get_impact_with_lifetable <-
 
         # PROJECT POPULATIONS IN BOTH IMPACTED AND BASELINE SCENARIO FROM YOA+1 UNTIL THE END
         # USING MODIFIED SURVIVAL PROBABILITIES (BECAUSE AFTER YOA THERE IS NO MORE AIR POLLUTION)
-        pop <- pop |>
+        data_with_projection <- data_with_projection |>
           dplyr::mutate(
             projection_if_exposed_nested =
               purrr::map(
@@ -325,7 +325,7 @@ get_impact_with_lifetable <-
               )
           )
 
-        pop <- pop |>
+        data_with_projection <- data_with_projection |>
           dplyr::mutate(
             projection_if_unexposed_nested =
               purrr::map(
@@ -344,7 +344,7 @@ get_impact_with_lifetable <-
       } else {
 
         # PROJECT POPULATION IN BASELINE SCENARIO
-        pop <- pop |>
+        data_with_projection <- data_with_projection |>
           dplyr::mutate(
             projection_if_exposed_nested =
               purrr::map(
@@ -358,7 +358,7 @@ get_impact_with_lifetable <-
           )
 
         # PROJECT POPULATION IN IMPACTED SCENARIO
-        pop <- pop |>
+        data_with_projection <- data_with_projection |>
           dplyr::mutate(
             projection_if_unexposed_nested =
               purrr::map(
@@ -375,7 +375,7 @@ get_impact_with_lifetable <-
       ###  DETERMINE IMPACT (YLL, PREMATURE DEATHS (CONSTANT EXPOSURE))  ###########################
       # YLL and premature deaths attributable to exposure are calculated
 
-      pop <- pop |>
+      data_with_projection <- data_with_projection |>
         dplyr::mutate(
           yll_by_age_and_year_nested = purrr::map2(
             .x = projection_if_unexposed_nested,
@@ -417,7 +417,7 @@ get_impact_with_lifetable <-
 
 
 
-      pop <- pop |>
+      data_with_projection <- data_with_projection |>
         dplyr::mutate(
           deaths_by_age_and_year_nested = purrr::map2(
             .x = projection_if_exposed_nested,
@@ -471,7 +471,7 @@ get_impact_with_lifetable <-
           return(tbl)
         }
 
-        pop <- pop |>
+        data_with_projection <- data_with_projection |>
           dplyr::mutate(
             yll_by_age_and_year_nested = purrr::map(
               .x = yll_by_age_and_year_nested,
@@ -483,7 +483,7 @@ get_impact_with_lifetable <-
             )
             , .before = 1)
 
-        pop <- pop |>
+        data_with_projection <- data_with_projection |>
           dplyr::mutate(deaths_by_age_and_year_nested = purrr::map(
             .x = deaths_by_age_and_year_nested,
             function(.x){
@@ -502,29 +502,30 @@ get_impact_with_lifetable <-
     # Data wrangling to get the results in the needed format
 
     if (health_outcome == "deaths"){
-      pop <- pop |>
+      data_with_projection <- data_with_projection |>
         dplyr::mutate(
           pop_impact_nested = deaths_by_age_and_year_nested) }
     else if (health_outcome == "yll"){
-      pop <- pop |>
+      data_with_projection <- data_with_projection |>
         dplyr::mutate(
           pop_impact_nested = yll_by_age_and_year_nested)
         }
 
     # Remove from pop, as already present in input_with_risk_...
-    pop <- pop |>
+    data_with_projection <- data_with_projection |>
       dplyr::select(-data_by_age_nested)
 
     if (health_outcome %in% c("deaths", "yll")){
 
       joining_columns_pop_impact <-
         healthiar:::find_joining_columns(data_for_projection,
-                                         pop,
+                                         data_with_projection,
                                          except = "data_by_age_nested")
 
       pop_impact <-
         data_for_projection |>
-        dplyr::right_join(pop, by = joining_columns_pop_impact) |>
+        dplyr::right_join(data_with_projection,
+                          by = joining_columns_pop_impact) |>
         dplyr::relocate(dplyr::contains("_nested"), .before = 1)}
 
 
