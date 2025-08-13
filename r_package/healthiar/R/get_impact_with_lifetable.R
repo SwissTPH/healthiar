@@ -64,46 +64,50 @@ get_impact_with_lifetable <-
 
 
     data_prepared <- data_prepared |>
-            # Get modification factor
+      # Get modification factor
       # it works with both single exposure and exposure distribution
-      dplyr::mutate(modification_factor = 1 - pop_fraction,
-                    .after = rr) |>
+      dplyr::mutate(
+        modification_factor = 1 - pop_fraction,
+        .after = rr) |>
+
       # CALCULATE ENTRY POPULATION OF YEAR OF ANALYSIS (YOA)
       dplyr::mutate(
         population_yoa_entry = population_yoa + (deaths / 2),
         .before = population_yoa) |>
+
       # CALCULATE PROBABILITY OF SURVIVAL FROM START YEAR TO END YEAR & START YEAR TO MID YEAR
-      # probability of survival from start of year i to start of year i+1 (entry to entry)
       dplyr::mutate(
+        # probability of survival from start of year i to start of year i+1 (entry to entry)
         prob_survival =
           (population_yoa - (deaths / 2)) /
           (population_yoa + (deaths / 2) ),
-        .after = deaths) |>
-      # Probability of survival from start to midyear
-      # For example entry_pop = 100, prob_survival = 0.8 then end_of_year_pop = 100 * 0.8 = 80.
-      # mid_year_pop = 100 - (20/2) = 90.
-      dplyr::mutate(
+
+        # Probability of survival from start to midyear
+        # For example entry_pop = 100, prob_survival = 0.8 then end_of_year_pop = 100 * 0.8 = 80.
+        # mid_year_pop = 100 - (20/2) = 90.
         prob_survival_until_mid_year = 1 - ((1 - prob_survival) / 2),
-        .after = deaths) |>
-      # Hazard rate for calculating survival probabilities
-      dplyr::mutate(
+
+        # Hazard rate for calculating survival probabilities
         hazard_rate = deaths / population_yoa,
+
         .after = deaths)
 
 
     # CALCULATE MODIFIED SURVIVAL PROBABILITIES
     data_prepared <- data_prepared |>
-      # For all ages min_age and higher calculate modified survival probabilities
-      # Calculate modified hazard rate = modification factor * hazard rate = mod factor * (deaths / mid-year pop)
       dplyr::mutate(
+        # For all ages min_age and higher calculate modified survival probabilities
+        # Calculate first the boolean/logic column to speed up calculations below
         age_end_over_min_age = age_end > min_age,
+
+        # Calculate modified hazard rate = modification factor * hazard rate = mod factor * (deaths / mid-year pop)
         hazard_rate_mod =
           dplyr::if_else(age_end_over_min_age,
                          modification_factor * hazard_rate,
                          hazard_rate),
 
-      # Calculate modified survival probability =
-      # ( 2 - modified hazard rate ) / ( 2 + modified hazard rate )
+        # Calculate modified survival probability =
+        # ( 2 - modified hazard rate ) / ( 2 + modified hazard rate )
         prob_survival_mod =
           dplyr::if_else(age_end_over_min_age,
                          (2 - hazard_rate_mod) / (2 + hazard_rate_mod),
