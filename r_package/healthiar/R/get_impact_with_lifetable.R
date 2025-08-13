@@ -284,8 +284,7 @@ get_impact_with_lifetable <-
         # Column bin matrices to input data frame
         # Remove first column of pop_entry, because it exists already in input data frame
         df <-
-          dplyr::bind_cols(df,
-                           pop_mid, pop_entry[, -1], deaths)
+          dplyr::bind_cols(df, pop_mid, pop_entry[, -1], deaths)
 
 
         return(df)
@@ -303,26 +302,19 @@ get_impact_with_lifetable <-
             projection_if_exposed_nested =
               purrr::map(
                 .x = projection_if_exposed_nested,
-                function(.x){
-                  project_pop(df = .x,
-                              prob_survival = .x$prob_survival_mod,
-                              prob_survival_until_mid_year = .x$prob_survival_until_mid_year_mod)
-                }
-              )
-          )
+                .f = ~ project_pop(
+                  df = .x,
+                  prob_survival = .x$prob_survival_mod,
+                  prob_survival_until_mid_year = .x$prob_survival_until_mid_year_mod)),
 
-        data_with_projection <- data_with_projection |>
-          dplyr::mutate(
             projection_if_unexposed_nested =
               purrr::map(
                 .x = projection_if_unexposed_nested,
-                function(.x){
-                  project_pop(df = .x,
-                              prob_survival = .x$prob_survival_mod,
-                              prob_survival_until_mid_year = .x$prob_survival_until_mid_year_mod)
-                }
-              )
-          )
+                .f = ~ project_pop(
+                  df = .x,
+                  prob_survival = .x$prob_survival_mod,
+                  prob_survival_until_mid_year = .x$prob_survival_until_mid_year_mod))
+            )
 
         ### CONSTANT EXPOSURE ########################################################################
         # Determine YLLs for baseline and impacted scenario's in the constant exposure case
@@ -335,25 +327,19 @@ get_impact_with_lifetable <-
             projection_if_exposed_nested =
               purrr::map(
                 .x = projection_if_exposed_nested,
-                function(.x){
-                  project_pop(df = .x,
-                              prob_survival = .x$prob_survival,
-                              prob_survival_until_mid_year = .x$prob_survival_until_mid_year)
-                }
-              )
-          )
-
-        # PROJECT POPULATION IN IMPACTED SCENARIO
-        data_with_projection <- data_with_projection |>
-          dplyr::mutate(
+                .f = ~ project_pop(
+                  df = .x,
+                  prob_survival = .x$prob_survival,
+                  prob_survival_until_mid_year = .x$prob_survival_until_mid_year)),
+            # PROJECT POPULATION IN IMPACTED SCENARIO
             projection_if_unexposed_nested =
               purrr::map(
                 .x = projection_if_unexposed_nested,
-                function(.x){
-                  project_pop(df = .x,
-                              prob_survival = .x$prob_survival_mod,
-                              prob_survival_until_mid_year = .x$prob_survival_until_mid_year_mod)
-                }
+                .f = ~ project_pop(
+                  df = .x,
+                  prob_survival = .x$prob_survival_mod,
+                  prob_survival_until_mid_year = .x$prob_survival_until_mid_year_mod)
+
               )
           )
       }
