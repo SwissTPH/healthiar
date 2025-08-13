@@ -128,12 +128,12 @@ get_impact_with_lifetable <-
     #   # it works with both single exposure and exposure distribution
     #   dplyr::mutate(modification_factor = 1 - pop_fraction,
     #                 .after = rr) |>
-    #   # Add modification factor to lifetable_with_pop_nested
-    #   dplyr::mutate(lifetable_with_pop_nested =
+    #   # Add modification factor to data_by_age_nested
+    #   dplyr::mutate(data_by_age_nested =
     #                   purrr::pmap(
-    #                     base::list(lifetable_with_pop_nested, modification_factor),
-    #                     function(lifetable_with_pop_nested, modification_factor){
-    #                       lifetable_with_pop_nested <- lifetable_with_pop_nested |>
+    #                     base::list(data_by_age_nested, modification_factor),
+    #                     function(data_by_age_nested, modification_factor){
+    #                       data_by_age_nested <- data_by_age_nested |>
     #                         dplyr::mutate(modification_factor = modification_factor)
     #                     }
     #                   )
@@ -145,9 +145,9 @@ get_impact_with_lifetable <-
     # data_prepared <- data_prepared |>
     #
     #   dplyr::mutate(
-    #     lifetable_with_pop_nested =
+    #     data_by_age_nested =
     #       purrr::map(
-    #         .x = lifetable_with_pop_nested,
+    #         .x = data_by_age_nested,
     #         function(.x){
     #           .x <- .x |>
     #             # CALCULATE ENTRY POPULATION OF YEAR OF ANALYSIS (YOA)
@@ -181,7 +181,7 @@ get_impact_with_lifetable <-
     # Nest life tables
     data_prepared <- data_prepared |>
       tidyr::nest(
-        lifetable_with_pop_nested =
+        data_by_age_nested =
         c(yoa, age_group, age_start, age_end, bhd, deaths, population, population_yoa,
           modification_factor, population_yoa_entry,
           prob_survival, prob_survival_until_mid_year, hazard_rate,
@@ -190,9 +190,9 @@ get_impact_with_lifetable <-
     # # CALCULATE MODIFIED SURVIVAL PROBABILITIES
     # data_prepared <- data_prepared |>
     #   dplyr::mutate(
-    #     lifetable_with_pop_nested =
+    #     data_by_age_nested =
     #       purrr::map(
-    #         .x = lifetable_with_pop_nested,
+    #         .x = data_by_age_nested,
     #         function(.x){
     #           .x <- .x |>
     #             # For all ages min_age and higher calculate modified survival probabilities
@@ -233,7 +233,7 @@ get_impact_with_lifetable <-
       dplyr::mutate(
         projection_if_exposed_nested =
           purrr::map(
-            .x = lifetable_with_pop_nested,
+            .x = data_by_age_nested,
             function(.x){
               .x <- .x |>
                 # End-of-year population YOA = entry pop YOA * ( survival probability )
@@ -253,7 +253,7 @@ get_impact_with_lifetable <-
                     dplyr::lag(population_yoa_end))
             }
           )
-        , .after = lifetable_with_pop_nested)
+        , .after = data_by_age_nested)
 
     ## IMPACTED SCENARIO ###########################################################################
     # The impacted scenario is the scenario without any exposure to the environmental stressor
@@ -266,7 +266,7 @@ get_impact_with_lifetable <-
       dplyr::mutate(
         projection_if_unexposed_nested =
           purrr::map(
-            .x = lifetable_with_pop_nested ,
+            .x = data_by_age_nested ,
             function(.x){
               .x <- .x |>
 
@@ -606,14 +606,14 @@ get_impact_with_lifetable <-
 
     # Remove from pop, as already present in input_with_risk_...
     pop <- pop |>
-      dplyr::select(-lifetable_with_pop_nested)
+      dplyr::select(-data_by_age_nested)
 
     if (health_outcome %in% c("deaths", "yll")){
 
       joining_columns_pop_impact <-
         healthiar:::find_joining_columns(data_prepared,
                                          pop,
-                                         except = "lifetable_with_pop_nested")
+                                         except = "data_by_age_nested")
 
       pop_impact <-
         data_prepared |>
@@ -634,7 +634,7 @@ get_impact_with_lifetable <-
 
       time_horizon <- data_prepared |>
         dplyr::slice(1) |>                      # Select the first row
-        dplyr::pull(lifetable_with_pop_nested) |> # Extract the nested tibble column
+        dplyr::pull(data_by_age_nested) |> # Extract the nested tibble column
         purrr::pluck(1) |>                      # Get the tibble stored in the first element
         base::nrow()
 
