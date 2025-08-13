@@ -235,31 +235,35 @@ get_impact_with_lifetable <-
       ### DEFINE FUNCTION FOR POPULATION PROJECTION ##################################################
 
       project_pop <- function(df, prob_survival, prob_survival_until_mid_year) {
+
+
         # Rename yoa columns
-        base::names(df) <-
-          base::gsub("_yoa_plus_1", base::paste0("_", yoa_plus_1), base::names(df))
-        base::names(df) <-
-          base::gsub("_yoa", base::paste0("_", yoa), base::names(df))
+        base::names(df) <- base::names(df) |>
+          # Important to repace first yoa_plus_1,
+          # otherwise the replacement of _yoa also affects yoa_plus_1
+          base::gsub("_yoa_plus_1", base::paste0("_", yoa_plus_1), x = _) |>
+          base::gsub("_yoa", base::paste0("_", yoa), x = _)
 
-        # Initialize matrices for entry population, mid-year population, and deaths
-        pop_entry <- matrix(NA, nrow = 100, ncol = number_years)
-        # Provide column names (population_year)
-        # e.g. population_2020 to population_2118
-        base::colnames(pop_entry) <-
-          base::paste0("population_", years_projection , "_entry")
+        # Precompute column names to increase speed code
+        entry_names <- base::paste0("population_", years_projection, "_entry")
+        mid_names   <- base::paste0("population_", years_projection)
+        death_names <- base::paste0("deaths_", years_projection)
 
-        # Same for mid-year population
-        pop_mid <- matrix(NA, nrow = 100, ncol = number_years)
-        colnames(pop_mid) <-
-          base::paste0("population_", years_projection)
+        # Precompute complements
+        death_prob <- 1 - prob_survival
 
-        # Same for deaths
-        deaths <- matrix(NA, nrow = 100, ncol = number_years)
-        colnames(deaths) <-
-          base::paste0("deaths_", years_projection)
+        # Initialise matrices
+        pop_entry <- base::matrix(NA, nrow = 100, ncol = number_years,
+                                  # Row and column names
+                                  # NULL because no row names
+                                  dimnames = base::list(NULL, entry_names))
+        pop_mid   <- base::matrix(NA, nrow = 100, ncol = number_years,
+                                  dimnames = base::list(NULL, mid_names))
+        deaths    <- base::matrix(NA, nrow = 100, ncol = number_years,
+                                  dimnames = base::list(NULL, death_names))
 
-        # Set initial population for the first year (2020)
-        pop_entry[, 1] <- df[[base::paste0("population_", data_for_projection |>  dplyr::pull(year_of_analysis) |> dplyr::first() + 1, "_entry")]]
+        # Set initial year
+        pop_entry[, 1] <- df[[entry_names[1]]]
         pop_mid[, 1] <- pop_entry[, 1] * prob_survival_until_mid_year
         deaths[, 1] <- pop_entry[, 1] * (1 - prob_survival)
 
@@ -267,28 +271,22 @@ get_impact_with_lifetable <-
         # E.g. starts with 1 and ends with 98;
         # i (index in the number of years) is used to select both the rows and the columns
 
-        for (i in 1:(number_years-1)) {
-
+        for (i in 1: (number_years - 1)) {
+          rows <- (i + 2):(number_years + 1)
           # ENTRY POP YOA+1 <- ( ENTRY POP YOA ) * ( SURVIVAL PROBABILITY YOA )
-          pop_entry[(i + 2):(number_years + 1), i + 1] <-
-            pop_entry[(i + 1):(number_years), i] * prob_survival[(i + 1):(number_years)]
-
+          pop_entry[rows, i + 1] <- pop_entry[rows - 1, i] * prob_survival[rows - 1]
           # MID-YEAR POP YOA+1 <- ( ENTRY POP YOA+1) * ( SURVIVAL PROBABILITY FROM START OF YOA+1 TO MID YEAR YOA+1)
-          pop_mid[(i + 2):(number_years+1), i + 1] <-
-            pop_entry[(i + 2):(number_years + 1), i + 1] * prob_survival_until_mid_year[(i + 2):(number_years + 1)]
-
+          pop_mid[rows, i + 1]   <- pop_entry[rows, i + 1] * prob_survival_until_mid_year[rows]
           # DEATHS IN YOA+1 <- ( ENTRY POP YOA+1 ) * (1 - SURVIVAL PROBABILITY YOA+1 )
-          deaths[(i + 2):(number_years+1), i + 1] <-
-            pop_entry[(i + 2):(number_years + 1), i + 1] * ( 1 - prob_survival[(i + 2):(number_years + 1)] )
-
+          deaths[rows, i + 1]    <- pop_entry[rows, i + 1] * death_prob[rows]
         }
 
         # Column bin matrices to input data frame
         # Remove first column of pop_entry, because it exists already in input data frame
-        df <- df |>
-          dplyr::bind_cols(pop_mid) |>
-          dplyr::bind_cols(pop_entry[, -1]) |>
-          dplyr::bind_cols(deaths)
+        df <-
+          dplyr::bind_cols(df,
+                           pop_mid, pop_entry[, -1], deaths)
+
 
         return(df)
       }
