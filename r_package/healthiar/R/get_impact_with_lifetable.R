@@ -50,7 +50,6 @@ get_impact_with_lifetable <-
     is_with_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "with_newborns"
 
 
-
     # LIFETABLE SETUP ##############################################################################
     data_prepared <- input_with_risk_and_pop_fraction |>
       dplyr::mutate(
@@ -62,7 +61,6 @@ get_impact_with_lifetable <-
       # yoa means Year Of Analysis
       # It is better to do it  now (before nesting tables)
       population_yoa = population)
-
 
 
     data_prepared <- data_prepared |>
@@ -91,6 +89,33 @@ get_impact_with_lifetable <-
       dplyr::mutate(
         hazard_rate = deaths / population_yoa,
         .after = deaths)
+
+
+    # CALCULATE MODIFIED SURVIVAL PROBABILITIES
+    data_prepared <- data_prepared |>
+      # For all ages min_age and higher calculate modified survival probabilities
+      # Calculate modified hazard rate = modification factor * hazard rate = mod factor * (deaths / mid-year pop)
+      dplyr::mutate(
+        age_end_over_min_age = age_end > min_age,
+        hazard_rate_mod =
+          dplyr::if_else(age_end_over_min_age,
+                         modification_factor * hazard_rate,
+                         hazard_rate),
+
+      # Calculate modified survival probability =
+      # ( 2 - modified hazard rate ) / ( 2 + modified hazard rate )
+        prob_survival_mod =
+          dplyr::if_else(age_end_over_min_age,
+                         (2 - hazard_rate_mod) / (2 + hazard_rate_mod),
+                         prob_survival),
+
+        prob_survival_until_mid_year_mod =
+          dplyr::if_else(age_end_over_min_age,
+                         1 - ((1 - prob_survival_mod) / 2),
+                         prob_survival_until_mid_year),
+
+        .after = deaths)
+
 
 
 
@@ -155,44 +180,45 @@ get_impact_with_lifetable <-
         lifetable_with_pop_nested =
         c(yoa, age_group, age_start, age_end, bhd, deaths, population, population_yoa,
           modification_factor, population_yoa_entry,
-          prob_survival, prob_survival_until_mid_year, hazard_rate))
+          prob_survival, prob_survival_until_mid_year, hazard_rate,
+          age_end_over_min_age, prob_survival_mod, prob_survival_until_mid_year_mod, hazard_rate_mod))
 
-    # CALCULATE MODIFIED SURVIVAL PROBABILITIES
-    data_prepared <- data_prepared |>
-      dplyr::mutate(
-        lifetable_with_pop_nested =
-          purrr::map(
-            .x = lifetable_with_pop_nested,
-            function(.x){
-              .x <- .x |>
-                # For all ages min_age and higher calculate modified survival probabilities
-                # Calculate modified hazard rate = modification factor * hazard rate = mod factor * (deaths / mid-year pop)
-                dplyr::mutate(
-                  hazard_rate_mod =
-                    dplyr::if_else(age_end > c(rep_len(data_prepared |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
-                                   modification_factor * hazard_rate,
-                                   hazard_rate),
-                  .after = deaths) |>
-
-                # Calculate modified survival probability =
-                # ( 2 - modified hazard rate ) / ( 2 + modified hazard rate )
-                dplyr::mutate(
-                  prob_survival_mod =
-                    dplyr::if_else(age_end > c(rep_len(data_prepared |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
-                                   (2 - hazard_rate_mod) / (2 + hazard_rate_mod),
-                                   prob_survival),
-                  .after = deaths) |>
-
-                dplyr::mutate(
-                  prob_survival_until_mid_year_mod =
-                    dplyr::if_else(age_end > c(rep_len(data_prepared |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
-                                   1 - ((1 - prob_survival_mod) / 2),
-                                   prob_survival_until_mid_year),
-                  .after = deaths)
-            }
-
-          )
-      )
+    # # CALCULATE MODIFIED SURVIVAL PROBABILITIES
+    # data_prepared <- data_prepared |>
+    #   dplyr::mutate(
+    #     lifetable_with_pop_nested =
+    #       purrr::map(
+    #         .x = lifetable_with_pop_nested,
+    #         function(.x){
+    #           .x <- .x |>
+    #             # For all ages min_age and higher calculate modified survival probabilities
+    #             # Calculate modified hazard rate = modification factor * hazard rate = mod factor * (deaths / mid-year pop)
+    #             dplyr::mutate(
+    #               hazard_rate_mod =
+    #                 dplyr::if_else(age_end > c(rep_len(data_prepared |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
+    #                                modification_factor * hazard_rate,
+    #                                hazard_rate),
+    #               .after = deaths) |>
+    #
+    #             # Calculate modified survival probability =
+    #             # ( 2 - modified hazard rate ) / ( 2 + modified hazard rate )
+    #             dplyr::mutate(
+    #               prob_survival_mod =
+    #                 dplyr::if_else(age_end > c(rep_len(data_prepared |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
+    #                                (2 - hazard_rate_mod) / (2 + hazard_rate_mod),
+    #                                prob_survival),
+    #               .after = deaths) |>
+    #
+    #             dplyr::mutate(
+    #               prob_survival_until_mid_year_mod =
+    #                 dplyr::if_else(age_end > c(rep_len(data_prepared |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
+    #                                1 - ((1 - prob_survival_mod) / 2),
+    #                                prob_survival_until_mid_year),
+    #               .after = deaths)
+    #         }
+    #
+    #       )
+    #   )
 
     ## BASELINE SCENARIO ###########################################################################
     # The baseline scenario is the scenario of "business as usual"
