@@ -125,14 +125,16 @@ get_impact_with_lifetable <-
     data_for_projection <- data_for_projection |>
       tidyr::nest(
         data_by_age_nested =
-        c(yoa, age_group, age_start, age_end, bhd, deaths, population, population_yoa,
-          modification_factor, population_yoa_entry,
+        c(yoa, age_group, age_start, age_end, bhd, deaths, population,
+          modification_factor,
           prob_survival, prob_survival_until_mid_year, hazard_rate,
-          age_end_over_min_age, prob_survival_mod, prob_survival_until_mid_year_mod, hazard_rate_mod))
+          age_end_over_min_age, prob_survival_mod, prob_survival_until_mid_year_mod, hazard_rate_mod,
+          # These columns at the end to link with projections
+          population_yoa, population_yoa_entry))
 
 
-    ## BASELINE SCENARIO ###########################################################################
-    # The baseline scenario is the scenario of "business as usual"
+    ## EXPOSED PROJECTION ###########################################################################
+    # The exposed projection is the scenario of "business as usual"
     # i.e. the scenario with the exposure to the environmental stressor as (currently) measured
 
     # DETERMINE ENTRY POPULATION OF YOA+1 IN BASELINE SCENARIO
@@ -143,28 +145,21 @@ get_impact_with_lifetable <-
             .x = data_by_age_nested,
             function(.x){
               .x <- .x |>
-                # End-of-year population YOA = entry pop YOA * ( survival probability )
                 dplyr::mutate(
-                  population_yoa_end =
-                    population_yoa_entry * prob_survival) |>
+                  # End-of-year population YOA = (entry population YOA) * ( survival probability )
+                  population_yoa_end = population_yoa_entry * prob_survival,
 
-                # Deaths YOA = End pop YOA - Entry pop YOA
-                dplyr::mutate(
-                  deaths_yoa =
-                    population_yoa_entry - population_yoa_end,
-                  .after =  population_yoa) |>
+                  # Deaths YOA = End pop YOA - Entry pop YOA
+                  deaths_yoa = population_yoa_entry - population_yoa_end,
 
-                # Entry population YOA+1 = lag ( End-of-year population YOA )
-                dplyr::mutate(
-                  population_yoa_plus_1_entry =
-                    dplyr::lag(population_yoa_end))
+                  # Entry population YOA+1 = lag ( End-of-year population YOA )
+                  population_yoa_plus_1_entry = dplyr::lag(population_yoa_end))
             }
           )
-        , .after = data_by_age_nested)
+        )
 
-    ## IMPACTED SCENARIO ###########################################################################
-    # The impacted scenario is the scenario without any exposure to the environmental stressor
-
+    ## UNEXPOSED PROJECTION ###########################################################################
+    # The exposed projection is the scenario without any exposure to the environmental stressor
 
     # CALCULATE YOA MID-YEAR POPOULATION,
     # YOA END-OF-YEAR POPULATION, YOA DEATHS AND
@@ -176,27 +171,22 @@ get_impact_with_lifetable <-
             .x = data_by_age_nested ,
             function(.x){
               .x <- .x |>
+                dplyr::mutate(
+                  # Re-calculate population_yoa
+                  # MID-YEAR POP = (entry population YOA) * ( survival probability until mid year )
+                  population_yoa = population_yoa_entry * prob_survival_until_mid_year_mod,
 
-                # MID-YEAR POP = (ENTRY POP) * ( survival probability until mid year )
-                dplyr::mutate(population_yoa =
-                                population_yoa_entry * prob_survival_until_mid_year_mod) |>
+                  # Calculate end-of-year population in YOA to later determine premature deaths
+                  population_yoa_end = population_yoa_entry * prob_survival_mod,
 
-                # Calculate end-of-year population in YOA to later determine premature deaths
-                dplyr::mutate(population_yoa_end =
-                                population_yoa_entry * prob_survival_mod) |>
+                  # Deaths YOA = End pop YOA - Entry pop YOA
+                  deaths_yoa = population_yoa_entry - population_yoa_end,
 
-                # Deaths YOA = End pop YOA - Entry pop YOA
-                dplyr::mutate(deaths_yoa =
-                                population_yoa_entry - population_yoa_end,
-                              .after =  population_yoa) |>
-
-                # Entry population YOA+1 = lag ( End-of-year population YOA )
-                dplyr::mutate(population_yoa_plus_1_entry =
-                                dplyr::lag(population_yoa_end))
-
+                  # Entry population YOA+1 = lag ( End-of-year population YOA )
+                  population_yoa_plus_1_entry = dplyr::lag(population_yoa_end)
+                  )
             }
           )
-        , .after = projection_if_exposed_nested
       )
 
     # PREMATURE DEATHS (SINGLE YEAR EXPOSURE) ######################################################
