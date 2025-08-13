@@ -344,85 +344,136 @@ get_impact_with_lifetable <-
           )
       }
 
+
+
       ###  DETERMINE IMPACT (YLL, PREMATURE DEATHS (CONSTANT EXPOSURE))  ###########################
       # YLL and premature deaths attributable to exposure are calculated
 
-      data_with_projection <- data_with_projection |>
-        dplyr::mutate(
-          yll_by_age_and_year_nested = purrr::map2(
-            .x = projection_if_unexposed_nested,
-            .y = projection_if_exposed_nested,
+      # Helper function to be used below
+      calculate_impact <- function(df_a, df_b, var_prefix) {
+        ages <- df_a |>
+          dplyr::select(age_start, age_end)
 
-            function(.x, .y){
+          impact_df_a <- df_a |>
+          dplyr::select(dplyr::starts_with(var_prefix),
+                        -dplyr::contains("_end"),
+                        -dplyr::contains("_entry"))
 
-              ages <- .x |>
-                dplyr::select(age_start, age_end)
+          impact_df_b <- df_b|>
+          dplyr::select(dplyr::starts_with(var_prefix),
+                        -dplyr::contains("_end"),
+                        -dplyr::contains("_entry"))
 
-              unexposed <- .x |>
-                dplyr::select(dplyr::contains("population_"),
-                              -dplyr::contains("_end"),
-                              -dplyr::contains("_entry"))
-              exposed <- .y |>
-                dplyr::select(dplyr::contains("population_"),
-                              -dplyr::contains("_end"),
-                              -dplyr::contains("_entry"))
+          diff <- impact_df_a - impact_df_b
 
-              # Difference in mid-year populations of baseline and impacted scenario equals attributable YLL
-              pop_diff <-
-                unexposed - exposed
-
-              # Add ages (in other pipeline because it does not work in one)
-              pop_diff <-
-                dplyr::bind_cols(ages, pop_diff) |>
-                # Rename to impact
-                dplyr::rename_with(
-                  .cols = dplyr::starts_with("population_"),
-                  .fn = ~ base::gsub("population_", "impact_", .x)
-                )
-
-              return(pop_diff)
-            }
-
-          ),
-          .before = 1)
-
-
-
-
-      data_with_projection <- data_with_projection |>
-        dplyr::mutate(
-          deaths_by_age_and_year_nested = purrr::map2(
-            .x = projection_if_exposed_nested,
-            .y = projection_if_unexposed_nested,
-            function(.x, .y){
-
-              exposed <- .x |>
-                dplyr::select(dplyr::contains("deaths_"))
-              unexposed <- .y |>
-                dplyr::select(dplyr::contains("deaths_"))
-
-              ages <- .x |>
-                dplyr::select(age_start, age_end)
-
-              # Calculate difference in deaths
-              # Baseline scenario minus impacted scenario
-              pop_diff <- exposed - unexposed
-
-              # Add ages (in other pipeline because it does not work in one)
-              pop_diff <-
-                dplyr::bind_cols(ages, pop_diff) |>
-              # Rename to impact
-              dplyr::rename_with(
-                .cols = dplyr::starts_with("deaths_"),
-                .fn = ~ base::gsub("deaths_", "impact_", .x)
-              )
-
-
-
-              return(pop_diff)
-            }
+        impact <- dplyr::bind_cols(ages, diff) |>
+          dplyr::rename_with(
+            .cols = dplyr::starts_with(var_prefix),
+            .fn   = ~ base::gsub(var_prefix, "impact_", .x)
           )
-          , .before = 1)
+
+        return(impact)
+      }
+
+      # Apply the helper function above to calculate deaths and yll
+      # from exposed and unexposed projections
+
+      data_with_projection <- data_with_projection |>
+        dplyr::mutate(
+          yll_by_age_and_year_nested =
+            purrr::map2(
+              .x = projection_if_unexposed_nested,
+              .y = projection_if_exposed_nested,
+              .f = calculate_impact,
+              var_prefix = "population_"
+            ),
+          deaths_by_age_and_year_nested =
+            purrr::map2(
+              projection_if_exposed_nested,
+              projection_if_unexposed_nested,
+              calculate_impact,
+              var_prefix = "deaths_"
+            )
+        )
+
+
+
+      # data_with_projection <- data_with_projection |>
+      #   dplyr::mutate(
+      #     yll_by_age_and_year_nested = purrr::map2(
+      #       .x = projection_if_unexposed_nested,
+      #       .y = projection_if_exposed_nested,
+      #
+      #       function(.x, .y){
+      #
+      #         ages <- .x |>
+      #           dplyr::select(age_start, age_end)
+      #
+      #         unexposed <- .x |>
+      #           dplyr::select(dplyr::contains("population_"),
+      #                         -dplyr::contains("_end"),
+      #                         -dplyr::contains("_entry"))
+      #         exposed <- .y |>
+      #           dplyr::select(dplyr::contains("population_"),
+      #                         -dplyr::contains("_end"),
+      #                         -dplyr::contains("_entry"))
+      #
+      #         # Difference in mid-year populations of baseline and impacted scenario equals attributable YLL
+      #         pop_diff <-
+      #           unexposed - exposed
+      #
+      #         # Add ages (in other pipeline because it does not work in one)
+      #         pop_diff <-
+      #           dplyr::bind_cols(ages, pop_diff) |>
+      #           # Rename to impact
+      #           dplyr::rename_with(
+      #             .cols = dplyr::starts_with("population_"),
+      #             .fn = ~ base::gsub("population_", "impact_", .x)
+      #           )
+      #
+      #         return(pop_diff)
+      #       }
+      #
+      #     ),
+      #     .before = 1)
+      #
+      #
+      #
+      #
+      # data_with_projection <- data_with_projection |>
+      #   dplyr::mutate(
+      #     deaths_by_age_and_year_nested = purrr::map2(
+      #       .x = projection_if_exposed_nested,
+      #       .y = projection_if_unexposed_nested,
+      #       function(.x, .y){
+      #
+      #         exposed <- .x |>
+      #           dplyr::select(dplyr::contains("deaths_"))
+      #         unexposed <- .y |>
+      #           dplyr::select(dplyr::contains("deaths_"))
+      #
+      #         ages <- .x |>
+      #           dplyr::select(age_start, age_end)
+      #
+      #         # Calculate difference in deaths
+      #         # Baseline scenario minus impacted scenario
+      #         pop_diff <- exposed - unexposed
+      #
+      #         # Add ages (in other pipeline because it does not work in one)
+      #         pop_diff <-
+      #           dplyr::bind_cols(ages, pop_diff) |>
+      #         # Rename to impact
+      #         dplyr::rename_with(
+      #           .cols = dplyr::starts_with("deaths_"),
+      #           .fn = ~ base::gsub("deaths_", "impact_", .x)
+      #         )
+      #
+      #
+      #
+      #         return(pop_diff)
+      #       }
+      #     )
+      #     , .before = 1)
 
 
       ## NEWBORNS #################################################################
