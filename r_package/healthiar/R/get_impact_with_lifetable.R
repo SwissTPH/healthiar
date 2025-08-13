@@ -59,6 +59,12 @@ get_impact_with_lifetable <-
     years_projection <- yoa_plus_1 : (yoa + number_years)
 
 
+    # Precompute column names to be use below
+    entry_names <- base::paste0("entry_population_", years_projection)
+    midyear_names   <- base::paste0("midyear_population_", years_projection)
+    death_names <- base::paste0("deaths_", years_projection)
+
+
     # LIFETABLE SETUP ##############################################################################
     data_for_projection <- input_with_risk_and_pop_fraction |>
       dplyr::mutate(
@@ -69,7 +75,7 @@ get_impact_with_lifetable <-
       # Rename population adding suffix yoa
       # yoa means Year Of Analysis
       # It is better to do it  now (before nesting tables)
-      population_yoa = population)
+      midyear_population_yoa = population)
 
 
     data_for_projection <- data_for_projection |>
@@ -81,15 +87,15 @@ get_impact_with_lifetable <-
 
       # CALCULATE ENTRY POPULATION OF YEAR OF ANALYSIS (YOA)
       dplyr::mutate(
-        population_yoa_entry = population_yoa + (deaths / 2),
-        .before = population_yoa) |>
+        entry_population_yoa = midyear_population_yoa + (deaths / 2),
+        .before = midyear_population_yoa) |>
 
       # CALCULATE PROBABILITY OF SURVIVAL FROM START YEAR TO END YEAR & START YEAR TO MID YEAR
       dplyr::mutate(
         # probability of survival from start of year i to start of year i+1 (entry to entry)
         prob_survival =
-          (population_yoa - (deaths / 2)) /
-          (population_yoa + (deaths / 2) ),
+          (midyear_population_yoa - (deaths / 2)) /
+          (midyear_population_yoa + (deaths / 2) ),
 
         # Probability of survival from start to midyear
         # For example entry_pop = 100, prob_survival = 0.8 then end_of_year_pop = 100 * 0.8 = 80.
@@ -97,7 +103,7 @@ get_impact_with_lifetable <-
         prob_survival_until_midyear = 1 - ((1 - prob_survival) / 2),
 
         # Hazard rate for calculating survival probabilities
-        hazard_rate = deaths / population_yoa,
+        hazard_rate = deaths / midyear_population_yoa,
 
         .after = deaths)
 
@@ -139,7 +145,7 @@ get_impact_with_lifetable <-
           prob_survival, prob_survival_until_midyear, hazard_rate,
           age_end_over_min_age, prob_survival_mod, prob_survival_until_midyear_mod, hazard_rate_mod,
           # These columns at the end to link with projections
-          population_yoa, population_yoa_entry))
+          midyear_population_yoa, entry_population_yoa))
 
 
     ## EXPOSED PROJECTION ###########################################################################
@@ -156,13 +162,13 @@ get_impact_with_lifetable <-
               .x <- .x |>
                 dplyr::mutate(
                   # End-of-year population YOA = (entry population YOA) * ( survival probability )
-                  population_yoa_end = population_yoa_entry * prob_survival,
+                  end_population_yoa = entry_population_yoa * prob_survival,
 
                   # Deaths YOA = End pop YOA - Entry pop YOA
-                  deaths_yoa = population_yoa_entry - population_yoa_end,
+                  deaths_yoa = entry_population_yoa - end_population_yoa,
 
                   # Entry population YOA+1 = lag ( End-of-year population YOA )
-                  population_yoa_plus_1_entry = dplyr::lag(population_yoa_end))
+                  entry_population_yoa_plus_1 = dplyr::lag(end_population_yoa))
             }
           )
         )
@@ -183,16 +189,16 @@ get_impact_with_lifetable <-
                 dplyr::mutate(
                   # Re-calculate population_yoa
                   # MID-YEAR POP = (entry population YOA) * ( survival probability until mid year )
-                  population_yoa = population_yoa_entry * prob_survival_until_midyear_mod,
+                  midyear_population_yoa = entry_population_yoa * prob_survival_until_midyear_mod,
 
                   # Calculate end-of-year population in YOA to later determine premature deaths
-                  population_yoa_end = population_yoa_entry * prob_survival_mod,
+                  end_population_yoa = entry_population_yoa * prob_survival_mod,
 
                   # Deaths YOA = End pop YOA - Entry pop YOA
-                  deaths_yoa = population_yoa_entry - population_yoa_end,
+                  deaths_yoa = entry_population_yoa - end_population_yoa,
 
                   # Entry population YOA+1 = lag ( End-of-year population YOA )
-                  population_yoa_plus_1_entry = dplyr::lag(population_yoa_end)
+                  entry_population_yoa_plus_1 = dplyr::lag(end_population_yoa)
                   )
             }
           )
@@ -214,7 +220,7 @@ get_impact_with_lifetable <-
                 tibble::tibble(
                   age_start = .x$age_start,
                   age_end = .x$age_end,
-                  impact_yoa = .x$population_yoa_end - .y$population_yoa_end) |>
+                  impact_yoa = .x$end_population_yoa - .y$end_population_yoa) |>
 
                   dplyr::rename_with(.cols = dplyr::everything(),
                                      .fn = ~ base::gsub("yoa", yoa, .x))
@@ -244,28 +250,24 @@ get_impact_with_lifetable <-
           base::gsub("_yoa_plus_1", base::paste0("_", yoa_plus_1), x = _) |>
           base::gsub("_yoa", base::paste0("_", yoa), x = _)
 
-        # Precompute column names to increase speed code
-        entry_names <- base::paste0("population_", years_projection, "_entry")
-        mid_names   <- base::paste0("population_", years_projection)
-        death_names <- base::paste0("deaths_", years_projection)
 
         # Precompute complements
         death_prob <- 1 - prob_survival
 
         # Initialise matrices
-        pop_entry <- base::matrix(NA, nrow = 100, ncol = number_years,
+        entry_pop <- base::matrix(NA, nrow = 100, ncol = number_years,
                                   # Row and column names
                                   # NULL because no row names
                                   dimnames = base::list(NULL, entry_names))
-        pop_mid   <- base::matrix(NA, nrow = 100, ncol = number_years,
-                                  dimnames = base::list(NULL, mid_names))
+        midyear_pop   <- base::matrix(NA, nrow = 100, ncol = number_years,
+                                  dimnames = base::list(NULL, midyear_names))
         deaths    <- base::matrix(NA, nrow = 100, ncol = number_years,
                                   dimnames = base::list(NULL, death_names))
 
         # Set initial year
-        pop_entry[, 1] <- df[[entry_names[1]]]
-        pop_mid[, 1] <- pop_entry[, 1] * prob_survival_until_midyear
-        deaths[, 1] <- pop_entry[, 1] * (1 - prob_survival)
+        entry_pop[, 1] <- df[[entry_names[1]]]
+        midyear_pop[, 1] <- entry_pop[, 1] * prob_survival_until_midyear
+        deaths[, 1] <- entry_pop[, 1] * (1 - prob_survival)
 
         # Loop across years
         # E.g. starts with 1 and ends with 98;
@@ -274,17 +276,17 @@ get_impact_with_lifetable <-
         for (i in 1: (number_years - 1)) {
           rows <- (i + 2):(number_years + 1)
           # ENTRY POP YOA+1 <- ( ENTRY POP YOA ) * ( SURVIVAL PROBABILITY YOA )
-          pop_entry[rows, i + 1] <- pop_entry[rows - 1, i] * prob_survival[rows - 1]
+          entry_pop[rows, i + 1] <- entry_pop[rows - 1, i] * prob_survival[rows - 1]
           # MID-YEAR POP YOA+1 <- ( ENTRY POP YOA+1) * ( SURVIVAL PROBABILITY FROM START OF YOA+1 TO MID YEAR YOA+1)
-          pop_mid[rows, i + 1]   <- pop_entry[rows, i + 1] * prob_survival_until_midyear[rows]
+          midyear_pop[rows, i + 1]   <- entry_pop[rows, i + 1] * prob_survival_until_midyear[rows]
           # DEATHS IN YOA+1 <- ( ENTRY POP YOA+1 ) * (1 - SURVIVAL PROBABILITY YOA+1 )
-          deaths[rows, i + 1]    <- pop_entry[rows, i + 1] * death_prob[rows]
+          deaths[rows, i + 1]    <- entry_pop[rows, i + 1] * death_prob[rows]
         }
 
         # Column bin matrices to input data frame
-        # Remove first column of pop_entry, because it exists already in input data frame
+        # Remove first column of entry_pop, because it exists already in input data frame
         df <-
-          dplyr::bind_cols(df, pop_mid, pop_entry[, -1], deaths)
+          dplyr::bind_cols(df, midyear_pop, entry_pop[, -1], deaths)
 
 
         return(df)
@@ -355,14 +357,10 @@ get_impact_with_lifetable <-
           dplyr::select(age_start, age_end)
 
         impact_df_a <- df_a |>
-          dplyr::select(dplyr::starts_with(var_prefix),
-                        -dplyr::contains("_end"),
-                        -dplyr::contains("_entry"))
+          dplyr::select(dplyr::starts_with(var_prefix))
 
         impact_df_b <- df_b|>
-          dplyr::select(dplyr::starts_with(var_prefix),
-                        -dplyr::contains("_end"),
-                        -dplyr::contains("_entry"))
+          dplyr::select(dplyr::starts_with(var_prefix))
 
         diff <- impact_df_a - impact_df_b
 
@@ -385,7 +383,7 @@ get_impact_with_lifetable <-
               .x = projection_if_unexposed_nested,
               .y = projection_if_exposed_nested,
               .f = calculate_impact,
-              var_prefix = "population_"
+              var_prefix = "midyear_population_"
             ),
           deaths_by_age_and_year_nested =
             purrr::map2(
