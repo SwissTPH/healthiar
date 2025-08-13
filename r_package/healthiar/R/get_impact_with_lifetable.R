@@ -51,7 +51,7 @@ get_impact_with_lifetable <-
 
 
     # LIFETABLE SETUP ##############################################################################
-    data_prepared <- input_with_risk_and_pop_fraction |>
+    data_for_projection <- input_with_risk_and_pop_fraction |>
       dplyr::mutate(
       # Duplicate bhd  and year_of_analysis
       # for more handy column names for life table calculations
@@ -63,7 +63,7 @@ get_impact_with_lifetable <-
       population_yoa = population)
 
 
-    data_prepared <- data_prepared |>
+    data_for_projection <- data_for_projection |>
       # Get modification factor
       # it works with both single exposure and exposure distribution
       dplyr::mutate(
@@ -94,7 +94,7 @@ get_impact_with_lifetable <-
 
 
     # CALCULATE MODIFIED SURVIVAL PROBABILITIES
-    data_prepared <- data_prepared |>
+    data_for_projection <- data_for_projection |>
       dplyr::mutate(
         # For all ages min_age and higher calculate modified survival probabilities
         # Calculate first the boolean/logic column to speed up calculations below
@@ -122,7 +122,7 @@ get_impact_with_lifetable <-
 
 
     # Nest life tables
-    data_prepared <- data_prepared |>
+    data_for_projection <- data_for_projection |>
       tidyr::nest(
         data_by_age_nested =
         c(yoa, age_group, age_start, age_end, bhd, deaths, population, population_yoa,
@@ -136,7 +136,7 @@ get_impact_with_lifetable <-
     # i.e. the scenario with the exposure to the environmental stressor as (currently) measured
 
     # DETERMINE ENTRY POPULATION OF YOA+1 IN BASELINE SCENARIO
-    pop <- data_prepared |>
+    pop <- data_for_projection |>
       dplyr::mutate(
         projection_if_exposed_nested =
           purrr::map(
@@ -251,7 +251,7 @@ get_impact_with_lifetable <-
         # Define the years based on number_years
         # e.g. 2020 to 2118
         years_projection <-
-          (data_prepared |>  dplyr::pull(year_of_analysis) |> dplyr::first() + 1) : (data_prepared |>  dplyr::pull(year_of_analysis) |> dplyr::first() + number_years)
+          (data_for_projection |>  dplyr::pull(year_of_analysis) |> dplyr::first() + 1) : (data_for_projection |>  dplyr::pull(year_of_analysis) |> dplyr::first() + number_years)
 
         # Initialize matrices for entry population, mid-year population, and deaths
         pop_entry <- matrix(NA, nrow = 100, ncol = number_years)
@@ -271,7 +271,7 @@ get_impact_with_lifetable <-
           base::paste0("deaths_", years_projection)
 
         # Set initial population for the first year (2020)
-        pop_entry[, 1] <- df[[base::paste0("population_", data_prepared |>  dplyr::pull(year_of_analysis) |> dplyr::first() + 1, "_entry")]]
+        pop_entry[, 1] <- df[[base::paste0("population_", data_for_projection |>  dplyr::pull(year_of_analysis) |> dplyr::first() + 1, "_entry")]]
         pop_mid[, 1] <- pop_entry[, 1] * prob_survival_until_mid_year
         deaths[, 1] <- pop_entry[, 1] * (1 - prob_survival)
 
@@ -518,12 +518,12 @@ get_impact_with_lifetable <-
     if (health_outcome %in% c("deaths", "yll")){
 
       joining_columns_pop_impact <-
-        healthiar:::find_joining_columns(data_prepared,
+        healthiar:::find_joining_columns(data_for_projection,
                                          pop,
                                          except = "data_by_age_nested")
 
       pop_impact <-
-        data_prepared |>
+        data_for_projection |>
         dplyr::right_join(pop, by = joining_columns_pop_impact) |>
         dplyr::relocate(dplyr::contains("_nested"), .before = 1)}
 
@@ -533,20 +533,20 @@ get_impact_with_lifetable <-
     # GET DEATHS AND YLL FROM LIFETABLE
 
     ## Define health_outcome variable
-    health_outcome <- base::unique(data_prepared$health_outcome)
+    health_outcome <- base::unique(data_for_projection$health_outcome)
 
     # Determine default time horizon for YLL/YLD if not specified ##############
     if ( health_outcome %in% c("yll") & # And ("yld")  if ever implemented
-         !"time_horizon" %in% base::names(data_prepared ) ) {
+         !"time_horizon" %in% base::names(data_for_projection ) ) {
 
-      time_horizon <- data_prepared |>
+      time_horizon <- data_for_projection |>
         dplyr::slice(1) |>                      # Select the first row
         dplyr::pull(data_by_age_nested) |> # Extract the nested tibble column
         purrr::pluck(1) |>                      # Get the tibble stored in the first element
         base::nrow()
 
       ## Add time_horizon to tibble
-      data_prepared <- data_prepared |>
+      data_for_projection <- data_for_projection |>
         dplyr::mutate(time_horizon = time_horizon)
 
     }
@@ -601,7 +601,7 @@ get_impact_with_lifetable <-
                   dplyr::select(dplyr::contains("impact_")) |>
 
                   ## Sum over ages (i.e. vertically)
-                  ## only ages between "max_age" and "data_prepared |>  pull(min_age) |> first()" filtered for above
+                  ## only ages between "max_age" and "data_for_projection |>  pull(min_age) |> first()" filtered for above
                   dplyr::summarize_all(sum, na.rm = TRUE) |>
 
                   ## Reshape to long format
@@ -651,7 +651,7 @@ get_impact_with_lifetable <-
         ## Add column for year of analysis
         dplyr::mutate(year_of_analysis = year_of_analysis) |>
         ## Add column for time horizon
-        dplyr::mutate(time_horizon = data_prepared |>  dplyr::pull(time_horizon) |> dplyr::first()) |>
+        dplyr::mutate(time_horizon = data_for_projection |>  dplyr::pull(time_horizon) |> dplyr::first()) |>
         ## Add column for last year of analysis
         dplyr::mutate(last_year = year_of_analysis + time_horizon - 1)
 
