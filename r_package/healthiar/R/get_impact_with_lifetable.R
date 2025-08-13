@@ -121,63 +121,6 @@ get_impact_with_lifetable <-
         .after = deaths)
 
 
-
-
-    # data_prepared <- input_with_risk_and_pop_fraction |>
-    #   # Get modification factor
-    #   # it works with both single exposure and exposure distribution
-    #   dplyr::mutate(modification_factor = 1 - pop_fraction,
-    #                 .after = rr) |>
-    #   # Add modification factor to data_by_age_nested
-    #   dplyr::mutate(data_by_age_nested =
-    #                   purrr::pmap(
-    #                     base::list(data_by_age_nested, modification_factor),
-    #                     function(data_by_age_nested, modification_factor){
-    #                       data_by_age_nested <- data_by_age_nested |>
-    #                         dplyr::mutate(modification_factor = modification_factor)
-    #                     }
-    #                   )
-    #   )
-    #
-    #
-    #
-    # # ADD ENTRY POPULATION OF YOA & SURVIVAL PROBABILITIES
-    # data_prepared <- data_prepared |>
-    #
-    #   dplyr::mutate(
-    #     data_by_age_nested =
-    #       purrr::map(
-    #         .x = data_by_age_nested,
-    #         function(.x){
-    #           .x <- .x |>
-    #             # CALCULATE ENTRY POPULATION OF YEAR OF ANALYSIS (YOA)
-    #             dplyr::mutate(
-    #               population_yoa_entry = population_yoa + (deaths / 2),
-    #               .before = population_yoa) |>
-    #
-    #             # CALCULATE PROBABILITY OF SURVIVAL FROM START YEAR TO END YEAR & START YEAR TO MID YEAR
-    #             # probability of survival from start of year i to start of year i+1 (entry to entry)
-    #             dplyr::mutate(
-    #               prob_survival =
-    #                 (population_yoa - (deaths / 2)) /
-    #                 (population_yoa + (deaths / 2) ),
-    #               .after = deaths) |>
-    #
-    #             # Probability of survival from start to midyear
-    #             # For example entry_pop = 100, prob_survival = 0.8 then end_of_year_pop = 100 * 0.8 = 80.
-    #             # mid_year_pop = 100 - (20/2) = 90.
-    #             dplyr::mutate(
-    #               prob_survival_until_mid_year = 1 - ((1 - prob_survival) / 2),
-    #               .after = deaths) |>
-    #
-    #             # Hazard rate for calculating survival probabilities
-    #             dplyr::mutate(
-    #               hazard_rate = deaths / population_yoa,
-    #               .after = deaths)
-    #         }
-    #       )
-    #   )
-
     # Nest life tables
     data_prepared <- data_prepared |>
       tidyr::nest(
@@ -187,42 +130,6 @@ get_impact_with_lifetable <-
           prob_survival, prob_survival_until_mid_year, hazard_rate,
           age_end_over_min_age, prob_survival_mod, prob_survival_until_mid_year_mod, hazard_rate_mod))
 
-    # # CALCULATE MODIFIED SURVIVAL PROBABILITIES
-    # data_prepared <- data_prepared |>
-    #   dplyr::mutate(
-    #     data_by_age_nested =
-    #       purrr::map(
-    #         .x = data_by_age_nested,
-    #         function(.x){
-    #           .x <- .x |>
-    #             # For all ages min_age and higher calculate modified survival probabilities
-    #             # Calculate modified hazard rate = modification factor * hazard rate = mod factor * (deaths / mid-year pop)
-    #             dplyr::mutate(
-    #               hazard_rate_mod =
-    #                 dplyr::if_else(age_end > c(rep_len(data_prepared |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
-    #                                modification_factor * hazard_rate,
-    #                                hazard_rate),
-    #               .after = deaths) |>
-    #
-    #             # Calculate modified survival probability =
-    #             # ( 2 - modified hazard rate ) / ( 2 + modified hazard rate )
-    #             dplyr::mutate(
-    #               prob_survival_mod =
-    #                 dplyr::if_else(age_end > c(rep_len(data_prepared |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
-    #                                (2 - hazard_rate_mod) / (2 + hazard_rate_mod),
-    #                                prob_survival),
-    #               .after = deaths) |>
-    #
-    #             dplyr::mutate(
-    #               prob_survival_until_mid_year_mod =
-    #                 dplyr::if_else(age_end > c(rep_len(data_prepared |>  dplyr::pull(min_age) |> dplyr::first(), length.out = length(age_end))), # This makes sure comparators are of same length
-    #                                1 - ((1 - prob_survival_mod) / 2),
-    #                                prob_survival_until_mid_year),
-    #               .after = deaths)
-    #         }
-    #
-    #       )
-    #   )
 
     ## BASELINE SCENARIO ###########################################################################
     # The baseline scenario is the scenario of "business as usual"
