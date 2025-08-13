@@ -49,6 +49,15 @@ get_impact_with_lifetable <-
 
     is_with_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "with_newborns"
 
+    # The number_years defines for how many years the population should be projected;
+    # might be easier to have two arguments "start year" and "end year"
+    number_years <-
+      base::length(base::unique(input_with_risk_and_pop_fraction$age_start)) - 1
+
+    # Define the years based on number_years
+    # e.g. 2020 to 2118
+    years_projection <- yoa_plus_1 : (yoa + number_years)
+
 
     # LIFETABLE SETUP ##############################################################################
     data_for_projection <- input_with_risk_and_pop_fraction |>
@@ -210,15 +219,15 @@ get_impact_with_lifetable <-
                   dplyr::rename_with(.cols = dplyr::everything(),
                                      .fn = ~ base::gsub("yoa", yoa, .x))
 
-
-                }),
-          .after = projection_if_unexposed_nested)
+                }
+              )
+          )
 
     }
 
     # YLL & PREMATURE DEATHS (CONSTANT EXPOSURE) ####################################################
 
-    if (health_outcome == "yll"| #And  ("yld", "daly") if yld from lifetable ever implemented
+    if (health_outcome == "yll"| #And  ("yld", "daly") if yld for life table ever implemented
          is_constant_exposure) {
 
       ## PROJECT POPULATIONS #########################################################################
@@ -232,22 +241,11 @@ get_impact_with_lifetable <-
         base::names(df) <-
           base::gsub("_yoa", base::paste0("_", yoa), base::names(df))
 
-        # Store useful variables such number_years
-        # The number_years argument defines for how many years the population should be projected;
-        # might be easier to have two arguments "start year" and "end year"
-        number_years <-
-          nrow(df) - 1
-
-        # Define the years based on number_years
-        # e.g. 2020 to 2118
-        years_projection <-
-          (data_for_projection |>  dplyr::pull(year_of_analysis) |> dplyr::first() + 1) : (data_for_projection |>  dplyr::pull(year_of_analysis) |> dplyr::first() + number_years)
-
         # Initialize matrices for entry population, mid-year population, and deaths
         pop_entry <- matrix(NA, nrow = 100, ncol = number_years)
         # Provide column names (population_year)
         # e.g. population_2020 to population_2118
-        colnames(pop_entry) <-
+        base::colnames(pop_entry) <-
           base::paste0("population_", years_projection , "_entry")
 
         # Same for mid-year population
