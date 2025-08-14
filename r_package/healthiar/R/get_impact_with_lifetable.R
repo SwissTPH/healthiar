@@ -467,12 +467,13 @@ get_impact_with_lifetable <-
 
               if ( health_outcome %in% c("yll") ) { # And ("yld")  if ever implemented
 
+                ## Sum over ages (i.e. vertically)
+                ## only ages between "max_age" and "data_for_projection filtered for above
                 .x <- .x |>
-                  dplyr::select(dplyr::contains("impact_")) |>
-
-                  ## Sum over ages (i.e. vertically)
-                  ## only ages between "max_age" and "data_for_projection |>  pull(min_age) |> first()" filtered for above
-                  dplyr::summarize_all(sum, na.rm = TRUE) |>
+                  dplyr::summarise(
+                    dplyr::across(
+                      .cols = dplyr::contains("impact_"),
+                      .fns= ~ sum(.x, na.rm = TRUE))) |>
 
                   ## Reshape to long format
                   ## (output is data frame with 2 columns "year" & "impact")
