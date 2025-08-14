@@ -431,34 +431,27 @@ get_impact_with_lifetable <-
       }
     }
 
-
-
+    # Get back default number of decimals now that no more quantitative operations
     on.exit(options(user_options))
+
+    # COMPILE OUTPUT ##############################################################################
+
+    # Data wrangling to get the results in the needed format
 
     # GET DEATHS AND YLL FROM LIFETABLE
 
-    ## Define health_outcome variable
-    health_outcome <- base::unique(data_for_projection$health_outcome)
-
     # Determine default time horizon for YLL/YLD if not specified ##############
     if ( health_outcome %in% c("yll") & # And ("yld")  if ever implemented
-         !"time_horizon" %in% base::names(data_for_projection ) ) {
-
-      time_horizon <- data_for_projection |>
-        dplyr::slice(1) |>                      # Select the first row
-        dplyr::pull(data_by_age_nested) |> # Extract the nested tibble column
-        purrr::pluck(1) |>                      # Get the tibble stored in the first element
-        base::nrow()
+         !"time_horizon" %in% base::names(data_with_projection ) ) {
 
       ## Add time_horizon to tibble
-      data_for_projection <- data_for_projection |>
+      data_with_projection <- data_with_projection |>
         dplyr::mutate(time_horizon = time_horizon)
 
     }
 
-    ## ALTERNATIVE CODE
     ## Filter for relevant ages
-    impact_detailed <- pop_impact |>
+    impact_detailed <- data_with_projection |>
       dplyr::mutate(
         health_outcome = health_outcome,
         impact_by_year_nested =
@@ -555,8 +548,6 @@ get_impact_with_lifetable <-
 
         ## Add column for year of analysis
         dplyr::mutate(year_of_analysis = year_of_analysis) |>
-        ## Add column for time horizon
-        dplyr::mutate(time_horizon = data_for_projection |>  dplyr::pull(time_horizon) |> dplyr::first()) |>
         ## Add column for last year of analysis
         dplyr::mutate(last_year = year_of_analysis + time_horizon - 1)
 
