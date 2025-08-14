@@ -514,31 +514,9 @@ get_impact_with_lifetable <-
 
     # Select and sort colums #####
     impact_detailed <- impact_detailed |>
-      dplyr::relocate(dplyr::contains("_nested"), .before = 1)
+      dplyr::relocate(dplyr::contains("_nested"), .before = 1) |>
+      dplyr::mutate(age_group = "total")
 
-
-    # Assign ID ###################################
-
-    ## Create ID for the rows (will be used below)
-    id_columns <-
-      c("sex",
-        "geo_id_disaggregated",
-        "erf_ci", "bhd_ci", "exp_ci", "dw_ci", "cutoff_ci", "duration_ci")
-
-    id_columns_in_df <-
-      id_columns[id_columns %in% base::names(impact_detailed)]
-
-    id <-
-      purrr::pmap_chr(impact_detailed[id_columns_in_df],
-                      ~base::paste(..., sep = "_"))
-
-    ## Name rows with the ids for better overview in Environment
-    impact_detailed <-
-      impact_detailed  |>
-      dplyr::mutate(dplyr::across(dplyr::contains("_nested"),
-                                  ~purrr::set_names(.x,
-                                                    id)),
-                    age_group = "total")
 
     return(impact_detailed)
 
