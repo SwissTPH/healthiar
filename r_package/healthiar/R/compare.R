@@ -216,6 +216,13 @@ compare <-
       stop("For the PIF approach, bhd must be identical in both scenarios.",
            call. = FALSE)
     }
+
+    if(approach_comparison == "pif" &&
+       "population" %in% c(names(input_table_scen_1),names(input_table_scen_2))  &&
+       !base::identical(input_table_scen_1$population, input_table_scen_2$population)){
+      stop("For the PIF approach, population must be identical in both scenarios.",
+           call. = FALSE)
+    }
     # Check if absolute risk with pif (not possible)
 
     if(approach_comparison == "pif" &&
@@ -285,9 +292,14 @@ compare <-
         if(base::unique(input_table_scen_1$is_lifetable)) {
           # Calculate the health impacts for each case (uncertainty, category, geo area...)
           results_raw <-
-            healthiar:::get_impact(
-              input_table = input_table |> dplyr::rename(year_of_analysis = year_of_analysis_scen_1),
-              pop_fraction_type = "pif")
+            input_table |>
+            # Duplicate column with new names (without _scen_..)
+            # to enable that get_impact() can read it
+            dplyr::mutate(year_of_analysis = year_of_analysis_scen_1,
+                          population = population_scen_1) |>
+            dplyr::select(-population_scen_1, -population_scen_2)|>
+            healthiar:::get_impact(input_table = _,
+                                   pop_fraction_type = "pif")
         } else { # Non-lifetable cases
 
           results_raw <-
