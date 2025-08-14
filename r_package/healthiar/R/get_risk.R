@@ -75,7 +75,7 @@ get_risk <-
 
     # Obtain rr_at_exp, i.e. the relative risk the level of exposure
     # instead of for the increment
-# browser()
+
     # If erf_eq is passed as argument
     if (! base::is.null(erf_eq)) {
 
