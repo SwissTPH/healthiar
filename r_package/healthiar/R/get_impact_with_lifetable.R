@@ -446,7 +446,8 @@ get_impact_with_lifetable <-
 
     # GET DEATHS AND YLL FROM LIFETABLE
 
-    ## Filter for relevant ages
+
+
     impact_detailed <- data_with_projection |>
       dplyr::mutate(
         impact_by_year_nested =
@@ -457,34 +458,34 @@ get_impact_with_lifetable <-
                        health_outcome = health_outcome),
             function(.x, max_age, min_age, health_outcome){
 
+
               # Filter for relevant ages #########################################
               .x <- .x |>
                 dplyr::filter(age_start <= max_age,
                               age_start >= min_age)
 
 
+
               # Calculate YLL/YLD impact per year ################################
 
-              #if ( health_outcome %in% c("yll") ) { # And ("yld")  if ever implemented
+              ## Sum over ages (i.e. vertically)
+              ## only ages between "max_age" and "data_for_projection filtered for above
+              .x <- .x |>
+                dplyr::summarise(
+                  dplyr::across(
+                    .cols = dplyr::contains("impact_"),
+                    .fns= ~ sum(.x, na.rm = TRUE))) |>
 
-                ## Sum over ages (i.e. vertically)
-                ## only ages between "max_age" and "data_for_projection filtered for above
-                .x <- .x |>
-                  dplyr::summarise(
-                    dplyr::across(
-                      .cols = dplyr::contains("impact_"),
-                      .fns= ~ sum(.x, na.rm = TRUE))) |>
+                ## Reshape to long format
+                ## (output is data frame with 2 columns "year" & "impact")
+                tidyr::pivot_longer(cols = dplyr::starts_with("impact_"),
+                                    names_to = "year",
+                                    values_to = "impact",
+                                    names_prefix = "impact_") |>
 
-                  ## Reshape to long format
-                  ## (output is data frame with 2 columns "year" & "impact")
-                  tidyr::pivot_longer(cols = dplyr::starts_with("impact_"),
-                                      names_to = "year",
-                                      values_to = "impact",
-                                      names_prefix = "impact_") |>
+                ## Convert year to numeric
+                dplyr::mutate(year = base::as.numeric(year))
 
-                  ## Convert year to numeric
-                  dplyr::mutate(year = base::as.numeric(year))
-              #} else { .x <- .x }
 
               }
             )
@@ -533,7 +534,6 @@ get_impact_with_lifetable <-
 
     # Select and sort colums #####
     impact_detailed <- impact_detailed |>
-      #dplyr::select(-data_by_age_nested) |>
       dplyr::relocate(dplyr::contains("_nested"), .before = 1)
 
 
