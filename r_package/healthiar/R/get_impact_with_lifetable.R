@@ -51,11 +51,11 @@ get_impact_with_lifetable <-
 
     # n_years_projection defines for how many years the population should be projected;
     n_years_projection <- base::length(base::unique(input_with_risk_and_pop_fraction$age_start)) - 1
-
+    # Define the last year of the projection
+    last_year_projection <- yoa + n_years_projection
     # Define the years based on n_years_projection
     # e.g. 2020 to 2118
-    years_projection <- yoa_plus_1 : (yoa + n_years_projection)
-
+    years_projection <- yoa_plus_1 : last_year_projection
 
     # Precompute column names to be use below
     entry_names <- base::paste0("entry_population_", years_projection)
@@ -465,7 +465,7 @@ get_impact_with_lifetable <-
 
               # Calculate YLL/YLD impact per year ################################
 
-              if ( health_outcome %in% c("yll") ) { # And ("yld")  if ever implemented
+              #if ( health_outcome %in% c("yll") ) { # And ("yld")  if ever implemented
 
                 ## Sum over ages (i.e. vertically)
                 ## only ages between "max_age" and "data_for_projection filtered for above
@@ -484,87 +484,59 @@ get_impact_with_lifetable <-
 
                   ## Convert year to numeric
                   dplyr::mutate(year = base::as.numeric(year))
-              } else { .x <- .x }
+              #} else { .x <- .x }
 
               }
             )
         )
 
-
-    # Deaths ###################################################################
-
-    ## Store total deaths in YOA in column impact_nested
-    if ( health_outcome == "deaths" ) {
-
-      impact_detailed <- impact_detailed |>
-        # Store in new column "impact_nested"
-        dplyr::mutate(
-          impact = purrr::map(
-            .x = impact_by_year_nested,
-            function(.x){
-
-              .x <- .x |>
-                dplyr::select(dplyr::all_of(base::paste0("impact_", yoa))) |>
-                base::sum(na.rm = TRUE)
-              return(.x)
-            }
-          )
-        ) |>
-        dplyr::mutate(impact = base::as.numeric(impact))
-
-
-    }
-
-    # Store total, YLL/YLD in YOA in column impact_nested #########
+    # Store total impacts #########
     ## Single number
 
-    if ( health_outcome == "yll"){ # And ("yld")  if ever implemented
+    ## Sum impacts
+    impact_detailed <- impact_detailed |>
 
-      impact_detailed <- impact_detailed |>
+      dplyr::mutate(
+        impact_nested = purrr::pmap(
+          base::list(.x = impact_by_year_nested, .y = last_year_projection, health_outcome = health_outcome),
+          function(.x, .y, health_outcome){
 
-        ## Add column for year of analysis
-        dplyr::mutate(year_of_analysis = year_of_analysis) |>
-        ## Add column for last year of analysis
-        dplyr::mutate(last_year = year_of_analysis + time_horizon - 1)
+            if(health_outcome == "deaths"){
+              .x <-
+                .x |>
+                ## Select first year of projection
+                dplyr::filter(.data = _, year < yoa_plus_1)
 
-      ## Sum impacts
-      impact_detailed <- impact_detailed |>
-
-        dplyr::mutate(
-          impact_nested = purrr::pmap(
-            base::list(.x = impact_by_year_nested, .y = last_year, health_outcome = base::unique(health_outcome)),
-            function(.x, .y, health_outcome){
-
-              ## If yll or yld
-              if( health_outcome == "yll"){ # And ("yld")  if ever implemented
-
+              } else if (health_outcome == "yll"){
                 .x <-
                   .x |>
+                ## Select all years within time horizon
+                dplyr::filter(.data = _, year < .y+1)
+                }
 
-                  ## Select all years within time horizon
-                  dplyr::filter(.data = _, year < .y+1) |>
+            .x <-
+              .x |>
 
-                  ## Sum impact
-                  dplyr::summarise(impact = base::sum(impact, na.rm = TRUE))
+              ## Sum impact
+              dplyr::summarise(impact = base::sum(impact, na.rm = TRUE))
 
-                return(.x)
-              }
-            }
-          )
-        ) |>
-        dplyr::mutate(
-          impact_for_discounting_nested = impact_nested
-        ) |>
-        ## Unnest the obtained impacts to integrate them the main tibble
-        ## Impact saved in column impact
-        tidyr::unnest(impact_nested)
+            return(.x)
 
-    }
+          }
+        )
+      ) |>
+      dplyr::mutate(
+        impact_for_discounting_nested = impact_nested
+      ) |>
+      ## Unnest the obtained impacts to integrate them the main tibble
+      ## Impact saved in column impact
+      tidyr::unnest(impact_nested)
+
+
 
     # Select and sort colums #####
-    # Remove from pop, as already present in input_with_risk_...
     impact_detailed <- impact_detailed |>
-      dplyr::select(-data_by_age_nested) |>
+      #dplyr::select(-data_by_age_nested) |>
       dplyr::relocate(dplyr::contains("_nested"), .before = 1)
 
 
