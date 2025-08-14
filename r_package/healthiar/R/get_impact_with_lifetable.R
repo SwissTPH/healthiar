@@ -398,17 +398,26 @@ get_impact_with_lifetable <-
 
       if (is_with_newborns) {
 
-
-
         fill_right_of_diag <- function(tbl) {
-          for (i in seq_len(nrow(tbl))) {
+
+          # Select only the numeric matrix portion, ignoring age columns
+          cols <- base::setdiff(base::names(tbl), c("age_start", "age_end"))
+          data_selection <- tbl[, cols, drop = FALSE]
+
+          for (i in 1 : base::nrow(data_selection)) {
             # Extract the diagonal value
-            diag_value <- tbl[i, i, drop = TRUE]
+            diag_value <- data_selection[i, i, drop = TRUE]
             # Replace NAs to the right of the diagonal with the diagonal value
-            tbl[i, (i+1):ncol(tbl)] <- diag_value
+            data_selection[i, (i+1):base::ncol(data_selection)] <- diag_value
           }
-          tbl <- tbl |>
-            dplyr::select(-ncol(tbl))
+
+
+          # Drop last column from the data part
+          data_selection <- data_selection[, -ncol(data_selection), drop = FALSE]
+
+          # Assign back into the same positions
+          tbl[, cols] <- data_selection
+
           return(tbl)
         }
 
@@ -416,24 +425,10 @@ get_impact_with_lifetable <-
           dplyr::mutate(
             yll_by_age_and_year_nested = purrr::map(
               .x = yll_by_age_and_year_nested,
-              function(.x){
-
-                .x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))])
-                return(.x)
-              }
-            )
-            , .before = 1)
-
-        data_with_projection <- data_with_projection |>
-          dplyr::mutate(deaths_by_age_and_year_nested = purrr::map(
-            .x = deaths_by_age_and_year_nested,
-            function(.x){
-
-              .x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))] <- fill_right_of_diag(.x[, dplyr::setdiff(names(.x), c("age_start", "age_end"))])
-              return(.x)
-            }
-          )
-          , .before = 1)
+              .f = fill_right_of_diag),
+            deaths_by_age_and_year_nested = purrr::map(
+              .x = deaths_by_age_and_year_nested,
+              .f = fill_right_of_diag))
 
       }
 
