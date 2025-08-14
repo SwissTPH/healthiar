@@ -152,7 +152,7 @@ get_impact_with_lifetable <-
     # The exposed projection is the scenario of "business as usual"
     # i.e. the scenario with the exposure to the environmental stressor as (currently) measured
 
-    # DETERMINE ENTRY POPULATION OF YOA+1 IN BASELINE SCENARIO
+    # DETERMINE ENTRY POPULATION OF YOA+1 IN EXPOSED SCENARIO
     data_with_projection <- data_for_projection |>
       dplyr::mutate(
         projection_if_exposed_nested =
@@ -165,7 +165,7 @@ get_impact_with_lifetable <-
                   end_population_yoa = entry_population_yoa * prob_survival,
 
                   # Deaths YOA = End pop YOA - Entry pop YOA
-                  deaths_yoa = entry_population_yoa - end_population_yoa,
+                  deaths_yoa = end_population_yoa - entry_population_yoa,
 
                   # Entry population YOA+1 = lag ( End-of-year population YOA )
                   entry_population_yoa_plus_1 = dplyr::lag(end_population_yoa))
@@ -195,7 +195,7 @@ get_impact_with_lifetable <-
                   end_population_yoa = entry_population_yoa * prob_survival_mod,
 
                   # Deaths YOA = End pop YOA - Entry pop YOA
-                  deaths_yoa = entry_population_yoa - end_population_yoa,
+                  deaths_yoa = end_population_yoa - entry_population_yoa,
 
                   # Entry population YOA+1 = lag ( End-of-year population YOA )
                   entry_population_yoa_plus_1 = dplyr::lag(end_population_yoa)
