@@ -439,7 +439,6 @@ get_impact_with_lifetable <-
     ## Filter for relevant ages
     impact_detailed <- data_with_projection |>
       dplyr::mutate(
-        health_outcome = health_outcome,
         impact_by_year_nested =
           purrr::pmap(
             base::list(.x =  impact_by_age_and_year_nested,
@@ -447,29 +446,6 @@ get_impact_with_lifetable <-
                        min_age = base::unique(min_age),
                        health_outcome = base::unique(health_outcome)),
             function(.x, max_age, min_age, health_outcome){
-
-              # Set values in upper triangle to NA ###############################
-              ## NOTE: also removes newborns values
-
-              if ( health_outcome == "deaths" ) {
-
-                .x <- .x |>
-                  dplyr::mutate(
-                    dplyr::across(dplyr::contains("deaths"), ~ {
-                      mat <- base::as.matrix(.x)
-                      mat[base::upper.tri(mat, diag = FALSE)] <- NA
-                      return(mat)}))
-
-              } else {
-
-                .x <- .x |>
-                  dplyr::mutate(
-                    dplyr::across(dplyr::contains("impact_"),
-                                  ~ {mat <- base::as.matrix(.x)
-                                  mat[base::upper.tri(mat, diag = FALSE)] <- NA
-                                  return(mat)}))
-              }
-
 
               # Filter for relevant ages #########################################
               .x <- .x |>
