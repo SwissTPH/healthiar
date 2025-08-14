@@ -49,12 +49,12 @@ get_impact_with_lifetable <-
 
     is_with_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "with_newborns"
 
-    # number_years defines for how many years the population should be projected;
-    number_years <- base::length(base::unique(input_with_risk_and_pop_fraction$age_start)) - 1
+    # n_years_projection defines for how many years the population should be projected;
+    n_years_projection <- base::length(base::unique(input_with_risk_and_pop_fraction$age_start)) - 1
 
-    # Define the years based on number_years
+    # Define the years based on n_years_projection
     # e.g. 2020 to 2118
-    years_projection <- yoa_plus_1 : (yoa + number_years)
+    years_projection <- yoa_plus_1 : (yoa + n_years_projection)
 
 
     # Precompute column names to be use below
@@ -254,13 +254,13 @@ get_impact_with_lifetable <-
         death_prob <- 1 - prob_survival
 
         # Initialise matrices
-        entry_pop <- base::matrix(NA, nrow = 100, ncol = number_years,
+        entry_pop <- base::matrix(NA, nrow = 100, ncol = n_years_projection,
                                   # Row and column names
                                   # NULL because no row names
                                   dimnames = base::list(NULL, entry_names))
-        midyear_pop   <- base::matrix(NA, nrow = 100, ncol = number_years,
+        midyear_pop   <- base::matrix(NA, nrow = 100, ncol = n_years_projection,
                                   dimnames = base::list(NULL, midyear_names))
-        deaths    <- base::matrix(NA, nrow = 100, ncol = number_years,
+        deaths    <- base::matrix(NA, nrow = 100, ncol = n_years_projection,
                                   dimnames = base::list(NULL, death_names))
 
         # Set initial year
@@ -272,8 +272,8 @@ get_impact_with_lifetable <-
         # E.g. starts with 1 and ends with 98;
         # i (index in the number of years) is used to select both the rows and the columns
 
-        for (i in 1: (number_years - 1)) {
-          rows <- (i + 2):(number_years + 1)
+        for (i in 1: (n_years_projection - 1)) {
+          rows <- (i + 2):(n_years_projection + 1)
           # ENTRY POP YOA+1 <- ( ENTRY POP YOA ) * ( SURVIVAL PROBABILITY YOA )
           entry_pop[rows, i + 1] <- entry_pop[rows - 1, i] * prob_survival[rows - 1]
           # MID-YEAR POP YOA+1 <- ( ENTRY POP YOA+1) * ( SURVIVAL PROBABILITY FROM START OF YOA+1 TO MID YEAR YOA+1)
