@@ -218,10 +218,12 @@ get_impact_with_lifetable <-
                 tibble::tibble(
                   age_start = .x$age_start,
                   age_end = .x$age_end,
-                  # Unexposed minus exposed
+                  # Change of sign in the difference unexposed minus exposed
                   # because if no exposure
-                  # there are more population (less deaths)
-                  impact_yoa = .x$end_population_yoa - .y$end_population_yoa) |>
+                  # there are less deaths in unexposed
+                  # For population unexposed minus exposed (without change of sign)
+                  # because there are more population in unexposed
+                  impact_yoa = -(.x$deaths_yoa - .y$deaths_yoa)) |>
 
                   dplyr::rename_with(.cols = dplyr::everything(),
                                      .fn = ~ base::gsub("yoa", yoa, .x))
