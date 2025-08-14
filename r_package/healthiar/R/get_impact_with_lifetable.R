@@ -432,9 +432,6 @@ get_impact_with_lifetable <-
     # COMPILE OUTPUT ##############################################################################
     # Data wrangling to get the results in the needed format
 
-    # Remove from pop, as already present in input_with_risk_...
-    data_with_projection <- data_with_projection |>
-      dplyr::select(-data_by_age_nested)
 
     if (health_outcome %in% c("deaths", "yll")){
 
@@ -447,7 +444,6 @@ get_impact_with_lifetable <-
         data_for_projection |>
         dplyr::right_join(data_with_projection,
                           by = joining_columns_pop_impact) |>
-        dplyr::relocate(dplyr::contains("_nested"), .before = 1)}
 
 
     on.exit(options(user_options))
@@ -610,6 +606,12 @@ get_impact_with_lifetable <-
         tidyr::unnest(impact_nested)
 
     }
+
+    # Select and sort colums #####
+    # Remove from pop, as already present in input_with_risk_...
+    impact_detailed <- impact_detailed |>
+      dplyr::select(-data_by_age_nested) |>
+      dplyr::relocate(dplyr::contains("_nested"), .before = 1)
 
 
     # Assign ID ###################################
