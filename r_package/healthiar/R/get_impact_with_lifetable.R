@@ -525,9 +525,6 @@ get_impact_with_lifetable <-
           }
         )
       ) |>
-      dplyr::mutate(
-        impact_for_discounting_nested = impact_nested
-      ) |>
       ## Unnest the obtained impacts to integrate them the main tibble
       ## Impact saved in column impact
       tidyr::unnest(impact_nested)
