@@ -49,10 +49,12 @@ get_impact_with_lifetable <-
 
     is_with_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "with_newborns"
 
-    # The number_years defines for how many years the population should be projected;
+    # time_horizon is equivalent to the number of ages
+    time_horizon <- base::length(base::unique(input_with_risk_and_pop_fraction$age_start))
+    # number_years defines for how many years the population should be projected;
     # might be easier to have two arguments "start year" and "end year"
-    number_years <-
-      base::length(base::unique(input_with_risk_and_pop_fraction$age_start)) - 1
+    # time_horizon minus 1
+    number_years <- time_horizon - 1
 
     # Define the years based on number_years
     # e.g. 2020 to 2118
