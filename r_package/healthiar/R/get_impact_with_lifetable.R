@@ -49,12 +49,8 @@ get_impact_with_lifetable <-
 
     is_with_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "with_newborns"
 
-    # time_horizon is equivalent to the number of ages
-    time_horizon <- base::length(base::unique(input_with_risk_and_pop_fraction$age_start))
     # number_years defines for how many years the population should be projected;
-    # might be easier to have two arguments "start year" and "end year"
-    # time_horizon minus 1
-    number_years <- time_horizon - 1
+    number_years <- base::length(base::unique(input_with_risk_and_pop_fraction$age_start)) - 1
 
     # Define the years based on number_years
     # e.g. 2020 to 2118
@@ -439,16 +435,6 @@ get_impact_with_lifetable <-
     # Data wrangling to get the results in the needed format
 
     # GET DEATHS AND YLL FROM LIFETABLE
-
-    # Determine default time horizon for YLL/YLD if not specified ##############
-    if ( health_outcome %in% c("yll") & # And ("yld")  if ever implemented
-         !"time_horizon" %in% base::names(data_with_projection ) ) {
-
-      ## Add time_horizon to tibble
-      data_with_projection <- data_with_projection |>
-        dplyr::mutate(time_horizon = time_horizon)
-
-    }
 
     ## Filter for relevant ages
     impact_detailed <- data_with_projection |>

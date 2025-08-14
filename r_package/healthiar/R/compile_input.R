@@ -172,7 +172,12 @@ compile_input <-
           min_age = if(base::is.null(input_args_edited$min_age)){
             dplyr::first(base::unique(age_start))} else {min_age},
           max_age = if(base::is.null(input_args_edited$max_age)){
-            dplyr::last(base::unique(age_start))} else {max_age})
+            dplyr::last(base::unique(age_start))} else {max_age},
+          # Determine default time horizon for YLL/YLD if not specified
+          time_horizon = if(base::is.null(input_args_edited$time_horizon) &
+                            input_args_edited$health_outcome == "yll"){
+            base::length(base::unique(input_args_edited$age_group))
+            } else {base::unique(input_args_edited$time_horizon)})
 
 
 
