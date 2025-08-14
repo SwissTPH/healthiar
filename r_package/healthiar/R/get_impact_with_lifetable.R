@@ -64,7 +64,7 @@ get_impact_with_lifetable <-
 
 
     # LIFETABLE SETUP ##############################################################################
-    data_for_projection <- input_with_risk_and_pop_fraction |>
+    lifetable_calculation <- input_with_risk_and_pop_fraction |>
       dplyr::mutate(
       # Duplicate bhd  and year_of_analysis
       # for more handy column names for life table calculations
@@ -76,7 +76,7 @@ get_impact_with_lifetable <-
       midyear_population_yoa = population)
 
 
-    data_for_projection <- data_for_projection |>
+    lifetable_calculation <- lifetable_calculation |>
       # Get modification factor
       # it works with both single exposure and exposure distribution
       dplyr::mutate(
@@ -107,7 +107,7 @@ get_impact_with_lifetable <-
 
 
     # CALCULATE MODIFIED SURVIVAL PROBABILITIES
-    data_for_projection <- data_for_projection |>
+    lifetable_calculation <- lifetable_calculation |>
       dplyr::mutate(
         # For all ages min_age and higher calculate modified survival probabilities
         # Calculate first the boolean/logic column to speed up calculations below
@@ -135,7 +135,7 @@ get_impact_with_lifetable <-
 
 
     # Nest life tables
-    data_for_projection <- data_for_projection |>
+    lifetable_calculation <- lifetable_calculation |>
       tidyr::nest(
         data_by_age_nested =
         c(yoa, age_group, age_start, age_end, bhd, deaths, population,
@@ -151,7 +151,7 @@ get_impact_with_lifetable <-
     # i.e. the scenario with the exposure to the environmental stressor as (currently) measured
 
     # DETERMINE ENTRY POPULATION OF YOA+1 IN EXPOSED SCENARIO
-    data_with_projection <- data_for_projection |>
+    lifetable_calculation <- lifetable_calculation |>
       dplyr::mutate(
         projection_if_exposed_nested =
           purrr::map(
@@ -177,7 +177,7 @@ get_impact_with_lifetable <-
     # CALCULATE YOA MID-YEAR POPOULATION,
     # YOA END-OF-YEAR POPULATION, YOA DEATHS AND
     # YOA+1 ENTRY POPULATION USING MODIFIED SURVIVAL PROBABILITIES
-    data_with_projection <- data_with_projection |>
+    lifetable_calculation <- lifetable_calculation |>
       dplyr::mutate(
         projection_if_unexposed_nested =
           purrr::map(
@@ -207,7 +207,7 @@ get_impact_with_lifetable <-
     if (health_outcome == "deaths" &
         is_single_year_exposure) {
 
-      data_with_projection <- data_with_projection |>
+      lifetable_calculation <- lifetable_calculation |>
         # Premature deaths = YOA end-of-year population of unexposed minus exposed
         dplyr::mutate(
           impact_by_age_and_year_nested =
@@ -302,7 +302,7 @@ get_impact_with_lifetable <-
 
         # PROJECT POPULATIONS IN BOTH IMPACTED AND BASELINE SCENARIO FROM YOA+1 UNTIL THE END
         # USING MODIFIED SURVIVAL PROBABILITIES (BECAUSE AFTER YOA THERE IS NO MORE AIR POLLUTION)
-        data_with_projection <- data_with_projection |>
+        lifetable_calculation <- lifetable_calculation |>
           dplyr::mutate(
             projection_if_exposed_nested =
               purrr::map(
@@ -328,7 +328,7 @@ get_impact_with_lifetable <-
       } else {
 
         # PROJECT POPULATION IN EXPOSED SCENARIO
-        data_with_projection <- data_with_projection |>
+        lifetable_calculation <- lifetable_calculation |>
           dplyr::mutate(
             projection_if_exposed_nested =
               purrr::map(
@@ -390,7 +390,7 @@ get_impact_with_lifetable <-
         base::ifelse(health_outcome == "deaths", "deaths_",
                      base::ifelse(health_outcome == "yll", "midyear_population_", NA))
 
-      data_with_projection <- data_with_projection |>
+      lifetable_calculation <- lifetable_calculation |>
         dplyr::mutate(
           impact_by_age_and_year_nested =
             purrr::map2(
@@ -429,7 +429,7 @@ get_impact_with_lifetable <-
         }
 
 
-        data_with_projection <- data_with_projection |>
+        lifetable_calculation <- lifetable_calculation |>
           dplyr::mutate(
             impact_by_age_and_year_nested = purrr::map(
               .x = impact_by_age_and_year_nested,
@@ -449,7 +449,7 @@ get_impact_with_lifetable <-
 
     # Store total impacts by age #########
     ## Sum impacts
-    impact_detailed <- data_with_projection |>
+    lifetable_calculation <- lifetable_calculation |>
       dplyr::mutate(
 
         impact_by_age_and_year_long_nested = purrr::map(
@@ -509,15 +509,13 @@ get_impact_with_lifetable <-
 
     # Unnest the obtained impacts to integrate them the main tibble
     # Impact saved in column impact
-    impact_detailed <- impact_detailed |>
-       tidyr::unnest(impact_nested)
-
-    # Select and sort colums #####
-    impact_detailed <- impact_detailed |>
+    lifetable_calculation <- lifetable_calculation |>
+       tidyr::unnest(impact_nested) |>
+      # Select and sort colums #####
       dplyr::relocate(dplyr::contains("_nested"), .before = 1) |>
       dplyr::mutate(age_group = "total")
 
 
-    return(impact_detailed)
+    return(lifetable_calculation)
 
   }
