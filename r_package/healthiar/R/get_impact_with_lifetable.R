@@ -210,9 +210,9 @@ get_impact_with_lifetable <-
         is_single_year_exposure) {
 
       data_with_projection <- data_with_projection |>
-        # Premature deaths = ( impacted scenario YOA end-of-year population ) - ( baseline scenario YOA end-of-year pop )
+        # Premature deaths = YOA end-of-year population of unexposed minus exposed
         dplyr::mutate(
-          deaths_by_age_and_year_nested =
+          impact_by_age_and_year_nested =
             purrr::map2(
               .x = projection_if_unexposed_nested,
               .y = projection_if_exposed_nested,
@@ -220,6 +220,7 @@ get_impact_with_lifetable <-
                 tibble::tibble(
                   age_start = .x$age_start,
                   age_end = .x$age_end,
+                  # Unexposed minus exposed
                   impact_yoa = .x$end_population_yoa - .y$end_population_yoa) |>
 
                   dplyr::rename_with(.cols = dplyr::everything(),
@@ -321,9 +322,10 @@ get_impact_with_lifetable <-
         ### CONSTANT EXPOSURE ########################################################################
         # Determine YLLs for baseline and impacted scenario's in the constant exposure case
 
+        # IF CONSTANT EXPOSURE
       } else {
 
-        # PROJECT POPULATION IN BASELINE SCENARIO
+        # PROJECT POPULATION IN EXPOSED SCENARIO
         data_with_projection <- data_with_projection |>
           dplyr::mutate(
             projection_if_exposed_nested =
@@ -333,7 +335,7 @@ get_impact_with_lifetable <-
                   df = .x,
                   prob_survival = .x$prob_survival,
                   prob_survival_until_midyear = .x$prob_survival_until_midyear)),
-            # PROJECT POPULATION IN IMPACTED SCENARIO
+            # PROJECT POPULATION IN UNEXPOSED SCENARIO
             projection_if_unexposed_nested =
               purrr::map(
                 .x = projection_if_unexposed_nested,
@@ -352,22 +354,22 @@ get_impact_with_lifetable <-
       # YLL and premature deaths attributable to exposure are calculated
 
       # Helper function to be used below
-      calculate_impact <- function(df_a, df_b, var_prefix) {
-        ages <- df_a |>
+      calculate_impact <- function(df_unexposed, df_exposed, var_prefix) {
+        ages <- df_unexposed |>
           dplyr::select(age_start, age_end)
 
-        impact_df_a <- df_a |>
+        impact_df_unexposed <- df_unexposed |>
           dplyr::select(dplyr::starts_with(var_prefix))
 
-        impact_df_b <- df_b|>
+        impact_df_exposed <- df_exposed|>
           dplyr::select(dplyr::starts_with(var_prefix))
 
-        diff <- impact_df_a - impact_df_b
+        diff <- impact_df_unexposed - impact_df_exposed
 
         impact <- dplyr::bind_cols(ages, diff) |>
           dplyr::rename_with(
             .cols = dplyr::starts_with(var_prefix),
-            .fn   = ~ base::gsub(var_prefix, "impact_", .x)
+            .fn = ~ base::gsub(var_prefix, "impact_", .x)
           )
 
         return(impact)
