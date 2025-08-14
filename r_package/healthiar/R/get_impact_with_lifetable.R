@@ -162,8 +162,8 @@ get_impact_with_lifetable <-
                   # End-of-year population YOA = (entry population YOA) * ( survival probability )
                   end_population_yoa = entry_population_yoa * prob_survival,
 
-                  # Deaths YOA = End pop YOA - Entry pop YOA
-                  deaths_yoa = end_population_yoa - entry_population_yoa,
+                  # Deaths YOA = Entry pop YOA - End pop YOA
+                  deaths_yoa = entry_population_yoa - end_population_yoa,
 
                   # Entry population YOA+1 = lag ( End-of-year population YOA )
                   entry_population_yoa_plus_1 = dplyr::lag(end_population_yoa))
@@ -192,8 +192,8 @@ get_impact_with_lifetable <-
                   # Calculate end-of-year population in YOA to later determine premature deaths
                   end_population_yoa = entry_population_yoa * prob_survival_mod,
 
-                  # Deaths YOA = End pop YOA - Entry pop YOA
-                  deaths_yoa = end_population_yoa - entry_population_yoa,
+                  # Deaths YOA = Entry pop YOA - End pop YOA
+                  deaths_yoa = entry_population_yoa - end_population_yoa,
 
                   # Entry population YOA+1 = lag ( End-of-year population YOA )
                   entry_population_yoa_plus_1 = dplyr::lag(end_population_yoa)
@@ -219,6 +219,8 @@ get_impact_with_lifetable <-
                   age_start = .x$age_start,
                   age_end = .x$age_end,
                   # Unexposed minus exposed
+                  # because if no exposure
+                  # there are more population (less deaths)
                   impact_yoa = .x$end_population_yoa - .y$end_population_yoa) |>
 
                   dplyr::rename_with(.cols = dplyr::everything(),
@@ -347,7 +349,6 @@ get_impact_with_lifetable <-
       }
 
 
-
       ###  DETERMINE IMPACT (YLL, PREMATURE DEATHS (CONSTANT EXPOSURE))  ###########################
       # YLL and premature deaths attributable to exposure are calculated
 
@@ -356,13 +357,20 @@ get_impact_with_lifetable <-
         ages <- df_unexposed |>
           dplyr::select(age_start, age_end)
 
-        impact_df_unexposed <- df_unexposed |>
+        df_unexposed_vars <- df_unexposed |>
           dplyr::select(dplyr::starts_with(var_prefix))
 
-        impact_df_exposed <- df_exposed|>
+        df_exposed_vars <- df_exposed|>
           dplyr::select(dplyr::starts_with(var_prefix))
 
-        diff <- impact_df_unexposed - impact_df_exposed
+        if(var_prefix == "midyear_population_"){
+          diff <- df_unexposed_vars - df_exposed_vars
+          # IF DEATHS
+          } else {
+            # The way round because otherwise negative numbers
+            # Reason: unexposed means more population but less deaths
+            diff <- - (df_unexposed_vars - df_exposed_vars)
+          }
 
         impact <- dplyr::bind_cols(ages, diff) |>
           dplyr::rename_with(
@@ -444,7 +452,7 @@ get_impact_with_lifetable <-
             base::list(.x =  impact_by_age_and_year_nested,
                        max_age = base::unique(max_age),
                        min_age = base::unique(min_age),
-                       health_outcome = base::unique(health_outcome)),
+                       health_outcome = health_outcome),
             function(.x, max_age, min_age, health_outcome){
 
               # Filter for relevant ages #########################################
@@ -473,8 +481,11 @@ get_impact_with_lifetable <-
 
                   ## Convert year to numeric
                   dplyr::mutate(year = base::as.numeric(year))
-              } else
-                .x<-.x}), .before = 1)
+              } else { .x <- .x }
+
+              }
+            )
+        )
 
 
     # Deaths ###################################################################
