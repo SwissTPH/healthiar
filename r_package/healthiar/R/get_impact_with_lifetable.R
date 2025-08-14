@@ -375,26 +375,23 @@ get_impact_with_lifetable <-
         return(impact)
       }
 
-      # Apply the helper function above to calculate deaths and yll
+      # Apply the helper function above to calculate impacts (deaths or yll)
       # from exposed and unexposed projections
+
+      var_prefix_for_function <-
+        base::ifelse(health_outcome == "deaths", "deaths_",
+                     base::ifelse(health_outcome == "yll", "midyear_population_", NA))
 
       data_with_projection <- data_with_projection |>
         dplyr::mutate(
-          yll_by_age_and_year_nested =
+          impact_by_age_and_year_nested =
             purrr::map2(
+              # Attention first argument unexposed and second exposed (see function above)
               .x = projection_if_unexposed_nested,
               .y = projection_if_exposed_nested,
               .f = calculate_impact,
-              var_prefix = "midyear_population_"),
+              var_prefix = var_prefix_for_function))
 
-          deaths_by_age_and_year_nested =
-            purrr::map2(
-              .x = projection_if_exposed_nested,
-              .y = projection_if_unexposed_nested,
-              .f = calculate_impact,
-              var_prefix = "deaths_"
-            )
-        )
 
       ## NEWBORNS #################################################################
 
@@ -415,7 +412,7 @@ get_impact_with_lifetable <-
 
 
           # Drop last column from the data part
-          data_selection <- data_selection[, -ncol(data_selection), drop = FALSE]
+          data_selection <- data_selection[, -base::ncol(data_selection), drop = FALSE]
 
           # Assign back into the same positions
           tbl[, cols] <- data_selection
@@ -423,31 +420,17 @@ get_impact_with_lifetable <-
           return(tbl)
         }
 
+
         data_with_projection <- data_with_projection |>
           dplyr::mutate(
-            yll_by_age_and_year_nested = purrr::map(
-              .x = yll_by_age_and_year_nested,
-              .f = fill_right_of_diag),
-            deaths_by_age_and_year_nested = purrr::map(
-              .x = deaths_by_age_and_year_nested,
+            impact_by_age_and_year_nested = purrr::map(
+              .x = impact_by_age_and_year_nested,
               .f = fill_right_of_diag))
-
       }
-
     }
 
     # COMPILE OUTPUT ##############################################################################
     # Data wrangling to get the results in the needed format
-
-    if (health_outcome == "deaths"){
-      data_with_projection <- data_with_projection |>
-        dplyr::mutate(
-          pop_impact_nested = deaths_by_age_and_year_nested) }
-    else if (health_outcome == "yll"){
-      data_with_projection <- data_with_projection |>
-        dplyr::mutate(
-          pop_impact_nested = yll_by_age_and_year_nested)
-        }
 
     # Remove from pop, as already present in input_with_risk_...
     data_with_projection <- data_with_projection |>
@@ -497,7 +480,7 @@ get_impact_with_lifetable <-
         health_outcome = health_outcome,
         impact_by_year_nested =
           purrr::pmap(
-            base::list(.x =  pop_impact_nested,
+            base::list(.x =  impact_by_age_and_year_nested,
                        max_age = base::unique(max_age),
                        min_age = base::unique(min_age),
                        health_outcome = base::unique(health_outcome)),
