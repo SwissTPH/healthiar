@@ -431,21 +431,6 @@ get_impact_with_lifetable <-
       }
     }
 
-    # COMPILE OUTPUT ##############################################################################
-    # Data wrangling to get the results in the needed format
-
-
-    if (health_outcome %in% c("deaths", "yll")){
-
-      joining_columns_pop_impact <-
-        healthiar:::find_joining_columns(data_for_projection,
-                                         data_with_projection,
-                                         except = "data_by_age_nested")
-
-      pop_impact <-
-        data_for_projection |>
-        dplyr::right_join(data_with_projection,
-                          by = joining_columns_pop_impact) |>
 
 
     on.exit(options(user_options))
