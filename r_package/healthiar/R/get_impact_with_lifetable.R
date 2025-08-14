@@ -62,18 +62,27 @@ get_impact_with_lifetable <-
     midyear_names   <- base::paste0("midyear_population_", years_projection)
     death_names <- base::paste0("deaths_", years_projection)
 
+    id_columns <-
+      c("geo_id_disaggregated",
+        "erf_ci", "bhd_ci", "exp_ci", "dw_ci", "cutoff_ci", "duration_ci",
+        "sex")
+
 
     # LIFETABLE SETUP ##############################################################################
     lifetable_calculation <- input_with_risk_and_pop_fraction |>
       dplyr::mutate(
-      # Duplicate bhd  and year_of_analysis
-      # for more handy column names for life table calculations
-      deaths = bhd,
-      yoa = year_of_analysis,
-      # Rename population adding suffix yoa
-      # yoa means Year Of Analysis
-      # It is better to do it  now (before nesting tables)
-      midyear_population_yoa = population)
+        # Duplicate bhd  and year_of_analysis
+        # for more handy column names for life table calculations
+        deaths = bhd,
+        yoa = year_of_analysis,
+        # Rename population adding suffix yoa
+        # yoa means Year Of Analysis
+        # It is better to do it  now (before nesting tables)
+        midyear_population_yoa = population) |>
+      dplyr::mutate(
+        .by = dplyr::any_of(id_columns),
+        population = base::sum(population, na.rm = TRUE)
+      )
 
 
     lifetable_calculation <- lifetable_calculation |>
@@ -138,7 +147,8 @@ get_impact_with_lifetable <-
     lifetable_calculation <- lifetable_calculation |>
       tidyr::nest(
         data_by_age_nested =
-        c(yoa, age_group, age_start, age_end, bhd, deaths, population,
+        c(yoa, age_group, age_start, age_end, bhd, deaths,
+          # population,
           modification_factor,
           prob_survival, prob_survival_until_midyear, hazard_rate,
           age_end_over_min_age, prob_survival_mod, prob_survival_until_midyear_mod, hazard_rate_mod,
@@ -514,6 +524,7 @@ get_impact_with_lifetable <-
       # Select and sort colums #####
       dplyr::relocate(dplyr::contains("_nested"), .before = 1) |>
       dplyr::mutate(age_group = "total")
+
 
 
     return(lifetable_calculation)
