@@ -383,13 +383,13 @@ get_impact_with_lifetable <-
               .x = projection_if_unexposed_nested,
               .y = projection_if_exposed_nested,
               .f = calculate_impact,
-              var_prefix = "midyear_population_"
-            ),
+              var_prefix = "midyear_population_"),
+
           deaths_by_age_and_year_nested =
             purrr::map2(
-              projection_if_exposed_nested,
-              projection_if_unexposed_nested,
-              calculate_impact,
+              .x = projection_if_exposed_nested,
+              .y = projection_if_unexposed_nested,
+              .f = calculate_impact,
               var_prefix = "deaths_"
             )
         )
