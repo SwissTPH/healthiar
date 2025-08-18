@@ -33,10 +33,6 @@ get_impact_with_lifetable <-
 
     # GET POP IMPACT ######
 
-    user_options <- options()
-    options(digits = 15)
-
-
     # USEFUL VARIABLES ##########
     # yoa means Year Of Analysis
     yoa <- input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first()
@@ -170,7 +166,11 @@ get_impact_with_lifetable <-
               .x <- .x |>
                 dplyr::mutate(
                   # End-of-year population YOA = (entry population YOA) * ( survival probability )
-                  end_population_yoa = entry_population_yoa * prob_survival,
+                  # Round results when multiplying by probability of surviving
+                  # to avoid floating-point precision issue
+                  # (i.e. result that should be zero ends up with e.g. 0.0000000000003)
+                  # The number of decimas is random, just large to avoid changes in final results
+                  end_population_yoa = base::round(entry_population_yoa * prob_survival, 10),
 
                   # Deaths YOA = Entry pop YOA - End pop YOA
                   deaths_yoa = entry_population_yoa - end_population_yoa,
@@ -197,10 +197,12 @@ get_impact_with_lifetable <-
                 dplyr::mutate(
                   # Re-calculate population_yoa
                   # MID-YEAR POP = (entry population YOA) * ( survival probability until mid year )
-                  midyear_population_yoa = entry_population_yoa * prob_survival_until_midyear_mod,
+                  # Round result to avoid floating-point precision issue
+                  midyear_population_yoa = base::round(entry_population_yoa * prob_survival_until_midyear_mod, 10),
 
                   # Calculate end-of-year population in YOA to later determine premature deaths
-                  end_population_yoa = entry_population_yoa * prob_survival_mod,
+                  # Round result to avoid floating-point precision issue
+                  end_population_yoa = base::round(entry_population_yoa * prob_survival_mod, 10),
 
                   # Deaths YOA = Entry pop YOA - End pop YOA
                   deaths_yoa = entry_population_yoa - end_population_yoa,
@@ -279,7 +281,7 @@ get_impact_with_lifetable <-
 
         # Set initial year
         entry_pop[, 1] <- df[[entry_names[1]]]
-        midyear_pop[, 1] <- entry_pop[, 1] * prob_survival_until_midyear
+        midyear_pop[, 1] <- base::round(entry_pop[, 1] * prob_survival_until_midyear, 10)
         deaths[, 1] <- entry_pop[, 1] * (1 - prob_survival)
 
         # Loop across years
@@ -287,13 +289,14 @@ get_impact_with_lifetable <-
         # i (index in the number of years) is used to select both the rows and the columns
 
         for (i in 1: (n_years_projection - 1)) {
+          # Round result to avoid floating-point precision issue
           rows <- (i + 2):(n_years_projection + 1)
           # ENTRY POP YOA+1 <- ( ENTRY POP YOA ) * ( SURVIVAL PROBABILITY YOA )
-          entry_pop[rows, i + 1] <- entry_pop[rows - 1, i] * prob_survival[rows - 1]
+          entry_pop[rows, i + 1] <- base::round(entry_pop[rows - 1, i] * prob_survival[rows - 1], 10)
           # MID-YEAR POP YOA+1 <- ( ENTRY POP YOA+1) * ( SURVIVAL PROBABILITY FROM START OF YOA+1 TO MID YEAR YOA+1)
-          midyear_pop[rows, i + 1]   <- entry_pop[rows, i + 1] * prob_survival_until_midyear[rows]
+          midyear_pop[rows, i + 1]   <- base::round(entry_pop[rows, i + 1] * prob_survival_until_midyear[rows], 10)
           # DEATHS IN YOA+1 <- ( ENTRY POP YOA+1 ) * (1 - SURVIVAL PROBABILITY YOA+1 )
-          deaths[rows, i + 1]    <- entry_pop[rows, i + 1] * death_prob[rows]
+          deaths[rows, i + 1]    <- base::round(entry_pop[rows, i + 1] * death_prob[rows], 10)
         }
 
         # Column bin matrices to input data frame
@@ -447,8 +450,6 @@ get_impact_with_lifetable <-
       }
     }
 
-    # Get back default number of decimals now that no more quantitative operations
-    on.exit(options(user_options))
 
     # COMPILE OUTPUT ##############################################################################
 
