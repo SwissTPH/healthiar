@@ -836,26 +836,6 @@ results_pm_yll$health_detailed$results_raw$impact_by_year_nested$female_a_centra
 
 TODO
 
-#### Premature deaths
-
-Premature deaths (females) in the year of exposure (here: 2019) attributable to exposure
-
-*NOTE*: only a selection of ages is shown
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$results_raw$deaths_by_age_and_year_nested$female_a_central_central_central_central
-```
-
-```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_yll$health_detailed$results_raw$deaths_by_age_and_year_nested$female_a_central_central_central_central |> 
-  dplyr::select(age_start, age_end, impact_2019) |> 
-  dplyr::slice(
-    ( nrow( results_pm_yll$health_detailed$results_raw$deaths_by_age_and_year_nested$female_a_central_central_central_central ) -8 ) : 
-      nrow( results_pm_yll$health_detailed$results_raw$deaths_by_age_and_year_nested$female_a_central_central_central_central )
-    ) |> 
-  knitr::kable()
-```
-
 ### Results by year and age
 
 *NOTE*: only a selection of years and ages is shown
