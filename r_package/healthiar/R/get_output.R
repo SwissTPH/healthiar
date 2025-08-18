@@ -52,7 +52,7 @@ get_output <-
       # The use of matches() is important.
       # It works as contains() but allowing regex | (OR)
       dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
-                    -dplyr::matches("_nest|_rounded|_per_100k_inhab")) |>
+                    -dplyr::matches("_by_|_rounded|_per_100k_inhab")) |>
       base::names()
 
     # Only columns to be summed that include the string "impact"
@@ -63,7 +63,7 @@ get_output <-
       columns_to_be_summed[base::grepl("impact", columns_to_be_summed)]
 
     nest_cols <-
-      colnames_results_raw[base::grepl("_nest", colnames_results_raw)]
+      colnames_results_raw[base::grepl("_by_", colnames_results_raw)]
 
     id_columns_in_results_raw <-
       colnames_results_raw[colnames_results_raw %in% id_columns]
@@ -114,10 +114,10 @@ get_output <-
            input_table = input_table,
            results_raw = results_raw)
 
-    if(any(grepl("nest", names(results_raw)))){
+    if(any(grepl("_by_", names(results_raw)))){
       impact_main <-
         results_raw |>
-        dplyr::select(-dplyr::contains("nest"))
+        dplyr::select(-dplyr::contains("_by_"))
 
       if ("duration_ci" %in% names(impact_main)){impact_main <- impact_main |> dplyr::filter(duration_ci %in% "central")}
       if ("dw_ci" %in% names(impact_main)){impact_main <- impact_main |> dplyr::filter(dw_ci %in% "central")}

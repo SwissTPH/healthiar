@@ -523,7 +523,7 @@ get_impact_with_lifetable <-
     lifetable_calculation <- lifetable_calculation |>
        tidyr::unnest(impact) |>
       # Select and sort colums #####
-      dplyr::relocate(dplyr::contains("_nested"), .before = 1) |>
+      dplyr::relocate(dplyr::contains("_by_"), .before = 1) |>
       dplyr::mutate(age_group = "total")
 
 
