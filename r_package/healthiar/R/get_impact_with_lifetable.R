@@ -33,8 +33,8 @@ get_impact_with_lifetable <-
 
     # GET POP IMPACT ######
 
-    user_options <- options()
-    options(digits = 15)
+    # user_options <- options()
+    # options(digits = 15)
 
 
     # USEFUL VARIABLES ##########
@@ -448,7 +448,7 @@ get_impact_with_lifetable <-
     }
 
     # Get back default number of decimals now that no more quantitative operations
-    on.exit(options(user_options))
+    # on.exit(options(user_options))
 
     # COMPILE OUTPUT ##############################################################################
 
