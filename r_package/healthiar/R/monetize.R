@@ -230,12 +230,12 @@ monetize <- function(output_attribute = NULL,
 
         ## Calculate total, discounted life years (single value) per sex & ci
         dplyr::mutate(
-          impact_with_discount_nested = purrr::pmap(
-            list(.x = impact_by_year_nested),
+          impact_with_discount = purrr::pmap(
+            list(.x = impact_by_year),
             function(.x){
 
               ## Calculate total, discounted life years (single value) per sex & ci
-              lifeyear_nested_with_and_without_discount <-
+              lifeyear_with_and_without_discount <-
                 .x |>
                 # Convert year to numeric
                 dplyr::mutate(year = as.numeric(year),
@@ -246,15 +246,15 @@ monetize <- function(output_attribute = NULL,
                               discount_rate = {{discount_rate}},
                               discount_shape = {{discount_shape}})
 
-              lifeyear_nested_with_and_without_discount <-
-                healthiar:::add_monetized_impact(df = lifeyear_nested_with_and_without_discount,
+              lifeyear_with_and_without_discount <-
+                healthiar:::add_monetized_impact(df = lifeyear_with_and_without_discount,
                                                  discount_rate = discount_rate,
-                                                 discount_years = length(lifeyear_nested_with_and_without_discount$discount_years)-1,
+                                                 discount_years = length(lifeyear_with_and_without_discount$discount_years)-1,
                                                  discount_shape = discount_shape,
                                                  inflation = inflation,
                                                  valuation = valuation)[["monetization_main"]]
 
-              return(lifeyear_nested_with_and_without_discount)
+              return(lifeyear_with_and_without_discount)
 
               }))
 
@@ -267,7 +267,7 @@ monetize <- function(output_attribute = NULL,
           impact_detailed |>
           dplyr::mutate(
             impact_with_discount_summed = purrr::pmap(
-              list(.x = impact_with_discount_nested),
+              list(.x = impact_with_discount),
               function(.x, .y){
                 impact_with_summed_discount <-
                   .x |>
