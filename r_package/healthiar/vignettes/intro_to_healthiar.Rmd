@@ -866,14 +866,14 @@ Baseline scenario refers to the scenario with exposure (i.e. the scenario specif
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
 results_pm_yll$health_detailed$results_raw|> 
   dplyr::filter(sex == "female") |>
-  dplyr::pull(projection_if_exposed_nested) |>
+  dplyr::pull(projection_if_exposed_by_age_and_year_nested) |>
   purrr::pluck(1)
 ```
 
 ```{r echo=FALSE}
 results_pm_yll$health_detailed$results_raw|> 
   dplyr::filter(sex == "female") |>
-  dplyr::pull(projection_if_exposed_nested) |>
+  dplyr::pull(projection_if_exposed_by_age_and_year_nested) |>
   purrr::pluck(1) |>   
   dplyr::select(age_start, midyear_population_2019, midyear_population_2020, 
                 midyear_population_2021, midyear_population_2022) |>    
@@ -888,14 +888,14 @@ Impacted scenario refers to the scenario without exposure
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
 results_pm_yll$health_detailed$results_raw|> 
   dplyr::filter(sex == "female") |>
-  dplyr::pull(projection_if_unexposed_nested) |>
+  dplyr::pull(projection_if_unexposed_by_age_and_year_nested) |>
   purrr::pluck(1)
 ```
 
 ```{r echo=FALSE}
 results_pm_yll$health_detailed$results_raw|> 
   dplyr::filter(sex == "female") |>
-  dplyr::pull(projection_if_unexposed_nested) |>
+  dplyr::pull(projection_if_unexposed_by_age_and_year_nested) |>
   purrr::pluck(1) |>   
   dplyr::select(age_start, midyear_population_2019, midyear_population_2020, 
                 midyear_population_2021, midyear_population_2022) |>    
@@ -963,14 +963,14 @@ are available
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
 results_pm_deaths$health_detailed$results_raw|> 
   dplyr::filter(sex == "female") |>
-  dplyr::pull(projection_if_unexposed_nested) |>
+  dplyr::pull(projection_if_unexposed_by_age_and_year_nested) |>
   purrr::pluck(1)
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
 results_pm_yll$health_detailed$results_raw|> 
   dplyr::filter(sex == "female") |>
-  dplyr::pull(projection_if_unexposed_nested) |>
+  dplyr::pull(projection_if_unexposed_by_age_and_year_nested) |>
   purrr::pluck(1) |>
   dplyr::slice( ( dplyr::n() - 8 ) : dplyr::n() ) |>  
   knitr::kable()
