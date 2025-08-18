@@ -154,7 +154,7 @@ get_risk_and_pop_fraction <-
               "geo_id_disaggregated",
               "sex",
               "age_group",
-              "data_by_age_nested",
+              "data_by_age",
               "rr_at_exp"),
             sep = ", ")
       }
@@ -242,7 +242,7 @@ get_risk_and_pop_fraction <-
               "geo_id_disaggregated",
               "sex",
               "age_group",
-              "data_by_age_nested",
+              "data_by_age",
               "pop_fraction"),
             sep = ", ")
         }
@@ -263,7 +263,7 @@ get_risk_and_pop_fraction <-
                                  "exp_name",
                                  "sex",
                                  "age_group",
-                                 "data_by_age_nested",
+                                 "data_by_age",
                                  "erf_ci",
                                  "exp_ci",
                                  "bhd_ci",
