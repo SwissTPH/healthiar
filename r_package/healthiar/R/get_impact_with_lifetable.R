@@ -33,10 +33,6 @@ get_impact_with_lifetable <-
 
     # GET POP IMPACT ######
 
-    # user_options <- options()
-    # options(digits = 15)
-
-
     # USEFUL VARIABLES ##########
     # yoa means Year Of Analysis
     yoa <- input_with_risk_and_pop_fraction |>  dplyr::pull(year_of_analysis) |> dplyr::first()
@@ -447,8 +443,6 @@ get_impact_with_lifetable <-
       }
     }
 
-    # Get back default number of decimals now that no more quantitative operations
-    # on.exit(options(user_options))
 
     # COMPILE OUTPUT ##############################################################################
 
