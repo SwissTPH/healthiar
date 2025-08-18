@@ -230,12 +230,12 @@ monetize <- function(output_attribute = NULL,
 
         ## Calculate total, discounted life years (single value) per sex & ci
         dplyr::mutate(
-          impact_with_discount = purrr::pmap(
+          impact_with_discount_by_year = purrr::pmap(
             list(.x = impact_by_year),
             function(.x){
 
               ## Calculate total, discounted life years (single value) per sex & ci
-              lifeyear_with_and_without_discount <-
+              lifeyear_with_and_without_discount_by_year <-
                 .x |>
                 # Convert year to numeric
                 dplyr::mutate(year = as.numeric(year),
@@ -246,15 +246,15 @@ monetize <- function(output_attribute = NULL,
                               discount_rate = {{discount_rate}},
                               discount_shape = {{discount_shape}})
 
-              lifeyear_with_and_without_discount <-
-                healthiar:::add_monetized_impact(df = lifeyear_with_and_without_discount,
+              lifeyear_with_and_without_discount_by_year <-
+                healthiar:::add_monetized_impact(df = lifeyear_with_and_without_discount_by_year,
                                                  discount_rate = discount_rate,
-                                                 discount_years = length(lifeyear_with_and_without_discount$discount_years)-1,
+                                                 discount_years = length(lifeyear_with_and_without_discount_by_year$discount_years)-1,
                                                  discount_shape = discount_shape,
                                                  inflation = inflation,
                                                  valuation = valuation)[["monetization_main"]]
 
-              return(lifeyear_with_and_without_discount)
+              return(lifeyear_with_and_without_discount_by_year)
 
               }))
 
@@ -266,8 +266,8 @@ monetize <- function(output_attribute = NULL,
         impact_detailed <-
           impact_detailed |>
           dplyr::mutate(
-            impact_with_discount_summed = purrr::pmap(
-              list(.x = impact_with_discount),
+            impact_with_discount_by_year_summed = purrr::pmap(
+              list(.x = impact_with_discount_by_year),
               function(.x, .y){
                 impact_with_summed_discount <-
                   .x |>
@@ -299,7 +299,7 @@ monetize <- function(output_attribute = NULL,
         dplyr::select(-impact) |>
         ## Unnest the obtained impacts to integrate them the main tibble
         ## Impact saved in column impact
-        tidyr::unnest(impact_with_discount_summed) |>
+        tidyr::unnest(impact_with_discount_by_year_summed) |>
         # Round results
         dplyr::mutate(
           # Round impacts and monetized impacts
