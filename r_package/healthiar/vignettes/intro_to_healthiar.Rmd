@@ -822,11 +822,18 @@ are available
 *NOTE*: only a selection of years is shown
 
 ```{r}
-results_pm_yll$health_detailed$results_raw$impact_by_year$female_a_central_central_central_central
+results_pm_yll$health_detailed$results_raw |>
+  dplyr::summarize(
+    .by = year, 
+    impact = sum(impact, na.rm = TRUE)
+  )
 ```
 
 ```{r}
-results_pm_yll$health_detailed$results_raw$impact_by_year$female_a_central_central_central_central |>    
+results_pm_yll$health_detailed$results_raw |>
+  dplyr::summarize(
+    .by = year, 
+    impact = sum(impact, na.rm = TRUE)) |>
   knitr::kable()
 ```
 
@@ -843,14 +850,14 @@ TODO
 #### YLL
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$interim_results |> 
+results_pm_yll$health_detailed$intermediate_calculations |> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(impact_by_age_and_year) |>
   purrr::pluck(1)
 ```
 
 ```{r echo=FALSE}
-results_pm_yll$health_detailed$interim_results |> 
+results_pm_yll$health_detailed$intermediate_calculations |> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(impact_by_age_and_year) |>
   purrr::pluck(1) |>
@@ -864,14 +871,14 @@ results_pm_yll$health_detailed$interim_results |>
 Baseline scenario refers to the scenario with exposure (i.e. the scenario specified in the assessment)
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$interim_results|> 
+results_pm_yll$health_detailed$intermediate_calculations|> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(projection_if_exposed_by_age_and_year) |>
   purrr::pluck(1)
 ```
 
 ```{r echo=FALSE}
-results_pm_yll$health_detailed$interim_results|> 
+results_pm_yll$health_detailed$intermediate_calculations|> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(projection_if_exposed_by_age_and_year) |>
   purrr::pluck(1) |>   
@@ -886,14 +893,14 @@ results_pm_yll$health_detailed$interim_results|>
 Impacted scenario refers to the scenario without exposure
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$interim_results|> 
+results_pm_yll$health_detailed$intermediate_calculations|> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(projection_if_unexposed_by_age_and_year) |>
   purrr::pluck(1)
 ```
 
 ```{r echo=FALSE}
-results_pm_yll$health_detailed$interim_results|> 
+results_pm_yll$health_detailed$intermediate_calculations|> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(projection_if_unexposed_by_age_and_year) |>
   purrr::pluck(1) |>   
@@ -961,14 +968,14 @@ are available
 *Note*: because we set the function argument `approach_exposure = "constant"` in the function call results are available for one year (the year of analysis)
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_deaths$health_detailed$interim_results|> 
+results_pm_deaths$health_detailed$intermediate_calculations|> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(projection_if_unexposed_by_age_and_year) |>
   purrr::pluck(1)
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_yll$health_detailed$interim_results|> 
+results_pm_yll$health_detailed$intermediate_calculations|> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(projection_if_unexposed_by_age_and_year) |>
   purrr::pluck(1) |>
