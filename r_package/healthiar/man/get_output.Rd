@@ -4,14 +4,21 @@
 \alias{get_output}
 \title{Obtain and store output}
 \usage{
-get_output(input_args = NULL, input_table = NULL, results_raw)
+get_output(
+  input_args = NULL,
+  input_table = NULL,
+  intermediate_calculations = NULL,
+  results_raw
+)
 }
 \arguments{
 \item{input_args}{\code{List} containingall arguments and values entered in attribute().}
 
-\item{input_table}{\code{List} containing the input_table data compiled and packed in a data frame.}
+\item{input_table}{\code{Tibble} containing the input_table data compiled and packed in a data frame.}
 
-\item{results_raw}{\code{List} containing all the calculation of health impacts.}
+\item{intermediate_calculations}{\code{Tibble} containing intermediate calculations (e.g. from life table pathway).}
+
+\item{results_raw}{\code{Tibble} containing all the calculation of health impacts.}
 }
 \value{
 TBD. E.g. This function returns a \code{data.frame} with one row for each value of the

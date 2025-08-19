@@ -6,8 +6,9 @@
 
 # ARGUMENTS ####################################################################
 #' @param input_args \code{List} containingall arguments and values entered in attribute().
-#' @param input_table \code{List} containing the input_table data compiled and packed in a data frame.
-#' @param results_raw \code{List} containing all the calculation of health impacts.
+#' @param input_table \code{Tibble} containing the input_table data compiled and packed in a data frame.
+#' @param intermediate_calculations \code{Tibble} containing intermediate calculations (e.g. from life table pathway).
+#' @param results_raw \code{Tibble} containing all the calculation of health impacts.
 
 # VALUE ########################################################################
 #' @returns
@@ -33,13 +34,16 @@
 get_output <-
   function(input_args = NULL,
            input_table = NULL,
-           results_raw){
+           intermediate_calculations = NULL,
+           results_raw) {
 
     # Store set of columns ###################################
     # Variables to be used below
 
+
     id_columns <- c("geo_id_aggregated", "geo_id_disaggregated",
                     "exp_name",
+                    "year",
                     "age_group", "sex",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
 
@@ -68,20 +72,23 @@ get_output <-
     id_columns_in_results_raw <-
       colnames_results_raw[colnames_results_raw %in% id_columns]
 
+    group_columns_for_year_aggregation <-
+      base::setdiff(id_columns_in_results_raw, c("year"))
+
     group_columns_for_exp_cat_aggregation <-
-      id_columns_in_results_raw
+      base::setdiff(id_columns_in_results_raw, c("exp_ci"))
 
     group_columns_for_sex_aggregation <-
-      base::setdiff(group_columns_for_exp_cat_aggregation, c("sex"))
+      base::setdiff(id_columns_in_results_raw, c("sex"))
 
     group_columns_for_age_aggregation <-
-      base::setdiff(group_columns_for_sex_aggregation, c("age_group"))
+      base::setdiff(id_columns_in_results_raw, c("age_group"))
 
     group_columns_for_geo_aggregation <-
-      base::setdiff(group_columns_for_age_aggregation, c("geo_id_disaggregated"))
+      base::setdiff(id_columns_in_results_raw, c("geo_id_disaggregated"))
 
     group_columns_for_multiexp_aggregation <-
-      base::setdiff(group_columns_for_geo_aggregation, c("exp_name"))
+      base::setdiff(id_columns_in_results_raw, c("exp_name"))
 
 
     # Pre-identify columns to be collapsed
@@ -109,34 +116,15 @@ get_output <-
 
     # Get main results from detailed results ###################################
 
-    health_detailed_from_impact  <-
-      list(input_args = input_args,
-           input_table = input_table,
-           results_raw = results_raw)
+    health_detailed  <-
+      base::list(input_args = input_args,
+                 input_table = input_table,
+                 intermediate_calculations = intermediate_calculations,
+                 results_raw = results_raw)
 
-    if(any(grepl("_by_", names(results_raw)))){
-      impact_main <-
-        results_raw |>
-        dplyr::select(-dplyr::contains("_by_"))
-
-      if ("duration_ci" %in% names(impact_main)){impact_main <- impact_main |> dplyr::filter(duration_ci %in% "central")}
-      if ("dw_ci" %in% names(impact_main)){impact_main <- impact_main |> dplyr::filter(dw_ci %in% "central")}
-
-
-      ## Classify results in main and detailed
-      output <-
-        list(health_main = impact_main,
-             health_detailed = health_detailed_from_impact)
-
-
-    } else {
-
-      # Store output so far
-      # The main will change below that we give a first value
-      output <-
-        list(health_main = results_raw,
-             health_detailed = health_detailed_from_impact)
-    }
+    output <-
+      base::list(health_main = results_raw,
+                 health_detailed = health_detailed)
 
 
     # Create function to aggregate impacts
@@ -149,6 +137,7 @@ get_output <-
       # (e.g. exposure categories)
 
       if(base::length(cols_with_multiple_values) > 0){
+
 
         cols_to_collapse <- df |>
           dplyr::select(dplyr::all_of(c(grouping_cols, cols_with_multiple_values))) |>
@@ -241,7 +230,25 @@ get_output <-
     # Keep the last version
     # This is important because some of the sums of health impacts below
     # do not happen and the chain of sums cannot be broken (see if statements)
-    output_last <- output[["health_main"]]
+    output_last <- results_raw
+
+
+
+    ## year ############
+    # This is only useful for life table
+    if("year" %in% base::names(output_last)) {
+
+      output[["health_detailed"]][["results_summed_across_year"]] <-
+        sum_round_and_relative_impact(
+          df = output_last,
+          grouping_cols = group_columns_for_year_aggregation,
+          col_total = "year")
+
+    } else {
+      output[["health_detailed"]][["results_summed_across_year"]] <- output_last
+    }
+
+    output_last <- output[["health_detailed"]][["results_summed_across_year"]]
 
     ## exposure categories ############
     # This is only useful for absolute risk because

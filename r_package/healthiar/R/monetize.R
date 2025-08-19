@@ -224,13 +224,61 @@ monetize <- function(output_attribute = NULL,
       # Store the original data (they refer to health)
       output_health <- output_attribute
 
+
+      # TODO Instead of using intermediate_calculations, use results raw
+      # Activate the code below when this development is undertaken
+      # # Output will be adapted according to monetized impacts
+      # impact_detailed <-
+      #   output_health[["health_detailed"]][["results_raw"]] |>
+      #   ## Calculate total, discounted life years (single value) per sex & ci
+      #   dplyr::mutate(
+      #     # Convert year to numeric
+      #     year = as.numeric(year),
+      #     # Ignore user defined discount_years
+      #     # Here the difference between year of analysis and
+      #     # last year of mortality data is to be used
+      #     discount_years = year - {{year_of_analysis}},
+      #     discount_rate = {{discount_rate}},
+      #     discount_shape = {{discount_shape}})
+      #
+      # impact_detailed  <-
+      #   healthiar:::add_monetized_impact(
+      #     df = impact_detailed,
+      #     discount_rate = discount_rate,
+      #     discount_years = base::length(base::unique(impact_detailed$discount_years))-1,
+      #     discount_shape = discount_shape,
+      #     inflation = inflation,
+      #     valuation = valuation)[["monetization_main"]]
+
+
+
+
+      # Calculate impact by year
+      results_raw_with_impact_by_year <-
+        output_health[["health_detailed"]][["intermediate_calculations"]] |>
+        dplyr::mutate(
+          impact_by_year = purrr::map(
+            .x = impact_by_age_and_year_long,
+            .f = ~ dplyr::summarise(.x,
+                                    .by = year,
+                                    impact = base::sum(impact, na.rm = TRUE))),
+          impact = purrr::map(
+            .x = impact_by_age_and_year_long,
+            .f = ~ dplyr::summarise(.x,
+                                    impact = base::sum(impact, na.rm = TRUE))),
+          age_group = "total") |>
+        tidyr::unnest(impact)
+
+
+
+
       # Output will be adapted according to monetized impacts
       impact_detailed <-
-        output_health[["health_detailed"]][["results_raw"]] |>
+        results_raw_with_impact_by_year |>
 
         ## Calculate total, discounted life years (single value) per sex & ci
         dplyr::mutate(
-          impact_with_discount_by_year = purrr::pmap(
+          impact_with_discount_summed = purrr::pmap(
             list(.x = impact_by_year),
             function(.x){
 
@@ -259,47 +307,13 @@ monetize <- function(output_attribute = NULL,
               }))
 
 
-      ##*** IF YLL or YLD ####
-
-      if({{health_outcome}} %in% c("yll")){ # And "yld" if ever implemented
-
-        impact_detailed <-
-          impact_detailed |>
-          dplyr::mutate(
-            impact_with_discount_by_year_summed = purrr::pmap(
-              list(.x = impact_with_discount_by_year),
-              function(.x, .y){
-                impact_with_summed_discount <-
-                  .x |>
-                  #Deactivated filter because probably not needed anymore
-                  #Year is always lower than the last_year and
-                  # the non-relevant years (>last_year) excluded from the calculation in get_deaths_yll_yld()
-                  #TODO To be confirmed
-                  # Filter for the relevant years
-                  # dplyr::filter(year < .y+1) |>
-                  ## Sum among years to obtain the total impact (single value)
-                  dplyr::summarise(
-                    impact = sum(impact, na.rm = TRUE),
-                    monetized_impact_before_inflation_and_discount = sum(monetized_impact_before_inflation_and_discount, na.rm = TRUE),
-                    monetized_impact_after_inflation_and_discount = sum(monetized_impact_after_inflation_and_discount, na.rm = TRUE),
-                    monetized_impact = sum(monetized_impact, na.rm = TRUE),
-                    .groups = "drop")
-
-                return(impact_with_summed_discount)
-              }
-
-            )
-          )
-      }
 
 
       impact_detailed <-
         impact_detailed |>
-        # Remove column impact to avoid duplication
-        dplyr::select(-impact) |>
         ## Unnest the obtained impacts to integrate them the main tibble
         ## Impact saved in column impact
-        tidyr::unnest(impact_with_discount_by_year_summed) |>
+        tidyr::unnest(impact_with_discount_summed) |>
         # Round results
         dplyr::mutate(
           # Round impacts and monetized impacts
@@ -318,6 +332,13 @@ monetize <- function(output_attribute = NULL,
             impact_per_100k_inhab = (impact / population) *1E5
           )
       }
+
+      # Remove nested tibbles to prevent that rows are not summed correctly in
+      # get_output() below
+
+      impact_detailed <- impact_detailed |>
+        dplyr::select(-dplyr::contains("_by_"))
+
 
 
       # Get the main and detailed output by aggregating and/or filtering cases (rows)

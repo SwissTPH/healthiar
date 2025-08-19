@@ -45,6 +45,11 @@ get_impact <-
     population_is_available <- "population" %in% base::names(input_table)
     dw_is_available <- "dw" %in% base::names(input_table)
 
+    # Default value of interim results
+    # If there are interim results from the calculation (e.g. life table method)
+    # then overwrite the value of the variable
+    intermediate_calculations <- NULL
+
     # Impacts ###########
 
     # * If is_relative_risk ############################################################
@@ -73,9 +78,12 @@ get_impact <-
           # so itcould be integrated here, but it is kept separated
           # because it is very long and
           # would make this code not very reader friendly
-          results_raw <-
+          impact_with_lifetable <-
             healthiar:::get_impact_with_lifetable(
               input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
+
+          results_raw <- impact_with_lifetable$results_raw
+          intermediate_calculations <- impact_with_lifetable$intermediate_calculations
 
         }
 
@@ -123,7 +131,12 @@ get_impact <-
         )
     }
 
+    out <- base::list(
+      results_raw = results_raw,
+      intermediate_calculations = intermediate_calculations
+    )
 
-  return(results_raw)
+
+  return(out)
 
   }

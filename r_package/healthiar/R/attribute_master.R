@@ -164,7 +164,7 @@ attribute_master <-
                                 is_lifetable = is_lifetable)
 
     # Calculate the health impacts for each case (uncertainty, category, geo area...)
-    results_raw <-
+    results <-
       healthiar:::get_impact(input_table = input_table,
                              pop_fraction_type = "paf")
 
@@ -172,7 +172,8 @@ attribute_master <-
     output <-
       healthiar:::get_output(input_args = input_args,
                              input_table = input_table,
-                             results_raw = results_raw)
+                             intermediate_calculations = results$intermediate_calculations,
+                             results_raw = results$results_raw)
 
     return(output)
   }
