@@ -307,47 +307,13 @@ monetize <- function(output_attribute = NULL,
               }))
 
 
-      ##*** IF YLL or YLD ####
-
-      if({{health_outcome}} %in% c("yll")){ # And "yld" if ever implemented
-
-        impact_detailed <-
-          impact_detailed |>
-          dplyr::mutate(
-            impact_with_discount_by_year_summed = purrr::pmap(
-              list(.x = impact_with_discount_by_year),
-              function(.x, .y){
-                impact_with_summed_discount <-
-                  .x |>
-                  #Deactivated filter because probably not needed anymore
-                  #Year is always lower than the last_year and
-                  # the non-relevant years (>last_year) excluded from the calculation in get_deaths_yll_yld()
-                  #TODO To be confirmed
-                  # Filter for the relevant years
-                  # dplyr::filter(year < .y+1) |>
-                  ## Sum among years to obtain the total impact (single value)
-                  dplyr::summarise(
-                    impact = sum(impact, na.rm = TRUE),
-                    monetized_impact_before_inflation_and_discount = sum(monetized_impact_before_inflation_and_discount, na.rm = TRUE),
-                    monetized_impact_after_inflation_and_discount = sum(monetized_impact_after_inflation_and_discount, na.rm = TRUE),
-                    monetized_impact = sum(monetized_impact, na.rm = TRUE),
-                    .groups = "drop")
-
-                return(impact_with_summed_discount)
-              }
-
-            )
-          )
-      }
 
 
       impact_detailed <-
         impact_detailed |>
-        # Remove column impact to avoid duplication
-        dplyr::select(-impact) |>
         ## Unnest the obtained impacts to integrate them the main tibble
         ## Impact saved in column impact
-        tidyr::unnest(impact_with_discount_by_year_summed) |>
+        tidyr::unnest(impact_with_discount_summed) |>
         # Round results
         dplyr::mutate(
           # Round impacts and monetized impacts
