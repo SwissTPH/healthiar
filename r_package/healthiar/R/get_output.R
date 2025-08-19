@@ -75,7 +75,7 @@ get_output <-
     group_columns_for_year_aggregation <-
       base::setdiff(id_columns_in_results_raw, c("year"))
 
-    group_columns_for_exp_cat_aggregation <-
+    group_columns_for_ar_exp_cat_aggregation <-
       base::setdiff(id_columns_in_results_raw, c("exp_ci"))
 
     group_columns_for_sex_aggregation <-
@@ -236,7 +236,8 @@ get_output <-
 
     ## year ############
     # This is only useful for life table
-    if("year" %in% base::names(output_last)) {
+    if("year" %in% base::names(output_last) &&
+       base::length(base::unique(output_last$year)) > 1) {
 
       output[["health_detailed"]][["results_summed_across_year"]] <-
         sum_round_and_relative_impact(
@@ -244,46 +245,57 @@ get_output <-
           grouping_cols = group_columns_for_year_aggregation,
           col_total = "year")
 
-    } else {
-      output[["health_detailed"]][["results_summed_across_year"]] <- output_last
+      output_last <- output[["health_detailed"]][["results_summed_across_year"]]
+
     }
 
-    output_last <- output[["health_detailed"]][["results_summed_across_year"]]
+
 
     ## exposure categories ############
     # This is only useful for absolute risk because
     # if relative risk
     # there is no exposure category specific results (bhd is not category specific).
-    if(unique(results_raw$approach_risk) == "absolute_risk") {
+    if(base::unique(results_raw$approach_risk) == "absolute_risk") {
 
-    output[["health_detailed"]][["results_summed_across_exp_cat"]] <-
+    output[["health_detailed"]][["results_summed_across_ar_exp_cat"]] <-
       sum_round_and_relative_impact(
         df = output_last,
-        grouping_cols = group_columns_for_exp_cat_aggregation,
+        grouping_cols = group_columns_for_ar_exp_cat_aggregation,
         col_total = "exp_category")
 
-    } else if (unique(results_raw$approach_risk) == "relative_risk"){
-      # For relative risk no need of summing impacts across exposure categories
-      # because no exposure category bhd so no exposure category impact.
-      # This output is anyway created because it is used by other functions
-      # such as healthiar::socialize()
+    # For relative risk no need of summing impacts across exposure categories
+    # because no exposure category bhd so no exposure category impact.
+    # This output is anyway created because it is used by other functions
+    # such as healthiar::socialize()
 
-      output[["health_detailed"]][["results_summed_across_exp_cat"]] <- output_last
+    output_last <- output[["health_detailed"]][["results_summed_across_ar_exp_cat"]]
+
     }
 
-    output_last <- output[["health_detailed"]][["results_summed_across_exp_cat"]]
+
 
     ##  sex #####
     # Aggregate results by sex
+    if("sex" %in% base::names(output_last) &&
+       base::length(base::unique(output_last$sex)) > 1) {
 
-    output[["health_detailed"]][["results_summed_across_sex"]] <-
-      sum_round_and_relative_impact(
-        df = output_last,
-        grouping_cols = group_columns_for_sex_aggregation,
-        col_total = "sex")
+      output[["health_detailed"]][["results_summed_across_sex"]] <-
+        sum_round_and_relative_impact(
+          df = output_last,
+          grouping_cols = group_columns_for_sex_aggregation,
+          col_total = "sex")
 
 
-    output_last <- output[["health_detailed"]][["results_summed_across_sex"]]
+      output_last <- output[["health_detailed"]][["results_summed_across_sex"]]
+    }
+
+    output[["health_detailed"]][["results_by_age_group"]] <- output_last
+
+
+
+
+    if("age_group" %in% base::names(output_last) &&
+       base::length(base::unique(output_last$age_group)) > 1) {
 
     ## age_group #####
     # Aggregate results by age_group
@@ -295,22 +307,9 @@ get_output <-
 
     output_last <- output[["health_detailed"]][["results_summed_across_age"]]
 
-
-    ## geo_id_aggregated #####
-    # Aggregate results by higher geo_level
-    # only if geo_id_aggregated is define
-
-    if("geo_id_aggregated" %in% names(output_last)){
-
-      output[["health_detailed"]][["results_summed_across_geo"]] <-
-        sum_round_and_relative_impact(
-          df = output_last,
-          grouping_cols = group_columns_for_geo_aggregation,
-          col_total = "geo_id_disaggregated")
-
-      output_last <- output[["health_detailed"]][["results_summed_across_geo"]]
-
     }
+
+
 
     # Aggregate results across pollutants (exposures)
     if("approach_multiexposure" %in% names(results_raw)){
@@ -326,10 +325,38 @@ get_output <-
             grouping_cols = group_columns_for_multiexp_aggregation,
             col_total = "exp_name")
 
-      output_last <- output[["health_detailed"]][["results_summed_across_multiexposure"]]
+        output_last <- output[["health_detailed"]][["results_summed_across_multiexposure"]]
 
       }
     }
+
+
+    # Store results_by_geo_id_disaggregated
+    output[["health_detailed"]][["results_by_geo_id_disaggregated"]] <- output_last |>
+      # Ensure that the column value is the same for the sum of impacts
+      # Otherwise missmatch of tables in other functions e.g. daly()
+      dplyr::mutate(
+        sex = "total",
+        age_group = "total")
+
+
+    ## geo_id_aggregated #####
+    # Aggregate results by higher geo_level
+    # only if geo_id_aggregated is define
+
+    if("geo_id_aggregated" %in% names(output_last)){
+
+      output[["health_detailed"]][["results_by_geo_id_aggregated"]] <-
+        sum_round_and_relative_impact(
+          df = output_last,
+          grouping_cols = group_columns_for_geo_aggregation,
+          col_total = "geo_id_disaggregated")
+
+      output_last <- output[["health_detailed"]][["results_by_geo_id_aggregated"]]
+
+    }
+
+
 
     # Keep only the ci central in main output ###########
 
