@@ -6,8 +6,9 @@
 
 # ARGUMENTS ####################################################################
 #' @param input_args \code{List} containingall arguments and values entered in attribute().
-#' @param input_table \code{List} containing the input_table data compiled and packed in a data frame.
-#' @param results_raw \code{List} containing all the calculation of health impacts.
+#' @param input_table \code{Tibble} containing the input_table data compiled and packed in a data frame.
+#' @param interim_results \code{Tibble} containing intermediate calculations (e.g. from life table pathway).
+#' @param results_raw \code{Tibble} containing all the calculation of health impacts.
 
 # VALUE ########################################################################
 #' @returns
@@ -33,7 +34,8 @@
 get_output <-
   function(input_args = NULL,
            input_table = NULL,
-           results_raw){
+           interim_results = NULL,
+           results_raw) {
 
     # Store set of columns ###################################
     # Variables to be used below
