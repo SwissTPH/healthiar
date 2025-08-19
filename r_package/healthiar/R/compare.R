@@ -121,8 +121,12 @@ compare <-
     input_table_scen_1 <- output_attribute_scen_1[["health_detailed"]][["input_table"]]
     input_table_scen_2 <- output_attribute_scen_2[["health_detailed"]][["input_table"]]
 
-    raw_scen_1 <- output_attribute_scen_1[["health_detailed"]][["results_raw"]]
-    raw_scen_2 <- output_attribute_scen_2[["health_detailed"]][["results_raw"]]
+    results_raw_scen_1 <- output_attribute_scen_1[["health_detailed"]][["results_raw"]]
+    results_raw_scen_2 <- output_attribute_scen_2[["health_detailed"]][["results_raw"]]
+
+    interim_results_scen_1 <- output_attribute_scen_1[["health_detailed"]][["interim_results"]]
+    interim_results_scen_2 <- output_attribute_scen_2[["health_detailed"]][["interim_results"]]
+
 
 
     # Force the same environment in the functions of erf_eq.
@@ -236,26 +240,31 @@ compare <-
     if(approach_comparison == "delta"){
 
 
-      # Identify the columns that are to be used to join raw_scen_1 and _scen_2
+      # Identify the columns that are to be used to join results_raw_scen_1 and _scen_2
       joining_columns_output <-
         healthiar:::find_joining_columns(
-          df_1 = raw_scen_1,
-          df_2 = raw_scen_2,
+          df_1 = results_raw_scen_1,
+          df_2 = results_raw_scen_2,
           except = scenario_specific_arguments)
 
       # Merge the result tables by common columns
       results_raw <-
         dplyr::left_join(
-         raw_scen_1,
-         raw_scen_2,
+         results_raw_scen_1,
+         results_raw_scen_2,
           by = joining_columns_output,
           suffix = c("_scen_1", "_scen_2")) |>
         # Calculate the delta (difference) between scenario 1 and 2
         dplyr::mutate(impact = impact_scen_1 - impact_scen_2,
                       impact_rounded = base::round(impact, 0))
 
-      input_table <- base::list(input_table_scen_1 = input_table_scen_1,
-                                input_table_scen_2 = input_table_scen_2)
+      input_table <-
+        base::list(input_table_scen_1 = input_table_scen_1,
+                   input_table_scen_2 = input_table_scen_2)
+
+      interim_results <-
+        base::list(interim_results_scen_1 = interim_results_scen_1,
+                   interim_results_scen_2 = interim_results_scen_2)
 
 
       # PIF approach ########################
@@ -291,7 +300,7 @@ compare <-
         # So let's use e.g. input_args_scen_1
         if(base::unique(input_table_scen_1$is_lifetable)) {
           # Calculate the health impacts for each case (uncertainty, category, geo area...)
-          results_raw <-
+          results <-
             input_table |>
             # Duplicate column with new names (without _scen_..)
             # to enable that get_impact() can read it
@@ -302,11 +311,14 @@ compare <-
                                    pop_fraction_type = "pif")
         } else { # Non-lifetable cases
 
-          results_raw <-
+          results <-
             healthiar:::get_impact(
               input_table = input_table,
               pop_fraction_type = "pif")
         }
+
+        results_raw <- results$results_raw
+        interim_results <- results$interim_results
 
       }
 
@@ -322,10 +334,11 @@ compare <-
                                 input_args_scen_1 = input_args_scen_1,
                                 input_args_scen_2 = input_args_scen_2),
         input_table = input_table,
+        interim_results = interim_results,
         results_raw = results_raw)
 
-    output[["health_detailed"]][["scen_1"]] <- raw_scen_1
-    output[["health_detailed"]][["scen_2"]] <- raw_scen_1
+    output[["health_detailed"]][["scen_1"]] <- results_raw_scen_1
+    output[["health_detailed"]][["scen_2"]] <- results_raw_scen_1
 
 
 
