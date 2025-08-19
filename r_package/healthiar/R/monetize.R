@@ -249,13 +249,36 @@ monetize <- function(output_attribute = NULL,
       #     discount_shape = discount_shape,
       #     inflation = inflation,
       #     valuation = valuation)[["monetization_main"]]
+
+
+
+
+      # Calculate impact by year
+      results_raw_with_impact_by_year <-
+        output_health[["health_detailed"]][["interim_results"]] |>
+        dplyr::mutate(
+          impact_by_year = purrr::map(
+            .x = impact_by_age_and_year_long,
+            .f = ~ dplyr::summarise(.x,
+                                    .by = year,
+                                    impact = base::sum(impact, na.rm = TRUE))),
+          impact = purrr::map(
+            .x = impact_by_age_and_year_long,
+            .f = ~ dplyr::summarise(.x,
+                                    impact = base::sum(impact, na.rm = TRUE))),
+          age_group = "total") |>
+        tidyr::unnest(impact)
+
+
+
+
       # Output will be adapted according to monetized impacts
       impact_detailed <-
-        output_health[["health_detailed"]][["results_raw"]] |>
+        results_raw_with_impact_by_year |>
 
         ## Calculate total, discounted life years (single value) per sex & ci
         dplyr::mutate(
-          impact_with_discount_by_year = purrr::pmap(
+          impact_with_discount_summed = purrr::pmap(
             list(.x = impact_by_year),
             function(.x){
 
