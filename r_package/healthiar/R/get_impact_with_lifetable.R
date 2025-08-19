@@ -506,7 +506,7 @@ get_impact_with_lifetable <-
       dplyr::select(-age_end)
 
     out <- base::list(
-      interim_results = lifetable_calculation,
+      subcalculations = lifetable_calculation,
       results_raw = results_raw
     )
 

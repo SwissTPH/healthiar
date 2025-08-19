@@ -7,7 +7,7 @@
 get_output(
   input_args = NULL,
   input_table = NULL,
-  interim_results = NULL,
+  subcalculations = NULL,
   results_raw
 )
 }
@@ -16,7 +16,7 @@ get_output(
 
 \item{input_table}{\code{Tibble} containing the input_table data compiled and packed in a data frame.}
 
-\item{interim_results}{\code{Tibble} containing intermediate calculations (e.g. from life table pathway).}
+\item{subcalculations}{\code{Tibble} containing intermediate calculations (e.g. from life table pathway).}
 
 \item{results_raw}{\code{Tibble} containing all the calculation of health impacts.}
 }

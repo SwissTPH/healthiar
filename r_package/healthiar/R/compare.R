@@ -124,8 +124,8 @@ compare <-
     results_raw_scen_1 <- output_attribute_scen_1[["health_detailed"]][["results_raw"]]
     results_raw_scen_2 <- output_attribute_scen_2[["health_detailed"]][["results_raw"]]
 
-    interim_results_scen_1 <- output_attribute_scen_1[["health_detailed"]][["interim_results"]]
-    interim_results_scen_2 <- output_attribute_scen_2[["health_detailed"]][["interim_results"]]
+    subcalculations_scen_1 <- output_attribute_scen_1[["health_detailed"]][["subcalculations"]]
+    subcalculations_scen_2 <- output_attribute_scen_2[["health_detailed"]][["subcalculations"]]
 
 
 
@@ -262,9 +262,9 @@ compare <-
         base::list(input_table_scen_1 = input_table_scen_1,
                    input_table_scen_2 = input_table_scen_2)
 
-      interim_results <-
-        base::list(interim_results_scen_1 = interim_results_scen_1,
-                   interim_results_scen_2 = interim_results_scen_2)
+      subcalculations <-
+        base::list(subcalculations_scen_1 = subcalculations_scen_1,
+                   subcalculations_scen_2 = subcalculations_scen_2)
 
 
       # PIF approach ########################
@@ -318,7 +318,7 @@ compare <-
         }
 
         results_raw <- results$results_raw
-        interim_results <- results$interim_results
+        subcalculations <- results$subcalculations
 
       }
 
@@ -334,7 +334,7 @@ compare <-
                                 input_args_scen_1 = input_args_scen_1,
                                 input_args_scen_2 = input_args_scen_2),
         input_table = input_table,
-        interim_results = interim_results,
+        subcalculations = subcalculations,
         results_raw = results_raw)
 
     output[["health_detailed"]][["scen_1"]] <- results_raw_scen_1

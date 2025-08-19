@@ -172,7 +172,7 @@ attribute_master <-
     output <-
       healthiar:::get_output(input_args = input_args,
                              input_table = input_table,
-                             interim_results = results$interim_results,
+                             subcalculations = results$subcalculations,
                              results_raw = results$results_raw)
 
     return(output)
