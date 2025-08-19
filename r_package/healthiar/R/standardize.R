@@ -41,7 +41,7 @@ standardize <- function(output_attribute,
                         age_group,
                         ref_prop_pop = NULL){
 
-  impact_by_age_group <- output_attribute$health_detailed$results_summed_across_sex
+  impact_by_age_group <- output_attribute$health_detailed$results_by_age_group
 
 
   if(is.null(ref_prop_pop)){
