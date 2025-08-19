@@ -7,7 +7,7 @@
 # ARGUMENTS ####################################################################
 #' @param input_args \code{List} containingall arguments and values entered in attribute().
 #' @param input_table \code{Tibble} containing the input_table data compiled and packed in a data frame.
-#' @param subcalculations \code{Tibble} containing intermediate calculations (e.g. from life table pathway).
+#' @param intermediate_calculations \code{Tibble} containing intermediate calculations (e.g. from life table pathway).
 #' @param results_raw \code{Tibble} containing all the calculation of health impacts.
 
 # VALUE ########################################################################
@@ -34,7 +34,7 @@
 get_output <-
   function(input_args = NULL,
            input_table = NULL,
-           subcalculations = NULL,
+           intermediate_calculations = NULL,
            results_raw) {
 
     # Store set of columns ###################################
@@ -119,7 +119,7 @@ get_output <-
     health_detailed  <-
       base::list(input_args = input_args,
                  input_table = input_table,
-                 subcalculations = subcalculations,
+                 intermediate_calculations = intermediate_calculations,
                  results_raw = results_raw)
 
     output <-

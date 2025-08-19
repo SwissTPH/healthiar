@@ -48,7 +48,7 @@ get_impact <-
     # Default value of interim results
     # If there are interim results from the calculation (e.g. life table method)
     # then overwrite the value of the variable
-    subcalculations <- NULL
+    intermediate_calculations <- NULL
 
     # Impacts ###########
 
@@ -83,7 +83,7 @@ get_impact <-
               input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
           results_raw <- impact_with_lifetable$results_raw
-          subcalculations <- impact_with_lifetable$subcalculations
+          intermediate_calculations <- impact_with_lifetable$intermediate_calculations
 
         }
 
@@ -133,7 +133,7 @@ get_impact <-
 
     out <- base::list(
       results_raw = results_raw,
-      subcalculations = subcalculations
+      intermediate_calculations = intermediate_calculations
     )
 
 

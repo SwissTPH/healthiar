@@ -225,7 +225,7 @@ monetize <- function(output_attribute = NULL,
       output_health <- output_attribute
 
 
-      # TODO Instead of using subcalculations, use results raw
+      # TODO Instead of using intermediate_calculations, use results raw
       # Activate the code below when this development is undertaken
       # # Output will be adapted according to monetized impacts
       # impact_detailed <-
@@ -255,7 +255,7 @@ monetize <- function(output_attribute = NULL,
 
       # Calculate impact by year
       results_raw_with_impact_by_year <-
-        output_health[["health_detailed"]][["subcalculations"]] |>
+        output_health[["health_detailed"]][["intermediate_calculations"]] |>
         dplyr::mutate(
           impact_by_year = purrr::map(
             .x = impact_by_age_and_year_long,

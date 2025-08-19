@@ -94,7 +94,7 @@ multiexpose <-
       output <-
         healthiar:::get_output(input_args = input_args,
                                input_table = input_table,
-                               subcalculations = results$subcalculations,
+                               intermediate_calculations = results$intermediate_calculations,
                                results_raw = results$results_raw)
 
       # Put the column exp_name as first column because it is now relevant
