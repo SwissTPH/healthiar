@@ -333,6 +333,13 @@ monetize <- function(output_attribute = NULL,
           )
       }
 
+      # Remove nested tibbles to prevent that rows are not summed correctly in
+      # get_output() below
+
+      impact_detailed <- impact_detailed |>
+        dplyr::select(-dplyr::contains("_by_"))
+
+
 
       # Get the main and detailed output by aggregating and/or filtering cases (rows)
       output_monetization <-
