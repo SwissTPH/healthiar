@@ -486,48 +486,30 @@ get_impact_with_lifetable <-
                 dplyr::filter(year <= last_year_projection )
             }
           }
-        ),
+        ))
 
-        impact_by_age = purrr::map(
-          .x = impact_by_age_and_year_long,
-          function(.x){
-            .x <- .x |>
-              dplyr::summarize(
-                .by = c(age_start, age_end),
-                impact = base::sum(impact , na.rm = TRUE))
-          }
-        ),
-
-        impact_by_year = purrr::map(
-          .x = impact_by_age_and_year_long,
-          function(.x){
-            .x <- .x |>
-              dplyr::summarize(
-                .by = year,
-                impact = base::sum(impact , na.rm = TRUE))
-          }
-        ),
-
-        impact = purrr::map(
-          .x = impact_by_age,
-          function(.x){
-            .x <- .x |>
-              dplyr::summarize(
-                impact = base::sum(impact , na.rm = TRUE))
-          }
-        )
-      )
+    # Unnest column #####
 
     # Unnest the obtained impacts to integrate them the main tibble
-    # Impact saved in column impact
-    lifetable_calculation <- lifetable_calculation |>
-       tidyr::unnest(impact) |>
-      # Select and sort colums #####
-      dplyr::relocate(dplyr::contains("_by_"), .before = 1) |>
-      dplyr::mutate(age_group = "total")
+     results_raw <- lifetable_calculation |>
+      # Remove all nested tibbles except impact_by_age_and_year_long
+      # which have to be nested
+      dplyr::select(-data_by_age,
+                    -projection_if_exposed_by_age_and_year,
+                    -projection_if_unexposed_by_age_and_year,
+                    -impact_by_age_and_year) |>
+      # Unnest
+      tidyr::unnest(impact_by_age_and_year_long) |>
+      # Rename age_start to age_group (consistent with input and other pathways)
+      dplyr::mutate(age_group = age_start) |>
+      # Remove age_end not needed anymore
+      dplyr::select(-age_end)
 
+    out <- base::list(
+      interim_results = lifetable_calculation,
+      results_raw = results_raw
+    )
 
-
-    return(lifetable_calculation)
+    return(out)
 
   }
