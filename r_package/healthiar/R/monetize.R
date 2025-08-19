@@ -224,6 +224,31 @@ monetize <- function(output_attribute = NULL,
       # Store the original data (they refer to health)
       output_health <- output_attribute
 
+
+      # TODO Instead of using interim_results, use results raw
+      # Activate the code below when this development is undertaken
+      # # Output will be adapted according to monetized impacts
+      # impact_detailed <-
+      #   output_health[["health_detailed"]][["results_raw"]] |>
+      #   ## Calculate total, discounted life years (single value) per sex & ci
+      #   dplyr::mutate(
+      #     # Convert year to numeric
+      #     year = as.numeric(year),
+      #     # Ignore user defined discount_years
+      #     # Here the difference between year of analysis and
+      #     # last year of mortality data is to be used
+      #     discount_years = year - {{year_of_analysis}},
+      #     discount_rate = {{discount_rate}},
+      #     discount_shape = {{discount_shape}})
+      #
+      # impact_detailed  <-
+      #   healthiar:::add_monetized_impact(
+      #     df = impact_detailed,
+      #     discount_rate = discount_rate,
+      #     discount_years = base::length(base::unique(impact_detailed$discount_years))-1,
+      #     discount_shape = discount_shape,
+      #     inflation = inflation,
+      #     valuation = valuation)[["monetization_main"]]
       # Output will be adapted according to monetized impacts
       impact_detailed <-
         output_health[["health_detailed"]][["results_raw"]] |>
