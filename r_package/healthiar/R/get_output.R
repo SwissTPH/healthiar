@@ -40,17 +40,24 @@ get_output <-
     # Store set of columns ###################################
     # Variables to be used below
 
-
+    ## ID columns
     id_columns <- c("geo_id_aggregated", "geo_id_disaggregated",
                     "exp_name",
-                    "year",
-                    "age_group", "sex",
-                    "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
+                    "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci",
+                    "year", "exp_category", "sex", "age_group")
 
     colnames_results_raw <- base::names(results_raw)
 
+    id_columns_in_results_raw <-
+      colnames_results_raw[colnames_results_raw %in% id_columns]
+
+
+    ## Columns to be summed
     impact_columns <-
       colnames_results_raw[base::grepl("impact", colnames_results_raw)]
+
+    nest_columns <-
+      colnames_results_raw[base::grepl("_by_", colnames_results_raw)]
 
     columns_to_be_summed <- results_raw |>
       # The use of matches() is important.
@@ -66,11 +73,6 @@ get_output <-
     impact_columns_to_be_summed <-
       columns_to_be_summed[base::grepl("impact", columns_to_be_summed)]
 
-    nest_cols <-
-      colnames_results_raw[base::grepl("_by_", colnames_results_raw)]
-
-    id_columns_in_results_raw <-
-      colnames_results_raw[colnames_results_raw %in% id_columns]
 
     group_columns_for_year_aggregation <-
       base::setdiff(id_columns_in_results_raw, c("year"))
