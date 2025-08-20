@@ -115,12 +115,15 @@ get_output <-
       base::names()
 
     # Get main results from detailed results ###################################
-
+    # Put all health detailed tables together in a list
     health_detailed  <-
       base::list(input_args = input_args,
                  input_table = input_table,
                  intermediate_calculations = intermediate_calculations,
-                 results_raw = results_raw)
+                 results_raw = results_raw) |>
+      # Remove list elemnts that are NULL
+      # e.g. usually the case of intermediate_calculations
+      purrr::compact()
 
     output <-
       base::list(health_main = results_raw,
