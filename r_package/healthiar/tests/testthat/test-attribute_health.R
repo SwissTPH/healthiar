@@ -1312,7 +1312,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         duration_central = 1,
         info = data.frame(pollutant = "road_noise",
                           outcome = "highly_annoyance")
-      )$health_detailed$results_summed_across_ar_exp_cat$impact_rounded,
+      )$health_detailed$results_by_geo_id_disaggregated$impact_rounded,
     expected =
       c(398, 199, 2388)
   )

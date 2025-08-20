@@ -147,9 +147,9 @@ Every `attribute_health()` output consists of two lists ("folders")
 
     -   `input_table` tibble that contains all input data entered by the user
 
-    -   `results_summed_across_ar:exp_cat` contains results per geo unit after aggregating across exposure categories in absolute risk
+    -   `results_by_`: contains results stratified by variables such as exposure category (only absolute risk), sex, age group and geo ids. These tables are only shown if the variables have more than one category (except results_by_geo_id_disaggegated, which is always shown).  
 
-    -   `results_summed_across_sex` & `results_summed_across_age` contains results aggregated by sex and age groups, respectively
+    -   `results_summed_with_all_ci` contains results summing imapct of across all the above variables but still keeping all uncertainties (confidence intervals)
 
 *NOTE*: `attribute_lifetable()` creates additional output that is specific to life table calculations
 
@@ -425,11 +425,11 @@ results_iteration_ar[["health_main"]] |>
 Impact by geo unit, in this case impact in the rural and in the urban area
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_iteration_ar$health_detailed$results_summed_across_ar_exp_cat
+results_iteration_ar$health_detailed$results_by_geo_id_disaggregated
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_iteration_ar[["health_detailed"]][["results_summed_across_ar_exp_cat"]] |> 
+results_iteration_ar[["health_detailed"]][["results_by_geo_id_disaggregated"]] |> 
   select(geo_id_disaggregated, geo_id_aggregated, impact) |> 
   knitr::kable()
 ```
@@ -1038,7 +1038,7 @@ results_daly$health_main |>
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
 results_daly$health_main |> 
-  dplyr::select(impact_rounded_yll, impact_rounded_yll, impact_rounded) |> 
+  dplyr::select(impact_yll_rounded, impact_yld_rounded, impact_rounded) |> 
   knitr::kable()
 ```
 
