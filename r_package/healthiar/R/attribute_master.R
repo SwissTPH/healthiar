@@ -81,7 +81,7 @@
 #' \code{String} specifying whether exposure is constant or only in one year. Options: \code{"single_year"} (default), \code{"constant"}.
 
 #' @param approach_newborns
-#' \code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". See Details for more info.
+#' \code{String} specifying whether newborns are to be considered in the years after the year of analysis or not. Options: \code{"without_newborns"} (default), \code{"with_newborns"}. See Details for more info.
 
 #' @param year_of_analysis
 #' \code{Numeric value} providing the first with exposure to the environmental stressor.
