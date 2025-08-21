@@ -194,7 +194,7 @@ get_output <-
               .by = dplyr::all_of(grouping_cols),
               dplyr::across(
                 .cols = dplyr::all_of(cols_to_collapse),
-                .fns = ~ base::paste(.x, collapse = ", "),
+                .fns = ~ base::toString(.x),
                 .names = "{.col}"))
         } else { df_collapsed <- df}
       } else { df_collapsed <- df}

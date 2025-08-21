@@ -160,7 +160,7 @@ validate_input_attribute <-
           base::paste0(
             "For ", var_name,
             ", please, type (between quotation marks) one of these options: ",
-            base::paste0(var_options, collapse = ", "), "."),
+            base::toString(var_options), "."),
           call. = FALSE)
       }
     }
