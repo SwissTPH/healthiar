@@ -134,13 +134,6 @@ add_monetized_impact  <-
         monetized_impact = monetized_impact_after_inflation_and_discount,
         .after = impact)
 
-    grouping_variables <-
-      df_by_year |>
-      dplyr::select(starts_with("geo_id"),
-                    dplyr::ends_with("_ci"),
-                    dplyr::any_of(c("discount_shape"))) |>
-      base::names()
-
 
     if(taking_last_discounted_year){
       df_relevant <-
@@ -152,11 +145,19 @@ add_monetized_impact  <-
         dplyr::select(-discount_year)
 
     }else if(summing_across_discounted_years){
+
+      grouping_variables <-
+        df_by_year |>
+        dplyr::select(-dplyr::any_of(c("year", "discount_year")),
+                      -dplyr::contains("discount_factor"),
+                      -dplyr::contains("impact")) |>
+        base::names()
+
       df_relevant <-
         df_by_year |>
         dplyr::summarize(
           .by = dplyr::any_of(grouping_variables),
-          dplyr::across(dplyr::starts_with("monetized"), sum)
+          dplyr::across(dplyr::contains("impact"), sum)
         )
     }
 
