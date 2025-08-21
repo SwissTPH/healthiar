@@ -366,7 +366,7 @@ testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_
         rr_increment = 10,
         erf_shape = "log_linear",
         population = c(1E5, 2E5),
-        geo_id_disaggregated = c("a", "b"))$health_main$impact|>round(4),
+        geo_id_micro = c("a", "b"))$health_main$impact|>round(4),
     expected =
       c(48.2825, 84.9003) # Results on 30 April 2025; no comparison study
   )
@@ -391,8 +391,8 @@ testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_
         rr_increment = 10,
         erf_shape = "log_linear",
         population = rep(1E6, 1E2),
-        geo_id_disaggregated = 1:1E2,
-        geo_id_aggregated = rep("CH", 1E2),
+        geo_id_micro = 1:1E2,
+        geo_id_macro = rep("CH", 1E2),
         info = "PM2.5_copd")$health_main$impact_rounded,
     expected =
       c(317577, 122363, 497741) # Results on 30 April 2025; no comparison study
@@ -416,7 +416,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
         exp_central = data$PM25,
         cutoff_central = 0,
         bhd_central = data$VALUE_BASELINE,
-        geo_id_disaggregated = data$CS01012020
+        geo_id_micro = data$CS01012020
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
@@ -445,7 +445,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
         exp_central = data$PM25,
         cutoff_central = 2.5,
         bhd_central = data$VALUE_BASELINE,
-        geo_id_disaggregated = data$CS01012020
+        geo_id_micro = data$CS01012020
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
@@ -475,7 +475,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
         exp_central = c(82.6,88.7,84.1), # exposure distribution for ozone
         cutoff_central = 0,
         bhd_central =  c(27001,31064,29908), #COPD mortality in Germany 2016
-        geo_id_disaggregated = c("2014","2015","2016")
+        geo_id_micro = c("2014","2015","2016")
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
@@ -492,7 +492,7 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        geo_id_disaggregated = c("a", "b"),
+        geo_id_micro = c("a", "b"),
         exp_central = c(20, 20),
         cutoff_central = 5,
         rr_central = 1.08,
@@ -509,7 +509,7 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        geo_id_disaggregated = c("a", "b"),
+        geo_id_micro = c("a", "b"),
         exp_central = c(20, 20),
         cutoff_central = 5,
         rr_central = 1.08,
@@ -770,8 +770,8 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
         rr_central = 1.08,
         rr_increment = 10,
         erf_shape = "log_linear",
-        geo_id_disaggregated = rep(1:3, each = 5),
-        geo_id_aggregated = rep("ch", each = 5 * 3)
+        geo_id_micro = rep(1:3, each = 5),
+        geo_id_macro = rep("ch", each = 5 * 3)
         )$health_detailed$results_raw$impact_rounded,
     expected =
       round(c(545,  634,  991)) # Results on 2025-06-24; no comparison study
@@ -796,7 +796,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
         exp_central = data$Mean.O3, # exposure distribution for ozone
         cutoff_central = 0,
         bhd_central =  data$bhd, #COPD mortality in Germany 2015 and 2016
-        geo_id_disaggregated = data$X,
+        geo_id_micro = data$X,
       )$health_main$impact_rounded,
     expected =
       c(350,267,424,313,238,379)
@@ -812,7 +812,7 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_TR
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        geo_id_disaggregated = c("a", "a", "b", "b"),
+        geo_id_micro = c("a", "a", "b", "b"),
         exp_central = c(20, 20, 20, 20),
         prop_pop_exp = c(0.5, 0.5, 0.5, 0.5),
         cutoff_central = 5,
@@ -830,7 +830,7 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_TR
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        geo_id_disaggregated = c("a", "a", "b", "b"),
+        geo_id_micro = c("a", "a", "b", "b"),
         exp_central = c(20, 20, 20, 20),
         prop_pop_exp = c(0.5, 0.5, 0.5, 0.5),
         cutoff_central = 5,
@@ -1145,7 +1145,7 @@ testthat::test_that("no error ar iteration", {
           runif_with_seed(1,5E3,1E4,3) * runif_with_seed(5,0,1,3)
         ),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        geo_id_disaggregated = rep(1:3, 5),
+        geo_id_micro = rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
 )
 })
@@ -1165,7 +1165,7 @@ testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iter
           runif_with_seed(1,5E3,1E4,3) * runif_with_seed(5,0,1,3)
           ),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        geo_id_disaggregated = rep(1:3, 5),
+        geo_id_micro = rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
         )$health_detailed$results_raw$impact |> round(),
     expected =
@@ -1194,7 +1194,7 @@ testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iter
           runif_with_seed(1,5E3,1E4,3) * runif_with_seed(5,0,1,3)
         ),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        geo_id_disaggregated = rep(1:3, 5),
+        geo_id_micro = rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
         )$health_detailed$results_raw$impact |> round(),
     expected = # Results on 2025-01-20; no comparison study
@@ -1221,8 +1221,8 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        geo_id_disaggregated = data$regionID,
-        # geo_id_disaggregated = rep(c("c","a","b"), times = 5),
+        geo_id_micro = data$regionID,
+        # geo_id_micro = rep(c("c","a","b"), times = 5),
         approach_risk = "absolute_risk",
         exp_central = data$exposure_mean,
         pop_exp = data$exposed,
@@ -1312,7 +1312,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         duration_central = 1,
         info = data.frame(pollutant = "road_noise",
                           outcome = "highly_annoyance")
-      )$health_detailed$results_by_geo_id_disaggregated$impact_rounded,
+      )$health_detailed$results_by_geo_id_micro$impact_rounded,
     expected =
       c(398, 199, 2388)
   )
@@ -1325,7 +1325,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
 
 # ERROR OR WARNING ########
 ## ERROR #########
-testthat::test_that("error if geo_id_aggregated but no geo_id_disaggregated", {
+testthat::test_that("error if geo_id_macro but no geo_id_micro", {
 
   testthat::expect_error(
     object =
@@ -1337,8 +1337,8 @@ testthat::test_that("error if geo_id_aggregated but no geo_id_disaggregated", {
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear",
-        geo_id_aggregated = c("a", "b")),
-    regexp = "If you do not pass a value for geo_id_disaggregated, you cannot use geo_id_aggregated."
+        geo_id_macro = c("a", "b")),
+    regexp = "If you do not pass a value for geo_id_micro, you cannot use geo_id_macro."
   )
 })
 
@@ -1579,8 +1579,8 @@ testthat::test_that("error if multi geo units but different length of geo-depend
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear",
-        geo_id_disaggregated = c("a", "b")),
-    regexp = "The following variables must all have the same length: geo_id_disaggregated, exp_central, bhd_central.")
+        geo_id_micro = c("a", "b")),
+    regexp = "The following variables must all have the same length: geo_id_micro, exp_central, bhd_central.")
 })
 
 testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {

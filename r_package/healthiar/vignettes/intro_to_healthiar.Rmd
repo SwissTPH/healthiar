@@ -312,9 +312,9 @@ rm(results_noise_ha)
 
 Goal: attribute disease cases to PM2.5 exposure in multiple geographic units
 
--   Enter unique ID's as a vector (`numeric` or `character`) to the `geo_id_disaggregated` argument (e.g. municipality names or province abbrevations)
+-   Enter unique ID's as a vector (`numeric` or `character`) to the `geo_id_micro` argument (e.g. municipality names or province abbrevations)
 
--   Optional: aggregate unit-specific results by providing higher-level ID's (e.g. region names or country abbreviations) as a vector (`numeric` or `character`) to the `geo_id_aggregated` argument
+-   Optional: aggregate unit-specific results by providing higher-level ID's (e.g. region names or country abbreviations) as a vector (`numeric` or `character`) to the `geo_id_macro` argument
 
 Input to the other function arguments is specified as usual, either as a vector or a single values (which will be recycled to match the length of the other input vectors).
 
@@ -323,9 +323,9 @@ Input to the other function arguments is specified as usual, either as a vector 
 ```{r}
 results_iteration <- attribute_health(
     # Names of Swiss cantons
-    geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Jura"),
+    geo_id_micro = c("Zurich", "Basel", "Geneva", "Ticino", "Jura"),
     # Names of languages spoken in the selected Swiss cantons
-    geo_id_aggregated = c("German","German","French","Italian","French"),
+    geo_id_macro = c("German","German","French","Italian","French"),
     rr_central = 1.369,
     rr_increment = 10, 
     cutoff_central = 5,
@@ -347,7 +347,7 @@ results_iteration$health_main
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
 results_iteration[["health_main"]] |> 
-  dplyr::select(geo_id_aggregated, impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
+  dplyr::select(geo_id_macro, impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
   knitr::kable()
 ```
 
@@ -363,7 +363,7 @@ results_iteration$health_detailed$results_raw
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
 results_iteration[["health_detailed"]][["results_raw"]] |> 
-  dplyr::select(geo_id_disaggregated, impact_rounded, geo_id_aggregated) |> 
+  dplyr::select(geo_id_micro, impact_rounded, geo_id_macro) |> 
   knitr::kable()
 ```
 
@@ -391,8 +391,8 @@ data <- exdat_noise |>
 ```{r}
 results_iteration_ar <- attribute_health( 
     # Both the rural and urban areas belong to the higher-level "total" region
-    geo_id_aggregated = "total",
-    geo_id_disaggregated = data$region,
+    geo_id_macro = "total",
+    geo_id_micro = data$region,
     approach_risk = "absolute_risk",
     exp_central = data$exposure_mean,
     pop_exp = data$exposed,
@@ -400,7 +400,7 @@ results_iteration_ar <- attribute_health(
 )
 ```
 
-*NOTE*: the length of the input vectors fed to `geo_id_disaggregated`, `exp_central`, `pop_exp` must match and must be
+*NOTE*: the length of the input vectors fed to `geo_id_micro`, `exp_central`, `pop_exp` must match and must be
 
 (number of geo units) x (number of exposure categories) = 2 x 5 = **10**,
 
@@ -416,7 +416,7 @@ results_iteration_ar$health_main
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
 results_iteration_ar[["health_main"]] |> 
-  dplyr::select(geo_id_aggregated, impact_rounded, erf_ci, exp_ci) |> 
+  dplyr::select(geo_id_macro, impact_rounded, erf_ci, exp_ci) |> 
   knitr::kable()
 ```
 
@@ -425,12 +425,12 @@ results_iteration_ar[["health_main"]] |>
 Impact by geo unit, in this case impact in the rural and in the urban area
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_iteration_ar$health_detailed$results_by_geo_id_disaggregated
+results_iteration_ar$health_detailed$results_by_geo_id_micro
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_iteration_ar[["health_detailed"]][["results_by_geo_id_disaggregated"]] |> 
-  select(geo_id_disaggregated, geo_id_aggregated, impact) |> 
+results_iteration_ar[["health_detailed"]][["results_by_geo_id_micro"]] |> 
+  select(geo_id_micro, geo_id_macro, impact) |> 
   knitr::kable()
 ```
 
@@ -442,7 +442,7 @@ rm(results_iteration_ar, data)
 
 Goal: determine mean attributable health impacts by education level
 
-*Note*: a (random) ID vector of unique values must be entered to the argument `geo_id_disaggregated`, to indicate that each row is an observation on its own (and not just exposure categories)
+*Note*: a (random) ID vector of unique values must be entered to the argument `geo_id_micro`, to indicate that each row is an observation on its own (and not just exposure categories)
 
 A data frame (or a single vector) can be entered to the `info` argument
 
@@ -459,7 +459,7 @@ output_attribute <- attribute_health(
   cutoff_central =  0,
   exp_central = sample(6:10, 15, replace = TRUE),
   bhd_central = sample(100:500, 15, replace = TRUE),
-  geo_id_disaggregated = c(1:nrow(info)), # (random) ID must be entered
+  geo_id_micro = c(1:nrow(info)), # (random) ID must be entered
   info = info
 )
 output_stratified <- output_attribute$health_detailed$results_raw |>
@@ -645,7 +645,7 @@ results_pm_copd_summarized$uncertainty_detailed$attribute_by_sim
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
 results_pm_copd_summarized$uncertainty_detailed$attribute_by_sim |> 
   dplyr::select(-input, -output) |> 
-  dplyr::relocate(impact, .after = geo_id_disaggregated) |> 
+  dplyr::relocate(impact, .after = geo_id_micro) |> 
   knitr::kable()
 ```
 
@@ -1103,7 +1103,7 @@ rm(results_multiplicative)
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
 mdi <- prepare_mdi(
-  geo_id_disaggregated = exdat_get_mdi$id,
+  geo_id_micro = exdat_get_mdi$id,
   edu = exdat_get_mdi$edu,
   unemployed = exdat_get_mdi$unemployed,
   single_parent = exdat_get_mdi$single_parent,
@@ -1121,7 +1121,7 @@ rm(mdi)
 
 ```{r eval=FALSE, include=TRUE, echo=FALSE}
 mdi <- prepare_mdi(
-  geo_id_disaggregated = exdat_get_mdi$id,
+  geo_id_micro = exdat_get_mdi$id,
   edu = exdat_get_mdi$edu,
   unemployed = exdat_get_mdi$unemployed,
   single_parent = exdat_get_mdi$single_parent,
@@ -1151,12 +1151,12 @@ Function output includes
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
 mdi |> 
-  select(geo_id_disaggregated, MDI, MDI_index)
+  select(geo_id_micro, MDI, MDI_index)
 ```
 
 ```{r eval=FALSE, include=TRUE, echo=FALSE}
 mdi |> 
-  dplyr::select(geo_id_disaggregated, MDI, MDI_index) |> 
+  dplyr::select(geo_id_micro, MDI, MDI_index) |> 
   knitr::kable()
 ```
 

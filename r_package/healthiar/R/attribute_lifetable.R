@@ -142,7 +142,7 @@ attribute_lifetable <-
     erf_shape = NULL,
     prop_pop_exp = 1,
     # ITERATION (OPTIONAL)
-    geo_id_disaggregated = "a", geo_id_aggregated = NULL,
+    geo_id_micro = "a", geo_id_macro = NULL,
     # META (OPTIONAL)
     info = NULL
   ) {
@@ -178,7 +178,7 @@ attribute_lifetable <-
         year_of_analysis = year_of_analysis,
         time_horizon = time_horizon,
         # ITERATION (OPTIONAL)
-        geo_id_disaggregated = geo_id_disaggregated, geo_id_aggregated = geo_id_aggregated,
+        geo_id_micro = geo_id_micro, geo_id_macro = geo_id_macro,
         # META (OPTIONAL)
         info = info,
         # INTERNAL ARGUMENTS

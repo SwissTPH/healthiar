@@ -23,8 +23,8 @@
 #' @param social_quantile
 #' \code{Integer vector} showing the values from 1 to the number of quantiles assigned to each geographic unit. Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}
 
-#' @param geo_id_disaggregated,
-#' \code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_disaggregated}) Argument must be entered for iterations. See Details for more info.
+#' @param geo_id_micro,
+#' \code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_micro}) Argument must be entered for iterations. See Details for more info.
 
 #' @param population
 #' \code{Numeric vector} specifying the population by age group and geographic unit.
@@ -63,7 +63,7 @@
 #'   rr_increment = 10,
 #'   bhd_central = exdat_mdi$MORTALITY_TOTAL,
 #'   population = exdat_mdi$POPULATION,
-#'   geo_id_disaggregated = exdat_mdi$CS01012020)
+#'   geo_id_micro = exdat_mdi$CS01012020)
 #'
 #' ## Create assessments for multiple geographic units for the age group
 #' ## 40 years and older
@@ -75,7 +75,7 @@
 #'     rr_increment = 10,
 #'     bhd_central = ifelse(exdat_mdi$MORTALITY_TOTAL-10<0, 0, exdat_mdi$MORTALITY_TOTAL-10),
 #'     population = ifelse(exdat_mdi$POPULATION-10<0, 0, exdat_mdi$POPULATION-10),
-#'     geo_id_disaggregated = exdat_mdi$CS01012020)
+#'     geo_id_micro = exdat_mdi$CS01012020)
 #'
 #' ## Difference in attributable impacts between geographic units
 #' ## that is attributable to differences in deprivation
@@ -83,7 +83,7 @@
 #'   age_group = c("below_40", "40_plus"),
 #'   ref_prop_pop = c(0.5, 0.5),
 #'   output_attribute = list(results_below_40, results_40_plus),
-#'   geo_id_disaggregated = data$CS01012020,
+#'   geo_id_micro = data$CS01012020,
 #'   social_indicator = data$score,
 #'   n_quantile = 10,
 #'   increasing_deprivation = TRUE)
@@ -99,7 +99,7 @@
 
 socialize <- function(output_attribute = NULL,
                       age_group,
-                      geo_id_disaggregated,
+                      geo_id_micro,
                       social_indicator = NULL,
                       increasing_deprivation = TRUE,
                       n_quantile = NULL, ## by default: decile
@@ -302,7 +302,7 @@ socialize <- function(output_attribute = NULL,
     input_data <-
       output_attribute$health_detailed$results_by_age_group |>
       dplyr::select(
-        dplyr::any_of(c("geo_id_disaggregated", "age_group", "population",
+        dplyr::any_of(c("geo_id_micro", "age_group", "population",
                         "impact", "exp", "bhd", "pop_fraction")))
 
     ## Compile social component
@@ -311,7 +311,7 @@ socialize <- function(output_attribute = NULL,
     ## (the user entered the output from healthiar)
     social_component_before_quantile <-
       tibble::tibble(
-        geo_id_disaggregated = base::unique(input_data$geo_id_disaggregated),
+        geo_id_micro = base::unique(input_data$geo_id_micro),
         social_indicator = social_indicator)
 
     # * * If available ref_prop_pop ################
@@ -342,7 +342,7 @@ socialize <- function(output_attribute = NULL,
       ## without social component
       input_data <-
         tibble::tibble(
-          geo_id_disaggregated = geo_id_disaggregated,
+          geo_id_micro = geo_id_micro,
           age_group = age_group,
           population = population,
           impact = impact,
@@ -354,7 +354,7 @@ socialize <- function(output_attribute = NULL,
       ## If they enter the output_attribute, they do not have a table with the social indicator
       social_component_before_quantile <-
         tibble::tibble(
-          geo_id_disaggregated = geo_id_disaggregated,
+          geo_id_micro = geo_id_micro,
           social_indicator = social_indicator) |>
         ## Use unique after putting both variables together
         ## because social_indicator has the same length of geo_id and the table where
@@ -390,7 +390,7 @@ socialize <- function(output_attribute = NULL,
   # * If available social_quantile #########
   if(has_social_quantile){
     social_component <-
-      tibble::tibble(geo_id_disaggregated = geo_id_disaggregated,
+      tibble::tibble(geo_id_micro = geo_id_micro,
                      social_quantile = social_quantile) |>
       base::unique()
 
@@ -434,8 +434,8 @@ socialize <- function(output_attribute = NULL,
     ## Add social_quantile (removing the other columns in social_component)
     dplyr::left_join(
       input_data,
-      social_component[, c("geo_id_disaggregated", "social_quantile")],
-      by = "geo_id_disaggregated") |>
+      social_component[, c("geo_id_micro", "social_quantile")],
+      by = "geo_id_micro") |>
     ## Add age_order
     dplyr::left_join(
       tibble::tibble(

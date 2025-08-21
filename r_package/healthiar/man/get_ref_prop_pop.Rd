@@ -7,7 +7,7 @@
 get_ref_prop_pop(df)
 }
 \arguments{
-\item{df}{\code{Data frame} or \code{tibble} with the data by \code{geo_id_disaggregated} and \code{age_group} including a column for \code{population}}
+\item{df}{\code{Data frame} or \code{tibble} with the data by \code{geo_id_micro} and \code{age_group} including a column for \code{population}}
 }
 \value{
 A tibble with two columns: one for \code{age_group} and a second one for \code{ref_prop_pop}.

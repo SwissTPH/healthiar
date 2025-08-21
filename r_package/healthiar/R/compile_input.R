@@ -47,7 +47,7 @@ compile_input <-
     # geo_ids need to be character because
     # a) no operations are expected
     # b) otherwise error somewhere else in the package when mixing character and numeric
-    for (geo_id_ in c("geo_id_disaggregated", "geo_id_aggregated")) {
+    for (geo_id_ in c("geo_id_micro", "geo_id_macro")) {
       if (!is.null(input_args_edited[[geo_id_]])){
         input_args_edited[[geo_id_]] <- base::as.character(input_args_edited[[geo_id_]])
       }
@@ -90,7 +90,7 @@ compile_input <-
 
     length_exp <- input_wo_lifetable |>
       dplyr::summarise(
-        .by = c(geo_id_disaggregated, sex, age_group),
+        .by = c(geo_id_micro, sex, age_group),
         length = base::length(exp_central)
       )|>
       dplyr::pull(length) |>
@@ -102,7 +102,7 @@ compile_input <-
       input_wo_lifetable |>
       # Add exp_category and exp_type
       dplyr::mutate(
-        .by = c(geo_id_disaggregated, age_group, sex),
+        .by = c(geo_id_micro, age_group, sex),
         exp_category = 1 : length_exp,
         exp_type =
           base::ifelse(length_exp == 1,

@@ -124,8 +124,8 @@ validate_input_attribute <-
       }
     }
 
-    error_if_var_1_but_not_var_2(var_name_1 = "geo_id_aggregated",
-                                 var_name_2 = "geo_id_disaggregated")
+    error_if_var_1_but_not_var_2(var_name_1 = "geo_id_macro",
+                                 var_name_2 = "geo_id_micro")
 
 
     ### error_if_not_numeric #####
@@ -406,8 +406,8 @@ validate_input_attribute <-
       # Get lengths of non-NULLs
       lengths <- purrr::map_int(non_nulls, length)
 
-      if (base::length(base::unique(list$geo_id_disaggregated)) > 1 &&
-          !base::all(lengths == base::length(list$geo_id_disaggregated))) {
+      if (base::length(base::unique(list$geo_id_micro)) > 1 &&
+          !base::all(lengths == base::length(list$geo_id_micro))) {
 
         base::stop(
           base::paste0("The following variables must all have the same length: ",
@@ -421,7 +421,7 @@ validate_input_attribute <-
 
 
     error_if_multi_geo_and_different_length(list = input_args_value ,
-                                            var_names = c("geo_id_disaggregated",
+                                            var_names = c("geo_id_micro",
                                                           "exp_central",
                                                           "pop_exp",
                                                           "bhd_central",
@@ -434,7 +434,7 @@ validate_input_attribute <-
     error_if_sum_higher_than_1 <- function(var_name){
 
       var_value <- input_args_value [[var_name]]
-      geo_id_disaggregated <- as.character(input_args_value [["geo_id_disaggregated"]])
+      geo_id_micro <- as.character(input_args_value [["geo_id_micro"]])
       #TODO: Only provisional to be deleted as soon as
       # age_group and sex is integrated into attribute_lifetable()
       rep_var_value <-
@@ -445,7 +445,7 @@ validate_input_attribute <-
 
       var_table <-
         tibble::tibble(
-          geo_id_disaggregated = geo_id_disaggregated ,
+          geo_id_micro = geo_id_micro ,
           age_group = input_args_value$age_group,
           sex = input_args_value$sex,
           population_midyear_male = base::rep(input_args_value[["population_midyear_male"]], times = base::length(var_value)),
@@ -454,7 +454,7 @@ validate_input_attribute <-
       if(base::is.null(input_args_value [["pop_exp"]]) &&
          var_table |>
          dplyr::summarize(
-           .by = dplyr::any_of(c("geo_id_disaggregated", "population_midyear_male", "age_group", "sex")),
+           .by = dplyr::any_of(c("geo_id_micro", "population_midyear_male", "age_group", "sex")),
            sum = base::sum(var, na.rm = TRUE) > 1) |>
          dplyr::pull(sum) |>
          base::any()){

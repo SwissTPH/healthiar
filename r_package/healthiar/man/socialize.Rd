@@ -7,7 +7,7 @@
 socialize(
   output_attribute = NULL,
   age_group,
-  geo_id_disaggregated,
+  geo_id_micro,
   social_indicator = NULL,
   increasing_deprivation = TRUE,
   n_quantile = NULL,
@@ -25,7 +25,7 @@ socialize(
 
 \item{age_group}{\code{String vector} with the age groups included in the age standardization. The vector refers to age-dependent data in this function and to \code{output_attribute} (if provided).}
 
-\item{geo_id_disaggregated, }{\code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_disaggregated}) Argument must be entered for iterations. See Details for more info.}
+\item{geo_id_micro, }{\code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_micro}) Argument must be entered for iterations. See Details for more info.}
 
 \item{social_indicator}{\code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. Based on this and \code{n_quantile}, \code{social_quantile} will be calculated.}
 
@@ -68,7 +68,7 @@ results_below_40 <- attribute_health(
   rr_increment = 10,
   bhd_central = exdat_mdi$MORTALITY_TOTAL,
   population = exdat_mdi$POPULATION,
-  geo_id_disaggregated = exdat_mdi$CS01012020)
+  geo_id_micro = exdat_mdi$CS01012020)
 
 ## Create assessments for multiple geographic units for the age group
 ## 40 years and older
@@ -80,7 +80,7 @@ results_40_plus <- attribute_health(
     rr_increment = 10,
     bhd_central = ifelse(exdat_mdi$MORTALITY_TOTAL-10<0, 0, exdat_mdi$MORTALITY_TOTAL-10),
     population = ifelse(exdat_mdi$POPULATION-10<0, 0, exdat_mdi$POPULATION-10),
-    geo_id_disaggregated = exdat_mdi$CS01012020)
+    geo_id_micro = exdat_mdi$CS01012020)
 
 ## Difference in attributable impacts between geographic units
 ## that is attributable to differences in deprivation
@@ -88,7 +88,7 @@ results <- socialize(
   age_group = c("below_40", "40_plus"),
   ref_prop_pop = c(0.5, 0.5),
   output_attribute = list(results_below_40, results_40_plus),
-  geo_id_disaggregated = data$CS01012020,
+  geo_id_micro = data$CS01012020,
   social_indicator = data$score,
   n_quantile = 10,
   increasing_deprivation = TRUE)

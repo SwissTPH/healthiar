@@ -62,7 +62,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      geo_id_disaggregated = c("a", "b")
+      geo_id_micro = c("a", "b")
     )
 
   testthat::expect_equal(
@@ -92,8 +92,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       rr_upper = 1.664,
       rr_increment = 10,
       erf_shape = "log_linear",
-      geo_id_disaggregated = 1:1E1,
-      geo_id_aggregated = c(rep("CH", 5), rep("DE", 5)),
+      geo_id_micro = 1:1E1,
+      geo_id_macro = c(rep("CH", 5), rep("DE", 5)),
       info = "PM2.5_copd")
 
   testthat::expect_equal(
@@ -277,8 +277,8 @@ testthat::test_that("summary uncertainty comparison iteration", {
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
+      geo_id_micro = c("a", "b"),
+      geo_id_macro = rep("ch", 2))
 
   scen_2_singlebhd_rr_geo <-
     healthiar::attribute_mod(
@@ -348,8 +348,8 @@ testthat::test_that("error_if_erf_eq  |pathway_uncertainty|exp_dist|erf_ar_formu
       erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
       erf_eq_lower = "78.9270-3.1162*c+0.034*c^2",
       erf_eq_upper = "78.9270-3.1162*c+0.04*c^2",
-      geo_id_disaggregated = rep(1:3, each = 5),
-      geo_id_aggregated = rep("CH", 3*5),
+      geo_id_micro = rep(1:3, each = 5),
+      geo_id_macro = rep("CH", 3*5),
       info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"),
     )
 

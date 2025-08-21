@@ -151,7 +151,7 @@ get_risk_and_pop_fraction <-
           dplyr::mutate(exp_name = base::paste(base::unique(exp_name), collapse = ", ")) |>
           collapse_df_by_columns(
             columns_for_group = c(
-              "geo_id_disaggregated",
+              "geo_id_micro",
               "sex",
               "age_group",
               "data_by_age",
@@ -167,7 +167,7 @@ get_risk_and_pop_fraction <-
       names(input_with_risk_and_pop_fraction)[base::grepl("_ci", names(input_with_risk_and_pop_fraction))]
 
     likely_columns_to_group_input <-
-      c("geo_id_disaggregated",
+      c("geo_id_micro",
         "age_group",
         "sex",
         "exp_name",
@@ -239,7 +239,7 @@ get_risk_and_pop_fraction <-
                         pop_fraction_before_combining = base::paste(base::unique(pop_fraction_before_combining), collapse = ", ")) |>
           collapse_df_by_columns(
             columns_for_group = c(
-              "geo_id_disaggregated",
+              "geo_id_micro",
               "sex",
               "age_group",
               "data_by_age",
@@ -257,7 +257,7 @@ get_risk_and_pop_fraction <-
       input_with_risk_and_pop_fraction <-
         collapse_df_by_columns(df = input_with_risk_and_pop_fraction,
                                columns_for_group = c(
-                                 "geo_id_disaggregated",
+                                 "geo_id_micro",
                                  "exp_name",
                                  "sex",
                                  "age_group",

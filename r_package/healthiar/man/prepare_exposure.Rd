@@ -4,7 +4,7 @@
 \alias{prepare_exposure}
 \title{Prepare exposure data}
 \usage{
-prepare_exposure(poll_grid, geo_units, population, geo_id_aggregated)
+prepare_exposure(poll_grid, geo_units, population, geo_id_macro)
 }
 \arguments{
 \item{poll_grid}{\code{SpatRaster} of the pollution concentration data.}
@@ -13,7 +13,7 @@ prepare_exposure(poll_grid, geo_units, population, geo_id_aggregated)
 
 \item{population}{\code{Vector} containing the total population number in each geographic sub-unit.}
 
-\item{geo_id_aggregated}{\code{Vector} containing the id code of the geographic unit the sub-unit belongs to.}
+\item{geo_id_macro}{\code{Vector} containing the id code of the geographic unit the sub-unit belongs to.}
 }
 \value{
 This function returns a vector of population exposure values.

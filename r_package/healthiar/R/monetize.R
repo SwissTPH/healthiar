@@ -340,7 +340,7 @@ monetize <- function(output_attribute = NULL,
     # For both with and without life table
     # Identify the relevant columns for monetization that are in the output
     relevant_columns <-
-      c("info", "geo_id_disaggregated", "geo_id_aggregated",
+      c("info", "geo_id_micro", "geo_id_macro",
         paste0("impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount")),
         "discount_rate", "discount_shape",
         "valuation",

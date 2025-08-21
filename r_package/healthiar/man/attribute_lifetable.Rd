@@ -34,8 +34,8 @@ attribute_lifetable(
   rr_increment = NULL,
   erf_shape = NULL,
   prop_pop_exp = 1,
-  geo_id_disaggregated = "a",
-  geo_id_aggregated = NULL,
+  geo_id_micro = "a",
+  geo_id_macro = NULL,
   info = NULL
 )
 }
@@ -76,7 +76,7 @@ attribute_lifetable(
 
 \item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}}
 
-\item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_disaggregated}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
+\item{geo_id_micro, geo_id_macro}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_micro}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_micro}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
 }
