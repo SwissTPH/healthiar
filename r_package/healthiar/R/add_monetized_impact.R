@@ -88,7 +88,8 @@ add_monetized_impact  <-
   if(summing_across_discounted_years){
 
     df_by_year <-  df_with_input
-    df_by_year$discount_year <- discount_years_vector
+    df_by_year$discount_year <-
+      base::rep(discount_years_vector, len = base::nrow(df_with_input))
 
   } else if(taking_last_discounted_year){
     df_by_year <-
