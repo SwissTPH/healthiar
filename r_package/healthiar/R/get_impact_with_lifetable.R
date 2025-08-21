@@ -44,6 +44,7 @@ get_impact_with_lifetable <-
     is_constant_exposure <- base::unique(input_with_risk_and_pop_fraction$approach_exposure) == "constant"
 
     is_with_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "with_newborns"
+    is_without_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "without_newborns"
 
     # n_years_projection defines for how many years the population should be projected;
     n_years_projection <- base::length(base::unique(input_with_risk_and_pop_fraction$age_start)) - 1
@@ -447,6 +448,11 @@ get_impact_with_lifetable <-
             impact_by_age_and_year = purrr::map(
               .x = impact_by_age_and_year,
               .f = fill_right_of_diag))
+
+      } else if(is_without_newborns) {
+
+        lifetable_calculation <- lifetable_calculation
+
       }
     }
 
