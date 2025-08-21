@@ -51,6 +51,15 @@ get_output <-
     id_columns_in_results_raw <-
       colnames_results_raw[colnames_results_raw %in% id_columns]
 
+    # Keep the larger geo_id available
+    # Since intersect() keep the order, taking the first element [1] ensures
+    # that it is geo_id_aggregated if available and otherwise geo_id_disaggregated
+    geo_id_available <-
+      base::intersect(c("geo_id_aggregated", "geo_id_disaggregated"),
+                      id_columns_in_results_raw)
+
+    larger_geo_id_available <- geo_id_available[1]
+
 
     ## Columns to be summed
     impact_columns <-
@@ -93,15 +102,6 @@ get_output <-
         base::setdiff(id_columns_in_results_raw,
                       c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_disaggregated"))
     )
-
-    # Keep the larger geo_id available
-    # Since intersect() keep the order, taking the first element [1] ensures
-    # that it is geo_id_aggregated if available and otherwise geo_id_disaggregated
-    larger_geo_id_available <-
-      base::intersect(c("geo_id_aggregated", "geo_id_disaggregated"),
-                      id_columns_in_results_raw)[1]
-
-
     # Pre-identify columns to be collapsed
     # First remove columns that are not to be collapsed
     cols_without_results_and_nest  <- base::setdiff(
