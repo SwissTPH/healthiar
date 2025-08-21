@@ -260,7 +260,16 @@ get_output <-
     }
 
     # Sum impacts: results_by_ #####
-
+    # Alternative code if for loop must be avoided
+    # Currently for loop being faster than this code
+    # output$health_detailed[base::paste0("results_by_", results_by_vars_to_be_used)] <-
+    #   purrr::map(
+    #   results_by_vars_to_be_used,
+    #   .f = ~ {sum_round_and_relative_impact(
+    #     df = results_raw,
+    #     grouping_cols = group_columns_for_results_by[[.x]])
+    #     }
+    #   )
 
     for(var in results_by_vars_to_be_used){
 
