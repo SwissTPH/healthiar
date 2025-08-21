@@ -54,7 +54,7 @@ attribute_lifetable(
 
 \item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: \code{"single_year"} (default), \code{"constant"}.}
 
-\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis. Options: "without_newborns" (default), "with_newborns". See Details for more info.}
+\item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis or not. Options: \code{"without_newborns"} (default), \code{"with_newborns"}. See Details for more info.}
 
 \item{year_of_analysis}{\code{Numeric value} providing the first with exposure to the environmental stressor.}
 
@@ -117,7 +117,7 @@ Mid-year population of year x can be approximated as the mean of either end-year
 
 \code{approach_newborns}
 
-If \code{"with_newborns"} is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.
+If \code{"with_newborns"} is selected, it is assumed that for each year after the year of analysis n babies (population aged 0) are born.
 
 \code{time_horizon}
 
