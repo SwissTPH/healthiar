@@ -5,7 +5,7 @@
 \title{Create the BEST-COST Multidimensional Deprivation Index (MDI)}
 \usage{
 prepare_mdi(
-  geo_id_disaggregated,
+  geo_id_micro,
   edu,
   unemployed,
   single_parent,
@@ -15,7 +15,7 @@ prepare_mdi(
 )
 }
 \arguments{
-\item{geo_id_disaggregated}{\code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_disaggregated}) Argument must be entered for iterations. See Details for more info.}
+\item{geo_id_micro}{\code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_micro}) Argument must be entered for iterations. See Details for more info.}
 
 \item{edu}{\code{Numeric vector} indicating educational attainment as \% of individuals (≥18) without a high school diploma (ISCED 0-2) per geo unit}
 
@@ -32,7 +32,7 @@ prepare_mdi(
 \value{
 Tibble with the columns
 \itemize{
-  \item geo_id_disaggregated
+  \item geo_id_micro
   \item BEST-COST Multidimensional Deprivation Index
 }
 
@@ -70,7 +70,7 @@ Imputation models should have an R² ≥ 0.7. If R² < 0.7, consider alternative
 # a selection of geographic units
 
 results <- prepare_mdi(
-  geo_id_disaggregated = exdat_get_mdi$id,
+  geo_id_micro = exdat_get_mdi$id,
   edu = exdat_get_mdi$edu,
   unemployed = exdat_get_mdi$unemployed,
   single_parent = exdat_get_mdi$single_parent,
@@ -80,7 +80,7 @@ results <- prepare_mdi(
 )
 
 results |>
-  dplyr::select(geo_id_disaggregated, MDI, MDI_index) |>
+  dplyr::select(geo_id_micro, MDI, MDI_index) |>
   dplyr::slice(1:15)
 }
 \author{

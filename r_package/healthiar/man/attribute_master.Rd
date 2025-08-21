@@ -25,8 +25,8 @@ attribute_master(
   bhd_lower = NULL,
   bhd_upper = NULL,
   prop_pop_exp = NULL,
-  geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL,
+  geo_id_micro = NULL,
+  geo_id_macro = NULL,
   age_group = "all",
   sex = "all",
   population = NULL,
@@ -75,7 +75,7 @@ attribute_master(
 
 \item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}}
 
-\item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_disaggregated}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
+\item{geo_id_micro, geo_id_macro}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_micro}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_micro}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
 \item{age_group}{\code{Numeric vector} or \code{string vector} providing the \strong{age groups} considered in the assessment. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}. \emph{Optional argument.}}
 

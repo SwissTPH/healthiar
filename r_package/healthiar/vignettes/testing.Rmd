@@ -265,8 +265,8 @@ results <- healthiar::attribute_health(
   prop_pop_exp = ,
   cutoff_central = ,
   bhd_central = ,
-  geo_id_disaggregated = ,
-  geo_id_aggregated =  
+  geo_id_micro = ,
+  geo_id_macro =  
 )
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -320,8 +320,8 @@ testthat::expect_equal(
       prop_pop_exp = ,
       cutoff_central = ,
       bhd_central = ,
-      geo_id_disaggregated = ,
-      geo_id_aggregated = 
+      geo_id_micro = ,
+      geo_id_macro = 
     )$health_main$impact_rounded,
   ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
   expected =
@@ -824,7 +824,7 @@ testthat::test_that("results correct [pathway_id]", {
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      geo_id_disaggregated = c("a", "b")
+      geo_id_micro = c("a", "b")
     )
 
   testthat::expect_equal(
@@ -892,8 +892,8 @@ The pathway ID for relative risk pathways contain the following elements:
 
     -   if yes –\> TRUE: the iteration function calls require two additional
         arguments compared to the function calls for single geo units: you have
-        to additionally specify the `geo_id_disaggregated` (e.g. "Brussels",
-        "Antwerp", ...) and `geo_id_aggregated` (e.g. "Belgium") arguments.
+        to additionally specify the `geo_id_micro` (e.g. "Brussels",
+        "Antwerp", ...) and `geo_id_macro` (e.g. "Belgium") arguments.
         Also, the geo unit-specific arguments (e.g. `exp_central`,
         `bhd_central`, ...) have to be provided as lists, with each list element
         representing a geo unit. For more detailed information on iterations
@@ -925,8 +925,8 @@ healthiar::attribute_health(
   bhd_central = ,
   bhd_lower = NULL, 
   bhd_upper = NULL,
-  geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL
+  geo_id_micro = NULL,
+  geo_id_macro = NULL
 )
     
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -966,8 +966,8 @@ testthat::test_that("results correct [pathway_id]", {
         bhd_central = ,
         bhd_lower = NULL, 
         bhd_upper = NULL,
-        geo_id_disaggregated = NULL,
-        geo_id_aggregated = NULL
+        geo_id_micro = NULL,
+        geo_id_macro = NULL
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
@@ -1011,8 +1011,8 @@ The pathway ID for absolute risk pathways contain the following elements:
 
     -   if yes –\> TRUE: the iteration function calls require two additional
         arguments compared to the function calls for single geo units: you have
-        to additionally specify the `geo_id_disaggregated` (e.g. "Brussels",
-        "Antwerp", ...) and `geo_id_aggregated` (e.g. "Belgium") arguments.
+        to additionally specify the `geo_id_micro` (e.g. "Brussels",
+        "Antwerp", ...) and `geo_id_macro` (e.g. "Belgium") arguments.
         Also, the geo unit-specific arguments (e.g. `exp_central`,
         `bhd_central`, ...) have to be provided as lists, with each list element
         representing a geo unit. For more detailed information on iterations
@@ -1036,8 +1036,8 @@ healthiar::attribute_health(
   exp_lower = NULL, 
   exp_upper = NULL,
   pop_exp = ,
-  geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL
+  geo_id_micro = NULL,
+  geo_id_macro = NULL
 )
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -1070,8 +1070,8 @@ testthat::test_that("results correct [pathway_id]", {
         exp_lower = NULL, 
         exp_upper = NULL,
         pop_exp = ,
-        geo_id_disaggregated = NULL,
-        geo_id_aggregated = NULL
+        geo_id_micro = NULL,
+        geo_id_macro = NULL
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
@@ -1295,13 +1295,13 @@ result_interim <- healthiar::attribute_health(
   rr_central = , 
   erf_shape = , 
   rr_increment = ,
-  geo_id_disaggregated = 
+  geo_id_micro = 
 )
 
 ## healthiar FUNCTION CALL
 healthiar::socialize(
   output_attribute = result_interim,
-  geo_id_disaggregated = , # geo IDs of the preparatory iteration call above and this function call must match!
+  geo_id_micro = , # geo IDs of the preparatory iteration call above and this function call must match!
   social_indicator = ,
   n_quantile = , # Specify number of quantiles, e.g. 10
   approach = "quantile" # default (and currently only) approach
@@ -1334,7 +1334,7 @@ testthat::test_that("results correct [pathway_id]", {
     rr_central = , 
     erf_shape = , 
     rr_increment = ,
-    geo_id_disaggregated = 
+    geo_id_micro = 
   )
 
   testthat::expect_equal(
@@ -1342,7 +1342,7 @@ testthat::test_that("results correct [pathway_id]", {
     object =
         healthiar::socialize(
           output_attribute = result_interim,
-          geo_id_disaggregated = , # geo IDs of the preparatory iteration call above and this function call must match!
+          geo_id_micro = , # geo IDs of the preparatory iteration call above and this function call must match!
           social_indicator = ,
           n_quantile = , # Specify number of quantiles, e.g. 10
           approach = "quantile" # default (and currently only) approach

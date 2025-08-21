@@ -14,7 +14,7 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
       bhd_central = c(data$MORTALITY_TOTAL,
                       ifelse(data$MORTALITY_TOTAL-10<0, 0, data$MORTALITY_TOTAL-10)),
       population = c(data$POPULATION, ifelse(data$POPULATION-10<0, 0, data$POPULATION-10)),
-      geo_id_disaggregated = rep(data$CS01012020, 2))
+      geo_id_micro = rep(data$CS01012020, 2))
 
   testthat::expect_equal(
     object =
@@ -22,7 +22,7 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
         age_group = c("below_40", "above_40"), # They have to be the same in socialize() and in attribute_health()
         ref_prop_pop = c(0.5, 0.5),
         output_attribute = att_age,
-        geo_id_disaggregated = data$CS01012020,
+        geo_id_micro = data$CS01012020,
         social_indicator = data$score,
         n_quantile = 10,
         increasing_deprivation = TRUE)$social_main$difference_value |> base::round(2),
@@ -45,7 +45,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
     object =
       healthiar::socialize(
         impact = data$ATT_MORT,
-        geo_id_disaggregated = data$SECTOR,
+        geo_id_micro = data$SECTOR,
         social_quantile = data$MDI,
         increasing_deprivation = TRUE,
         age_group = data$AGE,
@@ -73,7 +73,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
       erf_shape = 'log_linear',
       bhd_central = data$MORT,
       population = data$POP,
-      geo_id_disaggregated = data$SECTOR
+      geo_id_micro = data$SECTOR
       )
 
   testthat::expect_equal(
@@ -82,7 +82,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
       healthiar::socialize(
         output_attribute = attribute_result_age,
         age_group = base::unique(data$AGE),
-        # geo_id_disaggregated = data$CS01012020, # geo IDs of the preparatory iteration call above and this function call must match!
+        # geo_id_micro = data$CS01012020, # geo IDs of the preparatory iteration call above and this function call must match!
         social_indicator = base::subset(data, AGE == '[0,5)')$SCORE,
         n_quantile = 10, # Specify number of quantiles, e.g. 10
         # population = data$POPULATION,
@@ -116,7 +116,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
     object =
       healthiar::socialize(
         impact = data$IMPACT,
-        geo_id_disaggregated = data$SECTOR, # geo IDs of the preparatory iteration call above and this function call must match!
+        geo_id_micro = data$SECTOR, # geo IDs of the preparatory iteration call above and this function call must match!
         social_indicator = data$SCORE,
         n_quantile = 10, # Specify number of quantiles, e.g. 10
         population = data$POP,
@@ -151,7 +151,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
     object =
       healthiar::socialize(
         impact = data$IMPACT,
-        geo_id_disaggregated = data$SECTOR, # geo IDs of the preparatory iteration call above and this function call must match!
+        geo_id_micro = data$SECTOR, # geo IDs of the preparatory iteration call above and this function call must match!
         # social_indicator = data$SCORE,
         social_quantile = base::as.numeric(base::gsub("D", "", data$DECILE)),
         # n_quantile = 10, # Specify number of quantiles, e.g. 10
@@ -190,7 +190,7 @@ testthat::test_that("error if non-numeric", {
     object =
       healthiar::socialize(
         impact = base::as.character(data$IMPACT), #
-        geo_id_disaggregated = data$SECTOR,
+        geo_id_micro = data$SECTOR,
         social_indicator = data$SCORE,
         n_quantile = 10,
         population = data$POP,
@@ -211,7 +211,7 @@ testthat::test_that("error if non-numeric in numeric var", {
     object =
       healthiar::socialize(
         impact = base::as.character(data$IMPACT), # As character to force error
-        geo_id_disaggregated = data$SECTOR,
+        geo_id_micro = data$SECTOR,
         social_indicator = data$SCORE,
         n_quantile = 10,
         population = data$POP,
@@ -231,7 +231,7 @@ testthat::test_that("error if non-numeric in integer var", {
     object =
       healthiar::socialize(
         impact = data$IMPACT,
-        geo_id_disaggregated = data$SECTOR,
+        geo_id_micro = data$SECTOR,
         social_indicator = data$SCORE,
         n_quantile = as.character(10), # As character to force error
         population = data$POP,
@@ -252,7 +252,7 @@ testthat::test_that("error if non-numeric in integer var", {
     object =
       healthiar::socialize(
         impact = data$IMPACT,
-        geo_id_disaggregated = data$SECTOR,
+        geo_id_micro = data$SECTOR,
         social_indicator = data$SCORE,
         increasing_deprivation = 0.3, # Number instead of TRUE/FALSE to force error
         n_quantile = 10,
@@ -273,7 +273,7 @@ testthat::test_that("error if not integer var", {
     object =
       healthiar::socialize(
         impact = data$IMPACT,
-        geo_id_disaggregated = data$SECTOR,
+        geo_id_micro = data$SECTOR,
         social_indicator = data$SCORE,
         n_quantile = 10.5, # Decimal to force error
         population = data$POP,
@@ -300,7 +300,7 @@ testthat::test_that("error if age_group does not match in output_attribute", {
       bhd_central = c(data$MORTALITY_TOTAL,
                       ifelse(data$MORTALITY_TOTAL-10<0, 0, data$MORTALITY_TOTAL-10)),
       population = c(data$POPULATION, ifelse(data$POPULATION-10<0, 0, data$POPULATION-10)),
-      geo_id_disaggregated = rep(data$CS01012020, 2))
+      geo_id_micro = rep(data$CS01012020, 2))
 
   testthat::expect_error(
     object =
@@ -308,7 +308,7 @@ testthat::test_that("error if age_group does not match in output_attribute", {
         age_group = c("40_minus", "40_plus"), # Different age_group to force error
         ref_prop_pop = c(0.5, 0.5),
         output_attribute = att_age,
-        geo_id_disaggregated = data$CS01012020,
+        geo_id_micro = data$CS01012020,
         social_indicator = data$score,
         n_quantile = 10,
         increasing_deprivation = TRUE),
@@ -326,7 +326,7 @@ testthat::test_that("error if not fraction", {
     object =
       healthiar::socialize(
         impact = data$IMPACT,
-        geo_id_disaggregated = data$SECTOR,
+        geo_id_micro = data$SECTOR,
         social_indicator = data$SCORE,
         n_quantile = 10,
         population = data$POP,
@@ -346,7 +346,7 @@ testthat::test_that("error if var lower than 0", {
     object =
       healthiar::socialize(
         impact = data$IMPACT,
-        geo_id_disaggregated = data$SECTOR,
+        geo_id_micro = data$SECTOR,
         social_indicator = data$SCORE,
         n_quantile = -10, # Negative value to force error
         population = data$POP,

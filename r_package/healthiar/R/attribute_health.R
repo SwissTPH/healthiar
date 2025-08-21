@@ -26,8 +26,8 @@
 #'   bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
 #'   prop_pop_exp = 1,
 #'   # ITERATION (OPTIONAL)
-#'   geo_id_disaggregated = "a",
-#'   geo_id_aggregated = NULL,
+#'   geo_id_micro = "a",
+#'   geo_id_macro = NULL,
 #'   age_group = "all",
 #'   sex = "all",
 #'   # META (OPTIONAL)
@@ -42,7 +42,7 @@
 #' @details
 #' \strong{Assessment of multiple geographic units}
 #' @details
-#' To assess the attributable health impact/burden across multiple geographic units with \code{attribute_health()}, you must specify the argument \code{geo_id_disaggregated} and (optionally) \code{geo_id_aggregated}, in addition to the other required function arguments.
+#' To assess the attributable health impact/burden across multiple geographic units with \code{attribute_health()}, you must specify the argument \code{geo_id_micro} and (optionally) \code{geo_id_macro}, in addition to the other required function arguments.
 #' @details
 #' The length of the input vectors to the function arguments must be
 #' @details
@@ -92,10 +92,10 @@
 #' @details
 #' \emph{Only applicable in RR pathways.} In RR pathways indicates the fraction(s) (value(s) from 0 until and including 1) of the total population exposed to the exposure categories. Only to be specified if \code{pop_exp} is not specified. See equation of the population attributable fraction for categorical exposure below.
 #' @details
-#' \code{geo_id_aggregated}, \code{geo_id_disaggregated}
+#' \code{geo_id_macro}, \code{geo_id_micro}
 #' @details
-#' \emph{Only applicable in assessments with multiple geographic units.} For example, if you provide the names of the municipalities under analysis to \code{geo_id_disaggregated}, you might provide to \code{geo_id_aggregated} the corresponding region / canton / province names.
-#' Consequently, the vectors fed to \code{geo_id_disaggregated} and \code{geo_id_aggregated} must be of the same length.
+#' \emph{Only applicable in assessments with multiple geographic units.} For example, if you provide the names of the municipalities under analysis to \code{geo_id_micro}, you might provide to \code{geo_id_macro} the corresponding region / canton / province names.
+#' Consequently, the vectors fed to \code{geo_id_micro} and \code{geo_id_macro} must be of the same length.
 #' @details
 #' \code{info}
 #' @details
@@ -186,8 +186,8 @@
 #' # units, such as municipalities, provinces, countries, …
 #'
 #' results <- attribute_health(
-#'   geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino"),
-#'   geo_id_aggregated = c("Ger","Ger","Fra","Ita"),
+#'   geo_id_micro = c("Zurich", "Basel", "Geneva", "Ticino"),
+#'   geo_id_macro = c("Ger","Ger","Fra","Ita"),
 #'   rr_central = 1.369,
 #'   rr_increment = 10,
 #'   cutoff_central = 5,
@@ -201,8 +201,8 @@
 #'
 #' # Attributable cases (disaggregated)
 #' results$health_detailed$results_raw |> dplyr::select(
-#'   geo_id_disaggregated,
-#'   geo_id_aggregated,
+#'   geo_id_micro,
+#'   geo_id_macro,
 #'   impact_rounded
 #' )
 #'
@@ -235,7 +235,7 @@
 #'   cutoff_central =  0,
 #'   exp_central = sample(6:10, 15, replace = TRUE),
 #'   bhd_central = sample(100:500, 15, replace = TRUE),
-#'   geo_id_disaggregated = c(1:nrow(info)), # a vector of (random) unique IDs must be entered
+#'   geo_id_micro = c(1:nrow(info)), # a vector of (random) unique IDs must be entered
 #'   info = info
 #' )
 #' output_stratified <- output_attribute$health_detailed$results_summed_across_cat_exp |>
@@ -264,7 +264,7 @@ attribute_health <-
     bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
     prop_pop_exp = 1,
     # ITERATION (OPTIONAL)
-    geo_id_disaggregated = "a", geo_id_aggregated = NULL,
+    geo_id_micro = "a", geo_id_macro = NULL,
     age_group = "all",
     sex = "all",
     ## YLD (OPTIONAL)
@@ -297,7 +297,7 @@ attribute_health <-
         bhd_central = bhd_central, bhd_lower = bhd_lower, bhd_upper = bhd_upper,
         prop_pop_exp = prop_pop_exp,
         # ITERATION (OPTIONAL)
-        geo_id_disaggregated = geo_id_disaggregated , geo_id_aggregated = geo_id_aggregated,
+        geo_id_micro = geo_id_micro , geo_id_macro = geo_id_macro,
         age_group = age_group,
         sex = sex,
         # META (OPTIONAL)

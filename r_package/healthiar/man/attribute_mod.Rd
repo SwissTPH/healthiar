@@ -25,8 +25,8 @@ attribute_mod(
   bhd_central = NULL,
   bhd_lower = NULL,
   bhd_upper = NULL,
-  geo_id_disaggregated = NULL,
-  geo_id_aggregated = NULL,
+  geo_id_micro = NULL,
+  geo_id_macro = NULL,
   age_group = NULL,
   sex = NULL,
   population = NULL,
@@ -65,7 +65,7 @@ attribute_mod(
 
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{baseline health data} of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}}
 
-\item{geo_id_disaggregated, geo_id_aggregated}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_disaggregated}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_disaggregated}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
+\item{geo_id_micro, geo_id_macro}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_micro}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_micro}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
 \item{age_group}{\code{Numeric vector} or \code{string vector} providing the \strong{age groups} considered in the assessment. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}. \emph{Optional argument.}}
 

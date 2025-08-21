@@ -240,8 +240,8 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
       population = sum(data_lifetable[["male"]]$population,
                        data_lifetable[["female"]]$population),
       dw_central = 1,
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = c("ch", "ch"))
+      geo_id_micro = c("a", "b"),
+      geo_id_macro = c("ch", "ch"))
 
   scen_2_yld_geo <-
     healthiar::attribute_mod(
@@ -274,8 +274,8 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
         times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = rep(c("a", "b"), each = 2* 100),
-      geo_id_aggregated = rep("ch", each = 2 * 2 * 100))
+      geo_id_micro = rep(c("a", "b"), each = 2* 100),
+      geo_id_macro = rep("ch", each = 2 * 2 * 100))
 
   scen_2_yll_geo <-
     healthiar::attribute_mod(
@@ -324,8 +324,8 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
       population = sum(data_lifetable[["male"]]$population,
                        data_lifetable[["female"]]$population),
       dw_central = 1,
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = c("ch", "ch"))
+      geo_id_micro = c("a", "b"),
+      geo_id_macro = c("ch", "ch"))
 
   scen_2_yld_geo <-
     healthiar::attribute_mod(
@@ -358,8 +358,8 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
         times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = rep(c("a", "b"), each = 2* 100),
-      geo_id_aggregated = rep("ch", each = 2 * 2 * 100))
+      geo_id_micro = rep(c("a", "b"), each = 2* 100),
+      geo_id_macro = rep("ch", each = 2 * 2 * 100))
 
   scen_2_yll_geo <-
     healthiar::attribute_mod(

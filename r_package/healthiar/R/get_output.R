@@ -41,7 +41,7 @@ get_output <-
     # Variables to be used below
 
     ## ID columns
-    id_columns <- c("geo_id_aggregated", "geo_id_disaggregated",
+    id_columns <- c("geo_id_macro", "geo_id_micro",
                     "exp_name",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci",
                     "year", "exp_category", "sex", "age_group")
@@ -53,9 +53,9 @@ get_output <-
 
     # Keep the larger geo_id available
     # Since intersect() keep the order, taking the first element [1] ensures
-    # that it is geo_id_aggregated if available and otherwise geo_id_disaggregated
+    # that it is geo_id_macro if available and otherwise geo_id_micro
     geo_id_available <-
-      base::intersect(c("geo_id_aggregated", "geo_id_disaggregated"),
+      base::intersect(c("geo_id_macro", "geo_id_micro"),
                       id_columns_in_results_raw)
 
     larger_geo_id_available <- geo_id_available[1]
@@ -114,8 +114,8 @@ get_output <-
       exp_category = c("exp_name", "year", "age_group", "sex"),
       sex = c("exp_name", "year", "exp_category", "age_group"),
       age_group = c("exp_name", "year", "exp_category", "sex"),
-      geo_id_disaggregated = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_aggregated"),
-      geo_id_aggregated = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_disaggregated"))
+      geo_id_micro = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_macro"),
+      geo_id_macro = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_micro"))
 
     results_by_vars <- base::names(results_by_vars_and_excluded_columns)
 

@@ -5,7 +5,7 @@
 #' This function calculates reference proportion of population. To be used in \code{socialize()} and \code{standardize()} in case that \code{ref_prop_pop} is not provided.
 
 # ARGUMENTS ####################################################################
-#' @param df \code{Data frame} or \code{tibble} with the data by \code{geo_id_disaggregated} and \code{age_group} including a column for \code{population}
+#' @param df \code{Data frame} or \code{tibble} with the data by \code{geo_id_micro} and \code{age_group} including a column for \code{population}
 
 # VALUE ########################################################################
 #' @returns

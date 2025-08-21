@@ -6,7 +6,7 @@
 #   testthat::expect_equal(
 #     object =
 #       healthiar::prepare_mdi(
-#         geo_id_disaggregated = exdat_prepare_mdi$id,
+#         geo_id_micro = exdat_prepare_mdi$id,
 #         edu = exdat_prepare_mdi$edu,
 #         unemployed = exdat_prepare_mdi$unemployed,
 #         single_parent = exdat_prepare_mdi$single_parent,

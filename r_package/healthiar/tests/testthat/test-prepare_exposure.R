@@ -10,7 +10,7 @@ testthat::test_that("results correct", {
         poll_grid = pm_be,
         geo_units = sector,
         population = sf::st_drop_geometry(sector$POP),
-        geo_id_aggregated = sf::st_drop_geometry(sector$MUNICIP)
+        geo_id_macro = sf::st_drop_geometry(sector$MUNICIP)
       )$main$exp_value,
     expect = results$EXP_BE
   )
@@ -29,7 +29,7 @@ testthat::test_that("results correct", {
         poll_grid = pm_eu$SURF_ug_PM25_rh50,
         geo_units = sector,
         population = sf::st_drop_geometry(sector$POP),
-        geo_id_aggregated = sf::st_drop_geometry(sector$MUNICIP)
+        geo_id_macro = sf::st_drop_geometry(sector$MUNICIP)
       )$main$exp_value
       ),
     expect = results$EXP_EU

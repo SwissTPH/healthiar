@@ -8,7 +8,7 @@
 #' @param poll_grid \code{SpatRaster} of the pollution concentration data.
 #' @param geo_units \code{sf} of the geographic sub-units.
 #' @param population \code{Vector} containing the total population number in each geographic sub-unit.
-#' @param geo_id_aggregated \code{Vector} containing the id code of the geographic unit the sub-unit belongs to.
+#' @param geo_id_macro \code{Vector} containing the id code of the geographic unit the sub-unit belongs to.
 
 # VALUE ########################################################################
 #' @return
@@ -27,7 +27,7 @@ prepare_exposure <-
     poll_grid,
     geo_units,
     population,
-    geo_id_aggregated
+    geo_id_macro
   ){
     if (!requireNamespace("terra", quietly = TRUE)) {
       stop("The 'terra' package is required for this function. Please install it if you want to use this function.", call. = FALSE)}
@@ -41,7 +41,7 @@ prepare_exposure <-
     ## create table of non-aggregated exposure for raw output
     non_aggregated_exposure <- base::as.data.frame(
       base::cbind(
-        geo_id_aggregated,
+        geo_id_macro,
         population,
         poll_mean
       )
@@ -49,7 +49,7 @@ prepare_exposure <-
 
     ## create table to calculate pop-weighted exposure
     exposure <- base::data.frame(
-      geo_id_aggregated,
+      geo_id_macro,
       population,
       poll_mean
     )
@@ -58,7 +58,7 @@ prepare_exposure <-
     exposure <- exposure |>
       # group_by() instead of .by= because we need to keep the group
       # for mutate() and summarize()
-      dplyr::group_by(geo_id_aggregated) |>
+      dplyr::group_by(geo_id_macro) |>
       dplyr::mutate(poll_weighted = population / sum(population) * poll_mean) |>
       dplyr::summarise(exp_value = base::sum(poll_weighted)) |>
       dplyr::ungroup() |>

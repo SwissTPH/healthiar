@@ -34,7 +34,7 @@
 #' @return
 #' Tibble with the columns
 #' \itemize{
-#'   \item geo_id_disaggregated
+#'   \item geo_id_micro
 #'   \item BEST-COST Multidimensional Deprivation Index
 #' }
 #' @return
@@ -53,7 +53,7 @@
 #' # a selection of geographic units
 #'
 #' results <- prepare_mdi(
-#'   geo_id_disaggregated = exdat_get_mdi$id,
+#'   geo_id_micro = exdat_get_mdi$id,
 #'   edu = exdat_get_mdi$edu,
 #'   unemployed = exdat_get_mdi$unemployed,
 #'   single_parent = exdat_get_mdi$single_parent,
@@ -63,7 +63,7 @@
 #' )
 #'
 #' results |>
-#'   dplyr::select(geo_id_disaggregated, MDI, MDI_index) |>
+#'   dplyr::select(geo_id_micro, MDI, MDI_index) |>
 #'   dplyr::slice(1:15)
 
 #' @author Alberto Castro & Axel Luyten
@@ -73,7 +73,7 @@
 
 
 prepare_mdi <- function(
-    geo_id_disaggregated,
+    geo_id_micro,
     edu,
     unemployed,
     single_parent,
@@ -105,7 +105,7 @@ prepare_mdi <- function(
 
   # Compute MDI ################################################################
   data <- tibble::tibble(
-    geo_id_disaggregated,
+    geo_id_micro,
     edu,
     unemployed,
     single_parent,
@@ -182,7 +182,7 @@ prepare_mdi <- function(
 
   return(
     data |>
-      dplyr::relocate(MDI, .after = geo_id_disaggregated) |>
+      dplyr::relocate(MDI, .after = geo_id_micro) |>
       dplyr::relocate(MDI_index, .after = MDI)
   )
 }

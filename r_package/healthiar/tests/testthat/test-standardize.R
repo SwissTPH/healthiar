@@ -57,7 +57,7 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
 
   bestcost_pm_mortality_multigeo <-
     healthiar::attribute_health(
-      geo_id_disaggregated = c("a", "a", "b", "b"),
+      geo_id_micro = c("a", "a", "b", "b"),
       age_group = c("below_40", "above_40", "below_40", "above_40"),
       exp_central = c(8.1, 10.9, 7.1, 9.9),
       cutoff_central =  0,
@@ -76,7 +76,7 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
       rr_increment = 10,
       erf_shape = "log_linear",
       population = c(1E5, 2E5),
-      geo_id_disaggregated = c("a", "b"))
+      geo_id_micro = c("a", "b"))
 
   bestcost_pm_mortality_40_plus_multigeo <-
     healthiar::attribute_mod(

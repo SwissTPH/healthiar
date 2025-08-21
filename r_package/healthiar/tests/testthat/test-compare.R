@@ -120,8 +120,8 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
+      geo_id_micro = c("a", "b"),
+      geo_id_macro = rep("ch", 2))
 
   scen_2_singlebhd_rr_geo <-
     healthiar::attribute_mod(
@@ -156,8 +156,8 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
       rr_upper = 1.664,
       rr_increment = 10,
       erf_shape = "log_linear",
-      geo_id_disaggregated = 1:100,
-      geo_id_aggregated = rep("CH", 100),
+      geo_id_micro = 1:100,
+      geo_id_macro = rep("CH", 100),
       info = "PM2.5_mortality_2010")
 
   scen_2_singlebhd_rr_geo_large <-
@@ -227,8 +227,8 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
       dw_central = 0.5,
       duration_central = 1,
       info = "PM2.5_yld_before",
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
+      geo_id_micro = c("a", "b"),
+      geo_id_macro = rep("ch", 2))
 
   scen_2_singlebhd_yld_geo <-
     attribute_mod(
@@ -264,8 +264,8 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
       dw_central = 0.5,
       duration_central = 1,
       info = "PM2.5_yld_before",
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
+      geo_id_micro = c("a", "b"),
+      geo_id_macro = rep("ch", 2))
 
   scen_2_singlebhd_yld_geo <-
     attribute_mod(
@@ -368,8 +368,8 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
       rr_upper = 1.179,
       rr_increment = 10,
       erf_shape = "log_linear",
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
+      geo_id_micro = c("a", "b"),
+      geo_id_macro = rep("ch", 2))
 
   scen_2_singlebhd_rr_geo <-
     healthiar::attribute_mod(
@@ -404,8 +404,8 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
       dw_central = 0.5,
       duration_central = 1,
       info = "PM2.5_yld_before",
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
+      geo_id_micro = c("a", "b"),
+      geo_id_macro = rep("ch", 2))
 
   scen_2_singlebhd_yld_geo <-
     attribute_mod(
@@ -476,8 +476,8 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
       dw_central = 0.5,
       duration_central = 1,
       info = "PM2.5_yld_before",
-      geo_id_disaggregated = c("a", "b"),
-      geo_id_aggregated = rep("ch", 2))
+      geo_id_micro = c("a", "b"),
+      geo_id_macro = rep("ch", 2))
 
   scen_2_singlebhd_yld_geo <-
     attribute_mod(
@@ -584,8 +584,8 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|i
       info = data.frame(pollutant = "road_noise",
                         outcome = "highly_annoyance",
                         year = 2020),
-      geo_id_disaggregated = rep(c("a", "b"), each = 5),
-      geo_id_aggregated = rep("ch", each = 2*5)
+      geo_id_micro = rep(c("a", "b"), each = 5),
+      geo_id_macro = rep("ch", each = 2*5)
     )
 
   scen_2_singlebhd_ar_geo <-
@@ -689,8 +689,8 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
         times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = rep(c("a", "b"), each = 2* 100),
-      geo_id_aggregated = rep("ch", each = 2 * 2 * 100))
+      geo_id_micro = rep(c("a", "b"), each = 2* 100),
+      geo_id_macro = rep("ch", each = 2 * 2 * 100))
 
   scen_2_yll_lifetable_geo <-
     healthiar::attribute_mod(
@@ -786,8 +786,8 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
         times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = rep(c("a", "b"), each = 2* 100),
-      geo_id_aggregated = rep("ch", each = 2 * 2 * 100))
+      geo_id_micro = rep(c("a", "b"), each = 2* 100),
+      geo_id_macro = rep("ch", each = 2 * 2 * 100))
 
   scen_2_yll_lifetable_geo <-
     healthiar::attribute_mod(
@@ -885,8 +885,8 @@ testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_singl
         times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = rep(c("a", "b"), each = 2* 100),
-      geo_id_aggregated = rep("ch", each = 2 * 2 * 100))
+      geo_id_micro = rep(c("a", "b"), each = 2* 100),
+      geo_id_macro = rep("ch", each = 2 * 2 * 100))
 
   scen_2_deaths_lifetable_geo <-
     healthiar::attribute_mod(
@@ -982,8 +982,8 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
         times = 2),
       year_of_analysis = 2019,
       min_age = 20,
-      geo_id_disaggregated = rep(c("a", "b"), each = 2* 100),
-      geo_id_aggregated = rep("ch", each = 2 * 2 * 100))
+      geo_id_micro = rep(c("a", "b"), each = 2* 100),
+      geo_id_macro = rep("ch", each = 2 * 2 * 100))
 
   scen_2_deaths_lifetable_geo <-
     healthiar::attribute_mod(
@@ -1080,7 +1080,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
       cutoff_central = 0,
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = c(650, 1200, 1000),
-      geo_id_disaggregated = c('BR', 'FL', 'WA'))
+      geo_id_micro = c('BR', 'FL', 'WA'))
 
   output_attribute_scen_2 =
     healthiar::attribute_health(
@@ -1089,7 +1089,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
       cutoff_central = 0,
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = c(650, 1200, 1000),
-      geo_id_disaggregated = c('BR', 'FL', 'WA'))
+      geo_id_micro = c('BR', 'FL', 'WA'))
 
   testthat::expect_equal(
     object =
@@ -1115,7 +1115,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
       prop_pop_exp = c(c(0.7444227, 0.2555773), c(0.7464495, 0.2535505), c(0.7396086, 0.2603914)),
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = rep(c(650, 1200, 1000), each = 2),
-      geo_id_disaggregated = rep(c('BR', 'FL', 'WA'), each = 2))
+      geo_id_micro = rep(c('BR', 'FL', 'WA'), each = 2))
 
   output_attribute_scen_2 =
     healthiar::attribute_health(
@@ -1125,7 +1125,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
       prop_pop_exp = c(c(0.8373929, 0.1626071), c(0.8354269, 0.1645731), c(0.8157658, 0.1842342)),
       erf_eq_central = approxfun(data$UNITS, data$RR, rule = 2),
       bhd_central = rep(c(650, 1200, 1000), each = 2),
-      geo_id_disaggregated = rep(c('BR', 'FL', 'WA'), each = 2))
+      geo_id_micro = rep(c('BR', 'FL', 'WA'), each = 2))
 
   testthat::expect_equal(
     object =
