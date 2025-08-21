@@ -254,14 +254,22 @@ get_risk_and_pop_fraction <-
     ## then reduce the number of rows to keep the same number as in rr
     if(base::unique(input_table$exp_type) == "exposure_distribution"){
 
-      exp_category_columns <-
-        c("exp_category",
-          base::paste0(
-            rep(c("exp", "prop_pop_exp", "rr_at_exp"), each = 3),
-            c("", "_scen_1", "_scen_2")))
-
-      input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
-        tidyr::nest(rr_at_exp_by_exp_category = dplyr::any_of(exp_category_columns))
+      input_with_risk_and_pop_fraction <-
+        collapse_df_by_columns(df = input_with_risk_and_pop_fraction,
+                               columns_for_group = c(
+                                 "geo_id_disaggregated",
+                                 "exp_name",
+                                 "sex",
+                                 "age_group",
+                                 "data_by_age",
+                                 "erf_ci",
+                                 "exp_ci",
+                                 "bhd_ci",
+                                 "cutoff_ci",
+                                 "dw_ci",
+                                 "duration_ci",
+                                 "erf_eq"),
+                               sep = ", ")
 
 
     }
