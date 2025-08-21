@@ -82,26 +82,6 @@ get_output <-
     impact_columns_to_be_summed <-
       columns_to_be_summed[base::grepl("impact", columns_to_be_summed)]
 
-
-    ## Group columns
-    group_columns_for_results_by <- base::list(
-      exp_name =
-        base::setdiff(id_columns_in_results_raw, c("year", "exp_category", "sex", "age_group")),
-      year =
-        base::setdiff(id_columns_in_results_raw, c("exp_name", "exp_category", "age_group", "sex")),
-      exp_category =
-        base::setdiff(id_columns_in_results_raw, c("exp_name", "year", "age_group", "sex")),
-      sex =
-        base::setdiff(id_columns_in_results_raw, c("exp_name", "year", "exp_category", "age_group")),
-      age_group =
-        base::setdiff(id_columns_in_results_raw, c("exp_name", "year", "exp_category", "sex")),
-      geo_id_disaggregated =
-        base::setdiff(id_columns_in_results_raw,
-                      c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_aggregated")),
-      geo_id_aggregated =
-        base::setdiff(id_columns_in_results_raw,
-                      c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_disaggregated"))
-    )
     # Pre-identify columns to be collapsed
     # First remove columns that are not to be collapsed
     cols_without_results_and_nest  <- base::setdiff(
@@ -124,6 +104,42 @@ get_output <-
       # Use isTRUE() because it ignores NAs
       dplyr::select(dplyr::where(~ base::isTRUE(.x))) |>
       base::names()
+
+
+    ## Define variable for results_by_ and
+    # the columns that have to be excluded in the group columns
+    results_by_vars_and_excluded_columns <- base::list(
+      exp_name = c("year", "exp_category", "sex", "age_group"),
+      year = c("exp_name", "exp_category", "age_group", "sex"),
+      exp_category = c("exp_name", "year", "age_group", "sex"),
+      sex = c("exp_name", "year", "exp_category", "age_group"),
+      age_group = c("exp_name", "year", "exp_category", "sex"),
+      geo_id_disaggregated = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_aggregated"),
+      geo_id_aggregated = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_disaggregated"))
+
+    results_by_vars <- base::names(results_by_vars_and_excluded_columns)
+
+    # Identify the vars to be used for results_by
+    results_by_vars_to_be_used <-
+      # Only take the vars that present in results_raw
+      # This avoid the steps below for not relevant vars (because not available)
+      base::intersect(results_by_vars, colnames_results_raw) |>
+      # Only take vars that have more than one unique value
+      # Summing impacts across one category does not bring anything and
+      # and makes the code slower
+      base::intersect(cols_with_multiple_values) |>
+      # Add all available geo_ids
+      base::union(geo_id_available)
+
+
+    group_columns_for_results_by <-
+      results_by_vars_and_excluded_columns[results_by_vars_to_be_used] |>
+      purrr::map(
+        ~ base::setdiff(id_columns_in_results_raw, .x)
+      )
+
+
+
 
     # Get main results from detailed results ###################################
     # Put all health detailed tables together in a list
@@ -245,15 +261,8 @@ get_output <-
 
     # Sum impacts: results_by_ #####
 
-    for(var in c("exp_name", "year", "age_group", "exp_category",
-                 "geo_id_disaggregated", "geo_id_aggregated")){
 
-      if(
-        (var %in% base::names(results_raw)) &&
-         # If two categories in var OR
-         (base::length(base::unique(results_raw[[var]])) > 1 |
-         # Except geo_ids which are always shown if available
-         var %in% c("geo_id_disaggregated", "geo_id_aggregated"))){
+    for(var in results_by_vars_to_be_used){
 
         output$health_detailed[[base::paste0("results_by_", var)]] <-
           sum_round_and_relative_impact(
@@ -261,9 +270,6 @@ get_output <-
             grouping_cols = group_columns_for_results_by[[var]])
 
       }
-
-    }
-
 
     # Keep only the ci central in main output ###########
 
