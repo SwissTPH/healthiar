@@ -29,7 +29,7 @@
 #' @details
 #' \code{approach_newborns}
 #' @details
-#' If \code{"with_newborns"} is selected, it is assumed that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments \code{population_midyear_male} and \code{population_midyear_female}.
+#' If \code{"with_newborns"} is selected, it is assumed that for each year after the year of analysis n babies (population aged 0) are born.
 #' @details
 #' \code{time_horizon}
 #' @details
