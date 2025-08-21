@@ -99,8 +99,7 @@ daly <-
 
     if(!all(identical_cols))
     {stop("The arguments ",
-          paste(names(identical_cols)[identical_cols]
-                , collapse = ", "),
+          base::toString(base::names(identical_cols)[identical_cols]),
           " must be identical in both scenarios")}
 
 

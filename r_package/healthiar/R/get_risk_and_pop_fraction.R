@@ -148,7 +148,7 @@ get_risk_and_pop_fraction <-
         ## Collapse data frame pasting the columns with different values
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
-          dplyr::mutate(exp_name = base::paste(base::unique(exp_name), collapse = ", ")) |>
+          dplyr::mutate(exp_name = base::toString(base::unique(exp_name))) |>
           collapse_df_by_columns(
             columns_for_group = c(
               "geo_id_micro",
@@ -233,10 +233,10 @@ get_risk_and_pop_fraction <-
         ## Collapse data frame pasting the columns with different values
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
-          dplyr::mutate(exp_name = base::paste(base::unique(exp_name), collapse = ", "),
-                        exp = base::paste(base::unique(exp), collapse = ", "),
-                        rr_at_exp = base::paste(base::unique(rr_at_exp), collapse = ", "),
-                        pop_fraction_before_combining = base::paste(base::unique(pop_fraction_before_combining), collapse = ", ")) |>
+          dplyr::mutate(exp_name = base::toString(base::unique(exp_name)),
+                        exp = base::toString(base::unique(exp)),
+                        rr_at_exp = base::toString(base::unique(rr_at_exp)),
+                        pop_fraction_before_combining = base::toString(base::unique(pop_fraction_before_combining))) |>
           collapse_df_by_columns(
             columns_for_group = c(
               "geo_id_micro",
