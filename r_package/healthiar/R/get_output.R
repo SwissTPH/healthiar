@@ -143,6 +143,7 @@ get_output <-
       )
 
 
+
     # Get main results from detailed results ###################################
     # Put all health detailed tables together in a list
     health_detailed  <-
@@ -165,7 +166,6 @@ get_output <-
     sum_round_and_relative_impact <- function(df, var){
 
 
-
       grouping_cols <- group_columns_for_results_by[[var]]
 
       # Identify the columns that will have a "total" value after summing impacts
@@ -180,6 +180,10 @@ get_output <-
       # i.e. columns with different values within the groups
       # (e.g. exposure categories)
 
+      has_variation <- function(x){
+        base::length(base::unique(x)) > 1
+      }
+
       # Identify the columns to be collapsed
       cols_to_collapse <- df |>
         dplyr::select(dplyr::all_of(c(grouping_cols, cols_with_multiple_values))) |>
@@ -187,7 +191,7 @@ get_output <-
           .by = dplyr::all_of(c(grouping_cols)),
           dplyr::across(
             .cols = dplyr::everything(),
-            .fns = ~ dplyr::n_distinct(.x) > 1)) |>
+            .fns = ~ has_variation(.x))) |>
         # Select columns where is TRUE
         # Use isTRUE() because it ignores NAs
         dplyr::select(dplyr::where(~ base::isTRUE(.x[1]))) |>
