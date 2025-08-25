@@ -583,12 +583,12 @@ summarize_uncertainty <- function(
     output_sim <-
       purrr::map(
         input_args_for_attribute,
-        \(.x) base::do.call(healthiar:::attribute_health, args = .x ))
+        \(.x) base::do.call(healthiar::attribute_health, args = .x ))
   } else {
     output_sim <-
       purrr::map(
         input_args_for_attribute,
-        \(.x) base::do.call(healthiar:::attribute_lifetable, args = .x ))
+        \(.x) base::do.call(healthiar::attribute_lifetable, args = .x ))
   }
 
 
