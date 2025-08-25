@@ -106,6 +106,7 @@ get_output <-
       base::names()
 
 
+
     ## Define variable for results_by_ and
     # the columns that have to be excluded in the group columns
     results_by_vars_and_excluded_columns <- base::list(
@@ -129,6 +130,9 @@ get_output <-
       # and makes the code slower
       base::intersect(cols_with_multiple_values) |>
       # Add all available geo_ids
+      # They are needed in any case
+      # because at leaset results_by_geo_id_micro must be available
+      # for other healthiar functions
       base::union(geo_id_available)
 
 
@@ -137,8 +141,6 @@ get_output <-
       purrr::map(
         ~ base::setdiff(id_columns_in_results_raw, .x)
       )
-
-
 
 
     # Get main results from detailed results ###################################
@@ -160,44 +162,52 @@ get_output <-
     # Create function to aggregate impacts
     # To be used multiple times below
 
-    sum_round_and_relative_impact <- function(df, grouping_cols){
+    sum_round_and_relative_impact <- function(df, var){
+
+
+
+      grouping_cols <- group_columns_for_results_by[[var]]
 
       # Identify the columns that will have a "total" value after summing impacts
       col_total <-
         base::setdiff(id_columns_in_results_raw,
-                      grouping_cols)
+                      grouping_cols) |>
+        # Excluding geo_id_macro
+        # It can never be "total"
+        base::setdiff(c("geo_id_macro"))
 
       # Identify the columns that have to be collapsed
       # i.e. columns with different values within the groups
       # (e.g. exposure categories)
 
-      if(base::length(cols_with_multiple_values) > 0){
+      # Identify the columns to be collapsed
+      cols_to_collapse <- df |>
+        dplyr::select(dplyr::all_of(c(grouping_cols, cols_with_multiple_values))) |>
+        dplyr::summarise(
+          .by = dplyr::all_of(c(grouping_cols)),
+          dplyr::across(
+            .cols = dplyr::everything(),
+            .fns = ~ dplyr::n_distinct(.x) > 1)) |>
+        # Select columns where is TRUE
+        # Use isTRUE() because it ignores NAs
+        dplyr::select(dplyr::where(~ base::isTRUE(.x[1]))) |>
+        base::names()
 
-        cols_to_collapse <- df |>
-          dplyr::select(dplyr::all_of(c(grouping_cols, cols_with_multiple_values))) |>
-          dplyr::summarise(
+
+      # Collapse columns
+      # i.e. paste the values so that they do not hinder the summarize below
+      if(base::length(cols_to_collapse) > 0){
+        df_collapsed <-
+          df |>
+          dplyr::mutate(
             .by = dplyr::all_of(grouping_cols),
             dplyr::across(
-              .cols = dplyr::everything(),
-              .fns = ~ dplyr::n_distinct(.x) > 1)) |>
-          # Select columns where is TRUE
-          # Use isTRUE() because it ignores NAs
-          dplyr::select(dplyr::where(~ base::isTRUE(.x[1]))) |>
-          base::names()
-
-        # Collapse columns
-        # i.e. paste the values so that they do not hinder the summarize below
-        if(base::length(cols_to_collapse) > 0){
-          df_collapsed <-
-            df |>
-            dplyr::mutate(
-              .by = dplyr::all_of(grouping_cols),
-              dplyr::across(
-                .cols = dplyr::all_of(cols_to_collapse),
-                .fns = ~ base::toString(.x),
-                .names = "{.col}"))
-        } else { df_collapsed <- df}
+              .cols = dplyr::all_of(cols_to_collapse),
+              .fns = ~ base::toString(.x),
+              .names = "{.col}"))
       } else { df_collapsed <- df}
+
+
 
       # Create df_collapsed with unique values (to be used below)
       # Remove columns included in columns_to_be_summed and
@@ -271,14 +281,18 @@ get_output <-
     #     }
     #   )
 
+    # At least result_by_geo_id_micro is to be calculated
+    # so no if statement here
+
     for(var in results_by_vars_to_be_used){
 
-        output$health_detailed[[base::paste0("results_by_", var)]] <-
-          sum_round_and_relative_impact(
-            df = results_raw,
-            grouping_cols = group_columns_for_results_by[[var]])
+      output$health_detailed[[base::paste0("results_by_", var)]] <-
+        sum_round_and_relative_impact(
+          df = results_raw,
+          var = var)
 
-      }
+    }
+
 
     # Keep only the ci central in main output ###########
 
@@ -287,7 +301,6 @@ get_output <-
     output[["health_main"]] <-
       output$health_detailed[[base::paste0("results_by_", larger_geo_id_available)]]
 
-    # output[["health_main"]] <- output_last
 
 
     # Define all the ci columns have that have to be filtered to keep only central
