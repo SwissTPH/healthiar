@@ -84,7 +84,7 @@ compile_input <-
       # because it can be a data frame.
       purrr::discard(names(input_args_edited) %in% c("info")) |>
       # Convert into a tibble
-      tibble:::as_tibble() |>
+      tibble::as_tibble() |>
       # Add info
       healthiar:::add_info(info = input_args_edited$info)
 
