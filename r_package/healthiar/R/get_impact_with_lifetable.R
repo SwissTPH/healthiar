@@ -507,7 +507,7 @@ get_impact_with_lifetable <-
       # Unnest
       tidyr::unnest(impact_by_age_and_year_long) |>
       # Rename age_start to age_group (consistent with input and other pathways)
-      dplyr::mutate(age_group = age_start) |>
+      dplyr::rename(age_group = age_start) |>
       # Remove age_end not needed anymore
       dplyr::select(-age_end)
 
