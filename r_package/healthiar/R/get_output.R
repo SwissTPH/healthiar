@@ -106,7 +106,6 @@ get_output <-
       base::names()
 
 
-
     ## Define variable for results_by_ and
     # the columns that have to be excluded in the group columns
     results_by_vars_and_excluded_columns <- base::list(
@@ -141,6 +140,49 @@ get_output <-
       purrr::map(
         ~ base::setdiff(id_columns_in_results_raw, .x)
       )
+
+    # column from the argument info: grepl() because no fix number and names
+    # scen columns only for the case of compare()
+    other_columns_with_multiple_values <-
+      base::intersect(cols_with_multiple_values,
+                      colnames_results_raw[base::grepl("info_|scen_|pop_fraction", colnames_results_raw)])
+
+
+
+    results_by_vars_to_be_used_except_geo_id_macro <-
+      base::setdiff(results_by_vars_to_be_used, c("geo_id_macro"))
+
+    # ALTERNATIVE CODE TO GAIN SPEED BUT NOT WORKING IN ALL PATHWAYS
+    # Columns that may need collapse
+    # cols_eligible_for_collapse <-
+    #   base::intersect(cols_with_multiple_values,
+    #                   # results_by_vars_to_be_used removing geo_id_macro: it is never collapsed
+    #                   results_by_vars_to_be_used_except_geo_id_macro) |>
+    #   base::union(other_columns_with_multiple_values)
+    #
+    # # If absolute risk, then more columns
+    # if(base::unique(results_raw$approach_risk == "absolute_risk")){
+    #
+    #   ar_cols_with_multiple_values <-
+    #     base::intersect(cols_with_multiple_values,
+    #                     c("exp", "prop_exp"))
+    #
+    #  cols_eligible_for_collapse <-
+    #    c(cols_eligible_for_collapse,
+    #      ar_cols_with_multiple_values)
+    # }
+
+    # The _ci columns will never be collapsed
+    # This step avoid unneded data processing below
+    cols_eligible_for_collapse <-
+      base::setdiff(cols_with_multiple_values,
+                    c("cutoff_ci",
+                      "bhd_ci",
+                      "exp_ci",
+                      "erf_ci",
+                      "dw_ci",
+                      "duration_ci"))
+
 
 
 
@@ -184,9 +226,11 @@ get_output <-
         base::length(base::unique(x)) > 1
       }
 
+
       # Identify the columns to be collapsed
       cols_to_collapse <- df |>
-        dplyr::select(dplyr::all_of(c(grouping_cols, cols_with_multiple_values))) |>
+        #dplyr::filter(geo_id_micro == dplyr::first(geo_id_micro)) |>
+        dplyr::select(dplyr::all_of(c(grouping_cols, cols_eligible_for_collapse))) |>
         dplyr::summarise(
           .by = dplyr::all_of(c(grouping_cols)),
           dplyr::across(
@@ -197,6 +241,9 @@ get_output <-
         dplyr::select(dplyr::where(~ base::isTRUE(.x[1]))) |>
         base::names()
 
+      # if(var == "geo_id_macro"){
+      #   cols_to_collapse <- base::union("geo_id_micro", cols_to_collapse)
+      # }
 
       # Collapse columns
       # i.e. paste the values so that they do not hinder the summarize below
@@ -210,6 +257,26 @@ get_output <-
               .fns = ~ base::toString(.x),
               .names = "{.col}"))
       } else { df_collapsed <- df}
+
+
+      # ALTERNATIVE CODE: "total" or remove value of cols_to_collapse, very small speed gain
+      # # Collapse columns
+      # # i.e. paste the values so that they do not hinder the summarize below
+      # if(base::length(cols_to_collapse) > 0){
+      #
+      #   df_collapsed <- df
+      #
+      #   df_collapsed[, cols_to_collapse] <- "total"
+      #
+      # } else { df_collapsed <- df}
+
+      # # Collapse columns
+      # # i.e. paste the values so that they do not hinder the summarize below
+      # if(base::length(cols_to_collapse) > 0){
+      #   df_collapsed <- df |>
+      #     dplyr::select(-dplyr::all_of(cols_to_collapse))
+      # } else { df_collapsed <- df}
+
 
 
 
