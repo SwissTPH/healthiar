@@ -40,14 +40,17 @@ get_output <-
     # Store set of columns ###################################
     # Variables to be used below
 
-    ## ID columns
+    # ID columns
     id_cols <- c("geo_id_macro", "geo_id_micro",
                     "exp_name",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci",
                     "year", "exp_category", "sex", "age_group")
 
+    # Store column names of results_raw
+    # because it is to be used often below
     colnames_results_raw <- base::names(results_raw)
 
+    # Store those id_columns that are present in results_raw
     id_cols_in_results_raw <-
       base::intersect(id_cols, colnames_results_raw)
 
@@ -96,8 +99,8 @@ get_output <-
       # because they are results
       c(cols_to_be_summed, impact_cols, nest_cols))
 
-    # Identify the columns that have to be collapsed
-    # i.e. columns with different values within the groups
+    # Create function
+    # to identify the columns that have different values within the groups
     # (e.g. exposure categories)
 
     find_cols_with_multiple_values <- function(df, groups){
@@ -157,7 +160,8 @@ get_output <-
         ~ base::setdiff(id_cols_in_results_raw, .x)
       )
 
-    # column from the argument info: grepl() because no fix number and names
+    # Other columns: e.g. info, scen_, pop_fraction...
+    # grepl() because no fix number and names
     # scen columns only for the case of compare()
     other_cols_with_multiple_values <-
       base::intersect(cols_with_multiple_values,
@@ -349,11 +353,11 @@ get_output <-
       function(x, cols){
 
         # If x is a data.frame
-        if(is.data.frame(x)){
+        if(base::is.data.frame(x)){
           put_first_cols(x, cols)
 
         # If x is list and all list elements are data frames (and not lists)
-        }else if (is.list(x) & all(purrr::map_lgl(x, is.data.frame))){
+        }else if (base::is.list(x) & base::all(purrr::map_lgl(x, is.data.frame))){
           purrr::map(
             .x = x,
             .f = ~ put_first_cols(.x, cols))
