@@ -54,11 +54,12 @@ get_risk_and_pop_fraction <-
           df |>
           dplyr::summarize(
             .by = dplyr::any_of(columns_for_group),
-            dplyr::across(dplyr::everything(),
-                   ~ if (base::length(base::unique(.)) == 1) {
-                     dplyr::first(.)
-                   } else {
-                     base::toString(.)}))
+            dplyr::across(
+              .cols = dplyr::everything(),
+              .fns = ~ if (base::length(base::unique(.x)) == 1) {
+                dplyr::first(.)
+                } else {
+                  base::toString(.)}))
       }
 
 
