@@ -195,8 +195,7 @@ get_output <-
       # (e.g. exposure categories)
 
       has_variation <- function(x){
-        #base::length(base::unique(x)) > 1
-        base::all(base::duplicated(x[-1]))
+        base::length(base::unique(x)) > 1
       }
 
 
