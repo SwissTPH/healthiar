@@ -39,6 +39,8 @@ get_risk_and_pop_fraction <-
       c("erf_ci", "exp_ci", "bhd_ci", "cutoff_ci",
         "dw_ci", "duration_ci", "erf_eq_ci")
 
+    names_input_table <- base::names(input_table)
+
 
     # Define helper function ###################################################
 
@@ -68,7 +70,7 @@ get_risk_and_pop_fraction <-
     # Check if erf_eq is NULL before going into get_risk
     # Otherwise the variable is created without value and cannot be evaluated
     # We need to know erf_eq is NULL if statements within get_risk
-    if ( !base::any(base::grepl("erf_eq", base::names(input_table))) ) {
+    if ( !base::any(base::grepl("erf_eq", names_input_table)) ) {
       erf_eq <- NULL }
 
     input_with_risk_and_pop_fraction <-
@@ -111,7 +113,7 @@ get_risk_and_pop_fraction <-
       }
 
     # * Correction for multiexposure  ###############################################
-    if ( "approach_multiexposure" %in% base::names(input_table) ) {
+    if ( "approach_multiexposure" %in% names_input_table ) {
 
       # * * Multiplicative approach ############################################
 
@@ -164,7 +166,7 @@ get_risk_and_pop_fraction <-
 
     ## Calculate population (attributable or impact) fraction (PAF or PIF)
     cols_uncertainty <-
-      base::grep("_ci", base::names(input_with_risk_and_pop_fraction), value = TRUE)
+      base::grep("_ci", names_input_table, value = TRUE)
 
     likely_columns_to_group_input <-
       c("geo_id_micro",
@@ -175,7 +177,7 @@ get_risk_and_pop_fraction <-
 
     available_columns_to_group_input <-
       likely_columns_to_group_input[likely_columns_to_group_input %in%
-                                      base::names(input_with_risk_and_pop_fraction)]
+                                      names_input_table]
 
 
     # * PAF ####################################################################
@@ -204,7 +206,7 @@ get_risk_and_pop_fraction <-
                                        prop_pop_exp_2 = prop_pop_exp_scen_2)) }
     # * Correction for multiexposure ###########################################
 
-    if("approach_multiexposure" %in% base::names(input_table)){
+    if("approach_multiexposure" %in% names_input_table){
       if(base::unique(input_table$approach_multiexposure) %in% "combined"){
 
         input_with_risk_and_pop_fraction <-
