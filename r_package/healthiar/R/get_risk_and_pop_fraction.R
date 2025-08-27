@@ -77,7 +77,7 @@ get_risk_and_pop_fraction <-
       dplyr::mutate(pop_fraction_type = pop_fraction_type)
 
       ## If PAF
-    if ( {{pop_fraction_type}} == "paf" ) {
+    if (pop_fraction_type == "paf" ) {
 
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         ## Obtain the relative risk for the relevant concentration
@@ -120,7 +120,7 @@ get_risk_and_pop_fraction <-
 
         ## In the multiplicative approach, relative risks have to be merged
         ## by multiplying across different exposures
-        if({{pop_fraction_type}} == "paf"){
+        if(pop_fraction_type == "paf"){ # if PAF
           input_with_risk_and_pop_fraction <-
             input_with_risk_and_pop_fraction |>
             ## group by columns that define diversity
@@ -180,7 +180,7 @@ get_risk_and_pop_fraction <-
 
     # * PAF ####################################################################
 
-    if ( {{pop_fraction_type}} == "paf" ) {
+    if ( pop_fraction_type == "paf" ) {
 
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
