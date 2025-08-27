@@ -46,9 +46,9 @@ get_risk_and_pop_fraction <-
     # The columns with the same values inside will be condensed: e.g. c(1,1,1) = 1
     # The values in columns with different values are pasted: e.g. c(1,2,3) = "1, 2, 3"
     # The variable columns_for_group refers to the column that is used to group the collapse
-    # The variable sep refers to the string to be used to collapse different values
+
     collapse_df_by_columns <-
-      function(df, columns_for_group, sep){
+      function(df, columns_for_group){
 
         collapsed_df <-
           df |>
@@ -58,7 +58,7 @@ get_risk_and_pop_fraction <-
                    ~ if (base::length(base::unique(.)) == 1) {
                      dplyr::first(.)
                    } else {
-                     base::paste(., collapse = sep)}))
+                     base::toString(.)}))
       }
 
 
@@ -155,8 +155,7 @@ get_risk_and_pop_fraction <-
               "sex",
               "age_group",
               "data_by_age",
-              "rr_at_exp"),
-            sep = ", ")
+              "rr_at_exp"))
       }
     }
 
@@ -232,8 +231,7 @@ get_risk_and_pop_fraction <-
               "sex",
               "age_group",
               "data_by_age",
-              "pop_fraction"),
-            sep = ", ")
+              "pop_fraction"))
         }
       }
 
@@ -257,8 +255,7 @@ get_risk_and_pop_fraction <-
                                  "cutoff_ci",
                                  "dw_ci",
                                  "duration_ci",
-                                 "erf_eq"),
-                               sep = ", ")
+                                 "erf_eq"))
 
 
     }
