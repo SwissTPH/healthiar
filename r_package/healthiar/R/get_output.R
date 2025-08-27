@@ -63,10 +63,10 @@ get_output <-
 
     ## Columns to be summed
     impact_cols <-
-      colnames_results_raw[base::grepl("impact", colnames_results_raw)]
+      base::grep("impact", colnames_results_raw, value = TRUE)
 
     nest_cols <-
-      colnames_results_raw[base::grepl("_by_", colnames_results_raw)]
+      base::grep("_by_", colnames_results_raw, value = TRUE)
 
     cols_to_be_summed <-
       base::setdiff(
@@ -77,10 +77,10 @@ get_output <-
 
     # Only columns to be summed that include the string "impact"
     # This is used for per_100k_inhab
-    # Use grepl() because there are many possible column names, no only impact
+    # Use grep() because there are many possible column names, no only impact
     # e.g. "monetized_impact"
     impact_cols_to_be_summed <-
-      cols_to_be_summed[base::grepl("impact", cols_to_be_summed)]
+      base::grep("impact", cols_to_be_summed, value = TRUE)
 
     # Pre-identify columns to be collapsed
     # First remove columns that are not to be collapsed
