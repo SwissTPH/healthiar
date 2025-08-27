@@ -51,6 +51,12 @@ get_output <-
     id_cols_in_results_raw <-
       base::intersect(id_cols, colnames_results_raw)
 
+    # Define all the ci columns have that have to be filtered to keep only central
+    ci_cols <- base::grep("_ci", id_cols, value = TRUE)
+
+    # Identify which of the ci_cols are present in the assessment
+    ci_cols_available <- base::grep("_ci", id_cols_in_results_raw, value = TRUE)
+
     # Keep the larger geo_id available
     # Since intersect() keep the order, taking the first element [1] ensures
     # that it is geo_id_macro if available and otherwise geo_id_micro
@@ -166,14 +172,7 @@ get_output <-
     # This step avoid unneded data processing below
     cols_eligible_for_collapse <-
       base::setdiff(cols_with_multiple_values,
-                    c("cutoff_ci",
-                      "bhd_ci",
-                      "exp_ci",
-                      "erf_ci",
-                      "dw_ci",
-                      "duration_ci"))
-
-
+                    ci_cols_available)
 
 
     # Get main results from detailed results ###################################
@@ -322,19 +321,6 @@ get_output <-
     # Store the last output in health main before starting the loop
     output[["health_main"]] <-
       output$health_detailed[[base::paste0("results_by_", larger_geo_id_available)]]
-
-
-
-    # Define all the ci columns have that have to be filtered to keep only central
-    ci_cols <- c("exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
-
-    # Identify which of the ci_cols are present in the assessment
-    ci_cols_available <- base::intersect(
-      ci_cols,
-      base::names(output[["health_main"]])
-    )
-
-
 
     # Loop by the available_ci_cols to filter them keeping only central
     for (col in ci_cols_available) {
