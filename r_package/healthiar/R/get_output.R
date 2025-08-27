@@ -68,12 +68,12 @@ get_output <-
     nest_cols <-
       colnames_results_raw[base::grepl("_by_", colnames_results_raw)]
 
-    cols_to_be_summed <- results_raw |>
-      # The use of matches() is important.
-      # It works as contains() but allowing regex | (OR)
-      dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
-                    -dplyr::matches("_by_|_rounded|_per_100k_inhab")) |>
-      base::names()
+    cols_to_be_summed <-
+      base::setdiff(
+        # Columns including these strings
+        base::grep("impact|absolute_risk_as_percent|population", colnames_results_raw, value = TRUE),
+        # but not including these
+        base::grep("_by_|_rounded|_per_100k_inhab", colnames_results_raw, value = TRUE))
 
     # Only columns to be summed that include the string "impact"
     # This is used for per_100k_inhab
