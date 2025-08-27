@@ -144,8 +144,8 @@ get_output <-
       # for other healthiar functions
       base::union(geo_id_available)
 
-
-    group_cols_for_results_by <-
+    # Build list with the result_by_vars and the correponding grouping_cols
+    grouping_cols_for_results_by <-
       results_by_vars_and_excluded_cols[results_by_vars_to_be_used] |>
       purrr::map(
         ~ base::setdiff(id_cols_in_results_raw, .x)
@@ -198,7 +198,7 @@ get_output <-
     sum_round_and_relative_impact <- function(df, var){
 
 
-      grouping_cols <- group_cols_for_results_by[[var]]
+      grouping_cols <- grouping_cols_for_results_by[[var]]
 
       # Identify the columns to be collapsed
       cols_to_collapse <- df |>
