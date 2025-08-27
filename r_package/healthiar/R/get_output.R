@@ -90,21 +90,31 @@ get_output <-
       # because they are results
       c(cols_to_be_summed, impact_cols, nest_cols))
 
+    # Identify the columns that have to be collapsed
+    # i.e. columns with different values within the groups
+    # (e.g. exposure categories)
+
+    find_cols_with_multiple_values <- function(df, groups){
+      df |>
+      dplyr::summarise(
+        .by = groups,
+        dplyr::across(
+          .cols = dplyr::everything(),
+          .fns = ~ base::length(base::unique(.x)) > 1)) |>
+        # Select columns where is TRUE
+        # Use isTRUE() because it ignores NAs
+        dplyr::select(dplyr::where(~ base::isTRUE(.x))) |>
+        base::names()
+    }
+
     # Among those columns that could be collapsed,
     # identify the columns with multiple values.
     # This is a subset of columns to be scaned if they have multipble values
     # when grouping by the sum variables
     cols_with_multiple_values <- results_raw |>
       dplyr::select(dplyr::all_of(cols_without_results_and_nest)) |>
-      dplyr::summarise(
-        dplyr::across(
-          .cols = dplyr::everything(),
-          .fns = ~ dplyr::n_distinct(.x) > 1)) |>
-      # Select columns where is TRUE
-      # Use isTRUE() because it ignores NAs
-      dplyr::select(dplyr::where(~ base::isTRUE(.x))) |>
-      base::names()
-
+      # No groups, i.e. for the whole data set
+      find_cols_with_multiple_values(df = _, groups = NULL)
 
     ## Define variable for results_by_ and
     # the columns that have to be excluded in the group columns
@@ -190,15 +200,6 @@ get_output <-
 
       grouping_cols <- group_cols_for_results_by[[var]]
 
-      # Identify the columns that have to be collapsed
-      # i.e. columns with different values within the groups
-      # (e.g. exposure categories)
-
-      has_variation <- function(x){
-        base::length(base::unique(x)) > 1
-      }
-
-
       # Identify the columns to be collapsed
       cols_to_collapse <- df |>
         dplyr::select(dplyr::all_of(c(grouping_cols, cols_eligible_for_collapse))) |>
@@ -208,15 +209,7 @@ get_output <-
         dplyr::filter(
           dplyr::if_all(.cols = dplyr::contains("_ci"),
                         .fns = ~ base::grepl("central", .x))) |>
-        dplyr::summarise(
-          .by = dplyr::all_of(c(grouping_cols)),
-          dplyr::across(
-            .cols = dplyr::everything(),
-            .fns = ~ has_variation(.x))) |>
-        # Select columns where is TRUE
-        # Use isTRUE() because it ignores NAs
-        dplyr::select(dplyr::where(~ base::isTRUE(.x[1]))) |>
-        base::names()
+        find_cols_with_multiple_values(df = _, group = grouping_cols)
 
       # Collapse columns
       # i.e. paste the values so that they do not hinder the summarize below
