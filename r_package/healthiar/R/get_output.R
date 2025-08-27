@@ -152,26 +152,6 @@ get_output <-
     results_by_vars_to_be_used_except_geo_id_macro <-
       base::setdiff(results_by_vars_to_be_used, c("geo_id_macro"))
 
-    # ALTERNATIVE CODE TO GAIN SPEED BUT NOT WORKING IN ALL PATHWAYS
-    # Columns that may need collapse
-    # cols_eligible_for_collapse <-
-    #   base::intersect(cols_with_multiple_values,
-    #                   # results_by_vars_to_be_used removing geo_id_macro: it is never collapsed
-    #                   results_by_vars_to_be_used_except_geo_id_macro) |>
-    #   base::union(other_cols_with_multiple_values)
-    #
-    # # If absolute risk, then more columns
-    # if(base::unique(results_raw$approach_risk == "absolute_risk")){
-    #
-    #   ar_cols_with_multiple_values <-
-    #     base::intersect(cols_with_multiple_values,
-    #                     c("exp", "prop_exp"))
-    #
-    #  cols_eligible_for_collapse <-
-    #    c(cols_eligible_for_collapse,
-    #      ar_cols_with_multiple_values)
-    # }
-
     # The _ci columns will never be collapsed
     # This step avoid unneded data processing below
     cols_eligible_for_collapse <-
@@ -215,13 +195,13 @@ get_output <-
       # (e.g. exposure categories)
 
       has_variation <- function(x){
-        base::length(base::unique(x)) > 1
+        #base::length(base::unique(x)) > 1
+        base::all(base::duplicated(x[-1]))
       }
 
 
       # Identify the columns to be collapsed
       cols_to_collapse <- df |>
-        #dplyr::filter(geo_id_micro == dplyr::first(geo_id_micro)) |>
         dplyr::select(dplyr::all_of(c(grouping_cols, cols_eligible_for_collapse))) |>
         # Keep only central estimates
         # because no variability is expected across bounds
@@ -239,10 +219,6 @@ get_output <-
         dplyr::select(dplyr::where(~ base::isTRUE(.x[1]))) |>
         base::names()
 
-      # if(var == "geo_id_macro"){
-      #   cols_to_collapse <- base::union("geo_id_micro", cols_to_collapse)
-      # }
-
       # Collapse columns
       # i.e. paste the values so that they do not hinder the summarize below
       if(base::length(cols_to_collapse) > 0){
@@ -257,7 +233,7 @@ get_output <-
       } else { df_collapsed <- df}
 
 
-      # ALTERNATIVE CODE: "total" or remove value of cols_to_collapse, very small speed gain
+      # # ALTERNATIVE CODE: "total" or remove value of cols_to_collapse, very small speed gain
       # # Collapse columns
       # # i.e. paste the values so that they do not hinder the summarize below
       # if(base::length(cols_to_collapse) > 0){
