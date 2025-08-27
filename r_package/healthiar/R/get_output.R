@@ -103,17 +103,19 @@ get_output <-
     # to identify the columns that have different values within the groups
     # (e.g. exposure categories)
 
-    find_cols_with_multiple_values <- function(df, groups){
-      df |>
+    find_cols_with_multiple_values <- function(df, group){
+      out <- df |>
       dplyr::summarise(
-        .by = groups,
+        .by = dplyr::all_of(c(group)),
         dplyr::across(
           .cols = dplyr::everything(),
           .fns = ~ base::length(base::unique(.x)) > 1)) |>
         # Select columns where is TRUE
         # Use isTRUE() because it ignores NAs
-        dplyr::select(dplyr::where(~ base::isTRUE(.x))) |>
+        dplyr::select(dplyr::where(~ base::isTRUE(.x[1]))) |>
         base::names()
+
+      return(out)
     }
 
     # Among those columns that could be collapsed,
@@ -123,7 +125,7 @@ get_output <-
     cols_with_multiple_values <- results_raw |>
       dplyr::select(dplyr::all_of(cols_without_results_and_nest)) |>
       # No groups, i.e. for the whole data set
-      find_cols_with_multiple_values(df = _, groups = NULL)
+      find_cols_with_multiple_values(df = _, group = NULL)
 
     ## Define variable for results_by_ and
     # the columns that have to be excluded in the group columns
@@ -199,7 +201,6 @@ get_output <-
     # To be used multiple times below
 
     sum_round_and_relative_impact <- function(df, var){
-
 
       grouping_cols <- grouping_cols_for_results_by[[var]]
 
