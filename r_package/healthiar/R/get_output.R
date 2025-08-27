@@ -320,16 +320,16 @@ get_output <-
     output[["health_main"]] <-
       output$health_detailed[[base::paste0("results_by_", larger_geo_id_available)]]
 
+
     # Loop by the available_ci_cols to filter them keeping only central
-    for (col in ci_cols_available) {
+    output[["health_main"]] <- output[["health_main"]] |>
+      # grepl instead of %in% because it needs
+      # to be flexible to also accept the central_*id_ass* in the
+      # summarize_uncertainty
+      dplyr::filter(
+        dplyr::if_all(.cols = dplyr::all_of(ci_cols_available),
+                      .fns = ~ base::grepl("central", .x)))
 
-      output[["health_main"]] <- output[["health_main"]] |>
-        # grepl instead of %in% because it needs
-        # to be flexible to also accept the central_*id_ass* in the
-        # summarize_uncertainty
-        dplyr::filter(base::grepl("central", output[["health_main"]][[col]]))
-
-    }
 
     # Order columns ############################################################
     # putting first (on the left) those that determine different results across rows
