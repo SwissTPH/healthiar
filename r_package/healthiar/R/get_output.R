@@ -60,6 +60,9 @@ get_output <-
     # Identify which of the ci_cols are present in the assessment
     ci_cols_available <- base::grep("_ci", id_cols_available, value = TRUE)
 
+    ci_cols_available_except_erf <- base::setdiff(ci_cols_available, "erf_ci")
+
+
     # Keep the larger geo_id available
     # Since intersect() keep the order, taking the first element [1] ensures
     # that it is geo_id_macro if available and otherwise geo_id_micro
@@ -320,19 +323,20 @@ get_output <-
 
     # Keep only the ci central in main output ###########
 
+    results_by_larger_geo_id_available <-
+      base::paste0("results_by_", larger_geo_id_available)
+
 
     # Store the last output in health main before starting the loop
     output[["health_main"]] <-
-      output$health_detailed[[base::paste0("results_by_", larger_geo_id_available)]]
-
-
-    # Loop by the available_ci_cols to filter them keeping only central
-    output[["health_main"]] <- output[["health_main"]] |>
+      # Take the larger geo_id
+      output$health_detailed[[results_by_larger_geo_id_available]] |>
+      # Keep only central estimates
       # grepl instead of %in% because it needs
       # to be flexible to also accept the central_*id_ass* in the
       # summarize_uncertainty
       dplyr::filter(
-        dplyr::if_all(.cols = dplyr::all_of(ci_cols_available),
+        dplyr::if_all(.cols = dplyr::all_of(ci_cols_available_except_erf),
                       .fns = ~ base::grepl("central", .x)))
 
 
