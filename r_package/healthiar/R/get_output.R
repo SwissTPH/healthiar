@@ -41,34 +41,34 @@ get_output <-
     # Variables to be used below
 
     ## ID columns
-    id_columns <- c("geo_id_macro", "geo_id_micro",
+    id_cols <- c("geo_id_macro", "geo_id_micro",
                     "exp_name",
                     "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci",
                     "year", "exp_category", "sex", "age_group")
 
     colnames_results_raw <- base::names(results_raw)
 
-    id_columns_in_results_raw <-
-      colnames_results_raw[colnames_results_raw %in% id_columns]
+    id_cols_in_results_raw <-
+      colnames_results_raw[colnames_results_raw %in% id_cols]
 
     # Keep the larger geo_id available
     # Since intersect() keep the order, taking the first element [1] ensures
     # that it is geo_id_macro if available and otherwise geo_id_micro
     geo_id_available <-
       base::intersect(c("geo_id_macro", "geo_id_micro"),
-                      id_columns_in_results_raw)
+                      id_cols_in_results_raw)
 
     larger_geo_id_available <- geo_id_available[1]
 
 
     ## Columns to be summed
-    impact_columns <-
+    impact_cols <-
       colnames_results_raw[base::grepl("impact", colnames_results_raw)]
 
-    nest_columns <-
+    nest_cols <-
       colnames_results_raw[base::grepl("_by_", colnames_results_raw)]
 
-    columns_to_be_summed <- results_raw |>
+    cols_to_be_summed <- results_raw |>
       # The use of matches() is important.
       # It works as contains() but allowing regex | (OR)
       dplyr::select(dplyr::matches("impact|absolute_risk_as_percent|population"),
@@ -79,8 +79,8 @@ get_output <-
     # This is used for per_100k_inhab
     # Use grepl() because there are many possible column names, no only impact
     # e.g. "monetized_impact"
-    impact_columns_to_be_summed <-
-      columns_to_be_summed[base::grepl("impact", columns_to_be_summed)]
+    impact_cols_to_be_summed <-
+      cols_to_be_summed[base::grepl("impact", cols_to_be_summed)]
 
     # Pre-identify columns to be collapsed
     # First remove columns that are not to be collapsed
@@ -88,7 +88,7 @@ get_output <-
       colnames_results_raw,
       # Columns to be excluded of the collapse
       # because they are results
-      c(columns_to_be_summed, impact_columns, nest_columns))
+      c(cols_to_be_summed, impact_cols, nest_cols))
 
     # Among those columns that could be collapsed,
     # identify the columns with multiple values.
@@ -108,7 +108,7 @@ get_output <-
 
     ## Define variable for results_by_ and
     # the columns that have to be excluded in the group columns
-    results_by_vars_and_excluded_columns <- base::list(
+    results_by_vars_and_excluded_cols <- base::list(
       exp_name = c("year", "exp_category", "sex", "age_group"),
       year = c("exp_name", "exp_category", "age_group", "sex"),
       exp_category = c("exp_name", "year", "age_group", "sex"),
@@ -117,7 +117,7 @@ get_output <-
       geo_id_micro = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_macro"),
       geo_id_macro = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_micro"))
 
-    results_by_vars <- base::names(results_by_vars_and_excluded_columns)
+    results_by_vars <- base::names(results_by_vars_and_excluded_cols)
 
     # Identify the vars to be used for results_by
     results_by_vars_to_be_used <-
@@ -135,15 +135,15 @@ get_output <-
       base::union(geo_id_available)
 
 
-    group_columns_for_results_by <-
-      results_by_vars_and_excluded_columns[results_by_vars_to_be_used] |>
+    group_cols_for_results_by <-
+      results_by_vars_and_excluded_cols[results_by_vars_to_be_used] |>
       purrr::map(
-        ~ base::setdiff(id_columns_in_results_raw, .x)
+        ~ base::setdiff(id_cols_in_results_raw, .x)
       )
 
     # column from the argument info: grepl() because no fix number and names
     # scen columns only for the case of compare()
-    other_columns_with_multiple_values <-
+    other_cols_with_multiple_values <-
       base::intersect(cols_with_multiple_values,
                       colnames_results_raw[base::grepl("info_|scen_|pop_fraction", colnames_results_raw)])
 
@@ -158,7 +158,7 @@ get_output <-
     #   base::intersect(cols_with_multiple_values,
     #                   # results_by_vars_to_be_used removing geo_id_macro: it is never collapsed
     #                   results_by_vars_to_be_used_except_geo_id_macro) |>
-    #   base::union(other_columns_with_multiple_values)
+    #   base::union(other_cols_with_multiple_values)
     #
     # # If absolute risk, then more columns
     # if(base::unique(results_raw$approach_risk == "absolute_risk")){
@@ -208,7 +208,7 @@ get_output <-
     sum_round_and_relative_impact <- function(df, var){
 
 
-      grouping_cols <- group_columns_for_results_by[[var]]
+      grouping_cols <- group_cols_for_results_by[[var]]
 
       # Identify the columns that have to be collapsed
       # i.e. columns with different values within the groups
@@ -278,11 +278,11 @@ get_output <-
 
 
       # Create df_collapsed with unique values (to be used below)
-      # Remove columns included in columns_to_be_summed and
+      # Remove columns included in cols_to_be_summed and
       # _rounded & _per_100k_inhab.
       # Otherwise, duplicated.
       df_collapsed_and_distinct <- df_collapsed |>
-        dplyr::select(-dplyr::any_of(c(columns_to_be_summed)),
+        dplyr::select(-dplyr::any_of(c(cols_to_be_summed)),
                       -dplyr::matches("_rounded|_per_100k_inhab")) |>
         dplyr::distinct()
 
@@ -300,7 +300,7 @@ get_output <-
             # this function also have other columns with impact discounted and monetized
             # and even comparison scenarios
             # which also have to be included in this aggregation
-            .cols = dplyr::all_of(columns_to_be_summed),
+            .cols = dplyr::all_of(cols_to_be_summed),
             .fns = ~ sum(.x, na.rm = TRUE),
             .names = "{.col}"))|>
         # Add the rest of columns
@@ -310,7 +310,7 @@ get_output <-
         # Add ..._rounded columns
         dplyr::mutate(
           dplyr::across(
-            .cols = dplyr::all_of(impact_columns_to_be_summed),
+            .cols = dplyr::all_of(impact_cols_to_be_summed),
             .fns = ~ round(.x),
             .names = "{.col}_rounded"
           )
@@ -321,7 +321,7 @@ get_output <-
         impact_agg <- impact_agg |>
           dplyr::mutate(
             dplyr::across(
-              .cols = dplyr::all_of(impact_columns_to_be_summed),
+              .cols = dplyr::all_of(impact_cols_to_be_summed),
               .fns = list(
                 per_100k_inhab = ~ (.x / population) * 1e5
               ),
@@ -384,7 +384,7 @@ get_output <-
     # putting first (on the left) those that determine different results across rows
 
     # Choose columns to be put first
-    first_columns <- c(id_columns, impact_columns)
+    first_cols <- c(id_cols, impact_cols)
 
     # Create the functions
     put_first_cols <-
@@ -416,7 +416,7 @@ get_output <-
       purrr::map(
         .x = output,
         .f = ~ put_first_cols_recursive(x = .x,
-                                        cols = first_columns))
+                                        cols = first_cols))
 
 
     return(output)
