@@ -77,6 +77,10 @@ daly <-
     column_names_results_raw <-
       unique(c(names(results_raw_yll), names(results_raw_yld)))
 
+    results_raw_yll[, c("sex", "age_group")] <- "total"
+    results_raw_yld[, c("sex", "age_group")] <- "total"
+
+
     # Identify the columns names using keywords
     common_cols <-
       column_names_results_raw[grepl("exp|exposure|cutoff|geo|approach_risk|sex|age_group|bhd_ci",
@@ -101,7 +105,6 @@ daly <-
     {stop("The arguments ",
           base::toString(base::names(identical_cols)[identical_cols]),
           " must be identical in both scenarios")}
-
 
 
     # Obtain the new results_raw for DALY
