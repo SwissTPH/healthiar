@@ -164,7 +164,7 @@ get_risk_and_pop_fraction <-
 
     ## Calculate population (attributable or impact) fraction (PAF or PIF)
     cols_uncertainty <-
-      names(input_with_risk_and_pop_fraction)[base::grepl("_ci", names(input_with_risk_and_pop_fraction))]
+      base::grep("_ci", base::names(input_with_risk_and_pop_fraction), value = TRUE)
 
     likely_columns_to_group_input <-
       c("geo_id_micro",
