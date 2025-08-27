@@ -206,7 +206,7 @@ get_output <-
         # because no variability is expected across bounds
         # This enables faster evaluation
         dplyr::filter(
-          dplyr::if_all(.cols = dplyr::contains("_ci"),
+          dplyr::if_all(.cols = dplyr::all_of(ci_cols_available),
                         .fns = ~ base::grepl("central", .x))) |>
         find_cols_with_multiple_values(df = _, group = grouping_cols)
 
