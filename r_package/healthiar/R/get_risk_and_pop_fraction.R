@@ -178,20 +178,13 @@ get_risk_and_pop_fraction <-
                                       base::names(input_with_risk_and_pop_fraction)]
 
 
-
-    input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
-
-      ## Group by different pathways and geo_units
-      ## and keep this group for the operations below
-      dplyr::group_by(dplyr::across(dplyr::any_of(available_columns_to_group_input)))
-
-
     # * PAF ####################################################################
 
     if ( {{pop_fraction_type}} == "paf" ) {
 
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
+          .by = dplyr::all_of(available_columns_to_group_input),
           pop_fraction =
             healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp,
                                        rr_at_exp_2 = 1,
@@ -203,16 +196,12 @@ get_risk_and_pop_fraction <-
       } else {
         input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
+          .by = dplyr::all_of(available_columns_to_group_input),
           pop_fraction =
             healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp_scen_1,
                                        rr_at_exp_2 = rr_at_exp_scen_2,
                                        prop_pop_exp_1 = prop_pop_exp_scen_1,
                                        prop_pop_exp_2 = prop_pop_exp_scen_2)) }
-
-    ## Ungroup
-    input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
-      dplyr::ungroup()
-
     # * Correction for multiexposure ###########################################
 
     if("approach_multiexposure" %in% base::names(input_table)){
