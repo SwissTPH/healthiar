@@ -289,9 +289,7 @@ get_output <-
           dplyr::mutate(
             dplyr::across(
               .cols = dplyr::all_of(impact_cols_to_be_summed),
-              .fns = list(
-                per_100k_inhab = ~ (.x / population) * 1e5
-              ),
+              .fns = base::list(per_100k_inhab = ~ (.x / population) * 1e5),
               .names = "{.col}_{.fn}"
             )
           )
@@ -325,8 +323,7 @@ get_output <-
     # Loop by the available_ci_cols to filter them keeping only central
     for (col in ci_cols_available) {
 
-      output[["health_main"]] <-
-        output[["health_main"]] |>
+      output[["health_main"]] <- output[["health_main"]] |>
         # grepl instead of %in% because it needs
         # to be flexible to also accept the central_*id_ass* in the
         # summarize_uncertainty
