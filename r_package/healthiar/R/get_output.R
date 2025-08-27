@@ -231,6 +231,12 @@ get_output <-
       cols_to_collapse <- df |>
         #dplyr::filter(geo_id_micro == dplyr::first(geo_id_micro)) |>
         dplyr::select(dplyr::all_of(c(grouping_cols, cols_eligible_for_collapse))) |>
+        # Keep only central estimates
+        # because no variability is expected across bounds
+        # This enables faster evaluation
+        dplyr::filter(
+          dplyr::if_all(.cols = dplyr::contains("_ci"),
+                        .fns = ~ base::grepl("central", .x))) |>
         dplyr::summarise(
           .by = dplyr::all_of(c(grouping_cols)),
           dplyr::across(
