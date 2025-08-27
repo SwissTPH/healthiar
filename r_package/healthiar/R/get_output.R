@@ -49,7 +49,7 @@ get_output <-
     colnames_results_raw <- base::names(results_raw)
 
     id_cols_in_results_raw <-
-      colnames_results_raw[colnames_results_raw %in% id_cols]
+      base::intersect(id_cols, colnames_results_raw)
 
     # Keep the larger geo_id available
     # Since intersect() keep the order, taking the first element [1] ensures
