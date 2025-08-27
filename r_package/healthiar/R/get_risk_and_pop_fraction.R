@@ -176,8 +176,7 @@ get_risk_and_pop_fraction <-
         cols_uncertainty)
 
     available_columns_to_group_input <-
-      likely_columns_to_group_input[likely_columns_to_group_input %in%
-                                      names_input_table]
+      base::intersect(likely_columns_to_group_input, names_input_table)
 
 
     # * PAF ####################################################################
