@@ -210,14 +210,6 @@ get_output <-
 
       grouping_cols <- group_columns_for_results_by[[var]]
 
-      # Identify the columns that will have a "total" value after summing impacts
-      col_total <-
-        base::setdiff(id_columns_in_results_raw,
-                      grouping_cols) |>
-        # Excluding geo_id_macro
-        # It can never be "total"
-        base::setdiff(c("geo_id_macro"))
-
       # Identify the columns that have to be collapsed
       # i.e. columns with different values within the groups
       # (e.g. exposure categories)
@@ -285,13 +277,12 @@ get_output <-
 
 
 
-
       # Create df_collapsed with unique values (to be used below)
       # Remove columns included in columns_to_be_summed and
       # _rounded & _per_100k_inhab.
       # Otherwise, duplicated.
       df_collapsed_and_distinct <- df_collapsed |>
-        dplyr::select(-dplyr::any_of(c(columns_to_be_summed, col_total)),
+        dplyr::select(-dplyr::any_of(c(columns_to_be_summed)),
                       -dplyr::matches("_rounded|_per_100k_inhab")) |>
         dplyr::distinct()
 
@@ -339,8 +330,6 @@ get_output <-
           )
       }
 
-      # Add column showing that this is the total after summing
-      impact_agg[, col_total] <- "total"
 
       return(impact_agg)
 
