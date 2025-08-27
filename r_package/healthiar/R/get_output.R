@@ -51,21 +51,21 @@ get_output <-
     colnames_results_raw <- base::names(results_raw)
 
     # Store those id_columns that are present in results_raw
-    id_cols_in_results_raw <-
+    id_cols_available <-
       base::intersect(id_cols, colnames_results_raw)
 
     # Define all the ci columns have that have to be filtered to keep only central
     ci_cols <- base::grep("_ci", id_cols, value = TRUE)
 
     # Identify which of the ci_cols are present in the assessment
-    ci_cols_available <- base::grep("_ci", id_cols_in_results_raw, value = TRUE)
+    ci_cols_available <- base::grep("_ci", id_cols_available, value = TRUE)
 
     # Keep the larger geo_id available
     # Since intersect() keep the order, taking the first element [1] ensures
     # that it is geo_id_macro if available and otherwise geo_id_micro
     geo_id_available <-
       base::intersect(c("geo_id_macro", "geo_id_micro"),
-                      id_cols_in_results_raw)
+                      id_cols_available)
 
     larger_geo_id_available <- geo_id_available[1]
 
@@ -157,7 +157,7 @@ get_output <-
     grouping_cols_for_results_by <-
       results_by_vars_and_excluded_cols[results_by_vars_to_be_used] |>
       purrr::map(
-        ~ base::setdiff(id_cols_in_results_raw, .x)
+        ~ base::setdiff(id_cols_available, .x)
       )
 
     # Other columns: e.g. info, scen_, pop_fraction...
