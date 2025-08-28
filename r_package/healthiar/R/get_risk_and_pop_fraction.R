@@ -112,54 +112,53 @@ get_risk_and_pop_fraction <-
                                             erf_eq = erf_eq))
       }
 
-    # * Correction for multiexposure  ###############################################
-    if ( "approach_multiexposure" %in% names_input_table ) {
+    # * If multi-exposure with multiplicative approach ###############################################
+    if ( "approach_multiexposure" %in% names_input_table &&
+         base::unique(input_table$approach_multiexposure) %in% "multiplicative") {
 
-      # * * Multiplicative approach ############################################
+      # In the multiplicative approach, relative risks have to be merged
+      # by multiplying across different exposures
+      # if PAF
+      if(pop_fraction_type == "paf"){
 
-
-      if ( base::unique(input_table$approach_multiexposure) %in% "multiplicative" ) {
-
-        ## In the multiplicative approach, relative risks have to be merged
-        ## by multiplying across different exposures
-        if(pop_fraction_type == "paf"){ # if PAF
-          input_with_risk_and_pop_fraction <-
-            input_with_risk_and_pop_fraction |>
-            ## group by columns that define diversity
-            ## Only combine pm2.5 and no2 for rr_at_exp in the same ci |>
-            # prod() multiplies all elements in a vector
-            dplyr::mutate(
-              .by = dplyr::any_of(ci_variables),
-              rr_at_exp_before_multiplying = rr_at_exp,
-              rr_at_exp = base::prod(rr_at_exp))
-
-          } else { ## if PIF
-          input_with_risk_and_pop_fraction <-
-            input_with_risk_and_pop_fraction |>
-            ## group by columns that define diversity
-            ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
-            ## prod() multiplies all elements in a vector
-            dplyr::mutate(
-              .by = dplyr::any_of(ci_variables),
-              rr_at_exp_scen_1_before_multiplying = rr_at_exp_scen_1,
-              rr_at_exp_scen_2_before_multiplying = rr_at_exp_scen_2,
-              rr_at_exp_scen_1 = base::prod(rr_at_exp_scen_1),
-              rr_at_exp_scen_2 = base::prod(rr_at_exp_scen_2))
-          }
-
-        ## Data wrangling for multiple exposures
-        ## Collapse data frame pasting the columns with different values
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
-          dplyr::mutate(exp_name = base::toString(base::unique(exp_name))) |>
-          collapse_df_by_columns(
-            columns_for_group = c(
-              "geo_id_micro",
-              "sex",
-              "age_group",
-              "data_by_age",
-              "rr_at_exp"))
-      }
+          ## group by columns that define diversity
+          ## Only combine pm2.5 and no2 for rr_at_exp in the same ci |>
+          # prod() multiplies all elements in a vector
+          dplyr::mutate(
+            .by = dplyr::any_of(ci_variables),
+            rr_at_exp_before_multiplying = rr_at_exp,
+            rr_at_exp = base::prod(rr_at_exp))
+
+        # if PIF
+        } else {
+        input_with_risk_and_pop_fraction <-
+          input_with_risk_and_pop_fraction |>
+          ## group by columns that define diversity
+          ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
+          ## prod() multiplies all elements in a vector
+          dplyr::mutate(
+            .by = dplyr::any_of(ci_variables),
+            rr_at_exp_scen_1_before_multiplying = rr_at_exp_scen_1,
+            rr_at_exp_scen_2_before_multiplying = rr_at_exp_scen_2,
+            rr_at_exp_scen_1 = base::prod(rr_at_exp_scen_1),
+            rr_at_exp_scen_2 = base::prod(rr_at_exp_scen_2))
+        }
+
+      # Data wrangling for multiple exposures
+      # Collapse data frame pasting the columns with different values
+      input_with_risk_and_pop_fraction <-
+        input_with_risk_and_pop_fraction |>
+        dplyr::mutate(exp_name = base::toString(base::unique(exp_name))) |>
+        collapse_df_by_columns(
+          columns_for_group = c(
+            "geo_id_micro",
+            "sex",
+            "age_group",
+            "data_by_age",
+            "rr_at_exp"))
+
     }
 
     # Calculate PAF/PIF ########################################################
