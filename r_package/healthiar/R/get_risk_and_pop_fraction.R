@@ -75,7 +75,7 @@ get_risk_and_pop_fraction <-
         collapsed_df <-
           df |>
           dplyr::summarize(
-            .by = dplyr::any_of(columns_for_group),
+            .by = dplyr::all_of(columns_for_group),
             dplyr::across(
               .cols = dplyr::everything(),
               .fns = ~ if (base::length(base::unique(.x)) == 1) {
