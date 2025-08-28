@@ -35,9 +35,30 @@ get_risk_and_pop_fraction <-
 
     # Define useful variables #################
     # To be used below
-    ci_variables <-
+    ci_cols <-
       c("erf_ci", "exp_ci", "bhd_ci", "cutoff_ci",
         "dw_ci", "duration_ci", "erf_eq_ci")
+
+    names_input_table <- base::names(input_table)
+
+    ci_cols_available <-
+      base::intersect(ci_cols, names_input_table)
+
+
+    is_multiexposure_multiplicative <-
+      "approach_multiexposure" %in% names_input_table &&
+      base::unique(input_table$approach_multiexposure) %in% "multiplicative"
+
+    is_multiexposure_combined <-
+      "approach_multiexposure" %in% names_input_table &&
+      base::unique(input_table$approach_multiexposure) %in% "combined"
+
+    grouping_cols <-
+      c(ci_cols,
+        "geo_id_micro", "exp_name", "sex", "age_group", "erf_eq")
+
+    grouping_cols_available <-
+      base::intersect(grouping_cols, names_input_table)
 
 
     # Define helper function ###################################################
@@ -46,19 +67,20 @@ get_risk_and_pop_fraction <-
     # The columns with the same values inside will be condensed: e.g. c(1,1,1) = 1
     # The values in columns with different values are pasted: e.g. c(1,2,3) = "1, 2, 3"
     # The variable columns_for_group refers to the column that is used to group the collapse
-    # The variable sep refers to the string to be used to collapse different values
+
     collapse_df_by_columns <-
-      function(df, columns_for_group, sep){
+      function(df, columns_for_group){
 
         collapsed_df <-
           df |>
           dplyr::summarize(
-            .by = dplyr::any_of(columns_for_group),
-            dplyr::across(dplyr::everything(),
-                   ~ if (base::length(base::unique(.)) == 1) {
-                     dplyr::first(.)
-                   } else {
-                     base::paste(., collapse = sep)}))
+            .by = dplyr::all_of(columns_for_group),
+            dplyr::across(
+              .cols = dplyr::everything(),
+              .fns = ~ if (base::length(base::unique(.x)) == 1) {
+                dplyr::first(.)
+                } else {
+                  base::toString(.)}))
       }
 
 
@@ -67,7 +89,7 @@ get_risk_and_pop_fraction <-
     # Check if erf_eq is NULL before going into get_risk
     # Otherwise the variable is created without value and cannot be evaluated
     # We need to know erf_eq is NULL if statements within get_risk
-    if ( !base::any(base::grepl("erf_eq", base::names(input_table))) ) {
+    if ( !base::any(base::grepl("erf_eq", names_input_table)) ) {
       erf_eq <- NULL }
 
     input_with_risk_and_pop_fraction <-
@@ -76,7 +98,7 @@ get_risk_and_pop_fraction <-
       dplyr::mutate(pop_fraction_type = pop_fraction_type)
 
       ## If PAF
-    if ( {{pop_fraction_type}} == "paf" ) {
+    if (pop_fraction_type == "paf" ) {
 
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         ## Obtain the relative risk for the relevant concentration
@@ -88,154 +110,120 @@ get_risk_and_pop_fraction <-
                                             erf_shape = erf_shape,
                                             erf_eq = erf_eq))
 
-
-
       ## If PIF
     } else {
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(rr_at_exp_scen_1 =
                         healthiar::get_risk(rr = rr,
-                                           exp = exp_scen_1,
-                                           cutoff = cutoff,
-                                           rr_increment = rr_increment,
-                                           erf_shape = erf_shape,
-                                           erf_eq = erf_eq),
+                                            exp = exp_scen_1,
+                                            cutoff = cutoff,
+                                            rr_increment = rr_increment,
+                                            erf_shape = erf_shape,
+                                            erf_eq = erf_eq),
                       rr_at_exp_scen_2 =
                         healthiar::get_risk(rr = rr,
-                                           exp = exp_scen_2,
-                                           cutoff = cutoff,
-                                           rr_increment = rr_increment,
-                                           erf_shape = erf_shape,
-                                           erf_eq = erf_eq))
+                                            exp = exp_scen_2,
+                                            cutoff = cutoff,
+                                            rr_increment = rr_increment,
+                                            erf_shape = erf_shape,
+                                            erf_eq = erf_eq))
       }
 
-    # * Correction for multiexposure  ###############################################
-    if ( "approach_multiexposure" %in% base::names(input_table) ) {
+    # * If multi-exposure with multiplicative approach ###############################################
+    if (is_multiexposure_multiplicative) {
 
-      # * * Multiplicative approach ############################################
+      # In the multiplicative approach, relative risks have to be merged
+      # by multiplying across different exposures
+      # if PAF
+      if(pop_fraction_type == "paf"){
 
-
-      if ( base::unique(input_table$approach_multiexposure) %in% "multiplicative" ) {
-
-        ## In the multiplicative approach, relative risks have to be merged
-        ## by multiplying across different exposures
-        if({{pop_fraction_type}} == "paf"){
-          input_with_risk_and_pop_fraction <-
-            input_with_risk_and_pop_fraction |>
-            ## group by columns that define diversity
-            ## Only combine pm2.5 and no2 for rr_at_exp in the same ci |>
-            # prod() multiplies all elements in a vector
-            dplyr::mutate(
-              .by = dplyr::any_of(ci_variables),
-              rr_at_exp_before_multiplying = rr_at_exp,
-              rr_at_exp = base::prod(rr_at_exp))
-
-          } else { ## if PIF
-          input_with_risk_and_pop_fraction <-
-            input_with_risk_and_pop_fraction |>
-            ## group by columns that define diversity
-            ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
-            ## prod() multiplies all elements in a vector
-            dplyr::mutate(
-              .by = dplyr::any_of(ci_variables),
-              rr_at_exp_scen_1_before_multiplying = rr_at_exp_scen_1,
-              rr_at_exp_scen_2_before_multiplying = rr_at_exp_scen_2,
-              rr_at_exp_scen_1 = base::prod(rr_at_exp_scen_1),
-              rr_at_exp_scen_2 = base::prod(rr_at_exp_scen_2))
-          }
-
-        ## Data wrangling for multiple exposures
-        ## Collapse data frame pasting the columns with different values
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
-          dplyr::mutate(exp_name = base::toString(base::unique(exp_name))) |>
-          collapse_df_by_columns(
-            columns_for_group = c(
-              "geo_id_micro",
-              "sex",
-              "age_group",
-              "data_by_age",
-              "rr_at_exp"),
-            sep = ", ")
-      }
+          ## group by columns that define diversity
+          ## Only combine pm2.5 and no2 for rr_at_exp in the same ci |>
+          # prod() multiplies all elements in a vector
+          dplyr::mutate(
+            .by = dplyr::all_of(ci_cols_available),
+            rr_at_exp_before_multiplying = rr_at_exp,
+            rr_at_exp = base::prod(rr_at_exp))
+
+        # if PIF
+        } else {
+        input_with_risk_and_pop_fraction <-
+          input_with_risk_and_pop_fraction |>
+          ## group by columns that define diversity
+          ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
+          ## prod() multiplies all elements in a vector
+          dplyr::mutate(
+            .by = dplyr::all_of(ci_cols_available),
+            rr_at_exp_scen_1_before_multiplying = rr_at_exp_scen_1,
+            rr_at_exp_scen_2_before_multiplying = rr_at_exp_scen_2,
+            rr_at_exp_scen_1 = base::prod(rr_at_exp_scen_1),
+            rr_at_exp_scen_2 = base::prod(rr_at_exp_scen_2))
+        }
+
+      # Data wrangling for multiple exposures
+      # Collapse data frame pasting the columns with different values
+      input_with_risk_and_pop_fraction <-
+        input_with_risk_and_pop_fraction |>
+        dplyr::mutate(exp_name = base::toString(base::unique(exp_name))) |>
+        collapse_df_by_columns(columns_for_group = grouping_cols_available)
+
     }
 
     # Calculate PAF/PIF ########################################################
 
-    ## Calculate population (attributable or impact) fraction (PAF or PIF)
-    cols_uncertainty <-
-      names(input_with_risk_and_pop_fraction)[base::grepl("_ci", names(input_with_risk_and_pop_fraction))]
-
-    likely_columns_to_group_input <-
-      c("geo_id_micro",
-        "age_group",
-        "sex",
-        "exp_name",
-        cols_uncertainty)
-
-    available_columns_to_group_input <-
-      likely_columns_to_group_input[likely_columns_to_group_input %in%
-                                      base::names(input_with_risk_and_pop_fraction)]
-
-
     # * PAF ####################################################################
 
-    if ( {{pop_fraction_type}} == "paf" ) {
+    if ( pop_fraction_type == "paf" ) {
 
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
-          .by = dplyr::all_of(available_columns_to_group_input),
+          .by = dplyr::all_of(grouping_cols_available),
           pop_fraction =
             healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp,
-                                       rr_at_exp_2 = 1,
-                                       prop_pop_exp_1 = prop_pop_exp,
-                                       prop_pop_exp_2 = prop_pop_exp))
+                                         rr_at_exp_2 = 1,
+                                         prop_pop_exp_1 = prop_pop_exp,
+                                         prop_pop_exp_2 = prop_pop_exp))
 
     # * PIF ####################################################################
 
       } else {
         input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
-          .by = dplyr::all_of(available_columns_to_group_input),
+          .by = dplyr::all_of(grouping_cols_available),
           pop_fraction =
             healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp_scen_1,
-                                       rr_at_exp_2 = rr_at_exp_scen_2,
-                                       prop_pop_exp_1 = prop_pop_exp_scen_1,
-                                       prop_pop_exp_2 = prop_pop_exp_scen_2)) }
-    # * Correction for multiexposure ###########################################
+                                         rr_at_exp_2 = rr_at_exp_scen_2,
+                                         prop_pop_exp_1 = prop_pop_exp_scen_1,
+                                         prop_pop_exp_2 = prop_pop_exp_scen_2)) }
+    # * If multiexposure with combined approach #################################
 
-    if("approach_multiexposure" %in% base::names(input_table)){
-      if(base::unique(input_table$approach_multiexposure) %in% "combined"){
+    if(is_multiexposure_combined){
 
-        input_with_risk_and_pop_fraction <-
-          input_with_risk_and_pop_fraction |>
-          ## group by columns that define diversity
-          ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
-          dplyr::mutate(
-            .by = dplyr::any_of(ci_variables),
-            pop_fraction_before_combining = pop_fraction,
-            ## Multiply with prod() across all pollutants
-            pop_fraction = 1-(prod(1-pop_fraction)))
+      input_with_risk_and_pop_fraction <-
+        input_with_risk_and_pop_fraction |>
+        ## group by columns that define diversity
+        ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
+        dplyr::mutate(
+          .by = dplyr::all_of(ci_cols_available),
+          pop_fraction_before_combining = pop_fraction,
+          ## Multiply with prod() across all pollutants
+          pop_fraction = 1-(prod(1-pop_fraction)))
 
+      # Remove exp_name from grouping_cols_available
+      # because they have to be merged
+      grouping_cols_available_combined <-
+        base::setdiff(grouping_cols_available, c("exp_name"))
 
-        ## Data wrangling for multiple exposures
-        ## Collapse data frame pasting the columns with different values
-        input_with_risk_and_pop_fraction <-
-          input_with_risk_and_pop_fraction |>
-          dplyr::mutate(exp_name = base::toString(base::unique(exp_name)),
-                        exp = base::toString(base::unique(exp)),
-                        rr_at_exp = base::toString(base::unique(rr_at_exp)),
-                        pop_fraction_before_combining = base::toString(base::unique(pop_fraction_before_combining))) |>
-          collapse_df_by_columns(
-            columns_for_group = c(
-              "geo_id_micro",
-              "sex",
-              "age_group",
-              "data_by_age",
-              "pop_fraction"),
-            sep = ", ")
-        }
+      ## Data wrangling for multiple exposures
+      ## Collapse data frame pasting the columns with different values
+      input_with_risk_and_pop_fraction <-
+        input_with_risk_and_pop_fraction |>
+        collapse_df_by_columns(
+          columns_for_group = grouping_cols_available_combined)
       }
+
 
     # Prepare output ###########################################################
 
@@ -245,22 +233,7 @@ get_risk_and_pop_fraction <-
 
       input_with_risk_and_pop_fraction <-
         collapse_df_by_columns(df = input_with_risk_and_pop_fraction,
-                               columns_for_group = c(
-                                 "geo_id_micro",
-                                 "exp_name",
-                                 "sex",
-                                 "age_group",
-                                 "data_by_age",
-                                 "erf_ci",
-                                 "exp_ci",
-                                 "bhd_ci",
-                                 "cutoff_ci",
-                                 "dw_ci",
-                                 "duration_ci",
-                                 "erf_eq"),
-                               sep = ", ")
-
-
+                               columns_for_group = grouping_cols_available)
     }
 
     return(input_with_risk_and_pop_fraction)
