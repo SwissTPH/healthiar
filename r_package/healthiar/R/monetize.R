@@ -369,7 +369,7 @@ monetize <- function(output_attribute = NULL,
       output_monetization <-
 
         healthiar:::add_monetized_impact(
-          df = data.frame(impact = impact),
+          df = tibble::tibble(impact = impact),
           valuation = valuation,
           discount_rate = discount_rate,
           discount_years = discount_years,
