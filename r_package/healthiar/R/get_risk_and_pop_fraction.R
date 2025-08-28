@@ -55,8 +55,7 @@ get_risk_and_pop_fraction <-
 
     grouping_cols <-
       c(ci_cols,
-        "geo_id_micro", "exp_name", "sex", "age_group",
-        "rr_at_exp", "pop_fraction", "erf_eq")
+        "geo_id_micro", "exp_name", "sex", "age_group", "erf_eq")
 
     grouping_cols_available <-
       base::intersect(grouping_cols, names_input_table)
@@ -168,11 +167,7 @@ get_risk_and_pop_fraction <-
       input_with_risk_and_pop_fraction <-
         input_with_risk_and_pop_fraction |>
         dplyr::mutate(exp_name = base::toString(base::unique(exp_name))) |>
-        collapse_df_by_columns(
-          columns_for_group =
-            #c("geo_id_micro", "sex", "age_group", "data_by_age", "rr_at_exp")
-            grouping_cols_available
-            )
+        collapse_df_by_columns(columns_for_group = grouping_cols_available)
 
     }
 
@@ -196,7 +191,7 @@ get_risk_and_pop_fraction <-
       } else {
         input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
-          .by = dplyr::all_of(rouping_cols_available),
+          .by = dplyr::all_of(grouping_cols_available),
           pop_fraction =
             healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp_scen_1,
                                          rr_at_exp_2 = rr_at_exp_scen_2,
@@ -216,17 +211,17 @@ get_risk_and_pop_fraction <-
           ## Multiply with prod() across all pollutants
           pop_fraction = 1-(prod(1-pop_fraction)))
 
+      # Remove exp_name from grouping_cols_available
+      # because they have to be merged
+      grouping_cols_available_combined <-
+        base::setdiff(grouping_cols_available, c("exp_name"))
 
       ## Data wrangling for multiple exposures
       ## Collapse data frame pasting the columns with different values
       input_with_risk_and_pop_fraction <-
         input_with_risk_and_pop_fraction |>
-        # dplyr::mutate(exp_name = base::toString(base::unique(exp_name)),
-        #               exp = base::toString(base::unique(exp)),
-        #               rr_at_exp = base::toString(base::unique(rr_at_exp)),
-        #               pop_fraction_before_combining = base::toString(base::unique(pop_fraction_before_combining))) |>
         collapse_df_by_columns(
-          columns_for_group = grouping_cols_available)
+          columns_for_group = grouping_cols_available_combined)
       }
 
 
