@@ -202,39 +202,39 @@ get_risk_and_pop_fraction <-
                                          rr_at_exp_2 = rr_at_exp_scen_2,
                                          prop_pop_exp_1 = prop_pop_exp_scen_1,
                                          prop_pop_exp_2 = prop_pop_exp_scen_2)) }
-    # * Correction for multiexposure ###########################################
+    # * If multiexposure with combined approach #################################
 
-    if("approach_multiexposure" %in% names_input_table){
-      if(base::unique(input_table$approach_multiexposure) %in% "combined"){
+    if("approach_multiexposure" %in% names_input_table &&
+       base::unique(input_table$approach_multiexposure) %in% "combined"){
 
-        input_with_risk_and_pop_fraction <-
-          input_with_risk_and_pop_fraction |>
-          ## group by columns that define diversity
-          ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
-          dplyr::mutate(
-            .by = dplyr::any_of(ci_variables),
-            pop_fraction_before_combining = pop_fraction,
-            ## Multiply with prod() across all pollutants
-            pop_fraction = 1-(prod(1-pop_fraction)))
+      input_with_risk_and_pop_fraction <-
+        input_with_risk_and_pop_fraction |>
+        ## group by columns that define diversity
+        ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
+        dplyr::mutate(
+          .by = dplyr::any_of(ci_variables),
+          pop_fraction_before_combining = pop_fraction,
+          ## Multiply with prod() across all pollutants
+          pop_fraction = 1-(prod(1-pop_fraction)))
 
 
-        ## Data wrangling for multiple exposures
-        ## Collapse data frame pasting the columns with different values
-        input_with_risk_and_pop_fraction <-
-          input_with_risk_and_pop_fraction |>
-          dplyr::mutate(exp_name = base::toString(base::unique(exp_name)),
-                        exp = base::toString(base::unique(exp)),
-                        rr_at_exp = base::toString(base::unique(rr_at_exp)),
-                        pop_fraction_before_combining = base::toString(base::unique(pop_fraction_before_combining))) |>
-          collapse_df_by_columns(
-            columns_for_group = c(
-              "geo_id_micro",
-              "sex",
-              "age_group",
-              "data_by_age",
-              "pop_fraction"))
-        }
+      ## Data wrangling for multiple exposures
+      ## Collapse data frame pasting the columns with different values
+      input_with_risk_and_pop_fraction <-
+        input_with_risk_and_pop_fraction |>
+        dplyr::mutate(exp_name = base::toString(base::unique(exp_name)),
+                      exp = base::toString(base::unique(exp)),
+                      rr_at_exp = base::toString(base::unique(rr_at_exp)),
+                      pop_fraction_before_combining = base::toString(base::unique(pop_fraction_before_combining))) |>
+        collapse_df_by_columns(
+          columns_for_group = c(
+            "geo_id_micro",
+            "sex",
+            "age_group",
+            "data_by_age",
+            "pop_fraction"))
       }
+
 
     # Prepare output ###########################################################
 
