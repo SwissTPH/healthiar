@@ -178,27 +178,13 @@ get_risk_and_pop_fraction <-
 
     # Calculate PAF/PIF ########################################################
 
-    # ## Calculate population (attributable or impact) fraction (PAF or PIF)
-    # cols_uncertainty <-
-    #   base::grep("_ci", names_input_table, value = TRUE)
-    #
-    # likely_columns_to_group_input <-
-    #   c("geo_id_micro", "age_group", "sex", "exp_name", cols_uncertainty)
-    #
-    # available_columns_to_group_input <-
-    #   base::intersect(likely_columns_to_group_input, names_input_table)
-
-
     # * PAF ####################################################################
 
     if ( pop_fraction_type == "paf" ) {
 
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
-          .by = dplyr::all_of(
-            #available_columns_to_group_input
-            grouping_cols_available
-            ),
+          .by = dplyr::all_of(grouping_cols_available),
           pop_fraction =
             healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp,
                                          rr_at_exp_2 = 1,
@@ -210,10 +196,7 @@ get_risk_and_pop_fraction <-
       } else {
         input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(
-          .by = dplyr::all_of(
-            #available_columns_to_group_input
-            grouping_cols_available
-            ),
+          .by = dplyr::all_of(rouping_cols_available),
           pop_fraction =
             healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp_scen_1,
                                          rr_at_exp_2 = rr_at_exp_scen_2,
@@ -238,14 +221,12 @@ get_risk_and_pop_fraction <-
       ## Collapse data frame pasting the columns with different values
       input_with_risk_and_pop_fraction <-
         input_with_risk_and_pop_fraction |>
-        dplyr::mutate(exp_name = base::toString(base::unique(exp_name)),
-                      exp = base::toString(base::unique(exp)),
-                      rr_at_exp = base::toString(base::unique(rr_at_exp)),
-                      pop_fraction_before_combining = base::toString(base::unique(pop_fraction_before_combining))) |>
+        # dplyr::mutate(exp_name = base::toString(base::unique(exp_name)),
+        #               exp = base::toString(base::unique(exp)),
+        #               rr_at_exp = base::toString(base::unique(rr_at_exp)),
+        #               pop_fraction_before_combining = base::toString(base::unique(pop_fraction_before_combining))) |>
         collapse_df_by_columns(
-          columns_for_group =
-            # c("geo_id_micro", "sex", "age_group", "data_by_age", "pop_fraction")
-            grouping_cols_available)
+          columns_for_group = grouping_cols_available)
       }
 
 
@@ -257,15 +238,7 @@ get_risk_and_pop_fraction <-
 
       input_with_risk_and_pop_fraction <-
         collapse_df_by_columns(df = input_with_risk_and_pop_fraction,
-                               columns_for_group =
-                                 # c("geo_id_micro", "exp_name", "sex", "age_group",
-                                 #   "data_by_age",
-                                 #   "erf_ci", "exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci",
-                                 #   "erf_eq")
-                                 grouping_cols_available
-                               )
-
-
+                               columns_for_group = grouping_cols_available)
     }
 
     return(input_with_risk_and_pop_fraction)
