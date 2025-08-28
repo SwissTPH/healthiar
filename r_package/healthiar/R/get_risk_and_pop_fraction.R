@@ -41,6 +41,9 @@ get_risk_and_pop_fraction <-
 
     names_input_table <- base::names(input_table)
 
+    ci_variables_available <-
+      base::intersect(ci_variables, names_input_table)
+
 
     is_multiexposure_multiplicative <-
       "approach_multiexposure" %in% names_input_table &&
@@ -100,8 +103,6 @@ get_risk_and_pop_fraction <-
                                             erf_shape = erf_shape,
                                             erf_eq = erf_eq))
 
-
-
       ## If PIF
     } else {
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
@@ -135,7 +136,7 @@ get_risk_and_pop_fraction <-
           ## Only combine pm2.5 and no2 for rr_at_exp in the same ci |>
           # prod() multiplies all elements in a vector
           dplyr::mutate(
-            .by = dplyr::any_of(ci_variables),
+            .by = dplyr::all_of(ci_variables_available),
             rr_at_exp_before_multiplying = rr_at_exp,
             rr_at_exp = base::prod(rr_at_exp))
 
@@ -147,7 +148,7 @@ get_risk_and_pop_fraction <-
           ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
           ## prod() multiplies all elements in a vector
           dplyr::mutate(
-            .by = dplyr::any_of(ci_variables),
+            .by = dplyr::all_of(ci_variables_available),
             rr_at_exp_scen_1_before_multiplying = rr_at_exp_scen_1,
             rr_at_exp_scen_2_before_multiplying = rr_at_exp_scen_2,
             rr_at_exp_scen_1 = base::prod(rr_at_exp_scen_1),
@@ -219,7 +220,7 @@ get_risk_and_pop_fraction <-
         ## group by columns that define diversity
         ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
         dplyr::mutate(
-          .by = dplyr::any_of(ci_variables),
+          .by = dplyr::all_of(ci_variables_available),
           pop_fraction_before_combining = pop_fraction,
           ## Multiply with prod() across all pollutants
           pop_fraction = 1-(prod(1-pop_fraction)))
