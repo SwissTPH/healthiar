@@ -45,12 +45,15 @@ get_risk_and_pop_fraction <-
       base::intersect(ci_cols, names_input_table)
 
 
+    is_multiexposure <-
+      "approach_multiexposure" %in% names_input_table
+
     is_multiexposure_multiplicative <-
-      "approach_multiexposure" %in% names_input_table &&
+      is_multiexposure &&
       base::unique(input_table$approach_multiexposure) %in% "multiplicative"
 
     is_multiexposure_combined <-
-      "approach_multiexposure" %in% names_input_table &&
+      is_multiexposure &&
       base::unique(input_table$approach_multiexposure) %in% "combined"
 
     grouping_cols <-
@@ -59,6 +62,12 @@ get_risk_and_pop_fraction <-
 
     grouping_cols_available <-
       base::intersect(grouping_cols, names_input_table)
+
+    # Remove exp_name from grouping_cols_available
+    # because they have to be merged
+    grouping_cols_available_multiexposure <-
+      base::setdiff(grouping_cols_available, c("exp_name"))
+
 
 
     # Define helper function ###################################################
@@ -139,8 +148,8 @@ get_risk_and_pop_fraction <-
 
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
-          ## group by columns that define diversity
-          ## Only combine pm2.5 and no2 for rr_at_exp in the same ci |>
+          # group by columns that define diversity
+          # Only combine pm2.5 and no2 for rr_at_exp in the same ci |>
           # prod() multiplies all elements in a vector
           dplyr::mutate(
             .by = dplyr::all_of(ci_cols_available),
@@ -151,9 +160,9 @@ get_risk_and_pop_fraction <-
         } else {
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
-          ## group by columns that define diversity
-          ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
-          ## prod() multiplies all elements in a vector
+          # group by columns that define diversity
+          # Only combine pm2.5 and no2 for rr_at_exp in the same ci
+          # prod() multiplies all elements in a vector
           dplyr::mutate(
             .by = dplyr::all_of(ci_cols_available),
             rr_at_exp_scen_1_before_multiplying = rr_at_exp_scen_1,
@@ -165,9 +174,11 @@ get_risk_and_pop_fraction <-
       # Data wrangling for multiple exposures
       # Collapse data frame pasting the columns with different values
       input_with_risk_and_pop_fraction <-
-        input_with_risk_and_pop_fraction |>
-        dplyr::mutate(exp_name = base::toString(base::unique(exp_name))) |>
-        collapse_df_by_columns(columns_for_group = grouping_cols_available)
+        # input_with_risk_and_pop_fraction |>
+        # collapse_df_by_columns(columns_for_group = grouping_cols_available_multiexposure)
+        healthiar:::collapse_df_by_group(
+          df = input_with_risk_and_pop_fraction,
+          group_col_names = grouping_cols_available_multiexposure)
 
     }
 
@@ -203,37 +214,33 @@ get_risk_and_pop_fraction <-
 
       input_with_risk_and_pop_fraction <-
         input_with_risk_and_pop_fraction |>
-        ## group by columns that define diversity
-        ## Only combine pm2.5 and no2 for rr_at_exp in the same ci
+        # group by columns that define diversity
+        # Only combine pm2.5 and no2 for rr_at_exp in the same ci
         dplyr::mutate(
           .by = dplyr::all_of(ci_cols_available),
           pop_fraction_before_combining = pop_fraction,
           ## Multiply with prod() across all pollutants
           pop_fraction = 1-(prod(1-pop_fraction)))
 
-      # Remove exp_name from grouping_cols_available
-      # because they have to be merged
-      grouping_cols_available_combined <-
-        base::setdiff(grouping_cols_available, c("exp_name"))
-
-      ## Data wrangling for multiple exposures
-      ## Collapse data frame pasting the columns with different values
+      # Data wrangling for multiple exposures
+      # Collapse data frame pasting the columns with different values
       input_with_risk_and_pop_fraction <-
-        input_with_risk_and_pop_fraction |>
-        collapse_df_by_columns(
-          columns_for_group = grouping_cols_available_combined)
+        healthiar:::collapse_df_by_group(
+          df = input_with_risk_and_pop_fraction,
+          group_col_names = grouping_cols_available_multiexposure)
       }
 
 
     # Prepare output ###########################################################
 
-    ## Only if exposure distribution (multiple exposure categories)
-    ## then reduce the number of rows to keep the same number as in rr
+    # Only if exposure distribution (multiple exposure categories)
+    # then reduce the number of rows to keep the same number as in rr
     if(base::unique(input_table$exp_type) == "exposure_distribution"){
 
       input_with_risk_and_pop_fraction <-
-        collapse_df_by_columns(df = input_with_risk_and_pop_fraction,
-                               columns_for_group = grouping_cols_available)
+        healthiar:::collapse_df_by_group(
+          df = input_with_risk_and_pop_fraction,
+          group_col_names = grouping_cols_available)
     }
 
     return(input_with_risk_and_pop_fraction)

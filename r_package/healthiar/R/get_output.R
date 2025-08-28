@@ -102,25 +102,6 @@ get_output <-
       # because they are results
       c(cols_to_be_summed, impact_cols, nest_cols))
 
-    # Create function
-    # to identify the columns that have different values within the groups
-    # (e.g. exposure categories)
-
-    find_cols_with_multiple_values <- function(df, group){
-      out <- df |>
-      dplyr::summarise(
-        .by = dplyr::all_of(c(group)),
-        dplyr::across(
-          .cols = dplyr::everything(),
-          .fns = ~ base::length(base::unique(.x)) > 1)) |>
-        # Select columns where is TRUE
-        # Use isTRUE() because it ignores NAs
-        dplyr::select(dplyr::where(~ base::isTRUE(.x[1]))) |>
-        base::names()
-
-      return(out)
-    }
-
     # Among those columns that could be collapsed,
     # identify the columns with multiple values.
     # This is a subset of columns to be scaned if they have multipble values
@@ -128,7 +109,10 @@ get_output <-
     cols_with_multiple_values <- results_raw |>
       dplyr::select(dplyr::all_of(cols_without_results_and_nest)) |>
       # No groups, i.e. for the whole data set
-      find_cols_with_multiple_values(df = _, group = NULL)
+      #find_cols_with_multiple_values(df = _, group = NULL)
+      healthiar:::find_multi_value_col_names(
+        df = _,
+        group_col_names = NULL)
 
     ## Define variable for results_by_ and
     # the columns that have to be excluded in the group columns
@@ -173,7 +157,6 @@ get_output <-
                       colnames_results_raw[base::grepl("info_|scen_|pop_fraction", colnames_results_raw)])
 
 
-
     results_by_vars_to_be_used_except_geo_id_macro <-
       base::setdiff(results_by_vars_to_be_used, c("geo_id_macro"))
 
@@ -207,50 +190,23 @@ get_output <-
 
       grouping_cols <- grouping_cols_for_results_by[[var]]
 
-      # Identify the columns to be collapsed
-      cols_to_collapse <- df |>
-        dplyr::select(dplyr::all_of(c(grouping_cols, cols_eligible_for_collapse))) |>
-        # Keep only central estimates
-        # because no variability is expected across bounds
-        # This enables faster evaluation
-        dplyr::filter(
-          dplyr::if_all(.cols = dplyr::all_of(ci_cols_available),
-                        .fns = ~ base::grepl("central", .x))) |>
-        find_cols_with_multiple_values(df = _, group = grouping_cols)
+      # Prepare df for collapse by removing columns
+      # that are to be summed or obtained in steps below
+      df_for_collapse <- df |>
+        dplyr::select(-dplyr::any_of(c(cols_to_be_summed)),
+                      -dplyr::matches("_rounded|_per_100k_inhab"))
 
-      # Collapse columns
-      # i.e. paste the values so that they do not hinder the summarize below
-      if(base::length(cols_to_collapse) > 0){
-        df_collapsed <-
-          df |>
-          dplyr::mutate(
-            .by = dplyr::all_of(grouping_cols),
-            dplyr::across(
-              .cols = dplyr::all_of(cols_to_collapse),
-              .fns = ~ base::toString(.x),
-              .names = "{.col}"))
-      } else { df_collapsed <- df}
-
-
-      # # ALTERNATIVE CODE: "total" or remove value of cols_to_collapse, very small speed gain
-      # # Collapse columns
-      # # i.e. paste the values so that they do not hinder the summarize below
-      # if(base::length(cols_to_collapse) > 0){
-      #
-      #   df_collapsed <- df
-      #
-      #   df_collapsed[, cols_to_collapse] <- "total"
-      #
-      # } else { df_collapsed <- df}
-
-      # # Collapse columns
-      # # i.e. paste the values so that they do not hinder the summarize below
-      # if(base::length(cols_to_collapse) > 0){
-      #   df_collapsed <- df |>
-      #     dplyr::select(-dplyr::all_of(cols_to_collapse))
-      # } else { df_collapsed <- df}
-
-
+      # Collapse df using the intern healthiar function
+      df_collapsed <-
+        healthiar:::collapse_df_by_group(
+          df = df,
+          group_col_names = grouping_cols,
+          # If these two last arguments are empty the function can obtain them internally
+          # but we enter them because they are the same for all results_by_vars
+          # and we increase speed in this way (instead of repeating the process)
+          multi_value_col_names = cols_eligible_for_collapse,
+          ci_col_names = ci_cols_available,
+          only_unique_rows = FALSE)
 
       # Create df_collapsed with unique values (to be used below)
       # Remove columns included in cols_to_be_summed and
@@ -260,6 +216,7 @@ get_output <-
         dplyr::select(-dplyr::any_of(c(cols_to_be_summed)),
                       -dplyr::matches("_rounded|_per_100k_inhab")) |>
         dplyr::distinct()
+
 
       # Sum impact columns (keep original names)
       impact_agg <- df_collapsed |>
@@ -371,7 +328,7 @@ get_output <-
 
       }
 
-    # Use the funtions above to put first the columns
+    # Use the functions above to put first the columns
     output <-
       purrr::map(
         .x = output,
