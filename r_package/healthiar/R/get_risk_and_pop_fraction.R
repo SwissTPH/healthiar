@@ -98,18 +98,18 @@ get_risk_and_pop_fraction <-
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(rr_at_exp_scen_1 =
                         healthiar::get_risk(rr = rr,
-                                           exp = exp_scen_1,
-                                           cutoff = cutoff,
-                                           rr_increment = rr_increment,
-                                           erf_shape = erf_shape,
-                                           erf_eq = erf_eq),
+                                            exp = exp_scen_1,
+                                            cutoff = cutoff,
+                                            rr_increment = rr_increment,
+                                            erf_shape = erf_shape,
+                                            erf_eq = erf_eq),
                       rr_at_exp_scen_2 =
                         healthiar::get_risk(rr = rr,
-                                           exp = exp_scen_2,
-                                           cutoff = cutoff,
-                                           rr_increment = rr_increment,
-                                           erf_shape = erf_shape,
-                                           erf_eq = erf_eq))
+                                            exp = exp_scen_2,
+                                            cutoff = cutoff,
+                                            rr_increment = rr_increment,
+                                            erf_shape = erf_shape,
+                                            erf_eq = erf_eq))
       }
 
     # * Correction for multiexposure  ###############################################
@@ -188,9 +188,9 @@ get_risk_and_pop_fraction <-
           .by = dplyr::all_of(available_columns_to_group_input),
           pop_fraction =
             healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp,
-                                       rr_at_exp_2 = 1,
-                                       prop_pop_exp_1 = prop_pop_exp,
-                                       prop_pop_exp_2 = prop_pop_exp))
+                                         rr_at_exp_2 = 1,
+                                         prop_pop_exp_1 = prop_pop_exp,
+                                         prop_pop_exp_2 = prop_pop_exp))
 
     # * PIF ####################################################################
 
@@ -200,9 +200,9 @@ get_risk_and_pop_fraction <-
           .by = dplyr::all_of(available_columns_to_group_input),
           pop_fraction =
             healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp_scen_1,
-                                       rr_at_exp_2 = rr_at_exp_scen_2,
-                                       prop_pop_exp_1 = prop_pop_exp_scen_1,
-                                       prop_pop_exp_2 = prop_pop_exp_scen_2)) }
+                                         rr_at_exp_2 = rr_at_exp_scen_2,
+                                         prop_pop_exp_1 = prop_pop_exp_scen_1,
+                                         prop_pop_exp_2 = prop_pop_exp_scen_2)) }
     # * Correction for multiexposure ###########################################
 
     if("approach_multiexposure" %in% names_input_table){
