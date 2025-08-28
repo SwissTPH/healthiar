@@ -42,6 +42,15 @@ get_risk_and_pop_fraction <-
     names_input_table <- base::names(input_table)
 
 
+    is_multiexposure_multiplicative <-
+      "approach_multiexposure" %in% names_input_table &&
+      base::unique(input_table$approach_multiexposure) %in% "multiplicative"
+
+    is_multiexposure_combined <-
+      "approach_multiexposure" %in% names_input_table &&
+      base::unique(input_table$approach_multiexposure) %in% "combined"
+
+
     # Define helper function ###################################################
 
     # This function enables the collapse of the data frame to have only one row
@@ -113,8 +122,7 @@ get_risk_and_pop_fraction <-
       }
 
     # * If multi-exposure with multiplicative approach ###############################################
-    if ( "approach_multiexposure" %in% names_input_table &&
-         base::unique(input_table$approach_multiexposure) %in% "multiplicative") {
+    if (is_multiexposure_multiplicative) {
 
       # In the multiplicative approach, relative risks have to be merged
       # by multiplying across different exposures
@@ -204,8 +212,7 @@ get_risk_and_pop_fraction <-
                                          prop_pop_exp_2 = prop_pop_exp_scen_2)) }
     # * If multiexposure with combined approach #################################
 
-    if("approach_multiexposure" %in% names_input_table &&
-       base::unique(input_table$approach_multiexposure) %in% "combined"){
+    if(is_multiexposure_combined){
 
       input_with_risk_and_pop_fraction <-
         input_with_risk_and_pop_fraction |>
