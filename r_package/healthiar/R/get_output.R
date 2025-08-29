@@ -190,12 +190,6 @@ get_output <-
 
       grouping_cols <- grouping_cols_for_results_by[[var]]
 
-      # Prepare df for collapse by removing columns
-      # that are to be summed or obtained in steps below
-      df_for_collapse <- df |>
-        dplyr::select(-dplyr::any_of(c(cols_to_be_summed)),
-                      -dplyr::matches("_rounded|_per_100k_inhab"))
-
       # Collapse df using the intern healthiar function
       df_collapsed <-
         healthiar:::collapse_df_by_group(
@@ -208,22 +202,12 @@ get_output <-
           ci_col_names = ci_cols_available,
           only_unique_rows = FALSE)
 
-      # Create df_collapsed with unique values (to be used below)
-      # Remove columns included in cols_to_be_summed and
-      # _rounded & _per_100k_inhab.
-      # Otherwise, duplicated.
-      df_collapsed_and_distinct <- df_collapsed |>
-        dplyr::select(-dplyr::any_of(c(cols_to_be_summed)),
-                      -dplyr::matches("_rounded|_per_100k_inhab")) |>
-        dplyr::distinct()
-
-
       # Sum impact columns (keep original names)
       impact_agg <- df_collapsed |>
         # Deselect columns to be summed
         # Otherwise conflict with left_join behind
-        dplyr::select(- dplyr::contains("_rounded")) |>
-        dplyr::summarise(
+        dplyr::select(- dplyr::matches("_rounded|_per_100k_inhab")) |>
+        dplyr::mutate(
           .by = dplyr::all_of(grouping_cols),
           dplyr::across(
             # Important: across() because this is to be done in all impact columns
@@ -235,11 +219,9 @@ get_output <-
             .cols = dplyr::all_of(cols_to_be_summed),
             .fns = ~ sum(.x, na.rm = TRUE),
             .names = "{.col}"))|>
-        # Add the rest of columns
-        dplyr::left_join(
-          y = df_collapsed_and_distinct,
-          by = grouping_cols) |>
-        # Add ..._rounded columns
+        # Keep only distict rows because above mutate() not summarize()
+        dplyr::distinct() |>
+        # Calculate rounded impacts
         dplyr::mutate(
           dplyr::across(
             .cols = dplyr::all_of(impact_cols_to_be_summed),
@@ -247,6 +229,7 @@ get_output <-
             .names = "{.col}_rounded"
           )
         )
+
 
       # If population is available, recompute with population and normalized metrics
       if ("population" %in% names(df)) {
