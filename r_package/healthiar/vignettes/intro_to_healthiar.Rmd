@@ -801,7 +801,7 @@ Use the two arguments `approach_exposure` and `approach_newborns` to modify the 
 
     -   `"without_newborns"` (default) assumes that the population in the year of analysis is followed over time, without considering newborns being born
 
-    -   `"with_newborns"` assumes that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the arguments population_midyear_male and population_midyear_female
+    -   `"with_newborns"` assumes that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the argument population
 
 ### Detailed results
 
