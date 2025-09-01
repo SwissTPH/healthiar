@@ -313,8 +313,8 @@ validate_input_attribute <-
 
 
 
-    if(all(lifetable_var_names_with_same_length %in% available_var_names)){
-      error_if_incompatible_length_of_age_range(age_dependent_var = "deaths_male")
+    if(base::all(lifetable_var_names_with_same_length %in% available_var_names)){
+      error_if_incompatible_length_of_age_range(age_dependent_var = "bhd_central")
     }
 
     ### error_if_erf_eq_not_function_or_string #####
