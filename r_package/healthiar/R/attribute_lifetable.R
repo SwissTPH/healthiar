@@ -23,7 +23,7 @@
 #' @details
 #' \strong{Function arguments}
 #' @details
-#' \code{population_midyear_female},\code{population_midyear_male}
+#' \code{population}
 #' @details
 #' Mid-year population of year x can be approximated as the mean of either end-year populations of years x-1 and x or start-of-year populations of years x and x+1. In each age group population must be ≥ 1 to avoid problems in the calculation.
 #' @details
