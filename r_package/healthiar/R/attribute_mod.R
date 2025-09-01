@@ -68,7 +68,6 @@ attribute_mod <-
     year_of_analysis = NULL
     ) {
 
-    is_lifetable <- base::unique(output_attribute$health_detailed$input_table$is_lifetable)
 
     # Capture all arguments and values
     input_args_2_value <- base::as.list(base::environment())
@@ -84,47 +83,38 @@ attribute_mod <-
     # Extract input_args_1_value
     input_args_1 <- output_attribute[["health_detailed"]][["input_args"]]
 
-    # Create a function to replace values in list of arguments
-    # modifyList() and purrr::list_modify() do not work because require named lists
-    # And the list elements are entered by users without name
-
-    replace_list <- function(original, updated) {
-      # If an element exists in updates, replace it; otherwise, keep original
-      purrr::imap(original,
-                  function(.x, .y){
-                    if(.y %in% base::names(updated)){
-                      .x<- updated[[.y]]
-                      }else {.x <- .x}})
-    }
+    # New argument names
+    input_arg_2_names_with_new_values <- base::names(input_args_2_value)
 
 
-    input_args_2_value <-
-      replace_list(input_args_1[["value"]], input_args_2_value)
+    # Add input_args
+    input_for_attribute_input_args <- output_attribute$health_detailed$input_args
 
-    # Prepare input_args_2 for attribute_master()
-    input_args_2_for_attribute <-
+    # Modify values
+    input_for_attribute_input_args$value[input_arg_2_names_with_new_values] <-
       input_args_2_value
+
+    # Create input_for_attribute
+    # Compilation of the data that to be re-entered in attribute_master() below
+    # First all values (arguments in the function)
+    input_for_attribute <-
+      input_for_attribute_input_args$value
+    # Second the hole input_args as list.
+    # This is to transported internally
+    # because attribute_master does not create input_args,
+    # only attribute_health() and attribute_lifetable() create input_args.
+    input_for_attribute$input_args <- input_for_attribute_input_args
 
     # Add is_lifetable
     # which is not available in input_args
     # because it depends on the function call
-    input_args_2_for_attribute[["is_lifetable"]] <- is_lifetable
-
-
-    input_args_2_for_attribute[["input_args"]] <-
-      # Add input_args (including the rest of input_args sub-lists)
-      # as additional argument for attribute_master()
-      base::list(
-        value = input_args_2_value,
-        is_entered_by_user = input_args_1[["is_entered_by_user"]],
-        is_default = input_args_1[["is_default"]]
-      )
-
+    input_for_attribute[["is_lifetable"]] <-
+      base::unique(output_attribute$health_detailed$input_table$is_lifetable)
 
     # Use the arguments attribute()
     output_attribute_2 <-
       base::do.call(healthiar:::attribute_master,
-              input_args_2_for_attribute)
+                    input_for_attribute)
 
     return(output_attribute_2)
 
