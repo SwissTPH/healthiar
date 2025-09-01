@@ -63,7 +63,7 @@ attribute_health(
 
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
 
-\item{population}{\code{Numeric value} or \code{numeric vector} specifying the total population (exposed + non-exposed). For attribute_health(), this is used \strong{to calculate attributable impacts rate} per 100 000 population. \emph{Optional argument.}.  For attribute_lifetable(), it is an obligatory argument and it refers to the the population the \strong{mid-year populations} (≥ 1) per age (age interval = 1 year) for the year of analysis. See Details for more info.}
+\item{population}{For attribute_lifetable(), it is an obligatory argument and it refers to the the population the \strong{mid-year populations} (≥ 1) per age (age interval = 1 year) for the year of analysis. See Details for more info.}
 }
 \value{
 This function returns two \code{lists}:
