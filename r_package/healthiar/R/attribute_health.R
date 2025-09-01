@@ -298,11 +298,11 @@ attribute_health <-
         prop_pop_exp = prop_pop_exp,
         # ITERATION (OPTIONAL)
         geo_id_micro = geo_id_micro , geo_id_macro = geo_id_macro,
-        age_group = age_group,
+        age_group = age_group, # Obligatory for life table approach
         sex = sex,
         # META (OPTIONAL)
         info = info,
-        population = population,
+        population = population, # Obligatory for life table approach
         # YLD (OPTIONAL)
         dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
         duration_central = duration_central, duration_lower =  duration_lower, duration_upper = duration_upper,
