@@ -71,7 +71,7 @@ attribute_mod <-
     is_lifetable <- base::unique(output_attribute$health_detailed$input_table$is_lifetable)
 
     # Capture all arguments and values
-    input_args_2_value <- as.list(environment())
+    input_args_2_value <- base::as.list(base::environment())
 
     # Removing output_attribute from args
     input_args_2_value$output_attribute <- NULL
@@ -92,7 +92,7 @@ attribute_mod <-
       # If an element exists in updates, replace it; otherwise, keep original
       purrr::imap(original,
                   function(.x, .y){
-                    if(.y %in% names(updated)){
+                    if(.y %in% base::names(updated)){
                       .x<- updated[[.y]]
                       }else {.x <- .x}})
     }
@@ -114,7 +114,7 @@ attribute_mod <-
     input_args_2_for_attribute[["input_args"]] <-
       # Add input_args (including the rest of input_args sub-lists)
       # as additional argument for attribute_master()
-      list(
+      base::list(
         value = input_args_2_value,
         is_entered_by_user = input_args_1[["is_entered_by_user"]],
         is_default = input_args_1[["is_default"]]
@@ -123,7 +123,7 @@ attribute_mod <-
 
     # Use the arguments attribute()
     output_attribute_2 <-
-      do.call(healthiar:::attribute_master,
+      base::do.call(healthiar:::attribute_master,
               input_args_2_for_attribute)
 
     return(output_attribute_2)
