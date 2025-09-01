@@ -428,27 +428,25 @@ validate_input_attribute <-
     error_if_sum_higher_than_1 <- function(var_name){
 
       var_value <- input_args_value [[var_name]]
-      geo_id_micro <- as.character(input_args_value [["geo_id_micro"]])
-      #TODO: Only provisional to be deleted as soon as
-      # age_group and sex is integrated into attribute_lifetable()
-      rep_var_value <-
-        base::ifelse(
-          ! base::is.null(input_args_value[["population_midyear_male"]]),
-          base::length(input_args_value[["population_midyear_male"]]),
-          1)
 
       var_table <-
         tibble::tibble(
-          geo_id_micro = geo_id_micro ,
+          exp_name = input_args_value$exp_name,
+          geo_id_micro = input_args_value$geo_id_micro,
           age_group = input_args_value$age_group,
           sex = input_args_value$sex,
-          population_midyear_male = base::rep(input_args_value[["population_midyear_male"]], times = base::length(var_value)),
-          var = base::rep(var_value, each = rep_var_value))
+          exp_ci = input_args_value$exp_ci,
+          cutoff_ci = input_args_value$cutoff_ci,
+          erf_ci = input_args_value$erf_ci,
+          bhd_ci = input_args_value$bhd_ci,
+          dw_ci =  input_args_value$dw_ci,
+          duration_ci = input_args_value$duration_ci,
+          var = var_value)
 
       if(base::is.null(input_args_value [["pop_exp"]]) &&
          var_table |>
          dplyr::summarize(
-           .by = dplyr::any_of(c("geo_id_micro", "population_midyear_male", "age_group", "sex")),
+           .by = c(-var),
            sum = base::sum(var, na.rm = TRUE) > 1) |>
          dplyr::pull(sum) |>
          base::any()){
