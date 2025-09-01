@@ -46,7 +46,7 @@ attribute_lifetable(
 
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{baseline health data} of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}}
 
-\item{population}{\code{Numeric value} or \code{numeric vector} specifying the total population (exposed + non-exposed). For attribute_health(), this is used \strong{to calculate attributable impacts rate} per 100 000 population. \emph{Optional argument.}.  For attribute_lifetable(), it is an obligatory argument and it refers to the the population the \strong{mid-year populations} (≥ 1) per age (age interval = 1 year) for the year of analysis. See Details for more info.}
+\item{population}{For attribute_lifetable(), it is an obligatory argument and it refers to the the population the \strong{mid-year populations} (≥ 1) per age (age interval = 1 year) for the year of analysis. See Details for more info.}
 
 \item{health_outcome}{\code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).}
 
@@ -111,7 +111,7 @@ For conversion of hazard ratios and/or odds ratios to relative risks refer to ht
 
 \strong{Function arguments}
 
-\code{population_midyear_female},\code{population_midyear_male}
+\code{population}
 
 Mid-year population of year x can be approximated as the mean of either end-year populations of years x-1 and x or start-of-year populations of years x and x+1. In each age group population must be ≥ 1 to avoid problems in the calculation.
 

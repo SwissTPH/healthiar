@@ -39,12 +39,6 @@ attribute_master(
   duration_upper = NULL,
   is_lifetable = NULL,
   health_outcome = NULL,
-  first_age_pop = NULL,
-  last_age_pop = NULL,
-  population_midyear_male = NULL,
-  population_midyear_female = NULL,
-  deaths_male = NULL,
-  deaths_female = NULL,
   min_age = NULL,
   max_age = NULL,
   approach_newborns = NULL,
@@ -81,7 +75,7 @@ attribute_master(
 
 \item{sex}{\code{Numeric vector} or \code{string vector} specifying the \strong{sex} of the groups considered in the assessment.\emph{Optional argument.}}
 
-\item{population}{\code{Numeric value} or \code{numeric vector} specifying the total population (exposed + non-exposed). For attribute_health(), this is used \strong{to calculate attributable impacts rate} per 100 000 population. \emph{Optional argument.}.  For attribute_lifetable(), it is an obligatory argument and it refers to the the population the \strong{mid-year populations} (≥ 1) per age (age interval = 1 year) for the year of analysis. See Details for more info.}
+\item{population}{For attribute_lifetable(), it is an obligatory argument and it refers to the the population the \strong{mid-year populations} (≥ 1) per age (age interval = 1 year) for the year of analysis. See Details for more info.}
 
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
 
@@ -92,8 +86,6 @@ attribute_master(
 \item{is_lifetable}{\code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)}
 
 \item{health_outcome}{\code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).}
-
-\item{population_midyear_female, population_midyear_male}{\code{Numeric vector} containing the mid-year populations (≥ 1) per age (age interval = 1 year) for the year of analysis for females and males, respectively. See Details for more info.}
 
 \item{min_age, max_age}{\code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.}
 
