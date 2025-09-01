@@ -148,7 +148,6 @@ compare <-
         "population",
         "prop_pop_exp",
         "pop_exp",
-        "population_midyear_male", "population_midyear_female",
         "year_of_analysis",
         "info",
         "impact", "pop_fraction")
