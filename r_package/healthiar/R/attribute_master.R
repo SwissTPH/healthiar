@@ -52,7 +52,7 @@
 #' \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}
 
 #' @param population
-#' \code{Numeric value} or \code{numeric vector} specifying the total population (exposed + non-exposed), \strong{to calculate attributable impacts rate} per 100 000 population. See Details for more info. \emph{Optional argument.}
+#' \code{Numeric value} or \code{numeric vector} specifying the total population (exposed + non-exposed). For attribute_health(), this is used \strong{to calculate attributable impacts rate} per 100 000 population. \emph{Optional argument.}.  For attribute_lifetable(), it is an obligatory argument and it refers to the the population the \strong{mid-year populations} (≥ 1) per age (age interval = 1 year) for the year of analysis. See Details for more info.
 
 # YLD (OPTIONAL)
 #' @param dw_central,dw_lower,dw_upper
@@ -65,14 +65,8 @@
 #' @param health_outcome
 #' \code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).
 
-#' @param first_age_pop,last_age_pop
-#' \code{Numeric value} specifying the age of the youngest and oldest age group (age interval = 1 year) of the data, respectively.
-
 #' @param population_midyear_female,population_midyear_male
 #' \code{Numeric vector} containing the mid-year populations (≥ 1) per age (age interval = 1 year) for the year of analysis for females and males, respectively. See Details for more info.
-
-#' @param deaths_female,deaths_male
-#' \code{Numeric vector} containing the deaths for the year of analysis per age (age interval = 1 year) for females and males, respectively. In each age group deaths(s) must be ≥ 1 to avoid problems in the calculation.
 
 #' @param min_age,max_age
 #' \code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.

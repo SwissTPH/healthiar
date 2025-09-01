@@ -237,8 +237,9 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
       erf_shape = "log_linear",
       info = "pm2.5_yld",
       duration_central = 100,
-      population = sum(data_lifetable[["male"]]$population,
+      population = rep(sum(data_lifetable[["male"]]$population,
                        data_lifetable[["female"]]$population),
+                       2),
       dw_central = 1,
       geo_id_micro = c("a", "b"),
       geo_id_macro = c("ch", "ch"))
@@ -321,8 +322,9 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
       erf_shape = "log_linear",
       info = "pm2.5_yld",
       duration_central = 100,
-      population = sum(data_lifetable[["male"]]$population,
-                       data_lifetable[["female"]]$population),
+      population = rep(sum(data_lifetable[["male"]]$population,
+                           data_lifetable[["female"]]$population),
+                       2),
       dw_central = 1,
       geo_id_micro = c("a", "b"),
       geo_id_macro = c("ch", "ch"))

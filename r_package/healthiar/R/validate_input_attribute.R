@@ -44,8 +44,11 @@ validate_input_attribute <-
       purrr::keep(is.numeric) |>
       base::names()
 
+    # Arguments
     args <- base::names(input_args_value )
+
     ci_args <- args[base::grep("_central|_lower|_upper", args)]
+
     ci_args_wo_eq <- ci_args[!base::grepl("erf_eq", ci_args)]
     numeric_args <-
       c(ci_args_wo_eq,
@@ -56,13 +59,7 @@ validate_input_attribute <-
         "year_of_analysis",
         "time_horizon",
         "min_age",
-        "max_age",
-        "first_age_pop",
-        "last_age_pop",
-        "population_midyear_male",
-        "population_midyear_female",
-        "deaths_male",
-        "deaths_female")
+        "max_age")
 
     boolean_args <- "is_lifetable"
 
@@ -319,8 +316,8 @@ validate_input_attribute <-
 
 
 
-    if(all(lifetable_var_names_with_same_length %in% available_var_names)){
-      error_if_incompatible_length_of_age_range(age_dependent_var = "deaths_male")
+    if(base::all(lifetable_var_names_with_same_length %in% available_var_names)){
+      error_if_incompatible_length_of_age_range(age_dependent_var = "bhd_central")
     }
 
     ### error_if_erf_eq_not_function_or_string #####
@@ -425,10 +422,7 @@ validate_input_attribute <-
                                                           "exp_central",
                                                           "pop_exp",
                                                           "bhd_central",
-                                                          "deaths_male",
-                                                          "deaths_female",
-                                                          "population_midyear_male",
-                                                          "population_midyear_female"))
+                                                          "population"))
 
     ### error_if_sum_higher_than_1 #####
     error_if_sum_higher_than_1 <- function(var_name){
