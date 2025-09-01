@@ -1,4 +1,37 @@
 Main changes but not complete list. For this propose see Github.
+# healthiar 0.0.4
+
+* WP Meeting 01 September 2025
+
+## New Features
+- New function prepare_lifetable()
+- Argument info can have different values
+- Argument info also available in monetize()
+- Data validation in socialize()
+
+
+## Bug Fixes 
+
+
+## Improvements
+- More consistent sum of results
+- Higher speed because of shorter and/or optimized code in attribute_...() functions
+
+
+
+## Others
+- geo_id_disaggregated is now geo_id_micro
+- geo_id_aggregated is now geo_id_macro
+- output_attribute_1 in attribute_mod() is now output_attribute
+- Arguments with suffix _1 and _2 in compare() are now _scen_1 and _scen_2 
+- Arguments with exposure_ are now exp_
+- Arguments with suffix _1 and _2 in multiexpose() are now _exp_1 and _exp_2 
+- And many other renames in output columns and variables
+
+
+
+
+
 # healthiar 0.0.3
 
 * WP Meeting 14 July 2025
