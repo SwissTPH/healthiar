@@ -174,7 +174,7 @@ attribute_lifetable <-
         sex = sex,
         min_age = min_age, max_age = max_age,
         approach_exposure = approach_exposure,
-        approach_newborns = approach_newborns,deaths_male = deaths_male,
+        approach_newborns = approach_newborns,
         year_of_analysis = year_of_analysis,
         time_horizon = time_horizon,
         # ITERATION (OPTIONAL)

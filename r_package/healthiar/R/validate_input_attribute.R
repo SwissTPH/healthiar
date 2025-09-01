@@ -56,13 +56,7 @@ validate_input_attribute <-
         "year_of_analysis",
         "time_horizon",
         "min_age",
-        "max_age",
-        "first_age_pop",
-        "last_age_pop",
-        "population_midyear_male",
-        "population_midyear_female",
-        "deaths_male",
-        "deaths_female")
+        "max_age")
 
     boolean_args <- "is_lifetable"
 
@@ -425,10 +419,7 @@ validate_input_attribute <-
                                                           "exp_central",
                                                           "pop_exp",
                                                           "bhd_central",
-                                                          "deaths_male",
-                                                          "deaths_female",
-                                                          "population_midyear_male",
-                                                          "population_midyear_female"))
+                                                          "population"))
 
     ### error_if_sum_higher_than_1 #####
     error_if_sum_higher_than_1 <- function(var_name){

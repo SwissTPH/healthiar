@@ -308,9 +308,6 @@ attribute_health <-
         duration_central = duration_central, duration_lower =  duration_lower, duration_upper = duration_upper,
         # LIFE TABLE (OPTIONAL)
         is_lifetable = FALSE,
-        first_age_pop = NULL, last_age_pop = NULL,
-        population_midyear_male = NULL, population_midyear_female = NULL,
-        deaths_male = NULL, deaths_female = NULL,
         min_age = NULL, max_age = NULL,
         approach_exposure = NULL,
         approach_newborns = NULL,

@@ -351,8 +351,8 @@ testthat::test_that("error if population argument contains 0", {
 
   data[["pop"]]$midyear_population_male[47] <- 0 # 47 chosen randomly
 
-  ## argument population_midyear_male contains 0
-  ## argument deaths_male contains 0
+  ## argument population contains 0
+  ## argument bhd contains 0
   testthat::expect_error(
     object = healthiar::attribute_lifetable(
       health_outcome = "deaths",
