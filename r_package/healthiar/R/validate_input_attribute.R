@@ -44,8 +44,11 @@ validate_input_attribute <-
       purrr::keep(is.numeric) |>
       base::names()
 
+    # Arguments
     args <- base::names(input_args_value )
+
     ci_args <- args[base::grep("_central|_lower|_upper", args)]
+
     ci_args_wo_eq <- ci_args[!base::grepl("erf_eq", ci_args)]
     numeric_args <-
       c(ci_args_wo_eq,
