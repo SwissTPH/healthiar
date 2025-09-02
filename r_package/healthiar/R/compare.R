@@ -131,13 +131,16 @@ compare <-
 
     # Force the same environment in the functions of erf_eq.
     # Otherwise, not identified as identical and error joining below.
-    if(!is.null(input_args_scen_1$value$erf_eq_central)){
-      erf_eq_vars <- paste0("erf_eq_", c("central", "lower", "upper"))
+    if(!is.null(input_args_scen_1[["value"]][["erf_eq_central"]])){
 
-      input_args_scen_1$value$erf_eq_central <- input_args_scen_2$value$erf_eq_central
-      input_args_scen_1$value$erf_eq_lower <- input_args_scen_2$value$erf_eq_lower
-      input_args_scen_1$value$erf_eq_upper <- input_args_scen_2$value$erf_eq_upper
-      input_table_scen_2$erf_eq <- input_table_scen_1$erf_eq    }
+      erf_eq_vars <- paste0("erf_eq", c("erf_eq", "_central", "_lower", "_upper"))
+
+      input_args_scen_1[["value"]][erf_eq_vars] <-
+        input_args_scen_2[["value"]][erf_eq_vars]
+
+      input_table_scen_1[["erf_eq"]] <- input_table_scen_2[["erf_eq"]]
+
+      }
 
     # Key variables #############################
     # Identify the arguments that have _scen_1 or _scen_2 in the name (scenario specific)
@@ -158,15 +161,23 @@ compare <-
         "approach_exposure", "approach_newborns",
         "year_of_analysis")
 
+    is_absolute_risk <-
+      base::unique(input_table_scen_1$approach_risk) == "absolute_risk"
+
+    is_lifetable <- base::unique(input_table_scen_1$is_lifetable)
+
+
+
+
 
     # Data validation ########################
 
     # Argument used (user entered data)
     passed_arguments_scen_1 <-
-      base::names(purrr::keep(input_args_scen_1$is_entered_by_user, ~ .x == TRUE))
+      base::names(purrr::keep(input_args_scen_1[["is_entered_by_user"]], ~ .x == TRUE))
 
     passed_arguments_scen_2 <-
-      base::names(purrr::keep(input_args_scen_2$is_entered_by_user, ~ .x == TRUE))
+      base::names(purrr::keep(input_args_scen_2[["is_entered_by_user"]], ~ .x == TRUE))
 
 
    # Check that the two scenarios used the same arguments (calculation pathways)
@@ -179,10 +190,10 @@ compare <-
 
     # Arguments that should be identical in both scenarios
     common_arguments_scen_1 <-
-      passed_arguments_scen_1[!passed_arguments_scen_1 %in% scenario_specific_arguments]
+      base::setdiff(passed_arguments_scen_1, scenario_specific_arguments)
 
     common_arguments_scen_2 <-
-      passed_arguments_scen_2[!passed_arguments_scen_2 %in% scenario_specific_arguments]
+      base::setdiff(passed_arguments_scen_2, scenario_specific_arguments)
 
 
 
@@ -195,15 +206,15 @@ compare <-
 
     common_arguments_identical <-
       healthiar:::check_if_args_identical(
-        args_a = input_args_scen_1$value,
-        args_b = input_args_scen_2$value,
+        args_a = input_args_scen_1[["value"]],
+        args_b = input_args_scen_2[["value"]],
         names_to_check = common_arguments)
 
     # Check that (relevant) input values from scenarios A & B are equal
     # Works also if no input was provided (might be the case for e.g. ..._lower arguments)
     # Check if the common arguments in both scenarios are identical
 
-    if(!all(common_arguments_identical))
+    if( ! base::all(common_arguments_identical) )
     {stop(
       base::paste0(
         base::paste(names(common_arguments_identical)[!common_arguments_identical],
@@ -213,26 +224,32 @@ compare <-
 
     # Check that bhd is the same in both scenarios for the PIF approach (only one place in the equation)
 
-    if(approach_comparison == "pif" &&
-       "bhd" %in% c(names(input_table_scen_1),names(input_table_scen_2))  &&
-       !base::identical(input_table_scen_1$bhd, input_table_scen_2$bhd)){
-      stop("For the PIF approach, bhd must be identical in both scenarios.",
-           call. = FALSE)
+
+
+    if(approach_comparison == "pif"){
+
+      error_if_var_is_not_identical <- function(var){
+        if(var %in% c(base::names(input_table_scen_1),base::names(input_table_scen_2))  &&
+           ! base::identical(input_table_scen_1[[var]], input_table_scen_2[[var]])){
+
+          stop("For the PIF approach, ", var, " must be identical in both scenarios.",
+               call. = FALSE)
+        }
+      }
+
+      # Error if population and bhd are different in the scenarios
+      # (only applicable for PIF)
+      error_if_var_is_not_identical(var = "population")
+
+      error_if_var_is_not_identical(var = "bhd")
+
+      # PIF and absolute risk are not compatible
+      if(is_absolute_risk){
+        stop("For the PIF approach, the absolute risk approach cannot be used.",
+             call. = FALSE)
+      }
     }
 
-    if(approach_comparison == "pif" &&
-       "population" %in% c(names(input_table_scen_1),names(input_table_scen_2))  &&
-       !base::identical(input_table_scen_1$population, input_table_scen_2$population)){
-      stop("For the PIF approach, population must be identical in both scenarios.",
-           call. = FALSE)
-    }
-    # Check if absolute risk with pif (not possible)
-
-    if(approach_comparison == "pif" &&
-       base::unique(input_table_scen_1$approach_risk) == "absolute_risk"){
-      stop("For the PIF approach, the absolute risk approach cannot be used.",
-           call. = FALSE)
-    }
 
     # Delta approach ########################
 
@@ -281,9 +298,13 @@ compare <-
           healthiar:::find_joining_columns(
             df_1 = input_table_scen_1,
             df_2 = input_table_scen_2,
-            except =  c(scenario_specific_arguments,
-                        ## Keep year_of_analysis in the table so it can be accessed in the get_impact script
-                        "year_of_analysis"))
+            # except = scenario_specific_arguments)
+            except = base::setdiff(
+              scenario_specific_arguments,
+              # Keep year_of_analysis in the table
+              # so it can be accessed in the get_impact script
+              c("year_of_analysis", "population"))
+            )
 
         # Merge the input tables by common columns
         input_table <-
@@ -293,34 +314,16 @@ compare <-
             by = joining_columns_input,
             suffix = c("_scen_1", "_scen_2"))
 
+        results <-
+          healthiar:::get_impact(
+            input_table = input_table,
+            pop_fraction_type = "pif")
 
-        ## Added if statement below to avoid error in the non-lifetable cases
-        # input_args_scen_1 and input_args_scen_2 should have the same health_outcome (see checks above)
-        # So let's use e.g. input_args_scen_1
-        if(base::unique(input_table_scen_1$is_lifetable)) {
-          # Calculate the health impacts for each case (uncertainty, category, geo area...)
-          results <-
-            input_table |>
-            # Duplicate column with new names (without _scen_..)
-            # to enable that get_impact() can read it
-            dplyr::mutate(year_of_analysis = year_of_analysis_scen_1,
-                          population = population_scen_1) |>
-            dplyr::select(-population_scen_1, -population_scen_2)|>
-            healthiar:::get_impact(input_table = _,
-                                   pop_fraction_type = "pif")
-        } else { # Non-lifetable cases
-
-          results <-
-            healthiar:::get_impact(
-              input_table = input_table,
-              pop_fraction_type = "pif")
-        }
-
-        results_raw <- results$results_raw
-        intermediate_calculations <- results$intermediate_calculations
+        # Collect results
+        results_raw <- results[["results_raw"]]
+        intermediate_calculations <- results[["intermediate_calculations"]]
 
       }
-
 
 
     # Organize output
@@ -337,7 +340,7 @@ compare <-
         results_raw = results_raw)
 
     output[["health_detailed"]][["scen_1"]] <- results_raw_scen_1
-    output[["health_detailed"]][["scen_2"]] <- results_raw_scen_1
+    output[["health_detailed"]][["scen_2"]] <- results_raw_scen_2
 
 
 
