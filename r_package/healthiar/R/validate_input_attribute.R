@@ -121,24 +121,42 @@ validate_input_attribute <-
 
 
     ### error_if_not_numeric #####
-    error_if_not_numeric <- function(var_name){
 
-      var_value <- input_args_value[[var_name]]
+    # Find the arguments that should be numeric but are not
+    numeric_args_that_are_not <-
+      input_args_value[numeric_var_names_available] |>
+      purrr::keep(~ !is.numeric(.x)) |>
+      base::names()
 
-      if( ! base::is.numeric(var_value) ){
+    if(base::length(numeric_args_that_are_not) > 0) {
+      base::stop(
+        base::paste0("The following arguments should be numeric: ",
+                     base::toString(numeric_args_that_are_not),
+                     "."),
+        call. = FALSE
+      )
 
-        base::stop(
-          base::paste0(
-            var_name,
-            " must contain numeric value(s)."),
-          call. = FALSE)
-      }
     }
 
 
-    for (x in numeric_var_names_available) {
-      error_if_not_numeric(var_name = x)
-    }
+    # error_if_not_numeric <- function(var_name){
+    #
+    #   var_value <- input_args_value[[var_name]]
+    #
+    #   if( ! base::is.numeric(var_value) ){
+    #
+    #     base::stop(
+    #       base::paste0(
+    #         var_name,
+    #         " must contain numeric value(s)."),
+    #       call. = FALSE)
+    #   }
+    # }
+    #
+    #
+    # for (x in numeric_var_names_available) {
+    #   error_if_not_numeric(var_name = x)
+    # }
 
 
     ### error_if_not_an_option #####
