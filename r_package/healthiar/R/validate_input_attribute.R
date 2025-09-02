@@ -34,13 +34,6 @@ validate_input_attribute <-
     # ci_suffix to avoid repetitions
     ci_suffix <- c("_central", "_lower", "_upper")
 
-    # numeric_var_names to use it in error_if_lower_than_0()
-    # which can be used only if the variable is numeric
-    numeric_var_names <-
-      input_args_value  |>
-      purrr::keep(is.numeric) |>
-      base::names()
-
     # Arguments
     args <- base::names(input_args_value )
 
@@ -369,7 +362,7 @@ validate_input_attribute <-
     }
 
 
-    for (x in numeric_var_names) {
+    for (x in numeric_var_names_available) {
       error_if_lower_than_0(x)
     }
 
