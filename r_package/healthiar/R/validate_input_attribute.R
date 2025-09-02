@@ -66,8 +66,8 @@ validate_input_attribute <-
 
     categorical_args <- base::names(options_of_categorical_args)
 
-    lifetable_var_names_with_same_length <-
-      c("bhd_central", "bhd_lower", "bhd_upper", "population", "age_range", "sex")
+    lifetable_args_with_values_1_or_above <-
+      c("bhd_central", "bhd_lower", "bhd_upper", "population")
 
 
     var_names_available <-
@@ -230,39 +230,49 @@ validate_input_attribute <-
     }
 
 
-    ### error_if_0 #####
-    error_if_0 <- function(var_name){
-      var_value <- input_args$value[[var_name]]
-      if(base::any(var_value < 1)) {
-        base::stop(
-          base::paste0("All values of ", var_name , " must be 1 or higher."),
-          call. = FALSE
-        )
-      }
-    }
 
-    ### error_if_not_consecutive_sequence #####
-    error_if_not_consecutive_sequence <- function(var_name){
-      var_value <- base::as.numeric(input_args$value[[var_name]])
-
-      if(# Check that values are integers
-        base::any(var_value != base::floor(var_value)) &&
-        # Check difference between consecutive elements is exactly 1
-        base::all(base::diff(var_value))) {
-
-        base::stop(
-          base::paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements if 1."),
-          call. = FALSE
-        )
-      }
-    }
 
 
     if(is_lifetable){
 
-      for (x in lifetable_var_names_with_same_length) {
-        error_if_0(var_name = x)
+      ### error_if_below_1 #####
+
+      # Find the arguments with values <1
+      args_value_below_1 <-
+        input_args_value[lifetable_args_with_values_1_or_above] |>
+        purrr::map(input_args_value,
+                   .f = ~ base::any(.x < 1)) |>
+        purrr::keep(.p = ~ base::isTRUE(.x)) |>
+        base::names()
+
+
+      if(base::length(args_value_below_1) > 0) {
+        base::stop(
+          base::paste0("The values in the following arguments must be 1 or higher: ",
+                       base::toString(args_value_below_1),
+                       "."),
+          call. = FALSE
+        )
+
       }
+
+
+      ### error_if_not_consecutive_sequence #####
+      error_if_not_consecutive_sequence <- function(var_name){
+        var_value <- base::as.numeric(input_args$value[[var_name]])
+
+        if(# Check that values are integers
+          base::any(var_value != base::floor(var_value)) &&
+          # Check difference between consecutive elements is exactly 1
+          base::all(base::diff(var_value))) {
+
+          base::stop(
+            base::paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements if 1."),
+            call. = FALSE
+          )
+        }
+      }
+
 
       for (x in "age_group") {
         error_if_not_consecutive_sequence(var_name = x)

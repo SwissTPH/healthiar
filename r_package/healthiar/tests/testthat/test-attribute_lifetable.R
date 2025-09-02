@@ -337,7 +337,7 @@ testthat::test_that("error if bhd argument contains 0", {
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age),
 
-    regexp = "All values of bhd_central must be 1 or higher."
+    regexp = "The values in the following arguments must be 1 or higher: bhd_central."
   )
 
 })
@@ -373,7 +373,7 @@ testthat::test_that("error if population argument contains 0", {
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age),
 
-    regexp = "All values of population must be 1 or higher."
+    regexp = "The values in the following arguments must be 1 or higher: population."
   )
 })
 
