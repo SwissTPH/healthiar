@@ -349,44 +349,52 @@ validate_input_attribute <-
 
 
     ### error_if_sum_higher_than_1 #####
-    error_if_sum_higher_than_1 <- function(var_name){
 
-      var_value <- input_args_value [[var_name]]
+    # If not all values of prop_pop_exp are 1, then check below
+    # Otherwise this step is not excecuted and speed increases
+    if(! base::all(input_args_value[["prop_pop_exp"]] == 1)){
 
-      var_table <-
-        tibble::tibble(
-          exp_name = input_args_value$exp_name,
-          geo_id_micro = input_args_value$geo_id_micro,
-          age_group = input_args_value$age_group,
-          sex = input_args_value$sex,
-          exp_ci = input_args_value$exp_ci,
-          cutoff_ci = input_args_value$cutoff_ci,
-          erf_ci = input_args_value$erf_ci,
-          bhd_ci = input_args_value$bhd_ci,
-          dw_ci =  input_args_value$dw_ci,
-          duration_ci = input_args_value$duration_ci,
-          var = var_value)
+      error_if_sum_higher_than_1 <- function(var_name){
 
-      if(base::is.null(input_args_value [["pop_exp"]]) &&
-         var_table |>
-         dplyr::summarize(
-           .by = c(-var),
-           sum = base::sum(var, na.rm = TRUE) > 1) |>
-         dplyr::pull(sum) |>
-         base::any()){
+        var_value <- input_args_value [[var_name]]
 
-        # Create error message
-        stop(base::paste0(
-          "The sum of values in ",
-          var_name,
-          " cannot be higher than 1 for each geo unit."),
-          call. = FALSE)
+        var_table <-
+          tibble::tibble(
+            exp_name = input_args_value$exp_name,
+            geo_id_micro = input_args_value$geo_id_micro,
+            age_group = input_args_value$age_group,
+            sex = input_args_value$sex,
+            exp_ci = input_args_value$exp_ci,
+            cutoff_ci = input_args_value$cutoff_ci,
+            erf_ci = input_args_value$erf_ci,
+            bhd_ci = input_args_value$bhd_ci,
+            dw_ci =  input_args_value$dw_ci,
+            duration_ci = input_args_value$duration_ci,
+            var = var_value)
 
+        if(base::is.null(input_args_value [["pop_exp"]]) &&
+           var_table |>
+           dplyr::summarize(
+             .by = c(-var),
+             sum = base::sum(var, na.rm = TRUE) > 1) |>
+           dplyr::pull(sum) |>
+           base::any()){
+
+          # Create error message
+          stop(base::paste0(
+            "The sum of values in ",
+            var_name,
+            " cannot be higher than 1 for each geo unit."),
+            call. = FALSE)
+
+        }
       }
+
+      # Call function checking if base::sum(prop_pop_exp) > 1
+      error_if_sum_higher_than_1(var_name = "prop_pop_exp")
     }
 
-    # Call function checking if base::sum(prop_pop_exp) > 1
-    error_if_sum_higher_than_1(var_name = "prop_pop_exp")
+
 
 
 
