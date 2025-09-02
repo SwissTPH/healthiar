@@ -229,60 +229,6 @@ validate_input_attribute <-
           "."))
     }
 
-
-
-
-    # same_length <- function(var_value_1, var_value_2){
-    #
-    #   # Only if var_2 (e.g. prop_pop_exp) is not 1 (default value)
-    #   if(!base::identical(var_value_2, 1)){
-    #     base::length(var_value_1) == base::length(var_value_2)
-    #   } else {TRUE}
-    # }
-    #
-    #
-    #
-    # error_if_different_length <- function(var_name_1, var_name_2){
-    #
-    #   # Store var_value
-    #   var_value_1 <- input_args_value [[var_name_1]]
-    #   var_value_2 <- input_args_value [[var_name_2]]
-    #
-    #   if(# Deactivated because only available var_names are passed below
-    #     #!base::is.null(var_value_1) && !base::is.null(var_value_2) &&
-    #
-    #      !same_length(var_value_1, var_value_2) &&
-    #      # For the case of prop_pop_exp which can be NULL
-    #      # and get default value in compile_input()
-    #      !base::is.null(var_value_1) &&
-    #      !base::is.null(var_value_2)){
-    #
-    #       # Create error message
-    #       stop(base::paste0(var_name_1,
-    #                   " and ",
-    #                   var_name_2,
-    #                   " must have the same length."),
-    #            call. = FALSE)
-    #     }
-    # }
-
-
-    # If rr --> length(exp) and length(prop_pop_exp) must be the same
-
-    # Exposure has to have the same length as prop_pop_exp
-    # Only for relative risk
-
-    # if(approach_risk == "relative_risk"){
-    #
-    #   available_exp_var_names <-
-    #     base::intersect(var_names_available, base::paste0("exp", ci_suffix))
-    #
-    #   for(x in available_exp_var_names){
-    #     error_if_different_length(x, "prop_pop_exp")
-    #   }
-    # }
-
-
     #### error_if_info_with_incompatible_length ####
 
 
@@ -332,25 +278,7 @@ validate_input_attribute <-
     }
 
 
-
-
-
     if(is_lifetable){
-#
-#       # --> error if length of life table variables is different
-#       combi_vars <-
-#         utils::combn(lifetable_var_names_with_same_length, 2)|>
-#         base::t() |>
-#         base::as.data.frame() |>
-#         stats::setNames(c("var_1", "var_2"))
-#
-#       for (i in 1:base::nrow(combi_vars)) {
-#         error_if_different_length(combi_vars$var_1[i],
-#                                   combi_vars$var_2[i])
-#       }
-
-
-
 
       for (x in lifetable_var_names_with_same_length) {
         error_if_0(var_name = x)
@@ -359,9 +287,6 @@ validate_input_attribute <-
       for (x in "age_group") {
         error_if_not_consecutive_sequence(var_name = x)
       }
-
-
-
 
     }
 
@@ -389,9 +314,6 @@ validate_input_attribute <-
       error_if_erf_eq_not_function_or_string(erf_eq_name = "erf_eq_central")
       error_if_erf_eq_not_function_or_string(erf_eq_name = "erf_eq_lower")
       error_if_erf_eq_not_function_or_string(erf_eq_name = "erf_eq_upper")
-
-
-
 
 
     ### error_if_lower_than_0 #####
@@ -433,41 +355,6 @@ validate_input_attribute <-
       error_if_higher_than_1(x)
     }
 
-    ### error_if_multi_geo_and_different_length #####
-
-    # Error if multiple geo units and length of some geo dependent variables are different
-    # (geo_ids, exp_central, prop_pop_exp, pop_exp and bhd) must be the same
-    # i.e. enter the data as in the table
-    # error_if_multi_geo_and_different_length  <- function(list, var_names){
-    #
-    #   # Remove NULLs
-    #   non_nulls <-
-    #     list[var_names] |>
-    #     purrr::discard(is.null)
-    #
-    #   # Get lengths of non-NULLs
-    #   lengths <- purrr::map_int(non_nulls, length)
-    #
-    #   if (base::length(base::unique(list$geo_id_micro)) > 1 &&
-    #       !base::all(lengths == base::length(list$geo_id_micro))) {
-    #
-    #     base::stop(
-    #       base::paste0("The following variables must all have the same length: ",
-    #                    base::paste0(base::names(non_nulls),
-    #                                 collapse = ", "),
-    #                    "."),
-    #       call. = FALSE
-    #     )
-    #   }
-    # }
-    #
-    #
-    # error_if_multi_geo_and_different_length(list = input_args_value ,
-    #                                         var_names = c("geo_id_micro",
-    #                                                       "exp_central",
-    #                                                       "pop_exp",
-    #                                                       "bhd_central",
-    #                                                       "population"))
 
     ### error_if_sum_higher_than_1 #####
     error_if_sum_higher_than_1 <- function(var_name){
@@ -727,13 +614,6 @@ validate_input_attribute <-
     }
 
     warning_if_rr_and_no_var_with_default(var_name = "cutoff_central", default = 0)
-
-
-
-
-
-
-
 
 
   }
