@@ -135,7 +135,6 @@ attribute_lifetable <-
     exp_central = NULL, exp_lower = NULL, exp_upper = NULL,
     cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-    pop_exp = NULL,
     # RR ONLY
     rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
     rr_increment = NULL,
@@ -159,7 +158,9 @@ attribute_lifetable <-
         approach_risk = "relative_risk",
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
         cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
-        pop_exp = pop_exp,
+        # pop_exp can only be used with absolute risk
+        # and this is not compatible with life table method
+        pop_exp = NULL,
         erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
         # RR ONLY
         rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
