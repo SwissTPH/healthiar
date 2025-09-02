@@ -132,12 +132,15 @@ compare <-
     # Force the same environment in the functions of erf_eq.
     # Otherwise, not identified as identical and error joining below.
     if(!is.null(input_args_scen_1$value$erf_eq_central)){
-      erf_eq_vars <- paste0("erf_eq_", c("central", "lower", "upper"))
 
-      input_args_scen_1$value$erf_eq_central <- input_args_scen_2$value$erf_eq_central
-      input_args_scen_1$value$erf_eq_lower <- input_args_scen_2$value$erf_eq_lower
-      input_args_scen_1$value$erf_eq_upper <- input_args_scen_2$value$erf_eq_upper
-      input_table_scen_2$erf_eq <- input_table_scen_1$erf_eq    }
+      erf_eq_vars <- paste0("erf_eq", c("erf_eq", "_central", "_lower", "_upper"))
+
+      input_args_scen_1[["value"]][erf_eq_vars] <-
+        input_args_scen_2[["value"]][erf_eq_vars]
+
+      input_table_scen_1[["erf_eq"]] <- input_table_scen_2[["erf_eq"]]
+
+      }
 
     # Key variables #############################
     # Identify the arguments that have _scen_1 or _scen_2 in the name (scenario specific)
