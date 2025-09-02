@@ -27,9 +27,6 @@ validate_input_attribute <-
 
     input_args_value <- input_args$value
 
-    available_input_args <-
-      purrr::keep(input_args_value, ~!base::is.null(.x))
-
     arg_names_passed <-
       purrr::keep(input_args$is_entered_by_user, ~.x) |>
       base::names()
@@ -84,8 +81,10 @@ validate_input_attribute <-
     lifetable_var_names_with_same_length <-
       c("bhd_central", "bhd_lower", "bhd_upper", "population", "age_range", "sex")
 
+
     available_var_names <-
-      base::names(available_input_args)
+      purrr::keep(input_args_value, ~!base::is.null(.x)) |>
+      base::names()
 
     available_numeric_var_names <-
       available_var_names[available_var_names %in% numeric_args]
