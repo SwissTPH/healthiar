@@ -162,8 +162,8 @@ compile_input <-
           # Add approach risk which cannot be entered by the user
           # TODO: To be removed if attribute_health() and attribute_lifetable() are merged
           approach_risk = "relative_risk",
-          # Convert age_group to numeric (obligatory in life table approach)
-          age_group = base::as.numeric(age_group),
+          # Add age_group
+          age_group = age_group,
           # Duplicate age_group for life table calculations
           age_start = age_group,
           # Obtain the end age summing one because the function only works with
