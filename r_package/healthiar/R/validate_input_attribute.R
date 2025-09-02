@@ -256,7 +256,7 @@ validate_input_attribute <-
 
       ### error_if_not_consecutive_sequence #####
       error_if_not_consecutive_sequence <- function(var_name){
-        var_value <- base::as.numeric(input_args$value[[var_name]])
+        var_value <- input_args_value[[var_name]]
 
         if(# Check that values are integers
           base::any(var_value != base::floor(var_value)) &&
