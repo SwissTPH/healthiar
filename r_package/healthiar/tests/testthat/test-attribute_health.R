@@ -1468,7 +1468,7 @@ testthat::test_that("error if dw higher than 1", {
         rr_increment = 10,
         dw_central = 1.1,
         erf_shape = "log_linear"),
-    regexp = "dw_central cannot be higher than 1.")
+    regexp = "The values in the following arguments must not be higher than 1: dw_central.")
 })
 
 testthat::test_that("error if not lower>central>upper", {
