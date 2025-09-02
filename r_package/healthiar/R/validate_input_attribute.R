@@ -75,10 +75,10 @@ validate_input_attribute <-
       base::names()
 
     numeric_var_names_available <-
-      var_names_available[var_names_available %in% numeric_args]
+      base::intersect(var_names_available, numeric_args)
 
     categorical_var_names_available <-
-      var_names_available[var_names_available %in% categorical_args]
+      base::intersect(var_names_available, categorical_args)
 
 
     # Define approach_risk here because in the life table approach
@@ -216,8 +216,7 @@ validate_input_attribute <-
     if(approach_risk == "relative_risk"){
 
       available_exp_var_names <-
-        var_names_available[var_names_available %in%
-                              base::paste0("exp", ci_suffix)]
+        base::intersect(var_names_available, base::paste0("exp", ci_suffix))
 
       for(x in available_exp_var_names){
         error_if_different_length(x, "prop_pop_exp")
@@ -535,8 +534,8 @@ validate_input_attribute <-
       # Identify the alternative options
       all_approach_risks <- c("relative_risk", "absolute_risk")
       all_var_names <- c("prop_pop_exp", "pop_exp")
-      another_approach_risk <- all_approach_risks[!all_approach_risks %in% risk]
-      another_var_name <- all_var_names[!all_var_names %in% var_name]
+      another_approach_risk <- base::setdiff(all_approach_risks, risk)
+      another_var_name <- base::setdiff(all_var_names, var_name)
 
       if(var_name %in% arg_names_passed &&
          approach_risk == risk){
