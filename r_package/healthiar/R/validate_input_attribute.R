@@ -70,15 +70,15 @@ validate_input_attribute <-
       c("bhd_central", "bhd_lower", "bhd_upper", "population")
 
 
-    var_names_available <-
+    arg_names_available <-
       purrr::keep(input_args_value, ~!base::is.null(.x)) |>
       base::names()
 
-    numeric_var_names_available <-
-      base::intersect(var_names_available, numeric_args)
+    numeric_arg_names_available <-
+      base::intersect(arg_names_available, numeric_args)
 
-    categorical_var_names_available <-
-      base::intersect(var_names_available, categorical_args)
+    categorical_arg_names_available <-
+      base::intersect(arg_names_available, categorical_args)
 
 
     # Define approach_risk here because in the life table approach
@@ -125,7 +125,7 @@ validate_input_attribute <-
     # Find the arguments that should be numeric but are not
     # Avoid for loop here because it expected to review quite a lot of arguments
     numeric_args_that_are_not <-
-      input_args_value[numeric_var_names_available] |>
+      input_args_value[numeric_arg_names_available] |>
       purrr::keep(~ !is.numeric(.x)) |>
       base::names()
 
@@ -158,7 +158,7 @@ validate_input_attribute <-
     }
 
 
-    for (x in categorical_var_names_available) {
+    for (x in categorical_arg_names_available) {
       error_if_not_an_option(var_name = x)
     }
 
@@ -318,7 +318,7 @@ validate_input_attribute <-
     }
 
 
-    for (x in numeric_var_names_available) {
+    for (x in numeric_arg_names_available) {
       error_if_lower_than_0(x)
     }
 
