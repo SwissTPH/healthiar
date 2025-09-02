@@ -165,6 +165,8 @@ compare <-
       base::unique(input_table_scen_1$approach_risk) == "absolute_risk"
 
 
+
+
     # Data validation ########################
 
     # Argument used (user entered data)
@@ -293,9 +295,7 @@ compare <-
           healthiar:::find_joining_columns(
             df_1 = input_table_scen_1,
             df_2 = input_table_scen_2,
-            except =  c(scenario_specific_arguments,
-                        ## Keep year_of_analysis in the table so it can be accessed in the get_impact script
-                        "year_of_analysis"))
+            except = scenario_specific_arguments)
 
         # Merge the input tables by common columns
         input_table <-
