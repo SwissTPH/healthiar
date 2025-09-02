@@ -83,12 +83,13 @@ validate_input_attribute <-
 
     # Define approach_risk here because in the life table approach
     # approach_risk can only be relative_risk
-    # and it defined at the level of attribute_master()
-    # and therefore not available input$args
+    # and it is defined at the level of attribute_master()
+    # and therefore not available input_args
 
     if(is_lifetable) {
-      approach_risk <- "relative_risk" }
-    else{ approach_risk <- input_args$value$approach_risk}
+      approach_risk <- "relative_risk"
+      # Otherwise what is entered in input_args
+      }else{ approach_risk <- input_args_value[["approach_risk"]]}
 
 
     # Functions and calls ###########
