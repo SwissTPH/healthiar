@@ -206,7 +206,7 @@ compare <-
     # Works also if no input was provided (might be the case for e.g. ..._lower arguments)
     # Check if the common arguments in both scenarios are identical
 
-    if(!all(common_arguments_identical))
+    if( ! base::all(common_arguments_identical) )
     {stop(
       base::paste0(
         base::paste(names(common_arguments_identical)[!common_arguments_identical],
