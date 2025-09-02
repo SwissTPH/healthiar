@@ -287,9 +287,13 @@ validate_input_attribute <-
       if(! base::is.null(erf_eq_value)){
         # If it is a function (single function or multiple functions in a list)
         # and it is not a character
-        if((! base::is.function(erf_eq_value) &&
-           ! (base::is.list(erf_eq_value) && base::all(purrr::map_lgl(erf_eq_value, is.function)))) &&
-           ! base::is.character(erf_eq_value)){
+
+
+
+        if(! base::is.function(erf_eq_value) && ! base::is.character(erf_eq_value)){
+        # if((! base::is.function(erf_eq_value) &&
+        #    ! (base::is.list(erf_eq_value) && base::all(purrr::map_lgl(erf_eq_value, is.function)))) &&
+        #    ! base::is.character(erf_eq_value)){
 
           base::stop(
             base::paste0(erf_eq_name , " must be a (list of) function(s) or a (vector of) string(s)."),
