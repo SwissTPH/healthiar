@@ -99,11 +99,9 @@ validate_input_attribute <-
     ### error_if_var_1_but_not_var_2 #####
 
     error_if_var_1_but_not_var_2 <- function(var_name_1, var_name_2){
-
+      # Check arg_names_passed in case that there is a default value (safer)
       if(var_name_1 %in% arg_names_passed &&
-         !var_name_2 %in% arg_names_passed
-         # Check arg_names_passed in case that there is a default value (safer)
-         ){
+         !var_name_2 %in% arg_names_passed){
         stop(
           base::paste0(
             "If you do not pass a value for ",
@@ -115,15 +113,21 @@ validate_input_attribute <-
       }
     }
 
+
+    # If users enter a value for geo_id_macro but not for geo_id_micro
+    # the impact cannot be grouped accordingly (multiple geo_id_micro are needed)
     error_if_var_1_but_not_var_2(var_name_1 = "geo_id_macro",
                                  var_name_2 = "geo_id_micro")
 
 
     ### error_if_not_numeric #####
     error_if_not_numeric <- function(var_name){
-      var_value <- input_args_value [[var_name]]
 
-      if(base::any( ! base::is.numeric(base::unlist(var_value)))){
+      var_value <- input_args_value[[var_name]]
+
+      if(! base::is.numeric(var_value)){
+
+      # if(base::any( ! base::is.numeric(base::unlist(var_value)))){
 
         base::stop(
           base::paste0(
