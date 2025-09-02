@@ -233,8 +233,6 @@ validate_input_attribute <-
 
 
 
-
-
     if(is_lifetable){
 
       ### error_if_below_1 #####
@@ -396,46 +394,59 @@ validate_input_attribute <-
 
 
 
+
     ### error_if_not_increasing_lower_central_upper #####
-    error_if_not_increasing_lower_central_upper <-
-      function(var_ci){
-        # Store var_name from vector var_ci
-        var_name_lower <- var_ci[base::grep("lower", var_ci)]
-        var_name_central <- var_ci[base::grep("central", var_ci)]
-        var_name_upper <- var_ci[base::grep("upper", var_ci)]
 
-        # Store var_value
-        var_value_lower <- input_args_value [[var_name_lower]]
-        var_value_central <- input_args_value [[var_name_central]]
-        var_value_upper <- input_args_value [[var_name_upper]]
+    # Identify the argument names with all CI suffixes (_central, _lower_, _upper)
+    arg_names_with_ci <- arg_names_available|>
+      base::grep("_central|_lower|_upper", x= _, value = TRUE) |>
+      # Remove erf_eq because it is not numeric
+      base::setdiff(c("erf_eq_central", "erf_eq_lower", "erf_eq_upper"))
 
-        if(!base::is.null(var_value_central) &&
-           !base::is.null(var_value_lower) &&
-           !base::is.null(var_value_upper)){ # Only if available
+    arg_names_with_ci_prefix <- arg_names_with_ci|>
+      base::gsub("_central|_lower|_upper", "", x = _)
+
+    arg_names_with_all_ci_prefix <- arg_names_with_ci |>
+      base::gsub("_central|_lower|_upper", "", x = _) |>
+      base::table() |>
+      purrr::keep(~ . == 3) |>
+      base::names()
+
+
+
+    if(base::length(arg_names_with_all_ci_prefix) > 0){
+
+      error_if_not_increasing_lower_central_upper <-
+        function(var_name_central, var_name_lower, var_name_upper){
+
+          # Store var_value
+          var_value_central <- input_args_value [[var_name_central]]
+          var_value_lower <- input_args_value [[var_name_lower]]
+          var_value_upper <- input_args_value [[var_name_upper]]
 
           if(base::any(var_value_central < var_value_lower) |
              base::any(var_value_central > var_value_upper)){
-
             # Create error message
             stop(
               base::paste0(
-                var_name_central,
-                " must be higher than ",
-                var_name_lower,
-                " and lower than ",
-                var_name_upper,
-                "."),
+                var_name_central, " must be higher than ", var_name_lower,
+                " and lower than ", var_name_upper, "."),
               call. = FALSE)
 
-            }
-
+          }
         }
+
+      # Call function checking if error if not lower>central>upper
+      for (x in arg_names_with_all_ci_prefix) {
+        error_if_not_increasing_lower_central_upper(var_name_central = base::paste0(x, "_central"),
+                                                    var_name_lower = base::paste0(x, "_lower"),
+                                                    var_name_upper = base::paste0(x, "_upper"))
       }
 
-    # Call function checking if error if not lower>central>upper
-    for (x in c("rr", "bhd", "exp", "cutoff", "dw", "duration")) {
-      error_if_not_increasing_lower_central_upper(var_ci = base::paste0(x, ci_suffix))
+
     }
+
+
 
     ### error_if_only_lower_or_upper #####
     error_if_only_lower_or_upper <- function(var_short){
