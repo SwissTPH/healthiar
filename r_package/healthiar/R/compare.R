@@ -161,6 +161,9 @@ compare <-
         "approach_exposure", "approach_newborns",
         "year_of_analysis")
 
+    is_absolute_risk <-
+      base::unique(input_table_scen_1$approach_risk) == "absolute_risk"
+
 
     # Data validation ########################
 
@@ -216,26 +219,32 @@ compare <-
 
     # Check that bhd is the same in both scenarios for the PIF approach (only one place in the equation)
 
-    if(approach_comparison == "pif" &&
-       "bhd" %in% c(names(input_table_scen_1),names(input_table_scen_2))  &&
-       !base::identical(input_table_scen_1$bhd, input_table_scen_2$bhd)){
-      stop("For the PIF approach, bhd must be identical in both scenarios.",
-           call. = FALSE)
+
+
+    if(approach_comparison == "pif"){
+
+      error_if_var_is_not_identical <- function(var){
+        if(var %in% c(base::names(input_table_scen_1),base::names(input_table_scen_2))  &&
+           ! base::identical(input_table_scen_1[[var]], input_table_scen_2[[var]])){
+
+          stop("For the PIF approach, ", var, " must be identical in both scenarios.",
+               call. = FALSE)
+        }
+      }
+
+      # Error if population and bhd are different in the scenarios
+      # (only applicable for PIF)
+      error_if_var_is_not_identical(var = "population")
+
+      error_if_var_is_not_identical(var = "bhd")
+
+      # PIF and absolute risk are not compatible
+      if(is_absolute_risk){
+        stop("For the PIF approach, the absolute risk approach cannot be used.",
+             call. = FALSE)
+      }
     }
 
-    if(approach_comparison == "pif" &&
-       "population" %in% c(names(input_table_scen_1),names(input_table_scen_2))  &&
-       !base::identical(input_table_scen_1$population, input_table_scen_2$population)){
-      stop("For the PIF approach, population must be identical in both scenarios.",
-           call. = FALSE)
-    }
-    # Check if absolute risk with pif (not possible)
-
-    if(approach_comparison == "pif" &&
-       base::unique(input_table_scen_1$approach_risk) == "absolute_risk"){
-      stop("For the PIF approach, the absolute risk approach cannot be used.",
-           call. = FALSE)
-    }
 
     # Delta approach ########################
 
