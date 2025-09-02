@@ -166,10 +166,10 @@ compare <-
 
     # Argument used (user entered data)
     passed_arguments_scen_1 <-
-      base::names(purrr::keep(input_args_scen_1$is_entered_by_user, ~ .x == TRUE))
+      base::names(purrr::keep(input_args_scen_1[["is_entered_by_user"]], ~ .x == TRUE))
 
     passed_arguments_scen_2 <-
-      base::names(purrr::keep(input_args_scen_2$is_entered_by_user, ~ .x == TRUE))
+      base::names(purrr::keep(input_args_scen_2[["is_entered_by_user"]], ~ .x == TRUE))
 
 
    # Check that the two scenarios used the same arguments (calculation pathways)
