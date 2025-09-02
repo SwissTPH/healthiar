@@ -340,7 +340,7 @@ compare <-
         results_raw = results_raw)
 
     output[["health_detailed"]][["scen_1"]] <- results_raw_scen_1
-    output[["health_detailed"]][["scen_2"]] <- results_raw_scen_1
+    output[["health_detailed"]][["scen_2"]] <- results_raw_scen_2
 
 
 
