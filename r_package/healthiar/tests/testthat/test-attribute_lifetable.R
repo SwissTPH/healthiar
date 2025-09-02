@@ -304,8 +304,7 @@ testthat::test_that("error if length of age range higher than deaths", {
         info = data_mort$pollutant[2],
         min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
       ),
-    regexp = "bhd_central and sex must have the same length.",
-    fixed = TRUE
+    regexp = "Not clear what is the maximal length of your arguments: 600, 4000. Check: age_group, sex, exp_central."
   )
 })
 
@@ -338,7 +337,7 @@ testthat::test_that("error if bhd argument contains 0", {
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age),
 
-    regexp = "All values of bhd_central must be 1 or higher."
+    regexp = "The values in the following arguments must be 1 or higher: bhd_central."
   )
 
 })
@@ -374,7 +373,7 @@ testthat::test_that("error if population argument contains 0", {
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age),
 
-    regexp = "All values of population must be 1 or higher."
+    regexp = "The values in the following arguments must be 1 or higher: population."
   )
 })
 
@@ -405,7 +404,7 @@ testthat::test_that("error if exposuer lower than 0 | lifetable", {
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age),
 
-    regexp = "exp_central cannot be lower than 0."
+    regexp = "The values in the following arguments must be higher than 0: exp_central."
   )
 })
 

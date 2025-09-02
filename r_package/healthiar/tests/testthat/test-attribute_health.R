@@ -1343,21 +1343,7 @@ testthat::test_that("error if geo_id_macro but no geo_id_micro", {
 })
 
 
-testthat::test_that("error if length of exp lower than length of prop pop", {
 
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 6,
-        prop_pop_exp = c(0.5, 0.5),
-        cutoff_central = 5,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "log_linear"),
-    regexp = "exp_central and prop_pop_exp must have the same length."
-  )
-})
 
 testthat::test_that("error if rr lower than 0", {
 
@@ -1370,7 +1356,7 @@ testthat::test_that("error if rr lower than 0", {
         rr_central = -1.05,
         rr_increment = 10,
         erf_shape = "log_linear"),
-    regexp = "rr_central cannot be lower than 0."
+    regexp = "The values in the following arguments must be higher than 0: rr_central."
   )
 })
 
@@ -1482,7 +1468,7 @@ testthat::test_that("error if dw higher than 1", {
         rr_increment = 10,
         dw_central = 1.1,
         erf_shape = "log_linear"),
-    regexp = "dw_central cannot be higher than 1.")
+    regexp = "The values in the following arguments must not be higher than 1: dw_central.")
 })
 
 testthat::test_that("error if not lower>central>upper", {
@@ -1528,7 +1514,7 @@ testthat::test_that("error if numeric argument is not numeric", {
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear"),
-    regexp = "exp_central must contain numeric value(s).",
+    regexp = "The following arguments should be numeric: exp_central",
     # Use fixed because otherwise the brackets regexp give an error in the test
     fixed = TRUE
     )
@@ -1567,21 +1553,7 @@ testthat::test_that("error if sum(prop_pop_exp) higher than 1", {
     regexp = "The sum of values in prop_pop_exp cannot be higher than 1 for each geo unit.")
 })
 
-testthat::test_that("error if multi geo units but different length of geo-depending arguments", {
 
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 6,
-        prop_pop_exp = 1,
-        cutoff_central = 5,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        geo_id_micro = c("a", "b")),
-    regexp = "The following variables must all have the same length: geo_id_micro, exp_central, bhd_central.")
-})
 
 testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
 
@@ -1665,6 +1637,22 @@ testthat::test_that("error if rr and erf_eq", {
     fixed = TRUE)
 })
 
+testthat::test_that("error if multi geo units but different length of geo-depending arguments", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = c(6, 2, 3),
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        geo_id_micro = c("a", "b")),
+    regexp = "Not clear what is the maximal length of your arguments: 3, 2. Check: exp_central, geo_id_micro.")
+})
+
 testthat::test_that("error if info has incompatible length |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
@@ -1684,7 +1672,26 @@ testthat::test_that("error if info has incompatible length |pathway_rr|erf_log_l
         erf_shape = "log_linear",
         info = data.frame(id = 1:20)
       )$health_main$impact_rounded,
-    regexp = "For this assessment, the info vector or data frame columns must have a length of 1 or 6."
+    regexp = "All function arguments must have the same length (here 6) or length 1. Check: info.",
+    fix = TRUE
+  )
+})
+
+testthat::test_that("error if length of exp lower than length of prop pop", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = c(0.5, 0.5),
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"),
+    regexp = "All function arguments must have the same length (here 1) or length 1. Check: prop_pop_exp.",
+    # To prevent not passed test because of the brackets
+    fix = TRUE
   )
 })
 
@@ -1736,10 +1743,7 @@ testthat::test_that("error if erf_eq is not function or string", {
         prop_pop_exp = 1,
         cutoff_central = 5,
         bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        erf_eq_central = c(1,2,3)),
-    regexp = "erf_eq_central must be a (list of) function(s) or a (vector of) string(s)." ,
+        erf_eq_central = c(1)),
+    regexp = "erf_eq_central must be a function or a character string." ,
     fixed = TRUE)
 })

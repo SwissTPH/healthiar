@@ -27,9 +27,6 @@ validate_input_attribute <-
 
     input_args_value <- input_args$value
 
-    available_input_args <-
-      purrr::keep(input_args_value, ~!base::is.null(.x))
-
     arg_names_passed <-
       purrr::keep(input_args$is_entered_by_user, ~.x) |>
       base::names()
@@ -37,29 +34,17 @@ validate_input_attribute <-
     # ci_suffix to avoid repetitions
     ci_suffix <- c("_central", "_lower", "_upper")
 
-    # numeric_var_names to use it in error_if_lower_than_0()
-    # which can be used only if the variable is numeric
-    numeric_var_names <-
-      input_args_value  |>
-      purrr::keep(is.numeric) |>
-      base::names()
-
     # Arguments
     args <- base::names(input_args_value )
 
     ci_args <- args[base::grep("_central|_lower|_upper", args)]
 
     ci_args_wo_eq <- ci_args[!base::grepl("erf_eq", ci_args)]
+
     numeric_args <-
       c(ci_args_wo_eq,
-        "prop_pop_exp",
-        "pop_exp",
-        "rr_increment",
-        "population",
-        "year_of_analysis",
-        "time_horizon",
-        "min_age",
-        "max_age")
+        "prop_pop_exp", "pop_exp", "rr_increment", "population",
+        "year_of_analysis", "time_horizon", "min_age", "max_age")
 
     # Only if is_lifetable, then age_group is numeric.
     # Otherwise, it can be a string e.g. for socialize()
@@ -72,36 +57,39 @@ validate_input_attribute <-
     string_args <- args[!args %in% c(numeric_args, boolean_args)]
 
     options_of_categorical_args <-
-      list(
+      base::list(
         approach_risk = c("relative_risk", "absolute_risk"),
         erf_shape = c("linear", "log_linear", "log_log", "linear_log"),
         approach_exposure = c("single_year", "constant"),
         approach_newborns = c("without_newborns", "with_newborns")
       )
 
-    categorical_args <- names(options_of_categorical_args)
+    categorical_args <- base::names(options_of_categorical_args)
 
-    lifetable_var_names_with_same_length <-
-      c("bhd_central", "bhd_lower", "bhd_upper", "population", "age_range", "sex")
+    lifetable_args_with_values_1_or_above <-
+      c("bhd_central", "bhd_lower", "bhd_upper", "population")
 
-    available_var_names <-
-      names(available_input_args)
 
-    available_numeric_var_names <-
-      available_var_names[available_var_names %in% numeric_args]
+    arg_names_available <-
+      purrr::keep(input_args_value, ~!base::is.null(.x)) |>
+      base::names()
 
-    available_categorical_var_names <-
-      available_var_names[available_var_names %in% categorical_args]
+    numeric_arg_names_available <-
+      base::intersect(arg_names_available, numeric_args)
+
+    categorical_arg_names_available <-
+      base::intersect(arg_names_available, categorical_args)
 
 
     # Define approach_risk here because in the life table approach
     # approach_risk can only be relative_risk
-    # and it defined at the level of attribute_master()
-    # and therefore not available input$args
+    # and it is defined at the level of attribute_master()
+    # and therefore not available input_args
 
     if(is_lifetable) {
-      approach_risk <- "relative_risk" }
-    else{ approach_risk <- input_args$value$approach_risk}
+      approach_risk <- "relative_risk"
+      # Otherwise what is entered in input_args
+      }else{ approach_risk <- input_args_value[["approach_risk"]]}
 
 
     # Functions and calls ###########
@@ -111,13 +99,11 @@ validate_input_attribute <-
     ### error_if_var_1_but_not_var_2 #####
 
     error_if_var_1_but_not_var_2 <- function(var_name_1, var_name_2){
-
+      # Check arg_names_passed in case that there is a default value (safer)
       if(var_name_1 %in% arg_names_passed &&
-         !var_name_2 %in% arg_names_passed
-         # Check arg_names_passed in case that there is a default value (safer)
-         ){
+         !var_name_2 %in% arg_names_passed){
         stop(
-          paste0(
+          base::paste0(
             "If you do not pass a value for ",
             var_name_2,
             ", you cannot use ",
@@ -127,31 +113,37 @@ validate_input_attribute <-
       }
     }
 
+
+    # If users enter a value for geo_id_macro but not for geo_id_micro
+    # the impact cannot be grouped accordingly (multiple geo_id_micro are needed)
     error_if_var_1_but_not_var_2(var_name_1 = "geo_id_macro",
                                  var_name_2 = "geo_id_micro")
 
 
     ### error_if_not_numeric #####
-    error_if_not_numeric <- function(var_name){
-      var_value <- input_args_value [[var_name]]
 
-      if(any(!is.numeric(unlist(var_value)))){
+    # Find the arguments that should be numeric but are not
+    # Avoid for loop here because it expected to review quite a lot of arguments.
+    # And also nice to have all incorrect args at once
+    numeric_args_that_are_not <-
+      input_args_value[numeric_arg_names_available] |>
+      purrr::keep(~ !is.numeric(.x)) |>
+      base::names()
 
-        base::stop(
-          base::paste0(
-            var_name,
-            " must contain numeric value(s)."),
-          call. = FALSE)
-      }
-    }
+    if(base::length(numeric_args_that_are_not) > 0) {
+      base::stop(
+        base::paste0("The following arguments should be numeric: ",
+                     base::toString(numeric_args_that_are_not),
+                     "."),
+        call. = FALSE
+      )
 
-
-    for (x in available_numeric_var_names) {
-      error_if_not_numeric(var_name = x)
     }
 
 
     ### error_if_not_an_option #####
+    # Create here a function because showing all incorrect args with the values here at once
+    # because otherwise it could be overwhelming for the user
 
     error_if_not_an_option <- function(var_name){
       var_value <- input_args_value [[var_name]]
@@ -169,393 +161,340 @@ validate_input_attribute <-
     }
 
 
-    for (x in available_categorical_var_names) {
+    for (x in categorical_arg_names_available) {
       error_if_not_an_option(var_name = x)
     }
 
+
     ### error_if_different_length #####
 
+    # Obtain the length of all arguments
+    length_args <- purrr::map_vec(input_args_value, base::length)
+    # Remove erf_eq lengths because they are not vectors (not to be evaluated)
+    length_args <-
+      length_args[! base::names(length_args) %in%
+                    c("erf_eq_central", "erf_eq_lower", "erf_eq_upper")]
 
-    get_length <- function(var){
-      length <-
-        base::ifelse(
-          base::is.list(var),
-          base::length(var[[1]]), # Take first element for example
-          base::length(var))
-      return (length)
+    # If info is a data frame the length is actually the number of rows
+    if(base::is.data.frame(input_args_value$info)){
+      length_args["info"] <- base::nrow(input_args_value$info)
     }
 
 
-    same_length <- function(var_value_1, var_value_2){
-
-      # Only if var_2 (e.g. prop_pop_exp) is not 1 (default value)
-      if(!base::identical(var_value_2, 1)){
-        get_length(var_value_1) == get_length(var_value_2)
-      } else {TRUE}
+    # Get length that all arguments should have (apart from 0 or 1)
+    relevant_length_args <-
+      length_args[base::names(length_args) %in%
+                    c("geo_id_micro", "exp_central", "sex", "age_group")]
+    # Get length that all arguments should have (apart from 0 or 1)
+    # If all relevant lengths are 1, then 1
+    if(base::all(relevant_length_args == 1)){
+      required_length <- 1
+      # Otherwise
+    } else {
+      # Otherwise, the unique length that is not 1
+      required_length <- base::unique(base::setdiff(relevant_length_args, 1))
     }
 
+    # Get the names
+    # setdiff() cannot be used here because it drops the names of the vector
+    # and they are important here
+    names_required_length <-
+      base::names(relevant_length_args[relevant_length_args %in% required_length])
 
+    # Get the names of the outliers
+    # i.e. args not complying with the required length
 
-    error_if_different_length <- function(var_name_1, var_name_2){
+    names_not_complying_with_required_length <-
+      base::names(length_args[!length_args %in% c(0, 1, required_length)])
 
-      # Store var_value
-      var_value_1 <- input_args_value [[var_name_1]]
-      var_value_2 <- input_args_value [[var_name_2]]
+    # The length must be 0 (NULL), 1 or the same as required_length
+    # If there are multiple different required_length --> error.
+    # It must be clarified
+    if(base::length(required_length)> 1){
+      base::stop(
+        base::paste0(
+          "Not clear what is the maximal length of your arguments: ",
+          base::toString(required_length),
+          ". Check: ",
+          base::toString(names_required_length),
+          "."))
+    } else if (base::length(names_not_complying_with_required_length) > 0) {
+      # If it clear the unique required_length but there are outliers
+      # --> error
 
-      if(# Deactivated because only available var_names are passed below
-        #!base::is.null(var_value_1) && !base::is.null(var_value_2) &&
-
-         !same_length(var_value_1, var_value_2) &&
-         # For the case of prop_pop_exp which can be NULL
-         # and get default value in compile_input()
-         !is.null(var_value_1) &&
-         !is.null(var_value_2)){
-
-          # Create error message
-          stop(base::paste0(var_name_1,
-                      " and ",
-                      var_name_2,
-                      " must have the same length."),
-               call. = FALSE)
-        }
+      base::stop(
+        base::paste0(
+          "All function arguments must have the same length (here ",
+          required_length,
+          ") or length 1. Check: ",
+          base::toString(names_not_complying_with_required_length),
+          "."))
     }
-
-
-    # If rr --> length(exp) and length(prop_pop_exp) must be the same
-
-    # Exposure has to have the same length as prop_pop_exp
-    # Only for relative risk
-
-    if(approach_risk == "relative_risk"){
-
-      available_exp_var_names <-
-        available_var_names[available_var_names %in%
-                              base::paste0("exp", ci_suffix)]
-
-      for(x in available_exp_var_names){
-        error_if_different_length(x, "prop_pop_exp")
-      }
-    }
-
-
-    #### error_if_info_with_incompatible_length ####
-
-
-    if(!base::is.null(input_args_value$info)){
-
-      if(base::is.data.frame(input_args_value$info)){
-        length_info <- base::nrow(input_args_value$info)
-      } else if (base::is.vector(input_args_value$info)){
-        length_info <- base::length(input_args_value$info)
-      }
-
-      max_length <- base::max(purrr::map_vec(input_args_value, base::length))
-
-      if( !length_info == max_length && !length_info == 1){
-        base::stop(
-          base::paste0("For this assessment, the info vector or data frame columns must have a length of 1 or ", max_length, "."),
-          call. = FALSE
-        )
-      }
-    }
-
-    ### error_if_0 #####
-    error_if_0 <- function(var_name){
-      var_value <- input_args$value[[var_name]]
-      if(base::any(var_value < 1)) {
-        base::stop(
-          base::paste0("All values of ", var_name , " must be 1 or higher."),
-          call. = FALSE
-        )
-      }
-    }
-
-    ### error_if_not_consecutive_sequence #####
-    error_if_not_consecutive_sequence <- function(var_name){
-      var_value <- base::as.numeric(input_args$value[[var_name]])
-
-      if(# Check that values are integers
-        base::any(var_value != base::floor(var_value)) &&
-        # Check difference between consecutive elements is exactly 1
-        base::all(base::diff(var_value))) {
-
-        base::stop(
-          base::paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements if 1."),
-          call. = FALSE
-        )
-      }
-    }
-
-
 
 
 
     if(is_lifetable){
 
-      # --> error if length of life table variables is different
-      combi_vars <-
-        utils::combn(lifetable_var_names_with_same_length, 2)|>
-        base::t() |>
-        base::as.data.frame() |>
-        stats::setNames(c("var_1", "var_2"))
+      ### error_if_below_1 #####
 
-      for (i in 1:base::nrow(combi_vars)) {
-        error_if_different_length(combi_vars$var_1[i],
-                                  combi_vars$var_2[i])
+      # Find the arguments with values <1
+      args_value_below_1 <-
+        input_args_value[lifetable_args_with_values_1_or_above] |>
+        purrr::keep(.p = ~ base::any(.x < 1)) |>
+        base::names()
+
+
+      if(base::length(args_value_below_1) > 0) {
+        base::stop(
+          base::paste0("The values in the following arguments must be 1 or higher: ",
+                       base::toString(args_value_below_1),
+                       "."),
+          call. = FALSE
+        )
+
       }
 
 
+      ### error_if_not_consecutive_sequence #####
+      error_if_not_consecutive_sequence <- function(var_name){
+        var_value <- input_args_value[[var_name]]
+        # Here a function because it expected to use it in one or two arguments
+        # (not like e.g. the check of is.numeric)
 
-
-      for (x in lifetable_var_names_with_same_length) {
-        error_if_0(var_name = x)
-      }
-
-      for (x in "age_group") {
-        error_if_not_consecutive_sequence(var_name = x)
-      }
-
-
-
-
-    }
-
-
-
-    if(base::all(lifetable_var_names_with_same_length %in% available_var_names)){
-      error_if_incompatible_length_of_age_range(age_dependent_var = "bhd_central")
-    }
-
-    ### error_if_erf_eq_not_function_or_string #####
-
-    error_if_erf_eq_not_function_or_string <- function(erf_eq_name){
-      erf_eq_value <- input_args$value[[erf_eq_name]]
-      # If erf_eq_... is not null (user may not enter a value for this argument)
-      if(! base::is.null(erf_eq_value)){
-        # If it is a function (single function or multiple functions in a list)
-        # and it is not a character
-        if((! base::is.function(erf_eq_value) &&
-           ! (base::is.list(erf_eq_value) && base::all(purrr::map_lgl(erf_eq_value, is.function)))) &&
-           ! is.character(erf_eq_value)){
+        if(# Check that values are integers
+          base::any(var_value != base::floor(var_value)) &&
+          # Check difference between consecutive elements is exactly 1
+          base::all(base::diff(var_value))) {
 
           base::stop(
-            base::paste0(erf_eq_name , " must be a (list of) function(s) or a (vector of) string(s)."),
+            base::paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements is 1."),
             call. = FALSE
           )
         }
       }
+
+      error_if_not_consecutive_sequence(var_name = "age_group")
+
     }
 
+    ### error_if_erf_eq_not_function_or_string #####
+    # If erf_eq_... is not null (user may not enter a value for this argument)
+    erf_eq_args_available <-
+      base::intersect(arg_names_available,
+                      c("erf_eq_central", "erf_eq_lower", "erf_eq_upper"))
 
-      error_if_erf_eq_not_function_or_string(erf_eq_name = "erf_eq_central")
-      error_if_erf_eq_not_function_or_string(erf_eq_name = "erf_eq_lower")
-      error_if_erf_eq_not_function_or_string(erf_eq_name = "erf_eq_upper")
+    if(base::length(erf_eq_args_available) > 0){
 
+      error_if_erf_eq_not_function_or_string <- function(erf_eq_name){
+        erf_eq_value <- input_args_value[[erf_eq_name]]
 
+          # If it is a function (single function or multiple functions in a list)
+          # and it is not a character
+          if(! base::is.function(erf_eq_value) && ! base::is.character(erf_eq_value)){
+            base::stop(
+              base::paste0(erf_eq_name , " must be a function or a character string."),
+              call. = FALSE
+            )
+        }
+      }
+
+      for(x in erf_eq_args_available){
+        error_if_erf_eq_not_function_or_string(x)
+      }
+
+    }
 
 
 
     ### error_if_lower_than_0 #####
 
-    error_if_lower_than_0 <- function(var_name){
-      var_value <- input_args_value [[var_name]]
+    # Find the arguments with values <0
+    args_value_below_0 <-
+      input_args_value[numeric_arg_names_available] |>
+      purrr::keep(.p = ~ base::any(.x < 0)) |>
+      base::names()
 
-      if(!base::is.null(var_value) && # Only if available
-         base::any(base::unlist(var_value) < 0)){ # base::any(unlist( To make it robust for lists
-        # Create error message
-          stop(base::paste0(var_name,
-                            " cannot be lower than 0."),
-               call. = FALSE)
-        }
+
+    if(base::length(args_value_below_0) > 0) {
+      base::stop(
+        base::paste0("The values in the following arguments must be higher than 0: ",
+                     base::toString(args_value_below_0),
+                     "."),
+        call. = FALSE
+      )
+
     }
 
-
-    for (x in numeric_var_names) {
-      error_if_lower_than_0(x)
-    }
 
 
     ### error_if_higher_than_1 #####
 
-    error_if_higher_than_1 <- function(var_name){
-      var_value <- input_args_value [[var_name]]
+    args_value_above_1 <-
+      input_args_value[c("prop_pop_exp", base::paste0("dw", ci_suffix))] |>
+      purrr::keep(.p = ~ base::any(.x > 1)) |>
+      base::names()
 
-      if(!base::is.null(var_value) && # Only if available
-         base::any(unlist(var_value) > 1)){ # base::any(unlist( To make it robust for lists
-        # Create error message
-        stop(base::paste0(var_name,
-                    " cannot be higher than 1."),
-             call. = FALSE)
-      }
+
+    if(base::length(args_value_above_1) > 0) {
+      base::stop(
+        base::paste0("The values in the following arguments must not be higher than 1: ",
+                     base::toString(args_value_above_1),
+                     "."),
+        call. = FALSE
+      )
+
     }
 
-    # Error if base::any(prop_pop_exp) and dw are higher than 1
-    for (x in c("prop_pop_exp", base::paste0("dw", ci_suffix))) {
-      error_if_higher_than_1(x)
-    }
-
-    ### error_if_multi_geo_and_different_length #####
-
-    # Error if multiple geo units and length of some geo dependent variables are different
-    # (geo_ids, exp_central, prop_pop_exp, pop_exp and bhd) must be the same
-    # i.e. enter the data as in the table
-    error_if_multi_geo_and_different_length  <- function(list, var_names){
-
-      # Remove NULLs
-      non_nulls <-
-        list[var_names] |>
-        purrr::discard(is.null)
-
-      # Get lengths of non-NULLs
-      lengths <- purrr::map_int(non_nulls, length)
-
-      if (base::length(base::unique(list$geo_id_micro)) > 1 &&
-          !base::all(lengths == base::length(list$geo_id_micro))) {
-
-        base::stop(
-          base::paste0("The following variables must all have the same length: ",
-                       base::paste0(base::names(non_nulls),
-                                    collapse = ", "),
-                       "."),
-          call. = FALSE
-        )
-      }
-    }
-
-
-    error_if_multi_geo_and_different_length(list = input_args_value ,
-                                            var_names = c("geo_id_micro",
-                                                          "exp_central",
-                                                          "pop_exp",
-                                                          "bhd_central",
-                                                          "population"))
 
     ### error_if_sum_higher_than_1 #####
-    error_if_sum_higher_than_1 <- function(var_name){
 
-      var_value <- input_args_value [[var_name]]
+    # If not all values of prop_pop_exp are 1, then check below
+    # Otherwise this step is not excecuted and speed increases
+    if(! base::all(input_args_value[["prop_pop_exp"]] == 1)){
 
-      var_table <-
-        tibble::tibble(
-          exp_name = input_args_value$exp_name,
-          geo_id_micro = input_args_value$geo_id_micro,
-          age_group = input_args_value$age_group,
-          sex = input_args_value$sex,
-          exp_ci = input_args_value$exp_ci,
-          cutoff_ci = input_args_value$cutoff_ci,
-          erf_ci = input_args_value$erf_ci,
-          bhd_ci = input_args_value$bhd_ci,
-          dw_ci =  input_args_value$dw_ci,
-          duration_ci = input_args_value$duration_ci,
-          var = var_value)
+      error_if_sum_higher_than_1 <- function(var_name){
 
-      if(base::is.null(input_args_value [["pop_exp"]]) &&
-         var_table |>
-         dplyr::summarize(
-           .by = c(-var),
-           sum = base::sum(var, na.rm = TRUE) > 1) |>
-         dplyr::pull(sum) |>
-         base::any()){
+        var_value <- input_args_value [[var_name]]
 
-        # Create error message
-        stop(base::paste0(
-          "The sum of values in ",
-          var_name,
-          " cannot be higher than 1 for each geo unit."),
-          call. = FALSE)
+        var_table <-
+          tibble::tibble(
+            exp_name = input_args_value$exp_name,
+            geo_id_micro = input_args_value$geo_id_micro,
+            age_group = input_args_value$age_group,
+            sex = input_args_value$sex,
+            exp_ci = input_args_value$exp_ci,
+            cutoff_ci = input_args_value$cutoff_ci,
+            erf_ci = input_args_value$erf_ci,
+            bhd_ci = input_args_value$bhd_ci,
+            dw_ci =  input_args_value$dw_ci,
+            duration_ci = input_args_value$duration_ci,
+            var = var_value)
 
+        if(base::is.null(input_args_value [["pop_exp"]]) &&
+           var_table |>
+           dplyr::summarize(
+             .by = c(-var),
+             sum = base::sum(var, na.rm = TRUE) > 1) |>
+           dplyr::pull(sum) |>
+           base::any()){
+
+          # Create error message
+          stop(base::paste0(
+            "The sum of values in ",
+            var_name,
+            " cannot be higher than 1 for each geo unit."),
+            call. = FALSE)
+
+        }
       }
-    }
 
-    # Call function checking if base::sum(prop_pop_exp) > 1
-    error_if_sum_higher_than_1(var_name = "prop_pop_exp")
+      # Call function checking if base::sum(prop_pop_exp) > 1
+      error_if_sum_higher_than_1(var_name = "prop_pop_exp")
+    }
 
 
 
 
     ### error_if_not_increasing_lower_central_upper #####
-    error_if_not_increasing_lower_central_upper <-
-      function(var_ci){
-        # Store var_name from vector var_ci
-        var_name_lower <- var_ci[base::grep("lower", var_ci)]
-        var_name_central <- var_ci[base::grep("central", var_ci)]
-        var_name_upper <- var_ci[base::grep("upper", var_ci)]
 
-        # Store var_value
-        var_value_lower <- input_args_value [[var_name_lower]]
-        var_value_central <- input_args_value [[var_name_central]]
-        var_value_upper <- input_args_value [[var_name_upper]]
+    # Identify the argument names with all CI suffixes (_central, _lower_, _upper)
+    arg_names_with_ci <- arg_names_available|>
+      base::grep("_central|_lower|_upper", x= _, value = TRUE) |>
+      # Remove erf_eq because it is not numeric
+      base::setdiff(c("erf_eq_central", "erf_eq_lower", "erf_eq_upper"))
 
-        if(!base::is.null(var_value_central) &&
-           !base::is.null(var_value_lower) &&
-           !base::is.null(var_value_upper)){ # Only if available
+    arg_names_with_ci_prefix <- arg_names_with_ci|>
+      base::gsub("_central|_lower|_upper", "", x = _)
 
-          if((!base::is.list(var_value_central) &&
-             ((base::any(var_value_central < var_value_lower)) |
-              (base::any(var_value_central > var_value_upper)))) | #base::any() if vector
-             (base::is.list(var_value_central) &&
-              base::any(purrr::map2_lgl(var_value_lower, var_value_central, ~base::any(.x > .y))) |
-              base::any(purrr::map2_lgl(var_value_upper, var_value_central, ~base::any(.x < .y))))){
+    arg_names_with_all_ci_prefix <- arg_names_with_ci_prefix |>
+      base::table() |>
+      purrr::keep(~ . == 3) |>
+      base::names()
 
+
+
+    if(base::length(arg_names_with_all_ci_prefix) > 0){
+
+      error_if_not_increasing_lower_central_upper <-
+        function(var_name_central, var_name_lower, var_name_upper){
+
+          # Store var_value
+          var_value_central <- input_args_value [[var_name_central]]
+          var_value_lower <- input_args_value [[var_name_lower]]
+          var_value_upper <- input_args_value [[var_name_upper]]
+
+          if(base::any(var_value_central < var_value_lower) |
+             base::any(var_value_central > var_value_upper)){
             # Create error message
             stop(
               base::paste0(
-                var_name_central,
-                " must be higher than ",
-                var_name_lower,
-                " and lower than ",
-                var_name_upper,
-                "."),
+                var_name_central, " must be higher than ", var_name_lower,
+                " and lower than ", var_name_upper, "."),
               call. = FALSE)
 
-            }
-
+          }
         }
+
+      # Call function checking if error if not lower>central>upper
+      for (x in arg_names_with_all_ci_prefix) {
+        error_if_not_increasing_lower_central_upper(
+          var_name_central = base::paste0(x, "_central"),
+          var_name_lower = base::paste0(x, "_lower"),
+          var_name_upper = base::paste0(x, "_upper"))
       }
 
-    # Call function checking if error if not lower>central>upper
-    for (x in c("rr", "bhd", "exp", "cutoff", "dw", "duration")) {
-      error_if_not_increasing_lower_central_upper(var_ci = base::paste0(x, ci_suffix))
+
     }
+
+
 
     ### error_if_only_lower_or_upper #####
-    error_if_only_lower_or_upper <- function(var_short){
-      var_name_lower <- base::paste0(var_short, "_lower")
-      var_name_upper <- base::paste0(var_short, "_upper")
+    arg_names_with_two_ci_prefix <- arg_names_with_ci_prefix |>
+      base::table() |>
+      purrr::keep(~ . == 2) |>
+      base::names()
 
-      var_value_lower <- input_args_value [[var_name_lower]]
-      var_value_upper <- input_args_value [[var_name_upper]]
+    if(base::length(arg_names_with_two_ci_prefix) > 0){
 
-      if((!base::is.null(var_value_lower) && base::is.null(var_value_upper)) |
-         (base::is.null(var_value_lower) && !base::is.null(var_value_upper)) ){ # Only if available
-        {
-          # Create error message
-          stop(
-            base::paste0(
-              "Either both, ",
-              var_name_lower,
-              " and ",
-              var_name_upper,
-              ", or none of them must entered, but not only one."),
-            call. = FALSE)
+      error_if_only_lower_or_upper <- function(var_short){
+        var_name_lower <- base::paste0(var_short, "_lower")
+        var_name_upper <- base::paste0(var_short, "_upper")
+
+        var_value_lower <- input_args_value [[var_name_lower]]
+        var_value_upper <- input_args_value [[var_name_upper]]
+
+        if((!base::is.null(var_value_lower) && base::is.null(var_value_upper)) |
+           (base::is.null(var_value_lower) && !base::is.null(var_value_upper)) ){ # Only if available
+          {
+            # Create error message
+            stop(
+              base::paste0(
+                "Either both, ",
+                var_name_lower,
+                " and ",
+                var_name_upper,
+                ", or none of them must entered, but not only one."),
+              call. = FALSE)
+          }
         }
       }
+
+      # Call function checking if lower but not upper (or vice versa)
+      for (x in arg_names_with_two_ci_prefix) {
+        error_if_only_lower_or_upper(var_short = x)
+      }
+
+
     }
 
-    # Call function checking if lower but not upper (or vice versa)
-    for (x in c("rr", "bhd", "exp", "cutoff", "dw", "duration")) {
-      error_if_only_lower_or_upper(var_short = x)
-    }
-
-    ### error_if_var_and_risk #####
 
     error_if_var_and_risk <- function(var_name, risk){
 
       # Identify the alternative options
       all_approach_risks <- c("relative_risk", "absolute_risk")
       all_var_names <- c("prop_pop_exp", "pop_exp")
-      another_approach_risk <- all_approach_risks[!all_approach_risks %in% risk]
-      another_var_name <- all_var_names[!all_var_names %in% var_name]
+      another_approach_risk <- base::setdiff(all_approach_risks, risk)
+      another_var_name <- base::setdiff(all_var_names, var_name)
 
       if(var_name %in% arg_names_passed &&
          approach_risk == risk){
@@ -688,13 +627,6 @@ validate_input_attribute <-
     }
 
     warning_if_rr_and_no_var_with_default(var_name = "cutoff_central", default = 0)
-
-
-
-
-
-
-
 
 
   }
