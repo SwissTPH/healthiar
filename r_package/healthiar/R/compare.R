@@ -298,7 +298,13 @@ compare <-
           healthiar:::find_joining_columns(
             df_1 = input_table_scen_1,
             df_2 = input_table_scen_2,
-            except = scenario_specific_arguments)
+            # except = scenario_specific_arguments)
+            except = base::setdiff(
+              scenario_specific_arguments,
+              # Keep year_of_analysis in the table
+              # so it can be accessed in the get_impact script
+              c("year_of_analysis", "population"))
+            )
 
         # Merge the input tables by common columns
         input_table <-
@@ -308,34 +314,16 @@ compare <-
             by = joining_columns_input,
             suffix = c("_scen_1", "_scen_2"))
 
+        results <-
+          healthiar:::get_impact(
+            input_table = input_table,
+            pop_fraction_type = "pif")
 
-        ## Added if statement below to avoid error in the non-lifetable cases
-        # input_args_scen_1 and input_args_scen_2 should have the same health_outcome (see checks above)
-        # So let's use e.g. input_args_scen_1
-        if( is_lifetable ) {
-          # Calculate the health impacts for each case (uncertainty, category, geo area...)
-          results <-
-            input_table |>
-            # Duplicate column with new names (without _scen_..)
-            # to enable that get_impact() can read it
-            dplyr::mutate(year_of_analysis = year_of_analysis_scen_1,
-                          population = population_scen_1) |>
-            dplyr::select(-population_scen_1, -population_scen_2)|>
-            healthiar:::get_impact(input_table = _,
-                                   pop_fraction_type = "pif")
-        } else { # Non-lifetable cases
-
-          results <-
-            healthiar:::get_impact(
-              input_table = input_table,
-              pop_fraction_type = "pif")
-        }
-
+        # Collect results
         results_raw <- results$results_raw
         intermediate_calculations <- results$intermediate_calculations
 
       }
-
 
 
     # Organize output
