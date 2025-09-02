@@ -1355,7 +1355,9 @@ testthat::test_that("error if length of exp lower than length of prop pop", {
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear"),
-    regexp = "exp_central and prop_pop_exp must have the same length."
+    regexp = "All function arguments must have the same length (here 1) or length 1. Check: prop_pop_exp.",
+    # To prevent not passed test because of the brackets
+    fix = TRUE
   )
 })
 
@@ -1572,7 +1574,7 @@ testthat::test_that("error if multi geo units but different length of geo-depend
   testthat::expect_error(
     object =
       healthiar::attribute_health(
-        exp_central = 6,
+        exp_central = c(6, 2, 3),
         prop_pop_exp = 1,
         cutoff_central = 5,
         bhd_central = 1000,
@@ -1580,7 +1582,7 @@ testthat::test_that("error if multi geo units but different length of geo-depend
         rr_increment = 10,
         erf_shape = "log_linear",
         geo_id_micro = c("a", "b")),
-    regexp = "The following variables must all have the same length: geo_id_micro, exp_central, bhd_central.")
+    regexp = "Not clear what is the maximal length of your arguments: 3, 2. Check: exp_central, geo_id_micro.")
 })
 
 testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
@@ -1684,7 +1686,8 @@ testthat::test_that("error if info has incompatible length |pathway_rr|erf_log_l
         erf_shape = "log_linear",
         info = data.frame(id = 1:20)
       )$health_main$impact_rounded,
-    regexp = "For this assessment, the info vector or data frame columns must have a length of 1 or 6."
+    regexp = "All function arguments must have the same length (here 6) or length 1. Check: info.",
+    fix = TRUE
   )
 })
 
@@ -1739,7 +1742,7 @@ testthat::test_that("error if erf_eq is not function or string", {
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear",
-        erf_eq_central = c(1,2,3)),
+        erf_eq_central = c(1)),
     regexp = "erf_eq_central must be a (list of) function(s) or a (vector of) string(s)." ,
     fixed = TRUE)
 })

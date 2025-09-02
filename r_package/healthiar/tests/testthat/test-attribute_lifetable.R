@@ -304,8 +304,7 @@ testthat::test_that("error if length of age range higher than deaths", {
         info = data_mort$pollutant[2],
         min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
       ),
-    regexp = "bhd_central and sex must have the same length.",
-    fixed = TRUE
+    regexp = "Not clear what is the maximal length of your arguments: 600, 4000. Check: age_group, sex, exp_central."
   )
 })
 
