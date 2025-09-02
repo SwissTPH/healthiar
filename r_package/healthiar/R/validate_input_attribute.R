@@ -40,16 +40,11 @@ validate_input_attribute <-
     ci_args <- args[base::grep("_central|_lower|_upper", args)]
 
     ci_args_wo_eq <- ci_args[!base::grepl("erf_eq", ci_args)]
+
     numeric_args <-
       c(ci_args_wo_eq,
-        "prop_pop_exp",
-        "pop_exp",
-        "rr_increment",
-        "population",
-        "year_of_analysis",
-        "time_horizon",
-        "min_age",
-        "max_age")
+        "prop_pop_exp", "pop_exp", "rr_increment", "population",
+        "year_of_analysis", "time_horizon", "min_age", "max_age")
 
     # Only if is_lifetable, then age_group is numeric.
     # Otherwise, it can be a string e.g. for socialize()
