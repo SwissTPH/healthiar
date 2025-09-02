@@ -258,9 +258,7 @@ validate_input_attribute <-
       # Find the arguments with values <1
       args_value_below_1 <-
         input_args_value[lifetable_args_with_values_1_or_above] |>
-        purrr::map(input_args_value,
-                   .f = ~ base::any(.x < 1)) |>
-        purrr::keep(.p = ~ base::isTRUE(.x)) |>
+        purrr::keep(.p = ~ base::any(.x < 1)) |>
         base::names()
 
 
