@@ -396,9 +396,6 @@ validate_input_attribute <-
 
 
 
-
-
-
     ### error_if_not_increasing_lower_central_upper #####
     error_if_not_increasing_lower_central_upper <-
       function(var_ci){
@@ -416,12 +413,8 @@ validate_input_attribute <-
            !base::is.null(var_value_lower) &&
            !base::is.null(var_value_upper)){ # Only if available
 
-          if((!base::is.list(var_value_central) &&
-             ((base::any(var_value_central < var_value_lower)) |
-              (base::any(var_value_central > var_value_upper)))) | #base::any() if vector
-             (base::is.list(var_value_central) &&
-              base::any(purrr::map2_lgl(var_value_lower, var_value_central, ~base::any(.x > .y))) |
-              base::any(purrr::map2_lgl(var_value_upper, var_value_central, ~base::any(.x < .y))))){
+          if(base::any(var_value_central < var_value_lower) |
+             base::any(var_value_central > var_value_upper)){
 
             # Create error message
             stop(
