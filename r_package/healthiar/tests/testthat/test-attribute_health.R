@@ -1356,7 +1356,7 @@ testthat::test_that("error if rr lower than 0", {
         rr_central = -1.05,
         rr_increment = 10,
         erf_shape = "log_linear"),
-    regexp = "rr_central cannot be lower than 0."
+    regexp = "The values in the following arguments must be higher than 0: rr_central."
   )
 })
 

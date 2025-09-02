@@ -310,22 +310,39 @@ validate_input_attribute <-
 
     ### error_if_lower_than_0 #####
 
-    error_if_lower_than_0 <- function(var_name){
-      var_value <- input_args_value [[var_name]]
+    # Find the arguments with values <1
+    args_value_below_1 <-
+      input_args_value[numeric_arg_names_available] |>
+      purrr::keep(.p = ~ base::any(.x < 0)) |>
+      base::names()
 
-      if(!base::is.null(var_value) && # Only if available
-         base::any(base::unlist(var_value) < 0)){ # base::any(unlist( To make it robust for lists
-        # Create error message
-          stop(base::paste0(var_name,
-                            " cannot be lower than 0."),
-               call. = FALSE)
-        }
+
+    if(base::length(args_value_below_1) > 0) {
+      base::stop(
+        base::paste0("The values in the following arguments must be higher than 0: ",
+                     base::toString(args_value_below_1),
+                     "."),
+        call. = FALSE
+      )
+
     }
 
-
-    for (x in numeric_arg_names_available) {
-      error_if_lower_than_0(x)
-    }
+    # error_if_lower_than_0 <- function(var_name){
+    #   var_value <- input_args_value [[var_name]]
+    #
+    #   if(!base::is.null(var_value) && # Only if available
+    #      base::any(base::unlist(var_value) < 0)){ # base::any(unlist( To make it robust for lists
+    #     # Create error message
+    #       stop(base::paste0(var_name,
+    #                         " cannot be lower than 0."),
+    #            call. = FALSE)
+    #     }
+    # }
+    #
+    #
+    # for (x in numeric_arg_names_available) {
+    #   error_if_lower_than_0(x)
+    # }
 
 
     ### error_if_higher_than_1 #####
