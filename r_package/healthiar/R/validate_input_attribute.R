@@ -72,20 +72,20 @@ validate_input_attribute <-
     string_args <- args[!args %in% c(numeric_args, boolean_args)]
 
     options_of_categorical_args <-
-      list(
+      base::list(
         approach_risk = c("relative_risk", "absolute_risk"),
         erf_shape = c("linear", "log_linear", "log_log", "linear_log"),
         approach_exposure = c("single_year", "constant"),
         approach_newborns = c("without_newborns", "with_newborns")
       )
 
-    categorical_args <- names(options_of_categorical_args)
+    categorical_args <- base::names(options_of_categorical_args)
 
     lifetable_var_names_with_same_length <-
       c("bhd_central", "bhd_lower", "bhd_upper", "population", "age_range", "sex")
 
     available_var_names <-
-      names(available_input_args)
+      base::names(available_input_args)
 
     available_numeric_var_names <-
       available_var_names[available_var_names %in% numeric_args]
@@ -117,7 +117,7 @@ validate_input_attribute <-
          # Check arg_names_passed in case that there is a default value (safer)
          ){
         stop(
-          paste0(
+          base::paste0(
             "If you do not pass a value for ",
             var_name_2,
             ", you cannot use ",
@@ -135,7 +135,7 @@ validate_input_attribute <-
     error_if_not_numeric <- function(var_name){
       var_value <- input_args_value [[var_name]]
 
-      if(any(!is.numeric(unlist(var_value)))){
+      if(base::any( ! base::is.numeric(base::unlist(var_value)))){
 
         base::stop(
           base::paste0(
@@ -208,8 +208,8 @@ validate_input_attribute <-
          !same_length(var_value_1, var_value_2) &&
          # For the case of prop_pop_exp which can be NULL
          # and get default value in compile_input()
-         !is.null(var_value_1) &&
-         !is.null(var_value_2)){
+         !base::is.null(var_value_1) &&
+         !base::is.null(var_value_2)){
 
           # Create error message
           stop(base::paste0(var_name_1,
@@ -336,7 +336,7 @@ validate_input_attribute <-
         # and it is not a character
         if((! base::is.function(erf_eq_value) &&
            ! (base::is.list(erf_eq_value) && base::all(purrr::map_lgl(erf_eq_value, is.function)))) &&
-           ! is.character(erf_eq_value)){
+           ! base::is.character(erf_eq_value)){
 
           base::stop(
             base::paste0(erf_eq_name , " must be a (list of) function(s) or a (vector of) string(s)."),
