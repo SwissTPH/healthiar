@@ -164,6 +164,9 @@ compare <-
     is_absolute_risk <-
       base::unique(input_table_scen_1$approach_risk) == "absolute_risk"
 
+    is_lifetable <- base::unique(input_table_scen_1$is_lifetable)
+
+
 
 
 
@@ -309,7 +312,7 @@ compare <-
         ## Added if statement below to avoid error in the non-lifetable cases
         # input_args_scen_1 and input_args_scen_2 should have the same health_outcome (see checks above)
         # So let's use e.g. input_args_scen_1
-        if(base::unique(input_table_scen_1$is_lifetable)) {
+        if( is_lifetable ) {
           # Calculate the health impacts for each case (uncertainty, category, geo area...)
           results <-
             input_table |>
