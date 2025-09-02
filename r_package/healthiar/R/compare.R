@@ -131,7 +131,7 @@ compare <-
 
     # Force the same environment in the functions of erf_eq.
     # Otherwise, not identified as identical and error joining below.
-    if(!is.null(input_args_scen_1$value$erf_eq_central)){
+    if(!is.null(input_args_scen_1[["value"]][["erf_eq_central"]])){
 
       erf_eq_vars <- paste0("erf_eq", c("erf_eq", "_central", "_lower", "_upper"))
 
@@ -206,8 +206,8 @@ compare <-
 
     common_arguments_identical <-
       healthiar:::check_if_args_identical(
-        args_a = input_args_scen_1$value,
-        args_b = input_args_scen_2$value,
+        args_a = input_args_scen_1[["value"]],
+        args_b = input_args_scen_2[["value"]],
         names_to_check = common_arguments)
 
     # Check that (relevant) input values from scenarios A & B are equal
@@ -320,8 +320,8 @@ compare <-
             pop_fraction_type = "pif")
 
         # Collect results
-        results_raw <- results$results_raw
-        intermediate_calculations <- results$intermediate_calculations
+        results_raw <- results[["results_raw"]]
+        intermediate_calculations <- results[["intermediate_calculations"]]
 
       }
 
