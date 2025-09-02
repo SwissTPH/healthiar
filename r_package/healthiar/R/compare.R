@@ -182,10 +182,10 @@ compare <-
 
     # Arguments that should be identical in both scenarios
     common_arguments_scen_1 <-
-      passed_arguments_scen_1[!passed_arguments_scen_1 %in% scenario_specific_arguments]
+      base::setdiff(passed_arguments_scen_1, scenario_specific_arguments)
 
     common_arguments_scen_2 <-
-      passed_arguments_scen_2[!passed_arguments_scen_2 %in% scenario_specific_arguments]
+      base::setdiff(passed_arguments_scen_2, scenario_specific_arguments)
 
 
 
