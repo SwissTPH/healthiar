@@ -61,6 +61,12 @@ validate_input_attribute <-
         "min_age",
         "max_age")
 
+    # Only if is_lifetable, then age_group is numeric.
+    # Otherwise, it can be a string e.g. for socialize()
+    if(is_lifetable){
+      numeric_args <- c(numeric_args, "age_group")
+    }
+
     boolean_args <- "is_lifetable"
 
     string_args <- args[!args %in% c(numeric_args, boolean_args)]
