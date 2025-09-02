@@ -307,12 +307,6 @@ validate_input_attribute <-
 
     }
 
-
-
-    if(base::all(lifetable_var_names_with_same_length %in% var_names_available)){
-      error_if_incompatible_length_of_age_range(age_dependent_var = "bhd_central")
-    }
-
     ### error_if_erf_eq_not_function_or_string #####
 
     error_if_erf_eq_not_function_or_string <- function(erf_eq_name){
