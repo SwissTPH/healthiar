@@ -165,23 +165,11 @@ validate_input_attribute <-
 
     ### error_if_different_length #####
 
-
-    # get_length <- function(var){
-    #   length <-
-    #     base::ifelse(
-    #       base::is.list(var),
-    #       base::length(var[[1]]), # Take first element for example
-    #       base::length(var))
-    #   return (length)
-    # }
-
-
     same_length <- function(var_value_1, var_value_2){
 
       # Only if var_2 (e.g. prop_pop_exp) is not 1 (default value)
       if(!base::identical(var_value_2, 1)){
         base::length(var_value_1) == base::length(var_value_2)
-        #get_length(var_value_1) == get_length(var_value_2)
       } else {TRUE}
     }
 
