@@ -82,15 +82,15 @@ validate_input_attribute <-
       c("bhd_central", "bhd_lower", "bhd_upper", "population", "age_range", "sex")
 
 
-    available_var_names <-
+    var_names_available <-
       purrr::keep(input_args_value, ~!base::is.null(.x)) |>
       base::names()
 
-    available_numeric_var_names <-
-      available_var_names[available_var_names %in% numeric_args]
+    numeric_var_names_available <-
+      var_names_available[var_names_available %in% numeric_args]
 
-    available_categorical_var_names <-
-      available_var_names[available_var_names %in% categorical_args]
+    categorical_var_names_available <-
+      var_names_available[var_names_available %in% categorical_args]
 
 
     # Define approach_risk here because in the life table approach
@@ -145,7 +145,7 @@ validate_input_attribute <-
     }
 
 
-    for (x in available_numeric_var_names) {
+    for (x in numeric_var_names_available) {
       error_if_not_numeric(var_name = x)
     }
 
@@ -168,7 +168,7 @@ validate_input_attribute <-
     }
 
 
-    for (x in available_categorical_var_names) {
+    for (x in categorical_var_names_available) {
       error_if_not_an_option(var_name = x)
     }
 
@@ -228,7 +228,7 @@ validate_input_attribute <-
     if(approach_risk == "relative_risk"){
 
       available_exp_var_names <-
-        available_var_names[available_var_names %in%
+        var_names_available[var_names_available %in%
                               base::paste0("exp", ci_suffix)]
 
       for(x in available_exp_var_names){
@@ -321,7 +321,7 @@ validate_input_attribute <-
 
 
 
-    if(base::all(lifetable_var_names_with_same_length %in% available_var_names)){
+    if(base::all(lifetable_var_names_with_same_length %in% var_names_available)){
       error_if_incompatible_length_of_age_range(age_dependent_var = "bhd_central")
     }
 
