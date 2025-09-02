@@ -123,7 +123,8 @@ validate_input_attribute <-
     ### error_if_not_numeric #####
 
     # Find the arguments that should be numeric but are not
-    # Avoid for loop here because it expected to review quite a lot of arguments
+    # Avoid for loop here because it expected to review quite a lot of arguments.
+    # And also nice to have all incorrect args at once
     numeric_args_that_are_not <-
       input_args_value[numeric_arg_names_available] |>
       purrr::keep(~ !is.numeric(.x)) |>
@@ -141,6 +142,8 @@ validate_input_attribute <-
 
 
     ### error_if_not_an_option #####
+    # Create here a function because showing all incorrect args with the values here at once
+    # because otherwise it could be overwhelming for the user
 
     error_if_not_an_option <- function(var_name){
       var_value <- input_args_value [[var_name]]
@@ -257,6 +260,8 @@ validate_input_attribute <-
       ### error_if_not_consecutive_sequence #####
       error_if_not_consecutive_sequence <- function(var_name){
         var_value <- input_args_value[[var_name]]
+        # Here a function because it expected to use it in one or two arguments
+        # (not like e.g. the check of is.numeric)
 
         if(# Check that values are integers
           base::any(var_value != base::floor(var_value)) &&
@@ -264,7 +269,7 @@ validate_input_attribute <-
           base::all(base::diff(var_value))) {
 
           base::stop(
-            base::paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements if 1."),
+            base::paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements is 1."),
             call. = FALSE
           )
         }
