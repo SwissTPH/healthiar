@@ -270,10 +270,7 @@ validate_input_attribute <-
         }
       }
 
-
-      for (x in "age_group") {
-        error_if_not_consecutive_sequence(var_name = x)
-      }
+      error_if_not_consecutive_sequence(var_name = "age_group")
 
     }
 
