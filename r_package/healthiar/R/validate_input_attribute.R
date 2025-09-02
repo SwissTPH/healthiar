@@ -488,36 +488,6 @@ validate_input_attribute <-
     }
 
 
-    # error_if_only_lower_or_upper <- function(var_short){
-    #   var_name_lower <- base::paste0(var_short, "_lower")
-    #   var_name_upper <- base::paste0(var_short, "_upper")
-    #
-    #   var_value_lower <- input_args_value [[var_name_lower]]
-    #   var_value_upper <- input_args_value [[var_name_upper]]
-    #
-    #   if((!base::is.null(var_value_lower) && base::is.null(var_value_upper)) |
-    #      (base::is.null(var_value_lower) && !base::is.null(var_value_upper)) ){ # Only if available
-    #     {
-    #       # Create error message
-    #       stop(
-    #         base::paste0(
-    #           "Either both, ",
-    #           var_name_lower,
-    #           " and ",
-    #           var_name_upper,
-    #           ", or none of them must entered, but not only one."),
-    #         call. = FALSE)
-    #     }
-    #   }
-    # }
-    #
-    # # Call function checking if lower but not upper (or vice versa)
-    # for (x in c("rr", "bhd", "exp", "cutoff", "dw", "duration")) {
-    #   error_if_only_lower_or_upper(var_short = x)
-    # }
-
-    ### error_if_var_and_risk #####
-
     error_if_var_and_risk <- function(var_name, risk){
 
       # Identify the alternative options
