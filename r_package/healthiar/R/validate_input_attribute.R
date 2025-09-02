@@ -280,33 +280,32 @@ validate_input_attribute <-
     }
 
     ### error_if_erf_eq_not_function_or_string #####
+    # If erf_eq_... is not null (user may not enter a value for this argument)
+    erf_eq_args_available <-
+      base::intersect(arg_names_available,
+                      c("erf_eq_central", "erf_eq_lower", "erf_eq_upper"))
 
-    error_if_erf_eq_not_function_or_string <- function(erf_eq_name){
-      erf_eq_value <- input_args$value[[erf_eq_name]]
-      # If erf_eq_... is not null (user may not enter a value for this argument)
-      if(! base::is.null(erf_eq_value)){
-        # If it is a function (single function or multiple functions in a list)
-        # and it is not a character
+    if(base::length(erf_eq_args_available) > 0){
 
+      error_if_erf_eq_not_function_or_string <- function(erf_eq_name){
+        erf_eq_value <- input_args_value[[erf_eq_name]]
 
-
-        if(! base::is.function(erf_eq_value) && ! base::is.character(erf_eq_value)){
-        # if((! base::is.function(erf_eq_value) &&
-        #    ! (base::is.list(erf_eq_value) && base::all(purrr::map_lgl(erf_eq_value, is.function)))) &&
-        #    ! base::is.character(erf_eq_value)){
-
-          base::stop(
-            base::paste0(erf_eq_name , " must be a (list of) function(s) or a (vector of) string(s)."),
-            call. = FALSE
-          )
+          # If it is a function (single function or multiple functions in a list)
+          # and it is not a character
+          if(! base::is.function(erf_eq_value) && ! base::is.character(erf_eq_value)){
+            base::stop(
+              base::paste0(erf_eq_name , " must be a function or a character string."),
+              call. = FALSE
+            )
         }
       }
+
+      for(x in erf_eq_args_available){
+        error_if_erf_eq_not_function_or_string(x)
+      }
+
     }
 
-
-      error_if_erf_eq_not_function_or_string(erf_eq_name = "erf_eq_central")
-      error_if_erf_eq_not_function_or_string(erf_eq_name = "erf_eq_lower")
-      error_if_erf_eq_not_function_or_string(erf_eq_name = "erf_eq_upper")
 
 
     ### error_if_lower_than_0 #####

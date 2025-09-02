@@ -1743,10 +1743,7 @@ testthat::test_that("error if erf_eq is not function or string", {
         prop_pop_exp = 1,
         cutoff_central = 5,
         bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "log_linear",
         erf_eq_central = c(1)),
-    regexp = "erf_eq_central must be a (list of) function(s) or a (vector of) string(s)." ,
+    regexp = "erf_eq_central must be a function or a character string." ,
     fixed = TRUE)
 })
