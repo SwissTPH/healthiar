@@ -88,26 +88,17 @@ compile_input <-
       # Add info
       healthiar:::add_info(info = input_args_edited$info)
 
-    length_exp <- input_wo_lifetable |>
-      dplyr::summarise(
-        .by = c(geo_id_micro, sex, age_group),
-        length = base::length(exp_central)
-      )|>
-      dplyr::pull(length) |>
-      base::unique()
-
-
     # Obtain the exposure dimension and exposure type in a separate table
-    input_wo_lifetable <-
-      input_wo_lifetable |>
-      # Add exp_category and exp_type
-      dplyr::mutate(
-        .by = c(geo_id_micro, age_group, sex),
-        exp_category = 1 : length_exp,
-        exp_type =
-          base::ifelse(length_exp == 1,
-                       "population_weighted_mean",
-                       "exposure_distribution"))
+      input_wo_lifetable  <-
+        input_wo_lifetable |>
+        dplyr::mutate(
+          .by = c(geo_id_micro, age_group, sex),
+          exp_length = dplyr::n(),
+          exp_category = dplyr::row_number(),
+          exp_type =
+            base::ifelse(exp_length == 1,
+                         "population_weighted_mean",
+                         "exposure_distribution"))
 
 
     # PIVOT LONGER ###########################################################
