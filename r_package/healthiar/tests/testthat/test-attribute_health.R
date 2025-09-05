@@ -1231,6 +1231,49 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
   )
 })
 
+
+# Pathwway ID
+# pathway_ar-erf_formula-exp_dist-iteration_TRUE.R
+# Different number of exposure categories across geo_ids
+
+testthat::test_that("results correct  pathway_ar|erf_formula|exp_dist|iteration_TRUE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = data$average_cat,
+        population = data$totpop,
+        # prop_pop_exp = data$prop_pop_exp,
+        pop_exp = data$ANTALL_PER,
+        geo_id_micro = data$GEO_ID,
+        geo_id_macro = "Norway",
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        dw_central = 0.02,
+        duration_central = 1,
+        info = data.frame(pollutant = "road_noise",
+
+                          outcome = "highly_annoyance")
+
+      )$health_detailed$results_by_geo_id_micro$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c(283, 398 )
+  )
+})
+
+## ASSESSOR:
+## Liliana Vázquez, NIPH
+## ASSESSMENT DETAILS:
+## Stavanger and Bergen highly annoyance
+## INPUT DATA DETAILS:
+## Add here input data details: data sources, measured vs. modeled, ...
+
+
 ### YLD #########################################################################
 
 ## Using only the pop_exp argument
