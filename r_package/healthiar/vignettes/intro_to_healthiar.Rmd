@@ -444,7 +444,89 @@ results_iteration_ar[["health_detailed"]][["results_by_geo_id_micro"]] |>
 rm(results_iteration_ar, data)
 ```
 
-## Example: `attribute_health()` and sub-group analysis
+## Example: `attribute_health()` and sub-group analysis (by age group)
+
+Goal: determine mean attributable health impacts by age group
+
+*NOTE*: to obtain age-group-specific results, the baseline health data (and possibly exposure) must be available by age group.
+
+If the `age` argument was specified, age-group-specific results are available under `health_detailed` in the sub-folder `results_by_age_group`.
+
+```{r}
+results_age_group <- attribute_health(
+        approach_risk = "relative_risk",
+        age = c("below_65", "65_plus"),
+        exp_central = c(8, 7),
+        cutoff_central = c(5, 5),
+        bhd_central = c(1000, 5000),
+        rr_central = 1.06,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+results_age_group$health_detailed$results_by_age_group |> 
+  dplyr::select(age_group, impact_rounded, exp, bhd) |> 
+  knitr::kable()
+```
+
+
+## Example: `attribute_health()` and sub-group analysis (by age group)
+
+Goal: determine mean attributable health impacts by age group
+
+*NOTE*: to obtain age-group-specific results, the baseline health data (and possibly exposure) must be entered by age group.
+
+If the `age` argument was specified, age-group-specific results are available under `health_detailed` in the sub-folder `results_by_age_group`.
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
+results_age_group <- attribute_health(
+        approach_risk = "relative_risk",
+        age = c("below_65", "65_plus"),
+        exp_central = c(8, 7),
+        cutoff_central = c(5, 5),
+        bhd_central = c(1000, 5000),
+        rr_central = 1.06,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+results_age_group$health_detailed$results_by_age_group |> 
+  dplyr::select(age_group, impact_rounded, exp, bhd) |> 
+  knitr::kable()
+```
+
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(results_age_group)
+```
+
+
+## Example: `attribute_health()` and sub-group analysis (by sex)
+
+Goal: determine mean attributable health impacts by sex
+
+*NOTE*: to obtain sex-specific results, the baseline health data (and possibly exposure) must be entered by sex.
+
+If the `sex` argument was specified, sex-specific results are available under `health_detailed` in the sub-folder `results_by_sex`.
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
+results_sex <- attribute_health(
+        approach_risk = "relative_risk",
+        sex = c("female", "male"),
+        exp_central = c(8, 8),
+        cutoff_central = c(5, 5),
+        bhd_central = c(1000, 1100),
+        rr_central = 1.06,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+results_sex$health_detailed$results_by_sex |> 
+  dplyr::select(sex, impact_rounded, exp, bhd) |> 
+  knitr::kable()
+```
+
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(results_sex)
+```
+
+## Example: `attribute_health()` and sub-group analysis (by education level)
 
 Goal: determine mean attributable health impacts by education level
 
@@ -473,6 +555,11 @@ output_stratified <- output_attribute$health_detailed$results_raw |>
   dplyr::summarize(mean_impact = mean(impact)) |>
   print()
 ```
+
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(info, output_attribute, output_stratified)
+```
+
 
 ## Example: `attribute_health()` with user-defined ERF
 
