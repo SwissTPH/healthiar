@@ -41,7 +41,7 @@ This vignette will tell you about `healthiar` and show you how to use `healthiar
 
 *NOTE*: By using healthiar you agree to the [terms of use](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme) and confirm you have read the [disclaimer](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme).
 
-*NOTE*: the development of `healthiar` is still ongoing. Any feedback regarding bugs, unclear documentation, ... is welcome and highly appreciated. Please provide feedback via a [GitHub issue](https://github.com/best-cost/best-cost_WPs/issues).
+*NOTE*: the development of `healthiar` is still ongoing. Any feedback, e.g. regarding bugs or unclear documentation, is welcome and highly appreciated. Please provide feedback via a [GitHub issue](https://github.com/best-cost/best-cost_WPs/issues).
 
 ------------------------------------------------------------------------
 
@@ -51,16 +51,16 @@ The `healthiar` functions allow you to quantify and monetize the health impacts 
 
 `healthiar` core *family members* (= functions)
 
--   `attribute_health()` to environmental exposure (relative or absolute risk)
--   `summarize_uncertainty()` Monte Carlo simulation
--   `compare()` two scenarios
--   `monetize()` health impacts
--   `attribute_lifetable()` life table analysis (RR & AR)
--   `attribute_mod()` modify an existing assessment
--   `cba()` cost-benefit analysis
--   `get_daly()` by adding up YLL & YLD
--   `multiexpose()` approaches to consider exposure to 2 air pollutants at the same time
--   `socialize()` to discover inequalities in health impacts
+-   `attribute_health()` quantifies health impact attributable to environmental exposure (via relative or absolute risk)
+-   `summarize_uncertainty()` performs a Monte Carlo simulation
+-   `compare()` compares health impacts of two scenarios (via PAF or PIF approaches)
+-   `monetize()` monetizes health impacts
+-   `attribute_lifetable()` quantifies health impacts by applying the life table method (RR & AR)
+-   `attribute_mod()` modifies an existing `attribute_health()` assessment
+-   `cba()` performs a cost-benefit analysis
+-   `get_daly()` adds up YLL & YLD to obtain DALY
+-   `multiexpose()` considers exposure to 2 exposures (e.g. two different air pollutants) at the same time to quantify the attributable health impacts
+-   `socialize()` exposes and quantifies social inequalities in health impacts
 -   `prepare_mdi()` creates the BEST-COST MDI (Multidimensional Deprivation Index)
 
 ## Package overview
@@ -74,6 +74,8 @@ The `healthiar` functions allow you to quantify and monetize the health impacts 
 BHD/bhd - baseline health data CI - confidence interval
 
 CBA/cba - cost-benefit analysis
+
+exp - exposure
 
 RR/rr - relative risk
 
@@ -145,11 +147,15 @@ Every `attribute_health()` output consists of two lists ("folders")
 
     -   `input_args` contains a complete list of all arguments used in the assessment (including some internal arguments)
 
-    -   `input_table` tibble that contains all input data entered by the user
+    -   `input_table` tibble that contains all input data entered by the user or derived for the calculations
 
-    -   `results_by_`: contains results stratified by variables such as exposure category (only absolute risk), sex, age group and geo ids. These tables are only shown if the variables have more than one category (except results_by_geo_id_disaggegated, which is always shown).  
-
-    -   `results_summed_with_all_ci` contains results summing imapct of across all the above variables but still keeping all uncertainties (confidence intervals)
+    -   `results_by_...`
+    
+        - `geo_id_micro`: contains results by the inputted or default micro (e.g. high resolution) geo IDs
+        
+        - `sex`: contains results by sex (only present if function argument `sex` specified)
+        
+        - `age_group`: contains results by age groups (only present if function argument `age` sepcified)
 
 *NOTE*: `attribute_lifetable()` creates additional output that is specific to life table calculations
 
@@ -175,7 +181,7 @@ It is a table of the format `tibble` (very similar to a `data.frame`) of 3 rows 
 
 ```{r}
 results_pm_copd$health_main |> 
-  select(exp, bhd, rr, erf_ci, pop_fraction, impact_rounded) |> 
+  dplyr::select(exp, bhd, rr, erf_ci, pop_fraction, impact_rounded) |> 
   knitr::kable() # For formatting reasons only: prints tibble in nice layout
 ```
 
@@ -183,9 +189,9 @@ Interpretation: this table shows us that exposure was 8.85 $\mu g/m^3$, the base
 
 Some of the most results columns include:
 
--   *impact_rounded* Rounded attributable health impact/burden
--   *impact* Raw impact/burden
--   *pop_fraction* Population attributable fraction (PAF)
+-   *impact_rounded* rounded attributable health impact/burden
+-   *impact* raw impact/burden
+-   *pop_fraction* population attributable fraction (PAF) or population impact fraction (PIF)
 
 *NOTE*: the main output contains more columns that provide additional information about the assessment, such as intermediate results and assessment specifications, ...
 
@@ -266,8 +272,8 @@ The `erf_eq_central` argument can digest other types of functions (see section [
 
 ```{r echo=FALSE}
 results_noise_ha |> 
-  pluck("health_main") |>
-  select(erf_eq, erf_ci, impact_rounded) |> 
+  dplyr::pluck("health_main") |>
+  dplyr::select(erf_eq, erf_ci, impact_rounded) |> 
   knitr::kable() # Prints tibble in a minimal layout
 ```
 
@@ -430,7 +436,7 @@ results_iteration_ar$health_detailed$results_by_geo_id_micro
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
 results_iteration_ar[["health_detailed"]][["results_by_geo_id_micro"]] |> 
-  select(geo_id_micro, geo_id_macro, impact) |> 
+  dplyr::select(geo_id_micro, geo_id_macro, impact) |> 
   knitr::kable()
 ```
 
@@ -444,7 +450,7 @@ Goal: determine mean attributable health impacts by education level
 
 *Note*: a (random) ID vector of unique values must be entered to the argument `geo_id_micro`, to indicate that each row is an observation on its own (and not just exposure categories)
 
-A data frame (or a single vector) can be entered to the `info` argument
+A single vector (or a data frame / tibble with multiple columns) to group the results by can be entered to the `info` argument. In this exmaple, this will be information about the education level.
 
 In a second step one can group the results based on one or more columns and so summarize the results by the preferred sub-groups
 
@@ -470,8 +476,10 @@ output_stratified <- output_attribute$health_detailed$results_raw |>
 
 ## Example: `attribute_health()` with user-defined ERF
 
-Goal: attribute COPD cases to air pollution exposure by applying a user-defined exposure response function (e.g. MR-BRT curves from Global Burden of Disease study)
+Goal: attribute COPD cases to air pollution exposure by applying a user-defined exposure response function (e.g. MR-BRT curves from Global Burden of Disease study)
 
+
+*Note*: in this case, the function arguments `erf_eq_...` require a function as input, so we use an auxiliary function (`splinefun()`) to transform the points on the ERF into type `fucntion`.
 ```{r}
 results_pm_copd_mr_brt <- attribute_health(
   exp_central = 8.85,
@@ -737,7 +745,7 @@ cba <- cba(
 
 ```{r}
 cba$cba_main |>  
-  select(benefit, cost, net_benefit) |> 
+  dplyr::select(benefit, cost, net_benefit) |> 
   knitr::kable()
 ```
 
