@@ -99,9 +99,36 @@ This function assesses premature deaths or years of life lost (YLL) attributable
 
 The life table methodology of \code{attribute_lifetable()} follows that of the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003): https://doi.org/10.1136/jech.57.3.200.
 
+In short, age-group-specific population projections using scenario-specific survival probabilities are done for 1) a scenario with the exposure level specified in the function ("exposed scenario") and 2) a scenario with no exposure ("unexposed scenario"). By subtracting the unexposed scenario from the exposed scenario the premature deaths/years of life lost attributable to the exposure are determined.
+
+The survival probabilities in the exposed scenario from start of year i to start of year i+1  are calculated as follows:
+\deqn{prob\_survival = \frac{midyear\_population_i - (deaths_i / 2)}{midyear\_population_i + (deaths_i / 2)}}
+Analogously, the probability of survival from start of year i to mid-year i:
+\deqn{prob\_survival\_until\_midyear = 1 - \frac{1 - prob\_survival}{2}}
+
+The survival probabilities in the unexposed scenario are calculated as follows:
+First, the age-group specific hazard rate in the exposed scenario is calculated.
+\deqn{hazard\_rate_{exposed} = \frac{deaths}{mid\_year\_population}}
+Second, \eqn{hazard\_rate_{exposed}} is multiplied with the modification factor (\eqn{= 1 - PAF}) to obtain the age-group-specific hazard rate in unexposed scenario.
+\deqn{hazard\_rate_{unexposed} = hazard\_rate_{exposed} \times modification\_factor}
+Third, the the age-group-specific survival probabilities in the unexposed scenario are calculated as follows:
+\deqn{prob\_survival_{unexposed} = \frac{2-hazard\_rate_{unexposed}}{2+hazard\_rate_{unexposed}}}
+The survival probabilities from start of year i to mid-year i in the unexposed scenario (i.e. \code{prob_survival_until_midyear_mod}) is calculated as:
+\deqn{prob\_survival\_until\_midyear\_mod = 1 - \frac{1 - prob\_survival_{unexposed}}{2}}
+
 A more expansive life table case study by Miller is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
 
-See the AirQ+ manual "Health impact assessment of air pollution: AirQ+ life table manual" for guidance on how to convert larger age groups to 1 year age groups ("section "Estimation of yearly values"): https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf (accessed April 2025):
+\strong{Population projection}
+Using the age-group-specific survival probabilities calculated above future populations of each age-group under each scenario are calculated. First, the mid-year populations of year i (entered by the user) are used to calculate the entry population of year i.
+\deqn{entry\_population_i = midyear\_population_i + (deaths_i / 2)}
+Second, the entry population of year i+1 is calculated, which is the same as the end of year population of year i.
+\deqn{entry\_population_{i+1} = entry\_population_i \times prob\_survival}
+Third, the mid-year population of year i+1 is calculated.
+\deqn{midyear_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear}
+
+\strong{Conversion of multi-year to single year age groups}
+
+To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()}.
 
 \strong{Conversion of alternative risk measures to relative risks}
 For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).

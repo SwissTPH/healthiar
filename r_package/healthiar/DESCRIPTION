@@ -24,7 +24,7 @@ Description: The R package healthiar enables users to quantify and monetize the 
     This is work in progress. The developers are not liable for any calculation errors or inaccuracies resulting from the use of this package."
 License: GPL (>= 3)
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports:
   readxl, 
   dplyr, 

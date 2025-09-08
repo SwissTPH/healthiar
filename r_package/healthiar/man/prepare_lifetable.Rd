@@ -21,6 +21,9 @@ Returns deaths by one year age groups.
 \description{
 This function determines deaths by one year age groups
 }
+\details{
+See the AirQ+ manual "Health impact assessment of air pollution: AirQ+ life table manual" for guidance on how to convert larger age groups to 1 year age groups (section "Estimation of yearly values"): https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf (accessed April 2025)
+}
 \examples{
 # Goal: Convert 5-year population and death data into 1-year data
 results  <- prepare_lifetable(

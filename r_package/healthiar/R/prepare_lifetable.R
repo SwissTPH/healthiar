@@ -10,6 +10,10 @@
 #' @param bhd \code{Numeric vector} referring to the baseline health data (deaths) by age group.
 #' @param fraction_lived \code{Numeric vector} or \code{value} (if all values the same in the vector) referring to the fraction of last year lived.
 
+# DETAILS ######################################################################
+#' @details
+#' See the AirQ+ manual "Health impact assessment of air pollution: AirQ+ life table manual" for guidance on how to convert larger age groups to 1 year age groups (section "Estimation of yearly values"): https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf (accessed April 2025)
+
 # VALUE ########################################################################
 #' @returns Returns deaths by one year age groups.
 
