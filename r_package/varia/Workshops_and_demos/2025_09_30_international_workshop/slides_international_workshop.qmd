@@ -44,7 +44,7 @@ format:
 
 <!-- #TODO -->
 
-<!--  -->
+<!-- add example of sub-group analysis with info argument  -->
 
 <!--  -->
 
