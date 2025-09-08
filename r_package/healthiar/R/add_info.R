@@ -23,7 +23,6 @@
 
 
 
-
 add_info <- function(df, info){
 
   if(is.null(info)){
