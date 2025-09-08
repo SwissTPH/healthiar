@@ -272,7 +272,7 @@ The `erf_eq_central` argument can digest other types of functions (see section [
 
 ```{r echo=FALSE}
 results_noise_ha |> 
-  dplyr::pluck("health_main") |>
+  purrr::pluck("health_main") |>
   dplyr::select(erf_eq, erf_ci, impact_rounded) |> 
   knitr::kable() # Prints tibble in a minimal layout
 ```
