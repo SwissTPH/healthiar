@@ -527,7 +527,18 @@ get_risk(
   rr_increment = 10,
   erf_shape = "linear",
   exp = 10, 
-  cutoff = 5, 
+  cutoff = 5 
+)
+```
+
+# prepare_lifetable
+
+```{r}
+# Goal: Convert 5-year population and death data into single year lifetable
+results <- prepare_lifetable(
+  age_group = c(0, 5, 10, 15),
+  population = c(3387900, 3401300, 3212300, 3026100),
+  bhd = c(4727, 472, 557, 1323)
 )
 ```
 
