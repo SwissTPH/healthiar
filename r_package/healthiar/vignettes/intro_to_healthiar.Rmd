@@ -31,7 +31,6 @@ library(tibble)
 library(dplyr)
 library(purrr)
 library(tidyr)
-library(stringr)
 library(knitr)
 ```
 
