@@ -26,7 +26,6 @@ License: GPL (>= 3)
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Imports:
-  readxl, 
   dplyr, 
   tidyr, 
   purrr, 
