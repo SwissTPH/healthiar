@@ -24,9 +24,8 @@ library(tibble)
 library(dplyr)
 library(purrr)
 library(tidyr)
-library(stringr)
 library(knitr)
-library(readxl)
+# library(readxl) # NOTE 2025-09-09 AL: this line has been commented out to remove the package dependency on readxl
 library(remotes)
 
 ## Avoid using pacman here, as it causes error in installation if it's not installed already
@@ -454,24 +453,25 @@ Teams testing folder of your institute, alongside the code for the test.
 # test <- readxl::read_xlsx(path = system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar"), sheet = "Relative_risk_IHD_WHO_2003a")
 ```
 
+NOTE 2025-09-09 AL: this chunk has been commented out to remove the package dependency on readxl
 ```{r test with loaded inputs, include=TRUE, echo=TRUE, eval=FALSE}
 ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-data_raw  <-  readxl::read_xlsx(
-  path = system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar"),
-  sheet = "Relative_risk_IHD_WHO_2003a")
-data  <- data_raw |>
-  dplyr::filter(!is.na(data_raw$exposure_mean))
-
-## healthiar FUNCTION CALL
-results <- healthiar::attribute_health(
-  erf_shape = "log_linear",
-  rr_central = 1.08,
-  rr_increment = 10,
-  exp_central = data$exposure_mean,
-  prop_pop_exp = data$prop_exposed,
-  cutoff_central = min(data$exposure_mean),
-  bhd_central = data$gbd_daly[1]
-) 
+# data_raw  <-  readxl::read_xlsx(
+#   path = system.file("extdata", "example_road_noise_niph.xlsx", package = "healthiar"),
+#   sheet = "Relative_risk_IHD_WHO_2003a")
+# data  <- data_raw |>
+#   dplyr::filter(!is.na(data_raw$exposure_mean))
+# 
+# ## healthiar FUNCTION CALL
+# results <- healthiar::attribute_health(
+#   erf_shape = "log_linear",
+#   rr_central = 1.08,
+#   rr_increment = 10,
+#   exp_central = data$exposure_mean,
+#   prop_pop_exp = data$prop_exposed,
+#   cutoff_central = min(data$exposure_mean),
+#   bhd_central = data$gbd_daly[1]
+# ) 
 ```
 
 Note that in case of the extended template

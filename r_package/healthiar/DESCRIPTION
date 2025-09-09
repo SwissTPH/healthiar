@@ -26,23 +26,19 @@ License: GPL (>= 3)
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Imports:
-  readxl, 
-  dplyr, 
-  tidyr, 
+  devtools,
+  dplyr,  
   purrr, 
-  stringr, 
   tibble, 
-  zoo, 
-  stats,
-  credentials,
-  rlang,
-  devtools
+  tidyr
 Depends: 
     R (>= 4.1.0)
 LazyData: true
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Suggests: 
-    terra,
+    ggplot2,
     sf,
-    ggplot2
+    terra
+    
+    
