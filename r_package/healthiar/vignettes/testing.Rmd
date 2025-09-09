@@ -24,7 +24,6 @@ library(tibble)
 library(dplyr)
 library(purrr)
 library(tidyr)
-library(stringr)
 library(knitr)
 # library(readxl) # NOTE 2025-09-09 AL: this line has been commented out to remove the package dependency on readxl
 library(remotes)

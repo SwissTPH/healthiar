@@ -29,7 +29,6 @@ Imports:
   dplyr, 
   tidyr, 
   purrr, 
-  stringr, 
   tibble, 
   zoo, 
   stats,
