@@ -9,7 +9,7 @@ author:
       # - name: Swiss TPH
     # orcid: 0000-0002-7005-5889
     email: axel.luyten@swisstph.ch & alberto.castrofernandez@swisstph.ch
-date: 2025-06-30 # last-modified
+date: 2025-09-30 # last-modified
 editor: source
 execute: 
   eval: true
@@ -46,7 +46,7 @@ format:
 
 <!-- add example of sub-group analysis with info argument  -->
 
-<!--  -->
+<!-- show detailed attribute health results just before summarize_uncertainty -->
 
 # Today
 
@@ -56,7 +56,6 @@ library(tibble)
 library(dplyr)
 library(purrr)
 library(tidyr)
-library(stringr)
 library(knitr)
 
 options(knitr.kable.max_rows = 100)
@@ -72,10 +71,6 @@ set.seed(1)
 
 -   `healthiar` function examples
 
--   Other `healthiar` functions
-
--   More info
-
 -   Outlook
 
 -   Q & A
@@ -87,8 +82,6 @@ set.seed(1)
 
 ::: {.fragment .column width="50%"}
 **Second hour**
-
--   `healthiar` installation
 
 -   Hands-on mock case studies
 
@@ -112,7 +105,7 @@ set.seed(1)
 
 ![](images/bod_rr.png){fig-align="left"}
 
-## `attribute_health()` with RR
+## `attribute_health()` with RR 1/3
 
 Goal: attribute COPD cases to PM2.5 air pollution exposure
 
@@ -156,16 +149,14 @@ results_pm_copd <- attribute_health(
 ::::
 :::::
 
-## Main results
+## `attribute_health()` with RR 2/3
 
-::: fragment
+
 `attribute_health()` outputs two lists ("folders")
 
 -   `health_main` contains the main results
 
 -   `health_detailed` contains more detailed results and other assessment details in sub-lists ("sub-folders")
-
-:::
 
 :::: fragment
 ::: callout-tip
@@ -204,7 +195,7 @@ results_pm_copd[["health_main"]] |>
 :::
 :::
 
-## Detailed results
+## `attribute_health()` with RR 3/3
 
 ::: fragment
 If we add 95% confidence intervals to `attribute_health()` ...
@@ -245,7 +236,7 @@ results_pm_copd[["health_detailed"]][["results_raw"]] |>
 :::
 :::
 
-## Option: RR with user-defined ERF 1/2
+## `attribute_health()` with RR and user-defined ERF 1/2
 
 Goal: attribute COPD cases to air pollution exposure by applying a user-defined exposure response function (e.g. MR-BRT curves from Global Burden of Disease study)
 
@@ -268,9 +259,8 @@ results_pm_copd_mr_brt <- attribute_health(
 ```
 :::
 
-## Option: RR with user-defined ERF 2/2
+## `attribute_health()` with RR and user-defined ERF 2/2
 
-::: fragment
 ::: {.absolute left=0}
 ```{r, echo=FALSE, eval=TRUE, include=TRUE}
 
@@ -303,7 +293,6 @@ legend("topleft", legend = c("Original points", "Spline curve"),
        col = c("blue", "red"), pch = c(19, NA), lty = c(NA, 1), lwd = c(NA, 2))
 ```
 :::
-:::
 
 # Example: `attribute_health()` with AR
 
@@ -311,7 +300,7 @@ legend("topleft", legend = c("Original points", "Spline curve"),
 
 ![](images/bod_ar.png){fig-align="left"}
 
-## `attribute_health()` with AR
+## `attribute_health()` with AR 1/2
 
 Goal: attribute cases of high annoyance (HA) to noise exposure
 
@@ -342,7 +331,7 @@ results_noise_ha <- attribute_health(
 ```
 :::
 
-## Results
+## `attribute_health()` with AR 2/2
 
 ::: fragment
 ```{r, echo=TRUE, eval=FALSE, include=TRUE}
@@ -350,7 +339,6 @@ results_noise_ha$health_main
 ```
 :::
 
-<div style="height: 200px;"></div>
 
 ::: fragment
 ::: {.absolute left=0}
@@ -361,6 +349,8 @@ results_noise_ha[["health_main"]] |>
 ```
 :::
 :::
+
+<div style="height: 120px;"></div>
 
 ::: fragment
 ```{r, echo=TRUE, eval=FALSE, include=TRUE}
@@ -378,9 +368,9 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
 :::
 :::
 
-# Example: Iteration with `attribute_health()`
+# Example: `attribute_health()` across multiple geographic units
 
-## `attribute_health()` across multiple geographic units
+## `attribute_health()` across multiple geographic units 1/3
 
 Goal: attribute disease cases to PM2.5 exposure in multiple geographic units, such as municipalities, provinces, countries, ...
 
@@ -406,7 +396,7 @@ results_iteration <- attribute_health(
 Here the we want to aggregate results by language region (`"German", "French", "Italian"`)
 :::
 
-## Main results
+## `attribute_health()` across multiple geographic units 2/3
 
 ::: fragment
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
@@ -424,7 +414,7 @@ results_iteration[["health_main"]] |>
 :::
 :::
 
-<div style="height: 200px;"></div>
+<div style="height: 240px;"></div>
 
 :::: fragment
 ::: callout-tip
@@ -432,7 +422,7 @@ The main output contains aggregated results if available, or disaggregated resul
 :::
 ::::
 
-## Detailed results
+## `attribute_health()` across multiple geographic units 3/3
 
 ::: fragment
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
@@ -453,14 +443,14 @@ results_iteration[["health_detailed"]][["results_raw"]] |>
 
 # <span style="font-size: 0.8em;">Example: `summarize_uncertainty()`</span>
 
-## `summarize_uncertainty()`
+## `summarize_uncertainty()` 1/3
 
 Goal: perform a Monte Carlo simulation to obtain summary uncertainty confidence intervals that combine uncertainty in different input data
 
 
 ::::: columns
 ::: {.column .fragment width="45%"}
-1.  Use `attribute_health()` with uncertainty in ≥ 2 function arguments
+Step 1: Use `attribute_health()` with uncertainty in ≥ 2 function arguments
 
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
 #| code-line-numbers: "|4-5,8-9,12-13|"
@@ -483,7 +473,7 @@ results <-
 :::
 
 ::: {.column .fragment width="45%"}
-2. Use `summarize_uncertainty()` to obtain the confidence intervals
+Step 2: `summarize_uncertainty()` to obtain the confidence intervals
 
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
 results <- 
@@ -495,13 +485,12 @@ results <-
 :::
 :::::
 
-## Main results
+## `summarize_uncertainty()` 2/3
 
-::: fragment
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
 results$uncertainty_main
 ```
-:::
+
 ::: fragment
 ::: {.absolute left=0}
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
@@ -512,13 +501,11 @@ results$uncertainty_main |>
 :::
 :::
 
-## Detailed results
+## `summarize_uncertainty()` 3/3
 
-::: fragment
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
 results$uncertainty_detailed$attribute_by_sim_disaggregated
 ```
-:::
 
 ::: fragment
 ::: {.absolute left=0}
@@ -533,7 +520,7 @@ results$uncertainty_detailed$attribute_by_sim_disaggregated |>
 
 # Example: `compare()` two scenarios
 
-## `compare()` two scenarios
+## `compare()` 1/2
 
 Goal: compare attributable health impacts in two (policy) scenarios
 
@@ -585,13 +572,11 @@ results_comparison <- compare(
 ```
 :::
 
-## Comparison results
+## `compare()` 2/2
 
-::: fragment
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
 results_comparison$health_main
 ```
-:::
 
 ::: fragment
 ::: {.absolute left=0}
@@ -609,17 +594,6 @@ results_comparison[["health_main"]] |>
 ```
 :::
 :::
-<div style="height: 100px;"></div>
-::: {.fragment .nonincremental}
-
-`health_detailed` contains
-
--   `results_raw` raw comparison results
--   `scenario_1` results
--   `scenario_2` results
-:::
-
-
 
 # Other `healthiar` functions
 
@@ -635,7 +609,6 @@ results_comparison[["health_main"]] |>
 -   `multiexpose()` considers exposure to 2 exposures (e.g. two different air pollutants) at the same time to quantify the attributable health impacts
 -   `prepare_exposure()` calculates (population-weighted) mean exposure by combining spatial exposure geographic units data 
 -   `socialize()` determines burden attributable to differences in a social indicator
-    -   E.g. share of health impacts due to living in a poor neighborhood (with higher exposure) instead of a rich neighborhood (with lower exposure)
 -   `attribute_mod()` modifies an existing `attribute_health()` assessment
 -   `prepare_mdi()` creates the BEST-COST MDI (Multidimensional Deprivation Index)
 
@@ -658,7 +631,7 @@ results_comparison[["health_main"]] |>
 
 # Example: `monetize()` health impacts
 
-## `monetize()` health impacts
+## `monetize()` 1/2
 
 Goal: monetize (attributable) health impacts (obtained from `healthiar` or other source)
 
@@ -697,7 +670,7 @@ results_monetization <- monetize(
 :::
 :::
 
-## Main monetization results
+## `monetize()` 2/2
 
 ::: fragment
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
@@ -752,7 +725,7 @@ save(results_pm_copd, file = "exported_results/results_pm_copd.Rdata")
 ## Export to Excel (as `.xlsx` file)
 
 ```{r, eval=FALSE,echo=TRUE,include=TRUE}
-openxlsx::write.xlsx(x = results_pm_copd$health_main, file = "exported_results/results_pm_copd.xlsx")
+write.xlsx(x = results_pm_copd$health_main, file = "exported_results/results_pm_copd.xlsx")
 ```
 
 ![*Exported to .xlsx format*](images/export_xlsx.png){fig-align="left"}
