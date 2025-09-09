@@ -30,8 +30,6 @@ Imports:
   tidyr, 
   purrr, 
   tibble, 
-  zoo, 
-  stats,
   credentials,
   rlang,
   devtools
