@@ -144,13 +144,13 @@ results_pm_copd <- attribute_health(
 
 results_pm_copd <- attribute_health(
   erf_shape = "log_linear",
-  rr_central = exdat_pm_copd$relative_risk, 
-  rr_lower = exdat_pm_copd$relative_risk_lower,
-  rr_upper = exdat_pm_copd$relative_risk_upper,
+  rr_central = exdat_pm$relative_risk, 
+  rr_lower = exdat_pm$relative_risk_lower,
+  rr_upper = exdat_pm$relative_risk_upper,
   rr_increment = 10, 
-  exp_central = exdat_pm_copd$mean_concentration,
-  cutoff_central = exdat_pm_copd$cut_off_value,
-  bhd_central = exdat_pm_copd$incidence
+  exp_central = exdat_pm$mean_concentration,
+  cutoff_central = exdat_pm$cut_off_value,
+  bhd_central = exdat_pm$incidence
 ) 
 ```
 ::::
@@ -356,7 +356,7 @@ results_noise_ha$health_main
 ::: {.absolute left=0}
 ```{r, echo=FALSE, eval=TRUE, include=TRUE}
 results_noise_ha[["health_main"]] |> 
-  select(approach_risk, exposure_dimension, impact) |> 
+  select(approach_risk, exp_category, impact) |> 
   knitr::kable()
 ```
 :::
@@ -372,7 +372,7 @@ results_noise_ha$health_detailed$results_raw
 ::: {.absolute left=0}
 ```{r, echo=FALSE, eval=TRUE, include=TRUE}
 results_noise_ha[["health_detailed"]][["results_raw"]] |> 
-  select(exposure_dimension, exp, pop_exp, impact) |> 
+  select(exp_category, exp, pop_exp, impact) |> 
   knitr::kable()
 ```
 :::
@@ -390,8 +390,8 @@ Goal: attribute disease cases to PM2.5 exposure in multiple geographic units, su
 #| code-line-numbers: "|2-3|8-9|"
 
 results_iteration <- attribute_health(
-  geo_id_disaggregated = c("Zürich", "Basel", "Geneva", "Ticino", "Jura"), 
-  geo_id_aggregated = c("German","German","French","Italian","French"),
+  geo_id_micro = c("Zürich", "Basel", "Geneva", "Ticino", "Jura"), 
+  geo_id_macro = c("German","German","French","Italian","French"),
   erf_shape = "log_linear",
   rr_central = 1.369,
   rr_increment = 10, 
@@ -418,7 +418,7 @@ results_iteration$health_main
 ::: {.absolute left=0}
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
 results_iteration[["health_main"]] |> 
-  dplyr::select(geo_id_aggregated, impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
+  dplyr::select(geo_id_macro, impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
   knitr::kable()
 ```
 :::
@@ -444,7 +444,7 @@ results_iteration$health_detailed$results_raw
 ::: {.absolute left=0}
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
 results_iteration[["health_detailed"]][["results_raw"]] |> 
-  select(geo_id_disaggregated, geo_id_aggregated, impact_rounded) |> 
+  select(geo_id_micro, geo_id_macro, impact_rounded) |> 
   knitr::kable()
 ```
 :::
@@ -506,7 +506,7 @@ results$uncertainty_main
 ::: {.absolute left=0}
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
 results$uncertainty_main |> 
-  dplyr::select(-geo_id_disaggregated) |>
+  dplyr::select(-geo_id_micro) |>
   knitr::kable()
 ```
 :::
@@ -524,7 +524,7 @@ results$uncertainty_detailed$attribute_by_sim_disaggregated
 ::: {.absolute left=0}
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
 results$uncertainty_detailed$attribute_by_sim_disaggregated |> 
-  dplyr::select(-geo_id_disaggregated, -input, -output) |> 
+  dplyr::select(-geo_id_micro, -input, -output) |> 
   dplyr::relocate(impact, .after = sim_id) |>
   knitr::kable()
 ```
@@ -538,7 +538,7 @@ results$uncertainty_detailed$attribute_by_sim_disaggregated |>
 Goal: compare attributable health impacts in two (policy) scenarios
 
 ::: {.fragment .nonincremental}
-1.  Use `attribute_health()` to calculate burden of scenarios A & B
+1.  Use `attribute_health()` to calculate burden of scenarios 1 & 2
 :::
 
 ::::: columns
@@ -546,7 +546,7 @@ Goal: compare attributable health impacts in two (policy) scenarios
 ```{r}
 #| code-line-numbers: "|5"
 
-scenario_A <- attribute_health(
+scenario_1 <- attribute_health(
   erf_shape = "log_linear",
   rr_central = 1.118,
   rr_increment = 10,  
@@ -560,7 +560,7 @@ scenario_A <- attribute_health(
 ```{r}
 #| code-line-numbers: "|5"
 
-scenario_B <- attribute_health(
+scenario_2 <- attribute_health(
   erf_shape = "log_linear",
   rr_central = 1.118,
   rr_increment = 10,
@@ -572,14 +572,14 @@ scenario_B <- attribute_health(
 :::::
 
 ::: {.fragment .nonincremental}
-2.  Use `compare()` to compare scenarios A & B
+2.  Use `compare()` to compare scenarios 1 & 2
 :::
 
 ::: fragment
 ```{r}
 results_comparison <- compare(
-  output_attribute_1 = scenario_A,
-  output_attribute_2 = scenario_B,
+  output_attribute_scen_1 = scenario_1,
+  output_attribute_scen_2 = scenario_2,
   approach_comparison = "delta" # or "pif" (population impact fraction)
 )
 ```
@@ -599,7 +599,7 @@ results_comparison$health_main
 results_comparison[["health_main"]] |> 
   dplyr::select(
     impact, impact_rounded,
-    impact_1, impact_2,
+    impact_scen_1, impact_scen_2,
     bhd,
     dplyr::starts_with("exp_"),
     -dplyr::starts_with("exp_ci"), # remove col "exp_ci"
@@ -615,10 +615,46 @@ results_comparison[["health_main"]] |>
 `health_detailed` contains
 
 -   `results_raw` raw comparison results
--   `scenario_1` results (scenario A in our case)
--   `scenario_2` results (scenario B in our case)
+-   `scenario_1` results
+-   `scenario_2` results
 :::
 
+
+
+# Other `healthiar` functions
+
+## Other `healthiar` functions
+
+<!--  Additional existing `healthiar` functions -->
+
+-   `attribute_lifetable()` for YLL
+-   `attribute_health()` for YLD (using the `dw` & `duration` arguments)
+-   `get_daly()` as the sum of YLL and YLD
+-   `monetize()` monetizes (attributable) health impacts
+-   `cba()` performs a cost-benefit analysis (CBA)
+-   `multiexpose()` considers exposure to 2 exposures (e.g. two different air pollutants) at the same time to quantify the attributable health impacts
+-   `prepare_exposure()` calculates (population-weighted) mean exposure by combining spatial exposure geographic units data 
+-   `socialize()` determines burden attributable to differences in a social indicator
+    -   E.g. share of health impacts due to living in a poor neighborhood (with higher exposure) instead of a rich neighborhood (with lower exposure)
+-   `attribute_mod()` modifies an existing `attribute_health()` assessment
+-   `prepare_mdi()` creates the BEST-COST MDI (Multidimensional Deprivation Index)
+
+
+# Outlook
+
+## Outlook
+<!-- TODO add link to GitHub page -->
+-   `healthiar` is publicly available on this GitHub page
+    -   `healthiar` might be expanded in the future (if funding available)
+-   Python version coming out later in 2026
+-   Package submitted to CRAN
+
+
+# Q & A
+
+# Happy coding! : )
+
+# Appendix
 
 # Example: `monetize()` health impacts
 
@@ -683,22 +719,6 @@ results_monetization[["monetization_main"]] |>
 :::
 :::
 
-# Other `healthiar` functions
-
-## Other `healthiar` functions
-
-<!--  Additional existing `healthiar` functions -->
-
--   `attribute_lifetable()` for YLL
--   `attribute_health` for YLD (using the `dw` & `duration` arguments)
--   `get_daly` as the sum of YLL and YLD
--   `cba()` cost-benefit analysis
--   `multiexpose()` includes multiple exposures (e.g. PM2.5 & NO2) in your assessment
--   `prepare_exposure()` calculates (population-weighted) mean exposure by combining spatial exposure geographic units data 
--   `socialize()` determines burden attributable to differences in a social indicator
-    -   E.g. share of health impacts due to living in a poor neighborhood (with higher exposure) instead of a rich neighborhood (with lower exposure)
--   `attribute_mod()` modifies an existing `attribute_health()` assessment
-
 # More info
 
 ## `healthiar` in RStudio 1/3
@@ -713,43 +733,6 @@ results_monetization[["monetization_main"]] |>
 
 ![Figure: Help page of `attribute_health()`](images/fun_doc_start.png){width="900" fig-align="left"}
 
-# Outlook
-
-## Outlook 1/2
-
--   `healthiar` will be publicly available by the end of the year
-    -   Contact us in case you need early access
-    -   `healthiar` might be expanded in the future (if funding available)
--   Python version coming out later in 2026
--   Two international workshops planned later this year (see next slide)
-
-## Outlook 2/2
-
-:::: {.columns}
-::: {.column width="50%"}
-![](images/flyer_healthiar_v1.0.png){width="500" fig-align="left"}
-:::
-
-::: {.column width="50%"}
-
-**International `healthiar` online workshops**
-
-29 September 2025
-
-1 October 2025
-
-[Registration link](https://docs.google.com/forms/d/e/1FAIpQLSeLUh_GrBAI_ToUoLxL0KWl_lYIyDZ59a4LJJ08d2Fo6YKQzg/viewform?usp=sf_link)
-
-Please spread the word!
-:::
-::::
-
-
-# Q & A
-
-# Happy coding! : )
-
-# Appendix
 
 ## Export results
 
