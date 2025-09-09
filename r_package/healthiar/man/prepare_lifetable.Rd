@@ -2,24 +2,27 @@
 % Please edit documentation in R/prepare_lifetable.R
 \name{prepare_lifetable}
 \alias{prepare_lifetable}
-\title{Determine deaths by one year age groups}
+\title{Convert multi-year age group life table to single year life table}
 \usage{
 prepare_lifetable(age_group, population, bhd, fraction_lived = 0.5)
 }
 \arguments{
 \item{age_group}{\code{Numeric vector} referring to the first years of the age groups. E.g. c(0, 20, 40, 60) means [0, 20), [20, 40), [40, 60), [60, )}
 
-\item{population}{\code{Numeric vector} referring to mid-year population by age group.}
+\item{population}{\code{Numeric vector} referring to mid-year populations by age group.}
 
 \item{bhd}{\code{Numeric vector} referring to the baseline health data (deaths) by age group.}
-
-\item{fraction_lived}{\code{Numeric vector} or \code{value} (if all values the same in the vector) referring to the fraction of last year lived.}
 }
 \value{
-Returns deaths by one year age groups.
+Returns population and deaths by one year age groups.
 }
 \description{
-This function determines deaths by one year age groups
+This function determines populations and deaths by one year age groups.
+}
+\details{
+The conversion follows the methodology outlined in the "AirQ+ life table manual" section "Estimation of yearly values".
+
+Source: Health impact assessment of air pollution: AirQ+ life table manual. Copenhagen: WHO Regional Office for Europe; 2020. Licence: CC BY-NC-SA 3.0 IGO.https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf?sequence=1 (accessed on April 2025).
 }
 \examples{
 # Goal: Convert 5-year population and death data into 1-year data

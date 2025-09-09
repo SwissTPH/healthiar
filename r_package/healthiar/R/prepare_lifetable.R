@@ -1,17 +1,22 @@
-#' Determine deaths by one year age groups
+#' Convert multi-year life table to single year life table
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function determines deaths by one year age groups
+#' This function determines populations and deaths by one year age groups.
 
 # ARGUMENTS ####################################################################
 #' @param age_group \code{Numeric vector} referring to the first years of the age groups. E.g. c(0, 20, 40, 60) means [0, 20), [20, 40), [40, 60), [60, )
-#' @param population \code{Numeric vector} referring to mid-year population by age group.
+#' @param population \code{Numeric vector} referring to mid-year populations by age group.
 #' @param bhd \code{Numeric vector} referring to the baseline health data (deaths) by age group.
-#' @param fraction_lived \code{Numeric vector} or \code{value} (if all values the same in the vector) referring to the fraction of last year lived.
+
+# DETAILS ######################################################################
+#' @details
+#' The conversion follows the methodology outlined in the "AirQ+ life table manual" section "Estimation of yearly values".
+#' @details
+#' Source: Health impact assessment of air pollution: AirQ+ life table manual. Copenhagen: WHO Regional Office for Europe; 2020. Licence: CC BY-NC-SA 3.0 IGO.https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf?sequence=1 (accessed on April 2025).
 
 # VALUE ########################################################################
-#' @returns Returns deaths by one year age groups.
+#' @returns Returns population and deaths by one year age groups.
 
 # EXAMPLES #####################################################################
 #' @examples
