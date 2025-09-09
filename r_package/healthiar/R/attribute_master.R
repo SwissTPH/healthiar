@@ -52,7 +52,8 @@
 #' \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}
 
 #' @param population
-#' \code{Numeric value} or \code{numeric vector} specifying the total population (exposed + non-exposed). This is used \strong{to calculate attributable impacts rate} per 100 000 population. \emph{Optional argument.}.
+#' \code{Numeric vector} \strong{\code{For attribute_lifetable()}}, it is an \emph{obligatory argument} specifying the \strong{mid-year populations} per age (i.e. age group size = 1 year) for the (first) year of analysis.
+#' \strong{\code{For attribute_health()}} this argument specifies the \strong{total population} (exposed + non-exposed) \strong{to calculate attributable impacts rate} per 100 000 population. See Details for more info. \emph{Optional argument.}
 
 # YLD (OPTIONAL)
 #' @param dw_central,dw_lower,dw_upper
@@ -64,9 +65,6 @@
 # Life table parameters
 #' @param health_outcome
 #' \code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).
-
-#' @param population
-#'  For attribute_lifetable(), it is an obligatory argument and it refers to the the population the \strong{mid-year populations} (≥ 1) per age (age interval = 1 year) for the year of analysis. See Details for more info.
 
 #' @param min_age,max_age
 #' \code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.
