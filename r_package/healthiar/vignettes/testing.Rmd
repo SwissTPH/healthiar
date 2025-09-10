@@ -641,7 +641,7 @@ main / detailed results of an attribute output.
 
 Filled out extended template (with input data loaded into RStudio):
 
-```{r filled out template extended, include=TRUE, echo=TRUE, eval=TRUE}
+```{r filled out template extended, include=TRUE, echo=TRUE, eval=FALSE}
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
