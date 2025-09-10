@@ -5,19 +5,19 @@
 \alias{exdat_noise}
 \title{Noise exposure in urban and rural regions in Norway}
 \format{
-## `exdat_noise`
+\code{exdat_noise}
 \describe{
-  \item{exdat_pm}{PM2.5 exposure and COPD incidence in Switzerland}
-  \item{exdat_noise}{Noise exposure in urban and rural regions in Norway}
-  \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-  \item{exdat_get_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
+  \item{exposure_category}{noise exposure range of the exposure category}
+  \item{exposure_mean}{mean noise exposure in the exposure category}
+  \item{region}{region for which exposure is valid}
+  \item{exposed}{number of exposed persons}
 }
 }
 \source{
-A mix of simulated and real-world data
+Real-world data
 }
 \usage{
-data(example_data)
+data(exdat_noise)
 }
 \description{
 This tibble contains noise exposure data from urban and rural regions in Norway.
@@ -26,6 +26,6 @@ This tibble contains noise exposure data from urban and rural regions in Norway.
 #TBD
 }
 \author{
-Alberto Castro & Axel Luyten
+Anette Kocbach Bolling & Vázquez Fernández
 }
 \keyword{datasets}

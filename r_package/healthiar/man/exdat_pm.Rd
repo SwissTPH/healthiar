@@ -5,19 +5,22 @@
 \alias{exdat_pm}
 \title{PM2.5 exposure and COPD incidence in Switzerland}
 \format{
-## `exdat_pm`
+\code{exdat_pm}
 \describe{
-  \item{exdat_pm}{PM2.5 exposure and COPD incidence in Switzerland}
-  \item{exdat_noise}{Noise exposure in Norway in urban and rural regions}
-  \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-  \item{exdat_get_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
+  \item{mean_concentration}{population-weighted annual mean concentration}
+  \item{relative_risk}{central relative risk estimate}
+  \item{relative_risk_lower}{lower 95\% confidence interval bound of the relative risk estimate}
+  \item{relative_risk_upper}{upper 95\% confidence interval bound of the relative risk estimate}
+  \itme{incidence}{COPD incidence in the year of analysis}
+  \item{cut_off_value}{cut-off value}
+  \item{rr_increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
 }
 }
 \source{
-A mix of simulated and real-world data
+Real-world data
 }
 \usage{
-data(example_data)
+data(exdat_pm)
 }
 \description{
 This tibble contains PM2.5 exposure and COPD incidence data from Switzerland.
