@@ -23,8 +23,7 @@ This function determines populations and deaths by one year age groups.
 The conversion follows the methodology outlined in the "AirQ+ life table manual" section "Estimation of yearly values".
 
 Source: Health impact assessment of air pollution: AirQ+ life table manual. Copenhagen: WHO Regional Office for Europe; 2020. Licence: CC BY-NC-SA 3.0 IGO. https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf?sequence=1 (accessed on April 2025).
-}
-\details{
+
 See the AirQ+ manual "Health impact assessment of air pollution: AirQ+ life table manual" for guidance on how to convert larger age groups to 1 year age groups (section "Estimation of yearly values"): https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf (accessed April 2025)
 }
 \examples{
