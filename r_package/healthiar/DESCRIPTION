@@ -28,6 +28,7 @@ RoxygenNote: 7.3.3
 Imports:
   devtools,
   dplyr,  
+  knitr,
   purrr, 
   tibble, 
   tidyr
