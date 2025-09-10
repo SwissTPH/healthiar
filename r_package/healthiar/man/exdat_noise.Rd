@@ -5,42 +5,27 @@
 \alias{exdat_noise}
 \title{Noise exposure in urban and rural regions in Norway}
 \format{
-## `exdat_noise`
+\code{exdat_noise}
 \describe{
-  \item{exdat_pm}{PM2.5 exposure and COPD incidence in Switzerland}
-  \item{exdat_noise}{Noise exposure in urban and rural regions in Norway}
-  \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-  \item{exdat_prepare_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
-}
-
-## `exdat_lifetable`
-\describe{
-  \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-  \item{exdat_prepare_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
+  \item{exposure_category}{noise exposure range of the exposure category}
+  \item{exposure_mean}{mean noise exposure in the exposure category}
+  \item{region}{region for which exposure is valid}
+  \item{exposed}{number of exposed persons}
 }
 }
 \source{
 Real-world data
-
-Real-world data
 }
 \usage{
 data(exdat_noise)
-
-data(exdat_lifetable)
 }
 \description{
 This tibble contains noise exposure data from urban and rural regions in Norway.
-
-This tibble contains population per age and sex for Switzerland.
 }
 \examples{
-#TBD
 #TBD
 }
 \author{
 Anette Kocbach Bolling & Vázquez Fernández
-
-Alberto Castro & Axel Luyten
 }
 \keyword{datasets}

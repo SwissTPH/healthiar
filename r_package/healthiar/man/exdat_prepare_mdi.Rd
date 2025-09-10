@@ -3,40 +3,32 @@
 \docType{data}
 \name{exdat_prepare_mdi}
 \alias{exdat_prepare_mdi}
-\title{Population data per age and sex in Switzerland}
+\title{Social indicators of the BEST-COST Multidimensional Deprivation Index (MDI)}
 \format{
-## `exdat_prepare_mdi`
+\code{exdat_prepare_mdi}
 \describe{
-  \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-  \item{exdat_prepare_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
-}
-
-## `exdat_prepare_mdi`
-\describe{
-  \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-  \item{exdat_prepare_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
+  \item{id}{id of the geographic unit}
+  \item{geo_name}{name of the geographic unit}
+  \item{edu, unemployed, single_parent, no_heating, pop_change}{single social indicators that make up the MDI}
+  \item{norm_...}{normalized single social indicators of the MDI}
+  \item{MDI}{BEST-COST Multidimensional Deprivation Index (MDI)}
+  \item{MDI_decile}{decile of the MDI rankig}
+  \item{MDI_quartile}{quartile of the MDI ranking}
 }
 }
 \source{
 Real-world data
-
-Real-world data
 }
 \usage{
 data(exdat_prepare_mdi)
-
-data(exdat_prepare_mdi)
 }
 \description{
-This tibble contains population per age and sex for Switzerland.
-
-This tibble contains population per age and sex for Switzerland.
+This tibble contains social indicators of the BEST-COST Multidimensional Deprivation Index (MDI) of geo units in Belgium.
 }
 \examples{
 #TBD
-#TBD
 }
 \author{
-Alberto Castro & Axel Luyten
+Arno Pauwels & Vanessa Gorasso
 }
 \keyword{datasets}

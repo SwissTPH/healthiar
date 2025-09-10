@@ -5,11 +5,7 @@
 \alias{exdat_socialize}
 \title{Municipalities in Belgium ranked by BEST-COST Multidimensional Deprivation Index (MDI)}
 \format{
-## `exdat_socialize`
-\describe{
-  \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-  \item{exdat_prepare_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
-}
+\code{exdat_socialize}
 }
 \source{
 Real-world data
@@ -24,6 +20,6 @@ This tibble contains data for municipalities in Belgium ranked by BEST-COST Mult
 #TBD
 }
 \author{
-Alberto Castro & Axel Luyten
+Arno Pauwels & Vanessa Gorasso
 }
 \keyword{datasets}

@@ -5,12 +5,15 @@
 #' @description
 #' This tibble contains PM2.5 exposure and COPD incidence data from Switzerland.
 
-#' @format ## `exdat_pm`
+#' @format \code{exdat_pm}
 #' \describe{
-#'   \item{exdat_pm}{PM2.5 exposure and COPD incidence in Switzerland}
-#'   \item{exdat_noise}{Noise exposure in Norway in urban and rural regions}
-#'   \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-#'   \item{exdat_prepare_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
+#'   \item{mean_concentration}{population-weighted annual mean concentration}
+#'   \item{relative_risk}{central relative risk estimate}
+#'   \item{relative_risk_lower}{lower 95\% confidence interval bound of the relative risk estimate}
+#'   \item{relative_risk_upper}{upper 95\% confidence interval bound of the relative risk estimate}
+#'   \itme{incidence}{COPD incidence in the year of analysis}
+#'   \item{cut_off_value}{cut-off value}
+#'   \item{rr_increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
 #' }
 #' @source Real-world data
 
@@ -31,12 +34,12 @@
 #' @description
 #' This tibble contains noise exposure data from urban and rural regions in Norway.
 
-#' @format ## `exdat_noise`
+#' @format \code{exdat_noise}
 #' \describe{
-#'   \item{exdat_pm}{PM2.5 exposure and COPD incidence in Switzerland}
-#'   \item{exdat_noise}{Noise exposure in urban and rural regions in Norway}
-#'   \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-#'   \item{exdat_prepare_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
+#'   \item{exposure_category}{noise exposure range of the exposure category}
+#'   \item{exposure_mean}{mean noise exposure in the exposure category}
+#'   \item{region}{region for which exposure is valid}
+#'   \item{exposed}{number of exposed persons}
 #' }
 #' @source Real-world data
 
@@ -57,10 +60,12 @@
 #' @description
 #' This tibble contains population per age and sex for Switzerland.
 
-#' @format ## `exdat_lifetable`
+#' @format \code{exdat_lifetable}
 #' \describe{
-#'   \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-#'   \item{exdat_prepare_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
+#'   \item{age_group}{single year age groups}
+#'   \item{sex}{female or male}
+#'   \item{midyear_population}{mid-year populations}
+#'   \item{deaths}{annual deaths}
 #' }
 #' @source Real-world data
 
@@ -72,19 +77,24 @@
 
 #' @examples
 #' #TBD
-"exdat_noise"
+"exdat_lifetable"
 
 # exdat_prepare_mdi ##############################################################
 
-#' Population data per age and sex in Switzerland
+#' Social indicators of the BEST-COST Multidimensional Deprivation Index (MDI)
 
 #' @description
-#' This tibble contains population per age and sex for Switzerland.
+#' This tibble contains social indicators of the BEST-COST Multidimensional Deprivation Index (MDI) of geo units in Belgium.
 
-#' @format ## `exdat_prepare_mdi`
+#' @format \code{exdat_prepare_mdi}
 #' \describe{
-#'   \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-#'   \item{exdat_prepare_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
+#'   \item{id}{id of the geographic unit}
+#'   \item{geo_name}{name of the geographic unit}
+#'   \item{edu, unemployed, single_parent, no_heating, pop_change}{single social indicators that make up the MDI}
+#'   \item{norm_...}{normalized single social indicators of the MDI}
+#'   \item{MDI}{BEST-COST Multidimensional Deprivation Index (MDI)}
+#'   \item{MDI_decile}{decile of the MDI rankig}
+#'   \item{MDI_quartile}{quartile of the MDI ranking}
 #' }
 #' @source Real-world data
 
@@ -92,31 +102,7 @@
 
 #' @docType data
 
-#' @author Alberto Castro & Axel Luyten
-
-#' @examples
-#' #TBD
-"exdat_prepare_mdi"
-
-# exdat_prepare_mdi ##############################################################
-
-#' Population data per age and sex in Switzerland
-
-#' @description
-#' This tibble contains population per age and sex for Switzerland.
-
-#' @format ## `exdat_prepare_mdi`
-#' \describe{
-#'   \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-#'   \item{exdat_prepare_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
-#' }
-#' @source Real-world data
-
-#' @usage data(exdat_prepare_mdi)
-
-#' @docType data
-
-#' @author Alberto Castro & Axel Luyten
+#' @author Arno Pauwels & Vanessa Gorasso
 
 #' @examples
 #' #TBD
@@ -129,18 +115,15 @@
 #' @description
 #' This tibble contains data for municipalities in Belgium ranked by BEST-COST Multidimensional Deprivation Index (MDI).
 
-#' @format ## `exdat_socialize`
-#' \describe{
-#'   \item{exdat_lifetable}{Population data per age and sex in Switzerland}
-#'   \item{exdat_prepare_mdi}{Social indicators for municipalities in Belgium selected for the BEST-COST Multidimensional Deprivation Index (MDI)}
-#' }
+#' @format \code{exdat_socialize}
+
 #' @source Real-world data
 
 #' @usage data(exdat_socialize)
 
 #' @docType data
 
-#' @author Alberto Castro & Axel Luyten
+#' @author Arno Pauwels & Vanessa Gorasso
 
 #' @examples
 #' #TBD
