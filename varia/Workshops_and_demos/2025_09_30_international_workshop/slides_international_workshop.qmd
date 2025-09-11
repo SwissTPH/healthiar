@@ -629,84 +629,6 @@ results_comparison[["health_main"]] |>
 
 # Appendix
 
-# Example: `monetize()` health impacts
-
-## `monetize()` 1/2
-
-Goal: monetize (attributable) health impacts (obtained from `healthiar` or other source)
-
--   *Discounting* yes/no
--   *Inflation* yes/no
-
-::: fragment
-
-```{r, echo=FALSE}
-results_pm_copd <- attribute_health(
-  erf_shape = "log_linear", # Alternatives: "linear", ...
-  rr_central = 1.369, 
-  rr_lower = 1.114, 
-  rr_upper = 1.664,
-  rr_increment = 10,  # μg / m^3
-  exp_central = 8.85, # μg / m^3
-  cutoff_central = 5, # μg / m^3
-  bhd_central = 30747 # baseline health data: COPD incidence
-) 
-```
-
-```{r}
-results_monetization <- monetize(
-  output_attribute = results_pm_copd,
-  valuation = 20,
-  discount_shape = "exponential",
-  discount_rate = 0.03,
-  discount_years = 5
-)
-```
-:::
-
-::: fragment
-::: callout-tip
-`monetize()` can also monetize impacts from a non-`healthiar` source
-:::
-:::
-
-## `monetize()` 2/2
-
-::: fragment
-```{r, echo=TRUE,eval=FALSE,include=TRUE}
-results_monetization$monetization_main
-```
-:::
-
-::: fragment
-::: {.absolute left=0}
-```{r, echo=FALSE,include=TRUE,eval=TRUE}
-results_monetization[["monetization_main"]] |> 
-  dplyr::select(
-    impact, monetized_impact, discount_rate, valuation, 
-    monetized_impact_before_inflation_and_discount, 
-    monetized_impact_after_inflation_and_discount) |> 
-  dplyr::slice_head() |> 
-  knitr::kable()
-```
-:::
-:::
-
-# More info
-
-## `healthiar` in RStudio 1/3
-
-![Figure: Landing page of the `healthiar` package in RStudio, where you find the package vignettes and function documentation.](images/healthiar_package_landing_page.png){width="1000" fig-align="left"}
-
-## `healthiar` in RStudio 2/3
-
-![Figure: Intro to `healthiar` vignette (= detailed guide to the package)](images/vignette_start.png){width="700" fig-align="left"}
-
-## `healthiar` in RStudio 3/3
-
-![Figure: Help page of `attribute_health()`](images/fun_doc_start.png){width="900" fig-align="left"}
-
-
 ## Export results
 
 ::: panel-tabset
@@ -741,4 +663,18 @@ Visualization is out of scope of `healthiar`. You can visualize in
 -   Other tools
 :::
 
+## `healthiar` in RStudio 1/3
+
+![Figure: Landing page of the `healthiar` package in RStudio, where you find the package vignettes and function documentation.](images/healthiar_package_landing_page.png){width="1000" fig-align="left"}
+
+## `healthiar` in RStudio 2/3
+
+![Figure: Intro to `healthiar` vignette (= detailed guide to the package)](images/vignette_start.png){width="700" fig-align="left"}
+
+## `healthiar` in RStudio 3/3
+
+![Figure: Help page of `attribute_health()`](images/fun_doc_start.png){width="900" fig-align="left"}
+
+
 --------------------------------------------------------------------------------
+
