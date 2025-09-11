@@ -11,7 +11,7 @@
 #' @param discount_rate \code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
 #' @param n_years \code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1)
-#' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)
+#' @param inflation_rate \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
 
 # VALUE ########################################################################
@@ -60,7 +60,7 @@ monetize <- function(output_attribute = NULL,
                      discount_rate = NULL,
                      discount_shape = "exponential",
                      n_years = 0,
-                     inflation = NULL,
+                     inflation_rate = NULL,
                      info = NULL) {
 
   # Define variables ####
@@ -107,7 +107,7 @@ monetize <- function(output_attribute = NULL,
   }
 
   ## Error if value higher than 1 and lower than 0 ####
-  for(var_name in c("discount_rate", "inflation")){
+  for(var_name in c("discount_rate", "inflation_rate")){
 
     if(!is.null(base::get(var_name)) &&
        (base::get(var_name) < 0 | base::get(var_name) > 1)){
@@ -244,7 +244,7 @@ monetize <- function(output_attribute = NULL,
           n_years = n_years,
           discount_rate = discount_rate,
           discount_shape = discount_shape,
-          inflation = inflation)
+          inflation_rate = inflation_rate)
 
       impact_detailed  <-
         healthiar:::add_monetized_impact(
@@ -252,7 +252,7 @@ monetize <- function(output_attribute = NULL,
           discount_rate = discount_rate,
           n_years = n_years,
           discount_shape = discount_shape,
-          inflation = inflation,
+          inflation_rate = inflation_rate,
           valuation = valuation)[["monetization_main"]]
 
 
@@ -314,7 +314,7 @@ monetize <- function(output_attribute = NULL,
                                          discount_rate = discount_rate,
                                          n_years = {{n_years}},
                                          discount_shape = discount_shape,
-                                         inflation = inflation)[["monetization_main"]]
+                                         inflation_rate = inflation_rate)[["monetization_main"]]
 
       #Detailed results showing the by-year results of monetization
       output_monetization[["monetization_detailed"]][["by_year"]] <-
@@ -323,7 +323,7 @@ monetize <- function(output_attribute = NULL,
                                          discount_rate = discount_rate,
                                          n_years = {{n_years}},
                                          discount_shape = discount_shape,
-                                         inflation = inflation)[["monetization_detailed"]]
+                                         inflation_rate = inflation_rate)[["monetization_detailed"]]
 
       #Detailed results showing all the details of the health results
       output_monetization[["monetization_detailed"]][["health_raw"]]<-
@@ -332,7 +332,7 @@ monetize <- function(output_attribute = NULL,
                                          discount_rate = discount_rate,
                                          n_years = {{n_years}},
                                          discount_shape = discount_shape,
-                                         inflation = inflation)[["monetization_main"]]
+                                         inflation_rate = inflation_rate)[["monetization_main"]]
     }
 
 
@@ -373,7 +373,7 @@ monetize <- function(output_attribute = NULL,
           discount_rate = discount_rate,
           n_years = n_years,
           discount_shape = discount_shape,
-          inflation = inflation,
+          inflation_rate = inflation_rate,
           info = info)
 
   }

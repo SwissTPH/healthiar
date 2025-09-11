@@ -1112,7 +1112,7 @@ The pathway ID for monetization pathways contain the following elements:
     -   hyp_mazur = hyperbolic discount equation based on the work of Mazur
         (1986)
 
--   *inflation* specifies whether annual inflation (increase of prices) is
+-   *inflation_rate* specifies whether annual inflation (increase of prices) is
     applied
 
     -   if yes –\> TRUE
@@ -1133,7 +1133,7 @@ healthiar::monetize(
   discount_rate = NULL,
   discount_shape = NULL,
   n_years = 1,
-  inflation = NULL
+  inflation_rate = NULL
 )
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -1165,7 +1165,7 @@ testthat::test_that("results correct [pathway_id]", {
         discount_rate = NULL,
         discount_shape = NULL,
         n_years = 1,
-        inflation = NULL
+        inflation_rate = NULL
         )$monetization_main$monetized_impact,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =

@@ -20,12 +20,12 @@
 
 get_inflation_factor <-
   function(discount_year,
-           inflation = NULL){
+           inflation_rate = NULL){
 
-    if(!base::is.null(inflation)){
+    if(!base::is.null(inflation_rate)){
       # if discount_rate is NULL
 
-      inflation_factor <- (1 + inflation) ^ discount_year
+      inflation_factor <- (1 + inflation_rate) ^ discount_year
 
     } else {
 

@@ -34,7 +34,7 @@ discount <-
            discount_rate = NULL,
            n_years = 1,
            discount_shape = NULL,
-           inflation = NULL) {
+           inflation_rate = NULL) {
 
     output_discounting <-
       healthiar::monetize(
@@ -44,7 +44,7 @@ discount <-
         n_years = n_years,
         discount_shape = discount_shape,
         valuation = 1,
-        inflation = inflation)
+        inflation_rate = inflation_rate)
 
 
     output_discounting[["monetization_main"]] <-

@@ -26,7 +26,7 @@ add_monetized_impact  <-
            discount_rate,
            n_years,
            discount_shape,
-           inflation,
+           inflation_rate,
            info = NULL) {
 
     # If df has only one column (impact)
@@ -57,7 +57,7 @@ add_monetized_impact  <-
                   discount_rate = {{discount_rate}},
                   n_years = {{n_years}},
                   discount_shape = {{discount_shape}},
-                  inflation = inflation) |>
+                  inflation_rate = inflation_rate) |>
     # Add info
     healthiar:::add_info(
       info = info
@@ -88,13 +88,13 @@ add_monetized_impact  <-
       inflation_factor =
         healthiar::get_inflation_factor(
           discount_year = discount_year,
-          inflation = inflation),
+          inflation_rate = inflation_rate),
       discount_factor =
         healthiar::get_discount_factor(
           discount_rate = discount_rate,
           discount_year = discount_year,
           discount_shape = discount_shape,
-          inflation = inflation),
+          inflation_rate = inflation_rate),
       monetized_impact = impact * valuation * inflation_factor * discount_factor,
       monetized_impact_without_discount_and_inflation = impact * valuation,
       .after = impact)

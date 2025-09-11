@@ -2,7 +2,7 @@
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function calculates the discount factor based on discount rate. If the argument \code{inflation} is NULL (default), it is assumed that the discount rate is already corrected for inflation). Otherwise (if a value for \code{inflation} is entered), the resulted discount factor is adjusted for inflation.
+#' This function calculates the discount factor based on discount rate. If the argument \code{inflation_rate} is NULL (default), it is assumed that the discount rate is already corrected for inflation). Otherwise (if a value for \code{inflation_rate} is entered), the resulted discount factor is adjusted for inflation.
 
 # ARGUMENTS ####################################################################
 #' @inheritParams monetize
@@ -22,7 +22,7 @@ get_discount_factor <-
   function(discount_rate,
            discount_year,
            discount_shape = "exponential",
-           inflation = NULL){
+           inflation_rate = NULL){
 
 
     # If no discount_rate is provided,
@@ -35,8 +35,8 @@ get_discount_factor <-
       discount_factor <- 1
 
     } else if(!base::is.null(discount_rate) &&
-              base::is.null(inflation)) {
-      # if inflation is NULL
+              base::is.null(inflation_rate)) {
+      # if inflation_rate is NULL
 
         discount_factor <-
           base::ifelse(
@@ -49,18 +49,18 @@ get_discount_factor <-
                                       NA)))
 
       } else if(!base::is.null(discount_rate) &&
-                !base::is.null(inflation)) {
-        # if both discount_rate and inflation are available
+                !base::is.null(inflation_rate)) {
+        # if both discount_rate and inflation_rate are available
         # Adjust by inflation
 
         discount_factor <-
           base::ifelse(
             discount_shape == "exponential",
-            1/(((1+discount_rate)*(1+inflation)) ^ discount_year),
+            1/(((1+discount_rate)*(1+inflation_rate)) ^ discount_year),
             base::ifelse(discount_shape == "hyperbolic_harvey_1986",
-                         1/(((1 + discount_year) ^ discount_rate) * ((1 + inflation) ^ discount_year)),
+                         1/(((1 + discount_year) ^ discount_rate) * ((1 + inflation_rate) ^ discount_year)),
                          base::ifelse(discount_shape == "hyperbolic_mazur_1987",
-                                      1/((1 + discount_rate * discount_year) * ((1 + inflation) ^ discount_year)),
+                                      1/((1 + discount_rate * discount_year) * ((1 + inflation_rate) ^ discount_year)),
                                       NA)))
       }
 

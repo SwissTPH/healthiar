@@ -4,10 +4,10 @@
 \alias{get_inflation_factor}
 \title{Get inflation factor}
 \usage{
-get_inflation_factor(discount_year, inflation = NULL)
+get_inflation_factor(discount_year, inflation_rate = NULL)
 }
 \arguments{
-\item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
+\item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
 }
 \description{
 This function calculates the inflation factor based on inflation rate.

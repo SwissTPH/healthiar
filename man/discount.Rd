@@ -10,7 +10,7 @@ discount(
   discount_rate = NULL,
   n_years = 1,
   discount_shape = NULL,
-  inflation = NULL
+  inflation_rate = NULL
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ discount(
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 
-\item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
+\item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
 }
 \value{
 This function returns discounted health impacts.
