@@ -112,13 +112,13 @@ add_monetized_impact  <-
       inflation_factor =  (1+inflation)^discount_year,
 
       # Add discount factor without and with inflation
-      discount_factor_wo_inflation =
+      discount_factor =
         healthiar::get_discount_factor(
           discount_rate = discount_rate,
           discount_year = discount_year,
           discount_shape = discount_shape),
 
-      discount_factor =
+      discount_factor_adjusted_by_inflation =
         healthiar::get_discount_factor(
           discount_rate = discount_rate_with_inflation,
           discount_year = discount_year,
