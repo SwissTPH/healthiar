@@ -243,7 +243,8 @@ monetize <- function(output_attribute = NULL,
         dplyr::mutate(
           discount_years = discount_years,
           discount_rate = discount_rate,
-          discount_shape = discount_shape)
+          discount_shape = discount_shape,
+          inflation = inflation)
 
       impact_detailed  <-
         healthiar:::add_monetized_impact(
