@@ -47,7 +47,6 @@ add_monetized_impact  <-
 
     # Define discount years
     discount_years_vector <- 0 : discount_years
-    discount_period_length <- discount_years
 
   df_with_input <-
     df |>
