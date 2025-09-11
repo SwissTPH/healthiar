@@ -67,11 +67,11 @@ monetize <- function(output_attribute = NULL,
 
   # Store variables to increase readability of conditions
   using_impact_from_healthiar <-
-    !is.null(output_attribute) & is.null(impact)
+    !base::is.null(output_attribute) & base::is.null(impact)
   using_impact_from_user <-
     !using_impact_from_healthiar
 
-  using_impact_vector_from_user <- length(impact)>1
+  using_impact_vector_from_user <- base::length(impact)>1
 
   # is_lifetable only can exist if output_attribute is provided
   # and then it has to be checked of is_lifetable is TRUE or FALSE
@@ -89,7 +89,7 @@ monetize <- function(output_attribute = NULL,
   # The discount years are already defined by the lenght of the vector
   # Users do not need to enter it.
   if(using_impact_vector_from_user){
-    n_years <- length(impact)-1
+    n_years <- base::length(impact)-1
   }
 
   # Validate input data ####
@@ -266,7 +266,7 @@ monetize <- function(output_attribute = NULL,
 
       # Calculate impact per 100K inhab.
 
-      if("population" %in% colnames(impact_detailed)){
+      if("population" %in% base::colnames(impact_detailed)){
         impact_detailed <-
           impact_detailed |>
           dplyr::mutate(
@@ -286,7 +286,7 @@ monetize <- function(output_attribute = NULL,
       output_monetization <-
         healthiar:::get_output(results_raw = impact_detailed) |>
         # Rename the list elements (not anymore health but health including monetization)
-        setNames(c("monetization_main", "monetization_detailed"))
+        stats::setNames(c("monetization_main", "monetization_detailed"))
 
       # Keep only the main detailed data frame (raw) for monetization
       output_monetization[["monetization_detailed"]] <-
@@ -340,20 +340,20 @@ monetize <- function(output_attribute = NULL,
     # Identify the relevant columns for monetization that are in the output
     relevant_columns <-
       c("info", "geo_id_micro", "geo_id_macro",
-        paste0("impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount")),
+        base::paste0("impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount")),
         "discount_rate", "discount_shape",
         "valuation",
-        paste0("monetized_impact", c("", "_without_inflation_and_discount", "_rounded")))
+        base::paste0("monetized_impact", c("", "_without_inflation_and_discount", "_rounded")))
 
     # Keep only relevant columns for monetization
     output_monetization[["monetization_main"]] <-
       output_monetization[["monetization_main"]] |>
       dplyr::select(
         # The columns containing "_ci" are the uncertainties that define the rows
-        contains("_ci"),
+        dplyr::contains("_ci"),
         # Use any_of() instead of all_of() because depending on the calculation pathway
         # there might not be any of the relevant_columns
-        any_of(relevant_columns))
+        dplyr::any_of(relevant_columns))
 
 
     #* IF USER INPUT ####

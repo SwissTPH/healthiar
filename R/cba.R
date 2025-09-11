@@ -67,9 +67,9 @@ cba <-
       c("_benefit", "_cost")
 
     columns_monetization_with_suffix <-
-      paste0(
+      base::paste0(
         columns_monetization,
-        rep(suffix_monetization, each = length(columns_monetization))
+        base::rep(suffix_monetization, each = base::length(columns_monetization))
       )
 
     # Run include_monetization for benefit and cost separately
@@ -95,7 +95,7 @@ cba <-
 
 
 
-    # For cost, assume 1 impact with full valuation to make use of include_monetization
+    # For cost, assume 1 impact with full valuation
     cba_detailed_cost <-
       healthiar::monetize(
         impact = 1,
@@ -129,7 +129,7 @@ cba <-
     # if no columns with ci or geo are available
     # (i.e, without using the function attribute in a previous step)
     columns_ci_geo <-
-      names(cba_main)[grepl("_ci|geo_id", names(cba_main))]
+      base::names(cba_main)[base::grepl("_ci|geo_id", base::names(cba_main))]
 
     relevant_columns <-
       c(columns_ci_geo,
@@ -159,17 +159,17 @@ cba <-
     # Build the output list with main and detailed
 
     output_cba <-
-      list(cba_main = cba_main,
+      base::list(cba_main = cba_main,
            cba_detailed = cba_detailed)
 
 
 
-    if(is.null(positive_impact) & !is.null(output_attribute)){
+    if(base::is.null(positive_impact) & !base::is.null(output_attribute)){
       output <-
         c(output_attribute,
           output_cba)
 
-    }else if(!is.null(positive_impact) & is.null(output_attribute)){
+    }else if(!base::is.null(positive_impact) & base::is.null(output_attribute)){
      output <- output_cba
     }
 
