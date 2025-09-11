@@ -48,18 +48,6 @@ add_monetized_impact  <-
     discount_years_vector <- 0 : discount_years
     discount_period_length <- discount_years
 
-  # Convert NULL into 1 so that it can be integrated in the calculations.
-  # If no inflation is wished, no problem, the 0 will not change the results
-  inflation <-
-    base::ifelse(base::is.null(inflation),
-                 0,
-                 inflation)
-
-  discount_rate <-
-    base::ifelse(base::is.null(discount_rate),
-                 0,
-                 discount_rate)
-
   df_with_input <-
     df |>
     # Add columns for input data in the table
