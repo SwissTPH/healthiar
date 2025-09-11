@@ -18,7 +18,7 @@
 #'   impact = 2E4,
 #'   discount_shape = "exponential",
 #'   discount_rate = 0.03,
-#'   discount_years = 20
+#'   n_years = 20
 #' )
 #' results$monetization_main$monetized_impact
 
@@ -32,19 +32,19 @@ discount <-
   function(output_attribute = NULL,
            impact = NULL,
            discount_rate = NULL,
-           discount_years = 1,
+           n_years = 1,
            discount_shape = NULL,
-           inflation = NULL) {
+           inflation_rate = NULL) {
 
     output_discounting <-
       healthiar::monetize(
         output_attribute = output_attribute,
         impact = impact,
         discount_rate = discount_rate,
-        discount_years = discount_years,
+        n_years = n_years,
         discount_shape = discount_shape,
         valuation = 1,
-        inflation = inflation)
+        inflation_rate = inflation_rate)
 
 
     output_discounting[["monetization_main"]] <-

@@ -353,7 +353,7 @@ results <-
     output_attribute = output_attribute,
     discount_shape = "exponential",
     discount_rate = 0.03,
-    discount_years = 5,
+    n_years = 5,
     valuation = 50000 # E.g. EURO
   )
 
@@ -444,7 +444,7 @@ results <- discount(
         impact = 2E4,
         discount_shape = "exponential",
         discount_rate = 0.03,
-        discount_years = 20)
+        n_years = 20)
 
 results$monetization_main$monetized_impact
 ```
@@ -469,8 +469,8 @@ results <- cba(
   discount_shape = "exponential",
   discount_rate_benefit = 0.03,
   discount_rate_cost = 0.03,
-  discount_years_benefit = 5,
-  discount_years_cost = 5
+  n_years_benefit = 5,
+  n_years_cost = 5
 )
 
 results$cba_main |>  

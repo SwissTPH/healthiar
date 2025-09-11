@@ -1112,7 +1112,7 @@ The pathway ID for monetization pathways contain the following elements:
     -   hyp_mazur = hyperbolic discount equation based on the work of Mazur
         (1986)
 
--   *inflation* specifies whether annual inflation (increase of prices) is
+-   *inflation_rate* specifies whether annual inflation (increase of prices) is
     applied
 
     -   if yes –\> TRUE
@@ -1132,8 +1132,8 @@ healthiar::monetize(
   cost = ,
   discount_rate = NULL,
   discount_shape = NULL,
-  discount_years = 1,
-  inflation = NULL
+  n_years = 1,
+  inflation_rate = NULL
 )
 
 ## RESULT(S) COMPARISON ASSESSMENT:
@@ -1164,8 +1164,8 @@ testthat::test_that("results correct [pathway_id]", {
         cost = ,
         discount_rate = NULL,
         discount_shape = NULL,
-        discount_years = 1,
-        inflation = NULL
+        n_years = 1,
+        inflation_rate = NULL
         )$monetization_main$monetized_impact,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
@@ -1227,8 +1227,8 @@ The pathway ID for monetization pathways contain the following elements:
         discount_shape = ,
         discount_rate_benefit = ,
         discount_rate_cost = ,
-        discount_years_benefit = 1,
-        discount_years_cost = 1) 
+        n_years_benefit = 1,
+        n_years_cost = 1) 
 
 ## RESULT(S) COMPARISON ASSESSMENT:
 ## List here the results of the comparison assessment you selected
@@ -1259,8 +1259,8 @@ testthat::test_that("results correct [pathway_id]", {
         discount_shape = ,
         discount_rate_benefit = ,
         discount_rate_cost = ,
-        discount_years_benefit = 1,
-        discount_years_cost = 1)$cba_main$net_benefit_rounded,
+        n_years_benefit = 1,
+        n_years_cost = 1)$cba_main$net_benefit_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c( )

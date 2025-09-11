@@ -34,8 +34,8 @@
 #'   discount_shape = "exponential",
 #'   discount_rate_benefit = 0.03,
 #'   discount_rate_cost = 0.03,
-#'   discount_years_benefit = 5,
-#'   discount_years_cost = 5
+#'   n_years_benefit = 5,
+#'   n_years_cost = 5
 #' )
 #'
 #' results$cba_main |>
@@ -55,8 +55,8 @@ cba <-
            discount_rate_benefit = NULL,
            discount_rate_cost = NULL,
            discount_shape = "exponential",
-           discount_years_benefit = 1,
-           discount_years_cost = 1) {
+           n_years_benefit = 1,
+           n_years_cost = 1) {
 
     # Define vectors that are relevant below
 
@@ -67,9 +67,9 @@ cba <-
       c("_benefit", "_cost")
 
     columns_monetization_with_suffix <-
-      paste0(
+      base::paste0(
         columns_monetization,
-        rep(suffix_monetization, each = length(columns_monetization))
+        base::rep(suffix_monetization, each = base::length(columns_monetization))
       )
 
     # Run include_monetization for benefit and cost separately
@@ -80,7 +80,7 @@ cba <-
         output_attribute = output_attribute,
         impact = positive_impact,
         discount_rate = discount_rate_benefit,
-        discount_years = discount_years_benefit,
+        n_years = n_years_benefit,
         discount_shape = discount_shape,
         valuation = valuation)[["monetization_detailed"]]
 
@@ -89,19 +89,19 @@ cba <-
         output_attribute = output_attribute,
         impact = positive_impact,
         discount_rate = discount_rate_benefit,
-        discount_years = discount_years_benefit,
+        n_years = n_years_benefit,
         discount_shape = discount_shape,
         valuation = valuation)[["monetization_main"]]
 
 
 
-    # For cost, assume 1 impact with full valuation to make use of include_monetization
+    # For cost, assume 1 impact with full valuation
     cba_detailed_cost <-
       healthiar::monetize(
         impact = 1,
         valuation = cost,
         discount_rate = discount_rate_cost,
-        discount_years = discount_years_cost,
+        n_years = n_years_cost,
         discount_shape = discount_shape)[["monetization_main"]]
 
     # For costs main and detailed are the same because they only have one row
@@ -129,7 +129,7 @@ cba <-
     # if no columns with ci or geo are available
     # (i.e, without using the function attribute in a previous step)
     columns_ci_geo <-
-      names(cba_main)[grepl("_ci|geo_id", names(cba_main))]
+      base::names(cba_main)[base::grepl("_ci|geo_id", base::names(cba_main))]
 
     relevant_columns <-
       c(columns_ci_geo,
@@ -159,17 +159,17 @@ cba <-
     # Build the output list with main and detailed
 
     output_cba <-
-      list(cba_main = cba_main,
+      base::list(cba_main = cba_main,
            cba_detailed = cba_detailed)
 
 
 
-    if(is.null(positive_impact) & !is.null(output_attribute)){
+    if(base::is.null(positive_impact) & !base::is.null(output_attribute)){
       output <-
         c(output_attribute,
           output_cba)
 
-    }else if(!is.null(positive_impact) & is.null(output_attribute)){
+    }else if(!base::is.null(positive_impact) & base::is.null(output_attribute)){
      output <- output_cba
     }
 
