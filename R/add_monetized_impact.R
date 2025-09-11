@@ -85,13 +85,18 @@ add_monetized_impact  <-
     df_by_year |>
     # Add monetized impact and inflation factor
     dplyr::mutate(
-      conversion_factor =
+      inflation_factor =
+        healthiar::get_inflation_factor(
+          discount_year = discount_year,
+          inflation = inflation),
+      discount_factor =
         healthiar::get_discount_factor(
           discount_rate = discount_rate,
           discount_year = discount_year,
           discount_shape = discount_shape,
           inflation = inflation),
-      monetized_impact = impact * valuation * conversion_factor,
+      monetized_impact = impact * valuation * inflation_factor * discount_factor,
+      monetized_impact_without_discount_and_inflation = impact * valuation,
       .after = impact)
 
 
