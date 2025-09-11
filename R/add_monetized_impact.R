@@ -166,7 +166,7 @@ add_monetized_impact  <-
     # Round monetized impacts
     dplyr::mutate(
       monetized_impact_before_inflation_and_discount_rounded = base::round(monetized_impact_before_inflation_and_discount),
-      monetized_impact_after__inflation_and_discount_rounded = base::round(monetized_impact_after_inflation_and_discount),
+      monetized_impact_after_inflation_and_discount_rounded = base::round(monetized_impact_after_inflation_and_discount),
       monetized_impact_rounded = base::round(monetized_impact),
       .after = monetized_impact)
 
