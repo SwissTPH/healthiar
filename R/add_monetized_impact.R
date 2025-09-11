@@ -60,12 +60,6 @@ add_monetized_impact  <-
                  0,
                  discount_rate)
 
-  # Obtain the nominal discount rate if needed for the case of nominal_discount_rate
-  # If the user refers to a real discount rate (without inflation), then
-  # inflation is 0 and the discount rate does not change
-  discount_rate_with_inflation <- ((1+discount_rate)*(1+inflation))-1
-
-
   df_with_input <-
     df |>
     # Add columns for input data in the table
@@ -75,8 +69,7 @@ add_monetized_impact  <-
                   discount_rate = {{discount_rate}},
                   discount_years = {{discount_years}},
                   discount_shape = {{discount_shape}},
-                  inflation = inflation,
-                  discount_rate_with_inflation = discount_rate_with_inflation) |>
+                  inflation = inflation) |>
     # Add info
     healthiar:::add_info(
       info = info
@@ -116,13 +109,15 @@ add_monetized_impact  <-
         healthiar::get_discount_factor(
           discount_rate = discount_rate,
           discount_year = discount_year,
-          discount_shape = discount_shape),
+          discount_shape = discount_shape,
+          inflation = NULL),
 
       discount_factor_adjusted_by_inflation =
         healthiar::get_discount_factor(
-          discount_rate = discount_rate_with_inflation,
+          discount_rate = discount_rate,
           discount_year = discount_year,
-          discount_shape = discount_shape))
+          discount_shape = discount_shape,
+          inflation = inflation))
 
 
     df_by_year <-
