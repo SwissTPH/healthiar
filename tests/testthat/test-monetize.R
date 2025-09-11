@@ -398,16 +398,11 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
     expect =
       10151212470
   )
-  ## RESULT(S) COMPARISON ASSESSMENT:
-  ## 10151212470 $ (5 years)
-  ## ASSESSOR:
-  ## Iracy Pimenta
-  ## ASSESSMENT DETAILS:
-  ## Monetization of Ozone reduction policy on premature mortality in China with hyperbolic (Harvey) discount rate
-  ## INPUT DATA DETAILS:
-  ## Example adapted from Chen et al (2015) data to 5 years policy, with discount rate = 0,03 and hyperbolic (Harvey) function
-  ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
-  ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+  # ASSESSOR: Iracy Pimenta
+  # ASSESSMENT DETAILS: Monetization of PM2.5 and ozone reduction policy on premature mortality in China
+  # INPUT DATA DETAILS:Example adapted from Chen et al (2015). Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+  # DOI: https://doi.org/10.1007/s11270-015-2316-7
+
 })
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_harvey|inflation_FALSE|", {
@@ -424,16 +419,10 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
     expect =
       100999437198
   )
-  ## RESULT(S) COMPARISON ASSESSMENT:
-  ## 100999437198 $ (5 years)
-  ## ASSESSOR:
-  ## Iracy Pimenta
-  ## ASSESSMENT DETAILS:
-  ## Moneztization of PM2.5 reduction policy on premature mortality in China with hyperbolic (Harvey) discount rate
-  ## INPUT DATA DETAILS:
-  ## Example adapted from Chen et al (2015) data to 5 years policy, with discount rate = 0,03 and hyperbolic (Harvey) function
-  ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
-  ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+  # ASSESSOR: Iracy Pimenta
+  # ASSESSMENT DETAILS: Monetization of PM2.5 and ozone reduction policy on premature mortality in China
+  # INPUT DATA DETAILS:Example adapted from Chen et al (2015). Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+  # DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_harvey|inflation_FALSE|", {
@@ -450,22 +439,16 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
     expect =
       97444185252.79530
   )
-  ## RESULT(S) COMPARISON ASSESSMENT:
-  ## 97444185252.79530 $ (5 years)
-  ## ASSESSOR:
-  ## Iracy Pimenta
-  ## ASSESSMENT DETAILS:
-  ## Moneztization of PM2.5 reduction policy on premature mortality in China with hyperbolic (Harvey) discount rate
-  ## INPUT DATA DETAILS:
-  ## Example adapted from Chen et al (2015) data to 5 years policy, with discount rate = 0,05 and hyperbolic (Harvey) function
-  ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
-  ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+  # ASSESSOR: Iracy Pimenta
+  # ASSESSMENT DETAILS: Monetization of PM2.5 and ozone reduction policy on premature mortality in China
+  # INPUT DATA DETAILS:Example adapted from Chen et al (2015). Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+  # DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
 ##### INFLATION ################################################################
 
-
 testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_hyp_harvey|inflation_TRUE|", {
+
 
   testthat::expect_equal(
     object =
@@ -480,16 +463,10 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
     expect =
       102946596127.82300
   )
-  ## RESULT(S) COMPARISON ASSESSMENT:
-  ## 115103160000.00000 $ (1 years)
-  ## ASSESSOR:
-  ## Iracy Pimenta
-  ## ASSESSMENT DETAILS:
-  ## Moneztization of PM2.5 reduction policy on premature mortality in China with hyperbolic (Harvey) discount rate
-  ## INPUT DATA DETAILS:
-  ## Example adapted from Chen et al (2015)
-  ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
-  ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+  # ASSESSOR: Iracy Pimenta
+  # ASSESSMENT DETAILS: Monetization of PM2.5 and ozone reduction policy on premature mortality in China
+  # INPUT DATA DETAILS:Example adapted from Chen et al (2015). Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+  # DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
 
@@ -508,16 +485,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
     expect =
       97444185252.79530
   )
-  ## RESULT(S) COMPARISON ASSESSMENT:
-  ## 156596578441.11400 $ (5 years)
-  ## ASSESSOR:
-  ## Iracy Pimenta
-  ## ASSESSMENT DETAILS:
-  ## Moneztization of PM2.5 reduction policy on premature mortality in China with hyperbolic (Harvey) discount rate
-  ## INPUT DATA DETAILS:
-  ## Example adapted from Chen et al (2015)
-  ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
-  ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+
 })
 
 
@@ -554,16 +522,10 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
     expect =
       9314608696
   )
-  ## RESULT(S) COMPARISON ASSESSMENT:
-  ## 9314608696 million $ (5 years)
-  ## ASSESSOR:
-  ## Iracy Pimenta
-  ## ASSESSMENT DETAILS:
-  ## Monetization of Ozone reduction policy on premature mortality in China with hyperbolic (Mazur) discount rate
-  ## INPUT DATA DETAILS:
-  ## Example adapted from Chen et al (2015) data to 5 years policy, with discount rate = 0,03 and hyperbolic (Mazur) function
-  ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
-  ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+  # ASSESSOR: Iracy Pimenta
+  # ASSESSMENT DETAILS: Monetization of PM2.5 and ozone reduction policy on premature mortality in China
+  # INPUT DATA DETAILS:Example adapted from Chen et al (2015). Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+  # DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_mazur|inflation_FALSE|", {
@@ -580,16 +542,10 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
     expect =
       92675652174
   )
-  ## RESULT(S) COMPARISON ASSESSMENT:
-  ## 92675652174 $ (5 years)
-  ## ASSESSOR:
-  ## Iracy Pimenta
-  ## ASSESSMENT DETAILS:
-  ## Monetization of PM2.5 reduction policy on premature mortality in China with hyperbolic (Mazur) discount rate
-  ## INPUT DATA DETAILS:
-  ## Example adapted from Chen et al (2015) data to 5 years policy, with discount rate = 0,03 and hyperbolic (Mazur) function
-  ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
-  ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+  # ASSESSOR: Iracy Pimenta
+  # ASSESSMENT DETAILS: Monetization of PM2.5 and ozone reduction policy on premature mortality in China
+  # INPUT DATA DETAILS:Example adapted from Chen et al (2015). Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+  # DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_mazur|inflation_FALSE|", {
@@ -606,16 +562,10 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
     expect =
       85261600000.00000
   )
-  ## RESULT(S) COMPARISON ASSESSMENT:
-  ## 85261600000.00000 $ (5 years)
-  ## ASSESSOR:
-  ## Iracy Pimenta
-  ## ASSESSMENT DETAILS:
-  ## Monetization of PM2.5 reduction policy on premature mortality in China with hyperbolic (Mazur) discount rate
-  ## INPUT DATA DETAILS:
-  ## Example adapted from Chen et al (2015) data to 5 years policy, with discount rate = 0,03 and hyperbolic (Mazur) function
-  ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
-  ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+  # ASSESSOR: Iracy Pimenta
+  # ASSESSMENT DETAILS: Monetization of PM2.5 and ozone reduction policy on premature mortality in China
+  # INPUT DATA DETAILS:Example adapted from Chen et al (2015). Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
+  # DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
 
