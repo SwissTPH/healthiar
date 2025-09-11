@@ -43,7 +43,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
 })
 
 
-### DISCOUNTING ################################################################
+### WITH DISCOUNT ################################################################
 
 #### EXPONENTIAL ###############################################################
 
@@ -524,7 +524,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
   # DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-### INFLATION BUT NO DISCOUNTING ###########
+### WITH INFLATION BUT WITHOUT DISCOUNTING ###########
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_TRUE|", {
 
