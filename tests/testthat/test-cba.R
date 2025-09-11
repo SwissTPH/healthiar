@@ -15,8 +15,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
         positive_impact = 19800,
         valuation = 541000,
         cost = 8200000000,
-        discount_years_benefit = 10,
-        discount_years_cost = 10
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       2511800000 # benefit year 10 - cost year 10
@@ -40,8 +40,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
         valuation = 541000,
         cost = 523000000,
         discount_shape = "exponential",
-        discount_years_benefit = 10,
-        discount_years_cost = 10
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       106054000000 # benefit year 10 - cost year 10
@@ -68,8 +68,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
         valuation = 541000,
         cost = 8200000000,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years_benefit = 10,
-        discount_years_cost = 10
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       2511800000 # benefit year 10 - cost year 10
@@ -94,8 +94,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
         valuation = 541000,
         cost = 523000000,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years_benefit = 10,
-        discount_years_cost = 10
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       106054000000 # benefit year 10 - cost year 10
@@ -122,8 +122,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
         valuation = 541000,
         cost = 8200000000,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years_benefit = 10,
-        discount_years_cost = 10
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       2511800000 # benefit year 10 - cost year 10
@@ -147,8 +147,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
         valuation = 541000,
         cost = 523000000,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years_benefit = 10,
-        discount_years_cost = 10
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       106054000000 # benefit year 10 - cost year 10
@@ -180,8 +180,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
         discount_shape = "exponential",
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
-        discount_years_benefit = 5,
-        discount_years_cost = 5
+        n_years_benefit = 5,
+        n_years_cost = 5
         )$cba_main$net_benefit_rounded,
     expect = 776 # Excel file from University of Porto "WP2_Examples.xlsx"
   )
@@ -199,8 +199,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
         discount_shape = "exponential",
-        discount_years_benefit = 10,
-        discount_years_cost = 10
+        n_years_benefit = 10,
+        n_years_cost = 10
         )$cba_main$net_benefit_rounded,
     expect =
       1869015095 # benefit year 10 - cost year 10
@@ -227,8 +227,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
         discount_shape = "exponential",
-        discount_years_benefit = 10,
-        discount_years_cost = 10
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       78914136050 # benefit year 10 - cost year 10
@@ -256,7 +256,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
         cost = 8200000000,
         discount_rate_benefit = 0.03,
         discount_shape = "exponential",
-        discount_years_benefit = 10,
+        n_years_benefit = 10,
       )$cba_main$net_benefit_rounded,
     expect =
       -229414802 # benefit year 10 - cost year 10
@@ -282,7 +282,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
         cost = 523000000,
         discount_rate_benefit = 0.03,
         discount_shape = "exponential",
-        discount_years_benefit = 10,
+        n_years_benefit = 10,
       )$cba_main$net_benefit_rounded,
     expect =
       78780297168 # benefit year 10 - cost year 10
@@ -311,7 +311,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
         cost = 8200000000,
         discount_rate_cost = 0.03,
         discount_shape = "exponential",
-        discount_years_cost = 10
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       4610229898 # benefit year 10 - cost year 10
@@ -337,7 +337,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
         cost = 523000000,
         discount_rate_cost = 0.03,
         discount_shape = "exponential",
-        discount_years_cost = 10
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       106187838883 # benefit year 10 - cost year 10
@@ -368,8 +368,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years_benefit = 10,
-        discount_years_cost = 10
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       2337455091 # benefit year 10 - cost year 10
@@ -396,8 +396,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years_benefit = 10,
-        discount_years_cost = 10
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       98692755067 # benefit year 10 - cost year 10
@@ -425,7 +425,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
         cost = 8200000000,
         discount_rate_benefit = 0.03,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years_benefit = 10,
+        n_years_benefit = 10,
       )$cba_main$net_benefit_rounded,
     expect =
       1768290246 # benefit year 10 - cost year 10
@@ -451,7 +451,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
         cost = 523000000,
         discount_rate_benefit = 0.03,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years_benefit = 10,
+        n_years_benefit = 10,
       )$cba_main$net_benefit_rounded,
     expect =
       98656453456 # benefit year 10 - cost year 10
@@ -479,7 +479,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
         cost = 8200000000,
         discount_rate_cost = 0.03,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years_cost = 10,
+        n_years_cost = 10,
       )$cba_main$net_benefit_rounded,
     expect =
       3080964845 # benefit year 10 - cost year 10
@@ -505,7 +505,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
         cost = 523000000,
         discount_rate_cost = 0.03,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years_cost = 10,
+        n_years_cost = 10,
       )$cba_main$net_benefit_rounded,
     expect =
       106090301611 # benefit year 10 - cost year 10
@@ -536,8 +536,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years_benefit = 10,
-        discount_years_cost = 10
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       1932153846 # benefit year 10 - cost year 10
@@ -564,8 +564,8 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years_benefit = 10,
-        discount_years_cost = 10
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
       81580000000 # benefit year 10 - cost year 10
@@ -593,7 +593,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
         cost = 8200000000,
         discount_rate_benefit = 0.03,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years_benefit = 10,
+        n_years_benefit = 10,
       )$cba_main$net_benefit_rounded,
     expect =
       39846154 # benefit year 10 - cost year 10
@@ -619,7 +619,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
         cost = 523000000,
         discount_rate_benefit = 0.03,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years_benefit = 10,
+        n_years_benefit = 10,
       )$cba_main$net_benefit_rounded,
     expect =
       81459307692 # benefit year 10 - cost year 10
@@ -647,7 +647,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
         cost = 8200000000,
         discount_rate_cost = 0.03,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years_cost = 10,
+        n_years_cost = 10,
       )$cba_main$net_benefit_rounded,
     expect =
       4404107692 # benefit year 10 - cost year 10
@@ -673,7 +673,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
         cost = 523000000,
         discount_rate_cost = 0.03,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years_cost = 10,
+        n_years_cost = 10,
       )$cba_main$net_benefit_rounded,
     expect =
       106174692308 # benefit year 10 - cost year 10
@@ -715,8 +715,8 @@ testthat::test_that("results the same |fake_cba|discount_shape_exponential|disco
         discount_shape = "exponential",
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
-        discount_years_benefit = 5,
-        discount_years_cost = 5
+        n_years_benefit = 5,
+        n_years_cost = 5
         )$cba_main$net_benefit_rounded,
     expect = c(60330,23257,94350) # Results on 2025-03-06; no comparison study
   )
@@ -747,8 +747,8 @@ testthat::test_that("results the same |fake_cba|discount_shape_exp|discount_rate
         discount_shape = "exponential",
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
-        discount_years_benefit = 5,
-        discount_years_cost = 5
+        n_years_benefit = 5,
+        n_years_cost = 5
         )$cba_main$net_benefit_rounded,
     expect = c(60416, 23343, 94436) - 86 # Results on 2025-02-05 ; no comparison study
   )

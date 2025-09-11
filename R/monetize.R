@@ -6,11 +6,11 @@
 
 # ARGUMENTS ####################################################################
 #' @param output_attribute \code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.
-#' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while discount_years does not include the year 0. Thus, length of impact = discount_years + 1.
+#' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.
 #' @param valuation \code{Numberic value} referring to unit value of a health impact.
 #' @param discount_rate \code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
-#' @param discount_years \code{Numeric value} referring to the period of time to be considered in the discounting. Be aware that the year 0 (without discounting) is not be counted here. If a vector is entered in the argument impact, discount_years does not need to be entered (length of impact = discount_years + 1)
+#' @param n_years \code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1)
 #' @param inflation \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
 
@@ -40,7 +40,7 @@
 #'   output_attribute = output_attribute,
 #'   discount_shape = "exponential",
 #'   discount_rate = 0.03,
-#'   discount_years = 5,
+#'   n_years = 5,
 #'   valuation = 50000 # E.g. EURO
 #' )
 #'
@@ -59,7 +59,7 @@ monetize <- function(output_attribute = NULL,
                      valuation,
                      discount_rate = NULL,
                      discount_shape = "exponential",
-                     discount_years = 0,
+                     n_years = 0,
                      inflation = NULL,
                      info = NULL) {
 
@@ -89,13 +89,13 @@ monetize <- function(output_attribute = NULL,
   # The discount years are already defined by the lenght of the vector
   # Users do not need to enter it.
   if(using_impact_vector_from_user){
-    discount_years <- length(impact)-1
+    n_years <- length(impact)-1
   }
 
   # Validate input data ####
 
   ## Error if value lower than 0 ####
-  for(var_name in c("valuation", "discount_years")){
+  for(var_name in c("valuation", "n_years")){
 
     if(!is.null(base::get(var_name)) &&
        base::get(var_name) < 0){
@@ -138,11 +138,11 @@ monetize <- function(output_attribute = NULL,
   }
 
 
-  ## Warning if no value for discount_years, but discount_rate####
+  ## Warning if no value for n_years, but discount_rate####
 
-  # Then discount values are ignored because no discount is happening (by default `discount_years = 0`)
+  # Then discount values are ignored because no discount is happening (by default `n_years = 0`)
   # discount_shape has a default value, so it is never NULL
-  if(discount_years == 0 &&
+  if(n_years == 0 &&
      base::any(!base::is.null(discount_rate))&&
      # Exclude life table because the discount_year are calculated based on life table
      !is_lifetable){
@@ -175,30 +175,30 @@ monetize <- function(output_attribute = NULL,
 
 
 
-  ## Warning if user pass discount_years with impact ####
+  ## Warning if user pass n_years with impact ####
 
-  # Then the value will be ignored and the length of impact will be used as discount_years
+  # Then the value will be ignored and the length of impact will be used as n_years
 
-  if("discount_years" %in% base::names(base::match.call()) &&
+  if("n_years" %in% base::names(base::match.call()) &&
      base::length(impact) > 1 &&
      !base::is.null(impact)){
     warning(
-      base::paste0("discount_years is aimed for output_attribute (excluding life table)",
+      base::paste0("n_years is aimed for output_attribute (excluding life table)",
       " and for impact (excluding vector form).",
-      " Therefore discount_years is ignored here and the length of the vector impact is used instead."),
+      " Therefore n_years is ignored here and the length of the vector impact is used instead."),
       call. = FALSE)
   }
 
-  ## Warning if user pass discount_years with impact ####
+  ## Warning if user pass n_years with impact ####
 
-  # Then the value will be ignored and the length of impact will be used as discount_years
+  # Then the value will be ignored and the length of impact will be used as n_years
 
-  if("discount_years" %in% base::names(base::match.call()) &&
+  if("n_years" %in% base::names(base::match.call()) &&
      is_lifetable){
     warning(
-      base::paste0("discount_years is aimed for any output_attribute",
+      base::paste0("n_years is aimed for any output_attribute",
                    " and for impact with single value (no vector).",
-                   " Therefore discount_years is ignored here and the length life table is used instead."),
+                   " Therefore n_years is ignored here and the length life table is used instead."),
       call. = FALSE)
   }
 
@@ -224,8 +224,8 @@ monetize <- function(output_attribute = NULL,
       # Store the original data (they refer to health)
       output_health <- output_attribute
 
-      # Obtain discount_years
-      # Ignore user defined discount_years
+      # Obtain n_years
+      # Ignore user defined n_years
       # Here the difference between year of analysis and
       # last year of mortality data is to be used
       impact_detailed <- output_health[["health_detailed"]][["results_by_year"]] |>
@@ -233,7 +233,7 @@ monetize <- function(output_attribute = NULL,
         # Convert year to numeric
         year = base::as.numeric(year))
 
-      discount_years <- base::max(impact_detailed$year) - base::unique(impact_detailed$year_of_analysis)
+      n_years <- base::max(impact_detailed$year) - base::unique(impact_detailed$year_of_analysis)
 
 
       # Output will be adapted according to monetized impacts
@@ -241,7 +241,7 @@ monetize <- function(output_attribute = NULL,
         impact_detailed |>
         ## Calculate total, discounted life years (single value) per sex & ci
         dplyr::mutate(
-          discount_years = discount_years,
+          n_years = n_years,
           discount_rate = discount_rate,
           discount_shape = discount_shape,
           inflation = inflation)
@@ -250,7 +250,7 @@ monetize <- function(output_attribute = NULL,
         healthiar:::add_monetized_impact(
           df = impact_detailed,
           discount_rate = discount_rate,
-          discount_years = discount_years,
+          n_years = n_years,
           discount_shape = discount_shape,
           inflation = inflation,
           valuation = valuation)[["monetization_main"]]
@@ -312,7 +312,7 @@ monetize <- function(output_attribute = NULL,
         healthiar:::add_monetized_impact(df = output_attribute[["health_main"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
-                                         discount_years = {{discount_years}},
+                                         n_years = {{n_years}},
                                          discount_shape = discount_shape,
                                          inflation = inflation)[["monetization_main"]]
 
@@ -321,7 +321,7 @@ monetize <- function(output_attribute = NULL,
         healthiar:::add_monetized_impact(df = output_attribute[["health_main"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
-                                         discount_years = {{discount_years}},
+                                         n_years = {{n_years}},
                                          discount_shape = discount_shape,
                                          inflation = inflation)[["monetization_detailed"]]
 
@@ -330,7 +330,7 @@ monetize <- function(output_attribute = NULL,
         healthiar:::add_monetized_impact(df = output_attribute[["health_detailed"]][["results_raw"]],
                                          valuation = valuation,
                                          discount_rate = discount_rate,
-                                         discount_years = {{discount_years}},
+                                         n_years = {{n_years}},
                                          discount_shape = discount_shape,
                                          inflation = inflation)[["monetization_main"]]
     }
@@ -371,7 +371,7 @@ monetize <- function(output_attribute = NULL,
           df = tibble::tibble(impact = impact),
           valuation = valuation,
           discount_rate = discount_rate,
-          discount_years = discount_years,
+          n_years = n_years,
           discount_shape = discount_shape,
           inflation = inflation,
           info = info)

@@ -12,8 +12,8 @@ cba(
   discount_rate_benefit = NULL,
   discount_rate_cost = NULL,
   discount_shape = "exponential",
-  discount_years_benefit = 1,
-  discount_years_cost = 1
+  n_years_benefit = 1,
+  n_years_cost = 1
 )
 }
 \arguments{
@@ -55,8 +55,8 @@ results <- cba(
   discount_shape = "exponential",
   discount_rate_benefit = 0.03,
   discount_rate_cost = 0.03,
-  discount_years_benefit = 5,
-  discount_years_cost = 5
+  n_years_benefit = 5,
+  n_years_cost = 5
 )
 
 results$cba_main |>

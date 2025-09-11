@@ -708,7 +708,7 @@ results_monetization <- monetize(
   valuation = 20,
   discount_shape = "exponential",
   discount_rate = 0.03,
-  discount_years = 5
+  n_years = 5
 )
 ```
 :::

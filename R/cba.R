@@ -34,8 +34,8 @@
 #'   discount_shape = "exponential",
 #'   discount_rate_benefit = 0.03,
 #'   discount_rate_cost = 0.03,
-#'   discount_years_benefit = 5,
-#'   discount_years_cost = 5
+#'   n_years_benefit = 5,
+#'   n_years_cost = 5
 #' )
 #'
 #' results$cba_main |>
@@ -55,8 +55,8 @@ cba <-
            discount_rate_benefit = NULL,
            discount_rate_cost = NULL,
            discount_shape = "exponential",
-           discount_years_benefit = 1,
-           discount_years_cost = 1) {
+           n_years_benefit = 1,
+           n_years_cost = 1) {
 
     # Define vectors that are relevant below
 
@@ -80,7 +80,7 @@ cba <-
         output_attribute = output_attribute,
         impact = positive_impact,
         discount_rate = discount_rate_benefit,
-        discount_years = discount_years_benefit,
+        n_years = n_years_benefit,
         discount_shape = discount_shape,
         valuation = valuation)[["monetization_detailed"]]
 
@@ -89,7 +89,7 @@ cba <-
         output_attribute = output_attribute,
         impact = positive_impact,
         discount_rate = discount_rate_benefit,
-        discount_years = discount_years_benefit,
+        n_years = n_years_benefit,
         discount_shape = discount_shape,
         valuation = valuation)[["monetization_main"]]
 
@@ -101,7 +101,7 @@ cba <-
         impact = 1,
         valuation = cost,
         discount_rate = discount_rate_cost,
-        discount_years = discount_years_cost,
+        n_years = n_years_cost,
         discount_shape = discount_shape)[["monetization_main"]]
 
     # For costs main and detailed are the same because they only have one row

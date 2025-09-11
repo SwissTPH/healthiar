@@ -24,7 +24,7 @@ add_monetized_impact  <-
   function(df,
            valuation,
            discount_rate,
-           discount_years,
+           n_years,
            discount_shape,
            inflation,
            info = NULL) {
@@ -46,7 +46,7 @@ add_monetized_impact  <-
     summing_across_discounted_years <- using_impact_vector_from_user | using_impact_from_healthiar_with_lifetable
 
     # Define discount years
-    discount_years_vector <- 0 : discount_years
+    n_years_vector <- 0 : n_years
 
   df_with_input <-
     df |>
@@ -55,7 +55,7 @@ add_monetized_impact  <-
     # with the same name
     dplyr::mutate(valuation = {{valuation}},
                   discount_rate = {{discount_rate}},
-                  discount_years = {{discount_years}},
+                  n_years = {{n_years}},
                   discount_shape = {{discount_shape}},
                   inflation = inflation) |>
     # Add info
@@ -70,12 +70,12 @@ add_monetized_impact  <-
 
     df_by_year <-  df_with_input
     df_by_year$discount_year <-
-      base::rep(discount_years_vector, len = base::nrow(df_with_input))
+      base::rep(n_years_vector, len = base::nrow(df_with_input))
 
   } else if(taking_last_discounted_year){
     df_by_year <-
       # Split by discount year
-      dplyr::cross_join(x = tibble::tibble(discount_year = discount_years_vector),
+      dplyr::cross_join(x = tibble::tibble(discount_year = n_years_vector),
                         y = df_with_input)
   }
 

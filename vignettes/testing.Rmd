@@ -1132,7 +1132,7 @@ healthiar::monetize(
   cost = ,
   discount_rate = NULL,
   discount_shape = NULL,
-  discount_years = 1,
+  n_years = 1,
   inflation = NULL
 )
 
@@ -1164,7 +1164,7 @@ testthat::test_that("results correct [pathway_id]", {
         cost = ,
         discount_rate = NULL,
         discount_shape = NULL,
-        discount_years = 1,
+        n_years = 1,
         inflation = NULL
         )$monetization_main$monetized_impact,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
@@ -1227,8 +1227,8 @@ The pathway ID for monetization pathways contain the following elements:
         discount_shape = ,
         discount_rate_benefit = ,
         discount_rate_cost = ,
-        discount_years_benefit = 1,
-        discount_years_cost = 1) 
+        n_years_benefit = 1,
+        n_years_cost = 1) 
 
 ## RESULT(S) COMPARISON ASSESSMENT:
 ## List here the results of the comparison assessment you selected
@@ -1259,8 +1259,8 @@ testthat::test_that("results correct [pathway_id]", {
         discount_shape = ,
         discount_rate_benefit = ,
         discount_rate_cost = ,
-        discount_years_benefit = 1,
-        discount_years_cost = 1)$cba_main$net_benefit_rounded,
+        n_years_benefit = 1,
+        n_years_cost = 1)$cba_main$net_benefit_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c( )

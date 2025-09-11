@@ -40,7 +40,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
         impact = 19800,
         valuation = 541000,
         discount_shape = "exponential",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact_rounded,
     expect =
       10711800000
@@ -67,7 +67,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
         impact = 197000,
         valuation = 541000,
         discount_shape = "exponential",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact_rounded,
     expect =
       106577000000
@@ -95,7 +95,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
         impact = 197000,
         valuation = 541000,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact_rounded,
     expect =
       106577000000
@@ -121,7 +121,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
         impact = 19800,
         valuation = 541000,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact_rounded,
     expect =
       10711800000
@@ -149,7 +149,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
         impact = 19800,
         valuation = 541000,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact_rounded,
     expect =
       10711800000
@@ -175,7 +175,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
         impact = 197000,
         valuation = 541000,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact_rounded,
     expect =
       106577000000
@@ -210,7 +210,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         impact = 2E4,
         discount_shape = "exponential",
         discount_rate = 0.03,
-        discount_years = 20
+        n_years = 20
         )$monetization_main$monetized_impact_rounded,
     expect =
       round(11074) # Results on 2025-04-15; no comparison study
@@ -242,7 +242,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.03,
         discount_shape = "exponential",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact_rounded,
     expect =
       9240092777
@@ -264,7 +264,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.03,
         discount_shape = "exponential",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact_rounded,
     expect =
       91934256413
@@ -290,7 +290,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         impact = 2E4,
         discount_shape = "exponential",
         discount_rate = 0.03,
-        discount_years = 20,
+        n_years = 20,
         valuation = 1
       )$monetization_main$monetized_impact_rounded,
     expect = c(11074) # Result on 2024-03-10; from ChatGPT
@@ -305,7 +305,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         impact = 50,
         discount_shape = "exponential",
         discount_rate = 0.03,
-        discount_years = 5,
+        n_years = 5,
         valuation = 20
       )$monetization_main$monetized_impact_rounded,
     expect = c(863) # Excel file from University of Porto "WP2_Examples.xlsx"
@@ -320,7 +320,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
         impact = 2E4,
         discount_shape = "exponential",
         discount_rate = 0.03,
-        discount_years = 20
+        n_years = 20
       )$monetization_main$monetized_impact_rounded,
     expect = 11074 # Result on 15 Jan 2025 ; no comparison study
   )
@@ -336,7 +336,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         impact = 1,
         discount_shape = "exponential",
         discount_rate = 0.05,
-        discount_years = 5,
+        n_years = 5,
         inflation = 0.08,
         valuation = 1E3
       )$monetization_main$monetized_impact |> base::round(digits = 2),
@@ -352,7 +352,7 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
         impact = 1,
         discount_shape = "exponential",
         discount_rate = 0.04,
-        discount_years = 5,
+        n_years = 5,
         inflation = 0.03,
         valuation = 1E4
       )$monetization_main$monetized_impact_rounded,
@@ -371,7 +371,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.05,
         discount_shape = "exponential",
-        discount_years = 5,
+        n_years = 5,
         inflation = 0.08
       )$monetization_main$monetized_impact,
     expect =
@@ -393,7 +393,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.05,
         discount_shape = "exponential",
-        discount_years = 5,
+        n_years = 5,
         inflation = 0.08
       )$monetization_main$monetized_impact,
     expect =
@@ -434,7 +434,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.03,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact,
     expect =
       10151212470
@@ -455,7 +455,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.03,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact,
     expect =
       100999437198
@@ -475,7 +475,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.05,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact,
     expect =
       97444185252.79530
@@ -495,7 +495,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.05,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact,
     expect =
       85261600000
@@ -520,7 +520,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
         valuation = 541000,
         discount_rate = 0.05,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years = 1,
+        n_years = 1,
         inflation = 0.08
       )$monetization_main$monetized_impact,
     expect =
@@ -542,7 +542,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.05,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years = 5,
+        n_years = 5,
         inflation = 0.08
       )$monetization_main$monetized_impact,
     expect =
@@ -563,7 +563,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.05,
         discount_shape = "hyperbolic_harvey_1986",
-        discount_years = 5,
+        n_years = 5,
         inflation = 0.08)$monetization_main$monetized_impact,
     expect =  9793882578.71)
 
@@ -605,7 +605,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.03,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact,
     expect =
       9314608696
@@ -625,7 +625,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.03,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact,
     expect =
       92675652174
@@ -645,7 +645,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.05,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years = 5
+        n_years = 5
       )$monetization_main$monetized_impact,
     expect =
       85261600000.00000
@@ -667,7 +667,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 541000,
         discount_rate = 0.05,
         discount_shape = "hyperbolic_mazur_1987",
-        discount_years = 5,
+        n_years = 5,
         inflation = 0.08)$monetization_main$monetized_impact,
     expect =  8569440000)
 
@@ -686,7 +686,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
       healthiar::monetize(
         impact = 197000,
         valuation = 541000,
-        discount_years = 5,
+        n_years = 5,
         inflation = 0.08
       )$monetization_main$monetized_impact,
     expect =
@@ -705,7 +705,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
       healthiar::monetize(
         impact = 19800,
         valuation = 541000,
-        discount_years = 5,
+        n_years = 5,
         inflation = 0.08
       )$monetization_main$monetized_impact,
     expect =
@@ -785,7 +785,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
         output_attribute = bestcost_pm_copd,
         discount_shape = "exponential",
         discount_rate = 0.03,
-        discount_years = 5,
+        n_years = 5,
         valuation = 20
       )$monetization_main$monetized_impact_rounded,
     expect = c(60416, 23343, 94436) # Result on 9 Jan 2025 ; no comparison study
@@ -816,7 +816,7 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
       output_attribute = bestcost_pm_copd,
       discount_shape = "exponential",
       discount_rate = 0.05,
-      discount_years = 5,
+      n_years = 5,
       inflation = 0.08,
       valuation = 1E3
       )$monetization_main$monetized_impact_rounded,
@@ -838,14 +838,14 @@ testthat::test_that("error if negative valuation", {
         impact = c(800, 1000, 1200, 1500, 1800, 2000),
         discount_shape = "exponential",
         discount_rate = 0.05,
-        discount_years = 5,
+        n_years = 5,
         valuation = -10
       ),
     regexp = "valuation must be higher than 0."
   )
 })
 
-testthat::test_that("error if negative discount_years", {
+testthat::test_that("error if negative n_years", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -868,11 +868,11 @@ testthat::test_that("error if negative discount_years", {
         output_attribute = bestcost_pm_copd,
         discount_shape = "exponential",
         discount_rate = 0.05,
-        discount_years = -5,
+        n_years = -5,
         inflation = 0.08,
         valuation = 1E3
       ),
-    regexp = "discount_years must be higher than 0."
+    regexp = "n_years must be higher than 0."
   )
 })
 
@@ -884,7 +884,7 @@ testthat::test_that("error if discount_rate higher than 1", {
         impact = c(800, 1000, 1200, 1500, 1800, 2000),
         discount_shape = "exponential",
         discount_rate = 1.5,
-        discount_years = 5,
+        n_years = 5,
         valuation = 10
       ),
     regexp = "discount_rate must be higher than 0 and lower than 1."
@@ -899,7 +899,7 @@ testthat::test_that("error if inflation higher than 1", {
         impact = c(800, 1000, 1200, 1500, 1800, 2000),
         discount_shape = "exponential",
         discount_rate = 0.05,
-        discount_years = 5,
+        n_years = 5,
         valuation = 10,
         inflation = 1.15
       ),
@@ -931,7 +931,7 @@ testthat::test_that("error if both impact and output_attribute are entered", {
         output_attribute = bestcost_pm_copd,
         discount_shape = "exponential",
         discount_rate = 0.05,
-        discount_years = 5,
+        n_years = 5,
         inflation = 0.08,
         valuation = 1E3
       ),
@@ -1006,7 +1006,7 @@ testthat::test_that("warning if no discount_rate but other discount arguments", 
 })
 
 
-testthat::test_that("warning if user pass discount_years with impact", {
+testthat::test_that("warning if user pass n_years with impact", {
 
   testthat::expect_warning(
     object =
@@ -1014,20 +1014,20 @@ testthat::test_that("warning if user pass discount_years with impact", {
         impact = c(800, 1000, 1200, 1500, 1800, 2000),
         discount_shape = "exponential",
         discount_rate = 0.05,
-        discount_years = 5,
+        n_years = 5,
         valuation = 10
       ),
     regexp = base::paste0(
-      "discount_years is aimed for output_attribute (excluding life table)",
+      "n_years is aimed for output_attribute (excluding life table)",
       " and for impact (excluding vector form).",
-      " Therefore discount_years is ignored here and the length of the vector impact is used instead."),
+      " Therefore n_years is ignored here and the length of the vector impact is used instead."),
     # To match the messages fixed  = TRUE.
     # Otherwise, for some reason, testthat does not recognize the same text
     fixed = TRUE
   )
 })
 
-testthat::test_that("warning if user pass discount_years with life table", {
+testthat::test_that("warning if user pass n_years with life table", {
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
@@ -1061,12 +1061,12 @@ testthat::test_that("warning if user pass discount_years with life table", {
         output_attribute = bestcost_pm_yll_exp_single_year_lifetable_geluft,
         discount_shape = "exponential",
         discount_rate = 0.01,
-        discount_years = 5,
+        n_years = 5,
         valuation = 1,
       ),
     regexp = base::paste0(
-      "discount_years is aimed for any output_attribute and for impact with single value (no vector).",
-      " Therefore discount_years is ignored here and the length life table is used instead."),
+      "n_years is aimed for any output_attribute and for impact with single value (no vector).",
+      " Therefore n_years is ignored here and the length life table is used instead."),
     # To match the messages fixed  = TRUE.
     # Otherwise, for some reason, testthat does not recognize the same text
     fixed = TRUE
