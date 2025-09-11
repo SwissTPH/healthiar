@@ -31,12 +31,15 @@ get_discount_factor <-
 
 
 
-    if(base::is.null(discount_rate)){
+    if(base::is.null(discount_rate) &&
+       !base::is.null(inflation)){
+      # if discount_rate is NULL
 
-      discount_factor <- 1
+      discount_factor <- (1 + inflation) ^ discount_year
 
-    } else { # if discount_rate is available
-      if(is.null(inflation)){
+    } else if(!base::is.null(discount_rate) &&
+              base::is.null(inflation)) {
+      # if inflation is NULL
 
         discount_factor <-
           base::ifelse(
@@ -48,22 +51,28 @@ get_discount_factor <-
                                       1/(1 + discount_rate * discount_year),
                                       NA)))
 
-      } else { # if inflation is not NULL
+      } else if(!base::is.null(discount_rate) &&
+                !base::is.null(inflation)) {
+        # if both discount_rate and inflation are available
         # Adjust by inflation
 
         discount_factor <-
           base::ifelse(
             discount_shape == "exponential",
-            1/(((1+discount_rate)*(1+inflation)) ^ discount_year),
+            ((1 + inflation) ^ discount_year)/(((1+discount_rate)*(1+inflation)) ^ discount_year),
             base::ifelse(discount_shape == "hyperbolic_harvey_1986",
-                         1/(((1 + discount_year) ^ discount_rate) * ((1 + inflation) ^ discount_year)),
+                         ((1 + inflation) ^ discount_year)/(((1 + discount_year) ^ discount_rate) * ((1 + inflation) ^ discount_year)),
                          base::ifelse(discount_shape == "hyperbolic_mazur_1987",
-                                      1/((1 + discount_rate * discount_year) * ((1 + inflation) ^ discount_year)),
+                                      ((1 + inflation) ^ discount_year)/((1 + discount_rate * discount_year) * ((1 + inflation) ^ discount_year)),
                                       NA)))
 
+      } else if (base::is.null(discount_rate) &&
+                 base::is.null(inflation)){
+
+        discount_factor <- 1
       }
 
-     }
+
 
 
 
