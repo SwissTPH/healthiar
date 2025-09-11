@@ -148,6 +148,8 @@ compile_input <-
 
     if (is_lifetable) {
 
+
+
       input_table <- input_wo_lifetable |>
         dplyr::mutate(
           # Add approach risk which cannot be entered by the user
@@ -165,8 +167,7 @@ compile_input <-
           max_age = if(base::is.null(input_args_edited$max_age)){
             dplyr::last(base::unique(age_start))} else {max_age},
           # Determine default time horizon for YLL/YLD if not specified
-          time_horizon = if(base::is.null(input_args_edited$time_horizon) &
-                            input_args_edited$health_outcome == "yll"){
+          time_horizon = if(base::is.null(input_args_edited$time_horizon)){
             base::length(base::unique(input_args_edited$age_group))
             } else {base::unique(input_args_edited$time_horizon)})
 
