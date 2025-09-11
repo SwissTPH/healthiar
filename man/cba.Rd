@@ -19,7 +19,7 @@ cba(
 \arguments{
 \item{output_attribute}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
 
-\item{valuation}{\code{Numberic value} referring to unit value of a health impact}
+\item{valuation}{\code{Numberic value} referring to unit value of a health impact.}
 
 \item{cost}{\code{Numeric value} referring to the investment cost to achieve the reduction of exposure}
 

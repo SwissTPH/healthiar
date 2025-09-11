@@ -17,7 +17,7 @@ add_monetized_impact(
 \arguments{
 \item{df}{\code{Data frame} including the column "impact" (health impact)}
 
-\item{valuation}{\code{Numberic value} referring to unit value of a health impact}
+\item{valuation}{\code{Numberic value} referring to unit value of a health impact.}
 
 \item{discount_rate}{\code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.}
 
