@@ -124,9 +124,12 @@ add_monetized_impact  <-
       df_by_year |>
       dplyr::mutate(
         monetized_impact_after_inflation = monetized_impact_before_inflation_and_discount * inflation_factor,
+        monetized_impact_after_discount = monetized_impact_before_inflation_and_discount * discount_factor,
         monetized_impact_after_inflation_and_discount =
-          monetized_impact_after_inflation / discount_factor,
-        monetized_impact = monetized_impact_after_inflation_and_discount,
+          monetized_impact_before_inflation_and_discount * discount_factor * inflation_factor,
+        monetized_impact_after_inflation_and_after_discount_adjusted_by_inflation =
+          monetized_impact_after_inflation * discount_factor_adjusted_by_inflation,
+        monetized_impact = monetized_impact_after_inflation_and_after_discount_adjusted_by_inflation,
         .after = impact)
 
 
