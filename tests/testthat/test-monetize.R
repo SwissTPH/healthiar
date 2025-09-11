@@ -5,32 +5,6 @@
 
 #### EXPONENTIAL ###############################################################
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_rate_FALSE|", {
-
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
-
-  bestcost_pm_copd <-
-    healthiar::attribute_health(
-      exp_central = data$mean_concentration,
-      cutoff_central = data$cut_off_value,
-      bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
-      rr_central = data$relative_risk,
-      rr_lower = data$relative_risk_lower,
-      rr_upper = data$relative_risk_upper,
-      rr_increment = 10,
-      erf_shape = "log_linear",
-      info = paste0(data$pollutant,"_", data$evaluation_name))
-
-  testthat::expect_equal(
-    object =
-      healthiar::monetize(
-        output_attribute = bestcost_pm_copd,
-        valuation = 1000,
-        )$monetization_main$monetized_impact_rounded,
-    expect = # 1000 * airqplus_pm_copd
-      round(1000 * bestcost_pm_copd[["health_main"]]$impact)
-  )
-})
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_rate_FALSE|", {
 
@@ -720,6 +694,33 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
 ## HEALTHIAR INPUT ##############################################################
 
 ### NO DISCOUNTING ##############################################################
+
+testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_rate_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  bestcost_pm_copd <-
+    healthiar::attribute_health(
+      exp_central = data$mean_concentration,
+      cutoff_central = data$cut_off_value,
+      bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+      rr_central = data$relative_risk,
+      rr_lower = data$relative_risk_lower,
+      rr_upper = data$relative_risk_upper,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      info = paste0(data$pollutant,"_", data$evaluation_name))
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        output_attribute = bestcost_pm_copd,
+        valuation = 1000,
+      )$monetization_main$monetized_impact_rounded,
+    expect = # 1000 * airqplus_pm_copd
+      round(1000 * bestcost_pm_copd[["health_main"]]$impact)
+  )
+})
 
 ### DISCOUNTING #################################################################
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
