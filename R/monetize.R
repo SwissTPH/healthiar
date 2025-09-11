@@ -261,9 +261,7 @@ monetize <- function(output_attribute = NULL,
         dplyr::mutate(
           # Round impacts and monetized impacts
           impact_rounded = round(impact),
-          monetized_impact_rounded = round(monetized_impact),
-          monetized_impact_before_discount_rounded = round(monetized_impact_before_inflation_and_discount),
-          monetized_impact_after_discount_rounded = round(monetized_impact_after_inflation_and_discount))
+          monetized_impact_rounded = round(monetized_impact))
 
 
       # Calculate impact per 100K inhab.
