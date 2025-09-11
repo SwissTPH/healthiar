@@ -42,13 +42,13 @@ format:
     embed-resources: true
 ---
 
+# Today
+
 <!-- #TODO -->
 
 <!-- add example of sub-group analysis with info argument  -->
 
-<!-- show detailed attribute health results just before summarize_uncertainty -->
-
-# Today
+<!--  -->
 
 ```{r, echo=FALSE, include=TRUE}
 library(healthiar)
@@ -91,11 +91,29 @@ set.seed(1)
 
 # Hello, I'm `healthiar`!
 
+## `healthiar` in numbers
+
+-   *1* purpose - to help you quantify and monetize the burden of disease attributable to exposures
+
+-   *3* dimensions - health, monetization, social
+
+-   *19* functions
+
+-   *> 1000* calculations pathways
+
+-   *60000* assessments per second
+
 ## `healthiar` overview
 
-`healthiar` is a R package (= collection of R functions) to quantify and monetize the burden of disease attributable to exposures
+![](images/package_overview_1.png){width="1800" fig-align="left"}
 
-![DALY = disability-adjusted life years; YLD = years lived with disability; YLL = years of life lost](images/package_overview.png){width="1750" fig-align="left"}
+## `healthiar` overview
+
+![](images/package_overview_2.png){width="1800" fig-align="left"}
+
+## `healthiar` overview
+
+![](images/package_overview_3.png){width="1800" fig-align="left"}
 
 # Example: `attribute_health()` with RR
 
@@ -103,7 +121,19 @@ set.seed(1)
 
 ## Refresher - Burden of disease with relative risk
 
-![](images/bod_rr.png){fig-align="left"}
+![](images/bod_rr_1.png){fig-align="left" width="1400"}
+
+## Refresher - Burden of disease with relative risk
+
+![](images/bod_rr_2.png){fig-align="left" width="1500"}
+
+## Refresher - Burden of disease with relative risk
+
+![](images/bod_rr_3.png){fig-align="left" width="1500"}
+
+## Refresher - Burden of disease with relative risk
+
+![](images/bod_rr_4.png){fig-align="left" width="1500"}
 
 ## `attribute_health()` with RR 1/3
 
@@ -195,11 +225,151 @@ results_pm_copd[["health_main"]] |>
 :::
 :::
 
-## `attribute_health()` with RR 3/3
+# Example: `compare()` two scenarios
+
+## `compare()` two scenarios 1/2
+
+Goal: compare attributable health impacts in two (policy) scenarios
+
+::: {.fragment .nonincremental}
+1.  Use `attribute_health()` to calculate burden of scenarios 1 & 2
+:::
+
+::::: columns
+::: {.column .fragment width="50%"}
+```{r}
+#| code-line-numbers: "|5"
+
+scenario_1 <- attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.118,
+  rr_increment = 10,  
+  exp_central = 8.85, # EXPOSURE 1
+  bhd_central = 25000
+)
+```
+:::
+
+::: {.column .fragment width="50%"}
+```{r}
+#| code-line-numbers: "|5"
+
+scenario_2 <- attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.118,
+  rr_increment = 10,
+  exp_central = 6, # EXPOSURE 2
+  bhd_central = 25000
+)
+```
+:::
+:::::
+
+::: {.fragment .nonincremental}
+2.  Use `compare()` to compare scenarios 1 & 2
+:::
 
 ::: fragment
-If we add 95% confidence intervals to `attribute_health()` ...
+```{r}
+results_comparison <- compare(
+  output_attribute_scen_1 = scenario_1,
+  output_attribute_scen_2 = scenario_2,
+  approach_comparison = "delta" # or "pif" (population impact fraction)
+)
+```
 :::
+
+## `compare()` two scenarios 2/2
+
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_comparison$health_main
+```
+
+::: fragment
+::: {.absolute left=0}
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_comparison[["health_main"]] |> 
+  dplyr::select(
+    impact, impact_rounded,
+    impact_scen_1, impact_scen_2,
+    bhd,
+    dplyr::starts_with("exp_"),
+    -dplyr::starts_with("exp_ci"), # remove col "exp_ci"
+    dplyr::starts_with("rr_con")) |> 
+  dplyr::slice_head() |> 
+  knitr::kable()
+```
+:::
+:::
+
+# Example: `attribute_health()` across multiple geographic units
+
+## `attribute_health()` across multiple geographic units 1/3
+
+Goal: attribute disease cases to PM2.5 exposure in multiple geographic units, such as municipalities, provinces, countries, ...
+
+::: fragment
+```{r}
+#| code-line-numbers: "|2-3|8-9|"
+
+results_iteration <- attribute_health(
+  geo_id_micro = c("Zürich", "Basel", "Geneva", "Ticino", "Jura"), 
+  geo_id_macro = c("German","German","French","Italian","French"),
+  erf_shape = "log_linear",
+  rr_central = 1.369,
+  rr_increment = 10, 
+  cutoff_central = 5,
+  exp_central = c(11, 11, 10, 8, 7),
+  bhd_central = c(4000, 2500, 3000, 1500, 500)
+)
+```
+:::
+
+::: fragment
+Here the we want to aggregate results by language region (`"German", "French", "Italian"`)
+:::
+
+## `attribute_health()` across multiple geographic units 2/3
+
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_iteration$health_main
+```
+
+::: {.absolute left=0}
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_iteration[["health_main"]] |> 
+  dplyr::select(geo_id_macro, impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
+  knitr::kable()
+```
+:::
+
+<div style="height: 240px;"></div>
+
+:::: fragment
+::: callout-tip
+The main output contains aggregated results if available, or disaggregated results if no aggregation ID was provided
+:::
+::::
+
+## `attribute_health()` across multiple geographic units 3/3
+
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_iteration$health_detailed$results_raw
+```
+
+::: {.absolute left=0}
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_iteration[["health_detailed"]][["results_raw"]] |> 
+  select(geo_id_micro, geo_id_macro, impact_rounded) |> 
+  knitr::kable()
+```
+:::
+
+# <span style="font-size: 0.8em;">Example: `summarize_uncertainty()`</span>
+
+## `summarize_uncertainty()` 1/4
+
+If we add 95% confidence intervals to `attribute_health()` ...
 
 ::: fragment
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
@@ -235,6 +405,83 @@ results_pm_copd[["health_detailed"]][["results_raw"]] |>
 ```
 :::
 :::
+
+## `summarize_uncertainty()` 2/4
+
+Goal: perform a Monte Carlo simulation to obtain summary uncertainty confidence intervals that combine uncertainty in different input data
+
+
+::::: columns
+::: {.column .fragment width="45%"}
+Step 1: Use `attribute_health()` with uncertainty in ≥ 2 function arguments
+
+```{r, eval=TRUE,include=TRUE,echo=TRUE}
+#| code-line-numbers: "|4-5,8-9,12-13|"
+
+results <- 
+  attribute_health(
+    erf_shape = "log_linear",
+    rr_central = 1.369, 
+    rr_lower = 1.114, 
+    rr_upper = 1.664,
+    rr_increment = 10,
+    exp_central = 8.85, 
+    exp_lower = 8, 
+    exp_upper = 10,
+    cutoff_central = 5,
+    bhd_central = 30747, 
+    bhd_lower = 28000, 
+    bhd_upper = 32000) 
+```
+:::
+
+::: {.column .fragment width="45%"}
+Step 2: `summarize_uncertainty()` to obtain the confidence intervals
+
+```{r, eval=TRUE,include=TRUE,echo=TRUE}
+results <- 
+  summarize_uncertainty(
+    output_attribute = results,
+    n_sim = 100
+  )
+```
+:::
+:::::
+
+## `summarize_uncertainty()` 3/4
+
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results$uncertainty_main
+```
+
+::: fragment
+::: {.absolute left=0}
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results$uncertainty_main |> 
+  dplyr::select(-geo_id_micro) |>
+  knitr::kable()
+```
+:::
+:::
+
+## `summarize_uncertainty()` 4/4
+
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results$uncertainty_detailed$attribute_by_sim_disaggregated
+```
+
+::: fragment
+::: {.absolute left=0}
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results$uncertainty_detailed$attribute_by_sim_disaggregated |> 
+  dplyr::select(-geo_id_micro, -input, -output) |> 
+  dplyr::relocate(impact, .after = sim_id) |>
+  knitr::kable()
+```
+:::
+:::
+
+# Example: `attribute_health()` with RR and user-defined ERF
 
 ## `attribute_health()` with RR and user-defined ERF 1/2
 
@@ -294,11 +541,53 @@ legend("topleft", legend = c("Original points", "Spline curve"),
 ```
 :::
 
+# Example: `attribute_health()` with RR and exposure distribution
+
+## `attribute_health()` with RR and exposure distribution
+
+Goal: attribute COPD cases to air pollution exposure categories
+
+::: fragment
+```{r echo=TRUE,eval=TRUE,include=TRUE}
+#| code-line-numbers: "|5-6|"
+
+results_pm_copd <- attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.369, 
+  rr_increment = 10,
+  exp_central = c(5, 6, 7, 8, 9, 10),
+  prop_pop_exp = c(0.2, 0.1, 0.2, 0.3, 0.1, 0.1),
+  cutoff_central = 5,
+  bhd_central = 30747 
+)
+```
+:::
+
+::: fragment
+```{r, echo=TRUE,eval=FALSE,include=TRUE}
+results_pm_copd$health_main
+```
+:::
+::: fragment
+::: {.absolute left=0}
+```{r, echo=FALSE,include=TRUE,eval=TRUE}
+results_pm_copd[["health_main"]] |> 
+  dplyr::select(impact_rounded, pop_fraction, exp, prop_pop_exp, rr_at_exp) |> 
+  dplyr::slice(1) |> 
+  knitr::kable()
+```
+:::
+:::
+
 # Example: `attribute_health()` with AR
 
 ## Refresher - Burden of disease with absolute risk
 
-![](images/bod_ar.png){fig-align="left"}
+![](images/bod_ar_1.png){fig-align="left" width="1500"}
+
+## Refresher - Burden of disease with absolute risk
+
+![](images/bod_ar_2.png){fig-align="left" width="1500"}
 
 ## `attribute_health()` with AR 1/2
 
@@ -333,11 +622,9 @@ results_noise_ha <- attribute_health(
 
 ## `attribute_health()` with AR 2/2
 
-::: fragment
 ```{r, echo=TRUE, eval=FALSE, include=TRUE}
 results_noise_ha$health_main
 ```
-:::
 
 
 ::: fragment
@@ -368,232 +655,6 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
 :::
 :::
 
-# Example: `attribute_health()` across multiple geographic units
-
-## `attribute_health()` across multiple geographic units 1/3
-
-Goal: attribute disease cases to PM2.5 exposure in multiple geographic units, such as municipalities, provinces, countries, ...
-
-
-::: fragment
-```{r}
-#| code-line-numbers: "|2-3|8-9|"
-
-results_iteration <- attribute_health(
-  geo_id_micro = c("Zürich", "Basel", "Geneva", "Ticino", "Jura"), 
-  geo_id_macro = c("German","German","French","Italian","French"),
-  erf_shape = "log_linear",
-  rr_central = 1.369,
-  rr_increment = 10, 
-  cutoff_central = 5,
-  exp_central = c(11, 11, 10, 8, 7),
-  bhd_central = c(4000, 2500, 3000, 1500, 500)
-)
-```
-:::
-
-::: fragment
-Here the we want to aggregate results by language region (`"German", "French", "Italian"`)
-:::
-
-## `attribute_health()` across multiple geographic units 2/3
-
-::: fragment
-```{r, echo=TRUE,eval=FALSE,include=TRUE}
-results_iteration$health_main
-```
-:::
-
-::: fragment
-::: {.absolute left=0}
-```{r, echo=FALSE,include=TRUE,eval=TRUE}
-results_iteration[["health_main"]] |> 
-  dplyr::select(geo_id_macro, impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
-  knitr::kable()
-```
-:::
-:::
-
-<div style="height: 240px;"></div>
-
-:::: fragment
-::: callout-tip
-The main output contains aggregated results if available, or disaggregated results if no aggregation ID was provided
-:::
-::::
-
-## `attribute_health()` across multiple geographic units 3/3
-
-::: fragment
-```{r, echo=TRUE,eval=FALSE,include=TRUE}
-results_iteration$health_detailed$results_raw
-```
-:::
-
-::: fragment
-::: {.absolute left=0}
-```{r, echo=FALSE,include=TRUE,eval=TRUE}
-results_iteration[["health_detailed"]][["results_raw"]] |> 
-  select(geo_id_micro, geo_id_macro, impact_rounded) |> 
-  knitr::kable()
-```
-:::
-:::
-
-
-# <span style="font-size: 0.8em;">Example: `summarize_uncertainty()`</span>
-
-## `summarize_uncertainty()` 1/3
-
-Goal: perform a Monte Carlo simulation to obtain summary uncertainty confidence intervals that combine uncertainty in different input data
-
-
-::::: columns
-::: {.column .fragment width="45%"}
-Step 1: Use `attribute_health()` with uncertainty in ≥ 2 function arguments
-
-```{r, eval=TRUE,include=TRUE,echo=TRUE}
-#| code-line-numbers: "|4-5,8-9,12-13|"
-
-results <- 
-  attribute_health(
-    erf_shape = "log_linear",
-    rr_central = 1.369, 
-    rr_lower = 1.114, 
-    rr_upper = 1.664,
-    rr_increment = 10,
-    exp_central = 8.85, 
-    exp_lower = 8, 
-    exp_upper = 10,
-    cutoff_central = 5,
-    bhd_central = 30747, 
-    bhd_lower = 28000, 
-    bhd_upper = 32000) 
-```
-:::
-
-::: {.column .fragment width="45%"}
-Step 2: `summarize_uncertainty()` to obtain the confidence intervals
-
-```{r, eval=TRUE,include=TRUE,echo=TRUE}
-results <- 
-  summarize_uncertainty(
-    output_attribute = results,
-    n_sim = 100
-  )
-```
-:::
-:::::
-
-## `summarize_uncertainty()` 2/3
-
-```{r, echo=TRUE,eval=FALSE,include=TRUE}
-results$uncertainty_main
-```
-
-::: fragment
-::: {.absolute left=0}
-```{r, echo=FALSE,include=TRUE,eval=TRUE}
-results$uncertainty_main |> 
-  dplyr::select(-geo_id_micro) |>
-  knitr::kable()
-```
-:::
-:::
-
-## `summarize_uncertainty()` 3/3
-
-```{r, echo=TRUE,eval=FALSE,include=TRUE}
-results$uncertainty_detailed$attribute_by_sim_disaggregated
-```
-
-::: fragment
-::: {.absolute left=0}
-```{r, echo=FALSE,include=TRUE,eval=TRUE}
-results$uncertainty_detailed$attribute_by_sim_disaggregated |> 
-  dplyr::select(-geo_id_micro, -input, -output) |> 
-  dplyr::relocate(impact, .after = sim_id) |>
-  knitr::kable()
-```
-:::
-:::
-
-# Example: `compare()` two scenarios
-
-## `compare()` 1/2
-
-Goal: compare attributable health impacts in two (policy) scenarios
-
-::: {.fragment .nonincremental}
-1.  Use `attribute_health()` to calculate burden of scenarios 1 & 2
-:::
-
-::::: columns
-::: {.column .fragment width="50%"}
-```{r}
-#| code-line-numbers: "|5"
-
-scenario_1 <- attribute_health(
-  erf_shape = "log_linear",
-  rr_central = 1.118,
-  rr_increment = 10,  
-  exp_central = 8.85, # EXPOSURE 1
-  bhd_central = 25000
-)
-```
-:::
-
-::: {.column .fragment width="50%"}
-```{r}
-#| code-line-numbers: "|5"
-
-scenario_2 <- attribute_health(
-  erf_shape = "log_linear",
-  rr_central = 1.118,
-  rr_increment = 10,
-  exp_central = 6, # EXPOSURE 2
-  bhd_central = 25000
-)
-```
-:::
-:::::
-
-::: {.fragment .nonincremental}
-2.  Use `compare()` to compare scenarios 1 & 2
-:::
-
-::: fragment
-```{r}
-results_comparison <- compare(
-  output_attribute_scen_1 = scenario_1,
-  output_attribute_scen_2 = scenario_2,
-  approach_comparison = "delta" # or "pif" (population impact fraction)
-)
-```
-:::
-
-## `compare()` 2/2
-
-```{r, echo=TRUE,eval=FALSE,include=TRUE}
-results_comparison$health_main
-```
-
-::: fragment
-::: {.absolute left=0}
-```{r, echo=FALSE,include=TRUE,eval=TRUE}
-results_comparison[["health_main"]] |> 
-  dplyr::select(
-    impact, impact_rounded,
-    impact_scen_1, impact_scen_2,
-    bhd,
-    dplyr::starts_with("exp_"),
-    -dplyr::starts_with("exp_ci"), # remove col "exp_ci"
-    dplyr::starts_with("rr_con")) |> 
-  dplyr::slice_head() |> 
-  knitr::kable()
-```
-:::
-:::
 
 # Other `healthiar` functions
 
@@ -665,16 +726,14 @@ Visualization is out of scope of `healthiar`. You can visualize in
 
 ## `healthiar` in RStudio 1/3
 
-![Figure: Landing page of the `healthiar` package in RStudio, where you find the package vignettes and function documentation.](images/healthiar_package_landing_page.png){width="1000" fig-align="left"}
+![Figure: Landing page of the `healthiar` package in RStudio, where you find the package vignettes and function documentation.](images/healthiar_package_landing_page.png){width="40%" fig-align="left"}
 
 ## `healthiar` in RStudio 2/3
 
-![Figure: Intro to `healthiar` vignette (= detailed guide to the package)](images/vignette_start.png){width="700" fig-align="left"}
+![Figure: Intro to `healthiar` vignette (= detailed guide to the package)](images/vignette_start.png){fig-align="left" width="40%"}
 
 ## `healthiar` in RStudio 3/3
 
-![Figure: Help page of `attribute_health()`](images/fun_doc_start.png){width="900" fig-align="left"}
-
+![Figure: Help page of `attribute_health()`](images/fun_doc_start.png){fig-align="left" width="40%"}
 
 --------------------------------------------------------------------------------
-
