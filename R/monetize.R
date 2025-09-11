@@ -343,9 +343,7 @@ monetize <- function(output_attribute = NULL,
         paste0("impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount")),
         "discount_rate", "discount_shape",
         "valuation",
-        paste0("monetized_impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount")),
-        paste0("monetized_impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount"), "_rounded"))
-
+        paste0("monetized_impact", c("", "_without_inflation_and_discount", "_rounded")))
 
     # Keep only relevant columns for monetization
     output_monetization[["monetization_main"]] <-
