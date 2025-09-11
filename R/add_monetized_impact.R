@@ -28,6 +28,7 @@ add_monetized_impact  <-
            discount_shape,
            inflation,
            info = NULL) {
+
     # If df has only one column (impact)
     # it means that this is the direct input from user
     # no previous health assessment with healthiar
@@ -85,40 +86,15 @@ add_monetized_impact  <-
     df_by_year |>
     # Add monetized impact and inflation factor
     dplyr::mutate(
-      monetized_impact_before_inflation_and_discount = impact * valuation,
-
-      # Calculate discount factor
-      # If any arguments "discount_rate" and "discount_shape" are NULL,
-      # no discount (i.e. discount_factor=1)
-      inflation_factor =  (1+inflation)^discount_year,
-
-      # Add discount factor without and with inflation
-      discount_factor =
+      conversion_factor =
         healthiar::get_discount_factor(
           discount_rate = discount_rate,
           discount_year = discount_year,
           discount_shape = discount_shape,
-          inflation = NULL),
+          inflation = inflation),
+      monetized_impact = impact * valuation * conversion_factor,
+      .after = impact)
 
-      discount_factor_adjusted_by_inflation =
-        healthiar::get_discount_factor(
-          discount_rate = discount_rate,
-          discount_year = discount_year,
-          discount_shape = discount_shape,
-          inflation = inflation))
-
-
-    df_by_year <-
-      df_by_year |>
-      dplyr::mutate(
-        monetized_impact_after_inflation = monetized_impact_before_inflation_and_discount * inflation_factor,
-        monetized_impact_after_discount = monetized_impact_before_inflation_and_discount * discount_factor,
-        monetized_impact_after_inflation_and_discount =
-          monetized_impact_before_inflation_and_discount * discount_factor * inflation_factor,
-        monetized_impact_after_inflation_and_after_discount_adjusted_by_inflation =
-          monetized_impact_after_inflation * discount_factor_adjusted_by_inflation,
-        monetized_impact = monetized_impact_after_inflation_and_after_discount_adjusted_by_inflation,
-        .after = impact)
 
 
     if(taking_last_discounted_year){
@@ -151,8 +127,6 @@ add_monetized_impact  <-
     df_relevant |>
     # Round monetized impacts
     dplyr::mutate(
-      monetized_impact_before_inflation_and_discount_rounded = base::round(monetized_impact_before_inflation_and_discount),
-      monetized_impact_after_inflation_and_discount_rounded = base::round(monetized_impact_after_inflation_and_discount),
       monetized_impact_rounded = base::round(monetized_impact),
       .after = monetized_impact)
 
