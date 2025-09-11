@@ -19,7 +19,7 @@
 
 
 get_discount_factor <-
-  function(discount_rate,
+  function(discount_rate = NULL,
            discount_year,
            discount_shape = "exponential",
            inflation = NULL){
