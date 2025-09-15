@@ -173,7 +173,7 @@ monetize <- function(output_attribute = NULL,
   # discount_shape has a default value, so it is never NULL
   if(n_years == 0 &&
      base::any(!base::is.null(discount_rate))&&
-     # Exclude life table because the projected_year are calculated based on life table
+     # Exclude life table because the n_years are calculated based on life table
      !is_lifetable){
     warning(
       base::paste0("You entered some value in discount_rate,",
@@ -291,13 +291,13 @@ monetize <- function(output_attribute = NULL,
       if(summing_across_discounted_years){
 
         df_by_year <-  df_with_input
-        df_by_year$projected_year <-
+        df_by_year$year <-
           base::rep(n_years_vector, len = base::nrow(df_with_input))
 
       } else if(taking_last_discounted_year){
         df_by_year <-
           # Split by discount year
-          dplyr::cross_join(x = tibble::tibble(projected_year = n_years_vector),
+          dplyr::cross_join(x = tibble::tibble(year = n_years_vector),
                             y = df_with_input)
       }
 
@@ -307,13 +307,13 @@ monetize <- function(output_attribute = NULL,
       dplyr::mutate(
         inflation_factor =
           healthiar::get_inflation_factor(
-            projected_year = projected_year,
+            n_years = year,
             inflation_rate = inflation_rate),
         # Add discount factor ####
         discount_factor =
           healthiar::get_discount_factor(
             discount_rate = discount_rate,
-            projected_year = projected_year,
+            n_years = year,
             discount_shape = discount_shape,
             inflation_rate = inflation_rate),
         # Add monetized impact ####
@@ -328,17 +328,17 @@ monetize <- function(output_attribute = NULL,
         df_relevant <-
           df_by_year|>
           # Keep only the last year
-          dplyr::filter(projected_year == max(projected_year)) |>
+          dplyr::filter(year == max(year)) |>
           # Remove the variable discount year because it is not anymore relevant
           # (not by-year results)
-          dplyr::select(-projected_year)
+          dplyr::select(-year)
 
         # If summing across discounted years ####
       }else if(summing_across_discounted_years){
 
         grouping_variables <-
           df_by_year |>
-          dplyr::select(-dplyr::any_of(c("year", "projected_year")),
+          dplyr::select(-dplyr::any_of(c("year")),
                         -dplyr::contains("discount_factor"),
                         -dplyr::contains("impact")) |>
           base::names()
