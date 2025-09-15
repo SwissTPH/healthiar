@@ -7,6 +7,13 @@
 # ARGUMENTS ####################################################################
 #' @inheritParams monetize
 
+# DETAILS ######################################################################
+
+#' @details
+#' \strong{Equation inflation factor (without discounting)}
+#' @details
+#' \deqn{inflation\_factor = (1 + inflation\_rate)^{discount\_year}}
+
 # EXAMPLES #####################################################################
 #' @examples
 #' # TODO

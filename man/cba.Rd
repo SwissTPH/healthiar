@@ -39,6 +39,17 @@ Description of the return value.
 \description{
 This function performs a cost-benefit analysis
 }
+\details{
+\strong{Equation cost-benefit analysis}
+
+\deqn{net\_benefit = benefit - cost}
+
+\deqn{cost\_benefit\_ratio = \frac{benefit}{cost}}
+
+\deqn{return\_on\_investment = \frac{benefit - cost}{cost } \times 100}
+
+For the equations regarding the monetization of the cost and the benefit please see the function documentation of \code{monetize()}.
+}
 \examples{
 # Goal: performs a cost-benefit analysis using an existing output
 # of a attribute_... function

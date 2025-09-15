@@ -14,6 +14,35 @@
 #' @param inflation_rate \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
 
+# DETAILS ######################################################################
+
+#' @details
+#' \strong{Equation inflation factor (without discounting)}
+#' @details
+#' \deqn{inflation\_factor = (1 + inflation\_rate)^{discount\_year}}
+
+#' @details
+#' \strong{Equations discount factors (without inflation)}
+#' @details
+#' \emph{Exponential discounting (no inflation)}
+#' \deqn{discount\_factor = \frac{1}{(1 + discount\_rate) ^{discount\_year}}}
+#' @details
+#' \emph{Hyperbolic discounting Harvey (no inflation)}
+#' \deqn{discount\_factor = \frac{1}{(1 + discount\_year)^{discount\_rate}}}
+#' \emph{Hyperbolic discounting Mazure (no inflation)}
+#' \deqn{discount\_factor = \frac{1}{(1 + (discount\_rate \times discount\_year)}}
+
+#' @details
+#' \strong{Equations discount factors with inflation}
+#' @details
+#' \emph{Exponential discounting (with inflation)}
+#' \deqn{discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate)) ^{discount\_year}}}
+#' @details
+#' \emph{Hyperbolic discounting Harvey (with inflation)}
+#' \deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + discount\_year)^{discount\_rate} \times (1 + inflation\_rate)^{discount\_year}}}
+#' \emph{Hyperbolic discounting Mazure (with inflation)}
+#' \deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times discount\_year) \times (1 + inflation\_rate)^{discount\_year}}}
+
 # VALUE ########################################################################
 #' @returns
 #' This function returns two lists:
