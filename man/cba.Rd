@@ -11,6 +11,8 @@ cba(
   cost,
   discount_rate_benefit = NULL,
   discount_rate_cost = NULL,
+  inflation_rate_benefit = NULL,
+  inflation_rate_cost = NULL,
   discount_shape = "exponential",
   n_years_benefit = 1,
   n_years_cost = 1
@@ -23,7 +25,9 @@ cba(
 
 \item{cost}{\code{Numeric value} referring to the investment cost to achieve the reduction of exposure}
 
-\item{discount_rate_benefit, discount_rate_cost}{\code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates)}
+\item{discount_rate_benefit, discount_rate_cost}{\code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates).}
+
+\item{inflation_rate_benefit, inflation_rate_cost}{\code{Numeric value} referring to the the inflation rate used in the benefit and the cost side (respectively).}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 
