@@ -291,13 +291,13 @@ monetize <- function(output_attribute = NULL,
       if(summing_across_discounted_years){
 
         df_by_year <-  df_with_input
-        df_by_year$projected_year <-
+        df_by_year$year <-
           base::rep(n_years_vector, len = base::nrow(df_with_input))
 
       } else if(taking_last_discounted_year){
         df_by_year <-
           # Split by discount year
-          dplyr::cross_join(x = tibble::tibble(projected_year = n_years_vector),
+          dplyr::cross_join(x = tibble::tibble(year = n_years_vector),
                             y = df_with_input)
       }
 
@@ -328,17 +328,17 @@ monetize <- function(output_attribute = NULL,
         df_relevant <-
           df_by_year|>
           # Keep only the last year
-          dplyr::filter(projected_year == max(projected_year)) |>
+          dplyr::filter(year == max(year)) |>
           # Remove the variable discount year because it is not anymore relevant
           # (not by-year results)
-          dplyr::select(-projected_year)
+          dplyr::select(-year)
 
         # If summing across discounted years ####
       }else if(summing_across_discounted_years){
 
         grouping_variables <-
           df_by_year |>
-          dplyr::select(-dplyr::any_of(c("year", "projected_year")),
+          dplyr::select(-dplyr::any_of(c("year")),
                         -dplyr::contains("discount_factor"),
                         -dplyr::contains("impact")) |>
           base::names()
