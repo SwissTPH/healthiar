@@ -19,29 +19,29 @@
 #' @details
 #' \strong{Equation inflation factor (without discounting)}
 #' @details
-#' \deqn{inflation\_factor = (1 + inflation\_rate)^{discount\_year}}
+#' \deqn{inflation\_factor = (1 + inflation\_rate)^{n\_years}}
 
 #' @details
 #' \strong{Equations discount factors (without inflation)}
 #' @details
 #' \emph{Exponential discounting (no inflation)}
-#' \deqn{discount\_factor = \frac{1}{(1 + discount\_rate) ^{discount\_year}}}
+#' \deqn{discount\_factor = \frac{1}{(1 + discount\_rate) ^{n\_years}}}
 #' @details
 #' \emph{Hyperbolic discounting Harvey (no inflation)}
-#' \deqn{discount\_factor = \frac{1}{(1 + discount\_year)^{discount\_rate}}}
+#' \deqn{discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}}
 #' \emph{Hyperbolic discounting Mazure (no inflation)}
-#' \deqn{discount\_factor = \frac{1}{(1 + (discount\_rate \times discount\_year)}}
+#' \deqn{discount\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)}}
 
 #' @details
 #' \strong{Equations discount factors with inflation}
 #' @details
 #' \emph{Exponential discounting (with inflation)}
-#' \deqn{discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate)) ^{discount\_year}}}
+#' \deqn{discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate)) ^{n\_years}}}
 #' @details
 #' \emph{Hyperbolic discounting Harvey (with inflation)}
-#' \deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + discount\_year)^{discount\_rate} \times (1 + inflation\_rate)^{discount\_year}}}
+#' \deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}}
 #' \emph{Hyperbolic discounting Mazure (with inflation)}
-#' \deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times discount\_year) \times (1 + inflation\_rate)^{discount\_year}}}
+#' \deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years) \times (1 + inflation\_rate)^{n\_years}}}
 
 # VALUE ########################################################################
 #' @returns

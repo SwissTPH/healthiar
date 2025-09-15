@@ -12,7 +12,7 @@
 #' @details
 #' \strong{Equation inflation factor (without discounting)}
 #' @details
-#' \deqn{inflation\_factor = (1 + inflation\_rate)^{discount\_year}}
+#' \deqn{inflation\_factor = (1 + inflation\_rate)^{n\_years}}
 
 # EXAMPLES #####################################################################
 #' @examples

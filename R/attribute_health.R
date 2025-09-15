@@ -238,10 +238,10 @@
 #'   geo_id_micro = c(1:nrow(info)), # a vector of (random) unique IDs must be entered
 #'   info = info
 #' )
-#' output_stratified <- output_attribute$health_detailed$results_summed_across_cat_exp |>
-#'   dplyr::group_by(info_1) |>
-#'   dplyr::summarize(mean_impact = mean(impact)) |>
-#'   print()
+#' output_stratified <- output_attribute$health_detailed$results_raw |>
+#'  dplyr::group_by(info_column_1) |>
+#'  dplyr::summarize(mean_impact = mean(impact)) |>
+#'  print()
 
 #' @author Alberto Castro & Axel Luyten
 

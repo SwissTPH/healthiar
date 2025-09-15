@@ -15,7 +15,7 @@ This function calculates the inflation factor based on inflation rate.
 \details{
 \strong{Equation inflation factor (without discounting)}
 
-\deqn{inflation\_factor = (1 + inflation\_rate)^{discount\_year}}
+\deqn{inflation\_factor = (1 + inflation\_rate)^{n\_years}}
 }
 \examples{
 # TODO
