@@ -501,10 +501,10 @@ monetize <- function(output_attribute = NULL,
     # Identify the relevant columns for monetization that are in the output
     relevant_columns <-
       c("info", "geo_id_micro", "geo_id_macro",
-        base::paste0("impact", c("", "_before_inflation_and_discount", "_after_inflation_and_discount")),
+        "impact",
         "discount_rate", "discount_shape",
         "valuation",
-        base::paste0("monetized_impact", c("", "_without_inflation_and_discount", "_rounded")))
+        base::paste0("monetized_impact", c("", "_without_discount_and_inflation", "_rounded")))
 
     # Keep only relevant columns for monetization
     output_monetization[["monetization_main"]] <-
