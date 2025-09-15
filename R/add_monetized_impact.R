@@ -29,6 +29,7 @@ add_monetized_impact  <-
            inflation_rate,
            info = NULL) {
 
+    # Calculation preparation ####
     # If df has only one column (impact)
     # it means that this is the direct input from user
     # no previous health assessment with healthiar
@@ -79,28 +80,29 @@ add_monetized_impact  <-
                         y = df_with_input)
   }
 
-
-
   df_by_year <-
     df_by_year |>
-    # Add monetized impact and inflation factor
-    dplyr::mutate(
-      inflation_factor =
-        healthiar::get_inflation_factor(
-          discount_year = discount_year,
-          inflation_rate = inflation_rate),
-      discount_factor =
-        healthiar::get_discount_factor(
-          discount_rate = discount_rate,
-          discount_year = discount_year,
-          discount_shape = discount_shape,
-          inflation_rate = inflation_rate),
-      monetized_impact = impact * valuation * inflation_factor * discount_factor,
-      monetized_impact_without_discount_and_inflation = impact * valuation,
-      .after = impact)
+  # Add inflation factor ####
+  dplyr::mutate(
+    inflation_factor =
+      healthiar::get_inflation_factor(
+        discount_year = discount_year,
+        inflation_rate = inflation_rate),
+  # Add discount factor ####
+    discount_factor =
+      healthiar::get_discount_factor(
+        discount_rate = discount_rate,
+        discount_year = discount_year,
+        discount_shape = discount_shape,
+        inflation_rate = inflation_rate),
+  # Add monetized impact ####
+  monetized_impact = impact * valuation * inflation_factor * discount_factor,
+  monetized_impact_without_discount_and_inflation = impact * valuation,
+  .after = impact)
 
 
 
+  # If taking last discounted year ####
     if(taking_last_discounted_year){
       df_relevant <-
         df_by_year|>
@@ -110,6 +112,7 @@ add_monetized_impact  <-
         # (not by-year results)
         dplyr::select(-discount_year)
 
+  # If summing across discounted years ####
     }else if(summing_across_discounted_years){
 
       grouping_variables <-
@@ -134,6 +137,7 @@ add_monetized_impact  <-
       monetized_impact_rounded = base::round(monetized_impact),
       .after = monetized_impact)
 
+  # Output ####
   monetization <-
     base::list(
       monetization_main = monetization_main,
