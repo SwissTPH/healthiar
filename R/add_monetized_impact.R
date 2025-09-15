@@ -86,13 +86,13 @@ add_monetized_impact  <-
   dplyr::mutate(
     inflation_factor =
       healthiar::get_inflation_factor(
-        discount_year = discount_year,
+        n_years = n_years,
         inflation_rate = inflation_rate),
   # Add discount factor ####
     discount_factor =
       healthiar::get_discount_factor(
         discount_rate = discount_rate,
-        discount_year = discount_year,
+        n_years = n_years,
         discount_shape = discount_shape,
         inflation_rate = inflation_rate),
   # Add monetized impact ####
