@@ -283,15 +283,14 @@ monetize <- function(output_attribute = NULL,
                       discount_shape = discount_shape,
                       inflation_rate = inflation_rate) |>
         # Add info
-        healthiar:::add_info(
-          info = info
-        )
+        healthiar:::add_info(info = info)
 
-      # If impact is inserted as vector to refer to different monetized impacts by year
-      # (case of real costs, not applicable for nominal costs)
 
       # Add year
       if(summing_across_years){
+        # If lifetable or
+        # if impact is inserted as vector to refer to different monetized impacts by year
+        # (case of real costs, not applicable for nominal costs)
 
         df_by_year <-  df_with_input
         df_by_year$year <-
@@ -299,10 +298,13 @@ monetize <- function(output_attribute = NULL,
 
       } else if(taking_last_discounted_year){
         df_by_year <-
-          # Split by discount year
+          # Split by year
           dplyr::cross_join(x = tibble::tibble(year = n_years_vector),
                             y = df_with_input)
       }
+
+      # Calculate inflation_factor, discount_factor
+      # and with these factors, the monetized impact
 
       df_by_year <-
         df_by_year |>
