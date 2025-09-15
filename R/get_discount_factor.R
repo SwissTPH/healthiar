@@ -43,7 +43,7 @@
 
 get_discount_factor <-
   function(discount_rate,
-           projected_year,
+           n_years,
            discount_shape = "exponential",
            inflation_rate = NULL){
 
@@ -67,13 +67,13 @@ get_discount_factor <-
             # Exponential ####
             discount_shape == "exponential",
 
-            1/((1 + discount_rate) ^ projected_year),
+            1/((1 + discount_rate) ^ n_years),
             # Hyperbolic Harvey ####
             base::ifelse(discount_shape == "hyperbolic_harvey_1986",
-                         1/((1 + projected_year) ^ discount_rate),
+                         1/((1 + n_years) ^ discount_rate),
                          # Hyperbolic Mazur ####
                          base::ifelse(discount_shape == "hyperbolic_mazur_1987",
-                                      1/(1 + discount_rate * projected_year),
+                                      1/(1 + discount_rate * n_years),
                                       NA)))
 
     # If both discount and inflation rate provided ####
@@ -87,13 +87,13 @@ get_discount_factor <-
             # Exponential ####
             discount_shape == "exponential",
 
-            1/(((1+discount_rate)*(1+inflation_rate)) ^ projected_year),
+            1/(((1+discount_rate)*(1+inflation_rate)) ^ n_years),
             # Hyperbolic Harvey ####
             base::ifelse(discount_shape == "hyperbolic_harvey_1986",
-                         1/(((1 + projected_year) ^ discount_rate) * ((1 + inflation_rate) ^ projected_year)),
+                         1/(((1 + n_years) ^ discount_rate) * ((1 + inflation_rate) ^ n_years)),
                          # Hyperbolic Mazur ####
                          base::ifelse(discount_shape == "hyperbolic_mazur_1987",
-                                      1/((1 + discount_rate * projected_year) * ((1 + inflation_rate) ^ projected_year)),
+                                      1/((1 + discount_rate * n_years) * ((1 + inflation_rate) ^ n_years)),
                                       NA)))
       }
 

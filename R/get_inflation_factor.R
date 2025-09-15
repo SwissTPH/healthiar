@@ -26,13 +26,13 @@
 
 
 get_inflation_factor <-
-  function(projected_year,
+  function(n_years,
            inflation_rate = NULL){
 
     if(!base::is.null(inflation_rate)){
       # if discount_rate is NULL
 
-      inflation_factor <- (1 + inflation_rate) ^ projected_year
+      inflation_factor <- (1 + inflation_rate) ^ n_years
 
     } else {
 

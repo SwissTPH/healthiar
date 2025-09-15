@@ -173,7 +173,7 @@ monetize <- function(output_attribute = NULL,
   # discount_shape has a default value, so it is never NULL
   if(n_years == 0 &&
      base::any(!base::is.null(discount_rate))&&
-     # Exclude life table because the projected_year are calculated based on life table
+     # Exclude life table because the n_years are calculated based on life table
      !is_lifetable){
     warning(
       base::paste0("You entered some value in discount_rate,",
@@ -307,13 +307,13 @@ monetize <- function(output_attribute = NULL,
       dplyr::mutate(
         inflation_factor =
           healthiar::get_inflation_factor(
-            projected_year = projected_year,
+            n_years = year,
             inflation_rate = inflation_rate),
         # Add discount factor ####
         discount_factor =
           healthiar::get_discount_factor(
             discount_rate = discount_rate,
-            projected_year = projected_year,
+            n_years = year,
             discount_shape = discount_shape,
             inflation_rate = inflation_rate),
         # Add monetized impact ####
