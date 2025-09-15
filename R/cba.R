@@ -13,6 +13,20 @@
 # VALUE ########################################################################
 #' @returns Description of the return value.
 
+# DETAILS ######################################################################
+
+#' @details
+#' \strong{Equation cost-benefit analysis}
+#' @details
+#' \deqn{net\_benefit = benefit - cost}
+#' @details
+#' \deqn{cost\_benefit\_ratio = \frac{benefit}{cost}}
+#' @details
+#' \deqn{return\_on\_investment = \frac{benefit - cost}{cost } \times 100}
+#' @details
+#' For the equations regarding the monetization of the cost and the benefit please see the function documentation of \code{monetize()}.
+
+
 # EXAMPLES #####################################################################
 #' @examples
 #' # Goal: performs a cost-benefit analysis using an existing output
