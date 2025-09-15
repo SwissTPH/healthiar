@@ -32,8 +32,8 @@ results$health_main$impact_rounded # Attributable cases
 
 ```{r}
 results <- healthiar::attribute_health(
-  geo_id_disaggregated = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"),
-  geo_id_aggregated = c("Ger","Ger","Fra","Ita","Fra"),
+  geo_id_micro = c("Zurich", "Basel", "Geneva", "Ticino", "Valais"),
+  geo_id_macro = c("Ger","Ger","Fra","Ita","Fra"),
   rr_central = 1.369,
   rr_increment = 10,
   cutoff_central = 5,
@@ -45,8 +45,8 @@ results <- healthiar::attribute_health(
 results$health_main$impact_rounded
 
 results$health_detailed$results_raw |> dplyr::select(
-  geo_id_disaggregated,
-  geo_id_aggregated,
+  geo_id_micro,
+  geo_id_macro,
   impact_rounded
 )
 ```
@@ -81,11 +81,11 @@ output_attribute <- attribute_health(
       cutoff_central =  0,
       exp_central = sample(6:10, 15, replace = TRUE),
       bhd_central = sample(100:500, 15, replace = TRUE),
-      geo_id_disaggregated = c(1:nrow(info)), # (random) ID must be entered
+      geo_id_micro = c(1:nrow(info)), # (random) ID must be entered
       info = info
 )
-output_stratified <- output_attribute$health_detailed$results_disaggregated |>
-  dplyr::group_by(info_1) |> 
+output_stratified <- output_attribute$health_detailed$results_raw |>
+  dplyr::group_by(info_column_1) |> 
   dplyr::summarize(mean_impact = mean(impact)) |> 
   print()
 ```
@@ -105,10 +105,10 @@ results <- attribute_lifetable(
   rr_central =  1.118,
   rr_increment = 10,
   erf_shape = "log_linear",
-  age_group = exdat_pop_1$age_group,
-  sex = exdat_pop_1$sex,
-  bhd_central = exdat_pop_1$deaths,
-  population = exdat_pop_1$midyear_population,
+  age_group = exdat_lifetable$age_group,
+  sex = exdat_lifetable$sex,
+  bhd_central = exdat_lifetable$deaths,
+  population = exdat_lifetable$midyear_population,
   year_of_analysis = 2019,
   min_age = 20
 )
@@ -124,10 +124,10 @@ cutoff_central = 5,
 rr_central =  1.118,
 rr_increment = 10,
 erf_shape = "log_linear",
-age_group = exdat_pop_1$age_group,
-sex = exdat_pop_1$sex,
-bhd_central = exdat_pop_1$deaths,
-population = exdat_pop_1$midyear_population,
+age_group = exdat_lifetable$age_group,
+sex = exdat_lifetable$sex,
+bhd_central = exdat_lifetable$deaths,
+population = exdat_lifetable$midyear_population,
 year_of_analysis = 2019,
 min_age = 20
 )
@@ -145,16 +145,16 @@ results <- attribute_lifetable(
   rr_increment = 10,
   erf_shape = "log_linear",
   age_group = rep(
-    exdat_pop_1$age_group,
+    exdat_lifetable$age_group,
     times = 3), # times = number of exposure categories
   sex = rep(
-    exdat_pop_1$sex,
+    exdat_lifetable$sex,
     times = 3), # times = number of exposure categories
   population = rep(
-    exdat_pop_1$midyear_population,
+    exdat_lifetable$midyear_population,
     times = 3), # times = number of exposure categories
   bhd_central = rep(
-    exdat_pop_1$deaths,
+    exdat_lifetable$deaths,
     times = 3), # times = number of exposure categories
   year_of_analysis = 2019,
   info = "PM2.5",
@@ -190,12 +190,12 @@ scenario_B <- attribute_health(
 )
 results <- compare(
 approach_comparison = "delta",
-output_attribute_1 = scenario_A,
-output_attribute_2 = scenario_B
+output_attribute_scen_1 = scenario_A,
+output_attribute_scen_2 = scenario_B
 )
 # Inspect the difference, stored in the impact column
 results$health_main |>
-  dplyr::select(impact, impact_1, impact_2) |> 
+  dplyr::select(impact, impact_scen_1, impact_scen_2) |> 
   print()
 
 # Goal: comparison of two scenarios with population impact fraction (pif) approach
@@ -218,8 +218,8 @@ output_attribute_2 <- attribute_health(
   rr_increment = 10
 )
 results <- compare(
-  output_attribute_1 = output_attribute_1,
-  output_attribute_2 = output_attribute_2,
+  output_attribute_scen_1 = output_attribute_1,
+  output_attribute_scen_2 = output_attribute_2,
   approach_comparison = "pif"
 )
 # Inspect the difference, stored in the impact column
@@ -284,7 +284,7 @@ scenario_A$health_main$impact # Attributable impact in scenario A
 
 ## Modify scenario (adjust exposure value)
 scenario_B <- attribute_mod(
-  output_attribute_1 = scenario_A, 
+  output_attribute = scenario_A, 
   exp_central = 6
 )
 
@@ -306,10 +306,10 @@ results_yll <- attribute_lifetable(
   rr_central =  1.118,
   rr_increment = 10,
   erf_shape = "log_linear",
-  age_group = exdat_pop_1$age_group,
-  sex = exdat_pop_1$sex,
-  bhd_central = exdat_pop_1$deaths,
-  population = exdat_pop_1$midyear_population,
+  age_group = exdat_lifetable$age_group,
+  sex = exdat_lifetable$sex,
+  bhd_central = exdat_lifetable$deaths,
+  population = exdat_lifetable$midyear_population,
   year_of_analysis = 2019,
   min_age = 20
 )
@@ -341,11 +341,11 @@ results$health_main |>
 ```{r}
 output_attribute <- attribute_health(
   erf_shape = "log_linear",
-  rr_central = exdat_pm_copd$relative_risk, 
+  rr_central = exdat_pm$relative_risk, 
   rr_increment = 10, 
-  exp_central = exdat_pm_copd$mean_concentration,
-  cutoff_central = exdat_pm_copd$cut_off_value,
-  bhd_central = exdat_pm_copd$incidence
+  exp_central = exdat_pm$mean_concentration,
+  cutoff_central = exdat_pm$cut_off_value,
+  bhd_central = exdat_pm$incidence
 )
 
 results <- 
