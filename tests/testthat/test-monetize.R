@@ -74,7 +74,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_rate = 0.05,
         valuation = 1,
         info = base::data.frame(year = c(2020:2025))
-        )$monetization_detailed$monetized_impact |> round(digits = 2),
+        )$monetization_detailed$results_by_year$monetized_impact |> round(digits = 2),
     expect =
       c(800, 952.38,1088.44, 1295.76, 1480.86, 1567.05) # Results on 2025-03-04; Excel sheet of Uni Porto
   )
@@ -266,7 +266,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_shape = "hyperbolic_harvey_1986",
         discount_rate = 0.05,
         valuation = 1
-        )$monetization_detailed$monetized_impact |> round(digits = 2),
+        )$monetization_detailed$results_by_year$monetized_impact |> round(digits = 2),
     expect =
       c(800,965.94, 1135.86, 1399.55, 1660.83, 1828.62) # Results on 2025-04-15; Excel sheet of Uni Porto
   )
@@ -437,7 +437,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_shape = "hyperbolic_mazur_1987",
         discount_rate = 0.05,
         valuation = 1
-        )$monetization_detailed$monetized_impact |> round(digits = 2),
+        )$monetization_detailed$results_by_year$monetized_impact |> round(digits = 2),
     expect =
       c(800, 952.38, 1090.91, 1304.35, 1500.00, 1600.00) # Results on 2025-04-15; Excel sheet of Uni Porto
   )
