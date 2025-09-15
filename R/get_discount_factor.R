@@ -67,10 +67,10 @@ get_discount_factor <-
             # Exponential ####
             discount_shape == "exponential",
 
-            1/((1 + discount_rate) ^ discount_year),
+            1/((1 + discount_rate) ^ projected_year),
             # Hyperbolic Harvey ####
             base::ifelse(discount_shape == "hyperbolic_harvey_1986",
-                         1/((1 + discount_year) ^ discount_rate),
+                         1/((1 + projected_year) ^ discount_rate),
                          # Hyperbolic Mazur ####
                          base::ifelse(discount_shape == "hyperbolic_mazur_1987",
                                       1/(1 + discount_rate * projected_year),
@@ -87,10 +87,10 @@ get_discount_factor <-
             # Exponential ####
             discount_shape == "exponential",
 
-            1/(((1+discount_rate)*(1+inflation_rate)) ^ discount_year),
+            1/(((1+discount_rate)*(1+inflation_rate)) ^ projected_year),
             # Hyperbolic Harvey ####
             base::ifelse(discount_shape == "hyperbolic_harvey_1986",
-                         1/(((1 + discount_year) ^ discount_rate) * ((1 + inflation_rate) ^ discount_year)),
+                         1/(((1 + projected_year) ^ discount_rate) * ((1 + inflation_rate) ^ projected_year)),
                          # Hyperbolic Mazur ####
                          base::ifelse(discount_shape == "hyperbolic_mazur_1987",
                                       1/((1 + discount_rate * projected_year) * ((1 + inflation_rate) ^ projected_year)),
