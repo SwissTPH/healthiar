@@ -20,7 +20,7 @@
 
 get_discount_factor <-
   function(discount_rate,
-           discount_year,
+           projected_year,
            discount_shape = "exponential",
            inflation_rate = NULL){
 
@@ -41,11 +41,11 @@ get_discount_factor <-
         discount_factor <-
           base::ifelse(
             discount_shape == "exponential",
-            1/((1 + discount_rate) ^ discount_year),
+            1/((1 + discount_rate) ^ projected_year),
             base::ifelse(discount_shape == "hyperbolic_harvey_1986",
-                         1/((1 + discount_year) ^ discount_rate),
+                         1/((1 + projected_year) ^ discount_rate),
                          base::ifelse(discount_shape == "hyperbolic_mazur_1987",
-                                      1/(1 + discount_rate * discount_year),
+                                      1/(1 + discount_rate * projected_year),
                                       NA)))
 
       } else if(!base::is.null(discount_rate) &&
@@ -56,11 +56,11 @@ get_discount_factor <-
         discount_factor <-
           base::ifelse(
             discount_shape == "exponential",
-            1/(((1+discount_rate)*(1+inflation_rate)) ^ discount_year),
+            1/(((1+discount_rate)*(1+inflation_rate)) ^ projected_year),
             base::ifelse(discount_shape == "hyperbolic_harvey_1986",
-                         1/(((1 + discount_year) ^ discount_rate) * ((1 + inflation_rate) ^ discount_year)),
+                         1/(((1 + projected_year) ^ discount_rate) * ((1 + inflation_rate) ^ projected_year)),
                          base::ifelse(discount_shape == "hyperbolic_mazur_1987",
-                                      1/((1 + discount_rate * discount_year) * ((1 + inflation_rate) ^ discount_year)),
+                                      1/((1 + discount_rate * projected_year) * ((1 + inflation_rate) ^ projected_year)),
                                       NA)))
       }
 

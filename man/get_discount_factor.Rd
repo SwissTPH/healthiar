@@ -6,7 +6,7 @@
 \usage{
 get_discount_factor(
   discount_rate,
-  discount_year,
+  projected_year,
   discount_shape = "exponential",
   inflation_rate = NULL
 )

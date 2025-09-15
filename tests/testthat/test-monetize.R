@@ -871,7 +871,7 @@ testthat::test_that("warning if no discount_rate but other discount arguments", 
         valuation = 1E3
       ),
     regexp = base::paste0("You entered some value in discount_rate,",
-                          " but discount_year is 0 (default value).",
+                          " but n_years is 0 (default value).",
                           " Therefore no discount is applied."),
     # To match the messages fixed  = TRUE.
     # Otherwise, for some reason, testthat does not recognize the same text
