@@ -337,7 +337,7 @@ monetize <- function(output_attribute = NULL,
           dplyr::select(-year)
 
         # If summing across discounted years ####
-      }else if(summing_across_discounted_years){
+      }else if(summing_across_years){
 
         grouping_variables <-
           df_by_year |>
