@@ -173,7 +173,7 @@ monetize <- function(output_attribute = NULL,
   # discount_shape has a default value, so it is never NULL
   if(n_years == 0 &&
      base::any(!base::is.null(discount_rate))&&
-     # Exclude life table because the discount_year are calculated based on life table
+     # Exclude life table because the projected_year are calculated based on life table
      !is_lifetable){
     warning(
       base::paste0("You entered some value in discount_rate,",
@@ -238,6 +238,138 @@ monetize <- function(output_attribute = NULL,
 
   # Monetize ####
 
+  ## Create function add_monetized_impact() ###############
+  # To be used below
+
+  add_monetized_impact  <-
+    function(df,
+             valuation,
+             discount_rate,
+             n_years,
+             discount_shape,
+             inflation_rate,
+             info = NULL) {
+
+      # Calculation preparation ####
+      # If df has only one column (impact)
+      # it means that this is the direct input from user
+      # no previous health assessment with healthiar
+      using_impact_from_user <- base::ncol(df) == 1
+      using_impact_vector <- base::length(df$impact)>1
+      using_impact_vector_from_user <- using_impact_from_user & using_impact_vector
+      using_impact_value_from_user <- using_impact_from_user & !using_impact_vector
+      using_impact_from_healthiar <- !using_impact_from_user
+      using_lifetable <- "year" %in% base::names(df)
+      using_impact_from_healthiar_with_lifetable <- using_impact_from_healthiar & using_lifetable
+      using_impact_from_healthiar_without_lifetable <- using_impact_from_healthiar & !using_lifetable
+
+      # Definition of calculation pathways
+      taking_last_discounted_year <- using_impact_from_healthiar_without_lifetable | using_impact_value_from_user
+      summing_across_discounted_years <- using_impact_vector_from_user | using_impact_from_healthiar_with_lifetable
+
+      # Define discount years
+      n_years_vector <- 0 : n_years
+
+      df_with_input <-
+        df |>
+        # Add columns for input data in the table
+        # Use {{}} to clarify the it refers to the argument and not to the column
+        # with the same name
+        dplyr::mutate(valuation = {{valuation}},
+                      discount_rate = {{discount_rate}},
+                      n_years = {{n_years}},
+                      discount_shape = {{discount_shape}},
+                      inflation_rate = inflation_rate) |>
+        # Add info
+        healthiar:::add_info(
+          info = info
+        )
+
+      # If impact is inserted as vector to refer to different monetized impacts by year
+      # (case of real costs, not applicable for nominal costs)
+
+      if(summing_across_discounted_years){
+
+        df_by_year <-  df_with_input
+        df_by_year$projected_year <-
+          base::rep(n_years_vector, len = base::nrow(df_with_input))
+
+      } else if(taking_last_discounted_year){
+        df_by_year <-
+          # Split by discount year
+          dplyr::cross_join(x = tibble::tibble(projected_year = n_years_vector),
+                            y = df_with_input)
+      }
+
+      df_by_year <-
+        df_by_year |>
+        # Add inflation factor ####
+      dplyr::mutate(
+        inflation_factor =
+          healthiar::get_inflation_factor(
+            projected_year = projected_year,
+            inflation_rate = inflation_rate),
+        # Add discount factor ####
+        discount_factor =
+          healthiar::get_discount_factor(
+            discount_rate = discount_rate,
+            projected_year = projected_year,
+            discount_shape = discount_shape,
+            inflation_rate = inflation_rate),
+        # Add monetized impact ####
+        monetized_impact = impact * valuation * inflation_factor * discount_factor,
+        monetized_impact_without_discount_and_inflation = impact * valuation,
+        .after = impact)
+
+
+
+      # If taking last discounted year ####
+      if(taking_last_discounted_year){
+        df_relevant <-
+          df_by_year|>
+          # Keep only the last year
+          dplyr::filter(projected_year == max(projected_year)) |>
+          # Remove the variable discount year because it is not anymore relevant
+          # (not by-year results)
+          dplyr::select(-projected_year)
+
+        # If summing across discounted years ####
+      }else if(summing_across_discounted_years){
+
+        grouping_variables <-
+          df_by_year |>
+          dplyr::select(-dplyr::any_of(c("year", "projected_year")),
+                        -dplyr::contains("discount_factor"),
+                        -dplyr::contains("impact")) |>
+          base::names()
+
+        df_relevant <-
+          df_by_year |>
+          dplyr::summarize(
+            .by = dplyr::any_of(grouping_variables),
+            dplyr::across(dplyr::contains("impact"), sum)
+          )
+      }
+
+      monetization_main <-
+        df_relevant |>
+        # Round monetized impacts
+        dplyr::mutate(
+          monetized_impact_rounded = base::round(monetized_impact),
+          .after = monetized_impact)
+
+      ##### Output ####
+      monetization <-
+        base::list(
+          monetization_main = monetization_main,
+          monetization_detailed = df_by_year
+        )
+
+      return(monetization)
+
+    }
+
+
   #* IF OUTPUT of attribute ####
 
   if(using_impact_from_healthiar){
@@ -276,7 +408,7 @@ monetize <- function(output_attribute = NULL,
           inflation_rate = inflation_rate)
 
       impact_detailed  <-
-        healthiar:::add_monetized_impact(
+        add_monetized_impact(
           df = impact_detailed,
           discount_rate = discount_rate,
           n_years = n_years,
@@ -338,30 +470,30 @@ monetize <- function(output_attribute = NULL,
 
       # Apply the function in main and detailed results
       output_monetization[["monetization_main"]] <-
-        healthiar:::add_monetized_impact(df = output_attribute[["health_main"]],
-                                         valuation = valuation,
-                                         discount_rate = discount_rate,
-                                         n_years = {{n_years}},
-                                         discount_shape = discount_shape,
-                                         inflation_rate = inflation_rate)[["monetization_main"]]
+        add_monetized_impact(df = output_attribute[["health_main"]],
+                             valuation = valuation,
+                             discount_rate = discount_rate,
+                             n_years = {{n_years}},
+                             discount_shape = discount_shape,
+                             inflation_rate = inflation_rate)[["monetization_main"]]
 
       #Detailed results showing the by-year results of monetization
       output_monetization[["monetization_detailed"]][["by_year"]] <-
-        healthiar:::add_monetized_impact(df = output_attribute[["health_main"]],
-                                         valuation = valuation,
-                                         discount_rate = discount_rate,
-                                         n_years = {{n_years}},
-                                         discount_shape = discount_shape,
-                                         inflation_rate = inflation_rate)[["monetization_detailed"]]
+        add_monetized_impact(df = output_attribute[["health_main"]],
+                             valuation = valuation,
+                             discount_rate = discount_rate,
+                             n_years = {{n_years}},
+                             discount_shape = discount_shape,
+                             inflation_rate = inflation_rate)[["monetization_detailed"]]
 
       #Detailed results showing all the details of the health results
       output_monetization[["monetization_detailed"]][["health_raw"]]<-
-        healthiar:::add_monetized_impact(df = output_attribute[["health_detailed"]][["results_raw"]],
-                                         valuation = valuation,
-                                         discount_rate = discount_rate,
-                                         n_years = {{n_years}},
-                                         discount_shape = discount_shape,
-                                         inflation_rate = inflation_rate)[["monetization_main"]]
+        add_monetized_impact(df = output_attribute[["health_detailed"]][["results_raw"]],
+                             valuation = valuation,
+                             discount_rate = discount_rate,
+                             n_years = {{n_years}},
+                             discount_shape = discount_shape,
+                             inflation_rate = inflation_rate)[["monetization_main"]]
     }
 
 
@@ -393,7 +525,7 @@ monetize <- function(output_attribute = NULL,
     }else if(using_impact_from_user){
 
       output_monetization <-
-        healthiar:::add_monetized_impact(
+        add_monetized_impact(
           df = tibble::tibble(impact = impact),
           valuation = valuation,
           discount_rate = discount_rate,
