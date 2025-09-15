@@ -367,7 +367,7 @@ monetize <- function(output_attribute = NULL,
       monetization <-
         base::list(
           monetization_main = monetization_main,
-          monetization_detailed = df_by_year
+          monetization_detailed = base::list(results_by_year = df_by_year)
         )
 
       return(monetization)
@@ -467,13 +467,8 @@ monetize <- function(output_attribute = NULL,
 
       ##** IF WITHOUT LIFE TABLE #######
 
-      # If bhd_central is not NULL, then we are not using life table method
-
-      # Duplicate output to work with monetization
-      output_monetization <-
-        output_attribute
-
-      monetization_health_main <-
+      # Monetize impacts using health main
+      output_monetization_health_main <-
         add_monetized_impact(df = output_attribute[["health_main"]],
                              valuation = valuation,
                              discount_rate = discount_rate,
@@ -481,11 +476,9 @@ monetize <- function(output_attribute = NULL,
                              discount_shape = discount_shape,
                              inflation_rate = inflation_rate)
 
-      output_monetization[["monetization_main"]] <-
-        monetization_health_main[["monetization_main"]]
-
-      output_monetization[["monetization_detailed"]][["by_year"]]  <-
-        monetization_health_main[["monetization_detailed"]]
+      # Put together health and monetization output
+      output_monetization <-
+        c(output_attribute, output_monetization_health_main)
 
 
       #Detailed results showing all the details of the health results
