@@ -468,23 +468,39 @@ monetize <- function(output_attribute = NULL,
       output_monetization <-
         output_attribute
 
-      # Apply the function in main and detailed results
-      output_monetization[["monetization_main"]] <-
+      monetization_health_main <-
         add_monetized_impact(df = output_attribute[["health_main"]],
                              valuation = valuation,
                              discount_rate = discount_rate,
                              n_years = {{n_years}},
                              discount_shape = discount_shape,
-                             inflation_rate = inflation_rate)[["monetization_main"]]
+                             inflation_rate = inflation_rate)
 
-      #Detailed results showing the by-year results of monetization
-      output_monetization[["monetization_detailed"]][["by_year"]] <-
-        add_monetized_impact(df = output_attribute[["health_main"]],
-                             valuation = valuation,
-                             discount_rate = discount_rate,
-                             n_years = {{n_years}},
-                             discount_shape = discount_shape,
-                             inflation_rate = inflation_rate)[["monetization_detailed"]]
+      output_monetization[["monetization_main"]] <-
+        monetization_health_main[["monetization_main"]]
+
+      output_monetization[["monetization_detailed"]][["by_year"]]  <-
+        monetization_health_main[["monetization_detailed"]]
+
+
+
+      # # Apply the function in main and detailed results
+      # output_monetization[["monetization_main"]] <-
+      #   add_monetized_impact(df = output_attribute[["health_main"]],
+      #                        valuation = valuation,
+      #                        discount_rate = discount_rate,
+      #                        n_years = {{n_years}},
+      #                        discount_shape = discount_shape,
+      #                        inflation_rate = inflation_rate)[["monetization_main"]]
+      #
+      # #Detailed results showing the by-year results of monetization
+      # output_monetization[["monetization_detailed"]][["by_year"]] <-
+      #   add_monetized_impact(df = output_attribute[["health_main"]],
+      #                        valuation = valuation,
+      #                        discount_rate = discount_rate,
+      #                        n_years = {{n_years}},
+      #                        discount_shape = discount_shape,
+      #                        inflation_rate = inflation_rate)[["monetization_detailed"]]
 
       #Detailed results showing all the details of the health results
       output_monetization[["monetization_detailed"]][["health_raw"]]<-
@@ -502,7 +518,7 @@ monetize <- function(output_attribute = NULL,
     relevant_columns <-
       c("info", "geo_id_micro", "geo_id_macro",
         "impact",
-        "discount_rate", "discount_shape",
+        "discount_rate", "discount_shape", "inflation_rate", "n_years",
         "valuation",
         base::paste0("monetized_impact", c("", "_without_discount_and_inflation", "_rounded")))
 
