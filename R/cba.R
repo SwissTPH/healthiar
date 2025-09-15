@@ -78,23 +78,18 @@ cba <-
     # Run include_monetization for benefit and cost separately
     # Important to obtain main and detailed to avoid losing information
 
-    cba_detailed_benefit <-
-      healthiar::monetize(
-        output_attribute = output_attribute,
-        impact = positive_impact,
-        discount_rate = discount_rate_benefit,
-        n_years = n_years_benefit,
-        discount_shape = discount_shape,
-        valuation = valuation)[["monetization_detailed"]]
+    cba_benefit <- healthiar::monetize(
+      output_attribute = output_attribute,
+      impact = positive_impact,
+      discount_rate = discount_rate_benefit,
+      discount_shape = discount_shape,
+      inflation_rate = inflation_rate_benefit,
+      n_years = n_years_benefit,
+      valuation = valuation)
 
-    cba_main_benefit <-
-      healthiar::monetize(
-        output_attribute = output_attribute,
-        impact = positive_impact,
-        discount_rate = discount_rate_benefit,
-        n_years = n_years_benefit,
-        discount_shape = discount_shape,
-        valuation = valuation)[["monetization_main"]]
+    cba_detailed_benefit <- cba_benefit[["monetization_detailed"]]
+
+    cba_main_benefit <- cba_benefit[["monetization_main"]]
 
 
 
@@ -104,8 +99,9 @@ cba <-
         impact = 1,
         valuation = cost,
         discount_rate = discount_rate_cost,
-        n_years = n_years_cost,
-        discount_shape = discount_shape)[["monetization_main"]]
+        discount_shape = discount_shape,
+        inflation_rate = inflation_rate_cost,
+        n_years = n_years_cost)[["monetization_main"]]
 
     # For costs main and detailed are the same because they only have one row
     cba_main_cost <- cba_detailed_cost
