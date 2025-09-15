@@ -95,12 +95,10 @@ monetize <- function(output_attribute = NULL,
   # Define variables ####
 
   # Store variables to increase readability of conditions
+  #from healthiar
   using_impact_from_healthiar <-
     !base::is.null(output_attribute) & base::is.null(impact)
-  using_impact_from_user <-
-    !using_impact_from_healthiar
 
-  using_impact_vector_from_user <- base::length(impact)>1
 
   # is_lifetable only can exist if output_attribute is provided
   # and then it has to be checked of is_lifetable is TRUE or FALSE
@@ -111,6 +109,28 @@ monetize <- function(output_attribute = NULL,
   } else { is_lifetable <- FALSE}
 
   is_not_lifetable <- ! is_lifetable
+
+  # With and without lifetable
+  using_impact_from_healthiar_with_lifetable <-
+    using_impact_from_healthiar & is_lifetable
+  using_impact_from_healthiar_without_lifetable <-
+    using_impact_from_healthiar & is_not_lifetable
+
+
+  # Impact from user input
+  using_impact_from_user <- !using_impact_from_healthiar
+  # Pay attention: one is vector (multiple values) and the other value (single value)
+  using_impact_vector_from_user <- using_impact_from_user & base::length(impact)>1
+  using_impact_value_from_user <- using_impact_from_user & !using_impact_vector_from_user
+
+
+  # Definition of calculation pathways
+  # In the case of no life table and single value, only the monetized value of the last year is taken
+  taking_last_discounted_year <-
+    using_impact_from_healthiar_without_lifetable | using_impact_value_from_user
+  # In the case of life table or multiple impact values entered, results must be summed
+  summing_across_discounted_years <-
+    using_impact_vector_from_user | using_impact_from_healthiar_with_lifetable
 
 
 
@@ -250,22 +270,6 @@ monetize <- function(output_attribute = NULL,
              inflation_rate,
              info = NULL) {
 
-      # Calculation preparation ####
-      # If df has only one column (impact)
-      # it means that this is the direct input from user
-      # no previous health assessment with healthiar
-      using_impact_from_user <- base::ncol(df) == 1
-      using_impact_vector <- base::length(df$impact)>1
-      using_impact_vector_from_user <- using_impact_from_user & using_impact_vector
-      using_impact_value_from_user <- using_impact_from_user & !using_impact_vector
-      using_impact_from_healthiar <- !using_impact_from_user
-      using_lifetable <- "year" %in% base::names(df)
-      using_impact_from_healthiar_with_lifetable <- using_impact_from_healthiar & using_lifetable
-      using_impact_from_healthiar_without_lifetable <- using_impact_from_healthiar & !using_lifetable
-
-      # Definition of calculation pathways
-      taking_last_discounted_year <- using_impact_from_healthiar_without_lifetable | using_impact_value_from_user
-      summing_across_discounted_years <- using_impact_vector_from_user | using_impact_from_healthiar_with_lifetable
 
       # Define discount years
       n_years_vector <- 0 : n_years
