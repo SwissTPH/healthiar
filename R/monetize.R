@@ -177,7 +177,7 @@ monetize <- function(output_attribute = NULL,
      !is_lifetable){
     warning(
       base::paste0("You entered some value in discount_rate,",
-                   " but discount_year is 0 (default value).",
+                   " but n_years is 0 (default value).",
                    " Therefore no discount is applied."),
       call. = FALSE)
   }
@@ -393,7 +393,6 @@ monetize <- function(output_attribute = NULL,
     }else if(using_impact_from_user){
 
       output_monetization <-
-
         healthiar:::add_monetized_impact(
           df = tibble::tibble(impact = impact),
           valuation = valuation,

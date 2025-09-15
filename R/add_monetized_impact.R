@@ -70,13 +70,13 @@ add_monetized_impact  <-
   if(summing_across_discounted_years){
 
     df_by_year <-  df_with_input
-    df_by_year$discount_year <-
+    df_by_year$projected_year <-
       base::rep(n_years_vector, len = base::nrow(df_with_input))
 
   } else if(taking_last_discounted_year){
     df_by_year <-
       # Split by discount year
-      dplyr::cross_join(x = tibble::tibble(discount_year = n_years_vector),
+      dplyr::cross_join(x = tibble::tibble(projected_year = n_years_vector),
                         y = df_with_input)
   }
 
@@ -107,17 +107,17 @@ add_monetized_impact  <-
       df_relevant <-
         df_by_year|>
       # Keep only the last year
-      dplyr::filter(discount_year == max(discount_year)) |>
+      dplyr::filter(projected_year == max(projected_year)) |>
         # Remove the variable discount year because it is not anymore relevant
         # (not by-year results)
-        dplyr::select(-discount_year)
+        dplyr::select(-projected_year)
 
   # If summing across discounted years ####
     }else if(summing_across_discounted_years){
 
       grouping_variables <-
         df_by_year |>
-        dplyr::select(-dplyr::any_of(c("year", "discount_year")),
+        dplyr::select(-dplyr::any_of(c("year", "projected_year")),
                       -dplyr::contains("discount_factor"),
                       -dplyr::contains("impact")) |>
         base::names()
