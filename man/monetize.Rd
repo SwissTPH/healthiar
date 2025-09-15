@@ -43,6 +43,31 @@ If the argument \code{output_attribute} was specified, then the two lists are ad
 \description{
 This function monetizes health impacts
 }
+\details{
+\strong{Equation inflation factor (without discounting)}
+
+\deqn{inflation\_factor = (1 + inflation\_rate)^{discount\_year}}
+
+\strong{Equations discount factors (without inflation)}
+
+\emph{Exponential discounting (no inflation)}
+\deqn{discount\_factor = \frac{1}{(1 + discount\_rate) ^{discount\_year}}}
+
+\emph{Hyperbolic discounting Harvey (no inflation)}
+\deqn{discount\_factor = \frac{1}{(1 + discount\_year)^{discount\_rate}}}
+\emph{Hyperbolic discounting Mazure (no inflation)}
+\deqn{discount\_factor = \frac{1}{(1 + (discount\_rate \times discount\_year)}}
+
+\strong{Equations discount factors with inflation}
+
+\emph{Exponential discounting (with inflation)}
+\deqn{discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate)) ^{discount\_year}}}
+
+\emph{Hyperbolic discounting Harvey (with inflation)}
+\deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + discount\_year)^{discount\_rate} \times (1 + inflation\_rate)^{discount\_year}}}
+\emph{Hyperbolic discounting Mazure (with inflation)}
+\deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times discount\_year) \times (1 + inflation\_rate)^{discount\_year}}}
+}
 \examples{
 # Goal: monetize the attributable impacts of an existing healthiar
 # assessment

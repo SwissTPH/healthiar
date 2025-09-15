@@ -12,6 +12,11 @@ get_inflation_factor(discount_year, inflation_rate = NULL)
 \description{
 This function calculates the inflation factor based on inflation rate.
 }
+\details{
+\strong{Equation inflation factor (without discounting)}
+
+\deqn{inflation\_factor = (1 + inflation\_rate)^{discount\_year}}
+}
 \examples{
 # TODO
 

@@ -21,9 +21,29 @@ get_discount_factor(
 \description{
 This function calculates the discount factor based on discount rate. If the argument \code{inflation_rate} is NULL (default), it is assumed that the discount rate is already corrected for inflation). Otherwise (if a value for \code{inflation_rate} is entered), the resulted discount factor is adjusted for inflation.
 }
+\details{
+\strong{Equations discount factors (without inflation)}
+
+\emph{Exponential discounting (no inflation)}
+\deqn{discount\_factor = \frac{1}{(1 + discount\_rate) ^{discount\_year}}}
+
+\emph{Hyperbolic discounting Harvey (no inflation)}
+\deqn{discount\_factor = \frac{1}{(1 + discount\_year)^{discount\_rate}}}
+\emph{Hyperbolic discounting Mazure (no inflation)}
+\deqn{discount\_factor = \frac{1}{(1 + (discount\_rate \times discount\_year)}}
+
+\strong{Equations discount factors with inflation}
+
+\emph{Exponential discounting (with inflation)}
+\deqn{discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate)) ^{discount\_year}}}
+
+\emph{Hyperbolic discounting Harvey (with inflation)}
+\deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + discount\_year)^{discount\_rate} \times (1 + inflation\_rate)^{discount\_year}}}
+\emph{Hyperbolic discounting Mazure (with inflation)}
+\deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times discount\_year) \times (1 + inflation\_rate)^{discount\_year}}}
+}
 \examples{
 # TODO
-
 }
 \author{
 Alberto Castro & Axel Luyten
