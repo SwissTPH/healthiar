@@ -377,17 +377,17 @@ output_attribute_1 <- attribute_health(
 output_attribute_1$health_main$impact
 # Step 2: create assessment with exposure 2
 output_attribute_2 <- attribute_mod(
-  output_attribute_1 = output_attribute_1,
+  output_attribute = output_attribute_1,
   exp_central = 10.9,
   rr_central = 1.031
 )
 output_attribute_2$health_main$impact
 # Step 3: aggregate impacts of the two assessments
 results <- multiexpose(
-  output_attribute_1 = output_attribute_1,
-  output_attribute_2 = output_attribute_2,
-  exposure_name_1 = "pm2.5",
-  exposure_name_2 = "no2",
+  output_attribute_exp_1 = output_attribute_1,
+  output_attribute_exp_2 = output_attribute_2,
+  exp_name_1 = "pm2.5",
+  exp_name_2 = "no2",
   approach = "multiplicative"
 )
 results$health_main$impact
@@ -397,36 +397,24 @@ results$health_main$impact
 
 ```{r}
 
-exdat_socialize
-
-results_below_40 <-
+results_age_groups <-
     healthiar::attribute_health(
-      exp_central = exdat_socialize$PM25_MEAN,
+      age_group = rep(c("below_40", "40_plus"), each = 9037),
+      exp_central = c(exdat_socialize$PM25_MEAN, exdat_socialize$PM25_MEAN-0.1),
       cutoff_central = 0,
       rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
       erf_shape = "log_linear",
       rr_increment = 10,
-      bhd_central = exdat_socialize$MORTALITY_TOTAL,
-      population = exdat_socialize$POPULATION,
-      geo_id_disaggregated = exdat_socialize$CS01012020)
-
-results_40_plus <-
-    healthiar::attribute_health(
-      exp_central = exdat_socialize$PM25_MEAN-0.1,
-      cutoff_central = 0,
-      rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
-      erf_shape = "log_linear",
-      rr_increment = 10,
-      bhd_central = ifelse(exdat_socialize$MORTALITY_TOTAL-10<0, 0, exdat_socialize$MORTALITY_TOTAL-10),
-      population = ifelse(exdat_socialize$POPULATION-10<0, 0, exdat_socialize$POPULATION-10),
-      geo_id_disaggregated = exdat_socialize$CS01012020)
+      bhd_central = c(exdat_socialize$MORTALITY_TOTAL, ifelse(exdat_socialize$MORTALITY_TOTAL-10<0, 0, exdat_socialize$MORTALITY_TOTAL-10)),
+      population = c(exdat_socialize$POPULATION, ifelse(exdat_socialize$POPULATION-10<0, 0, exdat_socialize$POPULATION-10)),
+      geo_id_micro = rep(exdat_socialize$CS01012020, 2))
   
 results <- socialize(
         age_group = c("below_40", "40_plus"),
         ref_prop_pop = c(0.5, 0.5),
-        listed_output_attribute = list(results_below_40, results_40_plus),
-        geo_id_disaggregated = data$CS01012020,
-        social_indicator = data$score,
+        output_attribute = results_age_groups,
+        geo_id_micro = exdat_socialize$CS01012020,
+        social_indicator = exdat_socialize$score,
         n_quantile = 10,
         increasing_deprivation = TRUE)
 
@@ -434,19 +422,6 @@ results$social_main |>
   dplyr::filter(difference_type == "relative") |> 
   dplyr::filter(difference_compared_with == "overall") |> 
   dplyr::select(first, last, difference_type, difference_value, comment)
-```
-
-# discount
-
-```{r}
-
-results <- discount(
-        impact = 2E4,
-        discount_shape = "exponential",
-        discount_rate = 0.03,
-        n_years = 20)
-
-results$monetization_main$monetized_impact
 ```
 
 # cba
@@ -482,7 +457,7 @@ get_mdi
 ```{r}
 
 results <- prepare_mdi(
-        geo_id_disaggregated = exdat_prepare_mdi$id,
+        geo_id_micro = exdat_prepare_mdi$id,
         edu = exdat_prepare_mdi$edu,
         unemployed = exdat_prepare_mdi$unemployed,
         single_parent = exdat_prepare_mdi$single_parent,
@@ -491,7 +466,7 @@ results <- prepare_mdi(
         n_quantile = 10)
 
 results |> 
-  dplyr::select(geo_id_disaggregated, MDI, MDI_index) |> 
+  dplyr::select(geo_id_micro, MDI, MDI_index) |> 
   dplyr::slice(1:15)
 ```
 
