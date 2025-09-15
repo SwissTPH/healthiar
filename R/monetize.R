@@ -129,7 +129,7 @@ monetize <- function(output_attribute = NULL,
   taking_last_discounted_year <-
     using_impact_from_healthiar_without_lifetable | using_impact_value_from_user
   # In the case of life table or multiple impact values entered, results must be summed
-  summing_across_discounted_years <-
+  summing_across_years <-
     using_impact_vector_from_user | using_impact_from_healthiar_with_lifetable
 
 
@@ -290,7 +290,8 @@ monetize <- function(output_attribute = NULL,
       # If impact is inserted as vector to refer to different monetized impacts by year
       # (case of real costs, not applicable for nominal costs)
 
-      if(summing_across_discounted_years){
+      # Add year
+      if(summing_across_years){
 
         df_by_year <-  df_with_input
         df_by_year$year <-
