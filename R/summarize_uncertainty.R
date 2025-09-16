@@ -196,16 +196,10 @@ summarize_uncertainty <- function(
   ## N #####
   # Determine number of geographic units
   n_geo <-
-    # Exceptionally, let's use here unique() instead of input_args
+    # Let's use here unique() and input_table instead of input_args
     # because in some cases the users do not enter the geo_id.
     # In that cases compile_input() provide a geo_id and it is shown in results_raw
     base::length(base::unique(input_table$geo_id_micro))
-
-  # If exposure dimension is implemented:
-  # Get the dimension of the exposure
-  # (i.e. if pop-weighted mean => 1, if exposure distribution => >1 )
-  # n_exp <- base::max(output_attribute$health_detailed$results_by_geo_id_micro$exp_dimension)
-
 
   ## Boolean variables ####
 
@@ -383,7 +377,6 @@ summarize_uncertainty <- function(
   ## Template and simulations #####
   sim_template <- input_table |>
   dplyr::select(geo_id_micro) |>
-  # If exposure dimension is implemented: dplyr::select(geo_id_micro, exp_dimension) |>
   base::unique()|>
   dplyr::mutate(geo_id_number = 1:n_geo, .after = geo_id_micro) |>
   dplyr::mutate(sim_id = base::list(1:n_sim))
@@ -448,9 +441,6 @@ summarize_uncertainty <- function(
       sim[[col_name]] <- purrr::pmap(
         base::list(sim_template$geo_id_number),
         function(geo_id_number) {
-        # If exposure dimension is implemented
-        #base::list(sim_template$geo_id_number, sim_template$exp_dimension),
-        #function(geo_id_number, exp_dimension) {
           simulate(
           central = central,
           lower = lower,
@@ -458,10 +448,7 @@ summarize_uncertainty <- function(
           distribution = dist,
           n = n_sim,
           # Different seed for each geo_unit to avoid similar results across geo_units
-          # Minus 1 to keep the same seed as exposure dimension = 1
           seed = seeds[[var]] + geo_id_number)}
-         # If exposure dimension is implemented
-         # seed = seeds[[var]] + geo_id_number + base::as.integer(exp_dimension)-1)}
       )
 
       # Second for those variable that are common for all geo units (rr, cutoff, dw and duration)
