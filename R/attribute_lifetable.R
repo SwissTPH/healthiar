@@ -177,7 +177,6 @@
 #'     exdat_lifetable$deaths,
 #'     times = 3), # times = number of exposure categories
 #'   year_of_analysis = 2019,
-#'   info = PM2.5,
 #'   min_age = 20
 #' )
 #' results$health_main$impact_rounded # Attributable YLL
