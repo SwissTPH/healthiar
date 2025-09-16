@@ -580,43 +580,32 @@ summarize_uncertainty <- function(
                 \(...) {c(input_args_prepared_for_replacement, base::list(...))})
 
 
-  if(!is_lifetable){
-    output_sim <-
-      purrr::map(
-        input_args_for_attribute,
-        \(.x) base::do.call(healthiar::attribute_health, args = .x ))
-  } else {
-    output_sim <-
-      purrr::map(
-        input_args_for_attribute,
-        \(.x) base::do.call(healthiar::attribute_lifetable, args = .x ))
-  }
+
+  args_df <- input_table |>
+    dplyr::filter(dplyr::if_all(.cols = dplyr::all_of(var_names_with_ci_in_name),
+                                .fns = ~ .x == "central")) |>
+    dplyr::select(- dplyr::all_of(var_names_with_ci)) |>
+    dplyr::inner_join(template_with_sim,
+                      by = "geo_id_micro",
+                      relationship = "many-to-many") |>
+    dplyr::mutate(geo_id_micro = base::paste0(geo_id_micro, "_sim_", sim_id))
 
 
-  # Extract impact
-  results_by_geo_id_micro <- purrr::map(
-    output_sim,
-    \(x) x$health_detailed$results_by_geo_id_micro$impact
-  )
+  #TODO Line below to be deleted removing _central everywhere
+  base::names(args_df) <- base::gsub("_central", "", base::names(args_df))
 
-  # Extract geo_id_macro already with the right format to be added below
-  # Avoid warning if geo_id_macro is NULL with the if statement
-  if(is.null(input_args$value[["geo_id_macro"]])){
-    geo_id_macro <- NULL
-  } else {
-    geo_id_macro <- purrr::map(output_sim,
-    \(x) x$health_detailed$results_by_geo_id_micro$geo_id_macro
-  )}
+  # Call attribute_health once with all arguments vectorized
+  output_sim_after_impact <- healthiar:::get_impact(input_table = args_df,
+                                                    pop_fraction_type = "paf")
+
+  output_sim <- healthiar:::get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
+
+  results_by_geo_id_micro <- output_sim |>
+    dplyr::mutate(geo_id_micro = base::gsub("_sim_.*", "", geo_id_micro))
+
+  attribute_by_sim_disaggregated <- results_by_geo_id_micro
 
 
-  # Create a tibble with the input, output and impact
-  attribute_by_sim_disaggregated <-
-    # Add columns (one row for each assessment)
-    dplyr::mutate(template_with_sim_grouped,
-                  geo_id_macro = geo_id_macro,
-                  input = input_args_for_attribute,
-                  output = output_sim,
-                  impact = results_by_geo_id_micro)
 
   # Obtain results of simulations organized by geo unit
   attribute_by_geo_id_micro <-
@@ -625,41 +614,18 @@ summarize_uncertainty <- function(
 
   # Get summary (uncertainty) for each geo_id_micro
   summary_by_geo_id_micro <-
-    get_summary(attribute = attribute_by_geo_id_micro,
-                grouping_var = "geo_id_micro")
+    get_summary(attribute = attribute_by_geo_id_micro)
+
+  attribute_by_sim <- attribute_by_sim_disaggregated
 
 
   if( !"geo_id_macro" %in% names(output_attribute$health_main) ){
 
-    attribute_by_sim <- attribute_by_sim_disaggregated
-
     summary <- summary_by_geo_id_micro
 
   } else {
-    # # If there is geo_id_macro,
-    # # export these attribute_by_sim and summary
-    #
-    # # Create a tibble with the input, output health_main and impact
-    attribute_by_sim <- attribute_by_sim_disaggregated |>
-      # Modify geo_id_macro and impact column to the right format
-      # i.e. by geo_id_macro (less rows) and not by geo_id_micro (more rows)
-      dplyr::mutate(
-        geo_id_macro = purrr::map(
-          output_sim,
-          \(x) x$health_main$geo_id_macro),
-        impact = purrr::map(
-          output_sim,
-          \(x) x$health_main$impact)
-        )
 
-    summary_by_geo_id_macro <- input_table_to_check |>
-      # Create codebook geo_id_macro vs. disaggregated
-      dplyr::select(geo_id_macro, geo_id_micro) |>
-      # Keep only unique rows
-      base::unique() |>
-      # Add the summary of geo_id_micro to have the geo_id_macro in
-      dplyr::left_join(summary_by_geo_id_micro,
-                       by = "geo_id_micro") |>
+    summary_by_geo_id_macro <- summary_by_geo_id_micro |>
       # Sum impacts
       dplyr::summarise(impact = base::sum(impact),
                        .by = c("geo_id_macro", "impact_ci")) |>
@@ -668,7 +634,6 @@ summarize_uncertainty <- function(
 
     summary <- summary_by_geo_id_macro
   }
-
 
   # Store the results in a list keeping consistency in the structure with
   # other healthiar functions
@@ -703,7 +668,7 @@ summarize_uncertainty <- function(
   ## Two cases (comparison) ####
   } else if (is_two_cases){
 
-    # Use summarize_uncertainty_based_on_input() twice:
+
 
     # Once for the scenario 1
     attribute_scen_1 <-
@@ -717,96 +682,92 @@ summarize_uncertainty <- function(
         input_args = input_args[["input_args_scen_2"]],
         input_table = input_table[["input_table_scen_2"]])
 
+    # Extract simulation values 1 and 2
     # Extract output 1 and 2
     output_scen_1 <-
-      attribute_scen_1[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]|>
-      dplyr::select(dplyr::contains(c("_id", "output")))
+      attribute_scen_1[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]
 
     output_scen_2 <-
-      attribute_scen_2[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]|>
-      dplyr::select(dplyr::contains(c("_id", "output")))
+      attribute_scen_2[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]
 
-
-    # Extract simulation values 1 and 2
-    id_cols_and_sim_scen_1 <-
-      attribute_scen_1[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]] |>
-      dplyr::select(
-        !dplyr::all_of(c("input", "output", "impact")))
-
-    id_cols_and_sim_scen_2 <-
-      attribute_scen_2[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]] |>
-      dplyr::select(
-        !dplyr::all_of(c("input", "output", "impact")))
-
+    scenario_specific_arguments <-
+      c("exp_central", "exp_lower", "exp_upper",
+        "bhd_central", "bhd_lower", "bhd_upper",
+        "population",
+        "prop_pop_exp",
+        "pop_exp",
+        "year_of_analysis",
+        "info",
+        "impact", "pop_fraction")
 
     # Identify the id columns of the outputs (to be used below)
-    id_cols <-
+    scen_joining_cols <-
       # We use output 1 but we could use output 2
       # (same structure because same type of assessment)
-      output_scen_1 |>
-      dplyr::select(dplyr::contains("_id")) |>
-      base::names()
+      # base::names(output_scen_1) |>
+      # base::grep(pattern = "_id", x = _, value = TRUE)
+      healthiar:::find_joining_columns(
+        df_1 = output_scen_1,
+        df_2 = output_scen_2,
+        except = scenario_specific_arguments)
 
     # Put together ids and sim cols
-    id_cols_and_sim <-
-      dplyr::left_join(id_cols_and_sim_scen_1,
-                       id_cols_and_sim_scen_2,
-                       by = id_cols,
+    output_both_scen <-
+      dplyr::left_join(output_scen_1,
+                       output_scen_2,
+                       by = scen_joining_cols,
                        suffix = c("_scen_1", "_scen_2"))
 
-    # Put outputs together in one single tibble and run compare across rows
-    attribute_by_sim_disaggregated <-
-      id_cols_and_sim |>
-      dplyr::mutate(
-        output_scen_1 = output_scen_1$output,
-        output_scen_2 = output_scen_2$output)|>
-      dplyr::mutate(
-        output_compare =
-          purrr::pmap(base::list(output_scen_1, output_scen_2, input_args$approach_comparison),
-                      healthiar::compare),
-        impact = purrr::map(output_compare,
-                            \(x) x$health_detailed$results_by_geo_id_micro$impact)
+
+
+    if(input_args$approach_comparison == "delta"){
+
+      attribute_by_sim_disaggregated <- output_both_scen |>
+        dplyr::mutate(
+          impact = impact_scen_1 - impact_scen_2,
+          impact_rounded = base::round(impact)
         )
 
-    # Obtain results of simulations organized by geo unit
-    attribute_by_geo_id_micro <-
-      get_attribute_by_geo(attribute_by_sim = attribute_by_sim_disaggregated,
-                           geo_id = "geo_id_micro")
-
-    # Get summary (uncertainty) for each geo_id_micro
-    summary_by_geo_id_micro <-
-      get_summary(attribute = attribute_by_geo_id_micro,
-                  grouping_var = "geo_id_micro")
+    } else if(input_args$approach_comparison == "pif"){
 
 
-    if(! "geo_id_macro" %in% names(output_attribute$health_main)){
-      attribute_by_sim <- attribute_by_geo_id_micro
-      summary <- summary_by_geo_id_micro
+      output_sim_after_impact <- healthiar:::get_impact(input_table = output_both_scen,
+                                                        pop_fraction_type = "pif")
 
-    } else{
+      output_sim <- healthiar:::get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
 
-      attribute_by_sim <- attribute_by_sim_disaggregated |>
-        dplyr::mutate(
-          impact = purrr::map(output_compare,
-                                          \(x) x$health_main$impact)
-          )
+      results_by_geo_id_micro <- output_sim
 
-      summary_by_geo_id_macro <- input_table_to_check |>
-        # Create codebook geo_id_macro vs. disaggregated
-        dplyr::select(geo_id_macro, geo_id_micro) |>
-        # Keep only unique rows
-        base::unique() |>
-        # Add the summary of geo_id_micro to have the geo_id_macro in
-        dplyr::left_join(summary_by_geo_id_micro,
-                         by = "geo_id_micro") |>
-        # Sum impacts
-        dplyr::summarise(impact = base::sum(impact),
-                         .by = c("geo_id_macro", "impact_ci")) |>
-        # Round
-        dplyr::mutate(impact_rounded = round(impact))
 
-      summary <- summary_by_geo_id_macro
     }
+
+    # Obtain results of simulations organized by geo unit
+  attribute_by_geo_id_micro <-
+    get_attribute_by_geo(attribute_by_sim = attribute_by_sim_disaggregated,
+                         geo_id = "geo_id_micro")
+
+  # Get summary (uncertainty) for each geo_id_micro
+  summary_by_geo_id_micro <-
+    get_summary(attribute = attribute_by_geo_id_micro)
+
+  attribute_by_sim <- attribute_by_sim_disaggregated
+
+
+  if( !"geo_id_macro" %in% names(output_attribute$health_main) ){
+
+    summary <- summary_by_geo_id_micro
+
+  } else {
+
+    summary_by_geo_id_macro <- summary_by_geo_id_micro |>
+      # Sum impacts
+      dplyr::summarise(impact = base::sum(impact),
+                       .by = c("geo_id_macro", "impact_ci")) |>
+      # Round
+      dplyr::mutate(impact_rounded = round(impact))
+
+    summary <- summary_by_geo_id_macro
+  }
 
 
     # Store the results in a list keeping consistency in the structure with
