@@ -496,8 +496,7 @@ summarize_uncertainty <- function(
 
   only_new_values_for_replacement <-
     dplyr::select(template_with_sim,
-                  -dplyr::any_of(c("sim_id", "geo_id_micro")))
-                                   #geo_ids)))
+                  -dplyr::all_of(c("sim_id", "geo_id_micro")))
 
   # Replace the values
   input_args_for_attribute <-
