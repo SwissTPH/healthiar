@@ -97,6 +97,10 @@
 #' \emph{Only applicable in assessments with multiple geographic units.} For example, if you provide the names of the municipalities under analysis to \code{geo_id_micro}, you might provide to \code{geo_id_macro} the corresponding region / canton / province names.
 #' Consequently, the vectors fed to \code{geo_id_micro} and \code{geo_id_macro} must be of the same length.
 #' @details
+#' \code{age_group}
+#' @details
+#' Can be either \code{numeric} or \code{character}. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}.
+#' @details
 #' \code{info}
 #' @details
 #' \emph{Optional argument.} Information entered to this argument will be added as column(s) names \code{info_1}, \code{info_2}, \code{info_...} to the results table. These additional columns can be used to further stratify the analysis in a secondary step (see example below).

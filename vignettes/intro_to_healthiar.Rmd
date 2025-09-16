@@ -154,7 +154,7 @@ Every `attribute_health()` output consists of two lists ("folders")
         
         - `sex`: contains results by sex (only present if function argument `sex` specified)
         
-        - `age_group`: contains results by age groups (only present if function argument `age` sepcified)
+        - `age_group`: contains results by age groups (only present if function argument `age_group` sepcified)
 
 *NOTE*: `attribute_lifetable()` creates additional output that is specific to life table calculations
 

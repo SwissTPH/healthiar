@@ -39,7 +39,7 @@ attribute_lifetable(
 )
 }
 \arguments{
-\item{age_group}{\code{Numeric vector} or \code{string vector} providing the \strong{age groups} considered in the assessment. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}. \emph{Optional argument.}}
+\item{age_group}{\code{Numeric vector} or \code{string vector} providing the \strong{age groups} considered in the assessment. In case of use in \code{attribute_lifetable)()}, it must be a \code{numeric} and contain single year age groups. See Details for more info. \emph{Optional argument for \code{attribute_health()}; needed for \code{attribute_lifetable()}.}}
 
 \item{sex}{\code{Numeric vector} or \code{string vector} specifying the \strong{sex} of the groups considered in the assessment.\emph{Optional argument.}}
 
@@ -58,7 +58,7 @@ attribute_lifetable(
 
 \item{year_of_analysis}{\code{Numeric value} providing the first with exposure to the environmental stressor.}
 
-\item{time_horizon}{\code{Numeric value} specifying the time horizon (number of years) for which the impacts of exposure are to be considered. See Details for more info.}
+\item{time_horizon}{\code{Numeric value} specifying the time horizon (number of years) for which the attributable YLL or premature deaths are to be considered. See Details for more info. \emph{Optional argument.}}
 
 \item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
 
@@ -98,13 +98,17 @@ This function assesses premature deaths or years of life lost (YLL) attributable
 \details{
 \strong{Function arguments}
 
+\code{age_group}
+
+The numeric values must refer to 1 year age groups, e.g. \code{c(0:99)}. To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()} (see its function documentation for more info).
+
 \code{bhd_central,bhd_lower,bhd_upper}
 
 Deaths per age must be inputted with one value per age (i.e. age group size = 1 year). There must be ≥ 1 deaths per age to avoid issues during the calculation of survival probabilities.
 
 \code{population}
 
-The population data must be inputted with one value per age (i.e. age group size = 1 year). To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()} and see its function documentation for more info.
+The population data must be inputted with 1 value per age (i.e. age group size = 1 year). The values must be ≥ 1 per age to avoid issues during the calculation of survival probabilities.
 
 Mid-year population of year x can be approximated as the mean of either end-year populations of years x-1 and x or start-of-year populations of years x and x+1. For each age, the inputted values must be ≥ 1 to avoid issues during the calculation of survival probabilities.
 
@@ -114,7 +118,12 @@ If \code{"with_newborns"} is selected, it is assumed that for each year after th
 
 \code{time_horizon}
 
-For example, would be 10 if one is interested in the impacts of exposure during the year of analysis and the next 9 years (= 10 years in total).
+Applicable for the following cases:
+#' \itemize{
+ \item YLL: \code{single_year} or \code{constant} exposure
+ \item premature deaths: \code{constant} exposure
+}
+For example, if 10 is entered one is interested in the impacts of exposure during the year of analysis and the next 9 years (= 10 years in total). Default value: length of the numeric vector specified in the \code{age_group} argument.
 
 \code{min_age}, \code{max_age}
 The \code{min_age} default value 30 implies that all adults aged 30 or older will be affected by the exposure; \code{max_age} analogeously specifies the age above which no health effects of the exposure are considered.
