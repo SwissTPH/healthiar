@@ -476,16 +476,14 @@ summarize_uncertainty <- function(
     input_args$value[! base::names(input_args$value) %in% args_to_be_removed_in_input_args]
 
 
-
   template_with_sim <-
     # Bind the template with the simulated values
     dplyr::bind_cols(sim_template, tibble::as_tibble(sim[var_names_with_ci])) |>
     # Unnest to have table layout
-    tidyr::unnest(dplyr::any_of(c("sim_id",
-                                  var_names_with_ci)))
+    tidyr::unnest(dplyr::any_of(c("sim_id", var_names_with_ci)))
 
   geo_ids <-
-    base::names(template_with_sim)[base::names(template_with_sim) %in% c("geo_id_macro", "geo_id_micro")]
+    base::intersect(base::names(template_with_sim), c("geo_id_macro", "geo_id_micro"))
 
   template_with_sim_grouped <-
     template_with_sim |>
