@@ -165,25 +165,6 @@ summarize_uncertainty <- function(
   # Create sub-functions to be used inside summarize_uncertainty_based_on_input (see below)
   # and in compare() out that function
 
-  # Get results of simulations organized by geo unit
-  get_attribute_by_geo <- function(attribute_by_sim, geo_id){
-
-    attribute_by_geo <- attribute_by_sim |>
-      # Remove super-detailed information by simulation
-      # any_of() because input is not available in compare
-      # (otherwise too large output and slow)
-      dplyr::select( !dplyr::contains(c("input", "output")))|>
-      # Keep only unique rows
-      # If geo_id_macro avaialable,
-      # then geo_ and aggregated impact have the same dimension as geo_id_micro
-      # and this creates duplicates
-      base::unique() |>
-      # Put column geo_id first because it is now the sort criteria
-      dplyr::select(dplyr::all_of(geo_id), dplyr::everything()) |>
-      # Sort rows by geo_id
-      dplyr::arrange(dplyr::across(dplyr::all_of(geo_id)))
-  }
-
   # Get uncertainty
   get_summary <- function(attribute){
 
@@ -591,9 +572,7 @@ summarize_uncertainty <- function(
 
 
   # Obtain results of simulations organized by geo unit
-  attribute_by_geo_id_micro <-
-    get_attribute_by_geo(attribute_by_sim = attribute_by_sim_disaggregated,
-                         geo_id = "geo_id_micro")
+  attribute_by_geo_id_micro <- attribute_by_sim_disaggregated
 
   # Get summary (uncertainty) for each geo_id_micro
   summary_by_geo_id_micro <-
@@ -725,9 +704,8 @@ summarize_uncertainty <- function(
     }
 
     # Obtain results of simulations organized by geo unit
-  attribute_by_geo_id_micro <-
-    get_attribute_by_geo(attribute_by_sim = attribute_by_sim_disaggregated,
-                         geo_id = "geo_id_micro")
+  attribute_by_geo_id_micro <- attribute_by_sim_disaggregated
+
 
   # Get summary (uncertainty) for each geo_id_micro
   summary_by_geo_id_micro <-
