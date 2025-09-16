@@ -60,8 +60,8 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
         bhd_central = base::rep(data$incidents_per_100_000_per_year/1E5*data$population_at_risk, 4),
         rr_central = base::rep(data$relative_risk, 4),
         rr_increment = base::rep(10, 4),
-        erf_shape = "log_linear",
-        info = paste0(data$pollutant,"_", data$evaluation_name)
+        erf_shape = base::rep("log_linear", 4),
+        info = base::paste0(data$pollutant,"_", data$evaluation_name)
       )$health_main$impact_rounded,
     expected = # airqplus_pm_copd
       data$estimated_number_of_attributable_cases_central * 4
