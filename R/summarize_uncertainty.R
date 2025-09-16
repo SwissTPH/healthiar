@@ -385,9 +385,9 @@ summarize_uncertainty <- function(
   var_names_with_ci <- base::names(ci_in)[unlist(ci_in)]
   var_names_with_ci_in_name <- base::gsub("rr", "erf", var_names_with_ci) |> base::paste0("_ci")
   # Identify those var_names_with_ci that have simulated values different in all geo units
-  var_names_with_ci_geo_different <- var_names_with_ci[var_names_with_ci %in% c("exp", "bhd")]
+  var_names_with_ci_geo_different <- base::intersect(var_names_with_ci, c("exp", "bhd"))
   # And now identical
-  var_names_with_ci_geo_identical <- var_names_with_ci[var_names_with_ci %in% c("rr", "cutoff", "dw", "duration")]
+  var_names_with_ci_geo_identical <- base::intersect(var_names_with_ci,  c("rr", "cutoff", "dw", "duration"))
 
 
   # Define the mapping between variable names and their distributions
