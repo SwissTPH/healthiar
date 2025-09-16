@@ -24,7 +24,7 @@ load("C:/Users/luytax/switchdrive/Other projects/2025_CHair/chair/data/clean/dat
 ## Prepare datasets ####
 
 ## RR
-pm_lc <- read.csv("C:/Users/luytax/switchdrive/BEST-COST/best-cost_WPs/r_package/varia/Workshops_and_demos/2025_06_30_Swiss_TPH/_115a_rz.csv")
+pm_lc <- read.csv("varia/Workshops_and_demos/2025_09_30_international_workshop/_115a_rz.csv")
 pm_lc <- pm_lc |>
   ## Rename columns
   dplyr::select(
@@ -56,7 +56,10 @@ pm_lc <- pm_lc |>
     increment = 10,
     function_shape = "log_linear"
   ) |>
-  dplyr::mutate(cutoff = 5)
+  dplyr::mutate(cutoff = 5) |>
+  dplyr::mutate(
+    pollutant = "PM2.5", .after = exposure
+  )
 
 ## AR
 noise_ha <- pm_lc |>
@@ -112,7 +115,8 @@ pm_lc_ch <- pm_lc |>
   dplyr::filter(canton == "CH") |>
   dplyr::select(-canton)
 
-pm_lc_cantons <- pm_lc |>
+# pm_lc_cantons <- pm_lc |>
+exdat_cantons <- pm_lc |>
   dplyr::filter(canton != "CH") |>
   dplyr::filter(year == 2023)
 
