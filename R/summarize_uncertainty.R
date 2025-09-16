@@ -494,17 +494,6 @@ summarize_uncertainty <- function(
 
   }
 
-  only_new_values_for_replacement <-
-    dplyr::select(template_with_sim,
-                  -dplyr::all_of(c("sim_id", "geo_id_micro")))
-
-  # Replace the values
-  input_args_for_attribute <-
-    purrr::pmap(only_new_values_for_replacement,
-                \(...) {c(input_args_prepared_for_replacement, base::list(...))})
-
-
-
   args_df <- input_table |>
     dplyr::filter(dplyr::if_all(.cols = dplyr::all_of(var_names_with_ci_in_name),
                                 .fns = ~ .x == "central")) |>
