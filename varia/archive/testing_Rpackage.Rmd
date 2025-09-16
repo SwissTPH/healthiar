@@ -2184,7 +2184,7 @@ bestcost_pm_copd_costs_discount <-
     output_healthiar = bestcost_pm_copd,
     discount_shape = "exponential",
     discount_rate = 0.03,
-    discount_years = 5,
+    n_years = 5,
     valuation = 20)
 
 check_general(bestcost_pm_copd_costs_discount[["monetization_main"]]$monetized_impact_rounded,
@@ -2196,7 +2196,7 @@ bestcost_cost_discount_single_value <-
     impact = 2E4, 
     discount_shape = "exponential",
     discount_rate = 0.03,
-    discount_years = 20,
+    n_years = 20,
     valuation = 1)
 
 check_general(bestcost_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
@@ -2211,7 +2211,7 @@ bestcost_pm_copd_cost_discount_single_value <-
     impact = 50,
     discount_shape = "exponential",
     discount_rate = 0.03,
-    discount_years = 5,
+    n_years = 5,
     valuation = 20)
 
 check_general(bestcost_pm_copd_cost_discount_single_value[["monetization_main"]]$monetized_impact_rounded,
@@ -2247,7 +2247,7 @@ bestcost_pm_copd_discount <-
     impact = 2E4,
     discount_shape = "exponential",
     discount_rate = 0.03,
-    discount_years = 20)
+    n_years = 20)
 
 check_general(bestcost_pm_copd_discount[["monetization_main"]]$monetized_impact_rounded,
               11074)# Results on 2025-01-15
@@ -2262,7 +2262,7 @@ bestcost_inflation_attribute_result <-
     output_healthiar = bestcost_pm_copd,
     discount_shape = "exponential",
     discount_rate = 0.05,
-    discount_years = 5,
+    n_years = 5,
     inflation = 0.08,
     valuation = 1E3)
 
@@ -2276,7 +2276,7 @@ bestcost_inflation <-
     impact = 1,
     discount_shape = "exponential",
     discount_rate = 0.05,
-    discount_years = 5,
+    n_years = 5,
     inflation = 0.08,
     valuation = 1E3)
 
@@ -2290,7 +2290,7 @@ bestcost_inflation_chatgpt <-
     impact = 1,
     discount_shape = "exponential",
     discount_rate = 0.04,
-    discount_years = 5,
+    n_years = 5,
     inflation = 0.03,
     valuation = 1E4)
 
@@ -2305,7 +2305,7 @@ bestcost_inflation_different_cost_by_year_exp <-
     impact = c(800, 1000, 1200, 1500, 1800, 2000),
     discount_shape = "exponential",
     discount_rate = 0.05,
-    discount_years = 5,
+    n_years = 5,
     valuation = 1)
 
 check_general(round(bestcost_inflation_different_cost_by_year_exp[["monetization_detailed"]]$monetized_impact),
@@ -2321,7 +2321,7 @@ bestcost_inflation_different_cost_by_year_hyp_harvey <-
     impact = c(800, 1000, 1200, 1500, 1800, 2000),
     discount_shape = "hyperbolic_harvey_1986",
     discount_rate = 0.05,
-    discount_years = 5,
+    n_years = 5,
     valuation = 1)
 
 check_general(round(bestcost_inflation_different_cost_by_year_hyp_harvey[["monetization_detailed"]]$monetized_impact),
@@ -2333,7 +2333,7 @@ bestcost_inflation_different_cost_by_year_hyp_mazur <-
     impact = c(800, 1000, 1200, 1500, 1800, 2000),
     discount_shape = "hyperbolic_mazur_1987",
     discount_rate = 0.05,
-    discount_years = 5,
+    n_years = 5,
     valuation = 1)
 
 check_general(round(bestcost_inflation_different_cost_by_year_hyp_mazur[["monetization_detailed"]]$monetized_impact),
@@ -2352,8 +2352,8 @@ bestcost_pm_copd_cba_attr_input <-
     discount_shape = "exponential",
     discount_rate_benefit = 0.03,
     discount_rate_cost = 0.03,
-    discount_years_benefit = 5,
-    discount_years_cost = 5)
+    n_years_benefit = 5,
+    n_years_cost = 5)
 check_general(bestcost_pm_copd_cba_attr_input[["cba_main"]]$net_benefit_rounded,
               c(60330,23257,94350)) # Results on 2025-03-06; no comparison study
 
@@ -2370,8 +2370,8 @@ bestcost_pm_copd_cba_raw_input <-
     discount_shape = "exponential",
     discount_rate_benefit = 0.03,
     discount_rate_cost = 0.03,
-    discount_years_benefit = 5,
-    discount_years_cost = 5)
+    n_years_benefit = 5,
+    n_years_cost = 5)
 check_general(bestcost_pm_copd_cba_raw_input[["cba_main"]]$net_benefit_rounded,
               776) # As indicated by University of Port in Excel file
 
@@ -2388,8 +2388,8 @@ bestcost_pm_copd_cba_output <-
     discount_shape = "exponential",
     discount_rate_benefit = 0.03,
     discount_rate_cost = 0.03,
-    discount_years_benefit = 5,
-    discount_years_cost = 5)
+    n_years_benefit = 5,
+    n_years_cost = 5)
 check_general(bestcost_pm_copd_cba_output[["cba_main"]]$net_benefit_rounded,
               c(60416, 23343, 94436) - 86) # As indicated by University of Porto in Excel file
 

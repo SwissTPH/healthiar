@@ -6,21 +6,46 @@
 \usage{
 get_discount_factor(
   discount_rate,
-  discount_year,
-  discount_shape = "exponential"
+  n_years,
+  discount_shape = "exponential",
+  inflation_rate = NULL
 )
 }
 \arguments{
 \item{discount_rate}{\code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.}
 
+\item{n_years}{\code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1)}
+
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
+
+\item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
 }
 \description{
-This function calculates the discount factor based on discount rate (already corrected for inflation)
+This function calculates the discount factor based on discount rate. If the argument \code{inflation_rate} is NULL (default), it is assumed that the discount rate is already corrected for inflation). Otherwise (if a value for \code{inflation_rate} is entered), the resulted discount factor is adjusted for inflation.
+}
+\details{
+\strong{Equations discount factors (without inflation)}
+
+\emph{Exponential discounting (no inflation)}
+\deqn{discount\_factor = \frac{1}{(1 + discount\_rate) ^{n\_years}}}
+
+\emph{Hyperbolic discounting Harvey (no inflation)}
+\deqn{discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}}
+\emph{Hyperbolic discounting Mazure (no inflation)}
+\deqn{discount\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)}}
+
+\strong{Equations discount factors with inflation}
+
+\emph{Exponential discounting (with inflation)}
+\deqn{discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate)) ^{n\_years}}}
+
+\emph{Hyperbolic discounting Harvey (with inflation)}
+\deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}}
+\emph{Hyperbolic discounting Mazure (with inflation)}
+\deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years) \times (1 + inflation\_rate)^{n\_years}}}
 }
 \examples{
 # TODO
-
 }
 \author{
 Alberto Castro & Axel Luyten

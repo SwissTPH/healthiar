@@ -6,12 +6,27 @@
 
 # ARGUMENTS ####################################################################
 #' @inheritParams monetize
-#' @param discount_rate_benefit,discount_rate_cost \code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates)
+#' @param discount_rate_benefit,discount_rate_cost \code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates).
+#' @param inflation_rate_benefit,inflation_rate_cost \code{Numeric value} referring to the the inflation rate used in the benefit and the cost side (respectively).
 #' @param benefit \code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure
 #' @param cost \code{Numeric value} referring to the investment cost to achieve the reduction of exposure
 
 # VALUE ########################################################################
 #' @returns Description of the return value.
+
+# DETAILS ######################################################################
+
+#' @details
+#' \strong{Equation cost-benefit analysis}
+#' @details
+#' \deqn{net\_benefit = benefit - cost}
+#' @details
+#' \deqn{cost\_benefit\_ratio = \frac{benefit}{cost}}
+#' @details
+#' \deqn{return\_on\_investment = \frac{benefit - cost}{cost } \times 100}
+#' @details
+#' For the equations regarding the monetization of the cost and the benefit please see the function documentation of \code{monetize()}.
+
 
 # EXAMPLES #####################################################################
 #' @examples
@@ -34,8 +49,8 @@
 #'   discount_shape = "exponential",
 #'   discount_rate_benefit = 0.03,
 #'   discount_rate_cost = 0.03,
-#'   discount_years_benefit = 5,
-#'   discount_years_cost = 5
+#'   n_years_benefit = 5,
+#'   n_years_cost = 5
 #' )
 #'
 #' results$cba_main |>
@@ -54,9 +69,11 @@ cba <-
            cost,
            discount_rate_benefit = NULL,
            discount_rate_cost = NULL,
+           inflation_rate_benefit = NULL,
+           inflation_rate_cost = NULL,
            discount_shape = "exponential",
-           discount_years_benefit = 1,
-           discount_years_cost = 1) {
+           n_years_benefit = 1,
+           n_years_cost = 1) {
 
     # Define vectors that are relevant below
 
@@ -67,42 +84,38 @@ cba <-
       c("_benefit", "_cost")
 
     columns_monetization_with_suffix <-
-      paste0(
+      base::paste0(
         columns_monetization,
-        rep(suffix_monetization, each = length(columns_monetization))
+        base::rep(suffix_monetization, each = base::length(columns_monetization))
       )
 
     # Run include_monetization for benefit and cost separately
     # Important to obtain main and detailed to avoid losing information
 
-    cba_detailed_benefit <-
-      healthiar::monetize(
-        output_attribute = output_attribute,
-        impact = positive_impact,
-        discount_rate = discount_rate_benefit,
-        discount_years = discount_years_benefit,
-        discount_shape = discount_shape,
-        valuation = valuation)[["monetization_detailed"]]
+    cba_benefit <- healthiar::monetize(
+      output_attribute = output_attribute,
+      impact = positive_impact,
+      discount_rate = discount_rate_benefit,
+      discount_shape = discount_shape,
+      inflation_rate = inflation_rate_benefit,
+      n_years = n_years_benefit,
+      valuation = valuation)
 
-    cba_main_benefit <-
-      healthiar::monetize(
-        output_attribute = output_attribute,
-        impact = positive_impact,
-        discount_rate = discount_rate_benefit,
-        discount_years = discount_years_benefit,
-        discount_shape = discount_shape,
-        valuation = valuation)[["monetization_main"]]
+    cba_detailed_benefit <- cba_benefit[["monetization_detailed"]]
+
+    cba_main_benefit <- cba_benefit[["monetization_main"]]
 
 
 
-    # For cost, assume 1 impact with full valuation to make use of include_monetization
+    # For cost, assume 1 impact with full valuation
     cba_detailed_cost <-
       healthiar::monetize(
         impact = 1,
         valuation = cost,
         discount_rate = discount_rate_cost,
-        discount_years = discount_years_cost,
-        discount_shape = discount_shape)[["monetization_main"]]
+        discount_shape = discount_shape,
+        inflation_rate = inflation_rate_cost,
+        n_years = n_years_cost)[["monetization_main"]]
 
     # For costs main and detailed are the same because they only have one row
     cba_main_cost <- cba_detailed_cost
@@ -129,7 +142,7 @@ cba <-
     # if no columns with ci or geo are available
     # (i.e, without using the function attribute in a previous step)
     columns_ci_geo <-
-      names(cba_main)[grepl("_ci|geo_id", names(cba_main))]
+      base::names(cba_main)[base::grepl("_ci|geo_id", base::names(cba_main))]
 
     relevant_columns <-
       c(columns_ci_geo,
@@ -159,17 +172,17 @@ cba <-
     # Build the output list with main and detailed
 
     output_cba <-
-      list(cba_main = cba_main,
+      base::list(cba_main = cba_main,
            cba_detailed = cba_detailed)
 
 
 
-    if(is.null(positive_impact) & !is.null(output_attribute)){
+    if(base::is.null(positive_impact) & !base::is.null(output_attribute)){
       output <-
         c(output_attribute,
           output_cba)
 
-    }else if(!is.null(positive_impact) & is.null(output_attribute)){
+    }else if(!base::is.null(positive_impact) & base::is.null(output_attribute)){
      output <- output_cba
     }
 

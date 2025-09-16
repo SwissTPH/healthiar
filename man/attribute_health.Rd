@@ -53,7 +53,7 @@ attribute_health(
 
 \item{geo_id_micro, geo_id_macro}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_micro}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_micro}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
-\item{age_group}{\code{Numeric vector} or \code{string vector} providing the \strong{age groups} considered in the assessment. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}. \emph{Optional argument.}}
+\item{age_group}{\code{Numeric vector} or \code{string vector} providing the \strong{age groups} considered in the assessment. In case of use in \code{attribute_lifetable)()}, it must be a \code{numeric} and contain single year age groups. See Details for more info. \emph{Optional argument for \code{attribute_health()}; needed for \code{attribute_lifetable()}.}}
 
 \item{sex}{\code{Numeric vector} or \code{string vector} specifying the \strong{sex} of the groups considered in the assessment.\emph{Optional argument.}}
 
@@ -142,6 +142,10 @@ If you have x-axis (exposure) and y-axis (relative risk) value pairs of multiple
 \emph{Only applicable in assessments with multiple geographic units.} For example, if you provide the names of the municipalities under analysis to \code{geo_id_micro}, you might provide to \code{geo_id_macro} the corresponding region / canton / province names.
 Consequently, the vectors fed to \code{geo_id_micro} and \code{geo_id_macro} must be of the same length.
 
+\code{age_group}
+
+Can be either \code{numeric} or \code{character}. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}.
+
 \code{info}
 
 \emph{Optional argument.} Information entered to this argument will be added as column(s) names \code{info_1}, \code{info_2}, \code{info_...} to the results table. These additional columns can be used to further stratify the analysis in a secondary step (see example below).
@@ -168,7 +172,7 @@ PE(x) = population distribution of exposure
 RR(x) = relative risk at exposure level compared to the reference level
 
 If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF
-\deqn{PAF = \frac{\sum RR_i \times PE_i dx - 1}{\sum RR_i \times PE_i dx}}
+\deqn{PAF = \frac{\sum RR_i \times PE_i - 1}{\sum RR_i \times PE_i}}
 
 Where:
 
@@ -288,10 +292,10 @@ output_attribute <- attribute_health(
   geo_id_micro = c(1:nrow(info)), # a vector of (random) unique IDs must be entered
   info = info
 )
-output_stratified <- output_attribute$health_detailed$results_summed_across_cat_exp |>
-  dplyr::group_by(info_1) |>
-  dplyr::summarize(mean_impact = mean(impact)) |>
-  print()
+output_stratified <- output_attribute$health_detailed$results_raw |>
+ dplyr::group_by(info_column_1) |>
+ dplyr::summarize(mean_impact = mean(impact)) |>
+ print()
 }
 \author{
 Alberto Castro & Axel Luyten

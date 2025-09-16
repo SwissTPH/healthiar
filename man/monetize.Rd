@@ -10,25 +10,25 @@ monetize(
   valuation,
   discount_rate = NULL,
   discount_shape = "exponential",
-  discount_years = 0,
-  inflation = NULL,
+  n_years = 0,
+  inflation_rate = NULL,
   info = NULL
 )
 }
 \arguments{
 \item{output_attribute}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
 
-\item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while discount_years does not include the year 0. Thus, length of impact = discount_years + 1.}
+\item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.}
 
-\item{valuation}{\code{Numberic value} referring to unit value of a health impact}
+\item{valuation}{\code{Numberic value} referring to unit value of a health impact.}
 
 \item{discount_rate}{\code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 
-\item{discount_years}{\code{Numeric value} referring to the period of time to be considered in the discounting. Be aware that the year 0 (without discounting) is not be counted here. If a vector is entered in the argument impact, discount_years does not need to be entered (length of impact = discount_years + 1)}
+\item{n_years}{\code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1)}
 
-\item{inflation}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
+\item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate)}
 
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}}
 }
@@ -42,6 +42,31 @@ If the argument \code{output_attribute} was specified, then the two lists are ad
 }
 \description{
 This function monetizes health impacts
+}
+\details{
+\strong{Equation inflation factor (without discounting)}
+
+\deqn{inflation\_factor = (1 + inflation\_rate)^{n\_years}}
+
+\strong{Equations discount factors (without inflation)}
+
+\emph{Exponential discounting (no inflation)}
+\deqn{discount\_factor = \frac{1}{(1 + discount\_rate) ^{n\_years}}}
+
+\emph{Hyperbolic discounting Harvey (no inflation)}
+\deqn{discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}}
+\emph{Hyperbolic discounting Mazure (no inflation)}
+\deqn{discount\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)}}
+
+\strong{Equations discount factors with inflation}
+
+\emph{Exponential discounting (with inflation)}
+\deqn{discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate)) ^{n\_years}}}
+
+\emph{Hyperbolic discounting Harvey (with inflation)}
+\deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}}
+\emph{Hyperbolic discounting Mazure (with inflation)}
+\deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years) \times (1 + inflation\_rate)^{n\_years}}}
 }
 \examples{
 # Goal: monetize the attributable impacts of an existing healthiar
@@ -59,7 +84,7 @@ results <- monetize(
   output_attribute = output_attribute,
   discount_shape = "exponential",
   discount_rate = 0.03,
-  discount_years = 5,
+  n_years = 5,
   valuation = 50000 # E.g. EURO
 )
 

@@ -154,7 +154,7 @@ Every `attribute_health()` output consists of two lists ("folders")
         
         - `sex`: contains results by sex (only present if function argument `sex` specified)
         
-        - `age_group`: contains results by age groups (only present if function argument `age` sepcified)
+        - `age_group`: contains results by age groups (only present if function argument `age_group` sepcified)
 
 *NOTE*: `attribute_lifetable()` creates additional output that is specific to life table calculations
 
@@ -742,7 +742,7 @@ results_pm_copd <- monetize(
     output_attribute = results_pm_copd,
     discount_shape = "exponential",
     discount_rate = 0.03,
-    discount_years = 5,
+    n_years = 5,
     valuation = 50000 # E.g. EURO
 )
 ```
@@ -786,7 +786,7 @@ The outcome of the CBA is contained in two folders, which are added to the exist
 
     -   `benefit` contains results `by_year` and raw results `health_raw`
 
-    -   `cost` contains the costs of the policy at the end of the period specified in the `discount_years_cost` argument
+    -   `cost` contains the costs of the policy at the end of the period specified in the `n_years_cost` argument
 
 ### Function call
 
@@ -798,8 +798,8 @@ cba <- cba(
     discount_shape = "exponential",
     discount_rate_benefit = 0.03,
     discount_rate_cost = 0.03,
-    discount_years_benefit = 5,
-    discount_years_cost = 5
+    n_years_benefit = 5,
+    n_years_cost = 5
 )
 ```
 

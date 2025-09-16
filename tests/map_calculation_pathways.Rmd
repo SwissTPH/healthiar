@@ -501,7 +501,7 @@ cat("Total number of pathways:", progress_compare$n_all_pw, "\n")
 ov_monetization <- list(
   discount_rate = c("TRUE", "FALSE"),
   discount_shape = c("exponential", "hyp_harvey", "hyp_mazur"),
-  inflation = c("TRUE", "FALSE")
+  inflation_rate = c("TRUE", "FALSE")
 )
 
 pathways_monetization <- expand.grid(ov_monetization) |> 
@@ -520,7 +520,7 @@ pathways_monetization <- pathways_monetization %>% # Important to use magrittr p
 core_monetization <- list(
   discount_shape = c("exponential", "hyp_harvey", "hyp_mazur"),
   discount_rate = c("TRUE", "FALSE"),
-  inflation = c("TRUE", "FALSE")
+  inflation_rate = c("TRUE", "FALSE")
 )
 
 core_monetization <- expand.grid(core_monetization) |> 
@@ -529,7 +529,7 @@ core_monetization <- expand.grid(core_monetization) |>
   mutate(core_pathway = "TRUE")
 
 pathways_monetization <- pathways_monetization |> 
-  left_join(x = _, y = core_monetization, by = c("discount_shape", "discount_rate", "inflation")) |> 
+  left_join(x = _, y = core_monetization, by = c("discount_shape", "discount_rate", "inflation_rate")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
 
@@ -548,7 +548,7 @@ n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
   discount_rate = rep(NA_character_, n_row),
   discount_shape = rep(NA_character_, n_row),
-  inflation = rep(NA_character_, n_row),
+  inflation_rate = rep(NA_character_, n_row),
   implemented = rep("FALSE", n_row)
 )
 
@@ -559,14 +559,14 @@ for (i in seq_along(test_names_with_pw)) {
   # Extract values for each column
   existing_tests$discount_rate[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_")], "(?<=\\|discount_rate_)[^\\|]+")
   existing_tests$discount_shape[i] <- str_extract(strings[str_detect(strings, "\\|discount_shape_")], "(?<=\\|discount_shape_)[^\\|]+")
-  existing_tests$inflation[i] <- str_extract(strings[str_detect(strings, "\\|inflation_")], "(?<=\\|inflation_)[^\\|]+")
+  existing_tests$inflation[i] <- str_extract(strings[str_detect(strings, "\\|inflation_rate_")], "(?<=\\|inflation_)[^\\|]+")
   
   existing_tests$implemented[i] <- "TRUE"
 }
 
 ## Merge the pathways tibble and the existing_tests tibble
 pathways_monetization <- pathways_monetization %>%
-  left_join(existing_tests, by = c("discount_shape", "discount_rate", "inflation"),
+  left_join(existing_tests, by = c("discount_shape", "discount_rate", "inflation_rate"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-implemented.existing)|> 
@@ -576,7 +576,7 @@ pathways_monetization <- pathways_monetization %>%
 pathways_monetization <- pathways_monetization |> 
   relocate(implemented) |> 
   relocate(core_pathway, .after = implemented) |> 
-  arrange(desc(discount_rate), discount_shape, inflation)
+  arrange(desc(discount_rate), discount_shape, inflation_rate)
 
 # * Measure progress ###########################################################
 

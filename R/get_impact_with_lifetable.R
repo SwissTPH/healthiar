@@ -46,13 +46,16 @@ get_impact_with_lifetable <-
     is_with_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "with_newborns"
     is_without_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "without_newborns"
 
-    # n_years_projection defines for how many years the population should be projected;
-    n_years_projection <- base::length(base::unique(input_with_risk_and_pop_fraction$age_start)) - 1
+
+    # Store the value of time horizon (defined in compile_input())
+    time_horizon <- base::unique(input_with_risk_and_pop_fraction$time_horizon)
     # Define the last year of the projection
-    last_year_projection <- yoa + n_years_projection
+    last_year_projection <- yoa + time_horizon - 1
     # Define the years based on n_years_projection
     # e.g. 2020 to 2118
     years_projection <- yoa_plus_1 : last_year_projection
+    # n_years_projection defines for how many years the population should be projected;
+    n_years_projection <- base::length(years_projection)
 
     # Precompute column names to be use below
     entry_names <- base::paste0("entry_population_", years_projection)

@@ -11,19 +11,23 @@ cba(
   cost,
   discount_rate_benefit = NULL,
   discount_rate_cost = NULL,
+  inflation_rate_benefit = NULL,
+  inflation_rate_cost = NULL,
   discount_shape = "exponential",
-  discount_years_benefit = 1,
-  discount_years_cost = 1
+  n_years_benefit = 1,
+  n_years_cost = 1
 )
 }
 \arguments{
 \item{output_attribute}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
 
-\item{valuation}{\code{Numberic value} referring to unit value of a health impact}
+\item{valuation}{\code{Numberic value} referring to unit value of a health impact.}
 
 \item{cost}{\code{Numeric value} referring to the investment cost to achieve the reduction of exposure}
 
-\item{discount_rate_benefit, discount_rate_cost}{\code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates)}
+\item{discount_rate_benefit, discount_rate_cost}{\code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates).}
+
+\item{inflation_rate_benefit, inflation_rate_cost}{\code{Numeric value} referring to the the inflation rate used in the benefit and the cost side (respectively).}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 
@@ -34,6 +38,17 @@ Description of the return value.
 }
 \description{
 This function performs a cost-benefit analysis
+}
+\details{
+\strong{Equation cost-benefit analysis}
+
+\deqn{net\_benefit = benefit - cost}
+
+\deqn{cost\_benefit\_ratio = \frac{benefit}{cost}}
+
+\deqn{return\_on\_investment = \frac{benefit - cost}{cost } \times 100}
+
+For the equations regarding the monetization of the cost and the benefit please see the function documentation of \code{monetize()}.
 }
 \examples{
 # Goal: performs a cost-benefit analysis using an existing output
@@ -55,8 +70,8 @@ results <- cba(
   discount_shape = "exponential",
   discount_rate_benefit = 0.03,
   discount_rate_cost = 0.03,
-  discount_years_benefit = 5,
-  discount_years_cost = 5
+  n_years_benefit = 5,
+  n_years_cost = 5
 )
 
 results$cba_main |>
