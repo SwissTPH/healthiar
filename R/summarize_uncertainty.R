@@ -426,6 +426,7 @@ summarize_uncertainty <- function(
 
   # Identify the variable names with confidence interval
   var_names_with_ci <- base::names(ci_in)[unlist(ci_in)]
+  var_names_with_ci_in_name <- base::gsub("rr", "erf", var_names_with_ci) |> base::paste0("_ci")
   # Identify the central variable names with confidence interval
   var_names_with_ci_central <- base::paste0(var_names_with_ci, "_central")
   # Identify those var_names_with_ci that have simulated values different in all geo units
