@@ -143,7 +143,7 @@ summarize_uncertainty <- function(
 
   ## Error if exposure distribution and uncertainty in exp_...####
   if(# If exposure distribution
-    base::unique(output_attribute$health_detailed$results_raw$exp_type) == "exposure_distribution" &&
+    exp_type == "exposure_distribution" &&
     # If uncertainty in exposure
     (!base::is.null(input_args$value$exp_lower) |
       !base::is.null(input_args$value$exp_upper))){
@@ -157,7 +157,6 @@ summarize_uncertainty <- function(
     base::stop("Please enter an assessment with uncertainty (..._lower and ..._upper) in any argument.",
                call. = FALSE)
   }
-
 
 
 
