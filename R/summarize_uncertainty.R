@@ -202,12 +202,12 @@ summarize_uncertainty <- function(
   }
 
   # Get uncertainty
-  get_summary <- function(attribute, grouping_var){
+  get_summary <- function(attribute){
 
     summary <-
       attribute |>
       dplyr::summarise(
-        .by = dplyr::all_of(grouping_var),
+        .by = dplyr::any_of(c("geo_id_macro", "geo_id_micro")),
         central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
         lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE, names = FALSE),
         upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE)) |>
