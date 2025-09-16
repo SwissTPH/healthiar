@@ -384,24 +384,10 @@ summarize_uncertainty <- function(
   # Identify the variable names with confidence interval
   var_names_with_ci <- base::names(ci_in)[unlist(ci_in)]
   var_names_with_ci_in_name <- base::gsub("rr", "erf", var_names_with_ci) |> base::paste0("_ci")
-  # Identify the central variable names with confidence interval
-  var_names_with_ci_central <- base::paste0(var_names_with_ci, "_central")
   # Identify those var_names_with_ci that have simulated values different in all geo units
   var_names_with_ci_geo_different <- var_names_with_ci[var_names_with_ci %in% c("exp", "bhd")]
-
-  if(base::length(var_names_with_ci_geo_different) >= 1){
-    var_names_with_ci_geo_different_central <-
-      base::paste0(var_names_with_ci_geo_different, "_central")
-  }
-
   # And now identical
   var_names_with_ci_geo_identical <- var_names_with_ci[var_names_with_ci %in% c("rr", "cutoff", "dw", "duration")]
-
-  if(base::length(var_names_with_ci_geo_identical) >= 1){
-    var_names_with_ci_geo_identical_central <-
-      base::paste0(var_names_with_ci_geo_identical, "_central")
-  }
-
 
 
   # Define the mapping between variable names and their distributions
@@ -423,8 +409,6 @@ summarize_uncertainty <- function(
 
     # Store distribution
     dist <- sim_config[[var]]
-    # Store column name
-    col_name <- base::paste0(var, "_central")
 
     # Store central, lower and upper estimate for the simulation below
     central <- base::as.numeric(input_args$value[[base::paste0(var, "_central")]])
@@ -438,7 +422,7 @@ summarize_uncertainty <- function(
     # Simulations must be DIFFERENT  in all geo units
     if(var %in% var_names_with_ci_geo_different){
 
-      sim[[col_name]] <- purrr::pmap(
+      sim[[var]] <- purrr::pmap(
         base::list(sim_template$geo_id_number),
         function(geo_id_number) {
           simulate(
@@ -456,7 +440,7 @@ summarize_uncertainty <- function(
       # Not across geo_id but across sim_id
     } else if (var %in% var_names_with_ci_geo_identical ){
 
-      sim[[col_name]] <-
+      sim[[var]] <-
         base::list(
           simulate(
           central = central,
@@ -495,10 +479,10 @@ summarize_uncertainty <- function(
 
   template_with_sim <-
     # Bind the template with the simulated values
-    dplyr::bind_cols(sim_template, tibble::as_tibble(sim[var_names_with_ci_central])) |>
+    dplyr::bind_cols(sim_template, tibble::as_tibble(sim[var_names_with_ci])) |>
     # Unnest to have table layout
     tidyr::unnest(dplyr::any_of(c("sim_id",
-                                  var_names_with_ci_central)))
+                                  var_names_with_ci)))
 
   geo_ids <-
     base::names(template_with_sim)[base::names(template_with_sim) %in% c("geo_id_macro", "geo_id_micro")]
@@ -509,13 +493,13 @@ summarize_uncertainty <- function(
       .by = sim_id,
       # Pack in lists the values that are different in geo unit (as input_args)
       dplyr::across(
-        .cols = dplyr::all_of(c("geo_id_micro", var_names_with_ci_central)),
+        .cols = dplyr::all_of(c("geo_id_micro", var_names_with_ci)),
         .fns = ~ base::list(.x)))
 
   if( base::length(var_names_with_ci_geo_identical) >= 1 ){
     template_with_sim_grouped <-  template_with_sim_grouped |>
       # Keep only unique values because they identical for all geo_id_micro
-      dplyr::mutate(dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical_central),
+      dplyr::mutate(dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical),
                                   ~ purrr::map(.x, base::unique)))
 
   }
@@ -540,10 +524,6 @@ summarize_uncertainty <- function(
                       by = "geo_id_micro",
                       relationship = "many-to-many") |>
     dplyr::mutate(geo_id_micro = base::paste0(geo_id_micro, "_sim_", sim_id))
-
-
-  #TODO Line below to be deleted removing _central everywhere
-  base::names(args_df) <- base::gsub("_central", "", base::names(args_df))
 
   # Call attribute_health once with all arguments vectorized
   output_sim_after_impact <- healthiar:::get_impact(input_table = args_df,
