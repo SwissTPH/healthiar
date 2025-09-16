@@ -135,7 +135,7 @@ If you have x-axis (exposure) and y-axis (relative risk) value pairs of multiple
 
 \code{prop_pop_exp}
 
-\emph{Only applicable in RR pathways.} In RR pathways indicates the fraction(s) (value(s) from 0 until and including 1) of the total population exposed to the exposure categories. Only to be specified if \code{pop_exp} is not specified. See equation of the population attributable fraction for categorical exposure below.
+\emph{Only applicable in RR pathways.} In RR pathways indicates the fraction(s) (value(s) from 0 until and including 1) of the total population exposed to the exposure categories. See equation of the population attributable fraction for categorical exposure below.
 
 \code{geo_id_macro}, \code{geo_id_micro}
 
