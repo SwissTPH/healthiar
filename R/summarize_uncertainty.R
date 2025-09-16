@@ -376,10 +376,10 @@ summarize_uncertainty <- function(
 
   ## Template and simulations #####
   sim_template <- input_table |>
-  dplyr::select(geo_id_micro) |>
-  base::unique()|>
-  dplyr::mutate(geo_id_number = 1:n_geo, .after = geo_id_micro) |>
-  dplyr::mutate(sim_id = base::list(1:n_sim))
+    dplyr::select(geo_id_micro) |>
+    base::unique()|>
+    dplyr::mutate(geo_id_number = 1:n_geo) |>
+    dplyr::mutate(sim_id = base::list(1:n_sim))
 
   # Identify the variable names with confidence interval
   var_names_with_ci <- base::names(ci_in)[unlist(ci_in)]
