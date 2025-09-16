@@ -142,7 +142,7 @@
 #'   \item{canton}{canton abbreviations}
 #'   \item{lung_cancer_incidence}{lung cancer incidence in the year of analysis}
 #'   \item{exposure}{exposure level}
-#'   \itme{pollutant}{pollutant}
+#'   \item{pollutant}{pollutant}
 #'   \item{exposure_type}{exposure type}
 #'   \item{population}{cantonal population}
 #'   \item{rr}{central relative risk estimate}
