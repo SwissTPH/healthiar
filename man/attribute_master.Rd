@@ -71,7 +71,7 @@ attribute_master(
 
 \item{geo_id_micro, geo_id_macro}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_micro}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_micro}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
-\item{age_group}{\code{Numeric vector} or \code{string vector} providing the \strong{age groups} considered in the assessment. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}. \emph{Optional argument.}}
+\item{age_group}{\code{Numeric vector} or \code{string vector} providing the \strong{age groups} considered in the assessment. In case of use in \code{attribute_lifetable)()}, it must be a \code{numeric} and contain single year age groups. See Details for more info. \emph{Optional argument for \code{attribute_health()}; needed for \code{attribute_lifetable()}.}}
 
 \item{sex}{\code{Numeric vector} or \code{string vector} specifying the \strong{sex} of the groups considered in the assessment.\emph{Optional argument.}}
 
@@ -96,7 +96,7 @@ attribute_master(
 
 \item{year_of_analysis}{\code{Numeric value} providing the first with exposure to the environmental stressor.}
 
-\item{time_horizon}{\code{Numeric value} specifying the time horizon (number of years) for which the impacts of exposure are to be considered. See Details for more info.}
+\item{time_horizon}{\code{Numeric value} specifying the time horizon (number of years) for which the attributable YLL or premature deaths are to be considered. See Details for more info. \emph{Optional argument.}}
 }
 \value{
 This function returns two \code{lists}:

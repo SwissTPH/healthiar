@@ -60,36 +60,26 @@ This function considers socio-economic aspects (e.g. multiple deprivation index)
 
 ## Create assessments for multiple geographic units for the age group
 ## 40 years and younger
-results_below_40 <- attribute_health(
-  exp_central = exdat_socialize$PM25_MEAN,
-  cutoff_central = 0,
-  rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
-  erf_shape = "log_linear",
-  rr_increment = 10,
-  bhd_central = exdat_socialize$MORTALITY_TOTAL,
-  population = exdat_socialize$POPULATION,
-  geo_id_micro = exdat_socialize$CS01012020)
-
-## Create assessments for multiple geographic units for the age group
-## 40 years and older
-results_40_plus <- attribute_health(
-    exp_central = exdat_socialize$PM25_MEAN-0.1,
+results_age_groups <-
+  healthiar::attribute_health(
+    age_group = rep(c("below_40", "40_plus"), each = 9037),
+    exp_central = c(exdat_socialize$PM25_MEAN, exdat_socialize$PM25_MEAN-0.1),
     cutoff_central = 0,
     rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
     erf_shape = "log_linear",
     rr_increment = 10,
-    bhd_central = ifelse(exdat_socialize$MORTALITY_TOTAL-10<0, 0, exdat_socialize$MORTALITY_TOTAL-10),
-    population = ifelse(exdat_socialize$POPULATION-10<0, 0, exdat_socialize$POPULATION-10),
-    geo_id_micro = exdat_socialize$CS01012020)
+    bhd_central = c(exdat_socialize$MORTALITY_TOTAL, ifelse(exdat_socialize$MORTALITY_TOTAL-10<0, 0, exdat_socialize$MORTALITY_TOTAL-10)),
+    population = c(exdat_socialize$POPULATION, ifelse(exdat_socialize$POPULATION-10<0, 0, exdat_socialize$POPULATION-10)),
+    geo_id_micro = rep(exdat_socialize$CS01012020, 2))
 
 ## Difference in attributable impacts between geographic units
 ## that is attributable to differences in deprivation
 results <- socialize(
   age_group = c("below_40", "40_plus"),
   ref_prop_pop = c(0.5, 0.5),
-  output_attribute = list(results_below_40, results_40_plus),
-  geo_id_micro = data$CS01012020,
-  social_indicator = data$score,
+  output_attribute = results_age_groups,
+  geo_id_micro = exdat_socialize$CS01012020,
+  social_indicator = exdat_socialize$score,
   n_quantile = 10,
   increasing_deprivation = TRUE)
 

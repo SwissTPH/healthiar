@@ -11,13 +11,17 @@
 #' @details
 #' \strong{Function arguments}
 #' @details
+#' \code{age_group}
+#' @details
+#' The numeric values must refer to 1 year age groups, e.g. \code{c(0:99)}. To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()} (see its function documentation for more info).
+#' @details
 #' \code{bhd_central,bhd_lower,bhd_upper}
 #' @details
 #' Deaths per age must be inputted with one value per age (i.e. age group size = 1 year). There must be ≥ 1 deaths per age to avoid issues during the calculation of survival probabilities.
 #' @details
 #' \code{population}
 #' @details
-#' The population data must be inputted with one value per age (i.e. age group size = 1 year). To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()} and see its function documentation for more info.
+#' The population data must be inputted with 1 value per age (i.e. age group size = 1 year). The values must be ≥ 1 per age to avoid issues during the calculation of survival probabilities.
 #' @details
 #' Mid-year population of year x can be approximated as the mean of either end-year populations of years x-1 and x or start-of-year populations of years x and x+1. For each age, the inputted values must be ≥ 1 to avoid issues during the calculation of survival probabilities.
 #' @details
@@ -27,7 +31,12 @@
 #' @details
 #' \code{time_horizon}
 #' @details
-#' For example, would be 10 if one is interested in the impacts of exposure during the year of analysis and the next 9 years (= 10 years in total).
+#' Applicable for the following cases:
+#' #' \itemize{
+#'  \item YLL: \code{single_year} or \code{constant} exposure
+#'  \item premature deaths: \code{constant} exposure
+#' }
+#' For example, if 10 is entered one is interested in the impacts of exposure during the year of analysis and the next 9 years (= 10 years in total). Default value: length of the numeric vector specified in the \code{age_group} argument.
 #' @details
 #' \code{min_age}, \code{max_age}
 #' The \code{min_age} default value 30 implies that all adults aged 30 or older will be affected by the exposure; \code{max_age} analogeously specifies the age above which no health effects of the exposure are considered.
