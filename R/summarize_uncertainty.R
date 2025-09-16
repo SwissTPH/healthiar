@@ -491,24 +491,35 @@ summarize_uncertainty <- function(
       # Keep only unique values because they identical for all geo_id_micro
       dplyr::mutate(dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical),
                                   ~ purrr::map(.x, base::unique)))
-
   }
 
-  args_df <- input_table |>
+  input_table_with_sim <- input_table |>
+    # Remove lower and upper rows (keep only central)
+    # In the summary of uncertainties no lower or upper is used
     dplyr::filter(dplyr::if_all(.cols = dplyr::all_of(var_names_with_ci_in_name),
                                 .fns = ~ .x == "central")) |>
+    # Remove the variables with uncertainty because the new simulated values
+    # are introduced in the step below
     dplyr::select(- dplyr::all_of(var_names_with_ci)) |>
+    # Add the simulated values
     dplyr::inner_join(template_with_sim,
                       by = "geo_id_micro",
                       relationship = "many-to-many") |>
+    # Change the name of geo_id_micro adding the sim_id
+    # Important: This is a trick to be able to get the output with impacts by simulation
+    # To be removed below when impacts by geo_id_micro have to be obtained
     dplyr::mutate(geo_id_micro = base::paste0(geo_id_micro, "_sim_", sim_id))
 
-  # Call attribute_health once with all arguments vectorized
-  output_sim_after_impact <- healthiar:::get_impact(input_table = args_df,
+  # Call get_impact taking benefit of the vectorized structure
+  # impact by row no matter what you enter (e.g. multiple rr by geo_id_micro)
+  impact_sim <- healthiar:::get_impact(input_table = input_table_with_sim,
                                                     pop_fraction_type = "paf")
 
-  output_sim <- healthiar:::get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
+  # Get output
+  output_sim <- healthiar:::get_output(results_raw = impact_sim$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
 
+  # Bring back the original geo_id_micro after using the trick of adding the sim_id
+  # We need the original names to be able to sum impacts below
   results_by_geo_id_micro <- output_sim |>
     dplyr::mutate(geo_id_micro = base::gsub("_sim_.*", "", geo_id_micro))
 
