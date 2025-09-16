@@ -117,7 +117,7 @@ summarize_uncertainty <- function(
     input_table_to_check <- output_attribute$health_detailed$input_table
   } else {
     input_args_to_check <- output_attribute$health_detailed$input_args$input_args_scen_1
-    input_table_to_check <- output_attribute$health_detailed$input_table$input_table_scen_2
+    input_table_to_check <- output_attribute$health_detailed$input_table$input_table_scen_1
     #Same as input_args_scen_2 (data validation of compare())
   }
 
@@ -128,7 +128,7 @@ summarize_uncertainty <- function(
     base::names()
 
   is_lifetable <- base::unique(input_table_to_check$is_lifetable)
-
+  exp_type <- base::unique(input_table_to_check$exp_type)
 
 
   # DATA VALIDATION ####
