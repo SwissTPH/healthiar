@@ -168,27 +168,11 @@ summarize_uncertainty <- function(
   # Get results of simulations organized by geo unit
   get_attribute_by_geo <- function(attribute_by_sim, geo_id){
 
-    if(geo_id == "geo_id_micro"){
-
-      columns_to_unnest <- attribute_by_sim |>
-      dplyr::select(dplyr::contains(c("geo_id", "_central", "impact"))) |>
-      base::names()
-
-    }else if(geo_id == "geo_id_macro"){
-
-      columns_to_unnest <- attribute_by_sim |>
-        dplyr::select(dplyr::contains(c("geo_id_macro", "impact"))) |>
-        base::names()
-
-    }
-
     attribute_by_geo <- attribute_by_sim |>
       # Remove super-detailed information by simulation
       # any_of() because input is not available in compare
       # (otherwise too large output and slow)
       dplyr::select( !dplyr::contains(c("input", "output")))|>
-      # Unnest to have the information per" row
-      tidyr::unnest(cols = dplyr::all_of(columns_to_unnest)) |>
       # Keep only unique rows
       # If geo_id_macro avaialable,
       # then geo_ and aggregated impact have the same dimension as geo_id_micro
