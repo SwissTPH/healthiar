@@ -128,3 +128,38 @@
 #' @examples
 #' #TBD
 "exdat_socialize"
+
+# exdat_cantons ################################################################
+
+#' PM2.5 exposure and COPD incidence in Switzerland
+
+#' @description
+#' This tibble contains PM2.5 exposure and lung cancer incidence data from the Swiss cantons.
+
+#' @format \code{exdat_cantons}
+#' \describe{
+#'   \item{year}{population-weighted annual mean concentration}
+#'   \item{canton}{canton abbreviations}
+#'   \item{lung_cancer_incidence}{lung cancer incidence in the year of analysis}
+#'   \item{exposure}{exposure level}
+#'   \itme{pollutant}{pollutant}
+#'   \item{exposure_type}{exposure type}
+#'   \item{population}{cantonal population}
+#'   \item{rr}{central relative risk estimate}
+#'   \item{rr_l}{lower 95\% confidence interval bound of the relative risk estimate}
+#'   \item{rr_u}{upper 95\% confidence interval bound of the relative risk estimate}
+#'   \item{increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
+#'   \item{function_shape}{shape of the exposure-response function}
+#'   \item{cutoff}{cut-off value}
+#' }
+#' @source Real-world data
+
+#' @usage data(exdat_cantons)
+
+#' @docType data
+
+#' @author Alberto Castro & Axel Luyten
+
+#' @examples
+#' #TBD
+"exdat_cantons"
