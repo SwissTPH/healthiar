@@ -520,12 +520,12 @@ summarize_uncertainty <- function(
 
   # Bring back the original geo_id_micro after using the trick of adding the sim_id
   # We need the original names to be able to sum impacts below
-  results_by_geo_id_micro <- output_sim |>
+  impact_by_sim <- output_sim |>
     dplyr::mutate(geo_id_micro = base::gsub("_sim_.*", "", geo_id_micro))
 
   # Get summary (uncertainty) for each geo_id_micro
   summary_by_geo_id_micro <-
-    get_summary(attribute = results_by_geo_id_micro)
+    get_summary(attribute = impact_by_sim)
 
 
   if( !"geo_id_macro" %in% names(output_attribute$health_main) ){
@@ -550,7 +550,7 @@ summarize_uncertainty <- function(
     base::list(
       uncertainty_main = summary,
       uncertainty_detailed =
-        base::list(results_by_geo_id_micro = results_by_geo_id_micro,
+        base::list(impact_by_sim = impact_by_sim,
                    uncertainty_by_geo_id_micro = summary_by_geo_id_micro))
 
   return(uncertainty)
@@ -592,10 +592,10 @@ summarize_uncertainty <- function(
     # Extract simulation values 1 and 2
     # Extract output 1 and 2
     output_scen_1 <-
-      attribute_scen_1[["uncertainty_detailed"]][["results_by_geo_id_micro"]]
+      attribute_scen_1[["uncertainty_detailed"]][["impact_by_sim"]]
 
     output_scen_2 <-
-      attribute_scen_2[["uncertainty_detailed"]][["results_by_geo_id_micro"]]
+      attribute_scen_2[["uncertainty_detailed"]][["impact_by_sim"]]
 
     scenario_specific_arguments <-
       c("exp_central", "exp_lower", "exp_upper",
@@ -629,7 +629,7 @@ summarize_uncertainty <- function(
 
     if(input_args$approach_comparison == "delta"){
 
-      results_by_geo_id_micro <- output_both_scen |>
+      impact_by_sim <- output_both_scen |>
         dplyr::mutate(
           impact = impact_scen_1 - impact_scen_2,
           impact_rounded = base::round(impact)
@@ -643,16 +643,16 @@ summarize_uncertainty <- function(
                               pop_fraction_type = "pif")
 
       output_sim_both_scen <-
-        healthiar:::get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
+        healthiar:::get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["impact_by_sim"]]
 
-      results_by_geo_id_micro <- output_sim_both_scen
+      impact_by_sim <- output_sim_both_scen
 
 
     }
 
   # Get summary (uncertainty) for each geo_id_micro
   summary_by_geo_id_micro <-
-    get_summary(attribute = results_by_geo_id_micro)
+    get_summary(attribute = impact_by_sim)
 
 
 
@@ -681,7 +681,7 @@ summarize_uncertainty <- function(
         base::list(
           uncertainty_main = summary,
           uncertainty_detailed =
-            base::list(results_by_geo_id_micro = results_by_geo_id_micro,
+            base::list(impact_by_sim = impact_by_sim,
                        uncertainty_by_geo_id_micro = summary_by_geo_id_micro)))
 
   }
