@@ -523,18 +523,9 @@ summarize_uncertainty <- function(
   results_by_geo_id_micro <- output_sim |>
     dplyr::mutate(geo_id_micro = base::gsub("_sim_.*", "", geo_id_micro))
 
-  attribute_by_sim_disaggregated <- results_by_geo_id_micro
-
-
-
-  # Obtain results of simulations organized by geo unit
-  attribute_by_geo_id_micro <- attribute_by_sim_disaggregated
-
   # Get summary (uncertainty) for each geo_id_micro
   summary_by_geo_id_micro <-
-    get_summary(attribute = attribute_by_geo_id_micro)
-
-  attribute_by_sim <- attribute_by_sim_disaggregated
+    get_summary(attribute = results_by_geo_id_micro)
 
 
   if( !"geo_id_macro" %in% names(output_attribute$health_main) ){
@@ -559,9 +550,7 @@ summarize_uncertainty <- function(
     base::list(
       uncertainty_main = summary,
       uncertainty_detailed =
-        base::list(attribute_by_sim = attribute_by_sim,
-                   attribute_by_sim_disaggregated = attribute_by_sim_disaggregated,
-                   attribute_by_geo_id_micro = attribute_by_geo_id_micro,
+        base::list(results_by_geo_id_micro = results_by_geo_id_micro,
                    uncertainty_by_geo_id_micro = summary_by_geo_id_micro))
 
   return(uncertainty)
@@ -603,10 +592,10 @@ summarize_uncertainty <- function(
     # Extract simulation values 1 and 2
     # Extract output 1 and 2
     output_scen_1 <-
-      attribute_scen_1[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]
+      attribute_scen_1[["uncertainty_detailed"]][["results_by_geo_id_micro"]]
 
     output_scen_2 <-
-      attribute_scen_2[["uncertainty_detailed"]][["attribute_by_sim_disaggregated"]]
+      attribute_scen_2[["uncertainty_detailed"]][["results_by_geo_id_micro"]]
 
     scenario_specific_arguments <-
       c("exp_central", "exp_lower", "exp_upper",
@@ -640,7 +629,7 @@ summarize_uncertainty <- function(
 
     if(input_args$approach_comparison == "delta"){
 
-      attribute_by_sim_disaggregated <- output_both_scen |>
+      results_by_geo_id_micro <- output_both_scen |>
         dplyr::mutate(
           impact = impact_scen_1 - impact_scen_2,
           impact_rounded = base::round(impact)
@@ -649,25 +638,22 @@ summarize_uncertainty <- function(
     } else if(input_args$approach_comparison == "pif"){
 
 
-      output_sim_after_impact <- healthiar:::get_impact(input_table = output_both_scen,
-                                                        pop_fraction_type = "pif")
+      impact_sim_both_scen <-
+        ealthiar:::get_impact(input_table = output_both_scen,
+                              pop_fraction_type = "pif")
 
-      output_sim <- healthiar:::get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
+      output_sim_both_scen <-
+        healthiar:::get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
 
-      results_by_geo_id_micro <- output_sim
+      results_by_geo_id_micro <- output_sim_both_scen
 
 
     }
 
-    # Obtain results of simulations organized by geo unit
-  attribute_by_geo_id_micro <- attribute_by_sim_disaggregated
-
-
   # Get summary (uncertainty) for each geo_id_micro
   summary_by_geo_id_micro <-
-    get_summary(attribute = attribute_by_geo_id_micro)
+    get_summary(attribute = results_by_geo_id_micro)
 
-  attribute_by_sim <- attribute_by_sim_disaggregated
 
 
   if( !"geo_id_macro" %in% names(output_attribute$health_main) ){
@@ -695,9 +681,7 @@ summarize_uncertainty <- function(
         base::list(
           uncertainty_main = summary,
           uncertainty_detailed =
-            base::list(attribute_by_sim = attribute_by_sim,
-                       attribute_by_sim_disaggregated = attribute_by_sim_disaggregated,
-                       attribute_by_geo_id_micro = attribute_by_geo_id_micro,
+            base::list(results_by_geo_id_micro = results_by_geo_id_micro,
                        uncertainty_by_geo_id_micro = summary_by_geo_id_micro)))
 
   }
