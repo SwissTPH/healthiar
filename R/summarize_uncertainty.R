@@ -485,17 +485,9 @@ summarize_uncertainty <- function(
   geo_ids <-
     base::intersect(base::names(template_with_sim), c("geo_id_macro", "geo_id_micro"))
 
-  template_with_sim_grouped <-
-    template_with_sim |>
-    dplyr::summarize(
-      .by = sim_id,
-      # Pack in lists the values that are different in geo unit (as input_args)
-      dplyr::across(
-        .cols = dplyr::all_of(c("geo_id_micro", var_names_with_ci)),
-        .fns = ~ base::list(.x)))
 
   if( base::length(var_names_with_ci_geo_identical) >= 1 ){
-    template_with_sim_grouped <-  template_with_sim_grouped |>
+    test <-  template_with_sim |>
       # Keep only unique values because they identical for all geo_id_micro
       dplyr::mutate(dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical),
                                   ~ purrr::map(.x, base::unique)))
@@ -503,7 +495,7 @@ summarize_uncertainty <- function(
   }
 
   only_new_values_for_replacement <-
-    dplyr::select(template_with_sim_grouped,
+    dplyr::select(template_with_sim,
                   -dplyr::any_of(c("sim_id", "geo_id_micro")))
                                    #geo_ids)))
 
