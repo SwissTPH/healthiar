@@ -527,12 +527,10 @@ summarize_uncertainty <- function(
   summary_by_geo_id_micro <-
     get_summary(attribute = impact_by_sim)
 
+  summary <- summary_by_geo_id_micro
 
-  if( !"geo_id_macro" %in% names(output_attribute$health_main) ){
 
-    summary <- summary_by_geo_id_micro
-
-  } else {
+  if("geo_id_macro" %in% base::names(output_attribute$health_main) ){
 
     summary_by_geo_id_macro <- summary_by_geo_id_micro |>
       # Sum impacts
@@ -542,6 +540,7 @@ summarize_uncertainty <- function(
       dplyr::mutate(impact_rounded = round(impact))
 
     summary <- summary_by_geo_id_macro
+
   }
 
   # Store the results in a list keeping consistency in the structure with
@@ -562,8 +561,6 @@ summarize_uncertainty <- function(
 
   # Identify if this is one-case or two-case (comparison) assessment
 
-
-
   if(is_one_case){
     # Use summarize_uncertainty_based_on_input() only once
     uncertainty <-
@@ -574,8 +571,6 @@ summarize_uncertainty <- function(
 
   ## Two cases (comparison) ####
   } else if (is_two_cases){
-
-
 
     # Once for the scenario 1
     attribute_scen_1 <-
@@ -647,20 +642,16 @@ summarize_uncertainty <- function(
 
       impact_by_sim <- output_sim_both_scen
 
-
     }
 
   # Get summary (uncertainty) for each geo_id_micro
   summary_by_geo_id_micro <-
     get_summary(attribute = impact_by_sim)
 
+  summary <- summary_by_geo_id_micro
 
 
-  if( !"geo_id_macro" %in% names(output_attribute$health_main) ){
-
-    summary <- summary_by_geo_id_micro
-
-  } else {
+  if("geo_id_macro" %in% base::names(output_attribute$health_main) ){
 
     summary_by_geo_id_macro <- summary_by_geo_id_micro |>
       # Sum impacts
@@ -670,6 +661,7 @@ summarize_uncertainty <- function(
       dplyr::mutate(impact_rounded = round(impact))
 
     summary <- summary_by_geo_id_macro
+
   }
 
 
