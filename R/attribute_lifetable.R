@@ -17,7 +17,7 @@
 #' @details
 #' \code{bhd_central,bhd_lower,bhd_upper}
 #' @details
-#' Deaths per age must be inputted with one value per age (i.e. age group size = 1 year). There must be ≥ 1 deaths per age to avoid issues during the calculation of survival probabilities.
+#' Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year). There must be ≥ 1 deaths per age to avoid issues during the calculation of survival probabilities.
 #' @details
 #' \code{population}
 #' @details
