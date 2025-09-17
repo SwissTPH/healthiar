@@ -162,7 +162,7 @@ validate_input_attribute <-
       }
     }
 
-# browser()
+
     for (x in categorical_arg_names_available) {
       error_if_not_an_option(var_name = x)
     }
@@ -589,8 +589,9 @@ validate_input_attribute <-
       # Store var_value
       var_value <- input_args_value [[var_name]]
 
-      if(approach_risk == "absolute_risk" &&
-         !base::is.null(var_value) && !var_value == 0){ # Only if available
+
+      if(any(approach_risk == "absolute_risk" &
+         !base::is.null(var_value) & !var_value == 0)){ # Only if available
         # Create warning message
         base::warning(
           base::paste0(

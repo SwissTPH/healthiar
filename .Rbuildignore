@@ -3,5 +3,5 @@
 ^data-raw$
 ^doc$
 ^Meta$
-^varia$
+^varia/
 ^LICENSE\.md$

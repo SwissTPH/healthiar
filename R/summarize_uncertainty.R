@@ -638,7 +638,7 @@ summarize_uncertainty <- function(
 
 
       impact_sim_both_scen <-
-        ealthiar:::get_impact(input_table = output_both_scen,
+        healthiar:::get_impact(input_table = output_both_scen,
                               pop_fraction_type = "pif")
 
       output_sim_both_scen <-
