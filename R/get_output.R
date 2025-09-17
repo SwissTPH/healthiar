@@ -42,9 +42,9 @@ get_output <-
 
     # ID columns
     id_cols <- c("geo_id_macro", "geo_id_micro",
-                    "exp_name",
-                    "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci",
-                    "year", "exp_category", "sex", "age_group")
+                 "exp_name",
+                 "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci",
+                 "year", "exp_category", "sex", "age_group")
 
     # Store column names of results_raw
     # because it is to be used often below
