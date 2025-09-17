@@ -1,3 +1,5 @@
+# PM2.5 ############################################################################################
+
 # Layout for data
 ## One data set each for RR & AR
 ### Columns: year, canton, rr, bhd, exp, population,
@@ -129,3 +131,29 @@ noise_ha_cantons <- noise_ha |>
   dplyr::filter(year == 2023)
 
 rm(canton_key, data_20_plus, noise_ha, pm_lc, population_1969_2024_canton)
+
+# O3 ###############################################################################################
+
+exdat_ozone <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+
+exdat_ozone <- exdat_ozone |>
+  dplyr::select(
+    exposure = Mean.O3,
+    proportion_population_exposed = Population.affected
+  ) |>
+  dplyr::mutate(
+    exposure = exposure - 0.05
+  ) |>
+  dplyr::mutate(
+    pollutant = "O3", .before = exposure
+  ) |>
+  dplyr::mutate(
+    mortality_copd_total = 29908,
+    rr = 1.08,
+    exposure_type = "population-weighted_mean_of_maximum_daily_8-hour_averages_april_september)",
+    exp_unit = "μg/m^3",
+    country = "germany",
+    year = 2016
+  )
+
+save(exdat_ozone, file = "data/exdat_ozone.rda")
