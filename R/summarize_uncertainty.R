@@ -518,10 +518,14 @@ summarize_uncertainty <- function(
   # Get output
   output_sim <- healthiar:::get_output(results_raw = impact_sim$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
 
-  # Bring back the original geo_id_micro after using the trick of adding the sim_id
-  # We need the original names to be able to sum impacts below
+
   impact_by_sim <- output_sim |>
-    dplyr::mutate(geo_id_micro = base::gsub("_sim_.*", "", geo_id_micro))
+    # Bring back the original geo_id_micro after using the trick of adding the sim_id
+    # We need the original names to be able to sum impacts below
+    dplyr::mutate(geo_id_micro = base::gsub("_sim_.*", "", geo_id_micro))|>
+    # Put column sim_id closer to sim_id
+    # get_output reorder columns but ignores sim_id
+    dplyr::relocate(sim_id, .before = impact)
 
   # Get summary (uncertainty) for each geo_id_micro
   summary_by_geo_id_micro <-
@@ -627,8 +631,8 @@ summarize_uncertainty <- function(
       impact_by_sim <- output_both_scen |>
         dplyr::mutate(
           impact = impact_scen_1 - impact_scen_2,
-          impact_rounded = base::round(impact)
-        )
+          impact_rounded = base::round(impact),
+          .after = sim_id)
 
     } else if(input_args$approach_comparison == "pif"){
 
@@ -640,7 +644,9 @@ summarize_uncertainty <- function(
       output_sim_both_scen <-
         healthiar:::get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["impact_by_sim"]]
 
-      impact_by_sim <- output_sim_both_scen
+      impact_by_sim <- output_sim_both_scen|>
+        dplyr::relocate(impact, impact_rounded,
+                        .after = sim_id)
 
     }
 
