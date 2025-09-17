@@ -26,9 +26,7 @@ License: GPL (>= 3)
 Encoding: UTF-8
 RoxygenNote: 7.3.3
 Imports:
-  devtools,
   dplyr,  
-  knitr,
   purrr, 
   tibble, 
   tidyr
@@ -41,4 +39,6 @@ Suggests:
     ggplot2,
     sf,
     terra,
-    testthat
+    testthat,
+    devtools,
+    knitr,
