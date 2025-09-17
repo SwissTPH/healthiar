@@ -12,7 +12,7 @@
 #'   \item{relative_risk_lower}{lower 95\% confidence interval bound of the relative risk estimate}
 #'   \item{relative_risk_upper}{upper 95\% confidence interval bound of the relative risk estimate}
 #'   \item{incidence}{COPD incidence in the year of analysis}
-#'   \item{cut_off_value}{cut-off value}
+#'   \item{cutoff_value}{cut-off value}
 #'   \item{rr_increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
 #' }
 #' @source Real-world data
@@ -166,3 +166,38 @@
 #' @examples
 #' #TBD
 "exdat_ozone"
+
+# exdat_cantons #####################################################################
+
+#' PM2.5 exposure and COPD incidence in Switzerland
+
+#' @description
+#' This tibble contains PM2.5 exposure and COPD incidence data from Switzerland.
+
+#' @format \code{exdat_cantons}
+#' \describe{
+#'   \item{year}{year}
+#'   \item{canton}{abbreviation of Swiss cantons}
+#'   \item{lung_cancer_incidence}{lung cancer incidence}
+#'   \item{exposure}{mean country-wide population-weighted exposure level}
+#'   \item{pollutant}{PM2.5}
+#'   \item{exposure_type}{exposure type}
+#'   \item{population}{number of inhabitants per canton}
+#'   \item{rr}{central relative risk estimate}
+#'   \item{rr_l}{lower 95\% confidence interval bound of the relative risk estimate}
+#'   \item{rr_u}{upper 95\% confidence interval bound of the relative risk estimate}
+#'   \item{increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
+#'   \item{function_shape}{shape of the exposure-response function}
+#'   \item{cutoff}{cutoff level below which no health effects are attributable to the exposure}
+#' }
+#' @source Real-world data
+
+#' @usage data(exdat_cantons)
+
+#' @docType data
+
+#' @author Alberto Castro & Axel Luyten
+
+#' @examples
+#' #TBD
+"exdat_cantons"

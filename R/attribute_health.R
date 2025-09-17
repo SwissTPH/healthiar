@@ -5,38 +5,35 @@
 #' This function calculates the attributable health impacts (mortality or morbidity) due to
 #' exposure to an environmental stressor (air pollution or noise), using either relative risk (\strong{RR}) or absolute risk (\strong{AR}).
 #' @description
-#' For (short) \strong{examples} please see below or consult the vignette for more detailed examples.
+#' Arguments for both \strong{RR & AR} pathways
+#' \itemize{
+#'  \item \code{approach_risk}
+#'  \item \code{exp_central}, \code{exp_lower}, \code{exp_upper}
+#'  \item \code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper}
+#'  \item \code{erf_eq_central}, \code{erf_eq_lower}, \code{erf_eq_upper}
+#'  }
+#' Arguments only for \strong{RR} pathways
+#' \itemize{
+#'  \item \code{rr_central}, \code{rr_lower}, \code{rr_upper}
+#'  \item \code{rr_increment}
+#'  \item \code{erf_shape}
+#'  \item \code{bhd_central}, \code{bhd_lower}, \code{bhd_upper}
+#'  \item \code{prop_pop_exp}
+#'  }
+#'  Argument for \strong{AR} pathways
+#' \itemize{
+#'  \item \code{pop_exp}
+#'  }
+#'  \strong{Optional} arguments for both \strong{RR & AR} pathways
+#' \itemize{
+#'  \item \code{geo_id_micro}, \code{geo_id_macro},
+#'  \item \code{age_group}, \code{sex}, \code{info}, \code{population}
+#'  \item \code{dw_central}, \code{dw_lower}, \code{dw_upper}
+#'  \item \code{duration_central}, \code{duration_lower}, \code{duration_upper}
+#'  }
 
 # ARGUMENTS ####################################################################
 #' @inheritParams attribute_master
-
-# USAGE ########################################################################
-#' @usage
-#' attribute_health(
-#'   # RR & AR
-#'   approach_risk = "relative_risk", # alternative: "absolute_risk"
-#'   exp_central, exp_lower = NULL, exp_upper = NULL,
-#'   cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
-#'   pop_exp = NULL,
-#'   erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
-#'   # RR ONLY
-#'   rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
-#'   rr_increment = NULL,
-#'   erf_shape = NULL,
-#'   bhd_central = NULL, bhd_lower = NULL, bhd_upper = NULL,
-#'   prop_pop_exp = 1,
-#'   # ITERATION (OPTIONAL)
-#'   geo_id_micro = "a",
-#'   geo_id_macro = NULL,
-#'   age_group = "all",
-#'   sex = "all",
-#'   # META (OPTIONAL)
-#'   info = NULL,
-#'   population = NULL,
-#'   # YLD (OPTIONAL)
-#'   dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
-#'   duration_central = 1, duration_lower = NULL, duration_upper = NULL
-#' )
 
 # DETAILS ######################################################################
 #' @details
@@ -70,9 +67,7 @@
 #' @details
 #' \code{pop_exp}
 #' @details
-#' \emph{Required in AR pathways; optional in RR pathways.} In AR pathways the population exposed per exposure category is multiplied with the corresonding category-specific risk to obtain the absolute number of people affected by the health outcome.
-#' @details
-#' In RR pathways, only to be specified if \code{prop_pop_exp} is not specified: based on the values entered the proportion of people exposed to each exposure category (needed for calculation of the population attributable fraction) is derived. See the equation for the population attributable fraction below.
+#' \emph{Only applicable in AR pathways; always required.} In AR pathways the population exposed per exposure category is multiplied with the corresonding category-specific risk to obtain the absolute number of people affected by the health outcome.
 #' @details
 #' \code{erf_eq_central}, \code{erf_eq_lower}, \code{erf_eq_upper}
 #' @details
