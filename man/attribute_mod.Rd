@@ -53,7 +53,7 @@ attribute_mod(
 
 \item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}}
 
-\item{pop_exp}{\code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. See Details for more info. \emph{Required in AR pathways; optional in RR pathways.}}
+\item{pop_exp}{\code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. See Details for more info. \emph{Only applicable in AR pathways; always required.}}
 
 \item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.}
 
@@ -115,7 +115,7 @@ scenario_A$health_main$impact # Attributable impact in scenario A
 ## Modify scenario (adjust exposure value)
 scenario_B <- attribute_mod(
   output_attribute = scenario_A,
-  exp_central = 6
+  exp_central = 6       # EXPOSURE 2
 )
 
 scenario_B$health_main$impact # Attributable impact in scenario B
