@@ -32,7 +32,7 @@
 #' ## Modify scenario (adjust exposure value)
 #' scenario_B <- attribute_mod(
 #'   output_attribute = scenario_A,
-#'   exp_central = 6
+#'   exp_central = 6       # EXPOSURE 2
 #' )
 #'
 #' scenario_B$health_main$impact # Attributable impact in scenario B

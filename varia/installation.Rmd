@@ -20,10 +20,9 @@ Install the healthiar package
 # keyring::key_set("GITHUB_PAT_HEALTHIAR")
 
 remotes::install_github(
-  repo = "best-cost/best-cost_WPs",
-  subdir = "/r_package/healthiar",
+  repo = "SwissTPH/healthiar",
   # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
-  # ref = "942-tidy-up-example-data", # By default "HEAD"; name of branch to install package from as a string
+  # ref = "1102-prepare-exercises-slides-for-international-workshops-2", # By default "HEAD"; name of branch to install package from as a string
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   auth_token = keyring::key_get("GITHUB_PAT_HEALTHIAR"),

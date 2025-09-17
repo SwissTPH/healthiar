@@ -11,7 +11,7 @@
   \item{relative_risk}{central relative risk estimate}
   \item{relative_risk_lower}{lower 95\% confidence interval bound of the relative risk estimate}
   \item{relative_risk_upper}{upper 95\% confidence interval bound of the relative risk estimate}
-  \itme{incidence}{COPD incidence in the year of analysis}
+  \item{incidence}{COPD incidence in the year of analysis}
   \item{cut_off_value}{cut-off value}
   \item{rr_increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
 }
