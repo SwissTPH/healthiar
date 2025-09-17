@@ -115,8 +115,7 @@ Arguments only for \strong{RR} pathways
  \strong{Optional} arguments for both \strong{RR & AR} pathways
 \itemize{
  \item \code{geo_id_micro}, \code{geo_id_macro},
- \item \code{age_group}, \code{sex}, \code{info}
- \item \code{population}
+ \item \code{age_group}, \code{sex}, \code{info}, \code{population}
  \item \code{dw_central}, \code{dw_lower}, \code{dw_upper}
  \item \code{duration_central}, \code{duration_lower}, \code{duration_upper}
  }
