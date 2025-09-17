@@ -148,12 +148,40 @@ exdat_ozone <- exdat_ozone |>
     pollutant = "O3", .before = exposure
   ) |>
   dplyr::mutate(
-    mortality_copd_total = 29908,
-    rr = 1.08,
+    exp_unit = "μg/m^3", .after = exposure
+  ) |>
+  dplyr::mutate(
+    mortality_copd_total_year = 29908,
+    rr_central = 1.081,
+    rr_lower = 1.075,
+    rr_upper = 1.086,
+    rr_increment = 10,
+    cutoff = 64,
+    erf_shape = "log_linear",
     exposure_type = "population-weighted_mean_of_maximum_daily_8-hour_averages_april_september)",
-    exp_unit = "μg/m^3",
+    rr_source = "Kazemiparkouhi (2020)",
     country = "germany",
     year = 2016
   )
 
 save(exdat_ozone, file = "data/exdat_ozone.rda")
+
+# exdat_noise ######################################################################################
+
+# NOTE: right now the existing variable is loaded and adapted; in the best case, all code to create the variable would go here
+
+exdat_noise <- exdat_noise |>
+  dplyr::mutate(
+    exposure = "noise",
+    exposure_metric = "L_den",
+    exposure_unit = "dB(A)",
+    .before = exposure_category) |>
+  dplyr::relocate(region, .before = 1) |>
+  dplyr::mutate(
+    risk_estimate_type = "absolute_risk",
+    erf = "78.9270-3.1162*c+0.0342*c^2",
+    country = "norway",
+    year = "unknown"
+  )
+
+save(exdat_noise, file = "data/exdat_noise.rda")
