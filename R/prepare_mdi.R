@@ -172,18 +172,20 @@ prepare_mdi <- function(
   alpha_value <- cronbach_alpha(
     data[, indicators])
 
-  base::print(base::paste("CRONBACH'S α:", base::round(alpha_value, 3)))
 
   # Store non-ASCII characters as unicode escape to avoid errors
   alpha <- "\u03B1"
   higher_or_equal <- "\u2265"
   lower_or_equal <- "\u2264"
 
+  base::print(base::paste("CRONBACH'S", alpha, ":", base::round(alpha_value, 3)))
+
+
   if ( alpha_value >= 0.9 ) base::print(base::paste("Excellent reliability:", alpha, higher_or_equal, "0.9"))
   if ( alpha_value >= 0.8 & alpha_value <= 0.89 ) base::print(base::paste("Good reliability: 0.8", lower_or_equal, alpha, lower_or_equal, "0.89"))
   if ( alpha_value >= 0.7 & alpha_value <= 0.79 ) base::print(base::paste("Acceptable reliability: 0.7", lower_or_equal, alpha, lower_or_equal, "0.79"))
   if ( alpha_value >= 0.6 & alpha_value <= 0.69 ) base::print(base::paste("Questionable reliability: 0.6", lower_or_equal, alpha, lower_or_equal, "0.69"))
-  if ( alpha_value < 0.6 ) base::print("Poor reliability: α < 0.6")
+  if ( alpha_value < 0.6 ) base::print(base::paste("Poor reliability:", alpha, "< 0.6"))
 
   return(
     data |>
