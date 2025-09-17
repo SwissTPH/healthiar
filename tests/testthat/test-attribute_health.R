@@ -52,7 +52,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        approach_risk = "relative_risk",
+        approach_risk = rep("relative_risk", 4),
         age = c("below_50", "below_50", "50_plus", "50_plus"),
         sex = c("male", "female", "male", "female"),
         exp_central = base::rep(data$mean_concentration, 4),
