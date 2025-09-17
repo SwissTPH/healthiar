@@ -129,32 +129,35 @@
 #' #TBD
 "exdat_socialize"
 
-# exdat_cantons ################################################################
+# exdat_ozone ################################################################
 
 #' PM2.5 exposure and COPD incidence in Switzerland
 
 #' @description
-#' This tibble contains PM2.5 exposure and lung cancer incidence data from the Swiss cantons.
+#' This tibble contains modelled ozone (\eqn{O_3}) exposure and chronic obstructive pulmonary disease (COPD) incidence data from the Germany in 2016.
 
-#' @format \code{exdat_cantons}
+#' @format \code{exdat_ozone}
 #' \describe{
-#'   \item{year}{population-weighted annual mean concentration}
-#'   \item{canton}{canton abbreviations}
-#'   \item{lung_cancer_incidence}{lung cancer incidence in the year of analysis}
-#'   \item{exposure}{exposure level}
-#'   \item{pollutant}{pollutant}
+#'   \item{pollutant}{\eqn{O_3}}
+#'   \item{exposure}{mean exposure level in the exposure category}
+#'   \item{exp_unit}{unit of the exposure}
+#'   \item{proportion_population_exposed}{proportion of the total population exposed to each exposure category}
+#'   \item{mortality_copd_tota_yearl}{mortality due to chronic obstructive pulmonary disease (ICD-10 J40-44)}
+#'   \item{rr_central}{central relative risk estimate}
+#'   \item{rr_lower}{lower 95\% confidence interval bound of the relative risk estimate}
+#'   \item{rr_upper}{upper 95\% confidence interval bound of the relative risk estimate}
+#'   \item{rr_increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
+#'   \item{cutoff}{cutoff level below which no health effects are attributable to the exposure}
+#'   \item{erf_shape}{shape of the exposure-response function}
 #'   \item{exposure_type}{exposure type}
-#'   \item{population}{cantonal population}
-#'   \item{rr}{central relative risk estimate}
-#'   \item{rr_l}{lower 95\% confidence interval bound of the relative risk estimate}
-#'   \item{rr_u}{upper 95\% confidence interval bound of the relative risk estimate}
-#'   \item{increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
-#'   \item{function_shape}{shape of the exposure-response function}
-#'   \item{cutoff}{cut-off value}
+#'   \item{rr_source}{source of the relative risk estimates}
+#'   \item{country}{country}
+#'   \item{year}{year of the data}
 #' }
+
 #' @source Real-world data
 
-#' @usage data(exdat_cantons)
+#' @usage data(exdat_ozone)
 
 #' @docType data
 
@@ -162,4 +165,4 @@
 
 #' @examples
 #' #TBD
-"exdat_cantons"
+"exdat_ozone"

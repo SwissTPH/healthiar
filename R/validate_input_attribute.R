@@ -160,7 +160,7 @@ validate_input_attribute <-
       }
     }
 
-
+# browser()
     for (x in categorical_arg_names_available) {
       error_if_not_an_option(var_name = x)
     }

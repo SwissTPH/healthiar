@@ -1,12 +1,18 @@
-# Setup ########################################################################
+####################################################################################################
+# EXERCISES ########################################################################################
+####################################################################################################
+
+# SETUP ############################################################################################
 install.packages("remotes")
 library(remotes)
 remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)
 library(healthiar)
 
-# Relative risk 1 - single exposure value ######################################
 
-## Specify the exposure (8.85) and determine the attributable COPD cases
+
+# EXERCISE 1) Relative risk 1 ######################################################################
+
+## Specify the annual mean PM2.5 exposure (8.85 μg / m^3) and determine attributable COPD cases.
 results_rr_1 <- attribute_health(
   exp_central = , # μg / m^3
   erf_shape = "log_linear", # erf = exposure-response function
@@ -16,22 +22,103 @@ results_rr_1 <- attribute_health(
   bhd_central = 30747 # bhd = baseline health data (here: COPD incidence)
 )
 
-## Attributable cases: ...
 
-# Relative risk 2 - single exposure value
-results_rr_2
 
-# Comparison
-results_comparison
+# EXERCISE 2) Relative risk 2 ######################################################################
 
-# Multiple geo units 1 - single level
-results_geo_1
+## With a new policy the annual mean PM2.5 exposure is reduced to 6 μg / m^3. Determine the attributable cases with the new exposure level (keeping the other aspects the same) .
 
-# Multiple geo units 2 - multiple levels
-results_geo_2
+results_rr_2 <- attribute_health(
+  exp_central = ,
+  erf_shape = "log_linear",
+  rr_central = 1.369,
+  rr_increment = 10,
+  cutoff_central = 5,
+  bhd_central = 30747
+)
 
-# Relative risk 3 - exposure distribution
-results_rr_3
+results_rr_2 <- attribute_mod(
+  output_attribute = results_rr_1,
+  exp_central = 6
+)
 
-# Absolute risk
-results_ar
+## HINT: as an alternative to the function attribute_health(), the function attribute_mod() can be
+## used to modify and existing assessment
+
+
+
+# EXERCISE 3) Comparison ###########################################################################
+
+## Now compare the number of attributable cases from the two scenarios (before & after policy).
+
+results_comparison <- compare(
+  output_attribute_scen_1 = results_rr_1,
+  output_attribute_scen_2 = results_rr_2
+)
+
+
+
+# EXERCISE 4) Multiple geo units 1 #################################################################
+
+## Assess the number of attributable lung cancer cases due to PM2.5 in all Swiss cantons using the
+## input data from the example data set "exdat_cantons".
+
+data("exdat_cantons")
+
+results_geo_1 <- attribute_health(
+  geo_id_micro = exdat_cantons$canton,
+  exp_central = exdat_cantons$exposure,
+  # erf_shape = exdat_cantons$function_shape, # ERROR WITH VECTOR CONTAINING MULTIPLE VALUES
+  erf_shape = exdat_cantons$function_shape[1], # NO ERROR WITH SINGLE VALUE
+  rr_central = exdat_cantons$rr,
+  rr_increment = exdat_cantons$increment,
+  cutoff_central = exdat_cantons$cutoff,
+  bhd_central = exdat_cantons$lung_cancer_incidence
+)
+
+
+
+# EXERCISE 5) Multiple geo units 2 #################################################################
+
+results_geo_2 <- attribute_health(
+  geo_id_micro = exdat_cantons$canton,
+  geo_id_macro = "CH",
+  exp_central = exdat_cantons$exposure,
+  # erf_shape = exdat_cantons$function_shape, # ERROR WITH VECTOR CONTAINING MULTIPLE VALUES
+  erf_shape = exdat_cantons$function_shape[1], # NO ERROR WITH SINGLE VALUE
+  rr_central = exdat_cantons$rr,
+  rr_increment = exdat_cantons$increment,
+  cutoff_central = exdat_cantons$cutoff,
+  bhd_central = exdat_cantons$lung_cancer_incidence
+)
+
+
+
+# EXERCISE 6) Relative risk 3 ######################################################################
+
+data("exdat_ozone")
+
+results_rr_3 <- attribute_health(
+  exp_central = exdat_ozone$exposure,
+  erf_shape = exdat_ozone$erf_shape ,
+  rr_central = exdat_ozone$rr_central,
+  rr_increment = exdat_ozone$rr_increment,
+  cutoff_central = exdat_ozone$cutoff,
+  bhd_central = exdat_ozone$mortality_copd_total_year
+)
+
+
+
+# EXERCISE 7) Absolute risk #################################################################################
+
+data("exdat_noise")
+exdat_noise <- exdat_noise |> dplyr::filter(region == "total") # Filter for total (= country-wide) entries
+
+results_ar <- attribute_health(
+  approach_risk = exdat_noise$risk_estimate_type,
+  exp_central = exdat_noise$exposure_mean,
+  pop_exp = exdat_noise$exposed,
+  erf_eq_central = exdat_noise$erf
+)
+
+
