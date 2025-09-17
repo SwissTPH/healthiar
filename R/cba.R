@@ -7,8 +7,10 @@
 # ARGUMENTS ####################################################################
 #' @inheritParams monetize
 #' @param discount_rate_benefit,discount_rate_cost \code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates).
+#' @param n_years_benefit,n_years_cost \code{Numeric value} referring to number of years in the future to be considered in the benefit and cost side (respectively). Years for discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1)
 #' @param impact_benefit \code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure.
 #' @param cost \code{Numeric value} referring to the investment cost to achieve the reduction of exposure.
+
 
 # VALUE ########################################################################
 #' @returns Description of the return value.
