@@ -631,8 +631,8 @@ summarize_uncertainty <- function(
       impact_by_sim <- output_both_scen |>
         dplyr::mutate(
           impact = impact_scen_1 - impact_scen_2,
-          impact_rounded = base::round(impact)
-        )
+          impact_rounded = base::round(impact),
+          .after = sim_id)
 
     } else if(input_args$approach_comparison == "pif"){
 
@@ -644,7 +644,9 @@ summarize_uncertainty <- function(
       output_sim_both_scen <-
         healthiar:::get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["impact_by_sim"]]
 
-      impact_by_sim <- output_sim_both_scen
+      impact_by_sim <- output_sim_both_scen|>
+        dplyr::relocate(impact, impact_rounded,
+                        .after = sim_id)
 
     }
 
