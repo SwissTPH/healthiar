@@ -180,6 +180,7 @@ exdat_noise <- exdat_noise |>
   dplyr::mutate(
     risk_estimate_type = "absolute_risk",
     erf = "78.9270-3.1162*c+0.0342*c^2",
+    health_outcome = "high_annoyance",
     country = "norway",
     year = "unknown"
   )
