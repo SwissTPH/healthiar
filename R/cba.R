@@ -151,7 +151,7 @@ cba <-
     cba_main <-
       cba_main |>
       # Keep only relevant columns
-      dplyr::select(all_of(relevant_columns))|>
+      dplyr::select(dplyr::all_of(relevant_columns))|>
       # Moreover, cost is not actually a monetized impact
       dplyr::rename(benefit = monetized_impact_benefit,
                     cost = monetized_impact_cost,

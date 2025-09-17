@@ -709,13 +709,11 @@ results_pm_copd_summarized$uncertainty_main |>
 The folder `uncertainty_detailed` contains all single simulations. Let's look at the impact of the first 10 simulations.
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_copd_summarized$uncertainty_detailed$attribute_by_sim
+results_pm_copd_summarized$uncertainty_detailed$impact_by_sim
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_copd_summarized$uncertainty_detailed$attribute_by_sim |> 
-  dplyr::select(-input, -output) |> 
-  dplyr::relocate(impact, .after = geo_id_micro) |> 
+results_pm_copd_summarized$uncertainty_detailed$impact_by_sim |> 
   knitr::kable()
 ```
 

@@ -911,7 +911,7 @@ for(s in sex){
     nonNatural_mortality[[s]] <- 
       nonNatural_mortality[[s]] %>%
       # Select columns keeping only those 10 year before (2010-2019)
-      dplyr::select(all_of(c("Age", as.character(2010:2019)))) %>%
+      dplyr::select(dplyr::all_of(c("Age", as.character(2010:2019)))) %>%
       # Calculate average by age
       dplyr::mutate(mean_nonNatural = 
                       rowMeans(subset(nonNatural_mortality[[s]], 
