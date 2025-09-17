@@ -40,4 +40,5 @@ VignetteBuilder: knitr
 Suggests: 
     ggplot2,
     sf,
-    terra
+    terra,
+    testthat
