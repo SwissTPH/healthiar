@@ -21,7 +21,7 @@
 #'   rr_at_exp_1 = 1.043879,
 #'   rr_at_exp_2 = 1.011217,
 #'   prop_pop_exp_1 = 1,
-#'
+#'   prop_pop_exp_2 = 1
 #' )
 #' print(results)
 

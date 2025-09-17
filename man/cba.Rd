@@ -6,13 +6,12 @@
 \usage{
 cba(
   output_attribute = NULL,
-  positive_impact = NULL,
+  impact_benefit = NULL,
   valuation,
   cost,
   discount_rate_benefit = NULL,
   discount_rate_cost = NULL,
-  inflation_rate_benefit = NULL,
-  inflation_rate_cost = NULL,
+  inflation_rate = NULL,
   discount_shape = "exponential",
   n_years_benefit = 1,
   n_years_cost = 1
@@ -21,17 +20,19 @@ cba(
 \arguments{
 \item{output_attribute}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
 
+\item{impact_benefit}{\code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure.}
+
 \item{valuation}{\code{Numberic value} referring to unit value of a health impact.}
 
-\item{cost}{\code{Numeric value} referring to the investment cost to achieve the reduction of exposure}
+\item{cost}{\code{Numeric value} referring to the investment cost to achieve the reduction of exposure.}
 
 \item{discount_rate_benefit, discount_rate_cost}{\code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates).}
 
-\item{inflation_rate_benefit, inflation_rate_cost}{\code{Numeric value} referring to the the inflation rate used in the benefit and the cost side (respectively).}
+\item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
 
-\item{benefit}{\code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure}
+\item{n_years_benefit, n_years_cost}{\code{Numeric value} referring to number of years in the future to be considered in the benefit and cost side (respectively). Years for discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1)}
 }
 \value{
 Description of the return value.

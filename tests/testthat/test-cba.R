@@ -10,7 +10,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 19800,
+        impact_benefit = 19800,
         valuation = 541000,
         cost = 8200000000,
         n_years_benefit = 10,
@@ -34,7 +34,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 197000,
+        impact_benefit = 197000,
         valuation = 541000,
         cost = 523000000,
         discount_shape = "exponential",
@@ -67,16 +67,15 @@ testthat::test_that("same results |pathway_cba|discount_shape_exponential|discou
   testthat::expect_equal(
     object =
       healthiar::cba(
-        positive_impact = 50,
+        impact_benefit = 50,
         valuation = 20,
         cost = 100,
         discount_shape = "exponential",
-        inflation_rate_benefit = 0.05,
-        inflation_rate_cost = 0.08,
+        inflation_rate = 0.05,
         n_years_benefit = 5,
         n_years_cost = 5
       )$cba_main$net_benefit_rounded,
-    expect = 1129 # Example with fake values (just to check if the results remain identical over time)
+    expect = 1149 # Example with fake values (just to check if the results remain identical over time)
   )
 })
 
@@ -87,7 +86,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
   testthat::expect_equal(
     object =
       healthiar::cba(
-        positive_impact = 50,
+        impact_benefit = 50,
         valuation = 20,
         cost = 100,
         discount_shape = "exponential",
@@ -106,7 +105,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 19800,
+        impact_benefit = 19800,
         valuation = 541000,
         cost = 8200000000,
         discount_rate_benefit = 0.03,
@@ -134,7 +133,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 197000,
+        impact_benefit = 197000,
         valuation = 541000,
         cost = 523000000,
         discount_rate_benefit = 0.03,
@@ -164,7 +163,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 19800,
+        impact_benefit = 19800,
         valuation = 541000,
         cost = 8200000000,
         discount_rate_benefit = 0.03,
@@ -190,7 +189,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 197000,
+        impact_benefit = 197000,
         valuation = 541000,
         cost = 523000000,
         discount_rate_benefit = 0.03,
@@ -219,7 +218,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 19800,
+        impact_benefit = 19800,
         valuation = 541000,
         cost = 8200000000,
         discount_rate_cost = 0.03,
@@ -245,7 +244,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 197000,
+        impact_benefit = 197000,
         valuation = 541000,
         cost = 523000000,
         discount_rate_cost = 0.03,
@@ -275,7 +274,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 19800,
+        impact_benefit = 19800,
         valuation = 541000,
         cost = 8200000000,
         discount_rate_benefit = 0.03,
@@ -303,7 +302,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 197000,
+        impact_benefit = 197000,
         valuation = 541000,
         cost = 523000000,
         discount_rate_benefit = 0.03,
@@ -333,7 +332,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 19800,
+        impact_benefit = 19800,
         valuation = 541000,
         cost = 8200000000,
         discount_rate_benefit = 0.03,
@@ -359,7 +358,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 197000,
+        impact_benefit = 197000,
         valuation = 541000,
         cost = 523000000,
         discount_rate_benefit = 0.03,
@@ -387,7 +386,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 19800,
+        impact_benefit = 19800,
         valuation = 541000,
         cost = 8200000000,
         discount_rate_cost = 0.03,
@@ -413,7 +412,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 197000,
+        impact_benefit = 197000,
         valuation = 541000,
         cost = 523000000,
         discount_rate_cost = 0.03,
@@ -443,7 +442,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 19800,
+        impact_benefit = 19800,
         valuation = 541000,
         cost = 8200000000,
         discount_rate_benefit = 0.03,
@@ -471,7 +470,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 197000,
+        impact_benefit = 197000,
         valuation = 541000,
         cost = 523000000,
         discount_rate_benefit = 0.03,
@@ -501,7 +500,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 19800,
+        impact_benefit = 19800,
         valuation = 541000,
         cost = 8200000000,
         discount_rate_benefit = 0.03,
@@ -527,7 +526,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 197000,
+        impact_benefit = 197000,
         valuation = 541000,
         cost = 523000000,
         discount_rate_benefit = 0.03,
@@ -555,7 +554,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 19800,
+        impact_benefit = 19800,
         valuation = 541000,
         cost = 8200000000,
         discount_rate_cost = 0.03,
@@ -581,7 +580,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
     object =
       ## Adapted
       healthiar::cba(
-        positive_impact = 197000,
+        impact_benefit = 197000,
         valuation = 541000,
         cost = 523000000,
         discount_rate_cost = 0.03,

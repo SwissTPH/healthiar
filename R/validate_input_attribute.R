@@ -146,10 +146,12 @@ validate_input_attribute <-
     # because otherwise it could be overwhelming for the user
 
     error_if_not_an_option <- function(var_name){
-      var_value <- input_args_value [[var_name]]
+
+      var_value <- input_args_value[[var_name]]
       var_options <- options_of_categorical_args[[var_name]]
 
-      if(!var_value %in% var_options){
+      # any() for the case that people enter this argument as column with repeated (or multiple) values
+      if(base::any(!var_value %in% var_options)){
 
         base::stop(
           base::paste0(
