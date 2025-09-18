@@ -4,7 +4,6 @@
 
 # SETUP ############################################################################################
 install.packages("remotes")
-library(remotes)
 remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)
 library(healthiar)
 library(dplyr)
