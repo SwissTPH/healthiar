@@ -7,6 +7,7 @@
 
 #' @format \code{exdat_pm}
 #' \describe{
+#'   \item{year_of_analysis}{year that the exposure and incidence data is from}
 #'   \item{mean_concentration}{population-weighted annual mean concentration}
 #'   \item{relative_risk}{central relative risk estimate}
 #'   \item{relative_risk_lower}{lower 95\% confidence interval bound of the relative risk estimate}
@@ -14,6 +15,8 @@
 #'   \item{incidence}{COPD incidence in the year of analysis}
 #'   \item{cutoff_value}{cut-off value}
 #'   \item{rr_increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
+#'   \item{rr_source}{source of the relative risk}
+#'   \item{rr_doi}{DOI linking to the publication from which the relative risk was taken}
 #' }
 #' @source Real-world data
 
@@ -22,6 +25,8 @@
 #' @docType data
 
 #' @author Alberto Castro & Axel Luyten
+
+#' @keywords internal
 
 #' @examples
 #' #TBD
@@ -49,6 +54,8 @@
 
 #' @author Anette Kocbach Bolling & Vázquez Fernández
 
+#' @keywords internal
+
 #' @examples
 #' #TBD
 "exdat_noise"
@@ -74,6 +81,8 @@
 #' @docType data
 
 #' @author Alberto Castro & Axel Luyten
+
+#' @keywords internal
 
 #' @examples
 #' #TBD
@@ -104,6 +113,8 @@
 
 #' @author Arno Pauwels & Vanessa Gorasso
 
+#' @keywords internal
+
 #' @examples
 #' #TBD
 "exdat_prepare_mdi"
@@ -124,6 +135,8 @@
 #' @docType data
 
 #' @author Arno Pauwels & Vanessa Gorasso
+
+#' @keywords internal
 
 #' @examples
 #' #TBD
@@ -163,6 +176,8 @@
 
 #' @author Alberto Castro & Axel Luyten
 
+#'  @keywords internal
+
 #' @examples
 #' #TBD
 "exdat_ozone"
@@ -189,6 +204,8 @@
 #'   \item{increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
 #'   \item{function_shape}{shape of the exposure-response function}
 #'   \item{cutoff}{cutoff level below which no health effects are attributable to the exposure}
+#'   \item{language_main}{language spoken by the majority of inhabitants in the canton}
+#'   \item{canton_long}{full (English) name of the canton}
 #' }
 #' @source Real-world data
 
@@ -197,6 +214,8 @@
 #' @docType data
 
 #' @author Alberto Castro & Axel Luyten
+
+#' @keywords internal
 
 #' @examples
 #' #TBD

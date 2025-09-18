@@ -31,4 +31,4 @@ This tibble contains social indicators of the BEST-COST Multidimensional Depriva
 \author{
 Arno Pauwels & Vanessa Gorasso
 }
-\keyword{datasets}
+\keyword{internal}

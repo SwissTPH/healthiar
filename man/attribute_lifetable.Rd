@@ -2,7 +2,7 @@
 % Please edit documentation in R/attribute_lifetable.R
 \name{attribute_lifetable}
 \alias{attribute_lifetable}
-\title{Attributable premature deaths or YLL using a life table approach}
+\title{Attribute premature deaths or YLL to an environmental stressor using a life table approach}
 \usage{
 attribute_lifetable(
   age_group,

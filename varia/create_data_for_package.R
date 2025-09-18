@@ -1,3 +1,6 @@
+# Setup ############################################################################################
+library(dplyr)
+
 # PM2.5 ############################################################################################
 
 # Layout for data
@@ -120,7 +123,45 @@ pm_lc_ch <- pm_lc |>
 # pm_lc_cantons <- pm_lc |>
 exdat_cantons <- pm_lc |>
   dplyr::filter(canton != "CH") |>
-  dplyr::filter(year == 2023)
+  dplyr::filter(year == 2023) |>
+  mutate(
+    language_main = case_when(
+      canton %in% c("ZH", "BE", "LU", "UR", "SZ", "OW", "NW", "GR", "GL", "ZG", "SO", "BS", "BL", "SH", "AR", "AI", "SG", "GR",
+                    "AG", "TG") ~ "German",
+      canton %in% c("FR", "VD", "NE", "JU", "GE", "VS") ~ "French",
+      canton %in% c("TI") ~ "Italian",
+      TRUE ~ NA_character_
+    ),
+    canton_long = case_when(
+      canton == "ZH" ~ "Zurich",
+      canton == "BE" ~ "Bern",
+      canton == "LU" ~ "Lucerne",
+      canton == "UR" ~ "Uri",
+      canton == "SZ" ~ "Schwyz",
+      canton == "OW" ~ "Obwalden",
+      canton == "NW" ~ "Nidwalden",
+      canton == "GL" ~ "Glarus",
+      canton == "ZG" ~ "Zug",
+      canton == "FR" ~ "Fribourg",
+      canton == "SO" ~ "Solothurn",
+      canton == "BS" ~ "Basel-Stadt",
+      canton == "BL" ~ "Basel-Landschaft",
+      canton == "SH" ~ "Schaffhausen",
+      canton == "AR" ~ "Appenzell Ausserrhoden",
+      canton == "AI" ~ "Appenzell Innerrhoden",
+      canton == "SG" ~ "St. Gallen",
+      canton == "GR" ~ "Grisons",
+      canton == "AG" ~ "Aargau",
+      canton == "TG" ~ "Thurgau",
+      canton == "TI" ~ "Ticino",
+      canton == "VD" ~ "Vaud",
+      canton == "VS" ~ "Valais",
+      canton == "NE" ~ "Neuchâtel",
+      canton == "GE" ~ "Geneva",
+      canton == "JU" ~ "Jura",
+      TRUE ~ NA_character_
+    )
+  )
 
 noise_ha_ch <- noise_ha |>
   dplyr::filter(canton == "CH") |>
@@ -186,3 +227,14 @@ exdat_noise <- exdat_noise |>
   )
 
 save(exdat_noise, file = "data/exdat_noise.rda")
+
+# exdat_pm #########################################################################################
+
+# NOTE: extra info about this data set is found in the testthat data set airqplus_pm_copd
+
+exdat_pm <- exdat_pm |>
+  mutate(year_of_analysis = 2019, .before = 1) |>
+  mutate(rr_source = "Liu 2020") |>
+  mutate(rr_doi = "doi.org/10.1016/j.envint.2020.106267")
+
+save(exdat_pm, file = "data/exdat_pm.rda")

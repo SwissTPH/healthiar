@@ -1,4 +1,4 @@
-#' Attributable premature deaths or YLL using a life table approach
+#' Attribute premature deaths or YLL to an environmental stressor using a life table approach
 
 # DESCRIPTION ##################################################################
 #' @description

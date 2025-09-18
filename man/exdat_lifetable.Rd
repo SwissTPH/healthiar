@@ -28,4 +28,4 @@ This tibble contains population per age and sex for Switzerland.
 \author{
 Alberto Castro & Axel Luyten
 }
-\keyword{datasets}
+\keyword{internal}
