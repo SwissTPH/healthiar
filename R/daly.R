@@ -83,10 +83,10 @@ daly <-
 
     # Identify the columns names using keywords
     common_cols <-
-      column_names_results_raw[grepl("exp|exposure|cutoff|geo|approach_risk|sex|age_group|bhd_ci",
+      column_names_results_raw[base::grepl("exp|exposure|cutoff|geo|approach_risk|sex|age_group|bhd_ci",
                                      column_names_results_raw)]
     # Remove exceptions (columns with any of the keywords that should not be selected)
-    common_cols <- common_cols[!grepl("approach_exposure|rr_at_exp", common_cols)]
+    common_cols <- common_cols[!base::grepl("approach_exposure|rr_at_exp", common_cols)]
     cols_for_join <- c(common_cols, "erf_ci")
 
 
@@ -98,7 +98,7 @@ daly <-
 
     # Remove those containing the word impact
     column_names_results_raw_without_impact <-
-      column_names_results_raw[!grepl("impact|lifeyears|lifetable", column_names_results_raw)]
+      column_names_results_raw[!base::grepl("impact|lifeyears|lifetable", column_names_results_raw)]
 
 
     if(!all(identical_cols))
