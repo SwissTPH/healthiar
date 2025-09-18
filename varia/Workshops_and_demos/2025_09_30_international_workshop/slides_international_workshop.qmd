@@ -473,15 +473,14 @@ results$uncertainty_main |>
 ## `summarize_uncertainty()` 4/4
 
 ```{r, echo=TRUE,eval=FALSE,include=TRUE}
-results$uncertainty_detailed$attribute_by_sim_disaggregated
+results$uncertainty_detailed$impact_by_sim
 ```
 
 ::: fragment
 ::: {.absolute left=0}
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
-results$uncertainty_detailed$attribute_by_sim_disaggregated |> 
-  dplyr::select(-geo_id_micro, -input, -output) |> 
-  dplyr::relocate(impact, .after = sim_id) |>
+results$uncertainty_detailed$impact_by_sim |> 
+  dplyr::select(erf_ci, exp_ci, bhd_ci, impact_rounded, rr, exp, bhd) |> 
   knitr::kable()
 ```
 :::

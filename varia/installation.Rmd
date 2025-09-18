@@ -22,7 +22,7 @@ Install the healthiar package
 remotes::install_github(
   repo = "SwissTPH/healthiar",
   # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
-  ref = "1102-prepare-exercises-slides-for-international-workshops-4", # By default "HEAD"; name of branch to install package from as a string
+  # ref = "1102-prepare-exercises-slides-for-international-workshops-4", # By default "HEAD"; name of branch to install package from as a string
   force = TRUE,
   # auth_token = "", # Paste your GitHub PAT between the quotation marks
   auth_token = keyring::key_get("GITHUB_PAT_HEALTHIAR"),
