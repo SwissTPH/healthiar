@@ -76,8 +76,8 @@
     projection_if_unexposed_by_age_and_year prop_pop_exp
     prop_pop_exp_scen_1 prop_pop_exp_scen_2 ref_prop_pop rr
     rr_at_exp rr_at_exp_scen_1 rr_at_exp_scen_2 rr_increment setNames
-    sim_id social_ranking total_impact total_population value values var
-    year"
+    sex sim_id social_ranking total_impact total_population value values var
+    year year_of_analysis"
 
   col_names <- base::unlist(base::strsplit(missing_global_variables_raw, "\\s+"))
 
