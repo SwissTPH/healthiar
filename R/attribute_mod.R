@@ -110,7 +110,7 @@ attribute_mod <-
 
     # Use the arguments attribute()
     output_attribute_2 <-
-      base::do.call(attribute_master,
+      base::do.call(healthiar:::attribute_master,
                     input_for_attribute)
 
     return(output_attribute_2)

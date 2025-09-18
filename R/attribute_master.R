@@ -143,23 +143,23 @@ attribute_master <-
 
 
     # Check input data
-    validate_input_attribute(input_args = input_args,
+    healthiar:::validate_input_attribute(input_args = input_args,
                                          is_lifetable = is_lifetable)
 
 
     # Compile input data
     input_table <-
-      compile_input(input_args = input_args,
+      healthiar:::compile_input(input_args = input_args,
                                 is_lifetable = is_lifetable)
 
     # Calculate the health impacts for each case (uncertainty, category, geo area...)
     results <-
-      get_impact(input_table = input_table,
+      healthiar:::get_impact(input_table = input_table,
                              pop_fraction_type = "paf")
 
     # Get the main and detailed output by aggregating and/or filtering cases (rows)
     output <-
-      get_output(input_args = input_args,
+      healthiar:::get_output(input_args = input_args,
                              input_table = input_table,
                              intermediate_calculations = results$intermediate_calculations,
                              results_raw = results$results_raw)
