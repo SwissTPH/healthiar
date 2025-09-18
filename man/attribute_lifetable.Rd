@@ -190,7 +190,8 @@ Second, the mid-year population of year i+1 is calculated.
 For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 }
 \examples{
-# Goal: determine YLL attributable to air pollution exposure during one year using the life table approach
+# Goal: determine YLL attributable to air pollution exposure during one year
+# using the life table approach
 results <- attribute_lifetable(
   health_outcome = "yll",
   approach_exposure = "single_year",
@@ -210,7 +211,8 @@ results <- attribute_lifetable(
 )
 results$health_main$impact # Attributable YLL
 
-# Goal: determine attributable premature deaths due to air pollution exposure during one year using the life table approach
+# Goal: determine attributable premature deaths due to air pollution exposure
+# during one year using the life table approach
 results_pm_deaths <- attribute_lifetable(
   health_outcome = "deaths",
   approach_exposure = "single_year",
@@ -229,7 +231,8 @@ results_pm_deaths <- attribute_lifetable(
 )
 results_pm_deaths$health_main$impact # Attributable premature deaths
 
-# Goal: determine YLL attributable to air pollution exposure (exposure distribution) during one year using the life table approach
+# Goal: determine YLL attributable to air pollution exposure (exposure distribution)
+# during one year using the life table approach
 results <- attribute_lifetable(
   health_outcome = "yll",
   exp_central = rep(c(8, 9, 10), each = 100*2), # each = length of sex or age_group vector

@@ -60,11 +60,11 @@
 #'     age_group = rep(c("below_40", "40_plus"), each = 9037),
 #'     exp_central = c(exdat_socialize$PM25_MEAN, exdat_socialize$PM25_MEAN-0.1),
 #'     cutoff_central = 0,
-#'     rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
+#'     rr_central = 1.08,
 #'     erf_shape = "log_linear",
 #'     rr_increment = 10,
-#'     bhd_central = c(exdat_socialize$MORTALITY_TOTAL, ifelse(exdat_socialize$MORTALITY_TOTAL-10<0, 0, exdat_socialize$MORTALITY_TOTAL-10)),
-#'     population = c(exdat_socialize$POPULATION, ifelse(exdat_socialize$POPULATION-10<0, 0, exdat_socialize$POPULATION-10)),
+#'     bhd_central =  c(exdat_socialize$MORTALITY_below_40, exdat_socialize$MORTALITY_40_plus),
+#'     population = c(exdat_socialize$POPULATION_below_40, exdat_socialize$POPULATION_40_plus),
 #'     geo_id_micro = rep(exdat_socialize$CS01012020, 2))
 #'
 #' ## Difference in attributable impacts between geographic units
