@@ -64,7 +64,7 @@ daly <-
 
     # Capture all arguments and values
     input_args <-
-      healthiar:::get_input_args(environment = base::environment(),
+      get_input_args(environment = base::environment(),
                                  call = match.call())
 
     # Store results_raw of yll and yld
@@ -91,7 +91,7 @@ daly <-
 
 
     identical_cols <-
-      healthiar:::check_if_args_identical(
+      check_if_args_identical(
         args_a = input_args$value$output_attribute_yld,
         args_b = input_args$value$output_attribute_yld,
         names_to_check = common_cols)
@@ -136,7 +136,7 @@ daly <-
     # Use args and impact to produce impact
     # input_table is not available (two branches: yll and yld) but not needed
     output <-
-      healthiar:::get_output(
+      get_output(
         input_args = input_args,
         results_raw = results_raw)
 

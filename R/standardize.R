@@ -47,7 +47,7 @@ standardize <- function(output_attribute,
   if(is.null(ref_prop_pop)){
 
     ref_prop_pop <-
-      healthiar:::get_ref_prop_pop(df = input_data)$ref_prop_pop
+      get_ref_prop_pop(df = input_data)$ref_prop_pop
 
   }
 
