@@ -64,7 +64,7 @@ compile_input <-
     for (erf_eq_ in c("erf_eq_central", "erf_eq_lower", "erf_eq_upper")) {
       if (!is.null(input_args_edited[[erf_eq_]]) &&
           base::is.function(input_args_edited[[erf_eq_]])) {
-        input_args_edited[[erf_eq_]] <- list(input_args_edited[[erf_eq_]])
+        input_args_edited[[erf_eq_]] <- base::list(input_args_edited[[erf_eq_]])
       }
     }
 

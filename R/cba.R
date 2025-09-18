@@ -122,7 +122,7 @@ cba <-
 
     # Build the detailed output list
     cba_detailed <-
-      list(
+      base::list(
         benefit = cba_detailed_benefit,
         cost = cba_detailed_cost)
 
