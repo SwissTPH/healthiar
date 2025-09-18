@@ -565,7 +565,7 @@ socialize <- function(output_attribute = NULL,
   parameters_overall_prepared <-
     parameters_overall |>
     tidyr::pivot_longer(
-      cols = tidyr::everything(),
+      cols = dplyr::everything(),
       names_to = "parameter",
       values_to = "overall")
 
@@ -579,7 +579,7 @@ socialize <- function(output_attribute = NULL,
                         names_to = "parameter",
                         values_to = "value") |>
     ## Put column parameter first
-    dplyr::select(parameter, everything()) |>
+    dplyr::select(parameter, dplyr::everything()) |>
     ## Order columns by parameter
     dplyr::arrange(parameter) |>
     ## Obtain the first (most deprived) and last (least deprived) values
@@ -612,7 +612,7 @@ socialize <- function(output_attribute = NULL,
                        "impact_rate_std")) |>
     ## Long instead of wide layout
     tidyr::pivot_longer(
-      cols = contains("_"),
+      cols = dplyr::contains("_"),
       names_to = c("difference_type", "difference_compared_with"),
       values_to = "difference_value",
       names_sep = "_") |>
