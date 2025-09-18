@@ -19,12 +19,10 @@ This function returns a \code{vector} of strings
 \description{
 This function finds columns in two data frames that have same name and identical values (excluding exceptions).- The resulting joining columns are used to dplyr::x_join data frames and add the vector to by=.
 }
-\note{
-Experimental function
-}
 \examples{
 # TODO
 }
 \author{
 Alberto Castro & Axel Luyten
 }
+\keyword{internal}

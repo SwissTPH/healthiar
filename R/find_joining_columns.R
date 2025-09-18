@@ -19,8 +19,7 @@
 
 #' @author Alberto Castro & Axel Luyten
 
-#' @note Experimental function
-
+#' @keywords internal
 
 
 find_joining_columns <-

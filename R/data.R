@@ -25,7 +25,7 @@
 #' @docType data
 
 #' @author Alberto Castro & Axel Luyten
-
+#' @keywords internal
 #' @examples
 #' #TBD
 "exdat_pm"
