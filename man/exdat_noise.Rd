@@ -28,4 +28,4 @@ This tibble contains noise exposure data from urban and rural regions in Norway.
 \author{
 Anette Kocbach Bolling & Vázquez Fernández
 }
-\keyword{datasets}
+\keyword{internal}

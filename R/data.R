@@ -25,7 +25,9 @@
 #' @docType data
 
 #' @author Alberto Castro & Axel Luyten
+
 #' @keywords internal
+
 #' @examples
 #' #TBD
 "exdat_pm"
@@ -52,6 +54,8 @@
 
 #' @author Anette Kocbach Bolling & Vázquez Fernández
 
+#' @keywords internal
+
 #' @examples
 #' #TBD
 "exdat_noise"
@@ -77,6 +81,8 @@
 #' @docType data
 
 #' @author Alberto Castro & Axel Luyten
+
+#' @keywords internal
 
 #' @examples
 #' #TBD
@@ -107,6 +113,8 @@
 
 #' @author Arno Pauwels & Vanessa Gorasso
 
+#' @keywords internal
+
 #' @examples
 #' #TBD
 "exdat_prepare_mdi"
@@ -127,6 +135,8 @@
 #' @docType data
 
 #' @author Arno Pauwels & Vanessa Gorasso
+
+#' @keywords internal
 
 #' @examples
 #' #TBD
@@ -166,6 +176,8 @@
 
 #' @author Alberto Castro & Axel Luyten
 
+#'  @keywords internal
+
 #' @examples
 #' #TBD
 "exdat_ozone"
@@ -202,6 +214,8 @@
 #' @docType data
 
 #' @author Alberto Castro & Axel Luyten
+
+#' @keywords internal
 
 #' @examples
 #' #TBD

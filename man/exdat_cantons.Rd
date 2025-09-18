@@ -39,4 +39,4 @@ This tibble contains PM2.5 exposure and COPD incidence data from Switzerland.
 \author{
 Alberto Castro & Axel Luyten
 }
-\keyword{datasets}
+\keyword{internal}

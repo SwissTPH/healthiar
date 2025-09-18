@@ -22,4 +22,4 @@ This tibble contains data for municipalities in Belgium ranked by BEST-COST Mult
 \author{
 Arno Pauwels & Vanessa Gorasso
 }
-\keyword{datasets}
+\keyword{internal}
