@@ -227,3 +227,14 @@ exdat_noise <- exdat_noise |>
   )
 
 save(exdat_noise, file = "data/exdat_noise.rda")
+
+# exdat_pm #########################################################################################
+
+# NOTE: extra info about this data set is found in the testthat data set airqplus_pm_copd
+
+exdat_pm <- exdat_pm |>
+  mutate(year_of_analysis = 2019, .before = 1) |>
+  mutate(rr_source = "Liu 2020") |>
+  mutate(rr_doi = "doi.org/10.1016/j.envint.2020.106267")
+
+save(exdat_pm, file = "data/exdat_pm.rda")

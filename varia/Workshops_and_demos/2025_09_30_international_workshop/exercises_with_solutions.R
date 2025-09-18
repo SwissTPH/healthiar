@@ -13,7 +13,19 @@ library(dplyr)
 
 # EXERCISE 1) Relative risk 1 ######################################################################
 
-## Specify the annual mean PM2.5 exposure (8.85 μg / m^3) and determine attributable COPD cases.
+## Determine COPD (chronic obstructive pulmonary disease) cases attributable to long-term PM2.5 exposure. In the year of analysis, population-weighted mean PM2.5 exposure was 8.85 μg / m^3 and COPD incidence 30747. In the literature you found a relative risk (RR) of 1.369 (Liu 2021) for an exposure increment of 10 μg / m^3, which you apply using a cutoff value of 5 μg / m^3 and a "log_linear" exposure-response function (ERF) shape.
+
+# EXERCISE
+results_rr_1 <- attribute_health(
+  exp_central = ,
+  erf_shape = "log_linear",
+  rr_central = ,
+  rr_increment = ,
+  cutoff_central = ,
+  bhd_central =
+)
+
+# SOLUTION
 results_rr_1 <- attribute_health(
   exp_central = 8.85, # μg / m^3
   erf_shape = "log_linear", # erf = exposure-response function
@@ -31,6 +43,16 @@ results_rr_1$health_main$impact_rounded # 3502
 
 ## With a new policy the annual mean PM2.5 exposure is reduced to 6 μg / m^3. Determine the attributable cases with the new exposure level (keeping the other aspects the same) .
 
+# EXERCISE
+results_rr_2 <- attribute_mod(
+  output_attribute = ,
+  exp_central =
+)
+
+?attribute_mod
+## HINT: the function attribute_mod() can be used to modify and existing assessment; alternatively, you can copy and adjust the code from exercise 1
+
+# SOLUTION
 results_rr_2 <- attribute_health(
   exp_central = 6,
   erf_shape = "log_linear",
@@ -47,21 +69,26 @@ results_rr_2 <- attribute_mod(
 
 results_rr_2$health_main$impact_rounded # 951
 
-## HINT: as an alternative to the function attribute_health(), the function attribute_mod() can be
-## used to modify and existing assessment
+
 
 
 
 # EXERCISE 3) Comparison ###########################################################################
 
-## Now compare the number of attributable cases from the two scenarios (before & after policy).
+## Now compare the number of attributable cases from before & after the policy (exercises 1 & 2) via the "delta" approach.
 
+# EXERCISE
+results_comparison <- compare(...)
+
+?compare # HINT: run this line to open the help page of the compare() function
+
+# SOLUTION
 results_comparison <- compare(
   output_attribute_scen_1 = results_rr_1,
   output_attribute_scen_2 = results_rr_2
 )
 
-results_comparison$health_main$impact_rounded
+results_comparison$health_main$impact_rounded # 2551
 
 
 
@@ -70,8 +97,13 @@ results_comparison$health_main$impact_rounded
 ## Assess the number of attributable lung cancer cases due to PM2.5 in all Swiss cantons using the
 ## input data from the example data set "exdat_cantons".
 
-data("exdat_cantons")
+# EXERCISE
+data("exdat_cantons") # this line loads the variable into your RStudio environment tab
+View(exdat_cantons) # this line let's you inspect the variable
 
+results_geo_1 <- attribute_health()
+
+# SOLUTION
 results_geo_1 <- attribute_health(
   geo_id_micro = exdat_cantons$canton,
   exp_central = exdat_cantons$exposure,
