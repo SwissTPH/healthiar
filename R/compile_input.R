@@ -117,8 +117,8 @@ compile_input <-
           tidyr::pivot_longer(
             data = input_wo_lifetable,
             cols = dplyr::any_of(base::paste0(var, c("_central", "_lower", "_upper"))),
-            names_to = paste0(var, "_ci"),
-            names_prefix = paste0(var, "_"),
+            names_to = base::paste0(var, "_ci"),
+            names_prefix = base::paste0(var, "_"),
             values_to = var)
       }
     }

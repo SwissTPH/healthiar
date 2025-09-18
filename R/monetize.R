@@ -149,7 +149,7 @@ monetize <- function(output_attribute = NULL,
     if(!base::is.null(base::get(var_name)) &&
        base::get(var_name) < 0){
 
-      stop(paste0(var_name, " must be higher than 0."),
+      stop(base::paste0(var_name, " must be higher than 0."),
            call. = FALSE)
     }
 
