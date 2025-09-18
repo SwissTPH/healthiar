@@ -590,7 +590,7 @@ validate_input_attribute <-
       var_value <- input_args_value [[var_name]]
 
 
-      if(any(approach_risk == "absolute_risk" &
+      if(base::any(approach_risk == "absolute_risk" &
          !base::is.null(var_value) & !var_value == 0)){ # Only if available
         # Create warning message
         base::warning(

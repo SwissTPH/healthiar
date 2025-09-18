@@ -65,7 +65,7 @@ daly <-
     # Capture all arguments and values
     input_args <-
       get_input_args(environment = base::environment(),
-                                 call = match.call())
+                     call = base::match.call())
 
     # Store results_raw of yll and yld
     # Shorter and handy to code
