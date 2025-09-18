@@ -1,6 +1,6 @@
 .onAttach <- function(libname, pkgname) {
   # packageStartupMessage("This is version ", packageVersion(healthiar)," of ", healthiar,)
-  packageStartupMessage("***** TERMS OF USE *****\nBy using the R package healthiar or accessing its corresponding GitHub website https://github.com/best-cost/ the user agrees not to disseminate the package or any parts of it to third parties. If you have any questions regarding the terms of use write to alberto.castrofernandez@swisstph.ch.\n***** NOTE ******\nThe development of healthiar is part of the European Union project BEST-COST (Burden of disease based methods for estimating the socio-economic cost of environmental stressors). This R package is not published at this moment. It will be published as open-source towards the end of BEST-COST, most likely in 2026.\n***** DISCLAIMER *****\nThis is work in progress. Therefore, the functions of the R package, as including the required input data and the produced output data can change at any moment. The developers are not liable for any calculation errors or inaccuracies resulting from the use of this package.")
+  packageStartupMessage("***** DISCLAIMER *****\nThe developers are not liable for any calculation errors or inaccuracies resulting from the use of the R package healthiar. It is work in progress and the functions of this R package can change at any moment.\n***** HAPPY CODING *****")
 }
 
 # Trick to prevent CMD check notes no visible binding for global variable
