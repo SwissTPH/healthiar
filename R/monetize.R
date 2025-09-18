@@ -311,12 +311,12 @@ monetize <- function(output_attribute = NULL,
         # Add inflation factor ####
       dplyr::mutate(
         inflation_factor =
-          healthiar::get_inflation_factor(
+          get_inflation_factor(
             n_years = year,
             inflation_rate = inflation_rate),
         # Add discount factor ####
         discount_factor =
-          healthiar::get_discount_factor(
+          get_discount_factor(
             discount_rate = discount_rate,
             n_years = year,
             discount_shape = discount_shape,
