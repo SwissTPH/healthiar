@@ -27,12 +27,12 @@ collapse_df_by_group <- function(df,
                                  ci_col_names = NULL,
                                  only_unique_rows = TRUE){
 
-  if(is.null(multi_value_col_names)){
+  if(base::is.null(multi_value_col_names)){
     multi_value_col_names <-
-      healthiar:::find_multi_value_col_names(df = df, group_col_names = NULL)
+      find_multi_value_col_names(df = df, group_col_names = NULL)
   }
 
-  if(is.null(ci_col_names)){
+  if(base::is.null(ci_col_names)){
     ci_col_names <-
       base::grep("_ci", base::names(df), value = TRUE)
   }
@@ -46,7 +46,7 @@ collapse_df_by_group <- function(df,
     dplyr::filter(
       dplyr::if_all(.cols = dplyr::all_of(ci_col_names),
                     .fns = ~ base::grepl("central", .x))) |>
-    healthiar:::find_multi_value_col_names(df = _, group = group_col_names)
+    find_multi_value_col_names(df = _, group_col_names = group_col_names)
 
 
   # Collapse columns

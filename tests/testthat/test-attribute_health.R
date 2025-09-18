@@ -366,7 +366,7 @@ testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_
         rr_increment = 10,
         erf_shape = "log_linear",
         population = c(1E5, 2E5),
-        geo_id_micro = c("a", "b"))$health_main$impact|>round(4),
+        geo_id_micro = c("a", "b"))$health_main$impact|>base::round(4),
     expected =
       c(48.2825, 84.9003) # Results on 30 April 2025; no comparison study
   )
@@ -420,7 +420,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
-      round(data$VALUE)
+      base::round(data$VALUE)
   )
 
   ## ASSESSOR: Arno Pauwels, SCI
@@ -449,7 +449,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
-      round(data$VALUE)
+      base::round(data$VALUE)
   )
 
   ## ASSESSOR: Arno Pauwels, SCI
@@ -774,7 +774,7 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
         geo_id_macro = rep("ch", each = 5 * 3)
         )$health_detailed$results_raw$impact_rounded,
     expected =
-      round(c(545,  634,  991)) # Results on 2025-06-24; no comparison study
+      base::round(c(545,  634,  991)) # Results on 2025-06-24; no comparison study
   )
 })
 
@@ -1081,7 +1081,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
       dplyr::filter(exposure_category %in% "Total exposed")|>
       dplyr::select(number)|>
       dplyr::pull() |>
-      round()
+      base::round()
   )
 
   ## Single exposure value
@@ -1167,7 +1167,7 @@ testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iter
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         geo_id_micro = rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
-        )$health_detailed$results_raw$impact |> round(),
+        )$health_detailed$results_raw$impact |> base::round(),
     expected =
       c(921, 1278, 1932, 2967, 704, 605, 2191, 1810, 551, 2877, 543, 2458, 1219, 1043, 1869) # Results on 2025-02-05; no comparison study
   )
@@ -1196,7 +1196,7 @@ testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iter
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         geo_id_micro = rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
-        )$health_detailed$results_raw$impact |> round(),
+        )$health_detailed$results_raw$impact |> base::round(),
     expected = # Results on 2025-01-20; no comparison study
       c(890, 976,  809, 1241, 1361, 1128, 1893, 2077, 1720, 2954, 3242, 2682,  678,  743,
         617, 583, 639,  530, 2160, 2370, 1962, 1774, 1946, 1611, 530, 581, 482, 2870,
@@ -1302,7 +1302,7 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
       dplyr::filter(exposure_category %in% "Total exposed")|>
       dplyr::select(number)|>
       dplyr::pull() |>
-      round() / 2 # With dw_central = 0.5 & duration_central = 1 the expected results are half of those we would obtain without dw & duration arguments
+      base::round() / 2 # With dw_central = 0.5 & duration_central = 1 the expected results are half of those we would obtain without dw & duration arguments
   )
 })
 
@@ -1332,7 +1332,7 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
       dplyr::filter(exposure_category %in% "Total exposed")|>
       dplyr::select(number)|>
       dplyr::pull() |>
-      round() / 2 # With dw_central = 0.5 & duration_central = 1 the expected results are half of those we would obtain without dw & duration arguments
+      base::round() / 2 # With dw_central = 0.5 & duration_central = 1 the expected results are half of those we would obtain without dw & duration arguments
   )
 })
 

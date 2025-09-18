@@ -146,10 +146,10 @@ monetize <- function(output_attribute = NULL,
   ## Error if value lower than 0 ####
   for(var_name in c("valuation", "n_years")){
 
-    if(!is.null(base::get(var_name)) &&
+    if(!base::is.null(base::get(var_name)) &&
        base::get(var_name) < 0){
 
-      stop(paste0(var_name, " must be higher than 0."),
+      stop(base::paste0(var_name, " must be higher than 0."),
            call. = FALSE)
     }
 
@@ -158,7 +158,7 @@ monetize <- function(output_attribute = NULL,
   ## Error if value higher than 1 and lower than 0 ####
   for(var_name in c("discount_rate", "inflation_rate")){
 
-    if(!is.null(base::get(var_name)) &&
+    if(!base::is.null(base::get(var_name)) &&
        (base::get(var_name) < 0 | base::get(var_name) > 1)){
 
       stop(base::paste0(var_name, " must be higher than 0 and lower than 1."),
@@ -171,7 +171,7 @@ monetize <- function(output_attribute = NULL,
 
   ## Error if values for both impact and output_attribute are passed ####
 
-  if(!base::is.null(impact) && !is.null(output_attribute)){
+  if(!base::is.null(impact) && !base::is.null(output_attribute)){
     stop(base::paste0("Enter a value for impact or for output_attribute but not both."),
          call. = FALSE)
   }
@@ -283,7 +283,7 @@ monetize <- function(output_attribute = NULL,
                       discount_shape = discount_shape,
                       inflation_rate = inflation_rate) |>
         # Add info
-        healthiar:::add_info(info = info)
+        add_info(info = info)
 
 
       # Add year
@@ -311,12 +311,12 @@ monetize <- function(output_attribute = NULL,
         # Add inflation factor ####
       dplyr::mutate(
         inflation_factor =
-          healthiar::get_inflation_factor(
+          get_inflation_factor(
             n_years = year,
             inflation_rate = inflation_rate),
         # Add discount factor ####
         discount_factor =
-          healthiar::get_discount_factor(
+          get_discount_factor(
             discount_rate = discount_rate,
             n_years = year,
             discount_shape = discount_shape,
@@ -426,8 +426,8 @@ monetize <- function(output_attribute = NULL,
         # Round results
         dplyr::mutate(
           # Round impacts and monetized impacts
-          impact_rounded = round(impact),
-          monetized_impact_rounded = round(monetized_impact))
+          impact_rounded = base::round(impact),
+          monetized_impact_rounded = base::round(monetized_impact))
 
 
       # Calculate impact per 100K inhab.
@@ -442,7 +442,7 @@ monetize <- function(output_attribute = NULL,
 
       # Get the main and detailed output by aggregating and/or filtering cases (rows)
       output_monetization <-
-        healthiar:::get_output(results_raw = impact_detailed) |>
+        get_output(results_raw = impact_detailed) |>
         # Rename the list elements (not anymore health but health including monetization)
         stats::setNames(c("monetization_main", "monetization_detailed"))
 

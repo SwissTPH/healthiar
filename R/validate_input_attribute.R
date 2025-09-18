@@ -127,7 +127,7 @@ validate_input_attribute <-
     # And also nice to have all incorrect args at once
     numeric_args_that_are_not <-
       input_args_value[numeric_arg_names_available] |>
-      purrr::keep(~ !is.numeric(.x)) |>
+      purrr::keep(~ !base::is.numeric(.x)) |>
       base::names()
 
     if(base::length(numeric_args_that_are_not) > 0) {
@@ -590,7 +590,7 @@ validate_input_attribute <-
       var_value <- input_args_value [[var_name]]
 
 
-      if(any(approach_risk == "absolute_risk" &
+      if(base::any(approach_risk == "absolute_risk" &
          !base::is.null(var_value) & !var_value == 0)){ # Only if available
         # Create warning message
         base::warning(

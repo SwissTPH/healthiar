@@ -205,7 +205,7 @@ summarize_uncertainty <- function(
 
   # Is there a confidence interval? I.e. lower and upper estimate?
 
-  ci_in <- list()
+  ci_in <- base::list()
 
   for (v in var_names){
     ci_in[[v]] <-
@@ -382,7 +382,7 @@ summarize_uncertainty <- function(
     dplyr::mutate(sim_id = base::list(1:n_sim))
 
   # Identify the variable names with confidence interval
-  var_names_with_ci <- base::names(ci_in)[unlist(ci_in)]
+  var_names_with_ci <- base::names(ci_in)[base::unlist(ci_in)]
   var_names_with_ci_in_name <- base::gsub("rr", "erf", var_names_with_ci) |> base::paste0("_ci")
   # Identify those var_names_with_ci that have simulated values different in all geo units
   var_names_with_ci_geo_different <- base::intersect(var_names_with_ci, c("exp", "bhd"))
@@ -512,11 +512,11 @@ summarize_uncertainty <- function(
 
   # Call get_impact taking benefit of the vectorized structure
   # impact by row no matter what you enter (e.g. multiple rr by geo_id_micro)
-  impact_sim <- healthiar:::get_impact(input_table = input_table_with_sim,
+  impact_sim <- get_impact(input_table = input_table_with_sim,
                                                     pop_fraction_type = "paf")
 
   # Get output
-  output_sim <- healthiar:::get_output(results_raw = impact_sim$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
+  output_sim <- get_output(results_raw = impact_sim$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
 
 
   impact_by_sim <- output_sim |>
@@ -612,7 +612,7 @@ summarize_uncertainty <- function(
       # (same structure because same type of assessment)
       # base::names(output_scen_1) |>
       # base::grep(pattern = "_id", x = _, value = TRUE)
-      healthiar:::find_joining_columns(
+      find_joining_columns(
         df_1 = output_scen_1,
         df_2 = output_scen_2,
         except = scenario_specific_arguments)
@@ -638,11 +638,11 @@ summarize_uncertainty <- function(
 
 
       impact_sim_both_scen <-
-        healthiar:::get_impact(input_table = output_both_scen,
+        get_impact(input_table = output_both_scen,
                               pop_fraction_type = "pif")
 
       output_sim_both_scen <-
-        healthiar:::get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["impact_by_sim"]]
+        get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["impact_by_sim"]]
 
       impact_by_sim <- output_sim_both_scen|>
         dplyr::relocate(impact, impact_rounded,

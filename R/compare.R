@@ -131,9 +131,9 @@ compare <-
 
     # Force the same environment in the functions of erf_eq.
     # Otherwise, not identified as identical and error joining below.
-    if(!is.null(input_args_scen_1[["value"]][["erf_eq_central"]])){
+    if(!base::is.null(input_args_scen_1[["value"]][["erf_eq_central"]])){
 
-      erf_eq_vars <- paste0("erf_eq", c("erf_eq", "_central", "_lower", "_upper"))
+      erf_eq_vars <- base::paste0("erf_eq", c("erf_eq", "_central", "_lower", "_upper"))
 
       input_args_scen_1[["value"]][erf_eq_vars] <-
         input_args_scen_2[["value"]][erf_eq_vars]
@@ -205,7 +205,7 @@ compare <-
     }
 
     common_arguments_identical <-
-      healthiar:::check_if_args_identical(
+      check_if_args_identical(
         args_a = input_args_scen_1[["value"]],
         args_b = input_args_scen_2[["value"]],
         names_to_check = common_arguments)
@@ -217,7 +217,7 @@ compare <-
     if( ! base::all(common_arguments_identical) )
     {stop(
       base::paste0(
-        base::paste(names(common_arguments_identical)[!common_arguments_identical],
+        base::paste(base::names(common_arguments_identical)[!common_arguments_identical],
                     collapse = ", "),
         " must be identical in both scenarios."),
       call. = FALSE)}
@@ -258,7 +258,7 @@ compare <-
 
       # Identify the columns that are to be used to join results_raw_scen_1 and _scen_2
       joining_columns_output <-
-        healthiar:::find_joining_columns(
+        find_joining_columns(
           df_1 = results_raw_scen_1,
           df_2 = results_raw_scen_2,
           except = scenario_specific_arguments)
@@ -295,7 +295,7 @@ compare <-
 
         # Get identical columns to join data frames (as above)
         joining_columns_input <-
-          healthiar:::find_joining_columns(
+          find_joining_columns(
             df_1 = input_table_scen_1,
             df_2 = input_table_scen_2,
             # except = scenario_specific_arguments)
@@ -315,7 +315,7 @@ compare <-
             suffix = c("_scen_1", "_scen_2"))
 
         results <-
-          healthiar:::get_impact(
+          get_impact(
             input_table = input_table,
             pop_fraction_type = "pif")
 
@@ -331,7 +331,7 @@ compare <-
     # in a list
 
     output <-
-      healthiar:::get_output(
+      get_output(
         input_args = base::list(approach_comparison = approach_comparison,
                                 input_args_scen_1 = input_args_scen_1,
                                 input_args_scen_2 = input_args_scen_2),
