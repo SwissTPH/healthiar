@@ -104,7 +104,7 @@ standardize <- function(output_attribute,
       .by = dplyr::any_of(group_cols),
       bhd = base::sum(bhd),
       impact = base::sum(impact),
-      impact_per_100k_inhab = sum(impact_per_100k_inhab_std),
+      impact_per_100k_inhab = base::sum(impact_per_100k_inhab_std),
       exp = base::mean(exp_std),
       pop_fraction = base::sum(pop_fraction),
       population = base::sum(population))

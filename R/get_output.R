@@ -217,7 +217,7 @@ get_output <-
             # and even comparison scenarios
             # which also have to be included in this aggregation
             .cols = dplyr::all_of(cols_to_be_summed),
-            .fns = ~ sum(.x, na.rm = TRUE),
+            .fns = ~ base::sum(.x, na.rm = TRUE),
             .names = "{.col}"))|>
         # Keep only distict rows because above mutate() not summarize()
         dplyr::distinct() |>
