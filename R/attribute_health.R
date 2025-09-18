@@ -278,11 +278,11 @@ attribute_health <-
     # Get input_args
     # i.e. a list with all argument values and characteristics
     input_args <-
-      get_input_args(environment = base::environment(),
+      healthiar:::get_input_args(environment = base::environment(),
                                  call = match.call())
 
     output <-
-      attribute_master(
+      healthiar:::attribute_master(
         # RR & AR
         approach_risk = approach_risk,
         exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,

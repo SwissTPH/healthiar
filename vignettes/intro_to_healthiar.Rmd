@@ -1,19 +1,14 @@
 ---
 title: "Intro to healthiar"
-output:
-  rmarkdown::html_vignette:
-    toc: true
-    toc_depth: 2
-    execute:
-      eval: true
-      echo: true
-      include: true
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{intro_to_healthiar}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, eval=TRUE, include=TRUE)
+```
 ------------------------------------------------------------------------
 
 ```{r, include = FALSE}

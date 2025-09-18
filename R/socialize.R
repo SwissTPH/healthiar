@@ -105,7 +105,7 @@ socialize <- function(output_attribute = NULL,
   # Data validation ######################
 
   input_args_value <-
-    get_input_args(environment = base::environment(),
+    healthiar:::get_input_args(environment = base::environment(),
                                call = match.call())$value
 
   # Identify available_vars
@@ -319,7 +319,7 @@ socialize <- function(output_attribute = NULL,
       } else if (base::is.null(ref_prop_pop)){
 
         ref_prop_pop_table <-
-          get_ref_prop_pop(df = input_data)
+          healthiar:::get_ref_prop_pop(df = input_data)
       }
 
 
@@ -368,7 +368,7 @@ socialize <- function(output_attribute = NULL,
           # * * If NOT available ref_prop_pop ################
         } else if(base::is.null(ref_prop_pop)) {
           ref_prop_pop_table <-
-            get_ref_prop_pop(df = input_data)
+            healthiar:::get_ref_prop_pop(df = input_data)
           }
     }
 

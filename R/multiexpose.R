@@ -58,7 +58,7 @@ multiexpose <-
 
     # Capture all arguments and values
     input_args <-
-      get_input_args(environment = base::environment(),
+      healthiar:::get_input_args(environment = base::environment(),
                                  call = match.call())
 
     pop_fraction_type <- input_args$value$pop_fraction_type
@@ -87,12 +87,12 @@ multiexpose <-
 
       # Calculate the health impacts for each case (uncertainty, category, geo area...)
       results <-
-        get_impact(input_table = input_table,
+        healthiar:::get_impact(input_table = input_table,
                                pop_fraction_type = "paf")
 
       # Get the main and detailed output by aggregating and/or filtering cases (rows)
       output <-
-        get_output(input_args = input_args,
+        healthiar:::get_output(input_args = input_args,
                                input_table = input_table,
                                intermediate_calculations = results$intermediate_calculations,
                                results_raw = results$results_raw)

@@ -112,7 +112,7 @@ get_risk_and_pop_fraction <-
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         ## Obtain the relative risk for the relevant concentration
         dplyr::mutate(rr_at_exp =
-                        get_risk(
+                        healthiar::get_risk(
                           rr = rr,
                           exp = exp,
                           cutoff = cutoff,
@@ -124,7 +124,7 @@ get_risk_and_pop_fraction <-
     } else {
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(rr_at_exp_scen_1 =
-                        get_risk(
+                        healthiar::get_risk(
                           rr = rr,
                           exp = exp_scen_1,
                           cutoff = cutoff,
@@ -132,7 +132,7 @@ get_risk_and_pop_fraction <-
                           erf_shape = erf_shape,
                           erf_eq = erf_eq),
                       rr_at_exp_scen_2 =
-                        get_risk(
+                        healthiar::get_risk(
                           rr = rr,
                           exp = exp_scen_2,
                           cutoff = cutoff,
@@ -179,7 +179,7 @@ get_risk_and_pop_fraction <-
       input_with_risk_and_pop_fraction <-
         # input_with_risk_and_pop_fraction |>
         # collapse_df_by_columns(columns_for_group = grouping_cols_available_multiexposure)
-        collapse_df_by_group(
+        healthiar:::collapse_df_by_group(
           df = input_with_risk_and_pop_fraction,
           group_col_names = grouping_cols_available_multiexposure)
 
@@ -195,7 +195,7 @@ get_risk_and_pop_fraction <-
         dplyr::mutate(
           .by = dplyr::all_of(grouping_cols_available),
           pop_fraction =
-            get_pop_fraction(rr_at_exp_1 = rr_at_exp,
+            healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp,
                                          rr_at_exp_2 = 1,
                                          prop_pop_exp_1 = prop_pop_exp,
                                          prop_pop_exp_2 = prop_pop_exp))
@@ -207,7 +207,7 @@ get_risk_and_pop_fraction <-
         dplyr::mutate(
           .by = dplyr::all_of(grouping_cols_available),
           pop_fraction =
-            get_pop_fraction(rr_at_exp_1 = rr_at_exp_scen_1,
+            healthiar:::get_pop_fraction(rr_at_exp_1 = rr_at_exp_scen_1,
                                          rr_at_exp_2 = rr_at_exp_scen_2,
                                          prop_pop_exp_1 = prop_pop_exp_scen_1,
                                          prop_pop_exp_2 = prop_pop_exp_scen_2)) }
@@ -228,7 +228,7 @@ get_risk_and_pop_fraction <-
       # Data wrangling for multiple exposures
       # Collapse data frame pasting the columns with different values
       input_with_risk_and_pop_fraction <-
-        collapse_df_by_group(
+        healthiar:::collapse_df_by_group(
           df = input_with_risk_and_pop_fraction,
           group_col_names = grouping_cols_available_multiexposure)
       }
@@ -241,7 +241,7 @@ get_risk_and_pop_fraction <-
     if(base::unique(input_table$exp_type) == "exposure_distribution"){
 
       input_with_risk_and_pop_fraction <-
-        collapse_df_by_group(
+        healthiar:::collapse_df_by_group(
           df = input_with_risk_and_pop_fraction,
           group_col_names = grouping_cols_available)
     }
