@@ -112,7 +112,7 @@ get_risk_and_pop_fraction <-
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         ## Obtain the relative risk for the relevant concentration
         dplyr::mutate(rr_at_exp =
-                        get_risk(
+                        healthiar::get_risk(
                           rr = rr,
                           exp = exp,
                           cutoff = cutoff,
@@ -124,7 +124,7 @@ get_risk_and_pop_fraction <-
     } else {
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(rr_at_exp_scen_1 =
-                        get_risk(
+                        healthiar::get_risk(
                           rr = rr,
                           exp = exp_scen_1,
                           cutoff = cutoff,
@@ -132,7 +132,7 @@ get_risk_and_pop_fraction <-
                           erf_shape = erf_shape,
                           erf_eq = erf_eq),
                       rr_at_exp_scen_2 =
-                        get_risk(
+                        healthiar::get_risk(
                           rr = rr,
                           exp = exp_scen_2,
                           cutoff = cutoff,

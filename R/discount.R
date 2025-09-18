@@ -37,7 +37,7 @@ discount <-
            inflation_rate = NULL) {
 
     output_discounting <-
-      monetize(
+      healthiar::monetize(
         output_attribute = output_attribute,
         impact = impact,
         discount_rate = discount_rate,
