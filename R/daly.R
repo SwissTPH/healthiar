@@ -75,7 +75,7 @@ daly <-
     # Capture all column names
     # They should be the same for yll and yld but just in case
     column_names_results_raw <-
-      unique(c(names(results_raw_yll), names(results_raw_yld)))
+      base::unique(c(names(results_raw_yll), names(results_raw_yld)))
 
     results_raw_yll[, c("sex", "age_group")] <- "total"
     results_raw_yld[, c("sex", "age_group")] <- "total"
