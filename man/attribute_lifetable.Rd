@@ -231,7 +231,8 @@ results_pm_deaths <- attribute_lifetable(
 )
 results_pm_deaths$health_main$impact # Attributable premature deaths
 
-# Goal: determine YLL attributable to air pollution exposure (exposure distribution) during one year using the life table approach
+# Goal: determine YLL attributable to air pollution exposure (exposure distribution)
+# during one year using the life table approach
 results <- attribute_lifetable(
   health_outcome = "yll",
   exp_central = rep(c(8, 9, 10), each = 100*2), # each = length of sex or age_group vector
