@@ -205,7 +205,7 @@ summarize_uncertainty <- function(
 
   # Is there a confidence interval? I.e. lower and upper estimate?
 
-  ci_in <- list()
+  ci_in <- base::list()
 
   for (v in var_names){
     ci_in[[v]] <-
@@ -382,7 +382,7 @@ summarize_uncertainty <- function(
     dplyr::mutate(sim_id = base::list(1:n_sim))
 
   # Identify the variable names with confidence interval
-  var_names_with_ci <- base::names(ci_in)[unlist(ci_in)]
+  var_names_with_ci <- base::names(ci_in)[base::unlist(ci_in)]
   var_names_with_ci_in_name <- base::gsub("rr", "erf", var_names_with_ci) |> base::paste0("_ci")
   # Identify those var_names_with_ci that have simulated values different in all geo units
   var_names_with_ci_geo_different <- base::intersect(var_names_with_ci, c("exp", "bhd"))

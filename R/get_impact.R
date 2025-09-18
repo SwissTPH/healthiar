@@ -120,7 +120,7 @@ get_impact <-
 
     # Rounded impact ##############
     results_raw <- results_raw |>
-      dplyr::mutate(impact_rounded = round(impact, 0))
+      dplyr::mutate(impact_rounded = base::round(impact, 0))
 
     # Impact per 100K inhabitants ##################################
 

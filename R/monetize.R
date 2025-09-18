@@ -146,10 +146,10 @@ monetize <- function(output_attribute = NULL,
   ## Error if value lower than 0 ####
   for(var_name in c("valuation", "n_years")){
 
-    if(!is.null(base::get(var_name)) &&
+    if(!base::is.null(base::get(var_name)) &&
        base::get(var_name) < 0){
 
-      stop(paste0(var_name, " must be higher than 0."),
+      stop(base::paste0(var_name, " must be higher than 0."),
            call. = FALSE)
     }
 
@@ -158,7 +158,7 @@ monetize <- function(output_attribute = NULL,
   ## Error if value higher than 1 and lower than 0 ####
   for(var_name in c("discount_rate", "inflation_rate")){
 
-    if(!is.null(base::get(var_name)) &&
+    if(!base::is.null(base::get(var_name)) &&
        (base::get(var_name) < 0 | base::get(var_name) > 1)){
 
       stop(base::paste0(var_name, " must be higher than 0 and lower than 1."),
@@ -171,7 +171,7 @@ monetize <- function(output_attribute = NULL,
 
   ## Error if values for both impact and output_attribute are passed ####
 
-  if(!base::is.null(impact) && !is.null(output_attribute)){
+  if(!base::is.null(impact) && !base::is.null(output_attribute)){
     stop(base::paste0("Enter a value for impact or for output_attribute but not both."),
          call. = FALSE)
   }
@@ -426,8 +426,8 @@ monetize <- function(output_attribute = NULL,
         # Round results
         dplyr::mutate(
           # Round impacts and monetized impacts
-          impact_rounded = round(impact),
-          monetized_impact_rounded = round(monetized_impact))
+          impact_rounded = base::round(impact),
+          monetized_impact_rounded = base::round(monetized_impact))
 
 
       # Calculate impact per 100K inhab.

@@ -217,7 +217,7 @@ get_output <-
             # and even comparison scenarios
             # which also have to be included in this aggregation
             .cols = dplyr::all_of(cols_to_be_summed),
-            .fns = ~ sum(.x, na.rm = TRUE),
+            .fns = ~ base::sum(.x, na.rm = TRUE),
             .names = "{.col}"))|>
         # Keep only distict rows because above mutate() not summarize()
         dplyr::distinct() |>
@@ -225,14 +225,14 @@ get_output <-
         dplyr::mutate(
           dplyr::across(
             .cols = dplyr::all_of(impact_cols_to_be_summed),
-            .fns = ~ round(.x),
+            .fns = ~ base::round(.x),
             .names = "{.col}_rounded"
           )
         )
 
 
       # If population is available, recompute with population and normalized metrics
-      if ("population" %in% names(df)) {
+      if ("population" %in% base::names(df)) {
         impact_agg <- impact_agg |>
           dplyr::mutate(
             dplyr::across(
@@ -302,7 +302,7 @@ get_output <-
           put_first_cols(x, cols)
 
         # If x is list and all list elements are data frames (and not lists)
-        }else if (base::is.list(x) & base::all(purrr::map_lgl(x, is.data.frame))){
+        }else if (base::is.list(x) & base::all(purrr::map_lgl(x, base::is.data.frame))){
           purrr::map(
             .x = x,
             .f = ~ put_first_cols(.x, cols))

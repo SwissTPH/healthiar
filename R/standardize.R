@@ -44,7 +44,7 @@ standardize <- function(output_attribute,
   impact_by_age_group <- output_attribute$health_detailed$results_by_age_group
 
 
-  if(is.null(ref_prop_pop)){
+  if(base::is.null(ref_prop_pop)){
 
     ref_prop_pop <-
       get_ref_prop_pop(df = input_data)$ref_prop_pop
@@ -104,7 +104,7 @@ standardize <- function(output_attribute,
       .by = dplyr::any_of(group_cols),
       bhd = base::sum(bhd),
       impact = base::sum(impact),
-      impact_per_100k_inhab = sum(impact_per_100k_inhab_std),
+      impact_per_100k_inhab = base::sum(impact_per_100k_inhab_std),
       exp = base::mean(exp_std),
       pop_fraction = base::sum(pop_fraction),
       population = base::sum(population))

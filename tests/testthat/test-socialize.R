@@ -52,7 +52,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
         population = data$POP,
         ref_prop_pop = data$REF
         )$social_main$difference_value[1:4] |> base::round(3),
-    expect = round(c(42.4484118, 0.7791663, 23.92910057, 0.30518553), 3)
+    expect = base::round(c(42.4484118, 0.7791663, 23.92910057, 0.30518553), 3)
   )
 })
 

@@ -26,15 +26,15 @@
 
 add_info <- function(df, info){
 
-  if(is.null(info)){
+  if(base::is.null(info)){
     output <-
       dplyr::mutate(df, info = NULL)
 
-  } else if(is.vector(info)) {
+  } else if(base::is.vector(info)) {
     output <-
       dplyr::mutate(df, info = info)
 
-  } else if(is.data.frame(info)){
+  } else if(base::is.data.frame(info)){
 
     output <-
       stats::setNames(info, base::paste0("info_column_", 1: base::length(base::names(info))))

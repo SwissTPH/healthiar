@@ -48,7 +48,7 @@ compile_input <-
     # a) no operations are expected
     # b) otherwise error somewhere else in the package when mixing character and numeric
     for (geo_id_ in c("geo_id_micro", "geo_id_macro")) {
-      if (!is.null(input_args_edited[[geo_id_]])){
+      if (!base::is.null(input_args_edited[[geo_id_]])){
         input_args_edited[[geo_id_]] <- base::as.character(input_args_edited[[geo_id_]])
       }
     }
@@ -62,9 +62,9 @@ compile_input <-
     # to make the code work below
 
     for (erf_eq_ in c("erf_eq_central", "erf_eq_lower", "erf_eq_upper")) {
-      if (!is.null(input_args_edited[[erf_eq_]]) &&
+      if (!base::is.null(input_args_edited[[erf_eq_]]) &&
           base::is.function(input_args_edited[[erf_eq_]])) {
-        input_args_edited[[erf_eq_]] <- list(input_args_edited[[erf_eq_]])
+        input_args_edited[[erf_eq_]] <- base::list(input_args_edited[[erf_eq_]])
       }
     }
 
@@ -82,7 +82,7 @@ compile_input <-
       # Remove arguments for life table and info.
       # Info is to added later with a function add_info()
       # because it can be a data frame.
-      purrr::discard(names(input_args_edited) %in% c("info")) |>
+      purrr::discard(base::names(input_args_edited) %in% c("info")) |>
       # Convert into a tibble
       tibble::as_tibble() |>
       # Add info
@@ -117,8 +117,8 @@ compile_input <-
           tidyr::pivot_longer(
             data = input_wo_lifetable,
             cols = dplyr::any_of(base::paste0(var, c("_central", "_lower", "_upper"))),
-            names_to = paste0(var, "_ci"),
-            names_prefix = paste0(var, "_"),
+            names_to = base::paste0(var, "_ci"),
+            names_prefix = base::paste0(var, "_"),
             values_to = var)
       }
     }

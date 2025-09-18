@@ -68,10 +68,10 @@ prepare_exposure <-
     main <- base::as.list(exposure)
     raw <- base::as.list(non_aggregated_exposure)
 
-    detailed <- list(raw)
+    detailed <- base::list(raw)
     base::names(detailed) <- 'raw'
 
-    output <- list(main, detailed)
+    output <- base::list(main, detailed)
     base::names(output) <- c('main', 'detailed')
 
     return(output)

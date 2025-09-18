@@ -12,7 +12,7 @@
   \item{PM25_MEAN}{mean PM2.5 exposure}
   \item{RR}{relative risk estimate from the literature}
   \item{score}{BEST-COST Multidimensional Deprivation Index (MDI)}
-  \item{rank}{rank of the observation based on column \emph(score); note that the rank is not continuous, as some observations are missing}
+  \item{rank}{rank of the observation based on column \emph{score}; note that the rank is not continuous, as some observations are missing}
   \item{deciles}{deciles of the geo units based on the MDI}
   \item{POPULATION_below_40}{(fake) populations up until and including 39 years of age}
   \item{POPULATION_40_plus}{(fake) populations from 40 years of age onwards}

@@ -22,7 +22,7 @@ get_input_args <-
   function(environment, call){
 
     # Create empty list
-    input_args <- list()
+    input_args <- base::list()
 
     # Get all values passed as arguments
     input_args$value <- base::as.list(environment)

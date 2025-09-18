@@ -131,9 +131,9 @@ compare <-
 
     # Force the same environment in the functions of erf_eq.
     # Otherwise, not identified as identical and error joining below.
-    if(!is.null(input_args_scen_1[["value"]][["erf_eq_central"]])){
+    if(!base::is.null(input_args_scen_1[["value"]][["erf_eq_central"]])){
 
-      erf_eq_vars <- paste0("erf_eq", c("erf_eq", "_central", "_lower", "_upper"))
+      erf_eq_vars <- base::paste0("erf_eq", c("erf_eq", "_central", "_lower", "_upper"))
 
       input_args_scen_1[["value"]][erf_eq_vars] <-
         input_args_scen_2[["value"]][erf_eq_vars]
@@ -217,7 +217,7 @@ compare <-
     if( ! base::all(common_arguments_identical) )
     {stop(
       base::paste0(
-        base::paste(names(common_arguments_identical)[!common_arguments_identical],
+        base::paste(base::names(common_arguments_identical)[!common_arguments_identical],
                     collapse = ", "),
         " must be identical in both scenarios."),
       call. = FALSE)}
