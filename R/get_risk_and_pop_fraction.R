@@ -112,30 +112,33 @@ get_risk_and_pop_fraction <-
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         ## Obtain the relative risk for the relevant concentration
         dplyr::mutate(rr_at_exp =
-                        healthiar::get_risk(rr = rr,
-                                            exp = exp,
-                                            cutoff = cutoff,
-                                            rr_increment = rr_increment,
-                                            erf_shape = erf_shape,
-                                            erf_eq = erf_eq))
+                        hget_risk(
+                          rr = rr,
+                          exp = exp,
+                          cutoff = cutoff,
+                          rr_increment = rr_increment,
+                          erf_shape = erf_shape,
+                          erf_eq = erf_eq))
 
       ## If PIF
     } else {
       input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
         dplyr::mutate(rr_at_exp_scen_1 =
-                        healthiar::get_risk(rr = rr,
-                                            exp = exp_scen_1,
-                                            cutoff = cutoff,
-                                            rr_increment = rr_increment,
-                                            erf_shape = erf_shape,
-                                            erf_eq = erf_eq),
+                        get_risk(
+                          rr = rr,
+                          exp = exp_scen_1,
+                          cutoff = cutoff,
+                          rr_increment = rr_increment,
+                          erf_shape = erf_shape,
+                          erf_eq = erf_eq),
                       rr_at_exp_scen_2 =
-                        healthiar::get_risk(rr = rr,
-                                            exp = exp_scen_2,
-                                            cutoff = cutoff,
-                                            rr_increment = rr_increment,
-                                            erf_shape = erf_shape,
-                                            erf_eq = erf_eq))
+                        get_risk(
+                          rr = rr,
+                          exp = exp_scen_2,
+                          cutoff = cutoff,
+                          rr_increment = rr_increment,
+                          erf_shape = erf_shape,
+                          erf_eq = erf_eq))
       }
 
     # * If multi-exposure with multiplicative approach ###############################################
