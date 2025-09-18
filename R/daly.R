@@ -123,7 +123,7 @@ daly <-
         outcome_metric = "daly",
         # Add impact as sum of yll and yld (including rounded impact)
         impact = impact_yll + impact_yld,
-        impact_rounded = round(impact))
+        impact_rounded = base::round(impact))
 
     # Add impact per 100k inhabitants if population is available
     if("population" %in% names(results_raw)){

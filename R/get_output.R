@@ -225,7 +225,7 @@ get_output <-
         dplyr::mutate(
           dplyr::across(
             .cols = dplyr::all_of(impact_cols_to_be_summed),
-            .fns = ~ round(.x),
+            .fns = ~ base::round(.x),
             .names = "{.col}_rounded"
           )
         )

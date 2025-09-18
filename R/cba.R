@@ -162,7 +162,7 @@ cba <-
       # Calculate the difference between benefit and cost (net_benefit)
       # as well as cbr (cost-benefit ratio) and roi (return of investment)
       dplyr::mutate(net_benefit = benefit - cost,
-                    net_benefit_rounded = round(net_benefit),
+                    net_benefit_rounded = base::round(net_benefit),
                     cbr = benefit / cost,
                     roi = (benefit - cost) / cost * 100)
 
