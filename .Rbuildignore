@@ -4,4 +4,6 @@
 ^doc$
 ^Meta$
 ^varia/
+\.qmd$
+\.qpptx$
 ^LICENSE\.md$

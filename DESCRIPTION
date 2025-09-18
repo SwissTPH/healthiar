@@ -38,3 +38,4 @@ Suggests:
     testthat,
     devtools,
     knitr,
+    rmarkdown
