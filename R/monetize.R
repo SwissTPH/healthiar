@@ -283,7 +283,7 @@ monetize <- function(output_attribute = NULL,
                       discount_shape = discount_shape,
                       inflation_rate = inflation_rate) |>
         # Add info
-        healthiar:::add_info(info = info)
+        add_info(info = info)
 
 
       # Add year
@@ -442,7 +442,7 @@ monetize <- function(output_attribute = NULL,
 
       # Get the main and detailed output by aggregating and/or filtering cases (rows)
       output_monetization <-
-        healthiar:::get_output(results_raw = impact_detailed) |>
+        get_output(results_raw = impact_detailed) |>
         # Rename the list elements (not anymore health but health including monetization)
         stats::setNames(c("monetization_main", "monetization_detailed"))
 
