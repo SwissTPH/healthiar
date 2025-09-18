@@ -232,7 +232,7 @@ get_output <-
 
 
       # If population is available, recompute with population and normalized metrics
-      if ("population" %in% names(df)) {
+      if ("population" %in% base::names(df)) {
         impact_agg <- impact_agg |>
           dplyr::mutate(
             dplyr::across(

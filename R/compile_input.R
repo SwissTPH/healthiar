@@ -82,7 +82,7 @@ compile_input <-
       # Remove arguments for life table and info.
       # Info is to added later with a function add_info()
       # because it can be a data frame.
-      purrr::discard(names(input_args_edited) %in% c("info")) |>
+      purrr::discard(base::names(input_args_edited) %in% c("info")) |>
       # Convert into a tibble
       tibble::as_tibble() |>
       # Add info

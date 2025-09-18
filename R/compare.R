@@ -217,7 +217,7 @@ compare <-
     if( ! base::all(common_arguments_identical) )
     {stop(
       base::paste0(
-        base::paste(names(common_arguments_identical)[!common_arguments_identical],
+        base::paste(base::names(common_arguments_identical)[!common_arguments_identical],
                     collapse = ", "),
         " must be identical in both scenarios."),
       call. = FALSE)}

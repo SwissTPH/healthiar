@@ -480,10 +480,10 @@ socialize <- function(output_attribute = NULL,
   ## Only one step by quantile
 
   ## Define first the variables for if statements
-  has_bhd <- "bhd" %in% names(input_data_with_quantile)
-  has_population <- "population" %in% names(input_data_with_quantile)
-  has_exp <- "exp" %in% names(input_data_with_quantile)
-  has_pop_fraction <- "pop_fraction" %in% names(input_data_with_quantile)
+  has_bhd <- "bhd" %in% base::names(input_data_with_quantile)
+  has_population <- "population" %in% base::names(input_data_with_quantile)
+  has_exp <- "exp" %in% base::names(input_data_with_quantile)
+  has_pop_fraction <- "pop_fraction" %in% base::names(input_data_with_quantile)
 
 
   ## Define function to get_other_parameters()
