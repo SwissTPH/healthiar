@@ -155,10 +155,10 @@ cba <-
       # Keep only relevant columns
       dplyr::select(dplyr::all_of(relevant_columns))|>
       # Moreover, cost is not actually a monetized impact
-      dplyr::rename(benefit = monetized_impact_benefit,
-                    cost = monetized_impact_cost,
-                    benefit_rounded = monetized_impact_rounded_benefit,
-                    cost_rounded = monetized_impact_rounded_cost) |>
+      dplyr::rename("benefit" = "monetized_impact_benefit",
+                    "cost" = "monetized_impact_cost",
+                    "benefit_rounded" = "monetized_impact_rounded_benefit",
+                    "cost_rounded" = "monetized_impact_rounded_cost") |>
       # Calculate the difference between benefit and cost (net_benefit)
       # as well as cbr (cost-benefit ratio) and roi (return of investment)
       dplyr::mutate(net_benefit = benefit - cost,
