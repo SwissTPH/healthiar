@@ -1,3 +1,6 @@
+# Setup ############################################################################################
+library(dplyr)
+
 # PM2.5 ############################################################################################
 
 # Layout for data
@@ -120,7 +123,45 @@ pm_lc_ch <- pm_lc |>
 # pm_lc_cantons <- pm_lc |>
 exdat_cantons <- pm_lc |>
   dplyr::filter(canton != "CH") |>
-  dplyr::filter(year == 2023)
+  dplyr::filter(year == 2023) |>
+  mutate(
+    language_main = case_when(
+      canton %in% c("ZH", "BE", "LU", "UR", "SZ", "OW", "NW", "GR", "GL", "ZG", "SO", "BS", "BL", "SH", "AR", "AI", "SG", "GR",
+                    "AG", "TG") ~ "German",
+      canton %in% c("FR", "VD", "NE", "JU", "GE", "VS") ~ "French",
+      canton %in% c("TI") ~ "Italian",
+      TRUE ~ NA_character_
+    ),
+    canton_long = case_when(
+      canton == "ZH" ~ "Zurich",
+      canton == "BE" ~ "Bern",
+      canton == "LU" ~ "Lucerne",
+      canton == "UR" ~ "Uri",
+      canton == "SZ" ~ "Schwyz",
+      canton == "OW" ~ "Obwalden",
+      canton == "NW" ~ "Nidwalden",
+      canton == "GL" ~ "Glarus",
+      canton == "ZG" ~ "Zug",
+      canton == "FR" ~ "Fribourg",
+      canton == "SO" ~ "Solothurn",
+      canton == "BS" ~ "Basel-Stadt",
+      canton == "BL" ~ "Basel-Landschaft",
+      canton == "SH" ~ "Schaffhausen",
+      canton == "AR" ~ "Appenzell Ausserrhoden",
+      canton == "AI" ~ "Appenzell Innerrhoden",
+      canton == "SG" ~ "St. Gallen",
+      canton == "GR" ~ "Grisons",
+      canton == "AG" ~ "Aargau",
+      canton == "TG" ~ "Thurgau",
+      canton == "TI" ~ "Ticino",
+      canton == "VD" ~ "Vaud",
+      canton == "VS" ~ "Valais",
+      canton == "NE" ~ "Neuchâtel",
+      canton == "GE" ~ "Geneva",
+      canton == "JU" ~ "Jura",
+      TRUE ~ NA_character_
+    )
+  )
 
 noise_ha_ch <- noise_ha |>
   dplyr::filter(canton == "CH") |>
