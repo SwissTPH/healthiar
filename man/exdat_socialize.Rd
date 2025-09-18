@@ -6,9 +6,22 @@
 \title{Municipalities in Belgium ranked by BEST-COST Multidimensional Deprivation Index (MDI)}
 \format{
 \code{exdat_socialize}
+\describe{
+  \item{CS01012020}{unique identifier of the geographic unit}
+  \item{NUTS1}{NUTS1 region tag}
+  \item{PM25_MEAN}{mean PM2.5 exposure}
+  \item{RR}{relative risk estimate from the literature}
+  \item{score}{BEST-COST Multidimensional Deprivation Index (MDI)}
+  \item{rank}{rank of the observation based on column \emph(score); note that the rank is not continuous, as some observations are missing}
+  \item{deciles}{deciles of the geo units based on the MDI}
+  \item{POPULATION_below_40}{(fake) populations up until and including 39 years of age}
+  \item{POPULATION_40_plus}{(fake) populations from 40 years of age onwards}
+  \item{MORTALITY_below_40}{(fake) mortality up until and including 39 years of age}
+  \item{MORTALITY_40_plus}{(fake) mortality from 40 years of age onwards}
+}
 }
 \source{
-Real-world data
+Real-world data combined with fake populatoin and mortality data
 }
 \usage{
 data(exdat_socialize)
