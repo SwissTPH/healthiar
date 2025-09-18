@@ -86,7 +86,7 @@ get_risk <-
         # when get_risk() is used inside attribute_health(),
         # erf_eq that are functions are encapsulated in lists to be included in tibbles
         # That is why we need is.list() and map()
-        } else if (base::is.list(erf_eq) && base::all(purrr::map_lgl(erf_eq, is.function))) {
+        } else if (base::is.list(erf_eq) && base::all(purrr::map_lgl(erf_eq, base::is.function))) {
 
            rr_at_exp <- base::mapply(function(f, cval) f(cval), erf_eq, exp - cutoff)
            # A map() approach does not work here. Therefore, mapply

@@ -48,7 +48,7 @@ compile_input <-
     # a) no operations are expected
     # b) otherwise error somewhere else in the package when mixing character and numeric
     for (geo_id_ in c("geo_id_micro", "geo_id_macro")) {
-      if (!is.null(input_args_edited[[geo_id_]])){
+      if (!base::is.null(input_args_edited[[geo_id_]])){
         input_args_edited[[geo_id_]] <- base::as.character(input_args_edited[[geo_id_]])
       }
     }
@@ -62,7 +62,7 @@ compile_input <-
     # to make the code work below
 
     for (erf_eq_ in c("erf_eq_central", "erf_eq_lower", "erf_eq_upper")) {
-      if (!is.null(input_args_edited[[erf_eq_]]) &&
+      if (!base::is.null(input_args_edited[[erf_eq_]]) &&
           base::is.function(input_args_edited[[erf_eq_]])) {
         input_args_edited[[erf_eq_]] <- base::list(input_args_edited[[erf_eq_]])
       }

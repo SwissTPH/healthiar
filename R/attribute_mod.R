@@ -74,7 +74,7 @@ attribute_mod <-
 
     #Remove all arguments that are NULL in input_args_2_value to avoid that they overwrite
     #those in input_args_1_value
-    input_args_2_value <- purrr::discard(input_args_2_value, is.null)
+    input_args_2_value <- purrr::discard(input_args_2_value, base::is.null)
 
 
     # Extract input_args_1_value

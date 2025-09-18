@@ -277,7 +277,7 @@ socialize <- function(output_attribute = NULL,
     !base::is.null(social_indicator) && !base::is.null(n_quantile) && base::is.null(social_quantile)
 
   ## Available ref_prop_pop
-  has_ref_prop_pop <- !is.null(ref_prop_pop)
+  has_ref_prop_pop <- !base::is.null(ref_prop_pop)
 
   ## Decreasing order in social_indicator or quantile
   decreasing_deprivation <- !increasing_deprivation
@@ -366,7 +366,7 @@ socialize <- function(output_attribute = NULL,
             base::unique()
 
           # * * If NOT available ref_prop_pop ################
-        } else if(is.null(ref_prop_pop)) {
+        } else if(base::is.null(ref_prop_pop)) {
           ref_prop_pop_table <-
             get_ref_prop_pop(df = input_data)
           }
@@ -390,7 +390,7 @@ socialize <- function(output_attribute = NULL,
       social_component_before_quantile <-
         social_component_before_quantile |>
         ## Remove rows with NA in social_indicator
-        dplyr::filter( !is.na(social_indicator) )
+        dplyr::filter( !base::is.na(social_indicator) )
 
       # * * If increasing_deprivation #########
       if (increasing_deprivation) {

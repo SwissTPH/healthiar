@@ -44,7 +44,7 @@ standardize <- function(output_attribute,
   impact_by_age_group <- output_attribute$health_detailed$results_by_age_group
 
 
-  if(is.null(ref_prop_pop)){
+  if(base::is.null(ref_prop_pop)){
 
     ref_prop_pop <-
       get_ref_prop_pop(df = input_data)$ref_prop_pop

@@ -302,7 +302,7 @@ get_output <-
           put_first_cols(x, cols)
 
         # If x is list and all list elements are data frames (and not lists)
-        }else if (base::is.list(x) & base::all(purrr::map_lgl(x, is.data.frame))){
+        }else if (base::is.list(x) & base::all(purrr::map_lgl(x, base::is.data.frame))){
           purrr::map(
             .x = x,
             .f = ~ put_first_cols(.x, cols))

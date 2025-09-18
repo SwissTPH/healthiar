@@ -131,7 +131,7 @@ compare <-
 
     # Force the same environment in the functions of erf_eq.
     # Otherwise, not identified as identical and error joining below.
-    if(!is.null(input_args_scen_1[["value"]][["erf_eq_central"]])){
+    if(!base::is.null(input_args_scen_1[["value"]][["erf_eq_central"]])){
 
       erf_eq_vars <- paste0("erf_eq", c("erf_eq", "_central", "_lower", "_upper"))
 
