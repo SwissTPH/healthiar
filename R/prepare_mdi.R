@@ -6,7 +6,7 @@
 
 # ARGUMENTS ####################################################################
 #' @inheritParams socialize
-#' @param edu \code{Numeric vector} indicating educational attainment as \% of individuals (older than 18) without a high school diploma (ISCED 0-2) per geo unit
+#' @param edu \code{Numeric vector} indicating educational attainment as \% of individuals (at the age 18 or older) without a high school diploma (ISCED 0-2) per geo unit
 #' @param unemployed \code{Numeric vector} containing \% of unemployed individuals in the active population (18-65) per geo unit
 #' @param single_parent \code{Numeric vector} containing single-parent households as \% of total households headed by a single parent per geo unit
 #' @param pop_change \code{Numeric vector} containing population change as \% change in population over the previous 5 years (e.g., 2017-2021) per geo unit
