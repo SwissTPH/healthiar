@@ -33,9 +33,9 @@ Hi there!
 
 This vignette will tell you about `healthiar` and show you how to use `healthiar` with the help of examples.
 
-*NOTE*: By using healthiar you agree to the [terms of use](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme) and confirm you have read the [disclaimer](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme).
+*NOTE*: By using healthiar you agree to the [terms of use](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) and confirm you have read the [disclaimer](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme).
 
-*NOTE*: the development of `healthiar` is still ongoing. Any feedback, e.g. regarding bugs or unclear documentation, is welcome and highly appreciated. Please provide feedback via a [GitHub issue](https://github.com/best-cost/best-cost_WPs/issues).
+*NOTE*: the development of `healthiar` is still ongoing. Any feedback, e.g. regarding bugs or unclear documentation, is welcome and highly appreciated. Please provide feedback via a [GitHub issue](https://github.com/SwissTPH/healthiar/issues).
 
 ------------------------------------------------------------------------
 
