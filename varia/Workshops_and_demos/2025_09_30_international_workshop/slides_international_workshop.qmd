@@ -476,14 +476,12 @@ results$uncertainty_main |>
 results$uncertainty_detailed$impact_by_sim
 ```
 
-::: fragment
 ::: {.absolute left=0}
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
 results$uncertainty_detailed$impact_by_sim |> 
   dplyr::select(erf_ci, exp_ci, bhd_ci, impact_rounded, rr, exp, bhd) |> 
   knitr::kable()
 ```
-:::
 :::
 
 # Example: `attribute_health()` with RR and user-defined ERF
@@ -684,15 +682,42 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
 
 ## Outlook
 <!-- TODO add link to GitHub page -->
--   `healthiar` is publicly available on this GitHub page
-    -   `healthiar` might be expanded in the future (if funding available)
+-   `healthiar` is publicly available on this [GitHub page](https://github.com/SwissTPH/healthiar)
+
 -   Python version coming out later in 2026
+
 -   Package submitted to CRAN
 
+-   `healthiar` might be expanded in the future (if funding available)
 
 # Q & A
 
-# Happy coding! : )
+# Second hour programme
+
+## Second hour programme
+
+- Introduction of exercises (ca. 5 min)
+
+- Time for exercises in small groups (ca. 25 min)
+
+- Presentation of solutions in plenum (ca. 10 min)
+
+- Q & A (remaining time, ca. 15 min)
+
+::: fragment
+Run the following commands below in RStudio to install healthiar
+(also found at the start of the exercises)
+
+`install.packages("remotes")`
+`remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)`
+`library(healthiar)`
+:::
+
+::: fragment
+Happy coding!
+:::
+
+# Q & A
 
 # Appendix
 
