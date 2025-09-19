@@ -1,5 +1,5 @@
 bibentry(
-  entry    = "Manual",
+  bibtype  = "Manual",
   title    = "healthiar: R Package to Quantify and Monetize the Burden of Disease Attributable to Exposures",
   author   = person("Alberto", "Castro"),
   year     = 2025,
