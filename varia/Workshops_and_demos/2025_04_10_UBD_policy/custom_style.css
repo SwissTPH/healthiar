@@ -1,0 +1,13 @@
+ul, ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+li {
+  margin-bottom: 2px; /* Adjust spacing between list items */
+}
+
+code.sourceCode {
+  font-size: 1.3em;
+  /* or try font-size: xx-large; */
+}
