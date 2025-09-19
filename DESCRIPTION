@@ -1,6 +1,6 @@
 Package: healthiar
 Title: Quantify and Monetize the Burden of Disease Attributable to Exposures
-Version: 0.1.5.1218
+Version: 0.1.5.1220
 Authors@R: c(
     person(given = "Alberto", family = "Castro", email = "alberto.castrofernandez@swisstph.ch", role = c("cre", "aut"), comment = c(ORCID = "0000-0002-4665-3299")),
     person(given = "Axel", family = "Luyten", role = c("aut"), comment = c(ORCID = "0000-0002-7005-5889")),
