@@ -17,7 +17,7 @@ prepare_mdi(
 \arguments{
 \item{geo_id_micro}{\code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_micro}) Argument must be entered for iterations. See Details for more info.}
 
-\item{edu}{\code{Numeric vector} indicating educational attainment as \% of individuals (older than 18) without a high school diploma (ISCED 0-2) per geo unit}
+\item{edu}{\code{Numeric vector} indicating educational attainment as \% of individuals (at the age 18 or older) without a high school diploma (ISCED 0-2) per geo unit}
 
 \item{unemployed}{\code{Numeric vector} containing \% of unemployed individuals in the active population (18-65) per geo unit}
 
@@ -52,10 +52,10 @@ This function creates the BEST-COST Multidimensional Deprivation Index (MDI) and
 The function prints Cronbach's \eqn{\alpha}.
 \describe{
   \item{\eqn{\alpha \geq} 0.9}{Excellent reliability}
-  \item{0.8 \eqn{\leq \alpha \leq} 0.89}{Good reliability}
-  \item{0.7 \eqn{\leq \alpha \leq} 0.79}{Acceptable reliability}
-  \item{0.6 \eqn{\leq \alpha \leq} 0.69}{Questionable reliability}
-  \item{\eqn{\alpha} ≤ 0.6}{Poor reliability}
+  \item{0.8 \eqn{\leq \alpha \lt} 0.9}{Good reliability}
+  \item{0.7 \eqn{\leq \alpha \lt} 0.8}{Acceptable reliability}
+  \item{0.6 \eqn{\leq \alpha \lt} 0.7}{Questionable reliability}
+  \item{\eqn{\alpha} < 0.6}{Poor reliability}
 }
 
 Data completeness and imputation: ensure the dataset is as complete as possible. You can try to impute missing data:
@@ -63,7 +63,7 @@ Data completeness and imputation: ensure the dataset is as complete as possible.
   \item Time-Based Imputation: Use linear regression based on historical trends if prior years' data is complete.
   \item Indicator-Based Imputation: Use multiple linear regression if the missing indicator correlates strongly with others.
 }
-Imputation models should have an R² ≥ 0.7. If R² < 0.7, consider alternative data sources or methods.
+Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower than 0.7, consider alternative data sources or methods.
 }
 \examples{
 # Goal: create the BEST-COST Multidimensional Deprivation Index for

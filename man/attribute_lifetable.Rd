@@ -104,13 +104,13 @@ The numeric values must refer to 1 year age groups, e.g. \code{c(0:99)}. To conv
 
 \code{bhd_central,bhd_lower,bhd_upper}
 
-Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year). There must be ≥ 1 deaths per age to avoid issues during the calculation of survival probabilities.
+Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year). There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities.
 
 \code{population}
 
-The population data must be inputted with 1 value per age (i.e. age group size = 1 year). The values must be ≥ 1 per age to avoid issues during the calculation of survival probabilities.
+The population data must be inputted with 1 value per age (i.e. age group size = 1 year). The values must be greater than or equal to 1 per age to avoid issues during the calculation of survival probabilities.
 
-Mid-year population of year x can be approximated as the mean of either end-year populations of years x-1 and x or start-of-year populations of years x and x+1. For each age, the inputted values must be ≥ 1 to avoid issues during the calculation of survival probabilities.
+Mid-year population of year x can be approximated as the mean of either end-year populations of years x-1 and x or start-of-year populations of years x and x+1. For each age, the inputted values must be greater than or equal to 1 to avoid issues during the calculation of survival probabilities.
 
 \code{approach_newborns}
 

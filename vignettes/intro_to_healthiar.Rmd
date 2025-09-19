@@ -103,9 +103,9 @@ Goal: attribute COPD cases to PM2.5 air pollution exposure
 results_pm_copd <- attribute_health(
   erf_shape = "log_linear", # shape of the exposure-response function (ERF)
   rr_central = 1.369, # relative risk (RR) central estimate
-  rr_increment = 10,  # increment for which relative risk is valid (in μg / m^3)
-  exp_central = 8.85, # PM2.5 exposure (in μg / m^3) (here: population-weighted)
-  cutoff_central = 5, # cutoff (in μg / m^3) below which no health effects occur 
+  rr_increment = 10,  # increment for which relative risk is valid (in \\mu g / m^3)
+  exp_central = 8.85, # PM2.5 exposure (in \\mu g / m^3) (here: population-weighted)
+  cutoff_central = 5, # cutoff (in \\mu g / m^3) below which no health effects occur 
   bhd_central = 30747 # baseline health data (BHD; here: COPD incidence)
 )
 ```

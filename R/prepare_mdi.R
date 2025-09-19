@@ -6,7 +6,7 @@
 
 # ARGUMENTS ####################################################################
 #' @inheritParams socialize
-#' @param edu \code{Numeric vector} indicating educational attainment as \% of individuals (older than 18) without a high school diploma (ISCED 0-2) per geo unit
+#' @param edu \code{Numeric vector} indicating educational attainment as \% of individuals (at the age 18 or older) without a high school diploma (ISCED 0-2) per geo unit
 #' @param unemployed \code{Numeric vector} containing \% of unemployed individuals in the active population (18-65) per geo unit
 #' @param single_parent \code{Numeric vector} containing single-parent households as \% of total households headed by a single parent per geo unit
 #' @param pop_change \code{Numeric vector} containing population change as \% change in population over the previous 5 years (e.g., 2017-2021) per geo unit
@@ -17,10 +17,10 @@
 #' The function prints Cronbach's \eqn{\alpha}.
 #' \describe{
 #'   \item{\eqn{\alpha \geq} 0.9}{Excellent reliability}
-#'   \item{0.8 \eqn{\leq \alpha \leq} 0.89}{Good reliability}
-#'   \item{0.7 \eqn{\leq \alpha \leq} 0.79}{Acceptable reliability}
-#'   \item{0.6 \eqn{\leq \alpha \leq} 0.69}{Questionable reliability}
-#'   \item{\eqn{\alpha} ≤ 0.6}{Poor reliability}
+#'   \item{0.8 \eqn{\leq \alpha \lt} 0.9}{Good reliability}
+#'   \item{0.7 \eqn{\leq \alpha \lt} 0.8}{Acceptable reliability}
+#'   \item{0.6 \eqn{\leq \alpha \lt} 0.7}{Questionable reliability}
+#'   \item{\eqn{\alpha} < 0.6}{Poor reliability}
 #' }
 #' @details
 #' Data completeness and imputation: ensure the dataset is as complete as possible. You can try to impute missing data:
@@ -28,7 +28,7 @@
 #'   \item Time-Based Imputation: Use linear regression based on historical trends if prior years' data is complete.
 #'   \item Indicator-Based Imputation: Use multiple linear regression if the missing indicator correlates strongly with others.
 #' }
-#' Imputation models should have an R² ≥ 0.7. If R² < 0.7, consider alternative data sources or methods.
+#' Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower than 0.7, consider alternative data sources or methods.
 
 # VALUE ########################################################################
 #' @return
@@ -182,9 +182,9 @@ prepare_mdi <- function(
 
 
   if ( alpha_value >= 0.9 ) base::print(base::paste("Excellent reliability:", alpha, higher_or_equal, "0.9"))
-  if ( alpha_value >= 0.8 & alpha_value <= 0.89 ) base::print(base::paste("Good reliability: 0.8", lower_or_equal, alpha, lower_or_equal, "0.89"))
-  if ( alpha_value >= 0.7 & alpha_value <= 0.79 ) base::print(base::paste("Acceptable reliability: 0.7", lower_or_equal, alpha, lower_or_equal, "0.79"))
-  if ( alpha_value >= 0.6 & alpha_value <= 0.69 ) base::print(base::paste("Questionable reliability: 0.6", lower_or_equal, alpha, lower_or_equal, "0.69"))
+  if ( alpha_value >= 0.8 & alpha_value < 0.9 ) base::print(base::paste("Good reliability: 0.8", lower_or_equal, alpha, "< 0.9"))
+  if ( alpha_value >= 0.7 & alpha_value < 0.8 ) base::print(base::paste("Acceptable reliability: 0.7", lower_or_equal, alpha, "< 0.8"))
+  if ( alpha_value >= 0.6 & alpha_value < 0.7 ) base::print(base::paste("Questionable reliability: 0.6", lower_or_equal, alpha, "< 0.7"))
   if ( alpha_value < 0.6 ) base::print(base::paste("Poor reliability:", alpha, "< 0.6"))
 
   return(
