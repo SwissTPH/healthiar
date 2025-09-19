@@ -87,7 +87,7 @@ YLL/yll - years of life lost
 
 -   Each value is a cell; each cell is a single value.
 
-Source: Hadley Wickham (2014). Tidy Data. [Link](https://doi.org/10.18637/jss.v059.i10). For additional information see this [informal explanation of tidy data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) (by the author).
+Source: Hadley Wickham (2014). Tidy Data. [Link](https://doi.org/10.18637/jss.v059.i10). For additional information see this [informal explanation of tidy data](https://cran.r-project.org/package=tidyr) (by the author).
 
 ## Example: `attribute_health()` with relative risk
 
