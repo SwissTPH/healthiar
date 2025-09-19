@@ -6,6 +6,8 @@ Run the following commands below in RStudio to install *healthiar*
 
 We recommend to frequently install the newest *healthiar* version by running command 2. from above.
 
+(If you had previously installed *healthiar* while the repository was still private, you must remove your personal access token (PAT) before installing the package using the commands above.)
+
 # GET STARTED WITH *healthiar*
 The vignette *intro_to_healthiar* (i.e. documentation on how to use the healthiar package) will get you started with the *healthiar* R package.
 1) Open it in RStudio: go to the *Packages* tab in RStudio, scroll down to the *healthiar* package and clicking on the hyperlinks *healthiar* > *User guides, package vignettes and other documentation* > *healthiar::intro_to_healthiar*
