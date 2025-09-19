@@ -34,7 +34,7 @@ get_pif <-
   function(rr_at_exp_1, rr_at_exp_2, prop_pop_exp_1, prop_pop_exp_2){
     # Just use get_pop_fraction() with all arguments and the result is the PIF
     pif <-
-      healthiar:::get_pop_fraction(
+      get_pop_fraction(
         rr_at_exp_1 = rr_at_exp_1,
         rr_at_exp_2 = rr_at_exp_2,
         prop_pop_exp_1 = prop_pop_exp_1,

@@ -58,7 +58,7 @@ get_impact <-
 
       # Get pop_fraction and add it to the input_table data frame
       input_with_risk_and_pop_fraction <-
-        healthiar:::get_risk_and_pop_fraction(input_table = input_table,
+        get_risk_and_pop_fraction(input_table = input_table,
                                               pop_fraction_type = pop_fraction_type)
 
       if(is_not_lifetable) {
@@ -79,7 +79,7 @@ get_impact <-
           # because it is very long and
           # would make this code not very reader friendly
           impact_with_lifetable <-
-            healthiar:::get_impact_with_lifetable(
+            get_impact_with_lifetable(
               input_with_risk_and_pop_fraction = input_with_risk_and_pop_fraction)
 
           results_raw <- impact_with_lifetable$results_raw
