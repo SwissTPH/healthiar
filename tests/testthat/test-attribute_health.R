@@ -1282,10 +1282,6 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
-  niph_noise_ha_input <-
-    niph_noise_ha_excel |>
-    dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean))
-
   testthat::expect_equal(
     object = healthiar::attribute_health(
       approach_risk = "absolute_risk",
@@ -1310,10 +1306,6 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
-
-  niph_noise_ha_input <-
-    niph_noise_ha_excel |>
-    dplyr::filter(!is.na(niph_noise_ha_excel$exposure_mean))
 
   testthat::expect_equal(
     object = healthiar::attribute_health(
