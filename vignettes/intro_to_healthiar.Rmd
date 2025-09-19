@@ -33,9 +33,9 @@ Hi there!
 
 This vignette will tell you about `healthiar` and show you how to use `healthiar` with the help of examples.
 
-*NOTE*: By using healthiar you agree to the [terms of use](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme) and confirm you have read the [disclaimer](https://github.com/best-cost/best-cost_WPs?tab=readme-ov-file#readme).
+*NOTE*: By using healthiar you agree to the [terms of use](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) and confirm you have read the [disclaimer](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme).
 
-*NOTE*: the development of `healthiar` is still ongoing. Any feedback, e.g. regarding bugs or unclear documentation, is welcome and highly appreciated. Please provide feedback via a [GitHub issue](https://github.com/best-cost/best-cost_WPs/issues).
+*NOTE*: the development of `healthiar` is still ongoing. Any feedback, e.g. regarding bugs or unclear documentation, is welcome and highly appreciated. Please provide feedback via a [GitHub issue](https://github.com/SwissTPH/healthiar/issues).
 
 ------------------------------------------------------------------------
 
@@ -87,7 +87,7 @@ YLL/yll - years of life lost
 
 -   Each value is a cell; each cell is a single value.
 
-Source: Hadley Wickham (2014). Tidy Data. [Link](https://doi.org/10.18637/jss.v059.i10). For additional information see this [informal explanation of tidy data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) (by the author).
+Source: Hadley Wickham (2014). Tidy Data. [Link](https://doi.org/10.18637/jss.v059.i10). For additional information see this [informal explanation of tidy data](https://cran.r-project.org/package=tidyr) (by the author).
 
 ## Example: `attribute_health()` with relative risk
 
