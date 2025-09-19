@@ -141,6 +141,8 @@ results_geo_1$health_main |>
 ## data from the example data set "exdat_cantons".
 
 # EXERCISE
+View(exdat_cantons) # this line let's you inspect the variable
+
 results_geo_2 <- attribute_health(
   geo_id_micro = exdat_cantons$canton,
   geo_id_macro = ,
