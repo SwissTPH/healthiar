@@ -25,7 +25,7 @@
 #' If the population exposure is described as a categorical rather than continuous exposure, the integrals in equation (5) may be converted to sums, resulting in the following equations for the PIF:
 #' \deqn{PIF = \frac{\sum RR_{i} \times PE_{i} - \sum RR_{i}PE'_{i}}{\sum RR_{i}PE_{i}}}
 #' @details Where:
-#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
+#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
 #' @details \eqn{PE_i} = fraction of population in exposure category i
 #' @details \eqn{PE'_i} = fraction of population in category i for alternative (ideal) exposure scenario
 #' @details \eqn{RR_i} = relative risk for exposure category level i compared to the reference level

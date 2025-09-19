@@ -17,7 +17,7 @@
   \item{rr}{central relative risk estimate}
   \item{rr_l}{lower 95\% confidence interval bound of the relative risk estimate}
   \item{rr_u}{upper 95\% confidence interval bound of the relative risk estimate}
-  \item{increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
+  \item{increment}{exposure increment in \eqn{\mu g/m^3} for which the relative risk estimates are valid}
   \item{function_shape}{shape of the exposure-response function}
   \item{cutoff}{cutoff level below which no health effects are attributable to the exposure}
   \item{language_main}{language spoken by the majority of inhabitants in the canton}

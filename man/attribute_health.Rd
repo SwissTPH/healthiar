@@ -159,7 +159,7 @@ If you have x-axis (exposure) and y-axis (relative risk) value pairs of multiple
 
 \code{rr_increment}
 
-\emph{Only applicable in RR pathways.} Relative risks from the literature are valid for a specific increment in the exposure, in case of air pollution often 10 or 5 \eqn{µg/m^3}).
+\emph{Only applicable in RR pathways.} Relative risks from the literature are valid for a specific increment in the exposure, in case of air pollution often 10 or 5 \eqn{\mu g/m^3}).
 
 \code{bhd_central}, \code{bhd_lower}, \code{bhd_upper}
 
@@ -208,7 +208,7 @@ If the population exposure is described as a categorical rather than continuous 
 
 Where:
 
-i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
+i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
 
 \eqn{PE_i} = fraction of population in exposure category i
 
@@ -219,7 +219,7 @@ There is one alternative for the PAF for categorical exposure distribution that 
 
 Where:
 
-i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
+i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
 
 \eqn{PE_i} = fraction of population in exposure category i
 

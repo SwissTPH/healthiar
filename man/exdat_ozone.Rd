@@ -15,7 +15,7 @@
   \item{rr_central}{central relative risk estimate}
   \item{rr_lower}{lower 95\% confidence interval bound of the relative risk estimate}
   \item{rr_upper}{upper 95\% confidence interval bound of the relative risk estimate}
-  \item{rr_increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
+  \item{rr_increment}{exposure increment in \eqn{\mu g/m^3} for which the relative risk estimates are valid}
   \item{cutoff}{cutoff level below which no health effects are attributable to the exposure}
   \item{erf_shape}{shape of the exposure-response function}
   \item{exposure_type}{exposure type}

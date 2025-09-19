@@ -14,7 +14,7 @@
 #'   \item{relative_risk_upper}{upper 95\% confidence interval bound of the relative risk estimate}
 #'   \item{incidence}{COPD incidence in the year of analysis}
 #'   \item{cutoff_value}{cut-off value}
-#'   \item{rr_increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
+#'   \item{rr_increment}{exposure increment in \eqn{\mu g/m^3} for which the relative risk estimates are valid}
 #'   \item{rr_source}{source of the relative risk}
 #'   \item{rr_doi}{DOI linking to the publication from which the relative risk was taken}
 #' }
@@ -173,7 +173,7 @@
 #'   \item{rr_central}{central relative risk estimate}
 #'   \item{rr_lower}{lower 95\% confidence interval bound of the relative risk estimate}
 #'   \item{rr_upper}{upper 95\% confidence interval bound of the relative risk estimate}
-#'   \item{rr_increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
+#'   \item{rr_increment}{exposure increment in \eqn{\mu g/m^3} for which the relative risk estimates are valid}
 #'   \item{cutoff}{cutoff level below which no health effects are attributable to the exposure}
 #'   \item{erf_shape}{shape of the exposure-response function}
 #'   \item{exposure_type}{exposure type}
@@ -215,7 +215,7 @@
 #'   \item{rr}{central relative risk estimate}
 #'   \item{rr_l}{lower 95\% confidence interval bound of the relative risk estimate}
 #'   \item{rr_u}{upper 95\% confidence interval bound of the relative risk estimate}
-#'   \item{increment}{exposure increment in \eqn{µg/m^3} for which the relative risk estimates are valid}
+#'   \item{increment}{exposure increment in \eqn{\mu g/m^3} for which the relative risk estimates are valid}
 #'   \item{function_shape}{shape of the exposure-response function}
 #'   \item{cutoff}{cutoff level below which no health effects are attributable to the exposure}
 #'   \item{language_main}{language spoken by the majority of inhabitants in the canton}

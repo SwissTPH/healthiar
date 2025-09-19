@@ -57,7 +57,7 @@ If the population exposure is described as a categorical rather than continuous 
 
 Where:
 
-i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
+i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
 
 \eqn{PE_i} = fraction of population in exposure category i
 

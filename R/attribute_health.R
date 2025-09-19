@@ -77,7 +77,7 @@
 #' @details
 #' \code{rr_increment}
 #' @details
-#' \emph{Only applicable in RR pathways.} Relative risks from the literature are valid for a specific increment in the exposure, in case of air pollution often 10 or 5 \eqn{µg/m^3}).
+#' \emph{Only applicable in RR pathways.} Relative risks from the literature are valid for a specific increment in the exposure, in case of air pollution often 10 or 5 \eqn{\mu g/m^3}).
 #' @details
 #' \code{bhd_central}, \code{bhd_lower}, \code{bhd_upper}
 #' @details
@@ -121,14 +121,14 @@
 #' If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF
 #' \deqn{PAF = \frac{\sum RR_i \times PE_i - 1}{\sum RR_i \times PE_i}}
 #' @details Where:
-#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
+#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
 #' @details \eqn{PE_i} = fraction of population in exposure category i
 #' @details \eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
 #' @details
 #' There is one alternative for the PAF for categorical exposure distribution that is commonly used. It is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical.
 #' \deqn{PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}}
 #' @details Where:
-#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{µg/m^3} PM2.5 or 5 dB noise exposure)
+#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
 #' @details \eqn{PE_i} = fraction of population in exposure category i
 #' @details \eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
 #' @details
