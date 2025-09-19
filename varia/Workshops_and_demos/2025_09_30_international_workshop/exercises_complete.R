@@ -184,7 +184,8 @@ results_geo_2$health_main$impact_rounded
 
 # EXERCISE 6) Relative risk 3 ######################################################################
 
-## Determine deaths from COPD attributable to ozone exposure (exposure categories) in Germany in 2016 using the input data from the example data set "exdat_ozone".
+## Determine the number of deaths from COPD attributable to ozone exposure (exposure categories) in
+## Germany in 2016 using the input data from the example data set "exdat_ozone".
 
 data("exdat_ozone")
 View("exdat_ozone")
@@ -215,9 +216,10 @@ results_rr_3$health_main$impact_rounded # 4340
 
 
 
-# EXERCISE 7) Absolute risk #################################################################################
+# EXERCISE 7) Absolute risk ########################################################################
 
-## Determine the number of high annoyance cases due to noise exposure in Norway using the input data from the example data set "exdat_noise".
+## Determine the number of high annoyance cases due to noise exposure (exposure categories) in
+## Norway using the input data from the example data set "exdat_noise".
 
 data("exdat_noise")
 View("exdat_noise")
@@ -233,7 +235,7 @@ results_ar <- attribute_health(
 
 # SOLUTION
 results_ar <- attribute_health(
-  approach_risk = exdat_noise$risk_estimate_type,
+  approach_risk = exdat_noise$risk_estimate_type[1],
   exp_central = exdat_noise$exposure_mean,
   pop_exp = exdat_noise$exposed,
   erf_eq_central = exdat_noise$erf
