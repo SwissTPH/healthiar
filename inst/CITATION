@@ -1,7 +1,7 @@
 bibentry(
-  bibtype  = "Unpublished",
-  title    = "R package healthiar to quantify and monetize the burden of disease attributable to environmental exposures",
-  author   = utils::personList(base::eval(base::parse(text = utils::packageDescription("healthiar")$`Authors@R`))),
-  year     = 2026,
+  entry    = "Manual",
+  title    = "healthiar: R Package to Quantify and Monetize the Burden of Disease Attributable to Exposures",
+  author   = person("Alberto", "Castro"),
+  year     = 2025,
   note     = "Planned release as open source in early 2026 (currently under development, more info at https://best-cost.eu/)"
 )
