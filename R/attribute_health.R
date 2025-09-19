@@ -159,9 +159,9 @@
 #' results <- attribute_health(
 #'   erf_shape = "log_linear",
 #'   rr_central = 1.369,            # Central relative risk estimate
-#'   rr_increment = 10,             # per μg / m^3 increase in PM2.5 exposure
-#'   exp_central = 8.85,            # Central exposure estimate in μg / m^3
-#'   cutoff_central = 5,            # μg / m^3
+#'   rr_increment = 10,             # per \\mu g / m^3 increase in PM2.5 exposure
+#'   exp_central = 8.85,            # Central exposure estimate in \\mu g / m^3
+#'   cutoff_central = 5,            # \\mu g / m^3
 #'   bhd_central = 30747            # Baseline health data: lung cancer incidence
 #'  )
 #'

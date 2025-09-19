@@ -189,7 +189,7 @@ exdat_ozone <- exdat_ozone |>
     pollutant = "O3", .before = exposure
   ) |>
   dplyr::mutate(
-    exp_unit = "μg/m^3", .after = exposure
+    exp_unit = "\\mu g/m^3", .after = exposure
   ) |>
   dplyr::mutate(
     mortality_copd_total_year = 29908,
