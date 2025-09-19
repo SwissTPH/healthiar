@@ -8,7 +8,22 @@ output: html_document
  
 Install the healthiar package
 
-# Install healthiar from GitHub
+# Install healthiar from public GitHub
+
+```{r}
+## Avoid that PAT is used in installation
+### Only has to be done once
+# Sys.unsetenv("GITHUB_PAT")
+
+remotes::install_github(
+  repo = "SwissTPH/healthiar", 
+  build_vignettes = TRUE
+)
+
+```
+
+
+# Install healthiar from private GitHub
 
 ## Using keyring package
 
