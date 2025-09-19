@@ -87,7 +87,7 @@ multiexpose <-
 
       # Calculate the health impacts for each case (uncertainty, category, geo area...)
       results <-
-        hget_impact(input_table = input_table,
+        get_impact(input_table = input_table,
                     pop_fraction_type = "paf")
 
       # Get the main and detailed output by aggregating and/or filtering cases (rows)
