@@ -17,9 +17,9 @@
 #' The function prints Cronbach's \eqn{\alpha}.
 #' \describe{
 #'   \item{\eqn{\alpha \geq} 0.9}{Excellent reliability}
-#'   \item{0.8 \eqn{\leq \alpha \lt} 0.9}{Good reliability}
-#'   \item{0.7 \eqn{\leq \alpha \lt} 0.8}{Acceptable reliability}
-#'   \item{0.6 \eqn{\leq \alpha \lt} 0.7}{Questionable reliability}
+#'   \item{0.8 \eqn{\leq \alpha <} 0.9}{Good reliability}
+#'   \item{0.7 \eqn{\leq \alpha <} 0.8}{Acceptable reliability}
+#'   \item{0.6 \eqn{\leq \alpha <} 0.7}{Questionable reliability}
 #'   \item{\eqn{\alpha} < 0.6}{Poor reliability}
 #' }
 #' @details
