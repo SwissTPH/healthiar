@@ -17,10 +17,10 @@
 #' The function prints Cronbach's \eqn{\alpha}.
 #' \describe{
 #'   \item{\eqn{\alpha \geq} 0.9}{Excellent reliability}
-#'   \item{0.8 \eqn{\leq \alpha \leq} 0.89}{Good reliability}
-#'   \item{0.7 \eqn{\leq \alpha \leq} 0.79}{Acceptable reliability}
-#'   \item{0.6 \eqn{\leq \alpha \leq} 0.69}{Questionable reliability}
-#'   \item{\eqn{\alpha} ≤ 0.6}{Poor reliability}
+#'   \item{0.8 \eqn{\leq \alpha \lt} 0.9}{Good reliability}
+#'   \item{0.7 \eqn{\leq \alpha \lt} 0.8}{Acceptable reliability}
+#'   \item{0.6 \eqn{\leq \alpha \lt} 0.7}{Questionable reliability}
+#'   \item{\eqn{\alpha} < 0.6}{Poor reliability}
 #' }
 #' @details
 #' Data completeness and imputation: ensure the dataset is as complete as possible. You can try to impute missing data:
@@ -182,9 +182,9 @@ prepare_mdi <- function(
 
 
   if ( alpha_value >= 0.9 ) base::print(base::paste("Excellent reliability:", alpha, higher_or_equal, "0.9"))
-  if ( alpha_value >= 0.8 & alpha_value <= 0.89 ) base::print(base::paste("Good reliability: 0.8", lower_or_equal, alpha, lower_or_equal, "0.89"))
-  if ( alpha_value >= 0.7 & alpha_value <= 0.79 ) base::print(base::paste("Acceptable reliability: 0.7", lower_or_equal, alpha, lower_or_equal, "0.79"))
-  if ( alpha_value >= 0.6 & alpha_value <= 0.69 ) base::print(base::paste("Questionable reliability: 0.6", lower_or_equal, alpha, lower_or_equal, "0.69"))
+  if ( alpha_value >= 0.8 & alpha_value < 0.9 ) base::print(base::paste("Good reliability: 0.8", lower_or_equal, alpha, "< 0.9"))
+  if ( alpha_value >= 0.7 & alpha_value < 0.8 ) base::print(base::paste("Acceptable reliability: 0.7", lower_or_equal, alpha, "< 0.8"))
+  if ( alpha_value >= 0.6 & alpha_value < 0.7 ) base::print(base::paste("Questionable reliability: 0.6", lower_or_equal, alpha, "< 0.7"))
   if ( alpha_value < 0.6 ) base::print(base::paste("Poor reliability:", alpha, "< 0.6"))
 
   return(
