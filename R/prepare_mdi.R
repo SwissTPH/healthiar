@@ -28,7 +28,7 @@
 #'   \item Time-Based Imputation: Use linear regression based on historical trends if prior years' data is complete.
 #'   \item Indicator-Based Imputation: Use multiple linear regression if the missing indicator correlates strongly with others.
 #' }
-#' Imputation models should have an R² ≥ 0.7. If R² < 0.7, consider alternative data sources or methods.
+#' Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower than 0.7, consider alternative data sources or methods.
 
 # VALUE ########################################################################
 #' @return
