@@ -1,0 +1,63 @@
+---
+title: "performance"
+author: "Alberto Castro & Axel Luyten"
+output: html_document
+---
+
+```{r single exposure value with multiple uncertainties}
+
+library(healthiar)
+
+# Assess iteration geographical sections keeping the multiple uncertainties
+system.time(
+  bestcost_pm_copd_geo <-
+    healthiar::attribute_health(
+      exp_central = as.list(runif_with_seed(1E4, 8, 9, 1)),
+      exp_lower = as.list(runif_with_seed(1E4, 6, 7, 1)),
+      exp_upper = as.list(runif_with_seed(1E4, 10, 11, 1)),
+      cutoff_central = 5,   
+      bhd_central = as.list(runif_with_seed(1E4, 25E3, 34E3, 1)),
+      bhd_lower = as.list(runif_with_seed(1E4, 20E3, 24E3, 1)),
+      bhd_upper = as.list(runif_with_seed(1E4, 35E3, 40E3, 1)),
+      rr_central = 1.369, 
+      rr_lower = 1.124,
+      rr_upper = 1.664,
+      rr_increment = 10, 
+      erf_shape = "log_linear", 
+      population = as.list(rep(1E6, 1E4)),
+      geo_id_disaggregated = 1:1E4, 
+      geo_id_aggregated = rep("CH", 1E4),
+      info = "PM2.5_copd")
+  )
+
+# View(bestcost_pm_copd_geo)
+check_bestcost(result_list_bestcost = bestcost_pm_copd_geo,
+               result_vector_alternative = c(31460722, 12120764, 49312859)) # Results on 5 November 2024
+
+# Assess iteration geographical sections keeping the multiple uncertainties
+system.time(bestcost_pm_copd_geo_short <-
+  healthiar::attribute_health(
+    exp_central = as.list(runif_with_seed(1E1, 8.0, 9.0, 1)),
+    exp_lower = as.list(runif_with_seed(1E1, 8.0, 9.0, 1)-0.1),
+    exp_upper = as.list(runif_with_seed(1E1, 8.0, 9.0, 1)+0.1),
+    cutoff_central = 5,   
+    bhd_central = as.list(runif_with_seed(1E1, 25000, 35000, 1)),
+    bhd_lower = as.list(runif_with_seed(1E1, 25000, 35000, 1)),
+    bhd_upper = as.list(runif_with_seed(1E1, 25000, 35000, 1)),
+    rr_central = 1.369, 
+    rr_lower = 1.124,
+    rr_upper = 1.664,
+    rr_increment = 10, 
+    erf_shape = "log_linear", 
+    geo_id_disaggregated = 1:1E1, 
+    geo_id_aggregated = rep("CH", 1E1),
+    info = "PM2.5_copd"))
+
+# View(bestcost_pm_copd_geo_short)
+check_bestcost(result_list_bestcost = bestcost_pm_copd_geo_short,
+               result_vector_alternative = c(32449, 12508, 50836)) # Results on 5 November 2024
+```
+
+
+
+
