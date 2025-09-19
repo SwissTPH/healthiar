@@ -156,11 +156,14 @@ results_geo_2 <- attribute_health(
 ## you can copy and adjust the attribute_health() function call from exercise 4.
 
 # SOLUTION
-results_test <- attribute_mod(
+results_geo_2 <- attribute_mod(
   output_attribute = results_geo_1,
   geo_id_macro = exdat_cantons$language_main
 )
-results_test$health_main$impact_rounded # 554
+results_geo_2$health_main$impact_rounded
+## German-speaking: 385, French-speaking: 138, Italian-speaking: 31
+## Note that in the assessment we used the national exposure for each canton (due to lack of
+## canton-specific population-weighted exposure), so the results are a very rough approximation
 
 results_geo_2 <- attribute_health(
   geo_id_micro = exdat_cantons$canton,
@@ -172,8 +175,8 @@ results_geo_2 <- attribute_health(
   cutoff_central = exdat_cantons$cutoff,
   bhd_central = exdat_cantons$lung_cancer_incidence
 )
-
-results_geo_2$health_main$impact_rounded # 554
+results_geo_2$health_main$impact_rounded
+## German-speaking: 385, French-speaking: 138, Italian-speaking: 31
 ## Note that in the assessment we used the national exposure for each canton (due to lack of
 ## canton-specific population-weighted exposure), so the results are a very rough approximation
 
