@@ -1,7 +1,10 @@
 bibentry(
   bibtype  = "Manual",
   title    = "healthiar: R Package to Quantify and Monetize the Burden of Disease Attributable to Exposures",
-  author   = person("Alberto", "Castro"),
   year     = 2025,
   note     = "Planned release as open source in early 2026 (currently under development, more info at https://best-cost.eu/)"
+  author   = c(
+              person("Alberto", "Castro"),
+              person("Axel", "Luyten")
+              ),
 )
