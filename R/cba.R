@@ -92,7 +92,7 @@ cba <-
     # Run include_monetization for benefit and cost separately
     # Important to obtain main and detailed to avoid losing information
 
-    cba_benefit <- healthiar::monetize(
+    cba_benefit <- monetize(
       output_attribute = output_attribute,
       impact = impact_benefit,
       discount_rate = discount_rate_benefit,
@@ -109,7 +109,7 @@ cba <-
 
     # For cost, assume 1 impact with full valuation
     cba_detailed_cost <-
-      healthiar::monetize(
+      monetize(
         impact = 1,
         valuation = cost,
         discount_rate = discount_rate_cost,

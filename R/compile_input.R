@@ -86,7 +86,7 @@ compile_input <-
       # Convert into a tibble
       tibble::as_tibble() |>
       # Add info
-      healthiar:::add_info(info = input_args_edited$info)
+      add_info(info = input_args_edited$info)
 
     # Obtain the exposure dimension and exposure type in a separate table
       input_wo_lifetable  <-

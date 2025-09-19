@@ -110,7 +110,7 @@ get_output <-
       dplyr::select(dplyr::all_of(cols_without_results_and_nest)) |>
       # No groups, i.e. for the whole data set
       #find_cols_with_multiple_values(df = _, group = NULL)
-      healthiar:::find_multi_value_col_names(
+      find_multi_value_col_names(
         df = _,
         group_col_names = NULL)
 
@@ -192,7 +192,7 @@ get_output <-
 
       # Collapse df using the intern healthiar function
       df_collapsed <-
-        healthiar:::collapse_df_by_group(
+        collapse_df_by_group(
           df = df,
           group_col_names = grouping_cols,
           # If these two last arguments are empty the function can obtain them internally
