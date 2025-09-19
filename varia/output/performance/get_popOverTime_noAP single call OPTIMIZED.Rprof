@@ -1,5 +1,0 @@
-memory profiling: GC profiling: line profiling: sample.interval=5000
-:1369631:2155351:81553752:0:"f" ".rs.callAs" "Rprof" "profvis" 
-:1395816:2212669:87130008:3185:"[.tbl_df" "bestcost::get_popOverTime_noAP_opt" "profvis" 
-:1422722:2260854:91689080:2637:"vec_rep" "dplyr::lag" "bestcost::get_popOverTime_noAP_opt" "profvis" 
-:1463421:2334361:98577416:4023:"vec_recycle" "vectbl_recycle_rhs_rows" "tbl_subassign" "[<-.tbl_df" "bestcost::get_popOverTime_noAP_opt" "profvis" 
