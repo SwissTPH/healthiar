@@ -1062,7 +1062,6 @@ testthat::test_that("results the same |fake_rr|erf_function|exp_dist|iteration_F
 
 testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
@@ -1279,7 +1278,6 @@ testthat::test_that("results correct  pathway_ar|erf_formula|exp_dist|iteration_
 ## Using only the pop_exp argument
 testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formula|exp_dist|iteration_FALSE|", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
@@ -1309,7 +1307,6 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
 ## Using the prop_pop_exp and pop_exp arguments in combination
 testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formula|exp_dist|iteration_FALSE|", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
@@ -1622,7 +1619,6 @@ testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|it
 
 testthat::test_that("error if prop_pop_exp and ar |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|", {
 
-    base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
     data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
     data  <- data_raw |>
       dplyr::filter(!is.na(data_raw$exposure_mean))
@@ -1743,7 +1739,6 @@ testthat::test_that("error if length of exp lower than length of prop pop", {
 
 testthat::test_that("warning if absolute risk and cutoff", {
 
-  base::load(testthat::test_path("data", "input_data_for_testing_Rpackage.Rdata"))
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
