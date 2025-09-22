@@ -1,7 +1,7 @@
 Main changes but not complete list. For this propose see Github.
 # healthiar 0.0.4
 
-* WP Meeting 01 September 2025
+* 01 September 2025
 
 ## New Features
 - New function prepare_lifetable()
@@ -34,7 +34,7 @@ Main changes but not complete list. For this propose see Github.
 
 # healthiar 0.0.3
 
-* WP Meeting 14 July 2025
+* 14 July 2025
 
 ## New Features
 - No lists (vectors) as input for multiple geo units
@@ -64,7 +64,7 @@ Main changes but not complete list. For this propose see Github.
 
 # healthiar 0.0.2
 
-* WP Meeting 02 June 2025
+* 02 June 2025
 
 ## New Features
 - New function standardize()
@@ -93,7 +93,7 @@ Main changes but not complete list. For this propose see Github.
 
 # healthiar 0.0.1
 
-* WP Meeting 05 May 2025
+* 05 May 2025
 
 ## New Features
 - Version number was added
