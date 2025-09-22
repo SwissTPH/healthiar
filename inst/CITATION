@@ -6,6 +6,6 @@ bibentry(
     person("Axel", "Luyten")
   ),
   year     = 2025,
-  note     = "R package version 0.1.6",
+  note     = "R package version 0.2.0",
   url      = "https://github.com/SwissTPH/healthiar"
 )
