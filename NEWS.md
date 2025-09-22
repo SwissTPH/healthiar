@@ -1,4 +1,40 @@
 Main changes but not complete list. For this propose see Github.
+# healthiar 0.1.0
+
+* 19 September 2025
+
+## New Features
+
+- New function get_inflation_rate()
+- New argument in cba(): inflation rate
+- geo ids can now have different number of exposure categories
+
+
+## Improvements
+
+- Faster performance of summarize_uncertainty()
+
+
+## Bugs Fixes 
+
+- Argument time_horizon was not working
+
+
+## Renamings
+
+- discount_years was renamed to n_years
+- inflatoin was renamed to inflation_rate
+- attribute_by_sim was renamed to impact_by_sim
+- positive_impact was renamed to impact_benefit
+
+## Others
+- attribute_by_sim_disaggregated is not anymore available as output
+- attribute_by_geo_id_micro is not anymore available as output
+
+
+
+
+
 # healthiar 0.0.4
 
 * 01 September 2025
