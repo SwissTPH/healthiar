@@ -1,4 +1,18 @@
 Main changes but not complete list. For this propose see Github.
+# healthiar 0.2.0
+* 22 September 2025
+
+## Others
+- First version accepted and uploaded to CRAN
+
+
+# healthiar 0.1.1 to 0.1.6
+* 19 September 2025
+
+## Others
+- Submissions until compliance with CRAN requirements
+
+
 # healthiar 0.1.0
 
 * 19 September 2025
