@@ -4,24 +4,19 @@ Main changes but not complete list. For this propose see Github.
 * 19 September 2025
 
 ## New Features
-
 - New function get_inflation_rate()
 - New argument in cba(): inflation rate
 - geo ids can now have different number of exposure categories
 
 
 ## Improvements
-
 - Faster performance of summarize_uncertainty()
 
 
 ## Bugs Fixes 
-
 - Argument time_horizon was not working
 
-
 ## Renamings
-
 - discount_years was renamed to n_years
 - inflatoin was renamed to inflation_rate
 - attribute_by_sim was renamed to impact_by_sim
@@ -30,8 +25,6 @@ Main changes but not complete list. For this propose see Github.
 ## Others
 - attribute_by_sim_disaggregated is not anymore available as output
 - attribute_by_geo_id_micro is not anymore available as output
-
-
 
 
 
@@ -45,17 +38,11 @@ Main changes but not complete list. For this propose see Github.
 - Argument info also available in monetize()
 - Data validation in socialize()
 
-
-## Bug Fixes 
-
-
 ## Improvements
 - More consistent sum of results
 - Higher speed because of shorter and/or optimized code in attribute_...() functions
 
-
-
-## Others
+## Renamings
 - geo_id_disaggregated is now geo_id_micro
 - geo_id_aggregated is now geo_id_macro
 - output_attribute_1 in attribute_mod() is now output_attribute
@@ -63,8 +50,6 @@ Main changes but not complete list. For this propose see Github.
 - Arguments with exposure_ are now exp_
 - Arguments with suffix _1 and _2 in multiexpose() are now _exp_1 and _exp_2 
 - And many other renames in output columns and variables
-
-
 
 
 
@@ -78,12 +63,9 @@ Main changes but not complete list. For this propose see Github.
 - Detailed results of simulations by geo unit in summarize_uncertainty()
 - New structure of input_args
 
- 
 ## Bug Fixes 
-
 - Fixed bug in socialize()
 - Fixed bug attribute_lifetable()
-
 
 ## Improvements
 - Higher performance of attribute_()
@@ -91,8 +73,7 @@ Main changes but not complete list. For this propose see Github.
 - Data validation in summarize_uncertainty()
 - More validation in attribute_...()
 
-
-## Others
+## Renamings
 - Rename: impact_raw is now results_raw
 - Rename: listed_output_attribute is now output_attribute
 
@@ -108,9 +89,7 @@ Main changes but not complete list. For this propose see Github.
 - Expanded usability of summarize_uncertainty()
 - Enabled single exposure in absolute risk 
 
-
 ## Bug Fixes
-
 - Fixed compare() to avoid errors when using erf_eq
 - Fixed warning in socialize()
 - Fixed bug in prepare_exposure()
@@ -119,11 +98,9 @@ Main changes but not complete list. For this propose see Github.
 - Input data validation in compare()
 - Warning if cutoff is NULL and 0 as default
 
-## Others
+## Renamings
 - Arguments results or output_healthiar become output_attribute
 - Internal variable rr_conc (visible in results of attribute functions) becomes rr_at_exp
-
-
 
 
 
@@ -135,18 +112,14 @@ Main changes but not complete list. For this propose see Github.
 - Version number was added
 - Columns with health impacts were moved to the front in results
 
-
-
 ## Bug Fixes
-
 - Results for impact per 100k inhab. have been corrected
 - Exposure lower than cut-off must result in zero health impact
 
 ## Improvements
 - Custom warning and error messages are now available in attribute_health()
 
-
-## Others
+## Renamings
 - get_pop_fraction() becomes intern function
 - get_mdi() was renamed to prepare_mdi()
 - get_multiexposure() was renamed to multiexpose()
