@@ -1,1 +1,1 @@
-Other workshops are archived in the STPH shared drive
+Other workshops are archived in the Swiss TPH shared drive
