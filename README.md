@@ -2,7 +2,8 @@
 Run the following commands below in RStudio to install *healthiar*
 1) `install.packages("remotes")`
 2) `remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)`
-3) `library(healthiar)`
+3) If you get asked to install or update any dependencies (= other packages that are needed for *healthiar*) please install or update all of them.
+4) `library(healthiar)`
 
 We recommend to frequently install the newest *healthiar* version by running command 2. from above.
 
