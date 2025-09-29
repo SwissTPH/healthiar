@@ -100,7 +100,7 @@ set.seed(1)
 
 -   [**3**]{style="color: green"} dimensions - health, monetization, social aspects
 
--   [**19**]{style="color: green"} functions
+-   [**20**]{style="color: green"} functions
 
 -   [**> 1000**]{style="color: green"} calculation pathways
 
