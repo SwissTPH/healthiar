@@ -229,7 +229,7 @@ exdat_noise <- exdat_noise |> filter(region == "total") # Filter for total (= co
 
 # EXERCISE
 results_ar <- attribute_health(
-  approach_risk = ,
+  approach_risk = "absolute_risk",
   exp_central = ,
   pop_exp = ,
   erf_eq_central =
@@ -237,7 +237,7 @@ results_ar <- attribute_health(
 
 # SOLUTION
 results_ar <- attribute_health(
-  approach_risk = exdat_noise$risk_estimate_type[1],
+  approach_risk = "absolute_risk",
   exp_central = exdat_noise$exposure_mean,
   pop_exp = exdat_noise$exposed,
   erf_eq_central = exdat_noise$erf

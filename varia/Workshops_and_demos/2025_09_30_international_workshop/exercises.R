@@ -129,7 +129,7 @@ View("exdat_noise")
 exdat_noise <- exdat_noise |> filter(region == "total") # Filter for total (= country-wide) entries
 
 results_ar <- attribute_health(
-  approach_risk = ,
+  approach_risk = "absolute_risk",
   exp_central = ,
   pop_exp = ,
   erf_eq_central =
