@@ -672,7 +672,7 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
 -   `monetize()` monetizes (attributable) health impacts
 -   `cba()` performs a cost-benefit analysis (CBA)
 -   `multiexpose()` considers exposure to 2 exposures (e.g. two different air pollutants) at the same time to quantify the attributable health impacts
--   `prepare_exposure()` calculates (population-weighted) mean exposure by combining spatial exposure geographic units data 
+-   `prepare_exposure()` calculates (population-weighted) mean exposure by combining spatial exposure and geographic units data 
 -   `socialize()` determines burden attributable to differences in a social indicator
 -   `attribute_mod()` modifies an existing `attribute_health()` assessment
 -   `prepare_mdi()` creates the BEST-COST MDI (Multidimensional Deprivation Index)
@@ -705,7 +705,7 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
 - Q & A (remaining time, ca. 15 min)
 
 ::: fragment
-Slides and exercises can be downloaded from [this folder on the healthiar GitHub page](https://github.com/SwissTPH/healthiar/tree/master/varia/workshops_and_demos/workshop) (link also in the last email and in the Zoom chat)
+Slides and exercises can be downloaded from [this folder on the healthiar GitHub page](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop) (link also in the last email and in the Zoom chat)
 :::
 
 ::: fragment
