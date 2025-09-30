@@ -235,6 +235,8 @@ save(exdat_noise, file = "data/exdat_noise.rda")
 exdat_pm <- exdat_pm |>
   mutate(year_of_analysis = 2019, .before = 1) |>
   mutate(rr_source = "Liu 2020") |>
-  mutate(rr_doi = "doi.org/10.1016/j.envint.2020.106267")
+  mutate(rr_doi = "doi.org/10.1016/j.envint.2020.106267") |>
+  mutate(erf_shape = "log_linear", .after = relative_risk_upper) |>
+  select(-calculation_method)
 
 save(exdat_pm, file = "data/exdat_pm.rda")
