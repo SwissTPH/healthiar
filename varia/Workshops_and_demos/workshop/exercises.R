@@ -5,6 +5,7 @@
 # SETUP ############################################################################################
 install.packages("remotes")
 remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)
+## If asked to, please install or update dependencies
 library(healthiar)
 library(dplyr)
 
@@ -63,7 +64,7 @@ results_comparison <- compare(...)
 ## Assess the number of attributable lung cancer cases due to PM2.5 in all Swiss cantons (~ regions)
 ##  in 2023 using the input data from the example data set "exdat_cantons".
 
-data("exdat_cantons") # this line loads the variable into your RStudio environment tab
+data(exdat_cantons) # this line loads the variable into your RStudio environment tab
 View(exdat_cantons) # this line let's you inspect the variable
 
 results_geo_1 <- attribute_health(
@@ -104,8 +105,9 @@ results_geo_2 <- attribute_health(
 ## Determine the number of deaths from COPD attributable to ozone exposure (exposure categories) in
 ## Germany in 2016 using the input data from the example data set "exdat_ozone".
 
-data("exdat_ozone")
-View("exdat_ozone")
+data(exdat_ozone)
+str(exdat_ozone) # this line prints the variable to the console
+View(exdat_ozone) # this line let's you inspect the variable
 
 results_rr_3 <- attribute_health(
   exp_central = ,
@@ -124,8 +126,8 @@ results_rr_3 <- attribute_health(
 ## Determine the number of high annoyance cases due to noise exposure (exposure categories) in
 ## Norway using the input data from the example data set "exdat_noise".
 
-data("exdat_noise")
-View("exdat_noise")
+data(exdat_noise)
+View(exdat_noise)
 exdat_noise <- exdat_noise |> filter(region == "total") # Filter for total (= country-wide) entries
 
 results_ar <- attribute_health(
