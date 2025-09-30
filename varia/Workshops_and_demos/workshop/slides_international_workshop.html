@@ -2312,15 +2312,24 @@ Axel Luyten and Alberto Castro
 <li class="fragment"><p>Presentation of solutions in plenum (ca. 10 min)</p></li>
 <li class="fragment"><p>Q &amp; A (remaining time)</p></li>
 </ul>
+</section>
+<section id="exercises-healthiar-installation" class="slide level2">
+<h2>Exercises &amp; <code>healthiar</code> installation</h2>
 <div class="fragment">
-<p>Exercises can be downloaded from <a href="https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop">this folder on the <em>healthiar</em> GitHub page</a> (link also in the last email and in the Zoom chat)</p>
+<p><strong>Exercises</strong> (and other <em>healthiar</em> materials) can be downloaded from <a href="https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop">this folder on the <em>healthiar</em> GitHub page</a> (link also in the last email and in the Zoom chat)</p>
 </div>
 <div class="fragment">
-<p>Installation: run the following commands below in RStudio to install &amp; load <em>healthiar</em> (also found at the start of the exercises). If asked to, please install or update dependencies.</p>
+<p><strong>We recommend to run the following commands below to install</strong> &amp; load <em>healthiar</em> in RStudio (also found at the start of the exercises). If asked to, please install or update dependencies.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href></a><span class="fu">install.packages</span>(<span class="st">&quot;remotes&quot;</span>)</span>
 <span id="cb24-2"><a href></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="at">repo =</span> <span class="st">&quot;SwissTPH/healthiar&quot;</span>, <span class="at">build_vignettes =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb24-3"><a href></a><span class="fu">library</span>(healthiar)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="fragment">
+<p><strong>Alternatively</strong>, download the file <em>healthiar_0.2.0.zip</em> from the GitHub folder linked above (and in the Zoom chat). Then install it using the command</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href></a><span class="fu">install.packages</span>(<span class="st">&quot;&lt;path_to_folder_in_which_file_is_saved&gt;/healthiar_0.2.0.zip&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="fragment">
@@ -2372,17 +2381,17 @@ Axel Luyten and Alberto Castro
 <div class="tab-content">
 <div id="tabset-3-1">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href></a><span class="fu">write.csv</span>(<span class="at">x =</span> results_pm_copd<span class="sc">$</span>health_main, <span class="at">file =</span> <span class="st">&quot;exported_results/results_pm_copd.csv&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href></a><span class="fu">write.csv</span>(<span class="at">x =</span> results_pm_copd<span class="sc">$</span>health_main, <span class="at">file =</span> <span class="st">&quot;exported_results/results_pm_copd.csv&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-3-2">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href></a><span class="fu">save</span>(results_pm_copd, <span class="at">file =</span> <span class="st">&quot;exported_results/results_pm_copd.Rdata&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href></a><span class="fu">save</span>(results_pm_copd, <span class="at">file =</span> <span class="st">&quot;exported_results/results_pm_copd.Rdata&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-3-3">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href></a><span class="fu">write.xlsx</span>(<span class="at">x =</span> results_pm_copd<span class="sc">$</span>health_main, <span class="at">file =</span> <span class="st">&quot;exported_results/results_pm_copd.xlsx&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href></a><span class="fu">write.xlsx</span>(<span class="at">x =</span> results_pm_copd<span class="sc">$</span>health_main, <span class="at">file =</span> <span class="st">&quot;exported_results/results_pm_copd.xlsx&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="quarto-figure quarto-figure-left">
 <figure>
