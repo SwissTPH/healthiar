@@ -358,6 +358,7 @@ results_iteration$health_main
 ```{r, echo=FALSE,include=TRUE,eval=TRUE}
 results_iteration[["health_main"]] |> 
   dplyr::select(geo_id_macro, impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
+  dplyr::slice(1:3) |> 
   knitr::kable()
 ```
 :::
@@ -684,9 +685,9 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
 <!-- TODO add link to GitHub page -->
 -   `healthiar` is publicly available on this [GitHub page](https://github.com/SwissTPH/healthiar)
 
--   Python version coming out later in 2026
-
 -   Package submitted to CRAN
+
+-   Python version coming out later in 2026
 
 -   `healthiar` might be expanded in the future (if funding available)
 
@@ -696,21 +697,19 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
 
 ## Second hour programme
 
-- Introduction of exercises (ca. 5 min)
-
-- Time for exercises in small groups (ca. 25 min)
+- Exercises in small groups (ca. 40 min)
 
 - Presentation of solutions in plenum (ca. 10 min)
 
-- Q & A (remaining time, ca. 15 min)
+- Q & A (remaining time)
 
 ::: fragment
-Slides and exercises can be downloaded from [this folder on the healthiar GitHub page](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop) (link also in the last email and in the Zoom chat)
+Exercises can be downloaded from [this folder on the *healthiar* GitHub page](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop) (link also in the last email and in the Zoom chat)
 :::
 
 ::: fragment
-Run the following commands below in RStudio to install *healthiar*
-(also found at the start of the exercises)
+Installation: run the following commands below in RStudio to install & load *healthiar*
+(also found at the start of the exercises). If asked to, please install or update dependencies.
 
 ```{r, echo=TRUE, eval=FALSE, include=TRUE}
 install.packages("remotes")
@@ -729,7 +728,11 @@ Happy coding!
 
 ## Feedback
 
-Please answer 3 short questions to provide your valuable feedback via [this short form](https://swisstph.wufoo.com/forms/s1k7txho0lrkpj1/) (link also in the last email and in the Zoom chat
+Please answer 3 short questions to provide your valuable feedback via [this short form](https://swisstph.wufoo.com/forms/s1k7txho0lrkpj1/) (link also in the last email and in the Zoom chat)
+
+Also, any input via [GitHub issues](https://github.com/SwissTPH/healthiar/issues) is also welcome.
+
+Or you can write to Alberto (alberto.castrofernandez\@swisstph.ch) and Axel (axel.luyten\@swisstph.ch).
 
 # Appendix
 
