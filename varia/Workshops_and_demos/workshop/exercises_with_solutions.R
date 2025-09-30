@@ -3,7 +3,7 @@
 ####################################################################################################
 
 # SETUP ############################################################################################
-install.packages("remotes")
+install.packages(c("remotes", "knitr", "rmarkdown"))
 remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)
 ## If asked to, please install or update dependencies
 library(healthiar)

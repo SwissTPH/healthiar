@@ -746,32 +746,22 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
 
 - Q & A (remaining time)
 
-## Exercises & `healthiar` installation
-
 ::: fragment
-**Exercises** (and other *healthiar* materials) can be downloaded from [this folder on the *healthiar* GitHub page](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop) (link also in the last email and in the Zoom chat)
+**Exercises** and **slides** from this presentation can be downloaded from [this folder on the *healthiar* GitHub page](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop) (link also in the last email and in the Zoom chat).
 :::
 
- 
+
 ::: fragment
-**We recommend to run the following commands below to install** & load *healthiar* in RStudio
-(also found at the start of the exercises). If asked to, please install or update dependencies.
+**Install and load the `healthiar` R package** (code also found at the start of the exercises). 
+
+If asked to, please install or update dependencies.
 
 ```{r, echo=TRUE, eval=FALSE, include=TRUE}
-install.packages("remotes")
+install.packages(c("remotes", "knitr", "rmarkdown"))
 remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)
 library(healthiar)
 ```
 :::
-
-::: fragment
-**Alternatively**, download the file *healthiar_0.2.0.zip* from the GitHub folder linked above (and in the Zoom chat). Then install it using the command
-
-```{r, echo=TRUE, eval=FALSE, include=TRUE}
-install.packages("<path_to_folder_in_which_file_is_saved>/healthiar_0.2.0.zip")
-```
-:::
-
 
 ::: fragment
 Happy coding!
