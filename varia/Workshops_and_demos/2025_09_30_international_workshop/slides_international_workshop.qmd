@@ -138,7 +138,7 @@ set.seed(1)
 
 ![](images/bod_rr_4.png){fig-align="left" width="1500"}
 
-## `attribute_health()` with RR 1/3
+## `attribute_health()` with RR 1/2
 
 Goal: attribute COPD cases to PM2.5 air pollution exposure
 
@@ -182,7 +182,7 @@ results_pm_copd <- attribute_health(
 ::::
 :::::
 
-## `attribute_health()` with RR 2/3
+## `attribute_health()` with RR 2/2
 
 
 `attribute_health()` outputs two lists ("folders")
@@ -276,8 +276,7 @@ scenario_2 <- attribute_health(
 ```{r}
 results_comparison <- compare(
   output_attribute_scen_1 = scenario_1,
-  output_attribute_scen_2 = scenario_2,
-  approach_comparison = "delta" # or "pif" (population impact fraction)
+  output_attribute_scen_2 = scenario_2
 )
 ```
 :::
