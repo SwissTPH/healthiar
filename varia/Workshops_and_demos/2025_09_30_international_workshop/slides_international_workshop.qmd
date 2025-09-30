@@ -162,18 +162,15 @@ results_pm_copd <- attribute_health(
 
 ## Pre-loaded data
 
-::: callout-tip
-`healthiar` comes with some example data that start with `exdat_` that allow you to test functions.
-:::
 
 ```{r, eval=TRUE,include=TRUE,echo=TRUE}
 
 results_pm_copd <- attribute_health(
-  erf_shape = "log_linear",
+  erf_shape = exdat_pm$erf_shape,
   rr_central = exdat_pm$relative_risk, 
   rr_lower = exdat_pm$relative_risk_lower,
   rr_upper = exdat_pm$relative_risk_upper,
-  rr_increment = 10, 
+  rr_increment = exdat_pm$rr_increment, 
   exp_central = exdat_pm$mean_concentration,
   cutoff_central = exdat_pm$cut_off_value,
   bhd_central = exdat_pm$incidence
