@@ -22,9 +22,6 @@ data(exdat_lifetable)
 \description{
 This tibble contains population per age and sex for Switzerland.
 }
-\examples{
-#TBD
-}
 \author{
 Alberto Castro & Axel Luyten
 }

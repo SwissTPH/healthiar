@@ -11,6 +11,9 @@ get_inflation_factor(n_years, inflation_rate = NULL)
 
 \item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).}
 }
+\value{
+This function returns the numeric inflation factor.
+}
 \description{
 This function calculates the inflation factor based on inflation rate.
 }
@@ -20,8 +23,10 @@ This function calculates the inflation factor based on inflation rate.
 \deqn{inflation\_factor = (1 + inflation\_rate)^{n\_years}}
 }
 \examples{
-# TODO
-
+get_inflation_factor(
+  inflation_rate = 0.02,
+  n_years = 5
+)
 }
 \author{
 Alberto Castro & Axel Luyten

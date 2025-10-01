@@ -25,9 +25,6 @@ data(exdat_prepare_mdi)
 \description{
 This tibble contains social indicators of the BEST-COST Multidimensional Deprivation Index (MDI) of geo units in Belgium.
 }
-\examples{
-#TBD
-}
 \author{
 Arno Pauwels & Vanessa Gorasso
 }

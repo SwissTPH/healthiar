@@ -20,6 +20,9 @@ get_discount_factor(
 
 \item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).}
 }
+\value{
+This function returns the numeric discount factor.
+}
 \description{
 This function calculates the discount factor based on discount rate. If the argument \code{inflation_rate} is NULL (default), it is assumed that the discount rate is already corrected for inflation). Otherwise (if a value for \code{inflation_rate} is entered), the resulted discount factor is adjusted for inflation.
 }
@@ -45,7 +48,9 @@ This function calculates the discount factor based on discount rate. If the argu
 \deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years) \times (1 + inflation\_rate)^{n\_years}}}
 }
 \examples{
-# TODO
+get_discount_factor(
+  discount_rate = 0.07,
+  n_years = 5
 }
 \author{
 Alberto Castro & Axel Luyten
