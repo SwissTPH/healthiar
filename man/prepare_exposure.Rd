@@ -16,7 +16,7 @@ prepare_exposure(poll_grid, geo_units, population, geo_id_macro)
 \item{geo_id_macro}{\code{Vector} containing the id code of the geographic unit the sub-unit belongs to.}
 }
 \value{
-This function returns a vector of population exposure values.
+This function returns a \code{numeric vector} of population exposure values.
 }
 \description{
 This function prepares tabular population exposure data compatible with the \code{attribute()} and \code{compare()} functions, based on gridded pollution concentration data and vector data representing geographic units. The function calculates an average concentration value in each geographic unit, weighted by the fraction of the population in each sub-unit.

@@ -27,7 +27,7 @@ get_risk(
 \item{exp}{Population exposure to the stressor (e.g. annual population-weighted mean).}
 }
 \value{
-This function returns the relative risk(s) at the specified exposure level(s), \emph{rr_at_exp} in the equations above.
+This function returns the \code{numeric} relative risk(s) at the specified exposure level(s), referred to as \emph{rr_at_exp} in the equations above.
 }
 \description{
 This function re-scales the relative risk from the increment value in the epidemiological study (e.g. for PM2.5 10 or 5 ug/m3) to the actual population exposure

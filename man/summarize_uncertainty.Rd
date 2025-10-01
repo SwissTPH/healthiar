@@ -14,7 +14,11 @@ summarize_uncertainty(output_attribute, n_sim, seed = NULL)
 \item{seed}{\code{numeric value} for fixing the randomization. If empty, 123 is used as a default.}
 }
 \value{
-This function returns a summary uncertainty central estimate and correcponding lower and upper confidence intervals for the attributable health impacts by Monte Carlo simulation.
+#' This function adds two \code{list} of \code{tibbles} to the input variable specified to the argument \code{output_attribute}:
+\itemize{
+ \item \code{uncertainty_main} contains the \code{numeric} summary uncertainty central estimate and corresponding lower and upper confidence intervals for the attributable health impacts by Monte Carlo simulation.
+ \item \code{uncertainty_detailed} contains the \code{numeric} detailed simulation results
+ }
 }
 \description{
 This function determines summary uncertainty (based on central, lower and upper estimates of at least one input variable) using attribute() or compare()

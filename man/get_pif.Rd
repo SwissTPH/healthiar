@@ -16,7 +16,7 @@ get_pif(rr_at_exp_1, rr_at_exp_2, prop_pop_exp_1, prop_pop_exp_2)
 \item{prop_pop_exp_2}{\code{Numerical value} showing the fraction ([0,1]) of population exposed to the environmental stressor in the scenario 1. Per default = 1 (i.e. 100\% of population is exposed).}
 }
 \value{
-This function returns a \code{value} corresponding to the population attributable fraction
+This function returns the population impact fraction as a \code{numeric value}
 }
 \description{
 This function calculates the population impact fraction of a health outcome due to exposure to an environmental stressor
