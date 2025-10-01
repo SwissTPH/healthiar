@@ -7,5 +7,4 @@ testthat::test_that("results the same", {
         n_years = 5
       ),
     expect = 0.712986179) # Results on 2025-10-01; no comparison study
-
 })
