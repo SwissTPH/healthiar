@@ -8,7 +8,10 @@
 #' @inheritParams socialize
 
 # VALUE ########################################################################
-#' @returns Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
+#' @returns This function returns two \code{lists}:
+#' 1) \code{health_main}, which contains a \code{tibble} with the age-standardized main results and
+#' @returns
+#' 2) \code{health_detailed}, which contains detailed age-standardized results
 
 # EXAMPLES #####################################################################
 #' @examples

@@ -36,7 +36,7 @@
 
 # VALUE ########################################################################
 #' @returns
-#' This function returns the relative risk(s) at the specified exposure level(s), \emph{rr_at_exp} in the equations above.
+#' This function returns the \code{numeric} relative risk(s) at the specified exposure level(s), referred to as \emph{rr_at_exp} in the equations above.
 
 # EXAMPLES #####################################################################
 #' @examples

@@ -11,10 +11,6 @@
 #' @param impact_benefit \code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure.
 #' @param cost \code{Numeric value} referring to the investment cost to achieve the reduction of exposure.
 
-
-# VALUE ########################################################################
-#' @returns Description of the return value.
-
 # DETAILS ######################################################################
 
 #' @details
@@ -28,6 +24,8 @@
 #' @details
 #' For the equations regarding the monetization of the cost and the benefit please see the function documentation of \code{monetize()}.
 
+# VALUE ########################################################################
+#' @returns Description of the return value.
 
 # EXAMPLES #####################################################################
 #' @examples

@@ -181,7 +181,7 @@
 
 #' @author Alberto Castro & Axel Luyten
 
-#'  @keywords internal
+#' @keywords internal
 
 "exdat_ozone"
 

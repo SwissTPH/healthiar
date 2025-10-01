@@ -12,7 +12,7 @@
 
 # VALUE ########################################################################
 #' @returns
-#' This function returns a \code{value} corresponding to the population attributable fraction
+#' This function returns the population impact fraction as a \code{numeric value}
 
 # EXAMPLES #####################################################################
 #' @examples

@@ -20,8 +20,6 @@
 #' }
 
 # EXAMPLES #####################################################################
-#' @examples
-#' # TODO
 
 #' @author Alberto Castro & Axel Luyten
 
