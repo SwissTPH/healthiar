@@ -1,8 +1,6 @@
 ## COMMENTED OUT SO THAT FUNCTION OUTPUT DOESN'T SHOW UP IN TESTING OVERVIEW
 # testthat::test_that("results correct", {
 #
-#   data <- base::readRDS(testthat::test_path("data", "exdat_prepare_mdi.rds"))
-#
 #   testthat::expect_equal(
 #     object =
 #       healthiar::prepare_mdi(
