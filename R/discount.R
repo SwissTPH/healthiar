@@ -8,8 +8,7 @@
 #' @inheritParams monetize
 
 # VALUE ########################################################################
-#' @returns
-#' This function returns discounted health impacts.
+#' @inherit monetize return
 
 # EXAMPLES #####################################################################
 #' @examples
