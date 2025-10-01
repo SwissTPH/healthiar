@@ -22,9 +22,6 @@ data(exdat_noise)
 \description{
 This tibble contains noise exposure data from urban and rural regions in Norway.
 }
-\examples{
-#TBD
-}
 \author{
 Anette Kocbach Bolling & Vázquez Fernández
 }

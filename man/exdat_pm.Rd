@@ -29,9 +29,6 @@ data(exdat_pm)
 \description{
 This tibble contains PM2.5 exposure and COPD incidence data from Switzerland.
 }
-\examples{
-#TBD
-}
 \author{
 Alberto Castro & Axel Luyten
 }

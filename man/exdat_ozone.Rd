@@ -33,9 +33,6 @@ data(exdat_ozone)
 \description{
 This tibble contains modelled ozone (\eqn{O_3}) exposure and chronic obstructive pulmonary disease (COPD) incidence data from the Germany in 2016.
 }
-\examples{
-#TBD
-}
 \author{
 Alberto Castro & Axel Luyten
  @keywords internal

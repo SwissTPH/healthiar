@@ -29,9 +29,6 @@ data(exdat_socialize)
 \description{
 This tibble contains data for municipalities in Belgium ranked by BEST-COST Multidimensional Deprivation Index (MDI).
 }
-\examples{
-#TBD
-}
 \author{
 Arno Pauwels & Vanessa Gorasso
 }

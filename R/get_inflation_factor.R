@@ -14,10 +14,16 @@
 #' @details
 #' \deqn{inflation\_factor = (1 + inflation\_rate)^{n\_years}}
 
+# VALUE ########################################################################
+#' @returns This function returns the numeric inflation factor.
+
+
 # EXAMPLES #####################################################################
 #' @examples
-#' # TODO
-#'
+#' get_inflation_factor(
+#'   inflation_rate = 0.02,
+#'   n_years = 5
+#' )
 
 #' @author Alberto Castro & Axel Luyten
 
