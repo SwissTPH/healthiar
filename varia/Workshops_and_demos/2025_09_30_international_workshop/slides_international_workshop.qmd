@@ -712,7 +712,7 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
 
 -   `attribute_lifetable()` for YLL
 -   `attribute_health()` for YLD (using the `dw` & `duration` arguments)
--   `get_daly()` as the sum of YLL and YLD
+-   `daly()` sums attributable YLL and YLD impacts
 -   `monetize()` monetizes (attributable) health impacts
 -   `cba()` performs a cost-benefit analysis (CBA)
 -   `multiexpose()` considers exposure to 2 exposures (e.g. two different air pollutants) at the same time to quantify the attributable health impacts
