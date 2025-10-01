@@ -29,8 +29,6 @@
 
 #' @keywords internal
 
-#' @examples
-#' #TBD
 "exdat_pm"
 
 # exdat_noise ##################################################################
@@ -57,8 +55,6 @@
 
 #' @keywords internal
 
-#' @examples
-#' #TBD
 "exdat_noise"
 
 # exdat_lifetable ##############################################################
@@ -85,8 +81,6 @@
 
 #' @keywords internal
 
-#' @examples
-#' #TBD
 "exdat_lifetable"
 
 # exdat_prepare_mdi ##############################################################
@@ -117,8 +111,6 @@
 
 #' @keywords internal
 
-#' @examples
-#' #TBD
 "exdat_prepare_mdi"
 
 # exdat_socialize ##############################################################
@@ -153,8 +145,6 @@
 
 #' @keywords internal
 
-#' @examples
-#' #TBD
 "exdat_socialize"
 
 # exdat_ozone ################################################################
@@ -193,8 +183,6 @@
 
 #'  @keywords internal
 
-#' @examples
-#' #TBD
 "exdat_ozone"
 
 # exdat_cantons #####################################################################
@@ -232,6 +220,4 @@
 
 #' @keywords internal
 
-#' @examples
-#' #TBD
 "exdat_cantons"
