@@ -1,11 +1,26 @@
+# Read DESCRIPTION
+desc <- as.list(utils::packageDescription("healthiar"))
+
+# Pull authors and contributors from Authors@R
+authors <- eval(parse(text = desc$`Authors@R`))
+main_authors <- authors[vapply(authors$role, function(x) any(x %in% c("aut","cre")), logical(1))]
+contributors <- authors[vapply(authors$role, function(x) "ctb" %in% x, logical(1))]
+
+# Format names manually to avoid ORCID
+format_names <- function(persons) {
+  sapply(persons, function(p) {
+    paste(p$given, p$family)
+  })
+}
+
+main_authors_text <- format_names(main_authors)
+contributors_text <- paste("Contributors:", paste(format_names(contributors), collapse = ", "))
+
 bibentry(
   bibtype  = "Manual",
-  title    = "healthiar: R Package to Quantify and Monetize the Burden of Disease Attributable to Exposures",
-  author   = c(
-    person("Alberto", "Castro"),
-    person("Axel", "Luyten")
-  ),
-  year     = 2025,
-  note     = "R package version 0.2.0",
+  title    = paste0("healthiar: ", desc$Title),
+  author   = main_authors,
+  year     = desc$Year,
+  note     = paste0(contributors_text, ". R package version: ", desc$Version),
   url      = "https://github.com/SwissTPH/healthiar"
 )
