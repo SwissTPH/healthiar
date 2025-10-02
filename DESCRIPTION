@@ -17,7 +17,7 @@ Authors@R: c(
     person(given = "Joao", family = "Vasco Santos", role = c("ctb"), comment = c(ORCID = "0000-0003-4696-1002")),
     person(given = "Anette", family = "Kocbach Bolling", role = c("ctb"), comment = c(ORCID = "0000-0003-4209-7448"))
     )
-Description: Quantify and monetize the burden of disease attributable to (environmental) exposures. This R package has been developed with a focus on air pollution and noise but can applied to other exposures. The initial development has been funded by the European Union project BEST-COST. Disclaimer: It is work in progress and the developers are not liable for any calculation errors or inaccuracies resulting from the use of this package.
+Description: Quantify and monetize the burden of disease attributable to (environmental) exposures. This R package has been developed with a focus on air pollution and noise but can applied to other exposures. The initial development has been funded by the European Union project BEST-COST. Disclaimer: It is work in progress and the developers are not liable for any calculation errors or inaccuracies resulting from the use of this package. References: Murray CJ et al. 2019. <https://www.thelancet.com/journals/lancet/article/piis0140-6736(20)30752-2/fulltext>
 License: GPL (>= 3)
 Year: 2025
 Encoding: UTF-8
