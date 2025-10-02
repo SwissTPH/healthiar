@@ -111,14 +111,14 @@
 #' @details
 #' \strong{Equations (relative risk)}
 #' @details
-#' The most general equation describing the population attributable fraction (PAF) mathematically is an integral form
+#' The most general equation describing the population attributable fraction (PAF) mathematically is an integral form (Murray et al. 2019)
 #' \deqn{PAF = \frac{\int RR(x)PE(x)dx - 1}{\int RR(x)PE(x)dx}}
 #' @details Where:
 #' @details x     = exposure level
 #' @details PE(x) = population distribution of exposure
 #' @details RR(x) = relative risk at exposure level compared to the reference level
 #' @details
-#' If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF
+#' If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF (WHO 2003a, WHO 2011)
 #' \deqn{PAF = \frac{\sum RR_i \times PE_i - 1}{\sum RR_i \times PE_i}}
 #' @details Where:
 #' @details i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
