@@ -499,7 +499,8 @@ validate_input_attribute <-
       another_var_name <- base::setdiff(all_var_names, var_name)
 
       if(var_name %in% arg_names_passed &&
-         approach_risk == risk){
+         # Use all() for the case of approach_risk entered as vector
+         base::all(approach_risk == risk)){
         stop(base::paste0("The argument ",
         var_name,
         " is aimed for ",
@@ -616,7 +617,8 @@ validate_input_attribute <-
 
     # For absolute risk no cutoff is used (not relevant)
     if(! var_name %in% arg_names_passed &&
-       approach_risk == "relative_risk"){
+       # Use all() for the case of approach_risk entered as vector
+       base::all(approach_risk == "relative_risk")){
 
       base::warning(
         base::paste0("You entered no value for ",
