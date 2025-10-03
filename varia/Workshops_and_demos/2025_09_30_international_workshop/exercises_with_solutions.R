@@ -2,6 +2,10 @@
 # EXERCISES ########################################################################################
 ####################################################################################################
 
+# NOTE #############################################################################################
+## The R package is a work in progress - it could be that some of the exact code in this script will
+## cede to work with the latest package version at some point.
+
 # SETUP ############################################################################################
 install.packages(c("remotes", "knitr", "rmarkdown"))
 remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)

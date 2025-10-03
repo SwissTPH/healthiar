@@ -42,6 +42,18 @@ format:
     embed-resources: true
 ---
 
+# Note
+
+This presentation was part of an online *healthiar* workshop by [Swiss TPH](https://www.swisstph.ch/en/about/eph/environmental-exposures-and-health) held on 2025-10-01, which was recorded. [**The recording (45') can be found here**](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ): https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ
+
+See the README file of the [*healthiar* GitHub repository for **information on how to install *healthiar* in RStudio**](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) and how to get started: https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme
+
+Feedback is very welcome via [GitHub issues](https://github.com/SwissTPH/healthiar/issues) (preferred) or by email (addresses on first slide).
+
+Disclaimer: the R package is still a work in progress - it could be that some of the exact code in this presentation will cede to work at some point, but the concepts behind them should stay the same.
+
+The slides of this presentation can be found here: https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop
+
 # Today
 
 <!-- #TODO -->
