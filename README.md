@@ -1,5 +1,6 @@
 # INSTALL THE *healthiar* R PACKAGE FROM GITHUB
-Requirement: R version 4.3.0 or higher
+(Requirement: R version 4.3.0 or higher)
+
 Run the following commands below in RStudio to install *healthiar*
 1) `install.packages(c("remotes", "knitr", "rmarkdown"))`
 2) `remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)`
