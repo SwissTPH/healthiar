@@ -21,8 +21,9 @@ Description: Quantify and monetize the burden of disease attributable to (enviro
     This R package has been developed with a focus on air pollution and noise but can applied to other exposures. The initial development has been funded by the European Union project BEST-COST. 
     Disclaimer: It is work in progress and the developers are not liable for any calculation errors or inaccuracies resulting from the use of this package. 
     References: 
-    Murray et al. 2019. doi:10.1016/S0140-6736(20)30752-2
-    WHO. 2003a. https://www.who.int/publications/i/item/9241546204
+    Murray et al. 2019. <doi:10.1016/S0140-6736(20)30752-2>
+    WHO. 2003a. <https://www.who.int/publications/i/item/9241546204>
+    WHO. 2011. 
 License: GPL (>= 3)
 Year: 2025
 Encoding: UTF-8
