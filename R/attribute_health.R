@@ -111,21 +111,21 @@
 #' @details
 #' \strong{Equations (relative risk)}
 #' @details
-#' The most general equation describing the population attributable fraction (PAF) mathematically is an integral form (Murray et al. 2019)
+#' The most general equation describing the population attributable fraction (PAF) mathematically is an integral form (Murray et al. 2019):
 #' \deqn{PAF = \frac{\int RR(x)PE(x)dx - 1}{\int RR(x)PE(x)dx}}
 #' @details Where:
 #' @details x     = exposure level
 #' @details PE(x) = population distribution of exposure
 #' @details RR(x) = relative risk at exposure level compared to the reference level
 #' @details
-#' If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF (WHO 2003a, WHO 2011)
+#' If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF (WHO 2003a, WHO 2011):
 #' \deqn{PAF = \frac{\sum RR_i \times PE_i - 1}{\sum RR_i \times PE_i}}
 #' @details Where:
 #' @details i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
 #' @details \eqn{PE_i} = fraction of population in exposure category i
 #' @details \eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
 #' @details
-#' There is one alternative for the PAF for categorical exposure distribution that is commonly used. It is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical.
+#' There is one alternative for the PAF for categorical exposure distribution that is commonly used, which is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical (WHO 2003b, WHO 2011):
 #' \deqn{PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}}
 #' @details Where:
 #' @details i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)

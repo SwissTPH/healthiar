@@ -23,7 +23,9 @@ Description: Quantify and monetize the burden of disease attributable to (enviro
     References: 
     Murray et al. 2019. <doi:10.1016/S0140-6736(20)30752-2>
     WHO. 2003a. <https://www.who.int/publications/i/item/9241546204>
-    WHO. 2011. 
+    WHO. 2003b. <doi:10.1186/1478-7954-1-1>
+    WHO. 2011. <https://iris.who.int/handle/10665/326424>
+    
 License: GPL (>= 3)
 Year: 2025
 Encoding: UTF-8
