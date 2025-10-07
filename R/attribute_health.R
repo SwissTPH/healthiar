@@ -146,7 +146,7 @@
 
 #' @details
 #' \strong{Conversion of alternative risk measures to relative risks}
-#' For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
+#' For conversion of hazard ratios and/or odds ratios to relative risks refer to VanderWeele 2019 (<https://doi.org/10.1111/biom.13197>) and/or use the conversion tools developed by the Teaching group in EBM in 2022 for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
 # VALUE ########################################################################
 #' @inherit attribute_master return
