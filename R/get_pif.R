@@ -10,6 +10,10 @@
 #' @param prop_pop_exp_1 \code{Numerical value} showing the fraction ([0,1]) of population exposed to the environmental stressor in the scenario 1. Per default = 1 (i.e. 100\% of population is exposed).
 #' @param prop_pop_exp_2 \code{Numerical value} showing the fraction ([0,1]) of population exposed to the environmental stressor in the scenario 1. Per default = 1 (i.e. 100\% of population is exposed).
 
+# DETAILS ######################################################################
+#' @details
+#' For more information about the equations used by \code{get_pif} please see the function documentation of \code{compare}.
+
 # VALUE ########################################################################
 #' @returns
 #' This function returns a \code{value} corresponding to the population attributable fraction

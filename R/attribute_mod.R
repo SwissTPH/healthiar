@@ -8,6 +8,10 @@
 #' @inheritParams attribute_master
 #' @param output_attribute \code{List} containing the output of the function attribute() for scenario 1.
 
+# DETAILS ######################################################################
+#' @details
+#' Please see the function documentation of \code{attribute_health} for the methods used.
+
 # VALUE ########################################################################
 #' @inherit attribute_master return
 
