@@ -111,7 +111,7 @@
 #' @details
 #' \strong{Equations (relative risk)}
 #' @details
-#' The most general equation describing the population attributable fraction (PAF) mathematically is an integral form (Murray et al. 2019):
+#' The most general equation describing the population attributable fraction (PAF) mathematically is an integral form (GBD 2019 Risk Factors Collaborators 2020):
 #' \deqn{PAF = \frac{\int RR(x)PE(x)dx - 1}{\int RR(x)PE(x)dx}}
 #' @details Where:
 #' @details x     = exposure level
