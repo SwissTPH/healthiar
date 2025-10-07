@@ -37,9 +37,9 @@ This function calculates the health impacts between two scenarios (e.g. before a
 \details{
 Note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2 (e.g. comparison of two scenarios at the same time).
 
-Equations population impact fraction (PIF)
+\strong{Equations population impact fraction (PIF)}
 
-The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality when exposure to a risk factor is changed (for instance due to an intervention). The most general equation describing this mathematically is an integral form:
+The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality when exposure to a risk factor is changed (for instance due to an intervention). The most general equation describing this mathematically is an integral form (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2003b, https://doi.org/10.1186/1478-7954-1-1):
 \deqn{PIF = \frac{\int RR(x)PE(x)dx - \int RR(x)PE'(x)dx}{\int RR(x)PE(x)dx}}
 
 Where:
@@ -52,7 +52,7 @@ PE'(x) = alternative population distribution of exposure
 
 RR(x) = relative risk at exposure level compared to the reference level
 
-If the population exposure is described as a categorical rather than continuous exposure, the integrals in equation (5) may be converted to sums, resulting in the following equations for the PIF:
+If the population exposure is described as a categorical rather than continuous exposure, the integrals in equation (5) may be converted to sums, resulting in the following equations for the PIF (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2003b, https://doi.org/10.1186/1478-7954-1-1):
 \deqn{PIF = \frac{\sum RR_{i} \times PE_{i} - \sum RR_{i}PE'_{i}}{\sum RR_{i}PE_{i}}}
 
 Where:
@@ -74,9 +74,9 @@ Where:
 
 \eqn{RR_{PWC}} = relative risk associated with the population weighted mean for the alternative exposure scenario
 
-Delta comparison approach
+\strong{Delta comparison approach}
 
-With the delta comparison the difference between two scenarios is obtained by substraction. The delta approach is suited for all comparison cases, and specifically for comparison of a situation now with a situation in the future.
+With the delta comparison the difference between two scenarios is obtained by subtraction. The delta approach is suited for all comparison cases, and specifically for comparison of a situation now with a situation in the future.
 }
 \examples{
 # Goal: comparison of two scenarios with delta approach
