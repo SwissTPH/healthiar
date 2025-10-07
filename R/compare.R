@@ -13,7 +13,7 @@
 #' @details
 #' Note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2 (e.g. comparison of two scenarios at the same time).
 #' @details
-#' Equations population impact fraction (PIF)
+#' \strong{Equations population impact fraction (PIF)}
 #' @details The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality when exposure to a risk factor is changed (for instance due to an intervention). The most general equation describing this mathematically is an integral form (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2003b, https://doi.org/10.1186/1478-7954-1-1):
 #' \deqn{PIF = \frac{\int RR(x)PE(x)dx - \int RR(x)PE'(x)dx}{\int RR(x)PE(x)dx}}
 #' @details Where:
@@ -36,7 +36,7 @@
 #' @details \eqn{RR_{PWC}} = relative risk associated with the population weighted mean exposure
 #' @details \eqn{RR_{PWC}} = relative risk associated with the population weighted mean for the alternative exposure scenario
 #' @details
-#' Delta comparison approach
+#' \strong{Delta comparison approach}
 #' @details
 #' With the delta comparison the difference between two scenarios is obtained by subtraction. The delta approach is suited for all comparison cases, and specifically for comparison of a situation now with a situation in the future.
 
