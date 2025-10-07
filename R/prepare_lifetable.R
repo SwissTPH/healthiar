@@ -11,9 +11,7 @@
 
 # DETAILS ######################################################################
 #' @details
-#' The conversion follows the methodology outlined in the "AirQ+ life table manual" section "Estimation of yearly values".
-#' @details
-#' Source: Health impact assessment of air pollution: AirQ+ life table manual. Copenhagen: WHO Regional Office for Europe; 2020. Licence: CC BY-NC-SA 3.0 IGO. https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf?sequence=1 (accessed on April 2025).
+#' The conversion follows the methodology of the WHO tool which is outlined in WHO 2020 (https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf?sequence=1).
 
 # DETAILS ######################################################################
 #' @details
