@@ -134,11 +134,11 @@ To convert multi-year/larger age groups to 1 year age groups use the function \c
 
 \strong{Life table methodology}
 
-The life table methodology of \code{attribute_lifetable()} follows that of the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003; https://doi.org/10.1136/jech.57.3.200).
+The life table methodology of \code{attribute_lifetable()} follows that of the WHO tool AirQ+, and is described in more detail by Miller & Hurley (2003, https://doi.org/10.1136/jech.57.3.200).
 
 In short, two scenarios are compared: 1) a scenario with the exposure level specified in the function ("exposed scenario") and 2) a scenario with no exposure ("unexposed scenario"). First, the entry and mid-year populations of the (first) year of analysis in the unexposed scenario is determined using modified survival probabilities. Second, age-specific population projections using scenario-specific survival probabilities are done for both scenarios. Third, by subtracting the populations in the unexposed scenario from the populations in the exposed scenario the premature deaths/years of life lost attributable to the exposure are determined.
 
-An expansive life table case study by Miller (2010) is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf (accessed April 2025)
+An expansive life table case study by Miller (2010) is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf.
 
 \emph{\strong{Determination of populations in the (first) year of analysis}}
 

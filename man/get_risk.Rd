@@ -27,7 +27,7 @@ get_risk(
 \item{exp}{Population exposure to the stressor (e.g. annual population-weighted mean).}
 }
 \value{
-This function returns the relative risk(s) at the specified exposure level(s), \emph{rr_at_exp} in the equations above.
+This function returns a numeric relative risk(s) at the specified exposure level(s), \emph{rr_at_exp} in the equations above.
 }
 \description{
 This function re-scales the relative risk from the increment value in the epidemiological study (e.g. for PM2.5 10 or 5 ug/m3) to the actual population exposure
@@ -52,7 +52,7 @@ This function re-scales the relative risk from the increment value in the epidem
 
 \strong{Sources}
 
-Log-linear & log-log ERF: Pozzer et al. (2022), https://doi.org/10.1029/2022GH000711; linear-log ERF: adapted based on Pozzer et al. (2022), https://doi.org/10.1029/2022GH000711
+For the log-linear, log-log and linear-log exposure-response function equations see Pozzer et al. 2022 (https://doi.org/10.1029/2022GH000711).
 }
 \examples{
 # Goal: scale relative risk to observed exposure level

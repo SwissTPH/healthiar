@@ -17,6 +17,9 @@ This function returns a \code{value} corresponding to the population attributabl
 \description{
 This function calculates the population attributable fraction (PAF) of a health outcome due to exposure to an environmental stressor
 }
+\details{
+For more information about the equations used by \code{get_paf} please see the function documentation of \code{attribute_health}.
+}
 \examples{
 # Goal: calculate PAF based on RR and the proportion of population exposed
 get_paf(rr = 1.062, prop_pop_exp = 1)

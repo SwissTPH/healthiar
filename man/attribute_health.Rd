@@ -188,11 +188,11 @@ Can be either \code{numeric} or \code{character}. If it is numeric, it refers to
 
 \code{duration_central}, \code{duration_lower}, \code{duration_upper}
 
-\emph{Only applicable in assessments of YLD (years lived with disability).} If the value of \code{duration_central} is 1 year, it refers to the prevalence-based approach, while a value above 1 year to the incidence-based approach (Kim, 2022, https://doi.org/10.3961/jpmph.21.597).
+\emph{Only applicable in assessments of YLD (years lived with disability).} If the value of \code{duration_central} is 1 year, it refers to the prevalence-based approach, while a value above 1 year to the incidence-based approach (Kim et al. 2022, https://doi.org/10.3961/jpmph.21.597).
 
 \strong{Equations (relative risk)}
 
-The most general equation describing the population attributable fraction (PAF) mathematically is an integral form
+The most general equation describing the population attributable fraction (PAF) mathematically is an integral form (GBD 2019 Risk Factors Collaborators 2020, <https://doi.org/10.1016/S0140-6736(20)30752-2>):
 \deqn{PAF = \frac{\int RR(x)PE(x)dx - 1}{\int RR(x)PE(x)dx}}
 
 Where:
@@ -203,7 +203,7 @@ PE(x) = population distribution of exposure
 
 RR(x) = relative risk at exposure level compared to the reference level
 
-If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF
+If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2011, https://iris.who.int/handle/10665/326424):
 \deqn{PAF = \frac{\sum RR_i \times PE_i - 1}{\sum RR_i \times PE_i}}
 
 Where:
@@ -214,7 +214,7 @@ i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 d
 
 \eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
 
-There is one alternative for the PAF for categorical exposure distribution that is commonly used. It is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical.
+There is one alternative for the PAF for categorical exposure distribution that is commonly used, which is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical (WHO 2003b, https://doi.org/10.1186/1478-7954-1-1; WHO 2011, https://iris.who.int/handle/10665/326424):
 \deqn{PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}}
 
 Where:
@@ -225,7 +225,7 @@ i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 d
 
 \eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
 
-Finally, if the exposure is provided as the population weighted mean concentration (PWC), the equation for the PAF is reduced to
+Finally, if the exposure is provided as the population weighted mean concentration (PWC), the equation for the PAF is reduced to (ETC HE 2022, <https://www.eionet.europa.eu/etcs/all-etc-reports>:
 \deqn{PAF = \frac{RR_{PWC} - 1}{RR_{PWC}}}
 Where \eqn{RR_PWC} is the relative risk associated with the population weighted mean exposure.
 
@@ -241,7 +241,7 @@ N = the number of cases of the exposure-specific health outcome that are attribu
 \eqn{PE_i} = population exposed (absolute number) to exposure levels of exposure category i
 
 \strong{Conversion of alternative risk measures to relative risks}
-For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
+For conversion of hazard ratios and/or odds ratios to relative risks refer to VanderWeele 2019 (<https://doi.org/10.1111/biom.13197>) and/or use the conversion tools developed by the Teaching group in EBM in 2022 for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 }
 \examples{
 # Goal: attribute lung cancer cases to population-weighted PM2.5 exposure

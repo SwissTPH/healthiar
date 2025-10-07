@@ -36,6 +36,13 @@ The results contain columns such as:
 \description{
 This function aggregates health impacts from multiple exposures to environmental stressors.
 }
+\details{
+\strong{Sources}
+
+For more information on the additive and combined approaches see Steenland & Armstrong 2006 (https://doi.org/10.1097/01.ede.0000229155.05644.43).
+
+For more information on the multiplicative approach see Jerrett et al. 2013 (https://doi.org/10.1164/rccm.201303-0609OC).
+}
 \examples{
 # Goal: determine aggregated health impacts from multiple exposures
 # Step 1: create assessment with exposure 1
