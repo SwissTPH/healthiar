@@ -18,19 +18,25 @@ prepare_mdi(
 \arguments{
 \item{geo_id_micro}{\code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_micro}) Argument must be entered for iterations. See Details for more info.}
 
-\item{edu}{\code{Numeric vector} indicating educational attainment as \% of individuals (at the age 18 or older) without a high school diploma (ISCED 0-2) per geo unit}
+\item{edu}{\code{Numeric vector} indicating educational attainment as \% of individuals
+(at the age 18 or older) without a high school diploma (ISCED 0-2) per geo unit}
 
-\item{unemployed}{\code{Numeric vector} containing \% of unemployed individuals in the active population (18-65) per geo unit}
+\item{unemployed}{\code{Numeric vector} containing \% of unemployed individuals in the active
+population (18-65) per geo unit}
 
-\item{single_parent}{\code{Numeric vector} containing single-parent households as \% of total households headed by a single parent per geo unit}
+\item{single_parent}{\code{Numeric vector} containing single-parent households as \% of total
+households headed by a single parent per geo unit}
 
-\item{pop_change}{\code{Numeric vector} containing population change as \% change in population over the previous 5 years (e.g., 2017-2021) per geo unit}
+\item{pop_change}{\code{Numeric vector} containing population change as \% change in population
+over the previous 5 years (e.g., 2017-2021) per geo unit}
 
-\item{no_heating}{\code{Numeric vector} containing \% of households without central heating per geo unit}
+\item{no_heating}{\code{Numeric vector} containing \% of households without central heating per
+geo unit}
 
 \item{n_quantile}{\code{Integer value} specifying the number of quantiles in the analysis.}
 
-\item{verbose}{\code{Boolean} indicating whether function output is printed to console. Default: \code{TRUE}.}
+\item{verbose}{\code{Boolean} indicating whether function output is printed to console.
+Default: \code{TRUE}.}
 }
 \value{
 Tibble with the columns
@@ -49,7 +55,9 @@ For the internal consistency check the function provides
 }
 }
 \description{
-This function creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
+This function creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal
+consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and
+other internal consistency checks
 }
 \details{
 The function outputs Cronbach's \eqn{\alpha}.
@@ -61,12 +69,16 @@ The function outputs Cronbach's \eqn{\alpha}.
   \item{\eqn{\alpha} < 0.6}{Poor reliability}
 }
 
-Data completeness and imputation: ensure the dataset is as complete as possible. You can try to impute missing data:
+Data completeness and imputation: ensure the dataset is as complete as possible. You can try to
+impute missing data:
 \itemize{
-  \item Time-Based Imputation: Use linear regression based on historical trends if prior years' data is complete.
-  \item Indicator-Based Imputation: Use multiple linear regression if the missing indicator correlates strongly with others.
+  \item Time-Based Imputation: Use linear regression based on historical trends if prior years'
+  data is complete.
+  \item Indicator-Based Imputation: Use multiple linear regression if the missing indicator
+  correlates strongly with others.
 }
-Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower than 0.7, consider alternative data sources or methods.
+Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower than 0.7,
+consider alternative data sources or methods.
 }
 \examples{
 # Goal: create the BEST-COST Multidimensional Deprivation Index for
