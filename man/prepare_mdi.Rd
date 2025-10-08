@@ -11,7 +11,8 @@ prepare_mdi(
   single_parent,
   pop_change,
   no_heating,
-  n_quantile
+  n_quantile,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ prepare_mdi(
 \item{no_heating}{\code{Numeric vector} containing \% of households without central heating per geo unit}
 
 \item{n_quantile}{\code{Integer value} specifying the number of quantiles in the analysis.}
+
+\item{verbose}{\code{Boolean} indicating whether function output is printed to console. Default: \code{TRUE}.}
 }
 \value{
 Tibble with the columns
@@ -49,7 +52,7 @@ For the internal consistency check the function provides
 This function creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
 }
 \details{
-The function prints Cronbach's \eqn{\alpha}.
+The function outputs Cronbach's \eqn{\alpha}.
 \describe{
   \item{\eqn{\alpha \geq} 0.9}{Excellent reliability}
   \item{0.8 \eqn{\leq \alpha <} 0.9}{Good reliability}
