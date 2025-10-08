@@ -1,11 +1,11 @@
 Package: healthiar
-Title: Quantify and Monetize the Burden of Disease Attributable to Exposures
-Version: 0.2.0.1251
+Title: Quantify and Monetize the Burden of Disease Attributable to Exposure
+Version: 0.2.1256
 Authors@R: c(
     person(given = "Alberto", family = "Castro", email = "alberto.castrofernandez@swisstph.ch", role = c("cre", "aut"), comment = c(ORCID = "0000-0002-4665-3299")),
     person(given = "Axel", family = "Luyten", role = c("aut"), comment = c(ORCID = "0000-0002-7005-5889")),
     person(given = "Arno", family = "Pauwels", role = c("ctb"), comment = c(ORCID = "0000-0001-7519-8080")),
-    person(given = "Liliana", family = "Vázquez Fernández", role = c("ctb"), comment = c(ORCID = "0000-0003-3778-9415")),
+    person(given = "Liliana", family = "Vazquez Fernandez", role = c("ctb"), comment = c(ORCID = "0000-0003-3778-9415")),
     person(given = "Vanessa", family = "Gorasso", role = c("ctb"), comment = c(ORCID = "0000-0001-6884-9316")),
     person(given = "Carl", family = "Michael Baravelli", role = c("ctb"), comment = c(ORCID = "0000-0001-7772-5315")),
     person(given = "Susanne", family = "Breitner", role = c("ctb"), comment = c(ORCID = "0000-0002-0956-6911")),
@@ -17,8 +17,24 @@ Authors@R: c(
     person(given = "Joao", family = "Vasco Santos", role = c("ctb"), comment = c(ORCID = "0000-0003-4696-1002")),
     person(given = "Anette", family = "Kocbach Bolling", role = c("ctb"), comment = c(ORCID = "0000-0003-4209-7448"))
     )
-Description: Quantify and monetize the burden of disease attributable to (environmental) exposures. This R package has been developed with a focus on air pollution and noise but can applied to other exposures. The initial development has been funded by the European Union project BEST-COST. Disclaimer: It is work in progress and the developers are not liable for any calculation errors or inaccuracies resulting from the use of this package.
+Description: This R package has been developed with a focus on air pollution and noise but can applied to other exposures. The initial development has been funded by the European Union project BEST-COST. Disclaimer: It is work in progress and the developers are not liable for any calculation errors or inaccuracies resulting from the use of this package.
+ References (in chronological order): 
+ WHO (2003a) "Assessing the environmental burden of disease at national and local levels" <https://www.who.int/publications/i/item/9241546204> (accessed October 2025);
+ WHO (2003b) "Comparative quantification of health risks: Conceptual framework and methodological issues" <https://doi.org/10.1186/1478-7954-1-1> (accessed October 2025);
+ Miller & Hurley (2003) "Life table methods for quantitative impact assessments in chronic mortality" <https://doi.org/10.1136/jech.57.3.200> (accessed October 2025);
+ Steenland & Armstrong (2006) "An Overview of Methods for Calculating the Burden of Disease Due to Specific Risk Factors" <https://doi.org/10.1097/01.ede.0000229155.05644.43> (accessed October 2025);
+ Miller (2010) "Report on estimation of mortality impacts of particulate air pollution in London" <https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf> (accessed October 2025);
+ WHO (2011) "Burden of disease from environmental noise" <https://iris.who.int/handle/10665/326424> (accessed October 2025);
+ Jerrett et al. (2013) "Spatial Analysis of Air Pollution and Mortality in California" <https://doi.org/10.1164/rccm.201303-0609OC> (accessed October 2025);
+ GBD 2019 Risk Factors Collaborators (2020) "Global burden of 87 risk factors in 204 countries and territories, 1990–2019" <https://doi.org/10.1016/S0140-6736(20)30752-2> (accessed October 2025);
+ VanderWeele (2019) "Optimal Approximate Conversions of Odds Ratios and Hazard Ratios to Risk Ratios" <https://doi.org/10.1111/biom.13197> (accessed October 2025);
+ WHO (2020) "Health impact assessment of air pollution: AirQ+ life table manual" <https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf?sequence=1> (accessed October 2025);
+ ETC HE (2022) "Health risk assessment of air pollution and the impact of the new WHO guidelines" <https://www.eionet.europa.eu/etcs/all-etc-reports> (accessed October 2025);
+ Kim et al. (2022) "DALY Estimation Approaches: Understanding and Using the Incidence-based Approach and the Prevalence-based Approach" <https://doi.org/10.3961/jpmph.21.597> (accessed October 2025);
+ Pozzer et al. (2022) "Mortality Attributable to Ambient Air Pollution: A Review of Global Estimates" <https://doi.org/10.1029/2022GH000711> (accessed October 2025);
+ Teaching group in EBM (2022) "Evidence-based medicine research helper" <https://ebm-helper.cn/en/Conv/HR_RR.html> (accessed October 2025).
 License: GPL (>= 3)
+Year: 2025
 Encoding: UTF-8
 RoxygenNote: 7.3.3
 Imports:
@@ -32,7 +48,6 @@ LazyData: true
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Suggests: 
-    ggplot2,
     sf,
     terra,
     testthat,

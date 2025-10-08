@@ -2,6 +2,10 @@
 # EXERCISES ########################################################################################
 ####################################################################################################
 
+# NOTE #############################################################################################
+## The R package is a work in progress - it could be that some of the exact code in this script will
+## cede to work with the latest package version at some point.
+
 # SETUP ############################################################################################
 install.packages(c("remotes", "knitr", "rmarkdown"))
 remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)
@@ -131,7 +135,7 @@ View(exdat_noise)
 exdat_noise <- exdat_noise |> filter(region == "total") # Filter for total (= country-wide) entries
 
 results_ar <- attribute_health(
-  approach_risk = "absolute_risk",
+  approach_risk = exdat_noise$risk_estimate_type,
   exp_central = ,
   pop_exp = ,
   erf_eq_central =

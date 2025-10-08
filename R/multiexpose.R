@@ -9,6 +9,16 @@
 #' @param exp_name_1,exp_name_2 \code{String} referring to the name of the environmental exposures 1 and 2
 #' @param approach_multiexposure \code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined".
 
+# DETAILS ######################################################################
+#' @details
+#' \strong{Sources}
+#' @details
+#' For more information on the additive and combined approaches see Steenland & Armstrong 2006 (https://doi.org/10.1097/01.ede.0000229155.05644.43).
+#' @details
+#' For more information on the multiplicative approach see Jerrett et al. 2013 (https://doi.org/10.1164/rccm.201303-0609OC).
+
+
+
 # VALUE ########################################################################
 #' @inherit attribute_master return
 

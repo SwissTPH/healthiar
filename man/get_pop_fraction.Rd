@@ -21,6 +21,9 @@ This function returns a \code{value} corresponding to the population attributabl
 \description{
 This function calculates the population impact fraction of a health outcome due to exposure to an environmental stressor
 }
+\details{
+For more information about the equations used please see the function documentation of \code{attribute_health}.
+}
 \examples{
 # TBD
 }

@@ -95,6 +95,9 @@ The results contain columns such as:
 \description{
 This function assesses the attributable health impacts in a new scenario 2 which is obtained by modifying an existing scenario 1. Supply an existing attribute output and specify how scenario 1 should be modified to create scenario 2.
 }
+\details{
+Please see the function documentation of \code{attribute_health} for the methods used.
+}
 \examples{
 # Goal: adjust an existing healthiar scenario and determine the health
 # impacts in the modified scenario

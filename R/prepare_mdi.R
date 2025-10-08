@@ -2,19 +2,28 @@
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and other internal consistency checks
+#' This function creates the BEST-COST Multidimensional Deprivation Index (MDI) and checks internal
+#' consistency of the single deprivation indicators using Cronbach's coefficient \eqn{\alpha} and
+#' other internal consistency checks
 
 # ARGUMENTS ####################################################################
 #' @inheritParams socialize
-#' @param edu \code{Numeric vector} indicating educational attainment as \% of individuals (at the age 18 or older) without a high school diploma (ISCED 0-2) per geo unit
-#' @param unemployed \code{Numeric vector} containing \% of unemployed individuals in the active population (18-65) per geo unit
-#' @param single_parent \code{Numeric vector} containing single-parent households as \% of total households headed by a single parent per geo unit
-#' @param pop_change \code{Numeric vector} containing population change as \% change in population over the previous 5 years (e.g., 2017-2021) per geo unit
-#' @param no_heating \code{Numeric vector} containing \% of households without central heating per geo unit
+#' @param edu \code{Numeric vector} indicating educational attainment as \% of individuals
+#' (at the age 18 or older) without a high school diploma (ISCED 0-2) per geo unit
+#' @param unemployed \code{Numeric vector} containing \% of unemployed individuals in the active
+#' population (18-65) per geo unit
+#' @param single_parent \code{Numeric vector} containing single-parent households as \% of total
+#' households headed by a single parent per geo unit
+#' @param pop_change \code{Numeric vector} containing population change as \% change in population
+#' over the previous 5 years (e.g., 2017-2021) per geo unit
+#' @param no_heating \code{Numeric vector} containing \% of households without central heating per
+#' geo unit
+#' @param verbose \code{Boolean} indicating whether function output is printed to console.
+#' Default: \code{TRUE}.
 
 # DETAILS ######################################################################
 #' @details
-#' The function prints Cronbach's \eqn{\alpha}.
+#' The function outputs Cronbach's \eqn{\alpha}.
 #' \describe{
 #'   \item{\eqn{\alpha \geq} 0.9}{Excellent reliability}
 #'   \item{0.8 \eqn{\leq \alpha <} 0.9}{Good reliability}
@@ -23,12 +32,16 @@
 #'   \item{\eqn{\alpha} < 0.6}{Poor reliability}
 #' }
 #' @details
-#' Data completeness and imputation: ensure the dataset is as complete as possible. You can try to impute missing data:
+#' Data completeness and imputation: ensure the dataset is as complete as possible. You can try to
+#' impute missing data:
 #' \itemize{
-#'   \item Time-Based Imputation: Use linear regression based on historical trends if prior years' data is complete.
-#'   \item Indicator-Based Imputation: Use multiple linear regression if the missing indicator correlates strongly with others.
+#'   \item Time-Based Imputation: Use linear regression based on historical trends if prior years'
+#'   data is complete.
+#'   \item Indicator-Based Imputation: Use multiple linear regression if the missing indicator
+#'   correlates strongly with others.
 #' }
-#' Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower than 0.7, consider alternative data sources or methods.
+#' Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower than 0.7,
+#' consider alternative data sources or methods.
 
 # VALUE ########################################################################
 #' @return
@@ -81,17 +94,17 @@ prepare_mdi <- function(
     single_parent,
     pop_change,
     no_heating,
-    n_quantile
+    n_quantile,
+    verbose = TRUE
 ) {
-
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("The 'ggplot2' package is required for this function. Please install it if you want to use this function.", call. = FALSE)}
 
   # Create helper functions ####################################################
 
   ## Create helper function that normalizes indicators using min-max scaling
   normalize <- function(x) {
-    return((x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE)))
+    return(
+      (x - base::min(x, na.rm = TRUE)) / (base::max(x, na.rm = TRUE) - base::min(x, na.rm = TRUE))
+      )
   }
 
   ## Create helper function that calculates total MDI Cronbach's
@@ -116,82 +129,185 @@ prepare_mdi <- function(
   )
 
   data <- data |>
-    dplyr::mutate(dplyr::across(c(edu, unemployed, single_parent, pop_change, no_heating), normalize, .names = "norm_{.col}"))
+    dplyr::mutate(
+      dplyr::across(
+        c(edu, unemployed, single_parent, pop_change, no_heating),
+        normalize,
+        .names = "norm_{.col}")
+    )
 
-  data$MDI <- base::with(data,
-                         (norm_edu + norm_unemployed + norm_single_parent + norm_pop_change + norm_no_heating) / 5)
+  data$MDI <- base::with(
+    data,
+    (norm_edu + norm_unemployed + norm_single_parent + norm_pop_change + norm_no_heating) / 5
+  )
 
   ## Create quantile ranks
   data$MDI_index <- dplyr::ntile(data$MDI, n_quantile)
 
-  # Save results
-  # write.csv(data, "Belgium_MDI_2021.csv", row.names = FALSE)
+  data |>
+    dplyr::relocate(MDI, .after = geo_id_micro) |>
+    dplyr::relocate(MDI_index, .after = MDI)
 
-  # Check internal consistency ###################################################
+  # Check internal consistency ################################################
 
-  indicators <- c("norm_edu", "norm_unemployed", "norm_single_parent", "norm_pop_change", "norm_no_heating")
+  indicators <- c(
+    "norm_edu",
+    "norm_unemployed",
+    "norm_single_parent",
+    "norm_pop_change",
+    "norm_no_heating"
+    )
 
-  # * Descriptive analysis #######################################################
-  print("DESCRIPTIVE STATISTICS")
-  print(
-    base::sapply(data[c(indicators, "MDI")], function(x)
-      tibble::tibble(MEAN = base::round(base::mean(x), 3), SD = base::round(stats::sd(x), 3), MIN = base::min(x), MAX = base::max(x)))
-  )
-
-  # * Boxplot ####################################################################
-
-  print(
-    ggplot2::ggplot(utils::stack(data[ , c(indicators, "MDI")]), ggplot2::aes(x = ind, y = values)) +
-      ggplot2::geom_boxplot(na.rm = TRUE) +
-      ggplot2::theme_minimal() +
-      ggplot2::ggtitle("Boxplot of Normalized Indicators and MDI") +
-      ggplot2::xlab("Indicator") +
-      ggplot2::ylab("Value")
-  )
-
-  #ggsave("boxplot.png")
-
-  # * Histogram ##################################################################
-  print(
-    ggplot2::ggplot(data, ggplot2::aes(x = MDI)) +
-      ggplot2::geom_histogram(na.rm = TRUE, ggplot2::aes(y = ggplot2::after_stat(density)), bins = 30, alpha = 0.5) +
-      ggplot2::geom_density(color = "red") +
-      ggplot2::theme_minimal() +
-      ggplot2::theme(legend.position = "none") +
-      ggplot2::scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.2)) +  # x-axis from 0 to 1, with ticks every 0.1
-      ggplot2::ggtitle("Histogram of MDI with Normal Curve") +
-      ggplot2::ylab("Density")
-  )
-  #ggsave("MDI_hist.png")
-
-  # * Pearson’s correlation coefficient for each indicator #######################
-  print("PEARSON'S CORRELATION COEFFICIENTS")
-  print(
-    stats::cor(data[,indicators], use = "pairwise.complete.obs", method = "pearson")
-  )
-
-  # * Cronbach's alpha ###########################################################
-  alpha_value <- cronbach_alpha(
+  # * Cronbach's alpha ########################################################
+  cronbachs_alpha_value <- cronbach_alpha(
     data[, indicators])
 
+  # * Descriptive analysis ####################################################
 
-  # Store non-ASCII characters as unicode escape to avoid errors
-  alpha <- "\u03B1"
-  higher_or_equal <- "\u2265"
-  lower_or_equal <- "\u2264"
+  descriptive_statistics <- base::sapply(data[c(indicators, "MDI")], function(x)
+    tibble::tibble(
+      MEAN = base::round(base::mean(x), 3),
+      SD = base::round(stats::sd(x), 3),
+      MIN = base::min(x),
+      MAX = base::max(x)
+      )
+    )
 
-  base::print(base::paste("CRONBACH'S", alpha, ":", base::round(alpha_value, 3)))
+  # * Pearson’s correlation coefficients for each indicator ####################
 
+  pearsons_corr_coeff <- stats::cor(
+    data[,indicators],
+    use = "pairwise.complete.obs",
+    method = "pearson"
+    )
 
-  if ( alpha_value >= 0.9 ) base::print(base::paste("Excellent reliability:", alpha, higher_or_equal, "0.9"))
-  if ( alpha_value >= 0.8 & alpha_value < 0.9 ) base::print(base::paste("Good reliability: 0.8", lower_or_equal, alpha, "< 0.9"))
-  if ( alpha_value >= 0.7 & alpha_value < 0.8 ) base::print(base::paste("Acceptable reliability: 0.7", lower_or_equal, alpha, "< 0.8"))
-  if ( alpha_value >= 0.6 & alpha_value < 0.7 ) base::print(base::paste("Questionable reliability: 0.6", lower_or_equal, alpha, "< 0.7"))
-  if ( alpha_value < 0.6 ) base::print(base::paste("Poor reliability:", alpha, "< 0.6"))
+  # * Boxplot #################################################################
 
-  return(
-    data |>
-      dplyr::relocate(MDI, .after = geo_id_micro) |>
-      dplyr::relocate(MDI_index, .after = MDI)
+  cols <- c(indicators, "MDI")
+
+  boxplot_code <- base::substitute({ # save code and data in a variable to plot it later)
+    graphics::boxplot(
+      data[ , cols],
+      main = "Boxplot of Normalized Indicators and MDI",
+      xlab = "Indicator",
+      ylab = "Value",
+      col = "lightgray",     # optional: add some color for clarity
+      border = "darkgray",   # mimic ggplot's minimal theme
+      outline = TRUE,
+      axes = FALSE
+    )
+    graphics::box(bty = "l")  # remove top and right box borders (like theme_minimal from ggplot2)
+    graphics::axis(2) # add y-axis
+    at_pos <- base::seq_along(cols)
+    graphics::axis(1, at = at_pos, labels = FALSE)  # Add custom x-axis tick marks
+    ## Add rotated labels
+    graphics::text(
+      x = at_pos,
+      ## position slightly below axis
+      y = graphics::par("usr")[3] - 0.02 * base::diff(graphics::par("usr")[3:4]),
+      labels = cols,
+      srt = 20,           # rotate 45 degrees
+      adj = 1,            # right-aligned
+      xpd = TRUE,         # allow drawing outside plot area
+      cex = 0.9
+    )
+  },
+  list(
+    cols = cols,
+    data = data
+    )
   )
+  boxplot <- boxplot_code
+
+  # * Histogram ###############################################################
+
+  histogram_code <- base::substitute({
+    graphics::hist(
+      data$MDI,
+      breaks = 30,
+      freq = FALSE, # use density instead of counts
+      col = rgb(0.2, 0.4, 0.8, 0.5),  # semi-transparent fill (like ggplot alpha)
+      main = "Histogram of MDI with Normal Curve",
+      xlab = "MDI",
+      ylab = "Density",
+      xlim = c(0, 1),
+      xaxt = "n" # suppress x-axis to add custom ticks
+    )
+    graphics::axis(1, at = seq(0, 1, by = 0.2)) # Add x-axis ticks every 0.2
+    ## Add density line
+    graphics::lines(
+      stats::density(data$MDI, na.rm = TRUE),
+      col = "red",
+      lwd = 2
+      )
+    graphics::box(bty = "l") # Optional minimal styling
+  },
+  list(
+    data = data[, "MDI"]
+  ))
+  histogram <- histogram_code
+
+  # PRINT OUTPUTS #############################################################
+  if (verbose == TRUE) { # only print if user has not specified verbose == FALSE
+
+    # * Cronbach's alpha ######################################################
+
+    # Store non-ASCII characters as unicode escape to avoid errors
+    alpha <- "\u03B1"
+    higher_or_equal <- "\u2265"
+    lower_or_equal <- "\u2264"
+
+    base::print(base::paste("CRONBACH'S", alpha, ":", base::round(cronbachs_alpha_value, 3)))
+
+    if ( cronbachs_alpha_value >= 0.9 ) {
+      base::print(base::paste("Excellent reliability:", alpha, higher_or_equal, "0.9"))
+    }
+    if ( cronbachs_alpha_value >= 0.8 & cronbachs_alpha_value < 0.9 ) {
+      base::print(base::paste("Good reliability: 0.8", lower_or_equal, alpha, "< 0.9"))
+      }
+    if ( cronbachs_alpha_value >= 0.7 & cronbachs_alpha_value < 0.8 ) {
+      base::print(base::paste("Acceptable reliability: 0.7", lower_or_equal, alpha, "< 0.8"))
+    }
+    if ( cronbachs_alpha_value >= 0.6 & cronbachs_alpha_value < 0.7 ) {
+      base::print(base::paste("Questionable reliability: 0.6", lower_or_equal, alpha, "< 0.7"))
+    }
+    if ( cronbachs_alpha_value < 0.6 ) {
+      base::print(base::paste("Poor reliability:", alpha, "< 0.6"))
+    }
+
+    # * Descriptive analysis ##################################################
+
+    base::print("DESCRIPTIVE STATISTICS")
+    base::print(descriptive_statistics)
+
+    # * Pearson’s correlation coefficients for each indicator #################
+
+    base::print("PEARSON'S CORRELATION COEFFICIENTS")
+    base::print(pearsons_corr_coeff)
+
+    # * Boxplot #################################################################
+
+    base::eval(boxplot_code)
+
+    # * Histogram ###############################################################
+
+    base::eval(histogram_code)
+
+  }
+
+    mdi_main <- data
+
+  output <-
+    base::list(
+      mdi_main = mdi_main,
+      mdi_detailed = base::list(
+        boxplot = boxplot,
+        histogram = histogram,
+        descriptive_statistics = descriptive_statistics,
+        cronbachs_alpha_value = cronbachs_alpha_value,
+        pearsons_corr_coeff = pearsons_corr_coeff
+      )
+    )
+
+  return(output)
 }

@@ -21,6 +21,9 @@ This function returns the population impact fraction as a \code{numeric value}
 \description{
 This function calculates the population impact fraction of a health outcome due to exposure to an environmental stressor
 }
+\details{
+For more information about the equations used by \code{get_pif} please see the function documentation of \code{compare}.
+}
 \examples{
 # Goal: calculate the population impact fraction (PIF)
 results <- get_pif(

@@ -32,7 +32,7 @@
 #' @details
 #' \strong{Sources}
 #' @details
-#' Log-linear & log-log ERF: Pozzer et al. (2022), https://doi.org/10.1029/2022GH000711; linear-log ERF: adapted based on Pozzer et al. (2022), https://doi.org/10.1029/2022GH000711
+#' For the log-linear, log-log and linear-log exposure-response function equations see Pozzer et al. 2022 (https://doi.org/10.1029/2022GH000711).
 
 # VALUE ########################################################################
 #' @returns

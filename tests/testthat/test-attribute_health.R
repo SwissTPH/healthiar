@@ -1127,6 +1127,26 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
   ## INPUT DATA DETAILS:
 })
 
+testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|", {
+
+  ## The inputs to the arguments are all vectors
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+          approach_risk = exdat_noise$risk_estimate_type,
+          exp_central = exdat_noise$exposure_mean,
+          pop_exp = exdat_noise$exposed,
+          erf_eq_central = exdat_noise$erf
+      )$health_main$impact_rounded,
+    expected =
+      c(174232 * 2) # Results on 2 October 2025; no comparison study
+  )
+
+  ## ASSESSOR: Axel Luyten
+  ## ASSESSMENT DETAILS: example_road_noise_niph.xlsx
+  ## INPUT DATA DETAILS: -
+})
+
 ### ITERATION ###################################################################
 
 testthat::test_that("no error ar iteration", {
