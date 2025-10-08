@@ -1160,8 +1160,6 @@ rm(results_multiplicative)
 
 ## Example: `prepare_mdi`
 
-*Note*: the `ggplot2` package must be installed in order to use this function!
-
 ### Function call
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
