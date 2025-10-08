@@ -45,7 +45,15 @@
 
 # VALUE ########################################################################
 #' @return
-#' This function returns a \code{tibble} with the columns
+#' This function returns a \code{list} containing
+#' 1) a \code{tibble} \code{mdi_main} with the columns
+#' \itemize{
+#'   \item \code{geo_id_micro} containing the \code{numeric} geo id's
+#'   \item \code{MDI} containing the \code{numeric} BEST-COST Multidimensional Deprivation Index values
+#'   \item \code{MDI_index} \code{numeric} decile based on values in the column \code{MDI}
+#'   \item additional columns containing the function input data
+#' }
+#' 2) a \code{list} \code{mdi_detailes} with the elements
 #' \itemize{
 #'   \item \code{geo_id_micro} containing the \code{numeric} geo id's
 #'   \item \code{MDI} containing the \code{numeric} BEST-COST Multidimensional Deprivation Index values
@@ -74,12 +82,17 @@
 #'   single_parent = exdat_prepare_mdi$single_parent,
 #'   pop_change = exdat_prepare_mdi$pop_change,
 #'   no_heating = exdat_prepare_mdi$no_heating,
-#'   n_quantile = 10
+#'   n_quantile = 10,
+#'   verbose = TRUE
 #' )
 #'
-#' results |>
+#' results$mdi_main |>
 #'   dplyr::select(geo_id_micro, MDI, MDI_index) |>
 #'   dplyr::slice(1:15)
+#'
+#' # Reproduce plots after the function call
+#' eval(results$mdi_detailed$boxplot)
+#' eval(results$mdi_detailed$histogram)
 
 #' @author Alberto Castro & Axel Luyten
 
@@ -159,6 +172,12 @@ prepare_mdi <- function(
     )
 
   # * Cronbach's alpha ########################################################
+
+  # Store non-ASCII characters as unicode escape to avoid errors
+  alpha <- "\u03B1"
+  higher_or_equal <- "\u2265"
+  lower_or_equal <- "\u2264"
+
   cronbachs_alpha_value <- cronbach_alpha(
     data[, indicators])
 
@@ -226,7 +245,7 @@ prepare_mdi <- function(
       data$MDI,
       breaks = 30,
       freq = FALSE, # use density instead of counts
-      col = rgb(0.2, 0.4, 0.8, 0.5),  # semi-transparent fill (like ggplot alpha)
+      col = grDevices::rgb(0.2, 0.4, 0.8, 0.5),  # semi-transparent fill (like ggplot alpha)
       main = "Histogram of MDI with Normal Curve",
       xlab = "MDI",
       ylab = "Density",
@@ -251,11 +270,6 @@ prepare_mdi <- function(
   if (verbose == TRUE) { # only print if user has not specified verbose == FALSE
 
     # * Cronbach's alpha ######################################################
-
-    # Store non-ASCII characters as unicode escape to avoid errors
-    alpha <- "\u03B1"
-    higher_or_equal <- "\u2265"
-    lower_or_equal <- "\u2264"
 
     base::print(base::paste("CRONBACH'S", alpha, ":", base::round(cronbachs_alpha_value, 3)))
 
