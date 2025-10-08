@@ -34,9 +34,6 @@ Moreover, the data frame includes columns such as:
 \description{
 This function distributes and store outputs by level of detail by aggregating or filtering impacts.
 }
-\examples{
-# TODO
-}
 \author{
 Alberto Castro & Axel Luyten
 }

@@ -170,9 +170,6 @@ prepare_mdi <- function(
   # * Cronbach's alpha ########################################################
 
   # Store non-ASCII characters as unicode escape to avoid errors
-  alpha <- "\u03B1"
-  higher_or_equal <- "\u2265"
-  lower_or_equal <- "\u2264"
 
   cronbachs_alpha_value <- cronbach_alpha(
     data[, indicators])
@@ -267,6 +264,11 @@ prepare_mdi <- function(
 
     # * Cronbach's alpha ######################################################
 
+    ## with alpha and >= & <= sympbols
+    alpha <- "\u03B1"
+    higher_or_equal <- "\u2265"
+    lower_or_equal <- "\u2264"
+
     base::print(base::paste("CRONBACH'S", alpha, ":", base::round(cronbachs_alpha_value, 3)))
 
     if ( cronbachs_alpha_value >= 0.9 ) {
@@ -284,6 +286,25 @@ prepare_mdi <- function(
     if ( cronbachs_alpha_value < 0.6 ) {
       base::print(base::paste("Poor reliability:", alpha, "< 0.6"))
     }
+
+    ## with just strings
+    # base::print(base::paste("CRONBACH'S alpha:", base::round(cronbachs_alpha_value, 3)))
+    #
+    # if ( cronbachs_alpha_value >= 0.9 ) {
+    #   base::print(base::paste("Excellent reliability: alpha >= 0.9"))
+    # }
+    # if ( cronbachs_alpha_value >= 0.8 & cronbachs_alpha_value < 0.9 ) {
+    #   base::print(base::paste("Good reliability: 0.8 <= alpha < 0.9"))
+    # }
+    # if ( cronbachs_alpha_value >= 0.7 & cronbachs_alpha_value < 0.8 ) {
+    #   base::print(base::paste("Acceptable reliability: 0.7 <= alpha < 0.8"))
+    # }
+    # if ( cronbachs_alpha_value >= 0.6 & cronbachs_alpha_value < 0.7 ) {
+    #   base::print(base::paste("Questionable reliability: 0.6 <= alpha < 0.7"))
+    # }
+    # if ( cronbachs_alpha_value < 0.6 ) {
+    #   base::print(base::paste("Poor reliability: alpha < 0.6"))
+    # }
 
     # * Descriptive analysis ##################################################
 

@@ -24,9 +24,6 @@ This function calculates the population impact fraction of a health outcome due 
 \details{
 For more information about the equations used please see the function documentation of \code{attribute_health}.
 }
-\examples{
-# TBD
-}
 \author{
 Alberto Castro & Axel Luyten
 }

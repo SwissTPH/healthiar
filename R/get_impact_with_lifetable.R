@@ -18,10 +18,6 @@
 #'  \item And many more.
 #' }
 
-# EXAMPLES #####################################################################
-#' @examples
-#' # TBD
-
 #' @author Alberto Castro & Axel Luyten
 
 #' @keywords internal

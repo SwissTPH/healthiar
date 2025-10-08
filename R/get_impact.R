@@ -20,10 +20,6 @@
 #'  \item And many more.
 #' }
 
-# EXAMPLES #####################################################################
-#' @examples
-#' # TODO
-
 #' @author Alberto Castro & Axel Luyten
 
 #' @keywords internal
