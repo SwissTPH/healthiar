@@ -1,4 +1,3 @@
-## COMMENTED OUT SO THAT FUNCTION OUTPUT DOESN'T SHOW UP IN TESTING OVERVIEW
 testthat::test_that("results correct", {
 
   exdat_prepare_mdi <- base::readRDS(testthat::test_path("data", "exdat_get_mdi.rds"))

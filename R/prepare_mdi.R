@@ -84,9 +84,6 @@ prepare_mdi <- function(
     verbose = TRUE
 ) {
 
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("The 'ggplot2' package is required for this function. Please install it if you want to use this function.", call. = FALSE)}
-
   # Create helper functions ####################################################
 
   ## Create helper function that normalizes indicators using min-max scaling
@@ -160,35 +157,54 @@ prepare_mdi <- function(
 
   # * Boxplot ####################################################################
 
-    print(
-      ggplot2::ggplot(utils::stack(data[ , c(indicators, "MDI")]), ggplot2::aes(x = ind, y = values)) +
-        ggplot2::geom_boxplot(na.rm = TRUE) +
-        ggplot2::theme_minimal() +
-        ggplot2::ggtitle("Boxplot of Normalized Indicators and MDI") +
-        ggplot2::xlab("Indicator") +
-        ggplot2::ylab("Value")
+    cols <- c(indicators, "MDI")
+    boxplot(
+      data[ , cols],
+      main = "Boxplot of Normalized Indicators and MDI",
+      xlab = "Indicator",
+      ylab = "Value",
+      col = "lightgray",     # optional: add some color for clarity
+      border = "darkgray",   # mimic ggplot's minimal theme
+      outline = TRUE,
+      axes = FALSE
     )
-
-    #ggsave("boxplot.png")
+    box(bty = "l")  # remove top and right box borders (like theme_minimal from ggplot2)
+    axis(2) # add y-axis
+    at_pos <- seq_along(cols)
+    axis(1, at = at_pos, labels = FALSE)  # Add custom x-axis tick marks
+    ## Add rotated labels
+    text(
+      x = at_pos,
+      y = par("usr")[3] - 0.02 * diff(par("usr")[3:4]),  # position slightly below axis
+      labels = cols,
+      srt = 20,           # rotate 45 degrees
+      adj = 1,            # right-aligned
+      xpd = TRUE,         # allow drawing outside plot area
+      cex = 0.9
+    )
 
   # * Histogram ##################################################################
-    print(
-      ggplot2::ggplot(data, ggplot2::aes(x = MDI)) +
-        ggplot2::geom_histogram(na.rm = TRUE, ggplot2::aes(y = ggplot2::after_stat(density)), bins = 30, alpha = 0.5) +
-        ggplot2::geom_density(color = "red") +
-        ggplot2::theme_minimal() +
-        ggplot2::theme(legend.position = "none") +
-        ggplot2::scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.2)) +  # x-axis from 0 to 1, with ticks every 0.1
-        ggplot2::ggtitle("Histogram of MDI with Normal Curve") +
-        ggplot2::ylab("Density")
-    )
-    #ggsave("MDI_hist.png")
 
-    # * Pearson’s correlation coefficient for each indicator #######################
-    print("PEARSON'S CORRELATION COEFFICIENTS")
-    print(
-      stats::cor(data[,indicators], use = "pairwise.complete.obs", method = "pearson")
-    )
+      hist(
+        data$MDI,
+        breaks = 30,
+        freq = FALSE,       # use density instead of counts
+        col = rgb(0.2, 0.4, 0.8, 0.5),  # semi-transparent fill (like ggplot alpha)
+        main = "Histogram of MDI with Normal Curve",
+        xlab = "MDI",
+        ylab = "Density",
+        xlim = c(0, 1),
+        xaxt = "n"          # suppress x-axis to add custom ticks
+      )
+      axis(1, at = seq(0, 1, by = 0.2)) # Add x-axis ticks every 0.2
+      lines(density(data$MDI, na.rm = TRUE), col = "red", lwd = 2) # Add density line
+      box(bty = "l") # Optional minimal styling
+
+  # * Pearson’s correlation coefficient for each indicator #######################
+      print("PEARSON'S CORRELATION COEFFICIENTS")
+      print(
+        stats::cor(data[,indicators], use = "pairwise.complete.obs", method = "pearson")
+      )
   }
 
   return(
