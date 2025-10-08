@@ -35,6 +35,5 @@ This tibble contains modelled ozone (\eqn{O_3}) exposure and chronic obstructive
 }
 \author{
 Alberto Castro & Axel Luyten
- @keywords internal
 }
-\keyword{datasets}
+\keyword{internal}

@@ -9,11 +9,13 @@
 
 # VALUE ########################################################################
 #' @returns
-#' A tibble with two columns: one for \code{age_group} and a second one for \code{ref_prop_pop}.
+#' A \code{tibble} with the columns
+#' \itemize{
+#'  \item \code{age_group} containing \code{numeric} age values
+#'  \item \code{ref_prop_pop} containing \code{numeric} values
+#'  }
 
 # EXAMPLES #####################################################################
-#' @examples
-#' # TODO
 
 #' @author Alberto Castro & Axel Luyten
 

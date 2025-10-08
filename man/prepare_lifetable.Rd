@@ -14,7 +14,12 @@ prepare_lifetable(age_group, population, bhd)
 \item{bhd}{\code{Numeric vector} referring to the baseline health data (deaths) by age group.}
 }
 \value{
-Returns population and deaths by one year age groups.
+This function returns a tibble containing the columns
+\itemize{
+ \item \code{population_for_attribute} containing \code{numeric} population values for each age
+ \item \code{bhd_for_attribute} containing \code{numeric} baseline health data values for each age
+ \item additional columns containing input data or results
+}
 }
 \description{
 This function determines populations and deaths by one year age groups.

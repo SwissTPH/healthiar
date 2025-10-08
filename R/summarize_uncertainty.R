@@ -43,8 +43,11 @@
 
 # VALUE ########################################################################
 #' @returns
-#' This function returns a summary uncertainty central estimate and correcponding lower and upper confidence intervals for the attributable health impacts by Monte Carlo simulation.
-
+#' #' This function adds two \code{list} of \code{tibbles} to the input variable specified to the argument \code{output_attribute}:
+#' \itemize{
+#'  \item \code{uncertainty_main} contains the \code{numeric} summary uncertainty central estimate and corresponding lower and upper confidence intervals for the attributable health impacts by Monte Carlo simulation.
+#'  \item \code{uncertainty_detailed} contains the \code{numeric} detailed simulation results
+#'  }
 # EXAMPLES #####################################################################
 #' @examples
 #' # Goal: obtain summary uncertainty for an existing attribute_health() output

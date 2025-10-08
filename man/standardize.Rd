@@ -14,7 +14,10 @@ standardize(output_attribute, age_group, ref_prop_pop = NULL)
 \item{ref_prop_pop}{\code{Numeric vector} specifying with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.}
 }
 \value{
-Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
+This function returns two \code{lists}:
+1) \code{health_main}, which contains a \code{tibble} with the age-standardized main results and
+
+2) \code{health_detailed}, which contains detailed age-standardized results
 }
 \description{
 This function obtains age-standardized health impacts based on multiple age-group specific assessments

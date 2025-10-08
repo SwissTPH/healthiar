@@ -48,7 +48,14 @@ socialize(
 \item{pop_fraction}{\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the population attributable fraction by age group and geographic unit.}
 }
 \value{
-Returns the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
+This function returns two lists:
+\itemize{
+ \item \code{social_main} containing the results
+ \item \code{social_detailed} containing input data and detailed results
+ }
+If the argument \code{output_attribute} was specified, then the two lists are added next to the existing attribute output.
+
+This function returns the \code{numeric} impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 }
 \description{
 This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{output_attribute}, it is assumed that all data come from a table and the argument refer to the columns of that table.

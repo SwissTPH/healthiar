@@ -39,10 +39,12 @@ geo unit}
 Default: \code{TRUE}.}
 }
 \value{
-Tibble with the columns
+This function returns a \code{tibble} with the columns
 \itemize{
-  \item geo_id_micro
-  \item BEST-COST Multidimensional Deprivation Index
+  \item \code{geo_id_micro} containing the \code{numeric} geo id's
+  \item \code{MDI} containing the \code{numeric} BEST-COST Multidimensional Deprivation Index values
+  \item \code{MDI_index} \code{numeric} decile based on values in the column \code{MDI}
+  \item additional columns containing the function input data
 }
 
 For the internal consistency check the function provides

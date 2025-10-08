@@ -24,9 +24,6 @@ Moreover, the data frame includes columns such as:
 \description{
 This function calculates the population attributable fraction (PAF) based on the input data and puts the results in additional columns joined to the input data frame.
 }
-\examples{
-# TODO
-}
 \author{
 Alberto Castro & Axel Luyten
 }

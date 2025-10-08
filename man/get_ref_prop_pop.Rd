@@ -10,13 +10,14 @@ get_ref_prop_pop(df)
 \item{df}{\code{Data frame} or \code{tibble} with the data by \code{geo_id_micro} and \code{age_group} including a column for \code{population}}
 }
 \value{
-A tibble with two columns: one for \code{age_group} and a second one for \code{ref_prop_pop}.
+A \code{tibble} with the columns
+\itemize{
+ \item \code{age_group} containing \code{numeric} age values
+ \item \code{ref_prop_pop} containing \code{numeric} values
+ }
 }
 \description{
 This function calculates reference proportion of population. To be used in \code{socialize()} and \code{standardize()} in case that \code{ref_prop_pop} is not provided.
-}
-\examples{
-# TODO
 }
 \author{
 Alberto Castro & Axel Luyten

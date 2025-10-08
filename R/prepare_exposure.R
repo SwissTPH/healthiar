@@ -12,7 +12,7 @@
 
 # VALUE ########################################################################
 #' @return
-#' This function returns a vector of population exposure values.
+#' This function returns a \code{numeric vector} of population exposure values.
 
 # EXAMPLES #####################################################################
 #' @examples
