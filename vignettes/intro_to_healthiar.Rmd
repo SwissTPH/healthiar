@@ -1187,12 +1187,12 @@ Function output includes
 -   `mdi_main`, a tibble containing the BEST-COST MDI
 
 ```{r eval=FALSE, include=TRUE, echo=TRUE}
-mdi |> 
+mdi$mdi_main |> 
   select(geo_id_micro, MDI, MDI_index)
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-mdi |> 
+mdi$mdi_main |> 
   dplyr::select(geo_id_micro, MDI, MDI_index) |> 
   knitr::kable()
 ```

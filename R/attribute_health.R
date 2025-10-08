@@ -182,7 +182,7 @@
 #'
 #' @examples
 #' # Goal: attribute disease cases to PM2.5 exposure in multiple geographic
-#' # units, such as municipalities, provinces, countries, …
+#' # units, such as municipalities, provinces, countries, ...
 #'
 #' results <- attribute_health(
 #'   geo_id_micro = c("Zurich", "Basel", "Geneva", "Ticino"),

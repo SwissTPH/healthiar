@@ -42,32 +42,28 @@
 #' }
 #' Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower than 0.7,
 #' consider alternative data sources or methods.
+#' @details
+#' See the example below for how to reproduce the boxplots and the histogram after the `prepare_mdi` function call.
 
 # VALUE ########################################################################
 #' @return
 #' This function returns a \code{list} containing
-#' 1) a \code{tibble} \code{mdi_main} with the columns
+#' 1) \code{mdi_main} (\code{tibble}) with the columns (selection);
 #' \itemize{
 #'   \item \code{geo_id_micro} containing the \code{numeric} geo id's
 #'   \item \code{MDI} containing the \code{numeric} BEST-COST Multidimensional Deprivation Index values
 #'   \item \code{MDI_index} \code{numeric} decile based on values in the column \code{MDI}
 #'   \item additional columns containing the function input data
 #' }
-#' 2) a \code{list} \code{mdi_detailes} with the elements
+#' 2) \code{mdi_detailed} (\code{list}) with several elements for the internal consistency check of the BEST-COST
+#'   Multidimensional Deprivation Index.
 #' \itemize{
-#'   \item \code{geo_id_micro} containing the \code{numeric} geo id's
-#'   \item \code{MDI} containing the \code{numeric} BEST-COST Multidimensional Deprivation Index values
-#'   \item \code{MDI_index} \code{numeric} decile based on values in the column \code{MDI}
-#'   \item additional columns containing the function input data
-#' }
-#' @return
-#' For the internal consistency check the function provides
-#' \itemize{
-#'   \item Cronbach's \eqn{\alpha} (including the reliability rating this value indicates)
-#'   \item Descriptive analysis of the input data
-#'   \item Boxplots of the single indicators
-#'   \item Histogram of the MDI's for the geo units with a normal distribution curve
-#'   \item Person's correlation coefficient (pairwise-comparisons)
+#'   \item \code{boxplot} (\code{language}) containing the code to reproduce the boxplot of the single indicators
+#'   \item \code{histogram} (\code{language}) containing the code to reproduce a histogram of the BEST-COST
+#'   Multidimensional Deprivation Index (MDI) values with a normal distribution curve
+#'   \item \code{descriptive_statistics} (\code{list} table of descriptive statistics (mean, SD, min, max) of the normalized input data and the MDI
+#'   \item \code{cronbachs_alpha_value} (\code{numeric value} See the Details section for the reliability rating this value indicates
+#'   \item \code{pearsons_corr_coeff} (\code{numeric vector}) Person's correlation coefficient (pairwise-comparisons)
 #' }
 
 # EXAMPLES #####################################################################

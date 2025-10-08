@@ -18,18 +18,16 @@ compare(
 \item{approach_comparison}{\code{String} showing the method of comparison. Options: "delta" or "pif".}
 }
 \value{
-This function returns two \code{lists}:
+This function returns a \code{list} containing:
 
-1) \code{health_main}, which contains a \code{tibble} with the main results and
-
-2) \code{health_detailed}, which contains detailed (and interim) results.
-
-The results contain columns such as:
+1) \code{health_main} (\code{tibble}), which contains with the main results and the columns (selection);
 \itemize{
- \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
  \item \code{impact} attributable health burden/impact
+ \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
  \item And many more
  }
+
+2) \code{health_detailed} (\code{list}), which contains detailed (and interim) results.
 }
 \description{
 This function calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.

@@ -38,9 +38,9 @@ If the argument \code{output_attribute} was specified, then the two lists are ad
 This function calculates discounted health impacts (without valuation).
 }
 \examples{
-# Goal: discount current attributable health impacts
+# Goal: discount attributable health impacts
 results <- discount(
-  impact = 2E4,
+  impact = 20000,
   discount_shape = "exponential",
   discount_rate = 0.03,
   n_years = 20

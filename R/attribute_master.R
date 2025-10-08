@@ -86,18 +86,16 @@
 
 # VALUE ########################################################################
 #' @returns
-#' This function returns two \code{lists}:
+#' This function returns a \code{list} containing:
 #' @returns
-#' 1) \code{health_main}, which contains a \code{tibble} with the main results and
-#' @returns
-#' 2) \code{health_detailed}, which contains detailed (and interim) results.
-#' @returns
-#' The results contain columns such as:
+#' 1) \code{health_main} (\code{tibble}), which contains with the main results and the columns (selection);
 #' \itemize{
-#'  \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
 #'  \item \code{impact} attributable health burden/impact
+#'  \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
 #'  \item And many more
 #'  }
+#' @returns
+#' 2) \code{health_detailed} (\code{list}), which contains detailed (and interim) results.
 
 #' @author Alberto Castro & Axel Luyten
 

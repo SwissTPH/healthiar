@@ -11,11 +11,6 @@
 # VALUE ########################################################################
 #' @returns This function returns warning or error messages if needed.
 
-# EXAMPLES #####################################################################
-#' @examples
-#' # TODO
-#'
-
 #' @author Alberto Castro & Axel Luyten
 
 #' @keywords internal

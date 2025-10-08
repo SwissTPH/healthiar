@@ -99,18 +99,16 @@ attribute_master(
 \item{time_horizon}{\code{Numeric value} specifying the time horizon (number of years) for which the attributable YLL or premature deaths are to be considered. See Details for more info. \emph{Optional argument.}}
 }
 \value{
-This function returns two \code{lists}:
+This function returns a \code{list} containing:
 
-1) \code{health_main}, which contains a \code{tibble} with the main results and
-
-2) \code{health_detailed}, which contains detailed (and interim) results.
-
-The results contain columns such as:
+1) \code{health_main} (\code{tibble}), which contains with the main results and the columns (selection);
 \itemize{
- \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
  \item \code{impact} attributable health burden/impact
+ \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
  \item And many more
  }
+
+2) \code{health_detailed} (\code{list}), which contains detailed (and interim) results.
 }
 \description{
 This INTERNAL function calculates the health impacts, mortality or morbidity, of an environmental stressor using a single value for baseline heath data, i.e. without life table.

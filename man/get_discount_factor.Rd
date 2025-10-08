@@ -51,6 +51,7 @@ This function calculates the discount factor based on discount rate. If the argu
 get_discount_factor(
   discount_rate = 0.07,
   n_years = 5
+ )
 }
 \author{
 Alberto Castro & Axel Luyten

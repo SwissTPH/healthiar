@@ -79,18 +79,16 @@ attribute_mod(
 \item{year_of_analysis}{\code{Numeric value} providing the first with exposure to the environmental stressor.}
 }
 \value{
-This function returns two \code{lists}:
+This function returns a \code{list} containing:
 
-1) \code{health_main}, which contains a \code{tibble} with the main results and
-
-2) \code{health_detailed}, which contains detailed (and interim) results.
-
-The results contain columns such as:
+1) \code{health_main} (\code{tibble}), which contains with the main results and the columns (selection);
 \itemize{
- \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
  \item \code{impact} attributable health burden/impact
+ \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
  \item And many more
  }
+
+2) \code{health_detailed} (\code{list}), which contains detailed (and interim) results.
 }
 \description{
 This function assesses the attributable health impacts in a new scenario 2 which is obtained by modifying an existing scenario 1. Supply an existing attribute output and specify how scenario 1 should be modified to create scenario 2.

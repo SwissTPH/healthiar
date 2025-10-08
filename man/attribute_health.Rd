@@ -76,18 +76,16 @@ attribute_health(
 \strong{\code{For attribute_health()}} this argument specifies the \strong{total population} (exposed + non-exposed) \strong{to calculate attributable impacts rate} per 100 000 population. See Details for more info. \emph{Optional argument.}}
 }
 \value{
-This function returns two \code{lists}:
+This function returns a \code{list} containing:
 
-1) \code{health_main}, which contains a \code{tibble} with the main results and
-
-2) \code{health_detailed}, which contains detailed (and interim) results.
-
-The results contain columns such as:
+1) \code{health_main} (\code{tibble}), which contains with the main results and the columns (selection);
 \itemize{
- \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
  \item \code{impact} attributable health burden/impact
+ \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
  \item And many more
  }
+
+2) \code{health_detailed} (\code{list}), which contains detailed (and interim) results.
 }
 \description{
 This function calculates the attributable health impacts (mortality or morbidity) due to
@@ -271,7 +269,7 @@ results <- attribute_health(
 results$health_main$impact_rounded # Attributable high annoyance cases
 
 # Goal: attribute disease cases to PM2.5 exposure in multiple geographic
-# units, such as municipalities, provinces, countries, …
+# units, such as municipalities, provinces, countries, ...
 
 results <- attribute_health(
   geo_id_micro = c("Zurich", "Basel", "Geneva", "Ticino"),

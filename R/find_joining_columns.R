@@ -13,10 +13,6 @@
 #' @returns
 #' This function returns a \code{vector} of strings
 
-# EXAMPLES #####################################################################
-#' @examples
-#' # TODO
-
 #' @author Alberto Castro & Axel Luyten
 
 #' @keywords internal
