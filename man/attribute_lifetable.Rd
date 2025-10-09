@@ -92,6 +92,10 @@ This function returns a \code{list} containing:
 \itemize{
  \item \code{results_raw} (\code{tibble}) containing results for each combination of input uncertainty
  \item \code{results_by_geo_id_micro} (\code{tibble}) containing results for each geographic unit under analysis (specified in \code{geo_id_micro} argument)
+ \item \code{results_by_year} (\code{tibble}) containing results by year
+ \item \code{results_by_sex} (\code{tibble}) containing results by sex
+ \item \code{results_by_age_group} (\code{tibble}) containing results by age group
+ \item \code{intermediate_calculations} (\code{tibble}) containing intermediate results, among others population projections (for both the exposed and unexposed scenarios) and impact by age and year stored in nested \code{tibbles}
  \item \code{input_table} (\code{tibble}) containing the inputs to each relevant argument
  \item \code{input_args} (\code{list}) containing all the argument inputs used in the background
  }

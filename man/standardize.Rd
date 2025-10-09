@@ -15,6 +15,7 @@ standardize(output_attribute, age_group, ref_prop_pop = NULL)
 }
 \value{
 This function returns a \code{list} containing:
+
 1) \code{health_main} (\code{tibble}) containing the age-standardized main results;
 
 2) \code{health_detailed} (\code{tibble}) containing the results per age group.
