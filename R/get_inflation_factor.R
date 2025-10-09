@@ -15,7 +15,7 @@
 #' \deqn{inflation\_factor = (1 + inflation\_rate)^{n\_years}}
 
 # VALUE ########################################################################
-#' @returns This function returns the numeric inflation factor.
+#' @returns This function returns the \code{numeric} inflation factor.
 
 
 # EXAMPLES #####################################################################
