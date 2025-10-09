@@ -20,14 +20,24 @@ compare(
 \value{
 This function returns a \code{list} containing:
 
-1) \code{health_main} (\code{tibble}), which contains with the main results and the columns (selection);
+1) \code{health_main} (\code{tibble}) containing the main results from the comparison;
 \itemize{
- \item \code{impact} attributable health burden/impact
- \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
+ \item \code{impact} (\code{numeric} column) difference in attributable health burden/impact between scenario 1 and 2
+ \item \code{impact_scen_1} (\code{numeric} column) attributable health impact of scenario 1
+ \item \code{impact_scen_2} (\code{numeric} column) attributable health impact of scenario 2
  \item And many more
  }
 
-2) \code{health_detailed} (\code{list}), which contains detailed (and interim) results.
+2) \code{health_detailed} (\code{list}) containing detailed (and interim) results from the comparison.
+\itemize{
+ \item \code{results_raw} (\code{tibble}) containing comparison results for each combination of input uncertainty for both scenario 1 and 2
+ \item \code{results_by_geo_id_micro} (\code{tibble}) containing comparison results for each geographic unit under analysis (specified in \code{geo_id_micro} argument)
+ \item \code{results_by_geo_id_macro} (\code{tibble}) containing comparison results for each aggregated geographic unit under analysis (specified in \code{geo_id_macro} argument))
+ \item \code{input_table} (\code{list}) containing the inputs to each relevant argument for both scenario 1 and 2
+ \item \code{input_args} (\code{list}) containing all the argument inputs for both scenario 1 and 2 used in the background
+ \item \code{scen_1} (\code{tibble}) containing results for scenario 1
+ \item \code{scen_2} (\code{tibble}) containing results for scenario 2
+ }
 }
 \description{
 This function calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
