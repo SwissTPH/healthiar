@@ -17,8 +17,6 @@
 #' @details
 #' For more information on the multiplicative approach see Jerrett et al. 2013 (https://doi.org/10.1164/rccm.201303-0609OC).
 
-
-
 # VALUE ########################################################################
 #' @inherit attribute_master return
 
