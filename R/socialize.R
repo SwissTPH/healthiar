@@ -46,15 +46,22 @@
 
 # VALUE ########################################################################
 #' @returns
-#' This function returns two lists:
+#' This function returns a \code{list} containing the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles:
+#' @returns
+#' 1) \code{social_main} (\code{tibble}) containing the main results;
 #' \itemize{
-#'  \item \code{social_main} containing the results
-#'  \item \code{social_detailed} containing input data and detailed results
-#'  }
+#'  \item \code{difference_value} (\code{numeric} column) attributable health burden/impact due to differences in deprivation levels
+#'  \item And more
+#' }
+#' @returns
+#' 2) \code{social_detailed} (\code{list}) containing detailed (and interim) results.
+#' \itemize{
+#'  \item \code{input_data_with_quantile} (\code{tibble}) containing input data and information about the social quantile
+#'  \item \code{results_all_parameters} (\code{tibble}) containing deprivation-related results
+#'  \item \code{parameters_overall} (\code{tibble}) containing overall results for different input variables
+#'  \item \code{parameters_per_quantile} (\code{tibble}) containing quantile-specific results for different input variables
+#' }
 #' If the argument \code{output_attribute} was specified, then the two lists are added next to the existing attribute output.
-
-#'
-#' This function returns the \code{numeric} impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles.
 
 # EXAMPLES #####################################################################
 #' @examples
