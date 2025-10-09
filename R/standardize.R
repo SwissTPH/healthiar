@@ -8,10 +8,10 @@
 #' @inheritParams socialize
 
 # VALUE ########################################################################
-#' @returns This function returns two \code{lists}:
-#' 1) \code{health_main}, which contains a \code{tibble} with the age-standardized main results and
+#' @returns This function returns a \code{list} containing:
+#' 1) \code{health_main} (\code{tibble}) containing the age-standardized main results;
 #' @returns
-#' 2) \code{health_detailed}, which contains detailed age-standardized results
+#' 2) \code{health_detailed} (\code{tibble}) containing the results per age group.
 
 # EXAMPLES #####################################################################
 #' @examples
