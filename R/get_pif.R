@@ -16,7 +16,7 @@
 
 # VALUE ########################################################################
 #' @returns
-#' This function returns the population impact fraction as a \code{numeric value}
+#' This function returns the population impact fraction as a \code{numeric value}.
 
 # EXAMPLES #####################################################################
 #' @examples
