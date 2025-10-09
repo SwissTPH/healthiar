@@ -81,14 +81,20 @@ attribute_mod(
 \value{
 This function returns a \code{list} containing:
 
-1) \code{health_main} (\code{tibble}), which contains with the main results and the columns (selection);
+1) \code{health_main} (\code{tibble}) containing the main results;
 \itemize{
- \item \code{impact} attributable health burden/impact
- \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
+ \item \code{impact} (\code{numeric} column) attributable health burden/impact
+ \item \code{pop_fraction} (\code{numeric} column) population attributable fraction; only applicable in relative risk assessments
  \item And many more
  }
 
-2) \code{health_detailed} (\code{list}), which contains detailed (and interim) results.
+2) \code{health_detailed} (\code{list}) containing detailed (and interim) results.
+\itemize{
+ \item \code{results_raw} (\code{tibble}) containing results for each combination of input uncertainty
+ \item \code{results_by_geo_id_micro} (\code{tibble}) containing results for each geographic unit under analysis (specified in \code{geo_id_micro} argument)
+ \item \code{input_table} (\code{tibble}) containing the inputs to each relevant argument
+ \item \code{input_args} (\code{list}) containing all the argument inputs used in the background
+ }
 }
 \description{
 This function assesses the attributable health impacts in a new scenario 2 which is obtained by modifying an existing scenario 1. Supply an existing attribute output and specify how scenario 1 should be modified to create scenario 2.

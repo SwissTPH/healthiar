@@ -36,23 +36,13 @@
 #' @inheritParams attribute_master
 
 # DETAILS ######################################################################
-#' @details
-#' \strong{Assessment of multiple geographic units}
-#' @details
-#' To assess the attributable health impact/burden across multiple geographic units with \code{attribute_health()}, you must specify the argument \code{geo_id_micro} and (optionally) \code{geo_id_macro}, in addition to the other required function arguments.
-#' @details
-#' The length of the input vectors to the function arguments must be
-#' @details
-#' \deqn{\text{length input vectors} = \text{number of geo units} \times \text{number of exposure categories} \times \text{number of age groups (if entered)} \times \text{number of sex groups (if entered),}}
-#' @details
-#' i.e. there must be one line / observation for each specific combination of geo unit, exposure category, age and sex group.
-#' @details
-#' Alternatively, for those arguments that are independent of location (e.g. \code{approach_risk}, \code{rr_...}, \code{erf_shape}, ...), you can enter a single value, which will be recycled to match the length of the other geo unit-specific input data. Additional categories can be passed on via the \code{info} argument.
 
 #' @details
 #' \strong{What you put in is what you get out}
 #' @details
-#' The health metric you put in (e.g. absolute disease cases, deaths per 100 000 population, DALYs, prevalence, incidence, ...) is the one you get out. Exception: if you enter a disability weight (to the \code{dw_...} arguments) the attributable impact will be in YLD (years lived with disability).
+#' The health metric you put in (e.g. absolute disease cases, deaths per 100 000 population, DALYs, prevalence, incidence, ...) is the one you get out.
+#' @details
+#' \emph{Exception}: if you enter a disability weight (via the \code{dw_...} arguments) the attributable impact will be in YLD.
 
 #' @details
 #' \strong{Function arguments}
@@ -109,44 +99,59 @@
 #' \emph{Only applicable in assessments of YLD (years lived with disability).} If the value of \code{duration_central} is 1 year, it refers to the prevalence-based approach, while a value above 1 year to the incidence-based approach (Kim et al. 2022, https://doi.org/10.3961/jpmph.21.597).
 
 #' @details
+#' \strong{Assessment of multiple geographic units}
+#' @details
+#' To assess the attributable health impact/burden across multiple geographic units with \code{attribute_health()}, you must specify the argument \code{geo_id_micro} and (optionally) \code{geo_id_macro}, in addition to the other required function arguments.
+#' @details
+#' The length of the input vectors to the function arguments must be:
+#' @details
+#' \deqn{\text{length input vectors} = \text{number of geo units} \times \text{number of exposure categories}}
+#' @details
+#' \deqn{(  \times \text{number of age groups (if entered)} \times \text{number of sex groups (if entered) )}}
+#' @details
+#' I.e. there must be one line / observation for each specific combination of geo unit, exposure category, age and sex group.
+#' @details
+#' Alternatively, for those arguments that are independent of location (e.g. \code{approach_risk}, \code{rr_...}, \code{erf_shape}, ...), you can enter a single value, which will be recycled to match the length of the other geo unit-specific input data. Additional categories can be passed on via the \code{info} argument.
+
+#' @details
 #' \strong{Equations (relative risk)}
 #' @details
-#' The most general equation describing the population attributable fraction (PAF) mathematically is an integral form (GBD 2019 Risk Factors Collaborators 2020, <https://doi.org/10.1016/S0140-6736(20)30752-2>):
+#' The most general equation describing the population attributable fraction (PAF) mathematically is an integral form (GBD 2019 Risk Factors Collaborators 2020, https://doi.org/10.1016/S0140-6736(20)30752-2):
 #' \deqn{PAF = \frac{\int RR(x)PE(x)dx - 1}{\int RR(x)PE(x)dx}}
 #' @details Where:
-#' @details x     = exposure level
-#' @details PE(x) = population distribution of exposure
-#' @details RR(x) = relative risk at exposure level compared to the reference level
+#' @details \eqn{x} = exposure level
+#' @details \eqn{PE(x)} = population distribution of exposure
+#' @details \eqn{RR(x)} = relative risk at exposure level compared to the reference level
 #' @details
 #' If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2011, https://iris.who.int/handle/10665/326424):
 #' \deqn{PAF = \frac{\sum RR_i \times PE_i - 1}{\sum RR_i \times PE_i}}
 #' @details Where:
-#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
+#' @details \eqn{i} = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
 #' @details \eqn{PE_i} = fraction of population in exposure category i
 #' @details \eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
 #' @details
 #' There is one alternative for the PAF for categorical exposure distribution that is commonly used, which is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical (WHO 2003b, https://doi.org/10.1186/1478-7954-1-1; WHO 2011, https://iris.who.int/handle/10665/326424):
 #' \deqn{PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}}
 #' @details Where:
-#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
+#' @details \eqn{i} = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
 #' @details \eqn{PE_i} = fraction of population in exposure category i
 #' @details \eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
 #' @details
-#' Finally, if the exposure is provided as the population weighted mean concentration (PWC), the equation for the PAF is reduced to (ETC HE 2022, <https://www.eionet.europa.eu/etcs/all-etc-reports>:
+#' Finally, if the exposure is provided as the population weighted mean concentration (PWC), the equation for the PAF is reduced to (ETC HE 2022, https://www.eionet.europa.eu/etcs/all-etc-reports:
 #' \deqn{PAF = \frac{RR_{PWC} - 1}{RR_{PWC}}}
-#' Where \eqn{RR_PWC} is the relative risk associated with the population weighted mean exposure.
+#' Where \eqn{RR_{PWC}} is the relative risk associated with the population weighted mean exposure.
 
 #' @details
 #' \strong{Equation (absolute risk)}
 #' \deqn{N = \sum AR_i\times PE_i}
 #' @details Where:
-#' @details N = the number of cases of the exposure-specific health outcome that are attributed to the exposure
+#' @details \eqn{N} = the number of cases of the exposure-specific health outcome that are attributed to the exposure
 #' @details \eqn{AR_i} = absolute risk associated with the mean exposure level of exposure category i
 #' @details \eqn{PE_i} = population exposed (absolute number) to exposure levels of exposure category i
 
 #' @details
 #' \strong{Conversion of alternative risk measures to relative risks}
-#' For conversion of hazard ratios and/or odds ratios to relative risks refer to VanderWeele 2019 (<https://doi.org/10.1111/biom.13197>) and/or use the conversion tools developed by the Teaching group in EBM in 2022 for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
+#' For conversion of hazard ratios and/or odds ratios to relative risks refer to VanderWeele 2019 (https://doi.org/10.1111/biom.13197) and/or use the conversion tools developed by the Teaching group in EBM in 2022 for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
 # VALUE ########################################################################
 #' @inherit attribute_master return
