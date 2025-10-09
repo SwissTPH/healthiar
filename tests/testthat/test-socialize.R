@@ -1,20 +1,18 @@
 # QUANTITATIVE TEST ############################################################
 testthat::test_that("results the same |fake_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "social_data.rds"))
-
   att_age <-
     healthiar::attribute_health(
       age_group = rep(c("below_40", "above_40"), each = 9037),
-      exp_central = c(data$PM25_MEAN, data$PM25_MEAN-0.1),
+      exp_central = c(exdat_socialize$PM25_MEAN, exdat_socialize$PM25_MEAN-0.1),
       cutoff_central = 0,
       rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
       erf_shape = "log_linear",
       rr_increment = 10,
-      bhd_central = c(data$MORTALITY_TOTAL,
-                      ifelse(data$MORTALITY_TOTAL-10<0, 0, data$MORTALITY_TOTAL-10)),
-      population = c(data$POPULATION, ifelse(data$POPULATION-10<0, 0, data$POPULATION-10)),
-      geo_id_micro = rep(data$CS01012020, 2))
+      bhd_central = c(exdat_socialize$MORTALITY_below_40,
+                      ifelse(exdat_socialize$MORTALITY_below_40-10<0, 0, exdat_socialize$MORTALITY_below_40-10)),
+      population = c(exdat_socialize$POPULATION_below_40, ifelse(exdat_socialize$POPULATION_below_40-10<0, 0, exdat_socialize$POPULATION_below_40-10)),
+      geo_id_micro = rep(exdat_socialize$CS01012020, 2))
 
   testthat::expect_equal(
     object =
@@ -22,7 +20,7 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
         age_group = c("below_40", "above_40"), # They have to be the same in socialize() and in attribute_health()
         ref_prop_pop = c(0.5, 0.5),
         output_attribute = att_age,
-        geo_id_micro = data$CS01012020,
+        geo_id_micro = exdat_socialize$CS01012020,
         social_indicator = data$score,
         n_quantile = 10,
         increasing_deprivation = TRUE)$social_main$difference_value |> base::round(2),
@@ -287,20 +285,18 @@ testthat::test_that("error if not integer var", {
 
 testthat::test_that("error if age_group does not match in output_attribute", {
 
-  data <- base::readRDS(testthat::test_path("data", "social_data.rds"))
-
   att_age <-
     healthiar::attribute_health(
       age_group = rep(c("below_40", "above_40"), each = 9037),
-      exp_central = c(data$PM25_MEAN, data$PM25_MEAN-0.1),
+      exp_central = c(exdat_socialize$PM25_MEAN, exdat_socialize$PM25_MEAN-0.1),
       cutoff_central = 0,
       rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
       erf_shape = "log_linear",
       rr_increment = 10,
-      bhd_central = c(data$MORTALITY_TOTAL,
-                      ifelse(data$MORTALITY_TOTAL-10<0, 0, data$MORTALITY_TOTAL-10)),
-      population = c(data$POPULATION, ifelse(data$POPULATION-10<0, 0, data$POPULATION-10)),
-      geo_id_micro = rep(data$CS01012020, 2))
+      bhd_central = c(exdat_socialize$MORTALITY_below_40,
+                      ifelse(exdat_socialize$MORTALITY_below_40-10<0, 0, exdat_socialize$MORTALITY_below_40-10)),
+      population = c(exdat_socialize$POPULATION_below_40, ifelse(exdat_socialize$POPULATION_below_40-10<0, 0, exdat_socialize$POPULATION_below_40-10)),
+      geo_id_micro = rep(exdat_socialize$CS01012020, 2))
 
   testthat::expect_error(
     object =
@@ -308,8 +304,8 @@ testthat::test_that("error if age_group does not match in output_attribute", {
         age_group = c("40_minus", "40_plus"), # Different age_group to force error
         ref_prop_pop = c(0.5, 0.5),
         output_attribute = att_age,
-        geo_id_micro = data$CS01012020,
-        social_indicator = data$score,
+        geo_id_micro = exdat_socialize$CS01012020,
+        social_indicator = exdat_socialize$score,
         n_quantile = 10,
         increasing_deprivation = TRUE),
     regexp =  "age_group must be identical to the values in the column age_group in output_attribute."
