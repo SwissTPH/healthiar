@@ -1,6 +1,9 @@
 ---
 title: "Intro to healthiar"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
 vignette: >
   %\VignetteIndexEntry{intro_to_healthiar}
   %\VignetteEngine{knitr::rmarkdown}
@@ -1144,11 +1147,11 @@ rm(results_no2_copd, results_pm_copd)
 
 ### Main results
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE, include=TRUE, echo=TRUE}
 results_multiplicative$health_main
 ```
 
-```{r eval=TRUE, include=FALSE, echo=FALSE}
+```{r eval=TRUE, include=TRUE, echo=FALSE}
 results_multiplicative$health_main |> 
   dplyr::select(impact_rounded) |> 
   knitr::kable()
@@ -1162,7 +1165,7 @@ rm(results_multiplicative)
 
 ### Function call
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=TRUE, include=TRUE, echo=TRUE}
 mdi <- prepare_mdi(
   geo_id_micro = exdat_prepare_mdi$id,
   edu = exdat_prepare_mdi$edu,
@@ -1170,55 +1173,56 @@ mdi <- prepare_mdi(
   single_parent = exdat_prepare_mdi$single_parent,
   pop_change = exdat_prepare_mdi$pop_change,
   no_heating = exdat_prepare_mdi$no_heating,
-  n_quantile = 10
+  n_quantile = 10,
+  verbose = FALSE
 )
 ```
 
-```{r, eval=FALSE, include=FALSE, echo=FALSE}
-rm(mdi)
-```
+*Note*: `verbose = FALSE` suppresses any output to the console (default: `verbose = TRUE`, i.e. with printing turned on).
 
 ### Main results
 
-```{r eval=FALSE, include=TRUE, echo=FALSE}
-mdi <- prepare_mdi(
-  geo_id_micro = exdat_prepare_mdi$id,
-  edu = exdat_prepare_mdi$edu,
-  unemployed = exdat_prepare_mdi$unemployed,
-  single_parent = exdat_prepare_mdi$single_parent,
-  pop_change = exdat_prepare_mdi$pop_change,
-  no_heating = exdat_prepare_mdi$no_heating,
-  n_quantile = 10
-)
-```
-
 Function output includes
 
--   In the console
+-   `mdi_main`, a tibble containing the BEST-COST MDI
+
+```{r eval=FALSE, include=TRUE, echo=TRUE}
+mdi$mdi_main |> 
+  select(geo_id_micro, MDI, MDI_index)
+```
+
+```{r eval=TRUE, include=TRUE, echo=FALSE}
+mdi$mdi_main |> 
+  dplyr::select(geo_id_micro, MDI, MDI_index) |> 
+  knitr::kable()
+```
+
+### Detailed results
+
+-   `mdi_detailed`
 
     -   DESCRIPTIVE STATISTICS
 
     -   PEARSON'S CORRELATION COEFFICIENTS
 
-    -   PEARSON'S CORRELATION COEFFICIENTS
-
     -   CRONBACH'S α, including the reliability rating this value indicates
 
--   Plots
+    -   Code for boxplots of the single indicators
 
-    -   Boxplots of the single indicators
+    -   Code for histogram of the MDI's for the geo units with a normal distribution curve
 
-    -   Histogram of the MDI's for the geo units with a normal distribution curve
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-mdi |> 
-  select(geo_id_micro, MDI, MDI_index)
+To reproduce the boxlots run
+```{r eval=TRUE, include=TRUE, echo=TRUE}
+eval(mdi$mdi_detailed$boxplot)
+```
+Analogeously, to reproduce the histogram run
+```{r eval=TRUE, include=TRUE, echo=TRUE}
+eval(mdi$mdi_detailed$histogram)
 ```
 
-```{r eval=FALSE, include=TRUE, echo=FALSE}
-mdi |> 
-  dplyr::select(geo_id_micro, MDI, MDI_index) |> 
-  knitr::kable()
+
+```{r, eval=TRUE, include=FALSE, echo=FALSE}
+rm(mdi)
 ```
 
 # Post-`healthiar` workflow

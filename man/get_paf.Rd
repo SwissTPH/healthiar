@@ -12,7 +12,7 @@ get_paf(rr_at_exp, prop_pop_exp)
 \item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}}
 }
 \value{
-This function returns the population attributable fraction as a \code{numeric value}
+This function returns the population attributable fraction as a \code{numeric value}.
 }
 \description{
 This function calculates the population attributable fraction (PAF) of a health outcome due to exposure to an environmental stressor

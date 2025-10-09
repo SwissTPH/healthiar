@@ -1,5 +1,5 @@
-# QUANTITATIVE TEST ############################################################
-## YLL from lifetable ###########################################################
+# QUANTITATIVE TEST ###########################################################
+## YLL from lifetable #########################################################
 
 testthat::test_that("results correct |pathway_daly|yll_from_lifetable_TRUE|output_1_type_attribute|output_2_type_attribute|", {
 
@@ -218,6 +218,8 @@ testthat::test_that("results correct using 2 pif comparisons as inputs |pathway_
   )
 
 })
+
+### ITERATION #################################################################
 
 testthat::test_that("results correct using 2 delta iteration comparisons as inputs |pathway_daly|yll_from_lifetable_TRUE|output_1_type_compare|output_2_type_compare|", {
 

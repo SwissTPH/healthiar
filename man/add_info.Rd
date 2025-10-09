@@ -17,10 +17,6 @@ This function returns a \code{data frame} with binding the input data with the i
 \description{
 This function adds meta-information of the input data within the data frame containing the input data.
 }
-\examples{
-# TODO
-
-}
 \author{
 Alberto Castro & Axel Luyten
 }

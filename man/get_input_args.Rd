@@ -12,9 +12,6 @@ This function returns a \code{list} with all input data together by argument
 \description{
 This function compiles the input data of the main function and calculates the population attributable fraction based on the input data (all in one data frame)
 }
-\examples{
-# TODO
-}
 \author{
 Alberto Castro & Axel Luyten
 }

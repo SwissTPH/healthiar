@@ -16,9 +16,6 @@ check_if_args_identical(args_a, args_b, names_to_check)
 \description{
 This function checks if two different sets of arguments are identical
 }
-\examples{
-# TODO
-}
 \author{
 Alberto Castro & Axel Luyten
 }

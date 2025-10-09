@@ -43,11 +43,17 @@
 
 # VALUE ########################################################################
 #' @returns
-#' #' This function adds two \code{list} of \code{tibbles} to the input variable specified to the argument \code{output_attribute}:
+#' This function returns a \code{list} containing:
+#' @returns
+#' 1) \code{uncertainty_main} (\code{tibble}) containing the \code{numeric} summary uncertainty central estimate and corresponding lower and upper confidence intervals for the attributable health impacts obtained through Monte Carlo simulation;
+#' @returns
+#' 2) \code{uncertainty_detailed} (\code{list}) containing detailed (and interim) results.
 #' \itemize{
-#'  \item \code{uncertainty_main} contains the \code{numeric} summary uncertainty central estimate and corresponding lower and upper confidence intervals for the attributable health impacts by Monte Carlo simulation.
-#'  \item \code{uncertainty_detailed} contains the \code{numeric} detailed simulation results
+#'  \item \code{impact_by_sim} (\code{tibble}) containing the results for each simulation
+#'  \item \code{uncertainty_by_geo_id_micro} (\code{tibble}) containing results for each geographic unit under analysis (specified in \code{geo_id_micro} argument in the preceding \code{attribute_health} call)
 #'  }
+#'  The two results elements are added to the existing output.
+
 # EXAMPLES #####################################################################
 #' @examples
 #' # Goal: obtain summary uncertainty for an existing attribute_health() output

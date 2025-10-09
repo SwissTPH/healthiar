@@ -79,17 +79,21 @@ attribute_mod(
 \item{year_of_analysis}{\code{Numeric value} providing the first with exposure to the environmental stressor.}
 }
 \value{
-This function returns two \code{lists}:
+This function returns a \code{list} containing:
 
-1) \code{health_main}, which contains a \code{tibble} with the main results and
-
-2) \code{health_detailed}, which contains detailed (and interim) results.
-
-The results contain columns such as:
+1) \code{health_main} (\code{tibble}) containing the main results;
 \itemize{
- \item \code{pop_fraction} population attributable fraction; only applicable in relative risk assessments
- \item \code{impact} attributable health burden/impact
+ \item \code{impact} (\code{numeric} column) attributable health burden/impact
+ \item \code{pop_fraction} (\code{numeric} column) population attributable fraction; only applicable in relative risk assessments
  \item And many more
+ }
+
+2) \code{health_detailed} (\code{list}) containing detailed (and interim) results.
+\itemize{
+ \item \code{results_raw} (\code{tibble}) containing results for each combination of input uncertainty
+ \item \code{results_by_geo_id_micro} (\code{tibble}) containing results for each geographic unit under analysis (specified in \code{geo_id_micro} argument)
+ \item \code{input_table} (\code{tibble}) containing the inputs to each relevant argument
+ \item \code{input_args} (\code{list}) containing all the argument inputs used in the background
  }
 }
 \description{

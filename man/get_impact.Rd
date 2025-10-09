@@ -23,9 +23,6 @@ Moreover, the data frame includes columns such as:
 \description{
 This function calculates the health impacts for each uncertainty and geo area.
 }
-\examples{
-# TODO
-}
 \author{
 Alberto Castro & Axel Luyten
 }

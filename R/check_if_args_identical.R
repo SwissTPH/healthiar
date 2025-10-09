@@ -9,10 +9,6 @@
 #' @param args_b \code{List} second list of arguments
 #' @param names_to_check \code{Vector} with the names of arguments to be checked
 
-# EXAMPLES #####################################################################
-#' @examples
-#' # TODO
-
 #' @author Alberto Castro & Axel Luyten
 
 #' @keywords internal

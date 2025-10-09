@@ -18,11 +18,11 @@
 #' See the AirQ+ manual "Health impact assessment of air pollution: AirQ+ life table manual" for guidance on how to convert larger age groups to 1 year age groups (section "Estimation of yearly values"): https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf (accessed April 2025)
 
 # VALUE ########################################################################
-#' @returns This function returns a tibble containing the columns
+#' @returns This function returns a \code{tibble} containing the columns:
 #' \itemize{
-#'  \item \code{population_for_attribute} containing \code{numeric} population values for each age
-#'  \item \code{bhd_for_attribute} containing \code{numeric} baseline health data values for each age
-#'  \item additional columns containing input data or results
+#'  \item \code{population_for_attribute} (\code{numeric}) containing  population values for each age
+#'  \item \code{bhd_for_attribute} (\code{numeric}) containing baseline health data values for each age
+#'  \item and more columns containing input data or results
 #' }
 
 # EXAMPLES #####################################################################

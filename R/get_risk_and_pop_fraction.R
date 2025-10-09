@@ -19,8 +19,6 @@
 #'  \item And many more.
 #' }
 
-# EXAMPLES #####################################################################
-
 #' @author Alberto Castro & Axel Luyten
 
 #' @keywords internal

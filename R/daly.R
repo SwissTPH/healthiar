@@ -8,7 +8,24 @@
 #' @param output_attribute_yll,output_attribute_yld \code{variable} containing YLL or YLD results of a \code{attribute_...()} function call, respectively.
 
 # VALUE ########################################################################
-#' @inherit attribute_master return
+#' @returns
+#' This function returns a \code{list} containing:
+#' @returns
+#' 1) \code{health_main} (\code{tibble}) containing the main results;
+#' \itemize{
+#'  \item \code{impact} (\code{numeric} column) attributable health burden/impact in DALY
+#'  \item \code{impact_yld} (\code{numeric} column) attributable health burden/impact in YLD
+#'  \item \code{impact_yll} (\code{numeric} column) attributable health burden/impact in YLL
+#'  \item \code{dw} (\code{numeric} column) disability weight used for YLD calculation
+#'  \item And many more
+#'  }
+#' @returns
+#' 2) \code{health_detailed} (\code{list}) containing detailed (and interim) results.
+#' \itemize{
+#'  \item \code{results_raw} (\code{tibble}) containing results for each combination of input uncertainty
+#'  \item \code{results_by_geo_id_micro} (\code{tibble}) containing results for each geographic unit under analysis (specified in \code{geo_id_micro} argument)
+#'  \item \code{input_args} (\code{list}) containing all the argument inputs used in the background
+#'  }
 
 # EXAMPLES #####################################################################
 #' @examples

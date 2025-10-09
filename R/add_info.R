@@ -12,11 +12,6 @@
 #' @returns
 #' This function returns a \code{data frame} with binding the input data with the info columns (info_ is added to the column names)
 
-# EXAMPLES #####################################################################
-#' @examples
-#' # TODO
-#'
-
 #' @author Alberto Castro & Axel Luyten
 
 #' @keywords internal

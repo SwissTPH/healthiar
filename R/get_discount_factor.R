@@ -32,14 +32,14 @@
 #' \deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years) \times (1 + inflation\_rate)^{n\_years}}}
 
 # VALUE ########################################################################
-#' @returns This function returns the numeric discount factor.
+#' @returns This function returns the \code{numeric} discount factor.
 
 # EXAMPLES #####################################################################
 #' @examples
 #' get_discount_factor(
 #'   discount_rate = 0.07,
 #'   n_years = 5
-#  )
+#'  )
 
 #' @author Alberto Castro & Axel Luyten
 

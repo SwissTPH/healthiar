@@ -45,12 +45,22 @@
 
 # VALUE ########################################################################
 #' @returns
-#' This function returns two lists:
+#' This function returns a \code{list} containing:
+#' @returns
+#' 1) \code{monetization_main} (\code{tibble}) containing the main monetized results;
 #' \itemize{
-#'  \item \code{monetization_main} contains the central monetization estimate and the corresponding 95% confidence intervals
-#'  \item \code{monetization_detailed} contains the monetized results for each unique combination of the input variable estimates that were provided to the initial \code{attribute_health()} call
-#'  }
-#' If the argument \code{output_attribute} was specified, then the two lists are added next to the existing attribute output.
+#'  \item \code{monetized_impact} (\code{numeric} column)
+#'  \item \code{discount_factor} (\code{numeric} column) calculated based on the entered \code{discount_rate}
+#'  \item And many more
+#' }
+#' @returns
+#' 2) \code{monetization_detailed} (\code{list}) containing detailed (and interim) results.
+#' \itemize{
+#'  \item \code{results_by_year} (\code{tibble})
+#'  \item \code{health_raw} (\code{tibble}) containing the monetized results for each for each combination of input uncertainty that were provided to the initial \code{attribute_health()} call
+#' }
+#' @returns
+#' If the argument \code{output_attribute} was specified, then the two results elements are added to the existing output.
 
 # EXAMPLES #####################################################################
 #' @examples

@@ -25,7 +25,24 @@
 #' For the equations regarding the monetization of the cost and the benefit please see the function documentation of \code{monetize()}.
 
 # VALUE ########################################################################
-#' @returns Description of the return value.
+#' @returns
+#' This function returns a \code{list} containing:
+#' @returns
+#' 1) \code{cba_main} (\code{tibble}) containing the main CBA results;
+#' \itemize{
+#'  \item \code{net_benefit} (\code{numeric} column) containing the difference between benefit and cost (i.e. benefit - cost)
+#'  \item \code{benefit} (\code{numeric} column) containing discounted benefit (i.e. monetized attributable health impact)
+#'  \item \code{cost} (\code{numeric} column) containing discounted cost
+#'  \item And many more
+#' }
+#' @returns
+#' 2) \code{cba_detailed} (\code{list}) containing detailed (and interim) results.
+#' \itemize{
+#'  \item \code{benefit} (\code{list})
+#'  \item \code{cost} (\code{tibble})
+#' }
+#' @returns
+#' If the argument \code{output_attribute} was specified, then the two results elements are added to the existing output.
 
 # EXAMPLES #####################################################################
 #' @examples

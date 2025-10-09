@@ -18,10 +18,6 @@
 #' @returns
 #' This function returns a \code{value} corresponding to the population attributable fraction
 
-# EXAMPLES #####################################################################
-#' @examples
-#' # TBD
-
 #' @author Alberto Castro & Axel Luyten
 
 #' @keywords internal

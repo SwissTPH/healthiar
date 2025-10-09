@@ -14,10 +14,11 @@ standardize(output_attribute, age_group, ref_prop_pop = NULL)
 \item{ref_prop_pop}{\code{Numeric vector} specifying with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.}
 }
 \value{
-This function returns two \code{lists}:
-1) \code{health_main}, which contains a \code{tibble} with the age-standardized main results and
+This function returns a \code{list} containing:
 
-2) \code{health_detailed}, which contains detailed age-standardized results
+1) \code{health_main} (\code{tibble}) containing the age-standardized main results;
+
+2) \code{health_detailed} (\code{tibble}) containing the results per age group.
 }
 \description{
 This function obtains age-standardized health impacts based on multiple age-group specific assessments

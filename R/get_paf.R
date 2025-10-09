@@ -14,7 +14,7 @@
 
 # VALUE ########################################################################
 #' @returns
-#' This function returns the population attributable fraction as a \code{numeric value}
+#' This function returns the population attributable fraction as a \code{numeric value}.
 
 # EXAMPLES #####################################################################
 #' @examples

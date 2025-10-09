@@ -8,10 +8,6 @@
 #' @returns
 #' This function returns a \code{list} with all input data together by argument
 
-# EXAMPLES #####################################################################
-#' @examples
-#' # TODO
-
 #' @author Alberto Castro & Axel Luyten
 
 #' @keywords internal

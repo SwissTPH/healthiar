@@ -23,9 +23,6 @@ Moreover, the data frame include columns such as:
 \description{
 Get population impact over time
 }
-\examples{
-# TBD
-}
 \author{
 Alberto Castro & Axel Luyten
 }
