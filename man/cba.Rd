@@ -35,7 +35,23 @@ cba(
 \item{n_years_benefit, n_years_cost}{\code{Numeric value} referring to number of years in the future to be considered in the benefit and cost side (respectively). Years for discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1)}
 }
 \value{
-Description of the return value.
+This function returns a \code{list} containing:
+
+1) \code{cba_main} (\code{tibble}) containing the main CBA results;
+\itemize{
+ \item \code{net_benefit} (\code{numeric} column) containing the difference between benefit and cost (i.e. benefit - cost)
+ \item \code{benefit} (\code{numeric} column) containing discounted benefit (i.e. monetized attributable health impact)
+ \item \code{cost} (\code{numeric} column) containing discounted cost
+ \item And many more
+}
+
+2) \code{cba_detailed} (\code{list}) containing detailed (and interim) results.
+\itemize{
+ \item \code{benefit} (\code{list})
+ \item \code{cost} (\code{tibble})
+}
+
+If the argument \code{output_attribute} was specified, then the two results elements are added to the existing output.
 }
 \description{
 This function performs a cost-benefit analysis
