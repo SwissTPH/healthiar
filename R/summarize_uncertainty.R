@@ -18,7 +18,7 @@
 # ARGUMENTS ####################################################################
 #' @param output_attribute \code{variable} in which the output of a \code{healthiar::attribute_...()} function call are stored.
 #' @param n_sim \code{numeric value} indicating the number of simulations to be performed.
-#' @param seed \code{numeric value} for fixing the randomization. If empty, 123 is used as a default.
+#' @param seed \code{numeric value} for fixing the randomization. Based on it, each geographic unit is assigned a different. If empty, 123 is used as the base seed per default.
 
 # DETAILS ######################################################################
 #' @details
