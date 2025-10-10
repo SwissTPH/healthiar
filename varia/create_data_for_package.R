@@ -240,3 +240,29 @@ exdat_pm <- exdat_pm |>
   select(-calculation_method)
 
 save(exdat_pm, file = "data/exdat_pm.rda")
+
+# exdat_prepare_exposure ###########################################################################
+
+## Files sent by AP on 2025-09-22 are saved in /inst/extdata, from which they are loaded for the
+## example in the prepare_exposure fun doc
+
+## For some reason it doesn't work when
+### 1) you save the .tif and .gpkg in the data folder (then they are not automatically loaded when loading the package)
+### 2) you save them as .rda files (then they are loaded correctly but the pm2.5.tif file gets somehow corrupted and there's an error when you run prepare_exposure())
+#### Error: external pointer is not valid
+
+## data sets sent by AP on 2025-09-22
+
+# exdat_pwm_1 <- terra::rast("tests/testthat/data/pm25.tif")
+# exdat_pwm_2 <- sf::st_read("tests/testthat/data/municipalities_brussels.gpkg", quiet = TRUE)
+#
+# save(exdat_pwm_1, file = "data/exdat_pwm_1.rda")
+# save(exdat_pwm_2, file = "data/exdat_pwm_2.rda")
+#
+# test <- healthiar::prepare_exposure(
+#   poll_grid = exdat_pwm_1,
+#   geo_units = exdat_pwm_2,
+#   population = sf::st_drop_geometry(exdat_pwm_2$population),
+#   geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region)
+# )
+

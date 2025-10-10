@@ -22,7 +22,16 @@ This function returns a \code{numeric vector} of population exposure values.
 This function prepares tabular population exposure data compatible with the \code{attribute()} and \code{compare()} functions, based on gridded pollution concentration data and vector data representing geographic units. The function calculates an average concentration value in each geographic unit, weighted by the fraction of the population in each sub-unit.
 }
 \examples{
-# TODO
+
+exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
+exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
+
+prepare_exposure(
+  poll_grid = exdat_pwm_1,
+  geo_units = exdat_pwm_2,
+  population = sf::st_drop_geometry(exdat_pwm_2$population),
+  geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region)
+)
 }
 \author{
 Arno Pauwels
