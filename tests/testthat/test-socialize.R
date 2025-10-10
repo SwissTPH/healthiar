@@ -21,7 +21,7 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
         ref_prop_pop = c(0.5, 0.5),
         output_attribute = att_age,
         geo_id_micro = exdat_socialize$CS01012020,
-        social_indicator = data$score,
+        social_indicator = exdat_socialize$score,
         n_quantile = 10,
         increasing_deprivation = TRUE)$social_main$difference_value |> base::round(2),
     expect = c(11.72, 0.20, -0.64, -0.01) # Results on 25 June 2025
