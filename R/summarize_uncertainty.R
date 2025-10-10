@@ -96,6 +96,7 @@ summarize_uncertainty <- function(
 
   ## Set options
   user_options <- base::options()
+  base::on.exit(base::options(user_options)) # restores the user's option at the end of script
   # Make sure that no rounding occurs
   base::options(digits = 15)
 
@@ -695,8 +696,6 @@ summarize_uncertainty <- function(
   }
 
   # RETURN ####################################################################
-
-  on.exit(options(user_options))
 
   return(uncertainty)
 
