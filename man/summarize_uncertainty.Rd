@@ -11,7 +11,7 @@ summarize_uncertainty(output_attribute, n_sim, seed = NULL)
 
 \item{n_sim}{\code{numeric value} indicating the number of simulations to be performed.}
 
-\item{seed}{\code{numeric value} for fixing the randomization. If empty, 123 is used as a default.}
+\item{seed}{\code{numeric value} for fixing the randomization. Based on it, each geographic unit is assigned a different. If empty, 123 is used as the base seed per default.}
 }
 \value{
 This function returns a \code{list} containing:

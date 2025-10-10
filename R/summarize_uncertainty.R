@@ -96,12 +96,20 @@ summarize_uncertainty <- function(
 
   ## Set options
   user_options <- base::options()
-  base::on.exit(base::options(user_options)) # restores the user's option at the end of script
+  base::on.exit(base::options(user_options), add = TRUE) # restores the user's option at the end of script
   # Make sure that no rounding occurs
   base::options(digits = 15)
 
 
   ## Seeds ########
+
+  ## Save user's global random number generator (RNG) state if it exists,
+  ## e.g. if set.seed()) has been called at least once in the user's session
+  if(base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
+    old_seed <- .Random.seed
+    base::on.exit(base::assign(".Random.seed", old_seed, envir = .GlobalEnv), add = TRUE)
+  }
+
   ## Set seed for reproducibility
   if(base::is.null(seed)){seed <- 123}
 
