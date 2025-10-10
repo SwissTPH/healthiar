@@ -60,7 +60,7 @@ attribute_health(
 
 \item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}}
 
-\item{geo_id_micro, geo_id_macro}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_micro}) and (optionally) providing higher-level IDs to aggregate the geographic areas (\code{geo_id_micro}). See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
+\item{geo_id_micro, geo_id_macro}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_micro}) and (optionally) providing higher-level IDs (\code{geo_id_macro}) to aggregate the geographic areas at. See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
 \item{age_group}{\code{Numeric vector} or \code{string vector} providing the \strong{age groups} considered in the assessment. In case of use in \code{attribute_lifetable)()}, it must be a \code{numeric} and contain single year age groups. See Details for more info. \emph{Optional argument for \code{attribute_health()}; needed for \code{attribute_lifetable()}.}}
 
@@ -83,7 +83,7 @@ This function returns a \code{list} containing:
  \item \code{impact} (\code{numeric} column) attributable health burden/impact
  \item \code{pop_fraction} (\code{numeric} column) population attributable fraction; only applicable in relative risk assessments
  \item And many more
- }
+}
 
 2) \code{health_detailed} (\code{list}) containing detailed (and interim) results.
 \itemize{
@@ -91,7 +91,7 @@ This function returns a \code{list} containing:
  \item \code{results_by_geo_id_micro} (\code{tibble}) containing results for each geographic unit under analysis (specified in \code{geo_id_micro} argument)
  \item \code{input_table} (\code{tibble}) containing the inputs to each relevant argument
  \item \code{input_args} (\code{list}) containing all the argument inputs used in the background
- }
+}
 }
 \description{
 This function calculates the attributable health impacts (mortality or morbidity) due to

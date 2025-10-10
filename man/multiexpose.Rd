@@ -27,7 +27,7 @@ This function returns a \code{list} containing:
  \item \code{impact} (\code{numeric} column) attributable health burden/impact
  \item \code{pop_fraction} (\code{numeric} column) population attributable fraction; only applicable in relative risk assessments
  \item And many more
- }
+}
 
 2) \code{health_detailed} (\code{list}) containing detailed (and interim) results.
 \itemize{
@@ -35,7 +35,7 @@ This function returns a \code{list} containing:
  \item \code{results_by_geo_id_micro} (\code{tibble}) containing results for each geographic unit under analysis (specified in \code{geo_id_micro} argument)
  \item \code{input_table} (\code{tibble}) containing the inputs to each relevant argument
  \item \code{input_args} (\code{list}) containing all the argument inputs used in the background
- }
+}
 }
 \description{
 This function aggregates health impacts from multiple exposures to environmental stressors.

@@ -7,16 +7,38 @@
 # ARGUMENTS ####################################################################
 #' @param poll_grid \code{SpatRaster} of the pollution concentration data.
 #' @param geo_units \code{sf} of the geographic sub-units.
-#' @param population \code{Vector} containing the total population number in each geographic sub-unit.
-#' @param geo_id_macro \code{Vector} containing the id code of the geographic unit the sub-unit belongs to.
+#' @param population \code{Numeric vector} containing the total population number in each geographic sub-unit.
+#' @param geo_id_macro \code{Numeric or string vector} containing the higher-level IDs of the geographic units the sub-unit belong to and will be aggregated at.
 
 # VALUE ########################################################################
 #' @return
-#' This function returns a \code{numeric vector} of population exposure values.
+#' This function returns a \code{list} containing:
+#' @returns
+#' 1) \code{main} (\code{tibble}) containing the main results as vectors;
+#' \itemize{
+#'  \item \code{geo_id_macro} (\code{string} column) containing the (higher-level) geographic IDs of the assessment
+#'  \item \code{exp_value} (\code{numeric} column) containing the (population-weighted) mean exposure
+#'  \item \code{exp_type} (\code{string} column) specifying the exposure type
+#' }
+#' @returns
+#' 2) \code{detailed} (\code{list}) containing detailed (and interim) results.
 
 # EXAMPLES #####################################################################
 #' @examples
-#' # TODO
+#' # Goal: determine population-weighted mean PM2.5 exposure for several
+#' # neighborhoods of Brussels (Belgium)
+#'
+#' exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
+#' exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
+#'
+#' pwm <- prepare_exposure(
+#'   poll_grid = exdat_pwm_1, # Formal class SpatRaster
+#'   geo_units = exdat_pwm_2, # sf of the geographic sub-units
+#'   population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
+#'   geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate at
+#' )
+#'
+#' pwm$main # population-weighted mean exposures for the (higher-level) geographic units
 
 #' @export
 
