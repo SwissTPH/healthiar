@@ -26,7 +26,7 @@
 # EXAMPLES #####################################################################
 #' @examples
 #' # Goal: determine population-weighted mean PM2.5 exposure for several
-#' neighborhoods of Brussels (Belgium)
+#' # neighborhoods of Brussels (Belgium)
 #'
 #' exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
 #' exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)

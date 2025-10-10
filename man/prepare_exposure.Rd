@@ -11,27 +11,40 @@ prepare_exposure(poll_grid, geo_units, population, geo_id_macro)
 
 \item{geo_units}{\code{sf} of the geographic sub-units.}
 
-\item{population}{\code{Vector} containing the total population number in each geographic sub-unit.}
+\item{population}{\code{Numeric vector} containing the total population number in each geographic sub-unit.}
 
-\item{geo_id_macro}{\code{Vector} containing the id code of the geographic unit the sub-unit belongs to.}
+\item{geo_id_macro}{\code{Numeric or string vector} containing the higher-level IDs of the geographic units the sub-unit belong to and will be aggregated at.}
 }
 \value{
-This function returns a \code{numeric vector} of population exposure values.
+This function returns a \code{list} containing:
+
+1) \code{main} (\code{tibble}) containing the main results as vectors;
+\itemize{
+ \item \code{geo_id_macro} (\code{string} column) containing the (higher-level) geographic IDs of the assessment
+ \item \code{exp_value} (\code{numeric} column) containing the (population-weighted) mean exposure
+ \item \code{exp_type} (\code{string} column) specifying the exposure type
+}
+
+2) \code{detailed} (\code{list}) containing detailed (and interim) results.
 }
 \description{
 This function prepares tabular population exposure data compatible with the \code{attribute()} and \code{compare()} functions, based on gridded pollution concentration data and vector data representing geographic units. The function calculates an average concentration value in each geographic unit, weighted by the fraction of the population in each sub-unit.
 }
 \examples{
+# Goal: determine population-weighted mean PM2.5 exposure for several
+# neighborhoods of Brussels (Belgium)
 
 exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
 exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
 
-prepare_exposure(
-  poll_grid = exdat_pwm_1,
-  geo_units = exdat_pwm_2,
-  population = sf::st_drop_geometry(exdat_pwm_2$population),
-  geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region)
+pwm <- prepare_exposure(
+  poll_grid = exdat_pwm_1, # Formal class SpatRaster
+  geo_units = exdat_pwm_2, # sf of the geographic sub-units
+  population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
+  geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate at
 )
+
+pwm$main # population-weighted mean exposures for the (higher-level) geographic units
 }
 \author{
 Arno Pauwels
