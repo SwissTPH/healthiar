@@ -84,17 +84,32 @@ compile_input <-
       # Add info
       add_info(info = input_args_edited$info)
 
+
     # Obtain the exposure dimension and exposure type in a separate table
-      input_wo_lifetable  <-
-        input_wo_lifetable |>
+    input_wo_lifetable  <-
+      input_wo_lifetable |>
+      dplyr::mutate(
+        .by = c(geo_id_micro, age_group, sex),
+        exp_length = dplyr::n(),
+        exp_category = dplyr::row_number(),
+        exp_type =
+          base::ifelse(exp_length == 1,
+                       "population_weighted_mean",
+                       "exposure_distribution"))
+
+    # Get total population
+    if(!is.null(input_args_edited[["population"]])){
+
+      input_wo_lifetable  <- input_wo_lifetable |>
         dplyr::mutate(
-          .by = c(geo_id_micro, age_group, sex),
-          exp_length = dplyr::n(),
-          exp_category = dplyr::row_number(),
-          exp_type =
-            base::ifelse(exp_length == 1,
-                         "population_weighted_mean",
-                         "exposure_distribution"))
+          .by = geo_id_micro,
+          population_total = base::sum(population, na.rm = TRUE)
+        )
+
+      }
+
+
+
 
 
     # PIVOT LONGER ###########################################################
