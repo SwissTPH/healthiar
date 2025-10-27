@@ -65,20 +65,17 @@ get_impact_with_lifetable <-
 
 
     # LIFETABLE SETUP ##############################################################################
+
     lifetable_calculation <- input_with_risk_and_pop_fraction |>
       dplyr::mutate(
         # Duplicate bhd  and year_of_analysis
         # for more handy column names for life table calculations
         deaths = bhd,
         yoa = year_of_analysis,
-        # Rename population adding suffix yoa
+        # Create midyear_population_yoa
         # yoa means Year Of Analysis
         # It is better to do it  now (before nesting tables)
-        midyear_population_yoa = population) |>
-      dplyr::mutate(
-        .by = dplyr::any_of(id_columns),
-        population = base::sum(population, na.rm = TRUE)
-      )
+        midyear_population_yoa = population)
 
 
     lifetable_calculation <- lifetable_calculation |>
