@@ -231,7 +231,7 @@ get_output <-
       # If population is available, recompute with population and normalized metrics
       if ("population" %in% base::names(df)) {
 
-        if (var %in% c("exp_category", "sex", "age")) {
+        if (var %in% c("exp_category", "sex", "age_group")) {
           # Relative impact dividing by population in the subgroup (100k)
           # i.e. x impacts in the subgroup / population in the subgroup
           # Important: keep per_100_inhab as suffix because it is searched somewhere else
