@@ -255,11 +255,12 @@ get_output <-
           dplyr::mutate(
             dplyr::across(
               .cols = dplyr::all_of(impact_cols_to_be_summed),
-              .fns = base::list(per_100k_inhab = ~ (.x / population) * 1e5),
-              .names = "{.col}_{.fn}"
-            )
-          )
+              .fns = base::list(per_100k_inhab = ~ (.x / population_total) * 1e5),
+              .names = "{.col}_{.fn}"))
+
       }
+
+
 
 
       return(impact_agg)
