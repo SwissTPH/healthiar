@@ -244,23 +244,30 @@ get_output <-
                 # Important to keep per_100k_inhab in the name as suffix
                 # so that all relative impacts can be found at once
                 .fns = base::list(per_100k_inhab_subgroup = ~ (.x / population) * 1e5),
+                .names = "{.col}_{.fn}")) |>
+            # Relative impact dividing by total population (100k)
+            # i.e. x impacts in the subgroup / sum of population across all subgroups
+            dplyr::mutate(
+              dplyr::across(
+                .cols = dplyr::all_of(impact_cols_to_be_summed),
+                .fns = base::list(per_100k_inhab = ~ (.x / population_total) * 1e5),
+                .names = "{.col}_{.fn}"))
+
+        } else {
+
+          impact_agg <- impact_agg |>
+            dplyr::mutate(
+              dplyr::across(
+                .cols = dplyr::all_of(impact_cols_to_be_summed),
+                .fns = base::list(per_100k_inhab = ~ (.x / population) * 1e5),
                 .names = "{.col}_{.fn}"))
 
         }
 
 
-        # Relative impact dividing by total population (100k)
-        # i.e. x impacts in the subgroup / sum of population across all subgroups
-        impact_agg <- impact_agg |>
-          dplyr::mutate(
-            dplyr::across(
-              .cols = dplyr::all_of(impact_cols_to_be_summed),
-              .fns = base::list(per_100k_inhab = ~ (.x / population_total) * 1e5),
-              .names = "{.col}_{.fn}"))
+
 
       }
-
-
 
 
       return(impact_agg)
