@@ -81,7 +81,8 @@ get_output <-
         # Columns including these strings
         base::grep("impact|absolute_risk_as_percent|population", colnames_results_raw, value = TRUE),
         # but not including these
-        base::grep("_by_|_rounded|_per_100k_inhab", colnames_results_raw, value = TRUE))
+        c("total_population",
+          base::grep("_by_|_rounded|_per_100k_inhab", colnames_results_raw, value = TRUE)))
 
     # Only columns to be summed that include the string "impact"
     # This is used for per_100k_inhab
@@ -215,7 +216,7 @@ get_output <-
             .cols = dplyr::all_of(cols_to_be_summed),
             .fns = ~ base::sum(.x, na.rm = TRUE),
             .names = "{.col}"))|>
-        # Keep only distict rows because above mutate() not summarize()
+        # Keep only distinct rows because above mutate() not summarize()
         dplyr::distinct() |>
         # Calculate rounded impacts
         dplyr::mutate(
@@ -229,15 +230,37 @@ get_output <-
 
       # If population is available, recompute with population and normalized metrics
       if ("population" %in% base::names(df)) {
+
+        if (var %in% c("exp_category", "sex", "age_group")) {
+          # Relative impact dividing by population in the subgroup (100k)
+          # i.e. x impacts in the subgroup / population in the subgroup
+          # Important: keep per_100_inhab as suffix because it is searched somewhere else
+          # to delete all relative results
+
+          impact_agg <- impact_agg |>
+            dplyr::mutate(
+              dplyr::across(
+                .cols = dplyr::all_of(impact_cols_to_be_summed),
+                # Important to keep per_100k_inhab in the name as suffix
+                # so that all relative impacts can be found at once
+                .fns = base::list(per_100k_inhab_subgroup = ~ (.x / population) * 1e5),
+                .names = "{.col}_{.fn}"))
+
+        }
+
+
+        # Relative impact dividing by total population (100k)
+        # i.e. x impacts in the subgroup / sum of population across all subgroups
         impact_agg <- impact_agg |>
           dplyr::mutate(
             dplyr::across(
               .cols = dplyr::all_of(impact_cols_to_be_summed),
-              .fns = base::list(per_100k_inhab = ~ (.x / population) * 1e5),
-              .names = "{.col}_{.fn}"
-            )
-          )
+              .fns = base::list(per_100k_inhab = ~ (.x / population_total) * 1e5),
+              .names = "{.col}_{.fn}"))
+
       }
+
+
 
 
       return(impact_agg)

@@ -65,20 +65,17 @@ get_impact_with_lifetable <-
 
 
     # LIFETABLE SETUP ##############################################################################
+
     lifetable_calculation <- input_with_risk_and_pop_fraction |>
       dplyr::mutate(
         # Duplicate bhd  and year_of_analysis
         # for more handy column names for life table calculations
         deaths = bhd,
         yoa = year_of_analysis,
-        # Rename population adding suffix yoa
+        # Create midyear_population_yoa
         # yoa means Year Of Analysis
         # It is better to do it  now (before nesting tables)
-        midyear_population_yoa = population) |>
-      dplyr::mutate(
-        .by = dplyr::any_of(id_columns),
-        population = base::sum(population, na.rm = TRUE)
-      )
+        midyear_population_yoa = population)
 
 
     lifetable_calculation <- lifetable_calculation |>
@@ -144,7 +141,7 @@ get_impact_with_lifetable <-
       tidyr::nest(
         data_by_age =
         c(yoa, age_group, age_start, age_end, bhd, deaths,
-          # population,
+          population,
           modification_factor,
           prob_survival, prob_survival_until_midyear, hazard_rate,
           age_end_over_min_age, prob_survival_mod, prob_survival_until_midyear_mod, hazard_rate_mod,
@@ -230,6 +227,7 @@ get_impact_with_lifetable <-
                 tibble::tibble(
                   age_start = .x$age_start,
                   age_end = .x$age_end,
+                  population = .x$midyear_population_yoa,
                   # Change of sign in the difference unexposed minus exposed
                   # because if no exposure
                   # there are less deaths in unexposed
@@ -250,6 +248,7 @@ get_impact_with_lifetable <-
 
     if (health_outcome == "yll"| #And  ("yld", "daly") if yld for life table ever implemented
          is_constant_exposure) {
+
 
       ## PROJECT POPULATIONS #########################################################################
 
@@ -369,8 +368,10 @@ get_impact_with_lifetable <-
 
       # Helper function to be used below
       calculate_impact <- function(df_unexposed, df_exposed, var_prefix) {
-        ages <- df_unexposed |>
-          dplyr::select(age_start, age_end)
+
+
+        ages_and_pop <- df_unexposed |>
+          dplyr::select(age_start, age_end, population)
 
         df_unexposed_vars <- df_unexposed |>
           dplyr::select(dplyr::starts_with(var_prefix))
@@ -387,7 +388,7 @@ get_impact_with_lifetable <-
             diff <- - (df_unexposed_vars - df_exposed_vars)
           }
 
-        impact <- dplyr::bind_cols(ages, diff) |>
+        impact <- dplyr::bind_cols(ages_and_pop, diff) |>
           dplyr::rename_with(
             .cols = dplyr::starts_with(var_prefix),
             .fn = ~ base::gsub(var_prefix, "impact_", .x)
@@ -421,7 +422,7 @@ get_impact_with_lifetable <-
         fill_right_of_diag <- function(tbl) {
 
           # Select only the numeric matrix portion, ignoring age columns
-          cols <- base::setdiff(base::names(tbl), c("age_start", "age_end"))
+          cols <- base::setdiff(base::names(tbl), c("age_start", "age_end", "population"))
           data_selection <- tbl[, cols, drop = FALSE]
 
           for (i in 1 : base::nrow(data_selection)) {
@@ -478,7 +479,13 @@ get_impact_with_lifetable <-
                                   cols = dplyr::starts_with("impact_"),
                                   names_to = "year",
                                   values_to = "impact",
-                                  names_prefix = "impact_")
+                                  names_prefix = "impact_") |>
+              # Keep only first value of population for each year
+              # Otherwise the population is repeated for all years
+              # and the sum of population, calculated in get_output(),
+              # will be wrong (much higher)
+              dplyr::mutate(.by = c(age_start, age_end),
+                            population = ifelse(year == yoa, population, NA))
 
             if({{health_outcome}} == "deaths"){
               .x <- .x |>
@@ -491,6 +498,7 @@ get_impact_with_lifetable <-
                 dplyr::filter(year <= last_year_projection )
             }
           }
+
         ))
 
     # Unnest column #####
