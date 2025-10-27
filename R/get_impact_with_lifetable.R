@@ -478,7 +478,13 @@ get_impact_with_lifetable <-
                                   cols = dplyr::starts_with("impact_"),
                                   names_to = "year",
                                   values_to = "impact",
-                                  names_prefix = "impact_")
+                                  names_prefix = "impact_") |>
+              # Keep only first value of population for each year
+              # Otherwise the population is repeated for all years
+              # and the sum of population, calculated in get_output(),
+              # will be wrong (much higher)
+              dplyr::mutate(.by = c(age_start, age_end),
+                            population = ifelse(year == yoa, population, NA))
 
             if({{health_outcome}} == "deaths"){
               .x <- .x |>
@@ -491,6 +497,7 @@ get_impact_with_lifetable <-
                 dplyr::filter(year <= last_year_projection )
             }
           }
+
         ))
 
     # Unnest column #####
