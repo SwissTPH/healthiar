@@ -215,7 +215,7 @@ get_output <-
             .cols = dplyr::all_of(cols_to_be_summed),
             .fns = ~ base::sum(.x, na.rm = TRUE),
             .names = "{.col}"))|>
-        # Keep only distict rows because above mutate() not summarize()
+        # Keep only distinct rows because above mutate() not summarize()
         dplyr::distinct() |>
         # Calculate rounded impacts
         dplyr::mutate(
