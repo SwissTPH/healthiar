@@ -141,7 +141,7 @@ get_impact_with_lifetable <-
       tidyr::nest(
         data_by_age =
         c(yoa, age_group, age_start, age_end, bhd, deaths,
-          # population,
+          population,
           modification_factor,
           prob_survival, prob_survival_until_midyear, hazard_rate,
           age_end_over_min_age, prob_survival_mod, prob_survival_until_midyear_mod, hazard_rate_mod,
