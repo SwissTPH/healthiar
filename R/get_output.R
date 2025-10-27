@@ -230,6 +230,27 @@ get_output <-
 
       # If population is available, recompute with population and normalized metrics
       if ("population" %in% base::names(df)) {
+
+        if (var %in% c("exp_category", "sex", "age")) {
+          # Relative impact dividing by population in the subgroup (100k)
+          # i.e. x impacts in the subgroup / population in the subgroup
+          # Important: keep per_100_inhab as suffix because it is searched somewhere else
+          # to delete all relative results
+
+          impact_agg <- impact_agg |>
+            dplyr::mutate(
+              dplyr::across(
+                .cols = dplyr::all_of(impact_cols_to_be_summed),
+                # Important to keep per_100k_inhab in the name as suffix
+                # so that all relative impacts can be found at once
+                .fns = base::list(per_100k_inhab_subgroup = ~ (.x / population) * 1e5),
+                .names = "{.col}_{.fn}"))
+
+        }
+
+
+        # Relative impact dividing by total population (100k)
+        # i.e. x impacts in the subgroup / sum of population across all subgroups
         impact_agg <- impact_agg |>
           dplyr::mutate(
             dplyr::across(
