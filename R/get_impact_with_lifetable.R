@@ -227,6 +227,7 @@ get_impact_with_lifetable <-
                 tibble::tibble(
                   age_start = .x$age_start,
                   age_end = .x$age_end,
+                  population = .x$midyear_population_yoa,
                   # Change of sign in the difference unexposed minus exposed
                   # because if no exposure
                   # there are less deaths in unexposed
@@ -247,6 +248,7 @@ get_impact_with_lifetable <-
 
     if (health_outcome == "yll"| #And  ("yld", "daly") if yld for life table ever implemented
          is_constant_exposure) {
+
 
       ## PROJECT POPULATIONS #########################################################################
 
@@ -366,8 +368,10 @@ get_impact_with_lifetable <-
 
       # Helper function to be used below
       calculate_impact <- function(df_unexposed, df_exposed, var_prefix) {
-        ages <- df_unexposed |>
-          dplyr::select(age_start, age_end)
+
+
+        ages_and_pop <- df_unexposed |>
+          dplyr::select(age_start, age_end, population)
 
         df_unexposed_vars <- df_unexposed |>
           dplyr::select(dplyr::starts_with(var_prefix))
@@ -384,7 +388,7 @@ get_impact_with_lifetable <-
             diff <- - (df_unexposed_vars - df_exposed_vars)
           }
 
-        impact <- dplyr::bind_cols(ages, diff) |>
+        impact <- dplyr::bind_cols(ages_and_pop, diff) |>
           dplyr::rename_with(
             .cols = dplyr::starts_with(var_prefix),
             .fn = ~ base::gsub(var_prefix, "impact_", .x)
@@ -418,7 +422,7 @@ get_impact_with_lifetable <-
         fill_right_of_diag <- function(tbl) {
 
           # Select only the numeric matrix portion, ignoring age columns
-          cols <- base::setdiff(base::names(tbl), c("age_start", "age_end"))
+          cols <- base::setdiff(base::names(tbl), c("age_start", "age_end", "population"))
           data_selection <- tbl[, cols, drop = FALSE]
 
           for (i in 1 : base::nrow(data_selection)) {
