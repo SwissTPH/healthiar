@@ -81,7 +81,7 @@ get_output <-
         # Columns including these strings
         base::grep("impact|absolute_risk_as_percent|population", colnames_results_raw, value = TRUE),
         # but not including these
-        c("total_population",
+        c("population_total",
           base::grep("_by_|_rounded|_per_100k_inhab", colnames_results_raw, value = TRUE)))
 
     # Only columns to be summed that include the string "impact"
