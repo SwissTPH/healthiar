@@ -33,10 +33,6 @@ testthat::test_that("results correct |pathway_standardize|single_geo|", {
       exp_central = 10.9,
       population = 5E5)
 
-  population_below_40 <- bestcost_pm_mortality_below_40$health_main$population
-  population_40_plus <- bestcost_pm_mortality_40_plus$health_main$population
-  population_total <- population_below_40 + population_40_plus
-
   testthat::expect_equal(
     object =
       healthiar::standardize(
@@ -84,10 +80,6 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
       bhd_central = c(4000, 8000),
       exp_central = c(10.9, 9.9),
       population = c(5E5, 1E6))
-
-  population_below_40_multigeo <- bestcost_pm_mortality_below_40_multigeo$health_main$population
-  population_40_plus_multigeo <- bestcost_pm_mortality_40_plus_multigeo$health_main$population
-  population_total_multigeo <- population_below_40_multigeo + population_40_plus_multigeo
 
   testthat::expect_equal(
     object =
