@@ -101,27 +101,34 @@ summarize_uncertainty <- function(
   base::options(digits = 15)
 
 
+
   ## Seeds ########
 
-  ## Save user's global random number generator (RNG) state if it exists,
-  ## e.g. if set.seed()) has been called at least once in the user's session
-  if(base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
+  # RNG setup for reproducible, independent streams
+  # Save user's global random number generator (RNG) state if it exists
+  old_seed_exists <- base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
+  if (old_seed_exists) {
     old_seed <- .Random.seed
-    base::on.exit(base::assign(".Random.seed", old_seed, envir = .GlobalEnv), add = TRUE)
+    }
+
+  # Save the current RNG kind so we can restore it later
+  old_RNGkind <- base::RNGkind()
+
+  # If the user provided a seed, switch to L'Ecuyer-CMRG and initialise it.
+  # This gives you a single seed that can be used to derive reproducible streams
+  # (supports parallel-safe advancing / cluster use).
+  if (!is.null(seed)) {
+    # switch to L'Ecuyer
+    base::RNGkind(kind = "L'Ecuyer-CMRG")
+    # initialise from that seed
+    base::set.seed(seed)
+    use_lecuyer <- TRUE
+  } else {
+    use_lecuyer <- FALSE
   }
 
-  ## Set seed for reproducibility
-  if(base::is.null(seed)){seed <- 123}
 
-  var_names <- c("rr", "exp", "cutoff", "bhd", "dw", "duration")
-  seeds <- base::list()
-
-  # Store seed
-  for(i in 1:base::length(var_names)){
-    seeds[[var_names[i]]] <- seed +i*1E3
-  }
-
-  ## Revant variables ##########
+  ## Relevant variables ##########
   # Store the input data as entered in the arguments
 
   input_args <- output_attribute$health_detailed$input_args
