@@ -710,6 +710,26 @@ summarize_uncertainty <- function(
 
   }
 
+
+  # Restore user's RNG state/kind ##############################################
+  # Restore .Random.seed as it was before we touched it
+  if (old_seed_exists) {
+    base::assign(".Random.seed", old_seed, envir = .GlobalEnv)
+  } else {
+    # If the user had no .Random.seed and we created one,
+    # remove it to avoid side-effects
+    if (!old_seed_exists &&
+        base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
+      try(base::rm(".Random.seed", envir = .GlobalEnv), silent = TRUE)
+    }
+  }
+
+  # Restore the RNG kind the user had (this resets to prior kind/sample.kind)
+  if (base::exists("old_RNGkind", inherits = FALSE)) {
+    base::do.call(base::RNGkind, base::as.list(old_RNGkind))
+  }
+
+
   # RETURN ####################################################################
 
   return(uncertainty)
