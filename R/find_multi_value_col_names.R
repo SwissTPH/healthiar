@@ -27,9 +27,10 @@ find_multi_value_col_names <- function(df,
       dplyr::across(
         .cols = dplyr::everything(),
         .fns = ~ base::length(base::unique(.x)) > 1)) |>
-    # Select columns where is TRUE
-    # Use isTRUE() because it ignores NAs
-    dplyr::select(dplyr::where(~ base::isTRUE(.x[1]))) |>
+    # Select only columns that have potentially multiple values
+    dplyr::select(-all_of(group_col_names)) |>
+    # Select columns where there is at least a TRUE (different value)
+    dplyr::select(dplyr::where(~ any(.x)))|>
     base::names()
 
   return(multi_value_col_names)
