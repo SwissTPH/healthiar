@@ -366,9 +366,9 @@ testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_
         rr_increment = 10,
         erf_shape = "log_linear",
         population = c(1E5, 2E5),
-        geo_id_micro = c("a", "b"))$health_main$impact|>base::round(4),
+        geo_id_micro = c("a", "b"))$health_main$impact_per_100k_inhab,
     expected =
-      c(48.2825, 84.9003) # Results on 30 April 2025; no comparison study
+      c(48.2824986/1E5*1E5, 84.9003458/2E5*1E5) # Results on 30 April 2025; no comparison study
   )
 
 })
@@ -1281,7 +1281,7 @@ testthat::test_that("results correct  pathway_ar|erf_formula|exp_dist|iteration_
       )$health_detailed$results_by_geo_id_micro$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
-      c(283, 398 )
+      c(283, 398)
   )
 })
 
