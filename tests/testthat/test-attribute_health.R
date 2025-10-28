@@ -339,6 +339,26 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_
 
 testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|", {
 
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        geo_id_micro = c("Zürich", "Basel", "Geneva", "Ticino", "Jura"),
+        geo_id_macro = c("German","German","French","Italian","French"),
+        erf_shape = "log_linear",
+        rr_central = 1.369,
+        rr_increment = 10,
+        cutoff_central = 5,
+        exp_central = c(11, 11, 10, 8, 7), # exposure in Geneva and Jura the same
+        bhd_central = c(4000, 2500, 3000, 1500, 500)
+        )$health_main$impact,
+    expected =
+      c(1116.41855325132, 466.433010062623, 134.881901125568 ) # Results on 28 Oct 2025; no comparison study
+  )
+
+})
+
+testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|", {
+
   bestcost_pm_mortality_a <-
     healthiar::attribute_health(
       exp_central = 8.1,
