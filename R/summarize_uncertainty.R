@@ -478,7 +478,7 @@ summarize_uncertainty <- function(
           distribution = dist,
           n = n_sim,
           # Different seed for each geo_unit to avoid similar results across geo_units
-          seed = seeds[[var]] + geo_id_number)}
+          seed = if (!is.null(seed[[var]])) seed_base + geo_id_number else NULL) }
       )
 
       # Second for those variable that are common for all geo units (rr, cutoff, dw and duration)
