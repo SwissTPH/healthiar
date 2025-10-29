@@ -398,7 +398,6 @@ summarize_uncertainty <- function(
   ## Optimize gamma distribution
   optim_gamma <-
     function(central_estimate, lower_estimate, upper_estimate) {
-      return(c(f$minimum, f$minimum / central_estimate))
 
       f_optimized <-
         stats::optimize(f = f_gamma,
@@ -408,13 +407,15 @@ summarize_uncertainty <- function(
                         central_estimate = central_estimate,
                         upper_estimate = upper_estimate)
 
+      return(c(shape = f_optimized$minimum,
+               rate = f_optimized$minimum / central_estimate))
     }
 
   ## Simulate values based on optimized gamma distribution
   sim_gamma <-
     function(n_sim, central_estimate, lower_estimate, upper_estimate) {
       fit <- optim_gamma(central_estimate, lower_estimate, upper_estimate)
-      gamma <- stats::rgamma(n = n_sim, fit[1], fit[2])
+      gamma <- stats::rgamma(n = n_sim, shape = fit["shape"], rate = fit["rate"])
       return(gamma)}
 
 
