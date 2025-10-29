@@ -101,6 +101,55 @@ summarize_uncertainty <- function(
   base::options(digits = 15)
 
 
+  ## Relevant variables ##########
+  # Store the input data as entered in the arguments
+  var_names <- c("rr", "exp", "cutoff", "bhd", "dw", "duration")
+  # vars that are identical across geo_ids
+  var_geo_identical <- c("rr", "cutoff", "dw", "duration")
+
+  input_args <- output_attribute$health_detailed$input_args
+  input_table <- output_attribute$health_detailed$input_table
+
+  is_two_cases <- base::any(c("input_table_scen_1", "input_table_scen_2") %in% base::names(input_table))
+  is_one_case <- !is_two_cases
+
+  if(is_one_case){
+    input_args_to_check <- output_attribute$health_detailed$input_args
+    input_table_to_check <- output_attribute$health_detailed$input_table
+  } else {
+    input_args_to_check <- output_attribute$health_detailed$input_args$input_args_scen_1
+    input_table_to_check <- output_attribute$health_detailed$input_table$input_table_scen_1
+    #Same as input_args_scen_2 (data validation of compare())
+  }
+
+  input_arg_names_passed <- input_args_to_check$is_entered_by_user |>
+    purrr::keep(~.x == TRUE) |>
+    base::names()
+
+  is_lifetable <- base::unique(input_table_to_check$is_lifetable)
+  exp_type <- base::unique(input_table_to_check$exp_type)
+
+
+  ## N #####
+  # Determine number of geographic units
+  n_geo <-
+    # Let's use here unique() and input_table instead of input_args
+    # because in some cases the users do not enter the geo_id.
+    # In that cases compile_input() provide a geo_id and it is shown in results_raw
+    base::length(base::unique(input_table$geo_id_micro))
+
+  ## Boolean variables ####
+
+  # Is there a confidence interval? I.e. lower and upper estimate?
+
+  ci_in <- base::list()
+
+  for (v in var_names){
+    ci_in[[v]] <-
+      !base::is.null(input_args$value[[base::paste0(v, "_lower")]]) &&
+      !base::is.null(input_args$value[[base::paste0(v, "_upper")]])
+  }
+
 
   ## Seeds ########
 
@@ -157,32 +206,8 @@ summarize_uncertainty <- function(
   },
   add = TRUE)
 
-  ## Relevant variables ##########
-  # Store the input data as entered in the arguments
-
-  input_args <- output_attribute$health_detailed$input_args
-  input_table <- output_attribute$health_detailed$input_table
-
-  is_two_cases <- base::any(c("input_table_scen_1", "input_table_scen_2") %in% base::names(input_table))
-  is_one_case <- !is_two_cases
-
-  if(is_one_case){
-    input_args_to_check <- output_attribute$health_detailed$input_args
-    input_table_to_check <- output_attribute$health_detailed$input_table
-  } else {
-    input_args_to_check <- output_attribute$health_detailed$input_args$input_args_scen_1
-    input_table_to_check <- output_attribute$health_detailed$input_table$input_table_scen_1
-    #Same as input_args_scen_2 (data validation of compare())
-  }
 
 
-
-  input_arg_names_passed <- input_args_to_check$is_entered_by_user |>
-    purrr::keep(~.x == TRUE) |>
-    base::names()
-
-  is_lifetable <- base::unique(input_table_to_check$is_lifetable)
-  exp_type <- base::unique(input_table_to_check$exp_type)
 
 
   # DATA VALIDATION ####
@@ -246,26 +271,6 @@ summarize_uncertainty <- function(
   # the function has to be run more than once (avoid copy-pasted code)
   summarize_uncertainty_based_on_input <-
     function(input_args, input_table){
-
-  ## N #####
-  # Determine number of geographic units
-  n_geo <-
-    # Let's use here unique() and input_table instead of input_args
-    # because in some cases the users do not enter the geo_id.
-    # In that cases compile_input() provide a geo_id and it is shown in results_raw
-    base::length(base::unique(input_table$geo_id_micro))
-
-  ## Boolean variables ####
-
-  # Is there a confidence interval? I.e. lower and upper estimate?
-
-  ci_in <- base::list()
-
-  for (v in var_names){
-    ci_in[[v]] <-
-      !base::is.null(input_args$value[[base::paste0(v, "_lower")]]) &&
-      !base::is.null(input_args$value[[base::paste0(v, "_upper")]])
-  }
 
   # Beta and gamma functions ############################
 
