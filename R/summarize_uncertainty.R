@@ -283,6 +283,8 @@ summarize_uncertainty <- function(
       dplyr::mutate(
         impact_rounded = base::round(impact, digits = 0)
       )
+
+    return(summary)
   }
 
 
