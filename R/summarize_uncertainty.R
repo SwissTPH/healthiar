@@ -380,7 +380,7 @@ summarize_uncertainty <- function(
   # NOTE: the functions were adapted from those provided by Sciensano
 
   # Set gamma distribution specs
-  probs <- c(0.025, 0.5, 0.975)
+  probs <- c(0.025, 0.975)
   # shape parameter of the gamma distribution
   par <- 2
 
@@ -391,7 +391,7 @@ summarize_uncertainty <- function(
       qfit <- stats::qgamma(p = probs,
                             shape = par,
                             rate = par / central_estimate)
-      return(base::sum((qfit - c(lower_estimate, central_estimate, upper_estimate))^2))
+      return(base::sum((qfit - c(lower_estimate, upper_estimate))^2))
     }
 
 
