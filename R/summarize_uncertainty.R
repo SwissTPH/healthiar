@@ -378,21 +378,24 @@ summarize_uncertainty <- function(
   # NOTE: the functions were adapted from those provided by Sciensano
 
   # Set gamma distribution specs
-  vector_probabilities <- c(0.025, 0.975)
+  probs <- c(0.025, 0.5, 0.975)
   # shape parameter of the gamma distribution
   par <- 2
 
   ## Fit gamma distribution
   f_gamma <-
-    function(par, central_estimate, vector_propabilities, lower_estimate, upper_estimate) {
-      qfit <- stats::qgamma(p = vector_propabilities, shape = par, rate = par / central_estimate)
-      return(base::sum((qfit - c(lower_estimate, upper_estimate))^2))
+    function(par, probs, lower_estimate, central_estimate, upper_estimate) {
+
+      qfit <- stats::qgamma(p = probs,
+                            shape = par,
+                            rate = par / central_estimate)
+      return(base::sum((qfit - c(lower_estimate, central_estimate, upper_estimate))^2))
     }
+
 
   ## Optimize gamma distribution
   optim_gamma <-
     function(central_estimate, lower_estimate, upper_estimate) {
-      vector_propabilities <- c(0.025, 0.975)
       f <- stats::optimize(f = f_gamma,
                     interval = c(0, 1e9),
                     central_estimate = central_estimate,
