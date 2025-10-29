@@ -378,7 +378,8 @@ summarize_uncertainty <- function(
 
   # Simulate function #####################
   simulate <- function(central, lower, upper, distribution, n, seed){
-    base::set.seed(seed)
+    if (!is.null(seed)) {
+      base::set.seed(seed)}
 
     if(distribution == "gamma"){
 
