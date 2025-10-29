@@ -152,7 +152,9 @@ summarize_uncertainty <- function(
   old_seed_exists <- base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
   if (old_seed_exists) {
     old_seed <- base::get(".Random.seed", envir = .GlobalEnv)
-    }
+  } else {
+    old_seed <- NULL
+  }
 
   # Save the current RNG kind so we can restore it later
   old_RNGkind <- base::RNGkind()
