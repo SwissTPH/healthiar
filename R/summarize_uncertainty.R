@@ -420,7 +420,7 @@ summarize_uncertainty <- function(
 
 
   # Simulate function #####################
-  simulate <- function(central, lower, upper, distribution, n, seed){
+  simulate <- function(central, lower, upper, distribution, n, seed = NULL){
     if (!is.null(seed)) {
       base::set.seed(seed)}
 
@@ -517,14 +517,24 @@ summarize_uncertainty <- function(
       sim[[var]] <- purrr::pmap(
         base::list(sim_template$geo_id_number),
         function(geo_id_number) {
+
+          # assign full .Random.seed stream if available for this var & geo
+          if (!base::is.null(stream_map)) {
+            base::assign(".Random.seed", stream_map[[var]][[geo_id_number]], envir = .GlobalEnv)
+          }
+
           simulate(
-          # Different seed for each geo_unit to avoid similar results across geo_units
-          seed = if (!is.null(seed[[var]])) seed_base + geo_id_number else NULL) }
             central = central,
             lower = lower,
             upper = upper,
             distribution = dist,
             n = n_sim,
+            # Keep the seed argument for now although it should be NULL.
+            # It’s useful for backward compatibility, unit tests, and standalone calls,
+            # but the function should ignore it
+            # when you drive reproducibility by assigning full L'Ecuyer .Random.seed streams externally.
+            seed = NULL)
+          }
       )
 
       # Second for those variable that are common for all geo units (rr, cutoff, dw and duration)
@@ -532,17 +542,21 @@ summarize_uncertainty <- function(
       # Not across geo_id but across sim_id
     } else if (var %in% var_names_with_ci_geo_identical ){
 
+      # If reproducible streams were requested and stream_map[[var]] contains one stream vector,
+      # assign it once, then call simulate(...) to create a single vector of length n_sim.
+      if (!is.null(stream_map)) {
+        base::assign(".Random.seed", stream_map[[var]][[1]], envir = .GlobalEnv)
+      }
+
       sim[[var]] <-
         base::list(
           simulate(
-          # Different seed for each geo_unit to avoid similar results across geo_units
-          seed = seeds[[var]]))
-
             central = central,
             lower = lower,
             upper = upper,
             distribution = dist,
             n = n_sim,
+            seed = NULL))
     }
 
   }
