@@ -506,13 +506,13 @@ summarize_uncertainty <- function(
         base::list(sim_template$geo_id_number),
         function(geo_id_number) {
           simulate(
-          central = central,
-          lower = lower,
-          upper = upper,
-          distribution = dist,
-          n = n_sim,
           # Different seed for each geo_unit to avoid similar results across geo_units
           seed = if (!is.null(seed[[var]])) seed_base + geo_id_number else NULL) }
+            central = central,
+            lower = lower,
+            upper = upper,
+            distribution = dist,
+            n = n_sim,
       )
 
       # Second for those variable that are common for all geo units (rr, cutoff, dw and duration)
@@ -523,16 +523,15 @@ summarize_uncertainty <- function(
       sim[[var]] <-
         base::list(
           simulate(
-          central = central,
-          lower = lower,
-          upper = upper,
-          distribution = dist,
-          n = n_sim,
           # Different seed for each geo_unit to avoid similar results across geo_units
           seed = seeds[[var]]))
 
+            central = central,
+            lower = lower,
+            upper = upper,
+            distribution = dist,
+            n = n_sim,
     }
-
 
   }
 
@@ -592,11 +591,13 @@ summarize_uncertainty <- function(
 
   # Call get_impact taking benefit of the vectorized structure
   # impact by row no matter what you enter (e.g. multiple rr by geo_id_micro)
-  impact_sim <- get_impact(input_table = input_table_with_sim,
-                                                    pop_fraction_type = "paf")
+  impact_sim <-
+    get_impact(input_table = input_table_with_sim,
+               pop_fraction_type = "paf")
 
   # Get output
-  output_sim <- get_output(results_raw = impact_sim$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
+  output_sim <-
+    get_output(results_raw = impact_sim$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
 
 
   impact_by_sim <- output_sim |>
