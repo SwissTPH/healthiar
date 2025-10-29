@@ -429,6 +429,8 @@ summarize_uncertainty <- function(
             lower_estimate = lower,
             upper_estimate = upper))
 
+      return(simulation)
+
     } else if (distribution == "normal"){
         simulation <-
           #abs() because negative values have to be avoided
@@ -452,10 +454,11 @@ summarize_uncertainty <- function(
           n = n,
           shape1 = base::as.numeric(base::unname(simulation_betaExpert["alpha"])),
           shape2 = base::as.numeric(base::unname(simulation_betaExpert["beta"])))
+
+      return(simulation)
     }
 
   }
-
 
   ## Template and simulations #####
   sim_template <- input_table |>
