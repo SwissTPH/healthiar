@@ -38,8 +38,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
         n_sim = 100,
         seed = 122
         )$uncertainty_main$impact_rounded,
-    expected = # Results on 2025-06-04; no comparison study
-      c(1303, 528, 2246)
+    expected = # Results on 2025-10-29; no comparison study
+      c(1318, 639, 2239)
   )
 })
 
@@ -73,8 +73,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
         seed = 123
       )$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2025-06-04; no comparison study
-      c(2591.0, 745.0, 7400.0, 2599.0, 537.0, 6566.0)
+    expected = # Results on 2025-10-29; no comparison study
+      c(2853, 936, 6531, 2943, 875, 7232)
   )
 })
 
@@ -103,8 +103,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
         n_sim = 100
       )$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2025-07-17; no comparison study
-      c(14672, 6900, 23566, 15485, 7350, 24879)
+    expected = # Results on 2025-10-29; no comparison study
+      c(16001, 7422, 22292, 16989, 7855, 23587)
   )
 })
 
@@ -145,8 +145,8 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_
         seed = 122
       )$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2025-06-04; no comparison study
-      c(643, 264, 1255)
+    expected = # Results on 2025-10-29; no comparison study
+      c(706, 230, 1309)
   )
 })
 
@@ -179,8 +179,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
         n_sim = 100,
         seed = 122)$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2025-06-04; no comparison study
-      c(1199, 890, 1430)
+    expected = # Results on 2025-10-29; no comparison study
+      c(1146, 910, 1478)
   )
 })
 
@@ -211,8 +211,8 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_dist|erf_ar_fo
         n_sim = 100,
         seed = 122)$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2025-06-04; no comparison study
-      c(177388, 15557, 527362)
+    expected = # Results on 2025-10-29; no comparison study
+      c(171674, 2430, 614420)
   )
 })
 
@@ -257,8 +257,8 @@ testthat::test_that("results correct |pathway_uncertainty_compare|exp_dist|erf_a
         n_sim = 100,
         seed = 122)$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2025-06-04; no comparison study
-      c(528, 148, 1173)
+    expected = # Results on 2025-10-29; no comparison study
+      c(545.0, 171, 1107)
   )
 })
 
@@ -296,8 +296,8 @@ testthat::test_that("summary uncertainty comparison iteration", {
       healthiar::summarize_uncertainty(
         output_attribute = comparison_iteration,
         n_sim = 100)$uncertainty_main$impact_rounded,
-    expected = # Results on 2025-06-05; no comparison study
-      c(1052.0, 634.0, 1510.0)
+    expected = # Results on 2025-10-29; no comparison study
+      c(1113, 418, 1729)
   )
 })
 
