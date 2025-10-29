@@ -443,8 +443,10 @@ summarize_uncertainty <- function(
           base::abs(
             stats::rnorm(
               n = n,
-              mean = base::unlist(central),
-              sd = (base::unlist(upper) - base::unlist(lower)) / (2 * stats::qnorm(0.975))))
+              mean = central,
+              sd = (upper - lower) / (2 * stats::qnorm(0.975))))
+
+
 
     } else if (distribution == "beta") {
 
