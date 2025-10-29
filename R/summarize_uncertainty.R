@@ -477,6 +477,17 @@ summarize_uncertainty <- function(
 
   }
 
+  ##  Identify relevant var_names
+  # Variable names with confidence interval #####
+  var_names_with_ci <- base::names(ci_in)[base::unlist(ci_in)]
+  var_names_with_ci_in_name <- base::gsub("rr", "erf", var_names_with_ci) |> base::paste0("_ci")
+  # var_names_with_ci that have simulated values identical in all geo units
+  var_names_with_ci_geo_identical <- base::intersect(var_names_with_ci,  var_geo_identical)
+  # var_names_with_ci that have simulated values different in all geo units
+  var_names_with_ci_geo_different <- base::setdiff(var_names_with_ci, var_geo_identical)
+
+
+
   ## Template and simulations #####
   sim_template <- input_table |>
     dplyr::select(geo_id_micro) |>
@@ -484,13 +495,6 @@ summarize_uncertainty <- function(
     dplyr::mutate(geo_id_number = 1:n_geo) |>
     dplyr::mutate(sim_id = base::list(1:n_sim))
 
-  # Identify the variable names with confidence interval
-  var_names_with_ci <- base::names(ci_in)[base::unlist(ci_in)]
-  var_names_with_ci_in_name <- base::gsub("rr", "erf", var_names_with_ci) |> base::paste0("_ci")
-  # Identify those var_names_with_ci that have simulated values different in all geo units
-  var_names_with_ci_geo_different <- base::intersect(var_names_with_ci, c("exp", "bhd"))
-  # And now identical
-  var_names_with_ci_geo_identical <- base::intersect(var_names_with_ci,  c("rr", "cutoff", "dw", "duration"))
 
 
   # Define the mapping between variable names and their distributions
