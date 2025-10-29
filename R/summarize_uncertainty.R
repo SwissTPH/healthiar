@@ -287,8 +287,21 @@ summarize_uncertainty <- function(
   # Create the function that make the whole job
   # It is important to create it because for two cases (comparison)
   # the function has to be run more than once (avoid copy-pasted code)
-  summarize_uncertainty_based_on_input <-
-    function(input_args, input_table){
+  summarize_uncertainty_based_on_input <- function(input_args, input_table, stream_map){
+
+
+    ## Boolean variables ####
+
+    # Is there a confidence interval? I.e. lower and upper estimate?
+
+    ci_in <- base::list()
+
+    for (v in var_names){
+      ci_in[[v]] <-
+        !base::is.null(input_args$value[[base::paste0(v, "_lower")]]) &&
+        !base::is.null(input_args$value[[base::paste0(v, "_upper")]])
+    }
+
 
   # Beta and gamma functions ############################
 
