@@ -398,13 +398,16 @@ summarize_uncertainty <- function(
   ## Optimize gamma distribution
   optim_gamma <-
     function(central_estimate, lower_estimate, upper_estimate) {
-      f <- stats::optimize(f = f_gamma,
-                    interval = c(0, 1e9),
-                    central_estimate = central_estimate,
-                    vector_propabilities = vector_probabilities,
-                    lower_estimate = lower_estimate,
-                    upper_estimate = upper_estimate)
       return(c(f$minimum, f$minimum / central_estimate))
+
+      f_optimized <-
+        stats::optimize(f = f_gamma,
+                        interval = c(0, 1e9),
+                        probs = probs,
+                        lower_estimate = lower_estimate,
+                        central_estimate = central_estimate,
+                        upper_estimate = upper_estimate)
+
     }
 
   ## Simulate values based on optimized gamma distribution
