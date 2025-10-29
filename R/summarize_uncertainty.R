@@ -163,8 +163,6 @@ summarize_uncertainty <- function(
   # Save the current RNG kind so we can restore it later
   old_RNGkind <- base::RNGkind()
 
-  # Create empty list for the different seeds for the variables
-  var_names <- c("rr", "exp", "cutoff", "bhd", "dw", "duration")
   seeds <- setNames(vector("list", length(var_names)), var_names)
 
   # If the user provided a seed, switch to L'Ecuyer-CMRG and initialise it.
