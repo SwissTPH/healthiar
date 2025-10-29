@@ -177,34 +177,8 @@ summarize_uncertainty <- function(
     base::RNGkind(kind = "L'Ecuyer-CMRG")
     base::set.seed(seed)
 
-    # Prepare streams
-    # Current seed vector (after set.seed(seed)) is a valid L'Ecuyer stream
-    current_stream <- base::get(".Random.seed", envir = .GlobalEnv)
-
-    # Prepare structure to hold full .Random.seed vectors per var and geo
-    stream_map <- stats::setNames(base::vector("list", base::length(var_names)),
-                                 var_names)
-
-    # Iterate vars and allocate one stream per needed item:
-    for (v in var_names) {
-      if (v %in% var_geo_identical) {
-        # only one stream per variable
-        stream_map[[v]] <- base::list(current_stream)
-        current_stream <- parallel::nextRNGStream(current_stream)
-      } else {
-        # one stream per geo_id for this variable
-        stream_map[[v]] <- base::vector("list", n_geo)
-        for (g in base::seq_len(n_geo)) {
-          stream_map[[v]][[g]] <- current_stream
-          current_stream <- parallel::nextRNGStream(current_stream)
-        }
-      }
-    }
-
     } else {
       use_streams <- FALSE
-      stream_seeds <- NULL
-      stream_map <- NULL
   }
 
   # Ensure RNG state and kind are restored on exit
@@ -282,6 +256,40 @@ summarize_uncertainty <- function(
       )
 
     return(summary)
+  }
+
+
+  ## Prepare streams ########
+  # Important: Out of summarize_uncertainty_based_on_input(), see below.
+  # Otherwise, different seed for each scenario in two cases
+  # and results always different  (no reproducibility)
+  if(use_streams){
+    # Current seed vector (after set.seed(seed)) is a valid L'Ecuyer stream
+    current_stream <- base::get(".Random.seed", envir = .GlobalEnv)
+
+    # Prepare structure to hold full .Random.seed vectors per var and geo
+    stream_map <- stats::setNames(base::vector("list", base::length(var_names)),
+                                  var_names)
+
+
+
+    # Iterate vars and allocate one stream per needed item:
+    for (v in var_names) {
+      if (v %in% var_geo_identical) {
+        # only one stream per variable
+        stream_map[[v]] <- base::list(current_stream)
+        current_stream <- parallel::nextRNGStream(current_stream)
+      } else {
+        # one stream per geo_id for this variable
+        stream_map[[v]] <- base::vector("list", n_geo)
+        for (g in base::seq_len(n_geo)) {
+          stream_map[[v]][[g]] <- current_stream
+          current_stream <- parallel::nextRNGStream(current_stream)
+        }
+      }
+    }
+  } else {
+    stream_map <- NULL
   }
 
 
