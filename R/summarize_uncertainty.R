@@ -208,6 +208,7 @@ summarize_uncertainty <- function(
     } else {
       use_streams <- FALSE
       stream_seeds <- NULL
+      stream_map <- NULL
   }
 
   # Ensure RNG state and kind are restored on exit
