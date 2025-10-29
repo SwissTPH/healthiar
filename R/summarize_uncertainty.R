@@ -163,28 +163,51 @@ summarize_uncertainty <- function(
   # Save the current RNG kind so we can restore it later
   old_RNGkind <- base::RNGkind()
 
-  seeds <- setNames(vector("list", length(var_names)), var_names)
+  # Prepare L'Ecuyer stream seeds if user asked for reproducibility
 
-  # If the user provided a seed, switch to L'Ecuyer-CMRG and initialise it.
-  # This gives you a single seed that can be used to derive reproducible streams
-  # (supports parallel-safe advancing / cluster use).
+  # If users request reproducibility (seed not being NULL), switch to L'Ecuyer-CMRG,
+  # set.seed(seed) once, and pre-generate full independent L'Ecuyer streams
+  # (.Random.seed vectors) for each vectorized simulate() call using
+  # parallel::nextRNGStream().
+  # We then assign those full .Random.seed vectors
+  # before each vectorized simulate() call to guarantee independence and avoid
+  # integer-seed collisions.
+
   if (!is.null(seed)) {
-    # switch to L'Ecuyer
+    # If the user provided a seed, switch to L'Ecuyer-CMRG and initialise it.
+    # This gives a single seed that can be used to derive reproducible streams
+    # (supports parallel-safe advancing / cluster use).
+    use_streams <- TRUE
     base::RNGkind(kind = "L'Ecuyer-CMRG")
-    # initialise from that seed
     base::set.seed(seed)
 
-    # create per-variable numeric seeds to preserve per-variable-seed behaviour
-    for (i in base::seq_along(var_names)) {
-      seeds[[var_names[i]]] <- seed + i * 1e3
+    # Prepare streams
+    # Current seed vector (after set.seed(seed)) is a valid L'Ecuyer stream
+    current_stream <- base::get(".Random.seed", envir = .GlobalEnv)
+
+    # Prepare structure to hold full .Random.seed vectors per var and geo
+    stream_map <- stats::setNames(base::vector("list", base::length(var_names)),
+                                 var_names)
+
+    # Iterate vars and allocate one stream per needed item:
+    for (v in var_names) {
+      if (v %in% var_geo_identical) {
+        # only one stream per variable
+        stream_map[[v]] <- base::list(current_stream)
+        current_stream <- parallel::nextRNGStream(current_stream)
+      } else {
+        # one stream per geo_id for this variable
+        stream_map[[v]] <- base::vector("list", n_geo)
+        for (g in base::seq_len(n_geo)) {
+          stream_map[[v]][[g]] <- current_stream
+          current_stream <- parallel::nextRNGStream(current_stream)
+        }
+      }
     }
 
-  } else {
-    # Leave seeds as NULL placeholders so downstream code that checks for NULL seed
-    # will use the global RNG (no internal reseeding).
-   for (v in var_names) {
-     seeds[[v]] <- NULL
-     }
+    } else {
+      use_streams <- FALSE
+      stream_seeds <- NULL
   }
 
   # Ensure RNG state and kind are restored on exit
@@ -208,7 +231,7 @@ summarize_uncertainty <- function(
 
 
 
-  # DATA VALIDATION ####
+  # DATA VALIDATION ##################
   ## Error if uncertainty in erf_eq_... ####
   # Uncertainty in erf_eq is currently not supported
   # It would require a more complex modelling
@@ -234,7 +257,6 @@ summarize_uncertainty <- function(
     base::stop("Please enter an assessment with uncertainty (..._lower and ..._upper) in any argument.",
                call. = FALSE)
   }
-
 
 
 
