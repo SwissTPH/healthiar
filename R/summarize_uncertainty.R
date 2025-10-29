@@ -141,15 +141,8 @@ summarize_uncertainty <- function(
       n_geo <- base::length(base::unique(input_table$input_table_scen_1$geo_id_micro))
     }
 
-  # Is there a confidence interval? I.e. lower and upper estimate?
 
-  ci_in <- base::list()
 
-  for (v in var_names){
-    ci_in[[v]] <-
-      !base::is.null(input_args$value[[base::paste0(v, "_lower")]]) &&
-      !base::is.null(input_args$value[[base::paste0(v, "_upper")]])
-  }
 
 
   ## Seeds ########
