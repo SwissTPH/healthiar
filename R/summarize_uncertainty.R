@@ -126,9 +126,18 @@ summarize_uncertainty <- function(
     base::RNGkind(kind = "L'Ecuyer-CMRG")
     # initialise from that seed
     base::set.seed(seed)
-    use_lecuyer <- TRUE
+
+    # create per-variable numeric seeds to preserve per-variable-seed behaviour
+    for (i in base::seq_along(var_names)) {
+      seeds[[var_names[i]]] <- seed + i * 1e3
+    }
+
   } else {
-    use_lecuyer <- FALSE
+    # Leave seeds as NULL placeholders so downstream code that checks for NULL seed
+    # will use the global RNG (no internal reseeding).
+   for (v in var_names) {
+     seeds[[v]] <- NULL
+     }
   }
 
   # Ensure RNG state and kind are restored on exit
