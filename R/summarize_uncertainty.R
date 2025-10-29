@@ -101,28 +101,11 @@ summarize_uncertainty <- function(
   base::options(digits = 15)
 
 
-  ## Seeds ########
-
-  ## Save user's global random number generator (RNG) state if it exists,
-  ## e.g. if set.seed()) has been called at least once in the user's session
-  if(base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
-    old_seed <- .Random.seed
-    base::on.exit(base::assign(".Random.seed", old_seed, envir = .GlobalEnv), add = TRUE)
-  }
-
-  ## Set seed for reproducibility
-  if(base::is.null(seed)){seed <- 123}
-
-  var_names <- c("rr", "exp", "cutoff", "bhd", "dw", "duration")
-  seeds <- base::list()
-
-  # Store seed
-  for(i in 1:base::length(var_names)){
-    seeds[[var_names[i]]] <- seed +i*1E3
-  }
-
-  ## Revant variables ##########
+  ## Relevant variables ##########
   # Store the input data as entered in the arguments
+  var_names <- c("rr", "exp", "cutoff", "bhd", "dw", "duration")
+  # vars that are identical across geo_ids
+  var_geo_identical <- c("rr", "cutoff", "dw", "duration")
 
   input_args <- output_attribute$health_detailed$input_args
   input_table <- output_attribute$health_detailed$input_table
@@ -139,8 +122,6 @@ summarize_uncertainty <- function(
     #Same as input_args_scen_2 (data validation of compare())
   }
 
-
-
   input_arg_names_passed <- input_args_to_check$is_entered_by_user |>
     purrr::keep(~.x == TRUE) |>
     base::names()
@@ -148,8 +129,71 @@ summarize_uncertainty <- function(
   is_lifetable <- base::unique(input_table_to_check$is_lifetable)
   exp_type <- base::unique(input_table_to_check$exp_type)
 
+  # Determine number of geographic units (n_geo)
+  if(is_one_case) {
+    # Let's use here unique() and input_table instead of input_args
+    # because in some cases the users do not enter the geo_id.
+    # In that cases compile_input() provide a geo_id and it is shown in results_raw
+    n_geo <- base::length(base::unique(input_table$geo_id_micro))
 
-  # DATA VALIDATION ####
+    } else {
+      # Same for scen_1 and scen_2 so just take one of them
+      n_geo <- base::length(base::unique(input_table$input_table_scen_1$geo_id_micro))
+    }
+
+
+
+
+
+  ## Seeds ########
+
+  # RNG setup for reproducible, independent streams
+  # Save user's global random number generator (RNG) state if it exists
+  old_seed_exists <- base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
+  if (old_seed_exists) {
+    old_seed <- base::get(".Random.seed", envir = .GlobalEnv)
+  } else {
+    old_seed <- NULL
+  }
+
+  # Save the current RNG kind so we can restore it later
+  old_RNGkind <- base::RNGkind()
+
+  # Prepare L'Ecuyer stream seeds if user asked for reproducibility
+
+  # If users request reproducibility (seed not being NULL), switch to L'Ecuyer-CMRG,
+  # set.seed(seed) once, and pre-generate full independent L'Ecuyer streams
+  # (.Random.seed vectors) for each vectorized simulate() call using
+  # parallel::nextRNGStream().
+  # We then assign those full .Random.seed vectors
+  # before each vectorized simulate() call to guarantee independence and avoid
+  # integer-seed collisions.
+
+  if (!is.null(seed)) {
+    # If the user provided a seed, switch to L'Ecuyer-CMRG and initialise it.
+    # This gives a single seed that can be used to derive reproducible streams
+    # (supports parallel-safe advancing / cluster use).
+    use_streams <- TRUE
+    base::RNGkind(kind = "L'Ecuyer-CMRG")
+    base::set.seed(seed)
+
+    } else {
+      use_streams <- FALSE
+  }
+
+  # Ensure RNG state and kind are restored on exit
+  base::on.exit({
+    base::do.call(base::RNGkind, as.list(old_RNGkind))
+    if (!base::is.null(old_seed)) {
+      base::assign(".Random.seed", old_seed, envir = .GlobalEnv)
+    } else if (base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
+      base::rm(".Random.seed", envir = .GlobalEnv)
+    }
+  }, add = TRUE)
+
+
+
+  # DATA VALIDATION ##################
   ## Error if uncertainty in erf_eq_... ####
   # Uncertainty in erf_eq is currently not supported
   # It would require a more complex modelling
@@ -178,7 +222,6 @@ summarize_uncertainty <- function(
 
 
 
-
   # FUNCTION TO SUMMARIZE UNCERTAINTY ######
   # Create sub-functions to be used inside summarize_uncertainty_based_on_input (see below)
   # and in compare() out that function
@@ -202,34 +245,63 @@ summarize_uncertainty <- function(
       dplyr::mutate(
         impact_rounded = base::round(impact, digits = 0)
       )
+
+    return(summary)
+  }
+
+
+  ## Prepare streams ########
+  # Important: Out of summarize_uncertainty_based_on_input(), see below.
+  # Otherwise, different seed for each scenario in two cases
+  # and results always different  (no reproducibility)
+  if(use_streams){
+    # Current seed vector (after set.seed(seed)) is a valid L'Ecuyer stream
+    current_stream <- base::get(".Random.seed", envir = .GlobalEnv)
+
+    # Prepare structure to hold full .Random.seed vectors per var and geo
+    stream_map <- stats::setNames(base::vector("list", base::length(var_names)),
+                                  var_names)
+
+
+
+    # Iterate vars and allocate one stream per needed item:
+    for (v in var_names) {
+      if (v %in% var_geo_identical) {
+        # only one stream per variable
+        stream_map[[v]] <- base::list(current_stream)
+        current_stream <- parallel::nextRNGStream(current_stream)
+      } else {
+        # one stream per geo_id for this variable
+        stream_map[[v]] <- base::vector("list", n_geo)
+        for (g in base::seq_len(n_geo)) {
+          stream_map[[v]][[g]] <- current_stream
+          current_stream <- parallel::nextRNGStream(current_stream)
+        }
+      }
+    }
+  } else {
+    stream_map <- NULL
   }
 
 
   # Create the function that make the whole job
   # It is important to create it because for two cases (comparison)
   # the function has to be run more than once (avoid copy-pasted code)
-  summarize_uncertainty_based_on_input <-
-    function(input_args, input_table){
+  summarize_uncertainty_based_on_input <- function(input_args, input_table, stream_map){
 
-  ## N #####
-  # Determine number of geographic units
-  n_geo <-
-    # Let's use here unique() and input_table instead of input_args
-    # because in some cases the users do not enter the geo_id.
-    # In that cases compile_input() provide a geo_id and it is shown in results_raw
-    base::length(base::unique(input_table$geo_id_micro))
 
-  ## Boolean variables ####
+    ## Boolean variables ####
 
-  # Is there a confidence interval? I.e. lower and upper estimate?
+    # Is there a confidence interval? I.e. lower and upper estimate?
 
-  ci_in <- base::list()
+    ci_in <- base::list()
 
-  for (v in var_names){
-    ci_in[[v]] <-
-      !base::is.null(input_args$value[[base::paste0(v, "_lower")]]) &&
-      !base::is.null(input_args$value[[base::paste0(v, "_upper")]])
-  }
+    for (v in var_names){
+      ci_in[[v]] <-
+        !base::is.null(input_args$value[[base::paste0(v, "_lower")]]) &&
+        !base::is.null(input_args$value[[base::paste0(v, "_upper")]])
+    }
+
 
   # Beta and gamma functions ############################
 
@@ -317,41 +389,49 @@ summarize_uncertainty <- function(
   # NOTE: the functions were adapted from those provided by Sciensano
 
   # Set gamma distribution specs
-  vector_probabilities <- c(0.025, 0.975)
+  probs <- c(0.025, 0.975)
   # shape parameter of the gamma distribution
   par <- 2
 
   ## Fit gamma distribution
   f_gamma <-
-    function(par, central_estimate, vector_propabilities, lower_estimate, upper_estimate) {
-      qfit <- stats::qgamma(p = vector_propabilities, shape = par, rate = par / central_estimate)
+    function(par, probs, lower_estimate, central_estimate, upper_estimate) {
+
+      qfit <- stats::qgamma(p = probs,
+                            shape = par,
+                            rate = par / central_estimate)
       return(base::sum((qfit - c(lower_estimate, upper_estimate))^2))
     }
+
 
   ## Optimize gamma distribution
   optim_gamma <-
     function(central_estimate, lower_estimate, upper_estimate) {
-      vector_propabilities <- c(0.025, 0.975)
-      f <- stats::optimize(f = f_gamma,
-                    interval = c(0, 1e9),
-                    central_estimate = central_estimate,
-                    vector_propabilities = vector_probabilities,
-                    lower_estimate = lower_estimate,
-                    upper_estimate = upper_estimate)
-      return(c(f$minimum, f$minimum / central_estimate))
+
+      f_optimized <-
+        stats::optimize(f = f_gamma,
+                        interval = c(0, 1e9),
+                        probs = probs,
+                        lower_estimate = lower_estimate,
+                        central_estimate = central_estimate,
+                        upper_estimate = upper_estimate)
+
+      return(c(shape = f_optimized$minimum,
+               rate = f_optimized$minimum / central_estimate))
     }
 
   ## Simulate values based on optimized gamma distribution
   sim_gamma <-
     function(n_sim, central_estimate, lower_estimate, upper_estimate) {
       fit <- optim_gamma(central_estimate, lower_estimate, upper_estimate)
-      gamma <- stats::rgamma(n = n_sim, fit[1], fit[2])
+      gamma <- stats::rgamma(n = n_sim, shape = fit["shape"], rate = fit["rate"])
       return(gamma)}
 
 
   # Simulate function #####################
-  simulate <- function(central, lower, upper, distribution, n, seed){
-    base::set.seed(seed)
+  simulate <- function(central, lower, upper, distribution, n, seed = NULL){
+    if (!is.null(seed)) {
+      base::set.seed(seed)}
 
     if(distribution == "gamma"){
 
@@ -364,14 +444,18 @@ summarize_uncertainty <- function(
             lower_estimate = lower,
             upper_estimate = upper))
 
+      return(simulation)
+
     } else if (distribution == "normal"){
         simulation <-
           #abs() because negative values have to be avoided
           base::abs(
             stats::rnorm(
               n = n,
-              mean = base::unlist(central),
-              sd = (base::unlist(upper) - base::unlist(lower)) / (2 * stats::qnorm(0.975))))
+              mean = central,
+              sd = (upper - lower) / (2 * stats::qnorm(0.975))))
+
+
 
     } else if (distribution == "beta") {
 
@@ -387,9 +471,21 @@ summarize_uncertainty <- function(
           n = n,
           shape1 = base::as.numeric(base::unname(simulation_betaExpert["alpha"])),
           shape2 = base::as.numeric(base::unname(simulation_betaExpert["beta"])))
+
+      return(simulation)
     }
 
   }
+
+  ##  Identify relevant var_names
+  # Variable names with confidence interval #####
+  var_names_with_ci <- base::names(ci_in)[base::unlist(ci_in)]
+  var_names_with_ci_in_name <- base::gsub("rr", "erf", var_names_with_ci) |> base::paste0("_ci")
+  # var_names_with_ci that have simulated values identical in all geo units
+  var_names_with_ci_geo_identical <- base::intersect(var_names_with_ci,  var_geo_identical)
+  # var_names_with_ci that have simulated values different in all geo units
+  var_names_with_ci_geo_different <- base::setdiff(var_names_with_ci, var_geo_identical)
+
 
 
   ## Template and simulations #####
@@ -399,13 +495,6 @@ summarize_uncertainty <- function(
     dplyr::mutate(geo_id_number = 1:n_geo) |>
     dplyr::mutate(sim_id = base::list(1:n_sim))
 
-  # Identify the variable names with confidence interval
-  var_names_with_ci <- base::names(ci_in)[base::unlist(ci_in)]
-  var_names_with_ci_in_name <- base::gsub("rr", "erf", var_names_with_ci) |> base::paste0("_ci")
-  # Identify those var_names_with_ci that have simulated values different in all geo units
-  var_names_with_ci_geo_different <- base::intersect(var_names_with_ci, c("exp", "bhd"))
-  # And now identical
-  var_names_with_ci_geo_identical <- base::intersect(var_names_with_ci,  c("rr", "cutoff", "dw", "duration"))
 
 
   # Define the mapping between variable names and their distributions
@@ -443,14 +532,24 @@ summarize_uncertainty <- function(
       sim[[var]] <- purrr::pmap(
         base::list(sim_template$geo_id_number),
         function(geo_id_number) {
+
+          # assign full .Random.seed stream if available for this var & geo
+          if (!base::is.null(stream_map)) {
+            base::assign(".Random.seed", stream_map[[var]][[geo_id_number]], envir = .GlobalEnv)
+          }
+
           simulate(
-          central = central,
-          lower = lower,
-          upper = upper,
-          distribution = dist,
-          n = n_sim,
-          # Different seed for each geo_unit to avoid similar results across geo_units
-          seed = seeds[[var]] + geo_id_number)}
+            central = central,
+            lower = lower,
+            upper = upper,
+            distribution = dist,
+            n = n_sim,
+            # Keep the seed argument for now although it should be NULL.
+            # It’s useful for backward compatibility, unit tests, and standalone calls,
+            # but the function should ignore it
+            # when you drive reproducibility by assigning full L'Ecuyer .Random.seed streams externally.
+            seed = NULL)
+          }
       )
 
       # Second for those variable that are common for all geo units (rr, cutoff, dw and duration)
@@ -458,19 +557,22 @@ summarize_uncertainty <- function(
       # Not across geo_id but across sim_id
     } else if (var %in% var_names_with_ci_geo_identical ){
 
+      # If reproducible streams were requested and stream_map[[var]] contains one stream vector,
+      # assign it once, then call simulate(...) to create a single vector of length n_sim.
+      if (!is.null(stream_map)) {
+        base::assign(".Random.seed", stream_map[[var]][[1]], envir = .GlobalEnv)
+      }
+
       sim[[var]] <-
         base::list(
           simulate(
-          central = central,
-          lower = lower,
-          upper = upper,
-          distribution = dist,
-          n = n_sim,
-          # Different seed for each geo_unit to avoid similar results across geo_units
-          seed = seeds[[var]]))
-
+            central = central,
+            lower = lower,
+            upper = upper,
+            distribution = dist,
+            n = n_sim,
+            seed = NULL))
     }
-
 
   }
 
@@ -530,11 +632,13 @@ summarize_uncertainty <- function(
 
   # Call get_impact taking benefit of the vectorized structure
   # impact by row no matter what you enter (e.g. multiple rr by geo_id_micro)
-  impact_sim <- get_impact(input_table = input_table_with_sim,
-                                                    pop_fraction_type = "paf")
+  impact_sim <-
+    get_impact(input_table = input_table_with_sim,
+               pop_fraction_type = "paf")
 
   # Get output
-  output_sim <- get_output(results_raw = impact_sim$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
+  output_sim <-
+    get_output(results_raw = impact_sim$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
 
 
   impact_by_sim <- output_sim |>
@@ -589,7 +693,8 @@ summarize_uncertainty <- function(
       c(output_attribute,
         summarize_uncertainty_based_on_input(
           input_args = input_args,
-          input_table = input_table))
+          input_table = input_table,
+          stream_map = stream_map))
 
   ## Two cases (comparison) ####
   } else if (is_two_cases){
@@ -598,13 +703,15 @@ summarize_uncertainty <- function(
     attribute_scen_1 <-
       summarize_uncertainty_based_on_input(
         input_args = input_args[["input_args_scen_1"]],
-        input_table = input_table[["input_table_scen_1"]])
+        input_table = input_table[["input_table_scen_1"]],
+        stream_map = stream_map)
 
     # Once for the scenario 2
     attribute_scen_2 <-
       summarize_uncertainty_based_on_input(
         input_args = input_args[["input_args_scen_2"]],
-        input_table = input_table[["input_table_scen_2"]])
+        input_table = input_table[["input_table_scen_2"]],
+        stream_map = stream_map)
 
     # Extract simulation values 1 and 2
     # Extract output 1 and 2
@@ -702,6 +809,7 @@ summarize_uncertainty <- function(
                        uncertainty_by_geo_id_micro = summary_by_geo_id_micro)))
 
   }
+
 
   # RETURN ####################################################################
 
