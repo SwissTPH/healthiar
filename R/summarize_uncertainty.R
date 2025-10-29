@@ -127,6 +127,22 @@ summarize_uncertainty <- function(
     use_lecuyer <- FALSE
   }
 
+  # Ensure RNG state and kind are restored on exit
+  base::on.exit({
+    # Restore .Random.seed or remove if it did not exist before
+    if (old_seed_exists) {
+      base::assign(".Random.seed", old_seed, envir = .GlobalEnv)
+    } else {
+      if (base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
+        try(base::rm(".Random.seed", envir = .GlobalEnv), silent = TRUE)
+      }
+    }
+    # Restore RNGkind
+    if (base::exists("old_RNGkind", inherits = FALSE)) {
+      base::do.call(base::RNGkind, as.list(old_RNGkind))
+    }
+  },
+  add = TRUE)
 
   ## Relevant variables ##########
   # Store the input data as entered in the arguments
@@ -708,25 +724,6 @@ summarize_uncertainty <- function(
             base::list(impact_by_sim = impact_by_sim,
                        uncertainty_by_geo_id_micro = summary_by_geo_id_micro)))
 
-  }
-
-
-  # Restore user's RNG state/kind ##############################################
-  # Restore .Random.seed as it was before we touched it
-  if (old_seed_exists) {
-    base::assign(".Random.seed", old_seed, envir = .GlobalEnv)
-  } else {
-    # If the user had no .Random.seed and we created one,
-    # remove it to avoid side-effects
-    if (!old_seed_exists &&
-        base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
-      try(base::rm(".Random.seed", envir = .GlobalEnv), silent = TRUE)
-    }
-  }
-
-  # Restore the RNG kind the user had (this resets to prior kind/sample.kind)
-  if (base::exists("old_RNGkind", inherits = FALSE)) {
-    base::do.call(base::RNGkind, base::as.list(old_RNGkind))
   }
 
 
