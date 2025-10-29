@@ -129,16 +129,17 @@ summarize_uncertainty <- function(
   is_lifetable <- base::unique(input_table_to_check$is_lifetable)
   exp_type <- base::unique(input_table_to_check$exp_type)
 
-
-  ## N #####
-  # Determine number of geographic units
-  n_geo <-
+  # Determine number of geographic units (n_geo)
+  if(is_one_case) {
     # Let's use here unique() and input_table instead of input_args
     # because in some cases the users do not enter the geo_id.
     # In that cases compile_input() provide a geo_id and it is shown in results_raw
-    base::length(base::unique(input_table$geo_id_micro))
+    n_geo <- base::length(base::unique(input_table$geo_id_micro))
 
-  ## Boolean variables ####
+    } else {
+      # Same for scen_1 and scen_2 so just take one of them
+      n_geo <- base::length(base::unique(input_table$input_table_scen_1$geo_id_micro))
+    }
 
   # Is there a confidence interval? I.e. lower and upper estimate?
 
