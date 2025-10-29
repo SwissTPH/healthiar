@@ -693,7 +693,8 @@ summarize_uncertainty <- function(
       c(output_attribute,
         summarize_uncertainty_based_on_input(
           input_args = input_args,
-          input_table = input_table))
+          input_table = input_table,
+          stream_map = stream_map))
 
   ## Two cases (comparison) ####
   } else if (is_two_cases){
@@ -702,13 +703,15 @@ summarize_uncertainty <- function(
     attribute_scen_1 <-
       summarize_uncertainty_based_on_input(
         input_args = input_args[["input_args_scen_1"]],
-        input_table = input_table[["input_table_scen_1"]])
+        input_table = input_table[["input_table_scen_1"]],
+        stream_map = stream_map)
 
     # Once for the scenario 2
     attribute_scen_2 <-
       summarize_uncertainty_based_on_input(
         input_args = input_args[["input_args_scen_2"]],
-        input_table = input_table[["input_table_scen_2"]])
+        input_table = input_table[["input_table_scen_2"]],
+        stream_map = stream_map)
 
     # Extract simulation values 1 and 2
     # Extract output 1 and 2
