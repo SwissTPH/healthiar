@@ -65,30 +65,6 @@ get_risk_and_pop_fraction <-
       base::setdiff(grouping_cols_available, c("exp_name"))
 
 
-
-    # Define helper function ###################################################
-
-    # This function enables the collapse of the data frame to have only one row
-    # The columns with the same values inside will be condensed: e.g. c(1,1,1) = 1
-    # The values in columns with different values are pasted: e.g. c(1,2,3) = "1, 2, 3"
-    # The variable columns_for_group refers to the column that is used to group the collapse
-
-    collapse_df_by_columns <-
-      function(df, columns_for_group){
-
-        collapsed_df <-
-          df |>
-          dplyr::summarize(
-            .by = dplyr::all_of(columns_for_group),
-            dplyr::across(
-              .cols = dplyr::everything(),
-              .fns = ~ if (base::length(base::unique(.x)) == 1) {
-                dplyr::first(.)
-                } else {
-                  base::toString(.)}))
-      }
-
-
     # Determine risk at observed exposures #####################################
 
     # Check if erf_eq is NULL before going into get_risk
@@ -173,8 +149,6 @@ get_risk_and_pop_fraction <-
       # Data wrangling for multiple exposures
       # Collapse data frame pasting the columns with different values
       input_with_risk_and_pop_fraction <-
-        # input_with_risk_and_pop_fraction |>
-        # collapse_df_by_columns(columns_for_group = grouping_cols_available_multiexposure)
         collapse_df_by_group(
           df = input_with_risk_and_pop_fraction,
           group_col_names = grouping_cols_available_multiexposure)
