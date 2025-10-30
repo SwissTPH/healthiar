@@ -319,6 +319,50 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_
   )
 })
 
+
+
+testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration_FALSE|", {
+
+  # Use a calculation threshold which is different from the effect threshold
+  # Goal: Health impacts in the exposure group 55dB+ that are affected by a exposure above the effect threshold (45 dB)
+
+  totpop <- 10000000
+  exp_lab <- c(47,52,57,62,67,72,77)
+  diseased <- 50000
+  threshold_effect <- 45
+  RR <- 1.055
+  threshold_calculation <- 55
+  rr_increment <- 10
+
+  # Defining the exposure-response function (see ETC/HE 2023/11 report ("Environmental noise health risk assessment:
+  # methodology for assessing health risks using data reported under the Environmental Noise Directive"; Chapter "PART III:
+  # Calculation Methods"; Formula 2))
+  # c = Vector containing the midpoints for each exposure category
+  erf_function <- function(c){
+    output <- ifelse(c<threshold_calculation, 1, exp((log(RR)/rr_increment)*(c-threshold_effect)))
+    return(output)
+  }
+  # Calculations with healhtiar using the function "attribute_health"
+  # Here we assume cutoff_central=0, because:
+  # 1) we already included the threshold effect in the ERF function (erf_function),
+  # which is defined above; attribute health defines "c = exp_central - cutoff_central",
+  # 2) our defined ERF function only runs through the midpoints
+  # If effect threshold and calculation threshold were identical in all cases, we could skip the previous step (defining the ERF)
+  # and add the Arguments (rr_central=RR, rr_increment, erf_shape, cutoff_central) to the "attribute_health"
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_eq_central = erf_function,
+        prop_pop_exp = exp/totpop,
+        exp_central = exp_lab,
+        cutoff_central=0,
+        bhd_central=diseased)$health_main$impact_rounded,
+    expected = 2651
+  )
+
+})
+
 testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_FALSE|", {
 
   testthat::expect_equal(
