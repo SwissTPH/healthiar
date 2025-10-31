@@ -1,7 +1,7 @@
 # QUANTITATIVE TEST ############################################################
 ## ADDITIVE APPROACH ############################################################
 
-testthat::test_that("results correct |pathway_multiexposure|approach_additive|", {
+testthat::test_that("results correct |pathway_multiexposure|approach_multiexposure_additive|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
@@ -71,7 +71,7 @@ testthat::test_that("results correct |fake_multiexposure|approach_additive|", {
   )
 })
 
-testthat::test_that("detailed results correct |fake_multiexposure|approach_additive|", {
+testthat::test_that("detailed results correct |fake_multiexposure|approach_multiexposure_additive|", {
 
   bestcost_pm_mortality <- healthiar::attribute_health(
     exp_central = 8.1,
@@ -113,7 +113,7 @@ testthat::test_that("detailed results correct |fake_multiexposure|approach_addit
 
 ## MULTIPLICATIVE APPROACH ######################################################
 
-testthat::test_that("results correct |pathway_multiexposure|approach_multiplicative|", {
+testthat::test_that("results correct |pathway_multiexposure|approach_multiexposure_multiplicative|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
@@ -145,7 +145,7 @@ testthat::test_that("results correct |pathway_multiexposure|approach_multiplicat
   )
 })
 
-testthat::test_that("results correct |fake_multiexposure|approach_multiplicative|", {
+testthat::test_that("results correct |fake_multiexposure|approach_multiexposure_multiplicative|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
@@ -187,7 +187,7 @@ testthat::test_that("results correct |fake_multiexposure|approach_multiplicative
 
 ## COMBINED APPROACH ############################################################
 
-testthat::test_that("results correct |pathway_multiexposure|approach_combined|", {
+testthat::test_that("results correct |pathway_multiexposure|approach_multiexposure_combined|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
@@ -226,7 +226,7 @@ testthat::test_that("results correct |pathway_multiexposure|approach_combined|",
   )
 })
 
-testthat::test_that("results correct |fake_multiexposure|approach_combined|", {
+testthat::test_that("results correct |fake_multiexposure|approach_multiexposure_combined|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
@@ -266,7 +266,7 @@ testthat::test_that("results correct |fake_multiexposure|approach_combined|", {
   )
 })
 
-testthat::test_that("detailed results correct |fake_multiexposure|approach_combined|", {
+testthat::test_that("detailed results correct |fake_multiexposure|approach_multiexposure_combined|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(

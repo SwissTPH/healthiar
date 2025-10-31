@@ -542,7 +542,6 @@ file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commen
 test_names <- regmatches(file_content, gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', file_content, perl = TRUE))
 test_names_with_pw <- Filter(function(x) any(grepl("\\|pathway_monetization\\|", x)), test_names)
 
-
 ## Create an empty tibble with NA placeholders
 n_row <- length(test_names_with_pw)
 existing_tests <- tibble(
@@ -554,12 +553,15 @@ existing_tests <- tibble(
 
 ## Extract values and assign them directly to the tibble
 for (i in seq_along(test_names_with_pw)) {
+  
+  # print(i)
+  
   strings <- test_names_with_pw[[i]] # Current list item
 
   # Extract values for each column
   existing_tests$discount_rate[i] <- str_extract(strings[str_detect(strings, "\\|discount_rate_")], "(?<=\\|discount_rate_)[^\\|]+")
   existing_tests$discount_shape[i] <- str_extract(strings[str_detect(strings, "\\|discount_shape_")], "(?<=\\|discount_shape_)[^\\|]+")
-  existing_tests$inflation[i] <- str_extract(strings[str_detect(strings, "\\|inflation_rate_")], "(?<=\\|inflation_)[^\\|]+")
+  existing_tests$inflation_rate[i] <- str_extract(strings[str_detect(strings, "\\|inflation_rate_")], "(?<=\\|inflation_rate_)[^\\|]+")
   
   existing_tests$implemented[i] <- "TRUE"
 }
@@ -885,7 +887,7 @@ core_multiexposure <- expand.grid(core_multiexposure) |>
   mutate(core_pathway = "TRUE")
 
 pathways_multiexposure <- pathways_multiexposure |> 
-  left_join(x = _, y = core_multiexposure, by = c("approach")) |> 
+  left_join(x = _, y = core_multiexposure, by = c("approach_multiexposure")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
 
@@ -906,17 +908,20 @@ existing_tests <- tibble(
 
 ## Extract values and assign them directly to the tibble
 for (i in seq_along(test_names_with_pw)) {
+  
+  # print(i)
+  
   strings <- test_names_with_pw[[i]] # Current list item
 
   # Extract values for each column
-  existing_tests$approach[i] <- str_extract(strings[str_detect(strings, "\\|approach_")], "(?<=\\|approach_)[^\\|]+")
+  existing_tests$approach_multiexposure[i] <- str_extract(strings[str_detect(strings, "\\|approach_multiexposure_")], "(?<=\\|approach_multiexposure_)[^\\|]+")
   
   existing_tests$implemented[i] <- "TRUE"
 }
 
 ## Merge the pathways tibble and the existing_tests tibble
 pathways_multiexposure <- pathways_multiexposure %>%
-  left_join(existing_tests, by = c("approach"),
+  left_join(existing_tests, by = c("approach_multiexposure"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-implemented.existing) |> 
@@ -926,7 +931,7 @@ pathways_multiexposure <- pathways_multiexposure %>%
 pathways_multiexposure <- pathways_multiexposure |> 
   relocate(implemented) |> 
   relocate(core_pathway, .after = implemented) |> 
-  arrange(desc(implemented), desc(core_pathway), approach)
+  arrange(desc(implemented), desc(core_pathway), approach_multiexposure)
 
 # * Measure progress ###########################################################
 
@@ -1287,13 +1292,13 @@ overall_row_lifetable <- tibble(
 progress_overall <- rbind(overall_row_non_lifetable, progress_overall_non_lifetable, empty_row, overall_row_lifetable, progress_lifetable)
 
 ## Create Excel for overall progress
-openxlsx::write.xlsx(progress_overall, "tests/progress_overall.xlsx")
+openxlsx::write.xlsx(progress_overall, "varia/pathways/progress_overall.xlsx")
 ```
 
 
 # Create Excel
                                                                      
-```{r Create Excel with all pathways for Teams folder}
+```{r Create Excel with all pathways for Teams folder, eval=FALSE, include=FALSE}
 knitr::opts_knit$set(root.dir = getwd())
 
 pathways_rr <- pathways_rr |> 
@@ -1635,8 +1640,9 @@ names(pathways_list) <- c("OVERALL", "RR", "AR", "summary uncertainty", "compari
 
 hs <- openxlsx::createStyle(textDecoration = "bold") # hs = header style
 
-openxlsx::write.xlsx(pathways_list, "tests/overview_testing.xlsx",
-                     headerStyle = hs,
-                     gridExpand = TRUE) # doesn't seem to have effect
+##
+# openxlsx::write.xlsx(pathways_list, "varia/pathways/overview_testing.xlsx",
+#                      headerStyle = hs,
+#                      gridExpand = TRUE) # doesn't seem to have effect
 
 ```

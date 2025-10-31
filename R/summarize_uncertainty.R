@@ -18,7 +18,7 @@
 # ARGUMENTS ####################################################################
 #' @param output_attribute \code{variable} in which the output of a \code{healthiar::attribute_...()} function call are stored.
 #' @param n_sim \code{numeric value} indicating the number of simulations to be performed.
-#' @param seed \code{numeric value} for fixing the randomization. Based on it, each geographic unit is assigned a different. If empty, 123 is used as the base seed per default.
+#' @param seed \code{numeric value} for fixing the randomization. Based on it, each geographic unit is assigned a different. If empty, 123 is used as the base seed per default. The function preserves and restores the user's original random seed (if set prior to calling the function) upon function completion.
 
 # DETAILS ######################################################################
 #' @details
@@ -40,6 +40,14 @@
 #' Disability weights values of the morbidity health outcome of interest are simulated based on a beta distribution, as both the disability weights and the beta distribution are bounded by 0 and 1. The beta distribution best fitting the inputted central disability weight estimate and corresponding lower and upper 95\% confidence interval values is fitted using \code{stats::qgamma()} (the best fitting distribution parameters \code{shape1} and \code{shape2} are determined using \code{stats::optimize()}). Finally, \code{n_sim} disability weight values are simulated using \code{stats::rbeta()}.
 #' @details
 #' Duration values of the morbidity health outcome of interest are simulated based on a normal distribution using \code{stats::rnorm()} with \code{mean = duration_central} and a standard deviation based on corresponding lower and upper 95\% exposure confidence interval values.
+
+#' @details
+#' \strong{Function arguments}
+#' @details
+#' \code{seed}
+#' @details
+#' If the \code{seed} argument is specified then the \code{parallel} package is used to generate independent L’Ecuyer random number streams. One stream is allocated per variable (or per variable–geography combination, as needed), ensuring reproducible and independent random draws across variables and scenarios.
+
 
 # VALUE ########################################################################
 #' @returns

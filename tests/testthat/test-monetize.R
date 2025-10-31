@@ -175,7 +175,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 ##### INFLATION ################################################################
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_TRUE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -192,7 +192,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
   )
 })
 
-testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_TRUE|", {
+testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_TRUE|", {
   testthat::expect_equal(
     object =
       healthiar::monetize(
@@ -208,7 +208,7 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
   )
 })
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_TRUE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_TRUE|", {
 
 
   testthat::expect_equal(
@@ -230,7 +230,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
   # DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_TRUE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_TRUE|", {
 
 
   testthat::expect_equal(
@@ -357,7 +357,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
 
 
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_hyp_harvey|inflation_TRUE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_hyp_harvey|inflation_rate_TRUE|", {
 
 
   testthat::expect_equal(
@@ -380,7 +380,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
 })
 
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_harvey|inflation_TRUE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_harvey|inflation_rate_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -401,7 +401,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
   # DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_harvey|inflation_TRUE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_harvey|inflation_rate_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -505,7 +505,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
 
 #### INFLATION #####################
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_mazur|inflation_TRUE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_hyp_mazur|inflation_rate_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -526,7 +526,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
 
 ### WITH INFLATION BUT WITHOUT DISCOUNTING ###########
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_TRUE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_rate_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -545,7 +545,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
   # DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_TRUE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_rate_TRUE|", {
 
   testthat::expect_equal(
     object =
