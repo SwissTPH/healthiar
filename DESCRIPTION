@@ -53,5 +53,4 @@ Suggests:
     testthat,
     devtools,
     knitr,
-    rmarkdown,
-    parallel
+    rmarkdown
