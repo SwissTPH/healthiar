@@ -9,7 +9,7 @@
 
 ### SINGLE EXPOSURE #############################################################
 
-testthat::test_that("test2 |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
+testthat::test_that("test3 |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
