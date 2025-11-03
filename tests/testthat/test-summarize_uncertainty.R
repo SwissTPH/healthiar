@@ -9,6 +9,40 @@
 
 ### SINGLE EXPOSURE #############################################################
 
+testthat::test_that("test2 |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  bestcost_pm_copd_with_summary_uncertainty <-
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      exp_lower = data$mean_concentration - 1,
+      exp_upper = data$mean_concentration + 1,
+      cutoff_central = 5,
+      cutoff_lower = data$cut_off_value - 1,
+      cutoff_upper = data$cut_off_value + 1,
+      bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+      bhd_lower = (data$incidents_per_100_000_per_year/1E5*data$population_at_risk) - 5000,
+      bhd_upper = (data$incidents_per_100_000_per_year/1E5*data$population_at_risk) + 5000,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear"
+    )
+
+  testthat::expect_equal(
+    object =
+      healthiar::summarize_uncertainty(
+        output_attribute = bestcost_pm_copd_with_summary_uncertainty,
+        n_sim = 100,
+        seed = 122
+      )$uncertainty_main$impact_rounded,
+    expected = # Results on 2025-10-29; no comparison study
+      c(1303, 528, 2246)
+  )
+})
+
 testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
