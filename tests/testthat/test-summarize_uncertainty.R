@@ -43,81 +43,8 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
   )
 })
 
-testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_function|iteration_FALSE|", {
-
-  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
-  erf<-splinefun(data$x, data$y, method="natural")
-  erf_l<-splinefun(data$x, data$y_l, method="natural")
-  erf_u<-splinefun(data$x, data$y_u, method="natural")
 
 
-  testthat::expect_equal(
-    ## healthiar FUNCTION CALL
-    object =
-      healthiar::attribute_health(
-        erf_eq_central = erf,
-        erf_eq_lower = erf_l,
-        erf_eq_upper = erf_u,
-        prop_pop_exp = 1,
-        exp_central = 84.1, # exposure distribution for ozone
-        exp_lower = NULL,
-        exp_upper = NULL,
-        cutoff_central = 0,
-        cutoff_lower = NULL,
-        cutoff_upper = NULL,
-        bhd_central =  29908, #COPD mortality in Germany 2016
-        bhd_lower = NULL,
-        bhd_upper = NULL,
-      )$health_main$impact_rounded,
-    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
-    expected =
-      c(319,243,386)
-  )
-})
-
-## ASSESSOR: Susanne Breitner-Busch, LMU Munich
-## ASSESSMENT DETAILS: https://www.umweltbundesamt.de/publikationen/quantifizierung-der-krankheitslast-verursacht-durch#:~:text=Beschrieben%20werden%20die%20gesundheitlichen%20Effekte%20in%20der%20deutschen,f%C3%BCr%20die%20Jahre%202007%20-%202016%20quantifiziert%20wurden.
-## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
-
-
-testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_function|iteration_FALSE|", {
-
-  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
-  erf<-splinefun(data$x, data$y, method="natural")
-  erf_l<-splinefun(data$x, data$y_l, method="natural")
-  erf_u<-splinefun(data$x, data$y_u, method="natural")
-
-
-  testthat::expect_equal(
-    ## healthiar FUNCTION CALL
-    object =
-      healthiar::attribute_health(
-        erf_eq_central = erf,
-        erf_eq_lower = erf_l,
-        erf_eq_upper = erf_u,
-        prop_pop_exp = data$Population.affected,
-        exp_central = data$Mean.O3, # exposure distribution for ozone
-        exp_lower = NULL,
-        exp_upper = NULL,
-        cutoff_central = 0,
-        cutoff_lower = NULL,
-        cutoff_upper = NULL,
-        bhd_central =  29908, #COPD mortality in Germany 2016
-        bhd_lower = NULL,
-        bhd_upper = NULL,
-      )$health_main$impact_rounded,
-    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
-    expected =
-      c(313,238,379)
-  )
-})
-
-
-## ASSESSOR: Susanne Breitner-Busch, LMU Munich
-## ASSESSMENT DETAILS: https://www.umweltbundesamt.de/publikationen/quantifizierung-der-krankheitslast-verursacht-durch#:~:text=Beschrieben%20werden%20die%20gesundheitlichen%20Effekte%20in%20der%20deutschen,f%C3%BCr%20die%20Jahre%202007%20-%202016%20quantifiziert%20wurden.
-## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 
 #### ITERATION #################################################################
 testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_True|", {
@@ -184,81 +111,6 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
   )
 })
 
-testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_function|iteration_TRUE|", {
-
-  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
-  erf<-splinefun(data$x, data$y, method="natural")
-  erf_l<-splinefun(data$x, data$y_l, method="natural")
-  erf_u<-splinefun(data$x, data$y_u, method="natural")
-
-
-  testthat::expect_equal(
-    ## healthiar FUNCTION CALL
-    object =
-      healthiar::attribute_health(
-        erf_eq_central = erf,
-        erf_eq_lower = erf_l,
-        erf_eq_upper = erf_u,
-        prop_pop_exp = 1,
-        exp_central = c(82.6,88.7,84.1), # exposure distribution for ozone
-        exp_lower = NULL,
-        exp_upper = NULL,
-        cutoff_central = 0,
-        cutoff_lower = NULL,
-        cutoff_upper = NULL,
-        bhd_central =  c(27001,31064,29908), #COPD mortality in Germany 2016
-        bhd_lower = NULL,
-        bhd_upper = NULL,
-        geo_id_micro = c('2014','2015','2016'),
-      )$health_main$impact_rounded,
-    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
-    expected =
-      c(280,213,339,355,270,430,319,243,386)
-  )
-})
-
-## ASSESSOR: Susanne Breitner-Busch, LMU Munich
-## ASSESSMENT DETAILS: https://www.umweltbundesamt.de/publikationen/quantifizierung-der-krankheitslast-verursacht-durch#:~:text=Beschrieben%20werden%20die%20gesundheitlichen%20Effekte%20in%20der%20deutschen,f%C3%BCr%20die%20Jahre%202007%20-%202016%20quantifiziert%20wurden.
-## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
-
-testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_function|iteration_TRUE|", {
-
-  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rds"))[2:42,]
-  erf<-splinefun(data$x[2:22], data$y[2:22], method="natural")
-  erf_l<-splinefun(data$x[2:22], data$y_l[2:22], method="natural")
-  erf_u<-splinefun(data$x[2:22], data$y_u[2:22], method="natural")
-
-
-  testthat::expect_equal(
-    ## healthiar FUNCTION CALL
-    object =
-      healthiar::attribute_health(
-        erf_eq_central = erf,
-        erf_eq_lower = erf_l,
-        erf_eq_upper = erf_u,
-        prop_pop_exp = c(data$Population.affected[1:21],data$Population.affected[22:41]),
-        exp_central = c(data$Mean.O3[1:21],data$Mean.O3[22:41]), # exposure distribution for ozone
-        exp_lower = NULL,
-        exp_upper = NULL,
-        cutoff_central = 0,
-        cutoff_lower = NULL,
-        cutoff_upper = NULL,
-        bhd_central =  data$bhd, #COPD mortality in Germany 2015 and 2016
-        bhd_lower = NULL,
-        bhd_upper = NULL,
-        geo_id_micro = data$X,
-      )$health_main$impact_rounded,
-    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
-    expected =
-      c(350,267,424,313,238,379)
-  )
-})
-
-## ASSESSOR: Susanne Breitner-Busch, LMU Munich
-## ASSESSMENT DETAILS: https://www.umweltbundesamt.de/publikationen/quantifizierung-der-krankheitslast-verursacht-durch#:~:text=Beschrieben%20werden%20die%20gesundheitlichen%20Effekte%20in%20der%20deutschen,f%C3%BCr%20die%20Jahre%202007%20-%202016%20quantifiziert%20wurden.
-## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 
 #### YLD ########################################################################
 
@@ -565,5 +417,48 @@ testthat::test_that("error_if_no_uncertainty |pathway_uncertainty|exp_single|erf
     fixed = TRUE
   )
 })
+
+
+testthat::test_that("error_if_erf_eq_rr_function |pathway_uncertainty|exp_dist|erf_rr_function|iteration_FALSE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+  erf<-splinefun(data$x, data$y, method="natural")
+  erf_l<-splinefun(data$x, data$y_l, method="natural")
+  erf_u<-splinefun(data$x, data$y_u, method="natural")
+
+
+  bestcost_pm_copd_with_summary_uncertainty <-
+    healthiar::attribute_health(
+      erf_eq_central = erf,
+      erf_eq_lower = erf_l,
+      erf_eq_upper = erf_u,
+      prop_pop_exp = 1,
+      exp_central = 84.1, # exposure distribution for ozone
+      exp_lower = NULL,
+      exp_upper = NULL,
+      cutoff_central = 0,
+      cutoff_lower = NULL,
+      cutoff_upper = NULL,
+      bhd_central =  29908, #COPD mortality in Germany 2016
+      bhd_lower = NULL,
+      bhd_upper = NULL,
+    )
+
+  testthat::expect_error(
+    object =
+      healthiar::summarize_uncertainty(
+        output_attribute = bestcost_pm_copd_with_summary_uncertainty,
+        n_sim = 100,
+        seed = 122
+      )$uncertainty_main$impact_rounded,
+    regexp = "Sorry, the summary of uncertainty for erf_eq_... is not currently supported."
+  )
+})
+## ASSESSOR: Susanne Breitner-Busch, LMU Munich
+## ASSESSMENT DETAILS: https://www.umweltbundesamt.de/publikationen/quantifizierung-der-krankheitslast-verursacht-durch#:~:text=Beschrieben%20werden%20die%20gesundheitlichen%20Effekte%20in%20der%20deutschen,f%C3%BCr%20die%20Jahre%202007%20-%202016%20quantifiziert%20wurden.
+## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
+
+
 ## WARNING #########
 
