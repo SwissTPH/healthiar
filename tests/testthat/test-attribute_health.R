@@ -452,6 +452,46 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
   ## Add here input data details: data sources, measured vs. modelled, ...
 })
 
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+  ## Pathway ID: pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
+
+  ## healthiar FUNCTION CALL
+  results_pm2.5 <-
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear", # Page 18
+      rr_central = 1.15, # Page 33
+      rr_lower = 1.05, # Page 33
+      rr_upper = 1.25, # Page 33
+      rr_increment = 10, # Page 18
+      exp_central = 9.6, # Table 5 page 29
+      exp_lower = 8.9, # Table 5 page 29
+      exp_upper = 10.2, # Table 5 page 29
+      cutoff_central = 5, # Page 33
+      bhd_central = 561953, # Table 3 page 22
+    )
+
+
+  ### Healthiar results ###
+  ## Attributable impact in France
+  testthat::expect_equal(
+    object =
+      signif(c(results_pm2.5$health_main$impact_rounded,results_pm2.5$health_main$pop_fraction),3),
+    expected =
+      signif(c(34991.0000, 12472.0000, 54821.0000, 0.0623, 0.0222, 0.0976),3)
+  )
+
+  ### SpF report results ###
+  # France_impact_Cuttoff5 : 39541. Table 8 page 37
+  # France_pop_fraction_Cuttoff5 : 0.071 Table 8 page 37
+
+
+  ## ASSESSOR: Maria José Rueda Lopez, CSTB and Sabrina Delaunay-Havard, SpF.
+  ## ASSESSMENT DETAILS: Estimate the proportion of deaths attributable to PM2.5 exposure in France during the covid19 pandemic
+  ## INPUT DATA DETAILS: Etudes et enquêtes. Impact de la pollution de l'air ambiant sur la mortalité en France métropolitaine. Réduction en lien avec le
+  ## confinement du printemps 2020 et nouvelles données sur le poids total pour la période 2016-2019. Santé publique France. Avril 2021.
+})
+
 #### ITERATION ##################################################################
 
 testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|", {
