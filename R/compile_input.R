@@ -97,21 +97,6 @@ compile_input <-
                        "population_weighted_mean",
                        "exposure_distribution"))
 
-    # Get total population
-    if(!is.null(input_args_edited[["population"]])){
-
-      input_wo_lifetable  <- input_wo_lifetable |>
-        dplyr::mutate(
-          .by = geo_id_micro,
-          population_total = base::sum(population, na.rm = TRUE)
-        )
-
-      }
-
-
-
-
-
     # PIVOT LONGER ###########################################################
     # I.e. increase nr of rows to show all combinations of
     # central, lower and upper estimates (relevant for iteration)
