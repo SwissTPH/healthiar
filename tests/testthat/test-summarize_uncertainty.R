@@ -43,8 +43,149 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
   )
 })
 
+
+
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_function|iteration_FALSE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+
+  data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
+
+  data <- data.frame(
+    GEO_ID      = levels(data$GEO_ID),
+    exp_central = tapply(data$average_cat, data$GEO_ID, mean),
+    pop_exp     = tapply(data$ANTALL_PER,  data$GEO_ID, sum),
+    population  = tapply(data$totpop,      data$GEO_ID, unique)
+  )
+
+  data <- data["Bergen",]
+
+  erf_df <- data.frame(
+    dB = seq(30, 85, by = 0.5)
+  )
+
+  # Compute AR using the quadratic formula
+  erf_df$AR <- 78.9270 - 3.1162 * erf_df$dB + 0.0342 * erf_df$dB^2
+
+  # Create a function using spline interpolation over the data
+  spline_fun <- splinefun(
+    x = erf_df$dB,
+    y = erf_df$AR,
+    method = "natural"
+  )
+
+
+  ## healthiar FUNCTION CALL
+  results_noise_ha <-   healthiar::attribute_health(
+    approach_risk = "absolute_risk",
+    exp_central = data$exp_central,
+    exp_lower = data$exp_central-5,
+    exp_upper = data$exp_central+5,
+    population = data$totpop,
+    pop_exp = data$pop_exp,
+    geo_id_micro =  data$GEO_ID,
+    geo_id_macro = "Norway",
+    erf_eq_central = spline_fun,
+    dw_central = 0.02,
+    duration_central = 1,
+
+    info = data.frame(pollutant = "road_noise",
+
+                      outcome = "highly_annoyance")
+
+  )
+
+
+  results_noise_ha_summarised <- healthiar::summarize_uncertainty(results_noise_ha, n_sim = 10, seed = 123)
+
+  # Assuming SD of 47 and 70, and normal distribution
+  expected_impacts <-c(#283, 191,375  , 2 try: 398, 261 , 535
+    350.0, 288.0, 507.0)
+
+  ## COMPARE ONLY THE IMPACT_ROUNDED VECTOR
+  testthat::expect_equal(
+    object   = results_noise_ha_summarised$uncertainty_detailed$uncertainty_by_geo_id_micro$impact_rounded,
+    expected = expected_impacts
+  )
+
+
+
+})
+
+## ASSESSOR:
+## Liliana Vázquez, NIPH
+## ASSESSMENT DETAILS:
+## Bergen highly annoyance
+## INPUT DATA DETAILS:
+## Add here input data details: defined own function with spline interpolation, summarised the categories
+## to the average and checked the +and- 5dB on the exposure.
+## Assumed also a SD from the results_noise_ha object
+
+
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_formula|iteration_FALSE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+
+  data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
+
+  data <- data.frame(
+    GEO_ID      = levels(data$GEO_ID),
+    exp_central = tapply(data$average_cat, data$GEO_ID, mean),
+    pop_exp     = tapply(data$ANTALL_PER,  data$GEO_ID, sum),
+    population  = tapply(data$totpop,      data$GEO_ID, unique)
+  )
+
+  data <-  data["Bergen",]
+
+  ## healthiar FUNCTION CALL
+  results_noise_ha <-   healthiar::attribute_health(
+    approach_risk = "absolute_risk",
+    exp_central = data$exp_central,
+    exp_lower = data$exp_central-5,
+    exp_upper = data$exp_central+5,
+    population = data$totpop,
+    pop_exp = data$pop_exp,
+    geo_id_micro =  data$GEO_ID,
+    geo_id_macro = "Norway",
+    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+    dw_central = 0.02,
+    duration_central = 1,
+
+    info = data.frame(pollutant = "road_noise",
+
+                      outcome = "highly_annoyance")
+
+  )
+
+
+  results_noise_ha_summarised <- healthiar::summarize_uncertainty(results_noise_ha, n_sim = 100,seed = 123)
+
+  # Assuming SD of 47 and 70, and normal distribution
+  # from results_noise_ha
+  expected_impacts <- c(#283, 209,385 ,
+    349.0, 247.0, 506.0)
+
+  ## COMPARE ONLY THE IMPACT_ROUNDED VECTOR
+  testthat::expect_equal(
+    object   = results_noise_ha_summarised$uncertainty_detailed$uncertainty_by_geo_id_micro$impact_rounded,
+    expected = expected_impacts
+  )
+
+})
+
+## ASSESSOR:
+## Liliana Vázquez, NIPH
+## ASSESSMENT DETAILS:
+## Bergen highly annoyance
+## INPUT DATA DETAILS:
+## Add here input data details: defined own function with spline interpolation, summarised the categories
+## to the average and checked the +and- 5dB on the exposure.
+## Assumed also a SD from the results_noise_ha object
+
 #### ITERATION #################################################################
-testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_True|", {
 
   summary_uncertainty_small_iteration <-
     healthiar::attribute_health(
@@ -107,6 +248,142 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       c(16001, 7422, 22292, 16989, 7855, 23587)
   )
 })
+
+
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_function|iteration_TRUE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+
+  data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
+
+  data <- data.frame(
+    GEO_ID      = levels(data$GEO_ID),
+    exp_central = tapply(data$average_cat, data$GEO_ID, mean),
+    pop_exp     = tapply(data$ANTALL_PER,  data$GEO_ID, sum),
+    population  = tapply(data$totpop,      data$GEO_ID, unique)
+  )
+
+
+
+  erf_df <- data.frame(
+    dB = seq(30, 85, by = 0.5)
+  )
+
+  # Compute AR using the quadratic formula
+  erf_df$AR <- 78.9270 - 3.1162 * erf_df$dB + 0.0342 * erf_df$dB^2
+
+  # Create a function using spline interpolation over the data
+  spline_fun <- splinefun(
+    x = erf_df$dB,
+    y = erf_df$AR,
+    method = "natural"
+  )
+
+
+  ## healthiar FUNCTION CALL
+  results_noise_ha <-   healthiar::attribute_health(
+    approach_risk = "absolute_risk",
+    exp_central = data$exp_central,
+    exp_lower = data$exp_central-5,
+    exp_upper = data$exp_central+5,
+    population = data$totpop,
+    pop_exp = data$pop_exp,
+    geo_id_micro =  data$GEO_ID,
+    geo_id_macro = "Norway",
+    erf_eq_central = spline_fun,
+    dw_central = 0.02,
+    duration_central = 1,
+
+    info = data.frame(pollutant = "road_noise",
+
+                      outcome = "highly_annoyance")
+
+  )
+
+
+  results_noise_ha_summarised <- healthiar::summarize_uncertainty(results_noise_ha, n_sim = 10, seed = 123)
+
+  # Assuming SD of 47 and 70, and normal distribution
+  expected_impacts <-c(291.0, 228.0, 453.0, 357.0, 280.0, 479.0)
+
+  ## COMPARE ONLY THE IMPACT_ROUNDED VECTOR
+  testthat::expect_equal(
+    object   = results_noise_ha_summarised$uncertainty_detailed$uncertainty_by_geo_id_micro$impact_rounded,
+    expected = expected_impacts
+  )
+
+})
+
+## ASSESSOR:
+## Liliana Vázquez, NIPH
+## ASSESSMENT DETAILS:
+## Stavanger and Bergen highly annoyance
+## INPUT DATA DETAILS:
+## Add here input data details: defined own function with spline interpolation, summarised the categories
+## to the average and checked the +and- 5dB on the exposure.
+## Assumed also a SD from the results_noise_ha object
+
+
+
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_formula|iteration_TRUE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+
+  data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
+
+  data <- data.frame(
+    GEO_ID      = levels(data$GEO_ID),
+    exp_central = tapply(data$average_cat, data$GEO_ID, mean),
+    pop_exp     = tapply(data$ANTALL_PER,  data$GEO_ID, sum),
+    population  = tapply(data$totpop,      data$GEO_ID, unique)
+  )
+
+
+  ## healthiar FUNCTION CALL
+  results_noise_ha <-   healthiar::attribute_health(
+    approach_risk = "absolute_risk",
+    exp_central = data$exp_central,
+    exp_lower = data$exp_central-5,
+    exp_upper = data$exp_central+5,
+    population = data$totpop,
+    pop_exp = data$pop_exp,
+    geo_id_micro =  data$GEO_ID,
+    geo_id_macro = "Norway",
+    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+    dw_central = 0.02,
+    duration_central = 1,
+
+    info = data.frame(pollutant = "road_noise",
+
+                      outcome = "highly_annoyance")
+
+  )
+
+
+  results_noise_ha_summarised <- healthiar::summarize_uncertainty(results_noise_ha, n_sim = 100,seed = 123)
+
+  # Assuming SD of 47 and 70, and normal distribution
+  expected_impacts <-c(287.0, 201.0, 418.0, 378.0, 276.0, 536.0)
+
+  ## COMPARE ONLY THE IMPACT_ROUNDED VECTOR
+  testthat::expect_equal(
+    object   = results_noise_ha_summarised$uncertainty_detailed$uncertainty_by_geo_id_micro$impact_rounded,
+    expected = expected_impacts
+  )
+
+})
+
+## ASSESSOR:
+## Liliana Vázquez, NIPH
+## ASSESSMENT DETAILS:
+## Bergen highly annoyance
+## INPUT DATA DETAILS:
+## Add here input data details: defined own function with spline interpolation, summarised the categories
+## to the average and checked the +and- 5dB on the exposure.
+## Assumed also a SD from the results_noise_ha object
+
 
 
 #### YLD ########################################################################
@@ -414,5 +691,48 @@ testthat::test_that("error_if_no_uncertainty |pathway_uncertainty|exp_single|erf
     fixed = TRUE
   )
 })
+
+
+testthat::test_that("error_if_erf_eq_rr_function |pathway_uncertainty|exp_dist|erf_rr_function|iteration_FALSE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+  erf<-splinefun(data$x, data$y, method="natural")
+  erf_l<-splinefun(data$x, data$y_l, method="natural")
+  erf_u<-splinefun(data$x, data$y_u, method="natural")
+
+
+  bestcost_pm_copd_with_summary_uncertainty <-
+    healthiar::attribute_health(
+      erf_eq_central = erf,
+      erf_eq_lower = erf_l,
+      erf_eq_upper = erf_u,
+      prop_pop_exp = 1,
+      exp_central = 84.1, # exposure distribution for ozone
+      exp_lower = NULL,
+      exp_upper = NULL,
+      cutoff_central = 0,
+      cutoff_lower = NULL,
+      cutoff_upper = NULL,
+      bhd_central =  29908, #COPD mortality in Germany 2016
+      bhd_lower = NULL,
+      bhd_upper = NULL,
+    )
+
+  testthat::expect_error(
+    object =
+      healthiar::summarize_uncertainty(
+        output_attribute = bestcost_pm_copd_with_summary_uncertainty,
+        n_sim = 100,
+        seed = 122
+      )$uncertainty_main$impact_rounded,
+    regexp = "Sorry, the summary of uncertainty for erf_eq_... is not currently supported."
+  )
+})
+## ASSESSOR: Susanne Breitner-Busch, LMU Munich
+## ASSESSMENT DETAILS: https://www.umweltbundesamt.de/publikationen/quantifizierung-der-krankheitslast-verursacht-durch#:~:text=Beschrieben%20werden%20die%20gesundheitlichen%20Effekte%20in%20der%20deutschen,f%C3%BCr%20die%20Jahre%202007%20-%202016%20quantifiziert%20wurden.
+## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
+
+
 ## WARNING #########
 
