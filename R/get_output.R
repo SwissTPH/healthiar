@@ -283,7 +283,8 @@ get_output <-
     # putting first (on the left) those that determine different results across rows
 
     # Choose columns to be put first
-    first_cols <- c(id_cols, impact_cols)
+    first_cols <- c(id_cols, impact_cols,
+                    "population") # population close to impact_per_100_inhab
 
     # Create the functions
     put_first_cols <-
