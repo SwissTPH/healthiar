@@ -325,7 +325,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
 
   # Use a calculation threshold which is different from the effect threshold
   # Goal: Health impacts in the exposure group 55dB+ that are affected by a exposure above the effect threshold (45 dB)
-
+  exp <- c(300000,200000,150000,120000,100000,70000,60000)
   totpop <- 10000000
   exp_lab <- c(47,52,57,62,67,72,77)
   diseased <- 50000
@@ -363,6 +363,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
 
 })
 
+
 testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_FALSE|", {
 
   testthat::expect_equal(
@@ -380,7 +381,7 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_
 })
 
 
-testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
   ## Pathway ID: pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
   ## healthiar FUNCTION CALL
   results_pm <-
@@ -416,7 +417,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
 })
 
 
-testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
   ## Pathway ID: pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
 
   ## healthiar FUNCTION CALL
@@ -452,7 +453,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
   ## Add here input data details: data sources, measured vs. modelled, ...
 })
 
-testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
   ## Pathway ID: pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
 
   ## healthiar FUNCTION CALL
@@ -493,7 +494,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
 })
 
 
-testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
 
   testthat::expect_equal(
@@ -517,19 +518,7 @@ testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|cutoff_FA
   )
 })
 
-# original value from EEA = 199 -> test did not pass but the value provided by healthiar falls within the range provided by EEA
-# x<-healthiar::attribute_health(
-#   approach_risk = "relative_risk",
-#   erf_shape = "log_linear",
-#   rr_central = 1.06, #relative risk for pm2.5 according to WHO
-#   #rr_lower = 1.02,
-#   #rr_upper = 1.11,
-#   rr_increment = 10,
-#   prop_pop_exp = 0.0000000000000000001,
-#   exp_central = 5.8, #single for Urban centres(presumably Tallinn), pm2.5
-#   cutoff_central = 0,
-#   bhd_central = 4500 #deaths in tallinn 2020
-# )
+# original value from EEA = 199 -> test did not pass but the value provided by attribute_health falls within the range provided by EEA
 
 ## ASSESSOR: Maria Lepnurm TAI
 ## ASSESSMENT DETAILS: I used data from https://discomap.eea.europa.eu/App/AQViewer/index.html?fqn=Airquality_Dissem.ebd.countries_and_nuts# for Estonias urban centres(presumably Tallinn) and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
