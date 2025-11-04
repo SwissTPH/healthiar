@@ -71,7 +71,6 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
       c(28810.0511, 15083.5908, 42437.0574)/pop*1E5 # Result on 28 Oct 2025
   )
 
-
   testthat::expect_equal(
     object =
       healthiar::attribute_lifetable(
@@ -95,36 +94,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
         year_of_analysis = 2019,
         info = data_mort$pollutant[2],
         min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
-      )$health_detailed$results_by_sex$impact_per_100k_inhab, # impact_per_100k_inhab
-    expected =
-      c(15143.22958, 7925.86465, 22312.77159, 13666.82149, 7157.72614, 20124.28583)/pop*1E5  # Result on 28 Oct 2025
-  )
-
-
-  testthat::expect_equal(
-    object =
-      healthiar::attribute_lifetable(
-        health_outcome = "yll",
-        approach_exposure = "single_year",
-        exp_central = data_mort$exp[2], #exp CH 2019
-        prop_pop_exp = 1,
-        cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
-        rr_central = data_mort[2,"rr_central"],
-        rr_lower = data_mort[2,"rr_lower"],
-        rr_upper = data_mort[2,"rr_upper"],
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        age_group = c(data_lifetable[["male"]]$age,
-                      data_lifetable[["female"]]$age),
-        sex = base::rep(c("male", "female"), each = 100),
-        population = c(data_lifetable[["male"]]$population,
-                       data_lifetable[["female"]]$population),
-        bhd_central = c(data[["pop"]]$number_of_deaths_male,
-                        data[["pop"]]$number_of_deaths_female),
-        year_of_analysis = 2019,
-        info = data_mort$pollutant[2],
-        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
-      )$health_detailed$results_by_sex$impact_per_100k_inhab_subgroup, # impact_per_100k_inhab_subgroup
+      )$health_detailed$results_by_sex$impact_per_100k_inhab,
     expected = c(
       c(15143.22958, 7925.86465, 22312.77159) / sum(data_lifetable[["male"]]$population),
       c(13666.82149, 7157.72614, 20124.28583) / sum(data_lifetable[["female"]]$population)) * 1E5  # Result on 28 Oct 2025
