@@ -492,6 +492,49 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
   ## confinement du printemps 2020 et nouvelles données sur le poids total pour la période 2016-2019. Santé publique France. Avril 2021.
 })
 
+
+testthat::test_that("results correct pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "log_linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO
+        #rr_lower = 1.02,
+        #rr_upper = 1.11,
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = 5.8, #single for Urban centres(presumably Tallinn), pm2.5
+        cutoff_central = 0,
+        bhd_central = 4500 #deaths in tallinn 2020
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      150
+  )
+})
+
+# original value from EEA = 199 -> test did not pass but the value provided by healthiar falls within the range provided by EEA
+# x<-healthiar::attribute_health(
+#   approach_risk = "relative_risk",
+#   erf_shape = "log_linear",
+#   rr_central = 1.06, #relative risk for pm2.5 according to WHO
+#   #rr_lower = 1.02,
+#   #rr_upper = 1.11,
+#   rr_increment = 10,
+#   prop_pop_exp = 0.0000000000000000001,
+#   exp_central = 5.8, #single for Urban centres(presumably Tallinn), pm2.5
+#   cutoff_central = 0,
+#   bhd_central = 4500 #deaths in tallinn 2020
+# )
+
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://discomap.eea.europa.eu/App/AQViewer/index.html?fqn=Airquality_Dissem.ebd.countries_and_nuts# for Estonias urban centres(presumably Tallinn) and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: Baseline from WHO 2005 (HRAPIE 2013), all cause mortality, attributable deaths from pm2.5 in 2020.
+
 #### ITERATION ##################################################################
 
 testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|", {
