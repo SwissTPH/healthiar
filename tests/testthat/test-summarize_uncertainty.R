@@ -112,6 +112,86 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
 })
 
 
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_function|iteration_TRUE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+
+  data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
+
+  data <- data.frame(
+    GEO_ID      = levels(data$GEO_ID),
+    exp_central = tapply(data$average_cat, data$GEO_ID, mean),
+    pop_exp     = tapply(data$ANTALL_PER,  data$GEO_ID, sum),
+    population  = tapply(data$totpop,      data$GEO_ID, unique)
+  )
+
+
+
+  erf_df <- data.frame(
+    dB = seq(30, 85, by = 0.5)
+  )
+
+  # Compute AR using the quadratic formula
+  erf_df$AR <- 78.9270 - 3.1162 * erf_df$dB + 0.0342 * erf_df$dB^2
+
+  # Create a function using spline interpolation over the data
+  spline_fun <- splinefun(
+    x = erf_df$dB,
+    y = erf_df$AR,
+    method = "natural"
+  )
+
+
+  ## healthiar FUNCTION CALL
+  results_noise_ha <-   healthiar::attribute_health(
+    approach_risk = "absolute_risk",
+    exp_central = data$exp_central,
+    exp_lower = data$exp_central-5,
+    exp_upper = data$exp_central+5,
+    population = data$totpop,
+    pop_exp = data$pop_exp,
+    geo_id_micro =  data$GEO_ID,
+    geo_id_macro = "Norway",
+    erf_eq_central = spline_fun,
+    dw_central = 0.02,
+    duration_central = 1,
+
+    info = data.frame(pollutant = "road_noise",
+
+                      outcome = "highly_annoyance")
+
+  )
+
+
+  results_noise_ha_summarised <- healthiar::summarize_uncertainty(results_noise_ha, n_sim = 10)
+
+  # Assuming SD of 47 and 70, and normal distribution
+  expected_impacts <-c(318.0, 246.0, 382.0, 411.0, 326.0, 486.0)
+
+  ## COMPARE ONLY THE IMPACT_ROUNDED VECTOR
+  testthat::expect_equal(
+    object   = results_noise_ha_summarised$uncertainty_detailed$uncertainty_by_geo_id_micro$impact_rounded,
+    expected = expected_impacts
+  )
+
+})
+
+## ASSESSOR:
+## Liliana Vázquez, NIPH
+## ASSESSMENT DETAILS:
+## Stavanger and Bergen highly annoyance
+## INPUT DATA DETAILS:
+## Add here input data details: defined own function with spline interpolation, summarised the categories
+## to the average and checked the +and- 5dB on the exposure.
+## Assumed also a SD from the results_noise_ha object
+
+
+
+
+
+
+
 #### YLD ########################################################################
 
 testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
