@@ -44,11 +44,6 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
 })
 
 
-# Pathwway ID
-# pathway_uncertainty|exp_single|erf_ar_function|iteration_FALSE|
-
-
-
 
 testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_function|iteration_FALSE|", {
 
@@ -127,6 +122,67 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_func
 ## to the average and checked the +and- 5dB on the exposure.
 ## Assumed also a SD from the results_noise_ha object
 
+
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_formula|iteration_FALSE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+
+  data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
+
+  data <- data.frame(
+    GEO_ID      = levels(data$GEO_ID),
+    exp_central = tapply(data$average_cat, data$GEO_ID, mean),
+    pop_exp     = tapply(data$ANTALL_PER,  data$GEO_ID, sum),
+    population  = tapply(data$totpop,      data$GEO_ID, unique)
+  )
+
+  data <-  data["Bergen",]
+
+  ## healthiar FUNCTION CALL
+  results_noise_ha <-   healthiar::attribute_health(
+    approach_risk = "absolute_risk",
+    exp_central = data$exp_central,
+    exp_lower = data$exp_central-5,
+    exp_upper = data$exp_central+5,
+    population = data$totpop,
+    pop_exp = data$pop_exp,
+    geo_id_micro =  data$GEO_ID,
+    geo_id_macro = "Norway",
+    erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+    dw_central = 0.02,
+    duration_central = 1,
+
+    info = data.frame(pollutant = "road_noise",
+
+                      outcome = "highly_annoyance")
+
+  )
+
+
+  results_noise_ha_summarised <- healthiar::summarize_uncertainty(results_noise_ha, n_sim = 100,seed = 123)
+
+  # Assuming SD of 47 and 70, and normal distribution
+  # from results_noise_ha
+  expected_impacts <- c(#283, 209,385 ,
+    349.0, 247.0, 506.0)
+
+  ## COMPARE ONLY THE IMPACT_ROUNDED VECTOR
+  testthat::expect_equal(
+    object   = results_noise_ha_summarised$uncertainty_detailed$uncertainty_by_geo_id_micro$impact_rounded,
+    expected = expected_impacts
+  )
+
+})
+
+## ASSESSOR:
+## Liliana Vázquez, NIPH
+## ASSESSMENT DETAILS:
+## Bergen highly annoyance
+## INPUT DATA DETAILS:
+## Add here input data details: defined own function with spline interpolation, summarised the categories
+## to the average and checked the +and- 5dB on the exposure.
+## Assumed also a SD from the results_noise_ha object
 
 #### ITERATION #################################################################
 testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_True|", {
