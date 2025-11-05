@@ -73,7 +73,7 @@ attribute_health(
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
 
 \item{population}{\code{Numeric vector} \strong{\code{For attribute_lifetable()}}, it is an \emph{obligatory argument} specifying the \strong{mid-year populations} per age (i.e. age group size = 1 year) for the (first) year of analysis.
-\strong{\code{For attribute_health()}} this argument specifies the \strong{total population} (exposed + non-exposed) \strong{to calculate attributable impacts rate} per 100 000 population. See Details for more info. \emph{Optional argument.}}
+\strong{\code{For attribute_health()}} it is an \emph{optional argument} which specifies the \strong{population used to calculate attributable impacts rate} per 100 000 population. See Details for more info.}
 }
 \value{
 This function returns a \code{list} containing:
@@ -178,7 +178,7 @@ Can be either \code{numeric} or \code{character}. If it is numeric, it refers to
 
 \code{population}
 
-\emph{Optional argument.} The total population entered here is used to determine impact rate per 100 000 population.
+\emph{Optional argument.} The population entered here is used to determine impact rate per 100 000 population. Note the requirement for the vector length in the paragraph \emph{Assessment of multiple geographic units} below.
 
 \code{duration_central}, \code{duration_lower}, \code{duration_upper}
 

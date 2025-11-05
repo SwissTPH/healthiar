@@ -92,7 +92,7 @@
 #' @details
 #' \code{population}
 #' @details
-#' \emph{Optional argument.} The total population entered here is used to determine impact rate per 100 000 population.
+#' \emph{Optional argument.} The population entered here is used to determine impact rate per 100 000 population. Note the requirement for the vector length in the paragraph \emph{Assessment of multiple geographic units} below.
 #' @details
 #' \code{duration_central}, \code{duration_lower}, \code{duration_upper}
 #' @details
