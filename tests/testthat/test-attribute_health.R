@@ -68,9 +68,32 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
   )
 })
 
-
-
+## same as above but with population argument
 testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = rep("relative_risk", 4),
+        age = c("below_50", "below_50", "50_plus", "50_plus"),
+        sex = c("male", "female", "male", "female"),
+        exp_central = base::rep(data$mean_concentration, 4),
+        cutoff_central = base::rep(data$cut_off_value, 4),
+        bhd_central = base::rep(data$incidents_per_100_000_per_year/1E5*data$population_at_risk, 4),
+        rr_central = base::rep(data$relative_risk, 4),
+        rr_increment = base::rep(10, 4),
+        erf_shape = base::rep("log_linear", 4),
+        info = base::paste0(data$pollutant,"_", data$evaluation_name),
+        population = c(500000, 200000, 600000, 800000)
+      )$health_main$impact_rounded,
+    expected = # airqplus_pm_copd
+      data$estimated_number_of_attributable_cases_central * 4
+  )
+})
+
+  testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -837,6 +860,30 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
         geo_id_micro = rep(1:3, each = 5),
         geo_id_macro = rep("ch", each = 5 * 3)
         )$health_detailed$results_raw$impact_rounded,
+    expected =
+      base::round(c(545,  634,  991)) # Results on 2025-06-24; no comparison study
+  )
+})
+
+## with population argument specified
+testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = base::rep(c(5, 6, 7, 8, 9), times = 3),
+        cutoff_central = 5,
+        prop_pop_exp = c(c(0.1, 0.3, 0.2, 0.2, 0.2),
+                         c(0.2, 0.2, 0.3, 0.1, 0.2),
+                         c(0.2, 0.2, 0.2, 0.1, 0.3)),
+        bhd_central = rep(runif_with_seed(3,1E4,1E5,1), each = 5),
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        geo_id_micro = rep(1:3, each = 5),
+        geo_id_macro = rep("ch", each = 5 * 3),
+        population = rep(1000000, each = 5 * 3)
+      )$health_detailed$results_raw$impact_rounded,
     expected =
       base::round(c(545,  634,  991)) # Results on 2025-06-24; no comparison study
   )
