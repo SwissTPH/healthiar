@@ -349,6 +349,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
   # Use a calculation threshold which is different from the effect threshold
   # Goal: Health impacts in the exposure group 55dB+ that are affected by a exposure above the effect threshold (45 dB)
 
+  exp <- c(300000,200000,150000,120000,100000,70000,60000)
   totpop <- 10000000
   exp_lab <- c(47,52,57,62,67,72,77)
   diseased <- 50000
