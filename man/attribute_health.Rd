@@ -211,7 +211,7 @@ Where:
 
 \eqn{RR(x)} = relative risk at exposure level compared to the reference level
 
-If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2011, https://iris.who.int/handle/10665/326424):
+If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2011, https://iris.who.int/items/723ab97c-5c33-4e3b-8df1-744aa5bc1c27):
 \deqn{PAF = \frac{\sum RR_i \times PE_i - 1}{\sum RR_i \times PE_i}}
 
 Where:
@@ -222,7 +222,7 @@ Where:
 
 \eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
 
-There is one alternative for the PAF for categorical exposure distribution that is commonly used, which is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical (WHO 2003b, https://doi.org/10.1186/1478-7954-1-1; WHO 2011, https://iris.who.int/handle/10665/326424):
+There is one alternative for the PAF for categorical exposure distribution that is commonly used, which is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical (WHO 2003b, https://doi.org/10.1186/1478-7954-1-1; WHO 2011, https://iris.who.int/items/723ab97c-5c33-4e3b-8df1-744aa5bc1c27):
 \deqn{PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}}
 
 Where:
