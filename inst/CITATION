@@ -1,5 +1,5 @@
 # Read DESCRIPTION
-desc <- as.list(utils::packageDescription("healthiar"))
+desc <- as.list(utils::packageDescription(utils::packageName()))
 
 # Pull authors and contributors from Authors@R
 authors <- eval(parse(text = desc$`Authors@R`))
