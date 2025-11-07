@@ -756,6 +756,58 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iterati
 ## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
+
+testthat::test_that("results the same|pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|",{
+## Pathway ID: pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|
+## healthiar FUNCTION CALL
+results_NO2 <-
+  healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    erf_shape = "linear",
+    rr_central = 1.04,
+    rr_lower = 1.02,
+    rr_upper = 1.07,
+    rr_increment = 10,
+    exp_central = c(42.6,39.0,42.4),
+    exp_lower = c(33.1, 25.5, 33.1),
+    exp_upper = c(56.4,58.6,55.8),
+    cutoff_central = 0,
+    bhd_central = c(9946,9679,10539),
+    geo_id_micro = c('2013','2014','2015'),
+  )
+
+testthat::expect_equal(
+  ## healthiar FUNCTION CALL
+  object =results_NO2$health_main$impact_rounded,
+  expected = c(1448.0, 781.0, 2285.0, 1306.0, 700.0, 2076.0, 1528.0, 824.0, 2412.0)
+)
+
+testthat::expect_equal(
+  ## healthiar FUNCTION CALL
+  object =signif(results_NO2$health_main$pop_fraction,3),
+  expected = c(0.146, 0.0785, 0.230, 0.135, 0.0724, 0.214, 0.145, 0.0782, 0.229)
+)
+# original results impact = 1337.0 700.0 2188.0 1247.0 653.0 2041.0 1404.0 735.0 2299.0, see also below
+# original results pop fraction: c(0.139, 0.073, 0.227, 0.13, 0.068, 0.212, 0.146, 0.076, 0.239) see also below
+# Attributable impact in Naples
+### 2013 ###
+results_NO2$health_main$impact_rounded[1] # 1337 (95% CI: 700 - 2188)
+results_NO2$health_main$pop_fraction[1] # 13.9 (95% CI: 7.3 - 22.7)
+
+### 2014 ###
+results_NO2$health_main$impact_rounded[4] # 1247 (95% CI 653 - 2041)
+results_NO2$health_main$pop_fraction[4] # 13.0 (95% CI: 6.8 - 21.2)
+
+### 2015 ###
+results_NO2$health_main$impact_rounded[7] # 1404 (95% CI 735 - 2299)
+results_NO2$health_main$pop_fraction[7] # 14.6 (95% CI: 7.6 - 23.9)
+
+## ASSESSOR: Maria José Rueda Lopez, CSTB
+## ASSESSMENT DETAILS: Estimate the attributable death for exposition to NO2 concentrations in 2013, 2014 and 2015 in Naples, Italy.
+## INPUT DATA DETAILS: Chianese and Riccio 2024. Long-term variation in exposure to NO2 concentrations in the city of Naples, Italy: Results of a citizen science project
+## https://doi.org/10.1016/j.scitotenv.2024.172799
+})
+
 #### YLD ########################################################################
 
 testthat::test_that("results the same prevalence-based YLD (duration_central=1) |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
