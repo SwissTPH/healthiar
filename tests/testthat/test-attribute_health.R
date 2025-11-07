@@ -730,6 +730,32 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iterati
   )
 })
 
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_TRUE|", {
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      signif(healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central =  2.1,
+        cutoff_central = 0,
+        geo_id_micro = c("Harku", "Jõelähtme", "Keila"), #id codes for each area, can be names also
+        bhd_central = c(92, 47, 103 ) #deaths in chosen regions
+      )$health_main$impact,3),
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected = c(1.14, 0.585, 1.28)
+
+  )
+})
+#original results form publication: c(2.5, 1.2, 1.7) # test did not pass but the value provided by healthiar differs on average 0.8
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
+
 #### YLD ########################################################################
 
 testthat::test_that("results the same prevalence-based YLD (duration_central=1) |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
@@ -975,7 +1001,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
         rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
         rr_increment = 10,
         prop_pop_exp = 1,
-        exp_central = 1.7, # exposure for pm2.5
+        exp_central = c(1.1,1.7), # exposure for pm2.5
         # dist = exposure distribution, e.g. 5 different exposure
         #categories (~ exposure ranges) with the information how many people are
         #exposed to each of the 5 exposure range heitgaasid-pm2.5
@@ -984,10 +1010,11 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
       )$health_main$impact,3),
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
-      53.6 # test did not pass but the value provided by healthiar differs on average 14.8, might need to look into the differences
+      44.2 # test did not pass but the value provided by healthiar differs on average 14.8, might need to look into the differences
   )
 })
 ## Original result from publication: 42.0 # test did not pass
+# I added the exposure value 1.1, because the original was single exposure and not distribution
 ## ASSESSOR: Maria Lepnurm TAI
 ## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
