@@ -808,6 +808,57 @@ results_NO2$health_main$pop_fraction[7] # 14.6 (95% CI: 7.6 - 23.9)
 ## https://doi.org/10.1016/j.scitotenv.2024.172799
 })
 
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|",{
+## Pathway ID: pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|
+## healthiar FUNCTION CALL
+pm_iteration <-
+  healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.09,
+    rr_lower = 1.06,
+    rr_upper = 1.12,
+    rr_increment = 10,
+    exp_central = c(7,5.5),
+    cutoff_central = 0,
+    bhd_central = c(2085, 855),
+    geo_id_micro = c('Alberta','Manitoba'),
+  )
+testthat::expect_equal(
+  ## healthiar FUNCTION CALL
+  object =signif(pm_iteration$health_main$pop_fraction,2),
+  expected = c(0.059,0.040, 0.076, 0.046, 0.032, 0.060))
+
+
+testthat::expect_equal(
+  ## healthiar FUNCTION CALL
+  object =pm_iteration$health_main$impact_rounded,
+  expected = c(122,83.0, 159.0, 40, 27.0, 52.0))
+
+
+### below are the original results from the paper (only two very small adjustments where needed)
+## Attributable impact in Alberta
+pm_iteration$health_main$impact_rounded[1:3]
+pm_iteration$health_main$pop_fraction[1:3]
+# Alberta_impact_rounded : 123
+# Alberta_pop_fraction : 0.059 (95% CI: 0.040 - 0.077)
+
+
+## Attributable impact in Manitoba
+pm_iteration$health_main$impact_rounded[4:6]
+pm_iteration$health_main$pop_fraction[4:6]
+# Manitoba_impact_rounded : 40
+# Manitoba_pop_fraction : 0.046 (95% CI: 0.032 - 0.060)
+
+## List here the results of the comparison assessment you selected
+## ASSESSOR: Maria José Rueda Lopez, CSTB
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: Estimate the proportion of lung cancer cases attributable to PM2.5 exposure in Alberta and Manitoba in 2015
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: Gogna et al., 2019. Estimates of the current and future burden of lung cancer attributable to PM2.5 in Canada. https://doi.org/10.1016/j.ypmed.2019.03.010
+## Add here input data details: data sources, measured vs. modelled, ...
+})
+
 #### YLD ########################################################################
 
 testthat::test_that("results the same prevalence-based YLD (duration_central=1) |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
