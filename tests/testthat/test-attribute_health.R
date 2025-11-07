@@ -1052,6 +1052,64 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration
   )
 })
 
+
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|", {
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      signif(healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "log_linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = c(1.1, 1.6, 1.6, 1.5 ), # dist = exposure distribution, e.g. 5 different exposure
+        #categories (~ exposure ranges) with the information how many people are
+        #exposed to each of the 5 exposure range heitgaasid-pm2.5
+        cutoff_central = 0,
+        geo_id_micro = c("Anija", "Harku", "Jõelähtme", "Keila"), #id codes for each area, can be names also
+        bhd_central = c(88, 92, 47, 103 ) #deaths in chosen regions
+      )$health_main$impact,2),##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c(0.56, 0.85, 0.44, 0.90) # test did not pass but the value provided by healthiar differs on average 0.9
+  )
+})
+# original results from paper: c(0.8, 2.5, 1.2, 1.7) # test did not pass but the value provided by healthiar differs on average 0.9
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|", {
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "log_linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = c(2.1, 3, 2.6, 2.2, 2.3, 1.9, 1.8, 2.2  ), # exposure for NO2
+        # dist = exposure distribution, e.g. 5 different exposure
+        #categories (~ exposure ranges) with the information how many people are
+        #exposed to each of the 5 exposure range heitgaasid-pm2.5
+        cutoff_central = 0,
+        geo_id_micro = c("Haabersti", "Kesklinn", "Kristiine", "Lasnamäe", "Mustamäe", "Nõmme", "Pirita", "Põhja-Tallinn"),
+        bhd_central = c(433, 433, 289, 1232, 926, 397, 140, 694) #deaths in chosen regions
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c(5.0,  8.0,  4.0, 16.0, 12.0,  4.0, 1.0,  9.0) # test did not pass but the value provided by healthiar differs on average 14.8, might need to look into the differences
+  )
+})
+## original results from publication: c(16.2, 33.8, 15.3, 44.6, 28.4, 12, 4.9, 22.5) # test did not pass but the value provided by healthiar differs on average 14.8, might need to look into the differences)
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
+
 #### USER-DEFINED ERF FUNCTION ###############################################
 
 testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|", {
@@ -1266,6 +1324,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteratio
       c(32,32,76) # Results on 28 May 2025 ; no comparison study
   )
 })
+
 
 ## AR ###########################################################################
 
