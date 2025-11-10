@@ -524,6 +524,77 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 ## ASSESSMENT DETAILS: I used data from https://discomap.eea.europa.eu/App/AQViewer/index.html?fqn=Airquality_Dissem.ebd.countries_and_nuts# for Estonias urban centres(presumably Tallinn) and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: Baseline from WHO 2005 (HRAPIE 2013), all cause mortality, attributable deaths from pm2.5 in 2020.
 
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+
+## healthiar FUNCTION CALL
+results_NO2 <-
+  healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    erf_shape = "linear",
+    rr_central = 1.04,
+    rr_lower = 1.02,
+    rr_upper = 1.07,
+    rr_increment = 10,
+    exp_central = 42.6,
+    exp_lower = 33.1,
+    exp_upper = 56.4,
+    cutoff_central = 0,
+    bhd_central = 9946,
+  )
+
+
+testthat::expect_equal(
+  ## Attributable impact in Naples
+  object = results_NO2$health_main$impact_rounded,
+  expected = c(1448, 781, 2285))
+
+testthat::expect_equal(
+  ## Attributable impact in Naples
+  object = signif(results_NO2$health_main$pop_fraction,3),
+  expected = c(0.146, 0.0785, 0.230))
+
+
+
+# Original results from Paper (close to what attribute health gets):
+# Naples_impact_rounded : 1337 (95% CI: 700 - 2188)
+# Naples_pop_fraction : 13.9 (95% CI: 7.3 - 22.7)
+
+## ASSESSOR: Maria José Rueda Lopez, CSTB
+
+## ASSESSMENT DETAILS: Estimate the attributable death for exposition to NO2 concentrations in 2013 in Naples, Italy.
+
+## INPUT DATA DETAILS: Chianese and Riccio 2024. Long-term variation in exposure to NO2 concentrations in the city of Naples, Italy: Results of a citizen science project
+## https://doi.org/10.1016/j.scitotenv.2024.172799
+})
+
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_FALSE|", {
+
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO
+        #rr_lower = 1.02,
+        #rr_upper = 1.11,
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = 5.8, #single for Urban centres(presumably Tallinn), pm2.5
+        cutoff_central = 0,
+        bhd_central = 4500 #deaths in tallinn 2020
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      151 # test did not pass but the value provided by healthiar falls within the range provided by EEA
+  )
+})
+# Original results from source: 200
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://discomap.eea.europa.eu/App/AQViewer/index.html?fqn=Airquality_Dissem.ebd.countries_and_nuts# for Estonias urban centres(presumably Tallinn) and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: Baseline from WHO 2005 (HRAPIE 2013), all cause mortality, attributable deaths from pm2.5 in 2020.
+
 #### ITERATION ##################################################################
 
 testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
