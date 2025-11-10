@@ -46,7 +46,7 @@ attribute_lifetable(
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{baseline health data} of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}}
 
 \item{population}{\code{Numeric vector} \strong{\code{For attribute_lifetable()}}, it is an \emph{obligatory argument} specifying the \strong{mid-year populations} per age (i.e. age group size = 1 year) for the (first) year of analysis.
-\strong{\code{For attribute_health()}} this argument specifies the \strong{total population} (exposed + non-exposed) \strong{to calculate attributable impacts rate} per 100 000 population. See Details for more info. \emph{Optional argument.}}
+\strong{\code{For attribute_health()}} it is an \emph{optional argument} which specifies the \strong{population used to calculate attributable impacts rate} per 100 000 population. See Details for more info.}
 
 \item{health_outcome}{\code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).}
 

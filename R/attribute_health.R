@@ -92,7 +92,7 @@
 #' @details
 #' \code{population}
 #' @details
-#' \emph{Optional argument.} The total population entered here is used to determine impact rate per 100 000 population.
+#' \emph{Optional argument.} The population entered here is used to determine impact rate per 100 000 population. Note the requirement for the vector length in the paragraph \emph{Assessment of multiple geographic units} below.
 #' @details
 #' \code{duration_central}, \code{duration_lower}, \code{duration_upper}
 #' @details
@@ -123,14 +123,14 @@
 #' @details \eqn{PE(x)} = population distribution of exposure
 #' @details \eqn{RR(x)} = relative risk at exposure level compared to the reference level
 #' @details
-#' If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2011, https://iris.who.int/handle/10665/326424):
+#' If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2011, https://iris.who.int/items/723ab97c-5c33-4e3b-8df1-744aa5bc1c27):
 #' \deqn{PAF = \frac{\sum RR_i \times PE_i - 1}{\sum RR_i \times PE_i}}
 #' @details Where:
 #' @details \eqn{i} = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
 #' @details \eqn{PE_i} = fraction of population in exposure category i
 #' @details \eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
 #' @details
-#' There is one alternative for the PAF for categorical exposure distribution that is commonly used, which is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical (WHO 2003b, https://doi.org/10.1186/1478-7954-1-1; WHO 2011, https://iris.who.int/handle/10665/326424):
+#' There is one alternative for the PAF for categorical exposure distribution that is commonly used, which is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical (WHO 2003b, https://doi.org/10.1186/1478-7954-1-1; WHO 2011, https://iris.who.int/items/723ab97c-5c33-4e3b-8df1-744aa5bc1c27):
 #' \deqn{PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}}
 #' @details Where:
 #' @details \eqn{i} = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
