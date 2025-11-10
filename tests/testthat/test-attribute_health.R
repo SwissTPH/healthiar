@@ -68,9 +68,32 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
   )
 })
 
-
-
+## same as above but with population argument
 testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = rep("relative_risk", 4),
+        age = c("below_50", "below_50", "50_plus", "50_plus"),
+        sex = c("male", "female", "male", "female"),
+        exp_central = base::rep(data$mean_concentration, 4),
+        cutoff_central = base::rep(data$cut_off_value, 4),
+        bhd_central = base::rep(data$incidents_per_100_000_per_year/1E5*data$population_at_risk, 4),
+        rr_central = base::rep(data$relative_risk, 4),
+        rr_increment = base::rep(10, 4),
+        erf_shape = base::rep("log_linear", 4),
+        info = base::paste0(data$pollutant,"_", data$evaluation_name),
+        population = c(500000, 200000, 600000, 800000)
+      )$health_main$impact_rounded,
+    expected = # airqplus_pm_copd
+      data$estimated_number_of_attributable_cases_central * 4
+  )
+})
+
+  testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -125,7 +148,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
   )
 })
 
-testthat::test_that("detailed result the same |fake_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("detailed result the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -303,7 +326,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
-testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_single|iteration_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -325,7 +348,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
 
   # Use a calculation threshold which is different from the effect threshold
   # Goal: Health impacts in the exposure group 55dB+ that are affected by a exposure above the effect threshold (45 dB)
-
+  exp <- c(300000,200000,150000,120000,100000,70000,60000)
   totpop <- 10000000
   exp_lab <- c(47,52,57,62,67,72,77)
   diseased <- 50000
@@ -363,7 +386,8 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
 
 })
 
-testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_FALSE|", {
+
+testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iteration_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -379,9 +403,224 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_
   )
 })
 
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+  ## Pathway ID:|pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
+  ## healthiar FUNCTION CALL
+  results_pm <-
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.09,
+      rr_lower = 1.06,
+      rr_upper = 1.12,
+      rr_increment = 10,
+      exp_central = 8.3,
+      cutoff_central = 0,
+      bhd_central = 25235,
+    )
+  testthat::expect_equal(
+    object =
+      signif(c(results_pm$health_main$impact_rounded,results_pm$health_main$pop_fraction),3),
+    expected =
+      signif(c(1742.00000000,1191.00000000,2265.00000000,0.06902931,0.04721232,0.08977441),3)
+  )
+
+  # Original result from the paper:
+  # Canada_impact_rounded : 1739
+  # Canada_pop_fraction : 0.069 (95% CI: 0.047 - 0.090)
+
+  ## List here the results of the comparison assessment you selected
+  ## ASSESSOR: Maria José Rueda Lopez, CSTB
+  ## Add here your name and your institute abbreviation
+  ## ASSESSMENT DETAILS: Estimate the proportion of lung cancer cases attributable to PM2.5 exposure in Canada in 2015
+  ## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+  ## INPUT DATA DETAILS: Gogna et al., 2019. Estimates of the current and future burden of lung cancer attributable to PM2.5 in Canada. https://doi.org/10.1016/j.ypmed.2019.03.010
+  ## Add here input data details: data sources, measured vs. modelled, ...
+})
+
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+  ## Pathway ID:|pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
+
+  ## healthiar FUNCTION CALL
+  results_pm <-
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.09,
+      rr_lower = 1.06,
+      rr_upper = 1.12,
+      rr_increment = 10,
+      exp_central = 9.2,
+      cutoff_central = 0,
+      bhd_central = 8380,
+    )
+  testthat::expect_equal(
+    object =
+      signif(c(results_pm$health_main$impact_rounded,results_pm$health_main$pop_fraction),3),
+    expected =
+      signif(c(639.0000, 437.0000,  830.0000, 0.0762, 0.0522, 0.0990),3)
+  )
+
+  # Original results form the paper
+  # Ontario_impact_rounded : 662
+  # Ontario_pop_fraction : 0.079 (95% CI: 0.054 - 0.103)
+
+  ## List here the results of the comparison assessment you selected
+  ## ASSESSOR: Maria José Rueda Lopez, CSTB
+  ## Add here your name and your institute abbreviation
+  ## ASSESSMENT DETAILS: Estimate the proportion of lung cancer cases attributable to PM2.5 exposure in Ontario in 2015
+  ## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+  ## INPUT DATA DETAILS: Gogna et al., 2019. Estimates of the current and future burden of lung cancer attributable to PM2.5 in Canada. https://doi.org/10.1016/j.ypmed.2019.03.010
+  ## Add here input data details: data sources, measured vs. modelled, ...
+})
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+  ## Pathway ID:|pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
+
+  ## healthiar FUNCTION CALL
+  results_pm2.5 <-
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear", # Page 18
+      rr_central = 1.15, # Page 33
+      rr_lower = 1.05, # Page 33
+      rr_upper = 1.25, # Page 33
+      rr_increment = 10, # Page 18
+      exp_central = 9.6, # Table 5 page 29
+      exp_lower = 8.9, # Table 5 page 29
+      exp_upper = 10.2, # Table 5 page 29
+      cutoff_central = 5, # Page 33
+      bhd_central = 561953, # Table 3 page 22
+    )
+
+
+  ### Healthiar results ###
+  ## Attributable impact in France
+  testthat::expect_equal(
+    object =
+      signif(c(results_pm2.5$health_main$impact_rounded,results_pm2.5$health_main$pop_fraction),3),
+    expected =
+      signif(c(34991.0000, 12472.0000, 54821.0000, 0.0623, 0.0222, 0.0976),3)
+  )
+
+  ### SpF report results ###
+  # France_impact_Cuttoff5 : 39541. Table 8 page 37
+  # France_pop_fraction_Cuttoff5 : 0.071 Table 8 page 37
+
+
+  ## ASSESSOR: Maria José Rueda Lopez, CSTB and Sabrina Delaunay-Havard, SpF.
+  ## ASSESSMENT DETAILS: Estimate the proportion of deaths attributable to PM2.5 exposure in France during the covid19 pandemic
+  ## INPUT DATA DETAILS: Etudes et enquêtes. Impact de la pollution de l'air ambiant sur la mortalité en France métropolitaine. Réduction en lien avec le
+  ## confinement du printemps 2020 et nouvelles données sur le poids total pour la période 2016-2019. Santé publique France. Avril 2021.
+})
+
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "log_linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO
+        #rr_lower = 1.02,
+        #rr_upper = 1.11,
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = 5.8, #single for Urban centres(presumably Tallinn), pm2.5
+        cutoff_central = 0,
+        bhd_central = 4500 #deaths in tallinn 2020
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      150
+  )
+})
+
+# original value from EEA = 199 -> test did not pass but the value provided by attribute_health falls within the range provided by EEA
+
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://discomap.eea.europa.eu/App/AQViewer/index.html?fqn=Airquality_Dissem.ebd.countries_and_nuts# for Estonias urban centres(presumably Tallinn) and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: Baseline from WHO 2005 (HRAPIE 2013), all cause mortality, attributable deaths from pm2.5 in 2020.
+
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+
+## healthiar FUNCTION CALL
+results_NO2 <-
+  healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    erf_shape = "linear",
+    rr_central = 1.04,
+    rr_lower = 1.02,
+    rr_upper = 1.07,
+    rr_increment = 10,
+    exp_central = 42.6,
+    exp_lower = 33.1,
+    exp_upper = 56.4,
+    cutoff_central = 0,
+    bhd_central = 9946,
+  )
+
+
+testthat::expect_equal(
+  ## Attributable impact in Naples
+  object = results_NO2$health_main$impact_rounded,
+  expected = c(1448, 781, 2285))
+
+testthat::expect_equal(
+  ## Attributable impact in Naples
+  object = signif(results_NO2$health_main$pop_fraction,3),
+  expected = c(0.146, 0.0785, 0.230))
+
+
+
+# Original results from Paper (close to what attribute health gets):
+# Naples_impact_rounded : 1337 (95% CI: 700 - 2188)
+# Naples_pop_fraction : 13.9 (95% CI: 7.3 - 22.7)
+
+## ASSESSOR: Maria José Rueda Lopez, CSTB
+
+## ASSESSMENT DETAILS: Estimate the attributable death for exposition to NO2 concentrations in 2013 in Naples, Italy.
+
+## INPUT DATA DETAILS: Chianese and Riccio 2024. Long-term variation in exposure to NO2 concentrations in the city of Naples, Italy: Results of a citizen science project
+## https://doi.org/10.1016/j.scitotenv.2024.172799
+})
+
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_FALSE|", {
+
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO
+        #rr_lower = 1.02,
+        #rr_upper = 1.11,
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = 5.8, #single for Urban centres(presumably Tallinn), pm2.5
+        cutoff_central = 0,
+        bhd_central = 4500 #deaths in tallinn 2020
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      151 # test did not pass but the value provided by healthiar falls within the range provided by EEA
+  )
+})
+# Original results from source: 200
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://discomap.eea.europa.eu/App/AQViewer/index.html?fqn=Airquality_Dissem.ebd.countries_and_nuts# for Estonias urban centres(presumably Tallinn) and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: Baseline from WHO 2005 (HRAPIE 2013), all cause mortality, attributable deaths from pm2.5 in 2020.
+
 #### ITERATION ##################################################################
 
-testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -401,7 +640,7 @@ testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_
 
 })
 
-testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
 
   bestcost_pm_mortality_a <-
     healthiar::attribute_health(
@@ -437,7 +676,7 @@ testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_
 
 })
 
-testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -551,7 +790,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
-testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_single|iteration_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -568,7 +807,7 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_
   )
 })
 
-testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iteration_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -584,6 +823,138 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_
       c(0.936215963, 0.936215963) # Results on 06 August 2024 (ChatGPT); no comparison study
   )
 })
+
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_TRUE|", {
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      signif(healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central =  2.1,
+        cutoff_central = 0,
+        geo_id_micro = c("Harku", "Jõelähtme", "Keila"), #id codes for each area, can be names also
+        bhd_central = c(92, 47, 103 ) #deaths in chosen regions
+      )$health_main$impact,3),
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected = c(1.14, 0.585, 1.28)
+
+  )
+})
+#original results form publication: c(2.5, 1.2, 1.7) # test did not pass but the value provided by healthiar differs on average 0.8
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
+
+
+testthat::test_that("results the same|pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|",{
+## Pathway ID: pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|
+## healthiar FUNCTION CALL
+results_NO2 <-
+  healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    erf_shape = "linear",
+    rr_central = 1.04,
+    rr_lower = 1.02,
+    rr_upper = 1.07,
+    rr_increment = 10,
+    exp_central = c(42.6,39.0,42.4),
+    exp_lower = c(33.1, 25.5, 33.1),
+    exp_upper = c(56.4,58.6,55.8),
+    cutoff_central = 0,
+    bhd_central = c(9946,9679,10539),
+    geo_id_micro = c('2013','2014','2015'),
+  )
+
+testthat::expect_equal(
+  ## healthiar FUNCTION CALL
+  object =results_NO2$health_main$impact_rounded,
+  expected = c(1448.0, 781.0, 2285.0, 1306.0, 700.0, 2076.0, 1528.0, 824.0, 2412.0)
+)
+
+testthat::expect_equal(
+  ## healthiar FUNCTION CALL
+  object =signif(results_NO2$health_main$pop_fraction,3),
+  expected = c(0.146, 0.0785, 0.230, 0.135, 0.0724, 0.214, 0.145, 0.0782, 0.229)
+)
+# original results impact = 1337.0 700.0 2188.0 1247.0 653.0 2041.0 1404.0 735.0 2299.0, see also below
+# original results pop fraction: c(0.139, 0.073, 0.227, 0.13, 0.068, 0.212, 0.146, 0.076, 0.239) see also below
+# Attributable impact in Naples
+### 2013 ###
+results_NO2$health_main$impact_rounded[1] # 1337 (95% CI: 700 - 2188)
+results_NO2$health_main$pop_fraction[1] # 13.9 (95% CI: 7.3 - 22.7)
+
+### 2014 ###
+results_NO2$health_main$impact_rounded[4] # 1247 (95% CI 653 - 2041)
+results_NO2$health_main$pop_fraction[4] # 13.0 (95% CI: 6.8 - 21.2)
+
+### 2015 ###
+results_NO2$health_main$impact_rounded[7] # 1404 (95% CI 735 - 2299)
+results_NO2$health_main$pop_fraction[7] # 14.6 (95% CI: 7.6 - 23.9)
+
+## ASSESSOR: Maria José Rueda Lopez, CSTB
+## ASSESSMENT DETAILS: Estimate the attributable death for exposition to NO2 concentrations in 2013, 2014 and 2015 in Naples, Italy.
+## INPUT DATA DETAILS: Chianese and Riccio 2024. Long-term variation in exposure to NO2 concentrations in the city of Naples, Italy: Results of a citizen science project
+## https://doi.org/10.1016/j.scitotenv.2024.172799
+})
+
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|",{
+## Pathway ID: pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|
+## healthiar FUNCTION CALL
+pm_iteration <-
+  healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.09,
+    rr_lower = 1.06,
+    rr_upper = 1.12,
+    rr_increment = 10,
+    exp_central = c(7,5.5),
+    cutoff_central = 0,
+    bhd_central = c(2085, 855),
+    geo_id_micro = c('Alberta','Manitoba'),
+  )
+testthat::expect_equal(
+  ## healthiar FUNCTION CALL
+  object =signif(pm_iteration$health_main$pop_fraction,2),
+  expected = c(0.059,0.040, 0.076, 0.046, 0.032, 0.060))
+
+
+testthat::expect_equal(
+  ## healthiar FUNCTION CALL
+  object =pm_iteration$health_main$impact_rounded,
+  expected = c(122,83.0, 159.0, 40, 27.0, 52.0))
+
+
+### below are the original results from the paper (only two very small adjustments where needed)
+## Attributable impact in Alberta
+pm_iteration$health_main$impact_rounded[1:3]
+pm_iteration$health_main$pop_fraction[1:3]
+# Alberta_impact_rounded : 123
+# Alberta_pop_fraction : 0.059 (95% CI: 0.040 - 0.077)
+
+
+## Attributable impact in Manitoba
+pm_iteration$health_main$impact_rounded[4:6]
+pm_iteration$health_main$pop_fraction[4:6]
+# Manitoba_impact_rounded : 40
+# Manitoba_pop_fraction : 0.046 (95% CI: 0.032 - 0.060)
+
+## List here the results of the comparison assessment you selected
+## ASSESSOR: Maria José Rueda Lopez, CSTB
+## Add here your name and your institute abbreviation
+## ASSESSMENT DETAILS: Estimate the proportion of lung cancer cases attributable to PM2.5 exposure in Alberta and Manitoba in 2015
+## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+## INPUT DATA DETAILS: Gogna et al., 2019. Estimates of the current and future burden of lung cancer attributable to PM2.5 in Canada. https://doi.org/10.1016/j.ypmed.2019.03.010
+## Add here input data details: data sources, measured vs. modelled, ...
+})
+
+
+
 
 #### YLD ########################################################################
 
@@ -785,7 +1156,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
 })
 
 
-testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_dist|iteration_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -802,7 +1173,7 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_FA
   )
 })
 
-testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -818,6 +1189,91 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_FA
       0.936215963 # Results on 06 August 2024 (ChatGPT); no comparison study
   )
 })
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      signif(healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "log_linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = c(1.1,1.7), # exposure for pm2.5
+        # dist = exposure distribution, e.g. 5 different exposure
+        #categories (~ exposure ranges) with the information how many people are
+        #exposed to each of the 5 exposure range heitgaasid-pm2.5
+        cutoff_central = 0,
+        bhd_central =  5442 #deaths in chosen regions
+      )$health_main$impact,3),
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      44.2 # test did not pass but the value provided by healthiar differs on average 14.8, might need to look into the differences
+  )
+})
+## Original result from publication: 42.0 # test did not pass
+# I added the exposure value 1.1, because the original was single exposure and not distribution
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      signif(healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "log_linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = c(1.1,1.5), # exposure 1. pm2.5 and 2. pm2.5 and pm10 from the same administrative unit
+        # dist = exposure distribution, e.g. 5 different exposure
+        #categories (~ exposure ranges) with the information how many people are
+        #exposed to each of the 5 exposure range heitgaasid-pm2.5
+        cutoff_central = 0,
+        bhd_central = 88 #deaths in chosen regions
+      )$health_main$impact,3),
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      0.664
+  )
+})
+## original results: c(0.8, 0.7) but the result is only one value. I also tested how the result looks like if I add 2 geo_id_micro, then the results ar still colose, but the first result is lower than the second,
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
+
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration_FALSE|", {
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      signif(healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = 1.1 , # exposure 1. pm2.5 and 2. pm2.5 and pm10 from the same administrative unit
+        # dist = exposure distribution, e.g. 5 different exposure
+        #categories (~ exposure ranges) with the information how many people are
+        #exposed to each of the 5 exposure range heitgaasid-pm2.5
+        cutoff_central = 0,
+        bhd_central = c(88 ) #deaths in chosen regions
+      )$health_main$impact,3),
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c(0.577) # test did not pass but the value provided by healthiar differs on average 0.2
+  )
+})
+#original results: c(0.8) # test did not pass but the value provided by healthiar differs on average 0.2
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
 #### ITERATION ##################################################################
 testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|", {
@@ -837,6 +1293,30 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
         geo_id_micro = rep(1:3, each = 5),
         geo_id_macro = rep("ch", each = 5 * 3)
         )$health_detailed$results_raw$impact_rounded,
+    expected =
+      base::round(c(545,  634,  991)) # Results on 2025-06-24; no comparison study
+  )
+})
+
+## with population argument specified
+testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        exp_central = base::rep(c(5, 6, 7, 8, 9), times = 3),
+        cutoff_central = 5,
+        prop_pop_exp = c(c(0.1, 0.3, 0.2, 0.2, 0.2),
+                         c(0.2, 0.2, 0.3, 0.1, 0.2),
+                         c(0.2, 0.2, 0.2, 0.1, 0.3)),
+        bhd_central = rep(runif_with_seed(3,1E4,1E5,1), each = 5),
+        rr_central = 1.08,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        geo_id_micro = rep(1:3, each = 5),
+        geo_id_macro = rep("ch", each = 5 * 3),
+        population = rep(1000000, each = 5 * 3)
+      )$health_detailed$results_raw$impact_rounded,
     expected =
       base::round(c(545,  634,  991)) # Results on 2025-06-24; no comparison study
   )
@@ -871,7 +1351,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
-testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_dist|iteration_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -889,7 +1369,7 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_TR
   )
 })
 
-testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -906,6 +1386,152 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_TR
       c(0.936215963, 0.936215963) # Results on 06 August 2024 (ChatGPT); no comparison study
   )
 })
+
+
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|", {
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      signif(healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "log_linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = c(1.1, 1.6, 1.6, 1.5 ), # dist = exposure distribution, e.g. 5 different exposure
+        #categories (~ exposure ranges) with the information how many people are
+        #exposed to each of the 5 exposure range heitgaasid-pm2.5
+        cutoff_central = 0,
+        geo_id_micro = c("Anija", "Harku", "Jõelähtme", "Keila"), #id codes for each area, can be names also
+        bhd_central = c(88, 92, 47, 103 ) #deaths in chosen regions
+      )$health_main$impact,2),##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c(0.56, 0.85, 0.44, 0.90) # test did not pass but the value provided by healthiar differs on average 0.9
+  )
+})
+# original results from paper: c(0.8, 2.5, 1.2, 1.7) # test did not pass but the value provided by healthiar differs on average 0.9
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|", {
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "log_linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = c(2.1, 3, 2.6, 2.2, 2.3, 1.9, 1.8, 2.2  ), # exposure for NO2
+        # dist = exposure distribution, e.g. 5 different exposure
+        #categories (~ exposure ranges) with the information how many people are
+        #exposed to each of the 5 exposure range heitgaasid-pm2.5
+        cutoff_central = 0,
+        geo_id_micro = c("Haabersti", "Kesklinn", "Kristiine", "Lasnamäe", "Mustamäe", "Nõmme", "Pirita", "Põhja-Tallinn"),
+        bhd_central = c(433, 433, 289, 1232, 926, 397, 140, 694) #deaths in chosen regions
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c(5.0,  8.0,  4.0, 16.0, 12.0,  4.0, 1.0,  9.0) # test did not pass but the value provided by healthiar differs on average 14.8, might need to look into the differences
+  )
+})
+## original results from publication: c(16.2, 33.8, 15.3, 44.6, 28.4, 12, 4.9, 22.5) # test did not pass but the value provided by healthiar differs on average 14.8, might need to look into the differences)
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
+
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|",{
+  ## healthiar FUNCTION CALL
+  results_pm2.5 <-
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear", # Page 18
+      rr_central = 1.15, # Page 33
+      rr_lower = NULL, #1.05, Page 33
+      rr_upper = NULL, #1.25, Page 33
+      rr_increment = 10, # Page 18
+      exp_central = c(9.5, 9.8, 9.9, 10.9,9.6), # Table 5 page 29
+      exp_lower = NULL, # list(6.6, 7.1, 7.2, 7.8, 6.6), # Table 5 page 29
+      exp_upper = NULL, # list(13.5,13.5, 13.3, 14.4, 14.4), # Table 5 page 29
+      cutoff_central = 5, # Page 33
+      bhd_central = c(133103, 121061, 87860, 219929, 561953), # Table 3 page 22
+      geo_id_micro = c('Rural','Semi-rural', 'Semi-urbaines','Urbaines','France'),
+    )
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =results_pm2.5$health_main$impact_rounded,
+    expected = c(8113,7855, 5816, 17408, 34991))
+
+  ### SpF report results ###
+  # France_impact_Cuttoff5 : (7836, 7534, 5721, 18450, 39541) Table 8 page 37
+  # France_pop_fraction_Cuttoff5 : (0.059, 0.063, 0.066, 0.084, 0.0071) Table 8 page 37
+})
+
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|",{
+  results_NO2 <-
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear", # Page 18
+      rr_central = 1.023, # Page 14
+      rr_lower = NULL, #1.008 # Page 14
+      rr_upper = NULL, #1.037 # Page 14
+      rr_increment = 10, # Page 18
+      exp_central = c(11.5, 12.4, 13.2, 17.2, 12.0), # Table 5 page 29
+      exp_lower = NULL, #list(7.4, 7.6, 7.9, 8.0, 7.4), # Table 5 page 29
+      exp_upper = NULL, #list(23.5, 22.8, 21.0, 34.3, 34.3), # Table 5 page 29
+      cutoff_central = 10, # Page 33
+      bhd_central = c(133103, 121061, 87860, 219929, 561953), # Table 3 page 22
+      geo_id_micro = c('Rural','Semi-rural', 'Semi-urbaines','Urbaines','France'),
+    )
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =results_NO2$health_main$impact_rounded,
+    expected = c(453.0,  659.0,  637.0,  3571.0,  2550.0))
+
+  ### SpF report results ###
+  # France_impact_Cuttoff10 : (451, 596, 633, 5110, 6790) Table 8 page 37
+  # France_pop_fraction_Cuttoff10 : (0.003, 0.005, 0.007, 0.023, 0.0012) Table 8 page 37
+
+  ## ASSESSOR: Maria José Rueda Lopez, CSTB and Sabrina Delaunay-Havard, SpF.
+  ## ASSESSMENT DETAILS: Estimate the proportion of deaths attributable to PM2.5 exposure in France during the covid19 pandemic
+  ## INPUT DATA DETAILS: Etudes et enquêtes. Impact de la pollution de l'air ambiant sur la mortalité en France métropolitaine. Réduction en lien avec le
+  ## confinement du printemps 2020 et nouvelles données sur le poids total pour la période 2016-2019. Santé publique France. Avril 2021.
+})
+
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration_TRUE|", {
+
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      signif(healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = c(1.1, 1.6, 1.6, 1.5 ), # dist = exposure distribution, e.g. 5 different exposure
+        #categories (~ exposure ranges) with the information how many people are
+        #exposed to each of the 5 exposure range heitgaasid-pm2.5
+        cutoff_central = 0,
+        geo_id_micro = c("Anija", "Harku", "Jõelähtme", "Keila"), #id codes for each area, can be names also
+        bhd_central = c(88, 92, 47, 103 ) #deaths in chosen regions
+      )$health_main$impact,3),
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected = c(0.5770, 0.8750, 0.4470, 0.9190)
+  )
+})
+# original results: c(0.8, 2.5, 1.2, 1.7) # test did not pass but the value provided by healthiar differs on average 0.9
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
 #### USER-DEFINED ERF FUNCTION ###############################################
 
@@ -977,7 +1603,7 @@ testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|e
   )
 })
 
-testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|exp_dist|iteration_FALSE|", {
+testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1001,7 +1627,7 @@ testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|ex
   )
 })
 
-testthat::test_that("results the same mrbrt no cutoff |fake_rr|erf_function|exp_dist|iteration_FALSE|", {
+testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1025,7 +1651,7 @@ testthat::test_that("results the same mrbrt no cutoff |fake_rr|erf_function|exp_
   )
 })
 
-testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|exp_dist|iteration_FALSE|", {
+testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1050,7 +1676,7 @@ testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|ex
 })
 
 
-testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|exp_dist|iteration_FALSE|", {
+testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1086,7 +1712,7 @@ testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|ex
   )
 })
 
-testthat::test_that("results the same |fake_rr|erf_function|exp_dist|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteration_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1121,6 +1747,7 @@ testthat::test_that("results the same |fake_rr|erf_function|exp_dist|iteration_F
       c(32,32,76) # Results on 28 May 2025 ; no comparison study
   )
 })
+
 
 ## AR ###########################################################################
 
@@ -1233,7 +1860,7 @@ testthat::test_that("no error ar iteration", {
 )
 })
 
-testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iteration_TRUE|", {
+testthat::test_that("detailed results the same pathway_ar|erf_formula|exp_dist|iteration_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -1256,7 +1883,7 @@ testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iter
   )
 })
 
-testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iteration_TRUE|", {
+testthat::test_that("detailed results the same pathway_ar|erf_formula|exp_dist|iteration_TRUE|", {
 
   testthat::expect_equal(
     object =

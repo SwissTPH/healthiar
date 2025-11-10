@@ -98,7 +98,7 @@ standardize <- function(output_attribute,
       # Calculate
       pop_weight = population / total_population,
       impact_weight = impact/total_impact,
-      impact_per_100k_inhab_std = impact_per_100k_inhab_subgroup * ref_prop_pop,
+      impact_per_100k_inhab_std = impact_per_100k_inhab * ref_prop_pop,
       exp_std = exp * pop_weight,
       pop_fraction_std = pop_fraction * impact_weight)
 

@@ -76,7 +76,7 @@ attribute_master(
 \item{sex}{\code{Numeric vector} or \code{string vector} specifying the \strong{sex} of the groups considered in the assessment.\emph{Optional argument.}}
 
 \item{population}{\code{Numeric vector} \strong{\code{For attribute_lifetable()}}, it is an \emph{obligatory argument} specifying the \strong{mid-year populations} per age (i.e. age group size = 1 year) for the (first) year of analysis.
-\strong{\code{For attribute_health()}} this argument specifies the \strong{total population} (exposed + non-exposed) \strong{to calculate attributable impacts rate} per 100 000 population. See Details for more info. \emph{Optional argument.}}
+\strong{\code{For attribute_health()}} it is an \emph{optional argument} which specifies the \strong{population used to calculate attributable impacts rate} per 100 000 population. See Details for more info.}
 
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
 

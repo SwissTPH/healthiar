@@ -1,31 +1,40 @@
 Main changes but not complete list. For this propose see Github.
-# healthiar 0.2.x
-* 22 September 2025
+
+# healthiar 0.2.1
+* 06 November 2025
+
+## Improvements
+- Better sampling in summarize_uncertainty() using RNG and package parallel
+
+## Bugs Fixes 
+- time_horizon did not work in attribute_lifetable()
+- population was not summed correct in attribute_lifetable()
+- health_detailed in attribute_health() provided a duplicated rows for results by geo_id_micro
 
 ## Others
-- Submissions until compliance with manual checks of CRAN
+- Other changes to comply with with manual review of CRAN 
+
 
 
 # healthiar 0.1.x 
 * 19 September 2025
 
 ## Others
-- Submissions until compliance with automatic checks of CRAN 
+- Small changes to comply with with automatic review of CRAN 
+
 
 
 # healthiar 0.1.0
 
-* 19 September 2025
+* 19 September 2025 (1st submission to CRAN, automatic review)
 
 ## New Features
 - New function get_inflation_rate()
 - New argument in cba(): inflation rate
 - geo ids can now have different number of exposure categories
 
-
 ## Improvements
 - Faster performance of summarize_uncertainty()
-
 
 ## Bugs Fixes 
 - Argument time_horizon was not working

@@ -73,7 +73,7 @@ attribute_health(
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
 
 \item{population}{\code{Numeric vector} \strong{\code{For attribute_lifetable()}}, it is an \emph{obligatory argument} specifying the \strong{mid-year populations} per age (i.e. age group size = 1 year) for the (first) year of analysis.
-\strong{\code{For attribute_health()}} this argument specifies the \strong{total population} (exposed + non-exposed) \strong{to calculate attributable impacts rate} per 100 000 population. See Details for more info. \emph{Optional argument.}}
+\strong{\code{For attribute_health()}} it is an \emph{optional argument} which specifies the \strong{population used to calculate attributable impacts rate} per 100 000 population. See Details for more info.}
 }
 \value{
 This function returns a \code{list} containing:
@@ -178,7 +178,7 @@ Can be either \code{numeric} or \code{character}. If it is numeric, it refers to
 
 \code{population}
 
-\emph{Optional argument.} The total population entered here is used to determine impact rate per 100 000 population.
+\emph{Optional argument.} The population entered here is used to determine impact rate per 100 000 population. Note the requirement for the vector length in the paragraph \emph{Assessment of multiple geographic units} below.
 
 \code{duration_central}, \code{duration_lower}, \code{duration_upper}
 
@@ -211,7 +211,7 @@ Where:
 
 \eqn{RR(x)} = relative risk at exposure level compared to the reference level
 
-If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2011, https://iris.who.int/handle/10665/326424):
+If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2011, https://iris.who.int/items/723ab97c-5c33-4e3b-8df1-744aa5bc1c27):
 \deqn{PAF = \frac{\sum RR_i \times PE_i - 1}{\sum RR_i \times PE_i}}
 
 Where:
@@ -222,7 +222,7 @@ Where:
 
 \eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
 
-There is one alternative for the PAF for categorical exposure distribution that is commonly used, which is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical (WHO 2003b, https://doi.org/10.1186/1478-7954-1-1; WHO 2011, https://iris.who.int/handle/10665/326424):
+There is one alternative for the PAF for categorical exposure distribution that is commonly used, which is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical (WHO 2003b, https://doi.org/10.1186/1478-7954-1-1; WHO 2011, https://iris.who.int/items/723ab97c-5c33-4e3b-8df1-744aa5bc1c27):
 \deqn{PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}}
 
 Where:
