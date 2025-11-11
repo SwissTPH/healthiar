@@ -5,7 +5,8 @@ We recommend to frequently install the newest *healthiar* version.
 Click on the *Packages* tab in RStudio and in *Install*. 
 From CRAN, search *healthiar* and click on *Install* keeping *Install dependencies* activated.
 
-Run the following commands below in RStudio to install *healthiar*
+## Installation from Github (most recent version):
+Run the following commands below in RStudio to install *healthiar*:
 
 1) `install.packages(c("knitr", "rmarkdown"))`
 
