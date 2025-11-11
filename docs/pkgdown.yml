@@ -1,0 +1,6 @@
+pandoc: '3.4'
+pkgdown: 2.1.3
+pkgdown_sha: ~
+articles:
+  intro_to_healthiar: intro_to_healthiar.html
+last_built: 2025-11-11T08:29Z
