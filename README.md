@@ -1,4 +1,6 @@
 # INSTALL THE *healthiar* R PACKAGE FROM GITHUB
+We recommend to frequently install the newest *healthiar* version.
+
 ## Installation from CRAN: 
 Click on the *Packages* tab in RStudio and in *Install*. 
 From CRAN, search *healthiar* and click on *Install* keeping *Install dependencies* activated.
@@ -8,7 +10,6 @@ Run the following commands below in RStudio to install *healthiar*
 2) `remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)`
 3) If you get asked to install or update any dependencies (= other packages that are needed for *healthiar*) please install or update all of them.
 
-We recommend to frequently install the newest *healthiar* version by running command 2) from above.
 (If you had previously installed *healthiar* while the repository was still private, you must remove your personal access token (PAT) before installing the package again.)
 ## Load the package
 Do not forget to load the package after the installation entering in your R console: `library(healthiar)`.
