@@ -24,3 +24,9 @@ Feedback is very welcome - please provide it via GitHub issues: https://github.c
 
 # TRAININGS
 Would you like to be introduced to *healthiar*? In case you would like us to introduce the package at a conference or another event please get in touch: alberto.castrofernandez@swisstph.ch and axel.luyten@swisstph.ch
+
+# DISCLAMER AND LICENCE
+By using *healthiar*, you confirm that you agree with the following disclaimer and terms of licence:
+- Disclaimer: The R package *healthiar* is work in progress and the developers are not liable for the results. 
+- Terms of license: Available [here](https://github.com/SwissTPH/healthiar/blob/master/LICENSE.md).
+
