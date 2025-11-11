@@ -22,8 +22,4 @@ The slides of the presentation can be found here: https://github.com/SwissTPH/he
 # FEEDBACK
 Feedback is very welcome - please provide it via GitHub issues: https://github.com/SwissTPH/healthiar/issues
 
-# STAYING UPDATED
-If you want to receive updates in the future about new developments or workshops of the healthiar R package, please leave your email at the end of the form (otherwise you will not receive such updates in the future).
-
-# WE OFFER *healthiar* INTRODUCTIONS
 Would you like to be introduced to *healthiar*? In case you would like us to introduce the package at a conference or another event please get in touch: alberto.castrofernandez@swisstph.ch and axel.luyten@swisstph.ch
