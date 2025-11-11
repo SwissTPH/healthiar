@@ -1,4 +1,4 @@
-# INSTALL THE *healthiar* R PACKAGE 
+# INSTALL THE R PACKAGE *healthiar* 
 We recommend to frequently install the newest *healthiar* version.
 
 ## Installation from CRAN: 
