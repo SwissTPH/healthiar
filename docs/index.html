@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">healthiar</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.1323</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.1329</span>
       </span>
     </div>
 
@@ -81,22 +81,55 @@
 <div class="section level1">
 <div class="page-header"><h1 id="install-the-healthiar-r-package-from-github">INSTALL THE <em>healthiar</em> R PACKAGE FROM GITHUB<a class="anchor" aria-label="anchor" href="#install-the-healthiar-r-package-from-github"></a>
 </h1></div>
-<p>(Requirement: R version 4.3.0 or higher)</p>
-<p>Run the following commands below in RStudio to install <em>healthiar</em> 1) <code>install.packages(c("remotes", "knitr", "rmarkdown"))</code> 2) <code>remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)</code> 3) If you get asked to install or update any dependencies (= other packages that are needed for <em>healthiar</em>) please install or update all of them. 4) <code><a href="https://github.com/SwissTPH/healthiar/" class="external-link">library(healthiar)</a></code></p>
-<p>We recommend to frequently install the newest <em>healthiar</em> version by running command 2) from above. (If you had previously installed <em>healthiar</em> while the repository was still private, you must remove your personal access token (PAT) before installing the package again.)</p>
+<p>We recommend to frequently install the newest <em>healthiar</em> version.</p>
+<div class="section level2">
+<h2 id="installation-from-cran">Installation from CRAN:<a class="anchor" aria-label="anchor" href="#installation-from-cran"></a>
+</h2>
+<p>Click on the <em>Packages</em> tab in RStudio and in <em>Install</em>. From CRAN, search <em>healthiar</em> and click on <em>Install</em> keeping <em>Install dependencies</em> activated.</p>
+</div>
+<div class="section level2">
+<h2 id="installation-from-github-most-recent-version">Installation from Github (most recent version):<a class="anchor" aria-label="anchor" href="#installation-from-github-most-recent-version"></a>
+</h2>
+<p>Run the following commands below in RStudio to install <em>healthiar</em>:</p>
+<ol style="list-style-type: decimal">
+<li><p><code>install.packages(c("knitr", "rmarkdown"))</code></p></li>
+<li><p><code>remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)</code></p></li>
+<li><p>If you get asked to install or update any dependencies (= other packages that are needed for <em>healthiar</em>) please install or update all of them.</p></li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="load-the-package">Load the package<a class="anchor" aria-label="anchor" href="#load-the-package"></a>
+</h2>
+<p>Do not forget to load the package after the installation entering in your R console: <code><a href="https://github.com/SwissTPH/healthiar/" class="external-link">library(healthiar)</a></code>.</p>
+</div>
+<div class="section level2">
+<h2 id="requirement">Requirement<a class="anchor" aria-label="anchor" href="#requirement"></a>
+</h2>
+<p>R version 4.3.0 or higher</p>
+</div>
+<div class="section level2">
+<h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a>
+</h2>
+<p>If you had previously installed <em>healthiar</em> while the repository was still private, you must remove your personal access token (PAT) before installing the package again.</p>
+</div>
 </div>
 <div class="section level1">
 <h1 id="get-started-with-healthiar">GET STARTED WITH <em>healthiar</em>
 <a class="anchor" aria-label="anchor" href="#get-started-with-healthiar"></a>
 </h1>
-<p>The vignette <em>intro_to_healthiar</em> (i.e. documentation on how to use the healthiar package) will get you started with the <em>healthiar</em> R package. 1) Open it in RStudio: go to the <em>Packages</em> tab in RStudio, scroll down to the <em>healthiar</em> package and clicking on the hyperlinks <em>healthiar</em> &gt; <em>User guides, package vignettes and other documentation</em> &gt; <em>healthiar::intro_to_healthiar</em> 2) Open it in browser: run <code>browseVignettes("healthiar")</code> in the console and click on the <em>HTML</em> hyperlink on the page that opens up in your browser</p>
-<p>A 45’ minutes introduction to the package can be found here: <a href="https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ" class="external-link uri">https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ</a></p>
-<p>The slides of the presentation can be found here: <a href="https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop" class="external-link uri">https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop</a></p>
+<p>The vignette <em>intro_to_healthiar</em> (i.e. documentation on how to use the healthiar package) will get you started with the <em>healthiar</em> R package. You have the following options to find it:</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>On the <a href="https://swisstph.github.io/healthiar/articles/index.html" class="external-link">Github page</a></p></li>
+<li><p>In R Studio: Click on the <em>Packages</em> tab in RStudio, scroll down to the <em>healthiar</em> package and clicking on the hyperlinks <em>healthiar</em> &gt; <em>User guides, package vignettes and other documentation</em></p></li>
+<li><p>In the web browser: Run <code>browseVignettes("healthiar")</code> in the R console and the page will open up in your browser</p></li>
+</ol>
+<p>A 45’ minutes introduction to the package can be found <a href="https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ" class="external-link">here</a></p>
+<p>The slides of the presentation can be found <a href="https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop" class="external-link">here</a></p>
 </div>
 <div class="section level1">
 <h1 id="feedback">FEEDBACK<a class="anchor" aria-label="anchor" href="#feedback"></a>
 </h1>
-<p>Feedback is very welcome - please provide it via GitHub issues: <a href="https://github.com/SwissTPH/healthiar/issues" class="external-link uri">https://github.com/SwissTPH/healthiar/issues</a></p>
+<p>Feedback is very welcome - please provide it via <a href="https://github.com/SwissTPH/healthiar/issues" class="external-link">GitHub issues</a></p>
 </div>
 <div class="section level1">
 <h1 id="trainings">TRAININGS<a class="anchor" aria-label="anchor" href="#trainings"></a>
