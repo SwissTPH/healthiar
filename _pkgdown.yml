@@ -1,0 +1,7 @@
+url: https://github.com/SwissTPH/healthiar
+template:
+  bootstrap: 5
+
+home:
+  title: "healthiar"
+  description: "An R package for health impact assessment"

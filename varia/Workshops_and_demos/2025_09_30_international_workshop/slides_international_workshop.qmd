@@ -21,7 +21,7 @@ format:
     # code-line-numbers: true # Doesn't work; probably works for html format
     css: custom_style.css
     # code-tools: # Test at later point what this does
-      # source: https://github.com/best-cost/best-cost_WPs/tree/master
+      # source: https://github.com/SwissTPH/healthiar/tree/master
     # code-fold: true # Folds code chunk in the HTML prez
     incremental: true
     transition: none # alts: fade, none, slide
