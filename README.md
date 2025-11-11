@@ -14,7 +14,6 @@ Run the following commands below in RStudio to install *healthiar*:
 
 3) If you get asked to install or update any dependencies (= other packages that are needed for *healthiar*) please install or update all of them.
 
-(If you had previously installed *healthiar* while the repository was still private, you must remove your personal access token (PAT) before installing the package again.)
 ## Load the package
 Do not forget to load the package after the installation entering in your R console: `library(healthiar)`.
 
