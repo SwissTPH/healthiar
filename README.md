@@ -6,8 +6,11 @@ Click on the *Packages* tab in RStudio and in *Install*.
 From CRAN, search *healthiar* and click on *Install* keeping *Install dependencies* activated.
 
 Run the following commands below in RStudio to install *healthiar*
+
 1) `install.packages(c("knitr", "rmarkdown"))`
+
 2) `remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)`
+
 3) If you get asked to install or update any dependencies (= other packages that are needed for *healthiar*) please install or update all of them.
 
 (If you had previously installed *healthiar* while the repository was still private, you must remove your personal access token (PAT) before installing the package again.)
