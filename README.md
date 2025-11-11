@@ -1,4 +1,4 @@
-# INSTALL THE *healthiar* R PACKAGE FROM GITHUB
+# INSTALL THE *healthiar* R PACKAGE 
 We recommend to frequently install the newest *healthiar* version.
 
 ## Installation from CRAN: 
