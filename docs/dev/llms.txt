@@ -24,7 +24,7 @@ Run the following commands below in RStudio to install *healthiar*:
 
 Do not forget to load the package after the installation entering in
 your R console:
-[`library(healthiar)`](https://github.com/SwissTPH/healthiar/).
+[`library(healthiar)`](https://rdrr.io/r/base/library.html).
 
 ## Requirement
 
