@@ -1,0 +1,133 @@
+# INSTALL THE R PACKAGE *healthiar*
+
+We recommend to frequently install the newest *healthiar* version.
+
+## Installation from CRAN:
+
+Click on the *Packages* tab in RStudio and in *Install*. From CRAN,
+search *healthiar* and click on *Install* keeping *Install dependencies*
+activated.
+
+## Installation from Github (most recent version):
+
+Run the following commands below in RStudio to install *healthiar*:
+
+1.  `install.packages(c("knitr", "rmarkdown"))`
+
+2.  `remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)`
+
+3.  If you get asked to install or update any dependencies (= other
+    packages that are needed for *healthiar*) please install or update
+    all of them.
+
+## Load the package
+
+Do not forget to load the package after the installation entering in
+your R console:
+[`library(healthiar)`](https://github.com/SwissTPH/healthiar/).
+
+## Requirement
+
+R version 4.3.0 or higher
+
+## Note
+
+If you had previously installed *healthiar* while the repository was
+still private, you must remove your personal access token (PAT) before
+installing the package again.
+
+# GET STARTED WITH *healthiar*
+
+The vignette *intro_to_healthiar* (i.e. documentation on how to use the
+healthiar package) will get you started with the *healthiar* R package.
+You have the following options to find it:
+
+1.  On the [Github
+    page](https://swisstph.github.io/healthiar/articles/index.html)
+
+2.  In R Studio: Click on the *Packages* tab in RStudio, scroll down to
+    the *healthiar* package and clicking on the hyperlinks *healthiar*
+    \> *User guides, package vignettes and other documentation*
+
+3.  In the web browser: Run `browseVignettes("healthiar")` in the R
+    console and the page will open up in your browser
+
+A 45’ minutes introduction to the package can be found
+[here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ)
+
+The slides of the presentation can be found
+[here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop)
+
+# FEEDBACK
+
+Feedback is very welcome - please provide it via [GitHub
+issues](https://github.com/SwissTPH/healthiar/issues)
+
+# TRAININGS
+
+Would you like to be introduced to *healthiar*? In case you would like
+us to introduce the package at a conference or another event please get
+in touch: <alberto.castrofernandez@swisstph.ch> and
+<axel.luyten@swisstph.ch>
+
+# DISCLAMER AND LICENCE
+
+By using *healthiar*, you confirm that you agree with the following
+disclaimer and terms of licence: - Disclaimer: The R package *healthiar*
+is work in progress and the developers are not liable for the results. -
+Terms of license: Available
+[here](https://github.com/SwissTPH/healthiar/blob/master/LICENSE.md).
+
+# Package index
+
+## All functions
+
+- [`attribute_health()`](https://swisstph.github.io/healthiar/dev/reference/attribute_health.md)
+  : Attribute health impacts to an environmental stressor
+- [`attribute_lifetable()`](https://swisstph.github.io/healthiar/dev/reference/attribute_lifetable.md)
+  : Attribute premature deaths or YLL to an environmental stressor using
+  a life table approach
+- [`attribute_mod()`](https://swisstph.github.io/healthiar/dev/reference/attribute_mod.md)
+  : Create a scenario 2 by modifying an existing scenario 1 and
+  determine attributable health impacts in it
+- [`cba()`](https://swisstph.github.io/healthiar/dev/reference/cba.md) :
+  Cost-benefit analysis
+- [`compare()`](https://swisstph.github.io/healthiar/dev/reference/compare.md)
+  : Compare the attributable health impacts between two scenarios
+- [`daly()`](https://swisstph.github.io/healthiar/dev/reference/daly.md)
+  : Attributable disability-adjusted life years
+- [`discount()`](https://swisstph.github.io/healthiar/dev/reference/discount.md)
+  : Discount health impacts
+- [`get_discount_factor()`](https://swisstph.github.io/healthiar/dev/reference/get_discount_factor.md)
+  : Get discount factor
+- [`get_inflation_factor()`](https://swisstph.github.io/healthiar/dev/reference/get_inflation_factor.md)
+  : Get inflation factor
+- [`get_paf()`](https://swisstph.github.io/healthiar/dev/reference/get_paf.md)
+  : Get population attributable fraction
+- [`get_pif()`](https://swisstph.github.io/healthiar/dev/reference/get_pif.md)
+  : Get population impact fraction
+- [`get_risk()`](https://swisstph.github.io/healthiar/dev/reference/get_risk.md)
+  : Get the relative risk of an exposure level
+- [`monetize()`](https://swisstph.github.io/healthiar/dev/reference/monetize.md)
+  : Monetize health impacts
+- [`multiexpose()`](https://swisstph.github.io/healthiar/dev/reference/multiexpose.md)
+  : Aggregate health impacts from multiple exposures
+- [`prepare_exposure()`](https://swisstph.github.io/healthiar/dev/reference/prepare_exposure.md)
+  : Prepare exposure data
+- [`prepare_lifetable()`](https://swisstph.github.io/healthiar/dev/reference/prepare_lifetable.md)
+  : Convert multi-year life table to single year life table
+- [`prepare_mdi()`](https://swisstph.github.io/healthiar/dev/reference/prepare_mdi.md)
+  : Create the BEST-COST Multidimensional Deprivation Index (MDI)
+- [`socialize()`](https://swisstph.github.io/healthiar/dev/reference/socialize.md)
+  : Consider socio-economic aspects in healthiar assessments
+- [`standardize()`](https://swisstph.github.io/healthiar/dev/reference/standardize.md)
+  : Obtain age-standardized health impacts
+- [`summarize_uncertainty()`](https://swisstph.github.io/healthiar/dev/reference/summarize_uncertainty.md)
+  : Get Monte Carlo confidence intervals
+
+# Articles
+
+### All vignettes
+
+- [Intro to
+  healthiar](https://swisstph.github.io/healthiar/dev/articles/intro_to_healthiar.md):

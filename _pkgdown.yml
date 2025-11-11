@@ -1,0 +1,13 @@
+home:
+  title: "healthiar"
+  description: "Quantify and Monetize the Burden of Disease Attributable to Exposure"
+
+template:
+  bootstrap: 5
+
+url: https://swisstph.github.io/healthiar/
+repo:
+  source: swisstph/healthiar
+
+development:
+  mode: auto
