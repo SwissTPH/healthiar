@@ -24,7 +24,7 @@ cba(
 - output_attribute:
 
   `List` produced by `healthiar::attribute()` or
-  [`healthiar::compare()`](https://github.com/SwissTPH/healthiar/reference/compare.md)
+  [`healthiar::compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
   as results.
 
 - impact_benefit:
@@ -108,7 +108,7 @@ elements are added to the existing output.
 
 For the equations regarding the monetization of the cost and the benefit
 please see the function documentation of
-[`monetize()`](https://github.com/SwissTPH/healthiar/reference/monetize.md).
+[`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md).
 
 ## Author
 

@@ -2,9 +2,9 @@
 
 This function calculates reference proportion of population. To be used
 in
-[`socialize()`](https://github.com/SwissTPH/healthiar/reference/socialize.md)
+[`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md)
 and
-[`standardize()`](https://github.com/SwissTPH/healthiar/reference/standardize.md)
+[`standardize()`](https://swisstph.github.io/healthiar/reference/standardize.md)
 in case that `ref_prop_pop` is not provided.
 
 ## Usage

@@ -1,4 +1,4 @@
-# Intro to healthiar
+# intro to healthiar
 
 ------------------------------------------------------------------------
 
@@ -26,37 +26,37 @@ impacts of environmental stressors (air pollution & noise)
 
 `healthiar` core *family members* (= functions)
 
-- [`attribute_health()`](https://github.com/SwissTPH/healthiar/reference/attribute_health.md)
+- [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
   quantifies health impact attributable to environmental exposure (via
   relative or absolute risk)
-- [`summarize_uncertainty()`](https://github.com/SwissTPH/healthiar/reference/summarize_uncertainty.md)
+- [`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
   performs a Monte Carlo simulation
-- [`compare()`](https://github.com/SwissTPH/healthiar/reference/compare.md)
+- [`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
   compares health impacts of two scenarios (via PAF or PIF approaches)
-- [`monetize()`](https://github.com/SwissTPH/healthiar/reference/monetize.md)
+- [`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md)
   monetizes health impacts
-- [`attribute_lifetable()`](https://github.com/SwissTPH/healthiar/reference/attribute_lifetable.md)
+- [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
   quantifies health impacts by applying the life table method (RR & AR)
-- [`attribute_mod()`](https://github.com/SwissTPH/healthiar/reference/attribute_mod.md)
+- [`attribute_mod()`](https://swisstph.github.io/healthiar/reference/attribute_mod.md)
   modifies an existing
-  [`attribute_health()`](https://github.com/SwissTPH/healthiar/reference/attribute_health.md)
+  [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
   assessment
-- [`cba()`](https://github.com/SwissTPH/healthiar/reference/cba.md)
+- [`cba()`](https://swisstph.github.io/healthiar/reference/cba.md)
   performs a cost-benefit analysis
 - `get_daly()` adds up YLL & YLD to obtain DALY
-- [`multiexpose()`](https://github.com/SwissTPH/healthiar/reference/multiexpose.md)
+- [`multiexpose()`](https://swisstph.github.io/healthiar/reference/multiexpose.md)
   considers exposure to 2 exposures (e.g. two different air pollutants)
   at the same time to quantify the attributable health impacts
-- [`socialize()`](https://github.com/SwissTPH/healthiar/reference/socialize.md)
+- [`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md)
   exposes and quantifies social inequalities in health impacts
-- [`prepare_mdi()`](https://github.com/SwissTPH/healthiar/reference/prepare_mdi.md)
+- [`prepare_mdi()`](https://swisstph.github.io/healthiar/reference/prepare_mdi.md)
   creates the BEST-COST MDI (Multidimensional Deprivation Index)
 
 ### Package overview
 
-![Figure: healthiar overview](images/package_overview.png)
+![healthiar overview](images/package_overview.png)
 
-Figure: `healthiar` overview
+`healthiar` overview
 
 ------------------------------------------------------------------------
 
@@ -98,7 +98,9 @@ Goal: attribute COPD cases to PM2.5 air pollution exposure
 
 #### Refresher - Burden of disease with relative risk
 
-![](images/bod_rr.png)
+![Figure: Relative risk approach](images/bod_rr.png)
+
+Figure: Relative risk approach
 
 #### Function call - Hard coded
 
@@ -114,7 +116,7 @@ results_pm_copd <- attribute_health(
 ```
 
 For alternative ERF shapes see the function documentation of
-[`attribute_health()`](https://github.com/SwissTPH/healthiar/reference/attribute_health.md).
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
 
 #### Function call - Pre-loaded data
 
@@ -140,7 +142,7 @@ results_pm_copd <- attribute_health(
 #### Output structure
 
 Every
-[`attribute_health()`](https://github.com/SwissTPH/healthiar/reference/attribute_health.md)
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
 output consists of two lists (“folders”)
 
 - `health_main` contains the main results
@@ -168,7 +170,7 @@ output consists of two lists (“folders”)
       function argument `age_group` sepcified)
 
 *NOTE*:
-[`attribute_lifetable()`](https://github.com/SwissTPH/healthiar/reference/attribute_lifetable.md)
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
 creates additional output that is specific to life table calculations
 
 #### Main results
@@ -303,7 +305,9 @@ Goal: attribute cases of high annoyance to (road traffic) noise exposure
 
 #### Refresher - Burden of disease with absolute risk
 
-![](images/bod_ar.png)
+![Figure: Absolute risk approach](images/bod_ar.png)
+
+Figure: Absolute risk approach
 
 #### Function call
 
@@ -611,7 +615,8 @@ results_pm_copd_mr_brt <- attribute_health(
 
 The ERF curve created looks as follows
 
-![](intro_to_healthiar_files/figure-html/unnamed-chunk-37-1.png)
+![ERF
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-37-1.png)
 
 Alternatively, other functions
 (e.g. [`approxfun()`](https://rdrr.io/r/stats/approxfun.html)) can be
@@ -624,7 +629,7 @@ Goal: comparison of two scenarios
 #### Function call
 
 1.  Use
-    [`attribute_health()`](https://github.com/SwissTPH/healthiar/reference/attribute_health.md)
+    [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
     to calculate burden of scenarios A & B
 
 ``` r
@@ -650,7 +655,7 @@ scenario_B <- attribute_health(
 ```
 
 Alternatively, the function
-[`attribute_mod()`](https://github.com/SwissTPH/healthiar/reference/attribute_mod.md)
+[`attribute_mod()`](https://swisstph.github.io/healthiar/reference/attribute_mod.md)
 can be used to modify an existing scenario, e.g. `scenario_A`
 
 ``` r
@@ -661,7 +666,7 @@ scenario_B <- attribute_mod(
 ```
 
 2.  Use
-    [`compare()`](https://github.com/SwissTPH/healthiar/reference/compare.md)
+    [`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
     to compare scenarios A & B
 
 ``` r
@@ -676,7 +681,7 @@ results_comparison <- compare(
 The default value for the argument `approach_comparison` is `"delta"`.
 The alterntive is `"pif"` (population impact fraction). See the function
 documentation of
-[`compare()`](https://github.com/SwissTPH/healthiar/reference/compare.md)
+[`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
 for more details.
 
 #### Main results
@@ -688,7 +693,7 @@ for more details.
 #### Detailed results
 
 The
-[`compare()`](https://github.com/SwissTPH/healthiar/reference/compare.md)
+[`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
 results contain two additional outputs in addition to those we have
 already seen
 
@@ -767,7 +772,7 @@ Two folders are added:
 - `monetization_detailed` contains the monetized results for each unique
   combination of the input variable estimates that were provided to the
   initial
-  [`attribute_health()`](https://github.com/SwissTPH/healthiar/reference/attribute_health.md)
+  [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
   call
 
 #### Function call
@@ -811,13 +816,13 @@ analysis (CBA) using previous results
 Let’s imagine we design a policy that would reduce air pollution to 5
 $`\mu g/m^3`$, which is the concentration specified in the
 `cutoff_central` argument in the initial
-[`attribute_health()`](https://github.com/SwissTPH/healthiar/reference/attribute_health.md)
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
 call. So we could avoid all COPD cases attributed to air pollution.
 
 Considering the cost to implement the policy (estimated at 100 million
 EURO), what would be the monetary net benefit of such a policy, ? We can
 find out using `healthiar`’s
-[`cba()`](https://github.com/SwissTPH/healthiar/reference/cba.md)
+[`cba()`](https://swisstph.github.io/healthiar/reference/cba.md)
 function.
 
 The outcome of the CBA is contained in two folders, which are added to
@@ -874,7 +879,7 @@ Goal: determine years of life lost (YLL) due to deaths from COPD
 attributable to PM2.5 exposure during one year
 
 We can use
-[`attribute_lifetable()`](https://github.com/SwissTPH/healthiar/reference/attribute_lifetable.md)
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
 combined with life table input data to determine YLL attributable to an
 environmental stressor
 
@@ -1054,7 +1059,7 @@ exposure during one year
 
 See example above \[Example: attribute_lifetable() for YLL\] for
 additional info on
-[`attribute_lifetable()`](https://github.com/SwissTPH/healthiar/reference/attribute_lifetable.md)
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
 calculations and its output
 
 #### Function call
@@ -1263,14 +1268,16 @@ To reproduce the boxlots run
 eval(mdi$mdi_detailed$boxplot)
 ```
 
-![](intro_to_healthiar_files/figure-html/unnamed-chunk-90-1.png)
+![Boxplot of Normalized Indicators and
+MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-90-1.png)
 Analogeously, to reproduce the histogram run
 
 ``` r
 eval(mdi$mdi_detailed$histogram)
 ```
 
-![](intro_to_healthiar_files/figure-html/unnamed-chunk-91-1.png)
+![Histogram of MDI with normal
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-91-1.png)
 
 ## Post-`healthiar` workflow
 

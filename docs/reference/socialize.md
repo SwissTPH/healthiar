@@ -30,7 +30,7 @@ socialize(
 - output_attribute:
 
   `List` containing the outputs of the
-  [`healthiar::attribute_health()`](https://github.com/SwissTPH/healthiar/reference/attribute_health.md)
+  [`healthiar::attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
   assessments for each age group (each list element should be an age
   group-specific assessment).
 

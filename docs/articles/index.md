@@ -2,5 +2,5 @@
 
 ### All vignettes
 
-- [Intro to
-  healthiar](https://github.com/SwissTPH/healthiar/articles/intro_to_healthiar.md):
+- [intro to
+  healthiar](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.md):
