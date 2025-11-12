@@ -19,8 +19,6 @@ Do not forget to load the package after the installation entering in your R cons
 
 ## Requirement 
 R version 4.3.0 or higher
-
-## Note 
 If you had previously installed *healthiar* while the repository was still private, you must remove your personal access token (PAT) before installing the package again.
 
 # GET STARTED WITH *healthiar*
