@@ -46,7 +46,7 @@ In case you encounter difficulties, you find something unclear or you see a way
 to improve the testing process, please let us know:
 
 -   Preferably by opening a GitHub issue by going on this
-    [link](https://github.com/SwissTPH/healthiar/issues) and clicking the
+    [link](https://github.com/best-cost/best-cost_WPs/issues) and clicking the
     green button that says *New issue* or
 
 -   write us at
@@ -64,7 +64,8 @@ uses and/or relies on, we recommend to do so.
 
 ```{r install package, include=FALSE, echo=TRUE, eval=FALSE}
 remotes::install_github(
-  repo = "SwissTPH/healthiar", 
+  repo = "best-cost/best-cost_WPs", 
+  subdir = "/r_package/healthiar", 
   ref = "HEAD", 
   build_vignettes = TRUE)
 ```

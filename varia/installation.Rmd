@@ -62,7 +62,8 @@ remotes::install_github(
 # credentials::set_github_pat() # paste github PAT if prompted
 # ?remotes::install_github
 remotes::install_github(
-  repo = "SwissTPH/healthiar",
+  repo = "best-cost/best-cost_WPs",
+  subdir = "/r_package/healthiar",
   # ref = "HEAD", # By default "HEAD"; name of branch to install package from as a string
   ref = "519-add-examples-to-the-function-descriptions", # By default "HEAD"; name of branch to install package from as a string
   force = TRUE,
