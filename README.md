@@ -44,6 +44,8 @@ Would you like to be introduced to *healthiar*? In case you would like us to int
 
 # DISCLAMER AND LICENCE
 By using *healthiar*, you confirm that you agree with the following disclaimer and terms of licence:
+
 - Disclaimer: The R package *healthiar* is work in progress and the developers are not liable for the results. 
+
 - Terms of license: Available [here](https://github.com/SwissTPH/healthiar/blob/master/LICENSE.md).
 
