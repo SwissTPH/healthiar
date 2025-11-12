@@ -1,4 +1,7 @@
-# INSTALL THE R PACKAGE *healthiar* 
+# WELCOME TO *healthiar* 
+*healthiar* is an R package to quantify and monetize the burden of disease attributable to exposure
+
+# INSTALLATION 
 We recommend to frequently install the newest *healthiar* version.
 
 ## Installation from CRAN: 
@@ -23,7 +26,7 @@ R version 4.3.0 or higher
 ## Note 
 If you installed *healthiar* while the repository was still private, you must remove your personal access token (PAT) before installing the package again.
 
-# GET STARTED WITH *healthiar*
+# GETTING STARTED 
 The vignette *intro_to_healthiar* (i.e. documentation on how to use the healthiar package) will get you started with the *healthiar* R package. You have the following options to find it:
 
 a) On the [Github page](https://swisstph.github.io/healthiar/articles/index.html) 
@@ -57,8 +60,8 @@ c) See [CITATION.R](https://github.com/SwissTPH/healthiar/blob/master/inst/CITAT
 
 In the option a, you see the version number of *healthiar* that your are using. In options b and c, you see the updated citation (might be more recent than your installed version). 
 
-# TRAININGS
-If you would like us to introduce the *healthiar* at a conference or another event please get in touch: alberto.castrofernandez@swisstph.ch and axel.luyten@swisstph.ch
+# PRESENTING *healthiar*
+If you would like us to present *healthiar* at a conference, lecture or training, please, contact us: alberto.castrofernandez@swisstph.ch and axel.luyten@swisstph.ch
 
 # ACKNOWLEDGEMENTS
 The development of *healthiar* has been funded by the EU project BEST-COST. 
