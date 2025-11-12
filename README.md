@@ -46,7 +46,3 @@ If you would like us to introduce the *healthiar* at a conference or another eve
 
 # ACKNOWLEDGEMENTS
 The development of *healthiar* has been funded by the EU project BEST-COST. 
-
-
-# WE OFFER *healthiar* INTRODUCTIONS
-Would you like to be introduced to *healthiar*? In case you would like us to introduce the package at a conference or another event please get in touch: alberto.castrofernandez@swisstph.ch and axel.luyten@swisstph.ch
