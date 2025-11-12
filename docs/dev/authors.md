@@ -47,19 +47,3 @@
 
 Source:
 [`inst/CITATION`](https://github.com/swisstph/healthiar/blob/HEAD/inst/CITATION)
-
-Castro A, Luyten A (2025). *healthiar: Quantify and Monetize the Burden
-of Disease Attributable to Exposure*. Contributors: Arno Pauwels,
-Liliana Vazquez Fernandez, Vanessa Gorasso, Carl Michael Baravelli,
-Susanne Breitner, Maria Lepnurm, Maria Jose Rueda Lopez, Iracy Pimenta,
-Andreia Novais, Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling.
-R package version: 0.2.1, <https://github.com/SwissTPH/healthiar>.
-
-    @Manual{,
-      title = {healthiar: Quantify and Monetize the Burden of Disease Attributable to
-    Exposure},
-      author = {Alberto Castro and Axel Luyten},
-      year = {2025},
-      note = {Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Vanessa Gorasso, Carl Michael Baravelli, Susanne Breitner, Maria Lepnurm, Maria Jose Rueda Lopez, Iracy Pimenta, Andreia Novais, Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling. R package version: 0.2.1},
-      url = {https://github.com/SwissTPH/healthiar},
-    }

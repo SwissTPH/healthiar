@@ -24,13 +24,11 @@ Run the following commands below in RStudio to install *healthiar*:
 
 Do not forget to load the package after the installation entering in
 your R console:
-[`library(healthiar)`](https://rdrr.io/r/base/library.html).
+[`library(healthiar)`](https://github.com/SwissTPH/healthiar/).
 
 ## Requirement
 
-R version 4.3.0 or higher
-
-## Note
+R version 4.3.0 or higher.
 
 If you had previously installed *healthiar* while the repository was
 still private, you must remove your personal access token (PAT) before
@@ -58,22 +56,39 @@ A 45’ minutes introduction to the package can be found
 The slides of the presentation can be found
 [here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop)
 
-# FEEDBACK
-
-Feedback is very welcome - please provide it via [GitHub
-issues](https://github.com/SwissTPH/healthiar/issues)
-
-# TRAININGS
-
-Would you like to be introduced to *healthiar*? In case you would like
-us to introduce the package at a conference or another event please get
-in touch: <alberto.castrofernandez@swisstph.ch> and
-<axel.luyten@swisstph.ch>
-
 # DISCLAMER AND LICENCE
 
 By using *healthiar*, you confirm that you agree with the following
-disclaimer and terms of licence: - Disclaimer: The R package *healthiar*
-is work in progress and the developers are not liable for the results. -
-Terms of license: Available
-[here](https://github.com/SwissTPH/healthiar/blob/master/LICENSE.md).
+disclaimer and terms of the licence:
+
+1.  Disclaimer: The R package *healthiar* is work in progress and the
+    developers are not liable for the results.
+
+2.  License: Available
+    [here](https://github.com/SwissTPH/healthiar/blob/master/LICENSE.md).
+
+# FEEDBACK
+
+Feel free provide feedback via [GitHub
+issues](https://github.com/SwissTPH/healthiar/issues)
+
+# CITATION
+
+We love that you use *healthiar*. In that case, please do not forget to
+cite *healthiar* in your work. Two options to get there:
+
+1.  In your R console, enter *citation(“healthiar”)*
+
+2.  See
+    [CITATION.R](https://github.com/SwissTPH/healthiar/blob/master/inst/CITATION)
+
+# TRAININGS
+
+If you would like us to introduce the *healthiar* at a conference or
+another event please get in touch: <alberto.castrofernandez@swisstph.ch>
+and <axel.luyten@swisstph.ch>
+
+# ACKNOWLEDGEMENTS
+
+The development of *healthiar* has been funded by the EU project
+BEST-COST.

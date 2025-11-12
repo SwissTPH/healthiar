@@ -1,5 +1,5 @@
 ---
-title: "Intro to healthiar"
+title: "intro to healthiar"
 output: 
   rmarkdown::html_vignette:
     toc: true
@@ -62,7 +62,7 @@ The `healthiar` functions allow you to quantify and monetize the health impacts 
 
 ## Package overview
 
-![Figure: `healthiar` overview](images/package_overview.png){width="700"}
+![`healthiar` overview](images/package_overview.png){width="700"}
 
 ------------------------------------------------------------------------
 
@@ -98,7 +98,7 @@ Goal: attribute COPD cases to PM2.5 air pollution exposure
 
 ### Refresher - Burden of disease with relative risk
 
-![](images/bod_rr.png){width="700"}
+![Figure: Relative risk approach](images/bod_rr.png){width="700"}
 
 ### Function call - Hard coded
 
@@ -250,7 +250,7 @@ Goal: attribute cases of high annoyance to (road traffic) noise exposure
 
 ### Refresher - Burden of disease with absolute risk
 
-![](images/bod_ar.png){width="700"}
+![Figure: Absolute risk approach](images/bod_ar.png){width="700"}
 
 ### Function call
 
@@ -555,7 +555,7 @@ results_pm_copd_mr_brt <- attribute_health(
 
 The ERF curve created looks as follows
 
-```{r eval=TRUE, include=TRUE, echo=FALSE}
+```{r fig.alt="ERF curve", eval=TRUE, include=TRUE, echo=FALSE}
 
 x <- c(0, 5, 10, 15, 20, 25, 30, 50, 70, 90, 110)
 y <- c(1.00, 1.04, 1.08, 1.12, 1.16, 1.20, 1.23, 1.35, 1.45, 1.53, 1.60)
@@ -1212,11 +1212,11 @@ mdi$mdi_main |>
     -   Code for histogram of the MDI's for the geo units with a normal distribution curve
 
 To reproduce the boxlots run
-```{r eval=TRUE, include=TRUE, echo=TRUE}
+```{r fig.alt="Boxplot of Normalized Indicators and MDI", eval=TRUE, include=TRUE, echo=TRUE}
 eval(mdi$mdi_detailed$boxplot)
 ```
 Analogeously, to reproduce the histogram run
-```{r eval=TRUE, include=TRUE, echo=TRUE}
+```{r fig.alt="Histogram of MDI with normal curve", eval=TRUE, include=TRUE, echo=TRUE}
 eval(mdi$mdi_detailed$histogram)
 ```
 
