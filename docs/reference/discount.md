@@ -20,7 +20,7 @@ discount(
 - output_attribute:
 
   `List` produced by `healthiar::attribute()` or
-  [`healthiar::compare()`](https://github.com/SwissTPH/healthiar/reference/compare.md)
+  [`healthiar::compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
   as results.
 
 - impact:
@@ -81,7 +81,7 @@ results.
 - `health_raw` (`tibble`) containing the monetized results for each for
   each combination of input uncertainty that were provided to the
   initial
-  [`attribute_health()`](https://github.com/SwissTPH/healthiar/reference/attribute_health.md)
+  [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
   call
 
 If the argument `output_attribute` was specified, then the two results

@@ -10,4 +10,5 @@ repo:
   source: swisstph/healthiar
 
 development:
-  mode: auto
+  mode: release
+

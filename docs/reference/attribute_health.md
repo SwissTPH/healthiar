@@ -164,7 +164,7 @@ attribute_health(
   `attribute_lifetable)()`, it must be a `numeric` and contain single
   year age groups. See Details for more info. *Optional argument for
   `attribute_health()`; needed for
-  [`attribute_lifetable()`](https://github.com/SwissTPH/healthiar/reference/attribute_lifetable.md).*
+  [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md).*
 
 - sex:
 

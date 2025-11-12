@@ -50,7 +50,7 @@ attribute_lifetable(
   considered in the assessment. In case of use in
   `attribute_lifetable)()`, it must be a `numeric` and contain single
   year age groups. See Details for more info. *Optional argument for
-  [`attribute_health()`](https://github.com/SwissTPH/healthiar/reference/attribute_health.md);
+  [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md);
   needed for `attribute_lifetable()`.*
 
 - sex:
@@ -217,7 +217,7 @@ results.
 The numeric values must refer to 1 year age groups, e.g. `c(0:99)`. To
 convert multi-year/larger age groups to 1 year age groups use the
 function
-[`prepare_lifetable()`](https://github.com/SwissTPH/healthiar/reference/prepare_lifetable.md)
+[`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
 (see its function documentation for more info).
 
 `bhd_central,bhd_lower,bhd_upper`
@@ -265,7 +265,7 @@ exposure are considered.
 
 To convert multi-year/larger age groups to 1 year age groups use the
 function
-[`prepare_lifetable()`](https://github.com/SwissTPH/healthiar/reference/prepare_lifetable.md)
+[`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
 and see its function documentation for more info.
 
 **Life table methodology**

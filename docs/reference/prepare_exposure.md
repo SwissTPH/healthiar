@@ -2,7 +2,7 @@
 
 This function prepares tabular population exposure data compatible with
 the `attribute()` and
-[`compare()`](https://github.com/SwissTPH/healthiar/reference/compare.md)
+[`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
 functions, based on gridded pollution concentration data and vector data
 representing geographic units. The function calculates an average
 concentration value in each geographic unit, weighted by the fraction of
