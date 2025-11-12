@@ -31,15 +31,15 @@ a) Disclaimer: The R package *healthiar* is work in progress and the developers 
 
 b) License: Available [here](https://github.com/SwissTPH/healthiar/blob/master/LICENSE.md).
 
-# FEEDBACK
-Feel free provide feedback via [GitHub issues](https://github.com/SwissTPH/healthiar/issues)
-
 # CITATION
 We love that you use *healthiar*. In that case, please do not forget to cite *healthiar* in your work. Two options to get there:
 
 a) In your R console, enter *citation("healthiar")*
 
 b) See [CITATION.R](https://github.com/SwissTPH/healthiar/blob/master/inst/CITATION)
+
+# FEEDBACK
+Feel free provide feedback via [GitHub issues](https://github.com/SwissTPH/healthiar/issues)
 
 # TRAININGS
 If you would like us to introduce the *healthiar* at a conference or another event please get in touch: alberto.castrofernandez@swisstph.ch and axel.luyten@swisstph.ch
