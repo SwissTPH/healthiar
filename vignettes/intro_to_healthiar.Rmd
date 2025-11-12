@@ -1,5 +1,5 @@
 ---
-title: "Intro to healthiar"
+title: "intro to healthiar"
 output: 
   rmarkdown::html_vignette:
     toc: true
