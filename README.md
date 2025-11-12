@@ -34,16 +34,19 @@ A 45' minutes introduction to the package can be found [here](https://team.swiss
 
 The slides of the presentation can be found [here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop)
 
+# DISCLAMER AND LICENCE
+By using *healthiar*, you confirm that you agree with the following disclaimer and terms of licence:
+
+a) Disclaimer: The R package *healthiar* is work in progress and the developers are not liable for the results. 
+
+b) Terms of license: Available [here](https://github.com/SwissTPH/healthiar/blob/master/LICENSE.md).
+
 # FEEDBACK
 Feedback is very welcome - please provide it via [GitHub issues](https://github.com/SwissTPH/healthiar/issues)
 
 # TRAININGS
 Would you like to be introduced to *healthiar*? In case you would like us to introduce the package at a conference or another event please get in touch: alberto.castrofernandez@swisstph.ch and axel.luyten@swisstph.ch
 
-# DISCLAMER AND LICENCE
-By using *healthiar*, you confirm that you agree with the following disclaimer and terms of licence:
 
-- Disclaimer: The R package *healthiar* is work in progress and the developers are not liable for the results. 
 
-- Terms of license: Available [here](https://github.com/SwissTPH/healthiar/blob/master/LICENSE.md).
 
