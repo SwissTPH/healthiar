@@ -1,4 +1,4 @@
-# Intro to healthiar
+# intro to healthiar
 
 ------------------------------------------------------------------------
 
@@ -48,9 +48,9 @@ impacts of environmental stressors (air pollution & noise)
 
 ### Package overview
 
-![Figure: healthiar overview](images/package_overview.png)
+![healthiar overview](images/package_overview.png)
 
-Figure: `healthiar` overview
+`healthiar` overview
 
 ------------------------------------------------------------------------
 
@@ -92,7 +92,9 @@ Goal: attribute COPD cases to PM2.5 air pollution exposure
 
 #### Refresher - Burden of disease with relative risk
 
-![](images/bod_rr.png)
+![Figure: Relative risk approach](images/bod_rr.png)
+
+Figure: Relative risk approach
 
 #### Function call - Hard coded
 
@@ -297,7 +299,9 @@ Goal: attribute cases of high annoyance to (road traffic) noise exposure
 
 #### Refresher - Burden of disease with absolute risk
 
-![](images/bod_ar.png)
+![Figure: Absolute risk approach](images/bod_ar.png)
+
+Figure: Absolute risk approach
 
 #### Function call
 
@@ -605,7 +609,8 @@ results_pm_copd_mr_brt <- attribute_health(
 
 The ERF curve created looks as follows
 
-![](intro_to_healthiar_files/figure-html/unnamed-chunk-37-1.png)
+![ERF
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-37-1.png)
 
 Alternatively, other functions
 (e.g. [`approxfun()`](https://rdrr.io/r/stats/approxfun.html)) can be
@@ -1257,14 +1262,16 @@ To reproduce the boxlots run
 eval(mdi$mdi_detailed$boxplot)
 ```
 
-![](intro_to_healthiar_files/figure-html/unnamed-chunk-90-1.png)
+![Boxplot of Normalized Indicators and
+MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-90-1.png)
 Analogeously, to reproduce the histogram run
 
 ``` r
 eval(mdi$mdi_detailed$histogram)
 ```
 
-![](intro_to_healthiar_files/figure-html/unnamed-chunk-91-1.png)
+![Histogram of MDI with normal
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-91-1.png)
 
 ## Post-`healthiar` workflow
 
