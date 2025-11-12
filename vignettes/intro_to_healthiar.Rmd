@@ -851,7 +851,7 @@ results_pm_yll$health_main
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
 results_pm_yll$health_main |> 
   dplyr::slice_head() |> 
-  dplyr::select(sex, age_group, impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
+  dplyr::select(impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
   knitr::kable()
 ```
 
@@ -1013,7 +1013,7 @@ results_pm_deaths$health_main$impact
 ```{r, eval=TRUE, include=TRUE, echo=FALSE}
 results_pm_deaths$health_main |> 
   dplyr::slice_head() |> 
-  dplyr::select(sex, age_group, impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
+  dplyr::select(impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
   knitr::kable()
 ```
 
