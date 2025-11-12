@@ -18,7 +18,8 @@ Run the following commands below in RStudio to install *healthiar*:
 Do not forget to load the package after the installation entering in your R console: `library(healthiar)`.
 
 ## Requirement 
-R version 4.3.0 or higher
+R version 4.3.0 or higher. 
+
 If you had previously installed *healthiar* while the repository was still private, you must remove your personal access token (PAT) before installing the package again.
 
 # GET STARTED WITH *healthiar*
@@ -35,11 +36,11 @@ A 45' minutes introduction to the package can be found [here](https://team.swiss
 The slides of the presentation can be found [here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop)
 
 # DISCLAMER AND LICENCE
-By using *healthiar*, you confirm that you agree with the following disclaimer and terms of licence:
+By using *healthiar*, you confirm that you agree with the following disclaimer and terms of the licence:
 
 a) Disclaimer: The R package *healthiar* is work in progress and the developers are not liable for the results. 
 
-b) Terms of license: Available [here](https://github.com/SwissTPH/healthiar/blob/master/LICENSE.md).
+b) License: Available [here](https://github.com/SwissTPH/healthiar/blob/master/LICENSE.md).
 
 # FEEDBACK
 Feel free provide feedback via [GitHub issues](https://github.com/SwissTPH/healthiar/issues)
