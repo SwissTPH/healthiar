@@ -1456,6 +1456,61 @@ testthat::test_that("results correct  pathway_ar|erf_formula|exp_dist|iteration_
 ## Add here input data details: data sources, measured vs. modeled, ...
 
 
+testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteration_TRUE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+
+
+
+  erf_df <- data.frame(
+    dB = seq(30, 85, by = 0.5)
+  )
+
+  # Compute AR using the quadratic formula
+  erf_df$AR <- 78.9270 - 3.1162 * erf_df$dB + 0.0342 * erf_df$dB^2
+
+  # Create a function using spline interpolation over the data
+  spline_fun <- splinefun(
+    x = erf_df$dB,
+    y = erf_df$AR,
+    method = "natural"
+  )
+
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = data$average_cat,
+        population = data$totpop,
+        pop_exp = data$ANTALL_PER,
+        geo_id_micro = data$GEO_ID,
+        geo_id_macro = "Norway",
+        erf_eq_central = spline_fun,
+        dw_central = 0.02,
+        duration_central = 1,
+        info = data.frame(pollutant = "road_noise",
+
+                          outcome = "highly_annoyance")
+
+      )$health_detailed$results_by_geo_id_micro$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c(283, 398 )
+  )
+})
+
+## ASSESSOR:
+## Liliana Vázquez, NIPH
+## ASSESSMENT DETAILS:
+## Stavanger and Bergen highly annoyance
+## INPUT DATA DETAILS:
+## Add here input data details: defined own function with spline interpolation
+
+
+
 ### YLD #########################################################################
 
 ## Using only the pop_exp argument
