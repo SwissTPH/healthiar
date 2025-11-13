@@ -851,7 +851,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iterati
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
 
-testthat::test_that("results the same|pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|",{
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|",{
 ## Pathway ID: pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|
 ## healthiar FUNCTION CALL
 results_NO2 <-
@@ -1838,6 +1838,58 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
   ## INPUT DATA DETAILS: -
 })
 
+
+testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteration_FALSE|", {
+
+  ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_ha_Lden_StavangerandVicinity.rds"))
+
+
+
+  erf_df <- data.frame(
+    dB = seq(30, 85, by = 0.5)
+  )
+
+  # Compute AR using the quadratic formula
+  erf_df$AR <- 78.9270 - 3.1162 * erf_df$dB + 0.0342 * erf_df$dB^2
+
+  # Create a function using spline interpolation over the data
+  spline_fun <- splinefun(
+    x = erf_df$dB,
+    y = erf_df$AR,
+    method = "natural"
+  )
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = data$average_cat,
+        population = data$totpop,
+        pop_exp = data$ANTALL_PER,
+
+        erf_eq_central = spline_fun,
+        dw_central = 0.02,
+        duration_central = 1,
+        info = data.frame(pollutant = "road_noise",
+
+                          outcome = "highly_annoyance")
+
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      c(283)
+  )
+})
+
+## ASSESSOR:
+## Liliana Vázquez, NIPH
+## ASSESSMENT DETAILS:
+## Stavanger highly annoyance
+## INPUT DATA DETAILS:
+## Add here input data details: defined own function with spline interpolation
+
 ### ITERATION ###################################################################
 
 testthat::test_that("no error ar iteration", {
@@ -1860,7 +1912,7 @@ testthat::test_that("no error ar iteration", {
 )
 })
 
-testthat::test_that("detailed results the same pathway_ar|erf_formula|exp_dist|iteration_TRUE|", {
+testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|iteration_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -1883,7 +1935,7 @@ testthat::test_that("detailed results the same pathway_ar|erf_formula|exp_dist|i
   )
 })
 
-testthat::test_that("detailed results the same pathway_ar|erf_formula|exp_dist|iteration_TRUE|", {
+testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|iteration_TRUE|", {
 
   testthat::expect_equal(
     object =
