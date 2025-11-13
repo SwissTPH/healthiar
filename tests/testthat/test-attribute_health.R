@@ -1418,7 +1418,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
 # pathway_ar-erf_formula-exp_dist-iteration_TRUE.R
 # Different number of exposure categories across geo_ids
 
-testthat::test_that("results correct  pathway_ar|erf_formula|exp_dist|iteration_TRUE|", {
+testthat::test_that("results correct  |pathway_ar|erf_formula|exp_dist|iteration_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
