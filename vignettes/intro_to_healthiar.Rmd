@@ -590,7 +590,7 @@ Use a calculation threshold which is different from the effect threshold
 Goal: Health impacts in the exposure group 55dB+ that are affected by a exposure above the effect threshold (45 dB)
 
 
-*Note*: The function arguments `erf_eq_...` require a function as input. This can be fulfilled by using a 'function(c)' which is of type 'function'.
+*Note*: The function arguments `erf_eq_...` require a function as input. Instead of using a `splinefun()` this can also be fulfilled by using a 'function(c)' which is of type 'function'.
 
 ```{r}
 #setting up function parameters
@@ -604,7 +604,7 @@ erf_function <- function(c){
   output <- ifelse(c<threshold_calculation, 1, exp((log(RR)/rr_increment)*(c-threshold_effect)))
   return(output)
 }
-
+# attribute_health
 results_catERF_different_calc_thesh <- healthiar::attribute_health(
   approach_risk = "relative_risk",
   erf_eq_central = erf_function,
@@ -614,7 +614,7 @@ results_catERF_different_calc_thesh <- healthiar::attribute_health(
   bhd_central=50000)$health_main$impact_rounded
 ```
 
-The function created is equal to
+The used function is equal to
 $$
 f(c) =
 \begin{cases}
