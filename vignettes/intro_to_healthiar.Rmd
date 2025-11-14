@@ -539,7 +539,7 @@ rm(info, output_attribute, output_stratified)
 Goal: attribute COPD cases to air pollution exposure by applying a user-defined exposure response function (e.g. MR-BRT curves from Global Burden of Disease study)
 
 
-*Note*: in this case, the function arguments `erf_eq_...` require a function as input, so we use an auxiliary function (`splinefun()`) to transform the points on the ERF into type `fucntion`.
+*Note*: in this case, the function arguments `erf_eq_...` require a function as input, so we use an auxiliary function (`splinefun()`) to transform the points on the ERF into type `function`.
 ```{r}
 results_pm_copd_mr_brt <- attribute_health(
   exp_central = 8.85,
@@ -583,6 +583,82 @@ legend("topleft", legend = c("Original points", "Spline curve"),
 ```
 
 Alternatively, other functions (e.g. `approxfun()`) can be used to create the ERF
+
+## Example: `attribute_health()` with user-defined categorial ERF
+
+Use a calculation threshold which is different from the effect threshold
+Goal: Health impacts in the exposure group 55dB+ that are affected by a exposure above the effect threshold (45 dB)
+
+
+*Note*: The function arguments `erf_eq_...` require a function as input. This can be fulfilled by using a 'function(c)' which is of type 'function'.
+
+```{r}
+#setting up function parameters
+threshold_effect <- 45
+RR <- 1.055
+threshold_calculation <- 55
+rr_increment <- 10
+
+# define categorical function, the ifelse condition enables the case distinction
+erf_function <- function(c){
+  output <- ifelse(c<threshold_calculation, 1, exp((log(RR)/rr_increment)*(c-threshold_effect)))
+  return(output)
+}
+
+results_catERF_different_calc_thesh <- healthiar::attribute_health(
+  approach_risk = "relative_risk",
+  erf_eq_central = erf_function,
+  prop_pop_exp = c(300000,200000,150000,120000,100000,70000,60000)/10000000,
+  exp_central = c(47,52,57,62,67,72,77),
+  cutoff_central=0,
+  bhd_central=50000)$health_main$impact_rounded
+```
+
+The function created is equal to
+$$
+f(c) =
+\begin{cases}
+1, & c < \text{threshold} \\
+\exp\left( \frac{\log(RR)}{rr_{increment}} (c - threshold_{effect}) \right), & c \ge \text{threshold}
+\end{cases}.
+$$
+
+The categorical ERF curve created looks as follows
+
+```{r fig.alt="ERF curve", eval=TRUE, include=TRUE, echo=FALSE}
+
+
+
+
+# Evaluate exp_central points
+x <- c(47,52,57,62,67,72,77) # central exposure values
+y <- erf_function(x)
+
+# Generate finer x-values
+x_dense <- seq(min(x), max(x), length.out = 200)
+# Evaluate exp_central points (finer version)
+y_dense <- erf_function(x_dense)
+
+## Plot
+plot(x,
+     y # main = "User-defined ERF"
+     ,
+     main = "",
+     xlab = "Exposure",
+     ylab = "Relative risk",
+     col = "blue",
+     pch = 19)
+
+lines(x_dense,y_dense,col = "red",lwd = 2)
+
+legend("topleft",
+       legend = c("Original points", "Categorical ERF curve"),
+       col = c("blue", "red"),
+       pch = c(19, NA),
+       lty = c(NA, 1),
+       lwd = c(NA, 2))
+
+```
 
 ## Example: `compare()`
 
