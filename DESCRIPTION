@@ -15,8 +15,7 @@ Authors@R: c(
     person(given = "Andreia", family = "Novais", role = c("ctb"), comment = c(ORCID = "0009-0007-7775-108X")),
     person(given = "Ana", family = "Barbosa", role = c("ctb"), comment = c(ORCID = "0000-0002-9623-9002")),
     person(given = "Joao", family = "Vasco Santos", role = c("ctb"), comment = c(ORCID = "0000-0003-4696-1002")),
-    person(given = "Anette", family = "Kocbach Bolling", role = c("ctb"), comment = c(ORCID = "0000-0003-4209-7448")),
-    person(given = "Gianni", family = "Ardielli", role = c("ctb"), comment = c(ORCID = "0009-0000-3408-2217"))
+    person(given = "Anette", family = "Kocbach Bolling", role = c("ctb"), comment = c(ORCID = "0000-0003-4209-7448"))
     )
 Description: This R package has been developed with a focus on air pollution and noise but can applied to other exposures. The initial development has been funded by the European Union project BEST-COST. Disclaimer: It is work in progress and the developers are not liable for any calculation errors or inaccuracies resulting from the use of this package.
  References (in chronological order): 

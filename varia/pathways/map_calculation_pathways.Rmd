@@ -29,11 +29,7 @@ pacman::p_load(dplyr, tibble, stringr, purrr)
 pathways_rr <- list(
   erf = c("log_lin", "function", "formula", "lin_lin", "lin_log", "log_log"),
   exp = c("single", "dist"), # prop_pop_exp linked with this
-  iteration = c("TRUE", "FALSE"),
-  uncertainty = c("TRUE", "FALSE"), 
-  strat = c("TRUE", "FALSE"), # stratification (by both age_group and sex arguments)
-  yld = c("TRUE", "FALSE") # years lived with disability (i.e. both dw_... and duration_... arguments)
-  # pop = c("TRUE", "FALSE") # population; TBD whether we'll introduce this later
+  iteration = c("TRUE", "FALSE")
 )
 
 pathways_rr <- expand.grid(pathways_rr) |> 
@@ -51,10 +47,7 @@ paste0("|pathway_rr|", paste(names(vals), vals, sep = "_", collapse = "|"), "|")
 core_rr <- list(
   erf = c("log_lin", "function", "lin_lin"),
   exp = c("single", "dist"), # prop_pop_exp linked with this
-  iteration = c("TRUE", "FALSE"),
-  uncertainty = c("FALSE"), 
-  strat = c("FALSE"),
-  yld = c("FALSE")
+  iteration = c("TRUE", "FALSE")
 )
 
 core_rr <- expand.grid(core_rr) |> 
@@ -64,7 +57,7 @@ core_rr <- expand.grid(core_rr) |>
 
 ## Merge core pathways into whole overview
 pathways_rr <- pathways_rr |> 
-  left_join(x = _, y = core_rr, by = c("erf", "exp", "iteration", "uncertainty", "strat", "yld")) |> 
+  left_join(x = _, y = core_rr, by = c("erf", "exp", "iteration")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
 rm(core_rr)
@@ -85,38 +78,23 @@ existing_tests <- tibble(
   erf = rep(NA_character_, n_row),
   exp = rep(NA_character_, n_row),
   iteration = rep(NA_character_, n_row),
-  uncertainty = rep(NA_character_, n_row),
-  strat = rep(NA_character_, n_row),
-  yld = rep(NA_character_, n_row),
   implemented = rep(FALSE, n_row)
 )
 
 ## Extract values and assign them directly to the tibble
-
-## NOTE 2025-11-04: if there's an incomplete pathway ID within the list "existing_tests" the loop below will fail
-## --> make sure that all pathway ID's in the script "test-attribute_health.R" are extended with the new parts
 for (i in seq_along(test_names_with_pw)) {
+  strings <- test_names_with_pw[[i]] # Current list item
 
-  strings <- test_names_with_pw[[i]] # Current list item for which values will be extracted
-
-  print(i)
-  
   # Extract values for each column
   existing_tests$exp[i] <- str_extract(strings[str_detect(strings, "\\|exp_")], "(?<=\\|exp_)[^\\|]+")
   existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "\\|erf_")], "(?<=\\|erf_)[^\\|]+")
   existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
-  
-  existing_tests$uncertainty[i] <- str_extract(strings[str_detect(strings, "\\|uncertainty_")], "(?<=\\|uncertainty_)[^\\|]+")
-  existing_tests$strat[i] <- str_extract(strings[str_detect(strings, "\\|strat_")], "(?<=\\|strat_)[^\\|]+")
-  existing_tests$yld[i] <- str_extract(strings[str_detect(strings, "\\|yld_")], "(?<=\\|yld_)[^\\|]+")
-
   existing_tests$implemented[i] <- "TRUE"
-  
 }
 
 ## Merge the whole pathways tibble and the existing_tests tibble
 pathways_rr <- pathways_rr %>%
-  left_join(existing_tests, by = c("erf", "exp", "iteration", "uncertainty", "strat", "yld"),
+  left_join(existing_tests, by = c("erf", "exp", "iteration"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-starts_with("implemented.existing")) |> 
@@ -126,16 +104,7 @@ pathways_rr <- pathways_rr %>%
 pathways_rr <- pathways_rr |> 
   relocate(implemented) |> 
   relocate(core_pathway, .after = implemented) |> 
-  arrange(
-    desc(implemented), 
-    desc(core_pathway), 
-    erf, 
-    desc(exp), 
-    desc(iteration), 
-    desc(uncertainty),
-    desc(strat),
-    desc(yld)
-    )
+  arrange(desc(implemented), desc(core_pathway), erf, desc(exp), desc(iteration))
 
 # * Measure progress ###########################################################
 
