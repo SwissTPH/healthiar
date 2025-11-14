@@ -310,7 +310,24 @@ testthat::test_that("log-log rescaling the same", {
 # }
 # )
 
+testthat::test_that("log-log rescaling the same based on Lehtomäki et al.", {
+
+
+data <- read.csv(testthat::test_path("data","HeliLog-logcurve.csv")) #Lehtomäki et al. 2024
+
+testthat::expect_equal(
+  signif(healthiar::get_risk(
+  exp = rep(data$exposure, each = 3),
+  cutoff = 0,
+  rr = c(1.08,1.06,1.09), #actual-cause mortality was 1.08 (95%CI 1.06, 1.09) per 10 µg/m3 (Chen and Hoek 2020).
+  rr_increment = c(10),
+  erf_shape = "log_log"),5),
+  expected = c(matrix(c(data$RRcentral,data$RR.lower,data$RRupper), nrow = 3, byrow = TRUE)))
+
+})
+
+
 # ERROR OR WARNING ########
 ## ERROR #########
-
 ## WARNING #########
+
