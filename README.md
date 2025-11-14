@@ -27,9 +27,11 @@ Additionally, a 45 minutes introduction to the package can be found [here](https
 
 See the function help pages for information about specific functions. In RStudio, you can access the function documentation of e.g. the function `attribute_health` by
 
-a) running `?attribute_health` (with `healthiar` loaded)
+a) going to the [reference page of the package website]{https://swisstph.github.io/healthiar/reference/index.html}
 
-b) going to the `Packages tab` and then clicking on `healthiar`
+b) running `?attribute_health` in RStudio (with `healthiar` loaded)
+
+c) going to the `Packages tab` and then clicking on `healthiar`
 
 # CITATION
 We love that you use *healthiar*. In that case, please do not forget to cite *healthiar* in your work. Three options to get there: 
