@@ -30,7 +30,6 @@ pathways_rr <- list(
   erf = c("log_lin", "function", "formula", "lin_lin", "lin_log", "log_log"),
   exp = c("single", "dist"), # prop_pop_exp linked with this
   iteration = c("TRUE", "FALSE"),
-  #uncertainty = c("TRUE", "FALSE"), 
   strat = c("TRUE", "FALSE"), # stratification (by both age_group and sex arguments)
   yld = c("TRUE", "FALSE") # years lived with disability (i.e. both dw_... and duration_... arguments)
   # pop = c("TRUE", "FALSE") # population; TBD whether we'll introduce this later
@@ -64,14 +63,14 @@ core_rr <- expand.grid(core_rr) |>
 
 ## Merge core pathways into whole overview
 pathways_rr <- pathways_rr |> 
-  left_join(x = _, y = core_rr, by = c("erf", "exp", "iteration", "uncertainty", "strat", "yld")) |> 
+  left_join(x = _, y = core_rr, by = c("erf", "exp", "iteration", "strat", "yld")) |> 
   mutate(core_pathway = ifelse(is.na(core_pathway), "FALSE", core_pathway)) |> 
   mutate(implemented = "FALSE")
 rm(core_rr)
 
 # * Document existing pathways #################################################
 
-file_path <- "../healthiar/tests/testthat/test-attribute_health.R"
+file_path <- "~/GitHub/healthiar/tests/testthat/test-attribute_health.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commented-out lines
 
@@ -106,7 +105,6 @@ for (i in seq_along(test_names_with_pw)) {
   existing_tests$erf[i] <- str_extract(strings[str_detect(strings, "\\|erf_")], "(?<=\\|erf_)[^\\|]+")
   existing_tests$iteration[i] <- str_extract(strings[str_detect(strings, "\\|iteration_")], "(?<=\\|iteration_)[^\\|]+")
   
-  # existing_tests$uncertainty[i] <- str_extract(strings[str_detect(strings, "\\|uncertainty_")], "(?<=\\|uncertainty_)[^\\|]+")
   existing_tests$strat[i] <- str_extract(strings[str_detect(strings, "\\|strat_")], "(?<=\\|strat_)[^\\|]+")
   existing_tests$yld[i] <- str_extract(strings[str_detect(strings, "\\|yld_")], "(?<=\\|yld_)[^\\|]+")
 
