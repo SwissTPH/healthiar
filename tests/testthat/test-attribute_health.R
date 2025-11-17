@@ -148,7 +148,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
   )
 })
 
-testthat::test_that("detailed result the same |fake_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("detailed result the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -326,7 +326,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
-testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -387,7 +387,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
 
 })
 
-testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -405,7 +405,7 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_
 
 #### ITERATION ##################################################################
 
-testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -425,7 +425,7 @@ testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_
 
 })
 
-testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
 
   bestcost_pm_mortality_a <-
     healthiar::attribute_health(
@@ -461,7 +461,7 @@ testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_
 
 })
 
-testthat::test_that("results the same |fake_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -575,7 +575,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
-testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -592,7 +592,7 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_single|iteration_
   )
 })
 
-testthat::test_that("results the same |fake_rr|erf_log_log|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -809,7 +809,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
 })
 
 
-testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -826,7 +826,7 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_FA
   )
 })
 
-testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -919,7 +919,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
-testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -937,7 +937,7 @@ testthat::test_that("results the same |fake_rr|erf_lin_log|exp_dist|iteration_TR
   )
 })
 
-testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -1025,7 +1025,7 @@ testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|e
   )
 })
 
-testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1049,7 +1049,7 @@ testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|ex
   )
 })
 
-testthat::test_that("results the same mrbrt no cutoff |fake_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1073,7 +1073,7 @@ testthat::test_that("results the same mrbrt no cutoff |fake_rr|erf_function|exp_
   )
 })
 
-testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1098,7 +1098,7 @@ testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|ex
 })
 
 
-testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1134,7 +1134,7 @@ testthat::test_that("results the same mrbrt with cutoff |fake_rr|erf_function|ex
   )
 })
 
-testthat::test_that("results the same |fake_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1332,7 +1332,7 @@ testthat::test_that("no error ar iteration", {
 )
 })
 
-testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -1355,7 +1355,7 @@ testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iter
   )
 })
 
-testthat::test_that("detailed results the same fake_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     object =
