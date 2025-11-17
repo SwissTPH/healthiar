@@ -8,6 +8,8 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
 
     data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
+    data$mean_concentration
+
     testthat::expect_equal(
       object =
         healthiar::attribute_health(
@@ -617,6 +619,189 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iterati
 ## ASSESSMENT DETAILS: I used data from https://discomap.eea.europa.eu/App/AQViewer/index.html?fqn=Airquality_Dissem.ebd.countries_and_nuts# for Estonias urban centres(presumably Tallinn) and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: Baseline from WHO 2005 (HRAPIE 2013), all cause mortality, attributable deaths from pm2.5 in 2020.
 
+
+
+
+##### Stratification (sex/age) ####################################################################
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  #Exotic test based on real data but does produce real world results
+
+
+  #percentage of variation
+  exp_change <-1.1
+  cutoff_change <-0.8
+  bhd_change <-0.9
+  rr_change = bhd_change <-1.2
+  uncert_factor <- 20#set uncertainty factor
+
+  # set central values and variate by percentage
+  exp_c <- signif(unlist(lapply(data$mean_concentration, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- signif(unlist(lapply(data$mean_concentration, function(x)  x * cutoff_change^(0:3))),5)
+  bhd_c <- signif(unlist(lapply(data$incidents_per_100_000_per_year/1E5*data$population_at_risk, function(x) x * bhd_change^(0:3))),5)
+  rr_c <- signif(unlist(lapply(data$relative_risk, function(x) x * rr_change^(0:3))),5)
+
+  x <-healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    age = c("below_50", "below_50", "50_plus", "70_plus"),
+    sex = c("male", "female", "male", "female"),
+    exp_central = exp_c,
+    exp_lower = exp_c - exp_c/uncert_factor,
+    exp_upper = exp_c + exp_c/uncert_factor,
+    cutoff_central = cutoff_c,
+    cutoff_lower = cutoff_c - cutoff_c/uncert_factor,
+    cutoff_upper = cutoff_c + cutoff_c/uncert_factor,
+    bhd_central = bhd_c,
+    bhd_lower = bhd_c - bhd_c/uncert_factor,
+    bhd_upper = bhd_c + bhd_c/uncert_factor,
+    rr_central = rr_c,
+    rr_lower = rr_c - rr_c/uncert_factor,
+    rr_upper = rr_c + rr_c/uncert_factor,
+    rr_increment = c(10, 11, 12, 13),
+    erf_shape = "log_linear",
+    info = base::paste0(data$pollutant,"_", data$evaluation_name),
+    population = c(500000, 200000, 600000, 800000)
+  )
+
+  x$health_detailed$results_by_age_group$impact_rounded
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =x$health_detailed$results_by_age_group$impact_rounded,
+    expected = c(
+      4166, 3758, 4549, 5109, 4585, 5602, 3639, 3280, 3977, 3958, 3570, 4322,
+      4854, 4356, 5322, 3457, 3116, 3778, 4374, 3946, 4777, 5365, 4814, 5882,
+      3821, 3444, 4176, 3439, 3099, 3759, 3969, 3580, 4336, 2900, 2612, 3173,
+      3267, 2944, 3571, 3771, 3401, 4119, 2755, 2481, 3014, 3611, 3254, 3947,
+      4168, 3759, 4553, 3045, 2742, 3332, 5302, 4760, 5810, 6227, 5574, 6841,
+      4362, 3936, 4761, 5036, 4522, 5520, 5916, 5295, 6499, 4143, 3739, 4523,
+      5567, 4998, 6101, 6539, 5852, 7183, 4580, 4133, 4999, 10990, 10264, 11665,
+      11519, 10764, 12221, 10452, 9757, 11101, 10440, 9751, 11082, 10943, 10226,
+      11610, 9930, 9269, 10546, 11539, 10778, 12249, 12095, 11302, 12832, 10975,
+      10245, 11656, 9966, 9299, 10590, 10512, 9813, 11163, 9412, 8777, 10006, 9468,
+      8834, 10060, 9986, 9322, 10605, 8942, 8338, 9506, 10465, 9764, 11119, 11037,
+      10303, 11721, 9883, 9216, 10506, 11983, 11203, 12707, 12496, 11689, 13244,
+      11461, 10710, 12160, 11384, 10643, 12072, 11871, 11105, 12582, 10888, 10174,
+      11552, 12582, 11763, 13342, 13121, 12274, 13907, 12034, 11245, 12768, 20256,
+      19302, 21138, 20746, 19776, 21641, 19759, 18821, 20627, 19243, 18337, 20081,
+      19708, 18787, 20559, 18771, 17880, 19595, 21269, 20267, 22195, 21783, 20765,
+      22723, 20747, 19762, 21658, 18948, 18038, 19792, 19457, 18530, 20316, 18431,
+      17539, 19259, 18001, 17136, 18802, 18484, 17603, 19300, 17510, 16662, 18296,
+      19896, 18940, 20781, 20430, 19456, 21332, 19353, 18416, 20222, 21514, 20521,
+      22430, 21985, 20978, 22913, 21036, 20057, 21939, 20438, 19495, 21308, 20885,
+      19929, 21767, 19984, 19054, 20842, 22589, 21547, 23551, 23084, 22027, 24059,
+      22087, 21060, 23036
+    )
+  )
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =x$health_detailed$results_by_sex$impact_rounded,
+    expected = c(
+      10990, 10264, 11665, 11943, 11120, 12710, 10452, 9757, 11101, 10440, 9751,
+      11082, 11346, 10564, 12075, 9930, 9269, 10546, 11539, 10778, 12249, 12540,
+      11676, 13346, 10975, 10245, 11656, 9966, 9299, 10590, 10512, 9813, 11163,
+      9412, 8777, 10006, 9468, 8834, 10060, 9986, 9322, 10605, 8942, 8338, 9506,
+      10465, 9764, 11119, 11037, 10303, 11721, 9883, 9216, 10506, 12407, 11559,
+      13197, 13339, 12396, 14216, 11461, 10710, 12160, 11787, 10981, 12537, 12672,
+      11776, 13505, 10888, 10174, 11552, 13027, 12137, 13857, 14006, 13016, 14927,
+      12034, 11245, 12768, 24422, 23061, 25687, 25430, 24006, 26753, 23398, 22102,
+      24603, 23201, 21908, 24403, 24159, 22806, 25416, 22228, 20997, 23373, 25643,
+      24214, 26972, 26702, 25206, 28091, 24568, 23207, 25834, 22387, 21137, 23551,
+      23427, 22110, 24652, 21332, 20151, 22432, 21268, 20080, 22374, 22255, 21004,
+      23419, 20265, 19143, 21310, 23507, 22194, 24729, 24598, 23215, 25885, 22398,
+      21159, 23553, 26391, 24925, 27750, 27369, 25844, 28782, 25397, 23993, 26701,
+      25071, 23679, 26363, 26001, 24552, 27343, 24127, 22793, 25366, 27710, 26172,
+      29138, 28738, 27137, 30222, 26667, 25193, 28036
+    ))
+})
+
+
+testthat::test_that("results the same |pathway_rr|erf_function|exp_single|cutoff_TRUE|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
+  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+  #Exotic test based on real data but does produce real world results
+
+
+  #percentage of variation
+  exp_change <-1.1
+  cutoff_change <-0.8
+  bhd_change <-0.9
+  rr_change = bhd_change <-1.2
+  uncert_factor <- 20#set uncertainty factor
+
+  # set central values and variate by percentage
+  exp_c <- signif(unlist(lapply(84.1, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5)
+  bhd_c <- signif(unlist(lapply(29908, function(x) x * bhd_change^(0:3))),5)
+
+  x <-healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    age = c("below_50", "below_50", "50_plus", "70_plus"),
+    sex = c("male", "female", "male", "female"),
+    exp_central = exp_c,
+    exp_lower = exp_c - exp_c/uncert_factor,
+    exp_upper = exp_c + exp_c/uncert_factor,
+    cutoff_central = cutoff_c,
+    cutoff_lower = cutoff_c - cutoff_c/uncert_factor,
+    cutoff_upper = cutoff_c + cutoff_c/uncert_factor,
+    bhd_central = bhd_c,
+    bhd_lower = bhd_c - bhd_c/uncert_factor,
+    bhd_upper = bhd_c + bhd_c/uncert_factor,
+    erf_eq_central = splinefun(data$x, data$y, method="natural"),
+    erf_eq_lower  = splinefun(data$x, data$y_l, method="natural"),
+    erf_eq_upper  = splinefun(data$x, data$y_u, method="natural"),
+    prop_pop_exp = c(1,1,1,1))
+
+  testthat::expect_equal(
+    ## test if age group results are correct
+    object =x$health_detailed$results_by_age_group$impact_rounded,
+    expected = c(
+      739, 562, 894, 739, 563, 895, 738, 562, 893, 702, 534, 849, 702, 535, 850,
+      701, 534, 849, 776, 590, 939, 776, 591, 939, 775, 590, 938, 686, 522, 830,
+      686, 522, 831, 685, 522, 829, 652, 496, 789, 652, 496, 789, 651, 495, 788,
+      720, 548, 872, 721, 549, 872, 720, 548, 871, 782, 595, 946, 782, 595, 947,
+      781, 595, 946, 743, 565, 899, 743, 566, 899, 742, 565, 898, 821, 625, 993,
+      821, 625, 994, 821, 625, 993, 558, 424, 675, 558, 425, 675, 557, 424, 674,
+      530, 403, 641, 530, 403, 641, 530, 403, 641, 585, 446, 708, 586, 446, 709,
+      585, 446, 708, 534, 407, 646, 534, 407, 646, 534, 406, 646, 507, 386, 614,
+      508, 386, 614, 507, 386, 614, 561, 427, 679, 561, 427, 679, 561, 427, 678,
+      578, 440, 699, 578, 440, 699, 578, 440, 699, 549, 418, 664, 549, 418, 664,
+      549, 418, 664, 607, 462, 734, 607, 462, 734, 607, 462, 734, 717, 546, 868,
+      718, 546, 868, 717, 546, 868, 682, 519, 825, 682, 519, 825, 681, 519, 824,
+      753, 574, 911, 753, 574, 911, 753, 573, 911, 692, 527, 837, 692, 527, 837,
+      692, 527, 837, 657, 500, 795, 657, 500, 795, 657, 500, 795, 726, 553, 879,
+      727, 553, 879, 726, 553, 879, 743, 566, 899, 743, 566, 899, 743, 566, 899,
+      706, 537, 854, 706, 538, 854, 706, 537, 854, 780, 594, 944, 780, 594, 944,
+      780, 594, 944
+    )
+
+  )
+  testthat::expect_equal(
+    ## test if sex results are correct
+    object =x$health_detailed$results_by_sex$impact_rounded,
+    expected = c(
+      871, 663, 1053, 871, 663, 1054, 870, 662, 1053,
+      827, 630, 1001, 828, 630, 1001, 827, 629, 1000,
+      914, 696, 1106, 915, 696, 1107, 914, 695, 1106,
+      819, 623, 991, 819, 624, 991, 818, 623, 990,
+      778, 592, 941, 778, 592, 942, 777, 592, 941,
+      860, 654, 1040, 860, 655, 1041, 859, 654, 1040,
+      913, 695, 1105, 914, 696, 1106, 913, 695, 1105,
+      868, 661, 1050, 868, 661, 1050, 867, 660, 1050,
+      959, 730, 1160, 959, 730, 1161, 959, 730, 1160,
+      1143, 870, 1383, 1144, 871, 1383, 1143, 870, 1383,
+      1086, 827, 1314, 1086, 827, 1314, 1086, 827, 1314,
+      1200, 914, 1452, 1201, 914, 1453, 1200, 914, 1452,
+      1093, 832, 1323, 1093, 832, 1323, 1093, 832, 1322,
+      1038, 791, 1256, 1039, 791, 1257, 1038, 790, 1256,
+      1148, 874, 1389, 1148, 874, 1389, 1147, 873, 1388,
+      1189, 906, 1439, 1190, 906, 1439, 1189, 905, 1439,
+      1130, 860, 1367, 1130, 860, 1367, 1130, 860, 1367,
+      1249, 951, 1511, 1249, 951, 1511, 1249, 951, 1510
+    )
+  )
+})
+
 #### ITERATION ##################################################################
 
 testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
@@ -953,6 +1138,8 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|cutoff_F
   ## INPUT DATA DETAILS: Gogna et al., 2019. Estimates of the current and future burden of lung cancer attributable to PM2.5 in Canada. https://doi.org/10.1016/j.ypmed.2019.03.010
   ## Add here input data details: data sources, measured vs. modelled, ...
 })
+
+
 
 #### YLD ########################################################################
 
