@@ -403,7 +403,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iterati
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
   ## Pathway ID:|pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
   ## healthiar FUNCTION CALL
   results_pm <-
@@ -439,7 +439,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 })
 
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
   ## Pathway ID:|pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
 
   ## healthiar FUNCTION CALL
@@ -475,7 +475,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
   ## Add here input data details: data sources, measured vs. modelled, ...
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
   ## Pathway ID:|pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
 
   ## healthiar FUNCTION CALL
@@ -516,7 +516,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 })
 
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
 
   testthat::expect_equal(
@@ -546,7 +546,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 ## ASSESSMENT DETAILS: I used data from https://discomap.eea.europa.eu/App/AQViewer/index.html?fqn=Airquality_Dissem.ebd.countries_and_nuts# for Estonias urban centres(presumably Tallinn) and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: Baseline from WHO 2005 (HRAPIE 2013), all cause mortality, attributable deaths from pm2.5 in 2020.
 
-testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|strat_FALSE|yld_FALSE|", {
 
   ## healthiar FUNCTION CALL
   results_NO2 <-
@@ -589,7 +589,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_
   ## https://doi.org/10.1016/j.scitotenv.2024.172799
 })
 
-testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
 
   testthat::expect_equal(
@@ -825,7 +825,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iterati
 
 
 
-testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -852,7 +852,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iterati
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
 
-testthat::test_that("results the same|pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|",{
+testthat::test_that("results the same|pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|",{
   ## Pathway ID: pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|
   ## healthiar FUNCTION CALL
   results_NO2 <-
@@ -903,7 +903,7 @@ testthat::test_that("results the same|pathway_rr|erf_lin_lin|exp_single|cutoff_F
   ## https://doi.org/10.1016/j.scitotenv.2024.172799
 })
 
-testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|",{
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|",{
   ## Pathway ID: pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|
   ## healthiar FUNCTION CALL
   pm_iteration <-
@@ -1188,7 +1188,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1217,7 +1217,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
 ## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1245,7 +1245,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FA
 ## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
-testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1389,7 +1389,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration
 
 
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1416,7 +1416,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FA
 ## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1446,7 +1446,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|",{
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|",{
   ## healthiar FUNCTION CALL
   results_pm2.5 <-
     healthiar::attribute_health(
@@ -1474,7 +1474,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
   # France_pop_fraction_Cuttoff5 : (0.059, 0.063, 0.066, 0.084, 0.0071) Table 8 page 37
 })
 
-testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|",{
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|",{
   results_NO2 <-
     healthiar::attribute_health(
       approach_risk = "relative_risk",
@@ -1505,7 +1505,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRU
   ## confinement du printemps 2020 et nouvelles données sur le poids total pour la période 2016-2019. Santé publique France. Avril 2021.
 })
 
-testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
 
 
   testthat::expect_equal(
