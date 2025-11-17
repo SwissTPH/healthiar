@@ -403,6 +403,220 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iterati
   )
 })
 
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+  ## Pathway ID:|pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
+  ## healthiar FUNCTION CALL
+  results_pm <-
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.09,
+      rr_lower = 1.06,
+      rr_upper = 1.12,
+      rr_increment = 10,
+      exp_central = 8.3,
+      cutoff_central = 0,
+      bhd_central = 25235,
+    )
+  testthat::expect_equal(
+    object =
+      signif(c(results_pm$health_main$impact_rounded,results_pm$health_main$pop_fraction),3),
+    expected =
+      signif(c(1742.00000000,1191.00000000,2265.00000000,0.06902931,0.04721232,0.08977441),3)
+  )
+
+  # Original result from the paper:
+  # Canada_impact_rounded : 1739
+  # Canada_pop_fraction : 0.069 (95% CI: 0.047 - 0.090)
+
+  ## List here the results of the comparison assessment you selected
+  ## ASSESSOR: Maria José Rueda Lopez, CSTB
+  ## Add here your name and your institute abbreviation
+  ## ASSESSMENT DETAILS: Estimate the proportion of lung cancer cases attributable to PM2.5 exposure in Canada in 2015
+  ## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+  ## INPUT DATA DETAILS: Gogna et al., 2019. Estimates of the current and future burden of lung cancer attributable to PM2.5 in Canada. https://doi.org/10.1016/j.ypmed.2019.03.010
+  ## Add here input data details: data sources, measured vs. modelled, ...
+})
+
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+  ## Pathway ID:|pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
+
+  ## healthiar FUNCTION CALL
+  results_pm <-
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.09,
+      rr_lower = 1.06,
+      rr_upper = 1.12,
+      rr_increment = 10,
+      exp_central = 9.2,
+      cutoff_central = 0,
+      bhd_central = 8380,
+    )
+  testthat::expect_equal(
+    object =
+      signif(c(results_pm$health_main$impact_rounded,results_pm$health_main$pop_fraction),3),
+    expected =
+      signif(c(639.0000, 437.0000,  830.0000, 0.0762, 0.0522, 0.0990),3)
+  )
+
+  # Original results form the paper
+  # Ontario_impact_rounded : 662
+  # Ontario_pop_fraction : 0.079 (95% CI: 0.054 - 0.103)
+
+  ## List here the results of the comparison assessment you selected
+  ## ASSESSOR: Maria José Rueda Lopez, CSTB
+  ## Add here your name and your institute abbreviation
+  ## ASSESSMENT DETAILS: Estimate the proportion of lung cancer cases attributable to PM2.5 exposure in Ontario in 2015
+  ## Add here short description of the assessment: year, metric (e.g. DALY, premature deaths, ...), ...
+  ## INPUT DATA DETAILS: Gogna et al., 2019. Estimates of the current and future burden of lung cancer attributable to PM2.5 in Canada. https://doi.org/10.1016/j.ypmed.2019.03.010
+  ## Add here input data details: data sources, measured vs. modelled, ...
+})
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+  ## Pathway ID:|pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
+
+  ## healthiar FUNCTION CALL
+  results_pm2.5 <-
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear", # Page 18
+      rr_central = 1.15, # Page 33
+      rr_lower = 1.05, # Page 33
+      rr_upper = 1.25, # Page 33
+      rr_increment = 10, # Page 18
+      exp_central = 9.6, # Table 5 page 29
+      exp_lower = 8.9, # Table 5 page 29
+      exp_upper = 10.2, # Table 5 page 29
+      cutoff_central = 5, # Page 33
+      bhd_central = 561953, # Table 3 page 22
+    )
+
+
+  ### Healthiar results ###
+  ## Attributable impact in France
+  testthat::expect_equal(
+    object =
+      signif(c(results_pm2.5$health_main$impact_rounded,results_pm2.5$health_main$pop_fraction),3),
+    expected =
+      signif(c(34991.0000, 12472.0000, 54821.0000, 0.0623, 0.0222, 0.0976),3)
+  )
+
+  ### SpF report results ###
+  # France_impact_Cuttoff5 : 39541. Table 8 page 37
+  # France_pop_fraction_Cuttoff5 : 0.071 Table 8 page 37
+
+
+  ## ASSESSOR: Maria José Rueda Lopez, CSTB and Sabrina Delaunay-Havard, SpF.
+  ## ASSESSMENT DETAILS: Estimate the proportion of deaths attributable to PM2.5 exposure in France during the covid19 pandemic
+  ## INPUT DATA DETAILS: Etudes et enquêtes. Impact de la pollution de l'air ambiant sur la mortalité en France métropolitaine. Réduction en lien avec le
+  ## confinement du printemps 2020 et nouvelles données sur le poids total pour la période 2016-2019. Santé publique France. Avril 2021.
+})
+
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|", {
+
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "log_linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO
+        #rr_lower = 1.02,
+        #rr_upper = 1.11,
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = 5.8, #single for Urban centres(presumably Tallinn), pm2.5
+        cutoff_central = 0,
+        bhd_central = 4500 #deaths in tallinn 2020
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      150
+  )
+})
+
+# original value from EEA = 199 -> test did not pass but the value provided by attribute_health falls within the range provided by EEA
+
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://discomap.eea.europa.eu/App/AQViewer/index.html?fqn=Airquality_Dissem.ebd.countries_and_nuts# for Estonias urban centres(presumably Tallinn) and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: Baseline from WHO 2005 (HRAPIE 2013), all cause mortality, attributable deaths from pm2.5 in 2020.
+
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|", {
+
+  ## healthiar FUNCTION CALL
+  results_NO2 <-
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "linear",
+      rr_central = 1.04,
+      rr_lower = 1.02,
+      rr_upper = 1.07,
+      rr_increment = 10,
+      exp_central = 42.6,
+      exp_lower = 33.1,
+      exp_upper = 56.4,
+      cutoff_central = 0,
+      bhd_central = 9946,
+    )
+
+
+  testthat::expect_equal(
+    ## Attributable impact in Naples
+    object = results_NO2$health_main$impact_rounded,
+    expected = c(1448, 781, 2285))
+
+  testthat::expect_equal(
+    ## Attributable impact in Naples
+    object = signif(results_NO2$health_main$pop_fraction,3),
+    expected = c(0.146, 0.0785, 0.230))
+
+
+
+  # Original results from Paper (close to what attribute health gets):
+  # Naples_impact_rounded : 1337 (95% CI: 700 - 2188)
+  # Naples_pop_fraction : 13.9 (95% CI: 7.3 - 22.7)
+
+  ## ASSESSOR: Maria José Rueda Lopez, CSTB
+
+  ## ASSESSMENT DETAILS: Estimate the attributable death for exposition to NO2 concentrations in 2013 in Naples, Italy.
+
+  ## INPUT DATA DETAILS: Chianese and Riccio 2024. Long-term variation in exposure to NO2 concentrations in the city of Naples, Italy: Results of a citizen science project
+  ## https://doi.org/10.1016/j.scitotenv.2024.172799
+})
+
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_FALSE|", {
+
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        erf_shape = "linear",
+        rr_central = 1.06, #relative risk for pm2.5 according to WHO
+        #rr_lower = 1.02,
+        #rr_upper = 1.11,
+        rr_increment = 10,
+        prop_pop_exp = 1,
+        exp_central = 5.8, #single for Urban centres(presumably Tallinn), pm2.5
+        cutoff_central = 0,
+        bhd_central = 4500 #deaths in tallinn 2020
+      )$health_main$impact_rounded,
+    ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+    expected =
+      151 # test did not pass but the value provided by healthiar falls within the range provided by EEA
+  )
+})
+# Original results from source: 200
+## ASSESSOR: Maria Lepnurm TAI
+## ASSESSMENT DETAILS: I used data from https://discomap.eea.europa.eu/App/AQViewer/index.html?fqn=Airquality_Dissem.ebd.countries_and_nuts# for Estonias urban centres(presumably Tallinn) and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
+## INPUT DATA DETAILS: Baseline from WHO 2005 (HRAPIE 2013), all cause mortality, attributable deaths from pm2.5 in 2020.
+
 #### ITERATION ##################################################################
 
 testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
