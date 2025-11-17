@@ -4,7 +4,7 @@
 
 ### SINGLE EXPOSURE #############################################################
 
-testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
     data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -27,7 +27,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
     )
 })
 
-testthat::test_that("zero effect if exp lower than cutoff |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("zero effect if exp lower than cutoff |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -45,7 +45,7 @@ testthat::test_that("zero effect if exp lower than cutoff |pathway_rr|erf_log_li
 
 # Multiple age and sex groups
 
-testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -69,7 +69,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
 })
 
 ## same as above but with population argument
-testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -93,7 +93,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
   )
 })
 
-  testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+  testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -148,7 +148,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
   )
 })
 
-testthat::test_that("detailed result the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("detailed result the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -176,7 +176,7 @@ testthat::test_that("detailed result the same |pathway_rr|erf_log_lin|exp_single
   )
 })
 
-testthat::test_that("no error rr_no_error|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("no error rr_no_error|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -202,7 +202,7 @@ testthat::test_that("no error rr_no_error|erf_log_lin|exp_single|iteration_FALSE
     )
 })
 
-testthat::test_that("number of rows in detailed results correct |meta_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("number of rows in detailed results correct |meta_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -231,7 +231,7 @@ testthat::test_that("number of rows in detailed results correct |meta_rr|erf_log
 
 })
 
-testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -253,7 +253,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -274,7 +274,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -296,7 +296,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
   )
 })
 
-testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
 
@@ -326,7 +326,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
-testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -344,7 +344,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_single|iterati
 
 
 
-testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   # Use a calculation threshold which is different from the effect threshold
   # Goal: Health impacts in the exposure group 55dB+ that are affected by a exposure above the effect threshold (45 dB)
@@ -387,7 +387,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
 
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -403,7 +403,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iterati
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
   ## Pathway ID:|pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
   ## healthiar FUNCTION CALL
   results_pm <-
@@ -439,7 +439,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 })
 
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
   ## Pathway ID:|pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
 
   ## healthiar FUNCTION CALL
@@ -475,7 +475,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
   ## Add here input data details: data sources, measured vs. modelled, ...
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
   ## Pathway ID:|pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|
 
   ## healthiar FUNCTION CALL
@@ -516,7 +516,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 })
 
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
 
   testthat::expect_equal(
@@ -546,7 +546,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 ## ASSESSMENT DETAILS: I used data from https://discomap.eea.europa.eu/App/AQViewer/index.html?fqn=Airquality_Dissem.ebd.countries_and_nuts# for Estonias urban centres(presumably Tallinn) and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: Baseline from WHO 2005 (HRAPIE 2013), all cause mortality, attributable deaths from pm2.5 in 2020.
 
-testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   ## healthiar FUNCTION CALL
   results_NO2 <-
@@ -589,7 +589,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_
   ## https://doi.org/10.1016/j.scitotenv.2024.172799
 })
 
-testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
 
   testthat::expect_equal(
@@ -619,7 +619,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iterati
 
 #### ITERATION ##################################################################
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -639,7 +639,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   bestcost_pm_mortality_a <-
     healthiar::attribute_health(
@@ -675,7 +675,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -702,7 +702,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 })
 
 ## no cutoff
-testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021.rds"))
@@ -731,7 +731,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
 })
 
 ## with cutoff
-testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021_cutoff.rds"))
@@ -759,7 +759,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
   ## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2021
 })
 
-testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
   erf<-splinefun(data$x, data$y, method="natural")
@@ -789,7 +789,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
-testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -806,7 +806,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_single|iterati
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -825,7 +825,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iterati
 
 
 
-testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -852,7 +852,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iterati
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
 
-testthat::test_that("results the same|pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|",{
+testthat::test_that("results the same|pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|",{
   ## Pathway ID: pathway_rr|erf_lin_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|
   ## healthiar FUNCTION CALL
   results_NO2 <-
@@ -903,7 +903,7 @@ testthat::test_that("results the same|pathway_rr|erf_lin_lin|exp_single|cutoff_F
   ## https://doi.org/10.1016/j.scitotenv.2024.172799
 })
 
-testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|",{
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|",{
   ## Pathway ID: pathway_rr|erf_log_lin|exp_single|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|
   ## healthiar FUNCTION CALL
   pm_iteration <-
@@ -956,7 +956,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|cutoff_F
 
 #### YLD ########################################################################
 
-testthat::test_that("results the same prevalence-based YLD (duration_central=1) |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same prevalence-based YLD (duration_central=1) |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -977,7 +977,7 @@ testthat::test_that("results the same prevalence-based YLD (duration_central=1) 
   )
 })
 
-testthat::test_that("results the same incidence-based YLD (duration_central > 1) |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same incidence-based YLD (duration_central > 1) |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -998,7 +998,7 @@ testthat::test_that("results the same incidence-based YLD (duration_central > 1)
   )
 })
 
-testthat::test_that("results the same prevalence-based YLD |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same prevalence-based YLD |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -1019,7 +1019,7 @@ testthat::test_that("results the same prevalence-based YLD |pathway_rr|erf_log_l
   )
 })
 
-testthat::test_that("detailed results the same prevalence-based YLD |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("detailed results the same prevalence-based YLD |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -1045,7 +1045,7 @@ testthat::test_that("detailed results the same prevalence-based YLD |pathway_rr|
 })
 ### EXPOSURE DISTRIBUTION #######################################################
 
-testthat::test_that("results correct with cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct with cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
@@ -1074,7 +1074,7 @@ testthat::test_that("results correct with cutoff |pathway_rr|erf_log_lin|exp_dis
 
 })
 
-testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
@@ -1097,7 +1097,7 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
   )
 })
 
-testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
   erf <- splinefun(data$x, data$y, method="natural")
@@ -1126,7 +1126,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
-testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
 
@@ -1154,7 +1154,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
 })
 
 
-testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -1171,7 +1171,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_dist|iteration
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -1188,7 +1188,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1217,7 +1217,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
 ## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1245,7 +1245,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FA
 ## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
-testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1276,7 +1276,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration
 
 
 #### ITERATION ##################################################################
-testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -1299,7 +1299,7 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
 })
 
 ## with population argument specified
-testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -1322,7 +1322,7 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
   )
 })
 
-testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rds"))
   data <- data |> dplyr::slice(-1)
@@ -1351,7 +1351,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
   ## INPUT DATA DETAILS: Modelled ozone exposure, real COPD mortality data from Germany, 2016
 })
 
-testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -1369,7 +1369,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_dist|iteration
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -1389,7 +1389,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration
 
 
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1416,7 +1416,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FA
 ## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1446,7 +1446,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|",{
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|",{
   ## healthiar FUNCTION CALL
   results_pm2.5 <-
     healthiar::attribute_health(
@@ -1474,7 +1474,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
   # France_pop_fraction_Cuttoff5 : (0.059, 0.063, 0.066, 0.084, 0.0071) Table 8 page 37
 })
 
-testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|",{
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|",{
   results_NO2 <-
     healthiar::attribute_health(
       approach_risk = "relative_risk",
@@ -1505,7 +1505,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRU
   ## confinement du printemps 2020 et nouvelles données sur le poids total pour la période 2016-2019. Santé publique France. Avril 2021.
 })
 
-testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
 
   testthat::expect_equal(
@@ -1537,7 +1537,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration
 
 #### USER-DEFINED ERF FUNCTION ###############################################
 
-testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
@@ -1571,7 +1571,7 @@ testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function
   )
 })
 
-testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
@@ -1605,7 +1605,7 @@ testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|e
   )
 })
 
-testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1629,7 +1629,7 @@ testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function
   )
 })
 
-testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1653,7 +1653,7 @@ testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|e
   )
 })
 
-testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1678,7 +1678,7 @@ testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function
 })
 
 
-testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1714,7 +1714,7 @@ testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
@@ -1752,7 +1752,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteratio
 
 ## AR ###########################################################################
 
-testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
@@ -1795,7 +1795,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
   )
 })
 
-testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "roadnoise_ha_Lden_StavangerandVicinity.rds"))
 
@@ -1819,7 +1819,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
   ## INPUT DATA DETAILS:
 })
 
-testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   ## The inputs to the arguments are all vectors
   testthat::expect_equal(
@@ -1839,7 +1839,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
   ## INPUT DATA DETAILS: -
 })
 
-testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data <- base::readRDS(testthat::test_path("data", "roadnoise_ha_Lden_StavangerandVicinity.rds"))
@@ -1912,7 +1912,7 @@ testthat::test_that("no error ar iteration", {
 )
 })
 
-testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -1935,7 +1935,7 @@ testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|
   )
 })
 
-testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   testthat::expect_equal(
     object =
@@ -1967,7 +1967,7 @@ testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|
   )
 })
 
-testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
@@ -1998,7 +1998,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
 # pathway_ar-erf_formula-exp_dist-iteration_TRUE.R
 # Different number of exposure categories across geo_ids
 
-testthat::test_that("results correct  |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct  |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
@@ -2036,7 +2036,7 @@ testthat::test_that("results correct  |pathway_ar|erf_formula|exp_dist|iteration
 ## Add here input data details: data sources, measured vs. modeled, ...
 
 
-testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
@@ -2094,7 +2094,7 @@ testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteratio
 ### YLD #########################################################################
 
 ## Using only the pop_exp argument
-testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
@@ -2119,7 +2119,7 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
 })
 
 ## Using the prop_pop_exp and pop_exp arguments in combination
-testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
@@ -2143,7 +2143,7 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
   )
 })
 
-testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "Bergen_HA_og_HSD.rds"))
   totalpop_Bergen <- 269189
@@ -2405,7 +2405,7 @@ testthat::test_that("error if sum(prop_pop_exp) higher than 1", {
 
 
 
-testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
@@ -2427,7 +2427,7 @@ testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|it
     regexp = "The argument pop_exp is aimed for absolute risk. Use prop_pop_exp instead.")
 })
 
-testthat::test_that("error if prop_pop_exp and ar |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("error if prop_pop_exp and ar |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
     data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
     data  <- data_raw |>
@@ -2446,7 +2446,7 @@ testthat::test_that("error if prop_pop_exp and ar |pathway_rr|erf_log_lin|exp_di
     )
   })
 
-testthat::test_that("error if pop_exp and prop_pop_exp |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("error if pop_exp and prop_pop_exp |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
@@ -2502,7 +2502,7 @@ testthat::test_that("error if multi geo units but different length of geo-depend
     regexp = "Not clear what is the maximal length of your arguments: 3, 2. Check: exp_central, geo_id_micro.")
 })
 
-testthat::test_that("error if info has incompatible length |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|", {
+testthat::test_that("error if info has incompatible length |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
