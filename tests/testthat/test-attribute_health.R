@@ -2095,6 +2095,104 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteratio
   )
 })
 
+
+##### Stratification (sex/age) ####################################################################
+
+
+testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|", {
+
+
+  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+  #Exotic test based on real data but does produce real world results
+
+
+  #percentage of variation
+  exp_change <-1.1
+  cutoff_change <-0.8
+  bhd_change <-0.9
+  uncert_factor <- 20#set uncertainty factor
+
+  # set central values and variate by percentage
+  exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+
+
+  x <-healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    age_group = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
+    sex = rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
+    exp_central = exp_c,
+    exp_lower = exp_c - exp_c/uncert_factor,
+    exp_upper = exp_c + exp_c/uncert_factor,
+    cutoff_central = cutoff_c,
+    cutoff_lower = cutoff_c - cutoff_c/uncert_factor,
+    cutoff_upper = cutoff_c + cutoff_c/uncert_factor,
+    bhd_central = bhd_c,
+    bhd_lower = bhd_c - bhd_c/uncert_factor,
+    bhd_upper = bhd_c + bhd_c/uncert_factor,
+    erf_eq_central = stats::splinefun(x = data_erf$exposure,
+                                      y = data_erf$mean,
+                                      method = "natural"),
+    erf_eq_lower = stats::splinefun(x = data_erf$exposure,
+                                    y = data_erf$mean -0.01,
+                                    method = "natural"),
+    erf_eq_upper = stats::splinefun(x = data_erf$exposure,
+                                    y = data_erf$mean + 0.01,
+                                    method = "natural"),
+    prop_pop_exp = rep(data$prop_exposed, each = 4))
+  testthat::expect_equal(
+    ## test if age group results are correct
+    object = x$health_detailed$results_by_age_group$impact_rounded,
+    expected = c(
+      14725,13363,16063,18429,17135,19700,12938,11544,14307,13989,12694,15260,
+      17508,16279,18715,12291,10967,13591,15461,14031,16866,19351,17992,20685,
+      13585,12121,15022,12284,10878,13663,14095,12721,15443,10485,9047,11896,
+      11670,10334,12980,13390,12085,14671,9961,8594,11301,12898,11422,14347,
+      14800,13357,16215,11009,9499,12491,19023,17740,20284,22521,21300,23720,
+      15346,13994,16673,18072,16853,19270,21395,20235,22534,14578,13294,15839,
+      19974,18627,21298,23647,22365,24906,16113,14693,17507,18766,18397,19131,
+      19463,19103,19817,18046,17666,18421,17828,17477,18174,18490,18148,18826,
+      17144,16783,17500,19705,19316,20087,20436,20059,20808,18949,18549,19342,
+      17341,16950,17726,18084,17704,18458,16573,16170,16970,16474,16102,16840,
+      17180,16819,17536,15744,15362,16121,18208,17797,18613,18988,18590,19381,
+      17402,16979,17818,20102,19751,20447,20754,20413,21090,19427,19067,19782,
+      19097,18764,19425,19716,19392,20036,18455,18113,18793,21107,20739,21469,
+      21792,21434,22145,20398,20020,20771,21308,21037,21575,21693,21427,21955,
+      20912,20636,21185,20243,19985,20497,20608,20356,20857,19867,19604,20126,
+      22373,22089,22654,22778,22498,23053,21958,21668,22244,20225,19939,20506,
+      20639,20359,20915,19799,19507,20086,19213,18942,19481,19607,19341,19870,
+      18809,18532,19082,21236,20936,21532,21671,21377,21961,20789,20483,21090,
+      22313,22055,22567,22670,22417,22920,21946,21683,22205,21197,20953,21439,
+      21536,21296,21774,20849,20599,21095,23429,23158,23696,23803,23538,24066,
+      23043,22768,23315
+    )
+  )
+  testthat::expect_equal(
+    ## test if sex results are correct
+    object = x$health_detailed$results_by_sex$impact_rounded,
+    expected = c(
+      20403,19204,21581,23528,22387,24649,19225,18006,20422,19383,18244,20502,
+      22352,21267,23417,18263,17105,19400,21423,20164,22660,24704,23506,25882,
+      20186,18906,21443,18438,17207,19647,19640,18429,20829,17280,16030,18508,
+      17516,16346,18664,18658,17508,19788,16416,15228,17583,19360,18067,20629,
+      20622,19351,21871,18144,16831,19434,24243,23112,25354,27189,26111,28248,
+      21144,19956,22311,23031,21957,24086,25829,24806,26836,20087,18958,21195,
+      25455,24268,26621,28548,27417,29661,22201,20954,23426,34397,33592,35188,
+      36057,35279,36823,32672,31840,33491,32677,31913,33429,34254,33515,34982,
+      31038,30248,31816,36116,35272,36948,37860,37043,38664,34306,33432,35165,
+      31412,30560,32249,33178,32356,33988,29576,28695,30444,29841,29032,30637,
+      31519,30738,32288,28098,27260,28922,32982,32088,33862,34837,33974,35687,
+      31055,30130,31966,37195,36434,37945,38756,38019,39482,35574,34788,36349,
+      35335,34612,36048,36818,36118,37508,33796,33048,34532,39055,38256,39842,
+      40694,39920,41456,37353,36527,38166
+    )
+  )
+})
+
 ## AR ###########################################################################
 
 testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
