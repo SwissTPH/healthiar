@@ -422,9 +422,9 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
     )
   testthat::expect_equal(
     object =
-      signif(c(results_pm$health_main$impact_rounded,results_pm$health_main$pop_fraction),3),
+      base::signif(c(results_pm$health_main$impact_rounded,results_pm$health_main$pop_fraction),3),
     expected =
-      signif(c(1742.00000000,1191.00000000,2265.00000000,0.06902931,0.04721232,0.08977441),3)
+      base::signif(c(1742.00000000,1191.00000000,2265.00000000,0.06902931,0.04721232,0.08977441),3)
   )
 
   # Original result from the paper:
@@ -459,9 +459,9 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
     )
   testthat::expect_equal(
     object =
-      signif(c(results_pm$health_main$impact_rounded,results_pm$health_main$pop_fraction),3),
+      base::signif(c(results_pm$health_main$impact_rounded,results_pm$health_main$pop_fraction),3),
     expected =
-      signif(c(639.0000, 437.0000,  830.0000, 0.0762, 0.0522, 0.0990),3)
+      base::signif(c(639.0000, 437.0000,  830.0000, 0.0762, 0.0522, 0.0990),3)
   )
 
   # Original results form the paper
@@ -501,9 +501,9 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
   ## Attributable impact in France
   testthat::expect_equal(
     object =
-      signif(c(results_pm2.5$health_main$impact_rounded,results_pm2.5$health_main$pop_fraction),3),
+      base::signif(c(results_pm2.5$health_main$impact_rounded,results_pm2.5$health_main$pop_fraction),3),
     expected =
-      signif(c(34991.0000, 12472.0000, 54821.0000, 0.0623, 0.0222, 0.0976),3)
+      base::signif(c(34991.0000, 12472.0000, 54821.0000, 0.0623, 0.0222, 0.0976),3)
   )
 
   ### SpF report results ###
@@ -574,7 +574,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_
 
   testthat::expect_equal(
     ## Attributable impact in Naples
-    object = signif(results_NO2$health_main$pop_fraction,3),
+    object = base::signif(results_NO2$health_main$pop_fraction,3),
     expected = c(0.146, 0.0785, 0.230))
 
 
@@ -637,10 +637,10 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_
   uncert_factor <- 20#set uncertainty factor
 
   # set central values and variate by percentage
-  exp_c <- signif(unlist(lapply(data$mean_concentration, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- signif(unlist(lapply(data$mean_concentration, function(x)  x * cutoff_change^(0:3))),5)
-  bhd_c <- signif(unlist(lapply(data$incidents_per_100_000_per_year/1E5*data$population_at_risk, function(x) x * bhd_change^(0:3))),5)
-  rr_c <- signif(unlist(lapply(data$relative_risk, function(x) x * rr_change^(0:3))),5)
+  exp_c <- base::signif(unlist(lapply(data$mean_concentration, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::signif(unlist(lapply(data$mean_concentration, function(x)  x * cutoff_change^(0:3))),5)
+  bhd_c <- base::signif(unlist(lapply(data$incidents_per_100_000_per_year/1E5*data$population_at_risk, function(x) x * bhd_change^(0:3))),5)
+  rr_c <- base::signif(unlist(lapply(data$relative_risk, function(x) x * rr_change^(0:3))),5)
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
@@ -730,9 +730,9 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|cutoff
   uncert_factor <- 20#set uncertainty factor
 
   # set central values and variate by percentage
-  exp_c <- signif(unlist(lapply(84.1, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5)
-  bhd_c <- signif(unlist(lapply(29908, function(x) x * bhd_change^(0:3))),5)
+  exp_c <- base::signif(unlist(lapply(84.1, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5)
+  bhd_c <- base::signif(unlist(lapply(29908, function(x) x * bhd_change^(0:3))),5)
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
@@ -1017,7 +1017,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iterati
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
-      signif(healthiar::attribute_health(
+      base::signif(healthiar::attribute_health(
         approach_risk = "relative_risk",
         erf_shape = "linear",
         rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
@@ -1066,7 +1066,7 @@ testthat::test_that("results the same|pathway_rr|erf_lin_lin|exp_single|cutoff_F
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
-    object =signif(results_NO2$health_main$pop_fraction,3),
+    object =base::signif(results_NO2$health_main$pop_fraction,3),
     expected = c(0.146, 0.0785, 0.230, 0.135, 0.0724, 0.214, 0.145, 0.0782, 0.229)
   )
   # original results impact = 1337.0 700.0 2188.0 1247.0 653.0 2041.0 1404.0 735.0 2299.0, see also below
@@ -1108,7 +1108,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|cutoff_F
     )
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
-    object =signif(pm_iteration$health_main$pop_fraction,2),
+    object =base::signif(pm_iteration$health_main$pop_fraction,2),
     expected = c(0.059,0.040, 0.076, 0.046, 0.032, 0.060))
 
 
@@ -1147,9 +1147,6 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|cutoff_F
 testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
   data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021.rds"))
   #Exotic test based on real data but does produce real world results
-
-
-  #percentage of variation
 
   uncert_factor <- 20#set uncertainty factor
 
@@ -1541,7 +1538,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
-      signif(healthiar::attribute_health(
+      base::signif(healthiar::attribute_health(
         approach_risk = "relative_risk",
         erf_shape = "log_linear",
         rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
@@ -1570,7 +1567,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FA
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
-      signif(healthiar::attribute_health(
+      base::signif(healthiar::attribute_health(
         approach_risk = "relative_risk",
         erf_shape = "log_linear",
         rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
@@ -1598,7 +1595,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
-      signif(healthiar::attribute_health(
+      base::signif(healthiar::attribute_health(
         approach_risk = "relative_risk",
         erf_shape = "linear",
         rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
@@ -1742,7 +1739,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FA
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
-      signif(healthiar::attribute_health(
+      base::signif(healthiar::attribute_health(
         approach_risk = "relative_risk",
         erf_shape = "log_linear",
         rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
@@ -1859,7 +1856,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =
-      signif(healthiar::attribute_health(
+      base::signif(healthiar::attribute_health(
         approach_risk = "relative_risk",
         erf_shape = "linear",
         rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
