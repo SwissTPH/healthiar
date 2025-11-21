@@ -1234,7 +1234,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|cutoff_F
 
 ##### Stratification (sex/age) ####################################################################
 
-testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
   data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021.rds"))
   #Exotic test based on real data but does produce real world results
 
@@ -1366,7 +1366,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_
 })
 
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
   data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021.rds"))
   #Exotic test based on real data but does produce real world results
 
@@ -1518,6 +1518,115 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_
                   35,19,49, 35,19,49, 35,19,49, 38,21,54, 38,21,54, 38,21,54
     )
 
+  )
+})
+
+testthat::test_that("results the same |pathway_rr|erf_function|exp_single|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
+  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+  #Exotic test based on real data but does produce real world results
+
+
+  #percentage of variation
+  exp_change <-1.1
+  cutoff_change <-0.8
+  bhd_change <-0.9
+  rr_change = bhd_change <-1.2
+  uncert_factor <- 20#set uncertainty factor
+
+  # set central values and variate by percentage
+  exp_c <- base::signif(unlist(lapply(84.1, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5)
+  bhd_c <- base::signif(unlist(lapply(29908, function(x) x * bhd_change^(0:3))),5)
+
+  x <-healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    age = c("below_50", "below_50", "50_plus", "70_plus"),
+    sex = c("male", "female", "male", "female"),
+    exp_central = exp_c,
+    exp_lower = exp_c - exp_c/uncert_factor,
+    exp_upper = exp_c + exp_c/uncert_factor,
+    cutoff_central = cutoff_c,
+    cutoff_lower = cutoff_c - cutoff_c/uncert_factor,
+    cutoff_upper = cutoff_c + cutoff_c/uncert_factor,
+    bhd_central = bhd_c,
+    bhd_lower = bhd_c - bhd_c/uncert_factor,
+    bhd_upper = bhd_c + bhd_c/uncert_factor,
+    erf_eq_central = splinefun(data$x, data$y, method="natural"),
+    erf_eq_lower  = splinefun(data$x, data$y_l, method="natural"),
+    erf_eq_upper  = splinefun(data$x, data$y_u, method="natural"),
+    geo_id_micro = c("bern","basel","basel","bern"),
+    prop_pop_exp = c(1,1,1,1))
+
+  df_by_sex <- x$health_detailed$results_raw %>%
+    group_by(sex, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
+    summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+
+  df_by_age_group <- x$health_detailed$results_raw %>%
+    group_by(age_group, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
+    summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+
+
+  testthat::expect_equal(
+    ## test if age group results are correct
+    object = base::signif(df_by_age_group$mean_value,5),
+    c(557.61, 424.49, 674.62, 557.74, 424.59, 674.79, 557.47, 424.38, 674.46,
+      529.73, 403.26, 640.89, 529.86, 403.36, 641.05, 529.60, 403.16, 640.74,
+      585.49, 445.71, 708.36, 585.63, 445.82, 708.53, 585.34, 445.60, 708.18,
+      534.15, 406.61, 646.28, 534.31, 406.73, 646.48, 533.99, 406.48, 646.09,
+      507.44, 386.28, 613.97, 507.60, 386.39, 614.15, 507.29, 386.16, 613.79,
+      560.86, 426.94, 678.60, 561.03, 427.06, 678.80, 560.69, 426.81, 678.40,
+      577.97, 440.01, 699.22, 578.09, 440.11, 699.37, 577.84, 439.92, 699.07,
+      549.07, 418.01, 664.26, 549.18, 418.10, 664.40, 548.95, 417.92, 664.12,
+      606.87, 462.01, 734.18, 606.99, 462.11, 734.34, 606.74, 461.92, 734.03,
+      717.43, 546.22, 867.89, 717.54, 546.31, 868.04, 717.31, 546.13, 867.75,
+      681.56, 518.91, 824.50, 681.67, 518.99, 824.63, 681.44, 518.82, 824.37,
+      753.30, 573.53, 911.29, 753.42, 573.62, 911.44, 753.18, 573.43, 911.14,
+      691.83, 526.69, 836.97, 691.94, 526.78, 837.11, 691.71, 526.60, 836.83,
+      657.24, 500.36, 795.12, 657.35, 500.44, 795.26, 657.12, 500.27, 794.99,
+      726.42, 553.03, 878.82, 726.54, 553.12, 878.97, 726.30, 552.93, 878.67,
+      743.00, 565.72, 898.78, 743.12, 565.81, 898.92, 742.88, 565.64, 898.64,
+      705.85, 537.44, 853.84, 705.96, 537.52, 853.98, 705.74, 537.35, 853.71,
+      780.15, 594.01, 943.72, 780.27, 594.10, 943.87, 780.03, 593.92, 943.57,
+      369.42, 281.17, 447.02, 369.66, 281.35, 447.32, 369.17, 280.98, 446.72,
+      350.95, 267.11, 424.67, 351.18, 267.29, 424.95, 350.71, 266.93, 424.39,
+      387.89, 295.23, 469.37, 388.14, 295.42, 469.68, 387.63, 295.03, 469.06,
+      342.94, 260.99, 415.01, 343.25, 261.23, 415.39, 342.63, 260.75, 414.64,
+      325.79, 247.94, 394.26, 326.08, 248.16, 394.62, 325.49, 247.71, 393.91,
+      360.08, 274.04, 435.76, 360.41, 274.29, 436.16, 359.76, 273.79, 435.37,
+      390.93, 297.56, 473.02, 391.13, 297.72, 473.26, 390.73, 297.41, 472.77,
+      371.38, 282.69, 449.37, 371.57, 282.83, 449.60, 371.19, 282.54, 449.14,
+      410.48, 312.44, 496.67, 410.69, 312.60, 496.93, 410.26, 312.28, 496.41)
+  )
+  base::signif(df_by_sex$mean_value,5)
+  testthat::expect_equal(
+    ## test if sex results are correct
+    object = base::signif(df_by_sex$mean_value,5),
+    expected = c(
+      571.62, 435.16, 691.56, 571.77, 435.28, 691.75, 571.46, 435.05, 691.37,
+      543.04, 413.41, 656.98, 543.18, 413.52, 657.16, 542.89, 413.29, 656.80,
+      600.20, 456.92, 726.14, 600.36, 457.05, 726.33, 600.04, 456.80, 725.94,
+      546.56, 416.06, 661.29, 546.74, 416.19, 661.50, 546.39, 415.93, 661.08,
+      519.23, 395.26, 628.22, 519.40, 395.38, 628.42, 519.07, 395.13, 628.02,
+      573.89, 436.86, 694.35, 574.07, 437.00, 694.57, 573.71, 436.72, 694.13,
+      594.69, 452.76, 719.43, 594.83, 452.87, 719.60, 594.55, 452.65, 719.26,
+      564.96, 430.12, 683.46, 565.09, 430.22, 683.62, 564.82, 430.02, 683.30,
+      624.42, 475.40, 755.40, 624.57, 475.51, 755.58, 624.28, 475.28, 755.23,
+      435.32, 331.36, 526.72, 435.53, 331.52, 526.98, 435.10, 331.19, 526.46,
+      413.55, 314.79, 500.38, 413.76, 314.94, 500.63, 413.34, 314.63, 500.13,
+      457.08, 347.92, 553.06, 457.31, 348.10, 553.33, 456.85, 347.75, 552.78,
+      409.36, 311.58, 495.35, 409.64, 311.79, 495.68, 409.09, 311.37, 495.02,
+      388.90, 296.00, 470.59, 389.16, 296.20, 470.90, 388.64, 295.80, 470.27,
+      429.83, 327.16, 520.12, 430.12, 327.37, 520.47, 429.55, 326.94, 519.77,
+      456.72, 347.67, 552.59, 456.90, 347.81, 552.81, 456.54, 347.54, 552.37,
+      433.89, 330.29, 524.96, 434.06, 330.42, 525.17, 433.71, 330.16, 524.75,
+      479.56, 365.06, 580.22, 479.75, 365.20, 580.45, 479.37, 364.91, 579.99
+    ))
+  testthat::expect_equal(
+    ## test if geo_id results are correct
+    object =x$health_detailed$results_by_geo_id_micro$impact_rounded,
+    expected = c(1030, 784, 1247, 1031, 785, 1247, 1030, 784, 1246, 979, 745, 1184, 979, 746, 1185, 979, 745, 1184, 1082, 824, 1309, 1082, 824, 1310, 1082, 823, 1309, 976, 743, 1181, 977, 744, 1182, 976, 743, 1181, 928, 706, 1122, 928, 706, 1123, 927, 706, 1122, 1025, 780, 1240, 1026, 781, 1241, 1025, 780, 1240, 1078, 821, 1305, 1079, 821, 1305, 1078, 821, 1304, 1025, 780, 1239, 1025, 780, 1240, 1024, 780, 1239,
+                 1132, 862, 1370, 1133, 862, 1370, 1132, 862, 1370, 983, 749, 1190, 984, 749, 1190, 983, 748, 1189, 934, 711, 1130, 935, 711, 1131, 934, 711, 1130, 1033, 786, 1249, 1033, 786, 1250, 1032, 786, 1249, 935, 712, 1132, 936, 712, 1132, 935, 712, 1131, 889, 676, 1075, 889, 677, 1076, 888, 676, 1075, 982, 748, 1188, 983, 748, 1189, 982, 747, 1188, 1024, 780, 1239, 1025, 780, 1240, 1024, 780, 1239,
+                 973, 741, 1177, 973, 741, 1178, 973, 741, 1177, 1076, 819, 1301, 1076, 819, 1302, 1075, 819, 1301)
   )
 })
 
