@@ -716,6 +716,96 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_
     ))
 })
 
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_TRUE|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  #Exotic test based on real data but does produce real world results
+
+
+  #percentage of variation
+  exp_change <-1.11
+  cutoff_change <-0.9
+  bhd_change <-0.95
+  rr_change = bhd_change <-1.23
+  uncert_factor <- 20#set uncertainty factor
+
+  # set central values and variate by percentage
+  exp_c <- base::signif(unlist(lapply(data$mean_concentration, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::signif(unlist(lapply(data$mean_concentration, function(x)  x * cutoff_change^(0:3))),5)
+  bhd_c <- base::signif(unlist(lapply(data$incidents_per_100_000_per_year/1E5*data$population_at_risk, function(x) x * bhd_change^(0:3))),5)
+  rr_c <- base::signif(unlist(lapply(data$relative_risk, function(x) x * rr_change^(0:3))),5)
+
+  x <-healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    age = c("below_50", "below_50", "50_plus", "70_plus"),
+    sex = c("male", "female", "male", "female"),
+    exp_central = exp_c,
+    exp_lower = exp_c - exp_c/uncert_factor,
+    exp_upper = exp_c + exp_c/uncert_factor,
+    cutoff_central = cutoff_c,
+    cutoff_lower = cutoff_c - cutoff_c/uncert_factor,
+    cutoff_upper = cutoff_c + cutoff_c/uncert_factor,
+    bhd_central = bhd_c,
+    bhd_lower = bhd_c - bhd_c/uncert_factor,
+    bhd_upper = bhd_c + bhd_c/uncert_factor,
+    rr_central = rr_c,
+    rr_lower = rr_c - rr_c/uncert_factor,
+    rr_upper = rr_c + rr_c/uncert_factor,
+    rr_increment = c(10, 11, 12, 13),
+    erf_shape = "linear",
+    info = base::paste0(data$pollutant,"_", data$evaluation_name),
+    population = c(500000, 200000, 600000, 800000)
+  )
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =x$health_detailed$results_by_age_group$impact_rounded,
+    expected = c(
+      3917,3479,4344,5147,4547,5732,3148,2789,3499,3721,3305,4127,4890,4319,5446,
+      2990,2649,3324,4113,3653,4561,5405,4774,6019,3305,2928,3674,2963,2624,3296,
+      3741,3321,4151,2149,1898,2397,2815,2492,3131,3554,3155,3943,2042,1803,2277,
+      3111,2755,3461,3928,3487,4358,2257,1993,2517,5315,4698,5914,6491,5724,7234,
+      4092,3637,4535,5049,4463,5619,6166,5438,6873,3887,3455,4309,5580,4933,6210,
+      6815,6010,7596,4297,3818,4762,11632,10768,12456,12450,11545,13309,10775,9956,
+      11558,11051,10230,11833,11827,10968,12644,10236,9458,10980,12214,11307,13079,
+      13072,12122,13975,11314,10454,12136,10311,9518,11071,11191,10350,11994,9386,
+      8648,10097,9795,9042,10517,10631,9832,11394,8917,8215,9592,10827,9994,11624,
+      11750,10867,12593,9856,9080,10602,12861,11937,13737,13622,12664,14528,12063,
+      11177,12906,12218,11340,13050,12941,12031,13802,11460,10618,12261,13504,12533,
+      14424,14303,13297,15254,12666,11736,13551,23013,21842,24109,23781,22596,24887,
+      22210,21054,23293,21862,20750,22904,22592,21466,23642,21099,20001,22129,24164,
+      22934,25315,24970,23726,26131,23320,22107,24458,21474,20335,22545,22311,21154,
+      23397,20595,19477,21649,20400,19318,21418,21196,20096,22227,19566,18503,20567,
+      22548,21351,23672,23427,22211,24566,21625,20451,22732,24425,23231,25538,25131,
+      23928,26251,23687,22505,24792,23204,22070,24261,23875,22731,24938,22503,21379,
+      23553,25647,24393,26815,26388,25124,27563,24872,23630,26032
+    )
+
+  )
+
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =x$health_detailed$results_by_sex$impact_rounded,
+    expected = c(
+      11632,10768,12456,12944,11949,13893,10775,9956,11558,11051,10230,11833,
+      12297,11351,13198,10236,9458,10980,12214,11307,13079,13591,12546,14588,
+      11314,10454,12136,10311,9518,11071,11191,10350,11994,9386,8648,10097,
+      9795,9042,10517,10631,9832,11394,8917,8215,9592,10827,9994,11624,
+      11750,10867,12593,9856,9080,10602,13355,12340,14321,14595,13461,15674,
+      12063,11177,12906,12687,11723,13605,13865,12788,14890,11460,10618,12261,
+      14023,12957,15037,15324,14134,16458,12666,11736,13551,26930,25321,28453,
+      28434,26740,30035,25357,23843,26793,25584,24055,27031,27012,25403,28533,
+      24089,22651,25453,28277,26587,29876,29856,28077,31537,26625,25035,28132,
+      24437,22958,25841,26052,24474,27547,22745,21375,24046,23215,21810,24549,
+      24749,23251,26170,21607,20306,22844,25659,24106,27133,27355,25698,28925,
+      23882,22444,25248,29246,27526,30869,30650,28855,32339,27779,26141,29328,
+      27784,26149,29325,29117,27413,30722,26390,24834,27861,30708,28902,32412,
+      32182,30298,33956,29168,27448,30794
+    )
+  )
+})
+
+
 
 testthat::test_that("results the same |pathway_rr|erf_function|exp_single|cutoff_TRUE|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
