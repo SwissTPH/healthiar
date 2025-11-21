@@ -2045,6 +2045,103 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
   )
 })
 
+testthat::test_that("results correct |pathway_rr|erf_lin_lin|exp_dist|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|", {
+
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!is.na(data_raw$exposure_mean))
+  #Exotic test based on real data but does produce real world results
+
+  #percentage of variation
+  exp_change <-1.1
+  cutoff_change <-0.8
+  bhd_change <-0.9
+  rr_change <-1.2
+  uncert_factor <- 20#set uncertainty factor
+
+  # set central values and variate by percentage
+  exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  rr_c <- rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
+
+  x <-healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    age_group = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
+    sex = rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
+    exp_central = exp_c,
+    exp_lower = exp_c - exp_c/uncert_factor,
+    exp_upper = exp_c + exp_c/uncert_factor,
+    cutoff_central = cutoff_c,
+    cutoff_lower = cutoff_c - cutoff_c/uncert_factor,
+    cutoff_upper = cutoff_c + cutoff_c/uncert_factor,
+    bhd_central = bhd_c,
+    bhd_lower = bhd_c - bhd_c/uncert_factor,
+    bhd_upper = bhd_c + bhd_c/uncert_factor,
+    rr_central = rr_c,
+    rr_lower = rr_c - rr_c/uncert_factor,
+    rr_upper = rr_c + rr_c/uncert_factor,
+    rr_increment = rep(c(10, 11, 12, 13), times = 6),
+    erf_shape = "linear",
+    prop_pop_exp = rep(data$prop_exposed, each = 4))
+
+  testthat::expect_equal(
+    ## test if age group results are correct
+    object =x$health_detailed$results_by_age_group$impact_rounded,
+    expected = c(
+      25989, 21261, 30180, 29647, 23598, 35024, 23582, 19280, 27421,
+      24690, 20198, 28671, 28164, 22418, 33273, 22403, 18316, 26050,
+      27289, 22324, 31689, 31129, 24778, 36775, 24761, 20244, 28792,
+      22600, 18437, 26330, 25079, 20472, 29177, 19987, 16283, 23334,
+      21470, 17515, 25014, 23825, 19448, 27718, 18988, 15469, 22167,
+      23730, 19359, 27647, 26333, 21495, 30636, 20987, 17097, 24501,
+      30468, 24321, 35916, 33862, 26500, 40344, 26873, 22030, 31150,
+      28945, 23105, 34120, 32169, 25175, 38327, 25529, 20929, 29593,
+      31991, 25537, 37712, 35555, 27825, 42361, 28217, 23132, 32708,
+      41404, 38864, 43550, 42250, 39733, 44371, 40502, 37942, 42674,
+      39334, 36921, 41373, 40138, 37747, 42152, 38477, 36045, 40540,
+      43474, 40808, 45728, 44363, 41720, 46589, 42527, 39840, 44808,
+      39589, 37012, 41783, 40548, 37989, 42718, 38563, 35972, 40779,
+      37609, 35161, 39694, 38520, 36089, 40582, 36635, 34173, 38740,
+      41568, 38863, 43872, 42575, 39888, 44854, 40491, 37770, 42818,
+      43009, 40515, 45103, 43762, 41293, 45829, 42210, 39692, 44332,
+      40859, 38489, 42848, 41574, 39228, 43537, 40100, 37708, 42115,
+      45159, 42541, 47359, 45950, 43358, 48120, 44321, 41677, 46548,
+      46836, 45477, 47990, 47172, 45833, 48309, 46483, 45106, 47656,
+      44494, 43204, 45591, 44814, 43542, 45894, 44159, 42850, 45273,
+      49177, 47751, 50390, 49531, 48125, 50724, 48808, 47361, 50039,
+      45853, 44441, 47057, 46234, 44842, 47419, 45454, 44021, 46678,
+      43560, 42219, 44705, 43922, 42600, 45048, 43181, 41820, 44344,
+      48146, 46663, 49410, 48545, 47084, 49790, 47727, 46222, 49012,
+      47707, 46400, 48815, 48007, 46718, 49098, 47394, 46068, 48519,
+      45322, 44080, 46374, 45607, 44382, 46643, 45024, 43765, 46093,
+      50092, 48720, 51255, 50407, 49054, 51553, 49764, 48371, 50945
+    )
+  )
+  testthat::expect_equal(
+    ## test if sex results are correct
+    object =x$health_detailed$results_by_sex$impact_rounded,
+    expected = c(
+      42546, 39239, 45446, 45118, 40687, 49067, 41324, 38211, 44041,
+      40419, 37277, 43174, 42862, 38653, 46614, 39258, 36301, 41839,
+      44673, 41201, 47718, 47374, 42721, 51521, 43390, 40122, 46243,
+      40353, 37262, 43056, 41633, 38345, 44521, 39056, 36133, 41601,
+      38336, 35399, 40903, 39552, 36428, 42295, 37103, 34326, 39521,
+      42371, 39125, 45209, 43715, 40262, 46747, 41008, 37939, 43681,
+      45931, 41487, 49887, 48337, 42836, 53225, 43409, 40085, 46320,
+      43634, 39413, 47392, 45921, 40694, 50564, 41238, 38081, 44004,
+      48227, 43561, 52381, 50754, 44978, 55886, 45579, 42090, 48636,
+      71683, 66364, 76274, 73951, 68478, 78636, 69244, 64117, 73710,
+      68099, 63046, 72461, 70254, 65054, 74704, 65782, 60911, 70024,
+      75267, 69682, 80088, 77649, 71902, 82568, 72706, 67322, 77395,
+      67689, 62628, 72114, 70227, 64958, 74793, 64949, 60144, 69190,
+      64304, 59497, 68509, 66715, 61710, 71053, 61701, 57137, 65730,
+      71073, 65760, 75720, 73738, 68206, 78533, 68196, 63151, 72649,
+      75253, 69748, 79948, 77293, 71675, 82046, 73068, 67705, 77680,
+      71491, 66261, 75950, 73428, 68092, 77944, 69415, 64320, 73796,
+      79016, 73236, 83945, 81158, 75259, 86148, 76722, 71090, 81564
+    ))
+})
 
 
 #### ITERATION ##################################################################
