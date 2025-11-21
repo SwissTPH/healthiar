@@ -1234,7 +1234,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|cutoff_F
 
 ##### Stratification (sex/age) ####################################################################
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
+testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
   data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021.rds"))
   #Exotic test based on real data but does produce real world results
 
@@ -1264,6 +1264,138 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_
     rr_upper = rr_c + rr_c/uncert_factor,
     rr_increment = rep(c(10, 11, 12, 13), length.out = length(bhd_c)),
     erf_shape = "log_linear",
+    geo_id_micro = data$CS01012020,
+    geo_id_macro = rep(c("basel","bern","zuerich","genf","lausanne"), length.out = length(bhd_c))
+  )
+
+  df_by_sex <- x$health_detailed$results_raw %>%
+    group_by(sex, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
+    summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+
+  df_by_age_group <- x$health_detailed$results_raw %>%
+    group_by(age_group, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
+    summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+  base::signif(df_by_age_group$mean_value,5)
+  testthat::expect_equal(
+    ## test if age group results are correct
+    object = base::signif(df_by_age_group$mean_value,5),
+    expected = c(
+      1.71580,0.95045,2.40820,1.71580,0.95045,2.40820,1.71580,0.95045,2.40820,
+      1.63000,0.90293,2.28780,1.63000,0.90293,2.28780,1.63000,0.90293,2.28780,
+      1.80160,0.99797,2.52870,1.80160,0.99797,2.52870,1.80160,0.99797,2.52870,
+      1.63440,0.90427,2.29680,1.63440,0.90427,2.29680,1.63440,0.90427,2.29680,
+      1.55270,0.85906,2.18190,1.55270,0.85906,2.18190,1.55270,0.85906,2.18190,
+      1.71620,0.94949,2.41160,1.71620,0.94949,2.41160,1.71620,0.94949,2.41160,
+      1.79660,0.99649,2.51880,1.79660,0.99649,2.51880,1.79660,0.99649,2.51880,
+      1.70680,0.94666,2.39290,1.70680,0.94666,2.39290,1.70680,0.94666,2.39290,
+      1.88650,1.04630,2.64480,1.88650,1.04630,2.64480,1.88650,1.04630,2.64480,
+      1.45520,0.80462,2.04590,1.45520,0.80462,2.04590,1.45520,0.80462,2.04590,
+      1.38240,0.76439,1.94360,1.38240,0.76439,1.94360,1.38240,0.76439,1.94360,
+      1.52790,0.84485,2.14820,1.52790,0.84485,2.14820,1.52790,0.84485,2.14820,
+      1.38590,0.76544,1.95070,1.38590,0.76544,1.95070,1.38590,0.76544,1.95070,
+      1.31660,0.72717,1.85320,1.31660,0.72717,1.85320,1.31660,0.72717,1.85320,
+      1.45520,0.80372,2.04820,1.45520,0.80372,2.04820,1.45520,0.80372,2.04820,
+      1.52410,0.84368,2.14050,1.52410,0.84368,2.14050,1.52410,0.84368,2.14050,
+      1.44780,0.80150,2.03350,1.44780,0.80150,2.03350,1.44780,0.80150,2.03350,
+      1.60030,0.88587,2.24750,1.60030,0.88587,2.24750,1.60030,0.88587,2.24750,
+      1.85620,1.03200,2.59650,1.85620,1.03200,2.59650,1.85620,1.03200,2.59650,
+      1.76340,0.98037,2.46670,1.76340,0.98037,2.46670,1.76340,0.98037,2.46670,
+      1.94900,1.08360,2.72630,1.94900,1.08360,2.72630,1.94900,1.08360,2.72630,
+      1.76890,0.98204,2.47770,1.76890,0.98204,2.47770,1.76890,0.98204,2.47770,
+      1.68040,0.93294,2.35380,1.68040,0.93294,2.35380,1.68040,0.93294,2.35380,
+      1.85730,1.03110,2.60160,1.85730,1.03110,2.60160,1.85730,1.03110,2.60160,
+      1.94290,1.08170,2.71420,1.94290,1.08170,2.71420,1.94290,1.08170,2.71420,
+      1.84580,1.02760,2.57850,1.84580,1.02760,2.57850,1.84580,1.02760,2.57850,
+      2.04000,1.13580,2.84990,2.04000,1.13580,2.84990,2.04000,1.13580,2.84990
+    )
+
+  )
+  testthat::expect_equal(
+    ## test if sex results are correct
+    object = base::signif(df_by_sex$mean_value,5),
+    expected = c(
+      1.59040,0.88134,2.23160,1.59040,0.88134,2.23160,1.59040,0.88134,2.23160,
+      1.51090,0.83728,2.12000,1.51090,0.83728,2.12000,1.51090,0.83728,2.12000,
+      1.67000,0.92541,2.34320,1.67000,0.92541,2.34320,1.67000,0.92541,2.34320,
+      1.51510,0.83854,2.12840,1.51510,0.83854,2.12840,1.51510,0.83854,2.12840,
+      1.43940,0.79662,2.02200,1.43940,0.79662,2.02200,1.43940,0.79662,2.02200,
+      1.59090,0.88047,2.23480,1.59090,0.88047,2.23480,1.59090,0.88047,2.23480,
+      1.66530,0.92401,2.33400,1.66530,0.92401,2.33400,1.66530,0.92401,2.33400,
+      1.58210,0.87781,2.21730,1.58210,0.87781,2.21730,1.58210,0.87781,2.21730,
+      1.74860,0.97022,2.45070,1.74860,0.97022,2.45070,1.74860,0.97022,2.45070,
+      1.85120,1.02820,2.59200,1.85120,1.02820,2.59200,1.85120,1.02820,2.59200,
+      1.75860,0.97675,2.46240,1.75860,0.97675,2.46240,1.75860,0.97675,2.46240,
+      1.94370,1.07960,2.72160,1.94370,1.07960,2.72160,1.94370,1.07960,2.72160,
+      1.76390,0.97836,2.47300,1.76390,0.97836,2.47300,1.76390,0.97836,2.47300,
+      1.67570,0.92944,2.34930,1.67570,0.92944,2.34930,1.67570,0.92944,2.34930,
+      1.85210,1.02730,2.59660,1.85210,1.02730,2.59660,1.85210,1.02730,2.59660,
+      1.93790,1.07780,2.70990,1.93790,1.07780,2.70990,1.93790,1.07780,2.70990,
+      1.84100,1.02390,2.57440,1.84100,1.02390,2.57440,1.84100,1.02390,2.57440,
+      2.03480,1.13170,2.84540,2.03480,1.13170,2.84540,2.03480,1.13170,2.84540
+    )
+  )
+  testthat::expect_equal(
+    ## test if sex results are correct
+    object =x$health_detailed$results_by_geo_id_macro$impact_rounded,
+    expected = c(
+      27,15,38,27,15,38,27,15,38,26,14,36,26,14,36,26,14,36,
+      29,16,40,29,16,40,29,16,40,26,14,37,26,14,37,26,14,37,
+      25,14,35,25,14,35,25,14,35,27,15,38,27,15,38,27,15,38,
+      29,16,40,29,16,40,29,16,40,27,15,38,27,15,38,27,15,38,
+      30,17,42,30,17,42,30,17,42,33,19,47,33,19,47,33,19,47,
+      32,18,44,32,18,44,32,18,44,35,19,49,35,19,49,35,19,49,
+      32,18,45,32,18,45,32,18,45,30,17,42,30,17,42,30,17,42,
+      33,18,47,33,18,47,33,18,47,35,19,49,35,19,49,35,19,49,
+      33,18,47,33,18,47,33,18,47,37,20,51,37,20,51,37,20,51,
+      50,28,70,50,28,70,50,28,70,48,27,67,48,27,67,48,27,67,
+      53,29,74,53,29,74,53,29,74,48,27,67,48,27,67,48,27,67,
+      46,25,64,46,25,64,46,25,64,50,28,71,50,28,71,50,28,71,
+      53,29,74,53,29,74,53,29,74,50,28,70,50,28,70,50,28,70,
+      55,31,77,55,31,77,55,31,77,26,15,37,26,15,37,26,15,37,
+      25,14,35,25,14,35,25,14,35,27,15,39,27,15,39,27,15,39,
+      25,14,35,25,14,35,25,14,35,24,13,33,24,13,33,24,13,33,
+      26,15,37,26,15,37,26,15,37,27,15,38,27,15,38,27,15,38,
+      26,14,36,26,14,36,26,14,36,29,16,40,29,16,40,29,16,40,
+      35,19,49,35,19,49,35,19,49,33,18,46,33,18,46,33,18,46,
+      37,20,51,37,20,51,37,20,51,33,18,47,33,18,47,33,18,47,
+      32,17,44,32,17,44,32,17,44,35,19,49,35,19,49,35,19,49,
+      36,20,51,36,20,51,36,20,51,35,19,49,35,19,49,35,19,49,
+      38,21,54,38,21,54,38,21,54
+    )
+  )
+})
+
+
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
+  data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021.rds"))
+  #Exotic test based on real data but does produce real world results
+
+  uncert_factor <- 20#set uncertainty factor
+
+  # set central values and variate by percentage
+  exp_c <- data$PM25
+  cutoff_c <- rep(0, length.out = length(exp_c))
+  bhd_c <- data$VALUE_BASELINE
+  rr_c <- rep(1.118, length.out = length(bhd_c))
+
+  x <-healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    age = rep(c("below_50", "below_50", "50_plus", "70_plus"), length.out = length(bhd_c)),
+    sex = rep(c("male", "female"), length.out = length(bhd_c)),
+    exp_central = exp_c,
+    exp_lower = exp_c - exp_c/uncert_factor,
+    exp_upper = exp_c + exp_c/uncert_factor,
+    cutoff_central = cutoff_c,
+    cutoff_lower = cutoff_c - cutoff_c/uncert_factor,
+    cutoff_upper = cutoff_c + cutoff_c/uncert_factor,
+    bhd_central = bhd_c,
+    bhd_lower = bhd_c - bhd_c/uncert_factor,
+    bhd_upper = bhd_c + bhd_c/uncert_factor,
+    rr_central = rr_c,
+    rr_lower = rr_c - rr_c/uncert_factor,
+    rr_upper = rr_c + rr_c/uncert_factor,
+    rr_increment = rep(c(10, 11, 12, 13), length.out = length(bhd_c)),
+    erf_shape = "linear",
     geo_id_micro = data$CS01012020,
     geo_id_macro = rep(c("basel","bern","zuerich","genf","lausanne"), length.out = length(bhd_c))
   )
@@ -1357,7 +1489,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_
       2.03480, 1.13170, 2.84540, 2.03480, 1.13170, 2.84540
     )
   )
-  x$health_detailed$results_by_geo_id_macro$impact_rounded
+  x$health_detailed$results_by_sex$impact_rounded
   testthat::expect_equal(
     ## test if sex results are correct
     object =x$health_detailed$results_by_geo_id_macro$impact_rounded,
