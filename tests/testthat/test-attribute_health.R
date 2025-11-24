@@ -2166,6 +2166,7 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
       base::round(c(545,  634,  991)) # Results on 2025-06-24; no comparison study
   )
 })
+rep(runif_with_seed(3,1E4,1E5,1), each = 5)
 
 ## with population argument specified
 testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
@@ -2420,7 +2421,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
   bhd_change <-0.9
   rr_change <-1.2
   uncert_factor <- 20#set uncertainty factor
-
+  bhd_c
   # set central values and variate by percentage
   exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
   cutoff_c <- rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
@@ -2953,6 +2954,21 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteratio
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
   #Exotic test based on real data but does produce real world results
+func <-stats::splinefun(x = data_erf$exposure,
+                        y = data_erf$mean,
+                        method = "natural")
+# Beispiel-Daten
+set.seed(123)
+data_erf <- data.frame(
+  exposure = 1:10,
+  mean = c(2.3, 2.5, 3.0, 4.1, 5.0, 5.8, 6.3, 6.9, 7.2, 7.5)
+)
+
+
+
+
+
+
 
 
   #percentage of variation
@@ -3153,6 +3169,156 @@ data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rd
     erf_eq_central = erf,
     erf_eq_lower  = erf_l,
     erf_eq_upper  = erf_u,
+    prop_pop_exp = rep(data$Population.affected, each = 4),
+    geo_id_micro = rep(data$X, each = 4)
+  )
+
+  testthat::expect_equal(
+    ## test if age group results are correct
+    object =x$health_detailed$results_by_age_group$impact_rounded,
+    expected = c(
+      807,614,976,807,614,977,806,614,976,766,583,927,767,584,928,766,583,927,
+      847,645,1025,848,645,1026,847,644,1024,756,576,915,757,576,916,756,575,915,
+      719,547,870,719,547,870,718,546,869,794,604,961,795,605,962,794,604,960,
+      848,646,1026,849,646,1027,848,645,1026,806,613,975,806,614,975,805,613,974,
+      891,678,1078,891,678,1078,890,678,1077,601,457,727,601,457,727,601,457,727,
+      571,435,690,571,435,691,571,434,690,631,480,763,631,480,763,631,480,763,
+      577,439,698,577,439,698,577,439,698,548,417,663,548,417,663,548,417,663,
+      606,461,733,606,461,733,605,461,732,623,474,754,623,475,754,623,474,754,
+      592,451,716,592,451,716,592,451,716,654,498,792,654,498,792,654,498,791,
+      774,590,937,774,590,937,774,589,936,736,560,890,736,560,890,735,560,890,
+      813,619,983,813,619,984,813,619,983,746,568,902,746,568,902,746,568,902,
+      709,539,857,709,540,857,708,539,857,783,596,947,783,596,948,783,596,947,
+      802,611,971,802,611,971,802,611,970,762,580,922,762,581,922,762,580,922,
+      842,642,1019,843,642,1019,842,641,1019,729,555,882,729,555,883,728,554,881,
+      692,527,838,693,527,838,692,527,837,765,582,926,766,583,927,765,582,925,
+      670,510,811,671,510,812,669,509,810,637,484,770,637,485,771,636,484,770,
+      704,535,851,704,536,852,703,535,851,775,590,937,775,590,938,774,589,937,
+      736,560,890,736,560,891,735,560,890,813,619,984,814,619,985,813,619,984,
+      555,422,671,555,422,671,555,422,671,527,401,638,527,401,638,527,401,638,
+      583,444,705,583,444,705,582,443,705,530,404,642,531,404,642,530,404,642,
+      504,384,610,504,384,610,504,383,610,557,424,674,557,424,674,557,424,674,
+      577,439,698,577,439,698,576,439,697,548,417,663,548,417,663,548,417,663,
+      605,461,732,606,461,733,605,461,732,717,546,867,717,546,867,717,546,867,
+      681,518,824,681,519,824,681,518,824,753,573,911,753,573,911,753,573,910,
+      690,525,835,690,525,835,690,525,835,655,499,793,656,499,793,655,499,793,
+      724,552,877,725,552,877,724,551,876,743,565,898,743,566,899,743,565,898,
+      706,537,853,706,537,854,705,537,853,780,594,943,780,594,943,780,594,943
+    )
+
+  )
+
+  testthat::expect_equal(
+    ## test if sex results are correct
+    object =x$health_detailed$results_by_geo_id_micro$impact_rounded,
+    expected = c(
+      2182,1661,2640,2183,1662,2640,2181,1660,2639,
+      2073,1578,2508,2073,1578,2508,2072,1577,2507,
+      2291,1744,2772,2292,1745,2772,2290,1743,2771,
+      2079,1583,2515,2080,1583,2516,2078,1582,2514,
+      1975,1503,2390,1976,1504,2391,1974,1503,2389,
+      2183,1662,2641,2184,1662,2642,2182,1661,2640,
+      2274,1731,2751,2274,1732,2751,2273,1731,2750,
+      2160,1645,2613,2161,1645,2614,2159,1644,2612,
+      2387,1818,2888,2388,1818,2889,2387,1817,2887,
+      2000,1523,2420,2001,1523,2421,2000,1522,2419,
+      1900,1447,2299,1901,1447,2300,1900,1446,2298,
+      2101,1599,2541,2101,1600,2542,2100,1598,2540,
+      1891,1439,2288,1892,1440,2289,1890,1438,2286,
+      1796,1367,2173,1797,1368,2174,1795,1366,2172,
+      1985,1511,2402,1986,1512,2403,1984,1510,2401,
+      2094,1594,2533,2094,1595,2534,2093,1593,2532,
+      1989,1514,2407,1990,1515,2407,1988,1514,2406,
+      2199,1674,2660,2199,1674,2661,2198,1673,2659
+    )
+  )
+
+  testthat::expect_equal(
+    ## test if sex results are correct
+    object =x$health_detailed$results_by_sex$impact_rounded,
+    expected = c(
+      946,720,1144,946,720,1145,945,720,1144,898,684,1087,899,684,1088,898,684,1087,
+      993,756,1202,993,756,1202,993,756,1201,895,681,1083,895,682,1083,894,681,1082,
+      850,647,1029,851,647,1029,850,647,1028,940,715,1137,940,716,1138,939,715,1136,
+      989,753,1197,990,754,1197,989,753,1197,940,716,1137,940,716,1138,940,715,1137,
+      1039,791,1257,1039,791,1257,1039,791,1256,1236,941,1495,1236,941,1496,1236,941,1495,
+      1174,894,1421,1175,894,1421,1174,894,1420,1298,988,1570,1298,988,1570,1298,988,1570,
+      1184,901,1433,1184,902,1433,1184,901,1432,1125,856,1361,1125,857,1361,1125,856,1361,
+      1243,947,1504,1244,947,1505,1243,946,1504,1284,978,1554,1285,978,1554,1284,978,1553,
+      1220,929,1476,1220,929,1476,1220,929,1476,1348,1027,1631,1349,1027,1632,1348,1026,1631,
+      862,656,1043,862,656,1043,861,656,1042,819,623,991,819,623,991,818,623,990,
+      905,689,1095,905,689,1095,904,688,1094,804,612,973,805,613,974,804,612,973,
+      764,582,925,765,582,926,764,581,924,845,643,1022,845,643,1023,844,642,1021,
+      908,691,1098,908,691,1099,907,691,1098,862,656,1043,863,657,1044,862,656,1043,
+      953,726,1153,954,726,1154,953,725,1153,1139,867,1378,1139,867,1378,1138,867,1377,
+      1082,824,1309,1082,824,1309,1082,823,1308,1196,910,1447,1196,911,1447,1195,910,1446,
+      1086,827,1314,1086,827,1315,1086,826,1314,1032,785,1248,1032,786,1249,1031,785,1248,
+      1140,868,1380,1141,868,1380,1140,868,1379,1186,903,1435,1186,903,1435,1186,903,1434,
+      1127,858,1363,1127,858,1363,1126,858,1363,1245,948,1507,1246,948,1507,1245,948,1506
+    )
+  )
+})
+
+# Spline-Funktion
+func_spline <- stats::splinefun(x = data_erf$exposure,
+                                y = data_erf$mean,
+                                method = "natural")
+
+# Polynomfunktion (Beispiel: quadratisch)
+func_poly <- function(x) {
+  0.55*x^0.125+0.001*x^0.5 + 1
+}
+
+# feine x-Werte für die Kurven
+x_seq <- seq(min(data_erf$exposure), max(data_erf$exposure), length.out = 200)
+
+# Plot der Originaldaten
+plot(data_erf$exposure, data_erf$mean, pch = 19, col = "blue",
+     xlab = "Exposure", ylab = "Mean", main = "Spline vs. Polynom")
+
+# Spline-Kurve hinzufügen
+lines(x_seq, func_spline(x_seq), col = "red", lwd = 2)
+
+# Polynom-Kurve hinzufügen
+lines(x_seq, func_poly(x_seq), col = "green", lwd = 2, lty = 2)
+
+# Legende
+legend("bottomright", legend = c("Originaldaten", "Spline", "Polynom"),
+       col = c("blue", "red", "green"), pch = c(19, NA, NA),
+       lty = c(NA, 1, 2), lwd = c(NA, 2, 2))
+
+testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
+  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rds"))
+  data <- data |> dplyr::slice(-1)
+  erf <- splinefun(data$x[1:21], data$y[1:21], method="natural")
+  erf_l <- splinefun(data$x[1:21], data$y_l[1:21], method="natural")
+  erf_u <- splinefun(data$x[1:21], data$y_u[1:21], method="natural")
+  #Exotic test based on real data but does produce real world results
+  #percentage of variation
+  exp_change <-1.1
+  cutoff_change <-0.8
+  bhd_change <-0.9
+  rr_change = bhd_change <-1.2
+  uncert_factor <- 20#set uncertainty factor
+  # set central values and variate by percentage
+  exp_c <- base::signif(unlist(lapply(data$Mean.O3, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- rep(base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
+  bhd_c <- base::signif(unlist(lapply(data$bhd, function(x) x * bhd_change^(0:3))),5)
+
+  x <-healthiar::attribute_health(
+    approach_risk = "relative_risk",
+    age = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$Mean.O3)),
+    sex = rep(c("male", "female", "male", "female"),times = length(data$Mean.O3)),
+    exp_central = exp_c,
+    exp_lower = exp_c - exp_c/uncert_factor,
+    exp_upper = exp_c + exp_c/uncert_factor,
+    cutoff_central = cutoff_c,
+    cutoff_lower = cutoff_c - cutoff_c/uncert_factor,
+    cutoff_upper = cutoff_c + cutoff_c/uncert_factor,
+    bhd_central = bhd_c,
+    bhd_lower = bhd_c - bhd_c/uncert_factor,
+    bhd_upper = bhd_c + bhd_c/uncert_factor,
+    erf_eq_central = "1+0.2*c^0.25",
     prop_pop_exp = rep(data$Population.affected, each = 4),
     geo_id_micro = rep(data$X, each = 4)
   )
