@@ -44,21 +44,10 @@ This vignette will tell you about `healthiar` and show you how to use `healthiar
 
 # About `healthiar`
 
-The `healthiar` functions allow you to quantify and monetize the health impacts of environmental stressors (air pollution & noise)
+The `healthiar` functions allow you to quantify and monetize the health impacts (or burden of disease) attributable to exposure. The main focus of the EU project that initiated the development of `healthiar` (BEST-COST) has been two environmental exposures:  air pollution and noise. However, `healthiar` can be (and has been) used for many other exposures such as green spaces, chemicals, physical activity...
 
-`healthiar` core *family members* (= functions)
+See below a an overview of the package. The whole list of functions included in `healthiar` is available [here](https://swisstph.github.io/healthiar/reference/index.html). 
 
--   `attribute_health()` quantifies health impact attributable to environmental exposure (via relative or absolute risk)
--   `summarize_uncertainty()` performs a Monte Carlo simulation
--   `compare()` compares health impacts of two scenarios (via PAF or PIF approaches)
--   `monetize()` monetizes health impacts
--   `attribute_lifetable()` quantifies health impacts by applying the life table method (RR & AR)
--   `attribute_mod()` modifies an existing `attribute_health()` assessment
--   `cba()` performs a cost-benefit analysis
--   `get_daly()` adds up YLL & YLD to obtain DALY
--   `multiexpose()` considers exposure to 2 exposures (e.g. two different air pollutants) at the same time to quantify the attributable health impacts
--   `socialize()` exposes and quantifies social inequalities in health impacts
--   `prepare_mdi()` creates the BEST-COST MDI (Multidimensional Deprivation Index)
 
 ## Package overview
 
