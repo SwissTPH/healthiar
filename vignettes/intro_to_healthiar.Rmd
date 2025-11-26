@@ -49,16 +49,10 @@ The `healthiar` functions allow you to quantify and monetize the health impacts 
 See below a an overview of the package. The whole list of functions included in `healthiar` is available [here](https://swisstph.github.io/healthiar/reference/index.html). 
 
 
-## Package overview
-
-![`healthiar` overview](images/package_overview.png){width="700"}
+![Figure:`healthiar` overview](images/package_overview.png){width="700"}
 
 
-# `healthiar` Examples
-
-*Note*: most `healthiar` functions have examples that you can execute (with `healthiar` loaded) by running `example("function_name")`, e.g. `example("attribute_health")`
-
-*Note*: healthiar functions are easiest to use if your data is prepared in a tidy format:
+Be aware that `healthiar` functions are easiest to use if your data is prepared in a tidy format, i.e.:
 
 -   Each variable is a column; each column is a variable.
 
