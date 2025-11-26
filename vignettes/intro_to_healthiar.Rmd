@@ -949,15 +949,7 @@ results_pm_yll$health_detailed$results_raw |>
   knitr::kable()
 ```
 
-### Results by age
 
-#### YLL
-
-TODO
-
-### Results by year and age
-
-*NOTE*: only a selection of years and ages is shown
 
 #### YLL
 
