@@ -12,7 +12,7 @@ citEntry(
     "R package version 0.2.1.",
     "Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Vanessa Gorasso,",
     "Carl Michael Baravelli, Susanne Breitner, Maria Lepnurm, Maria Jose Rueda Lopez,",
-    "Iracy Pimenta, Andreia Novais, Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling.",
+    "Iracy Pimenta, Andreia Novais, Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling, Gianni Ardielli.",
     "Source code at: https://github.com/SwissTPH/healthiar"
   ),
   url      = "https://CRAN.R-project.org/package=healthiar"
