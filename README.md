@@ -58,4 +58,4 @@ Feel free provide feedback via [GitHub issues](https://github.com/SwissTPH/healt
 If you would like us to present *healthiar* at a conference, lecture or training, please, contact us: alberto.castrofernandez@swisstph.ch and axel.luyten@swisstph.ch
 
 # ACKNOWLEDGEMENTS
-The development of *healthiar* has been funded by the EU project BEST-COST. 
+*healthiar* was been developed under the framework of EU project BEST-COST. BEST-COST is funded by the European Union’s Horizon Europe programme under Grant Agreement No.101095408.
