@@ -36,7 +36,8 @@ Hi there!
 
 This vignette will tell you about `healthiar` and show you how to use `healthiar` with the help of examples.
 
-*NOTE*: By using healthiar you agree to the [terms of use](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) and confirm you have read the [disclaimer](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme).
+*NOTE*: Before using `healthiar`, please read carefully the information provided in the [readme file](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) or the [welcome webpage](https://swisstph.github.io/healthiar/). By using `healthiar`, you agree to the [terms of use and disclaimer](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme).
+
 
 
 ------------------------------------------------------------------------
