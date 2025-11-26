@@ -53,19 +53,6 @@ See below a an overview of the package. The whole list of functions included in 
 
 ![`healthiar` overview](images/package_overview.png){width="700"}
 
-------------------------------------------------------------------------
-
-# Abbreviations
-
-BHD/bhd - baseline health data CI - confidence interval
-
-CBA/cba - cost-benefit analysis
-
-exp - exposure
-
-RR/rr - relative risk
-
-YLL/yll - years of life lost
 
 # `healthiar` Examples
 
@@ -1319,3 +1306,17 @@ Visualization is out of scope of `healthiar`. You can visualize in
 -   R, e.g. with the `ggplot2` package ([online book by the creator](https://ggplot2-book.org/))
 -   Excel (export results first)
 -   Other tools
+
+------------------------------------------------------------------------
+
+# Abbreviations
+
+BHD/bhd - baseline health data CI - confidence interval
+
+CBA/cba - cost-benefit analysis
+
+exp - exposure
+
+RR/rr - relative risk
+
+YLL/yll - years of life lost
