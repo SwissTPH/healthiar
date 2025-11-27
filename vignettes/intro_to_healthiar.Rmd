@@ -1288,8 +1288,11 @@ eval(mdi$mdi_detailed$histogram)
 ```{r, eval=TRUE, include=FALSE, echo=FALSE}
 rm(mdi)
 ```
+---------------------------------------------------------------------------
 
-# Post-`healthiar` workflow
+# Export and visualize
+
+To export and visualize results, you can make use of existing functions of other packages beyond `healthiar`
 
 ## Export results
 
