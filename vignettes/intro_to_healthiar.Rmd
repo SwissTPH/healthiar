@@ -871,7 +871,7 @@ We see that the central and upper 95% confidence interval estimates of avoided a
 
 # Life table approach
 
-## For years of life lost
+## for years of life lost
 
 Goal: E.g. To quantify the years of life lost (YLL) due to deaths from COPD attributable to PM2.5 exposure during one year.
 
@@ -1026,7 +1026,7 @@ results_pm_yll$health_detailed$intermediate_calculations|>
   knitr::kable()
 ```
 
-## For premature deaths
+## for premature deaths
 
 Goal: E.g. To determine premature deaths from COPD attributable to PM2.5 exposure during one year.
 
