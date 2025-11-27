@@ -428,7 +428,8 @@ Each row contains the estimated attributable cases (`impact_rounded`) obtained b
 
 Goal: E.g. To summarize uncertainty of attributable health impacts (i.e. to get a single confidence interval instead of many combinations) by using a Monte Carlo simulation.
 
-You can do this carrying out a Monte Carlo uncertainty analysis via the `summarize_uncertainty` function.
+
+You can do this carrying out a Monte Carlo uncertainty analysis via the `summarize_uncertainty()` function.
 
 The outcome of the Monte Carlo analysis is added to the variable entered as the `results` argument, which is `results_pm_copd` in our case.
 
