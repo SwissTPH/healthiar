@@ -169,57 +169,9 @@ Some of the most results columns include:
 -   *impact* raw impact/burden
 -   *pop_fraction* population attributable fraction (PAF) or population impact fraction (PIF)
 
-*NOTE*: the main output contains more columns that provide additional information about the assessment, such as intermediate results and assessment specifications, ...
+*NOTE*: The main output contains more columns that provide additional information about the assessment.
 
-# Uncertainty
 
-Goal: E.g. To quantify the COPD cases attributable to PM2.5 exposure taking into account uncertainty in several input arguments (relative risk, exposure and baseline health data).
-
-### Function call
-
-```{r}
-results_pm_copd <- attribute_health(
-    erf_shape = "log_linear",
-    rr_central = 1.369, 
-    rr_lower = 1.124, # lower 95% confidence interval (CI) bound of RR
-    rr_upper = 1.664, # upper 95% CI bound of RR
-    rr_increment = 10, 
-    exp_central = 8.85, 
-    exp_lower = 8, # lower 95% CI bound of exposure
-    exp_upper = 10, # upper 95% CI bound of exposure
-    cutoff_central = 5,
-    bhd_central = 30747, 
-    bhd_lower = 28000, # lower 95% confidence interval estimate of BHD
-    bhd_upper = 32000 # upper 95% confidence interval estimate of BHD
-) 
-```
-
-### Detailed results
-
-Let's inspect the detailed results:
-
-```{r eval=FALSE, echo=TRUE, include=FALSE}
-results_pm_copd$health_detailed$results_raw
-```
-
-```{r echo=FALSE}
-results_pm_copd$health_detailed$results_raw |> 
-  dplyr::select(erf_ci, exp_ci, bhd_ci, impact_rounded) |> 
-  dplyr::slice(1:9) |> 
-  knitr::kable() # Prints tibble in a minimal layout
-```
-
-Each row contains the estimated attributable cases (`impact_rounded`) obtained by the input data specified in the columns ending in "\_ci" and the other calculation pathway specifications in that row (not shown).
-
--   The 1st contains the estimated attributable impact when using the central estimates of relative risk, exposure and baseline health data
-
--   The 2nd row shows the impact when using the central estimates of the relative risk, exposure in combination with the lower estimate of the baseline health data
-
--   ...
-
-*NOTE*: only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_raw$impact)` possible combinations are displayed due to space constraints
-
-*NOTE*: only a selection of columns are shown
 
 # Absolute risk
 
@@ -287,6 +239,8 @@ results_noise_ha[["health_main"]] |>
 ```{r eval=TRUE, include=FALSE, echo=FALSE}
 rm(results_noise_ha)
 ```
+
+
 
 # Multiple geographic units
 
@@ -417,6 +371,162 @@ results_iteration_ar[["health_detailed"]][["results_by_geo_id_micro"]] |>
 rm(results_iteration_ar, data)
 ```
 
+
+# Confidence interval
+
+Goal: E.g. To quantify the COPD cases attributable to PM2.5 exposure taking into account uncertainty (lower and upper bound of confidence interval) in several input arguments: relative risk, exposure and baseline health data.
+
+### Function call
+
+```{r}
+results_pm_copd <- attribute_health(
+    erf_shape = "log_linear",
+    rr_central = 1.369, 
+    rr_lower = 1.124, # lower 95% confidence interval (CI) bound of RR
+    rr_upper = 1.664, # upper 95% CI bound of RR
+    rr_increment = 10, 
+    exp_central = 8.85, 
+    exp_lower = 8, # lower 95% CI bound of exposure
+    exp_upper = 10, # upper 95% CI bound of exposure
+    cutoff_central = 5,
+    bhd_central = 30747, 
+    bhd_lower = 28000, # lower 95% confidence interval estimate of BHD
+    bhd_upper = 32000 # upper 95% confidence interval estimate of BHD
+) 
+```
+
+### Detailed results
+
+Let's inspect the detailed results:
+
+```{r eval=FALSE, echo=TRUE, include=FALSE}
+results_pm_copd$health_detailed$results_raw
+```
+
+```{r echo=FALSE}
+results_pm_copd$health_detailed$results_raw |> 
+  dplyr::select(erf_ci, exp_ci, bhd_ci, impact_rounded) |> 
+  dplyr::slice(1:9) |> 
+  knitr::kable() # Prints tibble in a minimal layout
+```
+
+Each row contains the estimated attributable cases (`impact_rounded`) obtained by the input data specified in the columns ending in "\_ci" and the other calculation pathway specifications in that row (not shown).
+
+-   The 1st contains the estimated attributable impact when using the central estimates of relative risk, exposure and baseline health data
+
+-   The 2nd row shows the impact when using the central estimates of the relative risk, exposure in combination with the lower estimate of the baseline health data
+
+-   ...
+
+*NOTE*: only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_raw$impact)` possible combinations are displayed due to space constraints
+
+*NOTE*: only a selection of columns are shown
+
+
+# Monte Carlo simulation
+
+Goal: E.g. To summarize uncertainty of attributable health impacts (i.e. to get a single confidence interval instead of many combinations) by using a Monte Carlo simulation.
+
+You can do this carrying out a Monte Carlo uncertainty analysis via the `summarize_uncertainty` function.
+
+The outcome of the Monte Carlo analysis is added to the variable entered as the `results` argument, which is `results_pm_copd` in our case.
+
+Two lists ("folders") are added:
+
+-   `uncertainty_main` contains the central estimate and the corresponding 95% confidence intervals obtained through the Monte Carlo assessment
+
+-   `uncertainty_detailed` contains all `n_sim` simulations of the Monte Carlo assessment
+
+### Function call
+
+```{r}
+results_pm_copd_summarized <- 
+  summarize_uncertainty(
+    output_attribute = results_pm_copd,
+    n_sim = 100
+)
+```
+
+### Main results
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_pm_copd_summarized$uncertainty_main
+```
+
+```{r eval=TRUE, include=TRUE, echo=FALSE}
+results_pm_copd_summarized$uncertainty_main |> 
+  knitr::kable()
+```
+
+### Detailed results
+
+The folder `uncertainty_detailed` contains all single simulations. Let's look at the impact of the first 10 simulations.
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_pm_copd_summarized$uncertainty_detailed$impact_by_sim
+```
+
+```{r eval=TRUE, include=TRUE, echo=FALSE}
+results_pm_copd_summarized$uncertainty_detailed$impact_by_sim |> 
+  knitr::kable()
+```
+
+```{r, echo=FALSE, eval=TRUE, include=FALSE}
+rm(results_pm_copd_summarized)
+```
+
+
+
+# User-defined ERF
+
+Goal: E.g. To quantify COPD cases attributable to air pollution exposure by applying a user-defined exposure-response function (ERF), such as the MR-BRT curves from Global Burden of Disease study. 
+
+
+In this case, the function arguments `erf_eq_...` require a function as input, so we use an auxiliary function (`splinefun()`) to transform the points on the ERF into type `function`.
+```{r}
+results_pm_copd_mr_brt <- attribute_health(
+  exp_central = 8.85,
+  bhd_central = 30747,
+  cutoff_central = 0,
+  # Specify the function based on x-y point pairs that lie on the ERF
+  erf_eq_central = splinefun(
+    x = c(0, 5, 10, 15, 20, 25, 30, 50, 70, 90, 110),
+    y = c(1.00, 1.04, 1.08, 1.12, 1.16, 1.20, 1.23, 1.35, 1.45, 1.53, 1.60),
+    method = "natural")
+)
+```
+
+The ERF curve created looks as follows
+
+```{r fig.alt="ERF curve", eval=TRUE, include=TRUE, echo=FALSE}
+
+x <- c(0, 5, 10, 15, 20, 25, 30, 50, 70, 90, 110)
+y <- c(1.00, 1.04, 1.08, 1.12, 1.16, 1.20, 1.23, 1.35, 1.45, 1.53, 1.60)
+spline_func <- 
+  stats::splinefun(
+    x = x,
+    y = y,
+    method = "natural")
+## Generate finer x-values
+x_dense <- seq(min(x), max(x), length.out = 200)
+## Evaluate the spline function at these points
+y_dense <- spline_func(x_dense)
+## Plot
+plot(x, 
+     y, 
+     # main = "User-defined ERF", 
+     main = "", 
+     xlab = "Exposure",
+     ylab = "Relative risk",
+     col = "blue", 
+     pch = 19)
+lines(x_dense, y_dense, col = "red", lwd = 2)
+legend("topleft", legend = c("Original points", "Spline curve"),
+       col = c("blue", "red"), pch = c(19, NA), lty = c(NA, 1), lwd = c(NA, 2))
+```
+
+Alternatively, other functions (e.g. `approxfun()`) can be used to create the ERF
+
 # Sub-group analysis 
 ## by age group
 
@@ -511,367 +621,9 @@ rm(info, output_attribute, output_stratified)
 ```
 
 
-# User-defined ERF
+# YLL & deaths with life table
 
-Goal: E.g. To quantify COPD cases attributable to air pollution exposure by applying a user-defined exposure-response function (ERF), such as the MR-BRT curves from Global Burden of Disease study. 
-
-
-In this case, the function arguments `erf_eq_...` require a function as input, so we use an auxiliary function (`splinefun()`) to transform the points on the ERF into type `function`.
-```{r}
-results_pm_copd_mr_brt <- attribute_health(
-  exp_central = 8.85,
-  bhd_central = 30747,
-  cutoff_central = 0,
-  # Specify the function based on x-y point pairs that lie on the ERF
-  erf_eq_central = splinefun(
-    x = c(0, 5, 10, 15, 20, 25, 30, 50, 70, 90, 110),
-    y = c(1.00, 1.04, 1.08, 1.12, 1.16, 1.20, 1.23, 1.35, 1.45, 1.53, 1.60),
-    method = "natural")
-)
-```
-
-The ERF curve created looks as follows
-
-```{r fig.alt="ERF curve", eval=TRUE, include=TRUE, echo=FALSE}
-
-x <- c(0, 5, 10, 15, 20, 25, 30, 50, 70, 90, 110)
-y <- c(1.00, 1.04, 1.08, 1.12, 1.16, 1.20, 1.23, 1.35, 1.45, 1.53, 1.60)
-spline_func <- 
-  stats::splinefun(
-    x = x,
-    y = y,
-    method = "natural")
-## Generate finer x-values
-x_dense <- seq(min(x), max(x), length.out = 200)
-## Evaluate the spline function at these points
-y_dense <- spline_func(x_dense)
-## Plot
-plot(x, 
-     y, 
-     # main = "User-defined ERF", 
-     main = "", 
-     xlab = "Exposure",
-     ylab = "Relative risk",
-     col = "blue", 
-     pch = 19)
-lines(x_dense, y_dense, col = "red", lwd = 2)
-legend("topleft", legend = c("Original points", "Spline curve"),
-       col = c("blue", "red"), pch = c(19, NA), lty = c(NA, 1), lwd = c(NA, 2))
-```
-
-Alternatively, other functions (e.g. `approxfun()`) can be used to create the ERF
-
-# Calculation threshold & cut-off
-
-Goal: To quantify health impacts in the exposure group 55dB+ that are affected by a exposure above the effect threshold, i.e. the cut-off (45 dB).
-
-
-The function arguments `erf_eq_...` require a function as input. Instead of using a `splinefun()` this can also be fulfilled by using a 'function(c)' which is of type 'function'.
-
-```{r}
-#setting up function parameters
-threshold_effect <- 45
-RR <- 1.055
-threshold_calculation <- 55
-rr_increment <- 10
-
-# define categorical function, the ifelse condition enables the case distinction
-erf_function <- function(c){
-  output <- ifelse(c<threshold_calculation, 1, exp((log(RR)/rr_increment)*(c-threshold_effect)))
-  return(output)
-}
-# attribute_health
-results_catERF_different_calc_thesh <- healthiar::attribute_health(
-  approach_risk = "relative_risk",
-  erf_eq_central = erf_function,
-  prop_pop_exp = c(300000,200000,150000,120000,100000,70000,60000)/10000000,
-  exp_central = c(47,52,57,62,67,72,77),
-  cutoff_central=0,
-  bhd_central=50000)$health_main$impact_rounded
-```
-
-The used function is equal to
-$$
-f(c) =
-\begin{cases}
-1, & c < \text{threshold} \\
-\exp\left( \frac{\log(RR)}{rr_{increment}} (c - threshold_{effect}) \right), & c \ge \text{threshold}
-\end{cases}
-$$
-
-The categorical ERF curve created looks as follows
-
-```{r fig.alt="ERF curve", eval=TRUE, include=TRUE, echo=FALSE}
-
-
-
-
-# Evaluate exp_central points
-x <- c(47,52,57,62,67,72,77) # central exposure values
-y <- erf_function(x)
-
-# Generate finer x-values
-x_dense <- seq(min(x), max(x), length.out = 200)
-# Evaluate exp_central points (finer version)
-y_dense <- erf_function(x_dense)
-
-## Plot
-plot(x,
-     y # main = "User-defined ERF"
-     ,
-     main = "",
-     xlab = "Exposure",
-     ylab = "Relative risk",
-     col = "blue",
-     pch = 19)
-
-lines(x_dense,y_dense,col = "red",lwd = 2)
-
-legend("topleft",
-       legend = c("Original points", "Categorical ERF curve"),
-       col = c("blue", "red"),
-       pch = c(19, NA),
-       lty = c(NA, 1),
-       lwd = c(NA, 2))
-
-```
-
-# Compare two health scenarios
-
-Goal: E.g. To compare the health impacts in the scenario "before intervention" vs. "after intervention".
-
-### Function call
-
-1.  Use `attribute_health()` to calculate burden of scenarios A & B
-
-```{r}
-scenario_A <- attribute_health(
-    exp_central = 8.85,   # EXPOSURE 1
-    cutoff_central = 5, 
-    bhd_central = 25000,
-    approach_risk = "relative_risk",
-    erf_shape = "log_linear",
-    rr_central = 1.118,
-    rr_increment = 10)
-```
-
-```{r}
-scenario_B <- attribute_health(
-    exp_central = 6,     # EXPOSURE 2
-    cutoff_central = 5, 
-    bhd_central = 25000,
-    approach_risk = "relative_risk",
-    erf_shape = "log_linear",
-    rr_central = 1.118,
-    rr_increment = 10)
-```
-
-Alternatively, the function `attribute_mod()` can be used to modify an existing scenario, e.g. `scenario_A`
-
-```{r}
-scenario_B <- attribute_mod(
-  output_attribute = scenario_A, 
-  exp_central = 6
-)
-```
-
-2.  Use `compare()` to compare scenarios A & B
-
-```{r}
-
-results_comparison <- compare(
-  approach_comparison = "delta", # or "pif" (population impact fraction)
-  output_attribute_scen_1 = scenario_A,
-  output_attribute_scen_2 = scenario_B
-)
-```
-
-The default value for the argument `approach_comparison` is `"delta"`. The alterntive is `"pif"` (population impact fraction). See the function documentation of `compare()` for more details.
-
-### Main results
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_comparison$health_main
-```
-
-```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_comparison[["health_main"]] |> 
-  dplyr::select(
-    impact, impact_rounded,
-    impact_scen_1, impact_scen_2,
-    bhd,
-    dplyr::starts_with("exp_"),
-    -dplyr::starts_with("exp_ci"), # remove col "exp_ci"
-    dplyr::starts_with("rr_con")) |> 
-  dplyr::slice_head() |> 
-  knitr::kable()
-```
-
-### Detailed results
-
-The `compare()` results contain two additional outputs in addition to those we have already seen
-
--   `health_detailed`
-
-    -   `scen_1` contains results of scenario 1 (scenario A in our case)
-
-    -   `scen_2` contains results of scenario 2 (scenario B in our case)
-
-```{r, echo=FALSE, eval=TRUE, include=FALSE}
-rm(results_comparison, scenario_A, scenario_B)
-```
-
-# Monte Carlo simulation
-
-Goal: E.g. To summarize uncertainty attributable health impacts getting a single confidence interval instead of so many as uncertainty combinations.
-
-You can do this carrying out a Monte Carlo uncertainty analysis via the `summarize_uncertainty` function.
-
-The outcome of the Monte Carlo analysis is added to the variable entered as the `results` argument, which is `results_pm_copd` in our case.
-
-Two lists ("folders") are added:
-
--   `uncertainty_main` contains the central estimate and the corresponding 95% confidence intervals obtained through the Monte Carlo assessment
-
--   `uncertainty_detailed` contains all `n_sim` simulations of the Monte Carlo assessment
-
-### Function call
-
-```{r}
-results_pm_copd_summarized <- 
-  summarize_uncertainty(
-    output_attribute = results_pm_copd,
-    n_sim = 100
-)
-```
-
-### Main results
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_copd_summarized$uncertainty_main
-```
-
-```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_copd_summarized$uncertainty_main |> 
-  knitr::kable()
-```
-
-### Detailed results
-
-The folder `uncertainty_detailed` contains all single simulations. Let's look at the impact of the first 10 simulations.
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_copd_summarized$uncertainty_detailed$impact_by_sim
-```
-
-```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_copd_summarized$uncertainty_detailed$impact_by_sim |> 
-  knitr::kable()
-```
-
-```{r, echo=FALSE, eval=TRUE, include=FALSE}
-rm(results_pm_copd_summarized)
-```
-
-# Economic dimension
-
-## Monetization 
-
-Goal: E.g. To monetize the attributable health impact of a policy that will have health benefits five years from now.
-
-The outcome of the monetization is added to the variable entered to the `output_attribute` argument, which is `results_pm_copd` in our case.
-
-Two folders are added:
-
--   `monetization_main` contains the central monetization estimate and the corresponding 95% confidence intervals obtained through the specified monetization
-
--   `monetization_detailed` contains the monetized results for each unique combination of the input variable estimates that were provided to the initial `attribute_health()` call
-
-### Function call
-
-```{r}
-results_pm_copd <- monetize(
-    output_attribute = results_pm_copd,
-    discount_shape = "exponential",
-    discount_rate = 0.03,
-    n_years = 5,
-    valuation = 50000 # E.g. EURO
-)
-```
-
-### Main results
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_copd$monetization_main
-```
-
-```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_copd$monetization_main |> 
-  select(erf_ci, monetized_impact) |> 
-  knitr::kable()
-```
-
-We see that the monetized impact (discounted) is more than 160 million EURO.
-
-Alternatively, you can also monetize (attributable) health impacts from a non-`healthiar` source.
-
-```{r}
-results <- monetize(
-  impact = 1151,
-  valuation = 100
-)
-```
-
-## Cost-benefit analysis
-
-Goal: E.g. To estimate the net-benefit of a health policy via cost-benefit analysis (CBA).
-
-Let's imagine we design a policy that would reduce air pollution to 5 $\mu g/m^3$, which is the concentration specified in the `cutoff_central` argument in the initial `attribute_health()` call. So we could avoid all COPD cases attributed to air pollution.
-
-Considering the cost to implement the policy (estimated at 100 million EURO), what would be the monetary net benefit of such a policy, ? We can find out using `healthiar`'s `cba()` function.
-
-The outcome of the CBA is contained in two folders, which are added to the existing assessment:
-
--   `cba_main` contains the central estimate and the corresponding 95% confidence intervals obtained
-
--   `cba_detailed` contains additional intermediate results for both cost and benefit
-
-    -   `benefit` contains results `by_year` and raw results `health_raw`
-
-    -   `cost` contains the costs of the policy at the end of the period specified in the `n_years_cost` argument
-
-### Function call
-
-```{r}
-cba <- cba(
-    output_attribute = results_pm_copd,
-    valuation = 50000,
-    cost = 100000000,
-    discount_shape = "exponential",
-    discount_rate_benefit = 0.03,
-    discount_rate_cost = 0.03,
-    n_years_benefit = 5,
-    n_years_cost = 5
-)
-```
-
-### Main results
-
-```{r}
-cba$cba_main |>  
-  dplyr::select(benefit, cost, net_benefit) |> 
-  knitr::kable()
-```
-
-```{r, echo=FALSE, eval=TRUE, include=FALSE}
-rm(cba)
-```
-
-We see that the central and upper 95% confidence interval estimates of avoided attributable COPD cases result in a net monetary benefit of the policy, while the lower 95% confidence interval estimate results in a net cost!
-
-# Life table approach
-
-## for years of life lost
+## YLL
 
 Goal: E.g. To quantify the years of life lost (YLL) due to deaths from COPD attributable to PM2.5 exposure during one year.
 
@@ -1026,7 +778,7 @@ results_pm_yll$health_detailed$intermediate_calculations|>
   knitr::kable()
 ```
 
-## for premature deaths
+## Deaths
 
 Goal: E.g. To determine premature deaths from COPD attributable to PM2.5 exposure during one year.
 
@@ -1103,7 +855,7 @@ results_pm_yll$health_detailed$intermediate_calculations|>
 rm(results_pm_deaths)
 ```
 
-# Years lived with disability
+# YLD
 
 Goal: E.g. To quantify the years lived with disability (YLD) attributable to air pollution exposure using disability weights.
 
@@ -1168,6 +920,174 @@ results_daly$health_main |>
 rm(results_daly, results_pm_yll, results_pm_copd_yld)
 ```
 
+
+
+# Calculation threshold & cut-off
+
+Goal: To quantify health impacts in the exposure group 55dB+ that are affected by a exposure above the effect threshold, i.e. the cut-off (45 dB).
+
+
+The function arguments `erf_eq_...` require a function as input. Instead of using a `splinefun()` this can also be fulfilled by using a 'function(c)' which is of type 'function'.
+
+```{r}
+#setting up function parameters
+threshold_effect <- 45
+RR <- 1.055
+threshold_calculation <- 55
+rr_increment <- 10
+
+# define categorical function, the ifelse condition enables the case distinction
+erf_function <- function(c){
+  output <- ifelse(c<threshold_calculation, 1, exp((log(RR)/rr_increment)*(c-threshold_effect)))
+  return(output)
+}
+# attribute_health
+results_catERF_different_calc_thesh <- healthiar::attribute_health(
+  approach_risk = "relative_risk",
+  erf_eq_central = erf_function,
+  prop_pop_exp = c(300000,200000,150000,120000,100000,70000,60000)/10000000,
+  exp_central = c(47,52,57,62,67,72,77),
+  cutoff_central=0,
+  bhd_central=50000)$health_main$impact_rounded
+```
+
+The used function is equal to
+$$
+f(c) =
+\begin{cases}
+1, & c < \text{threshold} \\
+\exp\left( \frac{\log(RR)}{rr_{increment}} (c - threshold_{effect}) \right), & c \ge \text{threshold}
+\end{cases}
+$$
+
+The categorical ERF curve created looks as follows
+
+```{r fig.alt="ERF curve", eval=TRUE, include=TRUE, echo=FALSE}
+
+
+
+
+# Evaluate exp_central points
+x <- c(47,52,57,62,67,72,77) # central exposure values
+y <- erf_function(x)
+
+# Generate finer x-values
+x_dense <- seq(min(x), max(x), length.out = 200)
+# Evaluate exp_central points (finer version)
+y_dense <- erf_function(x_dense)
+
+## Plot
+plot(x,
+     y # main = "User-defined ERF"
+     ,
+     main = "",
+     xlab = "Exposure",
+     ylab = "Relative risk",
+     col = "blue",
+     pch = 19)
+
+lines(x_dense,y_dense,col = "red",lwd = 2)
+
+legend("topleft",
+       legend = c("Original points", "Categorical ERF curve"),
+       col = c("blue", "red"),
+       pch = c(19, NA),
+       lty = c(NA, 1),
+       lwd = c(NA, 2))
+
+```
+
+
+# Comparison of two health scenarios
+
+Goal: E.g. To compare the health impacts in the scenario "before intervention" vs. "after intervention".
+
+### Function call
+
+1.  Use `attribute_health()` to calculate burden of scenarios A & B
+
+```{r}
+scenario_A <- attribute_health(
+    exp_central = 8.85,   # EXPOSURE 1
+    cutoff_central = 5, 
+    bhd_central = 25000,
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118,
+    rr_increment = 10)
+```
+
+```{r}
+scenario_B <- attribute_health(
+    exp_central = 6,     # EXPOSURE 2
+    cutoff_central = 5, 
+    bhd_central = 25000,
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118,
+    rr_increment = 10)
+```
+
+Alternatively, the function `attribute_mod()` can be used to modify an existing scenario, e.g. `scenario_A`
+
+```{r}
+scenario_B <- attribute_mod(
+  output_attribute = scenario_A, 
+  exp_central = 6
+)
+```
+
+2.  Use `compare()` to compare scenarios A & B
+
+```{r}
+
+results_comparison <- compare(
+  approach_comparison = "delta", # or "pif" (population impact fraction)
+  output_attribute_scen_1 = scenario_A,
+  output_attribute_scen_2 = scenario_B
+)
+```
+
+The default value for the argument `approach_comparison` is `"delta"`. The alterntive is `"pif"` (population impact fraction). See the function documentation of `compare()` for more details.
+
+### Main results
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_comparison$health_main
+```
+
+```{r eval=TRUE, include=TRUE, echo=FALSE}
+results_comparison[["health_main"]] |> 
+  dplyr::select(
+    impact, impact_rounded,
+    impact_scen_1, impact_scen_2,
+    bhd,
+    dplyr::starts_with("exp_"),
+    -dplyr::starts_with("exp_ci"), # remove col "exp_ci"
+    dplyr::starts_with("rr_con")) |> 
+  dplyr::slice_head() |> 
+  knitr::kable()
+```
+
+### Detailed results
+
+The `compare()` results contain two additional outputs in addition to those we have already seen
+
+-   `health_detailed`
+
+    -   `scen_1` contains results of scenario 1 (scenario A in our case)
+
+    -   `scen_2` contains results of scenario 2 (scenario B in our case)
+
+```{r, echo=FALSE, eval=TRUE, include=FALSE}
+rm(results_comparison, scenario_A, scenario_B)
+```
+
+
+
+
+
+
 # Two correlated exposures 
 
 Goal: E.g. To quantify the total health impact attributable to PM2.5 and NO2.
@@ -1223,6 +1143,107 @@ results_multiplicative$health_main |>
 ```{r eval=TRUE, include=FALSE, echo=FALSE}
 rm(results_multiplicative)
 ```
+
+
+
+# Economic dimension
+
+## Monetization 
+
+Goal: E.g. To monetize the attributable health impact of a policy that will have health benefits five years from now.
+
+The outcome of the monetization is added to the variable entered to the `output_attribute` argument, which is `results_pm_copd` in our case.
+
+Two folders are added:
+
+-   `monetization_main` contains the central monetization estimate and the corresponding 95% confidence intervals obtained through the specified monetization
+
+-   `monetization_detailed` contains the monetized results for each unique combination of the input variable estimates that were provided to the initial `attribute_health()` call
+
+### Function call
+
+```{r}
+results_pm_copd <- monetize(
+    output_attribute = results_pm_copd,
+    discount_shape = "exponential",
+    discount_rate = 0.03,
+    n_years = 5,
+    valuation = 50000 # E.g. EURO
+)
+```
+
+### Main results
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_pm_copd$monetization_main
+```
+
+```{r eval=TRUE, include=TRUE, echo=FALSE}
+results_pm_copd$monetization_main |> 
+  select(erf_ci, monetized_impact) |> 
+  knitr::kable()
+```
+
+We see that the monetized impact (discounted) is more than 160 million EURO.
+
+Alternatively, you can also monetize (attributable) health impacts from a non-`healthiar` source.
+
+```{r}
+results <- monetize(
+  impact = 1151,
+  valuation = 100
+)
+```
+
+## Cost-benefit analysis
+
+Goal: E.g. To estimate the net-benefit of a health policy via cost-benefit analysis (CBA).
+
+Let's imagine we design a policy that would reduce air pollution to 5 $\mu g/m^3$, which is the concentration specified in the `cutoff_central` argument in the initial `attribute_health()` call. So we could avoid all COPD cases attributed to air pollution.
+
+Considering the cost to implement the policy (estimated at 100 million EURO), what would be the monetary net benefit of such a policy, ? We can find out using `healthiar`'s `cba()` function.
+
+The outcome of the CBA is contained in two folders, which are added to the existing assessment:
+
+-   `cba_main` contains the central estimate and the corresponding 95% confidence intervals obtained
+
+-   `cba_detailed` contains additional intermediate results for both cost and benefit
+
+    -   `benefit` contains results `by_year` and raw results `health_raw`
+
+    -   `cost` contains the costs of the policy at the end of the period specified in the `n_years_cost` argument
+
+### Function call
+
+```{r}
+cba <- cba(
+    output_attribute = results_pm_copd,
+    valuation = 50000,
+    cost = 100000000,
+    discount_shape = "exponential",
+    discount_rate_benefit = 0.03,
+    discount_rate_cost = 0.03,
+    n_years_benefit = 5,
+    n_years_cost = 5
+)
+```
+
+### Main results
+
+```{r}
+cba$cba_main |>  
+  dplyr::select(benefit, cost, net_benefit) |> 
+  knitr::kable()
+```
+
+```{r, echo=FALSE, eval=TRUE, include=FALSE}
+rm(cba)
+```
+
+We see that the central and upper 95% confidence interval estimates of avoided attributable COPD cases result in a net monetary benefit of the policy, while the lower 95% confidence interval estimate results in a net cost!
+
+
+
 
 # Multiple deprivation index
 
