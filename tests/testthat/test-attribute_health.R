@@ -843,6 +843,25 @@ testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_FA
   )
 })
 
+# Sub-group analysis using info
+testthat::test_that("results the same |fake_rr|erf_log_log|exp_dist|iteration_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      attribute_health(
+        rr_central = 1.063,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        cutoff_central =  0,
+        exp_central = 5:10,
+        bhd_central = 600,
+        info = data.frame(
+          education = rep(c("secondary", "bachelor", "master"), each = 2)))$health_detailed$results_raw$impact,
+    expected = c(19.8291176946432, 26.8751020570141, 33.8355152589752))
+})
+
+
+
 #### ITERATION ##################################################################
 testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|", {
 
