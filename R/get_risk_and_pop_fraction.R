@@ -40,7 +40,6 @@ get_risk_and_pop_fraction <-
     ci_cols_available <-
       base::intersect(ci_cols, names_input_table)
 
-
     is_multiexposure <-
       "approach_multiexposure" %in% names_input_table
 
@@ -52,9 +51,14 @@ get_risk_and_pop_fraction <-
       is_multiexposure &&
       base::unique(input_table$approach_multiexposure) %in% "combined"
 
+    info_cols <- input_table |>
+      dplyr::select(dplyr::contains("info_")) |>
+      base::names()
+
     grouping_cols <-
       c(ci_cols,
-        "geo_id_micro", "exp_name", "sex", "age_group", "erf_eq")
+        "geo_id_micro", "exp_name", "sex", "age_group", "erf_eq",
+        info_cols)
 
     grouping_cols_available <-
       base::intersect(grouping_cols, names_input_table)
