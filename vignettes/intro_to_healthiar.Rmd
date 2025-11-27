@@ -68,7 +68,7 @@ Source: Hadley Wickham (2014). Tidy Data. [Link](https://doi.org/10.18637/jss.v0
 The description of all `healthiar` functions provide examples that you can execute (with `healthiar` loaded) by running `example("function_name")`, e.g. `example("attribute_health")`. In the sections below in this vignette, you find additional examples and further explanations.
 
 
-# Quantify health impacts using relative risk 
+# Relative risk 
 
 Goal: E.g. To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a country.
 
@@ -510,7 +510,7 @@ rm(info, output_attribute, output_stratified)
 ```
 
 
-## User-defined exposure-response functoin
+# User-defined ERF
 
 Goal: E.g. To quantify COPD cases attributable to air pollution exposure by applying a user-defined exposure-response function (such as the MR-BRT curves from Global Burden of Disease study). 
 
@@ -560,7 +560,7 @@ legend("topleft", legend = c("Original points", "Spline curve"),
 
 Alternatively, other functions (e.g. `approxfun()`) can be used to create the ERF
 
-# Calculation threshold different from cut-off
+# Calculation threshold & cut-off
 
 Goal: To quantify health impacts in the exposure group 55dB+ that are affected by a exposure above the effect threshold, i.e. the cut-off (45 dB).
 
@@ -720,7 +720,7 @@ The `compare()` results contain two additional outputs in addition to those we h
 rm(results_comparison, scenario_A, scenario_B)
 ```
 
-# Monte Carlo simulation to sumarize uncertainty
+# Monte Carlo simulation
 
 Goal: E.g. To summarize uncertainty attributable health impacts getting a single confidence interval instead of so many as uncertainty combinations.
 
@@ -1167,7 +1167,7 @@ results_daly$health_main |>
 rm(results_daly, results_pm_yll, results_pm_copd_yld)
 ```
 
-# Sum health impacts from two correlated exposures 
+# Two correlated exposures 
 
 Goal: E.g. To quantify the total health impact attributable to PM2.5 and NO2.
 
