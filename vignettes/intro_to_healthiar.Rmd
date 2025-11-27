@@ -1293,7 +1293,7 @@ rm(mdi)
 
 # Export and visualize
 
-To export and visualize results, you can make use of existing functions of other packages beyond `healthiar`
+Exporting and visualizing results is out of scope of `healthiar`. To export and visualize, you can make use of existing functions in other packages beyond `healthiar` as indicated below.
 
 ## Export results
 
