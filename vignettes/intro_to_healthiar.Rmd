@@ -1169,7 +1169,7 @@ rm(results_daly, results_pm_yll, results_pm_copd_yld)
 
 # Sum health impacts from two correlated exposures 
 
-Goal: E.g. To quantify the toatl health impact attributable to PM2.5 and NO2.
+Goal: E.g. To quantify the total health impact attributable to PM2.5 and NO2.
 
 For this purpose, you can use the function `multiexpose()`.
 
