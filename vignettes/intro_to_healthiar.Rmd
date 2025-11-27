@@ -1100,7 +1100,7 @@ For this purpose, you can use the function `multiexpose()`.
 ### Function call
 
 ```{r}
-results_pm_copd <- attribute_health(
+results_pm <- attribute_health(
   erf_shape = "log_linear",
   rr_central = 1.369, 
   rr_increment = 10,
@@ -1109,15 +1109,15 @@ results_pm_copd <- attribute_health(
   bhd_central = 30747
 ) 
 
-results_no2_copd <- attribute_mod(
-  output_attribute = results_pm_copd,
+results_no2 <- attribute_mod(
+  output_attribute = results_pm,
   exp_central = 10.9,
   rr_central = 1.031
 )
 
 results_multiplicative <- multiexpose(
-  output_attribute_exp_1 = results_pm_copd,
-  output_attribute_exp_2 = results_no2_copd,
+  output_attribute_exp_1 = results_pm,
+  output_attribute_exp_2 = results_no2,
   exp_name_1 = "pm2.5",
   exp_name_2 = "no2",
   approach_multiexposure = "multiplicative"
@@ -1125,7 +1125,7 @@ results_multiplicative <- multiexpose(
 ```
 
 ```{r, echo=FALSE, eval=TRUE, include=FALSE}
-rm(results_no2_copd, results_pm_copd)
+rm(results_no2, results_pm)
 ```
 
 ### Main results
