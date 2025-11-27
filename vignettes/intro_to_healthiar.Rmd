@@ -1360,7 +1360,7 @@ CBA/cba = cost-benefit analysis
 
 exp = exposure
 
-ERF = Exposure-response function
+ERF = exposure-response function
 
 RR/rr = relative risk
 
