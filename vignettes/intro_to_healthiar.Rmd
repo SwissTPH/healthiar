@@ -596,7 +596,7 @@ f(c) =
 \begin{cases}
 1, & c < \text{threshold} \\
 \exp\left( \frac{\log(RR)}{rr_{increment}} (c - threshold_{effect}) \right), & c \ge \text{threshold}
-\end{cases}.
+\end{cases}
 $$
 
 The categorical ERF curve created looks as follows
