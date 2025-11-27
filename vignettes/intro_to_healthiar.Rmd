@@ -52,7 +52,7 @@ See below a an overview of the package. The whole list of functions included in 
 ![Figure:`healthiar` overview](images/package_overview.png){width="700"}
 
 
-Be aware that `healthiar` functions are easiest to use if your data is prepared in a tidy format, i.e.:
+Be aware that `healthiar` functions are easier to use if your data is prepared in a tidy format, i.e.:
 
 -   Each variable is a column; each column is a variable.
 
