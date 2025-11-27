@@ -371,8 +371,9 @@ results_iteration_ar[["health_detailed"]][["results_by_geo_id_micro"]] |>
 rm(results_iteration_ar, data)
 ```
 
+# Uncertainty
 
-# Confidence interval
+## Confidence interval
 
 Goal: E.g. To quantify the COPD cases attributable to PM2.5 exposure taking into account uncertainty (lower and upper bound of confidence interval) in several input arguments: relative risk, exposure and baseline health data.
 
@@ -423,7 +424,7 @@ Each row contains the estimated attributable cases (`impact_rounded`) obtained b
 *NOTE*: only a selection of columns are shown
 
 
-# Monte Carlo simulation
+## Monte Carlo simulation
 
 Goal: E.g. To summarize uncertainty of attributable health impacts (i.e. to get a single confidence interval instead of many combinations) by using a Monte Carlo simulation.
 
