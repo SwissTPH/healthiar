@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.1.1341</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.1.1369</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,7 +35,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/intro_to_healthiar.html">intro to healthiar</a></li>
+<li><a class="dropdown-item" href="articles/intro_to_healthiar.html">Vignette: Intro to healthiar</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -61,49 +61,45 @@
 <div class="section level1">
 <h1 id="installation">INSTALLATION<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h1>
-<p>We recommend to frequently install the newest <em>healthiar</em> version.</p>
-<div class="section level2">
-<h2 id="installation-from-cran">Installation from CRAN:<a class="anchor" aria-label="anchor" href="#installation-from-cran"></a>
-</h2>
-<p>Click on the <em>Packages</em> tab in RStudio and in <em>Install</em>. From CRAN, search <em>healthiar</em> and click on <em>Install</em> keeping <em>Install dependencies</em> activated.</p>
-</div>
-<div class="section level2">
-<h2 id="installation-from-github-most-recent-version">Installation from Github (most recent version):<a class="anchor" aria-label="anchor" href="#installation-from-github-most-recent-version"></a>
-</h2>
-<p>Run the following commands below in RStudio to install <em>healthiar</em>:</p>
-<ol style="list-style-type: decimal">
-<li><p><code>install.packages(c("knitr", "rmarkdown"))</code></p></li>
-<li><p><code>remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)</code></p></li>
-<li><p>If you get asked to install or update any dependencies (= other packages that are needed for <em>healthiar</em>) please install or update all of them.</p></li>
+<p>We recommend to frequently install the newest <em>healthiar</em> version. Please note that <strong><code>healthiar</code> requires R version 4.3.0 or higher</strong>. There are two options to install <em>healthiar</em>:</p>
+<ol style="list-style-type: lower-alpha">
+<li><p><strong>From CRAN</strong>: Click on the <em>Packages</em> tab in RStudio and on the <em>Install</em> button. Leave the <em>Install from:</em> option set to <em>Reporsitory (CRAN)</em> and then search and select <em>healthiar</em> and finally click on <em>Install</em>, keeping <em>Install dependencies</em> activated.</p></li>
+<li><p><strong>From Github (most recent version)</strong>: Run the following commands below in RStudio to install <em>healthiar</em>:</p></li>
 </ol>
-</div>
-<div class="section level2">
-<h2 id="loading-the-package">Loading the package<a class="anchor" aria-label="anchor" href="#loading-the-package"></a>
-</h2>
-<p>Do not forget to load the package after the installation entering in your R console: <code><a href="https://CRAN.R-project.org/package=healthiar" class="external-link">library(healthiar)</a></code>.</p>
-</div>
-<div class="section level2">
-<h2 id="requirement">Requirement<a class="anchor" aria-label="anchor" href="#requirement"></a>
-</h2>
-<p>R version 4.3.0 or higher</p>
-</div>
-<div class="section level2">
-<h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a>
-</h2>
-<p>If you installed <em>healthiar</em> while the repository was still private, you must remove your personal access token (PAT) before installing the package again.</p>
-</div>
+<ul>
+<li><code>install.packages(c("knitr", "rmarkdown"))</code></li>
+<li><code>remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)</code></li>
+<li>Note: install or update all package dependencies (= other packages that are needed for <em>healthiar</em>) if you get asked to do so</li>
+</ul>
+<p><strong>After installation</strong>, do not forget to load the package by running the call <code><a href="https://github.com/SwissTPH/healthiar/" class="external-link">library(healthiar)</a></code>.</p>
 </div>
 <div class="section level1">
 <h1 id="getting-started">GETTING STARTED<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h1>
-<p>The vignette <em>intro_to_healthiar</em> (i.e. documentation on how to use the healthiar package) will get you started with the <em>healthiar</em> R package. You have the following options to find it:</p>
+<p>To get started with the <code>healthiar</code> R package, we recommend to look at the vignette (~ package manual) <em>intro_to_healthiar</em>, which you cou can access</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>On the <a href="https://swisstph.github.io/healthiar/articles/index.html">Github page</a></p></li>
-<li><p>In R Studio: Click on the <em>Packages</em> tab in RStudio, scroll down to the <em>healthiar</em> package and clicking on the hyperlinks <em>healthiar</em> &gt; <em>User guides, package vignettes and other documentation</em></p></li>
-<li><p>In the web browser: Run <code>browseVignettes("healthiar")</code> in the R console and the page will open up in your browser</p></li>
+<li><p>on the <a href="https://swisstph.github.io/healthiar/articles/index.html">package website</a> (recommended)</p></li>
+<li><p>in R Studio: Click on the <em>Packages</em> tab in RStudio, scroll down to the <em>healthiar</em> package and clicking on the hyperlinks <em>healthiar</em> &gt; <em>User guides, package vignettes and other documentation</em></p></li>
+<li><p>in the web browser: Run <code>browseVignettes("healthiar")</code> in the R console and the page will open up in your browser</p></li>
 </ol>
-<p>A 45 minutes introduction to the package can be found <a href="https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ" class="external-link">here</a></p>
-<p>The slides of the presentation can be found <a href="https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop" class="external-link">here</a></p>
+<p>Additionally, a 45 minutes introduction to the package can be found <a href="https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ" class="external-link">here</a>. The slides of the presentation can be found <a href="https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop" class="external-link">here</a></p>
+<p>See the function help pages for information about specific functions. In RStudio, you can access the function documentation of e.g. the function <code>attribute_health</code> by</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>going to the [reference page of the package website]{<a href="https://swisstph.github.io/healthiar/reference/index.html" class="uri">https://swisstph.github.io/healthiar/reference/index.html</a>}</p></li>
+<li><p>running <code><a href="reference/attribute_health.html">?attribute_health</a></code> in RStudio (with <code>healthiar</code> loaded)</p></li>
+<li><p>going to the <code>Packages tab</code> and then clicking on <code>healthiar</code></p></li>
+</ol>
+</div>
+<div class="section level1">
+<h1 id="citation">CITATION<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h1>
+<p>We love that you use <em>healthiar</em>. In that case, please do not forget to cite <em>healthiar</em> in your work. Three options to get there:</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>On the <a href="https://swisstph.github.io/healthiar/authors.html#citation">healthiar package website</a></p></li>
+<li><p>See <a href="https://github.com/SwissTPH/healthiar/blob/master/inst/CITATION" class="external-link">CITATION.R</a></p></li>
+<li><p>In your R console, enter <em>citation(“healthiar”)</em>.</p></li>
+</ol>
+<p>In options b) and c), you always see the updated citation. In option a), you see citation of the <em>healthiar</em> version that you have installed locally, which might be outdated.</p>
 </div>
 <div class="section level1">
 <h1 id="disclamer-and-licence">DISCLAMER AND LICENCE<a class="anchor" aria-label="anchor" href="#disclamer-and-licence"></a>
@@ -120,17 +116,6 @@
 <p>Feel free provide feedback via <a href="https://github.com/SwissTPH/healthiar/issues" class="external-link">GitHub issues</a></p>
 </div>
 <div class="section level1">
-<h1 id="citation">CITATION<a class="anchor" aria-label="anchor" href="#citation"></a>
-</h1>
-<p>We love that you use <em>healthiar</em>. In that case, please do not forget to cite <em>healthiar</em> in your work. Three options to get there:</p>
-<ol style="list-style-type: lower-alpha">
-<li><p>In your R console, enter <em>citation(“healthiar”)</em>.</p></li>
-<li><p>On the <a href="https://swisstph.github.io/healthiar/authors.html#citation">Github page</a></p></li>
-<li><p>See <a href="https://github.com/SwissTPH/healthiar/blob/master/inst/CITATION" class="external-link">CITATION.R</a></p></li>
-</ol>
-<p>In the option a, you see the version number of <em>healthiar</em> that your are using. In options b and c, you see the updated citation (might be more recent than your installed version).</p>
-</div>
-<div class="section level1">
 <h1 id="presenting-healthiar">PRESENTING <em>healthiar</em>
 <a class="anchor" aria-label="anchor" href="#presenting-healthiar"></a>
 </h1>
@@ -139,7 +124,7 @@
 <div class="section level1">
 <h1 id="acknowledgements">ACKNOWLEDGEMENTS<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
 </h1>
-<p>The development of <em>healthiar</em> has been funded by the EU project BEST-COST.</p>
+<p><em>healthiar</em> was been developed under the framework of EU project BEST-COST. BEST-COST is funded by the European Union’s Horizon Europe programme under Grant Agreement No.101095408.</p>
 </div>
 
   </main><aside class="col-md-3"><div class="links">
