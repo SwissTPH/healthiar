@@ -1163,7 +1163,7 @@ Two folders are added:
 ### Function call
 
 ```{r}
-results_pm_copd <- monetize(
+monetized_pm_copd <- monetize(
     output_attribute = results_pm_copd,
     discount_shape = "exponential",
     discount_rate = 0.03,
@@ -1175,11 +1175,11 @@ results_pm_copd <- monetize(
 ### Main results
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_copd$monetization_main
+monetized_pm_copd$monetization_main
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_copd$monetization_main |> 
+monetized_pm_copd$monetization_main |> 
   select(erf_ci, monetized_impact) |> 
   knitr::kable()
 ```
