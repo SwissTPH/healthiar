@@ -513,7 +513,7 @@ rm(info, output_attribute, output_stratified)
 
 # User-defined ERF
 
-Goal: E.g. To quantify COPD cases attributable to air pollution exposure by applying a user-defined exposure-response function (such as the MR-BRT curves from Global Burden of Disease study). 
+Goal: E.g. To quantify COPD cases attributable to air pollution exposure by applying a user-defined exposure-response function (ERF), such as the MR-BRT curves from Global Burden of Disease study. 
 
 
 In this case, the function arguments `erf_eq_...` require a function as input, so we use an auxiliary function (`splinefun()`) to transform the points on the ERF into type `function`.
@@ -1332,6 +1332,7 @@ BHD/bhd - baseline health data CI - confidence interval
 CBA/cba - cost-benefit analysis
 
 exp - exposure
+ERF = Exposure-response function
 
 RR/rr - relative risk
 
