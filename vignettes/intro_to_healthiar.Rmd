@@ -300,7 +300,7 @@ Goal: e.g. To quantify the disease cases attributable to PM2.5 exposure in multi
 
 Input to the other function arguments is specified as usual, either as a vector or a single values (which will be recycled to match the length of the other input vectors).
 
-## Function call
+### Function call
 
 ```{r}
 results_iteration <- attribute_health(
@@ -319,7 +319,7 @@ results_iteration <- attribute_health(
 
 In this example we want to aggregate the lower-level geographic units (municipalities) by the higher-level language region (`"German", "French", "Italian"`)
 
-## Main results
+### Main results
 
 The main output contains aggregated results
 
@@ -335,7 +335,7 @@ results_iteration[["health_main"]] |>
 
 In this case `health_main` contains the cumulative / summed number of stroke cases attributable to PM2.5 exposure in the 5 geo units, which is `r sum(results_iteration[["health_main"]]$impact_rounded)` (using a relative risk of 1.369).
 
-## Detailed results
+### Detailed results
 
 The geo unit-specific information and results are stored under `health_detailed`\>`results_raw`
 
@@ -417,8 +417,8 @@ results_iteration_ar[["health_detailed"]][["results_by_geo_id_micro"]] |>
 rm(results_iteration_ar, data)
 ```
 
-# Quantify health impacts by sub-group 
-## By age group
+# Sub-group analysis 
+## by age group
 
 Goal: e.g. To quantify health impacts attributable to air pollution in a country *by age group*.
 
@@ -448,7 +448,7 @@ rm(results_age_group)
 ```
 
 
-## By sex
+## by sex
 
 Goal: e.g. To quantify health impacts attributable to air pollution in a country *by sex*.
 
@@ -476,13 +476,13 @@ results_sex$health_detailed$results_by_sex |>
 rm(results_sex)
 ```
 
-## By other sub-groups
+## by other sub-groups
 
 Goal: e.g. To quantify health impacts attributable to air pollution in a country *by education level*.
 
 A (random) ID vector of unique values must be entered to the argument `geo_id_micro`, to indicate that each row is an observation on its own (and not just exposure categories)
 
-A single vector (or a data frame / tibble with multiple columns) to group the results by can be entered to the `info` argument. In this exmaple, this will be information about the education level.
+A single vector (or a data frame / tibble with multiple columns) to group the results by can be entered to the `info` argument. In this example, this will be information about the education level.
 
 In a second step one can group the results based on one or more columns and so summarize the results by the preferred sub-groups
 
