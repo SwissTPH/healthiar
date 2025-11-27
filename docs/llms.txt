@@ -6,62 +6,77 @@ disease attributable to exposure
 # INSTALLATION
 
 We recommend to frequently install the newest *healthiar* version.
+Please note that **`healthiar` requires R version 4.3.0 or higher**.
+There are two options to install *healthiar*:
 
-## Installation from CRAN:
+1.  **From CRAN**: Click on the *Packages* tab in RStudio and on the
+    *Install* button. Leave the *Install from:* option set to
+    *Reporsitory (CRAN)* and then search and select *healthiar* and
+    finally click on *Install*, keeping *Install dependencies*
+    activated.
 
-Click on the *Packages* tab in RStudio and in *Install*. From CRAN,
-search *healthiar* and click on *Install* keeping *Install dependencies*
-activated.
+2.  **From Github (most recent version)**: Run the following commands
+    below in RStudio to install *healthiar*:
 
-## Installation from Github (most recent version):
+- `install.packages(c("knitr", "rmarkdown"))`
+- `remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)`
+- Note: install or update all package dependencies (= other packages
+  that are needed for *healthiar*) if you get asked to do so
 
-Run the following commands below in RStudio to install *healthiar*:
-
-1.  `install.packages(c("knitr", "rmarkdown"))`
-
-2.  `remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)`
-
-3.  If you get asked to install or update any dependencies (= other
-    packages that are needed for *healthiar*) please install or update
-    all of them.
-
-## Loading the package
-
-Do not forget to load the package after the installation entering in
-your R console:
-[`library(healthiar)`](https://CRAN.R-project.org/package=healthiar).
-
-## Requirement
-
-R version 4.3.0 or higher
-
-## Note
-
-If you installed *healthiar* while the repository was still private, you
-must remove your personal access token (PAT) before installing the
-package again.
+**After installation**, do not forget to load the package by running the
+call [`library(healthiar)`](https://github.com/SwissTPH/healthiar/).
 
 # GETTING STARTED
 
-The vignette *intro_to_healthiar* (i.e. documentation on how to use the
-healthiar package) will get you started with the *healthiar* R package.
-You have the following options to find it:
+To get started with the `healthiar` R package, we recommend to look at
+the vignette (~ package manual) *intro_to_healthiar*, which you cou can
+access
 
-1.  On the [Github
-    page](https://swisstph.github.io/healthiar/articles/index.html)
+1.  on the [package
+    website](https://swisstph.github.io/healthiar/articles/index.html)
+    (recommended)
 
-2.  In R Studio: Click on the *Packages* tab in RStudio, scroll down to
+2.  in R Studio: Click on the *Packages* tab in RStudio, scroll down to
     the *healthiar* package and clicking on the hyperlinks *healthiar*
     \> *User guides, package vignettes and other documentation*
 
-3.  In the web browser: Run `browseVignettes("healthiar")` in the R
+3.  in the web browser: Run `browseVignettes("healthiar")` in the R
     console and the page will open up in your browser
 
-A 45 minutes introduction to the package can be found
-[here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ)
-
-The slides of the presentation can be found
+Additionally, a 45 minutes introduction to the package can be found
+[here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ). The slides of
+the presentation can be found
 [here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop)
+
+See the function help pages for information about specific functions. In
+RStudio, you can access the function documentation of e.g. the function
+`attribute_health` by
+
+1.  going to the \[reference page of the package
+    website\]{<https://swisstph.github.io/healthiar/reference/index.html>}
+
+2.  running
+    [`?attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+    in RStudio (with `healthiar` loaded)
+
+3.  going to the `Packages tab` and then clicking on `healthiar`
+
+# CITATION
+
+We love that you use *healthiar*. In that case, please do not forget to
+cite *healthiar* in your work. Three options to get there:
+
+1.  On the [healthiar package
+    website](https://swisstph.github.io/healthiar/authors.html#citation)
+
+2.  See
+    [CITATION.R](https://github.com/SwissTPH/healthiar/blob/master/inst/CITATION)
+
+3.  In your R console, enter *citation(“healthiar”)*.
+
+In options b) and c), you always see the updated citation. In option a),
+you see citation of the *healthiar* version that you have installed
+locally, which might be outdated.
 
 # DISCLAMER AND LICENCE
 
@@ -79,23 +94,6 @@ disclaimer and terms of the licence:
 Feel free provide feedback via [GitHub
 issues](https://github.com/SwissTPH/healthiar/issues)
 
-# CITATION
-
-We love that you use *healthiar*. In that case, please do not forget to
-cite *healthiar* in your work. Three options to get there:
-
-1.  In your R console, enter *citation(“healthiar”)*.
-
-2.  On the [Github
-    page](https://swisstph.github.io/healthiar/authors.html#citation)
-
-3.  See
-    [CITATION.R](https://github.com/SwissTPH/healthiar/blob/master/inst/CITATION)
-
-In the option a, you see the version number of *healthiar* that your are
-using. In options b and c, you see the updated citation (might be more
-recent than your installed version).
-
 # PRESENTING *healthiar*
 
 If you would like us to present *healthiar* at a conference, lecture or
@@ -104,8 +102,9 @@ training, please, contact us: <alberto.castrofernandez@swisstph.ch> and
 
 # ACKNOWLEDGEMENTS
 
-The development of *healthiar* has been funded by the EU project
-BEST-COST.
+*healthiar* was been developed under the framework of EU project
+BEST-COST. BEST-COST is funded by the European Union’s Horizon Europe
+programme under Grant Agreement No.101095408.
 
 # Package index
 
@@ -158,5 +157,5 @@ BEST-COST.
 
 ### All vignettes
 
-- [intro to
+- [Vignette: Intro to
   healthiar](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.md):

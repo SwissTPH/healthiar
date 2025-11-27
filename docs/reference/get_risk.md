@@ -28,9 +28,10 @@ get_risk(
 
 - rr:
 
-  `Numeric vector` containing the relative risk. The data frame must
-  contain the central estimate as well as the lower and upper bound of
-  the exposure-response function.
+  `Numeric value` or `numeric vector` specifying the **relative risk**
+  estimate(s) and (optionally) the corresponding lower and upper 95%
+  confidence interval bounds. Not required if the `erf_eq` argument is
+  already specified.
 
 - rr_increment:
 
@@ -41,32 +42,42 @@ get_risk(
 
 - erf_eq:
 
-  Equation of the user-defined exposure-response function that puts the
-  relative risk (y) in relation with exposure (x). If the function is
-  provided as `string`, it can only contains one variable: x (exposure).
-  E.g. "3+x+x^2". If the function is provided as a `function`, the
-  object should have a function class. If only the values of the x-axis
-  (exposure) and y axis (relative risk) of the dots in the
-  exposure-response function are available, a cubic spline natural
-  interpolation can be assumed to get the function using, e.g.,
-  `stats::splinefun(x, y, method="natural")`
+  `String` or `function` specifying the **exposure-response function**
+  and (optionally) the corresponding lower and upper 95% confidence
+  interval functions. See Details and Examples sections below.
 
 - cutoff:
 
-  `Numeric value` showing the cut-off exposure level in ug/m3 (i.e. the
-  exposure level below which no health effects occur).
+  `Numeric value` specifying the **exposure cut-off value** (i.e. the
+  exposure level below which no health effects occur) and (optionally)
+  the corresponding lower and upper 95% confidence interval bounds.
 
 - exp:
 
-  Population exposure to the stressor (e.g. annual population-weighted
-  mean).
+  `Numeric value` or `numeric vector` specifying the **exposure
+  level(s)** to the environmental stressor (e.g. annual
+  population-weighted mean) and (optionally) the corresponding lower and
+  upper bound of the 95% confidence interval.
 
 ## Value
 
-This function returns the `numeric` relative risk(s) at the specified
-exposure level(s), referred to as *rr_at_exp* in the equations above.
+This function returns the `numeric` risk value(s) at the specified
+exposure level(s), referred to as *rr_at_exp* in the relative risk
+equations above.
 
 ## Details
+
+**Function arguments**
+
+`erf_eq`
+
+If the function is provided as `string`, it can only contain the
+variable c (exposure), e.g. "3+c+c^2". If the function is provided as a
+`function`, the object must be of the class function. If only the values
+of the x-axis (exposure) and y axis (relative risk) of the dots in the
+exposure-response function are available, a cubic spline natural
+interpolation can be assumed to get the function using, e.g.,
+`stats::splinefun(x, y, method="natural")`
 
 **Equations for scaling of relative risk**
 
@@ -111,4 +122,22 @@ get_risk(
   cutoff = 5
 )
 #> [1] 1.025
+
+# Goal: determine the absolute risk for high annoyance at specific noise exposure levels
+get_risk(
+  erf_eq = "78.9270-3.1162*c+0.0342*c^2",
+  exp = c(57.5, 62.5, 67.5, 72.5, 77.5)
+)
+#> [1] 12.81925 17.75825 24.40725 32.76625 42.83525
+
+# Goal: attribute COPD cases to air pollution exposure by applying a user-defined exposure response function,
+# e.g. MR-BRT curves from Global Burden of Disease study.
+get_risk(
+  erf_eq = splinefun(
+    x = c(0, 5, 10, 15, 20, 25, 30, 50, 70, 90, 110),
+    y = c(1.00, 1.04, 1.08, 1.12, 1.16, 1.20, 1.23, 1.35, 1.45, 1.53, 1.60),
+    method = "natural"),
+  exp = c(8, 9, 10)
+)
+#> [1] 1.063984 1.071987 1.080000
 ```

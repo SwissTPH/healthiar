@@ -1,18 +1,18 @@
 ---
-title: "intro to healthiar"
+title: "Vignette: Intro to healthiar"
 output: 
   rmarkdown::html_vignette:
     toc: true
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{intro_to_healthiar}
+  %\VignetteIndexEntry{Vignette: Intro to healthiar}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=TRUE, eval=TRUE, include=TRUE)
 ```
-------------------------------------------------------------------------
+
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -36,53 +36,23 @@ Hi there!
 
 This vignette will tell you about `healthiar` and show you how to use `healthiar` with the help of examples.
 
-*NOTE*: By using healthiar you agree to the [terms of use](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) and confirm you have read the [disclaimer](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme).
+*NOTE*: Before using `healthiar`, please read carefully the information provided in the [readme file](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) or the [welcome webpage](https://swisstph.github.io/healthiar/). By using `healthiar`, you agree to the [terms of use and disclaimer](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme).
 
-*NOTE*: the development of `healthiar` is still ongoing. Any feedback, e.g. regarding bugs or unclear documentation, is welcome and highly appreciated. Please provide feedback via a [GitHub issue](https://github.com/SwissTPH/healthiar/issues).
+
 
 ------------------------------------------------------------------------
 
 # About `healthiar`
 
-The `healthiar` functions allow you to quantify and monetize the health impacts of environmental stressors (air pollution & noise)
+The `healthiar` functions allow you to quantify and monetize the health impacts (or burden of disease) attributable to exposure. The main focus of the EU project that initiated the development of `healthiar` (BEST-COST) has been two environmental exposures:  air pollution and noise. However, `healthiar` can be (and has been) used for many other exposures such as green spaces, chemicals, physical activity...
 
-`healthiar` core *family members* (= functions)
+See below a an overview of the package. The whole list of functions included in `healthiar` is available [here](https://swisstph.github.io/healthiar/reference/index.html). 
 
--   `attribute_health()` quantifies health impact attributable to environmental exposure (via relative or absolute risk)
--   `summarize_uncertainty()` performs a Monte Carlo simulation
--   `compare()` compares health impacts of two scenarios (via PAF or PIF approaches)
--   `monetize()` monetizes health impacts
--   `attribute_lifetable()` quantifies health impacts by applying the life table method (RR & AR)
--   `attribute_mod()` modifies an existing `attribute_health()` assessment
--   `cba()` performs a cost-benefit analysis
--   `get_daly()` adds up YLL & YLD to obtain DALY
--   `multiexpose()` considers exposure to 2 exposures (e.g. two different air pollutants) at the same time to quantify the attributable health impacts
--   `socialize()` exposes and quantifies social inequalities in health impacts
--   `prepare_mdi()` creates the BEST-COST MDI (Multidimensional Deprivation Index)
 
-## Package overview
+![Figure:`healthiar` overview](images/package_overview.png){width="700"}
 
-![`healthiar` overview](images/package_overview.png){width="700"}
 
-------------------------------------------------------------------------
-
-# Abbreviations
-
-BHD/bhd - baseline health data CI - confidence interval
-
-CBA/cba - cost-benefit analysis
-
-exp - exposure
-
-RR/rr - relative risk
-
-YLL/yll - years of life lost
-
-# `healthiar` Examples
-
-*Note*: most `healthiar` functions have examples that you can execute (with `healthiar` loaded) by running `example("function_name")`, e.g. `example("attribute_health")`
-
-*Note*: healthiar functions are easiest to use if your data is prepared in a tidy format:
+Be aware that `healthiar` functions are easier to use if your data is prepared in a tidy format, i.e.:
 
 -   Each variable is a column; each column is a variable.
 
@@ -92,15 +62,24 @@ YLL/yll - years of life lost
 
 Source: Hadley Wickham (2014). Tidy Data. [Link](https://doi.org/10.18637/jss.v059.i10). For additional information see this [informal explanation of tidy data](https://cran.r-project.org/package=tidyr) (by the author).
 
-## Example: `attribute_health()` with relative risk
+---------------------------------------------------------------------------
 
-Goal: attribute COPD cases to PM2.5 air pollution exposure
+# Function examples
 
-### Refresher - Burden of disease with relative risk
+The descriptions of the [`healthiar` functions](https://swisstph.github.io/healthiar/reference/index.html) provide examples that you can execute (with `healthiar` loaded) by running `example("function_name")`, e.g. `example("attribute_health")`. In the sections below in this vignette, you find additional examples and more detailed explanations.
+
+
+# Relative risk 
+
+Goal: E.g. To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a country.
+
+### Methodological refresher
 
 ![Figure: Relative risk approach](images/bod_rr.png){width="700"}
 
-### Function call - Hard coded
+### Function call
+
+#### Hard coded
 
 ```{r}
 results_pm_copd <- attribute_health(
@@ -115,7 +94,7 @@ results_pm_copd <- attribute_health(
 
 For alternative ERF shapes see the function documentation of `attribute_health()`.
 
-### Function call - Pre-loaded data
+#### Function call - Pre-loaded data
 
 `healthiar` comes with some example data that start with `exdat_` that allow you to test functions. Some of these example data will be used in some examples in this vignette.
 
@@ -190,65 +169,15 @@ Some of the most results columns include:
 -   *impact* raw impact/burden
 -   *pop_fraction* population attributable fraction (PAF) or population impact fraction (PIF)
 
-*NOTE*: the main output contains more columns that provide additional information about the assessment, such as intermediate results and assessment specifications, ...
+*NOTE*: The main output contains more columns that provide additional information about the assessment.
 
-## Example: `attribute_health()` with relative risk & uncertainty
 
-Goal: attribute COPD cases to PM2.5 exposure
 
-Now we will make a similar function call, but include uncertainty in several input arguments
+# Absolute risk
 
-### Function call
+Goal: E.g. To quantify the incidence cases of high annoyance attributable to (road traffic) noise exposure.
 
-```{r}
-results_pm_copd <- attribute_health(
-    erf_shape = "log_linear",
-    rr_central = 1.369, 
-    rr_lower = 1.124, # lower 95% confidence interval (CI) bound of RR
-    rr_upper = 1.664, # upper 95% CI bound of RR
-    rr_increment = 10, 
-    exp_central = 8.85, 
-    exp_lower = 8, # lower 95% CI bound of exposure
-    exp_upper = 10, # upper 95% CI bound of exposure
-    cutoff_central = 5,
-    bhd_central = 30747, 
-    bhd_lower = 28000, # lower 95% confidence interval estimate of BHD
-    bhd_upper = 32000 # upper 95% confidence interval estimate of BHD
-) 
-```
-
-### Detailed results
-
-Let's inspect the detailed results:
-
-```{r eval=FALSE, echo=TRUE, include=FALSE}
-results_pm_copd$health_detailed$results_raw
-```
-
-```{r echo=FALSE}
-results_pm_copd$health_detailed$results_raw |> 
-  dplyr::select(erf_ci, exp_ci, bhd_ci, impact_rounded) |> 
-  dplyr::slice(1:9) |> 
-  knitr::kable() # Prints tibble in a minimal layout
-```
-
-Each row contains the estimated attributable cases (`impact_rounded`) obtained by the input data specified in the columns ending in "\_ci" and the other calculation pathway specifications in that row (not shown).
-
--   The 1st contains the estimated attributable impact when using the central estimates of relative risk, exposure and baseline health data
-
--   The 2nd row shows the impact when using the central estimates of the relative risk, exposure in combination with the lower estimate of the baseline health data
-
--   ...
-
-*NOTE*: only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_raw$impact)` possible combinations are displayed due to space constraints
-
-*NOTE*: only a selection of columns are shown
-
-## Example: `attribute_health()` with absolute risk
-
-Goal: attribute cases of high annoyance to (road traffic) noise exposure
-
-### Refresher - Burden of disease with absolute risk
+## Refresher - Burden of disease with absolute risk
 
 ![Figure: Absolute risk approach](images/bod_ar.png){width="700"}
 
@@ -263,7 +192,7 @@ results_noise_ha <- attribute_health(
 )
 ```
 
-The `erf_eq_central` argument can digest other types of functions (see section [Example: attribute_health() with user-defined ERF])
+The `erf_eq_central` argument can digest other types of functions (see section on user-defined ERF)
 
 ### Main results
 
@@ -311,9 +240,13 @@ results_noise_ha[["health_main"]] |>
 rm(results_noise_ha)
 ```
 
-## Example: `attribute_health()` for multiple geographic units with relative risk
 
-Goal: attribute disease cases to PM2.5 exposure in multiple geographic units
+
+# Multiple geographic units
+
+## using relative risk
+
+Goal: e.g. To quantify the disease cases attributable to PM2.5 exposure in multiple cities using one single command.
 
 -   Enter unique ID's as a vector (`numeric` or `character`) to the `geo_id_micro` argument (e.g. municipality names or province abbrevations)
 
@@ -376,14 +309,11 @@ results_iteration[["health_detailed"]][["results_raw"]] |>
 rm(results_iteration)
 ```
 
-## Example: `attribute_health()` for multiple geographic units with absolute risk
+## using absolute risk
 
-(See [Example: attribute_health() for multiple geographic units with relative risk] for a more detailed explanation of multiple geo unit assessments)
-
-Goal: attribute high annoyance cases to noise exposure in rural and urban areas
+Goal: E.g.To quantify high annoyance cases attributable to noise exposure in rural and urban areas.
 
 ### Function call
-
 
 ```{r}
 data <- exdat_noise |> 
@@ -441,105 +371,120 @@ results_iteration_ar[["health_detailed"]][["results_by_geo_id_micro"]] |>
 rm(results_iteration_ar, data)
 ```
 
-## Example: `attribute_health()` and sub-group analysis (by age group)
+# Uncertainty
 
-Goal: determine mean attributable health impacts by age group
+## Confidence interval
 
-*NOTE*: to obtain age-group-specific results, the baseline health data (and possibly exposure) must be available by age group.
+Goal: E.g. To quantify the COPD cases attributable to PM2.5 exposure taking into account uncertainty (lower and upper bound of confidence interval) in several input arguments: relative risk, exposure and baseline health data.
 
-If the `age` argument was specified, age-group-specific results are available under `health_detailed` in the sub-folder `results_by_age_group`.
+### Function call
 
 ```{r}
-results_age_group <- attribute_health(
-        approach_risk = "relative_risk",
-        age = c("below_65", "65_plus"),
-        exp_central = c(8, 7),
-        cutoff_central = c(5, 5),
-        bhd_central = c(1000, 5000),
-        rr_central = 1.06,
-        rr_increment = 10,
-        erf_shape = "log_linear"
-      )
-results_age_group$health_detailed$results_by_age_group |> 
-  dplyr::select(age_group, impact_rounded, exp, bhd) |> 
+results_pm_copd <- attribute_health(
+    erf_shape = "log_linear",
+    rr_central = 1.369, 
+    rr_lower = 1.124, # lower 95% confidence interval (CI) bound of RR
+    rr_upper = 1.664, # upper 95% CI bound of RR
+    rr_increment = 10, 
+    exp_central = 8.85, 
+    exp_lower = 8, # lower 95% CI bound of exposure
+    exp_upper = 10, # upper 95% CI bound of exposure
+    cutoff_central = 5,
+    bhd_central = 30747, 
+    bhd_lower = 28000, # lower 95% confidence interval estimate of BHD
+    bhd_upper = 32000 # upper 95% confidence interval estimate of BHD
+) 
+```
+
+### Detailed results
+
+Let's inspect the detailed results:
+
+```{r eval=FALSE, echo=TRUE, include=FALSE}
+results_pm_copd$health_detailed$results_raw
+```
+
+```{r echo=FALSE}
+results_pm_copd$health_detailed$results_raw |> 
+  dplyr::select(erf_ci, exp_ci, bhd_ci, impact_rounded) |> 
+  dplyr::slice(1:9) |> 
+  knitr::kable() # Prints tibble in a minimal layout
+```
+
+Each row contains the estimated attributable cases (`impact_rounded`) obtained by the input data specified in the columns ending in "\_ci" and the other calculation pathway specifications in that row (not shown).
+
+-   The 1st contains the estimated attributable impact when using the central estimates of relative risk, exposure and baseline health data
+
+-   The 2nd row shows the impact when using the central estimates of the relative risk, exposure in combination with the lower estimate of the baseline health data
+
+-   ...
+
+*NOTE*: only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_raw$impact)` possible combinations are displayed due to space constraints
+
+*NOTE*: only a selection of columns are shown
+
+
+## Monte Carlo simulation
+
+Goal: E.g. To summarize uncertainty of attributable health impacts (i.e. to get a single confidence interval instead of many combinations) by using a Monte Carlo simulation.
+
+
+You can do this carrying out a Monte Carlo uncertainty analysis via the `summarize_uncertainty()` function.
+
+The outcome of the Monte Carlo analysis is added to the variable entered as the `results` argument, which is `results_pm_copd` in our case.
+
+Two lists ("folders") are added:
+
+-   `uncertainty_main` contains the central estimate and the corresponding 95% confidence intervals obtained through the Monte Carlo assessment
+
+-   `uncertainty_detailed` contains all `n_sim` simulations of the Monte Carlo assessment
+
+### Function call
+
+```{r}
+results_pm_copd_summarized <- 
+  summarize_uncertainty(
+    output_attribute = results_pm_copd,
+    n_sim = 100
+)
+```
+
+### Main results
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_pm_copd_summarized$uncertainty_main
+```
+
+```{r eval=TRUE, include=TRUE, echo=FALSE}
+results_pm_copd_summarized$uncertainty_main |> 
   knitr::kable()
 ```
 
+### Detailed results
 
-```{r eval=TRUE, include=FALSE, echo=FALSE}
-rm(results_age_group)
+The folder `uncertainty_detailed` contains all single simulations. Let's look at the impact of the first 10 simulations.
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_pm_copd_summarized$uncertainty_detailed$impact_by_sim
 ```
 
-
-## Example: `attribute_health()` and sub-group analysis (by sex)
-
-Goal: determine mean attributable health impacts by sex
-
-*NOTE*: to obtain sex-specific results, the baseline health data (and possibly exposure) must be entered by sex.
-
-If the `sex` argument was specified, sex-specific results are available under `health_detailed` in the sub-folder `results_by_sex`.
-
-```{r eval=TRUE, include=TRUE, echo=TRUE}
-results_sex <- attribute_health(
-        approach_risk = "relative_risk",
-        sex = c("female", "male"),
-        exp_central = c(8, 8),
-        cutoff_central = c(5, 5),
-        bhd_central = c(1000, 1100),
-        rr_central = 1.06,
-        rr_increment = 10,
-        erf_shape = "log_linear"
-      )
-results_sex$health_detailed$results_by_sex |> 
-  dplyr::select(sex, impact_rounded, exp, bhd) |> 
+```{r eval=TRUE, include=TRUE, echo=FALSE}
+results_pm_copd_summarized$uncertainty_detailed$impact_by_sim |> 
   knitr::kable()
 ```
 
-```{r eval=TRUE, include=FALSE, echo=FALSE}
-rm(results_sex)
-```
-
-## Example: `attribute_health()` and sub-group analysis (by education level)
-
-Goal: determine mean attributable health impacts by education level
-
-*Note*: a (random) ID vector of unique values must be entered to the argument `geo_id_micro`, to indicate that each row is an observation on its own (and not just exposure categories)
-
-A single vector (or a data frame / tibble with multiple columns) to group the results by can be entered to the `info` argument. In this exmaple, this will be information about the education level.
-
-In a second step one can group the results based on one or more columns and so summarize the results by the preferred sub-groups
-
-```{r}
-info <- data.frame(
-  education = rep(c("secondary", "bachelor", "master"), each = 5) # education level
-)
-output_attribute <- attribute_health(
-  rr_central = 1.063,
-  rr_increment = 10,
-  erf_shape = "log_linear",
-  cutoff_central =  0,
-  exp_central = sample(6:10, 15, replace = TRUE),
-  bhd_central = sample(100:500, 15, replace = TRUE),
-  geo_id_micro = c(1:nrow(info)), # (random) ID must be entered
-  info = info
-)
-output_stratified <- output_attribute$health_detailed$results_raw |>
-  dplyr::group_by(info_column_1) |>
-  dplyr::summarize(mean_impact = mean(impact)) |>
-  print()
-```
-
-```{r eval=TRUE, include=FALSE, echo=FALSE}
-rm(info, output_attribute, output_stratified)
+```{r, echo=FALSE, eval=TRUE, include=FALSE}
+rm(results_pm_copd_summarized)
 ```
 
 
-## Example: `attribute_health()` with user-defined ERF
 
-Goal: attribute COPD cases to air pollution exposure by applying a user-defined exposure response function (e.g. MR-BRT curves from Global Burden of Disease study)
+# User-defined ERF
+
+Goal: E.g. To quantify COPD cases attributable to air pollution exposure by applying a user-defined exposure-response function (ERF), such as the MR-BRT curves from Global Burden of Disease study. 
 
 
-*Note*: in this case, the function arguments `erf_eq_...` require a function as input, so we use an auxiliary function (`splinefun()`) to transform the points on the ERF into type `function`.
+In this case, the function arguments `erf_eq_...` require a function as input, so we use an auxiliary function (`splinefun()`) to transform the points on the ERF into type `function`.
 ```{r}
 results_pm_copd_mr_brt <- attribute_health(
   exp_central = 8.85,
@@ -584,85 +529,403 @@ legend("topleft", legend = c("Original points", "Spline curve"),
 
 Alternatively, other functions (e.g. `approxfun()`) can be used to create the ERF
 
-## Example: `attribute_health()` with user-defined categorial ERF
+# Sub-group analysis 
+## by age group
 
-Use a calculation threshold which is different from the effect threshold
-Goal: Health impacts in the exposure group 55dB+ that are affected by a exposure above the effect threshold (45 dB)
+Goal: e.g. To quantify health impacts attributable to air pollution in a country *by age group*.
 
+To obtain age-group-specific results, the baseline health data (and possibly exposure) must be available by age group.
 
-*Note*: The function arguments `erf_eq_...` require a function as input. Instead of using a `splinefun()` this can also be fulfilled by using a 'function(c)' which is of type 'function'.
+If the `age` argument was specified, age-group-specific results are available under `health_detailed` in the sub-folder `results_by_age_group`.
 
 ```{r}
-#setting up function parameters
-threshold_effect <- 45
-RR <- 1.055
-threshold_calculation <- 55
-rr_increment <- 10
-
-# define categorical function, the ifelse condition enables the case distinction
-erf_function <- function(c){
-  output <- ifelse(c<threshold_calculation, 1, exp((log(RR)/rr_increment)*(c-threshold_effect)))
-  return(output)
-}
-# attribute_health
-results_catERF_different_calc_thesh <- healthiar::attribute_health(
-  approach_risk = "relative_risk",
-  erf_eq_central = erf_function,
-  prop_pop_exp = c(300000,200000,150000,120000,100000,70000,60000)/10000000,
-  exp_central = c(47,52,57,62,67,72,77),
-  cutoff_central=0,
-  bhd_central=50000)$health_main$impact_rounded
+results_age_group <- attribute_health(
+        approach_risk = "relative_risk",
+        age = c("below_65", "65_plus"),
+        exp_central = c(8, 7),
+        cutoff_central = c(5, 5),
+        bhd_central = c(1000, 5000),
+        rr_central = 1.06,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+results_age_group$health_detailed$results_by_age_group |> 
+  dplyr::select(age_group, impact_rounded, exp, bhd) |> 
+  knitr::kable()
 ```
 
-The used function is equal to
-$$
-f(c) =
-\begin{cases}
-1, & c < \text{threshold} \\
-\exp\left( \frac{\log(RR)}{rr_{increment}} (c - threshold_{effect}) \right), & c \ge \text{threshold}
-\end{cases}.
-$$
 
-The categorical ERF curve created looks as follows
-
-```{r fig.alt="ERF curve", eval=TRUE, include=TRUE, echo=FALSE}
-
-
-
-
-# Evaluate exp_central points
-x <- c(47,52,57,62,67,72,77) # central exposure values
-y <- erf_function(x)
-
-# Generate finer x-values
-x_dense <- seq(min(x), max(x), length.out = 200)
-# Evaluate exp_central points (finer version)
-y_dense <- erf_function(x_dense)
-
-## Plot
-plot(x,
-     y # main = "User-defined ERF"
-     ,
-     main = "",
-     xlab = "Exposure",
-     ylab = "Relative risk",
-     col = "blue",
-     pch = 19)
-
-lines(x_dense,y_dense,col = "red",lwd = 2)
-
-legend("topleft",
-       legend = c("Original points", "Categorical ERF curve"),
-       col = c("blue", "red"),
-       pch = c(19, NA),
-       lty = c(NA, 1),
-       lwd = c(NA, 2))
-
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(results_age_group)
 ```
 
-## Example: `compare()`
 
-Goal: comparison of two scenarios
+## by sex
+
+Goal: e.g. To quantify health impacts attributable to air pollution in a country *by sex*.
+
+To obtain sex-specific results, the baseline health data (and possibly exposure) must be entered by sex.
+
+If the `sex` argument was specified, sex-specific results are available under `health_detailed` in the sub-folder `results_by_sex`.
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
+results_sex <- attribute_health(
+        approach_risk = "relative_risk",
+        sex = c("female", "male"),
+        exp_central = c(8, 8),
+        cutoff_central = c(5, 5),
+        bhd_central = c(1000, 1100),
+        rr_central = 1.06,
+        rr_increment = 10,
+        erf_shape = "log_linear"
+      )
+results_sex$health_detailed$results_by_sex |> 
+  dplyr::select(sex, impact_rounded, exp, bhd) |> 
+  knitr::kable()
+```
+
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(results_sex)
+```
+
+## by other sub-groups
+
+Goal: e.g. To quantify health impacts attributable to air pollution in a country *by education level*.
+
+A (random) ID vector of unique values must be entered to the argument `geo_id_micro`, to indicate that each row is an observation on its own (and not just exposure categories)
+
+A single vector (or a data frame / tibble with multiple columns) to group the results by can be entered to the `info` argument. In this example, this will be information about the education level.
+
+In a second step one can group the results based on one or more columns and so summarize the results by the preferred sub-groups
+
+```{r}
+info <- data.frame(
+  education = rep(c("secondary", "bachelor", "master"), each = 5) # education level
+)
+output_attribute <- attribute_health(
+  rr_central = 1.063,
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  cutoff_central =  0,
+  exp_central = sample(6:10, 15, replace = TRUE),
+  bhd_central = sample(100:500, 15, replace = TRUE),
+  geo_id_micro = c(1:nrow(info)), # (random) ID must be entered
+  info = info
+)
+output_stratified <- output_attribute$health_detailed$results_raw |>
+  dplyr::group_by(info_column_1) |>
+  dplyr::summarize(mean_impact = mean(impact)) |>
+  print()
+```
+
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(info, output_attribute, output_stratified)
+```
+
+
+# YLL & deaths with life table
+
+## YLL
+
+Goal: E.g. To quantify the years of life lost (YLL) due to deaths from COPD attributable to PM2.5 exposure during one year.
+
+We can use `attribute_lifetable()` combined with life table input data to determine YLL attributable to an environmental stressor.
+
+### Function call
+
+```{r}
+results_pm_yll <- attribute_lifetable(
+  year_of_analysis = 2019, 
+  health_outcome = "yll",
+  rr_central =  1.118, 
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  exp_central = 8.85,
+  cutoff_central = 5,
+  min_age = 20, # age from which population is affected by the exposure
+  # Life table information
+  age_group = exdat_lifetable$age_group,
+  sex = exdat_lifetable$sex,
+  population = exdat_lifetable$midyear_population,
+  # In the life table case, BHD refers to deaths
+  bhd_central = exdat_lifetable$deaths
+) 
+```
+
+### Main results
+
+Total YLL attributable to exposure (sum of sex-specific impacts)
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_pm_yll$health_main
+```
+
+```{r eval=TRUE, include=TRUE, echo=FALSE}
+results_pm_yll$health_main |> 
+  dplyr::slice_head() |> 
+  dplyr::select(impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
+  knitr::kable()
+```
+
+Use the two arguments `approach_exposure` and `approach_newborns` to modify the life table calculation
+
+-   `approach_exposure`
+
+    -   `"single_year"` (default) population is exposed for a single year and the impacts of that exposure are calculated
+
+    -   `"constant"` population is exposed every year
+
+-   `approach_newborns`
+
+    -   `"without_newborns"` (default) assumes that the population in the year of analysis is followed over time, without considering newborns being born
+
+    -   `"with_newborns"` assumes that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the argument population
+
+### Detailed results
+
+Attributable YLL results
+
+-   per year
+
+-   per age (group)
+
+-   per sex (if sex-specific life table data entered)
+
+are available.
+
+*Note*: We will inspect the results for females; male results are also available.
+
+### Results per year
+
+*NOTE*: only a selection of years is shown
+
+```{r}
+results_pm_yll$health_detailed$results_raw |>
+  dplyr::summarize(
+    .by = year, 
+    impact = sum(impact, na.rm = TRUE)
+  )
+```
+
+```{r}
+results_pm_yll$health_detailed$results_raw |>
+  dplyr::summarize(
+    .by = year, 
+    impact = sum(impact, na.rm = TRUE)) |>
+  knitr::kable()
+```
+
+
+
+#### YLL
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_pm_yll$health_detailed$intermediate_calculations |> 
+  dplyr::filter(sex == "female") |>
+  dplyr::pull(impact_by_age_and_year) |>
+  purrr::pluck(1)
+```
+
+```{r echo=FALSE}
+results_pm_yll$health_detailed$intermediate_calculations |> 
+  dplyr::filter(sex == "female") |>
+  dplyr::pull(impact_by_age_and_year) |>
+  purrr::pluck(1) |>
+  dplyr::select(age_start, age_end, impact_2019) |> 
+  dplyr::slice( ( dplyr::n() - 8 ) : dplyr::n() ) |> 
+  knitr::kable()
+```
+
+#### Population (baseline scenario)
+
+Baseline scenario refers to the scenario with exposure (i.e. the scenario specified in the assessment).
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_pm_yll$health_detailed$intermediate_calculations|> 
+  dplyr::filter(sex == "female") |>
+  dplyr::pull(projection_if_exposed_by_age_and_year) |>
+  purrr::pluck(1)
+```
+
+```{r echo=FALSE}
+results_pm_yll$health_detailed$intermediate_calculations|> 
+  dplyr::filter(sex == "female") |>
+  dplyr::pull(projection_if_exposed_by_age_and_year) |>
+  purrr::pluck(1) |>   
+  dplyr::select(age_start, midyear_population_2019, midyear_population_2020, 
+                midyear_population_2021, midyear_population_2022) |>    
+  dplyr::slice( ( dplyr::n() - 8 ) : dplyr::n() ) |>  
+  knitr::kable()
+```
+
+#### Population (unexposed scenario)
+
+Impacted scenario refers to the scenario without exposure.
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_pm_yll$health_detailed$intermediate_calculations|> 
+  dplyr::filter(sex == "female") |>
+  dplyr::pull(projection_if_unexposed_by_age_and_year) |>
+  purrr::pluck(1)
+```
+
+```{r echo=FALSE}
+results_pm_yll$health_detailed$intermediate_calculations|> 
+  dplyr::filter(sex == "female") |>
+  dplyr::pull(projection_if_unexposed_by_age_and_year) |>
+  purrr::pluck(1) |>   
+  dplyr::select(age_start, midyear_population_2019, midyear_population_2020, 
+                midyear_population_2021, midyear_population_2022) |>    
+  dplyr::slice( ( dplyr::n() - 8 ) : dplyr::n() ) |>  
+  knitr::kable()
+```
+
+## Deaths
+
+Goal: E.g. To determine premature deaths from COPD attributable to PM2.5 exposure during one year.
+
+See example on YLL for additional info on `attribute_lifetable()` calculations and its output.
+
+### Function call
+
+```{r}
+results_pm_deaths <- attribute_lifetable(
+  health_outcome = "deaths",
+  year_of_analysis = 2019,
+  rr_central =  1.118, 
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  exp_central = 8.85,
+  cutoff_central = 5,
+  min_age = 20, # age from which population is affected by the exposure   
+  # Life table information
+  age_group = exdat_lifetable$age_group,   
+  sex = exdat_lifetable$sex,
+  population = exdat_lifetable$midyear_population, 
+  bhd_central = exdat_lifetable$deaths
+)
+```
+
+### Main results
+
+Total premature deaths attributable to exposure (sum of sex-specific impacts)
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_pm_deaths$health_main$impact
+```
+
+```{r, eval=TRUE, include=TRUE, echo=FALSE}
+results_pm_deaths$health_main |> 
+  dplyr::slice_head() |> 
+  dplyr::select(impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
+  knitr::kable()
+```
+
+### Detailed results
+
+Attributable premature deaths results
+
+-   per year (if argument `approach_exposure = "constant"`)
+
+-   per age (group)
+
+-   per sex (if sex-specific life table data entered)
+
+are available
+
+*Note*: we will inspect the results for females; male results are also available
+
+*Note*: because we set the function argument `approach_exposure = "constant"` in the function call results are available for one year (the year of analysis)
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_pm_deaths$health_detailed$intermediate_calculations|> 
+  dplyr::filter(sex == "female") |>
+  dplyr::pull(projection_if_unexposed_by_age_and_year) |>
+  purrr::pluck(1)
+```
+
+```{r eval=TRUE, include=TRUE, echo=FALSE}
+results_pm_yll$health_detailed$intermediate_calculations|> 
+  dplyr::filter(sex == "female") |>
+  dplyr::pull(projection_if_unexposed_by_age_and_year) |>
+  purrr::pluck(1) |>
+  dplyr::slice( ( dplyr::n() - 8 ) : dplyr::n() ) |>  
+  knitr::kable()
+```
+
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(results_pm_deaths)
+```
+
+# YLD
+
+Goal: E.g. To quantify the years lived with disability (YLD) attributable to air pollution exposure using disability weights.
+
+### Function call
+
+```{r}
+results_pm_copd_yld  <- attribute_health(
+  rr_central = 1.1, 
+  rr_increment = 10, 
+  erf_shape = "log_linear",  
+  exp_central = 8.85,
+  cutoff_central = 5,
+  bhd_central = 1000,
+  duration_central = 10,
+  dw_central = 0.2
+)
+```
+
+### Main results
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_pm_copd_yld$health_main
+```
+
+```{r eval=TRUE, include=TRUE, echo=FALSE}
+results_pm_copd_yld$health_main |> 
+  dplyr::select(erf_ci, impact) |> 
+  knitr::kable()
+```
+
+# DALYs
+
+Goal: To obtain the Disability-Adjusted Life Years as the sum of YLLs and YLDs.
+
+This is possible using the function `daly()`.
+
+### Function call
+
+```{r}
+results_daly <- daly(
+     output_attribute_yll = results_pm_yll,
+     output_attribute_yld = results_pm_copd_yld
+)
+```
+
+### Main results
+
+YLL, YLD & DALY
+
+```{r eval=FALSE, include=FALSE, echo=TRUE}
+results_daly$health_main |> 
+  select(impact_yll_rounded, impact_yld_rounded, impact_rounded)
+```
+
+```{r eval=TRUE, include=TRUE, echo=FALSE}
+results_daly$health_main |> 
+  dplyr::select(impact_yll_rounded, impact_yld_rounded, impact_rounded) |> 
+  knitr::kable()
+```
+
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(results_daly, results_pm_yll, results_pm_copd_yld)
+```
+
+
+# Comparison of two health scenarios
+
+Goal: E.g. To compare the health impacts in the scenario "before intervention" vs. "after intervention".
 
 ### Function call
 
@@ -745,59 +1008,150 @@ The `compare()` results contain two additional outputs in addition to those we h
 rm(results_comparison, scenario_A, scenario_B)
 ```
 
-## Example: `summarize_uncertainty()`
 
-You can do a Monte Carlo uncertainty analysis via the `summarize_uncertainty` function.
 
-The outcome of the Monte Carlo analysis is added to the variable entered as the `results` argument, which is `results_pm_copd` in our case.
 
-Two lists ("folders") are added:
 
--   `uncertainty_main` contains the central estimate and the corresponding 95% confidence intervals obtained through the Monte Carlo assessment
+# Two correlated exposures 
 
--   `uncertainty_detailed` contains all `n_sim` simulations of the Monte Carlo assessment
+Goal: E.g. To quantify the total health impact attributable to PM2.5 and NO2.
+
+For this purpose, you can use the function `multiexpose()`.
+
+*Attention*: To apply this method, the relative risks for one exposure must be adjusted for the second exposure.
+
 
 ### Function call
 
 ```{r}
-results_pm_copd_summarized <- 
-  summarize_uncertainty(
-    output_attribute = results_pm_copd,
-    n_sim = 100
+results_pm <- attribute_health(
+  erf_shape = "log_linear",
+  rr_central = 1.369, 
+  rr_increment = 10,
+  exp_central = 8.85,
+  cutoff_central = 5,
+  bhd_central = 30747
+) 
+
+results_no2 <- attribute_mod(
+  output_attribute = results_pm,
+  exp_central = 10.9,
+  rr_central = 1.031
 )
+
+results_multiplicative <- multiexpose(
+  output_attribute_exp_1 = results_pm,
+  output_attribute_exp_2 = results_no2,
+  exp_name_1 = "pm2.5",
+  exp_name_2 = "no2",
+  approach_multiexposure = "multiplicative"
+)
+```
+
+```{r, echo=FALSE, eval=TRUE, include=FALSE}
+rm(results_no2, results_pm)
 ```
 
 ### Main results
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_copd_summarized$uncertainty_main
+```{r eval=FALSE, include=TRUE, echo=TRUE}
+results_multiplicative$health_main
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_copd_summarized$uncertainty_main |> 
+results_multiplicative$health_main |> 
+  dplyr::select(impact_rounded) |> 
   knitr::kable()
 ```
 
-### Detailed results
-
-The folder `uncertainty_detailed` contains all single simulations. Let's look at the impact of the first 10 simulations.
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_copd_summarized$uncertainty_detailed$impact_by_sim
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(results_multiplicative)
 ```
 
-```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_copd_summarized$uncertainty_detailed$impact_by_sim |> 
-  knitr::kable()
+
+
+# Threshold additional to cut-off
+
+Goal: To quantify health impacts in the exposure group 55dB+ (calculation threshold) that are affected by a exposure above the effect threshold of 45 dB (cut-off).
+
+
+The function arguments `erf_eq_...` require a function as input. Instead of using a `splinefun()` this can also be fulfilled by using a 'function(c)' which is of type 'function'.
+
+```{r}
+#setting up function parameters
+threshold_effect <- 45
+RR <- 1.055
+threshold_calculation <- 55
+rr_increment <- 10
+
+# define categorical function, the ifelse condition enables the case distinction
+erf_function <- function(c){
+  output <- ifelse(c<threshold_calculation, 1, exp((log(RR)/rr_increment)*(c-threshold_effect)))
+  return(output)
+}
+# attribute_health
+results_catERF_different_calc_thesh <- healthiar::attribute_health(
+  approach_risk = "relative_risk",
+  erf_eq_central = erf_function,
+  prop_pop_exp = c(300000,200000,150000,120000,100000,70000,60000)/10000000,
+  exp_central = c(47,52,57,62,67,72,77),
+  cutoff_central=0,
+  bhd_central=50000)$health_main$impact_rounded
 ```
 
-```{r, echo=FALSE, eval=TRUE, include=FALSE}
-rm(results_pm_copd_summarized)
+The used function is equal to
+$$
+f(c) =
+\begin{cases}
+1, & c < \text{threshold} \\
+\exp\left( \frac{\log(RR)}{rr_{increment}} (c - threshold_{effect}) \right), & c \ge \text{threshold}
+\end{cases}
+$$
+
+The categorical ERF curve created looks as follows
+
+```{r fig.alt="ERF curve", eval=TRUE, include=TRUE, echo=FALSE}
+
+
+
+
+# Evaluate exp_central points
+x <- c(47,52,57,62,67,72,77) # central exposure values
+y <- erf_function(x)
+
+# Generate finer x-values
+x_dense <- seq(min(x), max(x), length.out = 200)
+# Evaluate exp_central points (finer version)
+y_dense <- erf_function(x_dense)
+
+## Plot
+plot(x,
+     y # main = "User-defined ERF"
+     ,
+     main = "",
+     xlab = "Exposure",
+     ylab = "Relative risk",
+     col = "blue",
+     pch = 19)
+
+lines(x_dense,y_dense,col = "red",lwd = 2)
+
+legend("topleft",
+       legend = c("Original points", "Categorical ERF curve"),
+       col = c("blue", "red"),
+       pch = c(19, NA),
+       lty = c(NA, 1),
+       lwd = c(NA, 2))
+
 ```
 
-## Example: `monetize()`
 
-Goal: determine monetized attributable health impact of a policy that will have health benefits five years from now
+
+# Economic dimension
+
+## Monetization 
+
+Goal: E.g. To monetize the attributable health impact of a policy that will have health benefits five years from now.
 
 The outcome of the monetization is added to the variable entered to the `output_attribute` argument, which is `results_pm_copd` in our case.
 
@@ -810,7 +1164,7 @@ Two folders are added:
 ### Function call
 
 ```{r}
-results_pm_copd <- monetize(
+monetized_pm_copd <- monetize(
     output_attribute = results_pm_copd,
     discount_shape = "exponential",
     discount_rate = 0.03,
@@ -819,14 +1173,17 @@ results_pm_copd <- monetize(
 )
 ```
 
+
+
+
 ### Main results
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_copd$monetization_main
+monetized_pm_copd$monetization_main
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_copd$monetization_main |> 
+monetized_pm_copd$monetization_main |> 
   select(erf_ci, monetized_impact) |> 
   knitr::kable()
 ```
@@ -842,9 +1199,9 @@ results <- monetize(
 )
 ```
 
-## Example: `cba()`
+## Cost-benefit analysis
 
-Goal: determine the net-benefit of a health policy via cost-benefit analysis (CBA) using previous results
+Goal: E.g. To estimate the net-benefit of a health policy via cost-benefit analysis (CBA).
 
 Let's imagine we design a policy that would reduce air pollution to 5 $\mu g/m^3$, which is the concentration specified in the `cutoff_central` argument in the initial `attribute_health()` call. So we could avoid all COPD cases attributed to air pollution.
 
@@ -889,355 +1246,12 @@ rm(cba)
 
 We see that the central and upper 95% confidence interval estimates of avoided attributable COPD cases result in a net monetary benefit of the policy, while the lower 95% confidence interval estimate results in a net cost!
 
-## Example: `attribute_lifetable()` for YLL
 
-Goal: determine years of life lost (YLL) due to deaths from COPD attributable to PM2.5 exposure during one year
 
-We can use `attribute_lifetable()` combined with life table input data to determine YLL attributable to an environmental stressor
 
-### Function call
+# Multiple deprivation index
 
-```{r}
-results_pm_yll <- attribute_lifetable(
-  year_of_analysis = 2019, 
-  health_outcome = "yll",
-  rr_central =  1.118, 
-  rr_increment = 10,
-  erf_shape = "log_linear",
-  exp_central = 8.85,
-  cutoff_central = 5,
-  min_age = 20, # age from which population is affected by the exposure
-  # Life table information
-  age_group = exdat_lifetable$age_group,
-  sex = exdat_lifetable$sex,
-  population = exdat_lifetable$midyear_population,
-  # In the life table case, BHD refers to deaths
-  bhd_central = exdat_lifetable$deaths
-) 
-```
-
-### Main results
-
-Total YLL attributable to exposure (sum of sex-specific impacts)
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_main
-```
-
-```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_yll$health_main |> 
-  dplyr::slice_head() |> 
-  dplyr::select(impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
-  knitr::kable()
-```
-
-Use the two arguments `approach_exposure` and `approach_newborns` to modify the life table calculation
-
--   `approach_exposure`
-
-    -   `"single_year"` (default) population is exposed for a single year and the impacts of that exposure are calculated
-
-    -   `"constant"` population is exposed every year
-
--   `approach_newborns`
-
-    -   `"without_newborns"` (default) assumes that the population in the year of analysis is followed over time, without considering newborns being born
-
-    -   `"with_newborns"` assumes that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the argument population
-
-### Detailed results
-
-Attributable YLL results
-
--   per year
-
--   per age (group)
-
--   per sex (if sex-specific life table data entered)
-
-are available
-
-*Note*: we will inspect the results for females; male results are also available
-
-### Results per year
-
-*NOTE*: only a selection of years is shown
-
-```{r}
-results_pm_yll$health_detailed$results_raw |>
-  dplyr::summarize(
-    .by = year, 
-    impact = sum(impact, na.rm = TRUE)
-  )
-```
-
-```{r}
-results_pm_yll$health_detailed$results_raw |>
-  dplyr::summarize(
-    .by = year, 
-    impact = sum(impact, na.rm = TRUE)) |>
-  knitr::kable()
-```
-
-### Results by age
-
-#### YLL
-
-TODO
-
-### Results by year and age
-
-*NOTE*: only a selection of years and ages is shown
-
-#### YLL
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$intermediate_calculations |> 
-  dplyr::filter(sex == "female") |>
-  dplyr::pull(impact_by_age_and_year) |>
-  purrr::pluck(1)
-```
-
-```{r echo=FALSE}
-results_pm_yll$health_detailed$intermediate_calculations |> 
-  dplyr::filter(sex == "female") |>
-  dplyr::pull(impact_by_age_and_year) |>
-  purrr::pluck(1) |>
-  dplyr::select(age_start, age_end, impact_2019) |> 
-  dplyr::slice( ( dplyr::n() - 8 ) : dplyr::n() ) |> 
-  knitr::kable()
-```
-
-#### Population (baseline scenario)
-
-Baseline scenario refers to the scenario with exposure (i.e. the scenario specified in the assessment)
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$intermediate_calculations|> 
-  dplyr::filter(sex == "female") |>
-  dplyr::pull(projection_if_exposed_by_age_and_year) |>
-  purrr::pluck(1)
-```
-
-```{r echo=FALSE}
-results_pm_yll$health_detailed$intermediate_calculations|> 
-  dplyr::filter(sex == "female") |>
-  dplyr::pull(projection_if_exposed_by_age_and_year) |>
-  purrr::pluck(1) |>   
-  dplyr::select(age_start, midyear_population_2019, midyear_population_2020, 
-                midyear_population_2021, midyear_population_2022) |>    
-  dplyr::slice( ( dplyr::n() - 8 ) : dplyr::n() ) |>  
-  knitr::kable()
-```
-
-#### Population (unexposed scenario)
-
-Impacted scenario refers to the scenario without exposure
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_yll$health_detailed$intermediate_calculations|> 
-  dplyr::filter(sex == "female") |>
-  dplyr::pull(projection_if_unexposed_by_age_and_year) |>
-  purrr::pluck(1)
-```
-
-```{r echo=FALSE}
-results_pm_yll$health_detailed$intermediate_calculations|> 
-  dplyr::filter(sex == "female") |>
-  dplyr::pull(projection_if_unexposed_by_age_and_year) |>
-  purrr::pluck(1) |>   
-  dplyr::select(age_start, midyear_population_2019, midyear_population_2020, 
-                midyear_population_2021, midyear_population_2022) |>    
-  dplyr::slice( ( dplyr::n() - 8 ) : dplyr::n() ) |>  
-  knitr::kable()
-```
-
-## Example: `attribute_lifetable()` for premature deaths
-
-Goal: determine premature deaths from COPD attributable to PM2.5 exposure during one year
-
-See example above [Example: attribute_lifetable() for YLL] for additional info on `attribute_lifetable()` calculations and its output
-
-### Function call
-
-```{r}
-results_pm_deaths <- attribute_lifetable(
-  health_outcome = "deaths",
-  year_of_analysis = 2019,
-  rr_central =  1.118, 
-  rr_increment = 10,
-  erf_shape = "log_linear",
-  exp_central = 8.85,
-  cutoff_central = 5,
-  min_age = 20, # age from which population is affected by the exposure   
-  # Life table information
-  age_group = exdat_lifetable$age_group,   
-  sex = exdat_lifetable$sex,
-  population = exdat_lifetable$midyear_population, 
-  bhd_central = exdat_lifetable$deaths
-)
-```
-
-### Main results
-
-Total premature deaths attributable to exposure (sum of sex-specific impacts)
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_deaths$health_main$impact
-```
-
-```{r, eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_deaths$health_main |> 
-  dplyr::slice_head() |> 
-  dplyr::select(impact_rounded, erf_ci, exp_ci, bhd_ci) |> 
-  knitr::kable()
-```
-
-### Detailed results
-
-Attributable premature deaths results
-
--   per year (if argument `approach_exposure = "constant"`)
-
--   per age (group)
-
--   per sex (if sex-specific life table data entered)
-
-are available
-
-*Note*: we will inspect the results for females; male results are also available
-
-*Note*: because we set the function argument `approach_exposure = "constant"` in the function call results are available for one year (the year of analysis)
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_deaths$health_detailed$intermediate_calculations|> 
-  dplyr::filter(sex == "female") |>
-  dplyr::pull(projection_if_unexposed_by_age_and_year) |>
-  purrr::pluck(1)
-```
-
-```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_yll$health_detailed$intermediate_calculations|> 
-  dplyr::filter(sex == "female") |>
-  dplyr::pull(projection_if_unexposed_by_age_and_year) |>
-  purrr::pluck(1) |>
-  dplyr::slice( ( dplyr::n() - 8 ) : dplyr::n() ) |>  
-  knitr::kable()
-```
-
-```{r eval=TRUE, include=FALSE, echo=FALSE}
-rm(results_pm_deaths)
-```
-
-## Example: `attribute_health()` for YLD
-
-### Function call
-
-```{r}
-results_pm_copd_yld  <- attribute_health(
-  rr_central = 1.1, 
-  rr_increment = 10, 
-  erf_shape = "log_linear",  
-  exp_central = 8.85,
-  cutoff_central = 5,
-  bhd_central = 1000,
-  duration_central = 10,
-  dw_central = 0.2
-)
-```
-
-### Main results
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_pm_copd_yld$health_main
-```
-
-```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_copd_yld$health_main |> 
-  dplyr::select(erf_ci, impact) |> 
-  knitr::kable()
-```
-
-## Example: `daly()`
-
-### Function call
-
-```{r}
-results_daly <- daly(
-     output_attribute_yll = results_pm_yll,
-     output_attribute_yld = results_pm_copd_yld
-)
-```
-
-### Main results
-
-YLL, YLD & DALY
-
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_daly$health_main |> 
-  select(impact_yll_rounded, impact_yld_rounded, impact_rounded)
-```
-
-```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_daly$health_main |> 
-  dplyr::select(impact_yll_rounded, impact_yld_rounded, impact_rounded) |> 
-  knitr::kable()
-```
-
-```{r eval=TRUE, include=FALSE, echo=FALSE}
-rm(results_daly, results_pm_yll, results_pm_copd_yld)
-```
-
-## Example: `multiexpose()`
-
-### Function call
-
-```{r}
-results_pm_copd <- attribute_health(
-  erf_shape = "log_linear",
-  rr_central = 1.369, 
-  rr_increment = 10,
-  exp_central = 8.85,
-  cutoff_central = 5,
-  bhd_central = 30747
-) 
-
-results_no2_copd <- attribute_mod(
-  output_attribute = results_pm_copd,
-  exp_central = 10.9,
-  rr_central = 1.031
-)
-
-results_multiplicative <- multiexpose(
-  output_attribute_exp_1 = results_pm_copd,
-  output_attribute_exp_2 = results_no2_copd,
-  exp_name_1 = "pm2.5",
-  exp_name_2 = "no2",
-  approach_multiexposure = "multiplicative"
-)
-```
-
-```{r, echo=FALSE, eval=TRUE, include=FALSE}
-rm(results_no2_copd, results_pm_copd)
-```
-
-### Main results
-
-```{r eval=FALSE, include=TRUE, echo=TRUE}
-results_multiplicative$health_main
-```
-
-```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_multiplicative$health_main |> 
-  dplyr::select(impact_rounded) |> 
-  knitr::kable()
-```
-
-```{r eval=TRUE, include=FALSE, echo=FALSE}
-rm(results_multiplicative)
-```
-
-## Example: `prepare_mdi`
+Goal: E.g. To estimate the multiple deprivation index (MDI) to use it for the argument `social_indicator` in the function `socialize()`.
 
 ### Function call
 
@@ -1300,8 +1314,11 @@ eval(mdi$mdi_detailed$histogram)
 ```{r, eval=TRUE, include=FALSE, echo=FALSE}
 rm(mdi)
 ```
+---------------------------------------------------------------------------
 
-# Post-`healthiar` workflow
+# Export and visualize
+
+Exporting and visualizing results is out of scope of `healthiar`. To export and visualize, you can make use of existing functions in other packages beyond `healthiar` as indicated below.
 
 ## Export results
 
@@ -1330,3 +1347,21 @@ Visualization is out of scope of `healthiar`. You can visualize in
 -   R, e.g. with the `ggplot2` package ([online book by the creator](https://ggplot2-book.org/))
 -   Excel (export results first)
 -   Other tools
+
+------------------------------------------------------------------------
+
+# Abbreviations
+
+BHD/bhd = baseline health data 
+
+CI = confidence interval
+
+CBA/cba = cost-benefit analysis
+
+exp = exposure
+
+ERF = exposure-response function
+
+RR/rr = relative risk
+
+YLL/yll = years of life lost
