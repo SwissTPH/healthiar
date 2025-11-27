@@ -66,7 +66,7 @@ Source: Hadley Wickham (2014). Tidy Data. [Link](https://doi.org/10.18637/jss.v0
 
 # Function examples
 
-The description of all `healthiar` functions provide examples that you can execute (with `healthiar` loaded) by running `example("function_name")`, e.g. `example("attribute_health")`. In the sections below in this vignette, you find additional examples and further explanations.
+The descriptions of the [`healthiar` functions](https://swisstph.github.io/healthiar/reference/index.html) provide examples that you can execute (with `healthiar` loaded) by running `example("function_name")`, e.g. `example("attribute_health")`. In the sections below in this vignette, you find additional examples and more detailed explanations.
 
 
 # Relative risk 
