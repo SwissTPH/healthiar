@@ -922,9 +922,9 @@ rm(results_daly, results_pm_yll, results_pm_copd_yld)
 
 
 
-# Calculation threshold & cut-off
+# Threshold additional to cut-off
 
-Goal: To quantify health impacts in the exposure group 55dB+ that are affected by a exposure above the effect threshold, i.e. the cut-off (45 dB).
+Goal: To quantify health impacts in the exposure group 55dB+ (calculation threshold) that are affected by a exposure above the effect threshold of 45 dB (cut-off).
 
 
 The function arguments `erf_eq_...` require a function as input. Instead of using a `splinefun()` this can also be fulfilled by using a 'function(c)' which is of type 'function'.
