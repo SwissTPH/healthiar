@@ -1327,13 +1327,16 @@ Visualization is out of scope of `healthiar`. You can visualize in
 
 # Abbreviations
 
-BHD/bhd - baseline health data CI - confidence interval
+BHD/bhd = baseline health data 
 
-CBA/cba - cost-benefit analysis
+CI = confidence interval
 
-exp - exposure
+CBA/cba = cost-benefit analysis
+
+exp = exposure
+
 ERF = Exposure-response function
 
-RR/rr - relative risk
+RR/rr = relative risk
 
-YLL/yll - years of life lost
+YLL/yll = years of life lost
