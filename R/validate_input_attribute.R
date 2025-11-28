@@ -229,6 +229,27 @@ validate_input_attribute <-
     }
 
 
+      ### error_if_bhd_unique_longer_than_id_unique #####
+
+    all_ids <- c("geo_id_micro","sex","age_group") # geo_id_macro is left out because it does not interact with bhd_center
+    #find all ids which where used
+    valid_ids <-sapply(input_args_value[all_ids], function(x) length(x)==length(input_args_value$bhd_central))
+
+    #create dataframe with used ids and bhd as cols
+    df_id_structure <- as.data.frame(input_args_value[c(c("bhd_central"),all_ids[valid_ids])])
+    if(nrow(df_id_structure) > 0){
+
+      #check if every id combination has only one assigned bhd_central value
+      df_id_structure
+      id_ambiguity<-df_id_structure %>% group_by(across(-1)) %>% summarise(all_same = n_distinct(.data$bhd_central) != 1)
+
+      # browse()
+      if(any(id_ambiguity$all_same)){
+        base::stop(base::paste0(
+          "Allocation from bhd_central to ",base::toString(all_ids[valid_ids])," is ambiguous.\n",
+          "The following combinations have multiple bhd_central values: \n",base::toString(apply(id_ambiguity[id_ambiguity$all_same,1:(ncol(id_ambiguity)-1)], 1, function(x) paste(x, collapse = "_"))),
+          "\n","Within every combination, the bhd_central values need to be the same."))
+    }}
 
     if(is_lifetable){
 
