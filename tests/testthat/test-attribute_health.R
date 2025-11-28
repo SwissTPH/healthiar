@@ -2403,7 +2403,6 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration
 })
 
 
-#verschieben
 testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
@@ -2414,16 +2413,19 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FA
         erf_shape = "log_linear",
         rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
         rr_increment = 10,
-        prop_pop_exp = 1,
-        exp_central = c(1.1, 1.6, 1.6, 1.5 ), # dist = exposure distribution, e.g. 5 different exposure
+        prop_pop_exp = c(c(0.3,0.3,0.4),
+                         c(0.2,0.3,0.5),
+                         c(0.4,0.4,0.2),
+                         c(0.5,0.2,0.3)),
+        exp_central = c(1.1,2.1,0.1, 1.6,2.6,0.6, 1.6,2.6,0.6, 1.5,2.5,0.5 ), # dist = exposure distribution, e.g. 5 different exposure
         #categories (~ exposure ranges) with the information how many people are
         #exposed to each of the 5 exposure range heitgaasid-pm2.5
         cutoff_central = 0,
-        geo_id_micro = c("Anija", "Harku", "Jõelähtme", "Keila"), #id codes for each area, can be names also
-        bhd_central = c(88, 92, 47, 103 ) #deaths in chosen regions
+        geo_id_micro = rep(c("Anija", "Harku", "Jõelähtme", "Keila"),each = 3), #id codes for each area, can be names also
+        bhd_central = rep(c(88, 92, 47, 103 ),each = 3) #deaths in chosen regions
       )$health_main$impact,2),##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
-      c(0.56, 0.85, 0.44, 0.90) # test did not pass but the value provided by healthiar differs on average 0.9
+      c(0.510, 0.750, 0.490, 0.840) # test did not pass but the value provided by healthiar differs on average 0.9
   )
 })
 # original results from paper: c(0.8, 2.5, 1.2, 1.7) # test did not pass but the value provided by healthiar differs on average 0.9
@@ -2431,7 +2433,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FA
 ## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
-#verschieben
+
 testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
@@ -2442,18 +2444,25 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
         erf_shape = "log_linear",
         rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
         rr_increment = 10,
-        prop_pop_exp = 1,
-        exp_central = c(2.1, 3, 2.6, 2.2, 2.3, 1.9, 1.8, 2.2  ), # exposure for NO2
+        prop_pop_exp = c(c(0.3,0.3,0.4),
+                         c(0.2,0.3,0.5),
+                         c(0.4,0.4,0.2),
+                         c(0.5,0.2,0.3),
+                         c(0.2,0.5,0.3),
+                         c(0.4,0.1,0.5),
+                         c(0.4,0.5,0.1),
+                         c(0.5,0.4,0.1)),
+        exp_central = c(2.1,3.1,1.1, 3,4,2, 2.6,3.6,1.6, 2.2,3.2,1.2, 2.3,3.3,1.3, 1.9,2.9,0.9, 1.8,2.8,0.8, 2.2,3.2,1.2  ), # exposure for NO2
         # dist = exposure distribution, e.g. 5 different exposure
         #categories (~ exposure ranges) with the information how many people are
         #exposed to each of the 5 exposure range heitgaasid-pm2.5
         cutoff_central = 0,
-        geo_id_micro = c("Haabersti", "Kesklinn", "Kristiine", "Lasnamäe", "Mustamäe", "Nõmme", "Pirita", "Põhja-Tallinn"),
-        bhd_central = c(433, 433, 289, 1232, 926, 397, 140, 694) #deaths in chosen regions
+        geo_id_micro = rep(c("Haabersti", "Kesklinn", "Kristiine", "Lasnamäe", "Mustamäe", "Nõmme", "Pirita", "Põhja-Tallinn"),each=3),
+        bhd_central = rep(c(433, 433, 289, 1232, 926, 397, 140, 694),each = 3) #deaths in chosen regions
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
-      c(5.0,  8.0,  4.0, 16.0, 12.0,  4.0, 1.0,  9.0) # test did not pass but the value provided by healthiar differs on average 14.8, might need to look into the differences
+      c(5.0, 7.0, 5.0, 15.0, 13.0, 3.0, 2.0, 10.0) # test did not pass but the value provided by healthiar differs on average 14.8, might need to look into the differences
   )
 })
 ## original results from publication: c(16.2, 33.8, 15.3, 44.6, 28.4, 12, 4.9, 22.5) # test did not pass but the value provided by healthiar differs on average 14.8, might need to look into the differences)
@@ -2461,7 +2470,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
 ## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
-#verschieben
+
 testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|",{
   ## healthiar FUNCTION CALL
   results_pm2.5 <-
@@ -2472,18 +2481,23 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
       rr_lower = NULL, #1.05, Page 33
       rr_upper = NULL, #1.25, Page 33
       rr_increment = 10, # Page 18
-      exp_central = c(9.5, 9.8, 9.9, 10.9,9.6), # Table 5 page 29
+      prop_pop_exp = c(c(0.3,0.3,0.4),
+                       c(0.2,0.3,0.5),
+                       c(0.4,0.4,0.2),
+                       c(0.5,0.2,0.3),
+                       c(0.2,0.5,0.3)),
+      exp_central = c(9.5,10.5,8.5, 9.8,10.8,8.8, 9.9,10.9,8.9, 10.9,11.9,9.9,9.6,10.6,8.6), # Table 5 page 29
       exp_lower = NULL, # list(6.6, 7.1, 7.2, 7.8, 6.6), # Table 5 page 29
       exp_upper = NULL, # list(13.5,13.5, 13.3, 14.4, 14.4), # Table 5 page 29
       cutoff_central = 5, # Page 33
-      bhd_central = c(133103, 121061, 87860, 219929, 561953), # Table 3 page 22
-      geo_id_micro = c('Rural','Semi-rural', 'Semi-urbaines','Urbaines','France'),
+      bhd_central = rep(c(133103, 121061, 87860, 219929, 561953),each = 3), # Table 3 page 22
+      geo_id_micro = rep(c('Rural','Semi-rural', 'Semi-urbaines','Urbaines','France'),each = 3),
     )
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =results_pm2.5$health_main$impact_rounded,
-    expected = c(8113,7855, 5816, 17408, 34991))
+    expected = c(7947.0, 7547.0, 6049.0, 17134.0, 36501.0))
 
   ### SpF report results ###
   # France_impact_Cuttoff5 : (7836, 7534, 5721, 18450, 39541) Table 8 page 37
@@ -2491,7 +2505,6 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
 })
 
 
-#verschieben
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|",{
   results_NO2 <-
     healthiar::attribute_health(
@@ -2501,7 +2514,12 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRU
       rr_lower = NULL, #1.008 # Page 14
       rr_upper = NULL, #1.037 # Page 14
       rr_increment = 10, # Page 18
-      exp_central = rep(c(11.5, 12.4, 13.2, 17.2, 12.0),each = 3), # Table 5 page 29
+      prop_pop_exp = c(c(0.3,0.3,0.4),
+                       c(0.2,0.3,0.5),
+                       c(0.4,0.4,0.2),
+                       c(0.5,0.2,0.3),
+                       c(0.2,0.5,0.3)),
+      exp_central = c(11.5,12.5,10.5, 12.4,13.4,11.4, 13.2,14.2,12.2, 17.2,18.2,16.2, 12.0,13.0,11.0), # Table 5 page 29
       exp_lower = NULL, #list(7.4, 7.6, 7.9, 8.0, 7.4), # Table 5 page 29
       exp_upper = NULL, #list(23.5, 22.8, 21.0, 34.3, 34.3), # Table 5 page 29
       cutoff_central = 10, # Page 33
@@ -2511,7 +2529,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRU
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =results_NO2$health_main$impact_rounded,
-    expected = c(453.0,  659.0,  637.0,  3571.0,  2550.0))
+    expected = c(423.0, 604.0, 677.0, 3523.0, 2805.0))
 
   ### SpF report results ###
   # France_impact_Cuttoff10 : (451, 596, 633, 5110, 6790) Table 8 page 37
@@ -2523,7 +2541,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRU
   ## confinement du printemps 2020 et nouvelles données sur le poids total pour la période 2016-2019. Santé publique France. Avril 2021.
 })
 
-#verschieben
+
 testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
@@ -2534,16 +2552,19 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration
         erf_shape = "linear",
         rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
         rr_increment = 10,
-        prop_pop_exp = 1,
-        exp_central = c(1.1, 1.6, 1.6, 1.5 ), # dist = exposure distribution, e.g. 5 different exposure
+        prop_pop_exp = c(c(0.3,0.3,0.4),
+                         c(0.2,0.3,0.5),
+                         c(0.4,0.4,0.2),
+                         c(0.5,0.2,0.3)),
+        exp_central = c(1.1,1.2,1.0, 1.6,1.7,1.5, 1.6,1.7,1.5, 1.5,1.6,1.4), # dist = exposure distribution, e.g. 5 different exposure
         #categories (~ exposure ranges) with the information how many people are
         #exposed to each of the 5 exposure range heitgaasid-pm2.5
         cutoff_central = 0,
-        geo_id_micro = c("Anija", "Harku", "Jõelähtme", "Keila"), #id codes for each area, can be names also
-        bhd_central = c(88, 92, 47, 103 ) #deaths in chosen regions
+        geo_id_micro = rep(c("Anija", "Harku", "Jõelähtme", "Keila"),each = 3), #id codes for each area, can be names also
+        bhd_central = rep(c(88, 92, 47, 103 ),each = 3) #deaths in chosen regions
       )$health_main$impact,3),
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
-    expected = c(0.5770, 0.8750, 0.4470, 0.9190)
+    expected = c(0.5720, 0.8640, 0.4520, 0.9130)
   )
 })
 # original results: c(0.8, 2.5, 1.2, 1.7) # test did not pass but the value provided by healthiar differs on average 0.9
