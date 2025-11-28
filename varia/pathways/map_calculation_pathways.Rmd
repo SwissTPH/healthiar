@@ -84,7 +84,7 @@ existing_tests <- tibble(
   erf = rep(NA_character_, n_row),
   exp = rep(NA_character_, n_row),
   iteration = rep(NA_character_, n_row),
-  uncertainty = rep(NA_character_, n_row),
+  #uncertainty = rep(NA_character_, n_row),
   strat = rep(NA_character_, n_row),
   yld = rep(NA_character_, n_row),
   implemented = rep(FALSE, n_row)
@@ -114,7 +114,7 @@ for (i in seq_along(test_names_with_pw)) {
 
 ## Merge the whole pathways tibble and the existing_tests tibble
 pathways_rr <- pathways_rr %>%
-  left_join(existing_tests, by = c("erf", "exp", "iteration", "uncertainty", "strat", "yld"),
+  left_join(existing_tests, by = c("erf", "exp", "iteration", "strat", "yld"),
             suffix = c("", ".existing")) %>%
   mutate(implemented = coalesce(implemented.existing, implemented)) %>%
   select(-starts_with("implemented.existing")) |> 
