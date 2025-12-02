@@ -241,13 +241,13 @@ validate_input_attribute <-
 
       #check if every id combination has only one assigned bhd_central value
       df_id_structure
-      id_ambiguity<-df_id_structure %>% group_by(across(-1)) %>% summarise(all_same = n_distinct(.data$bhd_central) != 1)
+      id_ambiguity<-df_id_structure %>% dplyr::group_by(across(-1)) %>% dplyr::summarise(all_same = dplyr::n_distinct(.data$bhd_central) != 1)
 
-      # browse()
-      if(any(id_ambiguity$all_same)){
+      # browser()
+      if(base::any(id_ambiguity$all_same)){
         base::stop(base::paste0(
           "Allocation from bhd_central to ",base::toString(all_ids[valid_ids])," is ambiguous.\n",
-          "The following combinations have multiple bhd_central values: \n",base::toString(apply(id_ambiguity[id_ambiguity$all_same,1:(ncol(id_ambiguity)-1)], 1, function(x) paste(x, collapse = "_"))),
+          "The following combinations have multiple bhd_central values: \n",base::toString(apply(id_ambiguity[id_ambiguity$all_same,1:(ncol(id_ambiguity)-1)], 1, function(x) base::paste(x, collapse = "_"))),
           "\n","Within every combination, the bhd_central values need to be the same."))
     }}
 
