@@ -1413,12 +1413,12 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_
   )
 
   df_by_sex <- x$health_detailed$results_raw %>%
-    group_by(sex, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
-    summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+    dplyr::group_by(sex, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
+    dplyr::summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
 
   df_by_age_group <- x$health_detailed$results_raw %>%
-    group_by(age_group, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
-    summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+    dplyr::group_by(age_group, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
+    dplyr::summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
   base::signif(df_by_age_group$mean_value,5)
   testthat::expect_equal(
     ## test if age group results are correct
@@ -1545,12 +1545,12 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_
   )
 
   df_by_sex <- x$health_detailed$results_raw %>%
-    group_by(sex, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
-    summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+    dplyr::group_by(sex, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
+    dplyr::summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
 
   df_by_age_group <- x$health_detailed$results_raw %>%
-    group_by(age_group, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
-    summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+    dplyr::group_by(age_group, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
+    dplyr::summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
 
   testthat::expect_equal(
     ## test if age group results are correct
@@ -1702,12 +1702,12 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|cutoff
     prop_pop_exp = c(1,1,1,1))
 
   df_by_sex <- x$health_detailed$results_raw %>%
-    group_by(sex, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
-    summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+    dplyr::group_by(sex, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
+    dplyr::summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
 
   df_by_age_group <- x$health_detailed$results_raw %>%
-    group_by(age_group, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
-    summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+    dplyr::group_by(age_group, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
+    dplyr::summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
 
 
   testthat::expect_equal(
