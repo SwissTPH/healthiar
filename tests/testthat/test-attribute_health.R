@@ -54,7 +54,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        approach_risk = rep("relative_risk", 4),
+        approach_risk = base::rep("relative_risk", 4),
         age = c("below_50", "below_50", "50_plus", "50_plus"),
         sex = c("male", "female", "male", "female"),
         exp_central = base::rep(data$mean_concentration, 4),
@@ -78,7 +78,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
   testthat::expect_equal(
     object =
       healthiar::attribute_health(
-        approach_risk = rep("relative_risk", 4),
+        approach_risk = base::rep("relative_risk", 4),
         age = c("below_50", "below_50", "50_plus", "50_plus"),
         sex = c("male", "female", "male", "female"),
         exp_central = base::rep(data$mean_concentration, 4),
@@ -969,9 +969,9 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
         rr_upper = 1.664,
         rr_increment = 10,
         erf_shape = "log_linear",
-        population = rep(1E6, 1E2),
+        population = base::rep(1E6, 1E2),
         geo_id_micro = 1:1E2,
-        geo_id_macro = rep("CH", 1E2),
+        geo_id_macro = base::rep("CH", 1E2),
         info = "PM2.5_copd")$health_main$impact_rounded,
     expected =
       c(317577, 122363, 497741) # Results on 30 April 2025; no comparison study
@@ -1386,14 +1386,14 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_
 
   # set central values and variate by percentage
   exp_c <- data$PM25
-  cutoff_c <- rep(0, length.out = length(exp_c))
+  cutoff_c <- base::rep(0, length.out = length(exp_c))
   bhd_c <- data$VALUE_BASELINE
-  rr_c <- rep(1.118, length.out = length(bhd_c))
+  rr_c <- base::rep(1.118, length.out = length(bhd_c))
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
-    age = rep(c("below_50", "below_50", "50_plus", "70_plus"), length.out = length(bhd_c)),
-    sex = rep(c("male", "female"), length.out = length(bhd_c)),
+    age = base::rep(c("below_50", "below_50", "50_plus", "70_plus"), length.out = length(bhd_c)),
+    sex = base::rep(c("male", "female"), length.out = length(bhd_c)),
     exp_central = exp_c,
     exp_lower = exp_c - exp_c/uncert_factor,
     exp_upper = exp_c + exp_c/uncert_factor,
@@ -1406,10 +1406,10 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_
     rr_central = rr_c,
     rr_lower = rr_c - rr_c/uncert_factor,
     rr_upper = rr_c + rr_c/uncert_factor,
-    rr_increment = rep(c(10, 11, 12, 13), length.out = length(bhd_c)),
+    rr_increment = base::rep(c(10, 11, 12, 13), length.out = length(bhd_c)),
     erf_shape = "log_linear",
     geo_id_micro = data$CS01012020,
-    geo_id_macro = rep(c("basel","bern","zuerich","genf","lausanne"), length.out = length(bhd_c))
+    geo_id_macro = base::rep(c("basel","bern","zuerich","genf","lausanne"), length.out = length(bhd_c))
   )
 
   df_by_sex <- x$health_detailed$results_raw %>%
@@ -1518,14 +1518,14 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_
 
   # set central values and variate by percentage
   exp_c <- data$PM25
-  cutoff_c <- rep(0, length.out = length(exp_c))
+  cutoff_c <- base::rep(0, length.out = length(exp_c))
   bhd_c <- data$VALUE_BASELINE
-  rr_c <- rep(1.118, length.out = length(bhd_c))
+  rr_c <- base::rep(1.118, length.out = length(bhd_c))
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
-    age = rep(c("below_50", "below_50", "50_plus", "70_plus"), length.out = length(bhd_c)),
-    sex = rep(c("male", "female"), length.out = length(bhd_c)),
+    age = base::rep(c("below_50", "below_50", "50_plus", "70_plus"), length.out = length(bhd_c)),
+    sex = base::rep(c("male", "female"), length.out = length(bhd_c)),
     exp_central = exp_c,
     exp_lower = exp_c - exp_c/uncert_factor,
     exp_upper = exp_c + exp_c/uncert_factor,
@@ -1538,10 +1538,10 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_
     rr_central = rr_c,
     rr_lower = rr_c - rr_c/uncert_factor,
     rr_upper = rr_c + rr_c/uncert_factor,
-    rr_increment = rep(c(10, 11, 12, 13), length.out = length(bhd_c)),
+    rr_increment = base::rep(c(10, 11, 12, 13), length.out = length(bhd_c)),
     erf_shape = "linear",
     geo_id_micro = data$CS01012020,
-    geo_id_macro = rep(c("basel","bern","zuerich","genf","lausanne"), length.out = length(bhd_c))
+    geo_id_macro = base::rep(c("basel","bern","zuerich","genf","lausanne"), length.out = length(bhd_c))
   )
 
   df_by_sex <- x$health_detailed$results_raw %>%
@@ -2087,14 +2087,14 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
 
   # set central values and variate by percentage
   exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-  bhd_c <- rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
-  rr_c <- rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
+  cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  rr_c <- base::rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
-    age_group = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
-    sex = rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
+    age_group = base::rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
+    sex = base::rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
     exp_central = exp_c,
     exp_lower = exp_c - exp_c/uncert_factor,
     exp_upper = exp_c + exp_c/uncert_factor,
@@ -2107,9 +2107,9 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
     rr_central = rr_c,
     rr_lower = rr_c - rr_c/uncert_factor,
     rr_upper = rr_c + rr_c/uncert_factor,
-    rr_increment = rep(c(10, 11, 12, 13), times = 6),
+    rr_increment = base::rep(c(10, 11, 12, 13), times = 6),
     erf_shape = "log_linear",
-    prop_pop_exp = rep(data$prop_exposed, each = 4))
+    prop_pop_exp = base::rep(data$prop_exposed, each = 4))
 
   testthat::expect_equal(
     ## test if age group results are correct
@@ -2180,14 +2180,14 @@ testthat::test_that("results correct |pathway_rr|erf_lin_lin|exp_dist|iteration_
 
   # set central values and variate by percentage
   exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-  bhd_c <- rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
-  rr_c <- rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
+  cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  rr_c <- base::rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
-    age_group = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
-    sex = rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
+    age_group = base::rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
+    sex = base::rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
     exp_central = exp_c,
     exp_lower = exp_c - exp_c/uncert_factor,
     exp_upper = exp_c + exp_c/uncert_factor,
@@ -2200,9 +2200,9 @@ testthat::test_that("results correct |pathway_rr|erf_lin_lin|exp_dist|iteration_
     rr_central = rr_c,
     rr_lower = rr_c - rr_c/uncert_factor,
     rr_upper = rr_c + rr_c/uncert_factor,
-    rr_increment = rep(c(10, 11, 12, 13), times = 6),
+    rr_increment = base::rep(c(10, 11, 12, 13), times = 6),
     erf_shape = "linear",
-    prop_pop_exp = rep(data$prop_exposed, each = 4))
+    prop_pop_exp = base::rep(data$prop_exposed, each = 4))
 
   testthat::expect_equal(
     ## test if age group results are correct
@@ -2274,18 +2274,18 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
         prop_pop_exp = c(c(0.1, 0.3, 0.2, 0.2, 0.2),
                          c(0.2, 0.2, 0.3, 0.1, 0.2),
                          c(0.2, 0.2, 0.2, 0.1, 0.3)),
-        bhd_central = rep(runif_with_seed(3,1E4,1E5,1), each = 5),
+        bhd_central = base::rep(runif_with_seed(3,1E4,1E5,1), each = 5),
         rr_central = 1.08,
         rr_increment = 10,
         erf_shape = "log_linear",
-        geo_id_micro = rep(1:3, each = 5),
-        geo_id_macro = rep("ch", each = 5 * 3)
+        geo_id_micro = base::rep(1:3, each = 5),
+        geo_id_macro = base::rep("ch", each = 5 * 3)
         )$health_detailed$results_raw$impact_rounded,
     expected =
       base::round(c(545,  634,  991)) # Results on 2025-06-24; no comparison study
   )
 })
-rep(runif_with_seed(3,1E4,1E5,1), each = 5)
+base::rep(runif_with_seed(3,1E4,1E5,1), each = 5)
 
 ## with population argument specified
 testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
@@ -2298,13 +2298,13 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
         prop_pop_exp = c(c(0.1, 0.3, 0.2, 0.2, 0.2),
                          c(0.2, 0.2, 0.3, 0.1, 0.2),
                          c(0.2, 0.2, 0.2, 0.1, 0.3)),
-        bhd_central = rep(runif_with_seed(3,1E4,1E5,1), each = 5),
+        bhd_central = base::rep(runif_with_seed(3,1E4,1E5,1), each = 5),
         rr_central = 1.08,
         rr_increment = 10,
         erf_shape = "log_linear",
-        geo_id_micro = rep(1:3, each = 5),
-        geo_id_macro = rep("ch", each = 5 * 3),
-        population = rep(1000000, each = 5 * 3)
+        geo_id_micro = base::rep(1:3, each = 5),
+        geo_id_macro = base::rep("ch", each = 5 * 3),
+        population = base::rep(1000000, each = 5 * 3)
       )$health_detailed$results_raw$impact_rounded,
     expected =
       base::round(c(545,  634,  991)) # Results on 2025-06-24; no comparison study
@@ -2396,8 +2396,8 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FA
         #categories (~ exposure ranges) with the information how many people are
         #exposed to each of the 5 exposure range heitgaasid-pm2.5
         cutoff_central = 0,
-        geo_id_micro = rep(c("Anija", "Harku", "Jõelähtme", "Keila"),each = 3), #id codes for each area, can be names also
-        bhd_central = rep(c(88, 92, 47, 103 ),each = 3) #deaths in chosen regions
+        geo_id_micro = base::rep(c("Anija", "Harku", "Jõelähtme", "Keila"),each = 3), #id codes for each area, can be names also
+        bhd_central = base::rep(c(88, 92, 47, 103 ),each = 3) #deaths in chosen regions
       )$health_main$impact,2),##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
       c(0.510, 0.750, 0.490, 0.840) # test did not pass but the value provided by healthiar differs on average 0.9
@@ -2432,8 +2432,8 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
         #categories (~ exposure ranges) with the information how many people are
         #exposed to each of the 5 exposure range heitgaasid-pm2.5
         cutoff_central = 0,
-        geo_id_micro = rep(c("Haabersti", "Kesklinn", "Kristiine", "Lasnamäe", "Mustamäe", "Nõmme", "Pirita", "Põhja-Tallinn"),each=3),
-        bhd_central = rep(c(433, 433, 289, 1232, 926, 397, 140, 694),each = 3) #deaths in chosen regions
+        geo_id_micro = base::rep(c("Haabersti", "Kesklinn", "Kristiine", "Lasnamäe", "Mustamäe", "Nõmme", "Pirita", "Põhja-Tallinn"),each=3),
+        bhd_central = base::rep(c(433, 433, 289, 1232, 926, 397, 140, 694),each = 3) #deaths in chosen regions
       )$health_main$impact_rounded,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
@@ -2465,8 +2465,8 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
       exp_lower = NULL, # list(6.6, 7.1, 7.2, 7.8, 6.6), # Table 5 page 29
       exp_upper = NULL, # list(13.5,13.5, 13.3, 14.4, 14.4), # Table 5 page 29
       cutoff_central = 5, # Page 33
-      bhd_central = rep(c(133103, 121061, 87860, 219929, 561953),each = 3), # Table 3 page 22
-      geo_id_micro = rep(c('Rural','Semi-rural', 'Semi-urbaines','Urbaines','France'),each = 3),
+      bhd_central = base::rep(c(133103, 121061, 87860, 219929, 561953),each = 3), # Table 3 page 22
+      geo_id_micro = base::rep(c('Rural','Semi-rural', 'Semi-urbaines','Urbaines','France'),each = 3),
     )
 
   testthat::expect_equal(
@@ -2498,8 +2498,8 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRU
       exp_lower = NULL, #list(7.4, 7.6, 7.9, 8.0, 7.4), # Table 5 page 29
       exp_upper = NULL, #list(23.5, 22.8, 21.0, 34.3, 34.3), # Table 5 page 29
       cutoff_central = 10, # Page 33
-      bhd_central = rep(c(133103, 121061, 87860, 219929, 561953),each = 3), # Table 3 page 22
-      geo_id_micro = rep(c('Rural','Semi-rural', 'Semi-urbaines','Urbaines','France'),each = 3)
+      bhd_central = base::rep(c(133103, 121061, 87860, 219929, 561953),each = 3), # Table 3 page 22
+      geo_id_micro = base::rep(c('Rural','Semi-rural', 'Semi-urbaines','Urbaines','France'),each = 3)
     )
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -2535,8 +2535,8 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration
         #categories (~ exposure ranges) with the information how many people are
         #exposed to each of the 5 exposure range heitgaasid-pm2.5
         cutoff_central = 0,
-        geo_id_micro = rep(c("Anija", "Harku", "Jõelähtme", "Keila"),each = 3), #id codes for each area, can be names also
-        bhd_central = rep(c(88, 92, 47, 103 ),each = 3) #deaths in chosen regions
+        geo_id_micro = base::rep(c("Anija", "Harku", "Jõelähtme", "Keila"),each = 3), #id codes for each area, can be names also
+        bhd_central = base::rep(c(88, 92, 47, 103 ),each = 3) #deaths in chosen regions
       )$health_main$impact,3),
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected = c(0.5720, 0.8640, 0.4520, 0.9130)
@@ -2568,14 +2568,14 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
   bhd_c
   # set central values and variate by percentage
   exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-  bhd_c <- rep(base::signif(unlist(lapply(bhd_value, function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
-  rr_c <- rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
+  cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(unlist(lapply(bhd_value, function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  rr_c <- base::rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
-    age_group = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
-    sex = rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
+    age_group = base::rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
+    sex = base::rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
     exp_central = exp_c,
     exp_lower = exp_c - exp_c/uncert_factor,
     exp_upper = exp_c + exp_c/uncert_factor,
@@ -2588,10 +2588,10 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
     rr_central = rr_c,
     rr_lower = rr_c - rr_c/uncert_factor,
     rr_upper = rr_c + rr_c/uncert_factor,
-    rr_increment = rep(c(10, 11, 12, 13), times = 5),
+    rr_increment = base::rep(c(10, 11, 12, 13), times = 5),
     erf_shape = "log_linear",
-    prop_pop_exp = rep(data$prop_exposed, each = 4),
-    geo_id_micro = rep(rep(c("urban","rural"), each = 5), each = 2))
+    prop_pop_exp = base::rep(data$prop_exposed, each = 4),
+    geo_id_micro = base::rep(base::rep(c("urban","rural"), each = 5), each = 2))
 
   testthat::expect_equal(
     ## test if age group results are correct
@@ -2728,14 +2728,14 @@ testthat::test_that("results correct |pathway_rr|erf_lin_lin|exp_dist|iteration_
 
   # set central values and variate by percentage
   exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-  bhd_c <- rep(base::signif(unlist(lapply(bhd_value, function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
-  rr_c <- rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
+  cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(unlist(lapply(bhd_value, function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  rr_c <- base::rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
-    age_group = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
-    sex = rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
+    age_group = base::rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
+    sex = base::rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
     exp_central = exp_c,
     exp_lower = exp_c - exp_c/uncert_factor,
     exp_upper = exp_c + exp_c/uncert_factor,
@@ -2748,10 +2748,10 @@ testthat::test_that("results correct |pathway_rr|erf_lin_lin|exp_dist|iteration_
     rr_central = rr_c,
     rr_lower = rr_c - rr_c/uncert_factor,
     rr_upper = rr_c + rr_c/uncert_factor,
-    rr_increment = rep(c(10, 11, 12, 13), times = 5),
+    rr_increment = base::rep(c(10, 11, 12, 13), times = 5),
     erf_shape = "linear",
-    prop_pop_exp = rep(data$prop_exposed, each = 4),
-    geo_id_micro = rep(rep(c("urban","rural"), each = 5), each = 2))
+    prop_pop_exp = base::rep(data$prop_exposed, each = 4),
+    geo_id_micro = base::rep(base::rep(c("urban","rural"), each = 5), each = 2))
 
   x$health_detailed$results_by_geo_id_micro$impact_rounded
   testthat::expect_equal(
@@ -3113,14 +3113,14 @@ func <-stats::splinefun(x = data_erf$exposure,
 
   # set central values and variate by percentage
   exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-  bhd_c <- rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
 
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
-    age_group = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
-    sex = rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
+    age_group = base::rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
+    sex = base::rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
     exp_central = exp_c,
     exp_lower = exp_c - exp_c/uncert_factor,
     exp_upper = exp_c + exp_c/uncert_factor,
@@ -3139,7 +3139,7 @@ func <-stats::splinefun(x = data_erf$exposure,
     erf_eq_upper = stats::splinefun(x = data_erf$exposure,
                                     y = data_erf$mean + 0.01,
                                     method = "natural"),
-    prop_pop_exp = rep(data$prop_exposed, each = 4))
+    prop_pop_exp = base::rep(data$prop_exposed, each = 4))
   testthat::expect_equal(
     ## test if age group results are correct
     object = x$health_detailed$results_by_age_group$impact_rounded,
@@ -3201,12 +3201,12 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|cutoff_T
   uncert_factor <- 20#set uncertainty factor
   # set central values and variate by percentage
   exp_c <- base::signif(unlist(lapply(data$Mean.O3, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- rep(base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
-  bhd_c <- rep(base::signif(unlist(lapply(29908, function(x) x * bhd_change^(0:3))),5),times = length(data$Mean.O3))
+  cutoff_c <- base::rep(base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
+  bhd_c <- base::rep(base::signif(unlist(lapply(29908, function(x) x * bhd_change^(0:3))),5),times = length(data$Mean.O3))
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
-    age = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$Mean.O3)),
-    sex = rep(c("male", "female", "male", "female"),times = length(data$Mean.O3)),
+    age = base::rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$Mean.O3)),
+    sex = base::rep(c("male", "female", "male", "female"),times = length(data$Mean.O3)),
     exp_central = exp_c,
     exp_lower = exp_c - exp_c/uncert_factor,
     exp_upper = exp_c + exp_c/uncert_factor,
@@ -3219,7 +3219,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|cutoff_T
     erf_eq_central = splinefun(data$x, data$y, method="natural"),
     erf_eq_lower  = splinefun(data$x, data$y_l, method="natural"),
     erf_eq_upper  = splinefun(data$x, data$y_u, method="natural"),
-    prop_pop_exp = rep(data$Population.affected, each = 4),
+    prop_pop_exp = base::rep(data$Population.affected, each = 4),
   )
   testthat::expect_equal(
     ## test if age group results are correct
@@ -3283,13 +3283,13 @@ data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rd
   uncert_factor <- 20#set uncertainty factor
   # set central values and variate by percentage
   exp_c <- base::signif(unlist(lapply(data$Mean.O3, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- rep(base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
+  cutoff_c <- base::rep(base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
   bhd_c <- base::signif(unlist(lapply(data$bhd, function(x) x * bhd_change^(0:3))),5)
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
-    age = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$Mean.O3)),
-    sex = rep(c("male", "female", "male", "female"),times = length(data$Mean.O3)),
+    age = base::rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$Mean.O3)),
+    sex = base::rep(c("male", "female", "male", "female"),times = length(data$Mean.O3)),
     exp_central = exp_c,
     exp_lower = exp_c - exp_c/uncert_factor,
     exp_upper = exp_c + exp_c/uncert_factor,
@@ -3302,8 +3302,8 @@ data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rd
     erf_eq_central = erf,
     erf_eq_lower  = erf_l,
     erf_eq_upper  = erf_u,
-    prop_pop_exp = rep(data$Population.affected, each = 4),
-    geo_id_micro = rep(data$X, each = 4)
+    prop_pop_exp = base::rep(data$Population.affected, each = 4),
+    geo_id_micro = base::rep(data$X, each = 4)
   )
 
   testthat::expect_equal(
@@ -3405,14 +3405,14 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|cutoff_TR
   uncert_factor <- 20#set uncertainty factor
   # set central values and variate by percentage
   exp_c <- base::signif(unlist(lapply(data$Mean.O3, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- rep(base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
+  cutoff_c <- base::rep(base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
   bhd_c <- base::signif(unlist(lapply(data$bhd, function(x) x * bhd_change^(0:3))),5)
   exp_c
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
-    age = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$Mean.O3)),
-    sex = rep(c("male", "female", "male", "female"),times = length(data$Mean.O3)),
+    age = base::rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$Mean.O3)),
+    sex = base::rep(c("male", "female", "male", "female"),times = length(data$Mean.O3)),
     exp_central = exp_c,
     exp_lower = exp_c - exp_c/uncert_factor,
     exp_upper = exp_c + exp_c/uncert_factor,
@@ -3423,8 +3423,8 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|cutoff_TR
     bhd_lower = bhd_c - bhd_c/uncert_factor,
     bhd_upper = bhd_c + bhd_c/uncert_factor,
     erf_eq_central = "0.0026*(c-66.05)^0.35 + 0.0025*(c-66.05)^0.5-0.00085*(c-66.05)^0.7 - 0.015*(c-66.05+10)^-1 + 1",#   min(data$x[1:21]) = 66.05
-    prop_pop_exp = rep(data$Population.affected, each = 4),
-    geo_id_micro = rep(data$X, each = 4)
+    prop_pop_exp = base::rep(data$Population.affected, each = 4),
+    geo_id_micro = base::rep(data$X, each = 4)
   )
   x$health_detailed$results_by_sex$impact_rounded
   testthat::expect_equal(
@@ -3494,13 +3494,13 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
 
   # set central values and variate by percentage
   exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-  bhd_c <- rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
-    age_group = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
-    sex = rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
+    age_group = base::rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
+    sex = base::rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
     exp_central = exp_c,
     exp_lower = exp_c - exp_c/uncert_factor,
     exp_upper = exp_c + exp_c/uncert_factor,
@@ -3511,7 +3511,7 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
     bhd_lower = bhd_c - bhd_c/uncert_factor,
     bhd_upper = bhd_c + bhd_c/uncert_factor,
     erf_eq_central = "1+0.55*c^0.125-0.001*c^0.5",
-    prop_pop_exp = rep(data$prop_exposed, each = 4))
+    prop_pop_exp = base::rep(data$prop_exposed, each = 4))
 
   testthat::expect_equal(
     ## test if age group results are correct
@@ -3598,13 +3598,13 @@ uncert_factor <- 20#set uncertainty factor
 
 # set central values and variate by percentage
 exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-cutoff_c <- rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-bhd_c <- rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+bhd_c <- base::rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
 
 x <-healthiar::attribute_health(
   approach_risk = "relative_risk",
-  age_group = rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
-  sex = rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
+  age_group = base::rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
+  sex = base::rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
   exp_central = exp_c,
   exp_lower = exp_c - exp_c/uncert_factor,
   exp_upper = exp_c + exp_c/uncert_factor,
@@ -3615,7 +3615,7 @@ x <-healthiar::attribute_health(
   bhd_lower = bhd_c - bhd_c/uncert_factor,
   bhd_upper = bhd_c + bhd_c/uncert_factor,
   erf_eq_central = "0.9000 + 0.45*log(1 + 0.15*c) + 0.00042*c - 0.047*c^0.5 + 0.092*log(1 + 0.0413*c) - 0.0005*c + 0.0000083*c^1.5 - 0.00007*c^1.2 + 0.000013*c^1.4-0.01*c^0.1",
-  prop_pop_exp = rep(data$prop_exposed, each = 4))
+  prop_pop_exp = base::rep(data$prop_exposed, each = 4))
 x$health_detailed$results_by_age_group$impact_rounded
 testthat::expect_equal(
   ## test if age group results are correct
@@ -3803,7 +3803,7 @@ testthat::test_that("no error ar iteration", {
           runif_with_seed(1,5E3,1E4,3) * runif_with_seed(5,0,1,3)
         ),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        geo_id_micro = rep(1:3, 5),
+        geo_id_micro = base::rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance"))
 )
 })
@@ -3823,7 +3823,7 @@ testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|
           runif_with_seed(1,5E3,1E4,3) * runif_with_seed(5,0,1,3)
           ),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        geo_id_micro = rep(1:3, 5),
+        geo_id_micro = base::rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
         )$health_detailed$results_raw$impact |> base::round(),
     expected =
@@ -3852,7 +3852,7 @@ testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|
           runif_with_seed(1,5E3,1E4,3) * runif_with_seed(5,0,1,3)
         ),
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        geo_id_micro = rep(1:3, 5),
+        geo_id_micro = base::rep(1:3, 5),
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
         )$health_detailed$results_raw$impact |> base::round(),
     expected = # Results on 2025-01-20; no comparison study
@@ -3880,7 +3880,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
     object =
       healthiar::attribute_health(
         geo_id_micro = data$regionID,
-        # geo_id_micro = rep(c("c","a","b"), times = 5),
+        # geo_id_micro = base::rep(c("c","a","b"), times = 5),
         approach_risk = "absolute_risk",
         exp_central = data$exposure_mean,
         pop_exp = data$exposed,
