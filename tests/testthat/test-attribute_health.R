@@ -637,10 +637,10 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_
   uncert_factor <- 20#set uncertainty factor
 
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(data$mean_concentration, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::signif(unlist(lapply(data$mean_concentration, function(x)  x * cutoff_change^(0:3))),5)
-  bhd_c <- base::signif(unlist(lapply(data$incidents_per_100_000_per_year/1E5*data$population_at_risk, function(x) x * bhd_change^(0:3))),5)
-  rr_c <- base::signif(unlist(lapply(data$relative_risk, function(x) x * rr_change^(0:3))),5)
+  exp_c <- base::signif(base::unlist(base::lapply(data$mean_concentration, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::signif(base::unlist(base::lapply(data$mean_concentration, function(x)  x * cutoff_change^(0:3))),5)
+  bhd_c <- base::signif(base::unlist(base::lapply(data$incidents_per_100_000_per_year/1E5*data$population_at_risk, function(x) x * bhd_change^(0:3))),5)
+  rr_c <- base::signif(base::unlist(base::lapply(data$relative_risk, function(x) x * rr_change^(0:3))),5)
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
@@ -664,7 +664,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_
     population = c(500000, 200000, 600000, 800000)
   )
 
-  x$health_detailed$results_by_age_group$impact_rounded
+
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
     object =x$health_detailed$results_by_age_group$impact_rounded,
@@ -729,10 +729,10 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_
   uncert_factor <- 20#set uncertainty factor
 
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(data$mean_concentration, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::signif(unlist(lapply(data$mean_concentration, function(x)  x * cutoff_change^(0:3))),5)
-  bhd_c <- base::signif(unlist(lapply(data$incidents_per_100_000_per_year/1E5*data$population_at_risk, function(x) x * bhd_change^(0:3))),5)
-  rr_c <- base::signif(unlist(lapply(data$relative_risk, function(x) x * rr_change^(0:3))),5)
+  exp_c <- base::signif(base::unlist(base::lapply(data$mean_concentration, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::signif(base::unlist(base::lapply(data$mean_concentration, function(x)  x * cutoff_change^(0:3))),5)
+  bhd_c <- base::signif(base::unlist(base::lapply(data$incidents_per_100_000_per_year/1E5*data$population_at_risk, function(x) x * bhd_change^(0:3))),5)
+  rr_c <- base::signif(base::unlist(base::lapply(data$relative_risk, function(x) x * rr_change^(0:3))),5)
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
@@ -820,9 +820,9 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|cutoff
   uncert_factor <- 20#set uncertainty factor
 
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(84.1, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5)
-  bhd_c <- base::signif(unlist(lapply(29908, function(x) x * bhd_change^(0:3))),5)
+  exp_c <- base::signif(base::unlist(base::lapply(84.1, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::signif(base::unlist(base::lapply(1, function(x)  x * cutoff_change^(0:3))),5)
+  bhd_c <- base::signif(base::unlist(base::lapply(29908, function(x) x * bhd_change^(0:3))),5)
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
@@ -1653,9 +1653,9 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|cutoff
   uncert_factor <- 20#set uncertainty factor
 
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(84.1, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5)
-  bhd_c <- base::signif(unlist(lapply(29908, function(x) x * bhd_change^(0:3))),5)
+  exp_c <- base::signif(base::unlist(base::lapply(84.1, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::signif(base::unlist(base::lapply(1, function(x)  x * cutoff_change^(0:3))),5)
+  bhd_c <- base::signif(base::unlist(base::lapply(29908, function(x) x * bhd_change^(0:3))),5)
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
@@ -2086,10 +2086,10 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
   uncert_factor <- 20#set uncertainty factor
 
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-  bhd_c <- base::rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
-  rr_c <- base::rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
+  exp_c <- base::signif(base::unlist(base::lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::rep(base::signif(base::unlist(base::lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(base::unlist(base::lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  rr_c <- base::rep(base::signif(base::unlist(base::lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
@@ -2179,10 +2179,10 @@ testthat::test_that("results correct |pathway_rr|erf_lin_lin|exp_dist|iteration_
   uncert_factor <- 20#set uncertainty factor
 
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-  bhd_c <- base::rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
-  rr_c <- base::rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
+  exp_c <- base::signif(base::unlist(base::lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::rep(base::signif(base::unlist(base::lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(base::unlist(base::lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  rr_c <- base::rep(base::signif(base::unlist(base::lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
@@ -2567,10 +2567,10 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
   uncert_factor <- 20#set uncertainty factor
   bhd_c
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-  bhd_c <- base::rep(base::signif(unlist(lapply(bhd_value, function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
-  rr_c <- base::rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
+  exp_c <- base::signif(base::unlist(base::lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::rep(base::signif(base::unlist(base::lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(base::unlist(base::lapply(bhd_value, function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  rr_c <- base::rep(base::signif(base::unlist(base::lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
@@ -2727,10 +2727,10 @@ testthat::test_that("results correct |pathway_rr|erf_lin_lin|exp_dist|iteration_
   uncert_factor <- 20#set uncertainty factor
 
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-  bhd_c <- base::rep(base::signif(unlist(lapply(bhd_value, function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
-  rr_c <- base::rep(base::signif(unlist(lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
+  exp_c <- base::signif(base::unlist(base::lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::rep(base::signif(base::unlist(base::lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(base::unlist(base::lapply(bhd_value, function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  rr_c <- base::rep(base::signif(base::unlist(base::lapply(1.08, function(x) x * rr_change^(0:3))),5),times = length(data$exposure_mean))
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
@@ -3112,9 +3112,9 @@ func <-stats::splinefun(x = data_erf$exposure,
   uncert_factor <- 20#set uncertainty factor
 
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-  bhd_c <- base::rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  exp_c <- base::signif(base::unlist(base::lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::rep(base::signif(base::unlist(base::lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(base::unlist(base::lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
 
 
   x <-healthiar::attribute_health(
@@ -3200,9 +3200,9 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|cutoff_T
   rr_change = bhd_change <-1.2
   uncert_factor <- 20#set uncertainty factor
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(data$Mean.O3, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::rep(base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
-  bhd_c <- base::rep(base::signif(unlist(lapply(29908, function(x) x * bhd_change^(0:3))),5),times = length(data$Mean.O3))
+  exp_c <- base::signif(base::unlist(base::lapply(data$Mean.O3, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::rep(base::signif(base::unlist(base::lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
+  bhd_c <- base::rep(base::signif(base::unlist(base::lapply(29908, function(x) x * bhd_change^(0:3))),5),times = length(data$Mean.O3))
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
     age = base::rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$Mean.O3)),
@@ -3282,9 +3282,9 @@ data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rd
   rr_change = bhd_change <-1.2
   uncert_factor <- 20#set uncertainty factor
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(data$Mean.O3, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::rep(base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
-  bhd_c <- base::signif(unlist(lapply(data$bhd, function(x) x * bhd_change^(0:3))),5)
+  exp_c <- base::signif(base::unlist(base::lapply(data$Mean.O3, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::rep(base::signif(base::unlist(base::lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
+  bhd_c <- base::signif(base::unlist(base::lapply(data$bhd, function(x) x * bhd_change^(0:3))),5)
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
@@ -3404,9 +3404,9 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|cutoff_TR
   rr_change = bhd_change <-1.2
   uncert_factor <- 20#set uncertainty factor
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(data$Mean.O3, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::rep(base::signif(unlist(lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
-  bhd_c <- base::signif(unlist(lapply(data$bhd, function(x) x * bhd_change^(0:3))),5)
+  exp_c <- base::signif(base::unlist(base::lapply(data$Mean.O3, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::rep(base::signif(base::unlist(base::lapply(1, function(x)  x * cutoff_change^(0:3))),5),times = length(data$Mean.O3))
+  bhd_c <- base::signif(base::unlist(base::lapply(data$bhd, function(x) x * bhd_change^(0:3))),5)
   exp_c
 
   x <-healthiar::attribute_health(
@@ -3493,9 +3493,9 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
   uncert_factor <- 20#set uncertainty factor
 
   # set central values and variate by percentage
-  exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-  cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-  bhd_c <- base::rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  exp_c <- base::signif(base::unlist(base::lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::rep(base::signif(base::unlist(base::lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(base::unlist(base::lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
 
   x <-healthiar::attribute_health(
     approach_risk = "relative_risk",
@@ -3597,9 +3597,9 @@ bhd_change <-0.9
 uncert_factor <- 20#set uncertainty factor
 
 # set central values and variate by percentage
-exp_c <- base::signif(unlist(lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
-cutoff_c <- base::rep(base::signif(unlist(lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
-bhd_c <- base::rep(base::signif(unlist(lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+exp_c <- base::signif(base::unlist(base::lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
+cutoff_c <- base::rep(base::signif(base::unlist(base::lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+bhd_c <- base::rep(base::signif(base::unlist(base::lapply(data$gbd_daly[1], function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
 
 x <-healthiar::attribute_health(
   approach_risk = "relative_risk",
