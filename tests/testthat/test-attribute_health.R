@@ -302,9 +302,9 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iterati
 
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
 
-  erf <- splinefun(data$x, data$y, method="natural")
-  erf_l <- splinefun(data$x, data$y_l, method="natural")
-  erf_u <- splinefun(data$x, data$y_u, method="natural")
+  erf <- stats::splinefun(data$x, data$y, method="natural")
+  erf_l <- stats::splinefun(data$x, data$y_l, method="natural")
+  erf_u <- stats::splinefun(data$x, data$y_u, method="natural")
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -837,9 +837,9 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|cutoff
     bhd_central = bhd_c,
     bhd_lower = bhd_c - bhd_c/uncert_factor,
     bhd_upper = bhd_c + bhd_c/uncert_factor,
-    erf_eq_central = splinefun(data$x, data$y, method="natural"),
-    erf_eq_lower  = splinefun(data$x, data$y_l, method="natural"),
-    erf_eq_upper  = splinefun(data$x, data$y_u, method="natural"),
+    erf_eq_central = stats::splinefun(data$x, data$y, method="natural"),
+    erf_eq_lower  = stats::splinefun(data$x, data$y_l, method="natural"),
+    erf_eq_upper  = stats::splinefun(data$x, data$y_u, method="natural"),
     prop_pop_exp = c(1,1,1,1))
 
   testthat::expect_equal(
@@ -1039,9 +1039,9 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
 testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
-  erf<-splinefun(data$x, data$y, method="natural")
-  erf_l<-splinefun(data$x, data$y_l, method="natural")
-  erf_u<-splinefun(data$x, data$y_u, method="natural")
+  erf<-stats::splinefun(data$x, data$y, method="natural")
+  erf_l<-stats::splinefun(data$x, data$y_l, method="natural")
+  erf_u<-stats::splinefun(data$x, data$y_u, method="natural")
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1670,9 +1670,9 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|cutoff
     bhd_central = bhd_c,
     bhd_lower = bhd_c - bhd_c/uncert_factor,
     bhd_upper = bhd_c + bhd_c/uncert_factor,
-    erf_eq_central = splinefun(data$x, data$y, method="natural"),
-    erf_eq_lower  = splinefun(data$x, data$y_l, method="natural"),
-    erf_eq_upper  = splinefun(data$x, data$y_u, method="natural"),
+    erf_eq_central = stats::splinefun(data$x, data$y, method="natural"),
+    erf_eq_lower  = stats::splinefun(data$x, data$y_l, method="natural"),
+    erf_eq_upper  = stats::splinefun(data$x, data$y_u, method="natural"),
     geo_id_micro = c("bern","basel","basel","bern"),
     prop_pop_exp = c(1,1,1,1))
 
@@ -1895,9 +1895,9 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
 testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
-  erf <- splinefun(data$x, data$y, method="natural")
-  erf_l <- splinefun(data$x, data$y_l, method="natural")
-  erf_u <- splinefun(data$x, data$y_u, method="natural")
+  erf <- stats::splinefun(data$x, data$y, method="natural")
+  erf_l <- stats::splinefun(data$x, data$y_l, method="natural")
+  erf_u <- stats::splinefun(data$x, data$y_u, method="natural")
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -2315,9 +2315,9 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
 
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rds"))
   data <- data |> dplyr::slice(-1)
-  erf <- splinefun(data$x[1:21], data$y[1:21], method="natural")
-  erf_l <- splinefun(data$x[1:21], data$y_l[1:21], method="natural")
-  erf_u <- splinefun(data$x[1:21], data$y_u[1:21], method="natural")
+  erf <- stats::splinefun(data$x[1:21], data$y[1:21], method="natural")
+  erf_l <- stats::splinefun(data$x[1:21], data$y_l[1:21], method="natural")
+  erf_u <- stats::splinefun(data$x[1:21], data$y_u[1:21], method="natural")
 
   testthat::expect_equal(
     object =
@@ -3216,9 +3216,9 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|cutoff_T
     bhd_central = bhd_c,
     bhd_lower = bhd_c - bhd_c/uncert_factor,
     bhd_upper = bhd_c + bhd_c/uncert_factor,
-    erf_eq_central = splinefun(data$x, data$y, method="natural"),
-    erf_eq_lower  = splinefun(data$x, data$y_l, method="natural"),
-    erf_eq_upper  = splinefun(data$x, data$y_u, method="natural"),
+    erf_eq_central = stats::splinefun(data$x, data$y, method="natural"),
+    erf_eq_lower  = stats::splinefun(data$x, data$y_l, method="natural"),
+    erf_eq_upper  = stats::splinefun(data$x, data$y_u, method="natural"),
     prop_pop_exp = base::rep(data$Population.affected, each = 4),
   )
   testthat::expect_equal(
@@ -3271,9 +3271,9 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|cutoff_T
 testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
 data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rds"))
   data <- data |> dplyr::slice(-1)
-  erf <- splinefun(data$x[1:21], data$y[1:21], method="natural")
-  erf_l <- splinefun(data$x[1:21], data$y_l[1:21], method="natural")
-  erf_u <- splinefun(data$x[1:21], data$y_u[1:21], method="natural")
+  erf <- stats::splinefun(data$x[1:21], data$y[1:21], method="natural")
+  erf_l <- stats::splinefun(data$x[1:21], data$y_l[1:21], method="natural")
+  erf_u <- stats::splinefun(data$x[1:21], data$y_u[1:21], method="natural")
   #Exotic test based on real data but does produce real world results
   #percentage of variation
   exp_change <-1.1
@@ -3395,7 +3395,7 @@ data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rd
 testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rds"))
   data <- data |> dplyr::slice(-1)
-  #erf <- splinefun(data$x[1:21], data$y[1:21], method="natural")
+  #erf <- stats::splinefun(data$x[1:21], data$y[1:21], method="natural")
   #Exotic test based on real data but does produce real world results
   #percentage of variation
   exp_change <-1.1
@@ -3750,7 +3750,7 @@ testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteratio
   erf_df$AR <- 78.9270 - 3.1162 * erf_df$dB + 0.0342 * erf_df$dB^2
 
   # Create a function using spline interpolation over the data
-  spline_fun <- splinefun(
+  spline_fun <- stats::splinefun(
     x = erf_df$dB,
     y = erf_df$AR,
     method = "natural"
@@ -3947,7 +3947,7 @@ testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteratio
   erf_df$AR <- 78.9270 - 3.1162 * erf_df$dB + 0.0342 * erf_df$dB^2
 
   # Create a function using spline interpolation over the data
-  spline_fun <- splinefun(
+  spline_fun <- stats::splinefun(
     x = erf_df$dB,
     y = erf_df$AR,
     method = "natural"
