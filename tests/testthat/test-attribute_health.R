@@ -20,7 +20,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
           rr_central = data$relative_risk,
           rr_increment = 10,
           erf_shape = "log_linear",
-          info = paste0(data$pollutant,"_", data$evaluation_name)
+          info = base::paste0(data$pollutant,"_", data$evaluation_name)
         )$health_main$impact_rounded,
       expected = # airqplus_pm_copd
         data |>
@@ -116,7 +116,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
         rr_upper = data$relative_risk_upper,
         rr_increment = 10,
         erf_shape = "log_linear",
-        info = paste0(data$pollutant,"_", data$evaluation_name)
+        info = base::paste0(data$pollutant,"_", data$evaluation_name)
       )$health_main$impact_rounded,
     expected = # airqplus_pm_copd
       data |>
@@ -143,7 +143,7 @@ testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration
         rr_upper = data$relative_risk_upper,
         rr_increment = 10,
         erf_shape = "log_linear",
-        info = paste0(data$pollutant,"_", data$evaluation_name)
+        info = base::paste0(data$pollutant,"_", data$evaluation_name)
       )$health_detailed$results_raw$impact_rounded,
     expected = # Results on 2025-06-12; no comparison study
       c(3502, 1353, 5474, 4344, 1695, 6729, 2633, 1007, 4154, 3502, 1353, 5474, 4344, 1695, 6728, 2633, 1007, 4153, 3502, 1353, 5474, 4345, 1695, 6729, 2633, 1007, 4154, 2633, 1007, 4154, 3502, 1353, 5474, 1736, 658, 2764, 2633, 1007, 4153, 3502, 1353, 5474, 1736, 658, 2764, 2633, 1007, 4154, 3502, 1353, 5474, 1736, 658, 2764, 4344, 1695, 6729, 5161, 2032, 7921, 3502, 1353, 5474, 4344, 1695, 6728, 5161, 2032, 7921, 3502, 1353, 5474, 4345, 1695, 6729, 5161, 2032, 7921, 3502, 1353, 5474)
@@ -171,7 +171,7 @@ testthat::test_that("detailed result the same |pathway_rr|erf_log_lin|exp_single
         rr_upper = data$relative_risk_upper,
         rr_increment = 10,
         erf_shape = "log_linear",
-        info = paste0(data$pollutant,"_", data$evaluation_name)
+        info = base::paste0(data$pollutant,"_", data$evaluation_name)
       )$health_detailed$results_raw$impact_rounded,
     expected = # Results on 2025-06-12; no comparison study
       c(3502, 1353, 5474, 4344, 1695, 6729, 2633, 1007, 4154, 3502, 1353, 5474, 4344, 1695, 6728, 2633, 1007, 4153, 3502, 1353, 5474, 4345, 1695, 6729, 2633, 1007, 4154, 2633, 1007, 4154, 3502, 1353, 5474, 1736, 658, 2764, 2633, 1007, 4153, 3502, 1353, 5474, 1736, 658, 2764, 2633, 1007, 4154, 3502, 1353, 5474, 1736, 658, 2764, 4344, 1695, 6729, 5161, 2032, 7921, 3502, 1353, 5474, 4344, 1695, 6728, 5161, 2032, 7921, 3502, 1353, 5474, 4345, 1695, 6729, 5161, 2032, 7921, 3502, 1353, 5474)
@@ -199,7 +199,7 @@ testthat::test_that("no error rr_no_error|erf_log_lin|exp_single|iteration_FALSE
         rr_upper = data$relative_risk_upper,
         rr_increment = 10,
         erf_shape = "log_linear",
-        info = paste0(data$pollutant,"_", data$evaluation_name)
+        info = base::paste0(data$pollutant,"_", data$evaluation_name)
         )
     )
 })
@@ -225,7 +225,7 @@ testthat::test_that("number of rows in detailed results correct |meta_rr|erf_log
         rr_upper = data$relative_risk_upper,
         rr_increment = 10,
         erf_shape = "log_linear",
-        info = paste0(data$pollutant,"_", data$evaluation_name)
+        info = base::paste0(data$pollutant,"_", data$evaluation_name)
         )$health_detailed$results_raw |> base::nrow(),
     expected =
       3^4 # CI's in 4 input variables
@@ -248,7 +248,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
             x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
             y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
             method = "natural"),
-        info = paste0(data$pollutant,"_", data$evaluation_name)
+        info = base::paste0(data$pollutant,"_", data$evaluation_name)
         )$health_main$impact_rounded,
     expected =
       c(1057) # Results on 10 October 2024 (with cutoff = 5 = data$cut_off_value); no comparison study
@@ -270,7 +270,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
             x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
             y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
             method = "natural"),
-        info = paste0(data$pollutant,"_", data$evaluation_name))$health_main$impact_rounded,
+        info = base::paste0(data$pollutant,"_", data$evaluation_name))$health_main$impact_rounded,
     expected =
       c(2263) # Results on 10 October 2024 (with cutoff = 0); no comparison study
   )
@@ -291,7 +291,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
             x = c(600,500,400,300,200,150,130,110,90,70,50,30,25,20,15,10,5,0),
             y = c(2.189,2.143,2.098,2.052,1.909,1.751,1.68,1.607,1.533,1.453,1.357,1.238,1.204,1.168,1.129,1.089,1.046,	1),
             method = "linear"),
-        info = paste0(data$pollutant,"_", data$evaluation_name)
+        info = base::paste0(data$pollutant,"_", data$evaluation_name)
         )$health_main$impact_rounded,
     expected =
       c(1052) # Results on 10 October 2024 (with cutoff = 5); no comparison study
@@ -1414,11 +1414,11 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|cutoff_
 
   df_by_sex <- x$health_detailed$results_raw %>%
     dplyr::group_by(sex, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
-    dplyr::summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+    dplyr::summarise(mean_value = base::mean(impact, na.rm = TRUE), .groups = "drop")
 
   df_by_age_group <- x$health_detailed$results_raw %>%
     dplyr::group_by(age_group, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
-    dplyr::summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+    dplyr::summarise(mean_value = base::mean(impact, na.rm = TRUE), .groups = "drop")
   base::signif(df_by_age_group$mean_value,5)
   testthat::expect_equal(
     ## test if age group results are correct
@@ -1546,11 +1546,11 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|cutoff_
 
   df_by_sex <- x$health_detailed$results_raw %>%
     dplyr::group_by(sex, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
-    dplyr::summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+    dplyr::summarise(mean_value = base::mean(impact, na.rm = TRUE), .groups = "drop")
 
   df_by_age_group <- x$health_detailed$results_raw %>%
     dplyr::group_by(age_group, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
-    dplyr::summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+    dplyr::summarise(mean_value = base::mean(impact, na.rm = TRUE), .groups = "drop")
   testthat::expect_equal(
     ## test if age group results are correct
     object = base::signif(df_by_age_group$mean_value,5),
@@ -1678,11 +1678,11 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|cutoff
 
   df_by_sex <- x$health_detailed$results_raw %>%
     dplyr::group_by(sex, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
-    dplyr::summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+    dplyr::summarise(mean_value = base::mean(impact, na.rm = TRUE), .groups = "drop")
 
   df_by_age_group <- x$health_detailed$results_raw %>%
     dplyr::group_by(age_group, exp_ci,bhd_ci,cutoff_ci,erf_ci) %>%
-    dplyr::summarise(mean_value = mean(impact, na.rm = TRUE), .groups = "drop")
+    dplyr::summarise(mean_value = base::mean(impact, na.rm = TRUE), .groups = "drop")
 
 
   testthat::expect_equal(
@@ -1844,7 +1844,7 @@ testthat::test_that("results correct with cutoff |pathway_rr|erf_log_lin|exp_dis
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
   ## With prop_pop_exp
   testthat::expect_equal(
@@ -1873,7 +1873,7 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
   testthat::expect_equal(
     object =
@@ -2075,7 +2075,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
   #Exotic test based on real data but does produce real world results
 
   #percentage of variation
@@ -2168,7 +2168,7 @@ testthat::test_that("results correct |pathway_rr|erf_lin_lin|exp_dist|iteration_
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
   #Exotic test based on real data but does produce real world results
 
   #percentage of variation
@@ -2554,7 +2554,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
   bhd_value = data$gbd_daly[1]
   data <- data |> dplyr::slice(-1)
   #Exotic test based on real data but does produce real world results
@@ -2714,7 +2714,7 @@ testthat::test_that("results correct |pathway_rr|erf_lin_lin|exp_dist|iteration_
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
   bhd_value = data$gbd_daly[1]
   data <- data |> dplyr::slice(-1)
   #Exotic test based on real data but does produce real world results
@@ -2880,7 +2880,7 @@ testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
   testthat::expect_equal(
     object =
@@ -2914,7 +2914,7 @@ testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|e
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
   testthat::expect_equal(
     object =
@@ -3098,7 +3098,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteratio
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
   #Exotic test based on real data but does produce real world results
 func <-stats::splinefun(x = data_erf$exposure,
                         y = data_erf$mean,
@@ -3483,7 +3483,7 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
   data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
   #Exotic test based on real data but does produce real world results
 
   #percentage of variation
@@ -3587,7 +3587,7 @@ legend("bottomright", legend = c("Originaldaten", "Spline", "Polynom"),
 data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
 data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
 data  <- data_raw |>
-  dplyr::filter(!is.na(data_raw$exposure_mean))
+  dplyr::filter(!base::is.na(data_raw$exposure_mean))
 #Exotic test based on real data but does produce real world results
 
 #percentage of variation
@@ -3652,7 +3652,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
   testthat::expect_equal(
     object =
@@ -3867,7 +3867,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
   ## Convert data to long format following Ma-Loma's suggestion in #643
   data <- data |>
@@ -3994,7 +3994,7 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
   testthat::expect_equal(
     object = healthiar::attribute_health(
@@ -4019,7 +4019,7 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
   testthat::expect_equal(
     object = healthiar::attribute_health(
@@ -4305,7 +4305,7 @@ testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|it
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
   ## With pop_exp
   testthat::expect_error(
@@ -4327,7 +4327,7 @@ testthat::test_that("error if prop_pop_exp and ar |pathway_rr|erf_log_lin|exp_di
 
     data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
     data  <- data_raw |>
-      dplyr::filter(!is.na(data_raw$exposure_mean))
+      dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
     testthat::expect_error(
       object =
@@ -4346,7 +4346,7 @@ testthat::test_that("error if pop_exp and prop_pop_exp |pathway_rr|erf_log_lin|e
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
   ## With pop_exp
   testthat::expect_error(
@@ -4402,7 +4402,7 @@ testthat::test_that("error if info has incompatible length |pathway_rr|erf_log_l
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
   ## With pop_exp
   testthat::expect_error(
@@ -4447,7 +4447,7 @@ testthat::test_that("warning if absolute risk and cutoff", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
-    dplyr::filter(!is.na(data_raw$exposure_mean))
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
   testthat::expect_warning(
     object =
