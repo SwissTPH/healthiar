@@ -2083,3 +2083,39 @@ composition", {
 })
 
 
+
+
+
+############################## Preparation for meeting
+
+test1 <- healthiar::attribute_health(
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear", # Page 18
+  rr_central = 1.023, # Page 14
+  rr_lower = NULL, #1.008 # Page 14
+  rr_upper = NULL, #1.037 # Page 14
+  rr_increment = 10, # Page 18
+  exp_central = c(11.5, 12.4, 13.2,5.3), # Table 5 page 29
+  exp_lower = NULL, #list(7.4, 7.6, 7.9, 8.0, 7.4), # Table 5 page 29
+  exp_upper = NULL, #list(23.5, 22.8, 21.0, 34.3, 34.3), # Table 5 page 29
+  cutoff_central = 10, # Page 33
+  bhd_central = c(10000,20000,50000,60000), # Table 3 page 2
+  geo_id_micro = c("bern","bern","basel","basel"),
+)
+
+
+test2 <- healthiar::attribute_health(
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear", # Page 18
+  rr_central = 1.023, # Page 14
+  rr_lower = NULL, #1.008 # Page 14
+  rr_upper = NULL, #1.037 # Page 14
+  rr_increment = 10, # Page 18
+  exp_central = c(11.5, 12.4, 13.2,5.3), # Table 5 page 29
+  exp_lower = NULL, #list(7.4, 7.6, 7.9, 8.0, 7.4), # Table 5 page 29
+  exp_upper = NULL, #list(23.5, 22.8, 21.0, 34.3, 34.3), # Table 5 page 29
+  cutoff_central = 10, # Page 33
+  bhd_central = c(10000,20000,50000,60000), # Table 3 page 2
+  sex = c('female','male', 'male','male'),
+  geo_id_micro = c("bern","bern","basel","basel"),
+)

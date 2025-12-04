@@ -163,6 +163,7 @@ validate_input_attribute <-
     }
 
 
+
     ### error_if_different_length #####
 
     # Obtain the length of all arguments
@@ -228,28 +229,28 @@ validate_input_attribute <-
           "."))
     }
 
+    if ((input_args$is_entered_by_user$geo_id_micro | input_args$is_entered_by_user$age_group | input_args$is_entered_by_user$sex) & input_args$is_entered_by_user$bhd_central){
 
-      ### error_if_bhd_unique_longer_than_id_unique #####
+        #browser()
+        ### error_if_bhd_unique_longer_than_id_unique #####
+      arguments_for_bhd_combination <- c("geo_id_micro","sex","age_group") # geo_id_macro is left out because it does not interact with bhd_center
 
-    all_ids <- c("geo_id_micro","sex","age_group") # geo_id_macro is left out because it does not interact with bhd_center
-    #find all ids which where used
-    valid_ids <-sapply(input_args_value[all_ids], function(x) length(x)==length(input_args_value$bhd_central))
+      #find all ids which where used
+      valid_ids <- purrr::map_lgl(input_args_value[arguments_for_bhd_combination],~ length(.x) == length(input_args_value$bhd_central))
 
-    #create dataframe with used ids and bhd as cols
-    df_id_structure <- as.data.frame(input_args_value[c(c("bhd_central"),all_ids[valid_ids])])
-    if(nrow(df_id_structure) > 0){
+      #create dataframe with used ids and bhd as cols
+      df_id_structure <- base::as.data.frame(input_args_value[c(c("bhd_central"),arguments_for_bhd_combination[valid_ids])])
+      if(base::nrow(df_id_structure) > 0){
 
-      #check if every id combination has only one assigned bhd_central value
-      df_id_structure
-      id_ambiguity<-df_id_structure %>% dplyr::group_by(across(-1)) %>% dplyr::summarise(all_same = dplyr::n_distinct(.data$bhd_central) != 1)
+        #check if every id combination has only one assigned bhd_central value
+        id_ambiguity<-df_id_structure |> dplyr::group_by(dplyr::across(!bhd_central)) |> dplyr::summarise(all_same = dplyr::n_distinct(.data$bhd_central) != 1)
 
-      # browser()
-      if(base::any(id_ambiguity$all_same)){
-        base::stop(base::paste0(
-          "Allocation from bhd_central to ",base::toString(all_ids[valid_ids])," is ambiguous.\n",
-          "The following combinations have multiple bhd_central values: \n",base::toString(apply(id_ambiguity[id_ambiguity$all_same,1:(ncol(id_ambiguity)-1)], 1, function(x) base::paste(x, collapse = "_"))),
-          "\n","Within every combination, the bhd_central values need to be the same."))
-    }}
+        if(base::any(id_ambiguity$all_same)){
+          base::stop(base::paste0(
+            "Allocation from bhd_central to ",base::toString(arguments_for_bhd_combination[valid_ids])," is ambiguous.\n",
+            "The following combinations have multiple bhd_central values: \n",base::toString(base::do.call(base::paste, c(id_ambiguity[id_ambiguity$all_same, 1:(base::ncol(id_ambiguity)-1)],sep = "_"))),
+            "\n","Within every combination, the bhd_central values need to be the same."),call. = FALSE)
+    }}}
 
     if(is_lifetable){
 
