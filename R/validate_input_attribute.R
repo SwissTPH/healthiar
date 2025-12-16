@@ -126,8 +126,9 @@ validate_input_attribute <-
       base::names()
 
     if(base::length(numeric_args_that_are_not) > 0) {
+
       base::stop(
-        base::paste0("The following arguments should be numeric: ",
+        base::paste0("The following arguments should be numeric without NAs: ",
                      base::toString(numeric_args_that_are_not),
                      "."),
         call. = FALSE
