@@ -1803,7 +1803,7 @@ testthat::test_that("error if numeric argument is not numeric", {
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear"),
-    regexp = "The following arguments should be numeric: exp_central",
+    regexp = "The following arguments should be numeric without NAs: exp_central",
     # Use fixed because otherwise the brackets regexp give an error in the test
     fixed = TRUE
     )
