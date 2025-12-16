@@ -2,8 +2,7 @@
 
 ## Introduction
 
-*healthiar* is an R package to quantify and monetize health impacts attributable to exposure (e.g. air pollution, noise...). Enter the exposure, exposure response function, cut-off and baseline health data to quantify the attributable health impacts in your study area. You can also monetize impacts, consider social inequalities and make many more things. See below. 
-
+*healthiar* is an R package to quantify and monetize health impacts attributable to exposure (e.g. air pollution, noise...) in your study area. Explore the many functions and features of *healthiar*!
 
 ## Getting started 
 To get started with the `healthiar` R package, we recommend to look at the vignette (~ package manual) *intro_to_healthiar*, which you cou can access
