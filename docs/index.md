@@ -1,7 +1,7 @@
 # WELCOME TO *healthiar*
 
-*healthiar* is an R package to quantify and monetize the burden of
-disease attributable to exposure
+*healthiar* is an R package to quantify and monetize health impacts
+attributable to exposure (e.g. air pollution, noise…).
 
 # INSTALLATION
 
@@ -24,7 +24,8 @@ There are two options to install *healthiar*:
   that are needed for *healthiar*) if you get asked to do so
 
 **After installation**, do not forget to load the package by running the
-call [`library(healthiar)`](https://github.com/SwissTPH/healthiar/).
+call
+[`library(healthiar)`](https://CRAN.R-project.org/package=healthiar).
 
 # GETTING STARTED
 
