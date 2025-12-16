@@ -1,6 +1,6 @@
 # WELCOME TO *healthiar* 
 
-*healthiar* is an R package to quantify and monetize the burden of disease attributable to exposure
+*healthiar* is an R package to quantify and monetize health impacts attributable to exposure (e.g. air pollution, noise...).
 
 # INSTALLATION 
 We recommend to frequently install the newest *healthiar* version. Please note that **`healthiar` requires R version 4.3.0 or higher**. There are two options to install *healthiar*:
