@@ -4,17 +4,6 @@
 
 *healthiar* is an R package to quantify and monetize health impacts attributable to exposure (e.g. air pollution, noise...). Enter the exposure, exposure response function, cut-off and baseline health data to quantify the attributable health impacts in your study area. You can also monetize impacts, consider social inequalities and make many more things. See below. 
 
-# Instalation
-We recommend to frequently install the newest *healthiar* version. Please note that **`healthiar` requires R version 4.3.0 or higher**. There are two options to install *healthiar*:
-
-a) **From CRAN**: Click on the *Packages* tab in RStudio and on the *Install* button. Leave the *Install from:* option set to *Reporsitory (CRAN)* and then search and select *healthiar* and finally click on *Install*, keeping *Install dependencies* activated.
-
-b) **From Github (most recent version)**: Run the following commands below in RStudio to install *healthiar*:
-- `install.packages(c("knitr", "rmarkdown"))`
-- `remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)`
-- Note: install or update all package dependencies (= other packages that are needed for *healthiar*) if you get asked to do so
-
-**After installation**, do not forget to load the package by running the call `library(healthiar)`. 
 
 ## Getting started 
 To get started with the `healthiar` R package, we recommend to look at the vignette (~ package manual) *intro_to_healthiar*, which you cou can access
@@ -34,6 +23,19 @@ a) going to the [reference page of the package website]{https://swisstph.github.
 b) running `?attribute_health` in RStudio (with `healthiar` loaded)
 
 c) going to the `Packages tab` and then clicking on `healthiar`
+
+## Installation
+We recommend to frequently install the newest *healthiar* version. Please note that **`healthiar` requires R version 4.3.0 or higher**. There are two options to install *healthiar*:
+
+a) **From CRAN**: Click on the *Packages* tab in RStudio and on the *Install* button. Leave the *Install from:* option set to *Reporsitory (CRAN)* and then search and select *healthiar* and finally click on *Install*, keeping *Install dependencies* activated.
+
+b) **From Github (most recent version)**: Run the following commands below in RStudio to install *healthiar*:
+- `install.packages(c("knitr", "rmarkdown"))`
+- `remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)`
+- Note: install or update all package dependencies (= other packages that are needed for *healthiar*) if you get asked to do so
+
+**After installation**, do not forget to load the package by running the call `library(healthiar)`. 
+
 
 ## Citation
 We love that you use *healthiar*. In that case, please do not forget to cite *healthiar* in your work. Three options to get there: 
