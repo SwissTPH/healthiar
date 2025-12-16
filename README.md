@@ -1,6 +1,6 @@
 # healthiar <a href="https://swisstph.github.io/healthiar/"><img src="man/figures/logo.png" align="right" height="138" alt="healthiar website" /></a>
 
-# Introduction
+## Introduction
 
 *healthiar* is an R package to quantify and monetize health impacts attributable to exposure (e.g. air pollution, noise...). Enter the exposure, exposure response function, cut-off and baseline health data to quantify the attributable health impacts in your study area. You can also monetize impacts, consider social inequalities and make many more things. See below. 
 
@@ -16,7 +16,7 @@ b) **From Github (most recent version)**: Run the following commands below in RS
 
 **After installation**, do not forget to load the package by running the call `library(healthiar)`. 
 
-# Getting started 
+## Getting started 
 To get started with the `healthiar` R package, we recommend to look at the vignette (~ package manual) *intro_to_healthiar*, which you cou can access
 
 a) on the [package website](https://swisstph.github.io/healthiar/articles/index.html) (recommended)
@@ -35,7 +35,7 @@ b) running `?attribute_health` in RStudio (with `healthiar` loaded)
 
 c) going to the `Packages tab` and then clicking on `healthiar`
 
-# Citation
+## Citation
 We love that you use *healthiar*. In that case, please do not forget to cite *healthiar* in your work. Three options to get there: 
 
 a) On the [healthiar package website](https://swisstph.github.io/healthiar/authors.html#citation)  
@@ -46,18 +46,18 @@ c) In your R console, enter *citation("healthiar")*.
 
 In options b) and c), you always see the updated citation. In option a), you see citation of the *healthiar* version that you have installed locally, which might be outdated.
 
-# Disclamer and licence 
+## Disclamer and licence 
 By using *healthiar*, you confirm that you agree with the following disclaimer and terms of the licence:
 
 a) Disclaimer: The R package *healthiar* is work in progress and the developers are not liable for the results. 
 
 b) License: Available [here](https://github.com/SwissTPH/healthiar/blob/master/LICENSE.md).
 
-# Feedback
+## Feedback
 Feel free provide feedback via [GitHub issues](https://github.com/SwissTPH/healthiar/issues)
 
-# Presenting *healthiar*
+## Presenting *healthiar*
 If you would like us to present *healthiar* at a conference, lecture or training, please, contact us: alberto.castrofernandez@swisstph.ch and axel.luyten@swisstph.ch
 
-# Acknowledgements
+## Acknowledgements
 *healthiar* was been developed under the framework of EU project BEST-COST. BEST-COST is funded by the European Union’s Horizon Europe programme under Grant Agreement No.101095408.
