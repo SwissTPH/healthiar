@@ -1,3 +1,5 @@
+# healthiar
+
 # WELCOME TO *healthiar*
 
 *healthiar* is an R package to quantify and monetize health impacts

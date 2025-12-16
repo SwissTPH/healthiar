@@ -1,3 +1,5 @@
+# healthiar <a href="https://swisstph.github.io/healthiar/"><img src="man/figures/logo.png" align="right" height="138" alt="healthiar website" /></a>
+
 # WELCOME TO *healthiar* 
 
 *healthiar* is an R package to quantify and monetize health impacts attributable to exposure (e.g. air pollution, noise...).
