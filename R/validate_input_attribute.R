@@ -236,7 +236,7 @@ validate_input_attribute <-
       arguments_for_bhd_combination <- c("geo_id_micro","sex","age_group") # geo_id_macro is left out because it does not interact with bhd_center
 
       #find all ids which where used
-      valid_ids <- purrr::map_lgl(input_args_value[arguments_for_bhd_combination],~ length(.x) == length(input_args_value$bhd_central))
+      valid_ids <- purrr::map_lgl(input_args_value[arguments_for_bhd_combination],~ base::length(.x) == base::length(input_args_value$bhd_central))
 
       #create dataframe with used ids and bhd as cols
       df_id_structure <- base::as.data.frame(input_args_value[c(c("bhd_central"),arguments_for_bhd_combination[valid_ids])])
