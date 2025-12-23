@@ -231,8 +231,7 @@ validate_input_attribute <-
 
     if ((input_args$is_entered_by_user$geo_id_micro | input_args$is_entered_by_user$age_group | input_args$is_entered_by_user$sex) & input_args$is_entered_by_user$bhd_central){
 
-        #browser()
-        ### error_if_bhd_unique_longer_than_id_unique #####
+      ### error_if_bhd_unique_longer_than_id_unique #####
       arguments_for_bhd_combination <- c("geo_id_micro","sex","age_group") # geo_id_macro is left out because it does not interact with bhd_center
 
       #find all ids which where used
@@ -249,7 +248,7 @@ validate_input_attribute <-
           base::stop(base::paste0(
             "Allocation from bhd_central to ",base::toString(arguments_for_bhd_combination[valid_ids])," is ambiguous.\n",
             "The following combinations have multiple bhd_central values: \n",base::toString(base::do.call(base::paste, c(id_ambiguity[id_ambiguity$all_same, 1:(base::ncol(id_ambiguity)-1)],sep = "_"))),
-            "\n","Within every combination, the bhd_central values need to be the same."),call. = FALSE)
+            "\n","Within every combination, the bhd_central values need to be the same."),call. = NULL)
     }}}
 
     if(is_lifetable){
