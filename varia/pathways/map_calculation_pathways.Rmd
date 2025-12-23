@@ -51,7 +51,7 @@ core_rr <- list(
   erf = c("log_lin", "function", "lin_lin"),
   exp = c("single", "dist"), # prop_pop_exp linked with this
   iteration = c("TRUE", "FALSE"),
-  uncertainty = c("FALSE"), 
+  # uncertainty = c("FALSE"), 
   strat = c("FALSE"),
   yld = c("FALSE")
 )
@@ -70,7 +70,7 @@ rm(core_rr)
 
 # * Document existing pathways #################################################
 
-file_path <- "~/GitHub/healthiar/tests/testthat/test-attribute_health.R"
+file_path <- "tests/testthat/test-attribute_health.R"
 file_content <- readLines(file_path) # String vector where each element is all code from a line
 file_content <- file_content[!grepl("^\\s*#", file_content)] # Filter out commented-out lines
 
@@ -130,7 +130,7 @@ pathways_rr <- pathways_rr |>
     erf, 
     desc(exp), 
     desc(iteration), 
-    desc(uncertainty),
+    # desc(uncertainty),
     desc(strat),
     desc(yld)
     )
