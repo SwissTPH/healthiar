@@ -122,12 +122,13 @@ validate_input_attribute <-
     # And also nice to have all incorrect args at once
     numeric_args_that_are_not <-
       input_args_value[numeric_arg_names_available] |>
-      purrr::keep(~ !base::is.numeric(.x)) |>
+      purrr::keep(~ !base::is.numeric(.x) | any(is.na(.x))) |>
       base::names()
 
     if(base::length(numeric_args_that_are_not) > 0) {
+
       base::stop(
-        base::paste0("The following arguments should be numeric: ",
+        base::paste0("The following arguments should be numeric without NAs: ",
                      base::toString(numeric_args_that_are_not),
                      "."),
         call. = FALSE

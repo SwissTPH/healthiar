@@ -6,12 +6,18 @@
 
 # ARGUMENTS ####################################################################
 #' @inheritParams attribute_master
-#' @param rr \code{Numeric vector} containing the relative risk. The data frame must contain the central estimate as well as the lower and upper bound of the exposure-response function.
-#' @param exp Population exposure to the stressor (e.g. annual population-weighted mean).
-#' @param cutoff \code{Numeric value} showing the cut-off exposure level in ug/m3 (i.e. the exposure level below which no health effects occur).
-#' @param erf_eq Equation of the user-defined exposure-response function that puts the relative risk (y) in relation with exposure (x). If the function is provided as \code{string}, it can only contains one variable: x (exposure). E.g. "3+x+x^2". If the function is provided as a \code{function}, the object should have a function class. If only the values of the x-axis (exposure) and y axis (relative risk) of the dots in the exposure-response function are available, a cubic spline natural interpolation can be assumed to get the function using, e.g., \code{stats::splinefun(x, y, method="natural")}
+#' @param rr \code{Numeric value} or \code{numeric vector} specifying the \strong{relative risk} estimate(s) and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Not required if the \code{erf_eq} argument is already specified.
+#' @param exp \code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor (e.g. annual population-weighted mean) and (optionally) the corresponding lower and upper bound of the 95\% confidence interval.
+#' @param cutoff \code{Numeric value} specifying the \strong{exposure cut-off value} (i.e. the exposure level below which no health effects occur) and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
+#' @param erf_eq \code{String} or \code{function} specifying the \strong{exposure-response function} and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details and Examples sections below.
 
 # DETAILS ######################################################################
+#' @details
+#' \strong{Function arguments}
+#' @details
+#' \code{erf_eq}
+#' @details
+#' If the function is provided as \code{string}, it can only contain the variable c (exposure), e.g. "3+c+c^2". If the function is provided as a \code{function}, the object must be of the class function. If only the values of the x-axis (exposure) and y axis (relative risk) of the dots in the exposure-response function are available, a cubic spline natural interpolation can be assumed to get the function using, e.g., \code{stats::splinefun(x, y, method="natural")}
 #' @details
 #' \strong{Equations for scaling of relative risk}
 #' @details
@@ -36,7 +42,7 @@
 
 # VALUE ########################################################################
 #' @returns
-#' This function returns the \code{numeric} relative risk(s) at the specified exposure level(s), referred to as \emph{rr_at_exp} in the equations above.
+#' This function returns the \code{numeric} risk value(s) at the specified exposure level(s), referred to as \emph{rr_at_exp} in the relative risk equations above.
 
 # EXAMPLES #####################################################################
 #' @examples
@@ -47,6 +53,24 @@
 #'   erf_shape = "linear",
 #'   exp = 10,
 #'   cutoff = 5
+#' )
+#'
+#' @examples
+#' # Goal: determine the absolute risk for high annoyance at specific noise exposure levels
+#' get_risk(
+#'   erf_eq = "78.9270-3.1162*c+0.0342*c^2",
+#'   exp = c(57.5, 62.5, 67.5, 72.5, 77.5)
+#' )
+#'
+#' @examples
+#' # Goal: attribute COPD cases to air pollution exposure by applying a user-defined exposure response function,
+#' # e.g. MR-BRT curves from Global Burden of Disease study.
+#' get_risk(
+#'   erf_eq = splinefun(
+#'     x = c(0, 5, 10, 15, 20, 25, 30, 50, 70, 90, 110),
+#'     y = c(1.00, 1.04, 1.08, 1.12, 1.16, 1.20, 1.23, 1.35, 1.45, 1.53, 1.60),
+#'     method = "natural"),
+#'   exp = c(8, 9, 10)
 #' )
 
 #' @author Alberto Castro & Axel Luyten

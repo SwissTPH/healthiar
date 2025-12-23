@@ -4156,13 +4156,31 @@ testthat::test_that("error if numeric argument is not numeric", {
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear"),
-    regexp = "The following arguments should be numeric: exp_central",
+    regexp = "The following arguments should be numeric without NAs: exp_central",
     # Use fixed because otherwise the brackets regexp give an error in the test
     fixed = TRUE
     )
 })
 
 testthat::test_that("error if numeric argument is not numeric", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = c(6,8),
+        prop_pop_exp = c(NA, 0.5),
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"),
+    regexp = "The following arguments should be numeric without NAs: prop_pop_exp",
+    # Use fixed because otherwise the brackets regexp give an error in the test
+    fixed = TRUE
+  )
+})
+
+testthat::test_that("error if not an option", {
 
   testthat::expect_error(
     object =
