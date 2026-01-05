@@ -2565,7 +2565,6 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
   bhd_change <-0.9
   rr_change <-1.2
   uncert_factor <- 20#set uncertainty factor
-  bhd_c
   # set central values and variate by percentage
   exp_c <- base::signif(base::unlist(base::lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
   cutoff_c <- base::rep(base::signif(base::unlist(base::lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
