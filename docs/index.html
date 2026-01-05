@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.1.1383</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.1.1390</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,23 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p><em>healthiar</em> is an R package to quantify and monetize health impacts attributable to exposure (e.g. air pollution, noise…) in your study area. Explore the many functions and features of <em>healthiar</em>!</p>
+<p><em>healthiar</em> is an R package to quantify and monetize health impacts attributable to exposure (e.g. air pollution, noise…) in a study area. Using <em>healthiar</em>, you can …</p>
+<ul>
+<li>
+<p>Quantify health impacts choosing among multiple input data formats and calculation pathways:</p>
+<ul>
+<li><p>Exposure data as single value or as distribution</p></li>
+<li><p>Relative risk or absolute risk</p></li>
+<li><p>Fixed-shape or user-defined exposure-response functions</p></li>
+<li><p>Single or age-specific baseline health data (life table approach)</p></li>
+</ul>
+</li>
+<li><p>Iterate across geographical units</p></li>
+<li><p>Compare scenarios</p></li>
+<li><p>Include and summarize uncertainties</p></li>
+<li><p>Monetize health impacts or perform cost-benefit analyses adjusting for inflation and discounting</p></li>
+<li><p>Consider social inequalities in the assessment and stratify the results</p></li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
@@ -81,7 +97,7 @@
 <p>Additionally, a 45 minutes introduction to the package can be found <a href="https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ" class="external-link">here</a>. The slides of the presentation can be found <a href="https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop" class="external-link">here</a></p>
 <p>See the function help pages for information about specific functions. In RStudio, you can access the function documentation of e.g. the function <code>attribute_health</code> by</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>going to the [reference page of the package website]{<a href="https://swisstph.github.io/healthiar/reference/index.html" class="uri">https://swisstph.github.io/healthiar/reference/index.html</a>}</p></li>
+<li><p>going to the <a href="https://swisstph.github.io/healthiar/reference/index.html">reference page of the package website</a></p></li>
 <li><p>running <code><a href="reference/attribute_health.html">?attribute_health</a></code> in RStudio (with <code>healthiar</code> loaded)</p></li>
 <li><p>going to the <code>Packages tab</code> and then clicking on <code>healthiar</code></p></li>
 </ol>
@@ -99,7 +115,7 @@
 <li><code>remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)</code></li>
 <li>Note: install or update all package dependencies (= other packages that are needed for <em>healthiar</em>) if you get asked to do so</li>
 </ul>
-<p><strong>After installation</strong>, do not forget to load the package by running the call <code><a href="https://github.com/SwissTPH/healthiar/" class="external-link">library(healthiar)</a></code>.</p>
+<p><strong>After installation</strong>, do not forget to load the package by running the call <code><a href="https://CRAN.R-project.org/package=healthiar" class="external-link">library(healthiar)</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
