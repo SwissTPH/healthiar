@@ -3,8 +3,31 @@
 ## Introduction
 
 *healthiar* is an R package to quantify and monetize health impacts
-attributable to exposure (e.g. air pollution, noise…) in your study
-area. Explore the many functions and features of *healthiar*!
+attributable to exposure (e.g. air pollution, noise…) in a study area.
+Using *healthiar*, you can …
+
+- Quantify health impacts choosing among multiple input data formats and
+  calculation pathways:
+
+  - Exposure data as single value or as distribution
+
+  - Relative risk or absolute risk
+
+  - Fixed-shape or user-defined exposure-response functions
+
+  - Single or age-specific baseline health data (life table approach)
+
+- Iterate across geographical units
+
+- Compare scenarios
+
+- Include and summarize uncertainties
+
+- Monetize health impacts or perform cost-benefit analyses adjusting for
+  inflation and discounting
+
+- Consider social inequalities in the assessment and stratify the
+  results
 
 ## Getting started
 
@@ -32,8 +55,8 @@ See the function help pages for information about specific functions. In
 RStudio, you can access the function documentation of e.g. the function
 `attribute_health` by
 
-1.  going to the \[reference page of the package
-    website\]{<https://swisstph.github.io/healthiar/reference/index.html>}
+1.  going to the [reference page of the package
+    website](https://swisstph.github.io/healthiar/reference/index.html)
 
 2.  running
     [`?attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
@@ -62,7 +85,8 @@ There are two options to install *healthiar*:
   that are needed for *healthiar*) if you get asked to do so
 
 **After installation**, do not forget to load the package by running the
-call [`library(healthiar)`](https://github.com/SwissTPH/healthiar/).
+call
+[`library(healthiar)`](https://CRAN.R-project.org/package=healthiar).
 
 ## Citation
 
