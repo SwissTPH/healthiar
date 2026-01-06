@@ -1,13 +1,13 @@
 Package: healthiar
 Title: Quantifying and Monetizing Health Impacts Attributable to Exposure
-Version: 0.2.1.1391
+Version: 0.2.1.1393
 Authors@R: c(
     person(given = "Alberto", family = "Castro", email = "alberto.castrofernandez@swisstph.ch", role = c("cre", "aut"), comment = c(ORCID = "0000-0002-4665-3299")),
     person(given = "Axel", family = "Luyten", role = c("aut"), comment = c(ORCID = "0000-0002-7005-5889")),
     person(given = "Arno", family = "Pauwels", role = c("ctb"), comment = c(ORCID = "0000-0001-7519-8080")),
     person(given = "Liliana", family = "Vazquez Fernandez", role = c("ctb"), comment = c(ORCID = "0000-0003-3778-9415")),
     person(given = "Vanessa", family = "Gorasso", role = c("ctb"), comment = c(ORCID = "0000-0001-6884-9316")),
-    person(given = "Carl", family = "Michael Baravelli", role = c("ctb"), comment = c(ORCID = "0000-0001-7772-5315")),
+    person(given = "Carl", family = "Baravelli", role = c("ctb"), comment = c(ORCID = "0000-0001-7772-5315")),
     person(given = "Susanne", family = "Breitner", role = c("ctb"), comment = c(ORCID = "0000-0002-0956-6911")),
     person(given = "Maria", family = "Lepnurm", role = c("ctb"), comment = c(ORCID = "0009-0009-4372-6227")),
     person(given = "Maria Jose", family = "Rueda Lopez", role = c("ctb"), comment = c(ORCID = "0000-0002-2443-1038")),

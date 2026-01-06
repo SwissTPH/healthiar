@@ -16,7 +16,7 @@
 - **Vanessa Gorasso**. Contributor.
   [](https://orcid.org/0000-0001-6884-9316)
 
-- **Carl Michael Baravelli**. Contributor.
+- **Carl Baravelli**. Contributor.
   [](https://orcid.org/0000-0001-7772-5315)
 
 - **Susanne Breitner**. Contributor.
