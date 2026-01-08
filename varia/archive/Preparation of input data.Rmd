@@ -170,7 +170,7 @@ digest_airqplus_export_singlebhd <-
     airqplus_export <- 
       airqplus_export %>%
       # Rename variables
-      setNames(c("variable", "value"))%>%
+      stats::setNames(c("variable", "value"))%>%
       dplyr::rowwise()%>%
       # Add and edit columns
       dplyr::mutate(
@@ -265,7 +265,7 @@ digest_airqplus_export_lifetable <-
     airqplus_export_edited <- 
       airqplus_export %>%
       # Rename variables
-      setNames(c("variable", "value")) %>%
+      stat::setNames(c("variable", "value")) %>%
       # Remove ";" at the end of the string 
       # Important to be done before
       dplyr::mutate(

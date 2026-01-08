@@ -20,7 +20,7 @@ check_if_args_identical <- function(args_a, args_b, names_to_check) {
   # Compare values
   checked_values <-
     purrr::map_lgl(names_to_check, ~ identical(args_a[[.x]], args_b[[.x]])) |>
-    setNames(names_to_check)  # Name the result
+    stats::setNames(names_to_check)  # Name the result
 
   return(checked_values)
 }
