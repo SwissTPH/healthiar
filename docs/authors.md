@@ -13,26 +13,29 @@
 - **Liliana Vazquez Fernandez**. Contributor.
   [](https://orcid.org/0000-0003-3778-9415)
 
-- **Vanessa Gorasso**. Contributor.
-  [](https://orcid.org/0000-0001-6884-9316)
-
-- **Carl Baravelli**. Contributor.
-  [](https://orcid.org/0000-0001-7772-5315)
-
-- **Susanne Breitner**. Contributor.
-  [](https://orcid.org/0000-0002-0956-6911)
-
-- **Maria Lepnurm**. Contributor.
-  [](https://orcid.org/0009-0009-4372-6227)
-
-- **Maria Jose Rueda Lopez**. Contributor.
-  [](https://orcid.org/0000-0002-2443-1038)
+- **Gianni Ardielli**. Contributor.
+  [](https://orcid.org/0009-0000-3408-2217)
 
 - **Iracy Pimenta**. Contributor.
   [](https://orcid.org/0000-0003-0032-1536)
 
+- **Susanne Breitner**. Contributor.
+  [](https://orcid.org/0000-0002-0956-6911)
+
+- **Carl Baravelli**. Contributor.
+  [](https://orcid.org/0000-0001-7772-5315)
+
+- **Vanessa Gorasso**. Contributor.
+  [](https://orcid.org/0000-0001-6884-9316)
+
+- **Maria Lepnurm**. Contributor.
+  [](https://orcid.org/0009-0009-4372-6227)
+
 - **Andreia Novais**. Contributor.
   [](https://orcid.org/0009-0007-7775-108X)
+
+- **Maria Jose Rueda Lopez**. Contributor.
+  [](https://orcid.org/0000-0002-2443-1038)
 
 - **Ana Barbosa**. Contributor.
   [](https://orcid.org/0000-0002-9623-9002)
@@ -43,27 +46,25 @@
 - **Anette Kocbach Bolling**. Contributor.
   [](https://orcid.org/0000-0003-4209-7448)
 
-- **Gianni Ardielli**. Contributor.
-  [](https://orcid.org/0009-0000-3408-2217)
-
 ## Citation
 
 Source:
 [`inst/CITATION`](https://github.com/SwissTPH/healthiar/blob/HEAD/inst/CITATION)
 
-Castro A, Luyten A (2025). *healthiar: Quantifying and Monetizing Health
+Castro A, Luyten A (2026). *healthiar: Quantifying and Monetizing Health
 Impacts Attributable to Exposure*. R package version 0.2.2.
-Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Vanessa Gorasso,
-Carl Michael Baravelli, Susanne Breitner, Maria Lepnurm, Maria Jose
-Rueda Lopez, Iracy Pimenta, Andreia Novais, Ana Barbosa, Joao Vasco
-Santos, Anette Kocbach Bolling, Gianni Ardielli. Source code at:
-https://github.com/SwissTPH/healthiar,
-<https://CRAN.R-project.org/package=healthiar>.
+Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli,
+Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria
+Lepnurm, Andreia Novais, Maria Jose Rueda Lopez, Ana Barbosa, Joao Vasco
+Santos, Anette Kocbach Bolling.,
+[https://CRAN.R-project.org/package=healthiar
+https://swisstph.github.io/healthiar
+https://github.com/SwissTPH/healthiar](https://CRAN.R-project.org/package=healthiar%20https://swisstph.github.io/healthiar%20https://github.com/SwissTPH/healthiar).
 
     @Manual{,
       title = {healthiar: Quantifying and Monetizing Health Impacts Attributable to Exposure},
       author = {Alberto Castro and Axel Luyten},
-      year = {2025},
-      note = {R package version 0.2.2. Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Vanessa Gorasso, Carl Michael Baravelli, Susanne Breitner, Maria Lepnurm, Maria Jose Rueda Lopez, Iracy Pimenta, Andreia Novais, Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling, Gianni Ardielli. Source code at: https://github.com/SwissTPH/healthiar},
-      url = {https://CRAN.R-project.org/package=healthiar},
+      year = {2026},
+      note = {R package version 0.2.2. Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli, Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria Lepnurm, Andreia Novais, Maria Jose Rueda Lopez,  Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling.},
+      url = {https://CRAN.R-project.org/package=healthiar https://swisstph.github.io/healthiar https://github.com/SwissTPH/healthiar},
     }

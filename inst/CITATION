@@ -1,19 +1,23 @@
 citHeader("To cite package 'healthiar' in publications use:")
 
-citEntry(
-  entry    = "Manual",
-  title    = "healthiar: Quantifying and Monetizing Health Impacts Attributable to Exposure",
-  author   = c(
-    person("Alberto", "Castro"),
-    person("Axel", "Luyten")
-  ),
-  year     = "2025",
-  note     = paste(
+bibentry(
+  bibtype = "Manual",
+  title   = "healthiar: Quantifying and Monetizing Health Impacts Attributable to Exposure",
+  author  = as.person(c(
+    "Alberto Castro",
+    "Axel Luyten"
+  )),
+  year    = "2026",
+  note    = paste(
     "R package version 0.2.2.",
-    "Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Vanessa Gorasso,",
-    "Carl Baravelli, Susanne Breitner, Maria Lepnurm, Maria Jose Rueda Lopez,",
-    "Iracy Pimenta, Andreia Novais, Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling, Gianni Ardielli.",
-    "Source code at: https://github.com/SwissTPH/healthiar"
-  ),
-  url      = "https://CRAN.R-project.org/package=healthiar"
+    "Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli,",
+    "Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria Lepnurm,",
+    "Andreia Novais, Maria Jose Rueda Lopez,  Ana Barbosa,",
+    "Joao Vasco Santos, Anette Kocbach Bolling."
+    ),
+  url     = c(
+    "https://CRAN.R-project.org/package=healthiar",
+    "https://swisstph.github.io/healthiar",
+    "https://github.com/SwissTPH/healthiar"
+    )
 )
