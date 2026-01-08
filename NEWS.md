@@ -1,7 +1,7 @@
 Main changes but not complete list. For this propose see Github.
 
 # healthiar 0.2.2
-* 08 January 2025
+* 08 January 2026
 
 ## Improvements
 
