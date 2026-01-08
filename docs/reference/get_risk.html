@@ -125,7 +125,8 @@ $$rr\_at\_exp =  1 + \frac{(rr - 1)}{rr\_increment} \cdot (exp - cutoff)$$</p>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 12.81925 17.75825 24.40725 32.76625 42.83525</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Goal: attribute COPD cases to air pollution exposure by applying a user-defined exposure response function,</span></span></span>
+<span class="r-in"><span><span class="co"># Goal: attribute COPD cases to air pollution exposure</span></span></span>
+<span class="r-in"><span><span class="co"># by applying a user-defined exposure response function,</span></span></span>
 <span class="r-in"><span><span class="co"># e.g. MR-BRT curves from Global Burden of Disease study.</span></span></span>
 <span class="r-in"><span><span class="fu">get_risk</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  erf_eq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/splinefun.html" class="external-link">splinefun</a></span><span class="op">(</span></span></span>
