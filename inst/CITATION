@@ -14,6 +14,7 @@ bibentry(
     "Carl Baravelli, Susanne Breitner, Maria Lepnurm, Maria Jose Rueda Lopez,",
     "Iracy Pimenta, Andreia Novais, Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling, Gianni Ardielli.",
     "Source code: https://github.com/SwissTPH/healthiar",
+    "Documentation: https://swisstph.github.io/healthiar/",
   ),
   url      = "https://CRAN.R-project.org/package=healthiar"
 )
