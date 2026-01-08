@@ -1,5 +1,26 @@
 # Changelog
 
+## healthiar 0.2.2
+
+- 08 January 2026
+
+### Improvements
+
+### Bug Fixes
+
+- results_raw now stratifies by info arguments
+
+### Documentation
+
+- New structure of vignette (by topic instead of by function)
+- Amendments in readme file in terms of contents and structure including
+  URL to new healthiar website
+- Updated and fixed citation
+
+### Testing
+
+- Around 70 additional internal tests for attribute_helath()
+
 ## healthiar 0.2.1
 
 CRAN release: 2025-11-11
@@ -11,7 +32,7 @@ CRAN release: 2025-11-11
 - Better sampling in summarize_uncertainty() using RNG and package
   parallel
 
-### Bugs Fixes
+### Bug Fixes
 
 - time_horizon did not work in attribute_lifetable()
 - population was not summed correct in attribute_lifetable()
@@ -44,7 +65,7 @@ CRAN release: 2025-11-11
 
 - Faster performance of summarize_uncertainty()
 
-### Bugs Fixes
+### Bug Fixes
 
 - Argument time_horizon was not working
 

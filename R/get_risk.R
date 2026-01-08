@@ -63,7 +63,8 @@
 #' )
 #'
 #' @examples
-#' # Goal: attribute COPD cases to air pollution exposure by applying a user-defined exposure response function,
+#' # Goal: attribute COPD cases to air pollution exposure
+#' # by applying a user-defined exposure response function,
 #' # e.g. MR-BRT curves from Global Burden of Disease study.
 #' get_risk(
 #'   erf_eq = splinefun(

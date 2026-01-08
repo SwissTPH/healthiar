@@ -1,12 +1,30 @@
 Main changes but not complete list. For this propose see Github.
 
+# healthiar 0.2.2
+* 08 January 2026
+
+## Improvements
+
+## Bug Fixes
+- results_raw now stratifies by info arguments 
+
+## Documentation
+- New structure of vignette (by topic instead of by function)
+- Amendments in readme file in terms of contents and structure including URL to new healthiar website
+- Updated and fixed citation
+
+## Testing
+- Around 70 additional internal tests for attribute_helath()
+
+
+
 # healthiar 0.2.1
 * 06 November 2025
 
 ## Improvements
 - Better sampling in summarize_uncertainty() using RNG and package parallel
 
-## Bugs Fixes 
+## Bug Fixes 
 - time_horizon did not work in attribute_lifetable()
 - population was not summed correct in attribute_lifetable()
 - health_detailed in attribute_health() provided a duplicated rows for results by geo_id_micro
@@ -36,7 +54,7 @@ Main changes but not complete list. For this propose see Github.
 ## Improvements
 - Faster performance of summarize_uncertainty()
 
-## Bugs Fixes 
+## Bug Fixes 
 - Argument time_horizon was not working
 
 ## Renamings

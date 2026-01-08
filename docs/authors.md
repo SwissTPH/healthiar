@@ -52,7 +52,7 @@ Source:
 [`inst/CITATION`](https://github.com/SwissTPH/healthiar/blob/HEAD/inst/CITATION)
 
 Castro A, Luyten A (2025). *healthiar: Quantifying and Monetizing Health
-Impacts Attributable to Exposure*. R package version 0.2.1.
+Impacts Attributable to Exposure*. R package version 0.2.2.
 Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Vanessa Gorasso,
 Carl Michael Baravelli, Susanne Breitner, Maria Lepnurm, Maria Jose
 Rueda Lopez, Iracy Pimenta, Andreia Novais, Ana Barbosa, Joao Vasco
@@ -64,6 +64,6 @@ https://github.com/SwissTPH/healthiar,
       title = {healthiar: Quantifying and Monetizing Health Impacts Attributable to Exposure},
       author = {Alberto Castro and Axel Luyten},
       year = {2025},
-      note = {R package version 0.2.1. Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Vanessa Gorasso, Carl Michael Baravelli, Susanne Breitner, Maria Lepnurm, Maria Jose Rueda Lopez, Iracy Pimenta, Andreia Novais, Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling, Gianni Ardielli. Source code at: https://github.com/SwissTPH/healthiar},
+      note = {R package version 0.2.2. Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Vanessa Gorasso, Carl Michael Baravelli, Susanne Breitner, Maria Lepnurm, Maria Jose Rueda Lopez, Iracy Pimenta, Andreia Novais, Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling, Gianni Ardielli. Source code at: https://github.com/SwissTPH/healthiar},
       url = {https://CRAN.R-project.org/package=healthiar},
     }

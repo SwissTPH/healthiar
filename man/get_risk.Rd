@@ -76,7 +76,8 @@ get_risk(
   exp = c(57.5, 62.5, 67.5, 72.5, 77.5)
 )
 
-# Goal: attribute COPD cases to air pollution exposure by applying a user-defined exposure response function,
+# Goal: attribute COPD cases to air pollution exposure
+# by applying a user-defined exposure response function,
 # e.g. MR-BRT curves from Global Burden of Disease study.
 get_risk(
   erf_eq = splinefun(
