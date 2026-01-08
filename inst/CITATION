@@ -7,16 +7,17 @@ bibentry(
     "Alberto Castro",
     "Axel Luyten"
   )),
-  year     = "2026",
-  note     = paste(
+  year    = "2026",
+  note    = paste(
     "R package version 0.2.2.",
     "Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli,",
     "Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria Lepnurm,",
     "Andreia Novais, Maria Jose Rueda Lopez,  Ana Barbosa,",
     "Joao Vasco Santos, Anette Kocbach Bolling."
     ),
-  url   = c("https://CRAN.R-project.org/package=healthiar",
-            "https://swisstph.github.io/healthiar",
-            "https://github.com/SwissTPH/healthiar"
-            )
+  url     = c(
+    "https://CRAN.R-project.org/package=healthiar",
+    "https://swisstph.github.io/healthiar",
+    "https://github.com/SwissTPH/healthiar"
+    )
 )
