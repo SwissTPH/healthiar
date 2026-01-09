@@ -13,11 +13,9 @@ bibentry(
     "Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli,",
     "Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria Lepnurm,",
     "Andreia Novais, Maria Jose Rueda Lopez,  Ana Barbosa,",
-    "Joao Vasco Santos, Anette Kocbach Bolling."
+    "Joao Vasco Santos, Anette Kocbach Bolling.",
+    "Website: https://swisstph.github.io/healthiar.",
+    "Repository: https://github.com/SwissTPH/healthiar."
     ),
-  url     = c(
-    "https://CRAN.R-project.org/package=healthiar",
-    "https://swisstph.github.io/healthiar",
-    "https://github.com/SwissTPH/healthiar"
-    )
-)
+  url     = "https://CRAN.R-project.org/package=healthiar"
+  )
