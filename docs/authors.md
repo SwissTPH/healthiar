@@ -57,14 +57,12 @@ Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli,
 Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria
 Lepnurm, Andreia Novais, Maria Jose Rueda Lopez, Ana Barbosa, Joao Vasco
 Santos, Anette Kocbach Bolling.,
-[https://CRAN.R-project.org/package=healthiar
-https://swisstph.github.io/healthiar
-https://github.com/SwissTPH/healthiar](https://CRAN.R-project.org/package=healthiar%20https://swisstph.github.io/healthiar%20https://github.com/SwissTPH/healthiar).
+<https://CRAN.R-project.org/package=healthiar>.
 
     @Manual{,
       title = {healthiar: Quantifying and Monetizing Health Impacts Attributable to Exposure},
       author = {Alberto Castro and Axel Luyten},
       year = {2026},
       note = {R package version 0.2.2. Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli, Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria Lepnurm, Andreia Novais, Maria Jose Rueda Lopez,  Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling.},
-      url = {https://CRAN.R-project.org/package=healthiar https://swisstph.github.io/healthiar https://github.com/SwissTPH/healthiar},
+      url = {https://CRAN.R-project.org/package=healthiar},
     }
