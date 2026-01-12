@@ -2,6 +2,8 @@
 
 ## healthiar 0.2.2
 
+CRAN release: 2026-01-09
+
 - 08 January 2026
 
 ### Improvements
