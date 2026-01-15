@@ -90,7 +90,7 @@ There are two options to install *healthiar*:
   that are needed for *healthiar*) if you get asked to do so
 
 **After installation**, do not forget to load the package by running the
-call [`library(healthiar)`](https://swisstph.github.io/healthiar/).
+call [`library(healthiar)`](https://github.com/SwissTPH/healthiar/).
 
 ## Citation
 
