@@ -31,6 +31,7 @@ compile_input <-
   function(input_args, is_lifetable){
 
 
+
     args_for_lifetable <-
       c("approach_exposure", "approach_newborns",
         "year_of_analysis",
@@ -177,7 +178,6 @@ compile_input <-
     ## Add is_lifetable
     input_table <- input_table |>
       dplyr::mutate(is_lifetable = is_lifetable)
-
 
   return(input_table)
 

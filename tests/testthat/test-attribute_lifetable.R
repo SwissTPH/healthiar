@@ -1,8 +1,11 @@
 # QUANTITATIVE TEST ############################################################
 
-## YLL from lifetable ###########################################################
+## YLL FROM LIFE TABLE ###########################################################
 
-## SINGLE YEAR EXPOSURE & NO NEWBORNS ##########################################
+### SINGLE YEAR EXPOSURE & NO NEWBORNS ##########################################
+
+#### ONE GEO UNIT ##############################################################
+
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
@@ -214,8 +217,51 @@ testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_y
   )
 })
 
+#### MULTIPLE GEO UNITS ######
+
+testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_TRUE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        exp_central = rep(c(8.85, 8.0), each = 2 * 100) , # Fake data just for testing purposes
+        prop_pop_exp = 1, # Fake data just for testing purposes
+        cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
+        rr_central = 1.118,
+        rr_lower = 1.060,
+        rr_upper = 1.179,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        approach_exposure = "single_year",
+        approach_newborns = "without_newborns",
+        sex = base::rep(c("male", "female"), each = 100, times = 2),
+        age_group = base::rep(0:99, times = 2*2),
+        bhd_central = base::rep(
+          c(data[["pop"]]$number_of_deaths_male,
+            data[["pop"]]$number_of_deaths_female),
+          times = 2),
+        population = base::rep(
+          c(data_lifetable[["male"]]$population,
+            data_lifetable[["female"]]$population),
+          times = 2),
+        year_of_analysis = 2019,
+        min_age = 20,
+        geo_id_micro = rep(c("a", "b"), each = 2* 100),
+        geo_id_macro = rep("ch", each = 2 * 2 * 100))$health_main$impact,
+    expected = c(51282.460, 26843.268, 75555.482) # Results on 2026-01-15
+
+  )
+})
+
+
 
 ### CONSTANT EXPOSURE & NO NEWBORNS #############################################
+
+#### ONE GEO UNIT #####################################
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
@@ -247,9 +293,49 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
   )
 })
 
+#### MULTIPLE GEO UNITS ######
+
+testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_TRUE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "constant",
+        approach_newborns = "without_newborns",
+        exp_central = rep(c(8.85, 8.0), each = 2 * 100) , # Fake data just for testing purposes
+        prop_pop_exp = 1, # Fake data just for testing purposes
+        cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
+        rr_central = 1.118,
+        rr_lower = 1.060,
+        rr_upper = 1.179,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        sex = base::rep(c("male", "female"), each = 100, times = 2),
+        age_group = base::rep(0:99, times = 2*2),
+        bhd_central = base::rep(
+          c(data[["pop"]]$number_of_deaths_male,
+            data[["pop"]]$number_of_deaths_female),
+          times = 2),
+        population = base::rep(
+          c(data_lifetable[["male"]]$population,
+            data_lifetable[["female"]]$population),
+          times = 2),
+        year_of_analysis = 2019,
+        min_age = 20,
+        geo_id_micro = rep(c("a", "b"), each = 2* 100),
+        geo_id_macro = rep("ch", each = 2 * 2 * 100))$health_main$impact,
+    expected = c(4873223.7, 2548295.7, 7186872.3) # Results on 2025-07-09
+
+  )
+})
 
 ### CONSTANT EXPOSURE & WITH NEWBORNS ###########################################
 
+#### ONE GEO UNIT #############################################################
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
@@ -279,6 +365,45 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
   )
 })
 
+#### MULTIPLE GEO UNITS ######
+
+testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_TRUE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "constant",
+        approach_newborns = "with_newborns",
+        exp_central = rep(c(8.85, 8.0), each = 2 * 100) , # Fake data just for testing purposes
+        prop_pop_exp = 1, # Fake data just for testing purposes
+        cutoff_central = 5,   # PM2.5=5, WHO AQG 2021
+        rr_central = 1.118,
+        rr_lower = 1.060,
+        rr_upper = 1.179,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        sex = base::rep(c("male", "female"), each = 100, times = 2),
+        age_group = base::rep(0:99, times = 2*2),
+        bhd_central = base::rep(
+          c(data[["pop"]]$number_of_deaths_male,
+            data[["pop"]]$number_of_deaths_female),
+          times = 2),
+        population = base::rep(
+          c(data_lifetable[["male"]]$population,
+            data_lifetable[["female"]]$population),
+          times = 2),
+        year_of_analysis = 2019,
+        min_age = 20,
+        geo_id_micro = rep(c("a", "b"), each = 2* 100),
+        geo_id_macro = rep("ch", each = 2 * 2 * 100))$health_main$impact,
+    expected = c(5709248.8, 2987339.5, 8414599.0) # Results on 2025-07-09
+
+  )
+})
 
 ## PREMATURE DEATHS #############################################################
 
