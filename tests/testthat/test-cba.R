@@ -2,7 +2,9 @@
 
 ## RAW INPUT ###################################################################
 
-### NO DISCOUNTING #############################################################
+### WITHOUT DISCOUNT #############################################################
+
+#### WITHOUT INFLATION #############################################################
 
 testthat::test_that("results correct |pathway_cba|discount_shape_exponential|discount_rate_benefit_FALSE|discount_rate_cost_FALSE|", {
 
@@ -54,32 +56,34 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
   ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
+#### WITH INFLATION #############################################################
 
-### DISCOUNTING ################################################################
-
-#### EXPONENTIAL ###############################################################
-
-##### BENEFIT & COST DISCOUNTED ################################################
-
-###### WITH INFLATION ################################################
-testthat::test_that("same results |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
+testthat::test_that("results the same |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
   testthat::expect_equal(
     object =
+      ## Adapted
       healthiar::cba(
-        impact_benefit = 50,
-        valuation = 20,
-        cost = 100,
+        impact_benefit = 197000,
+        valuation = 541000,
+        cost = 523000000,
         discount_shape = "exponential",
         inflation_rate = 0.05,
-        n_years_benefit = 5,
-        n_years_cost = 5
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
-    expect = 1149 # Example with fake values (just to check if the results remain identical over time)
+    expect =
+      172750790748 # Results on 2026-01-15
   )
 })
 
-###### WITHOUT INFLATION ################################################
+### WITH DISCOUNT ################################################################
+
+#### WITHOUT INFLATION #############################################################
+
+##### EXPONENTIAL ###############################################################
+
+###### BENEFIT & COST DISCOUNTED ################################################
 
 testthat::test_that("results correct |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
@@ -155,7 +159,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
   ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-##### ONLY BENEFIT DISCOUNTED ##################################################
+###### ONLY BENEFIT DISCOUNTED ##################################################
 
 testthat::test_that("results correct |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_FALSE|", {
 
@@ -210,7 +214,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
 })
 
 
-##### ONLY COST DISCOUNTED #####################################################
+###### ONLY COST DISCOUNTED #####################################################
 
 testthat::test_that("results correct |pathway_cba|discount_shape_exponential|discount_rate_benefit_FALSE|discount_rate_cost_TRUE|", {
 
@@ -264,9 +268,9 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
   ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-#### HARVEY ####################################################################
+##### HARVEY ####################################################################
 
-##### BENEFIT & COST DISCOUNTED ################################################
+###### BENEFIT & COST DISCOUNTED ################################################
 
 testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
@@ -324,7 +328,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
   ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-##### ONLY BENEFIT DISCOUNTED ##################################################
+###### ONLY BENEFIT DISCOUNTED ##################################################
 
 testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount_rate_benefit_TRUE|discount_rate_cost_FALSE|", {
 
@@ -378,7 +382,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
   ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-##### ONLY COST DISCOUNTED #####################################################
+###### ONLY COST DISCOUNTED #####################################################
 
 testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount_rate_benefit_FALSE|discount_rate_cost_TRUE|", {
 
@@ -432,9 +436,9 @@ testthat::test_that("results correct |pathway_cba|discount_shape_harvey|discount
   ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-#### MAZUR #####################################################################
+##### MAZUR #####################################################################
 
-##### BENEFIT & COST DISCOUNTED ################################################
+###### BENEFIT & COST DISCOUNTED ################################################
 
 testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
@@ -492,7 +496,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
   ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-##### ONLY BENEFIT DISCOUNTED ##################################################
+###### ONLY BENEFIT DISCOUNTED ##################################################
 
 testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_rate_benefit_TRUE|discount_rate_cost_FALSE|", {
 
@@ -546,7 +550,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
   ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-##### ONLY COST DISCOUNTED #####################################################
+###### ONLY COST DISCOUNTED #####################################################
 
 testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_rate_benefit_FALSE|discount_rate_cost_TRUE|", {
 
@@ -598,6 +602,76 @@ testthat::test_that("results correct |pathway_cba|discount_shape_mazur|discount_
   ## Example adapted from Chen et al (2015) data to 10 years policy, with discount rate = 0,03 and hyperbolic (Mazur) function
   ## Paper title: Cost–Benefit Analysis of Reducing Premature Mortality
   ## DOI: https://doi.org/10.1007/s11270-015-2316-7
+})
+
+#### WITH INFLATION ################################################
+
+##### EXPONENTIAL ###############################################################
+
+###### BENEFIT & COST DISCOUNTED ################################################
+# The results are the same as above because if discount and inflation are provided
+# is because discount factor adjusts for inflation so no changes in results
+
+testthat::test_that("results correct |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::cba(
+        impact_benefit = 50,
+        valuation = 20,
+        cost = 100,
+        discount_shape = "exponential",
+        discount_rate_benefit = 0.03,
+        discount_rate_cost = 0.03,
+        inflation_rate = 0.05,
+        n_years_benefit = 5,
+        n_years_cost = 5
+      )$cba_main$net_benefit_rounded,
+    expect = 776 # Excel file from University of Porto "WP2_Examples.xlsx"
+  )
+})
+
+###### ONLY BENEFIT DISCOUNTED ##################################################
+
+testthat::test_that("results the same |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_FALSE|", {
+
+  testthat::expect_equal(
+    object =
+      ## Adapted
+      healthiar::cba(
+        impact_benefit = 19800,
+        valuation = 541000,
+        cost = 8200000000,
+        discount_rate_benefit = 0.03,
+        discount_shape = "exponential",
+        inflation_rate = 0.05,
+        n_years_benefit = 10,
+      )$cba_main$net_benefit_rounded,
+    expect =
+      -639414802 # Result on 2026-01-15
+  )
+})
+
+###### ONLY COST DISCOUNTED #####################################################
+
+testthat::test_that("results the same |pathway_cba|discount_shape_exponential|discount_rate_benefit_FALSE|discount_rate_cost_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      ## Adapted
+      healthiar::cba(
+        impact_benefit = 19800,
+        valuation = 541000,
+        cost = 8200000000,
+        discount_rate_cost = 0.03,
+        discount_shape = "exponential",
+        n_years_cost = 10,
+        inflation_rate = 0.05,
+      )$cba_main$net_benefit_rounded,
+    expect =
+      5145819898 # Result on 2026-01-15
+  )
+
 })
 
 ## HEALTHIAR INPUT #############################################################
