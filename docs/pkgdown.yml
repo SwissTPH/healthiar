@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   intro_to_healthiar: intro_to_healthiar.html
-last_built: 2026-01-13T16:26Z
+last_built: 2026-01-15T16:13Z
 urls:
   reference: https://swisstph.github.io/healthiar/reference
   article: https://swisstph.github.io/healthiar/articles
