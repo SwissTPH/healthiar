@@ -55,8 +55,14 @@ standardize <- function(output_attribute,
 
   impact_by_age_group <- output_attribute$health_detailed$results_by_age_group
 
-
   if(base::is.null(ref_prop_pop)){
+
+    ## Compile input data
+    ## without social component
+    input_data <-
+      output_attribute$health_detailed$results_by_age_group |>
+      dplyr::select(
+        dplyr::any_of(c("geo_id_micro", "age_group", "population")))
 
     ref_prop_pop <-
       get_ref_prop_pop(df = input_data)$ref_prop_pop
