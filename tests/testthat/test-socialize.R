@@ -139,6 +139,8 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 
 ## WITH USER IMPACT ###############################################
 
+#### WITH REF_PROP_POP #####################
+
 testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_FALSE|social_indicator_TRUE|ref_pop_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
@@ -174,6 +176,8 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 
 })
 
+
+
 testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_FALSE|social_indicator_FALSE|ref_pop_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
@@ -207,6 +211,38 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
   ## ASSESSOR: Arno Pauwels, SCI
   ## ASSESSMENT DETAILS: All-cause mortality attributable to NO2, by census tract (iteration)
   ## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2022 + BIMD2011
+
+
+### WITHOUT REF_PROP_POP  ################################
+
+  testthat::test_that("results the same |pathway_socialize|input_is_attribute_output_FALSE|social_indicator_TRUE|ref_pop_TRUE|", {
+
+    ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
+    data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+
+    testthat::expect_equal(
+      ## healthiar FUNCTION CALL
+      object =
+        healthiar::socialize(
+          impact = data$IMPACT,
+          geo_id_micro = data$SECTOR, # geo IDs of the preparatory iteration call above and this function call must match!
+          social_indicator = data$SCORE,
+          n_quantile = 10, # Specify number of quantiles, e.g. 10
+          population = data$POP,
+          age_group = data$AGE,
+          #ref_prop_pop = data$REF  # Deactivating ref_prop_pop
+        ) |>
+        purrr::pluck("social_main") |>
+        dplyr::select(difference_value) |>
+        base::unlist() |>
+        base::as.numeric(),
+
+      ## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
+      expected = c(31.472515930, 0.791263808, 17.647936608, 0.307332548)
+    )
+
+
+  })
 
 })
 
