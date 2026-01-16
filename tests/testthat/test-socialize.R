@@ -1,4 +1,6 @@
 # QUANTITATIVE TEST ############################################################
+
+## WITH ATTRIBUTE_HEALTH() ###############################################
 testthat::test_that("results the same |fake_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|", {
 
   att_age <-
@@ -134,6 +136,8 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
   ## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2022 + BIMD2011
 
 })
+
+## WITH USER IMPACT ###############################################
 
 testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_FALSE|social_indicator_TRUE|ref_pop_TRUE|", {
 
