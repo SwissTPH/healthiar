@@ -6,6 +6,13 @@
 
 # ARGUMENTS ####################################################################
 #' @inheritParams socialize
+#'
+# DETAILS ######################################################################
+
+#' @details
+#' This function works after running \code{attribute_health()} or \code{attribute_lifetable()} functions.
+#' If you want to use it in combination with compare(),
+#' please standardize first the results of attribute functions and then compare.
 
 # VALUE ########################################################################
 #' @returns
@@ -48,8 +55,14 @@ standardize <- function(output_attribute,
 
   impact_by_age_group <- output_attribute$health_detailed$results_by_age_group
 
-
   if(base::is.null(ref_prop_pop)){
+
+    ## Compile input data
+    ## without social component
+    input_data <-
+      output_attribute$health_detailed$results_by_age_group |>
+      dplyr::select(
+        dplyr::any_of(c("geo_id_micro", "age_group", "population")))
 
     ref_prop_pop <-
       get_ref_prop_pop(df = input_data)$ref_prop_pop
@@ -114,9 +127,10 @@ standardize <- function(output_attribute,
       pop_fraction = base::sum(pop_fraction),
       population = base::sum(population))
 
-  output<-
+  output <-
     base::list(health_main = impact_std_sum,
-               health_detailed = impact_std_by_age_group)
+               health_detailed = c(output_attribute$health_detailed,
+                                   list(impact_std_by_age_group = impact_std_by_age_group)))
 
   return(output)
 

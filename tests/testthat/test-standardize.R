@@ -1,9 +1,12 @@
 # QUANTITATIVE TEST ############################################################
-## USING ATTRIBUTE ############################################################
+
+## ONLY ATTRIBUTE ############################################################
 
 ### ONE GEO UNIT ############################################################
 
-testthat::test_that("results correct |pathway_standardize|single_geo|", {
+
+
+testthat::test_that("results the same |pathway_standardize|single_geo|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
@@ -33,6 +36,8 @@ testthat::test_that("results correct |pathway_standardize|single_geo|", {
       exp_central = 10.9,
       population = 5E5)
 
+  #### WITH REF_PROP_POP ############################################################
+
   testthat::expect_equal(
     object =
       healthiar::standardize(
@@ -46,9 +51,32 @@ testthat::test_that("results correct |pathway_standardize|single_geo|", {
       # No study behind.
       # Fake numbers to check consistency of result overtime. Results on 2025-01-16
   )
+
+  #### WITHOUT REF_PROP_POP ############################################################
+
+  testthat::expect_equal(
+    object =
+      healthiar::standardize(
+        output_attribute = bestcost_pm_mortality,
+        age_group = c("below_40", "above_40")
+        #,
+        #ref_prop_pop = c(0.5, 0.5) # Deactivating ref_prop_pop
+      )$health_main$impact_per_100k_inhab,
+
+    expected =  base::sum(
+      bestcost_pm_mortality_below_40$health_main$impact_per_100k_inhab * 0.1666667,
+      bestcost_pm_mortality_40_plus$health_main$impact_per_100k_inhab * 0.8333333)
+    # No study behind.
+    # Fake numbers to check consistency of result overtime. Results on 2025-01-16
+  )
+
 })
 
+
+
 ### MULTIPLE GEO UNITS ############################################################
+
+
 testthat::test_that("results correct |pathway_standardize|multi_geo|", {
 
   bestcost_pm_mortality_multigeo <-
@@ -81,6 +109,8 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
       exp_central = c(10.9, 9.9),
       population = c(5E5, 1E6))
 
+  #### WITHOUT REF_PROP_POP ############################################################
+
   testthat::expect_equal(
     object =
       healthiar::standardize(
@@ -94,73 +124,80 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
     # No study behind.
     # Fake numbers to check consistency of result overtime. Results on 2025-01-16
   )
+
+  #### WITHOUT REF_PROP_POP ############################################################
+  testthat::expect_equal(
+    object =
+      healthiar::standardize(
+        output_attribute = bestcost_pm_mortality_multigeo,
+        age_group = c("below_40", "above_40"),
+        #ref_prop_pop = c(0.5, 0.5)
+      )$health_main$impact_per_100k_inhab,
+
+    expected =
+      bestcost_pm_mortality_below_40_multigeo$health_main$impact_per_100k_inhab * 0.1666667 +
+      bestcost_pm_mortality_40_plus_multigeo$health_main$impact_per_100k_inhab * 0.8333333
+    # No study behind.
+    # Fake numbers to check consistency of result overtime. Results on 2026-01-16
+  )
 })
 
 
-### ONE GEO UNIT ############################################################
-#
-# testthat::test_that("results correct |pathway_standardize|single_geo|", {
-#
-#   bestcost_pm_mortality_below_40_before <-
-#     healthiar::attribute_health(
-#       exp_central = 8.1,
-#       cutoff_central =  0,
-#       bhd_central = 1000,
-#       rr_central = 1.063,
-#       rr_increment = 10,
-#       erf_shape = "log_linear",
-#       population = 1E5)
-#
-#   bestcost_pm_mortality_40_plus_before <-
-#     healthiar::attribute_mod(
-#       output_attribute = bestcost_pm_mortality_below_40_before,
-#       bhd_central = 4000,
-#       exp_central = 10.9,
-#       population = 5E5)
-#
-#
-#   bestcost_pm_mortality_below_40_after <-
-#     healthiar::attribute_mod(
-#       output_attribute = bestcost_pm_mortality_below_40_before,
-#       exp_central = 7.1,
-#       bhd_central = 2000,
-#       population = 2E5)
-#
-#   bestcost_pm_mortality_40_plus_after <-
-#     healthiar::attribute_mod(
-#       output_attribute = bestcost_pm_mortality_40_plus_before,
-#       bhd_central = 8000,
-#       exp_central = 9.9,
-#       population = 1E6)
-#
-#   bestcost_pm_mortality_below_40_compared <-
-#     healthiar::compare(
-#       output_attribute_scen_1 =
-#         healthiar::standardize(
-#           list(bestcost_pm_mortality_below_40_before,
-#                bestcost_pm_mortality_40_plus_before),
-#           age_group = c("below_40", "40_plus")),
-#       output_attribute_scen_2 =
-#         healthiar::standardize(
-#           list(bestcost_pm_mortality_below_40_after,
-#                bestcost_pm_mortality_40_plus_after),
-#           age_group = c("below_40", "40_plus")
-#         )
-#       )
-#
-#
-#   testthat::expect_equal(
-#     object =
-#       bestcost_pm_mortality_below_40_compared$health_main$impact_per_100k_inhab,
-#
-#     expected =  (46.20257 - 50.99689)    )
-#     # No study behind.
-#     # Fake numbers to check consistency of result overtime. Results on 2025-01-16
-#
-# })
 
 
-## USING COMPARE ############################################################
+## IN COMBINATION WITH COMPARE() ############################################################
+
+testthat::test_that("results the same |pathway_standardize|single_geo|", {
+
+  mortality_1 <-
+    healthiar::attribute_health(
+      age_group = c("below_40", "above_40"),
+      exp_central = c(8.1, 10.9),
+      cutoff_central =  0,
+      bhd_central = c(1000, 4000),
+      rr_central = 1.063,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      population = c(1E5, 5E5))
+
+  std_mortality_1 <-
+    healthiar::standardize(
+      output_attribute = mortality_1,
+      age_group = c("below_40", "above_40"),
+      ref_prop_pop = c(0.5, 0.5))
+
+  mortality_2 <-
+    healthiar::attribute_health(
+      age_group = c("below_40", "above_40"),
+      exp_central = c(6.1, 7.9),
+      cutoff_central =  0,
+      bhd_central = c(1000, 4000),
+      rr_central = 1.063,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      population = c(1E5, 5E5))
+
+  std_mortality_2 <-
+    healthiar::standardize(
+      output_attribute = mortality_2,
+      age_group = c("below_40", "above_40"),
+      ref_prop_pop = c(0.5, 0.5))
+
+  comparison <- healthiar::compare(std_mortality_1, std_mortality_2)
+
+  testthat::expect_equal(
+    object =
+      comparison$health_main$impact,
+
+    expected =  80.9237143
+    # No study behind.
+    # Fake numbers to check consistency of result overtime. Results on 2026-01-16
+  )
+
+})
+
+
+
 
 # ERROR OR WARNING ########
 ## ERROR #########

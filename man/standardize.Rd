@@ -23,6 +23,11 @@ This function returns a \code{list} containing:
 \description{
 This function obtains age-standardized health impacts based on multiple age-group specific assessments
 }
+\details{
+This function works after running \code{attribute_health()} or \code{attribute_lifetable()} functions.
+If you want to use it in combination with compare(),
+please standardize first the results of attribute functions and then compare.
+}
 \examples{
 # Goal: age-standardize two age group-specific impacts
 output_attribute <- attribute_health(
