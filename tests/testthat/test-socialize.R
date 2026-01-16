@@ -28,6 +28,37 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
   )
 })
 
+# QUANTITATIVE TEST ############################################################
+testthat::test_that("results the same |fake_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+  data_groups <- dplyr::bind_rows(data, data) |>
+    dplyr::mutate(age_group = rep(c("below_40", "above_40"), each = 85))
+
+  att_age <-
+    healthiar::attribute_health(
+      age_group = data_groups$age_group,
+      approach_risk = "absolute_risk",
+      exp_central = data_groups$average_cat,
+      population = data_groups$totpop,
+      pop_exp = data_groups$ANTALL_PER,
+      geo_id_micro = data_groups$GEO_ID,
+      erf_eq_central = "78.9270-3.1162*c+0.0342*c^2")
+
+  testthat::expect_equal(
+    object =
+      healthiar::socialize(
+        age_group = c("below_40", "above_40"), # They have to be the same in socialize() and in attribute_health()
+        ref_prop_pop = c(0.5, 0.5),
+        output_attribute = att_age,
+        geo_id_micro = unique(data_groups$GEO_ID),
+        social_indicator = c(3.5, 7.0),
+        n_quantile = 10,
+        increasing_deprivation = TRUE)$social_main$difference_value |> base::round(2),
+    expect = c(37.240, 0.280, 19.470, 0.130) # Results on 25 June 2025
+  )
+})
+
 testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|", {
 
   pop_ref <- base::readRDS(testthat::test_path("data", "pop_ref.rds"))
