@@ -28,7 +28,7 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
   )
 })
 
-# QUANTITATIVE TEST ############################################################
+
 testthat::test_that("results the same |fake_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|", {
 
   data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
