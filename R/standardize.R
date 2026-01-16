@@ -6,6 +6,13 @@
 
 # ARGUMENTS ####################################################################
 #' @inheritParams socialize
+#'
+# DETAILS ######################################################################
+
+#' @details
+#' This function works after running \code{attribute_health()} or \code{attribute_lifetable()} functions.
+#' If you want to use it in combination with compare(),
+#' please standardize first the results of attribute functions and then compare.
 
 # VALUE ########################################################################
 #' @returns
