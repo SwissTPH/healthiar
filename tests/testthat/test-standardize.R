@@ -1,9 +1,12 @@
 # QUANTITATIVE TEST ############################################################
-## USING ATTRIBUTE ############################################################
+
+## ONLY ATTRIBUTE ############################################################
 
 ### ONE GEO UNIT ############################################################
 
-testthat::test_that("results correct |pathway_standardize|single_geo|", {
+#### WITH REF_PROP_POP ############################################################
+
+testthat::test_that("results the same |pathway_standardize|single_geo|", {
 
   bestcost_pm_mortality <-
     healthiar::attribute_health(
