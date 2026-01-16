@@ -183,6 +183,59 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|", {
   )
 })
 
+## IN COMBINATION WITH COMPARE() ############################################################
+
+testthat::test_that("results the same |pathway_standardize|single_geo|", {
+
+  mortality_1 <-
+    healthiar::attribute_health(
+      age_group = c("below_40", "above_40"),
+      exp_central = c(8.1, 10.9),
+      cutoff_central =  0,
+      bhd_central = c(1000, 4000),
+      rr_central = 1.063,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      population = c(1E5, 5E5))
+
+  std_mortality_1 <-
+    healthiar::standardize(
+      output_attribute = mortality_1,
+      age_group = c("below_40", "above_40"),
+      ref_prop_pop = c(0.5, 0.5))
+
+  mortality_2 <-
+    healthiar::attribute_health(
+      age_group = c("below_40", "above_40"),
+      exp_central = c(6.1, 7.9),
+      cutoff_central =  0,
+      bhd_central = c(1000, 4000),
+      rr_central = 1.063,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      population = c(1E5, 5E5))
+
+  std_mortality_2 <-
+    healthiar::standardize(
+      output_attribute = mortality_2,
+      age_group = c("below_40", "above_40"),
+      ref_prop_pop = c(0.5, 0.5))
+
+  comparison <- healthiar::compare(std_mortality_1, std_mortality_2)
+
+  testthat::expect_equal(
+    object =
+      comparison$health_main$impact,
+
+    expected =  80.9237143
+    # No study behind.
+    # Fake numbers to check consistency of result overtime. Results on 2025-01-16
+  )
+
+})
+
+
+
 
 # ERROR OR WARNING ########
 ## ERROR #########
