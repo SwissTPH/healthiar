@@ -127,9 +127,10 @@ standardize <- function(output_attribute,
       pop_fraction = base::sum(pop_fraction),
       population = base::sum(population))
 
-  output<-
+  output <-
     base::list(health_main = impact_std_sum,
-               health_detailed = impact_std_by_age_group)
+               health_detailed = c(output_attribute$health_detailed,
+                                   list(impact_std_by_age_group = impact_std_by_age_group)))
 
   return(output)
 
