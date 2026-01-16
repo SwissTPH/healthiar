@@ -26,16 +26,14 @@
 get_ref_prop_pop <-
   function(df){
 
-    total_population_table <-
-      df |>
-      dplyr::summarize(total_population = sum(population, na.rm = TRUE))
 
     ref_prop_pop_table <-
-      dplyr::left_join(input_data,
-                       population_by_geo_table,
-                       by = "age_group") |>
-      dplyr::mutate(ref_prop_pop = population / total_population) |>
-      base::unique(age_group) |>
+      df |>
+      dplyr::summarise(
+        ref_population = sum(population, na.rm = TRUE),
+        .by = age_group) |>
+      dplyr::mutate(
+        ref_prop_pop = ref_population / sum(ref_population)) |>
       dplyr::select(age_group, ref_prop_pop)
 
 
