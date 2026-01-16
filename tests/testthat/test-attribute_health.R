@@ -3812,10 +3812,10 @@ testthat::test_that("results correct  |pathway_ar|erf_formula|exp_dist|iteration
 
                           outcome = "highly_annoyance")
 
-      )$health_detailed$results_by_geo_id_micro$impact_rounded,
+      )$health_detailed$results_by_geo_id_micro$impact,
     ##  RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =
-      c(283, 398)
+      c(282.71548, 397.93929)
   )
 })
 
@@ -3826,6 +3826,29 @@ testthat::test_that("results correct  |pathway_ar|erf_formula|exp_dist|iteration
 ## INPUT DATA DETAILS:
 ## Add here input data details: data sources, measured vs. modeled, ...
 
+# Now with age groups
+testthat::test_that("results correct  |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+  data_groups <- dplyr::bind_rows(data, data) |>
+    dplyr::mutate(age_group = rep(c("below_40", "above_40"), each = 85))
+
+  testthat::expect_equal(
+    ## healthiar FUNCTION CALL
+    object =
+      healthiar::attribute_health(
+        age_group = data_groups$age_group,
+        approach_risk = "absolute_risk",
+        exp_central = data_groups$average_cat,
+        population = data_groups$totpop,
+        pop_exp = data_groups$ANTALL_PER,
+        geo_id_micro = data_groups$GEO_ID,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        dw_central = 0.02,
+        duration_central = 1,
+        )$health_detailed$results_by_geo_id_micro$impact,
+    expected =
+      c(282.71548, 397.93929)*2)
+})
 
 testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 

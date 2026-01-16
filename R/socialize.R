@@ -512,8 +512,8 @@ socialize <- function(output_attribute = NULL,
         bhd_sum = if (has_bhd) base::sum(bhd, na.rm = TRUE) else NULL,
         population_sum = if (has_population) base::sum(population, na.rm = TRUE) else NULL,
         bhd_mean = if (has_bhd) base::mean(bhd, na.rm = TRUE) else NULL,
-        exp_mean = if (has_exp) base::mean(exp, na.rm = TRUE) else NULL,
-        exp_sd = if (has_exp) stats::sd(exp, na.rm = TRUE) else NULL,
+        exp_mean = if (has_exp & is.numeric(exp)) base::mean(exp, na.rm = TRUE) else NULL, # In absolute risk exp is string (pasted)
+        exp_sd = if (has_exp & is.numeric(exp)) stats::sd(exp, na.rm = TRUE) else NULL, # In absolute risk exp is string (pasted)
         pop_fraction_mean = if (has_pop_fraction) base::mean(pop_fraction, na.rm = TRUE) else NULL,
         .groups = "drop") |>
         dplyr::mutate(
