@@ -156,8 +156,8 @@ There exist different, equivalent ways of accessing the output
 - With `[[]]` operator `results_pm_copd[["health_main"]]`
 
 - With `pluck()` & `pull()`: use the
-  [`purrr::pluck`](https://rdrr.io/pkg/purrr/man/pluck.html) function to
-  select a list and then the
+  [`purrr::pluck`](https://purrr.tidyverse.org/reference/pluck.html)
+  function to select a list and then the
   [`dplyr::pull`](https://dplyr.tidyverse.org/reference/pull.html)
   function extract values from a specified column,
   e.g. `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
@@ -1333,12 +1333,28 @@ below.
 exdat_noise |>
   (\(df) {
     healthiar::attribute_health(
-      approach_risk = exdat_noise$risk_estimate_type,
-      exp_central = exdat_noise$exposure_mean,
-      pop_exp = exdat_noise$exposed,
-      erf_eq_central = exdat_noise$erf
+      approach_risk = df$risk_estimate_type,
+      exp_central = df$exposure_mean,
+      pop_exp = df$exposed,
+      erf_eq_central = df$erf
       )$health_main$impact_rounded
     })()
+```
+
+Shorter making used of the base R function
+[`with()`](https://rdrr.io/r/base/with.html).
+
+``` r
+exdat_noise |>
+      (\(df) {
+        with(df, healthiar::attribute_health(
+         approach_risk = risk_estimate_type,
+         exp_central = exposure_mean,
+         pop_exp = exposed,
+         erf_eq_central = erf
+         ))$health_main$impact_rounded
+        })()
+#> [1] 348464
 ```
 
 ### Pipe %\>%
