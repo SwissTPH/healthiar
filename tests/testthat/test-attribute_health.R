@@ -3628,7 +3628,41 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
   ## ASSESSOR: Axel Luyten
   ## ASSESSMENT DETAILS: example_road_noise_niph.xlsx
   ## INPUT DATA DETAILS: -
-})
+
+
+  ## Now with pipe |>
+  testthat::expect_equal(
+    object =
+      exdat_noise |>
+      (\(df) {
+        healthiar::attribute_health(
+         approach_risk = exdat_noise$risk_estimate_type,
+         exp_central = exdat_noise$exposure_mean,
+         pop_exp = exdat_noise$exposed,
+         erf_eq_central = exdat_noise$erf
+         )$health_main$impact_rounded
+        })(),
+    expected =
+      c(174232 * 2) # Results on 2 October 2025; no comparison study
+  )
+
+  ## With pipe %>% also works but a bit different code
+  testthat::expect_equal(
+    object =
+      exdat_noise %>%
+      {
+        healthiar::attribute_health(
+          approach_risk = .$risk_estimate_type,
+          exp_central = .$exposure_mean,
+          pop_exp = .$exposed,
+          erf_eq_central = .$erf
+        )$health_main$impact_rounded
+      },
+    expected =
+      c(174232 * 2) # Results on 2 October 2025; no comparison study
+  )
+
+  })
 
 testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
