@@ -3636,12 +3636,29 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
       exdat_noise |>
       (\(df) {
         healthiar::attribute_health(
-         approach_risk = exdat_noise$risk_estimate_type,
-         exp_central = exdat_noise$exposure_mean,
-         pop_exp = exdat_noise$exposed,
-         erf_eq_central = exdat_noise$erf
-         )$health_main$impact_rounded
-        })(),
+          approach_risk = df$risk_estimate_type,
+          exp_central = df$exposure_mean,
+          pop_exp = df$exposed,
+          erf_eq_central = df$erf
+        )$health_main$impact_rounded
+      })(),
+    expected =
+      c(174232 * 2) # Results on 2 October 2025; no comparison study
+  )
+
+
+  ## Now with pipe |> and with()
+  testthat::expect_equal(
+    object =
+      exdat_noise |>
+      (\(df) {
+        base::with(df, healthiar::attribute_health(
+          approach_risk = risk_estimate_type,
+          exp_central = exposure_mean,
+          pop_exp = exposed,
+          erf_eq_central = erf
+        ))$health_main$impact_rounded
+      })(),
     expected =
       c(174232 * 2) # Results on 2 October 2025; no comparison study
   )

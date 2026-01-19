@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1414</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1415</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -216,7 +216,7 @@ on the variable you want to inspect, and then open the
 <li><p>With <code>[[]]</code> operator
 <code>results_pm_copd[["health_main"]]</code></p></li>
 <li><p>With <code>pluck()</code> &amp; <code>pull()</code>: use the
-<code><a href="https://rdrr.io/pkg/purrr/man/pluck.html" class="external-link">purrr::pluck</a></code> function to select a list and then the
+<code><a href="https://purrr.tidyverse.org/reference/pluck.html" class="external-link">purrr::pluck</a></code> function to select a list and then the
 <code><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">dplyr::pull</a></code> function extract values from a specified
 column,
 e.g. <code>results_pm_copd |&gt; purrr::pluck("health_main") |&gt; dplyr::pull("impact_rounded")</code></p></li>
@@ -5795,19 +5795,31 @@ Analogeously, to reproduce the histogram run</p>
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">|&gt;</span></span>
 <span>  <span class="op">(</span>\<span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
-<span>      approach_risk <span class="op">=</span> <span class="va">exdat_noise</span><span class="op">$</span><span class="va">risk_estimate_type</span>,</span>
-<span>      exp_central <span class="op">=</span> <span class="va">exdat_noise</span><span class="op">$</span><span class="va">exposure_mean</span>,</span>
-<span>      pop_exp <span class="op">=</span> <span class="va">exdat_noise</span><span class="op">$</span><span class="va">exposed</span>,</span>
-<span>      erf_eq_central <span class="op">=</span> <span class="va">exdat_noise</span><span class="op">$</span><span class="va">erf</span></span>
+<span>      approach_risk <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">risk_estimate_type</span>,</span>
+<span>      exp_central <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">exposure_mean</span>,</span>
+<span>      pop_exp <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">exposed</span>,</span>
+<span>      erf_eq_central <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">erf</span></span>
 <span>      <span class="op">)</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_rounded</span></span>
 <span>    <span class="op">}</span><span class="op">)</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>Shorter making used of the base R function <code><a href="https://rdrr.io/r/base/with.html" class="external-link">with()</a></code>.</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">|&gt;</span></span>
+<span>      <span class="op">(</span>\<span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
+<span>         approach_risk <span class="op">=</span> <span class="va">risk_estimate_type</span>,</span>
+<span>         exp_central <span class="op">=</span> <span class="va">exposure_mean</span>,</span>
+<span>         pop_exp <span class="op">=</span> <span class="va">exposed</span>,</span>
+<span>         erf_eq_central <span class="op">=</span> <span class="va">erf</span></span>
+<span>         <span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_rounded</span></span>
+<span>        <span class="op">}</span><span class="op">)</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 348464</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="pipe-1">Pipe %&gt;%<a class="anchor" aria-label="anchor" href="#pipe-1"></a>
 </h3>
 <p><code>healthiar</code> can also be used inside <em>magrittr</em>
 pipes <code>%&gt;%</code> as follows.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="op">{</span></span>
 <span>    <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
