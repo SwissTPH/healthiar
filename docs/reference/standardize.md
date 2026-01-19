@@ -40,6 +40,15 @@ results;
 
 2\) `health_detailed` (`tibble`) containing the results per age group.
 
+## Details
+
+This function works after running
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+or
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+functions. If you want to use it in combination with compare(), please
+standardize first the results of attribute functions and then compare.
+
 ## Author
 
 Alberto Castro & Axel Luyten
