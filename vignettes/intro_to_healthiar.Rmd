@@ -1336,6 +1336,22 @@ exdat_noise |>
 ```
 
 
+Shorter making used of the base R function `with()`.
+
+```{r}
+exdat_noise |>
+      (\(df) {
+        with(df, healthiar::attribute_health(
+         approach_risk = risk_estimate_type,
+         exp_central = exposure_mean,
+         pop_exp = exposed,
+         erf_eq_central = erf
+         ))$health_main$impact_rounded
+        })()
+```
+
+
+
 ## Pipe %>%
 
 `healthiar` can also be used inside _magrittr_ pipes `%>%` as follows.
