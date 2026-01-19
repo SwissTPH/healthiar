@@ -156,8 +156,8 @@ There exist different, equivalent ways of accessing the output
 - With `[[]]` operator `results_pm_copd[["health_main"]]`
 
 - With `pluck()` & `pull()`: use the
-  [`purrr::pluck`](https://purrr.tidyverse.org/reference/pluck.html)
-  function to select a list and then the
+  [`purrr::pluck`](https://rdrr.io/pkg/purrr/man/pluck.html) function to
+  select a list and then the
   [`dplyr::pull`](https://dplyr.tidyverse.org/reference/pull.html)
   function extract values from a specified column,
   e.g. `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
@@ -1319,6 +1319,43 @@ eval(mdi$mdi_detailed$histogram)
 
 ![Histogram of MDI with normal
 curve](intro_to_healthiar_files/figure-html/unnamed-chunk-93-1.png)
+
+------------------------------------------------------------------------
+
+## Inside pipes
+
+### Pipe \|\>
+
+`healthiar` can be used inside the *native* pipes `|>`. See the example
+below.
+
+``` r
+exdat_noise |>
+  (\(df) {
+    healthiar::attribute_health(
+      approach_risk = exdat_noise$risk_estimate_type,
+      exp_central = exdat_noise$exposure_mean,
+      pop_exp = exdat_noise$exposed,
+      erf_eq_central = exdat_noise$erf
+      )$health_main$impact_rounded
+    })()
+```
+
+### Pipe %\>%
+
+`healthiar` can also be used inside *magrittr* pipes `%>%` as follows.
+
+``` r
+exdat_noise %>%
+  {
+    healthiar::attribute_health(
+      approach_risk = .$risk_estimate_type,
+      exp_central = .$exposure_mean,
+      pop_exp = .$exposed,
+      erf_eq_central = .$erf
+    )$health_main$impact_rounded
+  }
+```
 
 ------------------------------------------------------------------------
 
