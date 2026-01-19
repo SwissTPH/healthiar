@@ -1314,13 +1314,16 @@ eval(mdi$mdi_detailed$histogram)
 ```{r, eval=TRUE, include=FALSE, echo=FALSE}
 rm(mdi)
 ```
+
 ---------------------------------------------------------------------------
+
 # Inside pipes
 
 ## Pipe |>
+
 `healthiar` can be used inside the _native_ pipes `|>`. See the example below.
 
-```{r eval=FALSE, include=FALSE, echo = TRUE}
+```{r eval=FALSE, include=TRUE, echo = TRUE}
 exdat_noise |>
   (\(df) {
     healthiar::attribute_health(
@@ -1337,7 +1340,7 @@ exdat_noise |>
 
 `healthiar` can also be used inside _magrittr_ pipes `%>%` as follows.
 
-```{r eval=FALSE, include=FALSE, echo = TRUE}
+```{r eval=FALSE, include=TRUE, echo = TRUE}
 exdat_noise %>%
   {
     healthiar::attribute_health(
@@ -1350,6 +1353,7 @@ exdat_noise %>%
 ```
 
 ---------------------------------------------------------------------------
+
 # Export and visualize
 
 Exporting and visualizing results is out of scope of `healthiar`. To export and visualize, you can make use of existing functions in other packages beyond `healthiar` as indicated below.
