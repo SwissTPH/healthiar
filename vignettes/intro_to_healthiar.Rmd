@@ -1327,10 +1327,10 @@ rm(mdi)
 exdat_noise |>
   (\(df) {
     healthiar::attribute_health(
-      approach_risk = exdat_noise$risk_estimate_type,
-      exp_central = exdat_noise$exposure_mean,
-      pop_exp = exdat_noise$exposed,
-      erf_eq_central = exdat_noise$erf
+      approach_risk = df$risk_estimate_type,
+      exp_central = df$exposure_mean,
+      pop_exp = df$exposed,
+      erf_eq_central = df$erf
       )$health_main$impact_rounded
     })()
 ```
