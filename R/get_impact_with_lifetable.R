@@ -269,13 +269,13 @@ get_impact_with_lifetable <-
         death_prob <- 1 - prob_survival
 
         # Initialise matrices
-        entry_pop <- base::matrix(NA, nrow = 100, ncol = n_years_projection,
+        entry_pop <- base::matrix(NA, nrow = base::nrow(df), ncol = n_years_projection,
                                   # Row and column names
                                   # NULL because no row names
                                   dimnames = base::list(NULL, entry_names))
-        midyear_pop   <- base::matrix(NA, nrow = 100, ncol = n_years_projection,
+        midyear_pop   <- base::matrix(NA, nrow = base::nrow(df), ncol = n_years_projection,
                                   dimnames = base::list(NULL, midyear_names))
-        deaths    <- base::matrix(NA, nrow = 100, ncol = n_years_projection,
+        deaths    <- base::matrix(NA, nrow = base::nrow(df), ncol = n_years_projection,
                                   dimnames = base::list(NULL, death_names))
 
         # Set initial year
