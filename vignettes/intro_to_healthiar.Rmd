@@ -215,7 +215,16 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
   knitr::kable()
 ```
 
-Alternatively, it's also possible to only assess the impacts for a single noise exposure band
+Remember, that if the equation of the exposure-response function (`erf_eq_...`) requires taking a maximum in a vectorised context, `pmax()` must be used instead of `max()`. `pmax()` should be used whenever an element-wise maximum is required (the output will be a vector), while `max()` returns a single global maximum for the entire vector. For example:
+
+```{r}
+erf_eq_central <- "exp(0.2969 * log((pmax(0, c - 2.4) / 1.9 + 1)) / (1 + exp(-(pmax(0, c - 2.4) - 12) / 40.2)))"  
+```
+
+
+### One exposure category
+
+Alternatively, it's also possible to only assess the absolute risk impacts for one exposure category (e.g. a single noise exposure band).
 
 ```{r}
 results_noise_ha <- attribute_health(
