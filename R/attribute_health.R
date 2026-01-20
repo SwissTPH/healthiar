@@ -227,25 +227,7 @@
 #'
 #' results$health_main$impact
 #'
-#' @examples
-#' # Goal: determine mean attributable health impacts by education level
-#' info <- data.frame(
-#'   education = rep(c("secondary", "bachelor", "master"), each = 5) # education level
-#' )
-#' output_attribute <- attribute_health(
-#'   rr_central = 1.063,
-#'   rr_increment = 10,
-#'   erf_shape = "log_linear",
-#'   cutoff_central =  0,
-#'   exp_central = sample(6:10, 15, replace = TRUE),
-#'   bhd_central = sample(100:500, 15, replace = TRUE),
-#'   geo_id_micro = c(1:nrow(info)), # a vector of (random) unique IDs must be entered
-#'   info = info
-#' )
-#' output_stratified <- output_attribute$health_detailed$results_raw |>
-#'  dplyr::group_by(info_column_1) |>
-#'  dplyr::summarize(mean_impact = mean(impact)) |>
-#'  print()
+
 
 #' @author Alberto Castro & Axel Luyten
 
