@@ -36,7 +36,7 @@ testthat::test_that("results the same discount existing attribute_health() outpu
 testthat::test_that("results the same discount existing attribute_health() output", {
 
   # EKV2010 data
-  data <- utils::read.csv2(testthat::test_path("data", "lifetable_male_ekv_2010.csv"))
+  data <- base::readRDS(testthat::test_path("data", "lifetable_male_ekv_2010.rds"))
 
 
   health_impact <- healthiar::attribute_lifetable(
