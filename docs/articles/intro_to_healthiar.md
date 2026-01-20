@@ -250,8 +250,24 @@ results_noise_ha$health_detailed$results_raw
 |            4 | 72.5 |   72200 | 23657.232 |
 |            5 | 77.5 |    7700 |  3298.314 |
 
-Alternatively, it’s also possible to only assess the impacts for a
-single noise exposure band
+Remember, that if the equation of the exposure-response function
+(`erf_eq_...`) requires taking a maximum in a vectorised context,
+[`pmax()`](https://rdrr.io/r/base/Extremes.html) must be used instead of
+[`max()`](https://rdrr.io/r/base/Extremes.html).
+[`pmax()`](https://rdrr.io/r/base/Extremes.html) should be used whenever
+an element-wise maximum is required (the output will be a vector), while
+[`max()`](https://rdrr.io/r/base/Extremes.html) returns a single global
+maximum for the entire vector. For example:
+
+``` r
+erf_eq_central <- 
+  "exp(0.2969*log((pmax(0,c-2.4)/1.9+1))/(1+exp(-(pmax(0,c-2.4)-12)/40.2)))"  
+```
+
+#### One exposure category
+
+Alternatively, it’s also possible to only assess the absolute risk
+impacts for one exposure category (e.g. a single noise exposure band).
 
 ``` r
 results_noise_ha <- attribute_health(
@@ -536,7 +552,7 @@ results_pm_copd_mr_brt <- attribute_health(
 The ERF curve created looks as follows
 
 ![ERF
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-37-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-38-1.png)
 
 Alternatively, other functions
 (e.g. [`approxfun()`](https://rdrr.io/r/stats/approxfun.html)) can be
@@ -1118,7 +1134,7 @@ f(c) =
 The categorical ERF curve created looks as follows
 
 ![ERF
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-81-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-82-1.png)
 
 ## Economic dimension
 
@@ -1310,7 +1326,7 @@ eval(mdi$mdi_detailed$boxplot)
 ```
 
 ![Boxplot of Normalized Indicators and
-MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-92-1.png)
+MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-93-1.png)
 Analogeously, to reproduce the histogram run
 
 ``` r
@@ -1318,7 +1334,7 @@ eval(mdi$mdi_detailed$histogram)
 ```
 
 ![Histogram of MDI with normal
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-93-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-94-1.png)
 
 ------------------------------------------------------------------------
 
