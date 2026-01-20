@@ -102,8 +102,13 @@ monetize <- function(output_attribute = NULL,
                      inflation_rate = NULL,
                      info = NULL) {
 
-  # Define variables ####
 
+  # Store input_args
+  input_args <-
+    get_input_args(environment = base::environment(),
+                   call = match.call())
+
+  # Define variables ####
   # Store variables to increase readability of conditions
   #from healthiar
   using_impact_from_healthiar <-
@@ -201,7 +206,7 @@ monetize <- function(output_attribute = NULL,
 
   # Then discount values are ignored because no discount is happening (by default `n_years = 0`)
   # discount_shape has a default value, so it is never NULL
-  if(n_years == 0 &&
+  if(base::is.null(n_years) &&
      base::any(!base::is.null(discount_rate))&&
      # Exclude life table because the n_years are calculated based on life table
      !is_lifetable){
@@ -238,7 +243,7 @@ monetize <- function(output_attribute = NULL,
 
   # Then the value will be ignored and the length of impact will be used as n_years
 
-  if("n_years" %in% base::names(base::match.call()) &&
+  if( ! base::is.null(input_args$value$n_years)  &&
      base::length(impact) > 1 &&
      !base::is.null(impact)){
     warning(
@@ -252,7 +257,9 @@ monetize <- function(output_attribute = NULL,
 
   # Then the value will be ignored and the length of impact will be used as n_years
 
-  if("n_years" %in% base::names(base::match.call()) &&
+
+
+  if( ! base::is.null(input_args$value$n_years) &&
      is_lifetable){
     warning(
       base::paste0("n_years is aimed for any output_attribute",
@@ -282,7 +289,10 @@ monetize <- function(output_attribute = NULL,
 
 
       # Define discount years
-      n_years_vector <- 0 : n_years
+      if(base::is.null(n_years)){
+        n_years_vector <- 0
+      } else {
+        n_years_vector <- 0:n_years}
 
       df_with_input <-
         df |>
