@@ -31,7 +31,7 @@ discount <-
   function(output_attribute = NULL,
            impact = NULL,
            discount_rate = NULL,
-           n_years = 1,
+           n_years = NULL,
            discount_shape = NULL,
            inflation_rate = NULL) {
 
