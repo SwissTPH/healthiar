@@ -217,8 +217,9 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
 
 Remember, that if the equation of the exposure-response function (`erf_eq_...`) requires taking a maximum in a vectorised context, `pmax()` must be used instead of `max()`. `pmax()` should be used whenever an element-wise maximum is required (the output will be a vector), while `max()` returns a single global maximum for the entire vector. For example:
 
-```{r}
-erf_eq_central <- "exp(0.2969 * log((pmax(0, c - 2.4) / 1.9 + 1)) / (1 + exp(-(pmax(0, c - 2.4) - 12) / 40.2)))"  
+```{r eval=FALSE, include=TRUE, echo=TRUE}
+erf_eq_central <- 
+  "exp(0.2969*log((pmax(0,c-2.4)/1.9+1))/(1+exp(-(pmax(0,c-2.4)-12)/40.2)))"  
 ```
 
 
