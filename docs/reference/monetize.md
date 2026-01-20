@@ -11,7 +11,7 @@ monetize(
   valuation,
   discount_rate = NULL,
   discount_shape = "exponential",
-  n_years = 0,
+  n_years = NULL,
   inflation_rate = NULL,
   info = NULL
 )
