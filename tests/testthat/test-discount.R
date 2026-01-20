@@ -33,6 +33,40 @@ testthat::test_that("results the same discount existing attribute_health() outpu
   )
 })
 
+testthat::test_that("results the same discount existing attribute_health() output", {
+
+  # EKV2010 data
+  data <- utils::read.csv2(testthat::test_path("data", "lifetable_male_ekv_2010.csv"))
+
+
+  health_impact <- healthiar::attribute_lifetable(
+    health_outcome = "yll",
+    exp_central = 10,
+    cutoff_central = 0,
+    rr_central = 1.045,
+    rr_increment = 10,
+    erf_shape = "log_linear",
+    age_group = data$age,
+    sex = base::rep(c("male"), each = 106),
+    population = data$population_male,
+    bhd_central = as.numeric(data$deaths_natural_male),
+    year_of_analysis = 2010,
+    min_age = 20)
+
+  testthat::expect_equal(
+    object =
+      healthiar::discount(
+        output_attribute = health_impact,
+        discount_shape = "exponential",
+        discount_rate = 0.0099)$monetization_main$monetized_impact |> base::round(),
+    expect = 13453)
+  # The result in the EKV2010 project was 12600.
+  # Similar deviation as when calculating only health impacts (without discounting)
+})
+
+
+
+
 # ERROR OR WARNING ########
 ## ERROR #########
 
