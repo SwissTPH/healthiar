@@ -610,18 +610,27 @@ In a second step one can group the results based on one or more columns and so s
 
 ```{r}
 info <- data.frame(
-  education = rep(c("secondary", "bachelor", "master"), each = 5) # education level
+  education = rep(c("secondary", "bachelor", "master"), times = 4) # education level
 )
+
 output_attribute <- attribute_health(
+  # Goal: determine mean attributable health impacts by education level
   rr_central = 1.063,
   rr_increment = 10,
   erf_shape = "log_linear",
   cutoff_central =  0,
-  exp_central = sample(6:10, 15, replace = TRUE),
-  bhd_central = sample(100:500, 15, replace = TRUE),
-  geo_id_micro = c(1:nrow(info)), # (random) ID must be entered
-  info = info
-)
+  exp_central = c(6, 7, 8,
+                  7, 8, 9,
+                  8, 9, 10,
+                  9, 10, 11), # One value for each geo_id and education level
+  bhd_central = c(600, 700, 800,
+                  700, 800, 900,
+                  800, 900, 1000,
+                  900, 1000, 1100), # One value for each geo_id and education level
+  geo_id_micro = base::rep(c(1, 2, 3, 4), each = 3), 
+  info = info # education level
+  ) 
+    
 output_stratified <- output_attribute$health_detailed$results_raw |>
   dplyr::group_by(info_column_1) |>
   dplyr::summarize(mean_impact = mean(impact)) |>
