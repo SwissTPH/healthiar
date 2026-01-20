@@ -220,7 +220,7 @@ testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_y
 ##### ONE SEX ###########################
 testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
   # EKV2010 data
-  data <- read.csv2("tests/testthat/data/lifetable_male_ekv_2010.csv")
+  data <- utils::read.csv2(testthat::test_path("data", "lifetable_male_ekv_2010.csv"))
 
   testthat::expect_equal(
     object =
