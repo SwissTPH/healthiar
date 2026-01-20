@@ -217,6 +217,33 @@ testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_y
   )
 })
 
+##### ONE SEX ###########################
+testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
+  # EKV2010 data
+  data <- utils::read.csv2(testthat::test_path("data", "lifetable_male_ekv_2010.csv"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        exp_central = 10,
+        cutoff_central = 0,
+        rr_central = 1.045,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = data$age,
+        sex = base::rep(c("male"), each = 106),
+        population = data$population_male,
+        bhd_central = as.numeric(data$deaths_natural_male),
+        year_of_analysis = 2010,
+        min_age = 20
+      )$health_main$impact,
+    expected = 14973.76248)
+  # The result of the EKV2010 was 14029 but they applied a slightly different method
+  # e.g. entering probability of dying as input data.
+
+})
+
 #### MULTIPLE GEO UNITS ######
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_TRUE|", {
