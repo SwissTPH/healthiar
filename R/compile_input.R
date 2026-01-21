@@ -90,7 +90,9 @@ compile_input <-
     input_wo_lifetable  <-
       input_wo_lifetable |>
       dplyr::mutate(
-        .by = c(geo_id_micro, age_group, sex),
+        # Unique values by columns that determine if exposure distribution or no
+        # Including info just in case of subgroup analysis
+        .by = c(geo_id_micro, age_group, sex, dplyr::contains("info")),
         exp_length = dplyr::n(),
         exp_category = dplyr::row_number(),
         exp_type =
