@@ -3562,7 +3562,7 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
                     700, 800, 900,
                     800, 900, 1000,
                     900, 1000, 1100),
-    geo_id_micro = base::rep(c("a", "b", "c", "d"), each = 3), # a vector of (random) unique IDs must be entered
+    geo_id_micro = base::rep(c("a", "b", "c", "d"), each = 3),
     info = base::data.frame(
       education = base::rep(c("secondary", "bachelor", "master"), times = 4)) # education level
     )
@@ -3593,7 +3593,7 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
                     700, 800, 900,
                     800, 900, 1000,
                     900, 1000, 1100),
-    geo_id_micro = base::rep(c("a", "b", "c", "d"), each = 3), # a vector of (random) unique IDs must be entered
+    geo_id_micro = base::rep(c("a", "b", "c", "d"), each = 3),
     info = base::data.frame(
       education = base::rep(c("secondary", "bachelor", "master"), times = 4)) # education level
   )
@@ -3623,7 +3623,7 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
                     10, 9, 10, 11, 10, 11, 12, 13),
     bhd_central = c(600, 700, 800, 700, 800, 900, 800, 900,
                     1000, 900, 1000, 1100, 1000, 1100, 1200, 1000),
-    geo_id_micro = base::rep(c("a", "b"), each = 8), # a vector of (random) unique IDs must be entered
+    geo_id_micro = base::rep(c("a", "b"), each = 8),
     info = base::data.frame(
       education = base::rep(c("without_master", "with_master"), times = 8)) # education level
   )
