@@ -602,7 +602,6 @@ rm(results_sex)
 
 Goal: e.g. To quantify health impacts attributable to air pollution in a country *by education level*.
 
-A (random) ID vector of unique values must be entered to the argument `geo_id_micro`, to indicate that each row is an observation on its own (and not just exposure categories)
 
 A single vector (or a data frame / tibble with multiple columns) to group the results by can be entered to the `info` argument. In this example, this will be information about the education level.
 
