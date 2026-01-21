@@ -49,7 +49,7 @@ duration_central, duration_lower, duration_upper
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1419</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1420</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -373,30 +373,6 @@ For conversion of hazard ratios and/or odds ratios to relative risks refer to Va
 <span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3602.934</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Goal: determine mean attributable health impacts by education level</span></span></span>
-<span class="r-in"><span><span class="va">info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  education <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"secondary"</span>, <span class="st">"bachelor"</span>, <span class="st">"master"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="co"># education level</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">output_attribute</span> <span class="op">&lt;-</span> <span class="fu">attribute_health</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  rr_central <span class="op">=</span> <span class="fl">1.063</span>,</span></span>
-<span class="r-in"><span>  rr_increment <span class="op">=</span> <span class="fl">10</span>,</span></span>
-<span class="r-in"><span>  erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span></span>
-<span class="r-in"><span>  cutoff_central <span class="op">=</span>  <span class="fl">0</span>,</span></span>
-<span class="r-in"><span>  exp_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">6</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">15</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  bhd_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">100</span><span class="op">:</span><span class="fl">500</span>, <span class="fl">15</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  geo_id_micro <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">info</span><span class="op">)</span><span class="op">)</span>, <span class="co"># a vector of (random) unique IDs must be entered</span></span></span>
-<span class="r-in"><span>  info <span class="op">=</span> <span class="va">info</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">output_stratified</span> <span class="op">&lt;-</span> <span class="va">output_attribute</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_raw</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">info_column_1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>mean_impact <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">impact</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   info_column_1 mean_impact</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> bachelor             14.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> master               15.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> secondary            14.7</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

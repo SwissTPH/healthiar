@@ -627,12 +627,8 @@ results_sex$health_detailed$results_by_sex |>
 
 ### by other sub-groups
 
-Goal: e.g. To quantify health impacts attributable to air pollution in a
-country *by education level*.
-
-A (random) ID vector of unique values must be entered to the argument
-`geo_id_micro`, to indicate that each row is an observation on its own
-(and not just exposure categories)
+Goal: To quantify attributable health impacts *stratified by a sub-group
+different to age and sex, e.g. education level*.
 
 A single vector (or a data frame / tibble with multiple columns) to
 group the results by can be entered to the `info` argument. In this
@@ -642,29 +638,58 @@ In a second step one can group the results based on one or more columns
 and so summarize the results by the preferred sub-groups
 
 ``` r
-info <- data.frame(
-  education = rep(c("secondary", "bachelor", "master"), each = 5) # education level
-)
-output_attribute <- attribute_health(
-  rr_central = 1.063,
-  rr_increment = 10,
-  erf_shape = "log_linear",
-  cutoff_central =  0,
-  exp_central = sample(6:10, 15, replace = TRUE),
-  bhd_central = sample(100:500, 15, replace = TRUE),
-  geo_id_micro = c(1:nrow(info)), # (random) ID must be entered
-  info = info
-)
+output_attribute <- healthiar::attribute_health(
+    rr_central = 1.063,
+    rr_increment = 10,
+    erf_shape = "log_linear",
+    cutoff_central =  0,
+    exp_central = c(6, 7, 8,
+                    7, 8, 9,
+                    8, 9, 10,
+                    9, 10, 11),
+    bhd_central = c(600, 700, 800,
+                    700, 800, 900,
+                    800, 900, 1000,
+                    900, 1000, 1100),
+    geo_id_micro = rep(c("a", "b", "c", "d"), each = 3),
+    info = data.frame(
+      education = rep(c("secondary", "bachelor", "master"), times = 4)) # education level
+  )
+    
 output_stratified <- output_attribute$health_detailed$results_raw |>
-  dplyr::group_by(info_column_1) |>
-  dplyr::summarize(mean_impact = mean(impact)) |>
-  print()
-#> # A tibble: 3 × 2
-#>   info_column_1 mean_impact
-#>   <chr>               <dbl>
-#> 1 bachelor             18.2
-#> 2 master               17.1
-#> 3 secondary            11.1
+      dplyr::group_by(info_column_1) |>
+      dplyr::summarize(mean_impact = mean(impact))|>
+      dplyr::pull(mean_impact) |>
+      print()
+#> [1] 43.72087 54.26844 34.30332
+```
+
+Goal: To quantify attributable health impacts *stratified by age, sex
+and additional sub-group e.g. education level*.
+
+``` r
+output_attribute <- healthiar::attribute_health(
+    rr_central = 1.063,
+    rr_increment = 10,
+    erf_shape = "log_linear",
+    cutoff_central =  0,
+    age_group = base::rep(c("50_and_younger", "50_plus"), each = 4, times= 2),
+    sex = base::rep(c("female", "male"), each = 2, times = 4),
+    exp_central = c(6, 7, 8, 7, 8, 9, 8, 9,
+                    10, 9, 10, 11, 10, 11, 12, 13),
+    bhd_central = c(600, 700, 800, 700, 800, 900, 800, 900,
+                    1000, 900, 1000, 1100, 1000, 1100, 1200, 1000),
+    geo_id_micro = base::rep(c("a", "b"), each = 8),
+    info = base::data.frame(
+      education = base::rep(c("without_master", "with_master"), times = 8)) # education level
+  )
+    
+output_stratified <- output_attribute$health_detailed$results_raw |>
+      dplyr::group_by(info_column_1) |>
+      dplyr::summarize(mean_impact = mean(impact))|>
+      dplyr::pull(mean_impact) |>
+      print()
+#> [1] 52.80090 49.83826
 ```
 
 ## YLL & deaths with life table
@@ -1134,7 +1159,7 @@ f(c) =
 The categorical ERF curve created looks as follows
 
 ![ERF
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-82-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-83-1.png)
 
 ## Economic dimension
 
@@ -1326,7 +1351,7 @@ eval(mdi$mdi_detailed$boxplot)
 ```
 
 ![Boxplot of Normalized Indicators and
-MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-93-1.png)
+MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-94-1.png)
 Analogeously, to reproduce the histogram run
 
 ``` r
@@ -1334,7 +1359,7 @@ eval(mdi$mdi_detailed$histogram)
 ```
 
 ![Histogram of MDI with normal
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-94-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-95-1.png)
 
 ------------------------------------------------------------------------
 
