@@ -3540,9 +3540,46 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
   )
 })
 
+# Using info as additional subgroup analysis
+
+# Goal: determine mean attributable health impacts by education level
+
+## Same exposure within geo_id
+
+
 testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|", {
 
-   # Goal: determine mean attributable health impacts by education level
+  output_attribute <- healthiar::attribute_health(
+    rr_central = 1.063,
+    rr_increment = 10,
+    erf_shape = "log_linear",
+    cutoff_central =  0,
+    exp_central = c(6, 6, 6,
+                    7, 7, 7,
+                    8, 8, 8,
+                    9, 9, 9),
+    bhd_central = c(600, 700, 800,
+                    700, 800, 900,
+                    800, 900, 1000,
+                    900, 1000, 1100),
+    geo_id_micro = base::rep(c("a", "b", "c", "d"), each = 3), # a vector of (random) unique IDs must be entered
+    info = base::data.frame(
+      education = base::rep(c("secondary", "bachelor", "master"), times = 4)) # education level
+    )
+
+  testthat::expect_equal(
+    object =  output_attribute$health_detailed$results_raw |>
+      dplyr::group_by(info_column_1) |>
+      dplyr::summarize(mean_impact = mean(impact))|>
+      dplyr::pull(mean_impact),
+    expected = c(38.77982591, 43.25633549, 34.30331632)) # Results on 21 Jan 2026
+})
+
+## Different exposure within geo_id (subgroup-specific exposure)
+
+testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|", {
+
+  # Goal: determine mean attributable health impacts by education level
   output_attribute <- healthiar::attribute_health(
     rr_central = 1.063,
     rr_increment = 10,
@@ -3556,17 +3593,49 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
                     700, 800, 900,
                     800, 900, 1000,
                     900, 1000, 1100),
-    geo_id_micro = base::rep(c(1, 2, 3, 4), each = 3), # a vector of (random) unique IDs must be entered
-    info = base::data.frame(education = base::rep(c("secondary", "bachelor", "master"), times = 4)) # education level
-    )
+    geo_id_micro = base::rep(c("a", "b", "c", "d"), each = 3), # a vector of (random) unique IDs must be entered
+    info = base::data.frame(
+      education = base::rep(c("secondary", "bachelor", "master"), times = 4)) # education level
+  )
 
   testthat::expect_equal(
     object =  output_attribute$health_detailed$results_raw |>
       dplyr::group_by(info_column_1) |>
       dplyr::summarize(mean_impact = mean(impact))|>
       dplyr::pull(mean_impact),
-    expected = c(43.720875, 54.268439, 34.303316)) # Results on 20 Jan 2026
+    expected = c(43.720874558, 54.268438780, 34.303316320)) # Results on 21 Jan 2026
 })
+
+## All sex, age and info together
+## Different exposure within geo_id (subgroup-specific exposure)
+
+testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|", {
+
+  # Goal: determine mean attributable health impacts by education level
+  output_attribute <- healthiar::attribute_health(
+    rr_central = 1.063,
+    rr_increment = 10,
+    erf_shape = "log_linear",
+    cutoff_central =  0,
+    age_group = base::rep(c("50_and_younger", "50_plus"), each = 4, times= 2),
+    sex = base::rep(c("female", "male"), each = 2, times = 4),
+    exp_central = c(6, 7, 8, 7, 8, 9, 8, 9,
+                    10, 9, 10, 11, 10, 11, 12, 13),
+    bhd_central = c(600, 700, 800, 700, 800, 900, 800, 900,
+                    1000, 900, 1000, 1100, 1000, 1100, 1200, 1000),
+    geo_id_micro = base::rep(c("a", "b"), each = 8), # a vector of (random) unique IDs must be entered
+    info = base::data.frame(
+      education = base::rep(c("without_master", "with_master"), times = 8)) # education level
+  )
+
+  testthat::expect_equal(
+    object =  output_attribute$health_detailed$results_raw |>
+      dplyr::group_by(info_column_1) |>
+      dplyr::summarize(mean_impact = mean(impact))|>
+      dplyr::pull(mean_impact),
+    expected = c(52.8008961746572, 49.8382646174031)) # Results on 21 Jan 2026
+})
+
 
 ## AR ###########################################################################
 
