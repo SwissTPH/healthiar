@@ -632,6 +632,7 @@ output_stratified <- output_attribute$health_detailed$results_raw |>
       print()
 ```
 
+
 Goal: To quantify attributable health impacts *stratified by age, sex and additional sub-group e.g. education level*.
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
