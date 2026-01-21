@@ -620,7 +620,7 @@ output_attribute <- healthiar::attribute_health(
                     700, 800, 900,
                     800, 900, 1000,
                     900, 1000, 1100),
-    geo_id_micro = brep(c("a", "b", "c", "d"), each = 3),
+    geo_id_micro = rep(c("a", "b", "c", "d"), each = 3),
     info = data.frame(
       education = rep(c("secondary", "bachelor", "master"), times = 4)) # education level
   )
