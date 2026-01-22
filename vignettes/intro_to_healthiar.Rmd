@@ -1317,9 +1317,11 @@ We see that the central and upper 95% confidence interval estimates of avoided a
 ## Health impact attributable to social indicator
 Goal: To estimate the health impact that is theoretically attributable to the difference in a social indicator of the population exposed (e.g. degree of deprivation). 
 
-The function `socialize()` can be used for this aim either entering a) the whole output of `attribute_health()` or b) directly the health impact in the `socialize()` argument `impact`.  
+
 
 ### Function call
+
+First, quantify health impacts.
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
  health_impact <- healthiar::attribute_health(
@@ -1334,6 +1336,7 @@ The function `socialize()` can be used for this aim either entering a) the whole
    geo_id_micro = exdat_socialize$geo_unit)
 ```
 
+Second, use the function `socialize()` entering the whole output of `attribute_health()` in the argument `output_attribute`. 
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 social_t <- healthiar::socialize(
@@ -1347,6 +1350,7 @@ social_t <- healthiar::socialize(
 
 ```
 
+Alternatively, you can directly enter the health impact in the `socialize()` argument `impact`.
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 social <- healthiar::socialize(
