@@ -71,7 +71,9 @@ The descriptions of the [`healthiar` functions](https://swisstph.github.io/healt
 
 # Relative risk 
 
-Goal: E.g. To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a country.
+### Goal (e.g.)
+
+To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a country.
 
 ### Methodological refresher
 
@@ -94,7 +96,7 @@ results_pm_copd <- attribute_health(
 
 For alternative ERF shapes see the function documentation of `attribute_health()`.
 
-#### Function call - Pre-loaded data
+#### Pre-loaded data
 
 `healthiar` comes with some example data that start with `exdat_` that allow you to test functions. Some of these example data will be used in some examples in this vignette.
 
@@ -173,9 +175,10 @@ Some of the most results columns include:
 
 # Absolute risk
 
-Goal: E.g. To quantify the incidence cases of high annoyance attributable to (road traffic) noise exposure.
+### Goal (e.g.)
+To quantify the incidence cases of high annoyance attributable to (road traffic) noise exposure.
 
-## Refresher - Burden of disease with absolute risk
+### Refresher - Burden of disease with absolute risk
 
 ![Figure: Absolute risk approach](images/bod_ar.png){width="700"}
 
@@ -254,7 +257,9 @@ rm(results_noise_ha)
 
 ## using relative risk
 
-Goal: e.g. To quantify the disease cases attributable to PM2.5 exposure in multiple cities using one single command.
+### Goal (e.g.)
+
+To quantify the disease cases attributable to PM2.5 exposure in multiple cities using one single command.
 
 -   Enter unique ID's as a vector (`numeric` or `character`) to the `geo_id_micro` argument (e.g. municipality names or province abbrevations)
 
@@ -319,7 +324,9 @@ rm(results_iteration)
 
 ## using absolute risk
 
-Goal: E.g.To quantify high annoyance cases attributable to noise exposure in rural and urban areas.
+### Goal (e.g.)
+
+To quantify high annoyance cases attributable to noise exposure in rural and urban areas.
 
 ### Function call
 
@@ -383,7 +390,9 @@ rm(results_iteration_ar, data)
 
 ## Confidence interval
 
-Goal: E.g. To quantify the COPD cases attributable to PM2.5 exposure taking into account uncertainty (lower and upper bound of confidence interval) in several input arguments: relative risk, exposure and baseline health data.
+### Goal (e.g.)
+
+To quantify the COPD cases attributable to PM2.5 exposure taking into account uncertainty (lower and upper bound of confidence interval) in several input arguments: relative risk, exposure and baseline health data.
 
 ### Function call
 
@@ -434,7 +443,9 @@ Each row contains the estimated attributable cases (`impact_rounded`) obtained b
 
 ## Monte Carlo simulation
 
-Goal: E.g. To summarize uncertainty of attributable health impacts (i.e. to get a single confidence interval instead of many combinations) by using a Monte Carlo simulation.
+### Goal (e.g.)
+
+To summarize uncertainty of attributable health impacts (i.e. to get a single confidence interval instead of many combinations) by using a Monte Carlo simulation.
 
 
 You can do this carrying out a Monte Carlo uncertainty analysis via the `summarize_uncertainty()` function.
@@ -489,9 +500,11 @@ rm(results_pm_copd_summarized)
 
 # User-defined ERF
 
-Goal: E.g. To quantify COPD cases attributable to air pollution exposure by applying a user-defined exposure-response function (ERF), such as the MR-BRT curves from Global Burden of Disease study. 
+### Goal (e.g.)
 
+To quantify COPD cases attributable to air pollution exposure by applying a user-defined exposure-response function (ERF), such as the MR-BRT curves from Global Burden of Disease study. 
 
+### Function call
 In this case, the function arguments `erf_eq_...` require a function as input, so we use an auxiliary function (`splinefun()`) to transform the points on the ERF into type `function`.
 ```{r}
 results_pm_copd_mr_brt <- attribute_health(
@@ -540,12 +553,15 @@ Alternatively, other functions (e.g. `approxfun()`) can be used to create the ER
 # Sub-group analysis 
 ## by age group
 
-Goal: e.g. To quantify health impacts attributable to air pollution in a country *by age group*.
+### Goal (e.g.)
+
+To quantify health impacts attributable to air pollution in a country *by age group*.
 
 To obtain age-group-specific results, the baseline health data (and possibly exposure) must be available by age group.
 
 If the `age` argument was specified, age-group-specific results are available under `health_detailed` in the sub-folder `results_by_age_group`.
 
+### Function call
 ```{r}
 results_age_group <- attribute_health(
         approach_risk = "relative_risk",
@@ -557,6 +573,10 @@ results_age_group <- attribute_health(
         rr_increment = 10,
         erf_shape = "log_linear"
       )
+```
+
+### Results by age group
+```{r}
 results_age_group$health_detailed$results_by_age_group |> 
   dplyr::select(age_group, impact_rounded, exp, bhd) |> 
   knitr::kable()
@@ -570,11 +590,13 @@ rm(results_age_group)
 
 ## by sex
 
-Goal: e.g. To quantify health impacts attributable to air pollution in a country *by sex*.
+### Goal (e.g.)
 
-To obtain sex-specific results, the baseline health data (and possibly exposure) must be entered by sex.
+To quantify health impacts attributable to air pollution in a country *by sex*.
 
-If the `sex` argument was specified, sex-specific results are available under `health_detailed` in the sub-folder `results_by_sex`.
+### Function call
+
+The baseline health data (and possibly exposure) must be entered by sex. 
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 results_sex <- attribute_health(
@@ -587,6 +609,13 @@ results_sex <- attribute_health(
         rr_increment = 10,
         erf_shape = "log_linear"
       )
+```
+
+### Results by sex
+
+If the `sex` argument was specified, sex-specific results are available under `health_detailed` in the sub-folder `results_by_sex`.
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
 results_sex$health_detailed$results_by_sex |> 
   dplyr::select(sex, impact_rounded, exp, bhd) |> 
   knitr::kable()
@@ -598,8 +627,11 @@ rm(results_sex)
 
 ## by other sub-groups
 
-Goal: To quantify attributable health impacts *stratified by a sub-group different to age and sex, e.g. education level*.
+### Goal (e.g.)
 
+To quantify attributable health impacts *stratified by a sub-group different to age and sex, e.g. education level*.
+
+### Function call
 A single vector (or a data frame / tibble with multiple columns) to group the results by can be entered to the `info` argument. In this example, this will be information about the education level.
 
 In a second step one can group the results based on one or more columns and so summarize the results by the preferred sub-groups.
@@ -622,7 +654,10 @@ output_attribute <- healthiar::attribute_health(
     info = data.frame(
       education = rep(c("secondary", "bachelor", "master"), times = 4)) # education level
   )
-    
+```
+
+### Results by other sub-group
+```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_stratified <- output_attribute$health_detailed$results_raw |>
       dplyr::group_by(info_column_1) |>
       dplyr::summarize(mean_impact = mean(impact))|>
@@ -630,8 +665,18 @@ output_stratified <- output_attribute$health_detailed$results_raw |>
       print()
 ```
 
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(output_attribute, output_stratified)
+```
 
-Goal: To quantify attributable health impacts *stratified by age, sex and additional sub-group e.g. education level*.
+
+## by age, sex and other sub-groups
+
+### Goal (e.g.)
+
+To quantify attributable health impacts *stratified by age, sex and additional sub-group e.g. education level*.
+
+### Function call
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_attribute <- healthiar::attribute_health(
@@ -649,7 +694,11 @@ output_attribute <- healthiar::attribute_health(
     info = base::data.frame(
       education = base::rep(c("without_master", "with_master"), times = 8)) # education level
   )
-    
+```
+
+### Results by all sub-groups
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_stratified <- output_attribute$health_detailed$results_raw |>
       dplyr::group_by(info_column_1) |>
       dplyr::summarize(mean_impact = mean(impact))|>
@@ -667,11 +716,13 @@ rm(output_attribute, output_stratified)
 
 ## YLL
 
-Goal: E.g. To quantify the years of life lost (YLL) due to deaths from COPD attributable to PM2.5 exposure during one year.
+### Goal (e.g.)
 
-We can use `attribute_lifetable()` combined with life table input data to determine YLL attributable to an environmental stressor.
+To quantify the years of life lost (YLL) due to deaths from COPD attributable to PM2.5 exposure during one year.
 
 ### Function call
+
+We can use `attribute_lifetable()` combined with life table input data to determine YLL attributable to an environmental stressor.
 
 ```{r}
 results_pm_yll <- attribute_lifetable(
@@ -822,7 +873,9 @@ results_pm_yll$health_detailed$intermediate_calculations|>
 
 ## Deaths
 
-Goal: E.g. To determine premature deaths from COPD attributable to PM2.5 exposure during one year.
+### Goal (e.g.)
+
+To determine premature deaths from COPD attributable to PM2.5 exposure during one year.
 
 See example on YLL for additional info on `attribute_lifetable()` calculations and its output.
 
@@ -899,7 +952,9 @@ rm(results_pm_deaths)
 
 # YLD
 
-Goal: E.g. To quantify the years lived with disability (YLD) attributable to air pollution exposure using disability weights.
+### Goal (e.g.)
+
+To quantify the years lived with disability (YLD) attributable to air pollution exposure using disability weights.
 
 ### Function call
 
@@ -930,11 +985,13 @@ results_pm_copd_yld$health_main |>
 
 # DALYs
 
-Goal: To obtain the Disability-Adjusted Life Years as the sum of YLLs and YLDs.
+### Goal (e.g.)
 
-This is possible using the function `daly()`.
+To obtain the Disability-Adjusted Life Years as the sum of YLLs and YLDs.
 
 ### Function call
+
+This is possible using the function `daly()`.
 
 ```{r}
 results_daly <- daly(
@@ -963,7 +1020,10 @@ rm(results_daly, results_pm_yll, results_pm_copd_yld)
 ```
 
 # Modification of scenarios
-Goal: E.g. To quantify health impacts using `attribute_health`in an scenario B very similar to a previous scenario A.
+
+### Goal (e.g.)
+
+To quantify health impacts using `attribute_health`in an scenario B very similar to a previous scenario A.
 
 ### Function call
 ```{r}
@@ -1002,7 +1062,9 @@ scenario_B <- attribute_health(
 
 # Comparison of two health scenarios
 
-Goal: E.g. To compare the health impacts in the scenario "before intervention" vs. "after intervention".
+### Goal (e.g.)
+
+To compare the health impacts in the scenario "before intervention" vs. "after intervention".
 
 ### Function call
 
@@ -1073,19 +1135,17 @@ rm(results_comparison, scenario_A, scenario_B)
 ```
 
 
-
-
-
 # Two correlated exposures 
 
-Goal: E.g. To quantify the total health impact attributable to PM2.5 and NO2.
+### Goal (e.g.)
+
+To quantify the total health impact attributable to PM2.5 and NO2.
+
+### Function call
 
 For this purpose, you can use the function `multiexpose()`.
 
 *Attention*: To apply this method, the relative risks for one exposure must be adjusted for the second exposure.
-
-
-### Function call
 
 ```{r}
 results_pm <- attribute_health(
@@ -1136,8 +1196,11 @@ rm(results_multiplicative)
 
 # Threshold additional to cut-off
 
-Goal: To quantify health impacts in the exposure group 55dB+ (calculation threshold) that are affected by a exposure above the effect threshold of 45 dB (cut-off).
+### Goal (e.g.)
 
+To quantify health impacts in the exposure group 55dB+ (calculation threshold) that are affected by a exposure above the effect threshold of 45 dB (cut-off).
+
+### Function call
 
 The function arguments `erf_eq_...` require a function as input. Instead of using a `splinefun()` this can also be fulfilled by using a 'function(c)' which is of type 'function'.
 
@@ -1176,9 +1239,6 @@ The categorical ERF curve created looks as follows.
 
 ```{r fig.alt="ERF curve", eval=TRUE, include=TRUE, echo=FALSE}
 
-
-
-
 # Evaluate exp_central points
 x <- c(47,52,57,62,67,72,77) # central exposure values
 y <- erf_function(x)
@@ -1215,7 +1275,9 @@ legend("topleft",
 
 ## Monetization 
 
-Goal: E.g. To monetize the attributable health impact of a policy that will have health benefits five years from now.
+### Goal (e.g.)
+
+To monetize the attributable health impact of a policy that will have health benefits five years from now.
 
 The outcome of the monetization is added to the variable entered to the `output_attribute` argument, which is `results_pm_copd` in our case.
 
@@ -1236,8 +1298,6 @@ monetized_pm_copd <- monetize(
     valuation = 50000 # E.g. EURO
 )
 ```
-
-
 
 
 ### Main results
@@ -1265,7 +1325,9 @@ results <- monetize(
 
 ## Cost-benefit analysis
 
-Goal: E.g. To estimate the net-benefit of a health policy via cost-benefit analysis (CBA).
+### Goal (e.g.)
+
+To estimate the net-benefit of a health policy via cost-benefit analysis (CBA).
 
 Let's imagine we design a policy that would reduce air pollution to 5 $\mu g/m^3$, which is the concentration specified in the `cutoff_central` argument in the initial `attribute_health()` call. So we could avoid all COPD cases attributed to air pollution.
 
@@ -1313,8 +1375,10 @@ We see that the central and upper 95% confidence interval estimates of avoided a
 # Social aspects
 
 ## Health impact attributable to social indicator
-Goal: To estimate the health impact that is theoretically attributable to the difference in a social indicator of the population exposed (e.g. degree of deprivation). 
 
+### Goal (e.g.)
+
+To estimate the health impact that is theoretically attributable to the difference in a social indicator of the population exposed (e.g. degree of deprivation). 
 
 
 ### Function call
@@ -1364,8 +1428,6 @@ social <- healthiar::socialize(
 ```
 
 
-
-
 ### Main results
 ```{r echo=FALSE}
 social$social_main |> 
@@ -1379,7 +1441,9 @@ social$social_main |>
 
 ## Multiple deprivation index
 
-Goal: E.g. To estimate the multiple deprivation index (MDI) to use it for the argument `social_indicator` in the function `socialize()`.
+### Goal (e.g.)
+
+To estimate the multiple deprivation index (MDI) to use it for the argument `social_indicator` in the function `socialize()`.
 
 ### Function call
 
