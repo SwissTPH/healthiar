@@ -315,10 +315,12 @@ socialize <- function(output_attribute = NULL,
     ## Here use unique() because the user will enter a vector with unique values
     ## and not a vector that fits with a table
     ## (the user entered the output from healthiar)
+
     social_component_before_quantile <-
       tibble::tibble(
-        geo_id_micro = base::unique(input_data$geo_id_micro),
-        social_indicator = social_indicator)
+        geo_id_micro = geo_id_micro,
+        social_indicator = social_indicator) |>
+      dplyr::distinct()
 
     # * * If available ref_prop_pop ################
 
@@ -435,12 +437,11 @@ socialize <- function(output_attribute = NULL,
     }
 
   # Put all data together ####################
-
   input_data_with_quantile <-
     ## Add social_quantile (removing the other columns in social_component)
     dplyr::left_join(
       input_data,
-      social_component[, c("geo_id_micro", "social_quantile")],
+      base::unique(social_component[, c("geo_id_micro", "social_quantile")]),
       by = "geo_id_micro") |>
     ## Add age_order
     dplyr::left_join(
