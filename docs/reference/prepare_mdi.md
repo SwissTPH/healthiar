@@ -25,8 +25,7 @@ prepare_mdi(
 - geo_id_micro:
 
   `Numeric vector` or `string vector` specifying the unique ID codes of
-  each geographic area considered in the assessment (`geo_id_micro`)
-  Argument must be entered for iterations. See Details for more info.
+  each geographic area considered in the assessment (`geo_id_micro`).
 
 - edu:
 
