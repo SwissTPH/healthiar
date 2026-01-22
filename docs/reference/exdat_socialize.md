@@ -1,6 +1,6 @@
 # Municipalities in Belgium ranked by BEST-COST Multidimensional Deprivation Index (MDI)
 
-This tibble contains data for municipalities in Belgium ranked by
+This tibble contains data for municipalities in Belgium assigning
 BEST-COST Multidimensional Deprivation Index (MDI).
 
 ## Usage
@@ -13,55 +13,46 @@ data(exdat_socialize)
 
 `exdat_socialize`
 
-- CS01012020:
-
-  unique identifier of the geographic unit
-
 - NUTS1:
 
   NUTS1 region tag
 
-- PM25_MEAN:
+- geo_unit:
 
-  mean PM2.5 exposure
+  Unique identifier of the geographic unit
 
-- RR:
+- age_group:
+  
+  Age groups "below 40" (excluding 40) and "40_plus" (including 40)
 
-  relative risk estimate from the literature
+- pm25_mean:
+
+  Mean PM2.5 exposure
+
+- rr:
+
+  Relative risk estimate from the literature
+  
+- mortality:
+
+  Fake mortality data
+
+- population:
+
+  Fake population data
 
 - score:
 
   BEST-COST Multidimensional Deprivation Index (MDI)
+  
+- ref_prop_pop:
 
-- rank:
-
-  rank of the observation based on column *score*; note that the rank is
-  not continuous, as some observations are missing
-
-- deciles:
-
-  deciles of the geo units based on the MDI
-
-- POPULATION_below_40:
-
-  (fake) populations up until and including 39 years of age
-
-- POPULATION_40_plus:
-
-  (fake) populations from 40 years of age onwards
-
-- MORTALITY_below_40:
-
-  (fake) mortality up until and including 39 years of age
-
-- MORTALITY_40_plus:
-
-  (fake) mortality from 40 years of age onwards
+  Fake reference proportion of population for each age group
 
 ## Source
 
-Real-world data combined with fake populatoin and mortality data
+Real-world data combined with fake population and mortality data
 
 ## Author
 
-Arno Pauwels & Vanessa Gorasso
+Arno Pauwels, Vanessa Gorasso, Axel Luyten, Alberto Castro
