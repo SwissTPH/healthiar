@@ -964,6 +964,43 @@ results_daly$health_main |>
 rm(results_daly, results_pm_yll, results_pm_copd_yld)
 ```
 
+# Modification of scenarios
+Goal: E.g. To quantify health impacts using `attribute_health`in an scenario B very similar to a previous scenario A.
+
+### Function call
+```{r}
+scenario_A <- attribute_health(
+    exp_central = 8.85,   # EXPOSURE 1
+    cutoff_central = 5, 
+    bhd_central = 25000,
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118,
+    rr_increment = 10)
+```
+
+The function `attribute_mod()` can be used to modify one or multiple arguments of `attribute_health`in an existing scenario, e.g. `scenario_A`
+
+```{r}
+scenario_B <- attribute_mod(
+  output_attribute = scenario_A, 
+  exp_central = 6
+)
+```
+
+This is equivalent to building the whole scenario again (see below), but more time and code efficient.
+```{r}
+scenario_B <- attribute_health(
+    exp_central = 6,     # EXPOSURE 2
+    cutoff_central = 5, 
+    bhd_central = 25000,
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118,
+    rr_increment = 10)
+```
+
+
 
 # Comparison of two health scenarios
 
@@ -983,19 +1020,6 @@ scenario_A <- attribute_health(
     rr_central = 1.118,
     rr_increment = 10)
 ```
-
-```{r}
-scenario_B <- attribute_health(
-    exp_central = 6,     # EXPOSURE 2
-    cutoff_central = 5, 
-    bhd_central = 25000,
-    approach_risk = "relative_risk",
-    erf_shape = "log_linear",
-    rr_central = 1.118,
-    rr_increment = 10)
-```
-
-Alternatively, the function `attribute_mod()` can be used to modify an existing scenario, e.g. `scenario_A`
 
 ```{r}
 scenario_B <- attribute_mod(
