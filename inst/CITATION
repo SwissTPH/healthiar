@@ -12,7 +12,7 @@ bibentry(
     "R package version 0.2.2.",
     "Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli,",
     "Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria Lepnurm,",
-    "Andreia Novais, Maria Jose Rueda Lopez,  Ana Barbosa,",
+    "Andreia Novais, Maria Jose Rueda Lopez, Pham Minh Nhat, Ana Barbosa,",
     "Joao Vasco Santos, Anette Kocbach Bolling."
     ),
   doi     = "10.5281/zenodo.18220361",

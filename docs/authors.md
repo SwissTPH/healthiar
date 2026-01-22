@@ -37,6 +37,9 @@
 - **Maria Jose Rueda Lopez**. Contributor.
   [](https://orcid.org/0000-0002-2443-1038)
 
+- **Minh Nhat Pham**. Contributor.
+  [](https://orcid.org/0000-0002-5972-1668)
+
 - **Ana Barbosa**. Contributor.
   [](https://orcid.org/0000-0002-9623-9002)
 
@@ -57,14 +60,14 @@ Impacts Attributable to Exposure*.
 R package version 0.2.2. Contributors: Arno Pauwels, Liliana Vazquez
 Fernandez, Gianni Ardielli, Iracy Pimenta, Carl Baravelli, Vanessa
 Gorasso, Susanne Breitner, Maria Lepnurm, Andreia Novais, Maria Jose
-Rueda Lopez, Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling.,
-<https://CRAN.R-project.org/package=healthiar>.
+Rueda Lopez, Pham Minh Nhat, Ana Barbosa, Joao Vasco Santos, Anette
+Kocbach Bolling., <https://CRAN.R-project.org/package=healthiar>.
 
     @Manual{,
       title = {healthiar: Quantifying and Monetizing Health Impacts Attributable to Exposure},
       author = {Alberto Castro and Axel Luyten},
       year = {2026},
-      note = {R package version 0.2.2. Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli, Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria Lepnurm, Andreia Novais, Maria Jose Rueda Lopez,  Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling.},
+      note = {R package version 0.2.2. Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli, Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria Lepnurm, Andreia Novais, Maria Jose Rueda Lopez, Pham Minh Nhat, Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling.},
       doi = {10.5281/zenodo.18220361},
       url = {https://CRAN.R-project.org/package=healthiar},
     }
