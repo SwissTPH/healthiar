@@ -5,28 +5,27 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
 
   att_age <-
     healthiar::attribute_health(
-      age_group = rep(c("below_40", "above_40"), each = 9037),
-      exp_central = c(exdat_socialize$PM25_MEAN, exdat_socialize$PM25_MEAN-0.1),
+      age_group = exdat_socialize$age_group,
+      exp_central = exdat_socialize$pm25_mean,
       cutoff_central = 0,
-      rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
+      rr_central = exdat_socialize$rr,
       erf_shape = "log_linear",
       rr_increment = 10,
-      bhd_central = c(exdat_socialize$MORTALITY_below_40,
-                      ifelse(exdat_socialize$MORTALITY_below_40-10<0, 0, exdat_socialize$MORTALITY_below_40-10)),
-      population = c(exdat_socialize$POPULATION_below_40, ifelse(exdat_socialize$POPULATION_below_40-10<0, 0, exdat_socialize$POPULATION_below_40-10)),
-      geo_id_micro = rep(exdat_socialize$CS01012020, 2))
+      bhd_central = exdat_socialize$mortality,
+      population = exdat_socialize$population,
+      geo_id_micro = exdat_socialize$geo_unit)
 
   testthat::expect_equal(
     object =
       healthiar::socialize(
-        age_group = c("below_40", "above_40"), # They have to be the same in socialize() and in attribute_health()
-        ref_prop_pop = c(0.5, 0.5),
         output_attribute = att_age,
-        geo_id_micro = exdat_socialize$CS01012020,
+        age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
+        ref_prop_pop = exdat_socialize$ref_prop_pop,
+        geo_id_micro = exdat_socialize$geo_unit,
         social_indicator = exdat_socialize$score,
         n_quantile = 10,
         increasing_deprivation = TRUE)$social_main$difference_value |> base::round(2),
-    expect = c(11.72, 0.20, -0.64, -0.01) # Results on 25 June 2025
+    expect = c(11.470, 0.190, -0.830, -0.010) # Results on 25 June 2025
   )
 })
 
@@ -113,8 +112,8 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
       healthiar::socialize(
         output_attribute = attribute_result_age,
         age_group = base::unique(data$AGE),
-        # geo_id_micro = data$CS01012020, # geo IDs of the preparatory iteration call above and this function call must match!
-        social_indicator = base::subset(data, AGE == '[0,5)')$SCORE,
+        geo_id_micro = base::unique(data$SECTOR), # geo IDs of the preparatory iteration call above and this function call must match!
+        social_indicator = base::unique(data$SCORE),
         n_quantile = 10, # Specify number of quantiles, e.g. 10
         # population = data$POPULATION,
         ref_prop_pop = base::subset(data, SECTOR == '21001A00-')$REF
@@ -358,16 +357,15 @@ testthat::test_that("error if age_group does not match in output_attribute", {
 
   att_age <-
     healthiar::attribute_health(
-      age_group = rep(c("below_40", "above_40"), each = 9037),
-      exp_central = c(exdat_socialize$PM25_MEAN, exdat_socialize$PM25_MEAN-0.1),
+      age_group = exdat_socialize$age_group,
+      exp_central = exdat_socialize$pm25_mean,
       cutoff_central = 0,
       rr_central = 1.08, # The data set contains the RR for the exposure but not per increment. Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
       erf_shape = "log_linear",
       rr_increment = 10,
-      bhd_central = c(exdat_socialize$MORTALITY_below_40,
-                      ifelse(exdat_socialize$MORTALITY_below_40-10<0, 0, exdat_socialize$MORTALITY_below_40-10)),
-      population = c(exdat_socialize$POPULATION_below_40, ifelse(exdat_socialize$POPULATION_below_40-10<0, 0, exdat_socialize$POPULATION_below_40-10)),
-      geo_id_micro = rep(exdat_socialize$CS01012020, 2))
+      bhd_central = exdat_socialize$mortality,
+      population = exdat_socialize$population,
+      geo_id_micro = exdat_socialize$geo_unit)
 
   testthat::expect_error(
     object =
@@ -375,7 +373,6 @@ testthat::test_that("error if age_group does not match in output_attribute", {
         age_group = c("40_minus", "40_plus"), # Different age_group to force error
         ref_prop_pop = c(0.5, 0.5),
         output_attribute = att_age,
-        geo_id_micro = exdat_socialize$CS01012020,
         social_indicator = exdat_socialize$score,
         n_quantile = 10,
         increasing_deprivation = TRUE),
