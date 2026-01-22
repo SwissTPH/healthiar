@@ -20,8 +20,8 @@ The `healthiar` functions allow you to quantify and monetize the health
 impacts (or burden of disease) attributable to exposure. The main focus
 of the EU project that initiated the development of `healthiar`
 (BEST-COST) has been two environmental exposures: air pollution and
-noise. However, `healthiar` can be (and has been) used for many other
-exposures such as green spaces, chemicals, physical activity…
+noise. However, `healthiar` could be used for other exposures such as
+green spaces, chemicals, physical activity…
 
 See below a an overview of the package. The whole list of functions
 included in `healthiar` is available
@@ -58,8 +58,10 @@ more detailed explanations.
 
 ## Relative risk
 
-Goal: E.g. To quantify the COPD cases attributable to PM2.5 (air
-pollution) exposure in a country.
+#### Goal (e.g.)
+
+To quantify the COPD cases attributable to PM2.5 (air pollution)
+exposure in a country.
 
 #### Methodological refresher
 
@@ -85,7 +87,7 @@ results_pm_copd <- attribute_health(
 For alternative ERF shapes see the function documentation of
 [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
 
-##### Function call - Pre-loaded data
+##### Pre-loaded data
 
 `healthiar` comes with some example data that start with `exdat_` that
 allow you to test functions. Some of these example data will be used in
@@ -110,12 +112,12 @@ results_pm_copd <- attribute_health(
 
 Every
 [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
-output consists of two lists (“folders”)
+output consists of two lists (“folders”):
 
 - `health_main` contains the main results
 
 - `health_detailed` detailed results and additional info about the
-  assessment
+  assessment:
 
   - `results_raw` tibble that contains the detailed results
 
@@ -142,9 +144,8 @@ creates additional output that is specific to life table calculations
 
 #### Main results
 
-Let’s inspect the main results
-
-There exist different, equivalent ways of accessing the output
+Let’s inspect the main results. There exist different, equivalent ways
+of accessing the output:
 
 - With `$` operator: `results_pm_copd$health_main$impact_rounded` (as in
   the example above)
@@ -176,7 +177,7 @@ results_pm_copd$health_main
 ```
 
 It is a table of the format `tibble` (very similar to a `data.frame`) of
-3 rows and 23 columns. Let’s zoom in on some relevant aspects
+3 rows and 23 columns. Let’s zoom in on some relevant aspects.
 
 ``` r
 results_pm_copd$health_main |> 
@@ -207,10 +208,12 @@ information about the assessment.
 
 ## Absolute risk
 
-Goal: E.g. To quantify the incidence cases of high annoyance
-attributable to (road traffic) noise exposure.
+#### Goal (e.g.)
 
-### Refresher - Burden of disease with absolute risk
+To quantify the incidence cases of high annoyance attributable to (road
+traffic) noise exposure.
+
+#### Refresher - Burden of disease with absolute risk
 
 ![Figure: Absolute risk approach](images/bod_ar.png)
 
@@ -228,7 +231,7 @@ results_noise_ha <- attribute_health(
 ```
 
 The `erf_eq_central` argument can digest other types of functions (see
-section on user-defined ERF)
+section on user-defined ERF).
 
 #### Main results
 
@@ -286,8 +289,10 @@ results_noise_ha <- attribute_health(
 
 ### using relative risk
 
-Goal: e.g. To quantify the disease cases attributable to PM2.5 exposure
-in multiple cities using one single command.
+#### Goal (e.g.)
+
+To quantify the disease cases attributable to PM2.5 exposure in multiple
+cities using one single command.
 
 - Enter unique ID’s as a vector (`numeric` or `character`) to the
   `geo_id_micro` argument (e.g. municipality names or province
@@ -320,7 +325,7 @@ results_iteration <- attribute_health(
 
 In this example we want to aggregate the lower-level geographic units
 (municipalities) by the higher-level language region
-(`"German", "French", "Italian"`)
+(`"German", "French", "Italian"`).
 
 #### Main results
 
@@ -339,7 +344,7 @@ stroke cases attributable to PM2.5 exposure in the 5 geo units, which is
 #### Detailed results
 
 The geo unit-specific information and results are stored under
-`health_detailed`\>`results_raw`
+`health_detailed`\>`results_raw` .
 
 | geo_id_micro | impact_rounded | geo_id_macro |
 |:-------------|---------------:|:-------------|
@@ -351,12 +356,14 @@ The geo unit-specific information and results are stored under
 
 `health_detailed` also contains impacts obtained through all
 combinations of input data central, lower and upper estimates (as
-usual), besides the results per geo unit (not shown above)
+usual), besides the results per geo unit (not shown above).
 
 ### using absolute risk
 
-Goal: E.g.To quantify high annoyance cases attributable to noise
-exposure in rural and urban areas.
+#### Goal (e.g.)
+
+To quantify high annoyance cases attributable to noise exposure in rural
+and urban areas.
 
 #### Function call
 
@@ -390,7 +397,7 @@ categories.
 #### Main results
 
 `health_main` contains the aggregated results (i.e. sum of impacts in
-rural and urban areas)
+rural and urban areas).
 
 | geo_id_macro | impact_rounded | erf_ci  | exp_ci  |
 |:-------------|---------------:|:--------|:--------|
@@ -399,7 +406,7 @@ rural and urban areas)
 #### Detailed results
 
 Impact by geo unit, in this case impact in the rural and in the urban
-area
+area.
 
 | geo_id_micro | geo_id_macro |    impact |
 |:-------------|:-------------|----------:|
@@ -410,10 +417,12 @@ area
 
 ### Confidence interval
 
-Goal: E.g. To quantify the COPD cases attributable to PM2.5 exposure
-taking into account uncertainty (lower and upper bound of confidence
-interval) in several input arguments: relative risk, exposure and
-baseline health data.
+#### Goal (e.g.)
+
+To quantify the COPD cases attributable to PM2.5 exposure taking into
+account uncertainty (lower and upper bound of confidence interval) in
+several input arguments: relative risk, exposure and baseline health
+data.
 
 #### Function call
 
@@ -455,24 +464,26 @@ obtained by the input data specified in the columns ending in “\_ci” and
 the other calculation pathway specifications in that row (not shown).
 
 - The 1st contains the estimated attributable impact when using the
-  central estimates of relative risk, exposure and baseline health data
+  central estimates of relative risk, exposure and baseline health data.
 
 - The 2nd row shows the impact when using the central estimates of the
   relative risk, exposure in combination with the lower estimate of the
-  baseline health data
+  baseline health data.
 
 - …
 
 *NOTE*: only 9 of the 27 possible combinations are displayed due to
-space constraints
+space constraints.
 
-*NOTE*: only a selection of columns are shown
+*NOTE*: only a selection of columns are shown.
 
 ### Monte Carlo simulation
 
-Goal: E.g. To summarize uncertainty of attributable health impacts
-(i.e. to get a single confidence interval instead of many combinations)
-by using a Monte Carlo simulation.
+#### Goal (e.g.)
+
+To summarize uncertainty of attributable health impacts (i.e. to get a
+single confidence interval instead of many combinations) by using a
+Monte Carlo simulation.
 
 You can do this carrying out a Monte Carlo uncertainty analysis via the
 [`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
@@ -485,9 +496,10 @@ Two lists (“folders”) are added:
 
 - `uncertainty_main` contains the central estimate and the corresponding
   95% confidence intervals obtained through the Monte Carlo assessment
+  and
 
 - `uncertainty_detailed` contains all `n_sim` simulations of the Monte
-  Carlo assessment
+  Carlo assessment.
 
 #### Function call
 
@@ -527,9 +539,13 @@ look at the impact of the first 10 simulations.
 
 ## User-defined ERF
 
-Goal: E.g. To quantify COPD cases attributable to air pollution exposure
-by applying a user-defined exposure-response function (ERF), such as the
+#### Goal (e.g.)
+
+To quantify COPD cases attributable to air pollution exposure by
+applying a user-defined exposure-response function (ERF), such as the
 MR-BRT curves from Global Burden of Disease study.
+
+#### Function call
 
 In this case, the function arguments `erf_eq_...` require a function as
 input, so we use an auxiliary function
@@ -562,8 +578,10 @@ used to create the ERF
 
 ### by age group
 
-Goal: e.g. To quantify health impacts attributable to air pollution in a
-country *by age group*.
+#### Goal (e.g.)
+
+To quantify health impacts attributable to air pollution in a country
+*by age group*.
 
 To obtain age-group-specific results, the baseline health data (and
 possibly exposure) must be available by age group.
@@ -571,6 +589,8 @@ possibly exposure) must be available by age group.
 If the `age` argument was specified, age-group-specific results are
 available under `health_detailed` in the sub-folder
 `results_by_age_group`.
+
+#### Function call
 
 ``` r
 results_age_group <- attribute_health(
@@ -583,6 +603,11 @@ results_age_group <- attribute_health(
         rr_increment = 10,
         erf_shape = "log_linear"
       )
+```
+
+#### Results by age group
+
+``` r
 results_age_group$health_detailed$results_by_age_group |> 
   dplyr::select(age_group, impact_rounded, exp, bhd) |> 
   knitr::kable()
@@ -595,14 +620,14 @@ results_age_group$health_detailed$results_by_age_group |>
 
 ### by sex
 
-Goal: e.g. To quantify health impacts attributable to air pollution in a
-country *by sex*.
+#### Goal (e.g.)
 
-To obtain sex-specific results, the baseline health data (and possibly
-exposure) must be entered by sex.
+To quantify health impacts attributable to air pollution in a country
+*by sex*.
 
-If the `sex` argument was specified, sex-specific results are available
-under `health_detailed` in the sub-folder `results_by_sex`.
+#### Function call
+
+The baseline health data (and possibly exposure) must be entered by sex.
 
 ``` r
 results_sex <- attribute_health(
@@ -615,6 +640,14 @@ results_sex <- attribute_health(
         rr_increment = 10,
         erf_shape = "log_linear"
       )
+```
+
+#### Results by sex
+
+If the `sex` argument was specified, sex-specific results are available
+under `health_detailed` in the sub-folder `results_by_sex`.
+
+``` r
 results_sex$health_detailed$results_by_sex |> 
   dplyr::select(sex, impact_rounded, exp, bhd) |> 
   knitr::kable()
@@ -627,15 +660,19 @@ results_sex$health_detailed$results_by_sex |>
 
 ### by other sub-groups
 
-Goal: To quantify attributable health impacts *stratified by a sub-group
+#### Goal (e.g.)
+
+To quantify attributable health impacts *stratified by a sub-group
 different to age and sex, e.g. education level*.
+
+#### Function call
 
 A single vector (or a data frame / tibble with multiple columns) to
 group the results by can be entered to the `info` argument. In this
 example, this will be information about the education level.
 
 In a second step one can group the results based on one or more columns
-and so summarize the results by the preferred sub-groups
+and so summarize the results by the preferred sub-groups.
 
 ``` r
 output_attribute <- healthiar::attribute_health(
@@ -655,7 +692,11 @@ output_attribute <- healthiar::attribute_health(
     info = data.frame(
       education = rep(c("secondary", "bachelor", "master"), times = 4)) # education level
   )
-    
+```
+
+#### Results by other sub-group
+
+``` r
 output_stratified <- output_attribute$health_detailed$results_raw |>
       dplyr::group_by(info_column_1) |>
       dplyr::summarize(mean_impact = mean(impact))|>
@@ -664,8 +705,14 @@ output_stratified <- output_attribute$health_detailed$results_raw |>
 #> [1] 43.72087 54.26844 34.30332
 ```
 
-Goal: To quantify attributable health impacts *stratified by age, sex
-and additional sub-group e.g. education level*.
+### by age, sex and other sub-groups
+
+#### Goal (e.g.)
+
+To quantify attributable health impacts *stratified by age, sex and
+additional sub-group e.g. education level*.
+
+#### Function call
 
 ``` r
 output_attribute <- healthiar::attribute_health(
@@ -683,7 +730,11 @@ output_attribute <- healthiar::attribute_health(
     info = base::data.frame(
       education = base::rep(c("without_master", "with_master"), times = 8)) # education level
   )
-    
+```
+
+#### Results by all sub-groups
+
+``` r
 output_stratified <- output_attribute$health_detailed$results_raw |>
       dplyr::group_by(info_column_1) |>
       dplyr::summarize(mean_impact = mean(impact))|>
@@ -696,15 +747,17 @@ output_stratified <- output_attribute$health_detailed$results_raw |>
 
 ### YLL
 
-Goal: E.g. To quantify the years of life lost (YLL) due to deaths from
-COPD attributable to PM2.5 exposure during one year.
+#### Goal (e.g.)
+
+To quantify the years of life lost (YLL) due to deaths from COPD
+attributable to PM2.5 exposure during one year.
+
+#### Function call
 
 We can use
 [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
 combined with life table input data to determine YLL attributable to an
 environmental stressor.
-
-#### Function call
 
 ``` r
 results_pm_yll <- attribute_lifetable(
@@ -727,14 +780,14 @@ results_pm_yll <- attribute_lifetable(
 
 #### Main results
 
-Total YLL attributable to exposure (sum of sex-specific impacts)
+Total YLL attributable to exposure (sum of sex-specific impacts).
 
 | impact_rounded | erf_ci  | exp_ci  | bhd_ci  |
 |---------------:|:--------|:--------|:--------|
 |          28810 | central | central | central |
 
 Use the two arguments `approach_exposure` and `approach_newborns` to
-modify the life table calculation
+modify the life table calculation:
 
 - `approach_exposure`
 
@@ -771,7 +824,7 @@ available.
 
 #### Results per year
 
-*NOTE*: only a selection of years is shown
+*NOTE*: only a selection of years is shown.
 
 ``` r
 results_pm_yll$health_detailed$results_raw |>
@@ -865,8 +918,10 @@ Impacted scenario refers to the scenario without exposure.
 
 ### Deaths
 
-Goal: E.g. To determine premature deaths from COPD attributable to PM2.5
-exposure during one year.
+#### Goal (e.g.)
+
+To determine premature deaths from COPD attributable to PM2.5 exposure
+during one year.
 
 See example on YLL for additional info on
 [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
@@ -895,7 +950,7 @@ results_pm_deaths <- attribute_lifetable(
 #### Main results
 
 Total premature deaths attributable to exposure (sum of sex-specific
-impacts)
+impacts).
 
 | impact_rounded | erf_ci  | exp_ci  | bhd_ci  |
 |---------------:|:--------|:--------|:--------|
@@ -911,14 +966,14 @@ Attributable premature deaths results
 
 - per sex (if sex-specific life table data entered)
 
-are available
+are available.
 
 *Note*: we will inspect the results for females; male results are also
-available
+available.
 
 *Note*: because we set the function argument
 `approach_exposure = "constant"` in the function call results are
-available for one year (the year of analysis)
+available for one year (the year of analysis).
 
 | yoa | age_group | age_start | age_end | bhd | deaths | population | modification_factor | prob_survival | prob_survival_until_midyear | hazard_rate | age_end_over_min_age | prob_survival_mod | prob_survival_until_midyear_mod | hazard_rate_mod | midyear_population_2019 | entry_population_2019 | end_population_2019 | deaths_2019 | entry_population_2020 | midyear_population_2020 | midyear_population_2021 | midyear_population_2022 | midyear_population_2023 | midyear_population_2024 | midyear_population_2025 | midyear_population_2026 | midyear_population_2027 | midyear_population_2028 | midyear_population_2029 | midyear_population_2030 | midyear_population_2031 | midyear_population_2032 | midyear_population_2033 | midyear_population_2034 | midyear_population_2035 | midyear_population_2036 | midyear_population_2037 | midyear_population_2038 | midyear_population_2039 | midyear_population_2040 | midyear_population_2041 | midyear_population_2042 | midyear_population_2043 | midyear_population_2044 | midyear_population_2045 | midyear_population_2046 | midyear_population_2047 | midyear_population_2048 | midyear_population_2049 | midyear_population_2050 | midyear_population_2051 | midyear_population_2052 | midyear_population_2053 | midyear_population_2054 | midyear_population_2055 | midyear_population_2056 | midyear_population_2057 | midyear_population_2058 | midyear_population_2059 | midyear_population_2060 | midyear_population_2061 | midyear_population_2062 | midyear_population_2063 | midyear_population_2064 | midyear_population_2065 | midyear_population_2066 | midyear_population_2067 | midyear_population_2068 | midyear_population_2069 | midyear_population_2070 | midyear_population_2071 | midyear_population_2072 | midyear_population_2073 | midyear_population_2074 | midyear_population_2075 | midyear_population_2076 | midyear_population_2077 | midyear_population_2078 | midyear_population_2079 | midyear_population_2080 | midyear_population_2081 | midyear_population_2082 | midyear_population_2083 | midyear_population_2084 | midyear_population_2085 | midyear_population_2086 | midyear_population_2087 | midyear_population_2088 | midyear_population_2089 | midyear_population_2090 | midyear_population_2091 | midyear_population_2092 | midyear_population_2093 | midyear_population_2094 | midyear_population_2095 | midyear_population_2096 | midyear_population_2097 | midyear_population_2098 | midyear_population_2099 | midyear_population_2100 | midyear_population_2101 | midyear_population_2102 | midyear_population_2103 | midyear_population_2104 | midyear_population_2105 | midyear_population_2106 | midyear_population_2107 | midyear_population_2108 | midyear_population_2109 | midyear_population_2110 | midyear_population_2111 | midyear_population_2112 | midyear_population_2113 | midyear_population_2114 | midyear_population_2115 | midyear_population_2116 | midyear_population_2117 | midyear_population_2118 | entry_population_2021 | entry_population_2022 | entry_population_2023 | entry_population_2024 | entry_population_2025 | entry_population_2026 | entry_population_2027 | entry_population_2028 | entry_population_2029 | entry_population_2030 | entry_population_2031 | entry_population_2032 | entry_population_2033 | entry_population_2034 | entry_population_2035 | entry_population_2036 | entry_population_2037 | entry_population_2038 | entry_population_2039 | entry_population_2040 | entry_population_2041 | entry_population_2042 | entry_population_2043 | entry_population_2044 | entry_population_2045 | entry_population_2046 | entry_population_2047 | entry_population_2048 | entry_population_2049 | entry_population_2050 | entry_population_2051 | entry_population_2052 | entry_population_2053 | entry_population_2054 | entry_population_2055 | entry_population_2056 | entry_population_2057 | entry_population_2058 | entry_population_2059 | entry_population_2060 | entry_population_2061 | entry_population_2062 | entry_population_2063 | entry_population_2064 | entry_population_2065 | entry_population_2066 | entry_population_2067 | entry_population_2068 | entry_population_2069 | entry_population_2070 | entry_population_2071 | entry_population_2072 | entry_population_2073 | entry_population_2074 | entry_population_2075 | entry_population_2076 | entry_population_2077 | entry_population_2078 | entry_population_2079 | entry_population_2080 | entry_population_2081 | entry_population_2082 | entry_population_2083 | entry_population_2084 | entry_population_2085 | entry_population_2086 | entry_population_2087 | entry_population_2088 | entry_population_2089 | entry_population_2090 | entry_population_2091 | entry_population_2092 | entry_population_2093 | entry_population_2094 | entry_population_2095 | entry_population_2096 | entry_population_2097 | entry_population_2098 | entry_population_2099 | entry_population_2100 | entry_population_2101 | entry_population_2102 | entry_population_2103 | entry_population_2104 | entry_population_2105 | entry_population_2106 | entry_population_2107 | entry_population_2108 | entry_population_2109 | entry_population_2110 | entry_population_2111 | entry_population_2112 | entry_population_2113 | entry_population_2114 | entry_population_2115 | entry_population_2116 | entry_population_2117 | entry_population_2118 | deaths_2020 | deaths_2021 | deaths_2022 | deaths_2023 | deaths_2024 | deaths_2025 | deaths_2026 | deaths_2027 | deaths_2028 | deaths_2029 | deaths_2030 | deaths_2031 | deaths_2032 | deaths_2033 | deaths_2034 | deaths_2035 | deaths_2036 | deaths_2037 | deaths_2038 | deaths_2039 | deaths_2040 | deaths_2041 | deaths_2042 | deaths_2043 | deaths_2044 | deaths_2045 | deaths_2046 | deaths_2047 | deaths_2048 | deaths_2049 | deaths_2050 | deaths_2051 | deaths_2052 | deaths_2053 | deaths_2054 | deaths_2055 | deaths_2056 | deaths_2057 | deaths_2058 | deaths_2059 | deaths_2060 | deaths_2061 | deaths_2062 | deaths_2063 | deaths_2064 | deaths_2065 | deaths_2066 | deaths_2067 | deaths_2068 | deaths_2069 | deaths_2070 | deaths_2071 | deaths_2072 | deaths_2073 | deaths_2074 | deaths_2075 | deaths_2076 | deaths_2077 | deaths_2078 | deaths_2079 | deaths_2080 | deaths_2081 | deaths_2082 | deaths_2083 | deaths_2084 | deaths_2085 | deaths_2086 | deaths_2087 | deaths_2088 | deaths_2089 | deaths_2090 | deaths_2091 | deaths_2092 | deaths_2093 | deaths_2094 | deaths_2095 | deaths_2096 | deaths_2097 | deaths_2098 | deaths_2099 | deaths_2100 | deaths_2101 | deaths_2102 | deaths_2103 | deaths_2104 | deaths_2105 | deaths_2106 | deaths_2107 | deaths_2108 | deaths_2109 | deaths_2110 | deaths_2111 | deaths_2112 | deaths_2113 | deaths_2114 | deaths_2115 | deaths_2116 | deaths_2117 | deaths_2118 |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -934,8 +989,10 @@ available for one year (the year of analysis)
 
 ## YLD
 
-Goal: E.g. To quantify the years lived with disability (YLD)
-attributable to air pollution exposure using disability weights.
+#### Goal (e.g.)
+
+To quantify the years lived with disability (YLD) attributable to air
+pollution exposure using disability weights.
 
 #### Function call
 
@@ -960,13 +1017,15 @@ results_pm_copd_yld  <- attribute_health(
 
 ## DALYs
 
-Goal: To obtain the Disability-Adjusted Life Years as the sum of YLLs
-and YLDs.
+#### Goal (e.g.)
+
+To obtain the Disability-Adjusted Life Years as the sum of YLLs and
+YLDs.
+
+#### Function call
 
 This is possible using the function
 [`daly()`](https://swisstph.github.io/healthiar/reference/daly.md).
-
-#### Function call
 
 ``` r
 results_daly <- daly(
@@ -983,16 +1042,64 @@ YLL, YLD & DALY
 |-------------------:|-------------------:|---------------:|
 |              28810 |                 72 |          28882 |
 
+## Modification of scenarios
+
+#### Goal (e.g.)
+
+To quantify health impacts using `attribute_health`in an scenario B very
+similar to a previous scenario A.
+
+#### Function call
+
+``` r
+scenario_A <- attribute_health(
+    exp_central = 8.85,   # EXPOSURE 1
+    cutoff_central = 5, 
+    bhd_central = 25000,
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118,
+    rr_increment = 10)
+```
+
+The function
+[`attribute_mod()`](https://swisstph.github.io/healthiar/reference/attribute_mod.md)
+can be used to modify one or multiple arguments of `attribute_health`in
+an existing scenario, e.g. `scenario_A`.
+
+``` r
+scenario_B <- attribute_mod(
+  output_attribute = scenario_A, 
+  exp_central = 6
+)
+```
+
+This is equivalent to building the whole scenario again (see below), but
+more time and code efficient.
+
+``` r
+scenario_B <- attribute_health(
+    exp_central = 6,     # EXPOSURE 2
+    cutoff_central = 5, 
+    bhd_central = 25000,
+    approach_risk = "relative_risk",
+    erf_shape = "log_linear",
+    rr_central = 1.118,
+    rr_increment = 10)
+```
+
 ## Comparison of two health scenarios
 
-Goal: E.g. To compare the health impacts in the scenario “before
-intervention” vs. “after intervention”.
+#### Goal (e.g.)
+
+To compare the health impacts in the scenario “before intervention”
+vs. “after intervention”.
 
 #### Function call
 
 1.  Use
     [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
-    to calculate burden of scenarios A & B
+    to calculate burden of scenarios A & B.
 
 ``` r
 scenario_A <- attribute_health(
@@ -1006,21 +1113,6 @@ scenario_A <- attribute_health(
 ```
 
 ``` r
-scenario_B <- attribute_health(
-    exp_central = 6,     # EXPOSURE 2
-    cutoff_central = 5, 
-    bhd_central = 25000,
-    approach_risk = "relative_risk",
-    erf_shape = "log_linear",
-    rr_central = 1.118,
-    rr_increment = 10)
-```
-
-Alternatively, the function
-[`attribute_mod()`](https://swisstph.github.io/healthiar/reference/attribute_mod.md)
-can be used to modify an existing scenario, e.g. `scenario_A`
-
-``` r
 scenario_B <- attribute_mod(
   output_attribute = scenario_A, 
   exp_central = 6
@@ -1029,7 +1121,7 @@ scenario_B <- attribute_mod(
 
 2.  Use
     [`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
-    to compare scenarios A & B
+    to compare scenarios A & B.
 
 ``` r
 
@@ -1057,7 +1149,7 @@ for more details.
 The
 [`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
 results contain two additional outputs in addition to those we have
-already seen
+already seen:
 
 - `health_detailed`
 
@@ -1067,16 +1159,17 @@ already seen
 
 ## Two correlated exposures
 
-Goal: E.g. To quantify the total health impact attributable to PM2.5 and
-NO2.
+#### Goal (e.g.)
+
+To quantify the total health impact attributable to PM2.5 and NO2.
+
+#### Function call
 
 For this purpose, you can use the function
 [`multiexpose()`](https://swisstph.github.io/healthiar/reference/multiexpose.md).
 
 *Attention*: To apply this method, the relative risks for one exposure
 must be adjusted for the second exposure.
-
-#### Function call
 
 ``` r
 results_pm <- attribute_health(
@@ -1115,9 +1208,13 @@ results_multiplicative$health_main
 
 ## Threshold additional to cut-off
 
-Goal: To quantify health impacts in the exposure group 55dB+
-(calculation threshold) that are affected by a exposure above the effect
-threshold of 45 dB (cut-off).
+#### Goal (e.g.)
+
+To quantify health impacts in the exposure group 55dB+ (calculation
+threshold) that are affected by a exposure above the effect threshold of
+45 dB (cut-off).
+
+#### Function call
 
 The function arguments `erf_eq_...` require a function as input. Instead
 of using a [`splinefun()`](https://rdrr.io/r/stats/splinefun.html) this
@@ -1156,17 +1253,19 @@ f(c) =
 \end{cases}
 ```
 
-The categorical ERF curve created looks as follows
+The categorical ERF curve created looks as follows.
 
 ![ERF
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-83-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-90-1.png)
 
 ## Economic dimension
 
 ### Monetization
 
-Goal: E.g. To monetize the attributable health impact of a policy that
-will have health benefits five years from now.
+#### Goal (e.g.)
+
+To monetize the attributable health impact of a policy that will have
+health benefits five years from now.
 
 The outcome of the monetization is added to the variable entered to the
 `output_attribute` argument, which is `results_pm_copd` in our case.
@@ -1175,13 +1274,13 @@ Two folders are added:
 
 - `monetization_main` contains the central monetization estimate and the
   corresponding 95% confidence intervals obtained through the specified
-  monetization
+  monetization.
 
 - `monetization_detailed` contains the monetized results for each unique
   combination of the input variable estimates that were provided to the
   initial
   [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
-  call
+  call.
 
 #### Function call
 
@@ -1218,8 +1317,10 @@ results <- monetize(
 
 ### Cost-benefit analysis
 
-Goal: E.g. To estimate the net-benefit of a health policy via
-cost-benefit analysis (CBA).
+#### Goal (e.g.)
+
+To estimate the net-benefit of a health policy via cost-benefit analysis
+(CBA).
 
 Let’s imagine we design a policy that would reduce air pollution to 5
 $`\mu g/m^3`$, which is the concentration specified in the
@@ -1281,10 +1382,83 @@ avoided attributable COPD cases result in a net monetary benefit of the
 policy, while the lower 95% confidence interval estimate results in a
 net cost!
 
-## Multiple deprivation index
+## Social aspects
 
-Goal: E.g. To estimate the multiple deprivation index (MDI) to use it
-for the argument `social_indicator` in the function
+### Health impact attributable to social indicator
+
+#### Goal (e.g.)
+
+To estimate the health impact that is theoretically attributable to the
+difference in a social indicator of the population exposed (e.g. degree
+of deprivation).
+
+#### Function call
+
+First, quantify health impacts.
+
+``` r
+ health_impact <- healthiar::attribute_health(
+   age_group = exdat_socialize$age_group,
+   exp_central = exdat_socialize$pm25_mean,
+   cutoff_central = 0,
+   rr_central = exdat_socialize$rr,
+   erf_shape = "log_linear",
+   rr_increment = 10,
+   bhd_central = exdat_socialize$mortality,
+   population = exdat_socialize$population,
+   geo_id_micro = exdat_socialize$geo_unit)
+```
+
+Second, use the function
+[`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md)
+entering the whole output of
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+in the argument `output_attribute`.
+
+``` r
+social_t <- healthiar::socialize(
+  output_attribute = health_impact,
+  age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
+  ref_prop_pop = exdat_socialize$ref_prop_pop, # Population already provided in output_attribute
+  geo_id_micro = exdat_socialize$geo_unit,
+  social_indicator = exdat_socialize$score,
+  n_quantile = 10,
+  increasing_deprivation = TRUE)
+```
+
+Alternatively, you can directly enter the health impact in the
+[`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md)
+argument `impact`.
+
+``` r
+social <- healthiar::socialize(
+  impact = health_impact$health_detailed$results_by_age_group$impact,
+  age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
+  ref_prop_pop = exdat_socialize$ref_prop_pop,
+  geo_id_micro = exdat_socialize$geo_unit,
+  social_indicator = exdat_socialize$score,
+  population = exdat_socialize$population, # Population has to be provided because no output_attribute
+  n_quantile = 10,
+  increasing_deprivation = TRUE)
+```
+
+#### Main results
+
+    #> # A tibble: 4 × 5
+    #>   parameter      difference_type difference_compared_…¹ difference_value comment
+    #>   <chr>          <chr>           <chr>                             <dbl> <chr>  
+    #> 1 impact_rate_s… absolute        bottom_quantile                 11.5    NA     
+    #> 2 impact_rate_s… relative        bottom_quantile                  0.193  NA     
+    #> 3 impact_rate_s… absolute        overall                         -0.834  It can…
+    #> 4 impact_rate_s… relative        overall                         -0.0143 It can…
+    #> # ℹ abbreviated name: ¹​difference_compared_with
+
+### Multiple deprivation index
+
+#### Goal (e.g.)
+
+To estimate the multiple deprivation index (MDI) to use it for the
+argument `social_indicator` in the function
 [`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md).
 
 #### Function call
@@ -1307,7 +1481,7 @@ mdi <- prepare_mdi(
 
 #### Main results
 
-Function output includes
+Function output includes:
 
 - `mdi_main`, a tibble containing the BEST-COST MDI
 
@@ -1351,7 +1525,7 @@ eval(mdi$mdi_detailed$boxplot)
 ```
 
 ![Boxplot of Normalized Indicators and
-MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-94-1.png)
+MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-105-1.png)
 Analogeously, to reproduce the histogram run
 
 ``` r
@@ -1359,7 +1533,7 @@ eval(mdi$mdi_detailed$histogram)
 ```
 
 ![Histogram of MDI with normal
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-95-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-106-1.png)
 
 ------------------------------------------------------------------------
 
@@ -1432,12 +1606,12 @@ Export to Excel (as `.xlsx` file)
 
 ### Visualize results
 
-Visualization is out of scope of `healthiar`. You can visualize in
+Visualization is out of scope of `healthiar`. You can visualize in:
 
 - R, e.g. with the `ggplot2` package ([online book by the
-  creator](https://ggplot2-book.org/))
-- Excel (export results first)
-- Other tools
+  creator](https://ggplot2-book.org/)),
+- Excel (export results first) or
+- Other tools.
 
 ------------------------------------------------------------------------
 

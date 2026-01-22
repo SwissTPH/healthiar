@@ -583,11 +583,11 @@ cutoff_rawdata <-
 # cutoff
 social_mort_rawdata <- 
   ## import burden
-  read.csv("../varia/input/inequalities/mort_pm25_sector_2019.csv")
+  read.csv("varia/input/inequalities/mort_pm25_sector_2019.csv")
 
-## import derpivation index
+## import deprivation index
 social_bimd_rawdata <- 
-  read.csv("../varia/input/inequalities/BIMD_2011_WITHOUT_HEALTH_ELLIS_WIDE.csv")
+  read.csv("varia/input/inequalities/BIMD_2011_WITHOUT_HEALTH_ELLIS_WIDE.csv")
 
 
 ```
@@ -1134,6 +1134,40 @@ social_results <-
   )
 ```
 
+```{r exdat_socialize}
+
+exdat_socialize <- dplyr::bind_rows(
+  # Add rows for different age groups
+  social_data_input |> dplyr::mutate(age_group = "below_40"),
+  social_data_input |> dplyr::mutate(
+    age_group = "40_plus", 
+    # Fake numbers reducing the total ones in 40_plus
+    MORTALITY_TOTAL = MORTALITY_TOTAL - 10, 
+    POPULATION = POPULATION - 20,
+    PM25_MEAN = PM25_MEAN- 0.1,
+    )) |>
+  # Be sure that there is no negative numbers
+  dplyr::mutate(
+    dplyr::across(c(MORTALITY_TOTAL, POPULATION, PM25_MEAN), 
+                  ~ base::pmax(.x, 0))) |>
+  # Keep only relevant columns
+  dplyr::select(NUTS1, CS01012020, age_group, PM25_MEAN, RR, MORTALITY_TOTAL, POPULATION, score) |>
+  dplyr::rename(geo_unit = CS01012020,
+                pm25_mean = PM25_MEAN,
+                rr = RR,
+                mortality = MORTALITY_TOTAL,
+                population = POPULATION) |>
+  # Create ref_prop_pop
+  dplyr::mutate(ref_prop_pop = 0.5) |>
+  # The data set contains the RR for the exposure but not per increment. 
+  # Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
+  # Replace the value of rr (originally corresponds to rr_at_exp)
+  dplyr::mutate(rr = 1.08)
+
+  
+
+```
+
 
 
 # Misc
@@ -1260,7 +1294,8 @@ rm(list=setdiff(ls(),
                   "exdat_noise",
                   # "exdat_pop_2",
                   "exdat_mdi",
-                  "exdat_get_mdi"
+                  "exdat_get_mdi",
+                  "exdat_socialize"
                   )))
 ```
 

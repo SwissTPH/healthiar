@@ -16,7 +16,7 @@ prepare_mdi(
 )
 }
 \arguments{
-\item{geo_id_micro}{\code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_micro}) Argument must be entered for iterations. See Details for more info.}
+\item{geo_id_micro}{\code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_micro}).}
 
 \item{edu}{\code{Numeric vector} indicating educational attainment as \% of individuals
 (at the age 18 or older) without a high school diploma (ISCED 0-2) per geo unit}

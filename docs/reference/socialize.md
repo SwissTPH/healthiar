@@ -43,15 +43,16 @@ socialize(
 - geo_id_micro, :
 
   `Numeric vector` or `string vector` specifying the unique ID codes of
-  each geographic area considered in the assessment (`geo_id_micro`)
-  Argument must be entered for iterations. See Details for more info.
+  each geographic area considered in the assessment (`geo_id_micro`).
 
 - social_indicator:
 
   `Numeric vector` showing the social indicator used for the analysis,
   e.g. a deprivation score (indicator of economic wealth) for each
-  geographic unit. Based on this and `n_quantile`, `social_quantile`
-  will be calculated.
+  geographic unit. The length and the values must correspond with
+  `geo_id_micro`. If `geo_id_micro` is not entered when using argument
+  `output_attribute`, `social_indicator` must correspond to the column
+  `geo_id_micro` in `results_by_age_group` of `output_attribute`.
 
 - increasing_deprivation:
 
@@ -96,7 +97,7 @@ socialize(
 
   *(only if `output_attribute` not specified)* `Numeric vector`
   specifying the baseline health data of the health outcome of interest
-  per age group. See Details for more info.
+  per age group.
 
 - pop_fraction:
 
@@ -140,43 +141,3 @@ added next to the existing attribute output.
 Alberto Castro & Axel Luyten
 
 ## Examples
-
-``` r
-# Goal: determine fraction of attributable health impact that can
-# be attributed to differences in deprivation between the geographic
-# units under analysis
-
-## Create assessments for multiple geographic units for the age group
-## 40 years and younger
-results_age_groups <-
-  healthiar::attribute_health(
-    age_group = rep(c("below_40", "40_plus"), each = 9037),
-    exp_central = c(exdat_socialize$PM25_MEAN, exdat_socialize$PM25_MEAN-0.1),
-    cutoff_central = 0,
-    rr_central = 1.08,
-    erf_shape = "log_linear",
-    rr_increment = 10,
-    bhd_central =  c(exdat_socialize$MORTALITY_below_40, exdat_socialize$MORTALITY_40_plus),
-    population = c(exdat_socialize$POPULATION_below_40, exdat_socialize$POPULATION_40_plus),
-    geo_id_micro = rep(exdat_socialize$CS01012020, 2))
-
-## Difference in attributable impacts between geographic units
-## that is attributable to differences in deprivation
-results <- socialize(
-  age_group = c("below_40", "40_plus"),
-  ref_prop_pop = c(0.5, 0.5),
-  output_attribute = results_age_groups,
-  geo_id_micro = exdat_socialize$CS01012020,
-  social_indicator = exdat_socialize$score,
-  n_quantile = 10,
-  increasing_deprivation = TRUE)
-
-results$social_main |>
-  dplyr::filter(difference_type == "relative") |>
-  dplyr::filter(difference_compared_with == "overall") |>
-  dplyr::select(first, last, difference_type, difference_value, comment)
-#> # A tibble: 1 × 5
-#>   first  last difference_type difference_value comment                          
-#>   <dbl> <dbl> <chr>                      <dbl> <chr>                            
-#> 1  70.7  59.0 relative                 -0.0110 It can be interpreted as fractio…
-```

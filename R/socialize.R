@@ -12,7 +12,7 @@
 #' \code{String vector} with the age groups included in the age standardization. The vector refers to age-dependent data in this function and to \code{output_attribute} (if provided).
 
 #' @param social_indicator
-#' \code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. Based on this and \code{n_quantile}, \code{social_quantile} will be calculated.
+#' \code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. The length and the values must correspond with \code{geo_id_micro}. If \code{geo_id_micro} is not entered when using argument \code{output_attribute}, \code{social_indicator} must correspond to the column \code{geo_id_micro} in \code{results_by_age_group} of \code{output_attribute}.
 
 #' @param increasing_deprivation
 #' \code{Boolean} variable (\code{TRUE}/\code{FALSE}) specifying whether an increase in \code{social_indicator} corresponds to an increase (\code{TRUE}) or decrease \code{FALSE} in deprivation. Default: \code{TRUE}.
@@ -24,7 +24,7 @@
 #' \code{Integer vector} showing the values from 1 to the number of quantiles assigned to each geographic unit. Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}
 
 #' @param geo_id_micro,
-#' \code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_micro}) Argument must be entered for iterations. See Details for more info.
+#' \code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_micro}).
 
 #' @param population
 #' \code{Numeric vector} specifying the population by age group and geographic unit.
@@ -36,7 +36,7 @@
 #' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} containing the attributable health impacts by both age group and geo id.
 
 #' @param bhd
-#' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the baseline health data of the health outcome of interest per age group. See Details for more info.
+#' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the baseline health data of the health outcome of interest per age group.
 
 #' @param exp
 #'\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the exposure level(s) to the environmental stressor.
@@ -72,27 +72,29 @@
 #' ## Create assessments for multiple geographic units for the age group
 #' ## 40 years and younger
 #' results_age_groups <-
-#'   healthiar::attribute_health(
-#'     age_group = rep(c("below_40", "40_plus"), each = 9037),
-#'     exp_central = c(exdat_socialize$PM25_MEAN, exdat_socialize$PM25_MEAN-0.1),
-#'     cutoff_central = 0,
-#'     rr_central = 1.08,
-#'     erf_shape = "log_linear",
-#'     rr_increment = 10,
-#'     bhd_central =  c(exdat_socialize$MORTALITY_below_40, exdat_socialize$MORTALITY_40_plus),
-#'     population = c(exdat_socialize$POPULATION_below_40, exdat_socialize$POPULATION_40_plus),
-#'     geo_id_micro = rep(exdat_socialize$CS01012020, 2))
+#'    healthiar::attribute_health(
+#'      age_group = exdat_socialize$age_group,
+#'      exp_central = exdat_socialize$pm25_mean,
+#'      cutoff_central = 0,
+#'      rr_central = exdat_socialize$rr,
+#'      erf_shape = "log_linear",
+#'      rr_increment = 10,
+#'      bhd_central = exdat_socialize$mortality,
+#'      population = exdat_socialize$population,
+#'      geo_id_micro = exdat_socialize$geo_unit)
 #'
 #' ## Difference in attributable impacts between geographic units
 #' ## that is attributable to differences in deprivation
 #' results <- socialize(
-#'   age_group = c("below_40", "40_plus"),
-#'   ref_prop_pop = c(0.5, 0.5),
+#'   healthiar::socialize(
 #'   output_attribute = results_age_groups,
-#'   geo_id_micro = exdat_socialize$CS01012020,
+#'   age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
+#'   ref_prop_pop = exdat_socialize$ref_prop_pop,
+#'   geo_id_micro = exdat_socialize$geo_unit,
 #'   social_indicator = exdat_socialize$score,
 #'   n_quantile = 10,
 #'   increasing_deprivation = TRUE)
+#'
 #'
 #' results$social_main |>
 #'   dplyr::filter(difference_type == "relative") |>
@@ -315,10 +317,12 @@ socialize <- function(output_attribute = NULL,
     ## Here use unique() because the user will enter a vector with unique values
     ## and not a vector that fits with a table
     ## (the user entered the output from healthiar)
+
     social_component_before_quantile <-
       tibble::tibble(
-        geo_id_micro = base::unique(input_data$geo_id_micro),
-        social_indicator = social_indicator)
+        geo_id_micro = geo_id_micro,
+        social_indicator = social_indicator) |>
+      dplyr::distinct()
 
     # * * If available ref_prop_pop ################
 
@@ -435,12 +439,11 @@ socialize <- function(output_attribute = NULL,
     }
 
   # Put all data together ####################
-
   input_data_with_quantile <-
     ## Add social_quantile (removing the other columns in social_component)
     dplyr::left_join(
       input_data,
-      social_component[, c("geo_id_micro", "social_quantile")],
+      base::unique(social_component[, c("geo_id_micro", "social_quantile")]),
       by = "geo_id_micro") |>
     ## Add age_order
     dplyr::left_join(
