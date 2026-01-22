@@ -1288,10 +1288,70 @@ rm(cba)
 
 We see that the central and upper 95% confidence interval estimates of avoided attributable COPD cases result in a net monetary benefit of the policy, while the lower 95% confidence interval estimate results in a net cost!
 
+# Social aspects
+
+## Health impact attributable to social indicator
+Goal: To estimate the health impact that is theoretically attributable to the difference in a social indicator of the population exposed (e.g. degree of deprivation). 
+
+The function `socialize()` can be used for this aim either entering a) the whole output of `attribute_health()` or b) directly the health impact in the `socialize()` argument `impact`.  
+
+### Function call
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
+ health_impact <- healthiar::attribute_health(
+   age_group = exdat_socialize$age_group,
+   exp_central = exdat_socialize$pm25_mean,
+   cutoff_central = 0,
+   rr_central = exdat_socialize$rr,
+   erf_shape = "log_linear",
+   rr_increment = 10,
+   bhd_central = exdat_socialize$mortality,
+   population = exdat_socialize$population,
+   geo_id_micro = exdat_socialize$geo_unit)
+```
+
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
+social_t <- healthiar::socialize(
+  output_attribute = health_impact,
+  age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
+  ref_prop_pop = exdat_socialize$ref_prop_pop, # Population already provided in output_attribute
+  geo_id_micro = exdat_socialize$geo_unit,
+  social_indicator = exdat_socialize$score,
+  n_quantile = 10,
+  increasing_deprivation = TRUE)
+
+```
+
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
+social <- healthiar::socialize(
+  impact = health_impact$health_detailed$results_by_age_group$impact,
+  age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
+  ref_prop_pop = exdat_socialize$ref_prop_pop,
+  geo_id_micro = exdat_socialize$geo_unit,
+  social_indicator = exdat_socialize$score,
+  population = exdat_socialize$population, # Population has to be provided because no output_attribute
+  n_quantile = 10,
+  increasing_deprivation = TRUE)
+
+```
 
 
 
-# Multiple deprivation index
+
+### Main results
+```{r echo=FALSE}
+social$social_main |> 
+  dplyr::select(c(parameter, difference_type, 
+                  difference_compared_with, difference_value, 
+                  comment)) |>
+  print()
+```
+
+
+
+## Multiple deprivation index
 
 Goal: E.g. To estimate the multiple deprivation index (MDI) to use it for the argument `social_indicator` in the function `socialize()`.
 
