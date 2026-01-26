@@ -90,7 +90,6 @@ results_age_groups <-
 ## Difference in attributable impacts between geographic units
 ## that is attributable to differences in deprivation
 results <- socialize(
-  healthiar::socialize(
   output_attribute = results_age_groups,
   age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
   ref_prop_pop = exdat_socialize$ref_prop_pop,
