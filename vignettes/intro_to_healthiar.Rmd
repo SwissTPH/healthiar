@@ -54,48 +54,36 @@ See below a an overview of the package. The whole list of functions included in 
 
 # Input & output data
 
-# Function examples
-
-The descriptions of the [`healthiar` functions](https://swisstph.github.io/healthiar/reference/index.html) provide examples that you can execute (with `healthiar` loaded) by running `example("function_name")`, e.g. `example("attribute_health")`. In the sections below in this vignette, you find additional examples and more detailed explanations.
-
 ## Input
 
-# Relative risk 
+You can enter data in `healthiar` functions using: 
+- hard coded values or
+- columns inside pre-loaded data frames or tibbles.
 
-### Goal (e.g.)
+Let's see some examples calling the most important function in `healthiar`: `attribute_health()`.
 
-To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a country.
 ### Hard coded
 
-### Methodological refresher
+Depending on the function argument, you will need to enter numeric or character values.
 
-![Figure: Relative risk approach](images/bod_rr.png){width="700"}
-
-### Function call
-
-#### Hard coded
-
-```{r}
+```{r eval=FALSE, include=TRUE}
 results_pm_copd <- attribute_health(
-  erf_shape = "log_linear", # shape of the exposure-response function (ERF)
-  rr_central = 1.369, # relative risk (RR) central estimate
-  rr_increment = 10,  # increment for which relative risk is valid (in \\mu g / m^3)
-  exp_central = 8.85, # PM2.5 exposure (in \\mu g / m^3) (here: population-weighted)
-  cutoff_central = 5, # cutoff (in \\mu g / m^3) below which no health effects occur 
-  bhd_central = 30747 # baseline health data (BHD; here: COPD incidence)
+  exp_central = 8.85, 
+  rr_central = 1.369, 
+  rr_increment = 10,  
+  erf_shape = "log_linear",
+  cutoff_central = 5,
+  bhd_central = 30747 
 )
 ```
 
-For alternative ERF shapes see the function documentation of `attribute_health()`.
-
-#### Pre-loaded data
 ### Columns
 
 `healthiar` comes with some example data that start with `exdat_` that allow you to test functions. Some of these example data will be used in some examples in this vignette.
 
-Now we call `attribute_health` with input data from the `healthiar` example data. Note that we can easily provide input data to the function argument using the `$` operator.
+Now let's `attribute_health()` with input data from the `healthiar` example data. Note that you can easily provide input data to the function argument using the `$` operator.
 
-```{r, eval=TRUE, include=TRUE, echo=TRUE}
+```{r, eval=FALSE, include=TRUE}
 results_pm_copd <- attribute_health(
   erf_shape = "log_linear",
   rr_central = exdat_pm$relative_risk, 
@@ -106,7 +94,6 @@ results_pm_copd <- attribute_health(
 )
 ```
 
-### Output structure
 Be aware that `healthiar` functions are easier to use if your data is prepared in a tidy format, i.e.:
 
 -   Each variable is a column; each column is a variable.
@@ -118,36 +105,36 @@ Be aware that `healthiar` functions are easier to use if your data is prepared i
 If you want to know more about the concept of tidy format, read [this article of Hadley Wickham (2014)](https://doi.org/10.18637/jss.v059.i10). 
 
 
-Every `attribute_health()` output consists of two lists ("folders"):
 ## Output
 
 #### Structure
 
+The output of the `healthiar`function `attribute_health()` consists of two lists ("folders"):
 
 -   `health_main` contains the main results
 
--   `health_detailed` detailed results and additional info about the assessment:
+-   `health_detailed` contained detailed results and additional info about the assessment, e.g.:
 
-    -   `results_raw` tibble that contains the detailed results
+    -   `results_raw` tibble (very similar to a `data.frame`) that contains the detailed results
 
-    -   `input_args` contains a complete list of all arguments used in the assessment (including some internal arguments)
+    -   `input_args` list of all arguments used in the assessment (including some internal arguments)
 
     -   `input_table` tibble that contains all input data entered by the user or derived for the calculations
 
-    -   `results_by_...`
+    -   `results_by_...` tibble that contains the results stratified by the categories of the following arguments (only if entered)
     
-        - `geo_id_micro`: contains results by the inputted or default micro (e.g. high resolution) geo IDs
+        - `geo_id_micro`
         
-        - `sex`: contains results by sex (only present if function argument `sex` specified)
+        - `sex`
         
-        - `age_group`: contains results by age groups (only present if function argument `age_group` sepcified)
+        - `age_group` 
+        
 
-*NOTE*: `attribute_lifetable()` creates additional output that is specific to life table calculations
 #### Access
 
-### Main results
+A similar structure can be found in other large functions in `helathiar`, e.g. `attribute_lifetable()`, `compare()`, `socialize()` or `monetize()`. In some functions, different elements are available in the output. For instance,   `attribute_lifetable()` creates additional output that is specific to life table calculations.
 
-Let's inspect the main results. There exist different, equivalent ways of accessing the output:
+There exist different, equivalent ways of accessing the output:
 
 -   With `$` operator: `results_pm_copd$health_main$impact_rounded` (as in the example above)
 
@@ -157,11 +144,49 @@ Let's inspect the main results. There exist different, equivalent ways of access
 
 -   With `pluck()` & `pull()`: use the `purrr::pluck` function to select a list and then the `dplyr::pull` function extract values from a specified column, e.g. `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
 
+
+
+
+---------------------------------------------------------------------------
+
+# Function examples
+
+The descriptions of the [`healthiar` functions](https://swisstph.github.io/healthiar/reference/index.html) provide examples that you can execute (with `healthiar` loaded) by running `example("function_name")`, e.g. `example("attribute_health")`. In the sections below in this vignette, you find additional examples and more detailed explanations.
+
+
+# Relative risk 
+
+### Goal (e.g.)
+
+To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a country.
+
+### Methodological refresher
+
+![Figure: Relative risk approach](images/bod_rr.png){width="700"}
+
+### Function call
+
+```{r, eval=TRUE, include=TRUE, echo=TRUE}
+results_pm_copd <- attribute_health(
+  approach_risk = "relative_risk", # If you do not call this argument, "relative_risk" will be assigned by default.
+  erf_shape = "log_linear",
+  rr_central = exdat_pm$relative_risk, 
+  rr_increment = 10, 
+  exp_central = exdat_pm$mean_concentration,
+  cutoff_central = exdat_pm$cut_off_value,
+  bhd_central = exdat_pm$incidence
+)
+```
+
+
+### Main results
 ```{r, include=TRUE, eval=TRUE, echo=TRUE}
 results_pm_copd$health_main
 ```
 
-It is a table of the format `tibble` (very similar to a `data.frame`) of 3 rows and 23 columns. Let's zoom in on some relevant aspects.
+It is a table of the format `tibble` of 3 rows and 23 columns. Be aware that this main output contains input data, some intermediate steps and the final results in different formats.
+
+Let's zoom in on some relevant aspects.
 
 ```{r}
 results_pm_copd$health_main |> 
@@ -177,7 +202,6 @@ Some of the most results columns include:
 -   *impact* raw impact/burden
 -   *pop_fraction* population attributable fraction (PAF) or population impact fraction (PIF)
 
-*NOTE*: The main output contains more columns that provide additional information about the assessment.
 
 
 
