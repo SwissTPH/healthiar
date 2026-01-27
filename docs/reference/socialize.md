@@ -141,3 +141,44 @@ added next to the existing attribute output.
 Alberto Castro & Axel Luyten
 
 ## Examples
+
+``` r
+# Goal: determine fraction of attributable health impact that can
+# be attributed to differences in deprivation between the geographic
+# units under analysis
+
+## Create assessments for multiple geographic units for the age group
+## 40 years and younger
+results_age_groups <-
+   healthiar::attribute_health(
+     age_group = exdat_socialize$age_group,
+     exp_central = exdat_socialize$pm25_mean,
+     cutoff_central = 0,
+     rr_central = exdat_socialize$rr,
+     erf_shape = "log_linear",
+     rr_increment = 10,
+     bhd_central = exdat_socialize$mortality,
+     population = exdat_socialize$population,
+     geo_id_micro = exdat_socialize$geo_unit)
+
+## Difference in attributable impacts between geographic units
+## that is attributable to differences in deprivation
+results <- socialize(
+  output_attribute = results_age_groups,
+  age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
+  ref_prop_pop = exdat_socialize$ref_prop_pop,
+  geo_id_micro = exdat_socialize$geo_unit,
+  social_indicator = exdat_socialize$score,
+  n_quantile = 10,
+  increasing_deprivation = TRUE)
+
+
+results$social_main |>
+  dplyr::filter(difference_type == "relative") |>
+  dplyr::filter(difference_compared_with == "overall") |>
+  dplyr::select(first, last, difference_type, difference_value, comment)
+#> # A tibble: 1 × 5
+#>   first  last difference_type difference_value comment                          
+#>   <dbl> <dbl> <chr>                      <dbl> <chr>                            
+#> 1  70.9  59.4 relative                 -0.0143 It can be interpreted as fractio…
+```

@@ -72,8 +72,8 @@ results <- standardize(
   age_group = c("below_40", "above_40"),
   ref_prop_pop = c(0.5, 0.5)
 )
-results$health_detailed$impact_per_100k_inhab # age group-specific impact rate
-#> NULL
+results$health_detailed$results_raw$impact_per_100k_inhab # age group-specific impact rate
+#> [1] 48.28250 51.53977
 results$health_main$impact_per_100k_inhab # age-standardized impact rate
 #> [1] 49.91113
 ```
