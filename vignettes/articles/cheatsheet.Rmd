@@ -1,0 +1,11 @@
+---
+title: "Cheat sheet"
+output: html_document
+---
+
+
+You can download a PDF version of the cheat sheet [here](../cheatsheet_healthiar.pdf).
+
+<center>
+  <embed src="../cheatsheet_healthiar.pdf" width="100%" height="600px" type="application/pdf">
+</center>

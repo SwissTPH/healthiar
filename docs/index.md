@@ -36,12 +36,22 @@ Using *healthiar*, you can …
 
 ## Getting started
 
-To get started with the `healthiar` R package, we recommend to look at
-the vignette (~ package manual) *intro_to_healthiar*, which you cou can
-access
+You have different materials to learn about the R package `healthiar`.
+
+### Cheat sheet
+
+Have a quick and visual look at the [cheat
+sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html)
+[![Package
+Cheatsheet](reference/figures/cheatsheet_healthiar_1st_page.png)](https://swisstph.github.io/healthiar/articles/cheatsheet.html)
+
+### Vignette
+
+Read the vignette (~ package manual) *intro_to_healthiar*, which you you
+can access
 
 1.  on the [package
-    website](https://swisstph.github.io/healthiar/articles/index.html)
+    website](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html)
     (recommended)
 
 2.  in R Studio: Click on the *Packages* tab in RStudio, scroll down to
@@ -51,10 +61,7 @@ access
 3.  in the web browser: Run `browseVignettes("healthiar")` in the R
     console and the page will open up in your browser
 
-Additionally, a 45 minutes introduction to the package can be found
-[here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ). The slides of
-the presentation can be found
-[here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop)
+### Function documentation
 
 See the function help pages for information about specific functions. In
 RStudio, you can access the function documentation of e.g. the function
@@ -68,6 +75,14 @@ RStudio, you can access the function documentation of e.g. the function
     in RStudio (with `healthiar` loaded)
 
 3.  going to the `Packages tab` and then clicking on `healthiar`
+
+### Video
+
+Watch a 45 minutes video from an online international workshop (30
+September 2025), which can be found
+[here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ). The slides of
+the presentation can be found
+[here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop).
 
 ## Installation
 

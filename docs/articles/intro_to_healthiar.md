@@ -23,13 +23,17 @@ of the EU project that initiated the development of `healthiar`
 noise. However, `healthiar` could be used for other exposures such as
 green spaces, chemicals, physical activity…
 
-See below a an overview of the package. The whole list of functions
-included in `healthiar` is available
-[here](https://swisstph.github.io/healthiar/reference/index.html).
+See below a an overview of the `healthiar`, which is the first page of
+the [cheat
+sheet](https://swisstph.github.io/healthiar/articles/cheatsheet_healthiar.html).
+The whole list of functions included in `healthiar` is linked there and
+available in the
+[reference](https://swisstph.github.io/healthiar/reference/index.html).
 
-![Figure:healthiar overview](images/package_overview.png)
+![Figure: Overview of
+healthiar](../reference/figures/cheatsheet_healthiar_1st_page.png)
 
-Figure:`healthiar` overview
+Figure: Overview of `healthiar`
 
 ## Input & output data
 
@@ -177,7 +181,7 @@ exposure in a country.
 
 #### Methodological refresher
 
-![Figure: Relative risk approach](images/bod_rr.png)
+![Figure: Relative risk approach](../reference/figures/bod_rr.png)
 
 Figure: Relative risk approach
 
@@ -249,7 +253,7 @@ traffic) noise exposure.
 
 #### Refresher - Burden of disease with absolute risk
 
-![Figure: Absolute risk approach](images/bod_ar.png)
+![Figure: Absolute risk approach](../reference/figures/bod_ar.png)
 
 Figure: Absolute risk approach
 
