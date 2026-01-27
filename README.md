@@ -29,23 +29,28 @@
 - Consider social inequalities in the assessment and stratify the results
 
 ## Getting started 
-To get started with the `healthiar` R package, we recommend to look at the vignette (~ package manual) *intro_to_healthiar*, which you cou can access
 
-a) on the [package website](https://swisstph.github.io/healthiar/articles/index.html) (recommended)
+You have different materials to learn about the R package `healthiar`.
 
-b) in R Studio: Click on the *Packages* tab in RStudio, scroll down to the *healthiar* package and clicking on the hyperlinks *healthiar* > *User guides, package vignettes and other documentation* 
+1) Have a quick and visual look at the [cheat sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html)
 
-c) in the web browser: Run `browseVignettes("healthiar")` in the R console and the page will open up in your browser
+2) Read the vignette (~ package manual) *intro_to_healthiar*, which you you can access
 
-Additionally, a 45 minutes introduction to the package can be found [here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ). The slides of the presentation can be found [here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop)
+  a) on the [package website](https://swisstph.github.io/healthiar/articles/index.html) (recommended)
 
-See the function help pages for information about specific functions. In RStudio, you can access the function documentation of e.g. the function `attribute_health` by
+  b) in R Studio: Click on the *Packages* tab in RStudio, scroll down to the *healthiar* package and clicking on the hyperlinks *healthiar* > *User guides, package vignettes and other documentation* 
+  
+  c) in the web browser: Run `browseVignettes("healthiar")` in the R console and the page will open up in your browser
 
-a) going to the [reference page of the package website](https://swisstph.github.io/healthiar/reference/index.html)
+3) Watch a 45 minutes video from an online international workshop, which can be found [here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ). The slides of the presentation can be found [here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop)
 
-b) running `?attribute_health` in RStudio (with `healthiar` loaded)
+4) See the function help pages for information about specific functions. In RStudio, you can access the function documentation of e.g. the function `attribute_health` by
 
-c) going to the `Packages tab` and then clicking on `healthiar`
+  a) going to the [reference page of the package website](https://swisstph.github.io/healthiar/reference/index.html)
+  
+  b) running `?attribute_health` in RStudio (with `healthiar` loaded)
+  
+  c) going to the `Packages tab` and then clicking on `healthiar`
 
 ## Installation
 We recommend to frequently install the newest *healthiar* version. Please note that **`healthiar` requires R version 4.3.0 or higher**. There are two options to install *healthiar*:
