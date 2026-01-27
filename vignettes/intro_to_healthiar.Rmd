@@ -52,17 +52,20 @@ See below a an overview of the package. The whole list of functions included in 
 ![Figure:`healthiar` overview](images/package_overview.png){width="700"}
 
 
+# Input & output data
 
 # Function examples
 
 The descriptions of the [`healthiar` functions](https://swisstph.github.io/healthiar/reference/index.html) provide examples that you can execute (with `healthiar` loaded) by running `example("function_name")`, e.g. `example("attribute_health")`. In the sections below in this vignette, you find additional examples and more detailed explanations.
 
+## Input
 
 # Relative risk 
 
 ### Goal (e.g.)
 
 To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a country.
+### Hard coded
 
 ### Methodological refresher
 
@@ -86,6 +89,7 @@ results_pm_copd <- attribute_health(
 For alternative ERF shapes see the function documentation of `attribute_health()`.
 
 #### Pre-loaded data
+### Columns
 
 `healthiar` comes with some example data that start with `exdat_` that allow you to test functions. Some of these example data will be used in some examples in this vignette.
 
@@ -115,6 +119,10 @@ If you want to know more about the concept of tidy format, read [this article of
 
 
 Every `attribute_health()` output consists of two lists ("folders"):
+## Output
+
+#### Structure
+
 
 -   `health_main` contains the main results
 
@@ -135,6 +143,7 @@ Every `attribute_health()` output consists of two lists ("folders"):
         - `age_group`: contains results by age groups (only present if function argument `age_group` sepcified)
 
 *NOTE*: `attribute_lifetable()` creates additional output that is specific to life table calculations
+#### Access
 
 ### Main results
 
