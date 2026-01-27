@@ -31,6 +31,56 @@ included in `healthiar` is available
 
 Figure:`healthiar` overview
 
+## Input & output data
+
+### Input
+
+You can enter data in `healthiar` functions using: - hard coded values
+or - columns inside pre-loaded data frames or tibbles.
+
+Let’s see some examples calling the most important function in
+`healthiar`:
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
+
+#### Hard coded
+
+Depending on the function argument, you will need to enter numeric or
+character values.
+
+``` r
+results_pm_copd <- attribute_health(
+  exp_central = 8.85, 
+  rr_central = 1.369, 
+  rr_increment = 10,  
+  erf_shape = "log_linear",
+  cutoff_central = 5,
+  bhd_central = 30747 
+)
+```
+
+#### Columns
+
+`healthiar` comes with some example data that start with `exdat_` that
+allow you to test functions. Some of these example data will be used in
+some examples in this vignette.
+
+Now let’s
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+with input data from the `healthiar` example data. Note that you can
+easily provide input data to the function argument using the `$`
+operator.
+
+``` r
+results_pm_copd <- attribute_health(
+  erf_shape = "log_linear",
+  rr_central = exdat_pm$relative_risk, 
+  rr_increment = 10, 
+  exp_central = exdat_pm$mean_concentration,
+  cutoff_central = exdat_pm$cut_off_value,
+  bhd_central = exdat_pm$incidence
+)
+```
+
 Be aware that `healthiar` functions are easier to use if your data is
 prepared in a tidy format, i.e.:
 
@@ -40,10 +90,72 @@ prepared in a tidy format, i.e.:
 
 - Each value is a cell; each cell is a single value.
 
-Source: Hadley Wickham (2014). Tidy Data.
-[Link](https://doi.org/10.18637/jss.v059.i10). For additional
-information see this [informal explanation of tidy
-data](https://cran.r-project.org/package=tidyr) (by the author).
+If you want to know more about the concept of tidy format, read [this
+article of Hadley Wickham
+(2014)](https://doi.org/10.18637/jss.v059.i10).
+
+### Output
+
+##### Structure
+
+The output of the `healthiar`function
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+consists of two lists (“folders”):
+
+- `health_main` contains the main results
+
+- `health_detailed` contained detailed results and additional info about
+  the assessment, e.g.:
+
+  - `results_raw` tibble (very similar to a `data.frame`) that contains
+    the detailed results
+
+  - `input_args` list of all arguments used in the assessment (including
+    some internal arguments)
+
+  - `input_table` tibble that contains all input data entered by the
+    user or derived for the calculations
+
+  - `results_by_...` tibble that contains the results stratified by the
+    categories of the following arguments (only if entered)
+
+    - `geo_id_micro`
+
+    - `sex`
+
+    - `age_group`
+
+##### Access
+
+A similar structure can be found in other large functions in
+`helathiar`,
+e.g. [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
+[`compare()`](https://swisstph.github.io/healthiar/reference/compare.md),
+[`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md)
+or
+[`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md).
+In some functions, different elements are available in the output. For
+instance,
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+creates additional output that is specific to life table calculations.
+
+There exist different, equivalent ways of accessing the output:
+
+- With `$` operator: `results_pm_copd$health_main$impact_rounded` (as in
+  the example above)
+
+- By mouse: go to the *Environment* tab in RStudio and click on the
+  variable you want to inspect, and then open the `health_main` results
+  table
+
+- With `[[]]` operator `results_pm_copd[["health_main"]]`
+
+- With `pluck()` & `pull()`: use the
+  [`purrr::pluck`](https://purrr.tidyverse.org/reference/pluck.html)
+  function to select a list and then the
+  [`dplyr::pull`](https://dplyr.tidyverse.org/reference/pull.html)
+  function extract values from a specified column,
+  e.g. `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
 
 ------------------------------------------------------------------------
 
@@ -71,34 +183,9 @@ Figure: Relative risk approach
 
 #### Function call
 
-##### Hard coded
-
 ``` r
 results_pm_copd <- attribute_health(
-  erf_shape = "log_linear", # shape of the exposure-response function (ERF)
-  rr_central = 1.369, # relative risk (RR) central estimate
-  rr_increment = 10,  # increment for which relative risk is valid (in \\mu g / m^3)
-  exp_central = 8.85, # PM2.5 exposure (in \\mu g / m^3) (here: population-weighted)
-  cutoff_central = 5, # cutoff (in \\mu g / m^3) below which no health effects occur 
-  bhd_central = 30747 # baseline health data (BHD; here: COPD incidence)
-)
-```
-
-For alternative ERF shapes see the function documentation of
-[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
-
-##### Pre-loaded data
-
-`healthiar` comes with some example data that start with `exdat_` that
-allow you to test functions. Some of these example data will be used in
-some examples in this vignette.
-
-Now we call `attribute_health` with input data from the `healthiar`
-example data. Note that we can easily provide input data to the function
-argument using the `$` operator.
-
-``` r
-results_pm_copd <- attribute_health(
+  approach_risk = "relative_risk", # If you do not call this argument, "relative_risk" will be assigned by default.
   erf_shape = "log_linear",
   rr_central = exdat_pm$relative_risk, 
   rr_increment = 10, 
@@ -108,60 +195,7 @@ results_pm_copd <- attribute_health(
 )
 ```
 
-#### Output structure
-
-Every
-[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
-output consists of two lists (“folders”):
-
-- `health_main` contains the main results
-
-- `health_detailed` detailed results and additional info about the
-  assessment:
-
-  - `results_raw` tibble that contains the detailed results
-
-  - `input_args` contains a complete list of all arguments used in the
-    assessment (including some internal arguments)
-
-  - `input_table` tibble that contains all input data entered by the
-    user or derived for the calculations
-
-  - `results_by_...`
-
-    - `geo_id_micro`: contains results by the inputted or default micro
-      (e.g. high resolution) geo IDs
-
-    - `sex`: contains results by sex (only present if function argument
-      `sex` specified)
-
-    - `age_group`: contains results by age groups (only present if
-      function argument `age_group` sepcified)
-
-*NOTE*:
-[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
-creates additional output that is specific to life table calculations
-
 #### Main results
-
-Let’s inspect the main results. There exist different, equivalent ways
-of accessing the output:
-
-- With `$` operator: `results_pm_copd$health_main$impact_rounded` (as in
-  the example above)
-
-- By mouse: go to the *Environment* tab in RStudio and click on the
-  variable you want to inspect, and then open the `health_main` results
-  table
-
-- With `[[]]` operator `results_pm_copd[["health_main"]]`
-
-- With `pluck()` & `pull()`: use the
-  [`purrr::pluck`](https://purrr.tidyverse.org/reference/pluck.html)
-  function to select a list and then the
-  [`dplyr::pull`](https://dplyr.tidyverse.org/reference/pull.html)
-  function extract values from a specified column,
-  e.g. `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
 
 ``` r
 results_pm_copd$health_main
@@ -176,8 +210,11 @@ results_pm_copd$health_main
 #> #   pop_fraction <dbl>
 ```
 
-It is a table of the format `tibble` (very similar to a `data.frame`) of
-3 rows and 23 columns. Let’s zoom in on some relevant aspects.
+It is a table of the format `tibble` of 3 rows and 23 columns. Be aware
+that this main output contains input data, some intermediate steps and
+the final results in different formats.
+
+Let’s zoom in on some relevant aspects.
 
 ``` r
 results_pm_copd$health_main |> 
@@ -202,9 +239,6 @@ Some of the most results columns include:
 - *impact* raw impact/burden
 - *pop_fraction* population attributable fraction (PAF) or population
   impact fraction (PIF)
-
-*NOTE*: The main output contains more columns that provide additional
-information about the assessment.
 
 ## Absolute risk
 
@@ -568,7 +602,7 @@ results_pm_copd_mr_brt <- attribute_health(
 The ERF curve created looks as follows
 
 ![ERF
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-38-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-39-1.png)
 
 Alternatively, other functions
 (e.g. [`approxfun()`](https://rdrr.io/r/stats/approxfun.html)) can be
@@ -1256,7 +1290,7 @@ f(c) =
 The categorical ERF curve created looks as follows.
 
 ![ERF
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-90-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-91-1.png)
 
 ## Economic dimension
 
@@ -1525,7 +1559,7 @@ eval(mdi$mdi_detailed$boxplot)
 ```
 
 ![Boxplot of Normalized Indicators and
-MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-105-1.png)
+MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-106-1.png)
 Analogeously, to reproduce the histogram run
 
 ``` r
@@ -1533,7 +1567,7 @@ eval(mdi$mdi_detailed$histogram)
 ```
 
 ![Histogram of MDI with normal
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-106-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-107-1.png)
 
 ------------------------------------------------------------------------
 
