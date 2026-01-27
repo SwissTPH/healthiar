@@ -46,15 +46,10 @@ This vignette will tell you about `healthiar` and show you how to use `healthiar
 
 The `healthiar` functions allow you to quantify and monetize the health impacts (or burden of disease) attributable to exposure. The main focus of the EU project that initiated the development of `healthiar` (BEST-COST) has been two environmental exposures:  air pollution and noise. However, `healthiar` could be used for other exposures such as green spaces, chemicals, physical activity...
 
-See below a an overview of the `healthiar`, which is the first page of the cheat sheet. The whole list of functions included in `healthiar` is linked there and available in the [reference](https://swisstph.github.io/healthiar/reference/index.html). 
+See below a an overview of the `healthiar`, which is the first page of the [cheat sheet](https://swisstph.github.io/healthiar/articles/cheatsheet_healthiar.html). The whole list of functions included in `healthiar` is linked there and available in the [reference](https://swisstph.github.io/healthiar/reference/index.html). 
 
 
-Figure: Overview of `healthiar`
-
-<a href="https://healthiar.github.io/pkg/cheatsheet/cheatsheet_healthiar.pdf">
-  <img src="man/figures/cheatsheet_healthiar_1st_page.png" width="700">
-</a>
-
+![Figure: Overview of `healthiar`](../man/figures/cheatsheet_healthiar_1st_page.png)
 
 # Input & output data
 
@@ -166,7 +161,7 @@ To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a c
 
 ### Methodological refresher
 
-![Figure: Relative risk approach](images/bod_rr.png){width="700"}
+![Figure: Relative risk approach](../man/figures/bod_rr.png){width="700"}
 
 ### Function call
 
@@ -216,7 +211,7 @@ To quantify the incidence cases of high annoyance attributable to (road traffic)
 
 ### Refresher - Burden of disease with absolute risk
 
-![Figure: Absolute risk approach](images/bod_ar.png){width="700"}
+![Figure: Absolute risk approach](../man/figures/bod_ar.png){width="700"}
 
 ### Function call
 
