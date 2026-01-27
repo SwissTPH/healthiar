@@ -1,9 +1,0 @@
----
-title: "Cheat sheet"
-output: html_document
----
-
-
-<a href="../cheatsheet_healthiar_1st_page.png"> <img src="../cheatsheet_healthiar_1st_page.png" width="100%"/> </a>
-
-<p><a href="../cheatsheet/mypkg-cheatsheet.pdf"> Download the full PDF </a></p>
