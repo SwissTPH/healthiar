@@ -174,7 +174,7 @@ There is extensive literature on health impact quantification using the relative
 #### Population attributable fraction
 The general integral form for the **population attributable fraction (PAF)**:
 
-$$PAF = \frac{\int RR(x)PE(x)dx - 1}{\int RR(x)PE(x)dx}$$
+$$PAF = \frac{\int RRexp(x)PE(x)dx - 1}{\int RRexp(x)PE(x)dx}$$
 
 Where:
 
@@ -191,26 +191,28 @@ $$PAF = \frac{\sum RRexp_i \times PE_i - 1}{\sum RRexp_i \times PE_i}$$
 
 Alternatively, an equivalent form is:
 
-$$PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}$$
+$$PAF = \frac{\sum PE_i(RRexp_i - 1)}{\sum PE_i(RRexp_i - 1) + 1}$$
 
 ##### Simplified for single exposure value 
 The single exposure value corresponds to the population weighted mean concentration.
 
 $$PAF = \frac{RRexp - 1}{RRexp}$$
 #### Scaling relative risk
-How to get the relative risk at exposure level (RRexp). This is normally different to the one published in the epidemiological literature. The equations used for scaling relative risk depend on the chosen exposure-response function shapes:
+The relative risk at exposure level (RRexp) is called `rr_at_exp` in `healthiar` and is part of the output of `attribute_health()` and `attribute_lifetable()`. RRexp can also be calculated using `get_risk()`.
+
+But how to get this relative risk at exposure level (RRexp)? This is normally different to the one published in the epidemiological literature (RRlit). The equations used for scaling relative risk depend on the chosen exposure-response function shapes:
 
 - linear
-$$rr\_at\_exp = 1 + \frac{rr - 1}{rr\_increment} \cdot (exp - cutoff)$$
+$$RRexp = 1 + \frac{RRlit - 1}{RRlit\_Increment} \cdot (exp - cutoff)$$
 
 - log-linear [@Pozzer2023_gh]
-$$rr\_at\_exp = e^{\frac{\log(rr)}{rr\_increment} \cdot (exp - cutoff)}$$
+$$RRexp = e^{\frac{\log(RRlit)}{RRlit\_increment} \cdot (exp - cutoff)}$$
 
 - log-log [@Pozzer2023_gh]
-$$rr\_at\_exp = \left( \frac{exp + 1}{cutoff + 1} \right)^{\frac{\log(rr)}{\log(rr\_increment + cutoff + 1) - \log(cutoff + 1)}}$$
+$$RRexp = \left( \frac{exp + 1}{cutoff + 1} \right)^{\frac{\log(RRlit)}{\log(RRlit\_Increment + cutoff + 1) - \log(cutoff + 1)}}$$
 
 - linear-log [@Pozzer2023_gh]
-$$rr\_at\_exp = 1 + \frac{\log(rr - 1)}{\log(rr\_increment + cutoff + 1) - \log(cutoff + 1)} \cdot \frac{\log(exp + 1)}{\log(cutoff + 1)}$$
+$$RRexp = 1 + \frac{\log(RRlit - 1)}{\log(RRlit\_increment + cutoff + 1) - \log(cutoff + 1)} \cdot \frac{\log(exp + 1)}{\log(cutoff + 1)}$$
 For conversion of hazard ratios and/or odds ratios to relative risks refer to [@VanderWeele2019_biom] and/or use the conversion tools developed by the Teaching group in EBM in 2022 for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
 
@@ -1258,6 +1260,55 @@ scenario_B <- attribute_health(
 ### Goal (e.g.)
 
 To compare the health impacts in the scenario "before intervention" vs. "after intervention".
+
+### Methodology
+
+Two approaches can be used for the comparison of scenarios:
+
+- Population impact fraction (PIF)
+
+- Delta
+
+Please note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2 (e.g. comparison of two scenarios at the same time point), while the delta comparison approach, the difference between two scenarios is obtained by subtraction. Therefore, the delta approach is suited for comparison of a situation now with a situation in the future.
+
+#### Population Impact Fraction (PIF)
+
+The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality when exposure to a risk factor is changed (for instance due to an intervention). 
+
+##### General Integral Form
+The most general equation describing this mathematically is an integral form [@WHO2003_report; Murray2003-spbm]:
+
+$$PIF = \frac{\int RR(x)PE(x)dx - \int RR(x)PE'(x)dx}{\int RR(x)PE(x)dx}$$
+
+**Where:**
+
+* $x$ = exposure level
+* $PE(x)$ = population distribution of exposure
+* $PE'(x)$ = alternative population distribution of exposure
+* $RRexp(x)$ = relative risk at exposure level compared to the reference level
+
+###### Categorical Exposure Form
+If the population exposure is described as a categorical rather than continuous exposure, the integrals may be converted to sums [@WHO2003_report; Murray2003-spbm]:
+
+$$PIF = \frac{\sum RR_{i} \times PE_{i} - \sum RR_{i}PE'_{i}}{\sum RR_{i}PE_{i}}$$
+
+**Where:**
+
+* $i$ = the exposure category (e.g., in bins of 1 $\mu g/m^3$ $PM_{2.5}$ or 5 dB noise exposure)
+* $PE_i$ = fraction of population in exposure category $i$
+* $PE'_i$ = fraction of population in category $i$ for alternative (ideal) exposure scenario
+* $RRexp_i$ = relative risk for exposure category level $i$ compared to the reference level
+
+
+##### Population weighted mean concentration form
+Finally, if the exposure is provided as the population weighted mean concentration, the equation for the PIF is reduced to:
+
+$$PIF = \frac{RRexp - RRexp_{alt}}{RRexp}$$
+
+**Where:**
+
+* $RRexp$ = relative risk associated with the population weighted mean exposure
+* $RRexp{alt}$ = relative risk associated with the population weighted mean for the alternative exposure scenario
 
 ### Function call
 
