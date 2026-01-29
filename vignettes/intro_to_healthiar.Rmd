@@ -1697,3 +1697,7 @@ ERF = exposure-response function
 RR/rr = relative risk
 
 YLL/yll = years of life lost
+
+------------------------------------------------------------------------
+
+# References
