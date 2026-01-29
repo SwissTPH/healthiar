@@ -180,22 +180,35 @@ Where:
 
 * $PE(x)$ = population distribution of exposure
 
-* $RR(x)$ = relative risk at exposure level compared to reference
+* $RRexp(x)$ = relative risk at exposure level compared to reference
 
 ##### Simplified for categorical exposure distribution
 If exposure is categorical, the integrals are converted to sums:
 
-$$PAF = \frac{\sum RR_i \times PE_i - 1}{\sum RR_i \times PE_i}$$
+$$PAF = \frac{\sum RRexp_i \times PE_i - 1}{\sum RRexp_i \times PE_i}$$
 
 Alternatively, an equivalent form is:
 
 $$PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}$$
 
 ##### Simplified for single exposure value 
-The single exposure value corresponds to the Population Weighted Mean Concentration (PWC)
+The single exposure value corresponds to the population weighted mean concentration.
 
-$$PAF = \frac{RR_{PWC} - 1}{RR_{PWC}}$$
+$$PAF = \frac{RRexp - 1}{RRexp}$$
+#### Scaling relative risk
+How to get the relative risk at exposure level (RRexp). This is normally different to the one published in the epidemiological literature. The equations used for scaling relative risk depend on the chosen exposure-response function shapes:
 
+- linear
+$$rr\_at\_exp = 1 + \frac{rr - 1}{rr\_increment} \cdot (exp - cutoff)$$
+
+- log-linear [@Pozzer2023_gh]
+$$rr\_at\_exp = e^{\frac{\log(rr)}{rr\_increment} \cdot (exp - cutoff)}$$
+
+- log-log [@Pozzer2023_gh]
+$$rr\_at\_exp = \left( \frac{exp + 1}{cutoff + 1} \right)^{\frac{\log(rr)}{\log(rr\_increment + cutoff + 1) - \log(cutoff + 1)}}$$
+
+- linear-log [@Pozzer2023_gh]
+$$rr\_at\_exp = 1 + \frac{\log(rr - 1)}{\log(rr\_increment + cutoff + 1) - \log(cutoff + 1)} \cdot \frac{\log(exp + 1)}{\log(cutoff + 1)}$$
 For conversion of hazard ratios and/or odds ratios to relative risks refer to [@VanderWeele2019_biom] and/or use the conversion tools developed by the Teaching group in EBM in 2022 for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
 
