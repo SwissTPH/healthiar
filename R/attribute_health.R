@@ -85,10 +85,22 @@
 #'
 #' \code{duration_central}, \code{duration_lower}, \code{duration_upper}
 #' \emph{Only applicable in assessments of YLD (years lived with disability).} Measured in years. A value of 1 (year) refers to the prevalence-based approach, while values above 1 to the incidence-based approach.
-#
+#'
+#'
+#' \strong{Methodology}
+#'
+#' Information on methodology (including equations and literature) is available in the vignette.
+#' More specifically, see chapters:
+#'
+#' - \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}
+#'
+#' - \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{absolute risk}
+#'
+#'
 # VALUE ########################################################################
 #' @inherit attribute_master return
-
+#'
+#'
 # EXAMPLES #####################################################################
 #' @examples
 #' # Goal: attribute lung cancer cases to population-weighted PM2.5 exposure
@@ -160,10 +172,7 @@
 #'
 #' results$health_main$impact
 #'
-
-
 #' @author Alberto Castro & Axel Luyten
-
 #' @export
 
 
