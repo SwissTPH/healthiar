@@ -107,7 +107,7 @@ Be aware that `healthiar` functions are easier to use if your data is prepared i
 
 - Each value is a cell; each cell is a single value.
 
-If you want to know more about the concept of tidy format, read [this article of Hadley Wickham (2014)](https://doi.org/10.18637/jss.v059.i10). 
+To know more about the concept of tidy format, see the article by [@Wickham2014_jss].
 
 For example, in `attribute health()` the length of the input vectors to be entered in the arguments must be either 1 or the result of the combinations of the different values of:
 
@@ -165,7 +165,9 @@ The descriptions of the [`healthiar` functions](https://swisstph.github.io/healt
 
 To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a country.
 
-### Method
+### Methodology
+
+There is extensive literature on health impact quantification using the relative risk approach [e.g., Pozzer2023_gh; @Soares2020_report; @GBD2020_tl; @Steenland2006-e; @WHO2003_report]. 
 
 ![Figure: Relative risk approach](../man/figures/bod_rr.png){width="700"}
 
@@ -258,8 +260,8 @@ Some of the most results columns include:
 ### Goal (e.g.)
 To quantify the incidence cases of high annoyance attributable to (road traffic) noise exposure.
 
-For the absolute risk, the population exposed instead of baseline health data (i.e. disease-specific burden of disease) is used.
 ### Methodology
+For the absolute risk, the population exposed instead of baseline health data (i.e. disease-specific burden of disease) is used [@WHO2011_report].
 
 ![Figure: Absolute risk approach](../man/figures/bod_ar.png){width="700"}
 
@@ -1800,6 +1802,8 @@ exp = exposure
 ERF = exposure-response function
 
 RR/rr = relative risk
+
+WHO = World Health Organization
 
 YLL/yll = years of life lost
 
