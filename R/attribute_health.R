@@ -156,7 +156,7 @@
 #'
 #' results$health_main$impact_rounded # Attributable cases
 #'
-#' @examples
+#'
 #' # Goal: attribute cases of high annoyance to (road traffic) noise exposure
 #' # using absolute risk
 #'
@@ -169,7 +169,7 @@
 #'
 #' results$health_main$impact_rounded # Attributable high annoyance cases
 #'
-#' @examples
+#'
 #' # Goal: attribute disease cases to PM2.5 exposure in multiple geographic
 #' # units, such as municipalities, provinces, countries, ...
 #'
@@ -194,7 +194,7 @@
 #'   impact_rounded
 #' )
 #'
-#' @examples
+#'
 #' # Goal: determine attributable YLD (years lived with disability)
 #' results  <- attribute_health(
 #'   exp_central = 8.85,
