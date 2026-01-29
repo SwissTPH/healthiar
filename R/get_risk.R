@@ -13,39 +13,25 @@
 
 # DETAILS ######################################################################
 #' @details
+#'
 #' \strong{Function arguments}
-#' @details
 #' \code{erf_eq}
-#' @details
-#' If the function is provided as \code{string}, it can only contain the variable c (exposure), e.g. "3+c+c^2". If the function is provided as a \code{function}, the object must be of the class function. If only the values of the x-axis (exposure) and y axis (relative risk) of the dots in the exposure-response function are available, a cubic spline natural interpolation can be assumed to get the function using, e.g., \code{stats::splinefun(x, y, method="natural")}
-#' @details
-#' \strong{Equations for scaling of relative risk}
-#' @details
-#' \emph{linear ERF}
-#' \deqn{rr\_at\_exp =  1 + \frac{(rr - 1)}{rr\_increment} \cdot (exp - cutoff)}
-#' @details
-#' \emph{log-linear ERF}
-#' @details
-#' \deqn{rr\_at\_exp = e^{\frac{\log(\mathrm{rr})}{\mathrm{rr\_increment}} \cdot (\mathrm{exp} - \mathrm{cutoff})}}
-#' @details
-#' \emph{log-log ERF}
-#' @details
-#' \deqn{rr\_at\_exp = (\frac{exp + 1}{cutoff + 1})^{\frac{\log(\mathrm{rr})}{\log(\mathrm{rr\_increment + cutoff + 1}) - \log(cutoff + 1)}}}
-#' @details
-#' \emph{linear-log ERF}
-#' @details
-#' \deqn{rr\_at\_exp = 1 + \frac{\log(\mathrm{rr - 1})}{\log(\mathrm{rr\_increment + cutoff + 1}) - \log(cutoff + 1)} \cdot \frac{\log(exp + 1)}{\log(cutoff + 1)}}
-#' @details
-#' \strong{Sources}
-#' @details
-#' For the log-linear, log-log and linear-log exposure-response function equations see Pozzer et al. 2022 (https://doi.org/10.1029/2022GH000711).
-
+#' #' If the function is provided as \code{string}, it can only contain the variable c (exposure), e.g. "3+c+c^2". If the function is provided as a \code{function}, the object must be of the class function. If only the values of the x-axis (exposure) and y axis (relative risk) of the dots in the exposure-response function are available, a cubic spline natural interpolation can be assumed to get the function using, e.g., \code{stats::splinefun(x, y, method="natural")}
+#'
+#' \strong{Methodology}
+#'
+#' Information on methodology (including equations and literature) is available in the vignette.
+#' More specifically, see chapter:
+#'
+#' - \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}
+#'
 # VALUE ########################################################################
 #' @returns
 #' This function returns the \code{numeric} risk value(s) at the specified exposure level(s), referred to as \emph{rr_at_exp} in the relative risk equations above.
 
 # EXAMPLES #####################################################################
 #' @examples
+#'
 #' # Goal: scale relative risk to observed exposure level
 #' get_risk(
 #'   rr = 1.05,
@@ -55,14 +41,12 @@
 #'   cutoff = 5
 #' )
 #'
-#' @examples
 #' # Goal: determine the absolute risk for high annoyance at specific noise exposure levels
 #' get_risk(
 #'   erf_eq = "78.9270-3.1162*c+0.0342*c^2",
 #'   exp = c(57.5, 62.5, 67.5, 72.5, 77.5)
 #' )
 #'
-#' @examples
 #' # Goal: attribute COPD cases to air pollution exposure
 #' # by applying a user-defined exposure response function,
 #' # e.g. MR-BRT curves from Global Burden of Disease study.
