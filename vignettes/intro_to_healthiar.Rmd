@@ -165,9 +165,39 @@ The descriptions of the [`healthiar` functions](https://swisstph.github.io/healt
 
 To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a country.
 
-### Methodological refresher
+### Method
 
 ![Figure: Relative risk approach](../man/figures/bod_rr.png){width="700"}
+
+#### Population attributable fraction
+The general integral form for the **population attributable fraction (PAF)**:
+
+$$PAF = \frac{\int RR(x)PE(x)dx - 1}{\int RR(x)PE(x)dx}$$
+
+Where:
+
+* $x$ = exposure level
+
+* $PE(x)$ = population distribution of exposure
+
+* $RR(x)$ = relative risk at exposure level compared to reference
+
+##### Simplified for categorical exposure distribution
+If exposure is categorical, the integrals are converted to sums:
+
+$$PAF = \frac{\sum RR_i \times PE_i - 1}{\sum RR_i \times PE_i}$$
+
+Alternatively, an equivalent form is:
+
+$$PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}$$
+
+##### Simplified for single exposure value 
+The single exposure value corresponds to the Population Weighted Mean Concentration (PWC)
+
+$$PAF = \frac{RR_{PWC} - 1}{RR_{PWC}}$$
+
+For conversion of hazard ratios and/or odds ratios to relative risks refer to [@VanderWeele2019] and/or use the conversion tools developed by the Teaching group in EBM in 2022 for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
+
 
 ### Function call
 
@@ -215,9 +245,21 @@ Some of the most results columns include:
 ### Goal (e.g.)
 To quantify the incidence cases of high annoyance attributable to (road traffic) noise exposure.
 
-### Refresher - Burden of disease with absolute risk
+### Method
+For the absolute risk, the population exposed instead of baseline health data (i.e. disease-specific burden of disease) is used.
 
 ![Figure: Absolute risk approach](../man/figures/bod_ar.png){width="700"}
+
+$$N = \sum AR_i \times PE_i$$
+
+Where:
+
+* $N$ = attributed cases
+
+* $AR_i$ = absolute risk at category $i$
+
+* $PE_i$ = absolute population exposed at category $i$
+
 
 ### Function call
 
