@@ -1035,6 +1035,13 @@ rm(results_pm_deaths)
 
 To quantify the years lived with disability (YLD) attributable to air pollution exposure using disability weights.
 
+### Method
+To quantify the YLDs, you can use a prevalence-based or an incidence-based approach [@Kim2022].
+
+* Prevalence-based : Enter `1` (year) in the argument(s) `dw_...` and _prevalence_ cases in `bhd_...`.
+
+* Incidence-based: Enter a value _above_ 1 in `dw_...` and _incidence_ cases in `bhd_...`.  
+
 ### Function call
 
 ```{r}
