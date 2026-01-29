@@ -62,7 +62,9 @@ You can enter data in `healthiar` functions using:
 
 Let's see some examples calling the most important function in `healthiar`: `attribute_health()`.
 
-### Hard coded
+### Hard coded vs. columns
+
+#### Hard coded
 
 Depending on the function argument, you will need to enter numeric or character values.
 
@@ -77,7 +79,7 @@ results_pm_copd <- attribute_health(
 )
 ```
 
-### Columns
+#### Columns
 
 `healthiar` comes with some example data that start with `exdat_` that allow you to test functions. Some of these example data will be used in some examples in this vignette.
 
@@ -94,41 +96,44 @@ results_pm_copd <- attribute_health(
 )
 ```
 
+
+### Tidy data
+
 Be aware that `healthiar` functions are easier to use if your data is prepared in a tidy format, i.e.:
 
--   Each variable is a column; each column is a variable.
+- Each variable is a column; each column is a variable.
 
--   Each observation is a row; each row is an observation.
+- Each observation is a row; each row is an observation.
 
--   Each value is a cell; each cell is a single value.
+- Each value is a cell; each cell is a single value.
 
 If you want to know more about the concept of tidy format, read [this article of Hadley Wickham (2014)](https://doi.org/10.18637/jss.v059.i10). 
+
+For example, in `attribute health()` the length of the input vectors to be entered in the arguments must be either 1 or the result of the combinations of the different values of:
+
+- `geo_id_micro`
+
+- `exp_...`
+
+- `sex` 
+
+- `age`
+
+- (`info` for further sub-group analysis)
 
 
 ## Output
 
 #### Structure
 
-The output of the `healthiar`function `attribute_health()` consists of two lists ("folders"):
+The output of the `healthiar`function `attribute_health()` and `attribute_lifetable` consists of two lists ("folders"):
 
 -   `health_main` contains the main results
 
--   `health_detailed` contained detailed results and additional info about the assessment, e.g.:
+-   `health_detailed` contained detailed results and additional info about the assessment.
 
-    -   `results_raw` tibble (very similar to a `data.frame`) that contains the detailed results
+In other `healthiar` functions you can find a similar output structure but using different prefixes. E.g. `social_`in `socialize()` and `monetization_`in `monetitize()`.
 
-    -   `input_args` list of all arguments used in the assessment (including some internal arguments)
-
-    -   `input_table` tibble that contains all input data entered by the user or derived for the calculations
-
-    -   `results_by_...` tibble that contains the results stratified by the categories of the following arguments (only if entered)
-    
-        - `geo_id_micro`
-        
-        - `sex`
-        
-        - `age_group` 
-        
 
 #### Access
 
