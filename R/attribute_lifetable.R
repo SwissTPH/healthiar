@@ -108,27 +108,13 @@
 #' For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
 
 # VALUE ########################################################################
-#' @returns
-#' This function returns a \code{list} containing:
-#' @returns
-#' 1) \code{health_main} (\code{tibble}) containing the main results;
-#' \itemize{
-#'  \item \code{impact} (\code{numeric} column) attributable health burden/impact
-#'  \item \code{pop_fraction} (\code{numeric} column) population attributable fraction; only applicable in relative risk assessments
-#'  \item And many more
-#'  }
-#' @returns
-#' 2) \code{health_detailed} (\code{list}) containing detailed (and interim) results.
-#' \itemize{
-#'  \item \code{results_raw} (\code{tibble}) containing results for each combination of input uncertainty
-#'  \item \code{results_by_geo_id_micro} (\code{tibble}) containing results for each geographic unit under analysis (specified in \code{geo_id_micro} argument)
-#'  \item \code{results_by_year} (\code{tibble}) containing results by year
-#'  \item \code{results_by_sex} (\code{tibble}) containing results by sex
-#'  \item \code{results_by_age_group} (\code{tibble}) containing results by age group
-#'  \item \code{intermediate_calculations} (\code{tibble}) containing intermediate results, among others population projections (for both the exposed and unexposed scenarios) and impact by age and year stored in nested \code{tibbles}
-#'  \item \code{input_table} (\code{tibble}) containing the inputs to each relevant argument
-#'  \item \code{input_args} (\code{list}) containing all the argument inputs used in the background
-#'  }
+#' @inherit attribute_master return
+#' @note
+#' For this specific function, the return object \code{health_detailed} also
+#' contains \code{intermediate_calculations}. This is a nested \code{tibble}
+#' containing intermediate results, such as population projections and
+#' impact by age/year.
+
 
 # EXAMPLES #####################################################################
 #' @examples
