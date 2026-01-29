@@ -81,13 +81,7 @@
 #' \deqn{entry\_population_{i+1} = entry\_population_i \times prob\_survival}
 #' Second, the mid-year population of year i+1 is calculated.
 #' \deqn{midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear}
-#'
-#'
-#' \strong{Conversion of alternative risk measures to relative risks}
-#' For conversion of hazard ratios and/or odds ratios to relative risks,
-#'  refer to https://doi.org/10.1111/biom.13197 and/or
-#'  use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or
-#'  odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
+
 
 # VALUE ########################################################################
 #' @inherit attribute_master return
