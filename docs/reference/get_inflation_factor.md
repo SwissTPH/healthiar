@@ -31,20 +31,16 @@ This function returns the `numeric` inflation factor.
 
 ## Details
 
-**Equation inflation factor (without discounting)**
+**Methodology**
 
-\$\$inflation\\factor = (1 + inflation\\rate)^{n\\years}\$\$
+Information about the methodology (including corresponding equations and
+literature) is available in the package vignette. More specifically, see
+chapters:
+
+- [monetization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization)
 
 ## Author
 
 Alberto Castro & Axel Luyten
 
 ## Examples
-
-``` r
-get_inflation_factor(
-  inflation_rate = 0.02,
-  n_years = 5
-)
-#> [1] 1.104081
-```

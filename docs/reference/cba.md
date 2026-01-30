@@ -59,8 +59,8 @@ cba(
 - discount_shape:
 
   `String` referring to the assumed equation for the discount factor. By
-  default: "exponential". Otherwise: "hyperbolic_harvey_1986" or
-  "hyperbolic_mazur_1987".
+  default: `"exponential"`. Otherwise: `"hyperbolic_harvey_1986"` or
+  `"hyperbolic_mazur_1987"`.
 
 - n_years_benefit, n_years_cost:
 
@@ -98,17 +98,22 @@ elements are added to the existing output.
 
 ## Details
 
-**Equation cost-benefit analysis**
+**Methodology**
 
-\$\$net\\benefit = benefit - cost\$\$
+Information about the methodology (including corresponding equations and
+literature) is available in the package vignette. More specifically, see
+chapters:
 
-\$\$cost\\benefit\\ratio = \frac{benefit}{cost}\$\$
+- [cost-benefit
+  analysis](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cost-benefit-analysis)
 
-\$\$return\\on\\investment = \frac{benefit - cost}{cost } \times 100\$\$
+- [monetization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization)
 
-For the equations regarding the monetization of the cost and the benefit
-please see the function documentation of
-[`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md).
+## References
+
+Boardman AE, Greenberg DH, Vining AR, Weimer DL (2018). *Cost-Benefit
+Analysis: Concepts and Practice*, 5th edition. Cambridge University
+Press, Cambridge, UK. ISBN 978-1108401296.
 
 ## Author
 
@@ -146,4 +151,5 @@ results$cba_main |>
 #>      benefit      cost net_benefit
 #>        <dbl>     <dbl>       <dbl>
 #> 1 151041153. 86260878.   64780274.
+
 ```

@@ -2,7 +2,8 @@
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function calculates the health impacts between two scenarios (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
+#' This function calculates the health impacts between two scenarios
+#' (e.g. before and after a intervention in a health impact assessments) using either the delta or pif approach.
 
 # ARGUMENTS ####################################################################
 #' @param output_attribute_scen_1 Scenario 1 as in the output of attribute()
@@ -11,35 +12,26 @@
 
 # DETAILS ######################################################################
 #' @details
-#' Note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2 (e.g. comparison of two scenarios at the same time).
-#' @details
-#' \strong{Equations population impact fraction (PIF)}
-#' @details The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality when exposure to a risk factor is changed (for instance due to an intervention). The most general equation describing this mathematically is an integral form (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2003b, https://doi.org/10.1186/1478-7954-1-1):
-#' \deqn{PIF = \frac{\int RR(x)PE(x)dx - \int RR(x)PE'(x)dx}{\int RR(x)PE(x)dx}}
-#' @details Where:
-#' @details x     = exposure level
-#' @details PE(x) = population distribution of exposure
-#' @details PE'(x) = alternative population distribution of exposure
-#' @details RR(x) = relative risk at exposure level compared to the reference level
-#' @details
-#' If the population exposure is described as a categorical rather than continuous exposure, the integrals in equation (5) may be converted to sums, resulting in the following equations for the PIF (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2003b, https://doi.org/10.1186/1478-7954-1-1):
-#' \deqn{PIF = \frac{\sum RR_{i} \times PE_{i} - \sum RR_{i}PE'_{i}}{\sum RR_{i}PE_{i}}}
-#' @details Where:
-#' @details i     = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
-#' @details \eqn{PE_i} = fraction of population in exposure category i
-#' @details \eqn{PE'_i} = fraction of population in category i for alternative (ideal) exposure scenario
-#' @details \eqn{RR_i} = relative risk for exposure category level i compared to the reference level
-#' @details
-#' Finally, if the exposure is provided as the population weighted mean concentration (PWC), the equation for the PIF is reduced to:
-#' \deqn{PIF = \frac{RR_{PWC} - RR_{alt PWC}}{RR_{PWC}}}
-#' @details Where:
-#' @details \eqn{RR_{PWC}} = relative risk associated with the population weighted mean exposure
-#' @details \eqn{RR_{PWC}} = relative risk associated with the population weighted mean for the alternative exposure scenario
-#' @details
-#' \strong{Delta comparison approach}
-#' @details
-#' With the delta comparison the difference between two scenarios is obtained by subtraction. The delta approach is suited for all comparison cases, and specifically for comparison of a situation now with a situation in the future.
-
+#'
+#' \strong{Function arguments}
+#'
+#' \code{approach_comparison}
+#' Please note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2
+#' (e.g. comparison of two scenarios at the same time point).
+#'
+#' With the delta comparison approach, the difference between two scenarios is obtained by subtraction.
+#' The delta approach is suited for all comparison cases,
+#' and specifically for comparison of a situation now with a situation in the future.
+#'
+#' \strong{Methodology}
+#'
+#' Information about the methodology
+#' (including corresponding equations and literature)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios}{comparison of two health scenarios}}
+#'
 # VALUE ########################################################################
 #' @returns
 #' This function returns a \code{list} containing:
@@ -120,9 +112,16 @@
 #' )
 #' # Inspect the difference, stored in the impact column
 #' results$health_main$impact
-
+#'
+#' #' @references
+#'
+#' \insertRef{WHO2003_report}{healthiar}
+#'
+#' \insertRef{Murray2003-spbm}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 

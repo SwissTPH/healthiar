@@ -12,18 +12,18 @@
 #' @param cost \code{Numeric value} referring to the investment cost to achieve the reduction of exposure.
 
 # DETAILS ######################################################################
-
 #' @details
-#' \strong{Equation cost-benefit analysis}
-#' @details
-#' \deqn{net\_benefit = benefit - cost}
-#' @details
-#' \deqn{cost\_benefit\_ratio = \frac{benefit}{cost}}
-#' @details
-#' \deqn{return\_on\_investment = \frac{benefit - cost}{cost } \times 100}
-#' @details
-#' For the equations regarding the monetization of the cost and the benefit please see the function documentation of \code{monetize()}.
-
+#'
+#' \strong{Methodology}
+#'
+#' Information about the methodology
+#' (including corresponding equations and literature)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cost-benefit-analysis}{cost-benefit analysis}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization}{monetization}}
+#'
 # VALUE ########################################################################
 #' @returns
 #' This function returns a \code{list} containing:
@@ -71,9 +71,15 @@
 #'
 #' results$cba_main |>
 #'   dplyr::select(benefit, cost, net_benefit)
-
+#'
+#'
+#' @references
+#'
+#' \insertRef{Boardman2018_book}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 

@@ -97,10 +97,12 @@
 #' @returns
 #' 2) \code{health_detailed} (\code{list}) containing detailed (and interim) results.
 #' \itemize{
-#'  \item \code{results_raw} (\code{tibble}) containing results for each combination of input uncertainty
-#'  \item \code{results_by_geo_id_micro} (\code{tibble}) containing results for each geographic unit under analysis (specified in \code{geo_id_micro} argument)
-#'  \item \code{input_table} (\code{tibble}) containing the inputs to each relevant argument
 #'  \item \code{input_args} (\code{list}) containing all the argument inputs used in the background
+#'  \item \code{input_table} (\code{tibble}) containing the inputs after preparation
+#'  \item \code{results_raw} (\code{tibble}) containing results for all combinations of input (geo units, uncertainty, age and sex specific data...)
+#'  \item \code{results_by_...} (\code{tibble}) containing results stratified by each geographic unit, age or sex.
+#'
+#'
 #' }
 
 #' @author Alberto Castro & Axel Luyten

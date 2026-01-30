@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1431</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1433</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,20 +87,22 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><strong>Function arguments</strong></p>
-<p><code>erf_eq</code></p>
-<p>If the function is provided as <code>string</code>, it can only contain the variable c (exposure), e.g. "3+c+c^2". If the function is provided as a <code>function</code>, the object must be of the class function. If only the values of the x-axis (exposure) and y axis (relative risk) of the dots in the exposure-response function are available, a cubic spline natural interpolation can be assumed to get the function using, e.g., <code>stats::splinefun(x, y, method="natural")</code></p>
-<p><strong>Equations for scaling of relative risk</strong></p>
-<p><em>linear ERF</em>
-$$rr\_at\_exp =  1 + \frac{(rr - 1)}{rr\_increment} \cdot (exp - cutoff)$$</p>
-<p><em>log-linear ERF</em></p>
-<p>$$rr\_at\_exp = e^{\frac{\log(\mathrm{rr})}{\mathrm{rr\_increment}} \cdot (\mathrm{exp} - \mathrm{cutoff})}$$</p>
-<p><em>log-log ERF</em></p>
-<p>$$rr\_at\_exp = (\frac{exp + 1}{cutoff + 1})^{\frac{\log(\mathrm{rr})}{\log(\mathrm{rr\_increment + cutoff + 1}) - \log(cutoff + 1)}}$$</p>
-<p><em>linear-log ERF</em></p>
-<p>$$rr\_at\_exp = 1 + \frac{\log(\mathrm{rr - 1})}{\log(\mathrm{rr\_increment + cutoff + 1}) - \log(cutoff + 1)} \cdot \frac{\log(exp + 1)}{\log(cutoff + 1)}$$</p>
-<p><strong>Sources</strong></p>
-<p>For the log-linear, log-log and linear-log exposure-response function equations see Pozzer et al. 2022 (https://doi.org/10.1029/2022GH000711).</p>
+    <p><strong>Function arguments</strong>
+<code>erf_eq</code>
+#' If the function is provided as <code>string</code>, it can only contain the variable c (exposure), e.g. "3+c+c^2". If the function is provided as a <code>function</code>, the object must be of the class function. If only the values of the x-axis (exposure) and y axis (relative risk) of the dots in the exposure-response function are available, a cubic spline natural interpolation can be assumed to get the function using, e.g., <code>stats::splinefun(x, y, method="natural")</code></p>
+<p><strong>Methodology</strong></p>
+<p>Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk">relative risk</a></p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Pozzer A, Anenberg SC, Dey S, Haines A, Lelieveld J, Chowdhury S (2023).
+“Mortality Attributable to Ambient Air Pollution: A Review of Global Estimates.”
+<em>GeoHealth</em>, <b>7</b>(1), e2022GH000711.
+<a href="https://doi.org/10.1029/2022GH000711" class="external-link">doi:10.1029/2022GH000711</a>
+, e2022GH000711 2022GH000711, https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2022GH000711, <a href="https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2022GH000711" class="external-link">https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2022GH000711</a>.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -109,7 +111,8 @@ $$rr\_at\_exp =  1 + \frac{(rr - 1)}{rr\_increment} \cdot (exp - cutoff)$$</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Goal: scale relative risk to observed exposure level</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Goal: scale relative risk to observed exposure level</span></span></span>
 <span class="r-in"><span><span class="fu">get_risk</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  rr <span class="op">=</span> <span class="fl">1.05</span>,</span></span>
 <span class="r-in"><span>  rr_increment <span class="op">=</span> <span class="fl">10</span>,</span></span>
@@ -137,6 +140,7 @@ $$rr\_at\_exp =  1 + \frac{(rr - 1)}{rr\_increment} \cdot (exp - cutoff)$$</p>
 <span class="r-in"><span>  exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">9</span>, <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.063984 1.071987 1.080000</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

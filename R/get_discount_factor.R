@@ -6,43 +6,43 @@
 
 # ARGUMENTS ####################################################################
 #' @inheritParams monetize
-
+#'
 # DETAILS ######################################################################
-
 #' @details
-#' \strong{Equations discount factors (without inflation)}
-#' @details
-#' \emph{Exponential discounting (no inflation)}
-#' \deqn{discount\_factor = \frac{1}{(1 + discount\_rate) ^{n\_years}}}
-#' @details
-#' \emph{Hyperbolic discounting Harvey (no inflation)}
-#' \deqn{discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}}
-#' \emph{Hyperbolic discounting Mazure (no inflation)}
-#' \deqn{discount\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)}}
-
-#' @details
-#' \strong{Equations discount factors with inflation}
-#' @details
-#' \emph{Exponential discounting (with inflation)}
-#' \deqn{discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate)) ^{n\_years}}}
-#' @details
-#' \emph{Hyperbolic discounting Harvey (with inflation)}
-#' \deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}}
-#' \emph{Hyperbolic discounting Mazure (with inflation)}
-#' \deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years) \times (1 + inflation\_rate)^{n\_years}}}
-
+#' Additional details...
+#'
+#' \strong{Methodology}
+#'
+#' Information about the methodology
+#' (including corresponding equations and literature)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization}{monetization}}
+#'
+#'
 # VALUE ########################################################################
 #' @returns This function returns the \code{numeric} discount factor.
-
+#'
 # EXAMPLES #####################################################################
 #' @examples
 #' get_discount_factor(
 #'   discount_rate = 0.07,
 #'   n_years = 5
 #'  )
-
+#'
+#'
+#' @references
+#'
+#' \insertRef{Frederick2002_jel}{healthiar}
+#'
+#' \insertRef{Harvey1986_ms}{healthiar}
+#'
+#' \insertRef{Mazur1987_book}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 

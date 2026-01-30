@@ -24,7 +24,7 @@ monetize(
 
 \item{discount_rate}{\code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.}
 
-\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
+\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.}
 
 \item{n_years}{\code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).}
 
@@ -54,29 +54,14 @@ If the argument \code{output_attribute} was specified, then the two results elem
 This function monetizes health impacts
 }
 \details{
-\strong{Equation inflation factor (without discounting)}
+\strong{Methodology}
 
-\deqn{inflation\_factor = (1 + inflation\_rate)^{n\_years}}
-
-\strong{Equations discount factors (without inflation)}
-
-\emph{Exponential discounting (no inflation)}
-\deqn{discount\_factor = \frac{1}{(1 + discount\_rate) ^{n\_years}}}
-
-\emph{Hyperbolic discounting Harvey (no inflation)}
-\deqn{discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}}
-\emph{Hyperbolic discounting Mazure (no inflation)}
-\deqn{discount\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)}}
-
-\strong{Equations discount factors with inflation}
-
-\emph{Exponential discounting (with inflation)}
-\deqn{discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate)) ^{n\_years}}}
-
-\emph{Hyperbolic discounting Harvey (with inflation)}
-\deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}}
-\emph{Hyperbolic discounting Mazure (with inflation)}
-\deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years) \times (1 + inflation\_rate)^{n\_years}}}
+Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:
+\itemize{
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization}{monetization}}
 }
 \examples{
 # Goal: monetize the attributable impacts of an existing healthiar
@@ -101,6 +86,15 @@ results <- monetize(
 # Attributable COPD cases its monetized impact
 results$monetization_main |>
   dplyr::select(impact, monetized_impact)
+
+
+}
+\references{
+\insertRef{Frederick2002_jel}{healthiar}
+
+\insertRef{Harvey1986_ms}{healthiar}
+
+\insertRef{Mazur1987_book}{healthiar}
 }
 \author{
 Alberto Castro & Axel Luyten

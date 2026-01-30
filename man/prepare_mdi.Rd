@@ -64,25 +64,34 @@ consistency of the single deprivation indicators using Cronbach's coefficient \e
 other internal consistency checks
 }
 \details{
-The function outputs Cronbach's \eqn{\alpha}.
-\describe{
-  \item{\eqn{\alpha \geq} 0.9}{Excellent reliability}
-  \item{0.8 \eqn{\leq \alpha <} 0.9}{Good reliability}
-  \item{0.7 \eqn{\leq \alpha <} 0.8}{Acceptable reliability}
-  \item{0.6 \eqn{\leq \alpha <} 0.7}{Questionable reliability}
-  \item{\eqn{\alpha} < 0.6}{Poor reliability}
-}
+\strong{The function outputs Cronbach's alpha}
 
-Data completeness and imputation: ensure the dataset is as complete as possible. You can try to
-impute missing data:
+See below the considered reliability based on the alpha value:
+
+\itemize{
+ \item{0.9 and higher: Excellent reliability}
+ \item{between 0.8 (included) and 0.9: Good reliability}
+ \item{between 0.7 (included) and 0.8: Acceptable reliability}
+ \item{between 0.6 (included) and 0.7: Questionable reliability}
+ \item{lower than 0.6: Poor reliability}}
+
+
+\strong{Data completeness and imputation}
+
+Ensure the data set is as complete as possible. You can try to impute missing data:
 \itemize{
   \item Time-Based Imputation: Use linear regression based on historical trends if prior years'
   data is complete.
   \item Indicator-Based Imputation: Use multiple linear regression if the missing indicator
   correlates strongly with others.
 }
+
+\strong{Imputation models}
+
 Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower than 0.7,
 consider alternative data sources or methods.
+
+\strong{Plots}
 
 See the example below for how to reproduce the boxplots and the histogram after the `prepare_mdi` function call.
 }

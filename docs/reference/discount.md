@@ -49,8 +49,8 @@ discount(
 - discount_shape:
 
   `String` referring to the assumed equation for the discount factor. By
-  default: "exponential". Otherwise: "hyperbolic_harvey_1986" or
-  "hyperbolic_mazur_1987".
+  default: `"exponential"`. Otherwise: `"hyperbolic_harvey_1986"` or
+  `"hyperbolic_mazur_1987"`.
 
 - inflation_rate:
 

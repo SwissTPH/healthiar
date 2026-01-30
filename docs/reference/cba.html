@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1431</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1433</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,7 +86,7 @@
 
 
 <dt id="arg-discount-shape">discount_shape<a class="anchor" aria-label="anchor" href="#arg-discount-shape"></a></dt>
-<dd><p><code>String</code> referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".</p></dd>
+<dd><p><code>String</code> referring to the assumed equation for the discount factor. By default: <code>"exponential"</code>. Otherwise: <code>"hyperbolic_harvey_1986"</code> or <code>"hyperbolic_mazur_1987"</code>.</p></dd>
 
 
 <dt id="arg-n-years-benefit-n-years-cost">n_years_benefit, n_years_cost<a class="anchor" aria-label="anchor" href="#arg-n-years-benefit-n-years-cost"></a></dt>
@@ -106,11 +106,19 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><strong>Equation cost-benefit analysis</strong></p>
-<p>$$net\_benefit = benefit - cost$$</p>
-<p>$$cost\_benefit\_ratio = \frac{benefit}{cost}$$</p>
-<p>$$return\_on\_investment = \frac{benefit - cost}{cost } \times 100$$</p>
-<p>For the equations regarding the monetization of the cost and the benefit please see the function documentation of <code><a href="monetize.html">monetize()</a></code>.</p>
+    <p><strong>Methodology</strong></p>
+<p>Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cost-benefit-analysis">cost-benefit analysis</a></p></li>
+<li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization">monetization</a></p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Boardman AE, Greenberg DH, Vining AR, Weimer DL (2018).
+<em>Cost-Benefit Analysis: Concepts and Practice</em>, 5th edition.
+Cambridge University Press, Cambridge, UK.
+ISBN 978-1108401296.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -148,6 +156,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>      benefit      cost net_benefit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 151<span style="text-decoration: underline;">041</span>153. 86<span style="text-decoration: underline;">260</span>878.   64<span style="text-decoration: underline;">780</span>274.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

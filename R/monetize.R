@@ -9,59 +9,42 @@
 #' @param impact \code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.
 #' @param valuation \code{Numberic value} referring to unit value of a health impact.
 #' @param discount_rate \code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.
-#' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".
+#' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.
 #' @param n_years \code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).
 #' @param inflation_rate \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
 
 # DETAILS ######################################################################
-
 #' @details
-#' \strong{Equation inflation factor (without discounting)}
-#' @details
-#' \deqn{inflation\_factor = (1 + inflation\_rate)^{n\_years}}
-
-#' @details
-#' \strong{Equations discount factors (without inflation)}
-#' @details
-#' \emph{Exponential discounting (no inflation)}
-#' \deqn{discount\_factor = \frac{1}{(1 + discount\_rate) ^{n\_years}}}
-#' @details
-#' \emph{Hyperbolic discounting Harvey (no inflation)}
-#' \deqn{discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}}
-#' \emph{Hyperbolic discounting Mazure (no inflation)}
-#' \deqn{discount\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)}}
-
-#' @details
-#' \strong{Equations discount factors with inflation}
-#' @details
-#' \emph{Exponential discounting (with inflation)}
-#' \deqn{discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate)) ^{n\_years}}}
-#' @details
-#' \emph{Hyperbolic discounting Harvey (with inflation)}
-#' \deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}}
-#' \emph{Hyperbolic discounting Mazure (with inflation)}
-#' \deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years) \times (1 + inflation\_rate)^{n\_years}}}
-
+#'
+#' \strong{Methodology}
+#'
+#' Information about the methodology
+#' (including corresponding equations and literature)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization}{monetization}}
+#'
 # VALUE ########################################################################
 #' @returns
 #' This function returns a \code{list} containing:
-#' @returns
+#'
 #' 1) \code{monetization_main} (\code{tibble}) containing the main monetized results;
 #' \itemize{
 #'  \item \code{monetized_impact} (\code{numeric} column)
 #'  \item \code{discount_factor} (\code{numeric} column) calculated based on the entered \code{discount_rate}
 #'  \item And many more
 #' }
-#' @returns
+#'
 #' 2) \code{monetization_detailed} (\code{list}) containing detailed (and interim) results.
 #' \itemize{
 #'  \item \code{results_by_year} (\code{tibble})
 #'  \item \code{health_raw} (\code{tibble}) containing the monetized results for each for each combination of input uncertainty that were provided to the initial \code{attribute_health()} call
 #' }
-#' @returns
+#'
 #' If the argument \code{output_attribute} was specified, then the two results elements are added to the existing output.
-
+#'
 # EXAMPLES #####################################################################
 #' @examples
 #' # Goal: monetize the attributable impacts of an existing healthiar
@@ -86,9 +69,19 @@
 #' # Attributable COPD cases its monetized impact
 #' results$monetization_main |>
 #'   dplyr::select(impact, monetized_impact)
-
+#'
+#'
+#' @references
+#'
+#' \insertRef{Frederick2002_jel}{healthiar}
+#'
+#' \insertRef{Harvey1986_ms}{healthiar}
+#'
+#' \insertRef{Mazur1987_book}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 

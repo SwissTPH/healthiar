@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1431</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1433</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,8 +109,11 @@ coded values or - columns inside pre-loaded data frames or tibbles.</p>
 <p>Let’s see some examples calling the most important function in
 <code>healthiar</code>: <code><a href="../reference/attribute_health.html">attribute_health()</a></code>.</p>
 <div class="section level4">
-<h4 id="hard-coded">Hard coded<a class="anchor" aria-label="anchor" href="#hard-coded"></a>
+<h4 id="hard-coded-vs--columns">Hard coded vs. columns<a class="anchor" aria-label="anchor" href="#hard-coded-vs--columns"></a>
 </h4>
+<div class="section level5">
+<h5 id="hard-coded">Hard coded<a class="anchor" aria-label="anchor" href="#hard-coded"></a>
+</h5>
 <p>Depending on the function argument, you will need to enter numeric or
 character values.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -123,9 +126,9 @@ character values.</p>
 <span>  bhd_central <span class="op">=</span> <span class="fl">30747</span> </span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="columns">Columns<a class="anchor" aria-label="anchor" href="#columns"></a>
-</h4>
+<div class="section level5">
+<h5 id="columns">Columns<a class="anchor" aria-label="anchor" href="#columns"></a>
+</h5>
 <p><code>healthiar</code> comes with some example data that start with
 <code>exdat_</code> that allow you to test functions. Some of these
 example data will be used in some examples in this vignette.</p>
@@ -142,6 +145,11 @@ operator.</p>
 <span>  cutoff_central <span class="op">=</span> <span class="va">exdat_pm</span><span class="op">$</span><span class="va">cut_off_value</span>,</span>
 <span>  bhd_central <span class="op">=</span> <span class="va">exdat_pm</span><span class="op">$</span><span class="va">incidence</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level4">
+<h4 id="tidy-data">Tidy data<a class="anchor" aria-label="anchor" href="#tidy-data"></a>
+</h4>
 <p>Be aware that <code>healthiar</code> functions are easier to use if
 your data is prepared in a tidy format, i.e.:</p>
 <ul>
@@ -149,8 +157,18 @@ your data is prepared in a tidy format, i.e.:</p>
 <li><p>Each observation is a row; each row is an observation.</p></li>
 <li><p>Each value is a cell; each cell is a single value.</p></li>
 </ul>
-<p>If you want to know more about the concept of tidy format, read <a href="https://doi.org/10.18637/jss.v059.i10" class="external-link">this article of Hadley
-Wickham (2014)</a>.</p>
+<p>To know more about the concept of tidy format, see the article by
+<span class="citation">(Wickham 2014)</span>.</p>
+<p>For example, in <code>attribute health()</code> the length of the
+input vectors to be entered in the arguments must be either 1 or the
+result of the combinations of the different values of:</p>
+<ul>
+<li><p><code>geo_id_micro</code></p></li>
+<li><p><code>exp_...</code></p></li>
+<li><p><code>sex</code></p></li>
+<li><p><code>age</code></p></li>
+<li><p>(<code>info</code> for further sub-group analysis)</p></li>
+</ul>
 </div>
 </div>
 <div class="section level3">
@@ -160,32 +178,17 @@ Wickham (2014)</a>.</p>
 <h5 id="structure">Structure<a class="anchor" aria-label="anchor" href="#structure"></a>
 </h5>
 <p>The output of the <code>healthiar</code>function
-<code><a href="../reference/attribute_health.html">attribute_health()</a></code> consists of two lists (“folders”):</p>
+<code><a href="../reference/attribute_health.html">attribute_health()</a></code> and <code>attribute_lifetable</code>
+consists of two lists (“folders”):</p>
 <ul>
 <li><p><code>health_main</code> contains the main results</p></li>
-<li>
-<p><code>health_detailed</code> contained detailed results and
-additional info about the assessment, e.g.:</p>
-<ul>
-<li><p><code>results_raw</code> tibble (very similar to a
-<code>data.frame</code>) that contains the detailed results</p></li>
-<li><p><code>input_args</code> list of all arguments used in the
-assessment (including some internal arguments)</p></li>
-<li><p><code>input_table</code> tibble that contains all input data
-entered by the user or derived for the calculations</p></li>
-<li>
-<p><code>results_by_...</code> tibble that contains the results
-stratified by the categories of the following arguments (only if
-entered)</p>
-<ul>
-<li><p><code>geo_id_micro</code></p></li>
-<li><p><code>sex</code></p></li>
-<li><p><code>age_group</code></p></li>
+<li><p><code>health_detailed</code> contained detailed results and
+additional info about the assessment.</p></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
+<p>In other <code>healthiar</code> functions you can find a similar
+output structure but using different prefixes. E.g.
+<code>social_</code>in <code><a href="../reference/socialize.html">socialize()</a></code> and
+<code>monetization_</code>in <code>monetitize()</code>.</p>
 </div>
 <div class="section level5">
 <h5 id="access">Access<a class="anchor" aria-label="anchor" href="#access"></a>
@@ -208,7 +211,7 @@ on the variable you want to inspect, and then open the
 <li><p>With <code>[[]]</code> operator
 <code>results_pm_copd[["health_main"]]</code></p></li>
 <li><p>With <code>pluck()</code> &amp; <code>pull()</code>: use the
-<code><a href="https://purrr.tidyverse.org/reference/pluck.html" class="external-link">purrr::pluck</a></code> function to select a list and then the
+<code><a href="https://rdrr.io/pkg/purrr/man/pluck.html" class="external-link">purrr::pluck</a></code> function to select a list and then the
 <code><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">dplyr::pull</a></code> function extract values from a specified
 column,
 e.g. <code>results_pm_copd |&gt; purrr::pluck("health_main") |&gt; dplyr::pull("impact_rounded")</code></p></li>
@@ -238,10 +241,70 @@ explanations.</p>
 exposure in a country.</p>
 </div>
 <div class="section level4">
-<h4 id="methodological-refresher">Methodological refresher<a class="anchor" aria-label="anchor" href="#methodological-refresher"></a>
+<h4 id="methodology">Methodology<a class="anchor" aria-label="anchor" href="#methodology"></a>
 </h4>
+<p>There is extensive literature on health impact quantification using
+the relative risk approach [e.g., Pozzer2023_gh; <span class="citation">Soares et al. (2022)</span>; <span class="citation">Collaborators (2020)</span>; <span class="citation">Steenland and Armstrong (2006)</span>; <span class="citation">WHO (2003)</span>].</p>
 <div class="float">
 <img src="../reference/figures/bod_rr.png" width="700" alt="Figure: Relative risk approach"><div class="figcaption">Figure: Relative risk approach</div>
+</div>
+<div class="section level5">
+<h5 id="population-attributable-fraction">Population attributable fraction<a class="anchor" aria-label="anchor" href="#population-attributable-fraction"></a>
+</h5>
+<p>The general integral form for the <strong>population attributable
+fraction (PAF)</strong>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>A</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mo>∫</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mi>P</mi><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>d</mi><mi>x</mi><mo>−</mo><mn>1</mn></mrow><mrow><mo>∫</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mi>p</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>d</mi><mi>x</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">PAF = \frac{\int rr\_at\_exp(x) \times PE(x)dx - 1}{\int rr\_at\_exp(x) \times pop\_exp(x)dx}</annotation></semantics></math></p>
+<p>Where:</p>
+<ul>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+= exposure level</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">PE(x)</annotation></semantics></math>
+= population distribution of exposure</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">rr\_at\exp(x)</annotation></semantics></math>
+= relative risk at exposure level compared to reference</p></li>
+</ul>
+<div class="section level6">
+<h6 id="simplified-for-categorical-exposure-distribution">Simplified for categorical exposure distribution<a class="anchor" aria-label="anchor" href="#simplified-for-categorical-exposure-distribution"></a>
+</h6>
+<p>If exposure is categorical, the integrals are converted to sums:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>A</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mo>∑</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mo>×</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub><mo>−</mo><mn>1</mn></mrow><mrow><mo>∑</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mo>×</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">PAF = \frac{\sum rr\_at\_exp_i \times PE_i - 1}{\sum rr\_at\_exp_i \times PE_i}</annotation></semantics></math></p>
+<p>Alternatively, an equivalent form is:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>A</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mo>∑</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mo>∑</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mn>1</mn></mrow></mfrac></mrow><annotation encoding="application/x-tex">PAF = \frac{\sum PE_i \times (rr\_at\_exp_i - 1)}{\sum PE_i\times (rr\_at\_exp_i - 1) + 1}</annotation></semantics></math></p>
+</div>
+<div class="section level6">
+<h6 id="simplified-for-single-exposure-value">Simplified for single exposure value<a class="anchor" aria-label="anchor" href="#simplified-for-single-exposure-value"></a>
+</h6>
+<p>If there is one single single exposure value, corresponding to the
+population weighted mean concentration, the equation can be simplified
+as follows:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>A</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mn>1</mn></mrow><mrow><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">PAF = \frac{rr\_at\_exp - 1}{rr\_at\_exp }</annotation></semantics></math>
+#### Scaling relative risk How to get this relative risk at exposure
+level (<code>rr_at_exp</code>)? This is normally different to the
+relative risk published in the epidemiological literature
+(<code>rr</code>) together with the (concentration/dose)
+<code>increment</code> that corresponds to this relative risk. The
+equations used for scaling relative risk depend on the chosen
+exposure-response function shapes:</p>
+<ul>
+<li><p>linear
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo>=</mo><mn>1</mn><mo>+</mo><mfrac><mrow><mi>r</mi><mi>r</mi><mo>−</mo><mn>1</mn></mrow><mrow><mi>i</mi><mi>n</mi><mi>c</mi><mi>r</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></mfrac><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">RRexp = 1 + \frac{rr - 1}{increment} \times (exp - cutoff)</annotation></semantics></math></p></li>
+<li><p>log-linear <span class="citation">(Pozzer et al. 2023)</span>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo>=</mo><msup><mi>e</mi><mrow><mfrac><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mi>r</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>i</mi><mi>n</mi><mi>c</mi><mi>r</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></mfrac><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msup></mrow><annotation encoding="application/x-tex">RRexp = e^{\frac{\log(rr)}{increment} \times (exp - cutoff)}</annotation></semantics></math></p></li>
+<li><p>log-log <span class="citation">(Pozzer et al. 2023)</span>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>e</mi><mi>x</mi><mi>p</mi><mo>+</mo><mn>1</mn></mrow><mrow><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo>+</mo><mn>1</mn></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mfrac><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mi>r</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mi>n</mi><mi>c</mi><mi>r</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi><mo>+</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo>+</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo>+</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></msup></mrow><annotation encoding="application/x-tex">RRexp = \left( \frac{exp + 1}{cutoff + 1} \right)^{\frac{\log(rr)}{\log(increment + cutoff + 1) - \log(cutoff + 1)}}</annotation></semantics></math></p></li>
+<li><p>linear-log <span class="citation">(Pozzer et al. 2023)</span>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo>=</mo><mn>1</mn><mo>+</mo><mfrac><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mi>r</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mi>n</mi><mi>c</mi><mi>r</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi><mo>+</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo>+</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo>+</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo>×</mo><mfrac><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>+</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo>+</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">RRexp = 1 + \frac{\log(rr - 1)}{\log(increment + cutoff + 1) - \log(cutoff + 1)} \times \frac{\log(exp + 1)}{\log(cutoff + 1)}</annotation></semantics></math></p></li>
+</ul>
+<p>The relative risk at exposure level (<code>rr_at_exp</code>) and is
+part of the output of <code><a href="../reference/attribute_health.html">attribute_health()</a></code> and
+<code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>. <code>rr_at_exp</code> can also be
+calculated using <code><a href="../reference/get_risk.html">get_risk()</a></code>.</p>
+<p>For conversion of hazard ratios and/or odds ratios to relative risks
+refer to <span class="citation">(VanderWeele 2019)</span> and/or use the
+conversion tools developed by the Teaching group in EBM in 2022 for
+hazard ratios (<a href="https://ebm-helper.cn/en/Conv/HR_RR.html" class="external-link uri">https://ebm-helper.cn/en/Conv/HR_RR.html</a>) and/or odds
+ratios (<a href="https://ebm-helper.cn/en/Conv/OR_RR.html" class="external-link uri">https://ebm-helper.cn/en/Conv/OR_RR.html</a>).</p>
+</div>
 </div>
 </div>
 <div class="section level4">
@@ -328,11 +391,25 @@ population impact fraction (PIF)</li>
 (road traffic) noise exposure.</p>
 </div>
 <div class="section level4">
-<h4 id="refresher---burden-of-disease-with-absolute-risk">Refresher - Burden of disease with absolute risk<a class="anchor" aria-label="anchor" href="#refresher---burden-of-disease-with-absolute-risk"></a>
+<h4 id="methodology-1">Methodology<a class="anchor" aria-label="anchor" href="#methodology-1"></a>
 </h4>
+<p>For the absolute risk, the population exposed instead of baseline
+health data (i.e. disease-specific burden of disease) is used <span class="citation">(WHO 2011)</span>.</p>
 <div class="float">
 <img src="../reference/figures/bod_ar.png" width="700" alt="Figure: Absolute risk approach"><div class="figcaption">Figure: Absolute risk approach</div>
 </div>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mo>∑</mo><mi>A</mi><msub><mi>R</mi><mi>i</mi></msub><mo>×</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">N = \sum AR_i \times PE_i</annotation></semantics></math></p>
+<p>Where:</p>
+<ul>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+= attributed cases</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msub><mi>R</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">AR_i</annotation></semantics></math>
+= absolute risk at category
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math></p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">PE_i</annotation></semantics></math>
+= absolute population exposed at category
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math></p></li>
+</ul>
 </div>
 <div class="section level4">
 <h4 id="function-call-1">Function call<a class="anchor" aria-label="anchor" href="#function-call-1"></a>
@@ -1442,6 +1519,143 @@ and additional sub-group e.g. education level</em>.</p>
 </h4>
 <p>To quantify the years of life lost (YLL) due to deaths from COPD
 attributable to PM2.5 exposure during one year.</p>
+</div>
+<div class="section level4">
+<h4 id="method">Method<a class="anchor" aria-label="anchor" href="#method"></a>
+</h4>
+<div class="section level5">
+<h5 id="general-concept">General concept<a class="anchor" aria-label="anchor" href="#general-concept"></a>
+</h5>
+<p>The life table methodology of <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>
+follows that of the WHO tool AirQ+ <span class="citation">(WHO
+2020)</span>, which is described in more detail by <span class="citation">B. G. Miller and Hurley (2003)</span>.</p>
+<p>In short, two scenarios are compared:</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>a scenario with the exposure level specified in the function
+(“exposed scenario”) and</p></li>
+<li><p>a scenario with no exposure (“unexposed scenario”).</p></li>
+</ol>
+<p>First, the entry and mid-year populations of the (first) year of
+analysis in the unexposed scenario is determined using modified survival
+probabilities. Second, age-specific population projections using
+scenario-specific survival probabilities are done for both scenarios.
+Third, by subtracting the populations in the unexposed scenario from the
+populations in the exposed scenario the premature deaths/years of life
+lost attributable to the exposure are determined.</p>
+<p>An expansive life table case study for is available in a report of
+<span class="citation">Brian G. Miller (2010)</span>.</p>
+</div>
+<div class="section level5">
+<h5 id="determination-of-populations-in-the-first-year-of-analysis">Determination of populations in the (first) year of analysis<a class="anchor" aria-label="anchor" href="#determination-of-populations-in-the-first-year-of-analysis"></a>
+</h5>
+<div class="section level6">
+<h6 id="entry-population">Entry population<a class="anchor" aria-label="anchor" href="#entry-population"></a>
+</h6>
+<p>The entry (i.e. start of year) populations in both scenarios (exposed
+and unexposed) is determined as follows:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub><mo>=</mo><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub><mo>+</mo><mfrac><mrow><mi>d</mi><mi>e</mi><mi>a</mi><mi>t</mi><mi>h</mi><msub><mi>s</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">entry\_population_{year_1} = midyear\_population_{year_1} + \frac{deaths_{year_1}}{2}</annotation></semantics></math></p>
+</div>
+<div class="section level6">
+<h6 id="survival-probabilities">Survival probabilities<a class="anchor" aria-label="anchor" href="#survival-probabilities"></a>
+</h6>
+<div class="section level7">
+<h6 id="exposed-scenario">Exposed scenario<a class="anchor" aria-label="anchor" href="#exposed-scenario"></a>
+</h6>
+<p>The survival probabilities in the exposed scenario from start of year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+to start of year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i+1</annotation></semantics></math>
+are calculated as follows:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mo>=</mo><mfrac><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>i</mi></msub><mo>−</mo><mfrac><mrow><mi>d</mi><mi>e</mi><mi>a</mi><mi>t</mi><mi>h</mi><msub><mi>s</mi><mi>i</mi></msub></mrow><mn>2</mn></mfrac></mrow><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>i</mi></msub><mo>+</mo><mfrac><mrow><mi>d</mi><mi>e</mi><mi>a</mi><mi>t</mi><mi>h</mi><msub><mi>s</mi><mi>i</mi></msub></mrow><mn>2</mn></mfrac></mrow></mfrac></mrow><annotation encoding="application/x-tex">prob\_survival = \frac{midyear\_population_i - \frac{deaths_i}{2}}{midyear\_population_i + \frac{deaths_i}{2}}</annotation></semantics></math></p>
+<p>Analogously, the probability of survival from start of year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+to mid-year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mo>=</mo><mn>1</mn><mo>−</mo><mfrac><mrow><mn>1</mn><mo>−</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">prob\_survival\_until\_midyear = 1 - \frac{1 - prob\_survival}{2}</annotation></semantics></math></p>
+</div>
+<div class="section level7">
+<h6 id="unexposed-scenario">Unexposed scenario<a class="anchor" aria-label="anchor" href="#unexposed-scenario"></a>
+</h6>
+<p>The survival probabilities in the unexposed scenario are calculated
+as follows:</p>
+<p>First, the age-group specific hazard rate in the exposed scenario is
+calculated using the inputted age-specific mid-year populations and
+deaths.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo>=</mo><mfrac><mrow><mi>d</mi><mi>e</mi><mi>a</mi><mi>t</mi><mi>h</mi><mi>s</mi></mrow><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">hazard\_rate = \frac{deaths}{mid\_year\_population}</annotation></semantics></math></p>
+<p>Second, the hazard rate is multiplied with the modification factor
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mn>1</mn><mo>−</mo><mi>P</mi><mi>A</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">= 1 - PAF</annotation></semantics></math>)
+to obtain the age-specific hazard rate in the unexposed scenario.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi><mo>=</mo><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo>×</mo><mi>m</mi><mi>o</mi><mi>d</mi><mi>i</mi><mi>f</mi><mi>i</mi><mi>c</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">hazard\_rate\_mod = hazard\_rate \times modification\_factor</annotation></semantics></math></p>
+<p>Third, the the age-specific survival probabilities (from the start
+until the end in a given age group) in the unexposed scenario are
+calculated as follows (cf. Miller &amp; Hurley 2003):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi><mo>=</mo><mfrac><mrow><mn>2</mn><mo>−</mo><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi></mrow><mrow><mn>2</mn><mo>+</mo><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">prob\_survival\_mod = \frac{2-hazard\_rate\_mod}{2+hazard\_rate\_mod}</annotation></semantics></math></p>
+</div>
+</div>
+<div class="section level6">
+<h6 id="mid-year-population">Mid-year population<a class="anchor" aria-label="anchor" href="#mid-year-population"></a>
+</h6>
+<p>The mid-year populatios of the (first) year of analysis (year_1) in
+the unexposed scenario are determined as follows:</p>
+<p>First, the survival probabilities from start of year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+to mid-year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+in the unexposed scenario is calculated as:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi></mrow></msub><mo>=</mo><mn>1</mn><mo>−</mo><mfrac><mrow><mn>1</mn><mo>−</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">prob\_survival\_until\_midyear_{mod} = 1 - \frac{1 - prob\_survival\_mod}{2}</annotation></semantics></math></p>
+<p>Second, the mid-year populations of the (first) year of analysis
+(year_1) in the unexposed scenario is calculated:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>u</mi><mi>n</mi><mi>e</mi><mi>x</mi><mi>p</mi><mi>o</mi><mi>s</mi><mi>e</mi><msub><mi>d</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub><mo>=</mo><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub><mo>×</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">midyear\_population\_unexposed_{year_1} = entry\_population_{year_1} \times prob\_survival\_until\_midyear_{mod}</annotation></semantics></math></p>
+</div>
+</div>
+<div class="section level5">
+<h5 id="population-projection">Population projection<a class="anchor" aria-label="anchor" href="#population-projection"></a>
+</h5>
+<p>Using the age group-specific and scenario-specific survival
+probabilities calculated above, future populations of each age-group
+under each scenario are calculated.</p>
+<div class="section level7">
+<h6 id="exposed-scenario-1">Exposed scenario<a class="anchor" aria-label="anchor" href="#exposed-scenario-1"></a>
+</h6>
+<p>The population projections for the two possible options of
+<code>approach_exposure</code> (<code>"single_year"</code> and
+<code>"constant"</code>) for the unexposed scenario are different. In
+the case of <code>"single_year"</code> exposure, the population
+projection for the years after the year of exposure is the same as in
+the unexposed scenario.</p>
+<p>In the case of <code>"constant"</code> the population projection is
+done as follows:</p>
+<p>First, the entry population of year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i+1</annotation></semantics></math>
+is calculated (which is the same as the end of year population of year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>)
+using the entry population of year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>i</mi></msub><mo>×</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">entry\_population_{i+1} = entry\_population_i \times prob\_survival</annotation></semantics></math></p>
+<p>Second, the mid-year population of year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i+1</annotation></semantics></math>
+is calculated.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>×</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear</annotation></semantics></math></p>
+</div>
+<div class="section level7">
+<h6 id="unexposed-scenario-1">Unexposed scenario<a class="anchor" aria-label="anchor" href="#unexposed-scenario-1"></a>
+</h6>
+<p>The entry and mid-year population projections of in the exposed
+scenario is done as follows:</p>
+<p>First, the entry population of year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i+1</annotation></semantics></math>
+is calculated (which is the same as the end of year population of year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>)
+by multiplying the entry population of year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+and the modified survival probabilities.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>i</mi></msub><mo>×</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi></mrow><annotation encoding="application/x-tex">entry\_population_{i+1} = entry\_population_i \times prob\_survival\_mod</annotation></semantics></math></p>
+<p>Second, the mid-year population of year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i+1</annotation></semantics></math>
+is calculated.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>×</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear</annotation></semantics></math></p>
+</div>
+</div>
 </div>
 <div class="section level4">
 <h4 id="function-call-11">Function call<a class="anchor" aria-label="anchor" href="#function-call-11"></a>
@@ -5416,6 +5630,21 @@ are available for one year (the year of analysis).</p>
 pollution exposure using disability weights.</p>
 </div>
 <div class="section level4">
+<h4 id="methodology-2">Methodology<a class="anchor" aria-label="anchor" href="#methodology-2"></a>
+</h4>
+<p>To quantify the YLDs, you can use a prevalence-based or an
+incidence-based approach <span class="citation">(Kim et al.
+2022)</span>.</p>
+<ul>
+<li><p>Prevalence-based : Enter <code>1</code> (year) in the argument(s)
+<code>dw_...</code> and <em>prevalence</em> cases in
+<code>bhd_...</code>.</p></li>
+<li><p>Incidence-based: Enter a value <em>above</em> 1 in
+<code>dw_...</code> and <em>incidence</em> cases in
+<code>bhd_...</code>.</p></li>
+</ul>
+</div>
+<div class="section level4">
 <h4 id="function-call-13">Function call<a class="anchor" aria-label="anchor" href="#function-call-13"></a>
 </h4>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
@@ -5532,6 +5761,99 @@ but more time and code efficient.</p>
 </h4>
 <p>To compare the health impacts in the scenario “before intervention”
 vs. “after intervention”.</p>
+</div>
+<div class="section level4">
+<h4 id="methodology-3">Methodology<a class="anchor" aria-label="anchor" href="#methodology-3"></a>
+</h4>
+<p>Two approaches can be used for the comparison of scenarios:</p>
+<ul>
+<li><p>Population impact fraction (PIF)</p></li>
+<li><p>Delta</p></li>
+</ul>
+<p>Please note that the PIF comparison approach assumes same baseline
+health data for scenario 1 and 2 (e.g. comparison of two scenarios at
+the same time point), while the delta comparison approach, the
+difference between two scenarios is obtained by subtraction. Therefore,
+the delta approach is suited for comparison of a situation now with a
+situation in the future.</p>
+<div class="section level5">
+<h5 id="population-impact-fraction-pif">Population Impact Fraction (PIF)<a class="anchor" aria-label="anchor" href="#population-impact-fraction-pif"></a>
+</h5>
+<p>The Population Impact Fraction (PIF) is defined as the proportional
+change in disease or mortality when exposure to a risk factor is changed
+(for instance due to an intervention).</p>
+<div class="section level6">
+<h6 id="general-integral-form">General Integral Form<a class="anchor" aria-label="anchor" href="#general-integral-form"></a>
+</h6>
+<p>The most general equation describing this mathematically is an
+integral form <span class="citation">(WHO 2003; Murray et al.
+2003)</span>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>I</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mo>∫</mo><mi>R</mi><mi>R</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>P</mi><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>d</mi><mi>x</mi><mo>−</mo><mo>∫</mo><mi>R</mi><mi>R</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>P</mi><mi>E</mi><mi>′</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>d</mi><mi>x</mi></mrow><mrow><mo>∫</mo><mi>R</mi><mi>R</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>P</mi><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>d</mi><mi>x</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">PIF = \frac{\int RR(x)PE(x)dx - \int RR(x)PE'(x)dx}{\int RR(x)PE(x)dx}</annotation></semantics></math></p>
+<p><strong>Where:</strong></p>
+<ul>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+= exposure level</li>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">PE(x)</annotation></semantics></math>
+= population distribution of exposure</li>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>E</mi><mi>′</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">PE'(x)</annotation></semantics></math>
+= alternative population distribution of exposure</li>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">RRexp(x)</annotation></semantics></math>
+= relative risk at exposure level compared to the reference level</li>
+</ul>
+<div class="section level7">
+<h6 id="categorical-exposure-form">Categorical Exposure Form<a class="anchor" aria-label="anchor" href="#categorical-exposure-form"></a>
+</h6>
+<p>If the population exposure is described as a categorical rather than
+continuous exposure, the integrals may be converted to sums [<span class="citation">WHO (2003)</span>; Murray2003-spbm]:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>I</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mo>∑</mo><mi>R</mi><msub><mi>R</mi><mi>i</mi></msub><mo>×</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub><mo>−</mo><mo>∑</mo><mi>R</mi><msub><mi>R</mi><mi>i</mi></msub><mi>P</mi><mi>E</mi><msub><mi>′</mi><mi>i</mi></msub></mrow><mrow><mo>∑</mo><mi>R</mi><msub><mi>R</mi><mi>i</mi></msub><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">PIF = \frac{\sum RR_{i} \times PE_{i} - \sum RR_{i}PE'_{i}}{\sum RR_{i}PE_{i}}</annotation></semantics></math></p>
+<p><strong>Where:</strong></p>
+<ul>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+= the exposure category (e.g., in bins of 1
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mi>g</mi><mi>/</mi><msup><mi>m</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">\mu g/m^3</annotation></semantics></math><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><msub><mi>M</mi><mn>2.5</mn></msub></mrow><annotation encoding="application/x-tex">PM_{2.5}</annotation></semantics></math>
+or 5 dB noise exposure)</li>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">PE_i</annotation></semantics></math>
+= fraction of population in exposure category
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+</li>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>E</mi><msub><mi>′</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">PE'_i</annotation></semantics></math>
+= fraction of population in category
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+for alternative (ideal) exposure scenario</li>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">RRexp_i</annotation></semantics></math>
+= relative risk for exposure category level
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+compared to the reference level</li>
+</ul>
+</div>
+</div>
+<div class="section level6">
+<h6 id="population-weighted-mean-concentration-form">Population weighted mean concentration form<a class="anchor" aria-label="anchor" href="#population-weighted-mean-concentration-form"></a>
+</h6>
+<p>Finally, if the exposure is provided as the population weighted mean
+concentration, the equation for the PIF is reduced to:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>I</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mrow><mi>a</mi><mi>l</mi><mi>t</mi></mrow></msub></mrow><mrow><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><mi>p</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">PIF = \frac{RRexp - RRexp_{alt}}{RRexp}</annotation></semantics></math></p>
+<p><strong>Where:</strong></p>
+<ul>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">RRexp</annotation></semantics></math>
+= relative risk associated with the population weighted mean
+exposure</li>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><mi>p</mi><mrow><mi>a</mi><mi>l</mi><mi>t</mi></mrow></mrow><annotation encoding="application/x-tex">RRexp{alt}</annotation></semantics></math>
+= relative risk associated with the population weighted mean for the
+alternative exposure scenario</li>
+</ul>
+</div>
+</div>
 </div>
 <div class="section level4">
 <h4 id="function-call-16">Function call<a class="anchor" aria-label="anchor" href="#function-call-16"></a>
@@ -5743,18 +6065,48 @@ f(c) =
 </h4>
 <p>To monetize the attributable health impact of a policy that will have
 health benefits five years from now.</p>
-<p>The outcome of the monetization is added to the variable entered to
-the <code>output_attribute</code> argument, which is
-<code>results_pm_copd</code> in our case.</p>
-<p>Two folders are added:</p>
-<ul>
-<li><p><code>monetization_main</code> contains the central monetization
-estimate and the corresponding 95% confidence intervals obtained through
-the specified monetization.</p></li>
-<li><p><code>monetization_detailed</code> contains the monetized results
-for each unique combination of the input variable estimates that were
-provided to the initial <code><a href="../reference/attribute_health.html">attribute_health()</a></code> call.</p></li>
-</ul>
+</div>
+<div class="section level4">
+<h4 id="methodology-4">Methodology<a class="anchor" aria-label="anchor" href="#methodology-4"></a>
+</h4>
+<p>You can monetize health impacts valuating them and considering
+discounting and inflation. For this purpose you can use
+<code><a href="../reference/monetize.html">monetize()</a></code>. If you just need the discount factor or the
+inflation factor, you can alternatively call
+<code><a href="../reference/get_discount_factor.html">get_discount_factor()</a></code> or
+<code><a href="../reference/get_inflation_factor.html">get_inflation_factor()</a></code>. See the equations that are used
+behind these functions.</p>
+<div class="section level5">
+<h5 id="inflation-factor-without-discounting">Inflation factor (without discounting)<a class="anchor" aria-label="anchor" href="#inflation-factor-without-discounting"></a>
+</h5>
+<p>As suggested by <span class="citation">Brealey et al.
+(2023)</span></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mrow><annotation encoding="application/x-tex">inflation\_factor = (1 + inflation\_rate)^{n\_years}</annotation></semantics></math></p>
+</div>
+</div>
+<div class="section level4">
+<h4 id="discount-factors-without-inflation">Discount factors (without inflation)<a class="anchor" aria-label="anchor" href="#discount-factors-without-inflation"></a>
+</h4>
+<p><em>Exponential discounting (no inflation)</em></p>
+<p>As suggested by <span class="citation">Frederick, Loewenstein, and
+O’Donoghue (2002)</span></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mfrac></mrow><annotation encoding="application/x-tex">discount\_factor = \frac{1}{(1 + discount\_rate)^{n\_years}}</annotation></semantics></math></p>
+<p><em>Hyperbolic discounting Harvey (no inflation)</em></p>
+<p>As suggested by <span class="citation">Harvey (1986)</span></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi></mrow></msup></mfrac></mrow><annotation encoding="application/x-tex">discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}</annotation></semantics></math></p>
+<p><em>Hyperbolic discounting Mazur (no inflation)</em></p>
+<p>As suggested by <span class="citation">Mazur (1987)</span></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo>×</mo><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">discount\_factor = \frac{1}{1 + (discount\_rate \times n\_years)}</annotation></semantics></math></p>
+</div>
+<div class="section level4">
+<h4 id="discount-factors-with-inflation">Discount factors with inflation<a class="anchor" aria-label="anchor" href="#discount-factors-with-inflation"></a>
+</h4>
+<p><em>Exponential discounting (with inflation)</em>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><msup><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mfrac></mrow><annotation encoding="application/x-tex">discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate))^{n\_years}}</annotation></semantics></math></p>
+<p><em>Hyperbolic discounting Harvey (with inflation)</em>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi></mrow></msup><mo>×</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}</annotation></semantics></math></p>
+<p><em>Hyperbolic discounting Mazur (with inflation)</em>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo>×</mo><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)) \times (1 + inflation\_rate)^{n\_years}}</annotation></semantics></math></p>
 </div>
 <div class="section level4">
 <h4 id="function-call-19">Function call<a class="anchor" aria-label="anchor" href="#function-call-19"></a>
@@ -5771,6 +6123,18 @@ provided to the initial <code><a href="../reference/attribute_health.html">attri
 <div class="section level4">
 <h4 id="main-results-11">Main results<a class="anchor" aria-label="anchor" href="#main-results-11"></a>
 </h4>
+<p>The outcome of the monetization is added to the variable entered to
+the <code>output_attribute</code> argument, which is
+<code>results_pm_copd</code> in our case.</p>
+<p>Two folders are added:</p>
+<ul>
+<li><p><code>monetization_main</code> contains the central monetization
+estimate and the corresponding 95% confidence intervals obtained through
+the specified monetization.</p></li>
+<li><p><code>monetization_detailed</code> contains the monetized results
+for each unique combination of the input variable estimates that were
+provided to the initial <code><a href="../reference/attribute_health.html">attribute_health()</a></code> call.</p></li>
+</ul>
 <table class="table">
 <thead><tr class="header">
 <th align="left">erf_ci</th>
@@ -5810,15 +6174,48 @@ from a non-<code>healthiar</code> source.</p>
 </h4>
 <p>To estimate the net-benefit of a health policy via cost-benefit
 analysis (CBA).</p>
+</div>
+<div class="section level4">
+<h4 id="methodology-5">Methodology<a class="anchor" aria-label="anchor" href="#methodology-5"></a>
+</h4>
+<p>To perform a cost-benefit analysis, you can use the function
+<code><a href="../reference/cba.html">cba()</a></code>. It provides three types of indicators based on the
+following equations <span class="citation">(Boardman et al.
+2018)</span>:</p>
+<p><strong>Net Benefit</strong>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>t</mi><mi>_</mi><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi><mo>=</mo><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi><mo>−</mo><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">net\_benefit = benefit - cost</annotation></semantics></math></p>
+<p><strong>Cost-Benefit Ratio</strong>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi><mi>_</mi><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mo>=</mo><mfrac><mrow><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi></mrow><mrow><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">cost\_benefit\_ratio = \frac{benefit}{cost}</annotation></semantics></math></p>
+<p><strong>Return on Investment (ROI)</strong>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>_</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>v</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi><mo>=</mo><mfrac><mrow><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi><mo>−</mo><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow><mrow><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow></mfrac><mo>×</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">return\_on\_investment = \frac{benefit - cost}{cost} \times 100</annotation></semantics></math></p>
+</div>
+<div class="section level4">
+<h4 id="function-call-20">Function call<a class="anchor" aria-label="anchor" href="#function-call-20"></a>
+</h4>
 <p>Let’s imagine we design a policy that would reduce air pollution to 5
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mi>g</mi><mi>/</mi><msup><mi>m</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">\mu g/m^3</annotation></semantics></math>,
 which is the concentration specified in the <code>cutoff_central</code>
 argument in the initial <code><a href="../reference/attribute_health.html">attribute_health()</a></code> call. So we
 could avoid all COPD cases attributed to air pollution.</p>
 <p>Considering the cost to implement the policy (estimated at 100
-million EURO), what would be the monetary net benefit of such a policy,
-? We can find out using <code>healthiar</code>’s <code><a href="../reference/cba.html">cba()</a></code>
-function.</p>
+million EURO), what would be the monetary net benefit of such a policy?
+We can find out using the functions <code>healthiar</code> and
+<code><a href="../reference/cba.html">cba()</a></code></p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cba</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cba.html">cba</a></span><span class="op">(</span></span>
+<span>    output_attribute <span class="op">=</span> <span class="va">results_pm_copd</span>,</span>
+<span>    valuation <span class="op">=</span> <span class="fl">50000</span>,</span>
+<span>    cost <span class="op">=</span> <span class="fl">100000000</span>,</span>
+<span>    discount_shape <span class="op">=</span> <span class="st">"exponential"</span>,</span>
+<span>    discount_rate_benefit <span class="op">=</span> <span class="fl">0.03</span>,</span>
+<span>    discount_rate_cost <span class="op">=</span> <span class="fl">0.03</span>,</span>
+<span>    n_years_benefit <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>    n_years_cost <span class="op">=</span> <span class="fl">5</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="main-results-12">Main results<a class="anchor" aria-label="anchor" href="#main-results-12"></a>
+</h4>
 <p>The outcome of the CBA is contained in two folders, which are added
 to the existing assessment:</p>
 <ul>
@@ -5835,25 +6232,6 @@ the period specified in the <code>n_years_cost</code> argument</p></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section level4">
-<h4 id="function-call-20">Function call<a class="anchor" aria-label="anchor" href="#function-call-20"></a>
-</h4>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cba</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cba.html">cba</a></span><span class="op">(</span></span>
-<span>    output_attribute <span class="op">=</span> <span class="va">results_pm_copd</span>,</span>
-<span>    valuation <span class="op">=</span> <span class="fl">50000</span>,</span>
-<span>    cost <span class="op">=</span> <span class="fl">100000000</span>,</span>
-<span>    discount_shape <span class="op">=</span> <span class="st">"exponential"</span>,</span>
-<span>    discount_rate_benefit <span class="op">=</span> <span class="fl">0.03</span>,</span>
-<span>    discount_rate_cost <span class="op">=</span> <span class="fl">0.03</span>,</span>
-<span>    n_years_benefit <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>    n_years_cost <span class="op">=</span> <span class="fl">5</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="main-results-12">Main results<a class="anchor" aria-label="anchor" href="#main-results-12"></a>
-</h4>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cba</span><span class="op">$</span><span class="va">cba_main</span> <span class="op">|&gt;</span>  </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">benefit</span>, <span class="va">cost</span>, <span class="va">net_benefit</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -6168,7 +6546,111 @@ visualize in:</p>
 <p>exp = exposure</p>
 <p>ERF = exposure-response function</p>
 <p>RR/rr = relative risk</p>
+<p>WHO = World Health Organization</p>
 <p>YLL/yll = years of life lost</p>
+<hr>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-Boardman2018_book" class="csl-entry">
+Boardman, Anthony E., David H. Greenberg, Aidan R. Vining, and David L.
+Weimer. 2018. <em>Cost-Benefit Analysis: Concepts and Practice</em>. 5th
+ed. Cambridge, UK: Cambridge University Press.
+</div>
+<div id="ref-Brealey2023_book" class="csl-entry">
+Brealey, Richard A., Stewart C. Myers, Franklin Allen, Simon Benninga,
+and Julian Read. 2023. <em>Principles of Corporate Finance</em>. 14th
+ed. New York, NY: McGraw-Hill Education.
+</div>
+<div id="ref-GBD2020_tl" class="csl-entry">
+Collaborators, GBD 2019 Risk Factors. 2020. <span>“Global Burden of 87
+Risk Factors in 204 Countries and Territories, 1990–2019.”</span>
+<em>The Lancet</em>. <a href="https://doi.org/10.1016/S0140-6736(20)30752-2" class="external-link">https://doi.org/10.1016/S0140-6736(20)30752-2</a>.
+</div>
+<div id="ref-Frederick2002_jel" class="csl-entry">
+Frederick, Shane, George Loewenstein, and Ted O’Donoghue. 2002.
+<span>“Time Discounting and Time Preference: A Critical Review.”</span>
+<em>Journal of Economic Literature</em> 40 (2): 351–401. <a href="https://doi.org/10.1257/002205102320161311" class="external-link">https://doi.org/10.1257/002205102320161311</a>.
+</div>
+<div id="ref-Harvey1986_ms" class="csl-entry">
+Harvey, Charles M. 1986. <span>“Value Functions for Infinite-Period
+Planning.”</span> <em>Management Science</em> 32 (9): 1123–39. <a href="https://doi.org/10.1287/mnsc.32.9.1123" class="external-link">https://doi.org/10.1287/mnsc.32.9.1123</a>.
+</div>
+<div id="ref-Kim2022_kspm" class="csl-entry">
+Kim, Young-Eun, Yoon-Sun Jung, Minsu Ock, and Seok-Jun Yoon. 2022.
+<span>“DALY Estimation Approaches: Understanding and Using the
+Incidence-Based Approach and the Prevalence-Based Approach.”</span>
+<em>J. Prev. Med. Public Health</em> 55 (1): 10–18. <a href="https://doi.org/10.1111/biom.13197" class="external-link">https://doi.org/10.1111/biom.13197</a>.
+</div>
+<div id="ref-Mazur1987_book" class="csl-entry">
+Mazur, James E. 1987. <span>“An Adjusting Procedure for Studying Delayed
+Reinforcement.”</span> In <em>Quantitative Analyses of Behavior: Volume
+v. The Effect of Delay and of Intervening Events on Reinforcement
+Value</em>, edited by Michael L. Commons, James E. Mazur, John A. Nevin,
+and Howard Rachlin, 55–73. Hillsdale, NJ: Lawrence Erlbaum Associates.
+</div>
+<div id="ref-Miller2003_jech" class="csl-entry">
+Miller, B G, and J F Hurley. 2003. <span>“Life Table Methods for
+Quantitative Impact Assessments in Chronic Mortality.”</span>
+<em>Journal of Epidemiology &amp; Community Health</em> 57 (3): 200–206.
+<a href="https://doi.org/10.1136/jech.57.3.200" class="external-link">https://doi.org/10.1136/jech.57.3.200</a>.
+</div>
+<div id="ref-Miller2010_report" class="csl-entry">
+Miller, Brian G. 2010. <span>“Report on Estimation of Mortality Impacts
+of Particulate Air Pollution in London.”</span> Institute of
+Occupational Medicine (IOM). <a href="https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf" class="external-link">https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf</a>.
+</div>
+<div id="ref-Murray2003-spbm" class="csl-entry">
+Murray, Christopher J L, Majid Ezzati, Alan D Lopez, Anthony Rodgers,
+and Stephen Vander Hoorn. 2003. <span>“Comparative Quantification of
+Health Risks Conceptual Framework and Methodological Issues.”</span>
+<em>Popul. Health Metr.</em> 1 (1): 1.
+</div>
+<div id="ref-Pozzer2023_gh" class="csl-entry">
+Pozzer, A., S. C. Anenberg, S. Dey, A. Haines, J. Lelieveld, and S.
+Chowdhury. 2023. <span>“Mortality Attributable to Ambient Air Pollution:
+A Review of Global Estimates.”</span> <em>GeoHealth</em> 7 (1):
+e2022GH000711. https://doi.org/<a href="https://doi.org/10.1029/2022GH000711" class="external-link">https://doi.org/10.1029/2022GH000711</a>.
+</div>
+<div id="ref-Soares2020_report" class="csl-entry">
+Soares, J., A. González Ortiz, A. Gsella, J. Horálek, D. Plass, and S.
+Kienzler. 2022. <span>“Health Risk Assessment of Air Pollution and the
+Impact of the New WHO Guidelines (Eionet Report – ETC HE
+2022/10).”</span> European Topic Centre on Human Health; the
+Environment. <a href="https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content" class="external-link">https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content</a>.
+</div>
+<div id="ref-Steenland2006-e" class="csl-entry">
+Steenland, Kyle, and Ben Armstrong. 2006. <span>“An Overview of Methods
+for Calculating the Burden of Disease Due to Specific Risk
+Factors.”</span> <em>Epidemiology</em> 17 (5): 512–19. <a href="https://doi.org/10.1097/01.ede.0000229155.05644.43" class="external-link">https://doi.org/10.1097/01.ede.0000229155.05644.43</a>.
+</div>
+<div id="ref-VanderWeele2019_biom" class="csl-entry">
+VanderWeele, Tyler J. 2019. <span>“Optimal Approximate Conversions of
+Odds Ratios and Hazard Ratios to Risk Ratios.”</span>
+<em>Biometrics</em> 76 (3): 746–52. <a href="https://doi.org/10.1111/biom.13197" class="external-link">https://doi.org/10.1111/biom.13197</a>.
+</div>
+<div id="ref-WHO2003_report" class="csl-entry">
+WHO. 2003. <span>“Introduction and Methods: Assessing the Environmental
+Burden of Disease at National and Local Levels.”</span> World Health
+Organization. <a href="https://www.who.int/publications/i/item/9241546204" class="external-link">https://www.who.int/publications/i/item/9241546204</a>.
+</div>
+<div id="ref-WHO2011_report" class="csl-entry">
+———. 2011. <span>“Burden of Disease from Environmental Noise:
+Quantification of Healthy Life Years Lost in Europe.”</span> World
+Health Organization. <a href="https://www.who.int/publications/i/item/burden-of-disease-from-environmental-noise-quantification-of-healthy-life-years-lost-in-europe" class="external-link">https://www.who.int/publications/i/item/burden-of-disease-from-environmental-noise-quantification-of-healthy-life-years-lost-in-europe</a>.
+</div>
+<div id="ref-WHO2020_report" class="csl-entry">
+———. 2020. <span>“Health Impact Assessment of Air Pollution: AirQ+ Life
+Table Manual.”</span> World Health Organization - Regional Office for
+Europe. <a href="https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content" class="external-link">https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content</a>.
+</div>
+<div id="ref-Wickham2014_jss" class="csl-entry">
+Wickham, Hadley. 2014. <span>“Tidy Data.”</span> <em>Journal of
+Statistical Software</em> 59 (10): 1–23. <a href="https://doi.org/10.18637/jss.v059.i10" class="external-link">https://doi.org/10.18637/jss.v059.i10</a>.
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

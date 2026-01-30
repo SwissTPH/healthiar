@@ -47,8 +47,8 @@ monetize(
 - discount_shape:
 
   `String` referring to the assumed equation for the discount factor. By
-  default: "exponential". Otherwise: "hyperbolic_harvey_1986" or
-  "hyperbolic_mazur_1987".
+  default: `"exponential"`. Otherwise: `"hyperbolic_harvey_1986"` or
+  `"hyperbolic_mazur_1987"`.
 
 - n_years:
 
@@ -102,32 +102,31 @@ elements are added to the existing output.
 
 ## Details
 
-**Equation inflation factor (without discounting)**
+**Methodology**
 
-\$\$inflation\\factor = (1 + inflation\\rate)^{n\\years}\$\$
+Information about the methodology (including corresponding equations and
+literature) is available in the package vignette. More specifically, see
+chapters:
 
-**Equations discount factors (without inflation)**
+- [monetization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization)
 
-*Exponential discounting (no inflation)* \$\$discount\\factor =
-\frac{1}{(1 + discount\\rate) ^{n\\years}}\$\$
+## References
 
-*Hyperbolic discounting Harvey (no inflation)* \$\$discount\\factor =
-\frac{1}{(1 + n\\years)^{discount\\rate}}\$\$ *Hyperbolic discounting
-Mazure (no inflation)* \$\$discount\\factor = \frac{1}{(1 +
-(discount\\rate \times n\\years)}\$\$
+Frederick S, Loewenstein G, O'Donoghue T (2002). “Time Discounting and
+Time Preference: A Critical Review.” *Journal of Economic Literature*,
+**40**(2), 351–401.
+[doi:10.1257/002205102320161311](https://doi.org/10.1257/002205102320161311)
+.
 
-**Equations discount factors with inflation**
+Harvey CM (1986). “Value Functions for Infinite-Period Planning.”
+*Management Science*, **32**(9), 1123–1139.
+[doi:10.1287/mnsc.32.9.1123](https://doi.org/10.1287/mnsc.32.9.1123) .
 
-*Exponential discounting (with inflation)*
-\$\$discount\\and\\inflation\\factor = \frac{1}{((1 + discount\\rate)
-\times (1 + inflation\\rate)) ^{n\\years}}\$\$
-
-*Hyperbolic discounting Harvey (with inflation)*
-\$\$discount\\and\\inflation\\factor = \frac{1}{(1 +
-n\\years)^{discount\\rate} \times (1 + inflation\\rate)^{n\\years}}\$\$
-*Hyperbolic discounting Mazure (with inflation)*
-\$\$discount\\and\\inflation\\factor = \frac{1}{(1 + (discount\\rate
-\times n\\years) \times (1 + inflation\\rate)^{n\\years}}\$\$
+Mazur JE (1987). “An adjusting procedure for studying delayed
+reinforcement.” In Commons ML, Mazur JE, Nevin JA, Rachlin H (eds.),
+*Quantitative Analyses of Behavior: Volume V. The Effect of Delay and of
+Intervening Events on Reinforcement Value*, 55–73. Lawrence Erlbaum
+Associates, Hillsdale, NJ. ISBN 0-89859-800-1.
 
 ## Author
 
@@ -162,4 +161,5 @@ results$monetization_main |>
 #>   impact monetized_impact
 #>    <dbl>            <dbl>
 #> 1  3502.       151041149.
+
 ```
