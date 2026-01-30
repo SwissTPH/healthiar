@@ -28,7 +28,7 @@
 #' Information on methodology (including equations and literature) is available in the vignette.
 #' More specifically, see chapter:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios}{comparison of two health scenarios}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios}{comparison of two health scenarios}}
 #'
 # VALUE ########################################################################
 #' @returns

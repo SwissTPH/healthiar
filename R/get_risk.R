@@ -25,7 +25,7 @@
 #' Information on methodology (including equations and literature) is available in the vignette.
 #' More specifically, see chapter:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}}
 #'
 # VALUE ########################################################################
 #' @returns
