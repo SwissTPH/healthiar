@@ -59,9 +59,14 @@
 #'     method = "natural"),
 #'   exp = c(8, 9, 10)
 #' )
-
+#'
+#' @references
+#'
+#' \insertRef{Pozzer2023_gh}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 

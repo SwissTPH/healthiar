@@ -132,7 +132,16 @@
 #'   min_age = 20
 #' )
 #' results$health_main$impact_rounded # Attributable YLL
-
+#'
+#' @references
+#'
+#' \insertRef{WHO2020_report}{healthiar}
+#'
+#' \insertRef{Miller2003_jech}{healthiar}
+#'
+#' \insertRef{Miller2010_report}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
 
 #' @export
