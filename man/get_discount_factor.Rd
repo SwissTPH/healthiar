@@ -16,7 +16,7 @@ get_discount_factor(
 
 \item{n_years}{\code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).}
 
-\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".}
+\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.}
 
 \item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).}
 }
@@ -27,31 +27,31 @@ This function returns the \code{numeric} discount factor.
 This function calculates the discount factor based on discount rate. If the argument \code{inflation_rate} is NULL (default), it is assumed that the discount rate is already corrected for inflation). Otherwise (if a value for \code{inflation_rate} is entered), the resulted discount factor is adjusted for inflation.
 }
 \details{
-\strong{Equations discount factors (without inflation)}
+Additional details...
 
-\emph{Exponential discounting (no inflation)}
-\deqn{discount\_factor = \frac{1}{(1 + discount\_rate) ^{n\_years}}}
+\strong{Methodology}
 
-\emph{Hyperbolic discounting Harvey (no inflation)}
-\deqn{discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}}
-\emph{Hyperbolic discounting Mazure (no inflation)}
-\deqn{discount\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)}}
-
-\strong{Equations discount factors with inflation}
-
-\emph{Exponential discounting (with inflation)}
-\deqn{discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate)) ^{n\_years}}}
-
-\emph{Hyperbolic discounting Harvey (with inflation)}
-\deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}}
-\emph{Hyperbolic discounting Mazure (with inflation)}
-\deqn{discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years) \times (1 + inflation\_rate)^{n\_years}}}
+Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:
+\itemize{
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization}{monetization}}
 }
 \examples{
 get_discount_factor(
   discount_rate = 0.07,
   n_years = 5
  )
+
+
+}
+\references{
+\insertRef{Frederick2002_jel}{healthiar}
+
+\insertRef{Harvey1986_ms}{healthiar}
+
+\insertRef{Mazur1987_book}{healthiar}
 }
 \author{
 Alberto Castro & Axel Luyten

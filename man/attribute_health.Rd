@@ -87,10 +87,12 @@ This function returns a \code{list} containing:
 
 2) \code{health_detailed} (\code{list}) containing detailed (and interim) results.
 \itemize{
- \item \code{results_raw} (\code{tibble}) containing results for each combination of input uncertainty
- \item \code{results_by_geo_id_micro} (\code{tibble}) containing results for each geographic unit under analysis (specified in \code{geo_id_micro} argument)
- \item \code{input_table} (\code{tibble}) containing the inputs to each relevant argument
  \item \code{input_args} (\code{list}) containing all the argument inputs used in the background
+ \item \code{input_table} (\code{tibble}) containing the inputs after preparation
+ \item \code{results_raw} (\code{tibble}) containing results for all combinations of input (geo units, uncertainty, age and sex specific data...)
+ \item \code{results_by_...} (\code{tibble}) containing results stratified by each geographic unit, age or sex.
+
+
 }
 }
 \description{
@@ -104,6 +106,7 @@ Arguments for both \strong{RR & AR} pathways
  \item \code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper}
  \item \code{erf_eq_central}, \code{erf_eq_lower}, \code{erf_eq_upper}
  }
+
 Arguments only for \strong{RR} pathways
 \itemize{
  \item \code{rr_central}, \code{rr_lower}, \code{rr_upper}
@@ -112,10 +115,12 @@ Arguments only for \strong{RR} pathways
  \item \code{bhd_central}, \code{bhd_lower}, \code{bhd_upper}
  \item \code{prop_pop_exp}
  }
+
  Argument for \strong{AR} pathways
 \itemize{
  \item \code{pop_exp}
  }
+
  \strong{Optional} arguments for both \strong{RR & AR} pathways
 \itemize{
  \item \code{geo_id_micro}, \code{geo_id_macro},
@@ -131,125 +136,56 @@ The health metric you put in (e.g. absolute disease cases, deaths per 100 000 po
 
 \emph{Exception}: if you enter a disability weight (via the \code{dw_...} arguments) the attributable impact will be in YLD.
 
+
 \strong{Function arguments}
 
 \code{exp_central}, \code{exp_lower}, \code{exp_upper}
-
 In case of exposure bands enter only one exposure value per band (e.g. the means of the lower and upper bounds of the exposure bands).
 
 \code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper}
-
 The cutoff level refers to the exposure level below which no health effects occur in the same unit as the exposure. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
 
 \code{pop_exp}
-
 \emph{Only applicable in AR pathways; always required.} In AR pathways the population exposed per exposure category is multiplied with the corresonding category-specific risk to obtain the absolute number of people affected by the health outcome.
 
 \code{erf_eq_central}, \code{erf_eq_lower}, \code{erf_eq_upper}
-
 \emph{Required in AR pathways; in RR pathways required only if rr_... arguments not specified.} Enter the exposure-response function as a \code{function}, e.g. output from \code{stats::splinefun()} or \code{stats::approxfun()}, or as a \code{string} formula, e.g. \code{"3+c+c^2"} (with the \emph{c} representing the concentration/exposure).
-
 If you have x-axis (exposure) and y-axis (relative risk) value pairs of multiple points lying on the the exposure-response function, you could use e.g. \code{stats::splinefun(x, y, method="natural")} to derive the exposure-response function (in this example using a cubic spline natural interpolation).
-
 \code{rr_increment}
-
 \emph{Only applicable in RR pathways.} Relative risks from the literature are valid for a specific increment in the exposure, in case of air pollution often 10 or 5 \eqn{\mu g/m^3}).
 
 \code{bhd_central}, \code{bhd_lower}, \code{bhd_upper}
-
 \emph{Only applicable in RR pathways.} Baseline health data for each exposure category must be entered.
 
 \code{prop_pop_exp}
-
 \emph{Only applicable in RR pathways.} In RR pathways indicates the fraction(s) (value(s) from 0 until and including 1) of the total population exposed to the exposure categories. See equation of the population attributable fraction for categorical exposure below.
 
 \code{geo_id_macro}, \code{geo_id_micro}
-
 \emph{Only applicable in assessments with multiple geographic units.} For example, if you provide the names of the municipalities under analysis to \code{geo_id_micro}, you might provide to \code{geo_id_macro} the corresponding region / canton / province names.
 Consequently, the vectors fed to \code{geo_id_micro} and \code{geo_id_macro} must be of the same length.
 
 \code{age_group}
-
 Can be either \code{numeric} or \code{character}. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}.
 
 \code{info}
-
 \emph{Optional argument.} Information entered to this argument will be added as column(s) names \code{info_1}, \code{info_2}, \code{info_...} to the results table. These additional columns can be used to further stratify the analysis in a secondary step (see example below).
 
 \code{population}
-
 \emph{Optional argument.} The population entered here is used to determine impact rate per 100 000 population. Note the requirement for the vector length in the paragraph \emph{Assessment of multiple geographic units} below.
 
 \code{duration_central}, \code{duration_lower}, \code{duration_upper}
+\emph{Only applicable in assessments of YLD (years lived with disability).} Measured in years. A value of 1 (year) refers to the prevalence-based approach, while values above 1 to the incidence-based approach.
 
-\emph{Only applicable in assessments of YLD (years lived with disability).} If the value of \code{duration_central} is 1 year, it refers to the prevalence-based approach, while a value above 1 year to the incidence-based approach (Kim et al. 2022, https://doi.org/10.3961/jpmph.21.597).
 
-\strong{Assessment of multiple geographic units}
+\strong{Methodology}
 
-To assess the attributable health impact/burden across multiple geographic units with \code{attribute_health()}, you must specify the argument \code{geo_id_micro} and (optionally) \code{geo_id_macro}, in addition to the other required function arguments.
-
-The length of the input vectors to the function arguments must be:
-
-\deqn{\text{length input vectors} = \text{number of geo units} \times \text{number of exposure categories}}
-
-\deqn{(  \times \text{number of age groups (if entered)} \times \text{number of sex groups (if entered) )}}
-
-I.e. there must be one line / observation for each specific combination of geo unit, exposure category, age and sex group.
-
-Alternatively, for those arguments that are independent of location (e.g. \code{approach_risk}, \code{rr_...}, \code{erf_shape}, ...), you can enter a single value, which will be recycled to match the length of the other geo unit-specific input data. Additional categories can be passed on via the \code{info} argument.
-
-\strong{Equations (relative risk)}
-
-The most general equation describing the population attributable fraction (PAF) mathematically is an integral form (GBD 2019 Risk Factors Collaborators 2020, https://doi.org/10.1016/S0140-6736(20)30752-2):
-\deqn{PAF = \frac{\int RR(x)PE(x)dx - 1}{\int RR(x)PE(x)dx}}
-
-Where:
-
-\eqn{x} = exposure level
-
-\eqn{PE(x)} = population distribution of exposure
-
-\eqn{RR(x)} = relative risk at exposure level compared to the reference level
-
-If the population exposure is described as a categorical rather than continuous exposure, the integrals in this equation may be converted to sums, resulting in the following equation for the PAF (WHO 2003a, https://www.who.int/publications/i/item/9241546204; WHO 2011, https://iris.who.int/items/723ab97c-5c33-4e3b-8df1-744aa5bc1c27):
-\deqn{PAF = \frac{\sum RR_i \times PE_i - 1}{\sum RR_i \times PE_i}}
-
-Where:
-
-\eqn{i} = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
-
-\eqn{PE_i} = fraction of population in exposure category i
-
-\eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
-
-There is one alternative for the PAF for categorical exposure distribution that is commonly used, which is mathematically equivalent to the equation right above, meaning that numerical estimates based on these equations are identical (WHO 2003b, https://doi.org/10.1186/1478-7954-1-1; WHO 2011, https://iris.who.int/items/723ab97c-5c33-4e3b-8df1-744aa5bc1c27):
-\deqn{PAF = \frac{\sum PE_i(RR_i - 1)}{\sum PE_i(RR_i - 1) + 1}}
-
-Where:
-
-\eqn{i} = is the exposure category (e.g. in bins of 1 \eqn{\mu g/m^3} PM2.5 or 5 dB noise exposure)
-
-\eqn{PE_i} = fraction of population in exposure category i
-
-\eqn{RR_i} = relative risk associated with the mean exposure level in exposure category i compared to the reference level
-
-Finally, if the exposure is provided as the population weighted mean concentration (PWC), the equation for the PAF is reduced to (ETC HE 2022, https://www.eionet.europa.eu/etcs/all-etc-reports:
-\deqn{PAF = \frac{RR_{PWC} - 1}{RR_{PWC}}}
-Where \eqn{RR_{PWC}} is the relative risk associated with the population weighted mean exposure.
-
-\strong{Equation (absolute risk)}
-\deqn{N = \sum AR_i\times PE_i}
-
-Where:
-
-\eqn{N} = the number of cases of the exposure-specific health outcome that are attributed to the exposure
-
-\eqn{AR_i} = absolute risk associated with the mean exposure level of exposure category i
-
-\eqn{PE_i} = population exposed (absolute number) to exposure levels of exposure category i
-
-\strong{Conversion of alternative risk measures to relative risks}
-For conversion of hazard ratios and/or odds ratios to relative risks refer to VanderWeele 2019 (https://doi.org/10.1111/biom.13197) and/or use the conversion tools developed by the Teaching group in EBM in 2022 for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).
+Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:
+\itemize{
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{absolute risk}}
 }
 \examples{
 # Goal: attribute lung cancer cases to population-weighted PM2.5 exposure
@@ -266,6 +202,7 @@ results <- attribute_health(
 
 results$health_main$impact_rounded # Attributable cases
 
+
 # Goal: attribute cases of high annoyance to (road traffic) noise exposure
 # using absolute risk
 
@@ -277,6 +214,7 @@ results <- attribute_health(
 )
 
 results$health_main$impact_rounded # Attributable high annoyance cases
+
 
 # Goal: attribute disease cases to PM2.5 exposure in multiple geographic
 # units, such as municipalities, provinces, countries, ...
@@ -302,6 +240,7 @@ results$health_detailed$results_raw |> dplyr::select(
   impact_rounded
 )
 
+
 # Goal: determine attributable YLD (years lived with disability)
 results  <- attribute_health(
   exp_central = 8.85,
@@ -318,6 +257,17 @@ results  <- attribute_health(
 
 results$health_main$impact
 
+}
+\references{
+\insertRef{Soares2020_report}{healthiar}
+
+\insertRef{Pozzer2023_gh}{healthiar}
+
+\insertRef{GBD2020_tl}{healthiar}
+
+\insertRef{Steenland2006-e}{healthiar}
+
+\insertRef{WHO2003_report}{healthiar}
 }
 \author{
 Alberto Castro & Axel Luyten
