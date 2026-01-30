@@ -159,8 +159,8 @@ There exist different, equivalent ways of accessing the output:
 - With `[[]]` operator `results_pm_copd[["health_main"]]`
 
 - With `pluck()` & `pull()`: use the
-  [`purrr::pluck`](https://rdrr.io/pkg/purrr/man/pluck.html) function to
-  select a list and then the
+  [`purrr::pluck`](https://purrr.tidyverse.org/reference/pluck.html)
+  function to select a list and then the
   [`dplyr::pull`](https://dplyr.tidyverse.org/reference/pull.html)
   function extract values from a specified column,
   e.g. `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
