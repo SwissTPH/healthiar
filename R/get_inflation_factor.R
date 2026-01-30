@@ -8,12 +8,17 @@
 #' @inheritParams monetize
 
 # DETAILS ######################################################################
-
 #' @details
-#' \strong{Equation inflation factor (without discounting)}
-#' @details
-#' \deqn{inflation\_factor = (1 + inflation\_rate)^{n\_years}}
-
+#'
+#' \strong{Methodology}
+#'
+#' Information about the methodology
+#' (including corresponding equations and literature)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization}{monetization}
+#'
 # VALUE ########################################################################
 #' @returns This function returns the \code{numeric} inflation factor.
 
