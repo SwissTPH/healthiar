@@ -39,10 +39,9 @@
 #'
 #' Information on methodology (including equations and literature) is available in the vignette.
 #' More specifically, see chapters:
-#'
-#' - \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}
-#'
-#' - \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{absolute risk}
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{absolute risk}}
 #'
 #'
 #' \strong{Conversion of multi-year to single year age groups}

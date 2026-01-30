@@ -13,7 +13,7 @@
 # DETAILS ######################################################################
 #' @details
 #'
-#' #' \strong{Function arguments}
+#' \strong{Function arguments}
 #'
 #' \code{approach_comparison}
 #' Please note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2
@@ -22,6 +22,13 @@
 #' With the delta comparison approach, the difference between two scenarios is obtained by subtraction.
 #' The delta approach is suited for all comparison cases,
 #' and specifically for comparison of a situation now with a situation in the future.
+#'
+#' \strong{Methodology}
+#'
+#' Information on methodology (including equations and literature) is available in the vignette.
+#' More specifically, see chapter:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios}{comparison of two health scenarios}
 #'
 # VALUE ########################################################################
 #' @returns
