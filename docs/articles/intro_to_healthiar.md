@@ -46,7 +46,9 @@ Let’s see some examples calling the most important function in
 `healthiar`:
 [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
 
-#### Hard coded
+#### Hard coded vs. columns
+
+##### Hard coded
 
 Depending on the function argument, you will need to enter numeric or
 character values.
@@ -62,7 +64,7 @@ results_pm_copd <- attribute_health(
 )
 ```
 
-#### Columns
+##### Columns
 
 `healthiar` comes with some example data that start with `exdat_` that
 allow you to test functions. Some of these example data will be used in
@@ -85,6 +87,8 @@ results_pm_copd <- attribute_health(
 )
 ```
 
+#### Tidy data
+
 Be aware that `healthiar` functions are easier to use if your data is
 prepared in a tidy format, i.e.:
 
@@ -94,9 +98,22 @@ prepared in a tidy format, i.e.:
 
 - Each value is a cell; each cell is a single value.
 
-If you want to know more about the concept of tidy format, read [this
-article of Hadley Wickham
-(2014)](https://doi.org/10.18637/jss.v059.i10).
+To know more about the concept of tidy format, see the article by
+(Wickham 2014).
+
+For example, in `attribute health()` the length of the input vectors to
+be entered in the arguments must be either 1 or the result of the
+combinations of the different values of:
+
+- `geo_id_micro`
+
+- `exp_...`
+
+- `sex`
+
+- `age`
+
+- (`info` for further sub-group analysis)
 
 ### Output
 
@@ -104,30 +121,17 @@ article of Hadley Wickham
 
 The output of the `healthiar`function
 [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
-consists of two lists (“folders”):
+and `attribute_lifetable` consists of two lists (“folders”):
 
 - `health_main` contains the main results
 
 - `health_detailed` contained detailed results and additional info about
-  the assessment, e.g.:
+  the assessment.
 
-  - `results_raw` tibble (very similar to a `data.frame`) that contains
-    the detailed results
-
-  - `input_args` list of all arguments used in the assessment (including
-    some internal arguments)
-
-  - `input_table` tibble that contains all input data entered by the
-    user or derived for the calculations
-
-  - `results_by_...` tibble that contains the results stratified by the
-    categories of the following arguments (only if entered)
-
-    - `geo_id_micro`
-
-    - `sex`
-
-    - `age_group`
+In other `healthiar` functions you can find a similar output structure
+but using different prefixes. E.g. `social_`in
+[`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md)
+and `monetization_`in `monetitize()`.
 
 ##### Access
 
@@ -155,8 +159,8 @@ There exist different, equivalent ways of accessing the output:
 - With `[[]]` operator `results_pm_copd[["health_main"]]`
 
 - With `pluck()` & `pull()`: use the
-  [`purrr::pluck`](https://purrr.tidyverse.org/reference/pluck.html)
-  function to select a list and then the
+  [`purrr::pluck`](https://rdrr.io/pkg/purrr/man/pluck.html) function to
+  select a list and then the
   [`dplyr::pull`](https://dplyr.tidyverse.org/reference/pull.html)
   function extract values from a specified column,
   e.g. `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
@@ -179,11 +183,97 @@ more detailed explanations.
 To quantify the COPD cases attributable to PM2.5 (air pollution)
 exposure in a country.
 
-#### Methodological refresher
+#### Methodology
+
+There is extensive literature on health impact quantification using the
+relative risk approach \[e.g., Pozzer2023_gh; Soares et al. (2022);
+Collaborators (2020); Steenland and Armstrong (2006); WHO (2003)\].
 
 ![Figure: Relative risk approach](../reference/figures/bod_rr.png)
 
 Figure: Relative risk approach
+
+##### Population attributable fraction
+
+The general integral form for the **population attributable fraction
+(PAF)**:
+
+``` math
+PAF = \frac{\int rr\_at\_exp(x) \times PE(x)dx - 1}{\int rr\_at\_exp(x) \times pop\_exp(x)dx}
+```
+
+Where:
+
+- $`x`$ = exposure level
+
+- $`PE(x)`$ = population distribution of exposure
+
+- $`rr\_at\exp(x)`$ = relative risk at exposure level compared to
+  reference
+
+###### Simplified for categorical exposure distribution
+
+If exposure is categorical, the integrals are converted to sums:
+
+``` math
+PAF = \frac{\sum rr\_at\_exp_i \times PE_i - 1}{\sum rr\_at\_exp_i \times PE_i}
+```
+
+Alternatively, an equivalent form is:
+
+``` math
+PAF = \frac{\sum PE_i \times (rr\_at\_exp_i - 1)}{\sum PE_i\times (rr\_at\_exp_i - 1) + 1}
+```
+
+###### Simplified for single exposure value
+
+If there is one single single exposure value, corresponding to the
+population weighted mean concentration, the equation can be simplified
+as follows:
+
+``` math
+PAF = \frac{rr\_at\_exp - 1}{rr\_at\_exp }
+```
+\#### Scaling relative risk How to get this relative risk at exposure
+level (`rr_at_exp`)? This is normally different to the relative risk
+published in the epidemiological literature (`rr`) together with the
+(concentration/dose) `increment` that corresponds to this relative risk.
+The equations used for scaling relative risk depend on the chosen
+exposure-response function shapes:
+
+- linear
+  ``` math
+  RRexp = 1 + \frac{rr - 1}{increment} \times (exp - cutoff)
+  ```
+
+- log-linear (Pozzer et al. 2023)
+  ``` math
+  RRexp = e^{\frac{\log(rr)}{increment} \times (exp - cutoff)}
+  ```
+
+- log-log (Pozzer et al. 2023)
+  ``` math
+  RRexp = \left( \frac{exp + 1}{cutoff + 1} \right)^{\frac{\log(rr)}{\log(increment + cutoff + 1) - \log(cutoff + 1)}}
+  ```
+
+- linear-log (Pozzer et al. 2023)
+  ``` math
+  RRexp = 1 + \frac{\log(rr - 1)}{\log(increment + cutoff + 1) - \log(cutoff + 1)} \times \frac{\log(exp + 1)}{\log(cutoff + 1)}
+  ```
+
+The relative risk at exposure level (`rr_at_exp`) and is part of the
+output of
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+and
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md).
+`rr_at_exp` can also be calculated using
+[`get_risk()`](https://swisstph.github.io/healthiar/reference/get_risk.md).
+
+For conversion of hazard ratios and/or odds ratios to relative risks
+refer to (VanderWeele 2019) and/or use the conversion tools developed by
+the Teaching group in EBM in 2022 for hazard ratios
+(<https://ebm-helper.cn/en/Conv/HR_RR.html>) and/or odds ratios
+(<https://ebm-helper.cn/en/Conv/OR_RR.html>).
 
 #### Function call
 
@@ -251,11 +341,26 @@ Some of the most results columns include:
 To quantify the incidence cases of high annoyance attributable to (road
 traffic) noise exposure.
 
-#### Refresher - Burden of disease with absolute risk
+#### Methodology
+
+For the absolute risk, the population exposed instead of baseline health
+data (i.e. disease-specific burden of disease) is used (WHO 2011).
 
 ![Figure: Absolute risk approach](../reference/figures/bod_ar.png)
 
 Figure: Absolute risk approach
+
+``` math
+N = \sum AR_i \times PE_i
+```
+
+Where:
+
+- $`N`$ = attributed cases
+
+- $`AR_i`$ = absolute risk at category $`i`$
+
+- $`PE_i`$ = absolute population exposed at category $`i`$
 
 #### Function call
 
@@ -790,6 +895,160 @@ output_stratified <- output_attribute$health_detailed$results_raw |>
 To quantify the years of life lost (YLL) due to deaths from COPD
 attributable to PM2.5 exposure during one year.
 
+#### Method
+
+##### General concept
+
+The life table methodology of
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+follows that of the WHO tool AirQ+ (WHO 2020), which is described in
+more detail by B. G. Miller and Hurley (2003).
+
+In short, two scenarios are compared:
+
+1.  a scenario with the exposure level specified in the function
+    (“exposed scenario”) and
+
+2.  a scenario with no exposure (“unexposed scenario”).
+
+First, the entry and mid-year populations of the (first) year of
+analysis in the unexposed scenario is determined using modified survival
+probabilities. Second, age-specific population projections using
+scenario-specific survival probabilities are done for both scenarios.
+Third, by subtracting the populations in the unexposed scenario from the
+populations in the exposed scenario the premature deaths/years of life
+lost attributable to the exposure are determined.
+
+An expansive life table case study for is available in a report of Brian
+G. Miller (2010).
+
+##### Determination of populations in the (first) year of analysis
+
+###### Entry population
+
+The entry (i.e. start of year) populations in both scenarios (exposed
+and unexposed) is determined as follows:
+
+``` math
+entry\_population_{year_1} = midyear\_population_{year_1} + \frac{deaths_{year_1}}{2}
+```
+
+###### Survival probabilities
+
+###### Exposed scenario
+
+The survival probabilities in the exposed scenario from start of year
+$`i`$ to start of year $`i+1`$ are calculated as follows:
+
+``` math
+prob\_survival = \frac{midyear\_population_i - \frac{deaths_i}{2}}{midyear\_population_i + \frac{deaths_i}{2}}
+```
+
+Analogously, the probability of survival from start of year $`i`$ to
+mid-year $`i`$:
+
+``` math
+prob\_survival\_until\_midyear = 1 - \frac{1 - prob\_survival}{2}
+```
+
+###### Unexposed scenario
+
+The survival probabilities in the unexposed scenario are calculated as
+follows:
+
+First, the age-group specific hazard rate in the exposed scenario is
+calculated using the inputted age-specific mid-year populations and
+deaths.
+
+``` math
+hazard\_rate = \frac{deaths}{mid\_year\_population}
+```
+
+Second, the hazard rate is multiplied with the modification factor
+($`= 1 - PAF`$) to obtain the age-specific hazard rate in the unexposed
+scenario.
+
+``` math
+hazard\_rate\_mod = hazard\_rate \times modification\_factor
+```
+
+Third, the the age-specific survival probabilities (from the start until
+the end in a given age group) in the unexposed scenario are calculated
+as follows (cf. Miller & Hurley 2003):
+
+``` math
+prob\_survival\_mod = \frac{2-hazard\_rate\_mod}{2+hazard\_rate\_mod}
+```
+
+###### Mid-year population
+
+The mid-year populatios of the (first) year of analysis (year_1) in the
+unexposed scenario are determined as follows:
+
+First, the survival probabilities from start of year $`i`$ to mid-year
+$`i`$ in the unexposed scenario is calculated as:
+
+``` math
+prob\_survival\_until\_midyear_{mod} = 1 - \frac{1 - prob\_survival\_mod}{2}
+```
+
+Second, the mid-year populations of the (first) year of analysis
+(year_1) in the unexposed scenario is calculated:
+
+``` math
+midyear\_population\_unexposed_{year_1} = entry\_population_{year_1} \times prob\_survival\_until\_midyear_{mod}
+```
+
+##### Population projection
+
+Using the age group-specific and scenario-specific survival
+probabilities calculated above, future populations of each age-group
+under each scenario are calculated.
+
+###### Exposed scenario
+
+The population projections for the two possible options of
+`approach_exposure` (`"single_year"` and `"constant"`) for the unexposed
+scenario are different. In the case of `"single_year"` exposure, the
+population projection for the years after the year of exposure is the
+same as in the unexposed scenario.
+
+In the case of `"constant"` the population projection is done as
+follows:
+
+First, the entry population of year $`i+1`$ is calculated (which is the
+same as the end of year population of year $`i`$) using the entry
+population of year $`i`$.
+
+``` math
+entry\_population_{i+1} = entry\_population_i \times prob\_survival
+```
+
+Second, the mid-year population of year $`i+1`$ is calculated.
+
+``` math
+midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear
+```
+
+###### Unexposed scenario
+
+The entry and mid-year population projections of in the exposed scenario
+is done as follows:
+
+First, the entry population of year $`i+1`$ is calculated (which is the
+same as the end of year population of year $`i`$) by multiplying the
+entry population of year $`i`$ and the modified survival probabilities.
+
+``` math
+entry\_population_{i+1} = entry\_population_i \times prob\_survival\_mod
+```
+
+Second, the mid-year population of year $`i+1`$ is calculated.
+
+``` math
+midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear
+```
+
 #### Function call
 
 We can use
@@ -1032,6 +1291,17 @@ available for one year (the year of analysis).
 To quantify the years lived with disability (YLD) attributable to air
 pollution exposure using disability weights.
 
+#### Methodology
+
+To quantify the YLDs, you can use a prevalence-based or an
+incidence-based approach (Kim et al. 2022).
+
+- Prevalence-based : Enter `1` (year) in the argument(s) `dw_...` and
+  *prevalence* cases in `bhd_...`.
+
+- Incidence-based: Enter a value *above* 1 in `dw_...` and *incidence*
+  cases in `bhd_...`.
+
 #### Function call
 
 ``` r
@@ -1132,6 +1402,80 @@ scenario_B <- attribute_health(
 
 To compare the health impacts in the scenario “before intervention”
 vs. “after intervention”.
+
+#### Methodology
+
+Two approaches can be used for the comparison of scenarios:
+
+- Population impact fraction (PIF)
+
+- Delta
+
+Please note that the PIF comparison approach assumes same baseline
+health data for scenario 1 and 2 (e.g. comparison of two scenarios at
+the same time point), while the delta comparison approach, the
+difference between two scenarios is obtained by subtraction. Therefore,
+the delta approach is suited for comparison of a situation now with a
+situation in the future.
+
+##### Population Impact Fraction (PIF)
+
+The Population Impact Fraction (PIF) is defined as the proportional
+change in disease or mortality when exposure to a risk factor is changed
+(for instance due to an intervention).
+
+###### General Integral Form
+
+The most general equation describing this mathematically is an integral
+form (WHO 2003; Murray et al. 2003):
+
+``` math
+PIF = \frac{\int RR(x)PE(x)dx - \int RR(x)PE'(x)dx}{\int RR(x)PE(x)dx}
+```
+
+**Where:**
+
+- $`x`$ = exposure level
+- $`PE(x)`$ = population distribution of exposure
+- $`PE'(x)`$ = alternative population distribution of exposure
+- $`RRexp(x)`$ = relative risk at exposure level compared to the
+  reference level
+
+###### Categorical Exposure Form
+
+If the population exposure is described as a categorical rather than
+continuous exposure, the integrals may be converted to sums \[WHO
+(2003); Murray2003-spbm\]:
+
+``` math
+PIF = \frac{\sum RR_{i} \times PE_{i} - \sum RR_{i}PE'_{i}}{\sum RR_{i}PE_{i}}
+```
+
+**Where:**
+
+- $`i`$ = the exposure category (e.g., in bins of 1
+  $`\mu g/m^3`$$`PM_{2.5}`$ or 5 dB noise exposure)
+- $`PE_i`$ = fraction of population in exposure category $`i`$
+- $`PE'_i`$ = fraction of population in category $`i`$ for alternative
+  (ideal) exposure scenario
+- $`RRexp_i`$ = relative risk for exposure category level $`i`$ compared
+  to the reference level
+
+###### Population weighted mean concentration form
+
+Finally, if the exposure is provided as the population weighted mean
+concentration, the equation for the PIF is reduced to:
+
+``` math
+PIF = \frac{RRexp - RRexp_{alt}}{RRexp}
+```
+
+**Where:**
+
+- $`RRexp`$ = relative risk associated with the population weighted mean
+  exposure
+- $`RRexp{alt}`$ = relative risk associated with the population weighted
+  mean for the alternative exposure scenario
 
 #### Function call
 
@@ -1305,20 +1649,68 @@ curve](intro_to_healthiar_files/figure-html/unnamed-chunk-91-1.png)
 To monetize the attributable health impact of a policy that will have
 health benefits five years from now.
 
-The outcome of the monetization is added to the variable entered to the
-`output_attribute` argument, which is `results_pm_copd` in our case.
+#### Methodology
 
-Two folders are added:
+You can monetize health impacts valuating them and considering
+discounting and inflation. For this purpose you can use
+[`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md).
+If you just need the discount factor or the inflation factor, you can
+alternatively call
+[`get_discount_factor()`](https://swisstph.github.io/healthiar/reference/get_discount_factor.md)
+or
+[`get_inflation_factor()`](https://swisstph.github.io/healthiar/reference/get_inflation_factor.md).
+See the equations that are used behind these functions.
 
-- `monetization_main` contains the central monetization estimate and the
-  corresponding 95% confidence intervals obtained through the specified
-  monetization.
+##### Inflation factor (without discounting)
 
-- `monetization_detailed` contains the monetized results for each unique
-  combination of the input variable estimates that were provided to the
-  initial
-  [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
-  call.
+As suggested by Brealey et al. (2023)
+
+``` math
+inflation\_factor = (1 + inflation\_rate)^{n\_years}
+```
+
+#### Discount factors (without inflation)
+
+*Exponential discounting (no inflation)*
+
+As suggested by Frederick, Loewenstein, and O’Donoghue (2002)
+
+``` math
+discount\_factor = \frac{1}{(1 + discount\_rate)^{n\_years}}
+```
+
+*Hyperbolic discounting Harvey (no inflation)*
+
+As suggested by Harvey (1986)
+
+``` math
+discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}
+```
+
+*Hyperbolic discounting Mazur (no inflation)*
+
+As suggested by Mazur (1987)
+
+``` math
+discount\_factor = \frac{1}{1 + (discount\_rate \times n\_years)}
+```
+
+#### Discount factors with inflation
+
+*Exponential discounting (with inflation)*
+``` math
+discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate))^{n\_years}}
+```
+
+*Hyperbolic discounting Harvey (with inflation)*
+``` math
+discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}
+```
+
+*Hyperbolic discounting Mazur (with inflation)*
+``` math
+discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)) \times (1 + inflation\_rate)^{n\_years}}
+```
 
 #### Function call
 
@@ -1333,6 +1725,21 @@ monetized_pm_copd <- monetize(
 ```
 
 #### Main results
+
+The outcome of the monetization is added to the variable entered to the
+`output_attribute` argument, which is `results_pm_copd` in our case.
+
+Two folders are added:
+
+- `monetization_main` contains the central monetization estimate and the
+  corresponding 95% confidence intervals obtained through the specified
+  monetization.
+
+- `monetization_detailed` contains the monetized results for each unique
+  combination of the input variable estimates that were provided to the
+  initial
+  [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+  call.
 
 | erf_ci  | monetized_impact |
 |:--------|-----------------:|
@@ -1360,6 +1767,30 @@ results <- monetize(
 To estimate the net-benefit of a health policy via cost-benefit analysis
 (CBA).
 
+#### Methodology
+
+To perform a cost-benefit analysis, you can use the function
+[`cba()`](https://swisstph.github.io/healthiar/reference/cba.md). It
+provides three types of indicators based on the following equations
+(Boardman et al. 2018):
+
+**Net Benefit**
+``` math
+net\_benefit = benefit - cost
+```
+
+**Cost-Benefit Ratio**
+``` math
+cost\_benefit\_ratio = \frac{benefit}{cost}
+```
+
+**Return on Investment (ROI)**
+``` math
+return\_on\_investment = \frac{benefit - cost}{cost} \times 100
+```
+
+#### Function call
+
 Let’s imagine we design a policy that would reduce air pollution to 5
 $`\mu g/m^3`$, which is the concentration specified in the
 `cutoff_central` argument in the initial
@@ -1367,26 +1798,9 @@ $`\mu g/m^3`$, which is the concentration specified in the
 call. So we could avoid all COPD cases attributed to air pollution.
 
 Considering the cost to implement the policy (estimated at 100 million
-EURO), what would be the monetary net benefit of such a policy, ? We can
-find out using `healthiar`’s
+EURO), what would be the monetary net benefit of such a policy? We can
+find out using the functions `healthiar` and
 [`cba()`](https://swisstph.github.io/healthiar/reference/cba.md)
-function.
-
-The outcome of the CBA is contained in two folders, which are added to
-the existing assessment:
-
-- `cba_main` contains the central estimate and the corresponding 95%
-  confidence intervals obtained
-
-- `cba_detailed` contains additional intermediate results for both cost
-  and benefit
-
-  - `benefit` contains results `by_year` and raw results `health_raw`
-
-  - `cost` contains the costs of the policy at the end of the period
-    specified in the `n_years_cost` argument
-
-#### Function call
 
 ``` r
 cba <- cba(
@@ -1402,6 +1816,20 @@ cba <- cba(
 ```
 
 #### Main results
+
+The outcome of the CBA is contained in two folders, which are added to
+the existing assessment:
+
+- `cba_main` contains the central estimate and the corresponding 95%
+  confidence intervals obtained
+
+- `cba_detailed` contains additional intermediate results for both cost
+  and benefit
+
+  - `benefit` contains results `by_year` and raw results `health_raw`
+
+  - `cost` contains the costs of the policy at the end of the period
+    specified in the `n_years_cost` argument
 
 ``` r
 cba$cba_main |>  
@@ -1667,4 +2095,92 @@ ERF = exposure-response function
 
 RR/rr = relative risk
 
+WHO = World Health Organization
+
 YLL/yll = years of life lost
+
+------------------------------------------------------------------------
+
+## References
+
+Boardman, Anthony E., David H. Greenberg, Aidan R. Vining, and David L.
+Weimer. 2018. *Cost-Benefit Analysis: Concepts and Practice*. 5th ed.
+Cambridge, UK: Cambridge University Press.
+
+Brealey, Richard A., Stewart C. Myers, Franklin Allen, Simon Benninga,
+and Julian Read. 2023. *Principles of Corporate Finance*. 14th ed. New
+York, NY: McGraw-Hill Education.
+
+Collaborators, GBD 2019 Risk Factors. 2020. “Global Burden of 87 Risk
+Factors in 204 Countries and Territories, 1990–2019.” *The Lancet*.
+<https://doi.org/10.1016/S0140-6736(20)30752-2>.
+
+Frederick, Shane, George Loewenstein, and Ted O’Donoghue. 2002. “Time
+Discounting and Time Preference: A Critical Review.” *Journal of
+Economic Literature* 40 (2): 351–401.
+<https://doi.org/10.1257/002205102320161311>.
+
+Harvey, Charles M. 1986. “Value Functions for Infinite-Period Planning.”
+*Management Science* 32 (9): 1123–39.
+<https://doi.org/10.1287/mnsc.32.9.1123>.
+
+Kim, Young-Eun, Yoon-Sun Jung, Minsu Ock, and Seok-Jun Yoon. 2022. “DALY
+Estimation Approaches: Understanding and Using the Incidence-Based
+Approach and the Prevalence-Based Approach.” *J. Prev. Med. Public
+Health* 55 (1): 10–18. <https://doi.org/10.1111/biom.13197>.
+
+Mazur, James E. 1987. “An Adjusting Procedure for Studying Delayed
+Reinforcement.” In *Quantitative Analyses of Behavior: Volume v. The
+Effect of Delay and of Intervening Events on Reinforcement Value*,
+edited by Michael L. Commons, James E. Mazur, John A. Nevin, and Howard
+Rachlin, 55–73. Hillsdale, NJ: Lawrence Erlbaum Associates.
+
+Miller, B G, and J F Hurley. 2003. “Life Table Methods for Quantitative
+Impact Assessments in Chronic Mortality.” *Journal of Epidemiology &
+Community Health* 57 (3): 200–206.
+<https://doi.org/10.1136/jech.57.3.200>.
+
+Miller, Brian G. 2010. “Report on Estimation of Mortality Impacts of
+Particulate Air Pollution in London.” Institute of Occupational Medicine
+(IOM).
+<https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf>.
+
+Murray, Christopher J L, Majid Ezzati, Alan D Lopez, Anthony Rodgers,
+and Stephen Vander Hoorn. 2003. “Comparative Quantification of Health
+Risks Conceptual Framework and Methodological Issues.” *Popul. Health
+Metr.* 1 (1): 1.
+
+Pozzer, A., S. C. Anenberg, S. Dey, A. Haines, J. Lelieveld, and S.
+Chowdhury. 2023. “Mortality Attributable to Ambient Air Pollution: A
+Review of Global Estimates.” *GeoHealth* 7 (1): e2022GH000711.
+https://doi.org/<https://doi.org/10.1029/2022GH000711>.
+
+Soares, J., A. González Ortiz, A. Gsella, J. Horálek, D. Plass, and S.
+Kienzler. 2022. “Health Risk Assessment of Air Pollution and the Impact
+of the New WHO Guidelines (Eionet Report – ETC HE 2022/10).” European
+Topic Centre on Human Health; the Environment.
+<https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content>.
+
+Steenland, Kyle, and Ben Armstrong. 2006. “An Overview of Methods for
+Calculating the Burden of Disease Due to Specific Risk Factors.”
+*Epidemiology* 17 (5): 512–19.
+<https://doi.org/10.1097/01.ede.0000229155.05644.43>.
+
+VanderWeele, Tyler J. 2019. “Optimal Approximate Conversions of Odds
+Ratios and Hazard Ratios to Risk Ratios.” *Biometrics* 76 (3): 746–52.
+<https://doi.org/10.1111/biom.13197>.
+
+WHO. 2003. “Introduction and Methods: Assessing the Environmental Burden
+of Disease at National and Local Levels.” World Health Organization.
+<https://www.who.int/publications/i/item/9241546204>.
+
+———. 2011. “Burden of Disease from Environmental Noise: Quantification
+of Healthy Life Years Lost in Europe.” World Health Organization.
+<https://www.who.int/publications/i/item/burden-of-disease-from-environmental-noise-quantification-of-healthy-life-years-lost-in-europe>.
+
+———. 2020. “Health Impact Assessment of Air Pollution: AirQ+ Life Table
+Manual.” World Health Organization - Regional Office for Europe.
+<https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content>.
+
+Wickham, Hadley. 2014. “Tidy Data.” *Journal of Statistical Software* 59
+(10): 1–23. <https://doi.org/10.18637/jss.v059.i10>.

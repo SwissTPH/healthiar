@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1431</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1433</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -165,74 +165,62 @@
 <p>1) <code>health_main</code> (<code>tibble</code>) containing the main results;</p><ul><li><p><code>impact</code> (<code>numeric</code> column) attributable health burden/impact</p></li>
 <li><p><code>pop_fraction</code> (<code>numeric</code> column) population attributable fraction; only applicable in relative risk assessments</p></li>
 <li><p>And many more</p></li>
-</ul><p>2) <code>health_detailed</code> (<code>list</code>) containing detailed (and interim) results.</p><ul><li><p><code>results_raw</code> (<code>tibble</code>) containing results for each combination of input uncertainty</p></li>
-<li><p><code>results_by_geo_id_micro</code> (<code>tibble</code>) containing results for each geographic unit under analysis (specified in <code>geo_id_micro</code> argument)</p></li>
-<li><p><code>results_by_year</code> (<code>tibble</code>) containing results by year</p></li>
-<li><p><code>results_by_sex</code> (<code>tibble</code>) containing results by sex</p></li>
-<li><p><code>results_by_age_group</code> (<code>tibble</code>) containing results by age group</p></li>
-<li><p><code>intermediate_calculations</code> (<code>tibble</code>) containing intermediate results, among others population projections (for both the exposed and unexposed scenarios) and impact by age and year stored in nested <code>tibbles</code></p></li>
-<li><p><code>input_table</code> (<code>tibble</code>) containing the inputs to each relevant argument</p></li>
-<li><p><code>input_args</code> (<code>list</code>) containing all the argument inputs used in the background</p></li>
+</ul><p>2) <code>health_detailed</code> (<code>list</code>) containing detailed (and interim) results.</p><ul><li><p><code>input_args</code> (<code>list</code>) containing all the argument inputs used in the background</p></li>
+<li><p><code>input_table</code> (<code>tibble</code>) containing the inputs after preparation</p></li>
+<li><p><code>results_raw</code> (<code>tibble</code>) containing results for all combinations of input (geo units, uncertainty, age and sex specific data...)</p></li>
+<li><p><code>results_by_...</code> (<code>tibble</code>) containing results stratified by each geographic unit, age or sex.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><strong>Function arguments</strong></p>
-<p><code>age_group</code></p>
-<p>The numeric values must refer to 1 year age groups, e.g. <code>c(0:99)</code>. To convert multi-year/larger age groups to 1 year age groups use the function <code><a href="prepare_lifetable.html">prepare_lifetable()</a></code> (see its function documentation for more info).</p>
-<p><code>bhd_central,bhd_lower,bhd_upper</code></p>
-<p>Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year). There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities. If zeros show up in the last ages (e.g. age 98 = 0 deaths, 99 years old = 1), please sum the values and condensate last category (e.g. age 98 = 1).</p>
-<p><code>population</code></p>
-<p>The population data must be inputted with 1 value per age (i.e. age group size = 1 year). The values must be greater than or equal to 1 per age to avoid issues during the calculation of survival probabilities.</p>
-<p>Mid-year population of year x can be approximated as the mean of either end-year populations of years x-1 and x or start-of-year populations of years x and x+1. For each age, the inputted values must be greater than or equal to 1 to avoid issues during the calculation of survival probabilities.</p>
-<p><code>approach_newborns</code></p>
-<p>If <code>"with_newborns"</code> is selected, it is assumed that for each year after the year of analysis n babies (population aged 0) are born.</p>
-<p><code>time_horizon</code></p>
-<p>Applicable for the following cases:
+<p><code>age_group</code>
+The numeric values must refer to 1 year age groups, e.g. <code>c(0:99)</code>. To convert multi-year/larger age groups to 1 year age groups use the function <code><a href="prepare_lifetable.html">prepare_lifetable()</a></code> (see its function documentation for more info).</p>
+<p><code>bhd_central,bhd_lower,bhd_upper</code>
+Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year). There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities. If zeros show up in the last ages (e.g. age 98 = 0 deaths, 99 years old = 1), please sum the values and condensate last category (e.g. age 98 = 1).</p>
+<p><code>population</code>
+The population data must be inputted with 1 value per age (i.e. age group size = 1 year). The values must be greater than or equal to 1 per age to avoid issues during the calculation of survival probabilities.
+Mid-year population of year x can be approximated as the mean of either end-year populations of years x-1 and x or start-of-year populations of years x and x+1. For each age, the inputted values must be greater than or equal to 1 to avoid issues during the calculation of survival probabilities.</p>
+<p><code>approach_newborns</code>
+If <code>"with_newborns"</code> is selected, it is assumed that for each year after the year of analysis n babies (population aged 0) are born.</p>
+<p><code>time_horizon</code>
+Applicable for the following cases:
 #'</p><ul><li><p>YLL: <code>single_year</code> or <code>constant</code> exposure</p></li>
 <li><p>premature deaths: <code>constant</code> exposure</p></li>
-</ul><p>For example, if 10 is entered one is interested in the impacts of exposure during the year of analysis and the next 9 years (= 10 years in total). Default value: length of the numeric vector specified in the <code>age_group</code> argument.</p>
-<p><code>min_age</code>, <code>max_age</code>
+</ul><p>For example, if 10 is entered one is interested in the impacts of exposure during the year of analysis and the next 9 years (= 10 years in total). Default value: length of the numeric vector specified in the <code>age_group</code> argument.
+<code>min_age</code>, <code>max_age</code>
 The <code>min_age</code> default value 30 implies that all adults aged 30 or older will be affected by the exposure; <code>max_age</code> analogeously specifies the age above which no health effects of the exposure are considered.</p>
-<p><strong>Conversion of multi-year to single year age groups</strong></p>
-<p>To convert multi-year/larger age groups to 1 year age groups use the function <code><a href="prepare_lifetable.html">prepare_lifetable()</a></code> and see its function documentation for more info.</p>
-<p><strong>Life table methodology</strong></p>
-<p>The life table methodology of <code>attribute_lifetable()</code> follows that of the WHO tool AirQ+, and is described in more detail by Miller &amp; Hurley (2003, https://doi.org/10.1136/jech.57.3.200).</p>
-<p>In short, two scenarios are compared: 1) a scenario with the exposure level specified in the function ("exposed scenario") and 2) a scenario with no exposure ("unexposed scenario"). First, the entry and mid-year populations of the (first) year of analysis in the unexposed scenario is determined using modified survival probabilities. Second, age-specific population projections using scenario-specific survival probabilities are done for both scenarios. Third, by subtracting the populations in the unexposed scenario from the populations in the exposed scenario the premature deaths/years of life lost attributable to the exposure are determined.</p>
-<p>An expansive life table case study by Miller (2010) is available here: https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf.</p>
-<p><em><strong>Determination of populations in the (first) year of analysis</strong></em></p>
-<p>The entry (i.e. start of year) populations in both scenarios is determined as follows:
-$$entry\_population_{year_1} = midyear\_population_{year_1} + \frac{deaths_{year_1}}{2}$$</p>
-<p><em><strong>Exposed scenario</strong></em> The survival probabilities in the exposed scenario from start of year i to start of year i+1  are calculated as follows:
-$$prob\_survival = \frac{midyear\_population_i - \frac{deaths_i}{2}}{midyear\_population_i + \frac{deaths_i}{2}}$$
-Analogously, the probability of survival from start of year i to mid-year i:
-$$prob\_survival\_until\_midyear = 1 - \frac{1 - prob\_survival}{2}$$</p>
-<p><em><strong>Unexposed scenario</strong></em> The survival probabilities in the unexposed scenario are calculated as follows:</p>
-<p>First, the age-group specific hazard rate in the exposed scenario is calculated using the inputted age-specific mid-year populations and deaths.
-$$hazard\_rate = \frac{deaths}{mid\_year\_population}$$
-Second, the hazard rate is multiplied with the modification factor (\(= 1 - PAF\)) to obtain the age-specific hazard rate in the unexposed scenario.
-$$hazard\_rate\_mod = hazard\_rate \times modification\_factor$$
-Third, the the age-specific survival probabilities (from the start until the end in a given age group) in the unexposed scenario are calculated as follows (cf. Miller &amp; Hurley 2003):
-$$prob\_survival\_mod = \frac{2-hazard\_rate\_mod}{2+hazard\_rate\_mod}$$
-Then the mid-year populations of the (first) year of analysis (year_1) in the unexposed scenario are determined as follows:</p>
-<p>First, the survival probabilities from start of year i to mid-year i in the unexposed scenario is calculated as:
-$$prob\_survival\_until\_midyear\_{mod} = 1 - \frac{1 - prob\_survival\_mod}{2}$$
-Second, the mid-year populations of the (first) year of analysis (year_1) in the unexposed scenario is calculated:
-$$midyear\_population\_unexposed_{year_1} = entry\_population_{year_1} \times prob\_survival\_until\_midyear_{mod}$$</p>
-<p><em><strong>Population projection</strong></em></p>
-<p>Using the age group-specific and scenario-specific survival probabilities calculated above, future populations of each age-group under each scenario are calculated.</p>
-<p><em><strong>Unexposed scenario</strong></em> The entry and mid-year population projections of in the exposed scenario is done as follows:</p>
-<p>First, the entry population of year i+1 is calculated (which is the same as the end of year population of year i) by multiplying the entry population of year i and the modified survival probabilities.
-$$entry\_population_{i+1} = entry\_population_i \times prob\_survival\_mod$$
-Second, the mid-year population of year i+1 is calculated.
-$$midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear$$</p>
-<p><em><strong>Exposed scenario</strong></em> The population projections for the two possible options of <code>approach_exposure</code> (<code>"single_year"</code> and <code>"constant"</code>) for the unexposed scenario are different. In the case of <code>"single_year"</code> exposure, the population projection for the years after the year of exposure is the same as in the unexposed scenario.</p>
-<p>In the case of <code>"constant"</code> the population projection is done as follows:</p>
-<p>First, the entry population of year i+1 is calculated (which is the same as the end of year population of year i) using the entry population of year i.
-$$entry\_population_{i+1} = entry\_population_i \times prob\_survival$$
-Second, the mid-year population of year i+1 is calculated.
-$$midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear$$</p>
-<p><strong>Conversion of alternative risk measures to relative risks</strong></p>
-<p>For conversion of hazard ratios and/or odds ratios to relative risks refer to https://doi.org/10.1111/biom.13197 and/or use the conversion tool for hazard ratios (https://ebm-helper.cn/en/Conv/HR_RR.html) and/or odds ratios (https://ebm-helper.cn/en/Conv/OR_RR.html).</p>
+<p><strong>Methodology</strong></p>
+<p>Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk">relative risk</a></p></li>
+<li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk">absolute risk</a></p></li>
+</ul><p><strong>Conversion of multi-year to single year age groups</strong></p>
+<p>To convert multi-year/larger age groups to 1 year age groups,
+use the <code>healthiar</code> function <code><a href="prepare_lifetable.html">prepare_lifetable()</a></code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
+    <p>For this specific function, the return object <code>health_detailed</code> also
+contains <code>intermediate_calculations</code>. This is a nested <code>tibble</code>
+containing intermediate results, such as population projections and
+impact by age/year.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>WHO (2020).
+“Health impact assessment of air pollution: AirQ+ life table manual.”
+World Health Organization - Regional Office for Europe.
+<a href="https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content" class="external-link">https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content</a>.</p>
+<p>Miller BG, Hurley JF (2003).
+“Life table methods for quantitative impact assessments in chronic mortality.”
+<em>Journal of Epidemiology &amp; Community Health</em>, <b>57</b>(3), 200–206.
+<a href="https://doi.org/10.1136/jech.57.3.200" class="external-link">doi:10.1136/jech.57.3.200</a>
+, https://jech.bmj.com/content/57/3/200.full.pdf, <a href="https://jech.bmj.com/content/57/3/200" class="external-link">https://jech.bmj.com/content/57/3/200</a>.</p>
+<p>Miller BG (2010).
+“Report on estimation of mortality impacts of particulate air pollution in London.”
+Institute of Occupational Medicine (IOM).
+Commissioned by the Greater London Authority, <a href="https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf" class="external-link">https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf</a>.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -263,6 +251,7 @@ $$midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_unt
 <span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact</span> <span class="co"># Attributable YLL</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 28809.87</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Goal: determine attributable premature deaths due to air pollution exposure</span></span></span>
 <span class="r-in"><span><span class="co"># during one year using the life table approach</span></span></span>
 <span class="r-in"><span><span class="va">results_pm_deaths</span> <span class="op">&lt;-</span> <span class="fu">attribute_lifetable</span><span class="op">(</span></span></span>
@@ -283,6 +272,7 @@ $$midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_unt
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">results_pm_deaths</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact</span> <span class="co"># Attributable premature deaths</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2599.366</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Goal: determine YLL attributable to air pollution exposure (exposure distribution)</span></span></span>
 <span class="r-in"><span><span class="co"># during one year using the life table approach</span></span></span>
@@ -313,6 +303,7 @@ $$midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_unt
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_rounded</span> <span class="co"># Attributable YLL</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 32185 16849 47413</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

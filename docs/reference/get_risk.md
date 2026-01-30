@@ -67,44 +67,32 @@ equations above.
 
 ## Details
 
-**Function arguments**
+**Function arguments** `erf_eq` \#' If the function is provided as
+`string`, it can only contain the variable c (exposure), e.g. "3+c+c^2".
+If the function is provided as a `function`, the object must be of the
+class function. If only the values of the x-axis (exposure) and y axis
+(relative risk) of the dots in the exposure-response function are
+available, a cubic spline natural interpolation can be assumed to get
+the function using, e.g., `stats::splinefun(x, y, method="natural")`
 
-`erf_eq`
+**Methodology**
 
-If the function is provided as `string`, it can only contain the
-variable c (exposure), e.g. "3+c+c^2". If the function is provided as a
-`function`, the object must be of the class function. If only the values
-of the x-axis (exposure) and y axis (relative risk) of the dots in the
-exposure-response function are available, a cubic spline natural
-interpolation can be assumed to get the function using, e.g.,
-`stats::splinefun(x, y, method="natural")`
+Information about the methodology (including corresponding equations and
+literature) is available in the package vignette. More specifically, see
+chapters:
 
-**Equations for scaling of relative risk**
+- [relative
+  risk](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk)
 
-*linear ERF* \$\$rr\\at\\exp = 1 + \frac{(rr - 1)}{rr\\increment} \cdot
-(exp - cutoff)\$\$
+## References
 
-*log-linear ERF*
-
-\$\$rr\\at\\exp = e^{\frac{\log(\mathrm{rr})}{\mathrm{rr\\increment}}
-\cdot (\mathrm{exp} - \mathrm{cutoff})}\$\$
-
-*log-log ERF*
-
-\$\$rr\\at\\exp = (\frac{exp + 1}{cutoff +
-1})^{\frac{\log(\mathrm{rr})}{\log(\mathrm{rr\\increment + cutoff +
-1}) - \log(cutoff + 1)}}\$\$
-
-*linear-log ERF*
-
-\$\$rr\\at\\exp = 1 + \frac{\log(\mathrm{rr -
-1})}{\log(\mathrm{rr\\increment + cutoff + 1}) - \log(cutoff + 1)} \cdot
-\frac{\log(exp + 1)}{\log(cutoff + 1)}\$\$
-
-**Sources**
-
-For the log-linear, log-log and linear-log exposure-response function
-equations see Pozzer et al. 2022 (https://doi.org/10.1029/2022GH000711).
+Pozzer A, Anenberg SC, Dey S, Haines A, Lelieveld J, Chowdhury S (2023).
+“Mortality Attributable to Ambient Air Pollution: A Review of Global
+Estimates.” *GeoHealth*, **7**(1), e2022GH000711.
+[doi:10.1029/2022GH000711](https://doi.org/10.1029/2022GH000711) ,
+e2022GH000711 2022GH000711,
+https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2022GH000711,
+<https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2022GH000711>.
 
 ## Author
 

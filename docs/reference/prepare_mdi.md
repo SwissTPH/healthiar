@@ -97,30 +97,24 @@ consistency check of the BEST-COST Multidimensional Deprivation Index.
 
 ## Details
 
-The function outputs Cronbach's \\\alpha\\.
+**The function outputs Cronbach's alpha**
 
-- \\\alpha \geq\\ 0.9:
+See below the considered reliability based on the alpha value:
 
-  Excellent reliability
+- 0.9 and higher: Excellent reliability
 
-- 0.8 \\\leq \alpha \<\\ 0.9:
+- between 0.8 (included) and 0.9: Good reliability
 
-  Good reliability
+- between 0.7 (included) and 0.8: Acceptable reliability
 
-- 0.7 \\\leq \alpha \<\\ 0.8:
+- between 0.6 (included) and 0.7: Questionable reliability
 
-  Acceptable reliability
+- lower than 0.6: Poor reliability
 
-- 0.6 \\\leq \alpha \<\\ 0.7:
+**Data completeness and imputation**
 
-  Questionable reliability
-
-- \\\alpha\\ \< 0.6:
-
-  Poor reliability
-
-Data completeness and imputation: ensure the dataset is as complete as
-possible. You can try to impute missing data:
+Ensure the data set is as complete as possible. You can try to impute
+missing data:
 
 - Time-Based Imputation: Use linear regression based on historical
   trends if prior years' data is complete.
@@ -128,8 +122,12 @@ possible. You can try to impute missing data:
 - Indicator-Based Imputation: Use multiple linear regression if the
   missing indicator correlates strongly with others.
 
+**Imputation models**
+
 Imputation models should have an R^2 greater than or equal to 0.7. If
 R^2 lower than 0.7, consider alternative data sources or methods.
+
+**Plots**
 
 See the example below for how to reproduce the boxplots and the
 histogram after the \`prepare_mdi\` function call.

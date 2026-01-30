@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1431</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1433</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,10 +74,10 @@
 <p>1) <code>health_main</code> (<code>tibble</code>) containing the main results;</p><ul><li><p><code>impact</code> (<code>numeric</code> column) attributable health burden/impact</p></li>
 <li><p><code>pop_fraction</code> (<code>numeric</code> column) population attributable fraction; only applicable in relative risk assessments</p></li>
 <li><p>And many more</p></li>
-</ul><p>2) <code>health_detailed</code> (<code>list</code>) containing detailed (and interim) results.</p><ul><li><p><code>results_raw</code> (<code>tibble</code>) containing results for each combination of input uncertainty</p></li>
-<li><p><code>results_by_geo_id_micro</code> (<code>tibble</code>) containing results for each geographic unit under analysis (specified in <code>geo_id_micro</code> argument)</p></li>
-<li><p><code>input_table</code> (<code>tibble</code>) containing the inputs to each relevant argument</p></li>
-<li><p><code>input_args</code> (<code>list</code>) containing all the argument inputs used in the background</p></li>
+</ul><p>2) <code>health_detailed</code> (<code>list</code>) containing detailed (and interim) results.</p><ul><li><p><code>input_args</code> (<code>list</code>) containing all the argument inputs used in the background</p></li>
+<li><p><code>input_table</code> (<code>tibble</code>) containing the inputs after preparation</p></li>
+<li><p><code>results_raw</code> (<code>tibble</code>) containing results for all combinations of input (geo units, uncertainty, age and sex specific data...)</p></li>
+<li><p><code>results_by_...</code> (<code>tibble</code>) containing results stratified by each geographic unit, age or sex.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

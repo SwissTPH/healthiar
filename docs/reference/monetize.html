@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1431</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1433</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,7 +76,7 @@
 
 
 <dt id="arg-discount-shape">discount_shape<a class="anchor" aria-label="anchor" href="#arg-discount-shape"></a></dt>
-<dd><p><code>String</code> referring to the assumed equation for the discount factor. By default: "exponential". Otherwise: "hyperbolic_harvey_1986" or "hyperbolic_mazur_1987".</p></dd>
+<dd><p><code>String</code> referring to the assumed equation for the discount factor. By default: <code>"exponential"</code>. Otherwise: <code>"hyperbolic_harvey_1986"</code> or <code>"hyperbolic_mazur_1987"</code>.</p></dd>
 
 
 <dt id="arg-n-years">n_years<a class="anchor" aria-label="anchor" href="#arg-n-years"></a></dt>
@@ -103,22 +103,29 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><strong>Equation inflation factor (without discounting)</strong></p>
-<p>$$inflation\_factor = (1 + inflation\_rate)^{n\_years}$$</p>
-<p><strong>Equations discount factors (without inflation)</strong></p>
-<p><em>Exponential discounting (no inflation)</em>
-$$discount\_factor = \frac{1}{(1 + discount\_rate) ^{n\_years}}$$</p>
-<p><em>Hyperbolic discounting Harvey (no inflation)</em>
-$$discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}$$
-<em>Hyperbolic discounting Mazure (no inflation)</em>
-$$discount\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)}$$</p>
-<p><strong>Equations discount factors with inflation</strong></p>
-<p><em>Exponential discounting (with inflation)</em>
-$$discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate)) ^{n\_years}}$$</p>
-<p><em>Hyperbolic discounting Harvey (with inflation)</em>
-$$discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}$$
-<em>Hyperbolic discounting Mazure (with inflation)</em>
-$$discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years) \times (1 + inflation\_rate)^{n\_years}}$$</p>
+    <p><strong>Methodology</strong></p>
+<p>Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization">monetization</a></p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Frederick S, Loewenstein G, O'Donoghue T (2002).
+“Time Discounting and Time Preference: A Critical Review.”
+<em>Journal of Economic Literature</em>, <b>40</b>(2), 351–401.
+<a href="https://doi.org/10.1257/002205102320161311" class="external-link">doi:10.1257/002205102320161311</a>
+.</p>
+<p>Harvey CM (1986).
+“Value Functions for Infinite-Period Planning.”
+<em>Management Science</em>, <b>32</b>(9), 1123–1139.
+<a href="https://doi.org/10.1287/mnsc.32.9.1123" class="external-link">doi:10.1287/mnsc.32.9.1123</a>
+.</p>
+<p>Mazur JE (1987).
+“An adjusting procedure for studying delayed reinforcement.”
+In Commons ML, Mazur JE, Nevin JA, Rachlin H (eds.), <em>Quantitative Analyses of Behavior: Volume V. The Effect of Delay and of Intervening Events on Reinforcement Value</em>, 55–73.
+Lawrence Erlbaum Associates, Hillsdale, NJ.
+ISBN 0-89859-800-1.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -153,6 +160,8 @@ $$discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_yea
 <span class="r-out co"><span class="r-pr">#&gt;</span>   impact monetized_impact</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">3</span>502.       151<span style="text-decoration: underline;">041</span>149.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

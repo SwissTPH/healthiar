@@ -228,17 +228,16 @@ This function returns a `list` containing:
 2\) `health_detailed` (`list`) containing detailed (and interim)
 results.
 
-- `results_raw` (`tibble`) containing results for each combination of
-  input uncertainty
-
-- `results_by_geo_id_micro` (`tibble`) containing results for each
-  geographic unit under analysis (specified in `geo_id_micro` argument)
-
-- `input_table` (`tibble`) containing the inputs to each relevant
-  argument
-
 - `input_args` (`list`) containing all the argument inputs used in the
   background
+
+- `input_table` (`tibble`) containing the inputs after preparation
+
+- `results_raw` (`tibble`) containing results for all combinations of
+  input (geo units, uncertainty, age and sex specific data...)
+
+- `results_by_...` (`tibble`) containing results stratified by each
+  geographic unit, age or sex.
 
 ## Author
 
