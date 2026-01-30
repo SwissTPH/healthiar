@@ -40,9 +40,19 @@
 #'   discount_rate = 0.07,
 #'   n_years = 5
 #'  )
-
+#'
+#'
+#' @references
+#'
+#' \insertRef{Frederick2002_jel}{healthiar}
+#'
+#' \insertRef{Harvey1986_ms}{healthiar}
+#'
+#' \insertRef{Mazur1987_book}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 

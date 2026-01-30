@@ -24,9 +24,14 @@
 #'   inflation_rate = 0.02,
 #'   n_years = 5
 #' )
-
+#'
+#' #' @references
+#'
+#' \insertRef{Brealey2023_book}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 

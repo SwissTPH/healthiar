@@ -86,9 +86,19 @@
 #' # Attributable COPD cases its monetized impact
 #' results$monetization_main |>
 #'   dplyr::select(impact, monetized_impact)
-
+#'
+#'
+#' @references
+#'
+#' \insertRef{Frederick2002_jel}{healthiar}
+#'
+#' \insertRef{Harvey1986_ms}{healthiar}
+#'
+#' \insertRef{Mazur1987_book}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 
