@@ -1526,13 +1526,47 @@ legend("topleft",
 
 To monetize the attributable health impact of a policy that will have health benefits five years from now.
 
-The outcome of the monetization is added to the variable entered to the `output_attribute` argument, which is `results_pm_copd` in our case.
+### Methodology
+You can monetize health impacts valuating them and considering discounting and inflation. For this purpose you can use `monetize()`. If you just need the discount factor or the inflation factor, you can alternatively call `get_discount_factor()` or `get_inflation_factor()`. See the equations that are used behind these functions. 
 
-Two folders are added:
+#### Inflation factor (without discounting)
 
--   `monetization_main` contains the central monetization estimate and the corresponding 95% confidence intervals obtained through the specified monetization.
+As suggested by @Brealey2023_book
 
--   `monetization_detailed` contains the monetized results for each unique combination of the input variable estimates that were provided to the initial `attribute_health()` call.
+$$inflation\_factor = (1 + inflation\_rate)^{n\_years}$$
+
+### Discount factors (without inflation)
+
+*Exponential discounting (no inflation)*
+
+As suggested by @Frederick2002_jel
+
+$$discount\_factor = \frac{1}{(1 + discount\_rate)^{n\_years}}$$
+
+*Hyperbolic discounting Harvey (no inflation)*
+
+As suggested by @Harvey1986_ms
+
+$$discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}$$
+
+*Hyperbolic discounting Mazur (no inflation)*
+
+As suggested by @Mazur1987_book
+
+$$discount\_factor = \frac{1}{1 + (discount\_rate \times n\_years)}$$
+
+### Discount factors with inflation
+
+*Exponential discounting (with inflation)*
+$$discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate))^{n\_years}}$$
+
+*Hyperbolic discounting Harvey (with inflation)*
+$$discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}$$
+
+*Hyperbolic discounting Mazur (with inflation)*
+$$discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)) \times (1 + inflation\_rate)^{n\_years}}$$
+
+
 
 ### Function call
 
@@ -1548,6 +1582,14 @@ monetized_pm_copd <- monetize(
 
 
 ### Main results
+
+The outcome of the monetization is added to the variable entered to the `output_attribute` argument, which is `results_pm_copd` in our case.
+
+Two folders are added:
+
+-   `monetization_main` contains the central monetization estimate and the corresponding 95% confidence intervals obtained through the specified monetization.
+
+-   `monetization_detailed` contains the monetized results for each unique combination of the input variable estimates that were provided to the initial `attribute_health()` call.
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
 monetized_pm_copd$monetization_main
@@ -1576,21 +1618,29 @@ results <- monetize(
 
 To estimate the net-benefit of a health policy via cost-benefit analysis (CBA).
 
-Let's imagine we design a policy that would reduce air pollution to 5 $\mu g/m^3$, which is the concentration specified in the `cutoff_central` argument in the initial `attribute_health()` call. So we could avoid all COPD cases attributed to air pollution.
+### Methodology
 
-Considering the cost to implement the policy (estimated at 100 million EURO), what would be the monetary net benefit of such a policy, ? We can find out using `healthiar`'s `cba()` function.
+To perform a cost-benefit analysis, you can use the function `cba()`. 
+It provides three types of indicators based on the following equations [@Boardman2018_book]:
 
-The outcome of the CBA is contained in two folders, which are added to the existing assessment:
+**Net Benefit**
+$$net\_benefit = benefit - cost$$
 
--   `cba_main` contains the central estimate and the corresponding 95% confidence intervals obtained
+**Cost-Benefit Ratio**
+$$cost\_benefit\_ratio = \frac{benefit}{cost}$$
 
--   `cba_detailed` contains additional intermediate results for both cost and benefit
+**Return on Investment (ROI)**
+$$return\_on\_investment = \frac{benefit - cost}{cost} \times 100$$
 
-    -   `benefit` contains results `by_year` and raw results `health_raw`
 
-    -   `cost` contains the costs of the policy at the end of the period specified in the `n_years_cost` argument
+
+
 
 ### Function call
+
+Let's imagine we design a policy that would reduce air pollution to 5 $\mu g/m^3$, which is the concentration specified in the `cutoff_central` argument in the initial `attribute_health()` call. So we could avoid all COPD cases attributed to air pollution.
+
+Considering the cost to implement the policy (estimated at 100 million EURO), what would be the monetary net benefit of such a policy? We can find out using the functions `healthiar` and `cba()` 
 
 ```{r}
 cba <- cba(
@@ -1606,7 +1656,16 @@ cba <- cba(
 ```
 
 ### Main results
+The outcome of the CBA is contained in two folders, which are added to the existing assessment:
 
+-   `cba_main` contains the central estimate and the corresponding 95% confidence intervals obtained
+
+-   `cba_detailed` contains additional intermediate results for both cost and benefit
+
+    -   `benefit` contains results `by_year` and raw results `health_raw`
+
+    -   `cost` contains the costs of the policy at the end of the period specified in the `n_years_cost` argument
+    
 ```{r}
 cba$cba_main |>  
   dplyr::select(benefit, cost, net_benefit) |> 
