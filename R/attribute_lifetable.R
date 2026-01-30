@@ -37,7 +37,9 @@
 #'
 #' \strong{Methodology}
 #'
-#' Information on methodology (including equations and literature) is available in the vignette.
+#' Information about the methodology
+#' (including corresponding equations and literature)
+#' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
 #'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}
