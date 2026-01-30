@@ -33,7 +33,7 @@
 #'  \item{between 0.8 (included) and 0.9: Good reliability}
 #'  \item{between 0.7 (included) and 0.8: Acceptable reliability}
 #'  \item{between 0.6 (included) and 0.7: Questionable reliability}
-#'  \item{lower than 0.6: Poor reliability}
+#'  \item{lower than 0.6: Poor reliability}}
 #'
 #'
 #' \strong{Data completeness and imputation}
