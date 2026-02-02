@@ -28,9 +28,16 @@
 #' @examples
 #' # Goal: calculate PAF based on RR and the proportion of population exposed
 #' get_paf(rr = 1.062, prop_pop_exp = 1)
-
+#'
+#' #' @references
+#'
+#' \insertRef{Soares2020_report}{healthiar}
+#'
+#' \insertRef{Steenland2006-e}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 get_paf <-
