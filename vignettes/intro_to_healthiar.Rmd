@@ -819,11 +819,20 @@ rm(output_attribute, output_stratified)
 
 To quantify the years of life lost (YLL) due to deaths from COPD attributable to PM2.5 exposure during one year.
 
-### Method
+### Methodology
+
+#### Data preparation
+The life table approach to obtain YLL and deaths requires population and baseline mortality data to be 
+stratified by *one year* age groups. However, in some cases these data 
+are only available for larger age groups (e.g. 5-year data: 0-4 years old, 5-9 years old, ...). What to do?
+
+- If your population and mortality data are *not* available by one-year age group, your data must be prepared by interpolating values. The `healthiar` function `prepare_lifetable()` makes this conversion using the same approach as the WHO tool
+AirQ+ [@WHO2020_report]. 
+
+- If your population and death data are stratified by one-year age group, you are lucky, you can ignore this initial step.
 
 #### General concept
-The life table methodology of `attribute_lifetable()` follows that of the WHO tool AirQ+ [@WHO2020_report], 
-which is described in more detail by @Miller2003_jech. 
+The life table methodology of `attribute_lifetable()` follows that of the WHO tool AirQ+ [@WHO2020_report], which is described in more detail by @Miller2003_jech. 
 
 In short, two scenarios are compared: 
 
@@ -834,6 +843,7 @@ b) a scenario with no exposure ("unexposed scenario").
 First, the entry and mid-year populations of the (first) year of analysis in the unexposed scenario is determined using modified survival probabilities. Second, age-specific population projections using scenario-specific survival probabilities are done for both scenarios. Third, by subtracting the populations in the unexposed scenario from the populations in the exposed scenario the premature deaths/years of life lost attributable to the exposure are determined.
 
 An expansive life table case study for is available in a report of @Miller2010_report.
+
 
 #### Determination of populations in the (first) year of analysis
 
@@ -1140,6 +1150,8 @@ results_pm_yll$health_detailed$intermediate_calculations|>
 ```{r eval=TRUE, include=FALSE, echo=FALSE}
 rm(results_pm_deaths)
 ```
+
+
 
 # YLD
 

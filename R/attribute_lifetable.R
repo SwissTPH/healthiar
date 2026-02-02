@@ -135,15 +135,11 @@
 #'
 #' @references
 #'
-#' \insertRef{WHO2020_report}{healthiar}
-#'
-#' \insertRef{Miller2003_jech}{healthiar}
-#'
-#' \insertRef{Miller2010_report}{healthiar}
+#' \insertAllCited{}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 attribute_lifetable <-
