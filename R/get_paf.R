@@ -10,8 +10,16 @@
 
 # DETAILS ######################################################################
 #' @details
-#' For more information about the equations used by \code{get_paf} please see the function documentation of \code{attribute_health}.
-
+#'
+#' \strong{Methodology}
+#'
+#' Information about the methodology
+#' (including corresponding equations and literature)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}}
+#'
 # VALUE ########################################################################
 #' @returns
 #' This function returns the population attributable fraction as a \code{numeric value}.
