@@ -31,7 +31,7 @@
 #'
 #' #' @references
 #'
-#' \insertRef{Soares2020_report}{healthiar}
+#' \insertRef{WHO2003_report}{healthiar}
 #'
 #' \insertRef{Steenland2006-e}{healthiar}
 #'
