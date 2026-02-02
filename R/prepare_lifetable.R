@@ -19,7 +19,14 @@
 #' "Health impact assessment of air pollution: AirQ+ life table manual"
 #' for guidance on how to convert larger age groups to 1 year age groups,
 #' section "Estimation of yearly values" \insertCite{WHO2020_report}{healthiar}.
-
+#'
+#' Information about the methodology
+#' (including corresponding equations and literature)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+#'
 # VALUE ########################################################################
 #' @returns This function returns a \code{tibble} containing the columns:
 #' \itemize{
