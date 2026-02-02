@@ -1193,11 +1193,16 @@ results_pm_copd_yld$health_main |>
   knitr::kable()
 ```
 
-# DALYs
+# DALY
 
 ### Goal (e.g.)
 
 To obtain the Disability-Adjusted Life Years as the sum of YLLs and YLDs.
+
+### Methodology
+To obtain the attributable disability-adjusted life years (DALY), the two DALY components, i.e. years of life lost (YLL) and years lived with disability (YLD), must be summed [@GBD2020_tl].
+
+$$DALY = YLL + YLD$$
 
 ### Function call
 
