@@ -11,12 +11,16 @@
 
 # DETAILS ######################################################################
 #' @details
-#' \strong{Sources}
-#' @details
-#' For more information on the additive and combined approaches see Steenland & Armstrong 2006 (https://doi.org/10.1097/01.ede.0000229155.05644.43).
-#' @details
-#' For more information on the multiplicative approach see Jerrett et al. 2013 (https://doi.org/10.1164/rccm.201303-0609OC).
-
+#'
+#' \strong{Methodology}
+#'
+#' Information about the methodology
+#' (including corresponding equations and literature)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#two-correlated-exposures}{Two correlated exposures}}
+#'
 # VALUE ########################################################################
 #' @inherit attribute_master return
 
@@ -49,9 +53,18 @@
 #'   approach_multiexposure = "multiplicative"
 #' )
 #' results$health_main$impact
-
+#'
+#' #' @references
+#'
+#' \insertRef{Strak2024_report}{healthiar}
+#'
+#' \insertRef{Jerrett2013-oup}{healthiar}
+#'
+#' \insertRef{Steenland2006-e}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 
