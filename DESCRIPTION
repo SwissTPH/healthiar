@@ -27,7 +27,8 @@ Description: This R package has been developed with a focus on air pollution and
  Steenland & Armstrong (2006) <doi:10.1097/01.ede.0000229155.05644.43>, 
  WHO (2011) <https://iris.who.int/items/723ab97c-5c33-4e3b-8df1-744aa5bc1c27>
  GBD 2019 Risk Factors Collaborators (2020) <doi:10.1016/S0140-6736(20)30752-2>, 
- and Soares et al. (2022) <https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2022-10-health-risk-assessment-of-air-pollution-and-the-impact-of-the-new-who-guidelines>.
+ Soares et al. (2022) <https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2022-10-health-risk-assessment-of-air-pollution-and-the-impact-of-the-new-who-guidelines>,
+ and Lehtomaki et al. (2025) <doi:10.1186/s12940-025-01250-y>.
 License: GPL (>= 3)
 URL: https://swisstph.github.io/healthiar/, https://github.com/SwissTPH/healthiar, https://doi.org/10.5281/zenodo.18220361
 BugReports: https://github.com/SwissTPH/healthiar/issues
