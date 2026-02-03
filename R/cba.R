@@ -2,7 +2,9 @@
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function performs a cost-benefit analysis
+#' This function performs a cost-benefit analysis.
+#' It is assumed that the benefit is caused by the positive health impacts of a policy intervention,
+#' which generates some costs.
 
 # ARGUMENTS ####################################################################
 #' @inheritParams monetize
@@ -15,6 +17,15 @@
 #' @details
 #'
 #' \strong{Methodology}
+#'
+#' This function provides as output three types of cost-benefit indicators
+#' [@Boardman2018_book]:
+#'
+#' \itemize{
+#'  \item{net benefit}
+#'  \item{cost-benefit ratio}
+#'  \item{return of investment}}
+#'
 #'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
@@ -74,7 +85,9 @@
 #'
 #' @references
 #'
-#' \insertRef{Boardman2018_book}{healthiar}
+#' @references
+#'
+#' \insertAllCited{}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten

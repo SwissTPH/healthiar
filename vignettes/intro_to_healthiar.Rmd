@@ -1831,12 +1831,17 @@ results <- monetize(
 
 ### Goal (e.g.)
 
-To estimate the net-benefit of a health policy via cost-benefit analysis (CBA).
+To estimate the benefit of a health policy via cost-benefit analysis (CBA).
 
 ### Methodology
 
+The cost-benefit analysis compares the cost and the benefit of an investment.  
+It is assumed that the benefit is caused by the positive health impacts of a policy intervention, 
+which generates some costs.
+
 To perform a cost-benefit analysis, you can use the function `cba()`. 
-It provides three types of indicators based on the following equations [@Boardman2018_book]:
+It provides as output three types of indicators 
+based on the following equations [@Boardman2018_book]:
 
 **Net Benefit**
 $$net\_benefit = benefit - cost$$
