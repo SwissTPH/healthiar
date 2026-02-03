@@ -1525,9 +1525,62 @@ results_multiplicative$health_main |>
 rm(results_multiplicative)
 ```
 
+# Preparation of exposure data
+
+### Goal (e.g.)
+
+To determine population-weighted mean PM2.5 exposure for several neighborhoods of Brussels (Belgium)
+
+### Methodology
+The `healthiar`function `prepare_exposure()` helps users that do not have the 
+exposure data (needed for `healthiar` functions), but only concentration and population data. 
+The function calculates an average concentration value in each geographic unit, 
+weighted by the fraction of the population in each sub-unit. 
+
+$$ exp = \frac{\sum_{i=1}^{n} (C_i \times population_i)}{\sum_{i=1}^{n} population_i} $$
+
+where:
+
+* $exp$ = population-weighted mean exposure for the region.
+* $C_i$ = pollutant concentration in grid cell $i$.
+* $population_i$ = population count in grid cell $i$.
+* $n$ = total number of grid cells within the region's boundaries.
+
+
+The output of `prepare_exposure()` can be entered in the argument 
+`exp_mean`, `exp_lower` and/or `exp_upper` in `healthiar` functions 
+such as `attribute_health()`.
+
+### Function call
+
+```{r}
+
+exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
+exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
+
+pwm <- prepare_exposure(
+  poll_grid = exdat_pwm_1, # Formal class SpatRaster,
+  geo_units = exdat_pwm_2, # sf of the geographic sub-units
+  population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
+  geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region)) # higher-level IDs to aggregate
+```
+
+
+### Main results
+
+Within the function output, the tibble `main` contains 
+the population-weighted mean exposures for the (higher-level) geographic units 
+in the column `exp_value`.
+```{r}
+print(pwm$main)
+```
+
+
+
 
 
 # Threshold additional to cut-off
+
 
 ### Goal (e.g.)
 
