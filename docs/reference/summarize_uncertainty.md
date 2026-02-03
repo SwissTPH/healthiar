@@ -73,24 +73,28 @@ independent random draws across variables and scenarios.
 
 **Methodology**
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+This function summarizes the uncertainty of the attributable health
+impacts (i.e.a single confidence interval instead of many combinations).
+For this purpose, it applies a Monte Carlo simulation (Robert and
+Casella 2004; Doucet et al. 2020) .
+
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [Monte Carlo
   simulation](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monte-carlo-simulation)
 
 ## References
 
-Robert CP, Casella G (2004). *Monte Carlo Statistical Methods*, Springer
-Texts in Statistics. Springer Science \\ Business Media.
-[doi:10.1007/978-1-4757-4145-2](https://doi.org/10.1007/978-1-4757-4145-2)
-.
-
 Doucet A, Lee A, others (2020). “Monte Carlo Methods in the Twenty-First
 Century.” *Annual Review of Statistics and Its Application*, **7**,
 435–458.
 [doi:10.1146/annurev-statistics-031219-041122](https://doi.org/10.1146/annurev-statistics-031219-041122)
+.  
+  
+Robert CP, Casella G (2004). *Monte Carlo Statistical Methods*, Springer
+Texts in Statistics. Springer Science \\ Business Media.
+[doi:10.1007/978-1-4757-4145-2](https://doi.org/10.1007/978-1-4757-4145-2)
 .
 
 ## Author

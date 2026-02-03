@@ -87,6 +87,47 @@ results.
 If the argument `output_attribute` was specified, then the two results
 elements are added to the existing output.
 
+## Details
+
+**Methodology**
+
+This function applies a discount (Frederick et al. 2002; Harvey 1986;
+Mazur 1987) , optionally with inflation (Brealey et al. 2023) , to
+attributable health impacts into the future.
+
+From an epidemiological perspective, the attributable health impacts
+cannot be discounted (or inflated), only economic costs/benefits can.
+However, in some economic analyses the attributable health impacts are
+discounted (and/or inflated) as a previous step to valuating them. For
+this specific purpose, this function is offered.
+
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
+
+- [Monetization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization)
+
+## References
+
+Brealey RA, Myers SC, Allen F, Benninga S, Read J (2023). *Principles of
+Corporate Finance*, 14th edition. McGraw-Hill Education, New York, NY.
+ISBN 978-1264117464.  
+  
+Frederick S, Loewenstein G, O'Donoghue T (2002). “Time Discounting and
+Time Preference: A Critical Review.” *Journal of Economic Literature*,
+**40**(2), 351–401.
+[doi:10.1257/002205102320161311](https://doi.org/10.1257/002205102320161311)
+.  
+  
+Harvey CM (1986). “Value Functions for Infinite-Period Planning.”
+*Management Science*, **32**(9), 1123–1139.
+[doi:10.1287/mnsc.32.9.1123](https://doi.org/10.1287/mnsc.32.9.1123) .  
+  
+Mazur JE (1987). “An adjusting procedure for studying delayed
+reinforcement.” In Commons ML, Mazur JE, Nevin JA, Rachlin H (eds.),
+*Quantitative Analyses of Behavior: Volume V. The Effect of Delay and of
+Intervening Events on Reinforcement Value*, 55–73. Lawrence Erlbaum
+Associates, Hillsdale, NJ. ISBN 0-89859-800-1.
+
 ## Author
 
 Alberto Castro & Axel Luyten

@@ -185,10 +185,14 @@ exposure in a country.
 
 #### Methodology
 
-There is extensive literature on health impact quantification using the
-relative risk approach \[e.g., Pozzer2023_gh; Soares et al. (2022); G.
-2019. R. F. Collaborators (2020); Steenland and Armstrong (2006); WHO
-(2003); Lehtomäki et al. (2025)\].
+The comparative risk assessment approach (C. J. Murray et al. 2003) is
+applied obtaining the population attributable fraction (percent of cases
+that are attributable to the exposure) based on the relative risk. The
+exposure scenario is compared with a counter-factual scenario.
+
+This approach has been extensive documented and applied (e.g., WHO 2003;
+Steenland and Armstrong 2006; Soares et al. 2022; Pozzer et al. 2023; G.
+2019. R. F. Collaborators 2020; Lehtomäki et al. 2025).
 
 ![Figure: Relative risk approach](../reference/figures/bod_rr.png)
 
@@ -196,7 +200,7 @@ Figure: Relative risk approach
 
 ##### Population attributable fraction
 
-The general integral form for the **population attributable fraction
+General integral form for the **population attributable fraction
 (PAF)**:
 
 ``` math
@@ -634,7 +638,7 @@ Monte Carlo simulation.
 ##### General concepts
 
 A Monte Carlo simulation is a statistical method that generates repeated
-random sampling \[Robert and Casella (2004); Doucet2020_arsia\]. In
+random sampling (Robert and Casella 2004; Doucet, Lee, et al. 2020). In
 `healthiar`, you can use the function
 [`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
 to simulate values in the arguments with uncertainty and estimate a
@@ -1486,9 +1490,10 @@ vs. “after intervention”.
 
 Two approaches can be used for the comparison of scenarios:
 
-- Population impact fraction (PIF)
+- Delta: Subtraction of health impact in scenario 1 minus in scenarios 2
+  (i.e. two PAF) (Organization 2014)
 
-- Delta
+- Population impact fraction (PIF): see below.
 
 Please note that the PIF comparison approach assumes same baseline
 health data for scenario 1 and 2 (e.g. comparison of two scenarios at
@@ -1506,7 +1511,7 @@ change in disease or mortality when exposure to a risk factor is changed
 ###### General Integral Form
 
 The most general equation describing this mathematically is an integral
-form (WHO 2003; Murray et al. 2003):
+form (WHO 2003; C. J. L. Murray et al. 2003):
 
 ``` math
 PIF = \frac{\int rr\_at\_exp(x)PE(x)dx - \int rr\_at\_exp(x)PE'(x)dx}{\int rr\_at\_exp(x)PE(x)dx}
@@ -1626,7 +1631,7 @@ To quantify the total health impact attributable to PM2.5 and NO2.
 #### Methodology
 
 A methodological report of the EU project BEST-COST (Strak, Houthuijs,
-and Staatsen 2024) identified three approaches to sum attributable
+and Staatsen 2024) identified three approaches to add up attributable
 health impacts from correlated exposures:
 
 - Additive approach (Steenland and Armstrong 2006):
@@ -1880,15 +1885,22 @@ health benefits five years from now.
 
 #### Methodology
 
-You can monetize health impacts valuating them and considering
-discounting and inflation. For this purpose you can use
+Health impacts can be monetized by valuating them (giving them an
+econmic value) and by applying discounting and/or inflation. For this
+purpose, you can use
 [`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md).
+
 If you just need the discount factor or the inflation factor, you can
 alternatively call
 [`get_discount_factor()`](https://swisstph.github.io/healthiar/reference/get_discount_factor.md)
 or
 [`get_inflation_factor()`](https://swisstph.github.io/healthiar/reference/get_inflation_factor.md).
-See the equations that are used behind these functions.
+
+If you just need the discounted health impacts (to be valuated in a
+further step), you can alternatively call
+[`discount()`](https://swisstph.github.io/healthiar/reference/discount.md).
+
+See below the equations that are used behind these functions.
 
 ##### Inflation factor (without discounting)
 
@@ -1993,15 +2005,20 @@ results <- monetize(
 
 #### Goal (e.g.)
 
-To estimate the net-benefit of a health policy via cost-benefit analysis
+To estimate the benefit of a health policy via cost-benefit analysis
 (CBA).
 
 #### Methodology
 
+The cost-benefit analysis compares the cost and the benefit of an
+investment.  
+It is assumed that the benefit is caused by the positive health impacts
+of a policy intervention, which generates some costs.
+
 To perform a cost-benefit analysis, you can use the function
 [`cba()`](https://swisstph.github.io/healthiar/reference/cba.md). It
-provides three types of indicators based on the following equations
-(Boardman et al. 2018):
+provides as output three types of indicators based on the following
+equations (Boardman et al. 2018):
 
 **Net Benefit**
 ``` math
@@ -2091,8 +2108,8 @@ of deprivation).
 
 Taking into account socio-economic indicators, e.g. multiple deprivation
 index (Mogin et al. 2025), the differences in attributable health
-impacts across study areas can be estimated \[Renard et al. (2019);
-Otavova_2022_bmc\].
+impacts across study areas can be estimated (Renard et al. 2019; Otavova
+et al. 2022).
 
 The most deprived areas (top n-quantile) and in the least deprived areas
 (bottom n-quantile) are then compared. The differences can be
@@ -2455,6 +2472,10 @@ Cronbach, Lee J. 1951. “Coefficient Alpha and the Internal Structure of
 Tests.” *Psychometrika* 16 (3): 297–334.
 <https://doi.org/10.1007/BF02310555>.
 
+Doucet, Arnaud, Anthony Lee, et al. 2020. “Monte Carlo Methods in the
+Twenty-First Century.” *Annual Review of Statistics and Its Application*
+7: 435–58. <https://doi.org/10.1146/annurev-statistics-031219-041122>.
+
 Frederick, Shane, George Loewenstein, and Ted O’Donoghue. 2002. “Time
 Discounting and Time Preference: A Critical Review.” *Journal of
 Economic Literature* 40 (2): 351–401.
@@ -2508,6 +2529,22 @@ Murray, Christopher J L, Majid Ezzati, Alan D Lopez, Anthony Rodgers,
 and Stephen Vander Hoorn. 2003. “Comparative Quantification of Health
 Risks Conceptual Framework and Methodological Issues.” *Popul. Health
 Metr.* 1 (1): 1.
+
+Murray, Christopher JL, Majid Ezzati, Alan D Lopez, Anthony Rodgers, and
+Stephen Vander Hoorn. 2003. “Comparative Risk Assessment: Conceptual
+Framework and Design.” *Epidemiology* 14 (4): 447–58.
+<https://doi.org/10.1097/01.ede.0000071443.19794.8d>.
+
+Organization, World Health. 2014. *Health Impact Assessment of Air
+Pollution: Guide for Practitioners*. Copenhagen: WHO Regional Office for
+Europe. <https://apps.who.int/iris/handle/10665/144701>.
+
+Otavova, Martina, Christel Faes, Catherine Bouland, Eva De Clercq, Bram
+Vandeninden, Thierry Eggerickx, Jean-Paul Sanderson, Brecht
+Devleesschauwer, and Bruno Masquelier. 2022. “Inequalities in Mortality
+Associated with Housing Conditions in Belgium Between 1991 and 2020.”
+*BMC Public Health* 22 (1): 2397.
+<https://doi.org/10.1186/s12889-022-14819-w>.
 
 Pozzer, A., S. C. Anenberg, S. Dey, A. Haines, J. Lelieveld, and S.
 Chowdhury. 2023. “Mortality Attributable to Ambient Air Pollution: A

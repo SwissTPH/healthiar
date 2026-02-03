@@ -104,24 +104,39 @@ elements are added to the existing output.
 
 **Methodology**
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+This function monetize health impacts valuating them and applying
+discounting (Frederick et al. 2002; Harvey 1986; Mazur 1987) and/or
+inflation (Brealey et al. 2023) .
+
+One of the following three discount shapes can be selected:
+
+- Exponential (Frederick et al. 2002)
+
+- Hyperbolic as Harvey (1986)
+
+- Hyperbolic as Mazur (1987)
+
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [Monetization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization)
 
 ## References
 
+Brealey RA, Myers SC, Allen F, Benninga S, Read J (2023). *Principles of
+Corporate Finance*, 14th edition. McGraw-Hill Education, New York, NY.
+ISBN 978-1264117464.  
+  
 Frederick S, Loewenstein G, O'Donoghue T (2002). “Time Discounting and
 Time Preference: A Critical Review.” *Journal of Economic Literature*,
 **40**(2), 351–401.
 [doi:10.1257/002205102320161311](https://doi.org/10.1257/002205102320161311)
-.
-
+.  
+  
 Harvey CM (1986). “Value Functions for Infinite-Period Planning.”
 *Management Science*, **32**(9), 1123–1139.
-[doi:10.1287/mnsc.32.9.1123](https://doi.org/10.1287/mnsc.32.9.1123) .
-
+[doi:10.1287/mnsc.32.9.1123](https://doi.org/10.1287/mnsc.32.9.1123) .  
+  
 Mazur JE (1987). “An adjusting procedure for studying delayed
 reinforcement.” In Commons ML, Mazur JE, Nevin JA, Rachlin H (eds.),
 *Quantitative Analyses of Behavior: Volume V. The Effect of Delay and of

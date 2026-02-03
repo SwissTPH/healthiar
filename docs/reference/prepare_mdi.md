@@ -100,26 +100,15 @@ consistency check of the BEST-COST Multidimensional Deprivation Index.
 
 **Methodology**
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+This function condenses socio-economic indicators into a multiple
+deprivation index (MDI) (Mogin et al. 2025) . The reliability of the MDI
+is assessed using Cronbach's alpha (Cronbach 1951) .
+
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [Multiple deprivation
   index](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#multiple-deprivation-index)
-
-**The function outputs Cronbach's alpha**
-
-See below the considered reliability based on the alpha value:
-
-- 0.9 and higher: Excellent reliability
-
-- between 0.8 (included) and 0.9: Good reliability
-
-- between 0.7 (included) and 0.8: Acceptable reliability
-
-- between 0.6 (included) and 0.7: Questionable reliability
-
-- lower than 0.6: Poor reliability
 
 **Data completeness and imputation**
 
@@ -135,12 +124,8 @@ histogram after the `prepare_mdi` function call.
 
 Cronbach LJ (1951). “Coefficient alpha and the internal structure of
 tests.” *Psychometrika*, **16**(3), 297–334.
-[doi:10.1007/BF02310555](https://doi.org/10.1007/BF02310555) .
-
-Gorasso V, Priem F, Mogin G, Poelmans L, Buekers J (2024). “Social
-inequalities methodology.” EU project BEST-COST.
-<https://best-cost.eu/wp-content/uploads/2025/07/D3.2-The-quantification-of-social-inequalities-in-the-health-burden-of-environmental-stressors.pdf>.
-
+[doi:10.1007/BF02310555](https://doi.org/10.1007/BF02310555) .  
+  
 Mogin G, Gorasso V, Idavain J, Lepnurm M, Delaunay-Havard S, Kocbach
 Bølling A, Buekers J, Luyten A, Devleesschauwer B, Baravelli CM (2025).
 “A scoping review of multiple deprivation indices in Europe.” *European

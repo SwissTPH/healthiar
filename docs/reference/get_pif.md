@@ -1,4 +1,4 @@
-# Get population impact fraction
+# Get population impact fraction (PIF)
 
 This function calculates the population impact fraction of a health
 outcome due to exposure to an environmental stressor
@@ -50,8 +50,28 @@ This function returns the population impact fraction as a
 
 ## Details
 
-For more information about the equations used by `get_pif` please see
-the function documentation of `compare`.
+**Methodology**
+
+This function is internally used inside the `healthiar` function
+[`compare()`](https://swisstph.github.io/healthiar/reference/compare.md).
+The population impact fraction (PIF) is calculated as described in WHO
+(2003) and Murray et al. (2003) .
+
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
+
+- [comparison of two health
+  scenarios](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios)
+
+## References
+
+Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
+“Comparative quantification of health risks conceptual framework and
+methodological issues.” *Popul. Health Metr.*, **1**(1), 1.  
+  
+WHO (2003). “Introduction and methods: Assessing the environmental
+burden of disease at national and local levels.” World Health
+Organization. <https://www.who.int/publications/i/item/9241546204>.
 
 ## Author
 

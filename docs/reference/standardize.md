@@ -53,9 +53,8 @@ Organization (Ahmad et al. 2001) and the Global Burden of Disease study
 (2019 Demographics Collaborators 2020) provide the relevant information
 on this topic.
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [Standardization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#standardization)
 

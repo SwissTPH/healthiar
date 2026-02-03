@@ -45,9 +45,8 @@ manual "Health impact assessment of air pollution: AirQ+ life table
 manual" for guidance on how to convert larger age groups to 1 year age
 groups, section "Estimation of yearly values" (WHO 2020) .
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [YLL and deaths with life
   table](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table)

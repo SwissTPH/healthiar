@@ -27,7 +27,7 @@ duration (duration_...)
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1440</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1441</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,22 +109,25 @@ One stream is allocated per variable (or per variable–geography combination, a
 ensuring reproducible and independent random draws across variables and scenarios.</p>
 
 <p><strong>Methodology</strong></p>
-<p>Information about the methodology
-(including corresponding equations and literature)
+<p>This function summarizes the uncertainty of the attributable health impacts
+(i.e.a single confidence interval instead of many combinations).
+For this purpose, it applies
+a Monte Carlo simulation (Robert and Casella 2004; Doucet et al. 2020)
+.</p>
+<p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monte-carlo-simulation">Monte Carlo simulation</a></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Robert CP, Casella G (2004).
-<em>Monte Carlo Statistical Methods</em>,  Springer Texts in Statistics.
-Springer Science \&amp; Business Media.
-<a href="https://doi.org/10.1007/978-1-4757-4145-2" class="external-link">doi:10.1007/978-1-4757-4145-2</a>
-.</p>
-<p>Doucet A, Lee A, others (2020).
+    <p>Doucet A, Lee A, others (2020).
 “Monte Carlo Methods in the Twenty-First Century.”
 <em>Annual Review of Statistics and Its Application</em>, <b>7</b>, 435–458.
 <a href="https://doi.org/10.1146/annurev-statistics-031219-041122" class="external-link">doi:10.1146/annurev-statistics-031219-041122</a>
+.<br><br> Robert CP, Casella G (2004).
+<em>Monte Carlo Statistical Methods</em>,  Springer Texts in Statistics.
+Springer Science \&amp; Business Media.
+<a href="https://doi.org/10.1007/978-1-4757-4145-2" class="external-link">doi:10.1007/978-1-4757-4145-2</a>
 .</p>
     </div>
     <div class="section level2">

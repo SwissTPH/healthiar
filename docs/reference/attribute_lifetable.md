@@ -244,9 +244,14 @@ exposure are considered.
 
 **Methodology**
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+The life table approach to obtain YLL and deaths requires population and
+baseline mortality data to be stratified by one year age groups. This
+function applies the same approach as the on applied in the WHO tool
+AirQ+ (WHO 2020) , which is described in previous literature (Miller and
+Hurley 2003) .
+
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [YLL and deaths with life
   table](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table)
@@ -266,8 +271,16 @@ impact by age/year.
 
 ## References
 
-There are no references for Rd macro `\insertAllCites` on this help
-page.
+Miller BG, Hurley JF (2003). “Life table methods for quantitative impact
+assessments in chronic mortality.” *Journal of Epidemiology & Community
+Health*, **57**(3), 200–206.
+[doi:10.1136/jech.57.3.200](https://doi.org/10.1136/jech.57.3.200) ,
+https://jech.bmj.com/content/57/3/200.full.pdf,
+<https://jech.bmj.com/content/57/3/200>.  
+  
+WHO (2020). “Health impact assessment of air pollution: AirQ+ life table
+manual.” World Health Organization - Regional Office for Europe.
+<https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content>.
 
 ## Author
 

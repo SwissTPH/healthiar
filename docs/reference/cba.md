@@ -1,6 +1,8 @@
 # Cost-benefit analysis
 
-This function performs a cost-benefit analysis
+This function performs a cost-benefit analysis. It is assumed that the
+benefit is caused by the positive health impacts of a policy
+intervention, which generates some costs.
 
 ## Usage
 
@@ -100,9 +102,17 @@ elements are added to the existing output.
 
 **Methodology**
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+This function provides as output three types of cost-benefit indicators
+(Boardman et al. 2018) :
+
+- net benefit
+
+- cost-benefit ratio
+
+- return of investment
+
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [cost-benefit
   analysis](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cost-benefit-analysis)

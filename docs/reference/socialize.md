@@ -140,28 +140,32 @@ added next to the existing attribute output.
 
 **Methodology**
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+This function estimates the absolute and relative differences in
+attributable health impacts comparing study areas with different values
+for a socio-economic indicator (Renard et al. 2019; Otavova et al. 2022)
+.
+
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [Health impact attributable to social
   indicator](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#health-impact-attributable-to-social-indicator)
 
 ## References
 
+Otavova M, Faes C, Bouland C, De Clercq E, Vandeninden B, Eggerickx T,
+Sanderson J, Devleesschauwer B, Masquelier B (2022). “Inequalities in
+mortality associated with housing conditions in Belgium between 1991 and
+2020.” *BMC Public Health*, **22**(1), 2397. ISSN 1471-2458,
+[doi:10.1186/s12889-022-14819-w](https://doi.org/10.1186/s12889-022-14819-w)
+.  
+  
 Renard F, Devleesschauwer B, Speybroeck N, Deboosere P (2019).
 “Monitoring health inequalities when the socio-economic composition
 changes: are the slope and relative indices of inequality appropriate?
 Results of a simulation study.” *BMC Public Health*, **19**(1), 662.
 ISSN 1471-2458,
 [doi:10.1186/s12889-019-6980-1](https://doi.org/10.1186/s12889-019-6980-1)
-.
-
-Otavova M, Faes C, Bouland C, De Clercq E, Vandeninden B, Eggerickx T,
-Sanderson J, Devleesschauwer B, Masquelier B (2022). “Inequalities in
-mortality associated with housing conditions in Belgium between 1991 and
-2020.” *BMC Public Health*, **22**(1), 2397. ISSN 1471-2458,
-[doi:10.1186/s12889-022-14819-w](https://doi.org/10.1186/s12889-022-14819-w)
 .
 
 ## Author

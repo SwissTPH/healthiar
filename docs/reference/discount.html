@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1440</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1441</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,6 +92,42 @@
 </ul><p>If the argument <code>output_attribute</code> was specified, then the two results elements are added to the existing output.</p>
     </div>
     <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p><strong>Methodology</strong></p>
+<p>This function applies a discount (Frederick et al. 2002; Harvey 1986; Mazur 1987)
+,
+optionally with inflation (Brealey et al. 2023)
+,
+to attributable health impacts into the future.</p>
+<p>From an epidemiological perspective, the attributable health impacts
+cannot be discounted (or inflated), only economic costs/benefits can.
+However, in some economic analyses the attributable health impacts are discounted (and/or inflated)
+as a previous step to valuating them. For this specific purpose, this function is offered.</p>
+
+<p>Detailed information about the methodology (including equations)
+is available in the package vignette.
+More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization">Monetization</a></p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Brealey RA, Myers SC, Allen F, Benninga S, Read J (2023).
+<em>Principles of Corporate Finance</em>, 14th edition.
+McGraw-Hill Education, New York, NY.
+ISBN 978-1264117464.<br><br> Frederick S, Loewenstein G, O'Donoghue T (2002).
+“Time Discounting and Time Preference: A Critical Review.”
+<em>Journal of Economic Literature</em>, <b>40</b>(2), 351–401.
+<a href="https://doi.org/10.1257/002205102320161311" class="external-link">doi:10.1257/002205102320161311</a>
+.<br><br> Harvey CM (1986).
+“Value Functions for Infinite-Period Planning.”
+<em>Management Science</em>, <b>32</b>(9), 1123–1139.
+<a href="https://doi.org/10.1287/mnsc.32.9.1123" class="external-link">doi:10.1287/mnsc.32.9.1123</a>
+.<br><br> Mazur JE (1987).
+“An adjusting procedure for studying delayed reinforcement.”
+In Commons ML, Mazur JE, Nevin JA, Rachlin H (eds.), <em>Quantitative Analyses of Behavior: Volume V. The Effect of Delay and of Intervening Events on Reinforcement Value</em>, 55–73.
+Lawrence Erlbaum Associates, Hillsdale, NJ.
+ISBN 0-89859-800-1.</p>
+    </div>
+    <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p>Alberto Castro &amp; Axel Luyten</p>
     </div>
@@ -107,6 +143,7 @@
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">monetization_main</span><span class="op">$</span><span class="va">monetized_impact</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 11073.52</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

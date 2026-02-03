@@ -33,9 +33,14 @@ This function returns the `numeric` inflation factor.
 
 **Methodology**
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+This function is called inside
+[`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md).
+
+It calculates the inflation factor based on the inflation rate and the
+number of years into the future as described in Brealey et al. (2023) .
+
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [Monetization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization)
 

@@ -11,7 +11,7 @@ other internal consistency checks"><meta property="og:image" content="https://sw
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1440</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1441</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,22 +121,20 @@ Default: <code>TRUE</code>.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><strong>Methodology</strong></p>
-<p>Information about the methodology
-(including corresponding equations and literature)
+<p>This function condenses socio-economic indicators into
+a multiple deprivation index (MDI) (Mogin et al. 2025)
+.
+The reliability of the MDI is assessed using Cronbach's alpha (Cronbach 1951)
+.</p>
+<p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#multiple-deprivation-index">Multiple deprivation index</a></p></li>
-</ul><p><strong>The function outputs Cronbach's alpha</strong></p>
-<p>See below the considered reliability based on the alpha value:</p>
-<ul><li><p>0.9 and higher: Excellent reliability</p></li>
-<li><p>between 0.8 (included) and 0.9: Good reliability</p></li>
-<li><p>between 0.7 (included) and 0.8: Acceptable reliability</p></li>
-<li><p>between 0.6 (included) and 0.7: Questionable reliability</p></li>
-<li><p>lower than 0.6: Poor reliability</p></li>
 </ul><p><strong>Data completeness and imputation</strong></p>
 <p>Ensure the data set is as complete as possible. Otherwise, you can try to impute missing data,
 but R^2 should be greater than or equal to 0.7.</p>
 <p><strong>Plots</strong></p>
-<p>See the example below for how to reproduce the box plots and the histogram after the <code>prepare_mdi</code> function call.</p>
+<p>See the example below for how to reproduce the box plots and
+the histogram after the <code>prepare_mdi</code> function call.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -144,12 +142,7 @@ but R^2 should be greater than or equal to 0.7.</p>
 “Coefficient alpha and the internal structure of tests.”
 <em>Psychometrika</em>, <b>16</b>(3), 297–334.
 <a href="https://doi.org/10.1007/BF02310555" class="external-link">doi:10.1007/BF02310555</a>
-.</p>
-<p>Gorasso V, Priem F, Mogin G, Poelmans L, Buekers J (2024).
-“Social inequalities methodology.”
-EU project BEST-COST.
-<a href="https://best-cost.eu/wp-content/uploads/2025/07/D3.2-The-quantification-of-social-inequalities-in-the-health-burden-of-environmental-stressors.pdf" class="external-link">https://best-cost.eu/wp-content/uploads/2025/07/D3.2-The-quantification-of-social-inequalities-in-the-health-burden-of-environmental-stressors.pdf</a>.</p>
-<p>Mogin G, Gorasso V, Idavain J, Lepnurm M, Delaunay-Havard S, Kocbach Bølling A, Buekers J, Luyten A, Devleesschauwer B, Baravelli CM (2025).
+.<br><br> Mogin G, Gorasso V, Idavain J, Lepnurm M, Delaunay-Havard S, Kocbach Bølling A, Buekers J, Luyten A, Devleesschauwer B, Baravelli CM (2025).
 “A scoping review of multiple deprivation indices in Europe.”
 <em>European Journal of Public Health</em>, <b>35</b>(6), 1122-1128.
 <a href="https://doi.org/10.1093/eurpub/ckaf190" class="external-link">doi:10.1093/eurpub/ckaf190</a>

@@ -207,17 +207,33 @@ results.
 
 **Methodology**
 
-This function calls in the background \`attribute_health()\`.
+This function calls in the background \`attribute_health()\`, which can
+use the relative risk (Murray et al. 2003) and absolute risk (WHO 2011)
+.
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
-- [relative
+- [Modification of
+  scenarios](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#modification-of-scenarios)
+
+- [Relative
   risk](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk)
 
-- [absolute
+- [Absolute
   risk](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk)
+
+## References
+
+Murray CJ, Ezzati M, Lopez AD, Rodgers A, Hoorn SV (2003). “Comparative
+risk assessment: conceptual framework and design.” *Epidemiology*,
+**14**(4), 447-458.
+[doi:10.1097/01.ede.0000071443.19794.8d](https://doi.org/10.1097/01.ede.0000071443.19794.8d)
+.  
+  
+WHO (2011). “Burden of disease from environmental noise: Quantification
+of healthy life years lost in Europe.” World Health Organization.
+<https://www.who.int/publications/i/item/burden-of-disease-from-environmental-noise-quantification-of-healthy-life-years-lost-in-europe>.
 
 ## Author
 
