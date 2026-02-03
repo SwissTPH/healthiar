@@ -89,6 +89,18 @@
 #'
 #' \strong{Methodology}
 #'
+#' This function can quantify the attributable health impacts by means of a
+#' relative risk or an absolute risk (depending on the health outcome).
+#' \itemize{
+#'  \item{Relative risk: The comparative risk assessment approach
+#'  \insertCite{Murray2003_e}{healthiar} is applied by
+#' obtaining the population attributable fraction
+#' (percent of cases that are attributable to the exposure)
+#' based on the relative risk \insertCite{Murray2003_e}{healthiar}. }
+#'  \item{Absolute risk: The attributable cases are
+#'  directly derived from population exposed \insertCite{WHO2003_report,Steenland2006-e,GBD2020_tl,Soares2020_report,Pozzer2023_gh,Lehtomaki_2025_eh}{healthiar}.}
+#'  }
+#'
 #' Information about the methodology
 #' (including corresponding equations and literature)
 #' is available in the package vignette.
@@ -174,18 +186,8 @@
 #' results$health_main$impact
 #'
 #' @references
-#
-#' \insertRef{WHO2003_report}{healthiar}
 #'
-#' \insertRef{Steenland2006-e}{healthiar}
-#'
-#' \insertRef{GBD2020_tl}{healthiar}
-#'
-#' \insertRef{Soares2020_report}{healthiar}
-#'
-#' \insertRef{Pozzer2023_gh}{healthiar}
-#'
-#' \insertRef{Lehtomaki_2025_eh}{healthiar}
+#' \insertAllCited{}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten

@@ -166,13 +166,17 @@ The descriptions of the [`healthiar` functions](https://swisstph.github.io/healt
 To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a country.
 
 ### Methodology
+The comparative risk assessment approach [@Murray2003_e] is applied obtaining the population attributable fraction 
+(percent of cases that are attributable to the exposure) based on the relative risk. 
+The exposure scenario is compared with a counter-factual scenario.
 
-There is extensive literature on health impact quantification using the relative risk approach [e.g., Pozzer2023_gh; @Soares2020_report; @GBD2020_tl; @Steenland2006-e; @WHO2003_report; @Lehtomaki_2025_eh]. 
+This approach has been extensive documented and applied [e.g., @WHO2003_report; 
+@Steenland2006-e; @Soares2020_report; @Pozzer2023_gh; @GBD2020_tl; @Lehtomaki_2025_eh]. 
 
 ![Figure: Relative risk approach](../man/figures/bod_rr.png){width="700"}
 
 #### Population attributable fraction
-The general integral form for the **population attributable fraction (PAF)**:
+General integral form for the **population attributable fraction (PAF)**:
 
 $$PAF = \frac{\int rr\_at\_exp(x) \times PE(x)dx - 1}{\int rr\_at\_exp(x) \times pop\_exp(x)dx}$$
 
