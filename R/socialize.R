@@ -39,6 +39,10 @@
 #'
 #' \strong{Methodology}
 #'
+#' This function estimates the absolute and relative differences in attributable health impacts
+#' comparing study areas with different values for a socio-economic indicator
+#' \insertCite{Renard2019_bmc,Otavova_2022_bmc}{healthiar}.
+#'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
@@ -104,9 +108,7 @@
 #'
 #' @references
 #'
-#' \insertRef{Renard2019_bmc}{healthiar}
-#'
-#' \insertRef{Otavova_2022_bmc}{healthiar}
+#' \insertAllCited{}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten
