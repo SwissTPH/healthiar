@@ -6,7 +6,7 @@
 #' #' \itemize{
 #'  \item{taking the input data of an existing scenario 1 (obtained using `attribute_health()`)},
 #'  \item{modifying some of these input data of scenario 1 for the scenario 2 and
-#'  \item{calling in the background `attribute_health()` with the new data for scenario 2}}
+#'  \item{calling in the background `attribute_health()` with the new data for scenario 2}}}
 #'
 # ARGUMENTS ####################################################################
 #' @inheritParams attribute_master

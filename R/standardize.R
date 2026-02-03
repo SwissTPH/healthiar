@@ -3,12 +3,14 @@
 # DESCRIPTION ##################################################################
 #' @description
 #' This function obtains age-standardized health impacts based on multiple age-group specific assessments
-
+#'
 # ARGUMENTS ####################################################################
 #' @inheritParams socialize
 #'
-# DETAILS ######################################################################
 #'
+# DETAILS ######################################################################
+#' @details
+#' #'
 #' \strong{Methodology}
 #'
 #' This function applies the direct method of standardization,

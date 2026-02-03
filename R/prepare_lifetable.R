@@ -25,7 +25,7 @@
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}}
 #'
 # VALUE ########################################################################
 #' @returns This function returns a \code{tibble} containing the columns:
@@ -46,7 +46,7 @@
 #'
 #' @references
 #'
-#'
+#' \insertAllCited{}
 #'
 #' @author Alberto Castro & Axel Luyten
 

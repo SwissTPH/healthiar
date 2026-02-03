@@ -13,17 +13,27 @@
 #' \strong{Function arguments}
 #'
 #' \code{age_group}
-#' The numeric values must refer to 1 year age groups, e.g. \code{c(0:99)}. To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()} (see its function documentation for more info).
+#' The numeric values must refer to 1 year age groups, e.g. \code{c(0:99)}.
+#' To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()}
+#' (see its function documentation for more info).
 #'
 #' \code{bhd_central,bhd_lower,bhd_upper}
-#' Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year). There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities. If zeros show up in the last ages (e.g. age 98 = 0 deaths, 99 years old = 1), please sum the values and condensate last category (e.g. age 98 = 1).
+#' Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year).
+#' There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities.
+#' If zeros show up in the last ages (e.g. age 98 = 0 deaths, 99 years old = 1),
+#' please sum the values and condensate last category (e.g. age 98 = 1).
 #'
 #' \code{population}
-#' The population data must be inputted with 1 value per age (i.e. age group size = 1 year). The values must be greater than or equal to 1 per age to avoid issues during the calculation of survival probabilities.
-#' Mid-year population of year x can be approximated as the mean of either end-year populations of years x-1 and x or start-of-year populations of years x and x+1. For each age, the inputted values must be greater than or equal to 1 to avoid issues during the calculation of survival probabilities.
+#' The population data must be inputted with 1 value per age (i.e. age group size = 1 year).
+#' The values must be greater than or equal to 1 per age to avoid issues during the calculation of survival probabilities.
+#' Mid-year population of year x can be approximated as the mean of
+#' either end-year populations of years x-1 and x or start-of-year populations of years x and x+1.
+#' For each age, the inputted values must be greater than or equal to 1
+#' to avoid issues during the calculation of survival probabilities.
 #'
 #' \code{approach_newborns}
-#' If \code{"with_newborns"} is selected, it is assumed that for each year after the year of analysis n babies (population aged 0) are born.
+#' If \code{"with_newborns"} is selected, it is assumed that
+#' for each year after the year of analysis n babies (population aged 0) are born.
 #'
 #' \code{time_horizon}
 #' Applicable for the following cases:
@@ -31,9 +41,15 @@
 #'  \item YLL: \code{single_year} or \code{constant} exposure
 #'  \item premature deaths: \code{constant} exposure
 #' }
-#' For example, if 10 is entered one is interested in the impacts of exposure during the year of analysis and the next 9 years (= 10 years in total). Default value: length of the numeric vector specified in the \code{age_group} argument.
+#' For example, if 10 is entered one is interested in the impacts of exposure
+#' during the year of analysis and the next 9 years (= 10 years in total).
+#' Default value: length of the numeric vector specified in the \code{age_group} argument.
+#'
 #' \code{min_age}, \code{max_age}
-#' The \code{min_age} default value 30 implies that all adults aged 30 or older will be affected by the exposure; \code{max_age} analogeously specifies the age above which no health effects of the exposure are considered.
+#' The \code{min_age} default value 30 implies that all adults aged 30 or older
+#' will be affected by the exposure;
+#' \code{max_age} analogeously specifies the age above
+#' which no health effects of the exposure are considered.
 #'
 #' \strong{Methodology}
 #'
@@ -42,7 +58,7 @@
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}}
 #'
 #'
 #' \strong{Conversion of multi-year to single year age groups}

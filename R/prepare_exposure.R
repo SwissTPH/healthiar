@@ -27,7 +27,7 @@
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#preparation-of-exposure-data}{Preparation of exposure data}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#preparation-of-exposure-data}{Preparation of exposure data}}
 #'
 # VALUE ########################################################################
 #' @return
