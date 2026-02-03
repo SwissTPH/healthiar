@@ -179,13 +179,25 @@ Can be either \code{numeric} or \code{character}. If it is numeric, it refers to
 
 \strong{Methodology}
 
-Information about the methodology
-(including corresponding equations and literature)
+This function can quantify the attributable health impacts by means of a
+relative risk or an absolute risk (depending on the health outcome).
+\itemize{
+ \item{Relative risk: The comparative risk assessment approach
+ \insertCite{Murray2003_e}{healthiar} is applied by
+obtaining the population attributable fraction
+(percent of cases that are attributable to the exposure)
+based on the relative risk \insertCite{WHO2003_report,Steenland2006-e,
+GBD2020_tl,Soares2020_report,Pozzer2023_gh,Lehtomaki_2025_eh}{healthiar}. }
+ \item{Absolute risk: The attributable cases are
+ directly derived from population exposed \insertCite{WHO2011_report}{healthiar}.}
+ }
+
+Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
 \itemize{
- \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}
- \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{absolute risk}}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{Relative risk}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{Absolute risk}}
 }
 \examples{
 # Goal: attribute lung cancer cases to population-weighted PM2.5 exposure
@@ -259,17 +271,7 @@ results$health_main$impact
 
 }
 \references{
-\insertRef{WHO2003_report}{healthiar}
-
-\insertRef{Steenland2006-e}{healthiar}
-
-\insertRef{GBD2020_tl}{healthiar}
-
-\insertRef{Soares2020_report}{healthiar}
-
-\insertRef{Pozzer2023_gh}{healthiar}
-
-\insertRef{Lehtomaki_2025_eh}{healthiar}
+\insertAllCited{}
 }
 \author{
 Alberto Castro & Axel Luyten

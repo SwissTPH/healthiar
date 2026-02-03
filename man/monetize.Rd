@@ -56,8 +56,17 @@ This function monetizes health impacts
 \details{
 \strong{Methodology}
 
-Information about the methodology
-(including corresponding equations and literature)
+This function monetize health impacts valuating them and
+applying discounting \insertCite{Frederick2002_jel,Harvey1986_ms,Mazur1987_book}{healthiar}
+and/or inflation \insertCite{Brealey2023_book}{healthiar}.
+
+One of the following three discount shapes can be selected:
+\itemize{
+ \item Exponential \insertCite{Frederick2002_jel}{healthiar}
+ \item Hyperbolic as \insertCite{Harvey1986_ms;textual}{healthiar}
+ \item Hyperbolic as \insertCite{Mazur1987_book;textual}{healthiar}}
+
+Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
 \itemize{
@@ -90,11 +99,7 @@ results$monetization_main |>
 
 }
 \references{
-\insertRef{Frederick2002_jel}{healthiar}
-
-\insertRef{Harvey1986_ms}{healthiar}
-
-\insertRef{Mazur1987_book}{healthiar}
+\insertAllCited{}
 }
 \author{
 Alberto Castro & Axel Luyten

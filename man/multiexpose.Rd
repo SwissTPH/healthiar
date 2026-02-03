@@ -45,8 +45,15 @@ This function aggregates health impacts from multiple exposures to environmental
 \details{
 \strong{Methodology}
 
-Information about the methodology
-(including corresponding equations and literature)
+This function can add up the attributable health impacts from correlated exposures
+applying one of the following methods \insertCite{Strak2024_report}{healthiar}:
+\itemize{
+ \item Additive \insertCite{teenland2006-e}{healthiar}
+ \item Multiplicative \insertCite{Jerrett2013-oup}{healthiar}
+ \item Combined \insertCite{Steenland2006-e}{healthiar}
+ }
+
+Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
 \itemize{
@@ -83,11 +90,7 @@ results$health_main$impact
 
 }
 \references{
-\insertRef{Strak2024_report}{healthiar}
-
-\insertRef{Jerrett2013-oup}{healthiar}
-
-\insertRef{Steenland2006-e}{healthiar}
+\insertAllCited{}
 }
 \author{
 Alberto Castro & Axel Luyten
