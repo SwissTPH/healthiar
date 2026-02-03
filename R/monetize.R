@@ -27,7 +27,7 @@
 #' \itemize{
 #'  \item Exponential \insertCite{Frederick2002_jel}{healthiar}
 #'  \item Hyperbolic as \insertCite{Harvey1986_ms;textual}{healthiar}
-#'  \item Hyperbolic as \insertCite{Mazur1987_book;textual}{healthiar}
+#'  \item Hyperbolic as \insertCite{Mazur1987_book;textual}{healthiar}}
 #'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.

@@ -85,8 +85,6 @@
 #'
 #' @references
 #'
-#' @references
-#'
 #' \insertAllCited{}
 #'
 #'
