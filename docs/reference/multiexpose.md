@@ -63,17 +63,22 @@ results.
 
 **Methodology**
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+This function can add up the attributable health impacts from correlated
+exposures applying one of the following methods (Strak et al. 2024) :
+
+- Additive (Steenland and Armstrong 2006)
+
+- Multiplicative (Jerrett et al. 2013)
+
+- Combined (Steenland and Armstrong 2006)
+
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [Two correlated
   exposures](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#two-correlated-exposures)
 
 ## References
-
-Strak M, Houthuijs D, Staatsen B (2024). “D1.2 Report on the methodology
-for assessing the burden of correlated exposures.” EU Project BEST-COST.
 
 Jerrett M, Burnett RT, Beckerman BS, Turner MC, Krewski D, Thurston G,
 Martin RV, van Donkelaar A, Hughes E, Shi Y, Gapstur SM, Thun MJ, Pope
@@ -81,13 +86,16 @@ Martin RV, van Donkelaar A, Hughes E, Shi Y, Gapstur SM, Thun MJ, Pope
 California.” *American Journal of Respiratory and Critical Care
 Medicine*, **188**(5), 593–599.
 [doi:10.1164/rccm.201303-0609OC](https://doi.org/10.1164/rccm.201303-0609OC)
-.
-
+.  
+  
 Steenland K, Armstrong B (2006). “An overview of methods for calculating
 the burden of disease due to specific risk factors.” *Epidemiology*,
 **17**(5), 512–519.
 [doi:10.1097/01.ede.0000229155.05644.43](https://doi.org/10.1097/01.ede.0000229155.05644.43)
-.
+.  
+  
+Strak M, Houthuijs D, Staatsen B (2024). “D1.2 Report on the methodology
+for assessing the burden of correlated exposures.” EU Project BEST-COST.
 
 ## Author
 

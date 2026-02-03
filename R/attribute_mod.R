@@ -17,15 +17,16 @@
 #'
 #' \strong{Methodology}
 #'
-#' This function calls in the background `attribute_health()`.
+#' This function calls in the background `attribute_health()`, which can use
+#' the relative risk \insertCite{Murray2003_e}{healthiar} and absolute risk \insertCite{WHO2011_report}{healthiar}.
 #'
-#' Information about the methodology
-#' (including corresponding equations and literature)
+#' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{absolute risk}}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#modification-of-scenarios}{Modification of scenarios}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{Relative risk}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{Absolute risk}}
 #'
 #'
 # VALUE ########################################################################
@@ -56,6 +57,11 @@
 #' )
 #'
 #' scenario_B$health_main$impact # Attributable impact in scenario B
+#'
+#' @references
+#'
+#' \insertAllCited{}
+#'
 #'
 #' @author Alberto Castro & Axel Luyten
 #'

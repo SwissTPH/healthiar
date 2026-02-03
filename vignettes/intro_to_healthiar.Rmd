@@ -166,13 +166,17 @@ The descriptions of the [`healthiar` functions](https://swisstph.github.io/healt
 To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a country.
 
 ### Methodology
+The comparative risk assessment approach [@Murray2003_e] is applied obtaining the population attributable fraction 
+(percent of cases that are attributable to the exposure) based on the relative risk. 
+The exposure scenario is compared with a counter-factual scenario.
 
-There is extensive literature on health impact quantification using the relative risk approach [e.g., Pozzer2023_gh; @Soares2020_report; @GBD2020_tl; @Steenland2006-e; @WHO2003_report; @Lehtomaki_2025_eh]. 
+This approach has been extensive documented and applied [e.g., @WHO2003_report; 
+@Steenland2006-e; @Soares2020_report; @Pozzer2023_gh; @GBD2020_tl; @Lehtomaki_2025_eh]. 
 
 ![Figure: Relative risk approach](../man/figures/bod_rr.png){width="700"}
 
 #### Population attributable fraction
-The general integral form for the **population attributable fraction (PAF)**:
+General integral form for the **population attributable fraction (PAF)**:
 
 $$PAF = \frac{\int rr\_at\_exp(x) \times PE(x)dx - 1}{\int rr\_at\_exp(x) \times pop\_exp(x)dx}$$
 
@@ -552,7 +556,7 @@ by using a Monte Carlo simulation.
 
 #### General concepts
 A Monte Carlo simulation is a statistical method that 
-generates repeated random sampling [@Robert2004_book; Doucet2020_arsia]. 
+generates repeated random sampling [@Robert2004_book; @Doucet2020_arsia]. 
 In `healthiar`, you can use the function `summarize_uncertainty()` 
 to simulate values in the arguments with uncertainty and 
 estimate a single confidence interval in the results.
@@ -1332,18 +1336,23 @@ To compare the health impacts in the scenario "before intervention" vs. "after i
 
 Two approaches can be used for the comparison of scenarios:
 
-- Population impact fraction (PIF)
+- Delta: Subtraction of health impact in scenario 1 minus in  scenarios 2 (i.e. two PAF) [@WHO2014_book]
 
-- Delta
+- Population impact fraction (PIF): see below.
 
-Please note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2 (e.g. comparison of two scenarios at the same time point), while the delta comparison approach, the difference between two scenarios is obtained by subtraction. Therefore, the delta approach is suited for comparison of a situation now with a situation in the future.
+
+Please note that the PIF comparison approach assumes same baseline health data 
+for scenario 1 and 2 (e.g. comparison of two scenarios at the same time point), 
+while the delta comparison approach, the difference between two scenarios is obtained by subtraction. 
+Therefore, the delta approach is suited for comparison of a situation now with a situation in the future.
 
 #### Population Impact Fraction (PIF)
 
-The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality when exposure to a risk factor is changed (for instance due to an intervention). 
+The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality 
+when exposure to a risk factor is changed (for instance due to an intervention). 
 
 ##### General Integral Form
-The most general equation describing this mathematically is an integral form [@WHO2003_report; @Murray2003-spbm]:
+The most general equation describing this mathematically is an integral form [@WHO2003_report; @Murray2003_spbm]:
 
 $$PIF = \frac{\int rr\_at\_exp(x)PE(x)dx - \int rr\_at\_exp(x)PE'(x)dx}{\int rr\_at\_exp(x)PE(x)dx}$$
 
@@ -1354,7 +1363,7 @@ Where:
 * $PE'(x)$ = alternative population distribution of exposure
 * $rr\_at\_exp(x)$ = relative risk at exposure level compared to the reference level
 
-###### Categorical Exposure Form
+##### Categorical Exposure Form
 If the population exposure is described as a categorical rather than continuous exposure, the integrals may be converted to sums [@WHO2003_report; Murray2003-spbm]:
 
 $$PIF = \frac{\sum rr\_at\_exp_{i} \times PE_{i} - \sum rr\_at\_exp_{i}PE'_{i}}{\sum rr\_at\_exp_{i}PE_{i}}$$
@@ -1455,7 +1464,7 @@ To quantify the total health impact attributable to PM2.5 and NO2.
 ### Methodology
  
 A methodological report of the EU project BEST-COST [@Strak2024_report] identified
-three approaches to sum attributable health impacts from correlated exposures:
+three approaches to add up attributable health impacts from correlated exposures:
 
 - Additive approach [@Steenland2006-e]:
 
@@ -1738,7 +1747,17 @@ legend("topleft",
 To monetize the attributable health impact of a policy that will have health benefits five years from now.
 
 ### Methodology
-You can monetize health impacts valuating them and considering discounting and inflation. For this purpose you can use `monetize()`. If you just need the discount factor or the inflation factor, you can alternatively call `get_discount_factor()` or `get_inflation_factor()`. See the equations that are used behind these functions. 
+Health impacts can be monetized by valuating them (giving them an econmic value)
+and by applying discounting and/or inflation. 
+For this purpose, you can use `monetize()`. 
+
+If you just need the discount factor or the inflation factor, 
+you can alternatively call `get_discount_factor()` or `get_inflation_factor()`. 
+
+If you just need the discounted health impacts (to be valuated in a further step), 
+you can alternatively call `discount()`. 
+
+See below the equations that are used behind these functions. 
 
 #### Inflation factor (without discounting)
 
@@ -1827,12 +1846,17 @@ results <- monetize(
 
 ### Goal (e.g.)
 
-To estimate the net-benefit of a health policy via cost-benefit analysis (CBA).
+To estimate the benefit of a health policy via cost-benefit analysis (CBA).
 
 ### Methodology
 
+The cost-benefit analysis compares the cost and the benefit of an investment.  
+It is assumed that the benefit is caused by the positive health impacts of a policy intervention, 
+which generates some costs.
+
 To perform a cost-benefit analysis, you can use the function `cba()`. 
-It provides three types of indicators based on the following equations [@Boardman2018_book]:
+It provides as output three types of indicators 
+based on the following equations [@Boardman2018_book]:
 
 **Net Benefit**
 $$net\_benefit = benefit - cost$$
@@ -1901,7 +1925,7 @@ To estimate the health impact that is theoretically attributable to the differen
 
 Taking into account socio-economic indicators, e.g. multiple deprivation index [@Mogin2025_ejph], 
 the differences in attributable health impacts across study areas 
-can be estimated [@Renard2019_bmc; Otavova_2022_bmc]. 
+can be estimated [@Renard2019_bmc; @Otavova_2022_bmc]. 
 
 The most deprived areas (top n-quantile) and in the least deprived areas (bottom n-quantile) are then compared. 
 The differences can be 

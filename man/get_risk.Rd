@@ -30,7 +30,8 @@ get_risk(
 This function returns the \code{numeric} risk value(s) at the specified exposure level(s), referred to as \emph{rr_at_exp} in the relative risk equations above.
 }
 \description{
-This function re-scales the relative risk from the increment value in the epidemiological study (e.g. for PM2.5 10 or 5 ug/m3) to the actual population exposure
+This function re-scales the relative risk from the increment value in the epidemiological study
+(e.g. for PM2.5 10 or 5 ug/m3) to the actual population exposure
 }
 \details{
 \strong{Function arguments}
@@ -46,7 +47,13 @@ e.g., \code{stats::splinefun(x, y, method="natural")}
 
 \strong{Methodology}
 
-Information about the methodology
+This function is called internally inside other \code{healthiar} functions, e.g. \code{attribute_health()}.
+The function calculates the relative risk at the exposure level based on the
+relative risk available in the epidemiological literature and the assumed shape
+of the exposure-response function
+\insertCite{Pozzer2023_gh,Lehtomaki_2025_eh}{healthiar}.
+
+Detailed information about the methodology
 (including corresponding equations and literature)
 is available in the package vignette.
 More specifically, see chapters:
@@ -83,9 +90,7 @@ get_risk(
 
 }
 \references{
-\insertRef{Pozzer2023_gh}{healthiar}
-
-\insertRef{Lehtomaki_2025_eh}{healthiar}
+\insertAllCited{}
 }
 \author{
 Alberto Castro & Axel Luyten

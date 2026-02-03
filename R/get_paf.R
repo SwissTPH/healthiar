@@ -2,7 +2,8 @@
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function calculates the population attributable fraction (PAF) of a health outcome due to exposure to an environmental stressor
+#' This function calculates the population attributable fraction (PAF)
+#' of a health outcome due to exposure to an environmental stressor
 
 # ARGUMENTS ####################################################################
 #' @inheritParams attribute_master
@@ -13,8 +14,13 @@
 #'
 #' \strong{Methodology}
 #'
-#' Information about the methodology
-#' (including corresponding equations and literature)
+#' This function is called internally inside other \code{healthiar} functions, e.g. \code{attribute_health()}.
+#' The function calculates the  population attributable fraction
+#' (i.e. the percent of health cases that are attributable to the exposure)
+#' based on the relative risk as described in the extensive existing literature
+#' \insertCite{WHO2003_report,Steenland2006-e,Lehtomaki_2025_eh}{healthiar}.
+#'
+#' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
@@ -26,16 +32,13 @@
 
 # EXAMPLES #####################################################################
 #' @examples
+#'
 #' # Goal: calculate PAF based on RR and the proportion of population exposed
 #' get_paf(rr = 1.062, prop_pop_exp = 1)
 #'
 #' @references
 #'
-#' \insertRef{WHO2003_report}{healthiar}
-#'
-#' \insertRef{Steenland2006-e}{healthiar}
-#'
-#' \insertRef{Lehtomaki_2025_eh}{healthiar}
+#' \insertAllCited{}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten

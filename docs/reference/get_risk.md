@@ -77,15 +77,30 @@ the function using, e.g., `stats::splinefun(x, y, method="natural")`
 
 **Methodology**
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+This function is called internally inside other `healthiar` functions,
+e.g.
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
+The function calculates the relative risk at the exposure level based on
+the relative risk available in the epidemiological literature and the
+assumed shape of the exposure-response function (Pozzer et al. 2023;
+Lehtomäki et al. 2025) .
+
+Detailed information about the methodology (including corresponding
+equations and literature) is available in the package vignette. More
+specifically, see chapters:
 
 - [relative
   risk](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk)
 
 ## References
 
+Lehtomäki H, Aasvang GM, Sulo G, Denby BR, Hänninen OO, Brauer M,
+Pereira G, Dadras O, Bølling AK (2025). “Burden of disease attributable
+to PM2.5 at low exposure levels: impact of methodological choices.”
+*Environmental Health*, **25**(1), 4. ISSN 1476-069X,
+[doi:10.1186/s12940-025-01250-y](https://doi.org/10.1186/s12940-025-01250-y)
+.  
+  
 Pozzer A, Anenberg SC, Dey S, Haines A, Lelieveld J, Chowdhury S (2023).
 “Mortality Attributable to Ambient Air Pollution: A Review of Global
 Estimates.” *GeoHealth*, **7**(1), e2022GH000711.
@@ -93,13 +108,6 @@ Estimates.” *GeoHealth*, **7**(1), e2022GH000711.
 e2022GH000711 2022GH000711,
 https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2022GH000711,
 <https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2022GH000711>.
-
-Lehtomäki H, Aasvang GM, Sulo G, Denby BR, Hänninen OO, Brauer M,
-Pereira G, Dadras O, Bølling AK (2025). “Burden of disease attributable
-to PM2.5 at low exposure levels: impact of methodological choices.”
-*Environmental Health*, **25**(1), 4. ISSN 1476-069X,
-[doi:10.1186/s12940-025-01250-y](https://doi.org/10.1186/s12940-025-01250-y)
-.
 
 ## Author
 

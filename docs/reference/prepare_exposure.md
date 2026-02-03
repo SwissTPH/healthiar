@@ -55,9 +55,8 @@ The population-weighted exposure is calculated by intersecting gridded
 concentration values with population grids, following the methodology
 described in Shaddick et al. (2018) .
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [Preparation of exposure
   data](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#preparation-of-exposure-data)

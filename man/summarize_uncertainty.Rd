@@ -52,8 +52,12 @@ ensuring reproducible and independent random draws across variables and scenario
 
 \strong{Methodology}
 
-Information about the methodology
-(including corresponding equations and literature)
+This function summarizes the uncertainty of the attributable health impacts
+(i.e.a single confidence interval instead of many combinations).
+For this purpose, it applies
+a Monte Carlo simulation \insertCite{Robert2004_book,Doucet2020_arsia}{healthiar}.
+
+Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
 \itemize{
@@ -85,9 +89,7 @@ results$uncertainty_main$impact # Central, lower and upper estimates
 
 }
 \references{
-\insertRef{Robert2004_book}{healthiar}
-
-\insertRef{Doucet2020_arsia}{healthiar}
+\insertAllCited{}
 }
 \author{
 Alberto Castro & Axel Luyten

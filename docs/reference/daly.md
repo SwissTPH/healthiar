@@ -51,9 +51,12 @@ results.
 
 **Methodology**
 
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+This function sums the years of life lost (YLL) and years lived with
+disability (YLD) to obtain the disability-adjusted lost years (DALY)
+(2019 Risk Factors Collaborators 2020) .
+
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [dalys](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#dalys)
 

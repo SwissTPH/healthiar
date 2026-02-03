@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1440</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1441</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -204,8 +204,14 @@ will be affected by the exposure;
 <code>max_age</code> analogeously specifies the age above
 which no health effects of the exposure are considered.</p>
 <p><strong>Methodology</strong></p>
-<p>Information about the methodology
-(including corresponding equations and literature)
+<p>The life table approach to obtain YLL and deaths requires population and
+baseline mortality data to be stratified by one year age groups.
+This function applies the same approach as the on applied in the WHO tool AirQ+
+(WHO 2020)
+,
+which is described in previous literature (Miller and Hurley 2003)
+.</p>
+<p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table">YLL and deaths with life table</a></p></li>
 </ul><p><strong>Conversion of multi-year to single year age groups</strong></p>
@@ -221,7 +227,14 @@ impact by age/year.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>There are no references for Rd macro <code>\insertAllCites</code> on this help page.</p>
+    <p>Miller BG, Hurley JF (2003).
+“Life table methods for quantitative impact assessments in chronic mortality.”
+<em>Journal of Epidemiology &amp; Community Health</em>, <b>57</b>(3), 200–206.
+<a href="https://doi.org/10.1136/jech.57.3.200" class="external-link">doi:10.1136/jech.57.3.200</a>
+, https://jech.bmj.com/content/57/3/200.full.pdf, <a href="https://jech.bmj.com/content/57/3/200" class="external-link">https://jech.bmj.com/content/57/3/200</a>.<br><br> WHO (2020).
+“Health impact assessment of air pollution: AirQ+ life table manual.”
+World Health Organization - Regional Office for Europe.
+<a href="https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content" class="external-link">https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content</a>.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

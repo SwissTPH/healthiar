@@ -40,8 +40,7 @@ gridded concentration values with population grids,
 following the methodology described in \insertCite{Shaddick2018_jrsssc;textual}{healthiar}.
 
 
-Information about the methodology
-(including corresponding equations and literature)
+Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
 \itemize{

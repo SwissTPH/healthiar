@@ -26,24 +26,15 @@
 #'
 #' \strong{Methodology}
 #'
-#' Information about the methodology
-#' (including corresponding equations and literature)
+#' This function condenses socio-economic indicators into
+#' a multiple deprivation index (MDI) \insertCite{Mogin2025_ejph}{healthiar}.
+#' The reliability of the MDI is assessed using Cronbach's alpha \insertCite{Cronbach1951_p}{healthiar}.
+#'
+#' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
 #'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#multiple-deprivation-index}{Multiple deprivation index}}
-#'
-#'
-#' \strong{The function outputs Cronbach's alpha}
-#'
-#' See below the considered reliability based on the alpha value:
-#'
-#' \itemize{
-#'  \item{0.9 and higher: Excellent reliability}
-#'  \item{between 0.8 (included) and 0.9: Good reliability}
-#'  \item{between 0.7 (included) and 0.8: Acceptable reliability}
-#'  \item{between 0.6 (included) and 0.7: Questionable reliability}
-#'  \item{lower than 0.6: Poor reliability}}
 #'
 #'
 #' \strong{Data completeness and imputation}
@@ -53,7 +44,8 @@
 #'
 #' \strong{Plots}
 #'
-#' See the example below for how to reproduce the box plots and the histogram after the \code{prepare_mdi} function call.
+#' See the example below for how to reproduce the box plots and
+#' the histogram after the \code{prepare_mdi} function call.
 #'
 # VALUE ########################################################################
 #' @return
@@ -104,12 +96,7 @@
 #'
 #' @references
 #'
-#' \insertRef{Cronbach1951_p}{healthiar}
-#'
-#' \insertRef{Gorasso2024_report}{healthiar}
-#'
-#' \insertRef{Mogin2025_ejph}{healthiar}
-#'
+#' \insertAllCited{}
 #'
 #'
 #' @author Carl Baravelli, Vanessa Gorasso, Alberto Castro & Axel Luyten

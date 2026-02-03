@@ -14,8 +14,10 @@
 #'
 #' \strong{Methodology}
 #'
-#' Information about the methodology
-#' (including corresponding equations and literature)
+#' This function sums the years of life lost (YLL) and years lived with disability (YLD)
+#' to obtain the disability-adjusted lost years (DALY) \insertCite{GBD2020_tl}{healthiar}.
+#'
+#' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
@@ -86,7 +88,7 @@
 #'
 #' @references
 #'
-#' \insertRef{GBD2020_tl}{healthiar}
+#' \insertAllCited{}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten

@@ -2,7 +2,9 @@
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function performs a cost-benefit analysis
+#' This function performs a cost-benefit analysis.
+#' It is assumed that the benefit is caused by the positive health impacts of a policy intervention,
+#' which generates some costs.
 
 # ARGUMENTS ####################################################################
 #' @inheritParams monetize
@@ -16,8 +18,16 @@
 #'
 #' \strong{Methodology}
 #'
-#' Information about the methodology
-#' (including corresponding equations and literature)
+#' This function provides as output three types of cost-benefit indicators
+#' \insertCite{Boardman2018_book}{healthiar}:
+#'
+#' \itemize{
+#'  \item net benefit
+#'  \item cost-benefit ratio
+#'  \item return of investment}
+#'
+#'
+#' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
@@ -27,7 +37,7 @@
 # VALUE ########################################################################
 #' @returns
 #' This function returns a \code{list} containing:
-#' @returns
+#'
 #' 1) \code{cba_main} (\code{tibble}) containing the main CBA results;
 #' \itemize{
 #'  \item \code{net_benefit} (\code{numeric} column) containing the difference between benefit and cost (i.e. benefit - cost)
@@ -35,13 +45,13 @@
 #'  \item \code{cost} (\code{numeric} column) containing discounted cost
 #'  \item And many more
 #' }
-#' @returns
+#'
 #' 2) \code{cba_detailed} (\code{list}) containing detailed (and interim) results.
 #' \itemize{
 #'  \item \code{benefit} (\code{list})
 #'  \item \code{cost} (\code{tibble})
 #' }
-#' @returns
+#'
 #' If the argument \code{output_attribute} was specified, then the two results elements are added to the existing output.
 
 # EXAMPLES #####################################################################
@@ -75,7 +85,7 @@
 #'
 #' @references
 #'
-#' \insertRef{Boardman2018_book}{healthiar}
+#' \insertAllCited{}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten

@@ -72,35 +72,43 @@ from the comparison.
 
 ## Details
 
-**Function arguments**
+**Methodology** This function compares the attributable health impacts
+in scenario 1 with scenario 2. It can use two approaches:
 
-`approach_comparison` Please note that the PIF comparison approach
-assumes same baseline health data for scenario 1 and 2 (e.g. comparison
-of two scenarios at the same time point).
+- Delta: Subtraction of health impacts in the two scenarios (two PAF)
+  (Organization 2014)
+
+- Population impact fraction (PIF): Single PIF for both scenarios (WHO
+  2003; Murray et al. 2003)
+
+Please note that the PIF comparison approach assumes same baseline
+health data for scenario 1 and 2 (e.g. comparison of two scenarios at
+the same time point).
 
 With the delta comparison approach, the difference between two scenarios
 is obtained by subtraction. The delta approach is suited for all
 comparison cases, and specifically for comparison of a situation now
 with a situation in the future.
 
-**Methodology**
-
-Information about the methodology (including corresponding equations and
-literature) is available in the package vignette. More specifically, see
-chapters:
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
 
 - [comparison of two health
   scenarios](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios)
 
 ## References
 
+Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
+“Comparative quantification of health risks conceptual framework and
+methodological issues.” *Popul. Health Metr.*, **1**(1), 1.  
+  
+Organization WH (2014). *Health impact assessment of air pollution:
+Guide for practitioners*. WHO Regional Office for Europe, Copenhagen.
+<https://apps.who.int/iris/handle/10665/144701>.  
+  
 WHO (2003). “Introduction and methods: Assessing the environmental
 burden of disease at national and local levels.” World Health
 Organization. <https://www.who.int/publications/i/item/9241546204>.
-
-Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
-“Comparative quantification of health risks conceptual framework and
-methodological issues.” *Popul. Health Metr.*, **1**(1), 1.
 
 ## Author
 

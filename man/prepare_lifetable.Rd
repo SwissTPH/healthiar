@@ -33,8 +33,7 @@ See the AirQ+ manual
 for guidance on how to convert larger age groups to 1 year age groups,
 section "Estimation of yearly values" \insertCite{WHO2020_report}{healthiar}.
 
-Information about the methodology
-(including corresponding equations and literature)
+Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
 \itemize{

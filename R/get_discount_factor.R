@@ -9,12 +9,18 @@
 #'
 # DETAILS ######################################################################
 #' @details
-#' Additional details...
 #'
 #' \strong{Methodology}
 #'
-#' Information about the methodology
-#' (including corresponding equations and literature)
+#' This function is called inside \code{monetize()}.
+#'
+#' One of the following three discount shapes can be selected:
+#' \itemize{
+#'  \item Exponential \insertCite{Frederick2002_jel}{healthiar}
+#'  \item Hyperbolic as \insertCite{Harvey1986_ms;textual}{healthiar}
+#'  \item Hyperbolic as \insertCite{Mazur1987_book;textual}{healthiar}}
+#'
+#' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
@@ -34,11 +40,7 @@
 #'
 #' @references
 #'
-#' \insertRef{Frederick2002_jel}{healthiar}
-#'
-#' \insertRef{Harvey1986_ms}{healthiar}
-#'
-#' \insertRef{Mazur1987_book}{healthiar}
+#' \insertAllCited{}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten
