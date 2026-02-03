@@ -320,6 +320,21 @@ chapters:
 
 ## References
 
+WHO (2003). “Introduction and methods: Assessing the environmental
+burden of disease at national and local levels.” World Health
+Organization. <https://www.who.int/publications/i/item/9241546204>.
+
+Steenland K, Armstrong B (2006). “An overview of methods for calculating
+the burden of disease due to specific risk factors.” *Epidemiology*,
+**17**(5), 512–519.
+[doi:10.1097/01.ede.0000229155.05644.43](https://doi.org/10.1097/01.ede.0000229155.05644.43)
+.
+
+2019 Risk Factors Collaborators GBD (2020). “Global burden of 87 risk
+factors in 204 countries and territories, 1990–2019.” *The Lancet*.
+[doi:10.1016/S0140-6736(20)30752-2](https://doi.org/10.1016/S0140-6736%2820%2930752-2)
+, <https://www.thelancet.com/article/S0140-6736(20)30752-2/fulltext>.
+
 Soares J, González Ortiz A, Gsella A, Horálek J, Plass D, Kienzler S
 (2022). “Health risk assessment of air pollution and the impact of the
 new WHO guidelines (Eionet Report – ETC HE 2022/10).” European Topic
@@ -334,20 +349,12 @@ e2022GH000711 2022GH000711,
 https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2022GH000711,
 <https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2022GH000711>.
 
-2019 Risk Factors Collaborators GBD (2020). “Global burden of 87 risk
-factors in 204 countries and territories, 1990–2019.” *The Lancet*.
-[doi:10.1016/S0140-6736(20)30752-2](https://doi.org/10.1016/S0140-6736%2820%2930752-2)
-, <https://www.thelancet.com/article/S0140-6736(20)30752-2/fulltext>.
-
-Steenland K, Armstrong B (2006). “An overview of methods for calculating
-the burden of disease due to specific risk factors.” *Epidemiology*,
-**17**(5), 512–519.
-[doi:10.1097/01.ede.0000229155.05644.43](https://doi.org/10.1097/01.ede.0000229155.05644.43)
+Lehtomäki H, Aasvang GM, Sulo G, Denby BR, Hänninen OO, Brauer M,
+Pereira G, Dadras O, Bølling AK (2025). “Burden of disease attributable
+to PM2.5 at low exposure levels: impact of methodological choices.”
+*Environmental Health*, **25**(1), 4. ISSN 1476-069X,
+[doi:10.1186/s12940-025-01250-y](https://doi.org/10.1186/s12940-025-01250-y)
 .
-
-WHO (2003). “Introduction and methods: Assessing the environmental
-burden of disease at national and local levels.” World Health
-Organization. <https://www.who.int/publications/i/item/9241546204>.
 
 ## Author
 

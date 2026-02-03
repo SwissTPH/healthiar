@@ -2,25 +2,44 @@
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function prepares tabular population exposure data compatible with the \code{attribute()} and \code{compare()} functions, based on gridded pollution concentration data and vector data representing geographic units. The function calculates an average concentration value in each geographic unit, weighted by the fraction of the population in each sub-unit.
-
+#' This function prepares tabular population exposure data that can be entered in the
+#' argument \code{exp_...} of the \code{healthiar} functions, e.g. \code{attribute_health()}
+#' using gridded pollution concentration and population data.
+#'
 # ARGUMENTS ####################################################################
 #' @param poll_grid \code{SpatRaster} of the pollution concentration data.
 #' @param geo_units \code{sf} of the geographic sub-units.
 #' @param population \code{Numeric vector} containing the total population number in each geographic sub-unit.
 #' @param geo_id_macro \code{Numeric or string vector} containing the higher-level IDs of the geographic units the sub-unit belong to and will be aggregated at.
-
+#'
+# DETAILS ######################################################################
+#' @details
+#'
+#' \strong{Methodology}
+#'
+#' The population-weighted exposure is calculated by intersecting
+#' gridded concentration values with population grids,
+#' following the methodology described in \insertCite{Shaddick2018_jrsssc;textual}{healthiar}.
+#'
+#'
+#' Information about the methodology
+#' (including corresponding equations and literature)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#preparation-of-exposure-data}{Preparation of exposure data}}
+#'
 # VALUE ########################################################################
 #' @return
 #' This function returns a \code{list} containing:
-#' @returns
+#'
 #' 1) \code{main} (\code{tibble}) containing the main results as vectors;
 #' \itemize{
 #'  \item \code{geo_id_macro} (\code{string} column) containing the (higher-level) geographic IDs of the assessment
 #'  \item \code{exp_value} (\code{numeric} column) containing the (population-weighted) mean exposure
 #'  \item \code{exp_type} (\code{string} column) specifying the exposure type
 #' }
-#' @returns
+#'
 #' 2) \code{detailed} (\code{list}) containing detailed (and interim) results.
 
 # EXAMPLES #####################################################################
@@ -38,14 +57,17 @@
 #'   poll_grid = exdat_pwm_1, # Formal class SpatRaster
 #'   geo_units = exdat_pwm_2, # sf of the geographic sub-units
 #'   population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
-#'   geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate at
+#'   geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate
 #' )
 #'
-#' pwm$main # population-weighted mean exposures for the (higher-level) geographic units
-
+#' @references
+#'
+#' \insertAllCited{}
+#'
+#'
+#' @author Arno Pauwels, Axel Luyten and Alberto Castro
+#'
 #' @export
-
-#' @author Arno Pauwels
 
 prepare_exposure <-
   function(

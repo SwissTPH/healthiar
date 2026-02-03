@@ -17,7 +17,7 @@
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization}{monetization}}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization}{Monetization}}
 #'
 # VALUE ########################################################################
 #' @returns This function returns the \code{numeric} inflation factor.
@@ -30,7 +30,7 @@
 #'   n_years = 5
 #' )
 #'
-#' #' @references
+#' @references
 #'
 #' \insertRef{Brealey2023_book}{healthiar}
 #'

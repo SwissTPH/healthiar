@@ -67,10 +67,10 @@ equations above.
 
 ## Details
 
-**Function arguments** `erf_eq` \#' If the function is provided as
-`string`, it can only contain the variable c (exposure), e.g. "3+c+c^2".
-If the function is provided as a `function`, the object must be of the
-class function. If only the values of the x-axis (exposure) and y axis
+**Function arguments** `erf_eq` If the function is provided as `string`,
+it can only contain the variable c (exposure), e.g. "3+c+c^2". If the
+function is provided as a `function`, the object must be of the class
+function. If only the values of the x-axis (exposure) and y axis
 (relative risk) of the dots in the exposure-response function are
 available, a cubic spline natural interpolation can be assumed to get
 the function using, e.g., `stats::splinefun(x, y, method="natural")`
@@ -93,6 +93,13 @@ Estimates.” *GeoHealth*, **7**(1), e2022GH000711.
 e2022GH000711 2022GH000711,
 https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2022GH000711,
 <https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2022GH000711>.
+
+Lehtomäki H, Aasvang GM, Sulo G, Denby BR, Hänninen OO, Brauer M,
+Pereira G, Dadras O, Bølling AK (2025). “Burden of disease attributable
+to PM2.5 at low exposure levels: impact of methodological choices.”
+*Environmental Health*, **25**(1), 4. ISSN 1476-069X,
+[doi:10.1186/s12940-025-01250-y](https://doi.org/10.1186/s12940-025-01250-y)
+.
 
 ## Author
 

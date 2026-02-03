@@ -9,7 +9,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1435</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1440</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,13 +100,84 @@ is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios">comparison of two health scenarios</a></p></li>
 </ul></div>
     <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>WHO (2003).
+“Introduction and methods: Assessing the environmental burden of disease at national and local levels.”
+World Health Organization.
+<a href="https://www.who.int/publications/i/item/9241546204" class="external-link">https://www.who.int/publications/i/item/9241546204</a>.</p>
+<p>Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
+“Comparative quantification of health risks conceptual framework and methodological issues.”
+<em>Popul. Health Metr.</em>, <b>1</b>(1), 1.</p>
+    </div>
+    <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p>Alberto Castro &amp; Axel Luyten</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Goal: comparison of two scenarios with delta approach</span></span></span>
+<span class="r-in"><span><span class="va">scenario_A</span> <span class="op">&lt;-</span> <span class="fu"><a href="attribute_health.html">attribute_health</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  exp_central <span class="op">=</span> <span class="fl">8.85</span>,   <span class="co"># EXPOSURE 1</span></span></span>
+<span class="r-in"><span>  cutoff_central <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>  bhd_central <span class="op">=</span> <span class="fl">25000</span>,</span></span>
+<span class="r-in"><span>  approach_risk <span class="op">=</span> <span class="st">"relative_risk"</span>,</span></span>
+<span class="r-in"><span>  erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span></span>
+<span class="r-in"><span>  rr_central <span class="op">=</span> <span class="fl">1.118</span>,</span></span>
+<span class="r-in"><span>  rr_increment <span class="op">=</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">scenario_B</span> <span class="op">&lt;-</span> <span class="fu"><a href="attribute_health.html">attribute_health</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  exp_central <span class="op">=</span> <span class="fl">6</span>,     <span class="co"># EXPOSURE 2</span></span></span>
+<span class="r-in"><span>  cutoff_central <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>  bhd_central <span class="op">=</span> <span class="fl">25000</span>,</span></span>
+<span class="r-in"><span>  approach_risk <span class="op">=</span> <span class="st">"relative_risk"</span>,</span></span>
+<span class="r-in"><span>  erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span></span>
+<span class="r-in"><span>  rr_central <span class="op">=</span> <span class="fl">1.118</span>,</span></span>
+<span class="r-in"><span>  rr_increment <span class="op">=</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">compare</span><span class="op">(</span></span></span>
+<span class="r-in"><span>approach_comparison <span class="op">=</span> <span class="st">"delta"</span>,</span></span>
+<span class="r-in"><span>output_attribute_scen_1 <span class="op">=</span> <span class="va">scenario_A</span>,</span></span>
+<span class="r-in"><span>output_attribute_scen_2 <span class="op">=</span> <span class="va">scenario_B</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Inspect the difference, stored in the \code{impact} column</span></span></span>
+<span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">health_main</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">impact</span>, <span class="va">impact_scen_1</span>, <span class="va">impact_scen_2</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   impact impact_scen_1 impact_scen_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>   774.         <span style="text-decoration: underline;">1</span>051.          277.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Goal: comparison of two scenarios with population impact fraction (pif) approach</span></span></span>
+<span class="r-in"><span><span class="va">output_attribute_scen_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="attribute_health.html">attribute_health</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  exp_central <span class="op">=</span> <span class="fl">8.85</span>,   <span class="co"># EXPOSURE 1</span></span></span>
+<span class="r-in"><span>  cutoff_central <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>  bhd_central <span class="op">=</span> <span class="fl">25000</span>,</span></span>
+<span class="r-in"><span>  approach_risk <span class="op">=</span> <span class="st">"relative_risk"</span>,</span></span>
+<span class="r-in"><span>  erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span></span>
+<span class="r-in"><span>  rr_central <span class="op">=</span> <span class="fl">1.118</span>, rr_lower <span class="op">=</span> <span class="fl">1.060</span>, rr_upper <span class="op">=</span> <span class="fl">1.179</span>,</span></span>
+<span class="r-in"><span>  rr_increment <span class="op">=</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">output_attribute_scen_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="attribute_health.html">attribute_health</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  exp_central <span class="op">=</span> <span class="fl">6</span>,      <span class="co"># EXPOSURE 2</span></span></span>
+<span class="r-in"><span>  cutoff_central <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>  bhd_central <span class="op">=</span> <span class="fl">25000</span>,</span></span>
+<span class="r-in"><span>  approach_risk <span class="op">=</span> <span class="st">"relative_risk"</span>,</span></span>
+<span class="r-in"><span>  erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span></span>
+<span class="r-in"><span>  rr_central <span class="op">=</span> <span class="fl">1.118</span>, rr_lower <span class="op">=</span> <span class="fl">1.060</span>, rr_upper <span class="op">=</span> <span class="fl">1.179</span>,</span></span>
+<span class="r-in"><span>  rr_increment <span class="op">=</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">compare</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  output_attribute_scen_1 <span class="op">=</span> <span class="va">output_attribute_scen_1</span>,</span></span>
+<span class="r-in"><span>  output_attribute_scen_2 <span class="op">=</span> <span class="va">output_attribute_scen_2</span>,</span></span>
+<span class="r-in"><span>  approach_comparison <span class="op">=</span> <span class="st">"pif"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Inspect the difference, stored in the impact column</span></span></span>
+<span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  782.2331  411.7377 1146.1450</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

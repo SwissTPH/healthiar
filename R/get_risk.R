@@ -16,7 +16,14 @@
 #'
 #' \strong{Function arguments}
 #' \code{erf_eq}
-#' #' If the function is provided as \code{string}, it can only contain the variable c (exposure), e.g. "3+c+c^2". If the function is provided as a \code{function}, the object must be of the class function. If only the values of the x-axis (exposure) and y axis (relative risk) of the dots in the exposure-response function are available, a cubic spline natural interpolation can be assumed to get the function using, e.g., \code{stats::splinefun(x, y, method="natural")}
+#' If the function is provided as \code{string},
+#' it can only contain the variable c (exposure), e.g. "3+c+c^2".
+#' If the function is provided as a \code{function},
+#' the object must be of the class function.
+#' If only the values of the x-axis (exposure) and y axis (relative risk)
+#' of the dots in the exposure-response function are available,
+#' a cubic spline natural interpolation can be assumed to get the function using,
+#' e.g., \code{stats::splinefun(x, y, method="natural")}
 #'
 #' \strong{Methodology}
 #'
@@ -63,6 +70,8 @@
 #' @references
 #'
 #' \insertRef{Pozzer2023_gh}{healthiar}
+#'
+#' \insertRef{Lehtomaki_2025_eh}{healthiar}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten

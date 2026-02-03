@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1435</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1440</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -174,27 +174,40 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><strong>Function arguments</strong></p>
 <p><code>age_group</code>
-The numeric values must refer to 1 year age groups, e.g. <code>c(0:99)</code>. To convert multi-year/larger age groups to 1 year age groups use the function <code><a href="prepare_lifetable.html">prepare_lifetable()</a></code> (see its function documentation for more info).</p>
+The numeric values must refer to 1 year age groups, e.g. <code>c(0:99)</code>.
+To convert multi-year/larger age groups to 1 year age groups use the function <code><a href="prepare_lifetable.html">prepare_lifetable()</a></code>
+(see its function documentation for more info).</p>
 <p><code>bhd_central,bhd_lower,bhd_upper</code>
-Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year). There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities. If zeros show up in the last ages (e.g. age 98 = 0 deaths, 99 years old = 1), please sum the values and condensate last category (e.g. age 98 = 1).</p>
+Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year).
+There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities.
+If zeros show up in the last ages (e.g. age 98 = 0 deaths, 99 years old = 1),
+please sum the values and condensate last category (e.g. age 98 = 1).</p>
 <p><code>population</code>
-The population data must be inputted with 1 value per age (i.e. age group size = 1 year). The values must be greater than or equal to 1 per age to avoid issues during the calculation of survival probabilities.
-Mid-year population of year x can be approximated as the mean of either end-year populations of years x-1 and x or start-of-year populations of years x and x+1. For each age, the inputted values must be greater than or equal to 1 to avoid issues during the calculation of survival probabilities.</p>
+The population data must be inputted with 1 value per age (i.e. age group size = 1 year).
+The values must be greater than or equal to 1 per age to avoid issues during the calculation of survival probabilities.
+Mid-year population of year x can be approximated as the mean of
+either end-year populations of years x-1 and x or start-of-year populations of years x and x+1.
+For each age, the inputted values must be greater than or equal to 1
+to avoid issues during the calculation of survival probabilities.</p>
 <p><code>approach_newborns</code>
-If <code>"with_newborns"</code> is selected, it is assumed that for each year after the year of analysis n babies (population aged 0) are born.</p>
+If <code>"with_newborns"</code> is selected, it is assumed that
+for each year after the year of analysis n babies (population aged 0) are born.</p>
 <p><code>time_horizon</code>
-Applicable for the following cases:
-#'</p><ul><li><p>YLL: <code>single_year</code> or <code>constant</code> exposure</p></li>
+Applicable for the following cases:</p><ul><li><p>YLL: <code>single_year</code> or <code>constant</code> exposure</p></li>
 <li><p>premature deaths: <code>constant</code> exposure</p></li>
-</ul><p>For example, if 10 is entered one is interested in the impacts of exposure during the year of analysis and the next 9 years (= 10 years in total). Default value: length of the numeric vector specified in the <code>age_group</code> argument.
-<code>min_age</code>, <code>max_age</code>
-The <code>min_age</code> default value 30 implies that all adults aged 30 or older will be affected by the exposure; <code>max_age</code> analogeously specifies the age above which no health effects of the exposure are considered.</p>
+</ul><p>For example, if 10 is entered one is interested in the impacts of exposure
+during the year of analysis and the next 9 years (= 10 years in total).
+Default value: length of the numeric vector specified in the <code>age_group</code> argument.</p>
+<p><code>min_age</code>, <code>max_age</code>
+The <code>min_age</code> default value 30 implies that all adults aged 30 or older
+will be affected by the exposure;
+<code>max_age</code> analogeously specifies the age above
+which no health effects of the exposure are considered.</p>
 <p><strong>Methodology</strong></p>
 <p>Information about the methodology
 (including corresponding equations and literature)
 is available in the package vignette.
-More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk">relative risk</a></p></li>
-<li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk">absolute risk</a></p></li>
+More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table">YLL and deaths with life table</a></p></li>
 </ul><p><strong>Conversion of multi-year to single year age groups</strong></p>
 <p>To convert multi-year/larger age groups to 1 year age groups,
 use the <code>healthiar</code> function <code><a href="prepare_lifetable.html">prepare_lifetable()</a></code>.</p>
@@ -208,19 +221,7 @@ impact by age/year.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>WHO (2020).
-“Health impact assessment of air pollution: AirQ+ life table manual.”
-World Health Organization - Regional Office for Europe.
-<a href="https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content" class="external-link">https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content</a>.</p>
-<p>Miller BG, Hurley JF (2003).
-“Life table methods for quantitative impact assessments in chronic mortality.”
-<em>Journal of Epidemiology &amp; Community Health</em>, <b>57</b>(3), 200–206.
-<a href="https://doi.org/10.1136/jech.57.3.200" class="external-link">doi:10.1136/jech.57.3.200</a>
-, https://jech.bmj.com/content/57/3/200.full.pdf, <a href="https://jech.bmj.com/content/57/3/200" class="external-link">https://jech.bmj.com/content/57/3/200</a>.</p>
-<p>Miller BG (2010).
-“Report on estimation of mortality impacts of particulate air pollution in London.”
-Institute of Occupational Medicine (IOM).
-Commissioned by the Greater London Authority, <a href="https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf" class="external-link">https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf</a>.</p>
+    <p>There are no references for Rd macro <code>\insertAllCites</code> on this help page.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

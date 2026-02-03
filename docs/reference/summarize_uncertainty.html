@@ -27,7 +27,7 @@ duration (duration_...)
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1435</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1440</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,25 +92,40 @@ function output by Monte Carlo simulation.</p>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>This function returns a <code>list</code> containing:</p>
-<p>1) <code>uncertainty_main</code> (<code>tibble</code>) containing the <code>numeric</code> summary uncertainty central estimate and corresponding lower and upper confidence intervals for the attributable health impacts obtained through Monte Carlo simulation;</p>
+<p>1) <code>uncertainty_main</code> (<code>tibble</code>) containing the <code>numeric</code>
+summary uncertainty central estimate and corresponding lower and upper confidence intervals
+for the attributable health impacts obtained through Monte Carlo simulation;</p>
 <p>2) <code>uncertainty_detailed</code> (<code>list</code>) containing detailed (and interim) results.</p><ul><li><p><code>impact_by_sim</code> (<code>tibble</code>) containing the results for each simulation</p></li>
 <li><p><code>uncertainty_by_geo_id_micro</code> (<code>tibble</code>) containing results for each geographic unit under analysis (specified in <code>geo_id_micro</code> argument in the preceding <code>attribute_health</code> call)</p></li>
 </ul><p>The two results elements are added to the existing output.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><strong>Method</strong></p>
-<p>For each processed input variable with a provided 95% confidence interval value, a distribution is fitted (see below). From these, <code>n_sim</code> input value sets are sampled to compute <code>n_sim</code> attributable impacts. The median value of these attributable impacts is reported as the central estimate, and the 2.5th and 97.5th percentiles define the lower and upper bounds of the 95% summary uncertainty confidence interval, respectively. Aggregated central, lower and upper estimates are obtained by summing the corresponding values of each lower level unit.</p>
-<p><strong>Distributions used for simulation</strong></p>
-<p>Relative risk values are simulated based on an optimized gamma distribution, which fits well as relative risks are positive and its distributions usually right-skewed. The gamma distribution best fitting the inputted central relative risk estimate and corresponding lower and upper 95% confidence interval values is fitted using <code><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">stats::qgamma()</a></code> (with <code>rate = shape / rr_central</code>) and then <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">stats::optimize</a></code> is used to optimize the distribution parameters. Finally, <code>n_sim</code> relative risk values are simulated using <code><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">stats::rgamma()</a></code>.</p>
-<p>Exposure values are simulated based on a normal distribution using <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">stats::rnorm()</a></code> with <code>mean = exp_central</code> and a standard deviation based on corresponding lower and upper 95% exposure confidence interval values.</p>
-<p>Cutoff values are simulated based on a normal distribution using <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">stats::rnorm()</a></code> with <code>mean = cutoff_central</code> and a standard deviation based on corresponding lower and upper 95% cutoff confidence interval values.</p>
-<p>Baseline health data values are simulated based on a normal distribution using <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">stats::rnorm()</a></code> with <code>mean = bhd_central</code> and a standard deviation based on corresponding lower and upper 95% exposure confidence interval values.</p>
-<p>Disability weights values of the morbidity health outcome of interest are simulated based on a beta distribution, as both the disability weights and the beta distribution are bounded by 0 and 1. The beta distribution best fitting the inputted central disability weight estimate and corresponding lower and upper 95% confidence interval values is fitted using <code><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">stats::qgamma()</a></code> (the best fitting distribution parameters <code>shape1</code> and <code>shape2</code> are determined using <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">stats::optimize()</a></code>). Finally, <code>n_sim</code> disability weight values are simulated using <code><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">stats::rbeta()</a></code>.</p>
-<p>Duration values of the morbidity health outcome of interest are simulated based on a normal distribution using <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">stats::rnorm()</a></code> with <code>mean = duration_central</code> and a standard deviation based on corresponding lower and upper 95% exposure confidence interval values.</p>
-<p><strong>Function arguments</strong></p>
-<p><code>seed</code></p>
-<p>If the <code>seed</code> argument is specified then the <code>parallel</code> package is used to generate independent L’Ecuyer random number streams. One stream is allocated per variable (or per variable–geography combination, as needed), ensuring reproducible and independent random draws across variables and scenarios.</p>
+    <p><strong>Function arguments</strong>
+<code>seed</code>
+If the <code>seed</code> argument is specified then the <code>parallel</code> package
+is used to generate independent L’Ecuyer random number streams.
+One stream is allocated per variable (or per variable–geography combination, as needed),
+ensuring reproducible and independent random draws across variables and scenarios.</p>
+
+<p><strong>Methodology</strong></p>
+<p>Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monte-carlo-simulation">Monte Carlo simulation</a></p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Robert CP, Casella G (2004).
+<em>Monte Carlo Statistical Methods</em>,  Springer Texts in Statistics.
+Springer Science \&amp; Business Media.
+<a href="https://doi.org/10.1007/978-1-4757-4145-2" class="external-link">doi:10.1007/978-1-4757-4145-2</a>
+.</p>
+<p>Doucet A, Lee A, others (2020).
+“Monte Carlo Methods in the Twenty-First Century.”
+<em>Annual Review of Statistics and Its Application</em>, <b>7</b>, 435–458.
+<a href="https://doi.org/10.1146/annurev-statistics-031219-041122" class="external-link">doi:10.1146/annurev-statistics-031219-041122</a>
+.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -141,7 +156,8 @@ function output by Monte Carlo simulation.</p>
 <span class="r-in"><span>  n_sim <span class="op">=</span> <span class="fl">100</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">uncertainty_main</span><span class="op">$</span><span class="va">impact</span> <span class="co"># Central, lower and upper estimates</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3655.574 1496.535 5770.173</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3646.684 1496.535 5770.173</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

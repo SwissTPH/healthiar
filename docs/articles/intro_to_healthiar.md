@@ -186,8 +186,9 @@ exposure in a country.
 #### Methodology
 
 There is extensive literature on health impact quantification using the
-relative risk approach \[e.g., Pozzer2023_gh; Soares et al. (2022);
-Collaborators (2020); Steenland and Armstrong (2006); WHO (2003)\].
+relative risk approach \[e.g., Pozzer2023_gh; Soares et al. (2022); G.
+2019. R. F. Collaborators (2020); Steenland and Armstrong (2006); WHO
+(2003); Lehtomäki et al. (2025)\].
 
 ![Figure: Relative risk approach](../reference/figures/bod_rr.png)
 
@@ -241,17 +242,17 @@ published in the epidemiological literature (`rr`) together with the
 The equations used for scaling relative risk depend on the chosen
 exposure-response function shapes:
 
-- linear
+- linear \[Lehtomaki_2025_eh\]
   ``` math
   RRexp = 1 + \frac{rr - 1}{increment} \times (exp - cutoff)
   ```
 
-- log-linear (Pozzer et al. 2023)
+- log-linear (Lehtomäki et al. 2025)
   ``` math
   RRexp = e^{\frac{\log(rr)}{increment} \times (exp - cutoff)}
   ```
 
-- log-log (Pozzer et al. 2023)
+- log-log (Lehtomäki et al. 2025)
   ``` math
   RRexp = \left( \frac{exp + 1}{cutoff + 1} \right)^{\frac{\log(rr)}{\log(increment + cutoff + 1) - \log(cutoff + 1)}}
   ```
@@ -628,21 +629,60 @@ To summarize uncertainty of attributable health impacts (i.e. to get a
 single confidence interval instead of many combinations) by using a
 Monte Carlo simulation.
 
-You can do this carrying out a Monte Carlo uncertainty analysis via the
+#### Methodology
+
+##### General concepts
+
+A Monte Carlo simulation is a statistical method that generates repeated
+random sampling \[Robert and Casella (2004); Doucet2020_arsia\]. In
+`healthiar`, you can use the function
 [`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
-function.
+to simulate values in the arguments with uncertainty and estimate a
+single confidence interval in the results.
 
-The outcome of the Monte Carlo analysis is added to the variable entered
-as the `results` argument, which is `results_pm_copd` in our case.
+For each entered input argument that includes a (95%) confidence
+interval (i.e. `_lower` and `_upper` bound value) a distribution is
+fitted (see distributions below). The median value of these attributable
+impacts is reported as the central estimate, and the 2.5th and 97.5th
+percentiles define the lower and upper bounds of the 95% summary
+uncertainty confidence interval, respectively. Aggregated central, lower
+and upper estimates are obtained by summing the corresponding values of
+each lower level unit.
 
-Two lists (“folders”) are added:
+##### Distributions used for simulation
 
-- `uncertainty_main` contains the central estimate and the corresponding
-  95% confidence intervals obtained through the Monte Carlo assessment
-  and
+[`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
+assumes the following shapes of the distributions in the simulations:
 
-- `uncertainty_detailed` contains all `n_sim` simulations of the Monte
-  Carlo assessment.
+- Relative risk: The values are simulated based on an optimized *gamma*
+  distribution, which fits well as relative risks are positive and its
+  distributions usually right-skewed. The gamma distribution best
+  fitting the inputted central relative risk estimate and corresponding
+  lower and upper 95% confidence interval values is fitted using
+  [`stats::qgamma()`](https://rdrr.io/r/stats/GammaDist.html) (with
+  `rate = shape / rr_central`) and then
+  [`stats::optimize`](https://rdrr.io/r/stats/optimize.html) is used to
+  optimize the distribution parameters. Finally, `n_sim` relative risk
+  values are simulated using
+  [`stats::rgamma()`](https://rdrr.io/r/stats/GammaDist.html).
+
+- Exposure, cutoff, baseline health data and duration: The values are
+  simulated based on a *normal* distribution using
+  [`stats::rnorm()`](https://rdrr.io/r/stats/Normal.html) with
+  `mean = exp_central`, `mean = cutoff_central`, `mean = bhd_central` or
+  `mean = duration_central` and a standard deviation based on
+  corresponding lower and upper 95% exposure confidence interval values.
+
+- Disability weights: The values are simulated based on a *beta*
+  distribution, as both the disability weights and the beta distribution
+  are bounded by 0 and 1. The beta distribution best fitting the
+  inputted central disability weight estimate and corresponding lower
+  and upper 95% confidence interval values is fitted using
+  [`stats::qgamma()`](https://rdrr.io/r/stats/GammaDist.html) (the best
+  fitting distribution parameters `shape1` and `shape2` are determined
+  using [`stats::optimize()`](https://rdrr.io/r/stats/optimize.html)).
+  Finally, `n_sim` disability weight values are simulated using
+  [`stats::rbeta()`](https://rdrr.io/r/stats/Beta.html).
 
 #### Function call
 
@@ -655,6 +695,18 @@ results_pm_copd_summarized <-
 ```
 
 #### Main results
+
+The outcome of the Monte Carlo analysis is added to the variable entered
+as the `results` argument, which is `results_pm_copd` in our case.
+
+Two lists (“folders”) are added:
+
+- `uncertainty_main` contains the central estimate and the corresponding
+  95% confidence intervals obtained through the Monte Carlo assessment
+  and
+
+- `uncertainty_detailed` contains all `n_sim` simulations of the Monte
+  Carlo assessment.
 
 | geo_id_micro | impact_ci        |   impact | impact_rounded |
 |:-------------|:-----------------|---------:|---------------:|
@@ -895,7 +947,24 @@ output_stratified <- output_attribute$health_detailed$results_raw |>
 To quantify the years of life lost (YLL) due to deaths from COPD
 attributable to PM2.5 exposure during one year.
 
-#### Method
+#### Methodology
+
+##### Data preparation
+
+The life table approach to obtain YLL and deaths requires population and
+baseline mortality data to be stratified by *one year* age groups.
+However, in some cases these data are only available for larger age
+groups (e.g. 5-year data: 0-4 years old, 5-9 years old, …). What to do?
+
+- If your population and mortality data are *not* available by one-year
+  age group, your data must be prepared by interpolating values. The
+  `healthiar` function
+  [`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
+  makes this conversion using the same approach as the WHO tool AirQ+
+  (WHO 2020).
+
+- If your population and death data are stratified by one-year age
+  group, you are lucky, you can ignore this initial step.
 
 ##### General concept
 
@@ -1323,12 +1392,22 @@ results_pm_copd_yld  <- attribute_health(
 |:--------|---------:|
 | central | 72.05868 |
 
-## DALYs
+## DALY
 
 #### Goal (e.g.)
 
 To obtain the Disability-Adjusted Life Years as the sum of YLLs and
 YLDs.
+
+#### Methodology
+
+To obtain the attributable disability-adjusted life years (DALY), the
+two DALY components, i.e. years of life lost (YLL) and years lived with
+disability (YLD), must be summed (G. 2019. R. F. Collaborators 2020).
+
+``` math
+DALY = YLL + YLD
+```
 
 #### Function call
 
@@ -1430,15 +1509,15 @@ The most general equation describing this mathematically is an integral
 form (WHO 2003; Murray et al. 2003):
 
 ``` math
-PIF = \frac{\int RR(x)PE(x)dx - \int RR(x)PE'(x)dx}{\int RR(x)PE(x)dx}
+PIF = \frac{\int rr\_at\_exp(x)PE(x)dx - \int rr\_at\_exp(x)PE'(x)dx}{\int rr\_at\_exp(x)PE(x)dx}
 ```
 
-**Where:**
+Where:
 
 - $`x`$ = exposure level
 - $`PE(x)`$ = population distribution of exposure
 - $`PE'(x)`$ = alternative population distribution of exposure
-- $`RRexp(x)`$ = relative risk at exposure level compared to the
+- $`rr\_at\_exp(x)`$ = relative risk at exposure level compared to the
   reference level
 
 ###### Categorical Exposure Form
@@ -1448,18 +1527,18 @@ continuous exposure, the integrals may be converted to sums \[WHO
 (2003); Murray2003-spbm\]:
 
 ``` math
-PIF = \frac{\sum RR_{i} \times PE_{i} - \sum RR_{i}PE'_{i}}{\sum RR_{i}PE_{i}}
+PIF = \frac{\sum rr\_at\_exp_{i} \times PE_{i} - \sum rr\_at\_exp_{i}PE'_{i}}{\sum rr\_at\_exp_{i}PE_{i}}
 ```
 
-**Where:**
+Where:
 
 - $`i`$ = the exposure category (e.g., in bins of 1
   $`\mu g/m^3`$$`PM_{2.5}`$ or 5 dB noise exposure)
 - $`PE_i`$ = fraction of population in exposure category $`i`$
 - $`PE'_i`$ = fraction of population in category $`i`$ for alternative
   (ideal) exposure scenario
-- $`RRexp_i`$ = relative risk for exposure category level $`i`$ compared
-  to the reference level
+- $`rr\_at\_exp_i`$ = relative risk for exposure category level $`i`$
+  compared to the reference level
 
 ###### Population weighted mean concentration form
 
@@ -1467,15 +1546,14 @@ Finally, if the exposure is provided as the population weighted mean
 concentration, the equation for the PIF is reduced to:
 
 ``` math
-PIF = \frac{RRexp - RRexp_{alt}}{RRexp}
+PIF = \frac{rr\_at\_exp - rr\_at\_exp_{alt}}{rr}
 ```
 
-**Where:**
+Where:
 
-- $`RRexp`$ = relative risk associated with the population weighted mean
-  exposure
-- $`RRexp{alt}`$ = relative risk associated with the population weighted
-  mean for the alternative exposure scenario
+- $`rr\_at_exp`$ = relative risk at the exposure level
+- $`rr\_at_exp_{alt}`$ = relative risk at the exposure level for the
+  alternative exposure scenario
 
 #### Function call
 
@@ -1545,13 +1623,41 @@ already seen:
 
 To quantify the total health impact attributable to PM2.5 and NO2.
 
+#### Methodology
+
+A methodological report of the EU project BEST-COST (Strak, Houthuijs,
+and Staatsen 2024) identified three approaches to sum attributable
+health impacts from correlated exposures:
+
+- Additive approach (Steenland and Armstrong 2006):
+
+``` math
+PAF_{additive} = PAF_{exposure1} + PAF_{exposure2}
+```
+
+- Multiplicative approach (Jerrett et al. 2013):
+
+``` math
+PAF_{multiplicative} = \frac{\sum PE \times (rr\_at\_exp_{multiplicative} - 1)}{\sum PE \times (rr\_at\_exp_{multiplicative}-1) + 1}
+```
+
+``` math
+rr\_at\_exp_{multiplicative} = rr\_at\_exp_{exposure1} * rr\_at\_exp_{exposure2}
+```
+
+- Combined approach (Steenland and Armstrong 2006):
+
+``` math
+PAF_{combined} = 1-[(1-PAF_{exposure1}) \times (1-PAF_{exposure2})]
+```
+
+*Attention*: To apply any of these approaches, the relative risks for
+one exposure must be adjusted for the second exposure and the way round.
+
 #### Function call
 
 For this purpose, you can use the function
 [`multiexpose()`](https://swisstph.github.io/healthiar/reference/multiexpose.md).
-
-*Attention*: To apply this method, the relative risks for one exposure
-must be adjusted for the second exposure.
 
 ``` r
 results_pm <- attribute_health(
@@ -1587,6 +1693,129 @@ results_multiplicative$health_main
 | impact_rounded |
 |---------------:|
 |           3988 |
+
+## Standardization
+
+#### Goal (e.g.)
+
+To obtain the age-standardized attributable health impacts of two age
+groups
+
+#### Methodology
+
+Age standardization is a technique used to allow the comparison of
+populations with different age structures (G. 2019. D. Collaborators
+2020; Ahmad et al. 2001). In `healthiar`, the function
+[`standardize()`](https://swisstph.github.io/healthiar/reference/standardize.md)
+applies the direct method, where the age-specific rates observed in a
+study population are applied to a standard (reference) population
+distribution.
+
+The standardized health impact rate is computed as
+``` math
+ impact\_per\_100k\_inhab_{std} = \sum_{i=1}^{k} (impact\_per\_100k\_inhab_i \times w_i) 
+```
+
+where:
+
+- $`R_{std}`$ is the age-standardized health impact rate.
+- $`r_i`$ is the impact rate observed in age group $`i`$ (e.g., impact
+  per 100,000 inhabitants).
+- $`ref_prop_pop_i`$ is the proportion of the reference population in
+  age group $`i`$ .
+- $`k`$ is the number of age groups.
+
+#### Function call
+
+``` r
+output_attribute <- attribute_health(
+  rr_central = 1.063,
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  cutoff_central =  0,
+  age_group = c("below_40", "above_40"),
+  exp_central = c(8.1, 10.9),
+  bhd_central = c(1000, 4000),
+  population = c(100000, 500000)
+  )
+
+results <- standardize(
+  output_attribute = output_attribute,
+  age_group = c("below_40", "above_40"),
+  ref_prop_pop = c(0.5, 0.5)
+  )
+```
+
+#### Main results
+
+Age-standardized impact rate:
+
+``` r
+print(results$health_main$impact_per_100k_inhab)  
+#> [1] 49.91113
+```
+
+Age group-specific impact rate:
+
+``` r
+print(results$health_detailed$results_raw$impact_per_100k_inhab)  
+#> [1] 48.28250 51.53977
+```
+
+## Preparation of exposure data
+
+#### Goal (e.g.)
+
+To determine population-weighted mean PM2.5 exposure for several
+neighborhoods of Brussels (Belgium)
+
+#### Methodology
+
+The `healthiar`function
+[`prepare_exposure()`](https://swisstph.github.io/healthiar/reference/prepare_exposure.md)
+helps users that do not have the exposure data (needed for `healthiar`
+functions), but only concentration and population data. The function
+calculates an average concentration value in each geographic unit,
+weighted by the fraction of the population in each sub-unit.
+
+``` math
+ exp = \frac{\sum_{i=1}^{n} (C_i \times population_i)}{\sum_{i=1}^{n} population_i} 
+```
+
+where:
+
+- $`exp`$ = population-weighted mean exposure for the region.
+- $`C_i`$ = pollutant concentration in grid cell $`i`$.
+- $`population_i`$ = population count in grid cell $`i`$.
+- $`n`$ = total number of grid cells within the region’s boundaries.
+
+The output of
+[`prepare_exposure()`](https://swisstph.github.io/healthiar/reference/prepare_exposure.md)
+can be entered in the argument `exp_mean`, `exp_lower` and/or
+`exp_upper` in `healthiar` functions such as
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
+
+#### Function call
+
+``` r
+
+exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
+exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
+
+pwm <- prepare_exposure(
+  poll_grid = exdat_pwm_1, # Formal class SpatRaster,
+  geo_units = exdat_pwm_2, # sf of the geographic sub-units
+  population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
+  geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region)) # higher-level IDs to aggregate
+```
+
+#### Main results
+
+Within the function output, the tibble `main` contains the
+population-weighted mean exposures for the (higher-level) geographic
+units in the column `exp_value`.
+
+[TABLE]
 
 ## Threshold additional to cut-off
 
@@ -1638,7 +1867,7 @@ f(c) =
 The categorical ERF curve created looks as follows.
 
 ![ERF
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-91-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-98-1.png)
 
 ## Economic dimension
 
@@ -1858,6 +2087,63 @@ To estimate the health impact that is theoretically attributable to the
 difference in a social indicator of the population exposed (e.g. degree
 of deprivation).
 
+#### Methodology
+
+Taking into account socio-economic indicators, e.g. multiple deprivation
+index (Mogin et al. 2025), the differences in attributable health
+impacts across study areas can be estimated \[Renard et al. (2019);
+Otavova_2022_bmc\].
+
+The most deprived areas (top n-quantile) and in the least deprived areas
+(bottom n-quantile) are then compared. The differences can be
+
+- absolute or
+
+- relative
+
+and compared to
+
+- least deprived quantile or
+
+- to overall.
+
+##### Difference most deprived vs. least deprived
+
+``` math
+ absolute\_quantile = first - last 
+```
+Where:
+
+- $`absolute_quantile`$ = Absolute difference regarding quantile
+- $`first`$ = Average health impacts in *most* deprived quantile
+- $`last`$ = Average health impacts in *least* deprived quantile
+
+``` math
+ relative\_quantile = \frac{absolute\_quantile}{last} 
+```
+
+##### Difference overall vs. least deprived
+
+``` math
+ absolute\_overall = overall - last 
+```
+Where:
+
+- $`absolute_overall`$ = Absolute difference regarding the overall
+  average
+- $`overall`$ = *Overall* average health impacts in all study areas
+- $`last`$ = Average health impacts in *least* deprived quantile
+
+``` math
+ relative\_overall = \frac{absolute\_overall}{last} 
+```
+
+If you assume that the least deprived areas are similar to
+counter-factual cases (no exposure to deprivation), the relative
+difference regarding the overall average health impact could be
+interpreted as some kind of relative risk attributable to social
+inequalities.
+
 #### Function call
 
 First, quantify health impacts.
@@ -1927,6 +2213,38 @@ To estimate the multiple deprivation index (MDI) to use it for the
 argument `social_indicator` in the function
 [`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md).
 
+#### Methodology
+
+Socio-economic indicators (e.g. education level, employment status and
+family structure) can be condensed into a multiple deprivation index
+(MDI) (Mogin et al. 2025). For this purpose, the indicators can be
+normalized using min-max scaling.
+
+The reliability of the MDI can be assessed using Cronbach’s alpha
+(Cronbach 1951).
+
+``` math
+ \alpha = \frac{k}{k - 1} \left( 1 - \frac{\sum_{i=1}^{k} \sigma^2_{y_i}}{\sigma^2_x} \right) 
+```
+where:
+
+- $`k`$ is the number of items/variables.
+- $`\sigma^2_{y_i}`$ is the variance of the $`i`$-th item.
+- $`\sum_{i=1}^{k} \sigma^2_{y_i}`$ is the sum of the variances of all
+  items.
+- $`\sigma^2_x`$ is the total variance of the observed total scores (the
+  sum of all items).
+
+To apply this approach, you should ensure that the data set is as
+complete as possible. Otherwise, you can try to impute missing data
+using: - Time-Based Imputation: Linear regression based on historical
+trends if prior years’ data is complete. - Indicator-Based Imputation:
+Multiple linear regression if the missing indicator correlates strongly
+with others.
+
+Imputation models should have an R^2 greater than or equal to 0.7. If
+R^2 lower than 0.7, consider alternative data sources or methods.
+
 #### Function call
 
 ``` r
@@ -1969,6 +2287,12 @@ mdi$mdi_main |>
 |        11016 | 0.2656597 |         3 |
 |        11018 | 0.3566141 |         6 |
 
+The function assesses the reliability of the MDI based on the Cronbach’s
+alpha value as follows: - 0.9 and higher: Excellent reliability -
+between 0.8 (included) and 0.9: Good reliability - between 0.7
+(included) and 0.8: Acceptable reliability - between 0.6 (included) and
+0.7: Questionable reliability - lower than 0.6: Poor reliability
+
 #### Detailed results
 
 - `mdi_detailed`
@@ -1991,7 +2315,7 @@ eval(mdi$mdi_detailed$boxplot)
 ```
 
 ![Boxplot of Normalized Indicators and
-MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-106-1.png)
+MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-113-1.png)
 Analogeously, to reproduce the histogram run
 
 ``` r
@@ -1999,7 +2323,7 @@ eval(mdi$mdi_detailed$histogram)
 ```
 
 ![Histogram of MDI with normal
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-107-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-114-1.png)
 
 ------------------------------------------------------------------------
 
@@ -2103,6 +2427,11 @@ YLL/yll = years of life lost
 
 ## References
 
+Ahmad, Omar B, Cynthia Boschi Pinto, Alan D Lopez, Christopher JL
+Murray, Rafael Lozano, and Mie Inoue. 2001. “Age Standardization of
+Rates: A New WHO Standard.” GPE Discussion Paper Series: No. 31. Geneva:
+World Health Organization.
+
 Boardman, Anthony E., David H. Greenberg, Aidan R. Vining, and David L.
 Weimer. 2018. *Cost-Benefit Analysis: Concepts and Practice*. 5th ed.
 Cambridge, UK: Cambridge University Press.
@@ -2111,9 +2440,20 @@ Brealey, Richard A., Stewart C. Myers, Franklin Allen, Simon Benninga,
 and Julian Read. 2023. *Principles of Corporate Finance*. 14th ed. New
 York, NY: McGraw-Hill Education.
 
+Collaborators, GBD 2019 Demographics. 2020. “Global Age-Sex-Specific
+Fertility, Mortality, Healthy Life Expectancy (HALE), and Population
+Estimates in 204 Countries and Territories, 1950-2019: A Comprehensive
+Demographic Analysis for the Global Burden of Disease Study 2019.” *The
+Lancet* 396 (10258): 1160–1203.
+<https://doi.org/10.1016/S0140-6736(20)30977-6>.
+
 Collaborators, GBD 2019 Risk Factors. 2020. “Global Burden of 87 Risk
 Factors in 204 Countries and Territories, 1990–2019.” *The Lancet*.
 <https://doi.org/10.1016/S0140-6736(20)30752-2>.
+
+Cronbach, Lee J. 1951. “Coefficient Alpha and the Internal Structure of
+Tests.” *Psychometrika* 16 (3): 297–334.
+<https://doi.org/10.1007/BF02310555>.
 
 Frederick, Shane, George Loewenstein, and Ted O’Donoghue. 2002. “Time
 Discounting and Time Preference: A Critical Review.” *Journal of
@@ -2124,10 +2464,22 @@ Harvey, Charles M. 1986. “Value Functions for Infinite-Period Planning.”
 *Management Science* 32 (9): 1123–39.
 <https://doi.org/10.1287/mnsc.32.9.1123>.
 
+Jerrett, Michael, Richard T Burnett, Bernardo S Beckerman, Michelle C
+Turner, Daniel Krewski, George Thurston, Randall V Martin, et al. 2013.
+“Spatial Analysis of Air Pollution and Mortality in California.”
+*American Journal of Respiratory and Critical Care Medicine* 188 (5):
+593–99. https://doi.org/<https://doi.org/10.1164/rccm.201303-0609OC>.
+
 Kim, Young-Eun, Yoon-Sun Jung, Minsu Ock, and Seok-Jun Yoon. 2022. “DALY
 Estimation Approaches: Understanding and Using the Incidence-Based
 Approach and the Prevalence-Based Approach.” *J. Prev. Med. Public
 Health* 55 (1): 10–18. <https://doi.org/10.1111/biom.13197>.
+
+Lehtomäki, Heli, Gunn Marit Aasvang, Gerhard Sulo, Bruce R. Denby, Otto
+Olavi Hänninen, Michael Brauer, Gavin Pereira, Omid Dadras, and Anette
+Kocbach Bølling. 2025. “Burden of Disease Attributable to PM2.5 at Low
+Exposure Levels: Impact of Methodological Choices.” *Environmental
+Health* 25 (1): 4. <https://doi.org/10.1186/s12940-025-01250-y>.
 
 Mazur, James E. 1987. “An Adjusting Procedure for Studying Delayed
 Reinforcement.” In *Quantitative Analyses of Behavior: Volume v. The
@@ -2145,6 +2497,13 @@ Particulate Air Pollution in London.” Institute of Occupational Medicine
 (IOM).
 <https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf>.
 
+Mogin, Gaëlle, Vanessa Gorasso, Jane Idavain, Maria Lepnurm, Sabrina
+Delaunay-Havard, Anette Kocbach Bølling, Jurgen Buekers, Axel Luyten,
+Brecht Devleesschauwer, and Carl Michael Baravelli. 2025. “A Scoping
+Review of Multiple Deprivation Indices in Europe.” *European Journal of
+Public Health* 35 (6): 1122–28.
+<https://doi.org/10.1093/eurpub/ckaf190>.
+
 Murray, Christopher J L, Majid Ezzati, Alan D Lopez, Anthony Rodgers,
 and Stephen Vander Hoorn. 2003. “Comparative Quantification of Health
 Risks Conceptual Framework and Methodological Issues.” *Popul. Health
@@ -2154,6 +2513,16 @@ Pozzer, A., S. C. Anenberg, S. Dey, A. Haines, J. Lelieveld, and S.
 Chowdhury. 2023. “Mortality Attributable to Ambient Air Pollution: A
 Review of Global Estimates.” *GeoHealth* 7 (1): e2022GH000711.
 https://doi.org/<https://doi.org/10.1029/2022GH000711>.
+
+Renard, Françoise, Brecht Devleesschauwer, Niko Speybroeck, and Patrick
+Deboosere. 2019. “Monitoring Health Inequalities When the Socio-Economic
+Composition Changes: Are the Slope and Relative Indices of Inequality
+Appropriate? Results of a Simulation Study.” *BMC Public Health* 19 (1):
+662. <https://doi.org/10.1186/s12889-019-6980-1>.
+
+Robert, Christian P, and George Casella. 2004. *Monte Carlo Statistical
+Methods*. Springer Texts in Statistics. Springer Science & Business
+Media. <https://doi.org/10.1007/978-1-4757-4145-2>.
 
 Soares, J., A. González Ortiz, A. Gsella, J. Horálek, D. Plass, and S.
 Kienzler. 2022. “Health Risk Assessment of Air Pollution and the Impact
@@ -2165,6 +2534,10 @@ Steenland, Kyle, and Ben Armstrong. 2006. “An Overview of Methods for
 Calculating the Burden of Disease Due to Specific Risk Factors.”
 *Epidemiology* 17 (5): 512–19.
 <https://doi.org/10.1097/01.ede.0000229155.05644.43>.
+
+Strak, Maciek, Danny Houthuijs, and Brigit Staatsen. 2024. “D1.2 Report
+on the Methodology for Assessing the Burden of Correlated Exposures.” EU
+Project BEST-COST.
 
 VanderWeele, Tyler J. 2019. “Optimal Approximate Conversions of Odds
 Ratios and Hazard Ratios to Risk Ratios.” *Biometrics* 76 (3): 746–52.

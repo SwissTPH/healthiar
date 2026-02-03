@@ -2,48 +2,50 @@
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{output_attribute}, it is assumed that all data come from a table and the argument refer to the columns of that table.
+#' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts.
+#' If nothing is entered in the argument \code{output_attribute},
+#' it is assumed that all data come from a table and the argument refer to the columns of that table.
 
 # ARGUMENTS ####################################################################
 #' @param output_attribute
 #' \code{List} containing the outputs of the \code{healthiar::attribute_health()} assessments for each age group (each list element should be an age group-specific assessment).
-
 #' @param age_group
 #' \code{String vector} with the age groups included in the age standardization. The vector refers to age-dependent data in this function and to \code{output_attribute} (if provided).
-
 #' @param social_indicator
 #' \code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. The length and the values must correspond with \code{geo_id_micro}. If \code{geo_id_micro} is not entered when using argument \code{output_attribute}, \code{social_indicator} must correspond to the column \code{geo_id_micro} in \code{results_by_age_group} of \code{output_attribute}.
-
 #' @param increasing_deprivation
 #' \code{Boolean} variable (\code{TRUE}/\code{FALSE}) specifying whether an increase in \code{social_indicator} corresponds to an increase (\code{TRUE}) or decrease \code{FALSE} in deprivation. Default: \code{TRUE}.
-
 #' @param n_quantile
 #' \code{Integer value} specifying the number of quantiles in the analysis.
-
 #' @param social_quantile
 #' \code{Integer vector} showing the values from 1 to the number of quantiles assigned to each geographic unit. Either enter \code{social_indicator} and \code{n_quantile} or \code{social_quantile}
-
 #' @param geo_id_micro,
 #' \code{Numeric vector} or \code{string vector} specifying the unique ID codes of each geographic area considered in the assessment (\code{geo_id_micro}).
-
 #' @param population
 #' \code{Numeric vector} specifying the population by age group and geographic unit.
-
 #' @param ref_prop_pop
 #' \code{Numeric vector} specifying with the reference proportion of population for each age group. If this argument is empty, the proportion of \code{population} by age group in the provided data will be used.
-
 #' @param impact
 #' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} containing the attributable health impacts by both age group and geo id.
-
 #' @param bhd
 #' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the baseline health data of the health outcome of interest per age group.
-
 #' @param exp
 #'\emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the exposure level(s) to the environmental stressor.
-
 #' @param pop_fraction
 #' \emph{(only if \code{output_attribute} not specified)} \code{Numeric vector} specifying the population attributable fraction by age group and geographic unit.
 
+# DETAILS ######################################################################
+#' @details
+#'
+#' \strong{Methodology}
+#'
+#' Information about the methodology
+#' (including corresponding equations and literature)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#health-impact-attributable-to-social-indicator}{Health impact attributable to social indicator}}
+#'
 # VALUE ########################################################################
 #' @returns
 #' This function returns a \code{list} containing the impact (absolute and relative) theoretically attributable to the difference in the social indicator (e.g. degree of deprivation) between the quantiles:
@@ -99,9 +101,17 @@
 #'   dplyr::filter(difference_type == "relative") |>
 #'   dplyr::filter(difference_compared_with == "overall") |>
 #'   dplyr::select(first, last, difference_type, difference_value, comment)
-
+#'
+#'
+#' @references
+#'
+#' \insertRef{Renard2019_bmc}{healthiar}
+#'
+#' \insertRef{Otavova_2022_bmc}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 socialize <- function(output_attribute = NULL,

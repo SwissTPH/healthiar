@@ -1,8 +1,8 @@
 # Attributable disability-adjusted life years
 
-This function calculates the disability-adjusted life years (DALY)
-attributable to the exposure to an environmental stressor by adding the
-two DALY components YLL and YLD.
+This function quantifies the attributable disability-adjusted life years
+(DALY) by summing the two DALY components: years of life lost (YLL) and
+years lived with disability (YLD).
 
 ## Usage
 
@@ -46,6 +46,23 @@ results.
 
 - `input_args` (`list`) containing all the argument inputs used in the
   background
+
+## Details
+
+**Methodology**
+
+Information about the methodology (including corresponding equations and
+literature) is available in the package vignette. More specifically, see
+chapters:
+
+- [dalys](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#dalys)
+
+## References
+
+2019 Risk Factors Collaborators GBD (2020). “Global burden of 87 risk
+factors in 204 countries and territories, 1990–2019.” *The Lancet*.
+[doi:10.1016/S0140-6736(20)30752-2](https://doi.org/10.1016/S0140-6736%2820%2930752-2)
+, <https://www.thelancet.com/article/S0140-6736(20)30752-2/fulltext>.
 
 ## Author
 

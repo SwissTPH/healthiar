@@ -42,12 +42,43 @@ results;
 
 ## Details
 
+**Methodology**
+
+This function applies the direct method of standardization, where the
+age-specific rates observed in a study population are applied to a
+standard (reference) population distribution.
+
+For age standardization in health impact assessments, the World Health
+Organization (Ahmad et al. 2001) and the Global Burden of Disease study
+(2019 Demographics Collaborators 2020) provide the relevant information
+on this topic.
+
+Information about the methodology (including corresponding equations and
+literature) is available in the package vignette. More specifically, see
+chapters:
+
+- [Standardization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#standardization)
+
 This function works after running
 [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
 or
 [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
 functions. If you want to use it in combination with compare(), please
 standardize first the results of attribute functions and then compare.
+
+## References
+
+2019 Demographics Collaborators GBD (2020). “Global age-sex-specific
+fertility, mortality, healthy life expectancy (HALE), and population
+estimates in 204 countries and territories, 1950-2019: a comprehensive
+demographic analysis for the Global Burden of Disease Study 2019.” *The
+Lancet*, **396**(10258), 1160-1203.
+[doi:10.1016/S0140-6736(20)30977-6](https://doi.org/10.1016/S0140-6736%2820%2930977-6)
+.  
+  
+Ahmad OB, Pinto CB, Lopez AD, Murray CJ, Lozano R, Inoue M (2001). “Age
+standardization of rates: a new WHO standard.” Technical Report GPE
+Discussion Paper Series: No. 31, World Health Organization, Geneva.
 
 ## Author
 

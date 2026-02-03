@@ -37,10 +37,24 @@ Information about the methodology (including corresponding equations and
 literature) is available in the package vignette. More specifically, see
 chapters:
 
-- [monetization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization)
+- [Monetization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization)
+
+## References
+
+Brealey RA, Myers SC, Allen F, Benninga S, Read J (2023). *Principles of
+Corporate Finance*, 14th edition. McGraw-Hill Education, New York, NY.
+ISBN 978-1264117464.
 
 ## Author
 
 Alberto Castro & Axel Luyten
 
 ## Examples
+
+``` r
+get_inflation_factor(
+  inflation_rate = 0.02,
+  n_years = 5
+)
+#> [1] 1.104081
+```

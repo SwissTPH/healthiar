@@ -38,15 +38,25 @@ This function returns a `tibble` containing the columns:
 
 ## Details
 
-The conversion follows the methodology of the WHO tool which is outlined
-in WHO 2020
-(https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf?sequence=1).
+**Methodology**
 
-See the AirQ+ manual "Health impact assessment of air pollution: AirQ+
-life table manual" for guidance on how to convert larger age groups to 1
-year age groups (section "Estimation of yearly values"):
-https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf
-(accessed April 2025)
+The conversion follows the methodology of the WHO tool. See the AirQ+
+manual "Health impact assessment of air pollution: AirQ+ life table
+manual" for guidance on how to convert larger age groups to 1 year age
+groups, section "Estimation of yearly values" (WHO 2020) .
+
+Information about the methodology (including corresponding equations and
+literature) is available in the package vignette. More specifically, see
+chapters:
+
+- [YLL and deaths with life
+  table](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table)
+
+## References
+
+WHO (2020). “Health impact assessment of air pollution: AirQ+ life table
+manual.” World Health Organization - Regional Office for Europe.
+<https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content>.
 
 ## Author
 
@@ -55,7 +65,7 @@ Alberto Castro & Axel Luyten
 ## Examples
 
 ``` r
-# Goal: Convert 5-year population and death data into single year lifetable
+# Goal: Convert 5-year population and death data into single year life table
 results <- prepare_lifetable(
   age_group = c(0, 5, 10, 15),
   population = c(3387900, 3401300, 3212300, 3026100),

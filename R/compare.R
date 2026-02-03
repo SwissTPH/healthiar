@@ -113,7 +113,7 @@
 #' # Inspect the difference, stored in the impact column
 #' results$health_main$impact
 #'
-#' #' @references
+#' @references
 #'
 #' \insertRef{WHO2003_report}{healthiar}
 #'

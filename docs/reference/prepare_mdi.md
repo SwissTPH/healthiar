@@ -64,8 +64,9 @@ prepare_mdi(
 
 ## Value
 
-This function returns a `list` containing 1) `mdi_main` (`tibble`) with
-the columns (selection);
+This function returns a `list` containing
+
+1\) `mdi_main` (`tibble`) with the columns (selection);
 
 - `geo_id_micro` containing the `numeric` geo id's
 
@@ -97,6 +98,15 @@ consistency check of the BEST-COST Multidimensional Deprivation Index.
 
 ## Details
 
+**Methodology**
+
+Information about the methodology (including corresponding equations and
+literature) is available in the package vignette. More specifically, see
+chapters:
+
+- [Multiple deprivation
+  index](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#multiple-deprivation-index)
+
 **The function outputs Cronbach's alpha**
 
 See below the considered reliability based on the alpha value:
@@ -113,28 +123,34 @@ See below the considered reliability based on the alpha value:
 
 **Data completeness and imputation**
 
-Ensure the data set is as complete as possible. You can try to impute
-missing data:
-
-- Time-Based Imputation: Use linear regression based on historical
-  trends if prior years' data is complete.
-
-- Indicator-Based Imputation: Use multiple linear regression if the
-  missing indicator correlates strongly with others.
-
-**Imputation models**
-
-Imputation models should have an R^2 greater than or equal to 0.7. If
-R^2 lower than 0.7, consider alternative data sources or methods.
+Ensure the data set is as complete as possible. Otherwise, you can try
+to impute missing data, but R^2 should be greater than or equal to 0.7.
 
 **Plots**
 
-See the example below for how to reproduce the boxplots and the
-histogram after the \`prepare_mdi\` function call.
+See the example below for how to reproduce the box plots and the
+histogram after the `prepare_mdi` function call.
+
+## References
+
+Cronbach LJ (1951). “Coefficient alpha and the internal structure of
+tests.” *Psychometrika*, **16**(3), 297–334.
+[doi:10.1007/BF02310555](https://doi.org/10.1007/BF02310555) .
+
+Gorasso V, Priem F, Mogin G, Poelmans L, Buekers J (2024). “Social
+inequalities methodology.” EU project BEST-COST.
+<https://best-cost.eu/wp-content/uploads/2025/07/D3.2-The-quantification-of-social-inequalities-in-the-health-burden-of-environmental-stressors.pdf>.
+
+Mogin G, Gorasso V, Idavain J, Lepnurm M, Delaunay-Havard S, Kocbach
+Bølling A, Buekers J, Luyten A, Devleesschauwer B, Baravelli CM (2025).
+“A scoping review of multiple deprivation indices in Europe.” *European
+Journal of Public Health*, **35**(6), 1122-1128.
+[doi:10.1093/eurpub/ckaf190](https://doi.org/10.1093/eurpub/ckaf190) ,
+https://academic.oup.com/eurpub/article-pdf/35/6/1122/65042936/ckaf190.pdf.
 
 ## Author
 
-Alberto Castro & Axel Luyten
+Carl Baravelli, Vanessa Gorasso, Alberto Castro & Axel Luyten
 
 ## Examples
 
@@ -207,4 +223,5 @@ results$mdi_main |>
 eval(results$mdi_detailed$boxplot)
 
 eval(results$mdi_detailed$histogram)
+
 ```

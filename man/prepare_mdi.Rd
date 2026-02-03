@@ -40,6 +40,7 @@ Default: \code{TRUE}.}
 }
 \value{
 This function returns a \code{list} containing
+
 1) \code{mdi_main} (\code{tibble}) with the columns (selection);
 \itemize{
   \item \code{geo_id_micro} containing the \code{numeric} geo id's
@@ -47,6 +48,7 @@ This function returns a \code{list} containing
   \item \code{MDI_index} \code{numeric} decile based on values in the column \code{MDI}
   \item additional columns containing the function input data
 }
+
 2) \code{mdi_detailed} (\code{list}) with several elements for the internal consistency check of the BEST-COST
   Multidimensional Deprivation Index.
 \itemize{
@@ -64,6 +66,16 @@ consistency of the single deprivation indicators using Cronbach's coefficient \e
 other internal consistency checks
 }
 \details{
+\strong{Methodology}
+
+Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:
+\itemize{
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#multiple-deprivation-index}{Multiple deprivation index}}
+
+
 \strong{The function outputs Cronbach's alpha}
 
 See below the considered reliability based on the alpha value:
@@ -78,22 +90,12 @@ See below the considered reliability based on the alpha value:
 
 \strong{Data completeness and imputation}
 
-Ensure the data set is as complete as possible. You can try to impute missing data:
-\itemize{
-  \item Time-Based Imputation: Use linear regression based on historical trends if prior years'
-  data is complete.
-  \item Indicator-Based Imputation: Use multiple linear regression if the missing indicator
-  correlates strongly with others.
-}
-
-\strong{Imputation models}
-
-Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower than 0.7,
-consider alternative data sources or methods.
+Ensure the data set is as complete as possible. Otherwise, you can try to impute missing data,
+but R^2 should be greater than or equal to 0.7.
 
 \strong{Plots}
 
-See the example below for how to reproduce the boxplots and the histogram after the `prepare_mdi` function call.
+See the example below for how to reproduce the box plots and the histogram after the \code{prepare_mdi} function call.
 }
 \examples{
 # Goal: create the BEST-COST Multidimensional Deprivation Index for
@@ -117,7 +119,15 @@ results$mdi_main |>
 # Reproduce plots after the function call
 eval(results$mdi_detailed$boxplot)
 eval(results$mdi_detailed$histogram)
+
+}
+\references{
+\insertRef{Cronbach1951_p}{healthiar}
+
+\insertRef{Gorasso2024_report}{healthiar}
+
+\insertRef{Mogin2025_ejph}{healthiar}
 }
 \author{
-Alberto Castro & Axel Luyten
+Carl Baravelli, Vanessa Gorasso, Alberto Castro & Axel Luyten
 }

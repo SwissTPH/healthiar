@@ -226,7 +226,7 @@ survival probabilities.
 for each year after the year of analysis n babies (population aged 0)
 are born.
 
-`time_horizon` Applicable for the following cases: \#'
+`time_horizon` Applicable for the following cases:
 
 - YLL: `single_year` or `constant` exposure
 
@@ -235,10 +235,12 @@ are born.
 For example, if 10 is entered one is interested in the impacts of
 exposure during the year of analysis and the next 9 years (= 10 years in
 total). Default value: length of the numeric vector specified in the
-`age_group` argument. `min_age`, `max_age` The `min_age` default value
-30 implies that all adults aged 30 or older will be affected by the
-exposure; `max_age` analogeously specifies the age above which no health
-effects of the exposure are considered.
+`age_group` argument.
+
+`min_age`, `max_age` The `min_age` default value 30 implies that all
+adults aged 30 or older will be affected by the exposure; `max_age`
+analogeously specifies the age above which no health effects of the
+exposure are considered.
 
 **Methodology**
 
@@ -246,11 +248,8 @@ Information about the methodology (including corresponding equations and
 literature) is available in the package vignette. More specifically, see
 chapters:
 
-- [relative
-  risk](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk)
-
-- [absolute
-  risk](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk)
+- [YLL and deaths with life
+  table](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table)
 
 **Conversion of multi-year to single year age groups**
 
@@ -267,21 +266,8 @@ impact by age/year.
 
 ## References
 
-WHO (2020). “Health impact assessment of air pollution: AirQ+ life table
-manual.” World Health Organization - Regional Office for Europe.
-<https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content>.
-
-Miller BG, Hurley JF (2003). “Life table methods for quantitative impact
-assessments in chronic mortality.” *Journal of Epidemiology & Community
-Health*, **57**(3), 200–206.
-[doi:10.1136/jech.57.3.200](https://doi.org/10.1136/jech.57.3.200) ,
-https://jech.bmj.com/content/57/3/200.full.pdf,
-<https://jech.bmj.com/content/57/3/200>.
-
-Miller BG (2010). “Report on estimation of mortality impacts of
-particulate air pollution in London.” Institute of Occupational Medicine
-(IOM). Commissioned by the Greater London Authority,
-<https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf>.
+There are no references for Rd macro `\insertAllCites` on this help
+page.
 
 ## Author
 

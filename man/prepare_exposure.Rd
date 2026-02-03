@@ -28,7 +28,24 @@ This function returns a \code{list} containing:
 2) \code{detailed} (\code{list}) containing detailed (and interim) results.
 }
 \description{
-This function prepares tabular population exposure data compatible with the \code{attribute()} and \code{compare()} functions, based on gridded pollution concentration data and vector data representing geographic units. The function calculates an average concentration value in each geographic unit, weighted by the fraction of the population in each sub-unit.
+This function prepares tabular population exposure data that can be entered in the
+argument \code{exp_...} of the \code{healthiar} functions, e.g. \code{attribute_health()}
+using gridded pollution concentration and population data.
+}
+\details{
+\strong{Methodology}
+
+The population-weighted exposure is calculated by intersecting
+gridded concentration values with population grids,
+following the methodology described in \insertCite{Shaddick2018_jrsssc;textual}{healthiar}.
+
+
+Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:
+\itemize{
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#preparation-of-exposure-data}{Preparation of exposure data}}
 }
 \examples{
 # Goal: determine population-weighted mean PM2.5 exposure for several
@@ -44,11 +61,13 @@ pwm <- prepare_exposure(
   poll_grid = exdat_pwm_1, # Formal class SpatRaster
   geo_units = exdat_pwm_2, # sf of the geographic sub-units
   population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
-  geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate at
+  geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate
 )
 
-pwm$main # population-weighted mean exposures for the (higher-level) geographic units
+}
+\references{
+\insertAllCited{}
 }
 \author{
-Arno Pauwels
+Arno Pauwels, Axel Luyten and Alberto Castro
 }

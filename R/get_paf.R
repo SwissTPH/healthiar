@@ -10,8 +10,16 @@
 
 # DETAILS ######################################################################
 #' @details
-#' For more information about the equations used by \code{get_paf} please see the function documentation of \code{attribute_health}.
-
+#'
+#' \strong{Methodology}
+#'
+#' Information about the methodology
+#' (including corresponding equations and literature)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}}
+#'
 # VALUE ########################################################################
 #' @returns
 #' This function returns the population attributable fraction as a \code{numeric value}.
@@ -20,20 +28,26 @@
 #' @examples
 #' # Goal: calculate PAF based on RR and the proportion of population exposed
 #' get_paf(rr = 1.062, prop_pop_exp = 1)
-
+#'
+#' @references
+#'
+#' \insertRef{WHO2003_report}{healthiar}
+#'
+#' \insertRef{Steenland2006-e}{healthiar}
+#'
+#' \insertRef{Lehtomaki_2025_eh}{healthiar}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
-
+#'
 #' @export
 
 get_paf <-
   function(rr_at_exp, prop_pop_exp){
-    # Sources:
-    # WHO 2003 a: Prüss-Üstün_2003_Assessing the environmental burden of disease at national and local levels)
-    # WHO 2003 b: Murray_2003_Comparative quantification of health risks Conceptual framework and methodological issues
-    # GBD 2019
     # paf <- (sum(prop_pop_exp * (rr_at_exp-1))) / (1+(sum(prop_pop_exp *(rr_at_exp-1))))
 
-    # Instead of calculating PAF as above, just use the PIF
+    # Instead of calculating PAF as above, just use the complete equations
+    # (i.e. PIF form)
     # but with no effect in the second scenario
     # (same result using paf and pif for comparison with no effect)
 

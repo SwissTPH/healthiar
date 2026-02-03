@@ -92,8 +92,81 @@ chapters:
 - [comparison of two health
   scenarios](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios)
 
+## References
+
+WHO (2003). “Introduction and methods: Assessing the environmental
+burden of disease at national and local levels.” World Health
+Organization. <https://www.who.int/publications/i/item/9241546204>.
+
+Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
+“Comparative quantification of health risks conceptual framework and
+methodological issues.” *Popul. Health Metr.*, **1**(1), 1.
+
 ## Author
 
 Alberto Castro & Axel Luyten
 
 ## Examples
+
+``` r
+# Goal: comparison of two scenarios with delta approach
+scenario_A <- attribute_health(
+  exp_central = 8.85,   # EXPOSURE 1
+  cutoff_central = 5,
+  bhd_central = 25000,
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.118,
+  rr_increment = 10
+)
+scenario_B <- attribute_health(
+  exp_central = 6,     # EXPOSURE 2
+  cutoff_central = 5,
+  bhd_central = 25000,
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.118,
+  rr_increment = 10
+)
+results <- compare(
+approach_comparison = "delta",
+output_attribute_scen_1 = scenario_A,
+output_attribute_scen_2 = scenario_B
+)
+# Inspect the difference, stored in the \code{impact} column
+results$health_main |>
+  dplyr::select(impact, impact_scen_1, impact_scen_2) |>
+  print()
+#> # A tibble: 1 × 3
+#>   impact impact_scen_1 impact_scen_2
+#>    <dbl>         <dbl>         <dbl>
+#> 1   774.         1051.          277.
+
+# Goal: comparison of two scenarios with population impact fraction (pif) approach
+output_attribute_scen_1 <- attribute_health(
+  exp_central = 8.85,   # EXPOSURE 1
+  cutoff_central = 5,
+  bhd_central = 25000,
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+  rr_increment = 10
+)
+output_attribute_scen_2 <- attribute_health(
+  exp_central = 6,      # EXPOSURE 2
+  cutoff_central = 5,
+  bhd_central = 25000,
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+  rr_increment = 10
+)
+results <- compare(
+  output_attribute_scen_1 = output_attribute_scen_1,
+  output_attribute_scen_2 = output_attribute_scen_2,
+  approach_comparison = "pif"
+)
+# Inspect the difference, stored in the impact column
+results$health_main$impact
+#> [1]  782.2331  411.7377 1146.1450
+```
