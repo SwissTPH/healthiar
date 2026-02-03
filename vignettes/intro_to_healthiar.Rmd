@@ -167,7 +167,7 @@ To quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a c
 
 ### Methodology
 
-There is extensive literature on health impact quantification using the relative risk approach [e.g., Pozzer2023_gh; @Soares2020_report; @GBD2020_tl; @Steenland2006-e; @WHO2003_report]. 
+There is extensive literature on health impact quantification using the relative risk approach [e.g., Pozzer2023_gh; @Soares2020_report; @GBD2020_tl; @Steenland2006-e; @WHO2003_report; @Lehtomaki_2025_eh]. 
 
 ![Figure: Relative risk approach](../man/figures/bod_rr.png){width="700"}
 
@@ -200,13 +200,13 @@ $$PAF = \frac{rr\_at\_exp - 1}{rr\_at\_exp }$$
 #### Scaling relative risk
 How to get this relative risk at exposure level (`rr_at_exp`)? This is normally different to the relative risk published in the epidemiological literature (`rr`) together with the (concentration/dose) `increment` that corresponds to this relative risk. The equations used for scaling relative risk depend on the chosen exposure-response function shapes:
 
-- linear
+- linear [Lehtomaki_2025_eh]
 $$RRexp = 1 + \frac{rr - 1}{increment} \times (exp - cutoff)$$
 
-- log-linear [@Pozzer2023_gh]
+- log-linear [@Lehtomaki_2025_eh]
 $$RRexp = e^{\frac{\log(rr)}{increment} \times (exp - cutoff)}$$
 
-- log-log [@Pozzer2023_gh]
+- log-log [@Lehtomaki_2025_eh]
 $$RRexp = \left( \frac{exp + 1}{cutoff + 1} \right)^{\frac{\log(rr)}{\log(increment + cutoff + 1) - \log(cutoff + 1)}}$$
 
 - linear-log [@Pozzer2023_gh]

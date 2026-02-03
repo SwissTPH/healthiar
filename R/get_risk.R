@@ -64,6 +64,8 @@
 #'
 #' \insertRef{Pozzer2023_gh}{healthiar}
 #'
+#' \insertRef{Lehtomaki_2025_eh}{healthiar}
+#'
 #'
 #' @author Alberto Castro & Axel Luyten
 #'

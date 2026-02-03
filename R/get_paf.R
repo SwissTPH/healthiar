@@ -35,6 +35,8 @@
 #'
 #' \insertRef{Steenland2006-e}{healthiar}
 #'
+#' \insertRef{Lehtomaki_2025_eh}{healthiar}
+#'
 #'
 #' @author Alberto Castro & Axel Luyten
 #'

@@ -174,15 +174,19 @@
 #' results$health_main$impact
 #'
 #' @references
+#
+#' \insertRef{WHO2003_report}{healthiar}
+#'
+#' \insertRef{Steenland2006-e}{healthiar}
+#'
+#' \insertRef{GBD2020_tl}{healthiar}
+#'
 #' \insertRef{Soares2020_report}{healthiar}
 #'
 #' \insertRef{Pozzer2023_gh}{healthiar}
 #'
-#' \insertRef{GBD2020_tl}{healthiar}
+#' \insertRef{Lehtomaki_2025_eh}{healthiar}
 #'
-#' \insertRef{Steenland2006-e}{healthiar}
-#'
-#' \insertRef{WHO2003_report}{healthiar}
 #'
 #' @author Alberto Castro & Axel Luyten
 #' @export
