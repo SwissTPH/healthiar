@@ -104,9 +104,12 @@
 #'
 #' #' @references
 #'
+#' \insertRef{Cronbach1951_p}{healthiar}
+#'
+#' \insertRef{Gorasso2024_report}{healthiar}
+#'
 #' \insertRef{Mogin2025_ejph}{healthiar}
 #'
-#' \insertRef{Cronbach1951_p}{healthiar}
 #'
 #'
 #' @author Carl Baravelli, Vanessa Gorasso, Alberto Castro & Axel Luyten
