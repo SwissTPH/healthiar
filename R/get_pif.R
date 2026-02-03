@@ -1,4 +1,4 @@
-#' Get population impact fraction
+#' Get population impact fraction (PIF)
 
 # DESCRIPTION ##################################################################
 #' @description
@@ -12,8 +12,22 @@
 
 # DETAILS ######################################################################
 #' @details
-#' For more information about the equations used by \code{get_pif} please see the function documentation of \code{compare}.
-
+#'
+#' \strong{Methodology}
+#'
+#' This function is internally used inside the \code{healthiar} function \code{compare()}.
+#' The population impact fraction (PIF) is calculated as
+#' described in \insertCite{WHO2003_report;textual}{healthiar} and
+#' \insertCite{Murray2003_spbm;textual}{healthiar}.
+#'
+#' Detailed information about the methodology (including equations)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios}{comparison of two health scenarios}}
+#'
+#'
+#'
 # VALUE ########################################################################
 #' @returns
 #' This function returns the population impact fraction as a \code{numeric value}.
@@ -28,7 +42,12 @@
 #'   prop_pop_exp_2 = 1
 #' )
 #' print(results)
-
+#'
+#' @references
+#'
+#' \insertAllCited{}
+#'
+#'
 #' @author Alberto Castro & Axel Luyten
 
 #' @export

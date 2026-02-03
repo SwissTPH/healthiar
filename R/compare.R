@@ -13,9 +13,13 @@
 # DETAILS ######################################################################
 #' @details
 #'
-#' \strong{Function arguments}
+#' \strong{Methodology}
+#' This function compares the attributable health impacts in scenario 1 with scenario 2.
+#' It can use two approaches:
+#' \itemize{
+#'  \item{Delta: Subtraction of health impacts in the two scenarios (two PAF) \insertCite{WHO2014_book}{healthiar}}
+#'  \item{Population impact fraction (PIF): Single PIF for both scenarios \insertCite{WHO2003_report,Murray2003_spbm}{healthiar}}}
 #'
-#' \code{approach_comparison}
 #' Please note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2
 #' (e.g. comparison of two scenarios at the same time point).
 #'
@@ -23,10 +27,7 @@
 #' The delta approach is suited for all comparison cases,
 #' and specifically for comparison of a situation now with a situation in the future.
 #'
-#' \strong{Methodology}
-#'
-#' Detailed information about the methodology
-#' (including corresponding equations and literature)
+#' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
@@ -115,9 +116,7 @@
 #'
 #' @references
 #'
-#' \insertRef{WHO2003_report}{healthiar}
-#'
-#' \insertRef{Murray2003_spbm}{healthiar}
+#' \insertAllCited{}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten

@@ -1336,15 +1336,20 @@ To compare the health impacts in the scenario "before intervention" vs. "after i
 
 Two approaches can be used for the comparison of scenarios:
 
-- Population impact fraction (PIF)
+- Delta: Subtraction of health impact in scenario 1 minus in  scenarios 2 (i.e. two PAF) [@WHO2014_book]
 
-- Delta
+- Population impact fraction (PIF): see below.
 
-Please note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2 (e.g. comparison of two scenarios at the same time point), while the delta comparison approach, the difference between two scenarios is obtained by subtraction. Therefore, the delta approach is suited for comparison of a situation now with a situation in the future.
+
+Please note that the PIF comparison approach assumes same baseline health data 
+for scenario 1 and 2 (e.g. comparison of two scenarios at the same time point), 
+while the delta comparison approach, the difference between two scenarios is obtained by subtraction. 
+Therefore, the delta approach is suited for comparison of a situation now with a situation in the future.
 
 #### Population Impact Fraction (PIF)
 
-The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality when exposure to a risk factor is changed (for instance due to an intervention). 
+The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality 
+when exposure to a risk factor is changed (for instance due to an intervention). 
 
 ##### General Integral Form
 The most general equation describing this mathematically is an integral form [@WHO2003_report; @Murray2003_spbm]:
@@ -1358,7 +1363,7 @@ Where:
 * $PE'(x)$ = alternative population distribution of exposure
 * $rr\_at\_exp(x)$ = relative risk at exposure level compared to the reference level
 
-###### Categorical Exposure Form
+##### Categorical Exposure Form
 If the population exposure is described as a categorical rather than continuous exposure, the integrals may be converted to sums [@WHO2003_report; Murray2003-spbm]:
 
 $$PIF = \frac{\sum rr\_at\_exp_{i} \times PE_{i} - \sum rr\_at\_exp_{i}PE'_{i}}{\sum rr\_at\_exp_{i}PE_{i}}$$
