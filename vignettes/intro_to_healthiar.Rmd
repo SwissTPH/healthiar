@@ -544,18 +544,57 @@ Each row contains the estimated attributable cases (`impact_rounded`) obtained b
 
 ### Goal (e.g.)
 
-To summarize uncertainty of attributable health impacts (i.e. to get a single confidence interval instead of many combinations) by using a Monte Carlo simulation.
+To summarize uncertainty of attributable health impacts 
+(i.e. to get a single confidence interval instead of many combinations) 
+by using a Monte Carlo simulation.
+
+### Methodology
+
+#### General concepts
+A Monte Carlo simulation is a statistical method that 
+generates repeated random sampling [@Robert2004_book; Doucet2020_arsia]. 
+In `healthiar`, you can use the function `summarize_uncertainty()` 
+to simulate values in the arguments with uncertainty and 
+estimate a single confidence interval in the results.
+
+For each entered input argument that includes a (95%) confidence interval 
+(i.e. `_lower` and `_upper` bound value) 
+a distribution is fitted (see distributions below).
+The median value of these attributable impacts is reported as the central estimate, 
+and the 2.5th and 97.5th percentiles define the 
+lower and upper bounds of the 95% summary uncertainty confidence interval, respectively. 
+Aggregated central, lower and upper estimates are obtained 
+by summing the corresponding values of each lower level unit.
 
 
-You can do this carrying out a Monte Carlo uncertainty analysis via the `summarize_uncertainty()` function.
+#### Distributions used for simulation
 
-The outcome of the Monte Carlo analysis is added to the variable entered as the `results` argument, which is `results_pm_copd` in our case.
+`summarize_uncertainty()` assumes the following shapes of the distributions 
+in the simulations:
 
-Two lists ("folders") are added:
+- Relative risk: The values are simulated based on an optimized *gamma* distribution, 
+which fits well as relative risks are positive and its distributions usually right-skewed.
+The gamma distribution best fitting the inputted central relative risk estimate 
+and corresponding lower and upper 95% confidence interval values 
+is fitted using `stats::qgamma()` (with `rate = shape / rr_central`) 
+and then `stats::optimize` is used to optimize the distribution parameters. 
+Finally, `n_sim` relative risk values are simulated using `stats::rgamma()`.
 
--   `uncertainty_main` contains the central estimate and the corresponding 95% confidence intervals obtained through the Monte Carlo assessment and
+- Exposure, cutoff, baseline health data and duration: 
+The values are simulated based on a *normal* distribution 
+using `stats::rnorm()` with 
+`mean = exp_central`, `mean = cutoff_central`, `mean = bhd_central` or `mean = duration_central` 
+and a standard deviation based on corresponding lower and upper 95% exposure 
+confidence interval values.
 
--   `uncertainty_detailed` contains all `n_sim` simulations of the Monte Carlo assessment.
+- Disability weights: The values are simulated based on a *beta* distribution, 
+as both the disability weights and the beta distribution are bounded by 0 and 1. 
+The beta distribution best fitting the inputted central disability weight estimate and 
+corresponding lower and upper 95% confidence interval values is fitted using 
+`stats::qgamma()` (the best fitting distribution parameters 
+`shape1` and `shape2` are determined using `stats::optimize()`). 
+Finally, `n_sim` disability weight values are simulated using `stats::rbeta()`.
+
 
 ### Function call
 
@@ -568,6 +607,14 @@ results_pm_copd_summarized <-
 ```
 
 ### Main results
+
+The outcome of the Monte Carlo analysis is added to the variable entered as the `results` argument, which is `results_pm_copd` in our case.
+
+Two lists ("folders") are added:
+
+-   `uncertainty_main` contains the central estimate and the corresponding 95% confidence intervals obtained through the Monte Carlo assessment and
+
+-   `uncertainty_detailed` contains all `n_sim` simulations of the Monte Carlo assessment.
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
 results_pm_copd_summarized$uncertainty_main
