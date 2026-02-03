@@ -25,17 +25,32 @@ This function returns a \code{tibble} containing the columns:
 This function determines populations and deaths by one year age groups.
 }
 \details{
-The conversion follows the methodology of the WHO tool which is outlined in WHO 2020 (https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf?sequence=1).
+#' \strong{Methodology}
 
-See the AirQ+ manual "Health impact assessment of air pollution: AirQ+ life table manual" for guidance on how to convert larger age groups to 1 year age groups (section "Estimation of yearly values"): https://iris.who.int/bitstream/handle/10665/337683/WHO-EURO-2020-1559-41310-56212-eng.pdf (accessed April 2025)
+The conversion follows the methodology of the WHO tool.
+See the AirQ+ manual
+"Health impact assessment of air pollution: AirQ+ life table manual"
+for guidance on how to convert larger age groups to 1 year age groups,
+section "Estimation of yearly values" \insertCite{WHO2020_report}{healthiar}.
+
+Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:
+\itemize{
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}}
 }
 \examples{
-# Goal: Convert 5-year population and death data into single year lifetable
+# Goal: Convert 5-year population and death data into single year life table
 results <- prepare_lifetable(
   age_group = c(0, 5, 10, 15),
   population = c(3387900, 3401300, 3212300, 3026100),
   bhd = c(4727, 472, 557, 1323)
 )
+
+}
+\references{
+\insertAllCited{}
 }
 \author{
 Alberto Castro & Axel Luyten

@@ -66,7 +66,19 @@ This function returns a \code{list} containing the impact (absolute and relative
 If the argument \code{output_attribute} was specified, then the two lists are added next to the existing attribute output.
 }
 \description{
-This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts. If nothing is entered in the argument \code{output_attribute}, it is assumed that all data come from a table and the argument refer to the columns of that table.
+This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts.
+If nothing is entered in the argument \code{output_attribute},
+it is assumed that all data come from a table and the argument refer to the columns of that table.
+}
+\details{
+\strong{Methodology}
+
+Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:
+\itemize{
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#health-impact-attributable-to-social-indicator}{Health impact attributable to social indicator}}
 }
 \examples{
 # Goal: determine fraction of attributable health impact that can
@@ -103,6 +115,13 @@ results$social_main |>
   dplyr::filter(difference_type == "relative") |>
   dplyr::filter(difference_compared_with == "overall") |>
   dplyr::select(first, last, difference_type, difference_value, comment)
+
+
+}
+\references{
+\insertRef{Renard2019_bmc}{healthiar}
+
+\insertRef{Otavova_2022_bmc}{healthiar}
 }
 \author{
 Alberto Castro & Axel Luyten

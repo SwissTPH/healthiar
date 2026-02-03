@@ -99,10 +99,24 @@ This function returns a \code{list} containing:
 }
 }
 \description{
-This function assesses the attributable health impacts in a new scenario 2 which is obtained by modifying an existing scenario 1. Supply an existing attribute output and specify how scenario 1 should be modified to create scenario 2.
+This function quantifies the attributable health impacts in a new scenario 2 as follows:
+#' \itemize{
+ \item{taking the input data of an existing scenario 1 (obtained using `attribute_health()`)},
+ \item{modifying some of these input data of scenario 1 for the scenario 2 and
+ \item{calling in the background `attribute_health()` with the new data for scenario 2}}}
 }
 \details{
-Please see the function documentation of \code{attribute_health} for the methods used.
+\strong{Methodology}
+
+This function calls in the background `attribute_health()`.
+
+Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:
+\itemize{
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{absolute risk}}
 }
 \examples{
 # Goal: adjust an existing healthiar scenario and determine the health
@@ -128,6 +142,7 @@ scenario_B <- attribute_mod(
 )
 
 scenario_B$health_main$impact # Attributable impact in scenario B
+
 }
 \author{
 Alberto Castro & Axel Luyten

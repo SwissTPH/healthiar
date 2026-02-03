@@ -16,7 +16,9 @@ summarize_uncertainty(output_attribute, n_sim, seed = NULL)
 \value{
 This function returns a \code{list} containing:
 
-1) \code{uncertainty_main} (\code{tibble}) containing the \code{numeric} summary uncertainty central estimate and corresponding lower and upper confidence intervals for the attributable health impacts obtained through Monte Carlo simulation;
+1) \code{uncertainty_main} (\code{tibble}) containing the \code{numeric}
+summary uncertainty central estimate and corresponding lower and upper confidence intervals
+for the attributable health impacts obtained through Monte Carlo simulation;
 
 2) \code{uncertainty_detailed} (\code{list}) containing detailed (and interim) results.
 \itemize{
@@ -40,29 +42,22 @@ Input variables that will be processed are:
   }
 }
 \details{
-\strong{Method}
-
-For each processed input variable with a provided 95\% confidence interval value, a distribution is fitted (see below). From these, \code{n_sim} input value sets are sampled to compute \code{n_sim} attributable impacts. The median value of these attributable impacts is reported as the central estimate, and the 2.5th and 97.5th percentiles define the lower and upper bounds of the 95\% summary uncertainty confidence interval, respectively. Aggregated central, lower and upper estimates are obtained by summing the corresponding values of each lower level unit.
-
-\strong{Distributions used for simulation}
-
-Relative risk values are simulated based on an optimized gamma distribution, which fits well as relative risks are positive and its distributions usually right-skewed. The gamma distribution best fitting the inputted central relative risk estimate and corresponding lower and upper 95\% confidence interval values is fitted using \code{stats::qgamma()} (with \code{rate = shape / rr_central}) and then \code{stats::optimize} is used to optimize the distribution parameters. Finally, \code{n_sim} relative risk values are simulated using \code{stats::rgamma()}.
-
-Exposure values are simulated based on a normal distribution using \code{stats::rnorm()} with \code{mean = exp_central} and a standard deviation based on corresponding lower and upper 95\% exposure confidence interval values.
-
-Cutoff values are simulated based on a normal distribution using \code{stats::rnorm()} with \code{mean = cutoff_central} and a standard deviation based on corresponding lower and upper 95\% cutoff confidence interval values.
-
-Baseline health data values are simulated based on a normal distribution using \code{stats::rnorm()} with \code{mean = bhd_central} and a standard deviation based on corresponding lower and upper 95\% exposure confidence interval values.
-
-Disability weights values of the morbidity health outcome of interest are simulated based on a beta distribution, as both the disability weights and the beta distribution are bounded by 0 and 1. The beta distribution best fitting the inputted central disability weight estimate and corresponding lower and upper 95\% confidence interval values is fitted using \code{stats::qgamma()} (the best fitting distribution parameters \code{shape1} and \code{shape2} are determined using \code{stats::optimize()}). Finally, \code{n_sim} disability weight values are simulated using \code{stats::rbeta()}.
-
-Duration values of the morbidity health outcome of interest are simulated based on a normal distribution using \code{stats::rnorm()} with \code{mean = duration_central} and a standard deviation based on corresponding lower and upper 95\% exposure confidence interval values.
-
 \strong{Function arguments}
-
 \code{seed}
+If the \code{seed} argument is specified then the \code{parallel} package
+is used to generate independent L’Ecuyer random number streams.
+One stream is allocated per variable (or per variable–geography combination, as needed),
+ensuring reproducible and independent random draws across variables and scenarios.
 
-If the \code{seed} argument is specified then the \code{parallel} package is used to generate independent L’Ecuyer random number streams. One stream is allocated per variable (or per variable–geography combination, as needed), ensuring reproducible and independent random draws across variables and scenarios.
+
+\strong{Methodology}
+
+Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:
+\itemize{
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monte-carlo-simulation}{Monte Carlo simulation}}
 }
 \examples{
 # Goal: obtain summary uncertainty for an existing attribute_health() output
@@ -87,6 +82,12 @@ results <- summarize_uncertainty(
   n_sim = 100
 )
 results$uncertainty_main$impact # Central, lower and upper estimates
+
+}
+\references{
+\insertRef{Robert2004_book}{healthiar}
+
+\insertRef{Doucet2020_arsia}{healthiar}
 }
 \author{
 Alberto Castro & Axel Luyten

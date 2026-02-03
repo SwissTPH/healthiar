@@ -18,11 +18,28 @@ This function returns the population attributable fraction as a \code{numeric va
 This function calculates the population attributable fraction (PAF) of a health outcome due to exposure to an environmental stressor
 }
 \details{
-For more information about the equations used by \code{get_paf} please see the function documentation of \code{attribute_health}.
+\strong{Methodology}
+
+Information about the methodology
+(including corresponding equations and literature)
+is available in the package vignette.
+More specifically, see chapters:
+\itemize{
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}}
 }
 \examples{
 # Goal: calculate PAF based on RR and the proportion of population exposed
 get_paf(rr = 1.062, prop_pop_exp = 1)
+
+#' @references
+
+\insertRef{WHO2003_report}{healthiar}
+
+\insertRef{Steenland2006-e}{healthiar}
+
+\insertRef{Lehtomaki_2025_eh}{healthiar}
+
+
 }
 \author{
 Alberto Castro & Axel Luyten
