@@ -99,7 +99,7 @@
 #' based on the relative risk \insertCite{WHO2003_report,Steenland2006-e,
 #' GBD2020_tl,Soares2020_report,Pozzer2023_gh,Lehtomaki_2025_eh}{healthiar}. }
 #'  \item{Absolute risk: The attributable cases are
-#'  directly derived from population exposed \insertCite{WHO2011_report}.}
+#'  directly derived from population exposed \insertCite{WHO2011_report}{healthiar}.}
 #'  }
 #'
 #' Detailed information about the methodology (including equations)
