@@ -1300,7 +1300,7 @@ The most general equation describing this mathematically is an integral form [@W
 
 $$PIF = \frac{\int rr\_at\_exp(x)PE(x)dx - \int rr\_at\_exp(x)PE'(x)dx}{\int rr\_at\_exp(x)PE(x)dx}$$
 
-**Where:**
+Where:
 
 * $x$ = exposure level
 * $PE(x)$ = population distribution of exposure
@@ -1312,7 +1312,7 @@ If the population exposure is described as a categorical rather than continuous 
 
 $$PIF = \frac{\sum rr\_at\_exp_{i} \times PE_{i} - \sum rr\_at\_exp_{i}PE'_{i}}{\sum rr\_at\_exp_{i}PE_{i}}$$
 
-**Where:**
+Where:
 
 * $i$ = the exposure category (e.g., in bins of 1 $\mu g/m^3$ $PM_{2.5}$ or 5 dB noise exposure)
 * $PE_i$ = fraction of population in exposure category $i$
@@ -1325,7 +1325,7 @@ Finally, if the exposure is provided as the population weighted mean concentrati
 
 $$PIF = \frac{rr\_at\_exp - rr\_at\_exp_{alt}}{rr}$$
 
-**Where:**
+Where:
 
 * $rr\_at_exp$ = relative risk at the exposure level
 * $rr\_at_exp_{alt}$ = relative risk at the exposure level for the alternative exposure scenario
@@ -1724,6 +1724,51 @@ We see that the central and upper 95% confidence interval estimates of avoided a
 ### Goal (e.g.)
 
 To estimate the health impact that is theoretically attributable to the difference in a social indicator of the population exposed (e.g. degree of deprivation). 
+
+### Methodology
+
+Taking into account socio-economic indicators, e.g. multiple deprivation index [@Mogin2025_ejph], 
+the differences in attributable health impacts across study areas 
+can be estimated [@Renard2019_bmc; otavova_2022_bmc]. 
+
+The most deprived areas (top n-quantile) and in the least deprived areas (bottom n-quantile) are then compared. 
+The differences can be 
+
+- absolute or 
+
+- relative 
+
+and compared to 
+
+- least deprived quantile or 
+
+- to overall.
+
+#### Difference most deprived vs. least deprived
+
+$$ absolute\_quantile = first - last $$
+Where:
+
+* $absolute_quantile$ = Absolute difference regarding quantile
+* $first$ = Average health impacts in _most_ deprived quantile
+* $last$ = Average health impacts in _least_ deprived quantile
+
+$$ relative\_quantile = \frac{absolute\_quantile}{last} $$
+
+#### Difference overall vs. least deprived
+
+$$ absolute\_overall = overall - last $$
+Where:
+
+* $absolute_overall$ = Absolute difference regarding the overall average
+* $overall$ = _Overall_ average health impacts in all study areas
+* $last$ = Average health impacts in _least_ deprived quantile
+
+$$ relative\_overall = \frac{absolute\_overall}{last} $$
+
+If you assume that the least deprived areas are similar to counter-factual cases (no exposure to deprivation), 
+the relative difference regarding the overall average health impact 
+could be interpreted as some kind of relative risk attributable to social inequalities.
 
 
 ### Function call
