@@ -1729,7 +1729,7 @@ To estimate the health impact that is theoretically attributable to the differen
 
 Taking into account socio-economic indicators, e.g. multiple deprivation index [@Mogin2025_ejph], 
 the differences in attributable health impacts across study areas 
-can be estimated [@Renard2019_bmc; otavova_2022_bmc]. 
+can be estimated [@Renard2019_bmc; Otavova_2022_bmc]. 
 
 The most deprived areas (top n-quantile) and in the least deprived areas (bottom n-quantile) are then compared. 
 The differences can be 
