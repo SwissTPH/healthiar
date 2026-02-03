@@ -53,6 +53,12 @@
 #'
 #' \strong{Methodology}
 #'
+#' The life table approach to obtain YLL and deaths requires population and
+#' baseline mortality data to be stratified by one year age groups.
+#' This function applies the same approach as the on applied in the WHO tool AirQ+
+#' \insertCite{@WHO2020_report}{healthiar},
+#' which is described in previous literature \insertCite{@Miller2003_jech}{healthiar}.
+#'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
