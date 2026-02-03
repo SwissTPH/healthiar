@@ -1464,7 +1464,7 @@ To quantify the total health impact attributable to PM2.5 and NO2.
 ### Methodology
  
 A methodological report of the EU project BEST-COST [@Strak2024_report] identified
-three approaches to sum attributable health impacts from correlated exposures:
+three approaches to add up attributable health impacts from correlated exposures:
 
 - Additive approach [@Steenland2006-e]:
 
