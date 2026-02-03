@@ -26,7 +26,7 @@
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization}{Monetization}}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#standardization}{Standardization}}
 #'
 #'
 #' @details
