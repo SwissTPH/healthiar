@@ -14,7 +14,7 @@
 #'
 #' \strong{Methodology}
 #'
-#' Information about the methodology
+#' Detailed information about the methodology
 #' (including corresponding equations and literature)
 #' is available in the package vignette.
 #' More specifically, see chapters:

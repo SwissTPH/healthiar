@@ -23,8 +23,7 @@
 #' provide the relevant information on this topic.
 #'
 #'
-#' Information about the methodology
-#' (including corresponding equations and literature)
+#' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{

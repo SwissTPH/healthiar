@@ -101,8 +101,7 @@
 #'  directly derived from population exposed \insertCite{WHO2003_report,Steenland2006-e,GBD2020_tl,Soares2020_report,Pozzer2023_gh,Lehtomaki_2025_eh}{healthiar}.}
 #'  }
 #'
-#' Information about the methodology
-#' (including corresponding equations and literature)
+#' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
