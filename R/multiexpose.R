@@ -17,7 +17,7 @@
 #' This function can add up the attributable health impacts from correlated exposures
 #' applying one of the following methods \insertCite{Strak2024_report}{healthiar}:
 #' \itemize{
-#'  \item Additive \insertCite{teenland2006-e}{healthiar}
+#'  \item Additive \insertCite{Steenland2006-e}{healthiar}
 #'  \item Multiplicative \insertCite{Jerrett2013-oup}{healthiar}
 #'  \item Combined \insertCite{Steenland2006-e}{healthiar}
 #'  }

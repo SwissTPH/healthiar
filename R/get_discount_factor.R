@@ -14,7 +14,7 @@
 #'
 #' This function is called inside \code{monetize()}.
 #'
-#' #' One of the following three discount shapes can be selected:
+#' One of the following three discount shapes can be selected:
 #' \itemize{
 #'  \item Exponential \insertCite{Frederick2002_jel}{healthiar}
 #'  \item Hyperbolic as \insertCite{Harvey1986_ms;textual}{healthiar}

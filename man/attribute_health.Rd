@@ -186,8 +186,7 @@ relative risk or an absolute risk (depending on the health outcome).
  \insertCite{Murray2003_e}{healthiar} is applied by
 obtaining the population attributable fraction
 (percent of cases that are attributable to the exposure)
-based on the relative risk \insertCite{WHO2003_report,Steenland2006-e,
-GBD2020_tl,Soares2020_report,Pozzer2023_gh,Lehtomaki_2025_eh}{healthiar}. }
+based on the relative risk \insertCite{WHO2003_report,Steenland2006-e,GBD2020_tl,Soares2020_report,Pozzer2023_gh,Lehtomaki_2025_eh}{healthiar}. }
  \item{Absolute risk: The attributable cases are
  directly derived from population exposed \insertCite{WHO2011_report}{healthiar}.}
  }

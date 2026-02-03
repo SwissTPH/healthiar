@@ -62,12 +62,12 @@ which generates some costs.
 \strong{Methodology}
 
 This function provides as output three types of cost-benefit indicators
-[@Boardman2018_book]:
+\insertCite{Boardman2018_book}{healthiar}:
 
 \itemize{
- \item{net benefit}
- \item{cost-benefit ratio}
- \item{return of investment}}
+ \item net benefit
+ \item cost-benefit ratio
+ \item return of investment}
 
 
 Detailed information about the methodology (including equations)

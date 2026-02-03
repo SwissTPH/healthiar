@@ -19,12 +19,12 @@
 #' \strong{Methodology}
 #'
 #' This function provides as output three types of cost-benefit indicators
-#' [@Boardman2018_book]:
+#' \insertCite{Boardman2018_book}{healthiar}:
 #'
 #' \itemize{
-#'  \item{net benefit}
-#'  \item{cost-benefit ratio}
-#'  \item{return of investment}}
+#'  \item net benefit
+#'  \item cost-benefit ratio
+#'  \item return of investment}
 #'
 #'
 #' Detailed information about the methodology (including equations)
@@ -37,7 +37,7 @@
 # VALUE ########################################################################
 #' @returns
 #' This function returns a \code{list} containing:
-#' @returns
+#'
 #' 1) \code{cba_main} (\code{tibble}) containing the main CBA results;
 #' \itemize{
 #'  \item \code{net_benefit} (\code{numeric} column) containing the difference between benefit and cost (i.e. benefit - cost)
@@ -45,13 +45,13 @@
 #'  \item \code{cost} (\code{numeric} column) containing discounted cost
 #'  \item And many more
 #' }
-#' @returns
+#'
 #' 2) \code{cba_detailed} (\code{list}) containing detailed (and interim) results.
 #' \itemize{
 #'  \item \code{benefit} (\code{list})
 #'  \item \code{cost} (\code{tibble})
 #' }
-#' @returns
+#'
 #' If the argument \code{output_attribute} was specified, then the two results elements are added to the existing output.
 
 # EXAMPLES #####################################################################

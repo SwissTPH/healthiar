@@ -45,7 +45,8 @@
 #' )
 #' results$monetization_main$monetized_impact
 #'
-#' #' @references
+# REFERENCES #####################################################################
+#' @references
 #'
 #' \insertAllCited{}
 #'

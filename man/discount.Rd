@@ -76,11 +76,9 @@ results <- discount(
 )
 results$monetization_main$monetized_impact
 
-#' @references
-
+}
+\references{
 \insertAllCited{}
-
-
 }
 \author{
 Alberto Castro & Axel Luyten
