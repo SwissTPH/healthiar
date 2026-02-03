@@ -53,7 +53,7 @@
 #'
 #' \strong{Plots}
 #'
-#' See the example below for how to reproduce the box plots and the histogram after the `prepare_mdi` function call.
+#' See the example below for how to reproduce the box plots and the histogram after the \code{prepare_mdi} function call.
 #'
 # VALUE ########################################################################
 #' @return

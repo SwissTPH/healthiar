@@ -13,9 +13,7 @@ prepare_exposure(poll_grid, geo_units, population, geo_id_macro)
 
 \item{population}{\code{Numeric vector} containing the total population number in each geographic sub-unit.}
 
-\item{geo_id_macro}{\code{Numeric or string vector} containing the higher-level IDs of the geographic units the sub-unit belong to and will be aggregated at.
-
-DETAILS ######################################################################}
+\item{geo_id_macro}{\code{Numeric or string vector} containing the higher-level IDs of the geographic units the sub-unit belong to and will be aggregated at.}
 }
 \value{
 This function returns a \code{list} containing:
@@ -39,7 +37,7 @@ using gridded pollution concentration and population data.
 
 The population-weighted exposure is calculated by intersecting
 gridded concentration values with population grids,
-following the methodology described in \insertCite{Shaddick2018_jrsssc}{healthiar;textual}.
+following the methodology described in \insertCite{Shaddick2018_jrsssc;textual}{healthiar}.
 
 
 Information about the methodology

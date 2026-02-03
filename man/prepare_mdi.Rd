@@ -95,7 +95,7 @@ but R^2 should be greater than or equal to 0.7.
 
 \strong{Plots}
 
-See the example below for how to reproduce the box plots and the histogram after the `prepare_mdi` function call.
+See the example below for how to reproduce the box plots and the histogram after the \code{prepare_mdi} function call.
 }
 \examples{
 # Goal: create the BEST-COST Multidimensional Deprivation Index for
