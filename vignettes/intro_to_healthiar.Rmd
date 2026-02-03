@@ -556,7 +556,7 @@ by using a Monte Carlo simulation.
 
 #### General concepts
 A Monte Carlo simulation is a statistical method that 
-generates repeated random sampling [@Robert2004_book; Doucet2020_arsia]. 
+generates repeated random sampling [@Robert2004_book; @Doucet2020_arsia]. 
 In `healthiar`, you can use the function `summarize_uncertainty()` 
 to simulate values in the arguments with uncertainty and 
 estimate a single confidence interval in the results.
