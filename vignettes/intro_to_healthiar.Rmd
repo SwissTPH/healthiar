@@ -1343,7 +1343,7 @@ Please note that the PIF comparison approach assumes same baseline health data f
 The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality when exposure to a risk factor is changed (for instance due to an intervention). 
 
 ##### General Integral Form
-The most general equation describing this mathematically is an integral form [@WHO2003_report; @Murray2003-spbm]:
+The most general equation describing this mathematically is an integral form [@WHO2003_report; @Murray2003_spbm]:
 
 $$PIF = \frac{\int rr\_at\_exp(x)PE(x)dx - \int rr\_at\_exp(x)PE'(x)dx}{\int rr\_at\_exp(x)PE(x)dx}$$
 

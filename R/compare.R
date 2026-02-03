@@ -117,7 +117,7 @@
 #'
 #' \insertRef{WHO2003_report}{healthiar}
 #'
-#' \insertRef{Murray2003-spbm}{healthiar}
+#' \insertRef{Murray2003_spbm}{healthiar}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten
