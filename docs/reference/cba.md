@@ -107,7 +107,7 @@ chapters:
 - [cost-benefit
   analysis](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cost-benefit-analysis)
 
-- [monetization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization)
+- [monetization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization)
 
 ## References
 

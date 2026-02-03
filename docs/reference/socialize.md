@@ -136,6 +136,34 @@ results.
 If the argument `output_attribute` was specified, then the two lists are
 added next to the existing attribute output.
 
+## Details
+
+**Methodology**
+
+Information about the methodology (including corresponding equations and
+literature) is available in the package vignette. More specifically, see
+chapters:
+
+- [Health impact attributable to social
+  indicator](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#health-impact-attributable-to-social-indicator)
+
+## References
+
+Renard F, Devleesschauwer B, Speybroeck N, Deboosere P (2019).
+“Monitoring health inequalities when the socio-economic composition
+changes: are the slope and relative indices of inequality appropriate?
+Results of a simulation study.” *BMC Public Health*, **19**(1), 662.
+ISSN 1471-2458,
+[doi:10.1186/s12889-019-6980-1](https://doi.org/10.1186/s12889-019-6980-1)
+.
+
+Otavova M, Faes C, Bouland C, De Clercq E, Vandeninden B, Eggerickx T,
+Sanderson J, Devleesschauwer B, Masquelier B (2022). “Inequalities in
+mortality associated with housing conditions in Belgium between 1991 and
+2020.” *BMC Public Health*, **22**(1), 2397. ISSN 1471-2458,
+[doi:10.1186/s12889-022-14819-w](https://doi.org/10.1186/s12889-022-14819-w)
+.
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -181,4 +209,5 @@ results$social_main |>
 #>   first  last difference_type difference_value comment                          
 #>   <dbl> <dbl> <chr>                      <dbl> <chr>                            
 #> 1  70.9  59.4 relative                 -0.0143 It can be interpreted as fractio…
+
 ```

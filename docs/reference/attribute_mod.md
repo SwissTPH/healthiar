@@ -1,9 +1,14 @@
 # Create a scenario 2 by modifying an existing scenario 1 and determine attributable health impacts in it
 
-This function assesses the attributable health impacts in a new scenario
-2 which is obtained by modifying an existing scenario 1. Supply an
-existing attribute output and specify how scenario 1 should be modified
-to create scenario 2.
+This function quantifies the attributable health impacts in a new
+scenario 2 as follows:
+
+- taking the input data of an existing scenario 1 (obtained using
+  \`attribute_health()\`),
+
+- modifying some of these input data of scenario 1 for the scenario 2
+  and calling in the background \`attribute_health()\` with the new data
+  for scenario 2
 
 ## Usage
 
@@ -200,8 +205,19 @@ results.
 
 ## Details
 
-Please see the function documentation of `attribute_health` for the
-methods used.
+**Methodology**
+
+This function calls in the background \`attribute_health()\`.
+
+Information about the methodology (including corresponding equations and
+literature) is available in the package vignette. More specifically, see
+chapters:
+
+- [relative
+  risk](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk)
+
+- [absolute
+  risk](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk)
 
 ## Author
 

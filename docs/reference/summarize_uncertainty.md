@@ -65,74 +65,33 @@ The two results elements are added to the existing output.
 
 ## Details
 
-**Method**
+**Function arguments** `seed` If the `seed` argument is specified then
+the `parallel` package is used to generate independent L’Ecuyer random
+number streams. One stream is allocated per variable (or per
+variable–geography combination, as needed), ensuring reproducible and
+independent random draws across variables and scenarios.
 
-For each processed input variable with a provided 95% confidence
-interval value, a distribution is fitted (see below). From these,
-`n_sim` input value sets are sampled to compute `n_sim` attributable
-impacts. The median value of these attributable impacts is reported as
-the central estimate, and the 2.5th and 97.5th percentiles define the
-lower and upper bounds of the 95% summary uncertainty confidence
-interval, respectively. Aggregated central, lower and upper estimates
-are obtained by summing the corresponding values of each lower level
-unit.
+**Methodology**
 
-**Distributions used for simulation**
+Information about the methodology (including corresponding equations and
+literature) is available in the package vignette. More specifically, see
+chapters:
 
-Relative risk values are simulated based on an optimized gamma
-distribution, which fits well as relative risks are positive and its
-distributions usually right-skewed. The gamma distribution best fitting
-the inputted central relative risk estimate and corresponding lower and
-upper 95% confidence interval values is fitted using
-[`stats::qgamma()`](https://rdrr.io/r/stats/GammaDist.html) (with
-`rate = shape / rr_central`) and then
-[`stats::optimize`](https://rdrr.io/r/stats/optimize.html) is used to
-optimize the distribution parameters. Finally, `n_sim` relative risk
-values are simulated using
-[`stats::rgamma()`](https://rdrr.io/r/stats/GammaDist.html).
+- [Monte Carlo
+  simulation](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monte-carlo-simulation)
 
-Exposure values are simulated based on a normal distribution using
-[`stats::rnorm()`](https://rdrr.io/r/stats/Normal.html) with
-`mean = exp_central` and a standard deviation based on corresponding
-lower and upper 95% exposure confidence interval values.
+## References
 
-Cutoff values are simulated based on a normal distribution using
-[`stats::rnorm()`](https://rdrr.io/r/stats/Normal.html) with
-`mean = cutoff_central` and a standard deviation based on corresponding
-lower and upper 95% cutoff confidence interval values.
+Robert CP, Casella G (2004). *Monte Carlo Statistical Methods*, Springer
+Texts in Statistics. Springer Science \\ Business Media.
+[doi:10.1007/978-1-4757-4145-2](https://doi.org/10.1007/978-1-4757-4145-2)
+.
 
-Baseline health data values are simulated based on a normal distribution
-using [`stats::rnorm()`](https://rdrr.io/r/stats/Normal.html) with
-`mean = bhd_central` and a standard deviation based on corresponding
-lower and upper 95% exposure confidence interval values.
-
-Disability weights values of the morbidity health outcome of interest
-are simulated based on a beta distribution, as both the disability
-weights and the beta distribution are bounded by 0 and 1. The beta
-distribution best fitting the inputted central disability weight
-estimate and corresponding lower and upper 95% confidence interval
-values is fitted using
-[`stats::qgamma()`](https://rdrr.io/r/stats/GammaDist.html) (the best
-fitting distribution parameters `shape1` and `shape2` are determined
-using [`stats::optimize()`](https://rdrr.io/r/stats/optimize.html)).
-Finally, `n_sim` disability weight values are simulated using
-[`stats::rbeta()`](https://rdrr.io/r/stats/Beta.html).
-
-Duration values of the morbidity health outcome of interest are
-simulated based on a normal distribution using
-[`stats::rnorm()`](https://rdrr.io/r/stats/Normal.html) with
-`mean = duration_central` and a standard deviation based on
-corresponding lower and upper 95% exposure confidence interval values.
-
-**Function arguments**
-
-`seed`
-
-If the `seed` argument is specified then the `parallel` package is used
-to generate independent L’Ecuyer random number streams. One stream is
-allocated per variable (or per variable–geography combination, as
-needed), ensuring reproducible and independent random draws across
-variables and scenarios.
+Doucet A, Lee A, others (2020). “Monte Carlo Methods in the Twenty-First
+Century.” *Annual Review of Statistics and Its Application*, **7**,
+435–458.
+[doi:10.1146/annurev-statistics-031219-041122](https://doi.org/10.1146/annurev-statistics-031219-041122)
+.
 
 ## Author
 
@@ -163,5 +122,5 @@ results <- summarize_uncertainty(
   n_sim = 100
 )
 results$uncertainty_main$impact # Central, lower and upper estimates
-#> [1] 3655.574 1496.535 5770.173
+#> [1] 3646.684 1496.535 5770.173
 ```

@@ -61,7 +61,7 @@ Information about the methodology (including corresponding equations and
 literature) is available in the package vignette. More specifically, see
 chapters:
 
-- [monetization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-riskhttps://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization)
+- [Monetization](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization)
 
 ## References
 
