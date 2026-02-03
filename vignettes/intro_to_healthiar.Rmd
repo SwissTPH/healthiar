@@ -1790,6 +1790,29 @@ social$social_main |>
 
 To estimate the multiple deprivation index (MDI) to use it for the argument `social_indicator` in the function `socialize()`.
 
+### Methodology
+
+Socio-economic indicators (e.g. education level, employment status and family structure) can be condensed into a multiple deprivation index (MDI) [@Mogin2025_ejph]. For this purpose, the indicators can be normalized using min-max scaling.
+
+The reliability of the MDI can be assessed using Cronbach's alpha [@Cronbach1951_p].
+
+$$ \alpha = \frac{k}{k - 1} \left( 1 - \frac{\sum_{i=1}^{k} \sigma^2_{y_i}}{\sigma^2_x} \right) $$
+where:
+
+* $k$ is the number of items/variables.
+* $\sigma^2_{y_i}$ is the variance of the $i$-th item.
+* $\sum_{i=1}^{k} \sigma^2_{y_i}$ is the sum of the variances of all items.
+* $\sigma^2_x$ is the total variance of the observed total scores (the sum of all items).
+
+
+To apply this approach, you should ensure that the data set is as complete as possible.
+Otherwise, you can try to impute missing data using:
+- Time-Based Imputation: Linear regression based on historical trends if prior years' data is complete.
+- Indicator-Based Imputation: Multiple linear regression if the missing indicator correlates strongly with others.
+
+Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower than 0.7, consider alternative data sources or methods.
+
+
 ### Function call
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
@@ -1823,6 +1846,16 @@ mdi$mdi_main |>
   dplyr::select(geo_id_micro, MDI, MDI_index) |> 
   knitr::kable()
 ```
+
+
+The function assesses the reliability of the MDI based on the Cronbach's alpha value as follows:
+- 0.9 and higher: Excellent reliability
+- between 0.8 (included) and 0.9: Good reliability
+- between 0.7 (included) and 0.8: Acceptable reliability
+- between 0.6 (included) and 0.7: Questionable reliability
+- lower than 0.6: Poor reliability
+
+
 
 ### Detailed results
 
