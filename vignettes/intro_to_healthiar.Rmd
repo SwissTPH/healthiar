@@ -1747,7 +1747,17 @@ legend("topleft",
 To monetize the attributable health impact of a policy that will have health benefits five years from now.
 
 ### Methodology
-You can monetize health impacts valuating them and considering discounting and inflation. For this purpose you can use `monetize()`. If you just need the discount factor or the inflation factor, you can alternatively call `get_discount_factor()` or `get_inflation_factor()`. See the equations that are used behind these functions. 
+Health impacts can be monetized by valuating them (giving them an econmic value)
+and by applying discounting and/or inflation. 
+For this purpose, you can use `monetize()`. 
+
+If you just need the discount factor or the inflation factor, 
+you can alternatively call `get_discount_factor()` or `get_inflation_factor()`. 
+
+If you just need the discounted health impacts (to be valuated in a further step), 
+you can alternatively call `discount()`. 
+
+See below the equations that are used behind these functions. 
 
 #### Inflation factor (without discounting)
 

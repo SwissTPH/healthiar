@@ -12,8 +12,13 @@
 #'
 #' \strong{Methodology}
 #'
-#' Detailed information about the methodology
-#' (including corresponding equations and literature)
+#' This function is called inside \code{monetize()}.
+#'
+#' It calculates the inflation factor based on the inflation rate
+#' and the number of years into the future as described
+#' in \insertCite{Brealey2023_book;textual}{healthiar}.
+#'
+#' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
@@ -32,7 +37,7 @@
 #'
 #' @references
 #'
-#' \insertRef{Brealey2023_book}{healthiar}
+#' \insertAllCited{}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten
