@@ -105,7 +105,9 @@
 #'
 #' @references
 #'
-#' \insertRef{Gorasso2024_report}{healthiar}
+#' \insertRef{Renard2019_bmc}{healthiar}
+#'
+#' \insertRef{Otavova_2022_bmc}{healthiar}
 #'
 #'
 #' @author Alberto Castro & Axel Luyten
