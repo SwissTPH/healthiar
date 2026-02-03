@@ -1525,6 +1525,73 @@ results_multiplicative$health_main |>
 rm(results_multiplicative)
 ```
 
+# Standardization
+
+### Goal (e.g.)
+To obtain the age-standardized attributable health impacts of two age groups
+
+### Methodology
+Age standardization is a technique used to allow the comparison of populations 
+with different age structures [@GBD2020_tldemo; @Ahmad2001_report]. 
+In `healthiar`, the function `standardize()` applies the direct method, 
+where the age-specific rates observed in a study population 
+are applied to a standard (reference) population distribution.
+
+The standardized health impact rate is computed as 
+$$ impact\_per\_100k\_inhab_{std} = \sum_{i=1}^{k} (impact\_per\_100k\_inhab_i \times w_i) $$
+
+where:
+
+* $R_{std}$ is the age-standardized health impact rate.
+* $r_i$ is the impact rate observed in age group $i$ (e.g., impact per 100,000 inhabitants).
+* $ref_prop_pop_i$ is the proportion of the reference population in age group $i$ .
+* $k$ is the number of age groups.
+ 
+
+### Function call
+
+```{r}
+output_attribute <- attribute_health(
+  rr_central = 1.063,
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  cutoff_central =  0,
+  age_group = c("below_40", "above_40"),
+  exp_central = c(8.1, 10.9),
+  bhd_central = c(1000, 4000),
+  population = c(100000, 500000)
+  )
+
+results <- standardize(
+  output_attribute = output_attribute,
+  age_group = c("below_40", "above_40"),
+  ref_prop_pop = c(0.5, 0.5)
+  )
+
+
+```
+
+
+### Main results
+
+Age-standardized impact rate:
+```{r}
+print(results$health_main$impact_per_100k_inhab)  
+```
+
+Age group-specific impact rate:
+
+```{r}
+print(results$health_detailed$results_raw$impact_per_100k_inhab)  
+```
+
+
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(results)
+```
+
+
+
 # Preparation of exposure data
 
 ### Goal (e.g.)
@@ -1575,6 +1642,11 @@ in the column `exp_value`.
 print(pwm$main)
 ```
 
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(exdat_pwm_1)
+rm(exdat_pwm_2)
+rm(pwm)
+```
 
 
 
