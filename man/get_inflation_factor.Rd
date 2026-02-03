@@ -33,11 +33,9 @@ get_inflation_factor(
   n_years = 5
 )
 
-#' @references
-
+}
+\references{
 \insertRef{Brealey2023_book}{healthiar}
-
-
 }
 \author{
 Alberto Castro & Axel Luyten

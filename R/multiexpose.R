@@ -54,7 +54,7 @@
 #' )
 #' results$health_main$impact
 #'
-#' #' @references
+#' @references
 #'
 #' \insertRef{Strak2024_report}{healthiar}
 #'

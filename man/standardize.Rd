@@ -24,7 +24,6 @@ This function returns a \code{list} containing:
 This function obtains age-standardized health impacts based on multiple age-group specific assessments
 }
 \details{
-#'
 \strong{Methodology}
 
 This function applies the direct method of standardization,

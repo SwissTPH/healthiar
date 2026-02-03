@@ -29,7 +29,7 @@
 #' # Goal: calculate PAF based on RR and the proportion of population exposed
 #' get_paf(rr = 1.062, prop_pop_exp = 1)
 #'
-#' #' @references
+#' @references
 #'
 #' \insertRef{WHO2003_report}{healthiar}
 #'

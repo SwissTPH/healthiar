@@ -102,7 +102,7 @@
 #' eval(results$mdi_detailed$boxplot)
 #' eval(results$mdi_detailed$histogram)
 #'
-#' #' @references
+#' @references
 #'
 #' \insertRef{Cronbach1951_p}{healthiar}
 #'

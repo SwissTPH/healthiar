@@ -12,7 +12,7 @@
 # DETAILS ######################################################################
 #' @details
 #'
-#' #' \strong{Methodology}
+#' \strong{Methodology}
 #'
 #' The conversion follows the methodology of the WHO tool.
 #' See the AirQ+ manual

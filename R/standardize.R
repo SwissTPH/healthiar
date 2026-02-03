@@ -10,7 +10,7 @@
 #'
 # DETAILS ######################################################################
 #' @details
-#' #'
+#'
 #' \strong{Methodology}
 #'
 #' This function applies the direct method of standardization,

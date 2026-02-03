@@ -25,7 +25,7 @@ This function returns a \code{tibble} containing the columns:
 This function determines populations and deaths by one year age groups.
 }
 \details{
-#' \strong{Methodology}
+\strong{Methodology}
 
 The conversion follows the methodology of the WHO tool.
 See the AirQ+ manual

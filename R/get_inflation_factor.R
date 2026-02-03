@@ -30,7 +30,7 @@
 #'   n_years = 5
 #' )
 #'
-#' #' @references
+#' @references
 #'
 #' \insertRef{Brealey2023_book}{healthiar}
 #'

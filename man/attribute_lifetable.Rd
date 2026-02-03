@@ -129,7 +129,7 @@ for each year after the year of analysis n babies (population aged 0) are born.
 
 \code{time_horizon}
 Applicable for the following cases:
-#' \itemize{
+\itemize{
  \item YLL: \code{single_year} or \code{constant} exposure
  \item premature deaths: \code{constant} exposure
 }

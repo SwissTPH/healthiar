@@ -81,15 +81,13 @@ results <- multiexpose(
 )
 results$health_main$impact
 
-#' @references
-
+}
+\references{
 \insertRef{Strak2024_report}{healthiar}
 
 \insertRef{Jerrett2013-oup}{healthiar}
 
 \insertRef{Steenland2006-e}{healthiar}
-
-
 }
 \author{
 Alberto Castro & Axel Luyten

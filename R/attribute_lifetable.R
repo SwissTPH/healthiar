@@ -37,7 +37,7 @@
 #'
 #' \code{time_horizon}
 #' Applicable for the following cases:
-#' #' \itemize{
+#' \itemize{
 #'  \item YLL: \code{single_year} or \code{constant} exposure
 #'  \item premature deaths: \code{constant} exposure
 #' }

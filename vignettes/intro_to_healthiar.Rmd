@@ -1638,8 +1638,8 @@ pwm <- prepare_exposure(
 Within the function output, the tibble `main` contains 
 the population-weighted mean exposures for the (higher-level) geographic units 
 in the column `exp_value`.
-```{r}
-print(pwm$main)
+```{r echo=FALSE}
+ knitr::kable(pwm$main)
 ```
 
 ```{r eval=TRUE, include=FALSE, echo=FALSE}
