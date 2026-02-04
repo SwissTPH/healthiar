@@ -1,8 +1,9 @@
-#' Consider socio-economic aspects in healthiar assessments
+#' Consider socio-economic aspects in the attributable health impacts
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts.
+#' This function analyzes differences in attributable health impacts across study areas
+#' looking at the value of a socio-economic indicator (e.g. multiple deprivation index).
 #' If nothing is entered in the argument \code{output_attribute},
 #' it is assumed that all data come from a table and the argument refer to the columns of that table.
 
