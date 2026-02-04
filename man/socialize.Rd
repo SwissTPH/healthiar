@@ -2,7 +2,7 @@
 % Please edit documentation in R/socialize.R
 \name{socialize}
 \alias{socialize}
-\title{Consider socio-economic aspects in healthiar assessments}
+\title{Consider socio-economic aspects in the attributable health impacts}
 \usage{
 socialize(
   output_attribute = NULL,
@@ -66,7 +66,8 @@ This function returns a \code{list} containing the impact (absolute and relative
 If the argument \code{output_attribute} was specified, then the two lists are added next to the existing attribute output.
 }
 \description{
-This function considers socio-economic aspects (e.g. multiple deprivation index) in the attributable health impacts.
+This function analyzes differences in attributable health impacts across study areas
+looking at the value of a socio-economic indicator (e.g. multiple deprivation index).
 If nothing is entered in the argument \code{output_attribute},
 it is assumed that all data come from a table and the argument refer to the columns of that table.
 }
@@ -123,6 +124,13 @@ results$social_main |>
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item \strong{Upstream:}
+    \code{\link{attribute_health}}, \code{\link{attribute_lifetable}},
+     \code{\link{prepare_mdi}},
+}
 }
 \author{
 Alberto Castro & Axel Luyten

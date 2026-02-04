@@ -144,6 +144,14 @@ scenario_B <- attribute_mod(
 
 scenario_B$health_main$impact # Attributable impact in scenario B
 
+
+#' @seealso
+\itemize{
+  \item \strong{Upstream:} \code{\link{attribute_health}}
+  \item \strong{Downstream:} \code{\link{compare}}
+}
+
+
 }
 \references{
 \insertAllCited{}

@@ -87,9 +87,16 @@ results <- summarize_uncertainty(
 )
 results$uncertainty_main$impact # Central, lower and upper estimates
 
+
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item \strong{Upstream:}
+    \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+}
 }
 \author{
 Alberto Castro & Axel Luyten

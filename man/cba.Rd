@@ -109,6 +109,12 @@ results$cba_main |>
 \references{
 \insertAllCited{}
 }
+\seealso{
+\itemize{
+  \item \strong{Upstream:} \code{\link{attribute_health}}
+  \item \strong{Alternative:} \code{\link{monetize}}
+}
+}
 \author{
 Alberto Castro & Axel Luyten
 }

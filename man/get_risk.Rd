@@ -88,9 +88,15 @@ get_risk(
   exp = c(8, 9, 10)
 )
 
+
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item \strong{Alternative:} \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+}
 }
 \author{
 Alberto Castro & Axel Luyten
