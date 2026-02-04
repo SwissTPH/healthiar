@@ -85,6 +85,14 @@
 #' )
 #' results$uncertainty_main$impact # Central, lower and upper estimates
 #'
+#'
+#' @seealso
+#' \itemize{
+#'   \item \strong{Upstream:}
+#'     \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+#' }
+#'
+#'
 #' @references
 #'
 #' \insertAllCited{}

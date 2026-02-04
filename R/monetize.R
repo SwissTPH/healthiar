@@ -80,6 +80,14 @@
 #'   dplyr::select(impact, monetized_impact)
 #'
 #'
+#' @seealso
+#' \itemize{
+#'   \item \strong{Upstream:} \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+#'   \item \strong{Alternative:} \code{\link{get_inflation_factor}},
+#'     \code{\link{get_discount_factor}}, \code{\link{cba}}
+#' }
+#'
+#'
 #' @references
 #'
 #' \insertAllCited{}

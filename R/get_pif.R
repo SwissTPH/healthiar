@@ -43,6 +43,12 @@
 #' )
 #' print(results)
 #'
+#'
+#' @seealso
+#' \itemize{
+#'   \item \strong{Alternative:} \code{\link{compare}}
+#' }
+#'
 #' @references
 #'
 #' \insertAllCited{}

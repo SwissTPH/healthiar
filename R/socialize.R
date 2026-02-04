@@ -107,6 +107,13 @@
 #'   dplyr::select(first, last, difference_type, difference_value, comment)
 #'
 #'
+#' @seealso
+#' \itemize{
+#'   \item \strong{Upstream:}
+#'     \code{\link{attribute_health}}, \code{\link{attribute_lifetable}},
+#'      \code{\link{prepare_mdi}},
+#' }
+#'
 #' @references
 #'
 #' \insertAllCited{}

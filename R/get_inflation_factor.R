@@ -35,6 +35,13 @@
 #'   n_years = 5
 #' )
 #'
+#'
+#' @seealso
+#' \itemize{
+#'   \item \strong{Alternative:} \code{\link{monetize}}
+#' }
+#'
+#'
 #' @references
 #'
 #' \insertAllCited{}

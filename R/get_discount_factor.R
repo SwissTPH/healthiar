@@ -38,6 +38,12 @@
 #'  )
 #'
 #'
+#' @seealso
+#' \itemize{
+#'   \item \strong{Alternative:} \code{\link{monetize}}
+#' }
+#'
+#'
 #' @references
 #'
 #' \insertAllCited{}

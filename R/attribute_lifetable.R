@@ -153,6 +153,18 @@
 #' )
 #' results$health_main$impact_rounded # Attributable YLL
 #'
+#'
+#' @seealso
+#' \itemize{
+#'   \item \strong{Upstream:}
+#'     \code{\link{prepare_exposure}} (only if no exposure data available)
+#'   \item \strong{Alternative:} \code{\link{attribute_health}},
+#'     \code{\link{get_paf}}, \code{\link{get_risk}}
+#'   \item \strong{Downstream:} \code{\link{attribute_mod}}, \code{\link{compare}},
+#'     \code{\link{daly}}, \code{\link{multiexpose}},
+#'     \code{\link{standardize}}, \code{\link{monetize}}, \code{\link{socialize}}
+#' }
+#'
 #' @references
 #'
 #' \insertAllCited{}

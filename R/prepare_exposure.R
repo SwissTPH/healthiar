@@ -59,6 +59,13 @@
 #'   geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate
 #' )
 #'
+#'
+#' @seealso
+#' \itemize{
+#'   \item \strong{Downstream:} \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+#' }
+#'
+#'
 #' @references
 #'
 #' \insertAllCited{}
