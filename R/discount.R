@@ -45,6 +45,13 @@
 #' )
 #' results$monetization_main$monetized_impact
 #'
+#'
+#' @seealso
+#' \itemize{
+#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_health}}
+#'   \item Alternative: \code{\link{monetize}}
+#' }
+#'
 # REFERENCES #####################################################################
 #' @references
 #'

@@ -76,9 +76,16 @@ results <- discount(
 )
 results$monetization_main$monetized_impact
 
+
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_health}}
+  \item Alternative: \code{\link{monetize}}
+}
 }
 \author{
 Alberto Castro & Axel Luyten

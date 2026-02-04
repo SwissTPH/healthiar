@@ -87,9 +87,15 @@ results <- daly(
 results$health_main |>
   dplyr::select(impact, impact_yll, impact_yld)
 
+
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+}
 }
 \author{
 Alberto Castro & Axel Luyten

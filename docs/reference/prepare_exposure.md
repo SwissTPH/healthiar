@@ -69,6 +69,12 @@ assessment of population exposure to ambient air pollution.” *Journal of
 the Royal Statistical Society Series C: Applied Statistics*, **67**(1),
 231–248. [doi:10.1111/rssc.12227](https://doi.org/10.1111/rssc.12227) .
 
+## See also
+
+- Downstream:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+
 ## Author
 
 Arno Pauwels, Axel Luyten and Alberto Castro
@@ -91,4 +97,5 @@ pwm <- prepare_exposure(
   population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
   geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate
 )
+
 ```

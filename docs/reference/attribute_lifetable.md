@@ -282,6 +282,26 @@ WHO (2020). “Health impact assessment of air pollution: AirQ+ life table
 manual.” World Health Organization - Regional Office for Europe.
 <https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content>.
 
+## See also
+
+- Upstream:
+  [`prepare_exposure`](https://swisstph.github.io/healthiar/reference/prepare_exposure.md)
+  (only if no exposure data available)
+
+- Alternative:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`get_paf`](https://swisstph.github.io/healthiar/reference/get_paf.md),
+  [`get_risk`](https://swisstph.github.io/healthiar/reference/get_risk.md)
+
+- Downstream:
+  [`attribute_mod`](https://swisstph.github.io/healthiar/reference/attribute_mod.md),
+  [`compare`](https://swisstph.github.io/healthiar/reference/compare.md),
+  [`daly`](https://swisstph.github.io/healthiar/reference/daly.md),
+  [`multiexpose`](https://swisstph.github.io/healthiar/reference/multiexpose.md),
+  [`standardize`](https://swisstph.github.io/healthiar/reference/standardize.md),
+  [`monetize`](https://swisstph.github.io/healthiar/reference/monetize.md),
+  [`socialize`](https://swisstph.github.io/healthiar/reference/socialize.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -363,4 +383,5 @@ results <- attribute_lifetable(
 )
 results$health_main$impact_rounded # Attributable YLL
 #> [1] 32185 16849 47413
+
 ```

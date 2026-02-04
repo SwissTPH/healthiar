@@ -66,9 +66,16 @@ results <- standardize(
 results$health_detailed$results_raw$impact_per_100k_inhab # age group-specific impact rate
 results$health_main$impact_per_100k_inhab # age-standardized impact rate
 
+
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item Upstream:
+    \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+}
 }
 \author{
 Alberto Castro & Axel Luyten

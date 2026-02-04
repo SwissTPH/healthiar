@@ -38,9 +38,15 @@ get_inflation_factor(
   n_years = 5
 )
 
+
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item Alternative: \code{\link{monetize}}
+}
 }
 \author{
 Alberto Castro & Axel Luyten

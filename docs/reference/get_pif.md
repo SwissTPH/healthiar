@@ -73,6 +73,11 @@ WHO (2003). “Introduction and methods: Assessing the environmental
 burden of disease at national and local levels.” World Health
 Organization. <https://www.who.int/publications/i/item/9241546204>.
 
+## See also
+
+- Alternative:
+  [`compare`](https://swisstph.github.io/healthiar/reference/compare.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -89,4 +94,5 @@ results <- get_pif(
 )
 print(results)
 #> [1] 0.03128907
+
 ```

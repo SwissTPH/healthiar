@@ -57,6 +57,11 @@ WHO (2020). “Health impact assessment of air pollution: AirQ+ life table
 manual.” World Health Organization - Regional Office for Europe.
 <https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content>.
 
+## See also
+
+- Downstream:
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -70,4 +75,5 @@ results <- prepare_lifetable(
   population = c(3387900, 3401300, 3212300, 3026100),
   bhd = c(4727, 472, 557, 1323)
 )
+
 ```

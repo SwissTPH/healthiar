@@ -88,9 +88,15 @@ results <- multiexpose(
 )
 results$health_main$impact
 
+
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+}
 }
 \author{
 Alberto Castro & Axel Luyten

@@ -69,6 +69,12 @@ WHO (2003). “Introduction and methods: Assessing the environmental
 burden of disease at national and local levels.” World Health
 Organization. <https://www.who.int/publications/i/item/9241546204>.
 
+## See also
+
+- Alternative:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -79,4 +85,5 @@ Alberto Castro & Axel Luyten
 # Goal: calculate PAF based on RR and the proportion of population exposed
 get_paf(rr = 1.062, prop_pop_exp = 1)
 #> [1] 0.05838041
+
 ```

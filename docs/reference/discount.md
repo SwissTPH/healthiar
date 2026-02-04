@@ -128,6 +128,15 @@ reinforcement.” In Commons ML, Mazur JE, Nevin JA, Rachlin H (eds.),
 Intervening Events on Reinforcement Value*, 55–73. Lawrence Erlbaum
 Associates, Hillsdale, NJ. ISBN 0-89859-800-1.
 
+## See also
+
+- Upstream:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+
+- Alternative:
+  [`monetize`](https://swisstph.github.io/healthiar/reference/monetize.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -144,4 +153,5 @@ results <- discount(
 )
 results$monetization_main$monetized_impact
 #> [1] 11073.52
+
 ```

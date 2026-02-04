@@ -109,6 +109,12 @@ e2022GH000711 2022GH000711,
 https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2022GH000711,
 <https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2022GH000711>.
 
+## See also
+
+- Alternative:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -144,4 +150,5 @@ get_risk(
   exp = c(8, 9, 10)
 )
 #> [1] 1.063984 1.071987 1.080000
+
 ```

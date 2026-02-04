@@ -83,6 +83,13 @@
 #'   dplyr::select(benefit, cost, net_benefit)
 #'
 #'
+#' @seealso
+#' \itemize{
+#'   \item Upstream: \code{\link{attribute_health}}
+#'   \item Alternative: \code{\link{monetize}}
+#' }
+#'
+#'
 #' @references
 #'
 #' \insertAllCited{}

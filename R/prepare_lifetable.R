@@ -43,6 +43,13 @@
 #'   bhd = c(4727, 472, 557, 1323)
 #' )
 #'
+#'
+#' @seealso
+#' \itemize{
+#'   \item Downstream: \code{\link{attribute_lifetable}}
+#' }
+#'
+#'
 #' @references
 #'
 #' \insertAllCited{}

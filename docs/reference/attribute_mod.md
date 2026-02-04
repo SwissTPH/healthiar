@@ -240,31 +240,3 @@ of healthy life years lost in Europe.” World Health Organization.
 Alberto Castro & Axel Luyten
 
 ## Examples
-
-``` r
-# Goal: adjust an existing healthiar scenario and determine the health
-# impacts in the modified scenario
-
-## First create a scenario to be modified
-scenario_A <- attribute_health(
-  exp_central = 8.85,   # EXPOSURE 1
-  cutoff_central = 5,
-  bhd_central = 25000,
-  approach_risk = "relative_risk",
-  erf_shape = "log_linear",
-  rr_central = 1.118,
-  rr_increment = 10
-)
-
-scenario_A$health_main$impact # Attributable impact in scenario A
-#> [1] 1050.86
-
-## Modify scenario (adjust exposure value)
-scenario_B <- attribute_mod(
-  output_attribute = scenario_A,
-  exp_central = 6       # EXPOSURE 2
-)
-
-scenario_B$health_main$impact # Attributable impact in scenario B
-#> [1] 277.304
-```

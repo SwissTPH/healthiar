@@ -54,6 +54,11 @@ get_discount_factor(
 \references{
 \insertAllCited{}
 }
+\seealso{
+\itemize{
+  \item Alternative: \code{\link{monetize}}
+}
+}
 \author{
 Alberto Castro & Axel Luyten
 }

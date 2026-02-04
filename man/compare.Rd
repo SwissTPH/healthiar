@@ -121,9 +121,16 @@ results <- compare(
 # Inspect the difference, stored in the impact column
 results$health_main$impact
 
+
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_mod}},
+    \code{\link{standardize}}, \code{\link{daly}},
+}
 }
 \author{
 Alberto Castro & Axel Luyten

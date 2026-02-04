@@ -86,6 +86,13 @@
 #' results$health_main |>
 #'   dplyr::select(impact, impact_yll, impact_yld)
 #'
+#'
+#' @seealso
+#' \itemize{
+#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+#' }
+#'
+#'
 #' @references
 #'
 #' \insertAllCited{}

@@ -94,6 +94,13 @@
 #' eval(results$mdi_detailed$boxplot)
 #' eval(results$mdi_detailed$histogram)
 #'
+#'
+#' @seealso
+#' \itemize{
+#'   \item Downstream: \code{\link{socialize}}
+#' }
+#'
+#'
 #' @references
 #'
 #' \insertAllCited{}

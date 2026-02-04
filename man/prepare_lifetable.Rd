@@ -47,9 +47,15 @@ results <- prepare_lifetable(
   bhd = c(4727, 472, 557, 1323)
 )
 
+
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item Downstream: \code{\link{attribute_lifetable}}
+}
 }
 \author{
 Alberto Castro & Axel Luyten

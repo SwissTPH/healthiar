@@ -45,9 +45,15 @@ results <- get_pif(
 )
 print(results)
 
+
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item Alternative: \code{\link{compare}}
+}
 }
 \author{
 Alberto Castro & Axel Luyten

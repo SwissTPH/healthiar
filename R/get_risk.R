@@ -74,6 +74,13 @@
 #'   exp = c(8, 9, 10)
 #' )
 #'
+#'
+#' @seealso
+#' \itemize{
+#'   \item Alternative: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+#' }
+#'
+#'
 #' @references
 #'
 #' \insertAllCited{}

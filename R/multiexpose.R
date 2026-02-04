@@ -61,6 +61,12 @@
 #' )
 #' results$health_main$impact
 #'
+#'
+#' @seealso
+#' \itemize{
+#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+#' }
+#'
 #' @references
 #'
 #' \insertAllCited{}

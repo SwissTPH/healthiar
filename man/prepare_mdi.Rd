@@ -112,9 +112,15 @@ results$mdi_main |>
 eval(results$mdi_detailed$boxplot)
 eval(results$mdi_detailed$histogram)
 
+
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item Downstream: \code{\link{socialize}}
+}
 }
 \author{
 Carl Baravelli, Vanessa Gorasso, Alberto Castro & Axel Luyten

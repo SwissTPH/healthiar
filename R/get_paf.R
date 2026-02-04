@@ -36,6 +36,13 @@
 #' # Goal: calculate PAF based on RR and the proportion of population exposed
 #' get_paf(rr = 1.062, prop_pop_exp = 1)
 #'
+#'
+#' @seealso
+#' \itemize{
+#'   \item Alternative: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+#' }
+#'
+#'
 #' @references
 #'
 #' \insertAllCited{}

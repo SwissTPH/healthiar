@@ -63,9 +63,15 @@ pwm <- prepare_exposure(
   geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate
 )
 
+
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\itemize{
+  \item Downstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+}
 }
 \author{
 Arno Pauwels, Axel Luyten and Alberto Castro
