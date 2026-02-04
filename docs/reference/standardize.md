@@ -79,6 +79,12 @@ Ahmad OB, Pinto CB, Lopez AD, Murray CJ, Lozano R, Inoue M (2001). “Age
 standardization of rates: a new WHO standard.” Technical Report GPE
 Discussion Paper Series: No. 31, World Health Organization, Geneva.
 
+## See also
+
+- Upstream:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -106,4 +112,5 @@ results$health_detailed$results_raw$impact_per_100k_inhab # age group-specific i
 #> [1] 48.28250 51.53977
 results$health_main$impact_per_100k_inhab # age-standardized impact rate
 #> [1] 49.91113
+
 ```

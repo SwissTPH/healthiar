@@ -143,6 +143,17 @@ reinforcement.” In Commons ML, Mazur JE, Nevin JA, Rachlin H (eds.),
 Intervening Events on Reinforcement Value*, 55–73. Lawrence Erlbaum
 Associates, Hillsdale, NJ. ISBN 0-89859-800-1.
 
+## See also
+
+- Upstream:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+
+- Alternative:
+  [`get_inflation_factor`](https://swisstph.github.io/healthiar/reference/get_inflation_factor.md),
+  [`get_discount_factor`](https://swisstph.github.io/healthiar/reference/get_discount_factor.md),
+  [`cba`](https://swisstph.github.io/healthiar/reference/cba.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten

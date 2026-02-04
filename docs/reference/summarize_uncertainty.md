@@ -97,6 +97,12 @@ Texts in Statistics. Springer Science \\ Business Media.
 [doi:10.1007/978-1-4757-4145-2](https://doi.org/10.1007/978-1-4757-4145-2)
 .
 
+## See also
+
+- Upstream:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -126,5 +132,6 @@ results <- summarize_uncertainty(
   n_sim = 100
 )
 results$uncertainty_main$impact # Central, lower and upper estimates
-#> [1] 3646.684 1496.535 5770.173
+#> [1] 3655.574 1496.535 5770.173
+
 ```

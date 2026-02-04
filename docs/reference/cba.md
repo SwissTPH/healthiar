@@ -125,6 +125,14 @@ Boardman AE, Greenberg DH, Vining AR, Weimer DL (2018). *Cost-Benefit
 Analysis: Concepts and Practice*, 5th edition. Cambridge University
 Press, Cambridge, UK. ISBN 978-1108401296.
 
+## See also
+
+- Upstream:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+
+- Alternative:
+  [`monetize`](https://swisstph.github.io/healthiar/reference/monetize.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten

@@ -378,6 +378,26 @@ WHO (2011). “Burden of disease from environmental noise: Quantification
 of healthy life years lost in Europe.” World Health Organization.
 <https://www.who.int/publications/i/item/burden-of-disease-from-environmental-noise-quantification-of-healthy-life-years-lost-in-europe>.
 
+## See also
+
+- Upstream:
+  [`prepare_exposure`](https://swisstph.github.io/healthiar/reference/prepare_exposure.md)
+  (only if no exposure data available)
+
+- Alternative:
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
+  [`get_paf`](https://swisstph.github.io/healthiar/reference/get_paf.md),
+  [`get_risk`](https://swisstph.github.io/healthiar/reference/get_risk.md)
+
+- Downstream:
+  [`attribute_mod`](https://swisstph.github.io/healthiar/reference/attribute_mod.md),
+  [`compare`](https://swisstph.github.io/healthiar/reference/compare.md),
+  [`daly`](https://swisstph.github.io/healthiar/reference/daly.md),
+  [`multiexpose`](https://swisstph.github.io/healthiar/reference/multiexpose.md),
+  [`standardize`](https://swisstph.github.io/healthiar/reference/standardize.md),
+  [`monetize`](https://swisstph.github.io/healthiar/reference/monetize.md),
+  [`socialize`](https://swisstph.github.io/healthiar/reference/socialize.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -464,4 +484,5 @@ results  <- attribute_health(
 
 results$health_main$impact
 #> [1] 3602.934
+
 ```

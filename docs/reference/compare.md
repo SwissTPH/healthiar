@@ -110,6 +110,14 @@ WHO (2003). “Introduction and methods: Assessing the environmental
 burden of disease at national and local levels.” World Health
 Organization. <https://www.who.int/publications/i/item/9241546204>.
 
+## See also
+
+- Upstream:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`attribute_mod`](https://swisstph.github.io/healthiar/reference/attribute_mod.md),
+  [`standardize`](https://swisstph.github.io/healthiar/reference/standardize.md),
+  [`daly`](https://swisstph.github.io/healthiar/reference/daly.md),
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -177,4 +185,5 @@ results <- compare(
 # Inspect the difference, stored in the impact column
 results$health_main$impact
 #> [1]  782.2331  411.7377 1146.1450
+
 ```

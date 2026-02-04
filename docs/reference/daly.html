@@ -11,7 +11,7 @@ years of life lost (YLL) and years lived with disability (YLD)."><meta property=
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1441</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1445</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,6 +91,12 @@ More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.
 , <a href="https://www.thelancet.com/article/S0140-6736(20)30752-2/fulltext" class="external-link">https://www.thelancet.com/article/S0140-6736(20)30752-2/fulltext</a>.</p>
     </div>
     <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index">
+<ul><li><p>Upstream: <code><a href="attribute_health.html">attribute_health</a></code>, <code><a href="attribute_lifetable.html">attribute_lifetable</a></code></p></li>
+</ul></div>
+    </div>
+    <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p>Alberto Castro &amp; Axel Luyten</p>
     </div>
@@ -136,11 +142,12 @@ More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Attributable impact in DALY</span></span></span>
 <span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">health_main</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">impact</span>, <span class="va">impact_yll</span>, <span class="va">impact_yld</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">impact</span>, <span class="va">impact_yll</span>, <span class="va">impact_yld</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   impact impact_yll impact_yld</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> <span style="text-decoration: underline;">30</span>611.     <span style="text-decoration: underline;">28</span>810.      <span style="text-decoration: underline;">1</span>801.</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

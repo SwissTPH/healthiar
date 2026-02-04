@@ -17,7 +17,7 @@ modifying some of these input data of scenario 1 for the scenario 2 and
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1441</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1445</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -213,33 +213,7 @@ World Health Organization.
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Goal: adjust an existing healthiar scenario and determine the health</span></span></span>
-<span class="r-in"><span><span class="co"># impacts in the modified scenario</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## First create a scenario to be modified</span></span></span>
-<span class="r-in"><span><span class="va">scenario_A</span> <span class="op">&lt;-</span> <span class="fu"><a href="attribute_health.html">attribute_health</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  exp_central <span class="op">=</span> <span class="fl">8.85</span>,   <span class="co"># EXPOSURE 1</span></span></span>
-<span class="r-in"><span>  cutoff_central <span class="op">=</span> <span class="fl">5</span>,</span></span>
-<span class="r-in"><span>  bhd_central <span class="op">=</span> <span class="fl">25000</span>,</span></span>
-<span class="r-in"><span>  approach_risk <span class="op">=</span> <span class="st">"relative_risk"</span>,</span></span>
-<span class="r-in"><span>  erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span></span>
-<span class="r-in"><span>  rr_central <span class="op">=</span> <span class="fl">1.118</span>,</span></span>
-<span class="r-in"><span>  rr_increment <span class="op">=</span> <span class="fl">10</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">scenario_A</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact</span> <span class="co"># Attributable impact in scenario A</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1050.86</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## Modify scenario (adjust exposure value)</span></span></span>
-<span class="r-in"><span><span class="va">scenario_B</span> <span class="op">&lt;-</span> <span class="fu">attribute_mod</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  output_attribute <span class="op">=</span> <span class="va">scenario_A</span>,</span></span>
-<span class="r-in"><span>  exp_central <span class="op">=</span> <span class="fl">6</span>       <span class="co"># EXPOSURE 2</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">scenario_B</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact</span> <span class="co"># Attributable impact in scenario B</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 277.304</span>
-<span class="r-in"><span></span></span>
-</code></pre></div>
+
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

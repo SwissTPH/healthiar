@@ -1,9 +1,10 @@
-# Consider socio-economic aspects in healthiar assessments
+# Consider socio-economic aspects in the attributable health impacts
 
-This function considers socio-economic aspects (e.g. multiple
-deprivation index) in the attributable health impacts. If nothing is
-entered in the argument `output_attribute`, it is assumed that all data
-come from a table and the argument refer to the columns of that table.
+This function analyzes differences in attributable health impacts across
+study areas looking at the value of a socio-economic indicator (e.g.
+multiple deprivation index). If nothing is entered in the argument
+`output_attribute`, it is assumed that all data come from a table and
+the argument refer to the columns of that table.
 
 ## Usage
 
@@ -167,6 +168,13 @@ Results of a simulation study.” *BMC Public Health*, **19**(1), 662.
 ISSN 1471-2458,
 [doi:10.1186/s12889-019-6980-1](https://doi.org/10.1186/s12889-019-6980-1)
 .
+
+## See also
+
+- Upstream:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
+  [`prepare_mdi`](https://swisstph.github.io/healthiar/reference/prepare_mdi.md),
 
 ## Author
 

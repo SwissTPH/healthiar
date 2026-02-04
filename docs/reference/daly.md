@@ -67,6 +67,12 @@ factors in 204 countries and territories, 1990–2019.” *The Lancet*.
 [doi:10.1016/S0140-6736(20)30752-2](https://doi.org/10.1016/S0140-6736%2820%2930752-2)
 , <https://www.thelancet.com/article/S0140-6736(20)30752-2/fulltext>.
 
+## See also
+
+- Upstream:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -118,4 +124,5 @@ results$health_main |>
 #>   impact impact_yll impact_yld
 #>    <dbl>      <dbl>      <dbl>
 #> 1 30611.     28810.      1801.
+
 ```

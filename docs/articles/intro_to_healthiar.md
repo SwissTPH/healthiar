@@ -161,8 +161,8 @@ There exist different, equivalent ways of accessing the output:
 - With `pluck()` & `pull()`: use the
   [`purrr::pluck`](https://purrr.tidyverse.org/reference/pluck.html)
   function to select a list and then the
-  [`dplyr::pull`](https://dplyr.tidyverse.org/reference/pull.html)
-  function extract values from a specified column,
+  [`dplyr::pull`](https://rdrr.io/pkg/dplyr/man/pull.html) function
+  extract values from a specified column,
   e.g. `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
 
 ------------------------------------------------------------------------

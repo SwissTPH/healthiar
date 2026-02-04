@@ -9,7 +9,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1441</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1445</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,6 +112,13 @@ World Health Organization.
 <a href="https://www.who.int/publications/i/item/9241546204" class="external-link">https://www.who.int/publications/i/item/9241546204</a>.</p>
     </div>
     <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index">
+<ul><li><p>Upstream: <code><a href="attribute_health.html">attribute_health</a></code>, <code><a href="attribute_mod.html">attribute_mod</a></code>,
+    <code><a href="standardize.html">standardize</a></code>, <code><a href="daly.html">daly</a></code>,</p></li>
+</ul></div>
+    </div>
+    <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p>Alberto Castro &amp; Axel Luyten</p>
     </div>
@@ -144,7 +151,7 @@ World Health Organization.
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Inspect the difference, stored in the \code{impact} column</span></span></span>
 <span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">health_main</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">impact</span>, <span class="va">impact_scen_1</span>, <span class="va">impact_scen_2</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">impact</span>, <span class="va">impact_scen_1</span>, <span class="va">impact_scen_2</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   impact impact_scen_1 impact_scen_2</span>
@@ -178,6 +185,7 @@ World Health Organization.
 <span class="r-in"><span><span class="co"># Inspect the difference, stored in the impact column</span></span></span>
 <span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  782.2331  411.7377 1146.1450</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

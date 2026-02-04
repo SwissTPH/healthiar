@@ -39,7 +39,7 @@
 - [`prepare_mdi()`](https://swisstph.github.io/healthiar/reference/prepare_mdi.md)
   : Create the BEST-COST Multidimensional Deprivation Index (MDI)
 - [`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md)
-  : Consider socio-economic aspects in healthiar assessments
+  : Consider socio-economic aspects in the attributable health impacts
 - [`standardize()`](https://swisstph.github.io/healthiar/reference/standardize.md)
   : Obtain age-standardized health impacts
 - [`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)

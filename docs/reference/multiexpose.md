@@ -97,6 +97,12 @@ the burden of disease due to specific risk factors.” *Epidemiology*,
 Strak M, Houthuijs D, Staatsen B (2024). “D1.2 Report on the methodology
 for assessing the burden of correlated exposures.” EU Project BEST-COST.
 
+## See also
+
+- Upstream:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -134,4 +140,5 @@ results <- multiexpose(
 )
 results$health_main$impact
 #> [1] 3988.312
+
 ```

@@ -50,6 +50,11 @@ Brealey RA, Myers SC, Allen F, Benninga S, Read J (2023). *Principles of
 Corporate Finance*, 14th edition. McGraw-Hill Education, New York, NY.
 ISBN 978-1264117464.
 
+## See also
+
+- Alternative:
+  [`monetize`](https://swisstph.github.io/healthiar/reference/monetize.md)
+
 ## Author
 
 Alberto Castro & Axel Luyten
@@ -62,4 +67,5 @@ get_inflation_factor(
   n_years = 5
 )
 #> [1] 1.104081
+
 ```

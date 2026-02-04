@@ -133,6 +133,11 @@ Journal of Public Health*, **35**(6), 1122-1128.
 [doi:10.1093/eurpub/ckaf190](https://doi.org/10.1093/eurpub/ckaf190) ,
 https://academic.oup.com/eurpub/article-pdf/35/6/1122/65042936/ckaf190.pdf.
 
+## See also
+
+- Downstream:
+  [`socialize`](https://swisstph.github.io/healthiar/reference/socialize.md)
+
 ## Author
 
 Carl Baravelli, Vanessa Gorasso, Alberto Castro & Axel Luyten
@@ -208,5 +213,6 @@ results$mdi_main |>
 eval(results$mdi_detailed$boxplot)
 
 eval(results$mdi_detailed$histogram)
+
 
 ```
