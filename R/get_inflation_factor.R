@@ -38,7 +38,7 @@
 #'
 #' @seealso
 #' \itemize{
-#'   \item \strong{Alternative:} \code{\link{monetize}}
+#'   \item Alternative: \code{\link{monetize}}
 #' }
 #'
 #'

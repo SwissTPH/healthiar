@@ -94,7 +94,7 @@ results$health_main |>
 }
 \seealso{
 \itemize{
-  \item \strong{Upstream:} \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+  \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
 }
 }
 \author{

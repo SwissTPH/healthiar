@@ -73,7 +73,7 @@ results$health_main$impact_per_100k_inhab # age-standardized impact rate
 }
 \seealso{
 \itemize{
-  \item \strong{Upstream:}
+  \item Upstream:
     \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
 }
 }

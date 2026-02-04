@@ -52,7 +52,7 @@ print(results)
 }
 \seealso{
 \itemize{
-  \item \strong{Alternative:} \code{\link{compare}}
+  \item Alternative: \code{\link{compare}}
 }
 }
 \author{

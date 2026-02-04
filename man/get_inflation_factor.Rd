@@ -45,7 +45,7 @@ get_inflation_factor(
 }
 \seealso{
 \itemize{
-  \item \strong{Alternative:} \code{\link{monetize}}
+  \item Alternative: \code{\link{monetize}}
 }
 }
 \author{

@@ -117,7 +117,7 @@
 #'
 #' @seealso
 #' \itemize{
-#'   \item \strong{Upstream:} \code{\link{attribute_health}}, \code{\link{attribute_mod}},
+#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_mod}},
 #'     \code{\link{standardize}}, \code{\link{daly}},
 #' }
 #'

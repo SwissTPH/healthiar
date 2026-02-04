@@ -62,7 +62,7 @@
 #'
 #' @seealso
 #' \itemize{
-#'   \item \strong{Downstream:} \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+#'   \item Downstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
 #' }
 #'
 #'

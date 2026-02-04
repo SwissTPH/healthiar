@@ -119,7 +119,7 @@ eval(results$mdi_detailed$histogram)
 }
 \seealso{
 \itemize{
-  \item \strong{Downstream:} \code{\link{socialize}}
+  \item Downstream: \code{\link{socialize}}
 }
 }
 \author{

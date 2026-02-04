@@ -77,7 +77,7 @@
 #'
 #' @seealso
 #' \itemize{
-#'   \item \strong{Alternative:} \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+#'   \item Alternative: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
 #' }
 #'
 #'

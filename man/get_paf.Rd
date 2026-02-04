@@ -45,7 +45,7 @@ get_paf(rr = 1.062, prop_pop_exp = 1)
 }
 \seealso{
 \itemize{
-  \item \strong{Alternative:} \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+  \item Alternative: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
 }
 }
 \author{

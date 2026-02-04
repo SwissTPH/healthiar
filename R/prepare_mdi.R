@@ -97,7 +97,7 @@
 #'
 #' @seealso
 #' \itemize{
-#'   \item \strong{Downstream:} \code{\link{socialize}}
+#'   \item Downstream: \code{\link{socialize}}
 #' }
 #'
 #'

@@ -54,7 +54,7 @@ results <- prepare_lifetable(
 }
 \seealso{
 \itemize{
-  \item \strong{Downstream:} \code{\link{attribute_lifetable}}
+  \item Downstream: \code{\link{attribute_lifetable}}
 }
 }
 \author{

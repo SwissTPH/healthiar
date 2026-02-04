@@ -48,8 +48,8 @@
 #'
 #' @seealso
 #' \itemize{
-#'   \item \strong{Upstream:} \code{\link{attribute_health}}, \code{\link{attribute_health}}
-#'   \item \strong{Alternative:} \code{\link{monetize}}
+#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_health}}
+#'   \item Alternative: \code{\link{monetize}}
 #' }
 #'
 # REFERENCES #####################################################################
