@@ -21,6 +21,15 @@
 #'  \item{Population impact fraction (PIF): Single PIF for both scenarios \insertCite{WHO2003_report,Murray2003_spbm}{healthiar}}}
 #'
 #'
+#' Detailed information about the methodology (including equations)
+#' is available in the package vignette.
+#' More specifically, see chapters:
+#' \itemize{
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios}{comparison of two health scenarios}}
+#'
+#'
+#' \strong{Specifications of the comparison approach}
+#'
 #' Please, note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2
 #' (e.g. comparison of two scenarios at the same time point).
 #' With the delta comparison approach, the difference between two scenarios is obtained by subtraction.
@@ -34,11 +43,22 @@
 #' in both scenarios. The only variable that should change is the exposure
 #' (as a result of the intervention).
 #'
-#' Detailed information about the methodology (including equations)
-#' is available in the package vignette.
-#' More specifically, see chapters:
-#' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios}{comparison of two health scenarios}}
+#'
+#' \strong{Comparing DALY}
+#'
+#' If you want to use \code{compare()} DALY with \code{daly()},
+#' do not enter the output of \code{daly()} in \code{compare()}.
+#' Instead, follow these steps:
+#'
+#' 1) use \code{compare()} for YLL and YLD separately
+#'
+#' 2) use \code{daly()} inserting the output of both compare()
+#'
+#' Alternatively, you can use \code{attribute_health}
+#' to quantify DALY entering DALY in the argument \code{bhd_central}
+#' and then use \code{compare()}
+#'
+#'
 #'
 # VALUE ########################################################################
 #' @returns
@@ -125,7 +145,8 @@
 #' @seealso
 #' \itemize{
 #'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_mod}},
-#'     \code{\link{standardize}}, \code{\link{daly}},
+#'     \code{\link{standardize}},
+#'   \item Downstream: \code{\link{daly}},
 #' }
 #'
 #'

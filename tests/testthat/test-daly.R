@@ -56,12 +56,12 @@ testthat::test_that("results correct |pathway_daly|yll_from_lifetable_TRUE|outpu
   )
 })
 
-testthat::test_that("results correct using 2 delta comparisons as inputs|pathway_daly|yll_from_lifetable_TRUE|output_1_type_compare|output_2_type_compare|", {
+testthat::test_that("results the same using 2 comparisons as inputs|pathway_daly|yll_from_lifetable_TRUE|output_1_type_compare|output_2_type_compare|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
-  bestcost_pm_yld  <-
+  bestcost_yld_scen_1  <-
     healthiar::attribute_health(
       exp_central = 8.85,
       prop_pop_exp = 1,
@@ -78,7 +78,7 @@ testthat::test_that("results correct using 2 delta comparisons as inputs|pathway
                        data_lifetable[["female"]]$population),
       dw_central = 1)
 
-  bestcost_pm_yll <-
+  bestcost_yll_scen_1 <-
     healthiar::attribute_lifetable(
       health_outcome = "yll",
       exp_central = 8.85, # Fake data just for testing purposes
@@ -101,41 +101,63 @@ testthat::test_that("results correct using 2 delta comparisons as inputs|pathway
       min_age = 20)
 
   ## Define scenarios
-  scen_1_yll <-
-    bestcost_pm_yll
-
-  scen_2_yll <-
+  bestcost_yld_scen_2 <-
     healthiar::attribute_mod(
-      output_attribute = bestcost_pm_yll,
+      output_attribute =  bestcost_yld_scen_1,
       exp_central = 6)
 
-  scen_1_yld <-
-    bestcost_pm_yld
-
-  scen_2_yld <-
+  bestcost_yll_scen_2 <-
     healthiar::attribute_mod(
-      output_attribute = bestcost_pm_yld,
+      output_attribute =  bestcost_yll_scen_1,
       exp_central = 6)
+
+
+  comparison_yld_pif <- healthiar::compare(
+    bestcost_yld_scen_1,
+    bestcost_yld_scen_2,
+    approach_comparison = "pif"
+  )
+
+  comparison_yll_pif <- healthiar::compare(
+    bestcost_yll_scen_1,
+    bestcost_yll_scen_2,
+    approach_comparison = "pif"
+  )
+
+  comparison_yld_delta <- healthiar::compare(
+    bestcost_yld_scen_1,
+    bestcost_yld_scen_2,
+    approach_comparison = "delta"
+  )
+
+  comparison_yll_delta <- healthiar::compare(
+    bestcost_yll_scen_1,
+    bestcost_yll_scen_2,
+    approach_comparison = "delta"
+  )
+
+
+  ## PIF comparison
+  testthat::expect_equal(
+    object =
+      healthiar::daly(
+        output_attribute_yll = comparison_yll_pif,
+        output_attribute_yld = comparison_yld_pif)$health_main$impact_rounded,
+    expected =
+      c(24032, 12554, 36308) # Result on 7 July 2025; no comparison study
+  )
 
   ## Delta comparison
   testthat::expect_equal(
     object =
       healthiar::daly(
-        output_attribute_yll =
-          healthiar::compare(
-            approach_comparison = "delta",
-            output_attribute_scen_1 = scen_1_yll,
-            output_attribute_scen_2 = scen_2_yll),
-        output_attribute_yld =
-          healthiar::compare(
-            approach_comparison = "delta",
-            output_attribute_scen_1 = scen_1_yld,
-            output_attribute_scen_2 = scen_2_yld)
-      )$health_main$impact_rounded,
+        output_attribute_yll = comparison_yll_delta,
+        output_attribute_yld = comparison_yld_delta)$health_main$impact_rounded,
     expected =
       c(23956, 12533, 36112) # Result on 7 July 2025; no comparison study
   )
 })
+
 
 testthat::test_that("results correct using 2 pif comparisons as inputs |pathway_daly|yll_from_lifetable_TRUE|output_1_type_compare|output_2_type_compare|", {
 
