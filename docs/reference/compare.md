@@ -81,6 +81,14 @@ in scenario 1 with scenario 2. It can use two approaches:
 - Population impact fraction (PIF): Single PIF for both scenarios (WHO
   2003; Murray et al. 2003)
 
+Detailed information about the methodology (including equations) is
+available in the package vignette. More specifically, see chapters:
+
+- [comparison of two health
+  scenarios](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios)
+
+**Specifications of the comparison approach**
+
 Please, note that the PIF comparison approach assumes same baseline
 health data for scenario 1 and 2 (e.g. comparison of two scenarios at
 the same time point). With the delta comparison approach, the difference
@@ -93,11 +101,22 @@ intervention, be aware that you should use the same year of analysis and
 therefore same health baseline data in both scenarios. The only variable
 that should change is the exposure (as a result of the intervention).
 
-Detailed information about the methodology (including equations) is
-available in the package vignette. More specifically, see chapters:
+**Comparing DALY**
 
-- [comparison of two health
-  scenarios](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios)
+If you want to use `compare()` DALY with
+[`daly()`](https://swisstph.github.io/healthiar/reference/daly.md), do
+not enter the output of
+[`daly()`](https://swisstph.github.io/healthiar/reference/daly.md) in
+`compare()`. Instead, follow these steps:
+
+1\) use `compare()` for YLL and YLD separately
+
+2\) use
+[`daly()`](https://swisstph.github.io/healthiar/reference/daly.md)
+inserting the output of both compare()
+
+Alternatively, you can use `attribute_health` to quantify DALY entering
+DALY in the argument `bhd_central` and then use `compare()`
 
 ## References
 
@@ -119,6 +138,8 @@ Organization. <https://www.who.int/publications/i/item/9241546204>.
   [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
   [`attribute_mod`](https://swisstph.github.io/healthiar/reference/attribute_mod.md),
   [`standardize`](https://swisstph.github.io/healthiar/reference/standardize.md),
+
+- Downstream:
   [`daly`](https://swisstph.github.io/healthiar/reference/daly.md),
 
 ## Author

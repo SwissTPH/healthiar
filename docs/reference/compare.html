@@ -9,7 +9,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1450</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1451</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,11 @@
 This function compares the attributable health impacts in scenario 1 with scenario 2.
 It can use two approaches:</p><ul><li><p>Delta: Subtraction of health impacts in the two scenarios (two PAF) (Organization 2014)</p></li>
 <li><p>Population impact fraction (PIF): Single PIF for both scenarios (WHO 2003; Murray et al. 2003)</p></li>
-</ul><p>Please, note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2
+</ul><p>Detailed information about the methodology (including equations)
+is available in the package vignette.
+More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios">comparison of two health scenarios</a></p></li>
+</ul><p><strong>Specifications of the comparison approach</strong></p>
+<p>Please, note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2
 (e.g. comparison of two scenarios at the same time point).
 With the delta comparison approach, the difference between two scenarios is obtained by subtraction.
 The delta approach is suited for all comparison cases,
@@ -101,10 +105,17 @@ be aware that you should use the same year of analysis
 and therefore same health baseline data
 in both scenarios. The only variable that should change is the exposure
 (as a result of the intervention).</p>
-<p>Detailed information about the methodology (including equations)
-is available in the package vignette.
-More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios">comparison of two health scenarios</a></p></li>
-</ul></div>
+
+<p><strong>Comparing DALY</strong></p>
+<p>If you want to use <code>compare()</code> DALY with <code><a href="daly.html">daly()</a></code>,
+do not enter the output of <code><a href="daly.html">daly()</a></code> in <code>compare()</code>.
+Instead, follow these steps:</p>
+<p>1) use <code>compare()</code> for YLL and YLD separately</p>
+<p>2) use <code><a href="daly.html">daly()</a></code> inserting the output of both compare()</p>
+<p>Alternatively, you can use <code>attribute_health</code>
+to quantify DALY entering DALY in the argument <code>bhd_central</code>
+and then use <code>compare()</code></p>
+    </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
@@ -121,7 +132,8 @@ World Health Organization.
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
 <ul><li><p>Upstream: <code><a href="attribute_health.html">attribute_health</a></code>, <code><a href="attribute_mod.html">attribute_mod</a></code>,
-    <code><a href="standardize.html">standardize</a></code>, <code><a href="daly.html">daly</a></code>,</p></li>
+    <code><a href="standardize.html">standardize</a></code>,</p></li>
+<li><p>Downstream: <code><a href="daly.html">daly</a></code>,</p></li>
 </ul></div>
     </div>
     <div class="section level2">
