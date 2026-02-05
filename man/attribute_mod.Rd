@@ -147,7 +147,7 @@ scenario_B$health_main$impact # Attributable impact in scenario B
 
 #' @seealso
 \itemize{
-  \item Upstream: \code{\link{attribute_health}}
+  \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
   \item Downstream: \code{\link{compare}}
 }
 
