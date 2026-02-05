@@ -18,7 +18,7 @@ cba(
 )
 }
 \arguments{
-\item{output_attribute}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
+\item{output_attribute}{\code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()} or \code{healthiar::compare()} as results.}
 
 \item{impact_benefit}{\code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure.}
 

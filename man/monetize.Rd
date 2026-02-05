@@ -16,7 +16,7 @@ monetize(
 )
 }
 \arguments{
-\item{output_attribute}{\code{List} produced by \code{healthiar::attribute()} or \code{healthiar::compare()} as results.}
+\item{output_attribute}{\code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()} or \code{healthiar::compare()} as results.}
 
 \item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.}
 
@@ -103,7 +103,7 @@ results$monetization_main |>
 }
 \seealso{
 \itemize{
-  \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+  \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}, \code{\link{compare}}
   \item Alternative: \code{\link{get_inflation_factor}},
     \code{\link{get_discount_factor}}, \code{\link{cba}}
 }
