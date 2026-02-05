@@ -31,7 +31,7 @@ find_joining_columns <-
       # They are the columns to be used when joining data frames
       purrr::keep(~ base::identical(df_1[[.x]],
                                     df_2[[.x]]))|>
-      # Finally exclude scenario specific columns
+      # Finally exclude
       dplyr::setdiff(except)
 
 
