@@ -121,15 +121,53 @@ monetize <- function(output_attribute = NULL,
     !base::is.null(output_attribute) & base::is.null(impact)
 
 
+
+  # Using compare() before monetize()
+  is_compare <-
+    "input_args_scen_1" %in% base::names(output_attribute$health_detailed$input_args)
+
+  if(is_compare){
+
+    approach_comparison <-
+      base::unique(output_attribute$health_detailed$input_args$approach_comparison)
+
+  }
+
+
   # is_lifetable only can exist if output_attribute is provided
   # and then it has to be checked of is_lifetable is TRUE or FALSE
-  if(! base::is.null(output_attribute)){
-    is_lifetable <-
-      base::unique(output_attribute[["health_detailed"]][["input_table"]]$is_lifetable)
-    # Witout output_attribute, no life table
-  } else { is_lifetable <- FALSE}
+
+  if (!base::is.null(output_attribute)) {
+
+    input_table <- output_attribute[["health_detailed"]][["input_table"]]
+
+    # If after attribute_x(), then input table is a tibble
+    if (!is_compare) {
+      is_lifetable <- base::unique(input_table$is_lifetable)
+
+    # If after compare(), input table is a list
+    } else if (is_compare) {
+
+      if(approach_comparison == "delta"){
+
+        # When delta, two input tables (one per scenario)
+
+        is_lifetable <- base::unique(input_table[["input_table_scen_1"]]$is_lifetable)
+
+      } else if (approach_comparison == "pif"){
+
+        is_lifetable <- is_lifetable <- base::unique(input_table$is_lifetable)
+      }
+
+    }
+
+  } else {
+    is_lifetable <- FALSE
+    }
+
 
   is_not_lifetable <- ! is_lifetable
+
 
   # With and without lifetable
   using_impact_from_healthiar_with_lifetable <-
