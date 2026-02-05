@@ -193,7 +193,7 @@ monetize <- function(output_attribute = NULL,
 
 
   # If a vector is entered in impact
-  # The discount years are already defined by the lenght of the vector
+  # The discount years are already defined by the length of the vector
   # Users do not need to enter it.
   if(using_impact_vector_from_user){
     n_years <- base::length(impact)-1
@@ -244,21 +244,50 @@ monetize <- function(output_attribute = NULL,
          call. = FALSE)
   }
 
+  ## Error if different year of analysis in life table approach ####
 
-  ## Warning if no value for n_years, but discount_rate####
+  # if different year of analysis in scen_1 and scen_2
 
-  # Then discount values are ignored because no discount is happening (by default `n_years = 0`)
-  # discount_shape has a default value, so it is never NULL
-  if(base::is.null(n_years) &&
-     base::any(!base::is.null(discount_rate))&&
-     # Exclude life table because the n_years are calculated based on life table
-     !is_lifetable){
-    warning(
-      base::paste0("You entered some value in discount_rate,",
-                   " but n_years is 0 (default value).",
-                   " Therefore no discount is applied."),
-      call. = FALSE)
+
+  if(is_compare){
+
+    # Store values of scenarios
+    arg_values_scen_1 <- output_attribute$health_detailed$input_args$input_args_scen_1$value
+    arg_values_scen_2 <- output_attribute$health_detailed$input_args$input_args_scen_2$value
+
+
+    error_if_different_baseline <- function(var){
+      # If year of analysis are different
+      if(!base::identical(arg_values_scen_1[v], arg_values_scen_2[v])){
+
+        # Error because monetize() aims to monetize health impacts from interventions
+        # and health impacts from different years cannot be attributed to the intervention
+
+        stop(
+          base::paste0("Please, enter the same ", v ,
+                       " in both scenarios of the healthiar function compare. ",
+                       "Otherwise, the monetization cannot be attributed to an intervention."),
+          call. = FALSE)
+      }
+    }
+
+    for(v in c("bhd_central", "bhd_lower", "bhd_upper")){
+
+      error_if_different_baseline(var = v)
+
+    }
+
+    if(is_lifetable){
+
+      for(v in c("year_of_analysis")){
+
+        error_if_different_baseline(var = v)
+
+      }
+    }
   }
+
+
 
   #### error_if_info_with_incompatible_length ####
 
@@ -308,6 +337,24 @@ monetize <- function(output_attribute = NULL,
       base::paste0("n_years is aimed for any output_attribute",
                    " and for impact with single value (no vector).",
                    " Therefore n_years is ignored here and the length life table is used instead."),
+      call. = FALSE)
+  }
+
+
+
+
+  ## Warning if no value for n_years, but discount_rate####
+
+  # Then discount values are ignored because no discount is happening (by default `n_years = 0`)
+  # discount_shape has a default value, so it is never NULL
+  if(base::is.null(n_years) &&
+     base::any(!base::is.null(discount_rate))&&
+     # Exclude life table because the n_years are calculated based on life table
+     !is_lifetable){
+    warning(
+      base::paste0("You entered some value in discount_rate,",
+                   " but n_years is 0 (default value).",
+                   " Therefore no discount is applied."),
       call. = FALSE)
   }
 
