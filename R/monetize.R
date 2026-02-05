@@ -131,6 +131,8 @@ monetize <- function(output_attribute = NULL,
     approach_comparison <-
       base::unique(output_attribute$health_detailed$input_args$approach_comparison)
 
+  } else {
+    approach_comparison <- "no_comparison"
   }
 
 
@@ -146,24 +148,21 @@ monetize <- function(output_attribute = NULL,
       is_lifetable <- base::unique(input_table$is_lifetable)
 
     # If after compare(), input table is a list
-    } else if (is_compare) {
-
-      if(approach_comparison == "delta"){
+    } else if (approach_comparison == "delta") {
 
         # When delta, two input tables (one per scenario)
 
         is_lifetable <- base::unique(input_table[["input_table_scen_1"]]$is_lifetable)
 
-      } else if (approach_comparison == "pif"){
+      } else { # If approach comparison "pif" or if no_comparison
 
-        is_lifetable <- is_lifetable <- base::unique(input_table$is_lifetable)
+        is_lifetable <- base::unique(input_table$is_lifetable)
       }
-
-    }
 
   } else {
     is_lifetable <- FALSE
     }
+
 
 
   is_not_lifetable <- ! is_lifetable
