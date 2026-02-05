@@ -566,7 +566,9 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
 
 ## HEALTHIAR INPUT ##############################################################
 
-### NO DISCOUNTING ##############################################################
+### ATTRIBUTE #################
+
+#### NO DISCOUNTING ##############################################################
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_rate_FALSE|", {
 
@@ -595,7 +597,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
   )
 })
 
-### DISCOUNTING #################################################################
+#### DISCOUNTING #################################################################
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
@@ -666,7 +668,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
   )
 })
 
-#### WITH INFLATION #############################################################
+##### WITH INFLATION #############################################################
 
 testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
@@ -698,6 +700,144 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
       c(2743879, 1060162, 4288935) # Results on 2025-04-15; no comparison study
   )
 })
+
+### COMPARE ##########################
+
+testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  bestcost_pm_copd_1 <-
+    healthiar::attribute_health(
+      exp_central = data$mean_concentration,
+      cutoff_central = data$cut_off_value,
+      bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+      rr_central = data$relative_risk,
+      rr_lower = data$relative_risk_lower,
+      rr_upper = data$relative_risk_upper,
+      rr_increment = 10,
+      erf_shape = "log_linear")
+
+  bestcost_pm_copd_2 <-
+    healthiar::attribute_mod(
+      output_attribute = bestcost_pm_copd_1,
+      exp_central = data$mean_concentration-1)
+
+  comparison_delta <-
+    healthiar::compare(
+      bestcost_pm_copd_1,
+      bestcost_pm_copd_2,
+      approach_comparison = "delta"
+    )
+
+  comparison_pif <-
+    healthiar::compare(
+      bestcost_pm_copd_1,
+      bestcost_pm_copd_2,
+      approach_comparison = "pif"
+    )
+
+   testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        output_attribute = comparison_delta,
+        discount_shape = "exponential",
+        discount_rate = 0.03,
+        n_years = 5,
+        valuation = 20
+      )$monetization_main$monetized_impact_rounded,
+    expect = c( 14997, 5963, 22778) # Result on 9 Jan 2025 ; no comparison study
+  )
+
+   testthat::expect_equal(
+     object =
+       healthiar::monetize(
+         output_attribute = comparison_pif,
+         discount_shape = "exponential",
+         discount_rate = 0.03,
+         n_years = 5,
+         valuation = 20
+       )$monetization_main$monetized_impact_rounded,
+     expect = c(16402, 6165, 26336) # Result on 9 Jan 2025 ; no comparison study
+   )
+})
+
+
+testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+
+  bestcost_pm_yll_exp_single_year_lifetable_1 <-
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
+      approach_exposure = "single_year",
+      exp_central = data_mort$exp[2], #exp CH 2019
+      prop_pop_exp = 1,
+      cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
+      rr_central = data_mort[2,"rr_central"],
+      rr_lower = data_mort[2,"rr_lower"],
+      rr_upper = data_mort[2,"rr_upper"],
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      age_group = c(data_lifetable[["male"]]$age,
+                    data_lifetable[["female"]]$age),
+      sex = base::rep(c("male", "female"), each = 100),
+      population = c(data_lifetable[["male"]]$population,
+                     data_lifetable[["female"]]$population),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      year_of_analysis = 2019,
+      info = data_mort$pollutant[2],
+      min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2])
+
+  bestcost_pm_yll_exp_single_year_lifetable_2 <-
+    healthiar::attribute_mod(
+      bestcost_pm_yll_exp_single_year_lifetable_1,
+      exp_central = data_mort$exp[2]-1)
+
+  comparison_lifetable_delta <-
+    healthiar::compare(
+      bestcost_pm_yll_exp_single_year_lifetable_1,
+      bestcost_pm_yll_exp_single_year_lifetable_2,
+      approach_comparison = "delta"
+    )
+
+  comparison_lifetable_pif <-
+    healthiar::compare(
+      bestcost_pm_yll_exp_single_year_lifetable_1,
+      bestcost_pm_yll_exp_single_year_lifetable_2,
+      approach_comparison = "pif"
+    )
+
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        output_attribute =  comparison_lifetable_delta,
+        discount_shape = "exponential",
+        discount_rate = 0.01,
+        valuation = 1
+      )$monetization_main$monetized_impact_rounded,
+    expect = c(6752,  3543,  9923) # Result on 9 July 2025 ; no comparison study
+  )
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        output_attribute =  comparison_lifetable_pif,
+        discount_shape = "exponential",
+        discount_rate = 0.01,
+        valuation = 1
+      )$monetization_main$monetized_impact_rounded,
+    expect = c(6807, 3558, 10042) # Result on 9 July 2025 ; no comparison study
+  )
+
+
+})
+
+
 
 # ERROR OR WARNING ########
 
@@ -841,6 +981,99 @@ testthat::test_that("error if incompatible size of info", {
     regexp = "The info vector or data frame columns must have a length of 1 or the same length as impact."
   )
 })
+
+
+testthat::test_that("errof if different year of analysis", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+
+  bestcost_pm_yll_exp_single_year_lifetable_1 <-
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
+      approach_exposure = "single_year",
+      exp_central = 8.85,
+      prop_pop_exp = 1,
+      cutoff_central = data_mort$cutoff[2],
+      rr_central = data_mort[2,"rr_central"],
+      rr_lower = data_mort[2,"rr_lower"],
+      rr_upper = data_mort[2,"rr_upper"],
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      age_group = c(data_lifetable[["male"]]$age,
+                    data_lifetable[["female"]]$age),
+      sex = base::rep(c("male", "female"), each = 100),
+      population = c(data_lifetable[["male"]]$population,
+                     data_lifetable[["female"]]$population),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      year_of_analysis = 2019,
+      min_age = 20)
+
+  bestcost_pm_yll_exp_single_year_lifetable_2_error <-
+    healthiar::attribute_mod(
+      bestcost_pm_yll_exp_single_year_lifetable_1,
+      exp_central = 8.85-1, # New exposure
+      year_of_analysis = 2020, # different year --> error
+      )
+
+
+  comparison_lifetable_error <-
+    healthiar::compare(
+      bestcost_pm_yll_exp_single_year_lifetable_1,
+      bestcost_pm_yll_exp_single_year_lifetable_2_error,
+      approach_comparison = "delta"
+    )
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        output_attribute =  comparison_lifetable_error,
+        valuation = 1
+      )$monetization_main$monetized_impact_rounded,
+    regexp = "Please, enter the same year_of_analysis in both scenarios of the healthiar function compare. Otherwise, the monetization cannot be attributed to an intervention.",
+  )
+})
+
+
+
+testthat::test_that("errof if different bhd", {
+
+  attributable_health_impact_1 <-
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      rr_central = 1.05,
+      rr_increment = 10,
+      cutoff_central = 0,
+      erf_shape = "linear",
+      bhd_central = 1E5)
+
+  attributable_health_impact_2_error <-
+    healthiar::attribute_mod(
+      attributable_health_impact_1,
+      exp_central = 9.85,
+      bhd_central = 2E5 # Different bhd --> error
+      )
+
+
+  comparison_single_bhd_error <-
+    healthiar::compare(
+      attributable_health_impact_1,
+      attributable_health_impact_2_error
+      )
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        output_attribute =  comparison_single_bhd_error,
+        valuation = 1
+      )$monetization_main$monetized_impact_rounded,
+    regexp = "Please, enter the same bhd_central in both scenarios of the healthiar function compare. Otherwise, the monetization cannot be attributed to an intervention.",
+  )
+})
+
+
 
 ## WARNING #########
 
