@@ -81,14 +81,17 @@ in scenario 1 with scenario 2. It can use two approaches:
 - Population impact fraction (PIF): Single PIF for both scenarios (WHO
   2003; Murray et al. 2003)
 
-Please note that the PIF comparison approach assumes same baseline
+Please, note that the PIF comparison approach assumes same baseline
 health data for scenario 1 and 2 (e.g. comparison of two scenarios at
-the same time point).
+the same time point). With the delta comparison approach, the difference
+between two scenarios is obtained by subtraction. The delta approach is
+suited for all comparison cases, allowing a comparison of a situation
+now with a situation in the future.
 
-With the delta comparison approach, the difference between two scenarios
-is obtained by subtraction. The delta approach is suited for all
-comparison cases, and specifically for comparison of a situation now
-with a situation in the future.
+IMPORTANT: If your aim is to quantify health impacts from a policy
+intervention, be aware that you should use the same year of analysis and
+therefore same health baseline data in both scenarios. The only variable
+that should change is the exposure (as a result of the intervention).
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:

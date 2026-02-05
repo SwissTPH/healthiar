@@ -9,7 +9,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1445</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1450</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,11 +90,17 @@
 This function compares the attributable health impacts in scenario 1 with scenario 2.
 It can use two approaches:</p><ul><li><p>Delta: Subtraction of health impacts in the two scenarios (two PAF) (Organization 2014)</p></li>
 <li><p>Population impact fraction (PIF): Single PIF for both scenarios (WHO 2003; Murray et al. 2003)</p></li>
-</ul><p>Please note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2
-(e.g. comparison of two scenarios at the same time point).</p>
-<p>With the delta comparison approach, the difference between two scenarios is obtained by subtraction.
+</ul><p>Please, note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2
+(e.g. comparison of two scenarios at the same time point).
+With the delta comparison approach, the difference between two scenarios is obtained by subtraction.
 The delta approach is suited for all comparison cases,
-and specifically for comparison of a situation now with a situation in the future.</p>
+allowing a comparison of a situation now with a situation in the future.</p>
+
+<p>IMPORTANT: If your aim is to quantify health impacts from a policy intervention,
+be aware that you should use the same year of analysis
+and therefore same health baseline data
+in both scenarios. The only variable that should change is the exposure
+(as a result of the intervention).</p>
 <p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios">comparison of two health scenarios</a></p></li>
@@ -151,7 +157,7 @@ World Health Organization.
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Inspect the difference, stored in the \code{impact} column</span></span></span>
 <span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">health_main</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">impact</span>, <span class="va">impact_scen_1</span>, <span class="va">impact_scen_2</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">impact</span>, <span class="va">impact_scen_1</span>, <span class="va">impact_scen_2</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   impact impact_scen_1 impact_scen_2</span>

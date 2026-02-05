@@ -19,7 +19,10 @@ discount(
 
 - output_attribute:
 
-  `List` produced by `healthiar::attribute()` or
+  `List` produced by
+  [`healthiar::attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`healthiar::attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+  or
   [`healthiar::compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
   as results.
 
