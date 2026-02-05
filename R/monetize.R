@@ -462,7 +462,22 @@ monetize <- function(output_attribute = NULL,
         # Convert year to numeric
         year = base::as.numeric(year))
 
-      n_years <- base::max(impact_detailed$year) - base::unique(impact_detailed$year_of_analysis)
+      # Extract year of analysis
+      # If monetizing after compare(), then take year_of_analysis_scen_1
+      # year_of_analysis must be the same in scen_1 and scen_2 to be able to monetize
+      # See validation above
+
+      if(approach_comparison == "delta"){
+
+          year_of_analysis <- base::unique(impact_detailed$year_of_analysis_scen_1)
+
+        #If monetizing after attribute, then just take the value
+      } else { #If pif or no_comparison
+        year_of_analysis <- base::unique(impact_detailed$year_of_analysis)
+      }
+
+
+      n_years <- base::max(impact_detailed$year) - year_of_analysis
 
 
       # Output will be adapted according to monetized impacts
