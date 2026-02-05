@@ -82,7 +82,7 @@
 #'
 #' @seealso
 #' \itemize{
-#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}, \code{\link{compare}}
 #'   \item Alternative: \code{\link{get_inflation_factor}},
 #'     \code{\link{get_discount_factor}}, \code{\link{cba}}
 #' }
