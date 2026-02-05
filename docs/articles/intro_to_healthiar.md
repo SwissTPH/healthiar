@@ -161,8 +161,8 @@ There exist different, equivalent ways of accessing the output:
 - With `pluck()` & `pull()`: use the
   [`purrr::pluck`](https://purrr.tidyverse.org/reference/pluck.html)
   function to select a list and then the
-  [`dplyr::pull`](https://rdrr.io/pkg/dplyr/man/pull.html) function
-  extract values from a specified column,
+  [`dplyr::pull`](https://dplyr.tidyverse.org/reference/pull.html)
+  function extract values from a specified column,
   e.g. `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
 
 ------------------------------------------------------------------------
@@ -1495,12 +1495,17 @@ Two approaches can be used for the comparison of scenarios:
 
 - Population impact fraction (PIF): see below.
 
-Please note that the PIF comparison approach assumes same baseline
-health data for scenario 1 and 2 (e.g. comparison of two scenarios at
-the same time point), while the delta comparison approach, the
-difference between two scenarios is obtained by subtraction. Therefore,
-the delta approach is suited for comparison of a situation now with a
-situation in the future.
+Note that the PIF comparison approach assumes same baseline health data
+for scenario 1 and 2 (e.g. comparison of two scenarios at the same time
+point), while the delta comparison approach, the difference between two
+scenarios is obtained by subtraction. Therefore, the delta approach is
+suited for comparison of a situation now with a situation in the future.
+
+*IMPORTANT* If your aim is to quantify health impacts from a *policy
+intervention*, be aware that you should use the *same year of analysis*
+and therefore *same health baseline data* in both scenarios. The only
+variable that should change in the second scenario is the exposure
+(change as a result of the intervention).
 
 ##### Population Impact Fraction (PIF)
 

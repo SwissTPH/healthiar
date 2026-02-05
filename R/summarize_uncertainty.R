@@ -89,7 +89,8 @@
 #' @seealso
 #' \itemize{
 #'   \item Upstream:
-#'     \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+#'     \code{\link{attribute_health}}, \code{\link{attribute_lifetable}},
+#'     \code{\link{compare}}
 #' }
 #'
 #'

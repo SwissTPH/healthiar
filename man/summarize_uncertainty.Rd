@@ -95,7 +95,8 @@ results$uncertainty_main$impact # Central, lower and upper estimates
 \seealso{
 \itemize{
   \item Upstream:
-    \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
+    \code{\link{attribute_health}}, \code{\link{attribute_lifetable}},
+    \code{\link{compare}}
 }
 }
 \author{

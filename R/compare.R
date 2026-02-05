@@ -20,12 +20,19 @@
 #'  \item{Delta: Subtraction of health impacts in the two scenarios (two PAF) \insertCite{WHO2014_book}{healthiar}}
 #'  \item{Population impact fraction (PIF): Single PIF for both scenarios \insertCite{WHO2003_report,Murray2003_spbm}{healthiar}}}
 #'
-#' Please note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2
-#' (e.g. comparison of two scenarios at the same time point).
 #'
+#' Please, note that the PIF comparison approach assumes same baseline health data for scenario 1 and 2
+#' (e.g. comparison of two scenarios at the same time point).
 #' With the delta comparison approach, the difference between two scenarios is obtained by subtraction.
 #' The delta approach is suited for all comparison cases,
-#' and specifically for comparison of a situation now with a situation in the future.
+#' allowing a comparison of a situation now with a situation in the future.
+#'
+#'
+#' IMPORTANT: If your aim is to quantify health impacts from a policy intervention,
+#' be aware that you should use the same year of analysis
+#' and therefore same health baseline data
+#' in both scenarios. The only variable that should change is the exposure
+#' (as a result of the intervention).
 #'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
@@ -265,9 +272,11 @@ compare <-
 
       # Error if population and bhd are different in the scenarios
       # (only applicable for PIF)
-      error_if_var_is_not_identical(var = "population")
 
-      error_if_var_is_not_identical(var = "bhd")
+      for(v in c("population", "bhd", "year_of_analysis")) {
+        error_if_var_is_not_identical(var = v)
+      }
+
 
       # PIF and absolute risk are not compatible
       if(is_absolute_risk){
@@ -288,6 +297,20 @@ compare <-
           df_1 = results_raw_scen_1,
           df_2 = results_raw_scen_2,
           except = scenario_specific_arguments)
+
+      # If different year of analysis
+      # Add year as joining column
+      # Otherwise too large table
+
+      if( is_lifetable){
+        if(! base::unique(results_raw_scen_1$year_of_analysis) ==
+          base::unique(results_raw_scen_2$year_of_analysis)){
+
+          joining_columns_output <- c(joining_columns_output, "year")
+        }
+      }
+
+
 
       # Merge the result tables by common columns
       results_raw <-
@@ -352,7 +375,8 @@ compare <-
       }
 
 
-    # Organize output
+    # Organize output ##############################
+
     # Classify the individual results of each scenario in delta and pif method
     # in a list
 
@@ -367,8 +391,6 @@ compare <-
 
     output[["health_detailed"]][["scen_1"]] <- results_raw_scen_1
     output[["health_detailed"]][["scen_2"]] <- results_raw_scen_2
-
-
 
 
     return(output)

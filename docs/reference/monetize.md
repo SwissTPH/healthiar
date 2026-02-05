@@ -21,7 +21,10 @@ monetize(
 
 - output_attribute:
 
-  `List` produced by `healthiar::attribute()` or
+  `List` produced by
+  [`healthiar::attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`healthiar::attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+  or
   [`healthiar::compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
   as results.
 
@@ -147,7 +150,8 @@ Associates, Hillsdale, NJ. ISBN 0-89859-800-1.
 
 - Upstream:
   [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
-  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
+  [`compare`](https://swisstph.github.io/healthiar/reference/compare.md)
 
 - Alternative:
   [`get_inflation_factor`](https://swisstph.github.io/healthiar/reference/get_inflation_factor.md),

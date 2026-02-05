@@ -101,7 +101,8 @@ Texts in Statistics. Springer Science \\ Business Media.
 
 - Upstream:
   [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
-  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
+  [`compare`](https://swisstph.github.io/healthiar/reference/compare.md)
 
 ## Author
 
