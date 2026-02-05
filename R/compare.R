@@ -265,9 +265,11 @@ compare <-
 
       # Error if population and bhd are different in the scenarios
       # (only applicable for PIF)
-      error_if_var_is_not_identical(var = "population")
 
-      error_if_var_is_not_identical(var = "bhd")
+      for(v in c("population", "bhd", "year_of_analysis")) {
+        error_if_var_is_not_identical(var = v)
+      }
+
 
       # PIF and absolute risk are not compatible
       if(is_absolute_risk){
