@@ -289,6 +289,20 @@ compare <-
           df_2 = results_raw_scen_2,
           except = scenario_specific_arguments)
 
+      # If different year of analysis
+      # Add year as joining column
+      # Otherwise too large table
+
+      if( is_lifetable){
+        if(! base::unique(results_raw_scen_1$year_of_analysis) ==
+          base::unique(results_raw_scen_2$year_of_analysis)){
+
+          joining_columns_output <- c(joining_columns_output, "year")
+        }
+      }
+
+
+
       # Merge the result tables by common columns
       results_raw <-
         dplyr::left_join(
@@ -352,7 +366,8 @@ compare <-
       }
 
 
-    # Organize output
+    # Organize output ##############################
+
     # Classify the individual results of each scenario in delta and pif method
     # in a list
 
@@ -367,8 +382,6 @@ compare <-
 
     output[["health_detailed"]][["scen_1"]] <- results_raw_scen_1
     output[["health_detailed"]][["scen_2"]] <- results_raw_scen_2
-
-
 
 
     return(output)
