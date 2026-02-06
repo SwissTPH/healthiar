@@ -4536,7 +4536,7 @@ testthat::test_that("error if length of exp lower than length of prop pop", {
 
 
 
-testthat::test_that("error if length of exp lower than length of prop pop", {
+testthat::test_that("error if multiple rr for one go_id, sex, age_group ... combination", {
 
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
@@ -4577,6 +4577,22 @@ testthat::test_that("error if length of exp lower than length of prop pop", {
   )
 })
 
+
+testthat::test_that("error if multiple rr for one go_id, sex, age_group ... combination", {
+
+  testthat::expect_error(
+    object =healthiar::attribute_health(
+      exp_central = c(20, 20),
+      prop_pop_exp = c(0.5, 0.5),
+      cutoff_central = 5,
+      rr_central = c(1.08,1.09),
+      rr_increment = 10,
+      erf_shape = "linear_log",
+      bhd_central = c(10)),
+    regexp = "rr_central must be the same for all exposures.",
+    fix = TRUE
+  )
+})
 
 
 
@@ -4632,7 +4648,7 @@ testthat::test_that("error if erf_eq is not function or string", {
 })
 
 
-testthat::test_that("error if multiple rr within one the geo_id_micro, sex and age_group
+testthat::test_that("error if bhd does not match the geo_id_micro, sex and age_group
 composition", {
 
 
@@ -4677,6 +4693,8 @@ composition", {
     regexp = paste0("Allocation from bhd_central to geo_id_micro, age_group, sex is ambiguous.") ,
     fixed = TRUE)
 })
+
+
 
 
 
