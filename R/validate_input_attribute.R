@@ -245,7 +245,7 @@ validate_input_attribute <-
                                  base::as.list(input_args_value$info))
 
       ### error_if_bhd_unique_longer_than_id_unique #####
-      # geo_id_macro is left out because it does not interact with bhd_center
+      # geo_id_macro is left out because it does not interact with bhd_central
       arguments_for_bhd_combination <- base::intersect(
         base::names(input_args_value_flat),
         c("geo_id_micro", "sex", "age_group", names_info))
@@ -264,18 +264,71 @@ validate_input_attribute <-
         #check if every id combination has only one assigned bhd_central value
         id_ambiguity <- df_id_structure |>
           dplyr::group_by(dplyr::across(!bhd_central)) |>
-          dplyr::summarize(all_same = dplyr::n_distinct(.data$bhd_central) != 1)
+          dplyr::summarize(not_same = dplyr::n_distinct(.data$bhd_central) != 1)
 
-        if(base::any(id_ambiguity$all_same)){
+        if(base::any(id_ambiguity$not_same)){
           base::stop(
             base::paste0(
               "Allocation from bhd_central to ",base::toString(arguments_for_bhd_combination[valid_ids])," is ambiguous.\n",
               "The following combinations have multiple bhd_central values: \n",
-              base::toString(base::do.call(base::paste, c(id_ambiguity[id_ambiguity$all_same, 1:(base::ncol(id_ambiguity)-1)],sep = "_"))),
+              base::toString(base::do.call(base::paste, c(id_ambiguity[id_ambiguity$not_same, 1:(base::ncol(id_ambiguity)-1)],sep = "_"))),
               "\n",
               "Within every combination, the bhd_central values need to be the same."),
             call. = FALSE)
-    }}}
+        }}}
+
+    ### error_if_multiple_rr_in_one_exp_category #####
+    if ((input_args$is_entered_by_user$geo_id_macro |
+         input_args$is_entered_by_user$geo_id_micro |
+         input_args$is_entered_by_user$age_group |
+         input_args$is_entered_by_user$sex |
+         input_args$is_entered_by_user$info) &
+        input_args$is_entered_by_user$rr_central){
+
+
+      names_info <- base::names(input_args_value$info)
+
+      # Add info columns as list element for the operation below
+      input_args_value_flat <- c(input_args_value,
+                                 base::as.list(input_args_value$info))
+
+      arguments_for_rr_combination <- base::intersect(
+        base::names(input_args_value_flat),
+        c("geo_id_macro","geo_id_micro", "sex", "age_group", names_info))
+
+      #find all ids which were used
+      valid_ids <- purrr::map_lgl(input_args_value_flat[arguments_for_rr_combination],
+                                  ~ base::length(.x) == base::length(input_args_value_flat$rr_central))
+
+      #create dataframe with used ids and rr as cols
+      df_id_structure <-
+        base::as.data.frame(input_args_value_flat[c(c("rr_central"),
+                                                    arguments_for_rr_combination[valid_ids])])
+
+      if(base::nrow(df_id_structure) > 0){
+
+        #check if every id combination has only one assigned rr_central value
+        id_ambiguity <- df_id_structure |>
+          dplyr::group_by(dplyr::across(!rr_central)) |>
+          dplyr::summarize(not_same = dplyr::n_distinct(.data$rr_central) != 1)
+
+        if(base::any(id_ambiguity$not_same)){
+          base::stop(
+            base::paste0(
+              "Allocation from rr_central to ",base::toString(arguments_for_rr_combination[valid_ids])," is ambiguous.\n",
+              "The following combinations have multiple rr_central values: \n",
+              base::toString(base::do.call(base::paste, c(id_ambiguity[id_ambiguity$not_same, 1:(base::ncol(id_ambiguity)-1)],sep = "_"))),
+              "\n",
+              "Within every combination, the rr_central values need to be the same."),
+            call. = FALSE)
+        }}}
+        else if (input_args$is_entered_by_user$rr_central & (base::length(base::unique(input_args_value$rr_central))>1)) {
+          base::stop(
+            base::paste0(
+              "rr_central must be the same for all exposures."),
+            call. = FALSE)
+        }
+
 
     if(is_lifetable){
 

@@ -4,6 +4,7 @@
 
 ### SINGLE EXPOSURE #############################################################
 
+
 testthat::test_that("result correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
     data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
@@ -4534,6 +4535,51 @@ testthat::test_that("error if length of exp lower than length of prop pop", {
 })
 
 
+
+testthat::test_that("error if length of exp lower than length of prop pop", {
+
+
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
+  bhd_value = data$gbd_daly[1]
+  data <- data |> dplyr::slice(-1)
+  #Exotic test based on real data but does produce real world results
+
+  #percentage of variation
+  exp_change <-1.1
+  cutoff_change <-0.8
+  bhd_change <-0.9
+  rr_change <-1.2
+  uncert_factor <- 20#set uncertainty factor
+  # set central values and variate by percentage
+  exp_c <- base::signif(base::unlist(base::lapply(data$exposure_mean, function(x) x * exp_change^(0:3))),5)
+  cutoff_c <- base::rep(base::signif(base::unlist(base::lapply(min(data$exposure_mean), function(x)  x * cutoff_change^(0:3))),5),times = length(data$exposure_mean))
+  bhd_c <- base::rep(base::signif(base::unlist(base::lapply(bhd_value, function(x) x * bhd_change^(0:3))),5),times = length(data$exposure_mean))
+  rr_c <- base::rep(rr_change,times = length(data$exposure_mean)*4)+seq(1,20)
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "relative_risk",
+        age_group = base::rep(c("below_50", "below_50", "50_plus", "70_plus"),times = length(data$exposure_mean)),
+        sex = base::rep(c("male", "female", "male", "female"),times = length(data$exposure_mean)),
+        exp_central = exp_c,
+        cutoff_central = cutoff_c,
+        bhd_central = bhd_c,
+        rr_central = rr_c,
+        rr_increment = base::rep(c(10, 11, 12, 13), times = 5),
+        erf_shape = "log_linear",
+        prop_pop_exp = base::rep(data$prop_exposed, each = 4),
+        geo_id_micro = base::rep(base::rep(c("urban","rural"), each = 5), each = 2)),
+    regexp = "Allocation from rr_central to geo_id_micro, age_group, sex is ambiguous.",
+    fix = TRUE
+  )
+})
+
+
+
+
 ## WARNING #########
 
 testthat::test_that("warning if absolute risk and cutoff", {
@@ -4586,7 +4632,7 @@ testthat::test_that("error if erf_eq is not function or string", {
 })
 
 
-testthat::test_that("error if bhd does not match the geo_id_micro, sex and age_group
+testthat::test_that("error if multiple rr within one the geo_id_micro, sex and age_group
 composition", {
 
 
