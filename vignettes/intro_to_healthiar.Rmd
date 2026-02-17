@@ -1412,8 +1412,8 @@ $$PIF = \frac{rr\_at\_exp - rr\_at\_exp_{alt}}{rr}$$
 
 Where:
 
-* $rr\_at_exp$ = relative risk at the exposure level
-* $rr\_at_exp_{alt}$ = relative risk at the exposure level for the alternative exposure scenario
+* $rr\_at\_exp$ = relative risk at the exposure level
+* $rr\_at\_exp_{alt}$ = relative risk at the exposure level for the alternative exposure scenario
 
 ### Function call
 
