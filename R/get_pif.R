@@ -17,8 +17,9 @@
 #'
 #' This function is internally used inside the \code{healthiar} function \code{compare()}.
 #' The potential impact fraction (PIF) is calculated as
-#' described in \insertCite{WHO2003_report;textual}{healthiar} and
-#' \insertCite{Murray2003_spbm;textual}{healthiar}.
+#' described in \insertCite{WHO2003_report;textual}{healthiar},
+#' \insertCite{Murray2003_spbm;textual}{healthiar} and
+#' \insertCite{Askari2020_ijph;textual}{healthiar}.
 #'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.

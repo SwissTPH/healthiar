@@ -1360,13 +1360,13 @@ Two approaches can be used for the comparison of scenarios:
 
 - Delta: Subtraction of health impact in scenario 1 minus in  scenarios 2 (i.e. two PAF) [@WHO2014_book]
 
-- Population impact fraction (PIF): see below.
+- Population impact fraction (PIF) [@Askari2020_ijph].
 
 
 Note that the PIF comparison approach assumes same baseline health data 
 for scenario 1 and 2 (e.g., comparison of two scenarios at the same time point), 
 while the delta comparison approach, the difference between two scenarios is obtained by subtraction. 
-Therefore, the delta approach is suited for comparison of a situation now with a situation in the future.
+Therefore, the delta approach is suited for comparison of scenarios in different time points.
 
 *IMPORTANT* 
 If your aim is to quantify health impacts from a *policy intervention*, 
@@ -1378,7 +1378,7 @@ The only variable that should change in the second scenario is the exposure
 #### Population Impact Fraction (PIF)
 
 The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality 
-when exposure to a risk factor is changed (for instance due to an intervention). 
+when exposure to a risk factor is changed, for instance due to an intervention. 
 
 ##### General Integral Form
 The most general equation describing this mathematically is an integral form [@WHO2003_report; @Murray2003_spbm]:
