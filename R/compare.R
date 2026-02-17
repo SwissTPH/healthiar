@@ -18,7 +18,7 @@
 #' It can use two approaches:
 #' \itemize{
 #'  \item{Delta: Subtraction of health impacts in the two scenarios (two PAF) \insertCite{WHO2014_book}{healthiar}}
-#'  \item{Population impact fraction (PIF): Single PIF for both scenarios \insertCite{WHO2003_report,Murray2003_spbm}{healthiar}}}
+#'  \item{Potential impact fraction (PIF): Single PIF for both scenarios \insertCite{WHO2003_report,Murray2003_spbm}{healthiar}}}
 #'
 #'
 #' Detailed information about the methodology (including equations)
@@ -114,7 +114,7 @@
 #'   dplyr::select(impact, impact_scen_1, impact_scen_2) |>
 #'   print()
 #'
-#' # Goal: comparison of two scenarios with population impact fraction (pif) approach
+#' # Goal: comparison of two scenarios with potential impact fraction (pif) approach
 #' output_attribute_scen_1 <- attribute_health(
 #'   exp_central = 8.85,   # EXPOSURE 1
 #'   cutoff_central = 5,

@@ -2,7 +2,8 @@
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function calculates the population impact fraction of a health outcome due to exposure to an environmental stressor
+#' This function calculates the population attributable fraction or potential impact fraction
+#' of a health outcome due to exposure to an environmental stressor
 
 # ARGUMENTS ####################################################################
 #' @param rr_at_exp_1 \code{Numerical value} showing the risk estimate of the concentration response function for a specific concentration in the scenario 1. The population attributable fraction is normally calculated using the risk estimate that refers to the concentration that reflects the population exposure and the cut-off. This risk estimate is obtained after re-scaling from the epidemiological study with a particular increment (e.g. for PM2.5 10 or 5 ug/m3) to the aimed concentration.
