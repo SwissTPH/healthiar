@@ -31,6 +31,8 @@ library(dplyr)
 library(purrr)
 library(tidyr)
 library(knitr)
+library(terra)
+library(sf)
 ```
 
 Hi there!
@@ -1419,7 +1421,7 @@ scenario_B <- attribute_mod(
 
 ```{r}
 
-results_comparison <- compare(
+results_comparison <- healthiar::compare(
   approach_comparison = "delta", # or "pif" (population impact fraction)
   output_attribute_scen_1 = scenario_A,
   output_attribute_scen_2 = scenario_B
@@ -1641,7 +1643,7 @@ such as `attribute_health()`.
 exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
 exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
 
-pwm <- prepare_exposure(
+pwm <- healthiar::prepare_exposure(
   poll_grid = exdat_pwm_1, # Formal class SpatRaster,
   geo_units = exdat_pwm_2, # sf of the geographic sub-units
   population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
