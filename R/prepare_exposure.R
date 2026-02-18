@@ -2,8 +2,8 @@
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function prepares tabular population exposure data compatible with the \code{attribute()} and \code{compare()} functions, 
-#' based on gridded pollution concentration data and polygon data representing geographic units. 
+#' This function prepares tabular population exposure data compatible with the \code{attribute()} and \code{compare()} functions,
+#' based on gridded pollution concentration data and polygon data representing geographic units.
 #' If population data is provided, the function calculates an average concentration value in each geographic unit
 #' that is weighted with the population number at each location.
 #' If no population data is provided, the function calculates the simple spatial average concentration in each geographic unit.
@@ -71,34 +71,271 @@ prepare_exposure <-
       stop("The 'sf' package is required for this function. Please install it if you want to use this function.", call. = FALSE)}
     if (!requireNamespace("exactextractr", quietly = TRUE)) {
       stop("The 'exactextractr' package is required for this function. Please install it if you want to use this function.", call. = FALSE)}
-    
+
+    ## calculate exposure as a simple average concentration
     if (base::is.null(population) & base::is.null(pop_grid)) {
-      out <- get_exposure_simple(
-        poll_grid = poll_grid,
-        geo_units = geo_units,
-        geo_id_micro = geo_id_micro
-      )
-    }
-    
-    if (!base::is.null(pop_grid)) {
-      out <- get_exposure_grid(
-        poll_grid = poll_grid,
-        geo_units = geo_units,
-        pop_grid = pop_grid,
+
+      ## check for matching CRS
+      if (sf::st_crs(geo_units) != sf::st_crs(poll_grid)) {
+        geo_units <- sf::st_transform(geo_units, st_crs(poll_grid))
+        warning("'geo_units' was reprojected to match the CRS of 'poll_grid'.")}
+
+      ## crop & mask pollution grid
+      poll_grid <- terra::mask(terra::crop(poll_grid, terra::vect(geo_units)), terra::vect(geo_units))
+
+      ## rename pollution grid
+      base::names(poll_grid) <- "poll"
+
+      ## calculate mean concentration value and other stats by geographical unit
+      exp_mean <- base::data.frame(
         geo_id_micro = geo_id_micro,
-        bin_width = bin_width
+        mean = exactextractr::exact_extract(
+          poll_grid,
+          geo_units,
+          fun = "mean",
+          progress = FALSE
+        ),
+        median = exactextractr::exact_extract(
+          poll_grid,
+          geo_units,
+          fun = "median",
+          progress = FALSE
+        ),
+        min = exactextractr::exact_extract(
+          poll_grid,
+          geo_units,
+          fun = "min",
+          progress = FALSE
+        ),
+        lower = exactextractr::exact_extract(
+          poll_grid,
+          geo_units,
+          fun = "quantile",
+          quantiles = 0.025,
+          progress = FALSE
+        ),
+        upper = exactextractr::exact_extract(
+          poll_grid,
+          geo_units,
+          fun = "quantile",
+          quantiles = 0.975,
+          progress = FALSE
+        ),
+        max = exactextractr::exact_extract(
+          poll_grid,
+          geo_units,
+          fun = "max",
+          progress = FALSE
+        ),
+        stdev = exactextractr::exact_extract(
+          poll_grid,
+          geo_units,
+          fun = "stdev",
+          progress = FALSE
+        )
       )
+
+      ## build output lists
+      exposure_main <- base::list(
+        geo_id_micro = exp_mean$geo_id_micro,
+        exposure_mean = exp_mean$mean
+      )
+
+      exposure_detailed <- base::list(
+        geo_id_micro = exp_mean$geo_id_micro,
+        exposure_mean = exp_mean$mean,
+        exposure_median = exp_mean$median,
+        exposure_min = exp_mean$min,
+        exposure_lower = exp_mean$lower,
+        exposure_upper = exp_mean$upper,
+        exposure_max = exp_mean$max,
+        exposure_stdev = exp_mean$stdev
+      )
+
+      out <- base::list(
+        exposure_main = exposure_main,
+        exposure_detailed = exposure_detailed
+      )
+
+      return(out)
     }
-    
-    if (!base::is.null(population)) { 
-      out <- get_exposure_unit(
-        poll_grid = poll_grid,
-        geo_units = geo_units,
-        population = population,
+
+    ## calculate exposure as a population-weighted average concentration based on gridded population
+    if (!base::is.null(pop_grid)) {
+
+      ## check for matching CRS
+      if (terra::ext(pop_grid) != terra::ext(poll_grid)) {
+        poll_grid <- terra::project(poll_grid, pop_grid, method = "near")
+        warning("'poll_grid' was reprojected to match the extent and resolution of 'pop_grid'.")}
+      if (sf::st_crs(geo_units) != sf::st_crs(poll_grid)) {
+        geo_units <- sf::st_transform(geo_units, st_crs(poll_grid))
+        warning("'geo_units' was reprojected to match the CRS of 'poll_grid' and 'pop_grid'.")}
+
+      ## crop & mask pollution & population grid
+      poll_grid <- terra::mask(terra::crop(poll_grid, terra::vect(geo_units)), terra::vect(geo_units))
+      pop_grid <- terra::mask(terra::crop(pop_grid, terra::vect(geo_units)), terra::vect(geo_units))
+
+      ## extract min and max value
+      poll_min <- base::min(values(poll_grid), na.rm = TRUE)
+      poll_max <- base::max(values(poll_grid), na.rm = TRUE)
+
+      ## define bins
+      decimals = base::round(-base::log10(bin_width))
+      bin_min <- base::round(poll_min, decimals)
+      bin_max <- base::round(poll_max, decimals)
+      bins <- base::data.frame(
+        bin = base::cut(
+          x = base::seq(bin_min, bin_max-bin_width, by = bin_width),
+          breaks = base::seq(bin_min, bin_max, by = bin_width),
+          right = FALSE
+        ),
+        mid = base::seq(bin_min, bin_max-bin_width, by = bin_width) + (bin_width/2)
+      )
+
+      ## bind pollution and population grids
+      grid <- base::c(poll_grid, pop_grid)
+      base::names(grid) <- base::c("poll", "pop")
+
+      ## extract grid values by geographical unit
+      geo_units$geo_id_micro <- geo_id_micro
+      exp_vals <- exactextractr::exact_extract(
+        grid,
+        geo_units,
+        include_cols = "geo_id_micro",
+        progress = FALSE
+      )
+
+      ## get population by exposure bin
+      exp_bins <- base::lapply(exp_vals, function(df) {
+        df$pop <- df$coverage_fraction*df$pop
+        df$bin <- base::cut(df$poll, base::seq(bin_min, bin_max, by = bin_width), right = FALSE)
+        geo_id_micro <- unique(df$geo_id_micro)
+        df <- stats::aggregate(pop~bin, df, sum)
+        df <- dplyr::left_join(bins, df, by = "bin")
+        df$geo_id_micro <- geo_id_micro
+        df[base::is.na(df$pop), "pop"] <- 0
+        return(df)
+      }) |> data.table::rbindlist()
+
+      ## get population-weighted average
+      exp_mean <- base::lapply(exp_vals, function(df) {
+        df$pop <- df$coverage_fraction*df$pop
+        mean <- stats::weighted.mean(df$poll, df$pop, na.rm = TRUE)
+        pop <- base::round(base::sum(df$pop))
+        df <- base::data.frame(
+          geo_id_micro = base::unique(df$geo_id_micro),
+          mean = mean,
+          pop = pop
+        )
+        return(df)
+      }) |> data.table::rbindlist()
+
+      ## build output lists
+      exposure_main <- base::list(
+        geo_id_micro = exp_mean$geo_id_micro,
+        exposure_mean = exp_mean$mean,
+        population_total = exp_mean$pop
+      )
+
+      exposure_detailed <- base::list(
+        geo_id_micro = exp_bins$geo_id_micro,
+        exposure_bin = exp_bins$bin,
+        exposure_mid = exp_bins$mid,
+        population = exp_bins$pop
+      )
+
+      out <- base::list(
+        exposure_main = exposure_main,
+        exposure_detailed = exposure_detailed
+      )
+
+      return(out)
+    }
+
+    ## calculate exposure as a population-weighted average concentration based on population in sub-units
+    if (!base::is.null(population)) {
+
+      ## check for matching CRS
+      if (sf::st_crs(geo_units) != sf::st_crs(poll_grid)) {
+        geo_units <- sf::st_transform(geo_units, st_crs(poll_grid))
+        warning("'geo_units' was reprojected to match the CRS of 'poll_grid' and 'population'.")}
+
+      ## crop & mask pollution grid
+      poll_grid <- terra::mask(terra::crop(poll_grid, terra::vect(geo_units)), terra::vect(geo_units))
+
+      ## extract min and max value
+      poll_min <- base::min(values(poll_grid), na.rm = TRUE)
+      poll_max <- base::max(values(poll_grid), na.rm = TRUE)
+
+      ## define bins
+      decimals = base::round(-base::log10(bin_width))
+      bin_min <- base::round(poll_min, decimals)
+      bin_max <- base::round(poll_max, decimals)
+      bins <- base::data.frame(
+        bin = base::cut(
+          x = base::seq(bin_min, bin_max-bin_width, by = bin_width),
+          breaks = base::seq(bin_min, bin_max, by = bin_width),
+          right = FALSE
+        ),
+        mid = base::seq(bin_min, bin_max-bin_width, by = bin_width) + (bin_width/2)
+      )
+
+      ## extract pollution mean by geographical sub-unit
+      exp_vals <- base::data.frame(
         geo_id_macro = geo_id_macro,
-        bin_width = bin_width
+        pop = population,
+        poll = exactextractr::exact_extract(
+          poll_grid,
+          geo_units,
+          fun = "mean",
+          progress = FALSE
+        )
       )
+
+      ## get population by exposure bin
+      exp_bins <- base::by(
+        exp_vals,
+        base::list(exp_vals$geo_id_macro),
+        function(df) {
+          # df$pop <- df$coverage_fraction*df$pop
+          df$bin <- base::cut(df$poll, base::seq(bin_min, bin_max, by = bin_width), right = FALSE)
+          geo_id_macro <- unique(df$geo_id_macro)
+          df <- stats::aggregate(pop~bin, df, sum)
+          df <- dplyr::left_join(bins, df, by = "bin")
+          df$geo_id_macro <- geo_id_macro
+          df[base::is.na(df$pop), "pop"] <- 0
+          return(df)
+        },
+        simplify = FALSE
+      ) |> data.table::rbindlist()
+
+      ## get population-weighted average
+      exp_mean <- exp_vals |>
+        dplyr::group_by(geo_id_macro) |>
+        dplyr::summarise(
+          mean = stats::weighted.mean(poll, pop),
+          pop = base::sum(pop)
+        )
+
+      ## build output lists
+      exposure_main <- base::list(
+        geo_id_macro = exp_mean$geo_id_macro,
+        exposure_mean = exp_mean$mean,
+        population_total = exp_mean$pop
+      )
+
+      exposure_detailed <- base::list(
+        geo_id_macro = exp_bins$geo_id_macro,
+        exposure_bin = exp_bins$bin,
+        exposure_mid = exp_bins$mid,
+        population = exp_bins$pop
+      )
+
+      out <- base::list(
+        exposure_main = exposure_main,
+        exposure_detailed = exposure_detailed
+      )
+
+      return(out)
     }
-    
-    return(out)
 }
