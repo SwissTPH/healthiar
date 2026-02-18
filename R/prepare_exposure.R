@@ -74,7 +74,7 @@ prepare_exposure <-
 
       ## check for matching CRS
       if (sf::st_crs(geo_units) != sf::st_crs(poll_grid)) {
-        geo_units <- sf::st_transform(geo_units, st_crs(poll_grid))
+        geo_units <- sf::st_transform(geo_units, sf::st_crs(poll_grid))
         warning("'geo_units' was reprojected to match the CRS of 'poll_grid'.")}
 
       ## crop & mask pollution grid
@@ -173,8 +173,8 @@ prepare_exposure <-
       pop_grid <- terra::mask(terra::crop(pop_grid, terra::vect(geo_units)), terra::vect(geo_units))
 
       ## extract min and max value
-      poll_min <- base::min(values(poll_grid), na.rm = TRUE)
-      poll_max <- base::max(values(poll_grid), na.rm = TRUE)
+      poll_min <- base::min(terra::values(poll_grid), na.rm = TRUE)
+      poll_max <- base::max(terra::values(poll_grid), na.rm = TRUE)
 
       ## define bins
       decimals = base::round(-base::log10(bin_width))
@@ -261,8 +261,8 @@ prepare_exposure <-
       poll_grid <- terra::mask(terra::crop(poll_grid, terra::vect(geo_units)), terra::vect(geo_units))
 
       ## extract min and max value
-      poll_min <- base::min(values(poll_grid), na.rm = TRUE)
-      poll_max <- base::max(values(poll_grid), na.rm = TRUE)
+      poll_min <- base::min(terra::values(poll_grid), na.rm = TRUE)
+      poll_max <- base::max(terra::values(poll_grid), na.rm = TRUE)
 
       ## define bins
       decimals = base::round(-base::log10(bin_width))
