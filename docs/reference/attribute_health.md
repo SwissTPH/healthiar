@@ -314,7 +314,7 @@ relative risk or an absolute risk (depending on the health outcome).
 - Relative risk: The comparative risk assessment approach (Murray et
   al. 2003) is applied by obtaining the population attributable fraction
   (percent of cases that are attributable to the exposure) based on the
-  relative risk (WHO 2003; Steenland and Armstrong 2006; 2019 Risk
+  relative risk (WHO 2003; Steenland and Armstrong 2006; GBD 2019 Risk
   Factors Collaborators 2020; Soares et al. 2022; Pozzer et al. 2023;
   Lehtomäki et al. 2025) .
 
@@ -332,7 +332,7 @@ available in the package vignette. More specifically, see chapters:
 
 ## References
 
-2019 Risk Factors Collaborators GBD (2020). “Global burden of 87 risk
+GBD 2019 Risk Factors Collaborators (2020). “Global burden of 87 risk
 factors in 204 countries and territories, 1990–2019.” *The Lancet*.
 [doi:10.1016/S0140-6736(20)30752-2](https://doi.org/10.1016/S0140-6736%2820%2930752-2)
 , <https://www.thelancet.com/article/S0140-6736(20)30752-2/fulltext>.  

@@ -1,14 +1,27 @@
 # Prepare exposure data
 
-This function prepares tabular population exposure data that can be
-entered in the argument `exp_...` of the `healthiar` functions, e.g.
-[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
-using gridded pollution concentration and population data.
+This function prepares tabular population exposure data compatible with
+the `attribute()` and
+[`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
+functions, based on gridded pollution concentration data and polygon
+data representing geographic units. If population data is provided, the
+function calculates an average concentration value in each geographic
+unit that is weighted with the population number at each location. If no
+population data is provided, the function calculates the simple spatial
+average concentration in each geographic unit.
 
 ## Usage
 
 ``` r
-prepare_exposure(poll_grid, geo_units, population, geo_id_macro)
+prepare_exposure(
+  poll_grid,
+  geo_units,
+  population = NULL,
+  pop_grid = NULL,
+  geo_id_micro = NULL,
+  geo_id_macro = NULL,
+  bin_width = 0.1
+)
 ```
 
 ## Arguments
@@ -19,65 +32,52 @@ prepare_exposure(poll_grid, geo_units, population, geo_id_macro)
 
 - geo_units:
 
-  `sf` of the geographic sub-units.
+  `sf` of the geographic units or sub-units.
 
 - population:
 
-  `Numeric vector` containing the total population number in each
-  geographic sub-unit.
+  `Integer vector` of the total population number in each geographic
+  sub-unit.
+
+- pop_grid:
+
+  `SpatRaster` of the gridded population data.
+
+- geo_id_micro:
+
+  `Numeric or string vector` of the IDs of the geographic units.
+  Required if `pop_grid` is given or if no population data is provided.
 
 - geo_id_macro:
 
-  `Numeric or string vector` containing the higher-level IDs of the
-  geographic units the sub-unit belong to and will be aggregated at.
+  `Numeric or string vector` of the higher-level IDs of the geographic
+  units the sub-unit belong to and will be aggregated at. Required if
+  `population` is provided.
+
+- bin_width:
+
+  `Numeric` specifying the width of the population exposure bins.
 
 ## Value
 
 This function returns a `list` containing:
 
-1\) `main` (`tibble`) containing the main results as vectors;
+1\) `main` (`list`) containing the main results as vectors;
 
-- `geo_id_macro` (`string` column) containing the (higher-level)
-  geographic IDs of the assessment
+- `geo_id_micro` of `geo_id_macro` (`string` column) containing the
+  (higher-level) geographic IDs of the assessment
 
-- `exp_value` (`numeric` column) containing the (population-weighted)
-  mean exposure
+- `exposure_mean` (`numeric` column) containing the
+  (population-weighted) mean exposure
 
-- `exp_type` (`string` column) specifying the exposure type
+- `population_total` (`integer` column) containing the total population
+  in each geographic unit, if population data was provided
 
 2\) `detailed` (`list`) containing detailed (and interim) results.
 
-## Details
-
-**Methodology**
-
-The population-weighted exposure is calculated by intersecting gridded
-concentration values with population grids, following the methodology
-described in Shaddick et al. (2018) .
-
-Detailed information about the methodology (including equations) is
-available in the package vignette. More specifically, see chapters:
-
-- [Preparation of exposure
-  data](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#preparation-of-exposure-data)
-
-## References
-
-Shaddick G, Thomas J, Jobling A, Brauer M, Van Donkelaar A, Martin R,
-Burnett R, Casadei B, others (2018). “Data integration for the
-assessment of population exposure to ambient air pollution.” *Journal of
-the Royal Statistical Society Series C: Applied Statistics*, **67**(1),
-231–248. [doi:10.1111/rssc.12227](https://doi.org/10.1111/rssc.12227) .
-
-## See also
-
-- Downstream:
-  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
-  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
-
 ## Author
 
-Arno Pauwels, Axel Luyten and Alberto Castro
+Arno Pauwels & Liliana Vazquez Fernandez
 
 ## Examples
 
@@ -86,16 +86,16 @@ Arno Pauwels, Axel Luyten and Alberto Castro
 # neighborhoods of Brussels (Belgium)
 
 exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
-exdat_pwm_2 <- sf::st_read(
-    system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"),
-    quiet = TRUE
-)
+exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
 
 pwm <- prepare_exposure(
   poll_grid = exdat_pwm_1, # Formal class SpatRaster
   geo_units = exdat_pwm_2, # sf of the geographic sub-units
   population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
-  geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate
+  geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate at
 )
+#> Error in values(poll_grid): could not find function "values"
 
+pwm$main # population-weighted mean exposures for the (higher-level) geographic units
+#> Error: object 'pwm' not found
 ```

@@ -78,8 +78,8 @@ in scenario 1 with scenario 2. It can use two approaches:
 - Delta: Subtraction of health impacts in the two scenarios (two PAF)
   (Organization 2014)
 
-- Population impact fraction (PIF): Single PIF for both scenarios (WHO
-  2003; Murray et al. 2003)
+- Potential impact fraction (PIF): Single PIF for both scenarios (WHO
+  2003; Murray et al. 2003; Askari and Namayandeh 2020)
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
@@ -120,6 +120,12 @@ DALY in the argument `bhd_central` and then use `compare()`
 
 ## References
 
+Askari M, Namayandeh SM (2020). “The Difference between the Population
+Attributable Risk (PAR) and the Potentioal Impact Fraction (PIF).”
+*Iranian Journal of Public Health*, **49**(10), 2018–2019.
+[doi:10.18502/ijph.v49i10.4713](https://doi.org/10.18502/ijph.v49i10.4713)
+, <https://pmc.ncbi.nlm.nih.gov/articles/PMC7719653/>.  
+  
 Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
 “Comparative quantification of health risks conceptual framework and
 methodological issues.” *Popul. Health Metr.*, **1**(1), 1.  
@@ -182,7 +188,7 @@ results$health_main |>
 #>    <dbl>         <dbl>         <dbl>
 #> 1   774.         1051.          277.
 
-# Goal: comparison of two scenarios with population impact fraction (pif) approach
+# Goal: comparison of two scenarios with potential impact fraction (pif) approach
 output_attribute_scen_1 <- attribute_health(
   exp_central = 8.85,   # EXPOSURE 1
   cutoff_central = 5,

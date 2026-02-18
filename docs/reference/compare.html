@@ -9,7 +9,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1451</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1457</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,7 @@
     <p><strong>Methodology</strong>
 This function compares the attributable health impacts in scenario 1 with scenario 2.
 It can use two approaches:</p><ul><li><p>Delta: Subtraction of health impacts in the two scenarios (two PAF) (Organization 2014)</p></li>
-<li><p>Population impact fraction (PIF): Single PIF for both scenarios (WHO 2003; Murray et al. 2003)</p></li>
+<li><p>Potential impact fraction (PIF): Single PIF for both scenarios (WHO 2003; Murray et al. 2003; Askari and Namayandeh 2020)</p></li>
 </ul><p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#comparison-of-two-health-scenarios">comparison of two health scenarios</a></p></li>
@@ -118,7 +118,11 @@ and then use <code>compare()</code></p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
+    <p>Askari M, Namayandeh SM (2020).
+“The Difference between the Population Attributable Risk (PAR) and the Potentioal Impact Fraction (PIF).”
+<em>Iranian Journal of Public Health</em>, <b>49</b>(10), 2018–2019.
+<a href="https://doi.org/10.18502/ijph.v49i10.4713" class="external-link">doi:10.18502/ijph.v49i10.4713</a>
+, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7719653/" class="external-link">https://pmc.ncbi.nlm.nih.gov/articles/PMC7719653/</a>.<br><br> Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
 “Comparative quantification of health risks conceptual framework and methodological issues.”
 <em>Popul. Health Metr.</em>, <b>1</b>(1), 1.<br><br> Organization WH (2014).
 <em>Health impact assessment of air pollution: Guide for practitioners</em>.
@@ -176,7 +180,7 @@ World Health Organization.
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>   774.         <span style="text-decoration: underline;">1</span>051.          277.</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Goal: comparison of two scenarios with population impact fraction (pif) approach</span></span></span>
+<span class="r-in"><span><span class="co"># Goal: comparison of two scenarios with potential impact fraction (pif) approach</span></span></span>
 <span class="r-in"><span><span class="va">output_attribute_scen_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="attribute_health.html">attribute_health</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  exp_central <span class="op">=</span> <span class="fl">8.85</span>,   <span class="co"># EXPOSURE 1</span></span></span>
 <span class="r-in"><span>  cutoff_central <span class="op">=</span> <span class="fl">5</span>,</span></span>
