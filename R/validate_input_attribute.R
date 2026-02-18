@@ -679,32 +679,34 @@ validate_input_attribute <-
 
     ## Warnings ########################
 
-    ### warning_if_ar_and_var #####
-    warning_if_ar_and_var <- function(var_name){
+    ### warning_if_ar_and_cutoff #####
+    warning_if_ar_and_cutoff <- function(var_names){
 
       # Store var_value
-      var_value <- input_args_value [[var_name]]
+      available_var_values <- input_args_value[var_names] |>
+        purrr::discard(base::is.null)
+      available_var_names <- base::names(available_var_values)
 
 
-      if(base::any(approach_risk == "absolute_risk" &
-         !base::is.null(var_value) & !var_value == 0)){ # Only if available
+      if(base::any(approach_risk == "absolute_risk") &
+         base::length(available_var_names) > 0 &
+         base::any(!base::unlist(available_var_values) == 0)){ # Only if available
         # Create warning message
         base::warning(
           base::paste0(
-            "For absolute risk, the value of ",
-            var_name,
-            " is not considered; ",
-            var_name,
-            " is defined by the exposure-response function."),
+            "You entered a value for: ", paste(available_var_names, collapse = ", "), ". ", "\n",
+            "Be aware that for the absolute risk, the cutoff arguments are not used.", "\n",
+            "Thus, all exposures (including those below your entered cutoff)", "\n",
+            "will contribute to the attributable health impact. ", "\n",
+            "Consider handling the cutoff in the exposure-response function."),
           call. = FALSE)
       }
     }
 
     # Call function only if absolute risk
 
-      for(cutoff_ci_suffix in base::paste0("cutoff", ci_suffix)){
-        warning_if_ar_and_var(cutoff_ci_suffix)
-    }
+    warning_if_ar_and_cutoff(var_names = base::paste0("cutoff", ci_suffix))
+
 
 
     ### warning_if_rr_and_no_var_with_default #####

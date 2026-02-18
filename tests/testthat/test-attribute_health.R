@@ -4614,7 +4614,8 @@ testthat::test_that("warning if absolute risk and cutoff", {
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
       ),
-    regexp = "For absolute risk, the value of cutoff_central is not considered; cutoff_central is defined by the exposure-response function."
+    regexp = "Be aware that for the absolute risk, the cutoff arguments are not used.",
+    fixed = FALSE
   )
 })
 
