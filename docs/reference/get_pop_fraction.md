@@ -1,7 +1,8 @@
 # Get population attributable or impact fraction
 
-This function calculates the population impact fraction of a health
-outcome due to exposure to an environmental stressor
+This function calculates the population attributable fraction or
+potential impact fraction of a health outcome due to exposure to an
+environmental stressor
 
 ## Usage
 

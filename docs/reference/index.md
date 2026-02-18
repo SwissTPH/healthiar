@@ -25,7 +25,7 @@
 - [`get_paf()`](https://swisstph.github.io/healthiar/reference/get_paf.md)
   : Get population attributable fraction
 - [`get_pif()`](https://swisstph.github.io/healthiar/reference/get_pif.md)
-  : Get population impact fraction (PIF)
+  : Get potential impact fraction (PIF)
 - [`get_risk()`](https://swisstph.github.io/healthiar/reference/get_risk.md)
   : Get the relative risk of an exposure level
 - [`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md)

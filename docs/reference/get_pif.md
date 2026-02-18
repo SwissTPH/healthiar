@@ -1,6 +1,6 @@
-# Get population impact fraction (PIF)
+# Get potential impact fraction (PIF)
 
-This function calculates the population impact fraction of a health
+This function calculates the potential impact fraction of a health
 outcome due to exposure to an environmental stressor
 
 ## Usage
@@ -45,7 +45,7 @@ get_pif(rr_at_exp_1, rr_at_exp_2, prop_pop_exp_1, prop_pop_exp_2)
 
 ## Value
 
-This function returns the population impact fraction as a
+This function returns the potential impact fraction as a
 `numeric value`.
 
 ## Details
@@ -54,8 +54,8 @@ This function returns the population impact fraction as a
 
 This function is internally used inside the `healthiar` function
 [`compare()`](https://swisstph.github.io/healthiar/reference/compare.md).
-The population impact fraction (PIF) is calculated as described in WHO
-(2003) and Murray et al. (2003) .
+The potential impact fraction (PIF) is calculated as described in WHO
+(2003) , Murray et al. (2003) and Askari and Namayandeh (2020) .
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
@@ -65,6 +65,12 @@ available in the package vignette. More specifically, see chapters:
 
 ## References
 
+Askari M, Namayandeh SM (2020). “The Difference between the Population
+Attributable Risk (PAR) and the Potentioal Impact Fraction (PIF).”
+*Iranian Journal of Public Health*, **49**(10), 2018–2019.
+[doi:10.18502/ijph.v49i10.4713](https://doi.org/10.18502/ijph.v49i10.4713)
+, <https://pmc.ncbi.nlm.nih.gov/articles/PMC7719653/>.  
+  
 Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
 “Comparative quantification of health risks conceptual framework and
 methodological issues.” *Popul. Health Metr.*, **1**(1), 1.  
@@ -85,7 +91,7 @@ Alberto Castro & Axel Luyten
 ## Examples
 
 ``` r
-# Goal: calculate the population impact fraction (PIF)
+# Goal: calculate the potential impact fraction (PIF)
 results <- get_pif(
   rr_at_exp_1 = 1.043879,
   rr_at_exp_2 = 1.011217,

@@ -19,7 +19,8 @@ get_pop_fraction(rr_at_exp_1, rr_at_exp_2, prop_pop_exp_1, prop_pop_exp_2)
 This function returns a \code{value} corresponding to the population attributable fraction
 }
 \description{
-This function calculates the population impact fraction of a health outcome due to exposure to an environmental stressor
+This function calculates the population attributable fraction or potential impact fraction
+of a health outcome due to exposure to an environmental stressor
 }
 \details{
 For more information about the equations used please see the function documentation of \code{attribute_health}.

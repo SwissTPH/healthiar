@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1451</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1457</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -186,7 +186,7 @@ consists of two lists (“folders”):</p>
 additional info about the assessment.</p></li>
 </ul>
 <p>In other <code>healthiar</code> functions you can find a similar
-output structure but using different prefixes. E.g.
+output structure but using different prefixes. E.g.,
 <code>social_</code>in <code><a href="../reference/socialize.html">socialize()</a></code> and
 <code>monetization_</code>in <code>monetitize()</code>.</p>
 </div>
@@ -194,7 +194,7 @@ output structure but using different prefixes. E.g.
 <h5 id="access">Access<a class="anchor" aria-label="anchor" href="#access"></a>
 </h5>
 <p>A similar structure can be found in other large functions in
-<code>helathiar</code>, e.g. <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>,
+<code>helathiar</code>, e.g., <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>,
 <code><a href="../reference/compare.html">compare()</a></code>, <code><a href="../reference/socialize.html">socialize()</a></code> or
 <code><a href="../reference/monetize.html">monetize()</a></code>. In some functions, different elements are
 available in the output. For instance,
@@ -235,10 +235,10 @@ explanations.</p>
 <h2 id="relative-risk">Relative risk<a class="anchor" aria-label="anchor" href="#relative-risk"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-e-g-">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g-"></a>
+<h4 id="goal">Goal<a class="anchor" aria-label="anchor" href="#goal"></a>
 </h4>
-<p>To quantify the COPD cases attributable to PM2.5 (air pollution)
-exposure in a country.</p>
+<p>E.g., to quantify the COPD cases attributable to PM2.5 (air
+pollution) exposure in a country.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology">Methodology<a class="anchor" aria-label="anchor" href="#methodology"></a>
@@ -249,8 +249,8 @@ attributable fraction (percent of cases that are attributable to the
 exposure) based on the relative risk. The exposure scenario is compared
 with a counter-factual scenario.</p>
 <p>This approach has been extensive documented and applied <span class="citation">(e.g., WHO 2003; Steenland and Armstrong 2006; Soares
-et al. 2022; Pozzer et al. 2023; G. 2019. R. F. Collaborators 2020;
-Lehtomäki et al. 2025)</span>.</p>
+et al. 2022; Pozzer et al. 2023; GBD 2019 Risk Factors Collaborators
+2020; Lehtomäki et al. 2025)</span>.</p>
 <div class="float">
 <img src="../reference/figures/bod_rr.png" width="700" alt="Figure: Relative risk approach"><div class="figcaption">Figure: Relative risk approach</div>
 </div>
@@ -391,16 +391,17 @@ population impact fraction (PIF)</li>
 <h2 id="absolute-risk">Absolute risk<a class="anchor" aria-label="anchor" href="#absolute-risk"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-e-g--1">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--1"></a>
+<h4 id="goal-1">Goal<a class="anchor" aria-label="anchor" href="#goal-1"></a>
 </h4>
-<p>To quantify the incidence cases of high annoyance attributable to
-(road traffic) noise exposure.</p>
+<p>E.g., to quantify the number incidence cases of high annoyance
+attributable to (road traffic) noise exposure.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-1">Methodology<a class="anchor" aria-label="anchor" href="#methodology-1"></a>
 </h4>
-<p>For the absolute risk, the population exposed instead of baseline
-health data (i.e. disease-specific burden of disease) is used <span class="citation">(WHO 2011)</span>.</p>
+<p>In the absolute risk calculation pathway, estimates are based on the
+size and distribution of the exposed population, rather than on baseline
+health data, as is the case in the relative risk pathway <span class="citation">(WHO 2011)</span>.</p>
 <div class="float">
 <img src="../reference/figures/bod_ar.png" width="700" alt="Figure: Absolute risk approach"><div class="figcaption">Figure: Absolute risk approach</div>
 </div>
@@ -505,7 +506,7 @@ a single global maximum for the entire vector. For example:</p>
 <h4 id="one-exposure-category">One exposure category<a class="anchor" aria-label="anchor" href="#one-exposure-category"></a>
 </h4>
 <p>Alternatively, it’s also possible to only assess the absolute risk
-impacts for one exposure category (e.g. a single noise exposure
+impacts for one exposure category (e.g., a single noise exposure
 band).</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_noise_ha</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -533,26 +534,26 @@ band).</p>
 <h3 id="using-relative-risk">using relative risk<a class="anchor" aria-label="anchor" href="#using-relative-risk"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--2">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--2"></a>
+<h4 id="goal-2">Goal<a class="anchor" aria-label="anchor" href="#goal-2"></a>
 </h4>
-<p>To quantify the disease cases attributable to PM2.5 exposure in
+<p>E.g., to quantify the disease cases attributable to PM2.5 exposure in
 multiple cities using one single command.</p>
+</div>
+<div class="section level4">
+<h4 id="function-call-2">Function call<a class="anchor" aria-label="anchor" href="#function-call-2"></a>
+</h4>
 <ul>
 <li><p>Enter unique ID’s as a vector (<code>numeric</code> or
-<code>character</code>) to the <code>geo_id_micro</code> argument
-(e.g. municipality names or province abbrevations)</p></li>
+<code>character</code>) to the <code>geo_id_micro</code> argument (e.g.,
+municipality names or province abbreviations)</p></li>
 <li><p>Optional: aggregate unit-specific results by providing
-higher-level ID’s (e.g. region names or country abbreviations) as a
+higher-level ID’s (e.g., region names or country abbreviations) as a
 vector (<code>numeric</code> or <code>character</code>) to the
 <code>geo_id_macro</code> argument</p></li>
 </ul>
 <p>Input to the other function arguments is specified as usual, either
 as a vector or a single values (which will be recycled to match the
 length of the other input vectors).</p>
-</div>
-<div class="section level4">
-<h4 id="function-call-2">Function call<a class="anchor" aria-label="anchor" href="#function-call-2"></a>
-</h4>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_iteration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>    <span class="co"># Names of Swiss cantons</span></span>
@@ -658,10 +659,10 @@ usual), besides the results per geo unit (not shown above).</p>
 <h3 id="using-absolute-risk">using absolute risk<a class="anchor" aria-label="anchor" href="#using-absolute-risk"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--3">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--3"></a>
+<h4 id="goal-3">Goal<a class="anchor" aria-label="anchor" href="#goal-3"></a>
 </h4>
-<p>To quantify high annoyance cases attributable to noise exposure in
-rural and urban areas.</p>
+<p>E.g., to quantify high annoyance cases attributable to noise exposure
+in rural and urban areas.</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-3">Function call<a class="anchor" aria-label="anchor" href="#function-call-3"></a>
@@ -742,12 +743,12 @@ area.</p>
 <h3 id="confidence-interval">Confidence interval<a class="anchor" aria-label="anchor" href="#confidence-interval"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--4">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--4"></a>
+<h4 id="goal-4">Goal<a class="anchor" aria-label="anchor" href="#goal-4"></a>
 </h4>
-<p>To quantify the COPD cases attributable to PM2.5 exposure taking into
-account uncertainty (lower and upper bound of confidence interval) in
-several input arguments: relative risk, exposure and baseline health
-data.</p>
+<p>E.g., to quantify the COPD cases attributable to PM2.5 exposure
+taking into account uncertainty (lower and upper bound of confidence
+interval) in several input arguments: relative risk, exposure and
+baseline health data.</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-4">Function call<a class="anchor" aria-label="anchor" href="#function-call-4"></a>
@@ -858,11 +859,11 @@ due to space constraints.</p>
 <h3 id="monte-carlo-simulation">Monte Carlo simulation<a class="anchor" aria-label="anchor" href="#monte-carlo-simulation"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--5">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--5"></a>
+<h4 id="goal-5">Goal<a class="anchor" aria-label="anchor" href="#goal-5"></a>
 </h4>
-<p>To summarize uncertainty of attributable health impacts (i.e. to get
-a single confidence interval instead of many combinations) by using a
-Monte Carlo simulation.</p>
+<p>E.g., to summarize uncertainty of attributable health impacts
+(i.e. to get a single confidence interval instead of many combinations)
+by using a Monte Carlo simulation.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-2">Methodology<a class="anchor" aria-label="anchor" href="#methodology-2"></a>
@@ -878,10 +879,10 @@ values in the arguments with uncertainty and estimate a single
 confidence interval in the results.</p>
 <p>For each entered input argument that includes a (95%) confidence
 interval (i.e. <code>_lower</code> and <code>_upper</code> bound value)
-a distribution is fitted (see distributions below). The median value of
-these attributable impacts is reported as the central estimate, and the
-2.5th and 97.5th percentiles define the lower and upper bounds of the
-95% summary uncertainty confidence interval, respectively. Aggregated
+a distribution is fitted (see distributions below). The median of the
+simulated attributable impacts is reported as the central estimate. The
+2.5th and 97.5th percentiles of these simulated impacts define the lower
+and upper bounds of the 95% summary uncertainty interval. Aggregated
 central, lower and upper estimates are obtained by summing the
 corresponding values of each lower level unit.</p>
 </div>
@@ -893,31 +894,40 @@ the distributions in the simulations:</p>
 <ul>
 <li><p>Relative risk: The values are simulated based on an optimized
 <em>gamma</em> distribution, which fits well as relative risks are
-positive and its distributions usually right-skewed. The gamma
-distribution best fitting the inputted central relative risk estimate
-and corresponding lower and upper 95% confidence interval values is
-fitted using <code><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">stats::qgamma()</a></code> (with
-<code>rate = shape / rr_central</code>) and then
-<code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">stats::optimize</a></code> is used to optimize the distribution
-parameters. Finally, <code>n_sim</code> relative risk values are
-simulated using <code><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">stats::rgamma()</a></code>.</p></li>
+positive and their distributions are usually right-skewed. The gamma
+distribution is parametrized such that its mean is equal to the central
+relative risk estimate (<code>rate= shape/rr_central</code>). The shape
+parameter is then optimized using <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">stats::optimize()</a></code> to
+match the inputed 95% confidence interval bounds, with
+<code><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">stats::qgamma()</a></code> used to evaluate candidate distributions.
+Finally, <code>n_sim</code> relative risk values are simulated using
+<code><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">stats::rgamma()</a></code>.</p></li>
 <li><p>Exposure, cutoff, baseline health data and duration: The values
 are simulated based on a <em>normal</em> distribution using
 <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">stats::rnorm()</a></code> with <code>mean = exp_central</code>,
 <code>mean = cutoff_central</code>, <code>mean = bhd_central</code> or
 <code>mean = duration_central</code> and a standard deviation based on
-corresponding lower and upper 95% exposure confidence interval
-values.</p></li>
+corresponding lower and upper 95% exposure confidence interval values.
+The standard deviation is calculated as
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mi>p</mi><mi>p</mi><mi>e</mi><mi>r</mi><mo>−</mo><mi>l</mi><mi>o</mi><mi>w</mi><mi>e</mi><mi>r</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>2</mn><mo>*</mo><mn>1.96</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">(upper-lower)/(2*1.96)</annotation></semantics></math>,
+since for a normal distribution the 95% CI spans approximately two
+standard deviations on either side of the mean.</p></li>
 <li><p>Disability weights: The values are simulated based on a
 <em>beta</em> distribution, as both the disability weights and the beta
 distribution are bounded by 0 and 1. The beta distribution best fitting
 the inputted central disability weight estimate and corresponding lower
 and upper 95% confidence interval values is fitted using
-<code><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">stats::qgamma()</a></code> (the best fitting distribution parameters
+<code><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">stats::qbeta()</a></code> (the best fitting distribution parameters
 <code>shape1</code> and <code>shape2</code> are determined using
-<code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">stats::optimize()</a></code>). Finally, <code>n_sim</code> disability
-weight values are simulated using <code><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">stats::rbeta()</a></code>.</p></li>
+<code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">stats::optimize()</a></code>). For this purpose, we partly adapted the
+R function <code>prevalence::beta_expert</code> with permission of one
+of the authors <span class="citation">(Devleesschauwer et al.
+2022)</span>. Finally, <code>n_sim</code> disability weight values are
+simulated using <code><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">stats::rbeta()</a></code>.</p></li>
 </ul>
+<p>For stability of the 95% confidence interval, a large number of
+simulations (e.g., 10,000) is recommended in practice. The example below
+uses n_sim = 100 for brevity.</p>
 </div>
 </div>
 <div class="section level4">
@@ -978,6 +988,10 @@ simulations of the Monte Carlo assessment.</p></li>
 </h4>
 <p>The folder <code>uncertainty_detailed</code> contains all single
 simulations. Let’s look at the impact of the first 10 simulations.</p>
+<p>The columns <code>erf_ci</code>, <code>exp_ci</code>,
+<code>bhd_ci</code>, and <code>cutoff_ci</code> indicate the source of
+uncertainty component used for that simulation (in the first 10
+simulations, all use central estimates).</p>
 <table class="table">
 <colgroup>
 <col width="4%">
@@ -1325,10 +1339,10 @@ simulations. Let’s look at the impact of the first 10 simulations.</p>
 <h2 id="user-defined-erf">User-defined ERF<a class="anchor" aria-label="anchor" href="#user-defined-erf"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-e-g--6">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--6"></a>
+<h4 id="goal-6">Goal<a class="anchor" aria-label="anchor" href="#goal-6"></a>
 </h4>
-<p>To quantify COPD cases attributable to air pollution exposure by
-applying a user-defined exposure-response function (ERF), such as the
+<p>E.g., to quantify COPD cases attributable to air pollution exposure
+by applying a user-defined exposure-response function (ERF), such as the
 MR-BRT curves from Global Burden of Disease study.</p>
 </div>
 <div class="section level4">
@@ -1362,19 +1376,19 @@ used to create the ERF</p>
 <h3 id="by-age-group">by age group<a class="anchor" aria-label="anchor" href="#by-age-group"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--7">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--7"></a>
+<h4 id="goal-7">Goal<a class="anchor" aria-label="anchor" href="#goal-7"></a>
 </h4>
-<p>To quantify health impacts attributable to air pollution in a country
-<em>by age group</em>.</p>
+<p>E.g., to quantify health impacts attributable to air pollution in a
+country <em>by age group</em>.</p>
+</div>
+<div class="section level4">
+<h4 id="function-call-7">Function call<a class="anchor" aria-label="anchor" href="#function-call-7"></a>
+</h4>
 <p>To obtain age-group-specific results, the baseline health data (and
 possibly exposure) must be available by age group.</p>
 <p>If the <code>age</code> argument was specified, age-group-specific
 results are available under <code>health_detailed</code> in the
 sub-folder <code>results_by_age_group</code>.</p>
-</div>
-<div class="section level4">
-<h4 id="function-call-7">Function call<a class="anchor" aria-label="anchor" href="#function-call-7"></a>
-</h4>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_age_group</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>        approach_risk <span class="op">=</span> <span class="st">"relative_risk"</span>,</span>
@@ -1422,10 +1436,10 @@ sub-folder <code>results_by_age_group</code>.</p>
 <h3 id="by-sex">by sex<a class="anchor" aria-label="anchor" href="#by-sex"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--8">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--8"></a>
+<h4 id="goal-8">Goal<a class="anchor" aria-label="anchor" href="#goal-8"></a>
 </h4>
-<p>To quantify health impacts attributable to air pollution in a country
-<em>by sex</em>.</p>
+<p>E.g., to quantify health impacts attributable to air pollution in a
+country <em>by sex</em>.</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-8">Function call<a class="anchor" aria-label="anchor" href="#function-call-8"></a>
@@ -1482,10 +1496,10 @@ are available under <code>health_detailed</code> in the sub-folder
 <h3 id="by-other-sub-groups">by other sub-groups<a class="anchor" aria-label="anchor" href="#by-other-sub-groups"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--9">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--9"></a>
+<h4 id="goal-9">Goal<a class="anchor" aria-label="anchor" href="#goal-9"></a>
 </h4>
-<p>To quantify attributable health impacts <em>stratified by a sub-group
-different to age and sex, e.g. education level</em>.</p>
+<p>E.g., to quantify attributable health impacts <em>stratified by a
+sub-group different to age and sex, e.g., education level</em>.</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-9">Function call<a class="anchor" aria-label="anchor" href="#function-call-9"></a>
@@ -1530,10 +1544,10 @@ columns and so summarize the results by the preferred sub-groups.</p>
 <h3 id="by-age-sex-and-other-sub-groups">by age, sex and other sub-groups<a class="anchor" aria-label="anchor" href="#by-age-sex-and-other-sub-groups"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--10">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--10"></a>
+<h4 id="goal-10">Goal<a class="anchor" aria-label="anchor" href="#goal-10"></a>
 </h4>
-<p>To quantify attributable health impacts <em>stratified by age, sex
-and additional sub-group e.g. education level</em>.</p>
+<p>E.g., to quantify attributable health impacts <em>stratified by age,
+sex and additional sub-group e.g. education level</em>.</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-10">Function call<a class="anchor" aria-label="anchor" href="#function-call-10"></a>
@@ -1575,10 +1589,10 @@ and additional sub-group e.g. education level</em>.</p>
 <h3 id="yll">YLL<a class="anchor" aria-label="anchor" href="#yll"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--11">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--11"></a>
+<h4 id="goal-11">Goal<a class="anchor" aria-label="anchor" href="#goal-11"></a>
 </h4>
-<p>To quantify the years of life lost (YLL) due to deaths from COPD
-attributable to PM2.5 exposure during one year.</p>
+<p>E.g., to quantify the years of life lost (YLL) due to deaths from
+COPD attributable to PM2.5 exposure during one year.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-3">Methodology<a class="anchor" aria-label="anchor" href="#methodology-3"></a>
@@ -1589,7 +1603,7 @@ attributable to PM2.5 exposure during one year.</p>
 <p>The life table approach to obtain YLL and deaths requires population
 and baseline mortality data to be stratified by <em>one year</em> age
 groups. However, in some cases these data are only available for larger
-age groups (e.g. 5-year data: 0-4 years old, 5-9 years old, …). What to
+age groups (e.g., 5-year data: 0-4 years old, 5-9 years old, …). What to
 do?</p>
 <ul>
 <li><p>If your population and mortality data are <em>not</em> available
@@ -2131,16 +2145,16 @@ scenario specified in the assessment).</p>
 <h3 id="deaths">Deaths<a class="anchor" aria-label="anchor" href="#deaths"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--12">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--12"></a>
+<h4 id="goal-e-g-">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g-"></a>
 </h4>
-<p>To determine premature deaths from COPD attributable to PM2.5
+<p>E.g., to determine premature deaths from COPD attributable to PM2.5
 exposure during one year.</p>
-<p>See example on YLL for additional info on
-<code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code> calculations and its output.</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-12">Function call<a class="anchor" aria-label="anchor" href="#function-call-12"></a>
 </h4>
+<p>See example on YLL for additional info on
+<code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code> calculations and its output.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm_deaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_lifetable.html">attribute_lifetable</a></span><span class="op">(</span></span>
 <span>  health_outcome <span class="op">=</span> <span class="st">"deaths"</span>,</span>
@@ -5703,10 +5717,10 @@ are available for one year (the year of analysis).</p>
 <h2 id="yld">YLD<a class="anchor" aria-label="anchor" href="#yld"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-e-g--13">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--13"></a>
+<h4 id="goal-12">Goal<a class="anchor" aria-label="anchor" href="#goal-12"></a>
 </h4>
-<p>To quantify the years lived with disability (YLD) attributable to air
-pollution exposure using disability weights.</p>
+<p>E.g., to quantify the years lived with disability (YLD) attributable
+to air pollution exposure using disability weights.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-4">Methodology<a class="anchor" aria-label="anchor" href="#methodology-4"></a>
@@ -5757,18 +5771,18 @@ incidence-based approach <span class="citation">(Kim et al.
 <h2 id="daly">DALY<a class="anchor" aria-label="anchor" href="#daly"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-e-g--14">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--14"></a>
+<h4 id="goal-e-g--1">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--1"></a>
 </h4>
-<p>To obtain the Disability-Adjusted Life Years as the sum of YLLs and
-YLDs.</p>
+<p>E.g., to obtain the disability-adjusted life years (DALY) as the sum
+of YLLs and YLDs.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-5">Methodology<a class="anchor" aria-label="anchor" href="#methodology-5"></a>
 </h4>
-<p>To obtain the attributable disability-adjusted life years (DALY), the
-two DALY components, i.e. years of life lost (YLL) and years lived with
-disability (YLD), must be summed <span class="citation">(G. 2019. R. F.
-Collaborators 2020)</span>.</p>
+<p>To obtain the attributable DALY, its two components, i.e. years of
+life lost (YLL) and years lived with disability (YLD), must be summed
+<span class="citation">(GBD 2019 Risk Factors Collaborators
+2020)</span>.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mi>A</mi><mi>L</mi><mi>Y</mi><mo>=</mo><mi>Y</mi><mi>L</mi><mi>L</mi><mo>+</mo><mi>Y</mi><mi>L</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">DALY = YLL + YLD</annotation></semantics></math></p>
 </div>
 <div class="section level4">
@@ -5803,10 +5817,11 @@ Collaborators 2020)</span>.</p>
 <h2 id="modification-of-scenarios">Modification of scenarios<a class="anchor" aria-label="anchor" href="#modification-of-scenarios"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-e-g--15">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--15"></a>
+<h4 id="goal-13">Goal<a class="anchor" aria-label="anchor" href="#goal-13"></a>
 </h4>
-<p>To quantify health impacts using <code>attribute_health</code>in an
-scenario B very similar to a previous scenario A.</p>
+<p>E.g., to quantify health impacts using
+<code>attribute_health</code>in an scenario B very similar to a previous
+scenario A.</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-15">Function call<a class="anchor" aria-label="anchor" href="#function-call-15"></a>
@@ -5845,10 +5860,10 @@ but more time and code efficient.</p>
 <h2 id="comparison-of-two-health-scenarios">Comparison of two health scenarios<a class="anchor" aria-label="anchor" href="#comparison-of-two-health-scenarios"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-e-g--16">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--16"></a>
+<h4 id="goal-14">Goal<a class="anchor" aria-label="anchor" href="#goal-14"></a>
 </h4>
-<p>To compare the health impacts in the scenario “before intervention”
-vs. “after intervention”.</p>
+<p>E.g., to compare the health impacts in the scenario “before
+intervention” vs. “after intervention”.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-6">Methodology<a class="anchor" aria-label="anchor" href="#methodology-6"></a>
@@ -5858,14 +5873,14 @@ vs. “after intervention”.</p>
 <li><p>Delta: Subtraction of health impact in scenario 1 minus in
 scenarios 2 (i.e. two PAF) <span class="citation">(Organization
 2014)</span></p></li>
-<li><p>Population impact fraction (PIF): see below.</p></li>
+<li><p>Population impact fraction (PIF) <span class="citation">(Askari
+and Namayandeh 2020)</span>.</p></li>
 </ul>
 <p>Note that the PIF comparison approach assumes same baseline health
-data for scenario 1 and 2 (e.g. comparison of two scenarios at the same
+data for scenario 1 and 2 (e.g., comparison of two scenarios at the same
 time point), while the delta comparison approach, the difference between
 two scenarios is obtained by subtraction. Therefore, the delta approach
-is suited for comparison of a situation now with a situation in the
-future.</p>
+is suited for comparison of scenarios in different time points.</p>
 <p><em>IMPORTANT</em> If your aim is to quantify health impacts from a
 <em>policy intervention</em>, be aware that you should use the <em>same
 year of analysis</em> and therefore <em>same health baseline data</em>
@@ -5875,8 +5890,8 @@ scenario is the exposure (change as a result of the intervention).</p>
 <h5 id="population-impact-fraction-pif">Population Impact Fraction (PIF)<a class="anchor" aria-label="anchor" href="#population-impact-fraction-pif"></a>
 </h5>
 <p>The Population Impact Fraction (PIF) is defined as the proportional
-change in disease or mortality when exposure to a risk factor is changed
-(for instance due to an intervention).</p>
+change in disease or mortality when exposure to a risk factor is
+changed, for instance due to an intervention.</p>
 <div class="section level6">
 <h6 id="general-integral-form">General Integral Form<a class="anchor" aria-label="anchor" href="#general-integral-form"></a>
 </h6>
@@ -5939,10 +5954,10 @@ concentration, the equation for the PIF is reduced to:</p>
 <p>Where:</p>
 <ul>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><msub><mi>t</mi><mi>e</mi></msub><mi>x</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">rr\_at_exp</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">rr\_at\_exp</annotation></semantics></math>
 = relative risk at the exposure level</li>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><msub><mi>t</mi><mi>e</mi></msub><mi>x</mi><msub><mi>p</mi><mrow><mi>a</mi><mi>l</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">rr\_at_exp_{alt}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mrow><mi>a</mi><mi>l</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">rr\_at\_exp_{alt}</annotation></semantics></math>
 = relative risk at the exposure level for the alternative exposure
 scenario</li>
 </ul>
@@ -5975,7 +5990,7 @@ A &amp; B.</li>
 </ol>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="va">results_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare.html">compare</a></span><span class="op">(</span></span>
+<span><span class="va">results_comparison</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/compare.html">compare</a></span><span class="op">(</span></span>
 <span>  approach_comparison <span class="op">=</span> <span class="st">"delta"</span>, <span class="co"># or "pif" (population impact fraction)</span></span>
 <span>  output_attribute_scen_1 <span class="op">=</span> <span class="va">scenario_A</span>,</span>
 <span>  output_attribute_scen_2 <span class="op">=</span> <span class="va">scenario_B</span></span>
@@ -6049,9 +6064,9 @@ our case)</p></li>
 <h2 id="two-correlated-exposures">Two correlated exposures<a class="anchor" aria-label="anchor" href="#two-correlated-exposures"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-e-g--17">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--17"></a>
+<h4 id="goal-15">Goal<a class="anchor" aria-label="anchor" href="#goal-15"></a>
 </h4>
-<p>To quantify the total health impact attributable to PM2.5 and
+<p>E.g., to quantify the total health impact attributable to PM2.5 and
 NO2.</p>
 </div>
 <div class="section level4">
@@ -6128,35 +6143,37 @@ way round.</p>
 <h2 id="standardization">Standardization<a class="anchor" aria-label="anchor" href="#standardization"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-e-g--18">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--18"></a>
+<h4 id="goal-16">Goal<a class="anchor" aria-label="anchor" href="#goal-16"></a>
 </h4>
-<p>To obtain the age-standardized attributable health impacts of two age
-groups</p>
+<p>E.g., to obtain the age-standardized attributable health impacts of
+two age groups.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-8">Methodology<a class="anchor" aria-label="anchor" href="#methodology-8"></a>
 </h4>
-<p>Age standardization is a technique used to allow the comparison of
-populations with different age structures <span class="citation">(G.
-2019. D. Collaborators 2020; Ahmad et al. 2001)</span>. In
+<p>Age standardization involves adjusting the observed rates of a
+particular outcome to a standard population with a specific age
+structure. This is a technique used to allow the comparison of
+populations with different age structures <span class="citation">(GBD
+2019 Demographics Collaborators 2020; Ahmad et al. 2001)</span>. In
 <code>healthiar</code>, the function <code><a href="../reference/standardize.html">standardize()</a></code> applies
 the direct method, where the age-specific rates observed in a study
 population are applied to a standard (reference) population
 distribution.</p>
 <p>The standardized health impact rate is computed as
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mi>m</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>_</mi><mi>p</mi><mi>e</mi><mi>r</mi><mi>_</mi><mn>100</mn><mi>k</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>h</mi><mi>a</mi><msub><mi>b</mi><mrow><mi>s</mi><mi>t</mi><mi>d</mi></mrow></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></munderover><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mi>m</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>_</mi><mi>p</mi><mi>e</mi><mi>r</mi><mi>_</mi><mn>100</mn><mi>k</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>h</mi><mi>a</mi><msub><mi>b</mi><mi>i</mi></msub><mo>×</mo><msub><mi>w</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex"> impact\_per\_100k\_inhab_{std} = \sum_{i=1}^{k} (impact\_per\_100k\_inhab_i \times w_i) </annotation></semantics></math></p>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mi>m</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>_</mi><mi>p</mi><mi>e</mi><mi>r</mi><mi>_</mi><mn>100</mn><mi>k</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>h</mi><mi>a</mi><msub><mi>b</mi><mrow><mi>s</mi><mi>t</mi><mi>d</mi></mrow></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></munderover><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mi>m</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>_</mi><mi>p</mi><mi>e</mi><mi>r</mi><mi>_</mi><mn>100</mn><mi>k</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>h</mi><mi>a</mi><msub><mi>b</mi><mi>i</mi></msub><mo>×</mo><mi>r</mi><mi>e</mi><mi>f</mi><mi>_</mi><mi>p</mi><mi>r</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>p</mi><mi>o</mi><msub><mi>p</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex"> impact\_per\_100k\_inhab_{std} = \sum_{i=1}^{k} (impact\_per\_100k\_inhab_i \times ref\_prop\_pop_i) </annotation></semantics></math></p>
 <p>where:</p>
 <ul>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>R</mi><mrow><mi>s</mi><mi>t</mi><mi>d</mi></mrow></msub><annotation encoding="application/x-tex">R_{std}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mi>m</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>_</mi><mi>p</mi><mi>e</mi><mi>r</mi><mi>_</mi><mn>100</mn><mi>k</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>h</mi><mi>a</mi><msub><mi>b</mi><mrow><mi>s</mi><mi>t</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">impact\_per\_100k\_inhab_{std}</annotation></semantics></math>
 is the age-standardized health impact rate.</li>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>i</mi></msub><annotation encoding="application/x-tex">r_i</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mi>m</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>_</mi><mi>p</mi><mi>e</mi><mi>r</mi><mi>_</mi><mn>100</mn><mi>k</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>h</mi><mi>a</mi><msub><mi>b</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">impact\_per\_100k\_inhab_i</annotation></semantics></math>
 is the impact rate observed in age group
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 (e.g., impact per 100,000 inhabitants).</li>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><msub><mi>f</mi><mi>p</mi></msub><mi>r</mi><mi>o</mi><msub><mi>p</mi><mi>p</mi></msub><mi>o</mi><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">ref_prop_pop_i</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><mi>f</mi><mi>_</mi><mi>p</mi><mi>r</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>p</mi><mi>o</mi><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">ref\_prop\_pop_i</annotation></semantics></math>
 is the proportion of the reference population in age group
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 .</li>
@@ -6203,26 +6220,25 @@ is the number of age groups.</li>
 <h2 id="preparation-of-exposure-data">Preparation of exposure data<a class="anchor" aria-label="anchor" href="#preparation-of-exposure-data"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-e-g--19">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--19"></a>
+<h4 id="goal-17">Goal<a class="anchor" aria-label="anchor" href="#goal-17"></a>
 </h4>
-<p>To determine population-weighted mean PM2.5 exposure for several
-neighborhoods of Brussels (Belgium)</p>
+<p>E.g., to determine population-weighted mean PM2.5 exposure for
+several neighborhoods of Brussels (Belgium)</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-9">Methodology<a class="anchor" aria-label="anchor" href="#methodology-9"></a>
 </h4>
 <p>The <code>healthiar</code>function <code><a href="../reference/prepare_exposure.html">prepare_exposure()</a></code>
 helps users that do not have the exposure data (needed for
-<code>healthiar</code> functions), but only concentration and population
-data. The function calculates an average concentration value in each
-geographic unit, weighted by the fraction of the population in each
-sub-unit.</p>
+<code>healthiar</code> functions), but only spatial concentration and
+population data. The function calculates an average concentration value
+in each geographic unit, weighted with population at each location.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>x</mi><mi>p</mi><mo>=</mo><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>C</mi><mi>i</mi></msub><mo>×</mo><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>i</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex"> exp = \frac{\sum_{i=1}^{n} (C_i \times population_i)}{\sum_{i=1}^{n} population_i} </annotation></semantics></math></p>
 <p>where:</p>
 <ul>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>x</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">exp</annotation></semantics></math>
-= population-weighted mean exposure for the region.</li>
+= population-weighted mean exposure for the geographic unit.</li>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>C</mi><mi>i</mi></msub><annotation encoding="application/x-tex">C_i</annotation></semantics></math>
 = pollutant concentration in grid cell
@@ -6233,8 +6249,13 @@ sub-unit.</p>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>.</li>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
-= total number of grid cells within the region’s boundaries.</li>
+= total number of grid cells contained by the geographic unit.</li>
 </ul>
+<p>In case population is entered as count by geographic sub-unit, the
+function calculates the mean concentration in each sub-unit and
+aggregates it to higher-level geographic units. If no population data is
+entered, the function calculates a simple spatial mean concentration as
+exposure value.</p>
 <p>The output of <code><a href="../reference/prepare_exposure.html">prepare_exposure()</a></code> can be entered in the
 argument <code>exp_mean</code>, <code>exp_lower</code> and/or
 <code>exp_upper</code> in <code>healthiar</code> functions such as
@@ -6248,7 +6269,7 @@ argument <code>exp_mean</code>, <code>exp_lower</code> and/or
 <span><span class="va">exdat_pwm_1</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exdat_pwm_1.tif"</span>, package <span class="op">=</span> <span class="st">"healthiar"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">exdat_pwm_2</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exdat_pwm_2.gpkg"</span>, package <span class="op">=</span> <span class="st">"healthiar"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">pwm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_exposure.html">prepare_exposure</a></span><span class="op">(</span></span>
+<span><span class="va">pwm</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/prepare_exposure.html">prepare_exposure</a></span><span class="op">(</span></span>
 <span>  poll_grid <span class="op">=</span> <span class="va">exdat_pwm_1</span>, <span class="co"># Formal class SpatRaster,</span></span>
 <span>  geo_units <span class="op">=</span> <span class="va">exdat_pwm_2</span>, <span class="co"># sf of the geographic sub-units</span></span>
 <span>  population <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">exdat_pwm_2</span><span class="op">$</span><span class="va">population</span><span class="op">)</span>, <span class="co"># population per geographic sub-unit</span></span>
@@ -6257,94 +6278,21 @@ argument <code>exp_mean</code>, <code>exp_lower</code> and/or
 <div class="section level4">
 <h4 id="main-results-12">Main results<a class="anchor" aria-label="anchor" href="#main-results-12"></a>
 </h4>
-<p>Within the function output, the tibble <code>main</code> contains the
+<p>Within the function output, the list <code>main</code> contains the
 population-weighted mean exposures for the (higher-level) geographic
-units in the column <code>exp_value</code>.</p>
-<table class="table kable_wrapper"><tbody><tr>
-<td>
-<table class="table">
-<thead><tr class="header">
-<th align="left">x</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">Center</td>
-</tr>
-<tr class="even">
-<td align="left">East</td>
-</tr>
-<tr class="odd">
-<td align="left">North</td>
-</tr>
-<tr class="even">
-<td align="left">South</td>
-</tr>
-<tr class="odd">
-<td align="left">West</td>
-</tr>
-</tbody>
-</table>
-</td>
-<td>
-<table class="table">
-<thead><tr class="header">
-<th align="right">x</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="right">11.48074</td>
-</tr>
-<tr class="even">
-<td align="right">11.06808</td>
-</tr>
-<tr class="odd">
-<td align="right">11.47630</td>
-</tr>
-<tr class="even">
-<td align="right">11.05403</td>
-</tr>
-<tr class="odd">
-<td align="right">11.37794</td>
-</tr>
-</tbody>
-</table>
-</td>
-<td>
-<table class="table">
-<thead><tr class="header">
-<th align="left">x</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">Population-weighted mean concentration</td>
-</tr>
-<tr class="even">
-<td align="left">Population-weighted mean concentration</td>
-</tr>
-<tr class="odd">
-<td align="left">Population-weighted mean concentration</td>
-</tr>
-<tr class="even">
-<td align="left">Population-weighted mean concentration</td>
-</tr>
-<tr class="odd">
-<td align="left">Population-weighted mean concentration</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr></tbody></table>
+units in the column <code>exposure_mean</code> and the total population
+in each unit in column <code>population_total</code>.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="threshold-additional-to-cut-off">Threshold additional to cut-off<a class="anchor" aria-label="anchor" href="#threshold-additional-to-cut-off"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-e-g--20">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--20"></a>
+<h4 id="goal-18">Goal<a class="anchor" aria-label="anchor" href="#goal-18"></a>
 </h4>
-<p>To quantify health impacts in the exposure group 55dB+ (calculation
-threshold) that are affected by a exposure above the effect threshold of
-45 dB (cut-off).</p>
+<p>E.g., to quantify health impacts in the exposure group 55dB+
+(calculation threshold) that are affected by a exposure above the effect
+threshold of 45 dB (cut-off).</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-20">Function call<a class="anchor" aria-label="anchor" href="#function-call-20"></a>
@@ -6391,28 +6339,51 @@ f(c) =
 <h3 id="monetization">Monetization<a class="anchor" aria-label="anchor" href="#monetization"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--21">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--21"></a>
+<h4 id="goal-19">Goal<a class="anchor" aria-label="anchor" href="#goal-19"></a>
 </h4>
-<p>To monetize the attributable health impact of a policy that will have
-health benefits five years from now.</p>
+<p>E.g., to monetize the attributable health impact of a policy that
+will have health benefits five years from now.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-10">Methodology<a class="anchor" aria-label="anchor" href="#methodology-10"></a>
 </h4>
-<p>Health impacts can be monetized by valuating them (giving them an
-econmic value) and by applying discounting and/or inflation. For this
-purpose, you can use <code><a href="../reference/monetize.html">monetize()</a></code>.</p>
-<p>If you just need the discount factor or the inflation factor, you can
-alternatively call <code><a href="../reference/get_discount_factor.html">get_discount_factor()</a></code> or
-<code><a href="../reference/get_inflation_factor.html">get_inflation_factor()</a></code>.</p>
-<p>If you just need the discounted health impacts (to be valuated in a
-further step), you can alternatively call <code><a href="../reference/discount.html">discount()</a></code>.</p>
+<p>In health economic evaluations and economic burden of disease
+assessments, health impacts may need to be converted into monetary
+values. For this purpose, you can use <code><a href="../reference/monetize.html">monetize()</a></code>.</p>
+<p>Several valuation metrics are available, depending on how outcomes
+are quantified in natural or health units (e.g. cases reduced, deaths
+prevented, reductions in mortality risk, life-years gained, QALYs
+gained, DALYs averted). Common metrics include the Value of a
+Statistical Life (VSL) <span class="citation">(OECD 2025)</span> , the
+Value of a Life-Year (VOLY) <span class="citation">(Hammitt 2007)</span>
+and the Value of a Quality-Adjusted Life-Year (VAQALY) <span class="citation">(Bobinac et al. 2010)</span>.</p>
+<p>Discounting is the practice of converting future costs (or health
+impacts as previous step to valuating them) into their present value.
+The underlying rationale is that the value placed on outcomes declines
+as they occur further in the future. Therefore, future costs and effects
+are converted into present-value terms to make them comparable over time
+<span class="citation">(Attema, Brouwer, and Claxton 2018)</span>.</p>
+<p>Discounting is implemented by selecting a discount rate, which is
+used to compute a discount factor for each time period. This factor is
+then multiplied by the corresponding future cost (or effect) to express
+it in present-value terms.</p>
+<p>If you need the discounted values of a cost or health outcome, you
+can call the <code>healthiar</code> function <code><a href="../reference/discount.html">discount()</a></code>. If
+you just need the discount factor, you can alternatively call
+<code><a href="../reference/get_discount_factor.html">get_discount_factor()</a></code>. If you just need the inflation
+factor, you can <code><a href="../reference/get_inflation_factor.html">get_inflation_factor()</a></code>.</p>
+<p>Different functional forms can be used to apply discounting. The most
+common is exponential discounting, also referred to as constant
+discounting, since outcomes are discounted proportionally as time
+increases. An alternative is hyperbolic discounting, which tends to
+better capture human behavior by discounting the near present more
+heavily than outcomes further in the future <span class="citation">(Lipman and Attema 2024)</span></p>
 <p>See below the equations that are used behind these functions.</p>
 <div class="section level5">
 <h5 id="inflation-factor-without-discounting">Inflation factor (without discounting)<a class="anchor" aria-label="anchor" href="#inflation-factor-without-discounting"></a>
 </h5>
-<p>As suggested by <span class="citation">Brealey et al.
-(2023)</span></p>
+<p>As suggested by <span class="citation">(Brealey et al. 2023;
+Samuelson 1937)</span></p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mrow><annotation encoding="application/x-tex">inflation\_factor = (1 + inflation\_rate)^{n\_years}</annotation></semantics></math></p>
 </div>
 </div>
@@ -6502,28 +6473,41 @@ from a non-<code>healthiar</code> source.</p>
 <h3 id="cost-benefit-analysis">Cost-benefit analysis<a class="anchor" aria-label="anchor" href="#cost-benefit-analysis"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--22">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--22"></a>
+<h4 id="goal-e-g--2">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--2"></a>
 </h4>
-<p>To estimate the benefit of a health policy via cost-benefit analysis
-(CBA).</p>
+<p>E.g., to perform an economic evaluation for an intervention by
+comparing its benefits and costs via Cost-Benefit Analysis (CBA).</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-11">Methodology<a class="anchor" aria-label="anchor" href="#methodology-11"></a>
 </h4>
-<p>The cost-benefit analysis compares the cost and the benefit of an
-investment.<br>
-It is assumed that the benefit is caused by the positive health impacts
-of a policy intervention, which generates some costs.</p>
-<p>To perform a cost-benefit analysis, you can use the function
-<code><a href="../reference/cba.html">cba()</a></code>. It provides as output three types of indicators
-based on the following equations <span class="citation">(Boardman et al.
-2018)</span>:</p>
+<p>The CBA is a type of economic evaluation that compares the costs and
+the benefits of an intervention, considering both measures expressed in
+monetary terms.</p>
+<p>To perform a CBA, you can use the function <code><a href="../reference/cba.html">cba()</a></code>. This
+approach requires monetizing benefits so they can be directly compared
+with costs. Since interventions typically generate costs and benefits
+over multi-year time horizons, discounting is a common practice to
+obtain the present value of future costs and benefits. Depending on the
+reference guidelines, the discount rate can be specified as the same for
+costs and benefits or different across them. The outputs of a
+Cost-Benefit Analysis can be expressed as three main indicators <span class="citation">(Boardman et al. 2018)</span>: - intervention’s net
+benefit: the difference between monetized benefits and costs -
+Cost-Benefit Ratio (CBR): monetized benefits divided by costs and -
+Return on Investment (ROI): return generated per unit of expenditure by
+relating net benefits to the intervention’s costs.</p>
+<p>An intervention is recommended from a Cost-Benefit Analysis
+perspective, if it yields a positive net benefit or a positive ROI, or
+equivalently, a CBR greater than one, meaning that the intervention’s
+monetized benefits exceed its costs. These three outputs are available
+when running <code><a href="../reference/cba.html">cba()</a></code> and are calculated considering the
+following formulas.</p>
 <p><strong>Net Benefit</strong>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>t</mi><mi>_</mi><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi><mo>=</mo><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi><mo>−</mo><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">net\_benefit = benefit - cost</annotation></semantics></math></p>
-<p><strong>Cost-Benefit Ratio</strong>
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi><mi>_</mi><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mo>=</mo><mfrac><mrow><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi></mrow><mrow><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">cost\_benefit\_ratio = \frac{benefit}{cost}</annotation></semantics></math></p>
+<p><strong>Cost-Benefit Ratio (CBR)</strong>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>b</mi><mi>r</mi><mo>=</mo><mfrac><mrow><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi></mrow><mrow><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">cbr = \frac{benefit}{cost}</annotation></semantics></math></p>
 <p><strong>Return on Investment (ROI)</strong>
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>_</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>v</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi><mo>=</mo><mfrac><mrow><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi><mo>−</mo><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow><mrow><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow></mfrac><mo>×</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">return\_on\_investment = \frac{benefit - cost}{cost} \times 100</annotation></semantics></math></p>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>o</mi><mi>i</mi><mo>=</mo><mfrac><mrow><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi><mo>−</mo><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow><mrow><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow></mfrac><mo>×</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">roi = \frac{benefit - cost}{cost} \times 100</annotation></semantics></math></p>
 </div>
 <div class="section level4">
 <h4 id="function-call-22">Function call<a class="anchor" aria-label="anchor" href="#function-call-22"></a>
@@ -6610,30 +6594,30 @@ a net cost!</p>
 <h3 id="health-impact-attributable-to-social-indicator">Health impact attributable to social indicator<a class="anchor" aria-label="anchor" href="#health-impact-attributable-to-social-indicator"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--23">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--23"></a>
+<h4 id="goal-20">Goal<a class="anchor" aria-label="anchor" href="#goal-20"></a>
 </h4>
-<p>To estimate the health impact that is theoretically attributable to
-the difference in a social indicator of the population exposed
-(e.g. degree of deprivation).</p>
+<p>E.g., to estimate the health impact that is theoretically
+attributable to the difference in degree of deprivation of the
+population exposed.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-12">Methodology<a class="anchor" aria-label="anchor" href="#methodology-12"></a>
 </h4>
-<p>Taking into account socio-economic indicators, e.g. multiple
+<p>Taking into account socio-economic indicators, e.g. a multiple
 deprivation index <span class="citation">(Mogin et al. 2025)</span>, the
-differences in attributable health impacts across study areas can be
+differences in attributable health impacts across the study areas can be
 estimated <span class="citation">(Renard et al. 2019; Otavova et al.
 2022)</span>.</p>
-<p>The most deprived areas (top n-quantile) and in the least deprived
-areas (bottom n-quantile) are then compared. The differences can be</p>
+<p>Social inequalities are quantified as the difference between the
+least deprived areas (the last n-quantile) and</p>
+<ul>
+<li><p>the most deprived areas or</p></li>
+<li><p>the population overall.</p></li>
+</ul>
+<p>These differences can be</p>
 <ul>
 <li><p>absolute or</p></li>
-<li><p>relative</p></li>
-</ul>
-<p>and compared to</p>
-<ul>
-<li><p>least deprived quantile or</p></li>
-<li><p>to overall.</p></li>
+<li><p>relative.</p></li>
 </ul>
 <div class="section level5">
 <h5 id="difference-most-deprived-vs--least-deprived">Difference most deprived vs. least deprived<a class="anchor" aria-label="anchor" href="#difference-most-deprived-vs--least-deprived"></a>
@@ -6642,14 +6626,14 @@ areas (bottom n-quantile) are then compared. The differences can be</p>
 Where:</p>
 <ul>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>b</mi><mi>s</mi><mi>o</mi><mi>l</mi><mi>u</mi><mi>t</mi><msub><mi>e</mi><mi>q</mi></msub><mi>u</mi><mi>a</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">absolute_quantile</annotation></semantics></math>
-= Absolute difference regarding quantile</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>b</mi><mi>s</mi><mi>o</mi><mi>l</mi><mi>u</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>q</mi><mi>u</mi><mi>a</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">absolute\_quantile</annotation></semantics></math>
+= Absolute difference between quantiles.</li>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mi>i</mi><mi>r</mi><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">first</annotation></semantics></math>
-= Average health impacts in <em>most</em> deprived quantile</li>
+= Average health impacts in <em>most</em> deprived quantile.</li>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>a</mi><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">last</annotation></semantics></math>
-= Average health impacts in <em>least</em> deprived quantile</li>
+= Average health impacts in <em>least</em> deprived quantile.</li>
 </ul>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>_</mi><mi>q</mi><mi>u</mi><mi>a</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>e</mi><mo>=</mo><mfrac><mrow><mi>a</mi><mi>b</mi><mi>s</mi><mi>o</mi><mi>l</mi><mi>u</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>q</mi><mi>u</mi><mi>a</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>e</mi></mrow><mrow><mi>l</mi><mi>a</mi><mi>s</mi><mi>t</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex"> relative\_quantile = \frac{absolute\_quantile}{last} </annotation></semantics></math></p>
 </div>
@@ -6660,16 +6644,15 @@ Where:</p>
 Where:</p>
 <ul>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>b</mi><mi>s</mi><mi>o</mi><mi>l</mi><mi>u</mi><mi>t</mi><msub><mi>e</mi><mi>o</mi></msub><mi>v</mi><mi>e</mi><mi>r</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">absolute_overall</annotation></semantics></math>
-= Absolute difference regarding the overall average</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>b</mi><mi>s</mi><mi>o</mi><mi>l</mi><mi>u</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>o</mi><mi>v</mi><mi>e</mi><mi>r</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">absolute\_overall</annotation></semantics></math>
+= Absolute difference regarding the overall average.</li>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>o</mi><mi>v</mi><mi>e</mi><mi>r</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">overall</annotation></semantics></math>
-= <em>Overall</em> average health impacts in all study areas</li>
+= <em>Overall</em> average health impacts in the study area.</li>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>a</mi><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">last</annotation></semantics></math>
-= Average health impacts in <em>least</em> deprived quantile</li>
+= Average health impacts in <em>least</em> deprived quantile.</li>
 </ul>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>_</mi><mi>o</mi><mi>v</mi><mi>e</mi><mi>r</mi><mi>a</mi><mi>l</mi><mi>l</mi><mo>=</mo><mfrac><mrow><mi>a</mi><mi>b</mi><mi>s</mi><mi>o</mi><mi>l</mi><mi>u</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>o</mi><mi>v</mi><mi>e</mi><mi>r</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow><mrow><mi>l</mi><mi>a</mi><mi>s</mi><mi>t</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex"> relative\_overall = \frac{absolute\_overall}{last} </annotation></semantics></math></p>
 <p>If you assume that the least deprived areas are similar to
 counter-factual cases (no exposure to deprivation), the relative
 difference regarding the overall average health impact could be
@@ -6723,8 +6706,8 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
 <span><span class="co">#&gt;   parameter      difference_type difference_compared_…¹ difference_value comment</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> impact_rate_s… absolute        bottom_quantile                 11.5    <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> impact_rate_s… relative        bottom_quantile                  0.193  <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> impact_rate_s… absolute        last_quantile                   11.5    <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> impact_rate_s… relative        last_quantile                    0.193  <span style="color: #BB0000;">NA</span>     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> impact_rate_s… absolute        overall                         -<span style="color: #BB0000;">0.834</span>  It can…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> impact_rate_s… relative        overall                         -<span style="color: #BB0000;">0.014</span><span style="color: #BB0000; text-decoration: underline;">3</span> It can…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated name: ¹​difference_compared_with</span></span></span></code></pre>
@@ -6734,16 +6717,16 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <h3 id="multiple-deprivation-index">Multiple deprivation index<a class="anchor" aria-label="anchor" href="#multiple-deprivation-index"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-e-g--24">Goal (e.g.)<a class="anchor" aria-label="anchor" href="#goal-e-g--24"></a>
+<h4 id="goal-21">Goal<a class="anchor" aria-label="anchor" href="#goal-21"></a>
 </h4>
-<p>To estimate the multiple deprivation index (MDI) to use it for the
-argument <code>social_indicator</code> in the function
+<p>E.g., to estimate the multiple deprivation index (MDI) to use it for
+the argument <code>social_indicator</code> in the function
 <code><a href="../reference/socialize.html">socialize()</a></code>.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-13">Methodology<a class="anchor" aria-label="anchor" href="#methodology-13"></a>
 </h4>
-<p>Socio-economic indicators (e.g. education level, employment status
+<p>Socio-economic indicators (e.g., education level, employment status
 and family structure) can be condensed into a multiple deprivation index
 (MDI) <span class="citation">(Mogin et al. 2025)</span>. For this
 purpose, the indicators can be normalized using min-max scaling.</p>
@@ -6969,7 +6952,8 @@ indicated below.</p>
 <p>Visualization is out of scope of <code>healthiar</code>. You can
 visualize in:</p>
 <ul>
-<li>R, e.g. with the <code>ggplot2</code> package (<a href="https://ggplot2-book.org/" class="external-link">online book by the creator</a>),</li>
+<li>R using base programming or packages such as <code>ggplot2</code>
+<span class="citation">(Wickham 2016)</span>,</li>
 <li>Excel (export results first) or</li>
 <li>Other tools.</li>
 </ul>
@@ -6999,31 +6983,42 @@ Murray, Rafael Lozano, and Mie Inoue. 2001. <span>“Age Standardization
 of Rates: A New WHO Standard.”</span> GPE Discussion Paper Series: No.
 31. Geneva: World Health Organization.
 </div>
+<div id="ref-Askari2020_ijph" class="csl-entry">
+Askari, Maryam, and Seyedeh Mahdieh Namayandeh. 2020. <span>“The
+Difference Between the Population Attributable Risk (PAR) and the
+Potentioal Impact Fraction (PIF).”</span> <em>Iranian Journal of Public
+Health</em> 49 (10): 2018–19. <a href="https://doi.org/10.18502/ijph.v49i10.4713" class="external-link">https://doi.org/10.18502/ijph.v49i10.4713</a>.
+</div>
+<div id="ref-Attema2018_p" class="csl-entry">
+Attema, Arthur E., Werner B. F. Brouwer, and Karl Claxton. 2018.
+<span>“Discounting in Economic Evaluations.”</span>
+<em>PharmacoEconomics</em> 36 (7): 745–58. <a href="https://doi.org/10.1007/s40273-018-0672-z" class="external-link">https://doi.org/10.1007/s40273-018-0672-z</a>.
+</div>
 <div id="ref-Boardman2018_book" class="csl-entry">
 Boardman, Anthony E., David H. Greenberg, Aidan R. Vining, and David L.
 Weimer. 2018. <em>Cost-Benefit Analysis: Concepts and Practice</em>. 5th
 ed. Cambridge, UK: Cambridge University Press.
+</div>
+<div id="ref-Bobinac2010_vh" class="csl-entry">
+Bobinac, N., J. van Exel, F. F. H. Rutten, and W. B. F. Brouwer. 2010.
+<span>“Willingness to Pay for a Quality-Adjusted Life-Year: The
+Individual Perspective.”</span> <em>Value in Health</em> 13 (8):
+1046–55. <a href="https://doi.org/10.1111/j.1524-4733.2010.00783.x" class="external-link">https://doi.org/10.1111/j.1524-4733.2010.00783.x</a>.
 </div>
 <div id="ref-Brealey2023_book" class="csl-entry">
 Brealey, Richard A., Stewart C. Myers, Franklin Allen, Simon Benninga,
 and Julian Read. 2023. <em>Principles of Corporate Finance</em>. 14th
 ed. New York, NY: McGraw-Hill Education.
 </div>
-<div id="ref-GBD2020_tldemo" class="csl-entry">
-Collaborators, GBD 2019 Demographics. 2020. <span>“Global
-Age-Sex-Specific Fertility, Mortality, Healthy Life Expectancy (HALE),
-and Population Estimates in 204 Countries and Territories, 1950-2019: A
-Comprehensive Demographic Analysis for the Global Burden of Disease
-Study 2019.”</span> <em>The Lancet</em> 396 (10258): 1160–1203. <a href="https://doi.org/10.1016/S0140-6736(20)30977-6" class="external-link">https://doi.org/10.1016/S0140-6736(20)30977-6</a>.
-</div>
-<div id="ref-GBD2020_tl" class="csl-entry">
-Collaborators, GBD 2019 Risk Factors. 2020. <span>“Global Burden of 87
-Risk Factors in 204 Countries and Territories, 1990–2019.”</span>
-<em>The Lancet</em>. <a href="https://doi.org/10.1016/S0140-6736(20)30752-2" class="external-link">https://doi.org/10.1016/S0140-6736(20)30752-2</a>.
-</div>
 <div id="ref-Cronbach1951_p" class="csl-entry">
 Cronbach, Lee J. 1951. <span>“Coefficient Alpha and the Internal
 Structure of Tests.”</span> <em>Psychometrika</em> 16 (3): 297–334. <a href="https://doi.org/10.1007/BF02310555" class="external-link">https://doi.org/10.1007/BF02310555</a>.
+</div>
+<div id="ref-Devleesschauwer2022_package" class="csl-entry">
+Devleesschauwer, Brecht, Paul Torgerson, Johannes Charlier, Bruno
+Levecke, Nicolas Praet, Sophie Roelandt, Suzanne Smit, Pierre Dorny,
+Dirk Berkvens, and Niko Speybroeck. 2022. <em>Prevalence: Tools for
+Prevalence Assessment Studies.</em> <a href="https://cran.r-project.org/package=prevalence" class="external-link">https://cran.r-project.org/package=prevalence</a>.
 </div>
 <div id="ref-Doucet2020_arsia" class="csl-entry">
 Doucet, Arnaud, Anthony Lee, et al. 2020. <span>“Monte Carlo Methods in
@@ -7034,6 +7029,23 @@ Its Application</em> 7: 435–58. <a href="https://doi.org/10.1146/annurev-stati
 Frederick, Shane, George Loewenstein, and Ted O’Donoghue. 2002.
 <span>“Time Discounting and Time Preference: A Critical Review.”</span>
 <em>Journal of Economic Literature</em> 40 (2): 351–401. <a href="https://doi.org/10.1257/002205102320161311" class="external-link">https://doi.org/10.1257/002205102320161311</a>.
+</div>
+<div id="ref-GBD2020_tldemo" class="csl-entry">
+GBD 2019 Demographics Collaborators. 2020. <span>“Global
+Age-Sex-Specific Fertility, Mortality, Healthy Life Expectancy (HALE),
+and Population Estimates in 204 Countries and Territories, 1950-2019: A
+Comprehensive Demographic Analysis for the Global Burden of Disease
+Study 2019.”</span> <em>The Lancet</em> 396 (10258): 1160–1203. <a href="https://doi.org/10.1016/S0140-6736(20)30977-6" class="external-link">https://doi.org/10.1016/S0140-6736(20)30977-6</a>.
+</div>
+<div id="ref-GBD2020_tl" class="csl-entry">
+GBD 2019 Risk Factors Collaborators. 2020. <span>“Global Burden of 87
+Risk Factors in 204 Countries and Territories, 1990–2019.”</span>
+<em>The Lancet</em>. <a href="https://doi.org/10.1016/S0140-6736(20)30752-2" class="external-link">https://doi.org/10.1016/S0140-6736(20)30752-2</a>.
+</div>
+<div id="ref-Hammitt2007_reep" class="csl-entry">
+Hammitt, James K. 2007. <span>“Valuing Changes in Mortality Risk: Lives
+Saved Versus Life Years Saved.”</span> <em>Review of Environmental
+Economics and Policy</em> 1 (2): 228–40. <a href="https://doi.org/10.1093/reep/rem015" class="external-link">https://doi.org/10.1093/reep/rem015</a>.
 </div>
 <div id="ref-Harvey1986_ms" class="csl-entry">
 Harvey, Charles M. 1986. <span>“Value Functions for Infinite-Period
@@ -7058,6 +7070,11 @@ Olavi Hänninen, Michael Brauer, Gavin Pereira, Omid Dadras, and Anette
 Kocbach Bølling. 2025. <span>“Burden of Disease Attributable to
 <span>PM2</span>.5 at Low Exposure Levels: Impact of Methodological
 Choices.”</span> <em>Environmental Health</em> 25 (1): 4. <a href="https://doi.org/10.1186/s12940-025-01250-y" class="external-link">https://doi.org/10.1186/s12940-025-01250-y</a>.
+</div>
+<div id="ref-Lipman2024_jru" class="csl-entry">
+Lipman, Stefan A., and Arthur E. Attema. 2024. <span>“A Systematic
+Review of Unique Methods for Measuring Discount Rates.”</span>
+<em>Journal of Risk and Uncertainty</em> 69 (2): 145–89. <a href="https://doi.org/10.1007/s11166-024-09439-1" class="external-link">https://doi.org/10.1007/s11166-024-09439-1</a>.
 </div>
 <div id="ref-Mazur1987_book" class="csl-entry">
 Mazur, James E. 1987. <span>“An Adjusting Procedure for Studying Delayed
@@ -7096,6 +7113,11 @@ Stephen Vander Hoorn. 2003. <span>“Comparative Risk Assessment:
 Conceptual Framework and Design.”</span> <em>Epidemiology</em> 14 (4):
 447–58. <a href="https://doi.org/10.1097/01.ede.0000071443.19794.8d" class="external-link">https://doi.org/10.1097/01.ede.0000071443.19794.8d</a>.
 </div>
+<div id="ref-OECD2025_book" class="csl-entry">
+OECD. 2025. <em>Mortality Risk Valuation in Policy Assessment: A Global
+Meta-Analysis of Value of Statistical Life Studies</em>. Paris: OECD
+Publishing. <a href="https://doi.org/10.1787/76ca89a2-en" class="external-link">https://doi.org/10.1787/76ca89a2-en</a>.
+</div>
 <div id="ref-WHO2014_book" class="csl-entry">
 Organization, World Health. 2014. <em>Health Impact Assessment of Air
 Pollution: Guide for Practitioners</em>. Copenhagen: WHO Regional Office
@@ -7126,6 +7148,11 @@ Study.”</span> <em>BMC Public Health</em> 19 (1): 662. <a href="https://doi.or
 Robert, Christian P, and George Casella. 2004. <em>Monte Carlo
 Statistical Methods</em>. Springer Texts in Statistics. Springer Science
 &amp; Business Media. <a href="https://doi.org/10.1007/978-1-4757-4145-2" class="external-link">https://doi.org/10.1007/978-1-4757-4145-2</a>.
+</div>
+<div id="ref-Samuelson1937_res" class="csl-entry">
+Samuelson, Paul A. 1937. <span>“A Note on Measurement of
+Utility.”</span> <em>The Review of Economic Studies</em> 4 (2): 155–61.
+<a href="https://doi.org/10.2307/2967612" class="external-link">https://doi.org/10.2307/2967612</a>.
 </div>
 <div id="ref-Soares2020_report" class="csl-entry">
 Soares, J., A. González Ortiz, A. Gsella, J. Horálek, D. Plass, and S.
@@ -7167,6 +7194,10 @@ Europe. <a href="https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4
 <div id="ref-Wickham2014_jss" class="csl-entry">
 Wickham, Hadley. 2014. <span>“Tidy Data.”</span> <em>Journal of
 Statistical Software</em> 59 (10): 1–23. <a href="https://doi.org/10.18637/jss.v059.i10" class="external-link">https://doi.org/10.18637/jss.v059.i10</a>.
+</div>
+<div id="ref-Wickham2016_ggplot" class="csl-entry">
+———. 2016. <em>Ggplot2: Elegant Graphics for Data Analysis</em>.
+Springer-Verlag New York. <a href="https://ggplot2.tidyverse.org" class="external-link">https://ggplot2.tidyverse.org</a>.
 </div>
 </div>
 </div>

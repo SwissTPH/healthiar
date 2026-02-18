@@ -661,9 +661,9 @@ socialize <- function(output_attribute = NULL,
           base::grepl("bhd_", parameter) ~ "baseline health data",
           base::grepl("pop_fraction_", parameter) ~ "population attributable fraction",
           base::grepl("impact_", parameter) ~ "impact"),
-      ## Replace "quantile" with "bottom_quantile"
+      ## Replace "quantile" with "last_quantile"
       difference_compared_with =
-        base::gsub("quantile", "bottom_quantile", difference_compared_with),
+        base::gsub("quantile", "last_quantile", difference_compared_with),
       ## Flag attributable fraction
       is_paf_from_deprivation =
         difference_type == "relative" & difference_compared_with == "overall",

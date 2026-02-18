@@ -1,8 +1,8 @@
-#' Get population impact fraction (PIF)
+#' Get potential impact fraction (PIF)
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function calculates the population impact fraction of a health outcome due to exposure to an environmental stressor
+#' This function calculates the potential impact fraction of a health outcome due to exposure to an environmental stressor
 
 # ARGUMENTS ####################################################################
 #' @param rr_at_exp_1 \code{Numerical value} showing the risk estimate of the concentration response function for a specific concentration in the scenario 1. The population attributable fraction is normally calculated using the risk estimate that refers to the concentration that reflects the population exposure and the cut-off. This risk estimate is obtained after re-scaling from the epidemiological study with a particular increment (e.g. for PM2.5 10 or 5 ug/m3) to the aimed concentration.
@@ -16,9 +16,10 @@
 #' \strong{Methodology}
 #'
 #' This function is internally used inside the \code{healthiar} function \code{compare()}.
-#' The population impact fraction (PIF) is calculated as
-#' described in \insertCite{WHO2003_report;textual}{healthiar} and
-#' \insertCite{Murray2003_spbm;textual}{healthiar}.
+#' The potential impact fraction (PIF) is calculated as
+#' described in \insertCite{WHO2003_report;textual}{healthiar},
+#' \insertCite{Murray2003_spbm;textual}{healthiar} and
+#' \insertCite{Askari2020_ijph;textual}{healthiar}.
 #'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
@@ -30,11 +31,11 @@
 #'
 # VALUE ########################################################################
 #' @returns
-#' This function returns the population impact fraction as a \code{numeric value}.
+#' This function returns the potential impact fraction as a \code{numeric value}.
 
 # EXAMPLES #####################################################################
 #' @examples
-#' # Goal: calculate the population impact fraction (PIF)
+#' # Goal: calculate the potential impact fraction (PIF)
 #' results <- get_pif(
 #'   rr_at_exp_1 = 1.043879,
 #'   rr_at_exp_2 = 1.011217,
