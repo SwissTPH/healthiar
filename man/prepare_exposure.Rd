@@ -4,47 +4,49 @@
 \alias{prepare_exposure}
 \title{Prepare exposure data}
 \usage{
-prepare_exposure(poll_grid, geo_units, population, geo_id_macro)
+prepare_exposure(
+  poll_grid,
+  geo_units,
+  population = NULL,
+  pop_grid = NULL,
+  geo_id_micro = NULL,
+  geo_id_macro = NULL,
+  bin_width = 0.1
+)
 }
 \arguments{
 \item{poll_grid}{\code{SpatRaster} of the pollution concentration data.}
 
-\item{geo_units}{\code{sf} of the geographic sub-units.}
+\item{geo_units}{\code{sf} of the geographic units or sub-units.}
 
-\item{population}{\code{Numeric vector} containing the total population number in each geographic sub-unit.}
+\item{population}{\code{Integer vector} of the total population number in each geographic sub-unit.}
 
-\item{geo_id_macro}{\code{Numeric or string vector} containing the higher-level IDs of the geographic units the sub-unit belong to and will be aggregated at.}
+\item{pop_grid}{\code{SpatRaster} of the gridded population data.}
+
+\item{geo_id_micro}{\code{Numeric or string vector} of the IDs of the geographic units. Required if \code{pop_grid} is given or if no population data is provided.}
+
+\item{geo_id_macro}{\code{Numeric or string vector} of the higher-level IDs of the geographic units the sub-unit belong to and will be aggregated at. Required if \code{population} is provided.}
+
+\item{bin_width}{\code{Numeric} specifying the width of the population exposure bins.}
 }
 \value{
 This function returns a \code{list} containing:
 
-1) \code{main} (\code{tibble}) containing the main results as vectors;
+1) \code{main} (\code{list}) containing the main results as vectors;
 \itemize{
- \item \code{geo_id_macro} (\code{string} column) containing the (higher-level) geographic IDs of the assessment
- \item \code{exp_value} (\code{numeric} column) containing the (population-weighted) mean exposure
- \item \code{exp_type} (\code{string} column) specifying the exposure type
+ \item \code{geo_id_micro} of \code{geo_id_macro} (\code{string} column) containing the (higher-level) geographic IDs of the assessment
+ \item \code{exposure_mean} (\code{numeric} column) containing the (population-weighted) mean exposure
+ \item \code{population_total} (\code{integer} column) containing the total population in each geographic unit, if population data was provided
 }
 
 2) \code{detailed} (\code{list}) containing detailed (and interim) results.
 }
 \description{
-This function prepares tabular population exposure data that can be entered in the
-argument \code{exp_...} of the \code{healthiar} functions, e.g. \code{attribute_health()}
-using gridded pollution concentration and population data.
-}
-\details{
-\strong{Methodology}
-
-The population-weighted exposure is calculated by intersecting
-gridded concentration values with population grids,
-following the methodology described in \insertCite{Shaddick2018_jrsssc;textual}{healthiar}.
-
-
-Detailed information about the methodology (including equations)
-is available in the package vignette.
-More specifically, see chapters:
-\itemize{
- \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#preparation-of-exposure-data}{Preparation of exposure data}}
+This function prepares tabular population exposure data compatible with the \code{attribute()} and \code{compare()} functions,
+based on gridded pollution concentration data and polygon data representing geographic units.
+If population data is provided, the function calculates an average concentration value in each geographic unit
+that is weighted with the population number at each location.
+If no population data is provided, the function calculates the simple spatial average concentration in each geographic unit.
 }
 \examples{
 # Goal: determine population-weighted mean PM2.5 exposure for several
@@ -60,19 +62,11 @@ pwm <- prepare_exposure(
   poll_grid = exdat_pwm_1, # Formal class SpatRaster
   geo_units = exdat_pwm_2, # sf of the geographic sub-units
   population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
-  geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate
+  geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate at
 )
 
-
-}
-\references{
-\insertAllCited{}
-}
-\seealso{
-\itemize{
-  \item Downstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
-}
+pwm$main # population-weighted mean exposures for the (higher-level) geographic units
 }
 \author{
-Arno Pauwels, Axel Luyten and Alberto Castro
+Arno Pauwels & Liliana Vazquez Fernandez
 }
