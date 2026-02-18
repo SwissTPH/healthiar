@@ -31,6 +31,8 @@ library(dplyr)
 library(purrr)
 library(tidyr)
 library(knitr)
+library(terra)
+library(sf)
 ```
 
 Hi there!
@@ -1441,7 +1443,7 @@ scenario_B <- attribute_mod(
 
 ```{r}
 
-results_comparison <- compare(
+results_comparison <- healthiar::compare(
   approach_comparison = "delta", # or "pif" (population impact fraction)
   output_attribute_scen_1 = scenario_A,
   output_attribute_scen_2 = scenario_B
