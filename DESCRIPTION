@@ -48,6 +48,7 @@ VignetteBuilder: knitr
 Suggests: 
     sf,
     terra,
+    exactextractr,
     testthat,
     devtools,
     knitr,
