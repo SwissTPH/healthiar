@@ -34,7 +34,7 @@
 - **Andreia Novais**. Contributor.
   [](https://orcid.org/0009-0007-7775-108X)
 
-- **Maria José Rueda Lopez**. Contributor.
+- **Maria Jose Rueda Lopez**. Contributor.
   [](https://orcid.org/0000-0002-2443-1038)
 
 - **Minh Nhat Pham**. Contributor.
@@ -43,7 +43,7 @@
 - **Ana Barbosa**. Contributor.
   [](https://orcid.org/0000-0002-9623-9002)
 
-- **João Vasco Santos**. Contributor.
+- **Joao Vasco Santos**. Contributor.
   [](https://orcid.org/0000-0003-4696-1002)
 
 - **Anette Kocbach Bolling**. Contributor.
