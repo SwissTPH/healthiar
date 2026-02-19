@@ -361,7 +361,7 @@ Soares J, González Ortiz A, Gsella A, Horálek J, Plass D, Kienzler S
 (2022). “Health risk assessment of air pollution and the impact of the
 new WHO guidelines (Eionet Report – ETC HE 2022/10).” European Topic
 Centre on Human Health and the Environment.
-<https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content>.  
+[doi:10.5281/zenodo.7405988](https://doi.org/10.5281/zenodo.7405988) .  
   
 Steenland K, Armstrong B (2006). “An overview of methods for calculating
 the burden of disease due to specific risk factors.” *Epidemiology*,

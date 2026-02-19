@@ -55,7 +55,7 @@ available in the package vignette. More specifically, see chapters:
 
 WHO (2020). “Health impact assessment of air pollution: AirQ+ life table
 manual.” World Health Organization - Regional Office for Europe.
-<https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content>.
+<https://www.who.int/europe/publications/i/item/WHO-EURO-2020-1559-41310-56212>.
 
 ## See also
 
