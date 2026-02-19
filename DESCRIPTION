@@ -35,10 +35,10 @@ BugReports: https://github.com/SwissTPH/healthiar/issues
 Encoding: UTF-8
 RoxygenNote: 7.3.3
 Imports:
-  dplyr,  
+  dplyr,
+  tidyr,
   purrr, 
-  tibble, 
-  Rdpack
+  tibble
 RdMacros: Rdpack
 Depends: 
     R (>= 4.2.0)
