@@ -565,7 +565,7 @@ by using a Monte Carlo simulation.
 
 #### General concepts
 A Monte Carlo simulation is a statistical method that 
-generates repeated random sampling [@Robert2004_book; @Doucet2020_arsia]. 
+generates repeated random sampling [@Robert2004_book; @Rubinstein2016_book. 
 In `healthiar`, you can use the function `summarize_uncertainty()` 
 to simulate values in the arguments with uncertainty and 
 estimate a single confidence interval in the results.
@@ -1673,7 +1673,7 @@ such as `attribute_health()`.
 ```{r}
 
 exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
-exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
+#exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
 
 pwm <- healthiar::prepare_exposure(
   poll_grid = exdat_pwm_1, # Formal class SpatRaster,
