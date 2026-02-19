@@ -38,7 +38,8 @@ Imports:
   dplyr,
   tidyr,
   purrr, 
-  tibble
+  tibble,
+  Rdpack
 RdMacros: Rdpack
 Depends: 
     R (>= 4.2.0)
