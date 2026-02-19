@@ -1836,10 +1836,11 @@ can be entered in the argument `exp_mean`, `exp_lower` and/or
 #### Function call
 
 ``` r
-
+# exdat_pwm_1 = Pollution grid data
 exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
-#exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
-#exdat_pwm_2 <- utils::data("exdat_pwm_2.rda")
+
+# exdat_pwm_2 = Data with the geo units and population data. This is pre-loaded in healthiar.
+# If your raw data are in .gpkg format, you can use e.g.  sf::st_read() 
 
 pwm <- healthiar::prepare_exposure(
   poll_grid = exdat_pwm_1, # Formal class SpatRaster,

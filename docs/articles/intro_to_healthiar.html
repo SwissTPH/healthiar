@@ -6266,10 +6266,11 @@ argument <code>exp_mean</code>, <code>exp_lower</code> and/or
 <h4 id="function-call-19">Function call<a class="anchor" aria-label="anchor" href="#function-call-19"></a>
 </h4>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<code class="sourceCode R"><span><span class="co"># exdat_pwm_1 = Pollution grid data</span></span>
 <span><span class="va">exdat_pwm_1</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exdat_pwm_1.tif"</span>, package <span class="op">=</span> <span class="st">"healthiar"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#exdat_pwm_2 &lt;- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)</span></span>
-<span><span class="co">#exdat_pwm_2 &lt;- utils::data("exdat_pwm_2.rda")</span></span>
+<span></span>
+<span><span class="co"># exdat_pwm_2 = Data with the geo units and population data. This is pre-loaded in healthiar.</span></span>
+<span><span class="co"># If your raw data are in .gpkg format, you can use e.g.  sf::st_read() </span></span>
 <span></span>
 <span><span class="va">pwm</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/prepare_exposure.html">prepare_exposure</a></span><span class="op">(</span></span>
 <span>  poll_grid <span class="op">=</span> <span class="va">exdat_pwm_1</span>, <span class="co"># Formal class SpatRaster,</span></span>
