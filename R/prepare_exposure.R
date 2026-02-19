@@ -36,7 +36,8 @@
 #' # neighborhoods of Brussels (Belgium)
 #'
 #'exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
-#'exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
+#'exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"),
+#'                           quiet = TRUE)
 #'
 #' pwm <- prepare_exposure(
 #'   poll_grid = exdat_pwm_1, # Formal class SpatRaster
