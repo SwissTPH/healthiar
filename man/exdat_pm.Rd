@@ -24,7 +24,7 @@
 Real-world data
 }
 \usage{
-data(exdat_pm)
+base::data(exdat_pm)
 }
 \description{
 This tibble contains PM2.5 exposure and COPD incidence data from Switzerland.
