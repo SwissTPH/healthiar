@@ -94,8 +94,7 @@ pwm <- prepare_exposure(
   population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
   geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate at
 )
-#> Error in values(poll_grid): could not find function "values"
 
 pwm$main # population-weighted mean exposures for the (higher-level) geographic units
-#> Error: object 'pwm' not found
+#> NULL
 ```
