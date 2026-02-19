@@ -4,9 +4,9 @@
 #' @description
 #' This function quantifies the attributable health impacts in a new scenario 2 as follows:
 #' \itemize{
-#'  \item{taking the input data of an existing scenario 1 (obtained using `attribute_health()`)},
-#'  \item{modifying some of these input data of scenario 1 for the scenario 2 and
-#'  \item{calling in the background `attribute_health()` with the new data for scenario 2}}}
+#'  \item{taking the input data of an existing scenario 1 (obtained using \code{attribute_health()})},
+#'  \item{modifying some of these input data of scenario 1 for the scenario 2 and}
+#'  \item{calling in the background \code{attribute_health()} with the new data for scenario 2}}
 #'
 # ARGUMENTS ####################################################################
 #' @inheritParams attribute_master
@@ -17,7 +17,7 @@
 #'
 #' \strong{Methodology}
 #'
-#' This function calls in the background `attribute_health()`, which can use
+#' This function calls in the background \code{attribute_health()}, which can use
 #' the relative risk \insertCite{Murray2003_e}{healthiar} and absolute risk \insertCite{WHO2011_report}{healthiar}.
 #'
 #' Detailed information about the methodology (including equations)
@@ -59,7 +59,7 @@
 #' scenario_B$health_main$impact # Attributable impact in scenario B
 #'
 #'
-#' #' @seealso
+#' @seealso
 #' \itemize{
 #'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}
 #'   \item Downstream: \code{\link{compare}}
