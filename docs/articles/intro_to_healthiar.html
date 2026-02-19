@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1462</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@ environmental exposures: air pollution and noise. However,
 <code>healthiar</code> could be used for other exposures such as green
 spaces, chemicals, physical activity…</p>
 <p>See below a an overview of the <code>healthiar</code>, which is the
-first page of the <a href="https://swisstph.github.io/healthiar/articles/cheatsheet_healthiar.html">cheat
+first page of the <a href="https://swisstph.github.io/healthiar/articles/cheatsheet.html">cheat
 sheet</a>. The whole list of functions included in
 <code>healthiar</code> is linked there and available in the <a href="https://swisstph.github.io/healthiar/reference/index.html">reference</a>.</p>
 <div class="float">
@@ -872,11 +872,12 @@ by using a Monte Carlo simulation.</p>
 <h5 id="general-concepts">General concepts<a class="anchor" aria-label="anchor" href="#general-concepts"></a>
 </h5>
 <p>A Monte Carlo simulation is a statistical method that generates
-repeated random sampling <span class="citation">(Robert and Casella
-2004; Doucet, Lee, et al. 2020)</span>. In <code>healthiar</code>, you
-can use the function <code><a href="../reference/summarize_uncertainty.html">summarize_uncertainty()</a></code> to simulate
-values in the arguments with uncertainty and estimate a single
-confidence interval in the results.</p>
+repeated random sampling [<span class="citation">Robert and Casella
+(2004)</span>; <span class="citation">Rubinstein and Kroese
+(2016)</span>. In <code>healthiar</code>, you can use the function
+<code><a href="../reference/summarize_uncertainty.html">summarize_uncertainty()</a></code> to simulate values in the arguments
+with uncertainty and estimate a single confidence interval in the
+results.</p>
 <p>For each entered input argument that includes a (95%) confidence
 interval (i.e. <code>_lower</code> and <code>_upper</code> bound value)
 a distribution is fitted (see distributions below). The median of the
@@ -6267,7 +6268,8 @@ argument <code>exp_mean</code>, <code>exp_lower</code> and/or
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">exdat_pwm_1</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exdat_pwm_1.tif"</span>, package <span class="op">=</span> <span class="st">"healthiar"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">exdat_pwm_2</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exdat_pwm_2.gpkg"</span>, package <span class="op">=</span> <span class="st">"healthiar"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#exdat_pwm_2 &lt;- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)</span></span>
+<span><span class="co">#exdat_pwm_2 &lt;- utils::data("exdat_pwm_2.rda")</span></span>
 <span></span>
 <span><span class="va">pwm</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/prepare_exposure.html">prepare_exposure</a></span><span class="op">(</span></span>
 <span>  poll_grid <span class="op">=</span> <span class="va">exdat_pwm_1</span>, <span class="co"># Formal class SpatRaster,</span></span>
@@ -7020,11 +7022,6 @@ Levecke, Nicolas Praet, Sophie Roelandt, Suzanne Smit, Pierre Dorny,
 Dirk Berkvens, and Niko Speybroeck. 2022. <em>Prevalence: Tools for
 Prevalence Assessment Studies.</em> <a href="https://cran.r-project.org/package=prevalence" class="external-link">https://cran.r-project.org/package=prevalence</a>.
 </div>
-<div id="ref-Doucet2020_arsia" class="csl-entry">
-Doucet, Arnaud, Anthony Lee, et al. 2020. <span>“Monte Carlo Methods in
-the Twenty-First Century.”</span> <em>Annual Review of Statistics and
-Its Application</em> 7: 435–58. <a href="https://doi.org/10.1146/annurev-statistics-031219-041122" class="external-link">https://doi.org/10.1146/annurev-statistics-031219-041122</a>.
-</div>
 <div id="ref-Frederick2002_jel" class="csl-entry">
 Frederick, Shane, George Loewenstein, and Ted O’Donoghue. 2002.
 <span>“Time Discounting and Time Preference: A Critical Review.”</span>
@@ -7056,7 +7053,7 @@ Jerrett, Michael, Richard T Burnett, Bernardo S Beckerman, Michelle C
 Turner, Daniel Krewski, George Thurston, Randall V Martin, et al. 2013.
 <span>“Spatial Analysis of Air Pollution and Mortality in
 California.”</span> <em>American Journal of Respiratory and Critical
-Care Medicine</em> 188 (5): 593–99. https://doi.org/<a href="https://doi.org/10.1164/rccm.201303-0609OC" class="external-link">https://doi.org/10.1164/rccm.201303-0609OC</a>.
+Care Medicine</em> 188 (5): 593–99. <a href="https://doi.org/10.1164/rccm.201303-0609OC" class="external-link">https://doi.org/10.1164/rccm.201303-0609OC</a>.
 </div>
 <div id="ref-Kim2022_kspm" class="csl-entry">
 Kim, Young-Eun, Yoon-Sun Jung, Minsu Ock, and Seok-Jun Yoon. 2022.
@@ -7111,7 +7108,7 @@ Health Risks Conceptual Framework and Methodological Issues.”</span>
 Murray, Christopher JL, Majid Ezzati, Alan D Lopez, Anthony Rodgers, and
 Stephen Vander Hoorn. 2003. <span>“Comparative Risk Assessment:
 Conceptual Framework and Design.”</span> <em>Epidemiology</em> 14 (4):
-447–58. <a href="https://doi.org/10.1097/01.ede.0000071443.19794.8d" class="external-link">https://doi.org/10.1097/01.ede.0000071443.19794.8d</a>.
+447–58. <a href="https://doi.org/10.1186/1478-7954-1-1" class="external-link">https://doi.org/10.1186/1478-7954-1-1</a>.
 </div>
 <div id="ref-OECD2025_book" class="csl-entry">
 OECD. 2025. <em>Mortality Risk Valuation in Policy Assessment: A Global
@@ -7148,6 +7145,10 @@ Study.”</span> <em>BMC Public Health</em> 19 (1): 662. <a href="https://doi.or
 Robert, Christian P, and George Casella. 2004. <em>Monte Carlo
 Statistical Methods</em>. Springer Texts in Statistics. Springer Science
 &amp; Business Media. <a href="https://doi.org/10.1007/978-1-4757-4145-2" class="external-link">https://doi.org/10.1007/978-1-4757-4145-2</a>.
+</div>
+<div id="ref-Rubinstein2016_book" class="csl-entry">
+Rubinstein, Reuven Y., and Dirk P. Kroese. 2016. <em>Simulation and the
+Monte Carlo Method</em>. John Wiley &amp; Sons. <a href="https://doi.org/10.1002/9781118631980" class="external-link">https://doi.org/10.1002/9781118631980</a>.
 </div>
 <div id="ref-Samuelson1937_res" class="csl-entry">
 Samuelson, Paul A. 1937. <span>“A Note on Measurement of

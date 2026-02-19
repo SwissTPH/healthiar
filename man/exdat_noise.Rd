@@ -17,7 +17,7 @@
 Real-world data
 }
 \usage{
-base::data(exdat_noise)
+data(exdat_noise)
 }
 \description{
 This tibble contains noise exposure data from urban and rural regions in Norway.

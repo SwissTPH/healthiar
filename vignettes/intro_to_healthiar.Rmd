@@ -49,7 +49,7 @@ This vignette will tell you about `healthiar` and show you how to use `healthiar
 
 The `healthiar` functions allow you to quantify and monetize the health impacts (or burden of disease) attributable to exposure. The main focus of the EU project that initiated the development of `healthiar` (BEST-COST) has been two environmental exposures:  air pollution and noise. However, `healthiar` could be used for other exposures such as green spaces, chemicals, physical activity...
 
-See below a an overview of the `healthiar`, which is the first page of the [cheat sheet](https://swisstph.github.io/healthiar/articles/cheatsheet_healthiar.html). The whole list of functions included in `healthiar` is linked there and available in the [reference](https://swisstph.github.io/healthiar/reference/index.html). 
+See below a an overview of the `healthiar`, which is the first page of the [cheat sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html). The whole list of functions included in `healthiar` is linked there and available in the [reference](https://swisstph.github.io/healthiar/reference/index.html). 
 
 
 ![Figure: Overview of `healthiar`](../man/figures/cheatsheet_healthiar_1st_page.png)
@@ -565,7 +565,7 @@ by using a Monte Carlo simulation.
 
 #### General concepts
 A Monte Carlo simulation is a statistical method that 
-generates repeated random sampling [@Robert2004_book; @Doucet2020_arsia]. 
+generates repeated random sampling [@Robert2004_book; @Rubinstein2016_book. 
 In `healthiar`, you can use the function `summarize_uncertainty()` 
 to simulate values in the arguments with uncertainty and 
 estimate a single confidence interval in the results.
@@ -1671,9 +1671,11 @@ such as `attribute_health()`.
 ### Function call
 
 ```{r}
-
+# exdat_pwm_1 = Pollution grid data
 exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
-exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
+
+# exdat_pwm_2 = Data with the geo units and population data. This is pre-loaded in healthiar.
+# If your raw data are in .gpkg format, you can use e.g.  sf::st_read() 
 
 pwm <- healthiar::prepare_exposure(
   poll_grid = exdat_pwm_1, # Formal class SpatRaster,

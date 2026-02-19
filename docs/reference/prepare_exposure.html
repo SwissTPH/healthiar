@@ -15,7 +15,7 @@ If no population data is provided, the function calculates the simple spatial av
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1462</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,8 +116,8 @@ If no population data is provided, the function calculates the simple spatial av
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Goal: determine population-weighted mean PM2.5 exposure for several</span></span></span>
 <span class="r-in"><span><span class="co"># neighborhoods of Brussels (Belgium)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">exdat_pwm_1</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exdat_pwm_1.tif"</span>, package <span class="op">=</span> <span class="st">"healthiar"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">exdat_pwm_2</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exdat_pwm_2.gpkg"</span>, package <span class="op">=</span> <span class="st">"healthiar"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exdat_pwm_1.tif"</span>, package <span class="op">=</span> <span class="st">"healthiar"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">exdat_pwm_1</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">pwm</span> <span class="op">&lt;-</span> <span class="fu">prepare_exposure</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  poll_grid <span class="op">=</span> <span class="va">exdat_pwm_1</span>, <span class="co"># Formal class SpatRaster</span></span></span>
@@ -126,8 +126,16 @@ If no population data is provided, the function calculates the simple spatial av
 <span class="r-in"><span>  geo_id_macro <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">exdat_pwm_2</span><span class="op">$</span><span class="va">region</span><span class="op">)</span> <span class="co"># higher-level IDs to aggregate at</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">pwm</span><span class="op">$</span><span class="va">main</span> <span class="co"># population-weighted mean exposures for the (higher-level) geographic units</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-in"><span><span class="va">pwm</span><span class="op">$</span><span class="va">exposure_main</span> <span class="co"># population-weighted mean exposures for the (higher-level) geographic units</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $geo_id_macro</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Center" "East"   "North"  "South"  "West"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $exposure_mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 11.47271 11.10716 11.48670 11.09940 11.38849</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $population_total</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 203105 187907 257573 308860 298802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

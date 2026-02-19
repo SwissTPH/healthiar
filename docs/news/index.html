@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1462</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,12 +37,37 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.3" id="healthiar-023">healthiar 0.2.3<a class="anchor" aria-label="anchor" href="#healthiar-023"></a></h2>
+<ul><li>19 February 2026</li>
+</ul><div class="section level3">
+<h3 id="new-features-0-2-3">New features<a class="anchor" aria-label="anchor" href="#new-features-0-2-3"></a></h3>
+<ul><li>Using compare() after standardizing results from attribute_health() now works</li>
+<li>For the sub-group analysis, exposure value can be specific for each geo_id_micro AND info column</li>
+<li>The argument social_indicator and geo_id_micro in socialize() can now use tidy data</li>
+<li>monetize() works after compare()</li>
+<li>prepare_exposure() works for gridded population data</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-2-3">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-3"></a></h3>
+<ul><li>Using socialize() and standardize() without ref_prop_pop now works properly</li>
+<li>Now attribute_lifetable() allows all lengths for age group (before, only 100 age categories were allowed)</li>
+<li>The data validation now identifies correctly whether the argument n_years was entered by the user or not</li>
+</ul></div>
+<div class="section level3">
+<h3 id="testing-0-2-3">Testing<a class="anchor" aria-label="anchor" href="#testing-0-2-3"></a></h3>
+<ul><li>31 additional internal tests</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-improvements-0-2-3">Other improvements<a class="anchor" aria-label="anchor" href="#other-improvements-0-2-3"></a></h3>
+<ul><li>The argument n_years has no default value anymore in monetize() and discount()</li>
+<li>Error message if monetize() is used after compare() with different year of analysis or baseline health data in the two scenarios (not attributable to policy intervention)</li>
+<li>More complete warning message if absolute risk and cutoff is provided</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.2" id="healthiar-022">healthiar 0.2.2<a class="anchor" aria-label="anchor" href="#healthiar-022"></a></h2><p class="text-muted">CRAN release: 2026-01-09</p>
 <ul><li>08 January 2026</li>
 </ul><div class="section level3">
-<h3 id="improvements-0-2-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-2-2"></a></h3>
-</div>
-<div class="section level3">
 <h3 id="bug-fixes-0-2-2">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-2"></a></h3>
 <ul><li>results_raw now stratifies by info arguments</li>
 </ul></div>
@@ -54,32 +79,29 @@
 </ul></div>
 <div class="section level3">
 <h3 id="testing-0-2-2">Testing<a class="anchor" aria-label="anchor" href="#testing-0-2-2"></a></h3>
-<ul><li>Around 70 additional internal tests for attribute_helath()</li>
+<ul><li>Around 70 additional internal tests for attribute_health()</li>
 </ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="healthiar-021">healthiar 0.2.1<a class="anchor" aria-label="anchor" href="#healthiar-021"></a></h2><p class="text-muted">CRAN release: 2025-11-11</p>
 <ul><li>06 November 2025</li>
 </ul><div class="section level3">
-<h3 id="improvements-0-2-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-2-1"></a></h3>
-<ul><li>Better sampling in summarize_uncertainty() using RNG and package parallel</li>
-</ul></div>
-<div class="section level3">
 <h3 id="bug-fixes-0-2-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-1"></a></h3>
 <ul><li>time_horizon did not work in attribute_lifetable()</li>
 <li>population was not summed correct in attribute_lifetable()</li>
 <li>health_detailed in attribute_health() provided a duplicated rows for results by geo_id_micro</li>
 </ul></div>
 <div class="section level3">
-<h3 id="others-0-2-1">Others<a class="anchor" aria-label="anchor" href="#others-0-2-1"></a></h3>
-<ul><li>Other changes to comply with with manual review of CRAN</li>
+<h3 id="other-improvements-0-2-1">Other improvements<a class="anchor" aria-label="anchor" href="#other-improvements-0-2-1"></a></h3>
+<ul><li>Better sampling in summarize_uncertainty() using RNG and package parallel</li>
+<li>Other changes to comply with with manual review of CRAN</li>
 </ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1" id="healthiar-01x">healthiar 0.1.x<a class="anchor" aria-label="anchor" href="#healthiar-01x"></a></h2>
 <ul><li>19 September 2025</li>
 </ul><div class="section level3">
-<h3 id="others-0-1">Others<a class="anchor" aria-label="anchor" href="#others-0-1"></a></h3>
+<h3 id="other-improvements-0-1">Other improvements<a class="anchor" aria-label="anchor" href="#other-improvements-0-1"></a></h3>
 <ul><li>Small changes to comply with with automatic review of CRAN</li>
 </ul></div>
 </div>
@@ -93,10 +115,6 @@
 <li>geo ids can now have different number of exposure categories</li>
 </ul></div>
 <div class="section level3">
-<h3 id="improvements-0-1-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0"></a></h3>
-<ul><li>Faster performance of summarize_uncertainty()</li>
-</ul></div>
-<div class="section level3">
 <h3 id="bug-fixes-0-1-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0"></a></h3>
 <ul><li>Argument time_horizon was not working</li>
 </ul></div>
@@ -108,9 +126,10 @@
 <li>positive_impact was renamed to impact_benefit</li>
 </ul></div>
 <div class="section level3">
-<h3 id="others-0-1-0">Others<a class="anchor" aria-label="anchor" href="#others-0-1-0"></a></h3>
+<h3 id="other-improvements-0-1-0">Other improvements<a class="anchor" aria-label="anchor" href="#other-improvements-0-1-0"></a></h3>
 <ul><li>attribute_by_sim_disaggregated is not anymore available as output</li>
 <li>attribute_by_geo_id_micro is not anymore available as output</li>
+<li>Faster performance of summarize_uncertainty()</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -124,11 +143,6 @@
 <li>Data validation in socialize()</li>
 </ul></div>
 <div class="section level3">
-<h3 id="improvements-0-0-4">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-0-4"></a></h3>
-<ul><li>More consistent sum of results</li>
-<li>Higher speed because of shorter and/or optimized code in attribute_…() functions</li>
-</ul></div>
-<div class="section level3">
 <h3 id="renamings-0-0-4">Renamings<a class="anchor" aria-label="anchor" href="#renamings-0-0-4"></a></h3>
 <ul><li>geo_id_disaggregated is now geo_id_micro</li>
 <li>geo_id_aggregated is now geo_id_macro</li>
@@ -137,6 +151,11 @@
 <li>Arguments with exposure_ are now exp_</li>
 <li>Arguments with suffix _1 and _2 in multiexpose() are now _exp_1 and _exp_2</li>
 <li>And many other renames in output columns and variables</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-improvements-0-0-4">Other improvements<a class="anchor" aria-label="anchor" href="#other-improvements-0-0-4"></a></h3>
+<ul><li>More consistent sum of results</li>
+<li>Higher speed because of shorter and/or optimized code in attribute_…() functions</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -155,16 +174,16 @@
 <li>Fixed bug attribute_lifetable()</li>
 </ul></div>
 <div class="section level3">
-<h3 id="improvements-0-0-3">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-0-3"></a></h3>
+<h3 id="renamings-0-0-3">Renamings<a class="anchor" aria-label="anchor" href="#renamings-0-0-3"></a></h3>
+<ul><li>Rename: impact_raw is now results_raw</li>
+<li>Rename: listed_output_attribute is now output_attribute</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-improvements-0-0-3">Other improvements<a class="anchor" aria-label="anchor" href="#other-improvements-0-0-3"></a></h3>
 <ul><li>Higher performance of attribute_()</li>
 <li>Data validation in monetize()</li>
 <li>Data validation in summarize_uncertainty()</li>
 <li>More validation in attribute_…()</li>
-</ul></div>
-<div class="section level3">
-<h3 id="renamings-0-0-3">Renamings<a class="anchor" aria-label="anchor" href="#renamings-0-0-3"></a></h3>
-<ul><li>Rename: impact_raw is now results_raw</li>
-<li>Rename: listed_output_attribute is now output_attribute</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -184,14 +203,14 @@
 <li>Fixed bug in prepare_exposure()</li>
 </ul></div>
 <div class="section level3">
-<h3 id="improvements-0-0-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-0-2"></a></h3>
-<ul><li>Input data validation in compare()</li>
-<li>Warning if cutoff is NULL and 0 as default</li>
-</ul></div>
-<div class="section level3">
 <h3 id="renamings-0-0-2">Renamings<a class="anchor" aria-label="anchor" href="#renamings-0-0-2"></a></h3>
 <ul><li>Arguments results or output_healthiar become output_attribute</li>
 <li>Internal variable rr_conc (visible in results of attribute functions) becomes rr_at_exp</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-improvements-0-0-2">Other improvements<a class="anchor" aria-label="anchor" href="#other-improvements-0-0-2"></a></h3>
+<ul><li>Input data validation in compare()</li>
+<li>Warning if cutoff is NULL and 0 as default</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -208,15 +227,15 @@
 <li>Exposure lower than cut-off must result in zero health impact</li>
 </ul></div>
 <div class="section level3">
-<h3 id="improvements-0-0-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-0-1"></a></h3>
-<ul><li>Custom warning and error messages are now available in attribute_health()</li>
-</ul></div>
-<div class="section level3">
 <h3 id="renamings-0-0-1">Renamings<a class="anchor" aria-label="anchor" href="#renamings-0-0-1"></a></h3>
 <ul><li>get_pop_fraction() becomes intern function</li>
 <li>get_mdi() was renamed to prepare_mdi()</li>
 <li>get_multiexposure() was renamed to multiexpose()</li>
 <li>get_daly was renamed to daly()</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-improvements-0-0-1">Other improvements<a class="anchor" aria-label="anchor" href="#other-improvements-0-0-1"></a></h3>
+<ul><li>Custom warning and error messages are now available in attribute_health()</li>
 </ul></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

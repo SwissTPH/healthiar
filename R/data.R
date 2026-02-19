@@ -25,7 +25,7 @@
 #' }
 #' @source Real-world data
 
-#' @usage base::data(exdat_cantons)
+#' @usage data(exdat_cantons)
 
 #' @docType data
 
@@ -51,7 +51,7 @@
 #' }
 #' @source Real-world data
 
-#' @usage base::data(exdat_lifetable)
+#' @usage data(exdat_lifetable)
 
 #' @docType data
 
@@ -77,7 +77,7 @@
 #' }
 #' @source Real-world data
 
-#' @usage base::data(exdat_noise)
+#' @usage data(exdat_noise)
 
 #' @docType data
 
@@ -115,7 +115,7 @@
 
 #' @source Real-world data
 
-#' @usage base::data(exdat_ozone)
+#' @usage data(exdat_ozone)
 
 #' @docType data
 
@@ -148,7 +148,7 @@
 #' }
 #' @source Real-world data
 
-#' @usage base::data(exdat_pm)
+#' @usage data(exdat_pm)
 
 #' @docType data
 
@@ -178,7 +178,7 @@
 
 #' @source Real-world data
 
-#' @usage base::data(exdat_prepare_mdi)
+#' @usage data(exdat_prepare_mdi)
 
 #' @docType data
 
@@ -247,7 +247,7 @@ NULL
 
 #' @source Real-world data
 
-#' @usage base::data(exdat_pwm_2)
+#' @usage data(exdat_pwm_2)
 
 #' @docType data
 
@@ -281,7 +281,7 @@ NULL
 
 #' @source Real-world data combined with fake population and mortality data
 
-#' @usage base::data(exdat_socialize)
+#' @usage data(exdat_socialize)
 
 #' @docType data
 

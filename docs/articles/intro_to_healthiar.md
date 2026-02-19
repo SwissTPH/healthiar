@@ -25,7 +25,7 @@ green spaces, chemicals, physical activity…
 
 See below a an overview of the `healthiar`, which is the first page of
 the [cheat
-sheet](https://swisstph.github.io/healthiar/articles/cheatsheet_healthiar.html).
+sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html).
 The whole list of functions included in `healthiar` is linked there and
 available in the
 [reference](https://swisstph.github.io/healthiar/reference/index.html).
@@ -639,8 +639,8 @@ a Monte Carlo simulation.
 ##### General concepts
 
 A Monte Carlo simulation is a statistical method that generates repeated
-random sampling (Robert and Casella 2004; Doucet, Lee, et al. 2020). In
-`healthiar`, you can use the function
+random sampling \[Robert and Casella (2004); Rubinstein and Kroese
+(2016). In `healthiar`, you can use the function
 [`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
 to simulate values in the arguments with uncertainty and estimate a
 single confidence interval in the results.
@@ -1838,7 +1838,8 @@ can be entered in the argument `exp_mean`, `exp_lower` and/or
 ``` r
 
 exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
-exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
+#exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
+#exdat_pwm_2 <- utils::data("exdat_pwm_2.rda")
 
 pwm <- healthiar::prepare_exposure(
   poll_grid = exdat_pwm_1, # Formal class SpatRaster,
@@ -2548,10 +2549,6 @@ Dirk Berkvens, and Niko Speybroeck. 2022. *Prevalence: Tools for
 Prevalence Assessment Studies.*
 <https://cran.r-project.org/package=prevalence>.
 
-Doucet, Arnaud, Anthony Lee, et al. 2020. “Monte Carlo Methods in the
-Twenty-First Century.” *Annual Review of Statistics and Its Application*
-7: 435–58. <https://doi.org/10.1146/annurev-statistics-031219-041122>.
-
 Frederick, Shane, George Loewenstein, and Ted O’Donoghue. 2002. “Time
 Discounting and Time Preference: A Critical Review.” *Journal of
 Economic Literature* 40 (2): 351–401.
@@ -2580,7 +2577,7 @@ Jerrett, Michael, Richard T Burnett, Bernardo S Beckerman, Michelle C
 Turner, Daniel Krewski, George Thurston, Randall V Martin, et al. 2013.
 “Spatial Analysis of Air Pollution and Mortality in California.”
 *American Journal of Respiratory and Critical Care Medicine* 188 (5):
-593–99. https://doi.org/<https://doi.org/10.1164/rccm.201303-0609OC>.
+593–99. <https://doi.org/10.1164/rccm.201303-0609OC>.
 
 Kim, Young-Eun, Yoon-Sun Jung, Minsu Ock, and Seok-Jun Yoon. 2022. “DALY
 Estimation Approaches: Understanding and Using the Incidence-Based
@@ -2629,7 +2626,7 @@ Metr.* 1 (1): 1.
 Murray, Christopher JL, Majid Ezzati, Alan D Lopez, Anthony Rodgers, and
 Stephen Vander Hoorn. 2003. “Comparative Risk Assessment: Conceptual
 Framework and Design.” *Epidemiology* 14 (4): 447–58.
-<https://doi.org/10.1097/01.ede.0000071443.19794.8d>.
+<https://doi.org/10.1186/1478-7954-1-1>.
 
 OECD. 2025. *Mortality Risk Valuation in Policy Assessment: A Global
 Meta-Analysis of Value of Statistical Life Studies*. Paris: OECD
@@ -2660,6 +2657,10 @@ Appropriate? Results of a Simulation Study.” *BMC Public Health* 19 (1):
 Robert, Christian P, and George Casella. 2004. *Monte Carlo Statistical
 Methods*. Springer Texts in Statistics. Springer Science & Business
 Media. <https://doi.org/10.1007/978-1-4757-4145-2>.
+
+Rubinstein, Reuven Y., and Dirk P. Kroese. 2016. *Simulation and the
+Monte Carlo Method*. John Wiley & Sons.
+<https://doi.org/10.1002/9781118631980>.
 
 Samuelson, Paul A. 1937. “A Note on Measurement of Utility.” *The Review
 of Economic Studies* 4 (2): 155–61. <https://doi.org/10.2307/2967612>.

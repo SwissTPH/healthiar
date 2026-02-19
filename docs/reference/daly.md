@@ -65,7 +65,7 @@ available in the package vignette. More specifically, see chapters:
 GBD 2019 Risk Factors Collaborators (2020). “Global burden of 87 risk
 factors in 204 countries and territories, 1990–2019.” *The Lancet*.
 [doi:10.1016/S0140-6736(20)30752-2](https://doi.org/10.1016/S0140-6736%2820%2930752-2)
-, <https://www.thelancet.com/article/S0140-6736(20)30752-2/fulltext>.
+.
 
 ## See also
 

@@ -146,7 +146,7 @@ Organization. <https://www.who.int/publications/i/item/9241546204>.
   [`standardize`](https://swisstph.github.io/healthiar/reference/standardize.md),
 
 - Downstream:
-  [`daly`](https://swisstph.github.io/healthiar/reference/daly.md),
+  [`daly`](https://swisstph.github.io/healthiar/reference/daly.md)
 
 ## Author
 

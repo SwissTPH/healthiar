@@ -60,7 +60,7 @@ data(exdat_socialize)
 
 ## Source
 
-Real-world data combined with fake populatoin and mortality data
+Real-world data combined with fake population and mortality data
 
 ## Author
 

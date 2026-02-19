@@ -37,7 +37,7 @@
 #' This function summarizes the uncertainty of the attributable health impacts
 #' (i.e.a single confidence interval instead of many combinations).
 #' For this purpose, it applies
-#' a Monte Carlo simulation \insertCite{Robert2004_book,Doucet2020_arsia}{healthiar}.
+#' a Monte Carlo simulation \insertCite{Robert2004_book,Rubinstein2016_book}{healthiar}.
 #'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
