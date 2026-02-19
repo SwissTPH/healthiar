@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-This R package has been developed with a focus on air pollution and noise but can applied to other exposures. The initial development has been funded by the European Union project BEST-COST. Disclaimer: It is work in progress and the developers are not liable for any calculation errors or inaccuracies resulting from the use of this package. Selection of relevant references (in chronological order): WHO (2003) \url{https://www.who.int/publications/i/item/9241546204}, Murray et al. (2003) \doi{10.1186/1478-7954-1-1}, Miller & Hurley (2003) \doi{10.1136/jech.57.3.200}, Steenland & Armstrong (2006) \doi{10.1097/01.ede.0000229155.05644.43}, WHO (2011) \url{https://iris.who.int/items/723ab97c-5c33-4e3b-8df1-744aa5bc1c27} GBD 2019 Risk Factors Collaborators (2020) \doi{10.1016/S0140-6736(20)30752-2}, Soares et al. (2022) \url{https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2022-10-health-risk-assessment-of-air-pollution-and-the-impact-of-the-new-who-guidelines}, and Lehtomaki et al. (2025) \doi{10.1186/s12940-025-01250-y}.
+This R package has been developed with a focus on air pollution and noise but can applied to other exposures. The initial development has been funded by the European Union project BEST-COST. Disclaimer: It is work in progress and the developers are not liable for any calculation errors or inaccuracies resulting from the use of this package. Selection of relevant references (in chronological order): WHO (2003) \url{https://www.who.int/publications/i/item/9241546204}, Murray et al. (2003) \doi{10.1186/1478-7954-1-1}, Miller & Hurley (2003) \doi{10.1136/jech.57.3.200}, Steenland & Armstrong (2006) \doi{10.1097/01.ede.0000229155.05644.43}, WHO (2011) \url{https://iris.who.int/items/723ab97c-5c33-4e3b-8df1-744aa5bc1c27}, GBD 2019 Risk Factors Collaborators (2020) \doi{10.1016/S0140-6736(20)30752-2}, Soares et al. (2022) \url{https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2022-10-health-risk-assessment-of-air-pollution-and-the-impact-of-the-new-who-guidelines}, and Lehtomäki et al. (2025) \doi{10.1186/s12940-025-01250-y}.
 }
 \seealso{
 Useful links:
@@ -39,10 +39,10 @@ Other contributors:
   \item Vanessa Gorasso (\href{https://orcid.org/0000-0001-6884-9316}{ORCID}) [contributor]
   \item Maria Lepnurm (\href{https://orcid.org/0009-0009-4372-6227}{ORCID}) [contributor]
   \item Andreia Novais (\href{https://orcid.org/0009-0007-7775-108X}{ORCID}) [contributor]
-  \item Maria Jose Rueda Lopez (\href{https://orcid.org/0000-0002-2443-1038}{ORCID}) [contributor]
+  \item Maria José Rueda Lopez (\href{https://orcid.org/0000-0002-2443-1038}{ORCID}) [contributor]
   \item Minh Nhat Pham (\href{https://orcid.org/0000-0002-5972-1668}{ORCID}) [contributor]
   \item Ana Barbosa (\href{https://orcid.org/0000-0002-9623-9002}{ORCID}) [contributor]
-  \item Joao Vasco Santos (\href{https://orcid.org/0000-0003-4696-1002}{ORCID}) [contributor]
+  \item João Vasco Santos (\href{https://orcid.org/0000-0003-4696-1002}{ORCID}) [contributor]
   \item Anette Kocbach Bolling (\href{https://orcid.org/0000-0003-4209-7448}{ORCID}) [contributor]
 }
 
