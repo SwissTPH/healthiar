@@ -1,9 +1,33 @@
 Main changes but not complete list. For this propose see Github.
 
+# healthiar 0.2.3
+* 19 February 2026
+
+
+## New features
+- Using compare() after standardizing results from attribute_health() now works
+- For the sub-group analysis, exposure value can be specific for each geo_id_micro AND info column
+- The argument social_indicator and geo_id_micro in socialize() can now use tidy data
+- monetize() works after compare()
+- prepare_exposure() works for gridded population data 
+
+## Bug Fixes
+- Using socialize() and standardize() without ref_prop_pop now works properly
+- Now attribute_lifetable() allows all lengths for age group (before, only 100 age categories were allowed)
+- The data validation now identifies correctly whether the argument n_years was entered by the user or not
+
+## Testing
+- 31 additional internal tests
+
+## Other improvements
+- The argument n_years has no default value anymore in monetize() and discount()
+- Error message if monetize() is used after compare() with different year of analysis or baseline health data in the two scenarios (not attributable to policy intervention) 
+- More complete warning message if absolute risk and cutoff is provided 
+
+
+
 # healthiar 0.2.2
 * 08 January 2026
-
-## Improvements
 
 ## Bug Fixes
 - results_raw now stratifies by info arguments 
@@ -14,22 +38,20 @@ Main changes but not complete list. For this propose see Github.
 - Updated and fixed citation
 
 ## Testing
-- Around 70 additional internal tests for attribute_helath()
+- Around 70 additional internal tests for attribute_health()
 
 
 
 # healthiar 0.2.1
 * 06 November 2025
 
-## Improvements
-- Better sampling in summarize_uncertainty() using RNG and package parallel
-
 ## Bug Fixes 
 - time_horizon did not work in attribute_lifetable()
 - population was not summed correct in attribute_lifetable()
 - health_detailed in attribute_health() provided a duplicated rows for results by geo_id_micro
 
-## Others
+## Other improvements
+- Better sampling in summarize_uncertainty() using RNG and package parallel
 - Other changes to comply with with manual review of CRAN 
 
 
@@ -37,7 +59,7 @@ Main changes but not complete list. For this propose see Github.
 # healthiar 0.1.x 
 * 19 September 2025
 
-## Others
+## Other improvements
 - Small changes to comply with with automatic review of CRAN 
 
 
@@ -51,9 +73,6 @@ Main changes but not complete list. For this propose see Github.
 - New argument in cba(): inflation rate
 - geo ids can now have different number of exposure categories
 
-## Improvements
-- Faster performance of summarize_uncertainty()
-
 ## Bug Fixes 
 - Argument time_horizon was not working
 
@@ -63,9 +82,11 @@ Main changes but not complete list. For this propose see Github.
 - attribute_by_sim was renamed to impact_by_sim
 - positive_impact was renamed to impact_benefit
 
-## Others
+## Other improvements
 - attribute_by_sim_disaggregated is not anymore available as output
 - attribute_by_geo_id_micro is not anymore available as output
+- Faster performance of summarize_uncertainty()
+
 
 
 
@@ -79,10 +100,6 @@ Main changes but not complete list. For this propose see Github.
 - Argument info also available in monetize()
 - Data validation in socialize()
 
-## Improvements
-- More consistent sum of results
-- Higher speed because of shorter and/or optimized code in attribute_...() functions
-
 ## Renamings
 - geo_id_disaggregated is now geo_id_micro
 - geo_id_aggregated is now geo_id_macro
@@ -92,6 +109,9 @@ Main changes but not complete list. For this propose see Github.
 - Arguments with suffix _1 and _2 in multiexpose() are now _exp_1 and _exp_2 
 - And many other renames in output columns and variables
 
+## Other improvements
+- More consistent sum of results
+- Higher speed because of shorter and/or optimized code in attribute_...() functions
 
 
 # healthiar 0.0.3
@@ -108,16 +128,15 @@ Main changes but not complete list. For this propose see Github.
 - Fixed bug in socialize()
 - Fixed bug attribute_lifetable()
 
-## Improvements
-- Higher performance of attribute_()
-- Data validation in monetize()
-- Data validation in summarize_uncertainty()
-- More validation in attribute_...()
-
 ## Renamings
 - Rename: impact_raw is now results_raw
 - Rename: listed_output_attribute is now output_attribute
 
+## Other improvements
+- Higher performance of attribute_()
+- Data validation in monetize()
+- Data validation in summarize_uncertainty()
+- More validation in attribute_...()
 
 
 # healthiar 0.0.2
@@ -135,13 +154,13 @@ Main changes but not complete list. For this propose see Github.
 - Fixed warning in socialize()
 - Fixed bug in prepare_exposure()
 
-## Improvements
-- Input data validation in compare()
-- Warning if cutoff is NULL and 0 as default
-
 ## Renamings
 - Arguments results or output_healthiar become output_attribute
 - Internal variable rr_conc (visible in results of attribute functions) becomes rr_at_exp
+
+## Other improvements
+- Input data validation in compare()
+- Warning if cutoff is NULL and 0 as default
 
 
 
@@ -157,12 +176,12 @@ Main changes but not complete list. For this propose see Github.
 - Results for impact per 100k inhab. have been corrected
 - Exposure lower than cut-off must result in zero health impact
 
-## Improvements
-- Custom warning and error messages are now available in attribute_health()
-
 ## Renamings
 - get_pop_fraction() becomes intern function
 - get_mdi() was renamed to prepare_mdi()
 - get_multiexposure() was renamed to multiexpose()
 - get_daly was renamed to daly()
+
+## Other improvements
+- Custom warning and error messages are now available in attribute_health()
 
