@@ -1510,7 +1510,7 @@ intervention” vs. “after intervention”.
 Two approaches can be used for the comparison of scenarios:
 
 - Delta: Subtraction of health impact in scenario 1 minus in scenarios 2
-  (i.e. two PAF) (Organization 2014)
+  (i.e. two PAF) (WHO Regional Office for Europe 2014)
 
 - Population impact fraction (PIF) (Askari and Namayandeh 2020).
 
@@ -2583,7 +2583,7 @@ Turner, Daniel Krewski, George Thurston, Randall V Martin, et al. 2013.
 Kim, Young-Eun, Yoon-Sun Jung, Minsu Ock, and Seok-Jun Yoon. 2022. “DALY
 Estimation Approaches: Understanding and Using the Incidence-Based
 Approach and the Prevalence-Based Approach.” *J. Prev. Med. Public
-Health* 55 (1): 10–18. <https://doi.org/10.1111/biom.13197>.
+Health* 55 (1): 10–18. <https://doi.org/10.3961/jpmph.21.597>.
 
 Lehtomäki, Heli, Gunn Marit Aasvang, Gerhard Sulo, Bruce R. Denby, Otto
 Olavi Hänninen, Michael Brauer, Gavin Pereira, Omid Dadras, and Anette
@@ -2633,10 +2633,6 @@ OECD. 2025. *Mortality Risk Valuation in Policy Assessment: A Global
 Meta-Analysis of Value of Statistical Life Studies*. Paris: OECD
 Publishing. <https://doi.org/10.1787/76ca89a2-en>.
 
-Organization, World Health. 2014. *Health Impact Assessment of Air
-Pollution: Guide for Practitioners*. Copenhagen: WHO Regional Office for
-Europe. <https://apps.who.int/iris/handle/10665/144701>.
-
 Otavova, Martina, Christel Faes, Catherine Bouland, Eva De Clercq, Bram
 Vandeninden, Thierry Eggerickx, Jean-Paul Sanderson, Brecht
 Devleesschauwer, and Bruno Masquelier. 2022. “Inequalities in Mortality
@@ -2668,9 +2664,9 @@ of Economic Studies* 4 (2): 155–61. <https://doi.org/10.2307/2967612>.
 
 Soares, J., A. González Ortiz, A. Gsella, J. Horálek, D. Plass, and S.
 Kienzler. 2022. “Health Risk Assessment of Air Pollution and the Impact
-of the New WHO Guidelines (Eionet Report – ETC HE 2022/10).” European
-Topic Centre on Human Health; the Environment.
-<https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content>.
+of the New WHO Guidelines (Eionet Report – ETC HE 2022/10).” Eionet
+Report -- ETC HE 2022/10. European Topic Centre on Human Health; the
+Environment. <https://doi.org/10.5281/zenodo.7405988>.
 
 Steenland, Kyle, and Ben Armstrong. 2006. “An Overview of Methods for
 Calculating the Burden of Disease Due to Specific Risk Factors.”
@@ -2695,7 +2691,13 @@ of Healthy Life Years Lost in Europe.” World Health Organization.
 
 ———. 2020. “Health Impact Assessment of Air Pollution: AirQ+ Life Table
 Manual.” World Health Organization - Regional Office for Europe.
-<https://iris.who.int/server/api/core/bitstreams/3ebe7c55-be17-4ebe-89b9-8871fd287acd/content>.
+<https://www.who.int/europe/publications/i/item/WHO-EURO-2020-1559-41310-56212>.
+
+WHO Regional Office for Europe. 2014. *WHO Expert Meeting: Methods and
+Tools for Assessing the Health Risks of Air Pollution at Local, National
+and International Level. Meeting Report; 12-13 May 2014; Bonn, Germany*.
+Copenhagen: WHO Regional Office for Europe.
+<https://iris.who.int/handle/10665/142940>.
 
 Wickham, Hadley. 2014. “Tidy Data.” *Journal of Statistical Software* 59
 (10): 1–23. <https://doi.org/10.18637/jss.v059.i10>.

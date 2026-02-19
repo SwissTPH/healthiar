@@ -76,7 +76,7 @@ from the comparison.
 in scenario 1 with scenario 2. It can use two approaches:
 
 - Delta: Subtraction of health impacts in the two scenarios (two PAF)
-  (Organization 2014)
+  (WHO Regional Office for Europe 2014)
 
 - Potential impact fraction (PIF): Single PIF for both scenarios (WHO
   2003; Murray et al. 2003; Askari and Namayandeh 2020)
@@ -130,9 +130,11 @@ Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
 “Comparative quantification of health risks conceptual framework and
 methodological issues.” *Popul. Health Metr.*, **1**(1), 1.  
   
-Organization WH (2014). *Health impact assessment of air pollution:
-Guide for practitioners*. WHO Regional Office for Europe, Copenhagen.
-<https://apps.who.int/iris/handle/10665/144701>.  
+WHO Regional Office for Europe (2014). *WHO Expert Meeting: Methods and
+tools for assessing the health risks of air pollution at local, national
+and international level. Meeting report; 12-13 May 2014; Bonn, Germany*.
+WHO Regional Office for Europe, Copenhagen.
+<https://iris.who.int/handle/10665/142940>.  
   
 WHO (2003). “Introduction and methods: Assessing the environmental
 burden of disease at national and local levels.” World Health
