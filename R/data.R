@@ -188,6 +188,37 @@
 
 "exdat_prepare_mdi"
 
+# exdat_pwm_2 ##################################################################
+
+#' Geospatial outlines and populations of the Brussels-Capital region (Belgium)
+
+#' @description
+#' This variable of class `sf` and `data.frame` contains the geospatial outlines and populations of
+#' municipalities in the Brussels-Capital region (Belgium).
+
+#' @docType data
+
+#' @format \code{exdat_pwm_2}
+#' \describe{
+#'   \item{code}{NIS-codes (i.e. unique statistical code assigned to each geographic area in Belgium)}
+#'   \item{name}{Dutch names of the municipalities}
+#'   \item{population}{municipality populations}
+#'   \item{region}{geographic position of each municipality (North, East, West, South) relative to Brussels (Center)}
+#'   \item{geom}{geospatial outlines of the municipalities (MULTIPOLYGON)}
+#' }
+
+#' @source Real-world data
+
+#' @usage data(exdat_socialize)
+
+#' @docType data
+
+#' @author Arno Pauwels
+
+#' @keywords internal
+
+"exdat_pwm_2"
+
 # exdat_socialize ##############################################################
 
 #' Municipalities in Belgium ranked by BEST-COST Multidimensional Deprivation Index (MDI)
@@ -210,7 +241,7 @@
 #'   \item{MORTALITY_40_plus}{(fake) mortality from 40 years of age onwards}
 #' }
 
-#' @source Real-world data combined with fake populatoin and mortality data
+#' @source Real-world data combined with fake population and mortality data
 
 #' @usage data(exdat_socialize)
 
