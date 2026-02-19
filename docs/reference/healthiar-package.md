@@ -69,7 +69,7 @@ Other contributors:
 - Andreia Novais ([ORCID](https://orcid.org/0009-0007-7775-108X))
   \[contributor\]
 
-- Maria José Rueda Lopez
+- Maria Jose Rueda Lopez
   ([ORCID](https://orcid.org/0000-0002-2443-1038)) \[contributor\]
 
 - Minh Nhat Pham ([ORCID](https://orcid.org/0000-0002-5972-1668))
@@ -78,7 +78,7 @@ Other contributors:
 - Ana Barbosa ([ORCID](https://orcid.org/0000-0002-9623-9002))
   \[contributor\]
 
-- João Vasco Santos ([ORCID](https://orcid.org/0000-0003-4696-1002))
+- Joao Vasco Santos ([ORCID](https://orcid.org/0000-0003-4696-1002))
   \[contributor\]
 
 - Anette Kocbach Bolling
