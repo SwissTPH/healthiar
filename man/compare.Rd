@@ -155,7 +155,7 @@ results$health_main$impact
 \itemize{
   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_mod}},
     \code{\link{standardize}},
-  \item Downstream: \code{\link{daly}},
+  \item Downstream: \code{\link{daly}}
 }
 }
 \author{
