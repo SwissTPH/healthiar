@@ -15,7 +15,7 @@ If no population data is provided, the function calculates the simple spatial av
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1457</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1462</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -125,10 +125,9 @@ If no population data is provided, the function calculates the simple spatial av
 <span class="r-in"><span>  population <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">exdat_pwm_2</span><span class="op">$</span><span class="va">population</span><span class="op">)</span>, <span class="co"># population per geographic sub-unit</span></span></span>
 <span class="r-in"><span>  geo_id_macro <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">exdat_pwm_2</span><span class="op">$</span><span class="va">region</span><span class="op">)</span> <span class="co"># higher-level IDs to aggregate at</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in values(poll_grid):</span> could not find function "values"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">pwm</span><span class="op">$</span><span class="va">main</span> <span class="co"># population-weighted mean exposures for the (higher-level) geographic units</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'pwm' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
