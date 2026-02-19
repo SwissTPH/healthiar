@@ -18,10 +18,10 @@
 Real-world data
 }
 \usage{
-data(exdat_socialize)
+base::data(exdat_pwm_2)
 }
 \description{
-This variable of class `sf` and `data.frame` contains the geospatial outlines and populations of
+This variable of class \code{sf} and \code{data.frame} contains the geospatial outlines and populations of
 municipalities in the Brussels-Capital region (Belgium).
 }
 \author{
