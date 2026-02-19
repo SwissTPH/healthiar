@@ -1,3 +1,130 @@
+# exdat_cantons #####################################################################
+
+#' PM2.5 exposure and COPD incidence in Switzerland
+
+#' @description
+#' This tibble contains PM2.5 exposure and COPD incidence data from Switzerland.
+
+#' @format \code{exdat_cantons}
+#' \describe{
+#'   \item{year}{year}
+#'   \item{canton}{abbreviation of Swiss cantons}
+#'   \item{lung_cancer_incidence}{lung cancer incidence}
+#'   \item{exposure}{mean country-wide population-weighted exposure level}
+#'   \item{pollutant}{PM2.5}
+#'   \item{exposure_type}{exposure type}
+#'   \item{population}{number of inhabitants per canton}
+#'   \item{rr}{central relative risk estimate}
+#'   \item{rr_l}{lower 95\% confidence interval bound of the relative risk estimate}
+#'   \item{rr_u}{upper 95\% confidence interval bound of the relative risk estimate}
+#'   \item{increment}{exposure increment in \eqn{\mu g/m^3} for which the relative risk estimates are valid}
+#'   \item{function_shape}{shape of the exposure-response function}
+#'   \item{cutoff}{cutoff level below which no health effects are attributable to the exposure}
+#'   \item{language_main}{language spoken by the majority of inhabitants in the canton}
+#'   \item{canton_long}{full (English) name of the canton}
+#' }
+#' @source Real-world data
+
+#' @usage data(exdat_cantons)
+
+#' @docType data
+
+#' @author Alberto Castro & Axel Luyten
+
+#' @keywords internal
+
+"exdat_cantons"
+
+# exdat_lifetable ##############################################################
+
+#' Population data per age and sex in Switzerland
+
+#' @description
+#' This tibble contains population per age and sex for Switzerland.
+
+#' @format \code{exdat_lifetable}
+#' \describe{
+#'   \item{age_group}{single year age groups}
+#'   \item{sex}{female or male}
+#'   \item{midyear_population}{mid-year populations}
+#'   \item{deaths}{annual deaths}
+#' }
+#' @source Real-world data
+
+#' @usage data(exdat_lifetable)
+
+#' @docType data
+
+#' @author Alberto Castro & Axel Luyten
+
+#' @keywords internal
+
+"exdat_lifetable"
+
+# exdat_noise ##################################################################
+
+#' Noise exposure in urban and rural regions in Norway
+
+#' @description
+#' This tibble contains noise exposure data from urban and rural regions in Norway.
+
+#' @format \code{exdat_noise}
+#' \describe{
+#'   \item{exposure_category}{noise exposure range of the exposure category}
+#'   \item{exposure_mean}{mean noise exposure in the exposure category}
+#'   \item{region}{region for which exposure is valid}
+#'   \item{exposed}{number of exposed persons}
+#' }
+#' @source Real-world data
+
+#' @usage data(exdat_noise)
+
+#' @docType data
+
+#' @author Anette Kocbach Bolling & Vázquez Fernández
+
+#' @keywords internal
+
+"exdat_noise"
+
+# exdat_ozone ################################################################
+
+#' PM2.5 exposure and COPD incidence in Switzerland
+
+#' @description
+#' This tibble contains modelled ozone (\eqn{O_3}) exposure and chronic obstructive pulmonary disease (COPD) incidence data from the Germany in 2016.
+
+#' @format \code{exdat_ozone}
+#' \describe{
+#'   \item{pollutant}{\eqn{O_3}}
+#'   \item{exposure}{mean exposure level in the exposure category}
+#'   \item{exp_unit}{unit of the exposure}
+#'   \item{proportion_population_exposed}{proportion of the total population exposed to each exposure category}
+#'   \item{mortality_copd_tota_yearl}{mortality due to chronic obstructive pulmonary disease (ICD-10 J40-44)}
+#'   \item{rr_central}{central relative risk estimate}
+#'   \item{rr_lower}{lower 95\% confidence interval bound of the relative risk estimate}
+#'   \item{rr_upper}{upper 95\% confidence interval bound of the relative risk estimate}
+#'   \item{rr_increment}{exposure increment in \eqn{\mu g/m^3} for which the relative risk estimates are valid}
+#'   \item{cutoff}{cutoff level below which no health effects are attributable to the exposure}
+#'   \item{erf_shape}{shape of the exposure-response function}
+#'   \item{exposure_type}{exposure type}
+#'   \item{rr_source}{source of the relative risk estimates}
+#'   \item{country}{country}
+#'   \item{year}{year of the data}
+#' }
+
+#' @source Real-world data
+
+#' @usage data(exdat_ozone)
+
+#' @docType data
+
+#' @author Alberto Castro & Axel Luyten
+
+#' @keywords internal
+
+"exdat_ozone"
+
 # exdat_pm #####################################################################
 
 #' PM2.5 exposure and COPD incidence in Switzerland
@@ -30,58 +157,6 @@
 #' @keywords internal
 
 "exdat_pm"
-
-# exdat_noise ##################################################################
-
-#' Noise exposure in urban and rural regions in Norway
-
-#' @description
-#' This tibble contains noise exposure data from urban and rural regions in Norway.
-
-#' @format \code{exdat_noise}
-#' \describe{
-#'   \item{exposure_category}{noise exposure range of the exposure category}
-#'   \item{exposure_mean}{mean noise exposure in the exposure category}
-#'   \item{region}{region for which exposure is valid}
-#'   \item{exposed}{number of exposed persons}
-#' }
-#' @source Real-world data
-
-#' @usage data(exdat_noise)
-
-#' @docType data
-
-#' @author Anette Kocbach Bolling & Vázquez Fernández
-
-#' @keywords internal
-
-"exdat_noise"
-
-# exdat_lifetable ##############################################################
-
-#' Population data per age and sex in Switzerland
-
-#' @description
-#' This tibble contains population per age and sex for Switzerland.
-
-#' @format \code{exdat_lifetable}
-#' \describe{
-#'   \item{age_group}{single year age groups}
-#'   \item{sex}{female or male}
-#'   \item{midyear_population}{mid-year populations}
-#'   \item{deaths}{annual deaths}
-#' }
-#' @source Real-world data
-
-#' @usage data(exdat_lifetable)
-
-#' @docType data
-
-#' @author Alberto Castro & Axel Luyten
-
-#' @keywords internal
-
-"exdat_lifetable"
 
 # exdat_prepare_mdi ##############################################################
 
@@ -146,78 +221,3 @@
 #' @keywords internal
 
 "exdat_socialize"
-
-# exdat_ozone ################################################################
-
-#' PM2.5 exposure and COPD incidence in Switzerland
-
-#' @description
-#' This tibble contains modelled ozone (\eqn{O_3}) exposure and chronic obstructive pulmonary disease (COPD) incidence data from the Germany in 2016.
-
-#' @format \code{exdat_ozone}
-#' \describe{
-#'   \item{pollutant}{\eqn{O_3}}
-#'   \item{exposure}{mean exposure level in the exposure category}
-#'   \item{exp_unit}{unit of the exposure}
-#'   \item{proportion_population_exposed}{proportion of the total population exposed to each exposure category}
-#'   \item{mortality_copd_tota_yearl}{mortality due to chronic obstructive pulmonary disease (ICD-10 J40-44)}
-#'   \item{rr_central}{central relative risk estimate}
-#'   \item{rr_lower}{lower 95\% confidence interval bound of the relative risk estimate}
-#'   \item{rr_upper}{upper 95\% confidence interval bound of the relative risk estimate}
-#'   \item{rr_increment}{exposure increment in \eqn{\mu g/m^3} for which the relative risk estimates are valid}
-#'   \item{cutoff}{cutoff level below which no health effects are attributable to the exposure}
-#'   \item{erf_shape}{shape of the exposure-response function}
-#'   \item{exposure_type}{exposure type}
-#'   \item{rr_source}{source of the relative risk estimates}
-#'   \item{country}{country}
-#'   \item{year}{year of the data}
-#' }
-
-#' @source Real-world data
-
-#' @usage data(exdat_ozone)
-
-#' @docType data
-
-#' @author Alberto Castro & Axel Luyten
-
-#' @keywords internal
-
-"exdat_ozone"
-
-# exdat_cantons #####################################################################
-
-#' PM2.5 exposure and COPD incidence in Switzerland
-
-#' @description
-#' This tibble contains PM2.5 exposure and COPD incidence data from Switzerland.
-
-#' @format \code{exdat_cantons}
-#' \describe{
-#'   \item{year}{year}
-#'   \item{canton}{abbreviation of Swiss cantons}
-#'   \item{lung_cancer_incidence}{lung cancer incidence}
-#'   \item{exposure}{mean country-wide population-weighted exposure level}
-#'   \item{pollutant}{PM2.5}
-#'   \item{exposure_type}{exposure type}
-#'   \item{population}{number of inhabitants per canton}
-#'   \item{rr}{central relative risk estimate}
-#'   \item{rr_l}{lower 95\% confidence interval bound of the relative risk estimate}
-#'   \item{rr_u}{upper 95\% confidence interval bound of the relative risk estimate}
-#'   \item{increment}{exposure increment in \eqn{\mu g/m^3} for which the relative risk estimates are valid}
-#'   \item{function_shape}{shape of the exposure-response function}
-#'   \item{cutoff}{cutoff level below which no health effects are attributable to the exposure}
-#'   \item{language_main}{language spoken by the majority of inhabitants in the canton}
-#'   \item{canton_long}{full (English) name of the canton}
-#' }
-#' @source Real-world data
-
-#' @usage data(exdat_cantons)
-
-#' @docType data
-
-#' @author Alberto Castro & Axel Luyten
-
-#' @keywords internal
-
-"exdat_cantons"
