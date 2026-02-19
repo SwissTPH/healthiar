@@ -2,8 +2,9 @@
 
 # DESCRIPTION ##################################################################
 #' @description
-#' This function determines summary uncertainty (based on central, lower and upper estimates of at least one input variable) using attribute() or compare()
-#' function output by Monte Carlo simulation.
+#' This function obtains a summary of uncertainty
+#' (based on central, lower and upper estimates of at least one input variable)
+#' using a Monte Carlo simulation.
 #' @description
 #' Input variables that will be processed are:
 #' \itemize{
