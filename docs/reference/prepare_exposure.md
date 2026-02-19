@@ -85,9 +85,8 @@ Arno Pauwels & Liliana Vazquez Fernandez
 # Goal: determine population-weighted mean PM2.5 exposure for several
 # neighborhoods of Brussels (Belgium)
 
-exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
-exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"),
-                          quiet = TRUE)
+path <- system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
+exdat_pwm_1 <- terra::rast(path)
 
 pwm <- prepare_exposure(
   poll_grid = exdat_pwm_1, # Formal class SpatRaster
@@ -96,18 +95,14 @@ pwm <- prepare_exposure(
   geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate at
 )
 
-pwm$main # population-weighted mean exposures for the (higher-level) geographic units
+pwm$exposure_main # population-weighted mean exposures for the (higher-level) geographic units
 #> $geo_id_macro
 #> [1] "Center" "East"   "North"  "South"  "West"  
 #> 
-#> $exp_value
-#> [1] 11.48074 11.06808 11.47630 11.05403 11.37794
+#> $exposure_mean
+#> [1] 11.47271 11.10716 11.48670 11.09940 11.38849
 #> 
-#> $exp_type
-#> [1] "Population-weighted mean concentration"
-#> [2] "Population-weighted mean concentration"
-#> [3] "Population-weighted mean concentration"
-#> [4] "Population-weighted mean concentration"
-#> [5] "Population-weighted mean concentration"
+#> $population_total
+#> [1] 203105 187907 257573 308860 298802
 #> 
 ```

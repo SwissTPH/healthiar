@@ -639,8 +639,8 @@ a Monte Carlo simulation.
 ##### General concepts
 
 A Monte Carlo simulation is a statistical method that generates repeated
-random sampling (Robert and Casella 2004; **Doucet2020_arsia?**). In
-`healthiar`, you can use the function
+random sampling \[Robert and Casella (2004); Rubinstein and Kroese
+(2016). In `healthiar`, you can use the function
 [`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
 to simulate values in the arguments with uncertainty and estimate a
 single confidence interval in the results.
@@ -1838,7 +1838,8 @@ can be entered in the argument `exp_mean`, `exp_lower` and/or
 ``` r
 
 exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
-exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
+#exdat_pwm_2 <- sf::st_read(system.file("extdata", "exdat_pwm_2.gpkg", package = "healthiar"), quiet = TRUE)
+#exdat_pwm_2 <- utils::data("exdat_pwm_2.rda")
 
 pwm <- healthiar::prepare_exposure(
   poll_grid = exdat_pwm_1, # Formal class SpatRaster,
@@ -1853,8 +1854,6 @@ Within the function output, the list `main` contains the
 population-weighted mean exposures for the (higher-level) geographic
 units in the column `exposure_mean` and the total population in each
 unit in column `population_total`.
-
-[TABLE]
 
 ## Threshold additional to cut-off
 
@@ -2286,8 +2285,8 @@ social <- healthiar::socialize(
     #> # A tibble: 4 × 5
     #>   parameter      difference_type difference_compared_…¹ difference_value comment
     #>   <chr>          <chr>           <chr>                             <dbl> <chr>  
-    #> 1 impact_rate_s… absolute        bottom_quantile                 11.5    NA     
-    #> 2 impact_rate_s… relative        bottom_quantile                  0.193  NA     
+    #> 1 impact_rate_s… absolute        last_quantile                   11.5    NA     
+    #> 2 impact_rate_s… relative        last_quantile                    0.193  NA     
     #> 3 impact_rate_s… absolute        overall                         -0.834  It can…
     #> 4 impact_rate_s… relative        overall                         -0.0143 It can…
     #> # ℹ abbreviated name: ¹​difference_compared_with
@@ -2658,6 +2657,10 @@ Appropriate? Results of a Simulation Study.” *BMC Public Health* 19 (1):
 Robert, Christian P, and George Casella. 2004. *Monte Carlo Statistical
 Methods*. Springer Texts in Statistics. Springer Science & Business
 Media. <https://doi.org/10.1007/978-1-4757-4145-2>.
+
+Rubinstein, Reuven Y., and Dirk P. Kroese. 2016. *Simulation and the
+Monte Carlo Method*. John Wiley & Sons.
+<https://doi.org/10.1002/9781118631980>.
 
 Samuelson, Paul A. 1937. “A Note on Measurement of Utility.” *The Review
 of Economic Studies* 4 (2): 155–61. <https://doi.org/10.2307/2967612>.
