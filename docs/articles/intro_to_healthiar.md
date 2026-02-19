@@ -25,7 +25,7 @@ green spaces, chemicals, physical activity…
 
 See below a an overview of the `healthiar`, which is the first page of
 the [cheat
-sheet](https://swisstph.github.io/healthiar/articles/cheatsheet_healthiar.html).
+sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html).
 The whole list of functions included in `healthiar` is linked there and
 available in the
 [reference](https://swisstph.github.io/healthiar/reference/index.html).
@@ -639,7 +639,7 @@ a Monte Carlo simulation.
 ##### General concepts
 
 A Monte Carlo simulation is a statistical method that generates repeated
-random sampling (Robert and Casella 2004; Doucet, Lee, et al. 2020). In
+random sampling (Robert and Casella 2004; **Doucet2020_arsia?**). In
 `healthiar`, you can use the function
 [`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
 to simulate values in the arguments with uncertainty and estimate a
@@ -1854,6 +1854,8 @@ population-weighted mean exposures for the (higher-level) geographic
 units in the column `exposure_mean` and the total population in each
 unit in column `population_total`.
 
+[TABLE]
+
 ## Threshold additional to cut-off
 
 #### Goal
@@ -2284,8 +2286,8 @@ social <- healthiar::socialize(
     #> # A tibble: 4 × 5
     #>   parameter      difference_type difference_compared_…¹ difference_value comment
     #>   <chr>          <chr>           <chr>                             <dbl> <chr>  
-    #> 1 impact_rate_s… absolute        last_quantile                   11.5    NA     
-    #> 2 impact_rate_s… relative        last_quantile                    0.193  NA     
+    #> 1 impact_rate_s… absolute        bottom_quantile                 11.5    NA     
+    #> 2 impact_rate_s… relative        bottom_quantile                  0.193  NA     
     #> 3 impact_rate_s… absolute        overall                         -0.834  It can…
     #> 4 impact_rate_s… relative        overall                         -0.0143 It can…
     #> # ℹ abbreviated name: ¹​difference_compared_with
@@ -2548,10 +2550,6 @@ Dirk Berkvens, and Niko Speybroeck. 2022. *Prevalence: Tools for
 Prevalence Assessment Studies.*
 <https://cran.r-project.org/package=prevalence>.
 
-Doucet, Arnaud, Anthony Lee, et al. 2020. “Monte Carlo Methods in the
-Twenty-First Century.” *Annual Review of Statistics and Its Application*
-7: 435–58. <https://doi.org/10.1146/annurev-statistics-031219-041122>.
-
 Frederick, Shane, George Loewenstein, and Ted O’Donoghue. 2002. “Time
 Discounting and Time Preference: A Critical Review.” *Journal of
 Economic Literature* 40 (2): 351–401.
@@ -2580,7 +2578,7 @@ Jerrett, Michael, Richard T Burnett, Bernardo S Beckerman, Michelle C
 Turner, Daniel Krewski, George Thurston, Randall V Martin, et al. 2013.
 “Spatial Analysis of Air Pollution and Mortality in California.”
 *American Journal of Respiratory and Critical Care Medicine* 188 (5):
-593–99. https://doi.org/<https://doi.org/10.1164/rccm.201303-0609OC>.
+593–99. <https://doi.org/10.1164/rccm.201303-0609OC>.
 
 Kim, Young-Eun, Yoon-Sun Jung, Minsu Ock, and Seok-Jun Yoon. 2022. “DALY
 Estimation Approaches: Understanding and Using the Incidence-Based
@@ -2629,7 +2627,7 @@ Metr.* 1 (1): 1.
 Murray, Christopher JL, Majid Ezzati, Alan D Lopez, Anthony Rodgers, and
 Stephen Vander Hoorn. 2003. “Comparative Risk Assessment: Conceptual
 Framework and Design.” *Epidemiology* 14 (4): 447–58.
-<https://doi.org/10.1097/01.ede.0000071443.19794.8d>.
+<https://doi.org/10.1186/1478-7954-1-1>.
 
 OECD. 2025. *Mortality Risk Valuation in Policy Assessment: A Global
 Meta-Analysis of Value of Statistical Life Studies*. Paris: OECD

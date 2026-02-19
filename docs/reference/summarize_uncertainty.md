@@ -1,8 +1,8 @@
 # Get Monte Carlo confidence intervals
 
-This function determines summary uncertainty (based on central, lower
-and upper estimates of at least one input variable) using attribute() or
-compare() function output by Monte Carlo simulation.
+This function obtains a summary of uncertainty (based on central, lower
+and upper estimates of at least one input variable) using a Monte Carlo
+simulation.
 
 Input variables that will be processed are:
 
@@ -76,7 +76,7 @@ independent random draws across variables and scenarios.
 This function summarizes the uncertainty of the attributable health
 impacts (i.e.a single confidence interval instead of many combinations).
 For this purpose, it applies a Monte Carlo simulation (Robert and
-Casella 2004; Doucet et al. 2020) .
+Casella 2004; Rubinstein and Kroese 2016) .
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
@@ -86,16 +86,14 @@ available in the package vignette. More specifically, see chapters:
 
 ## References
 
-Doucet A, Lee A, others (2020). “Monte Carlo Methods in the Twenty-First
-Century.” *Annual Review of Statistics and Its Application*, **7**,
-435–458.
-[doi:10.1146/annurev-statistics-031219-041122](https://doi.org/10.1146/annurev-statistics-031219-041122)
+Robert CP, Casella G (2004). *Monte Carlo Statistical Methods*, Springer
+Texts in Statistics. Springer Science & Business Media.
+[doi:10.1007/978-1-4757-4145-2](https://doi.org/10.1007/978-1-4757-4145-2)
 .  
   
-Robert CP, Casella G (2004). *Monte Carlo Statistical Methods*, Springer
-Texts in Statistics. Springer Science \\ Business Media.
-[doi:10.1007/978-1-4757-4145-2](https://doi.org/10.1007/978-1-4757-4145-2)
-.
+Rubinstein RY, Kroese DP (2016). *Simulation and the Monte Carlo
+Method*. John Wiley & Sons.
+[doi:10.1002/9781118631980](https://doi.org/10.1002/9781118631980) .
 
 ## See also
 
@@ -133,6 +131,6 @@ results <- summarize_uncertainty(
   n_sim = 100
 )
 results$uncertainty_main$impact # Central, lower and upper estimates
-#> [1] 3655.574 1496.535 5770.173
+#> [1] 3646.684 1496.535 5770.173
 
 ```

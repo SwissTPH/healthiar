@@ -335,7 +335,7 @@ available in the package vignette. More specifically, see chapters:
 GBD 2019 Risk Factors Collaborators (2020). “Global burden of 87 risk
 factors in 204 countries and territories, 1990–2019.” *The Lancet*.
 [doi:10.1016/S0140-6736(20)30752-2](https://doi.org/10.1016/S0140-6736%2820%2930752-2)
-, <https://www.thelancet.com/article/S0140-6736(20)30752-2/fulltext>.  
+.  
   
 Lehtomäki H, Aasvang GM, Sulo G, Denby BR, Hänninen OO, Brauer M,
 Pereira G, Dadras O, Bølling AK (2025). “Burden of disease attributable
@@ -347,8 +347,7 @@ to PM2.5 at low exposure levels: impact of methodological choices.”
 Murray CJ, Ezzati M, Lopez AD, Rodgers A, Hoorn SV (2003). “Comparative
 risk assessment: conceptual framework and design.” *Epidemiology*,
 **14**(4), 447-458.
-[doi:10.1097/01.ede.0000071443.19794.8d](https://doi.org/10.1097/01.ede.0000071443.19794.8d)
-.  
+[doi:10.1186/1478-7954-1-1](https://doi.org/10.1186/1478-7954-1-1) .  
   
 Pozzer A, Anenberg SC, Dey S, Haines A, Lelieveld J, Chowdhury S (2023).
 “Mortality Attributable to Ambient Air Pollution: A Review of Global

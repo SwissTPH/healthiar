@@ -205,7 +205,7 @@ results_age_groups <-
 ## that is attributable to differences in deprivation
 results <- socialize(
   output_attribute = results_age_groups,
-  age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
+  age_group = exdat_socialize$age_group, # The same as in attribute_health()
   ref_prop_pop = exdat_socialize$ref_prop_pop,
   geo_id_micro = exdat_socialize$geo_unit,
   social_indicator = exdat_socialize$score,

@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2.1462</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@ environmental exposures: air pollution and noise. However,
 <code>healthiar</code> could be used for other exposures such as green
 spaces, chemicals, physical activity…</p>
 <p>See below a an overview of the <code>healthiar</code>, which is the
-first page of the <a href="https://swisstph.github.io/healthiar/articles/cheatsheet_healthiar.html">cheat
+first page of the <a href="https://swisstph.github.io/healthiar/articles/cheatsheet.html">cheat
 sheet</a>. The whole list of functions included in
 <code>healthiar</code> is linked there and available in the <a href="https://swisstph.github.io/healthiar/reference/index.html">reference</a>.</p>
 <div class="float">
@@ -873,10 +873,11 @@ by using a Monte Carlo simulation.</p>
 </h5>
 <p>A Monte Carlo simulation is a statistical method that generates
 repeated random sampling <span class="citation">(Robert and Casella
-2004; Doucet, Lee, et al. 2020)</span>. In <code>healthiar</code>, you
-can use the function <code><a href="../reference/summarize_uncertainty.html">summarize_uncertainty()</a></code> to simulate
-values in the arguments with uncertainty and estimate a single
-confidence interval in the results.</p>
+2004; <strong>Doucet2020_arsia?</strong>)</span>. In
+<code>healthiar</code>, you can use the function
+<code><a href="../reference/summarize_uncertainty.html">summarize_uncertainty()</a></code> to simulate values in the arguments
+with uncertainty and estimate a single confidence interval in the
+results.</p>
 <p>For each entered input argument that includes a (95%) confidence
 interval (i.e. <code>_lower</code> and <code>_upper</code> bound value)
 a distribution is fitted (see distributions below). The median of the
@@ -6282,6 +6283,80 @@ argument <code>exp_mean</code>, <code>exp_lower</code> and/or
 population-weighted mean exposures for the (higher-level) geographic
 units in the column <code>exposure_mean</code> and the total population
 in each unit in column <code>population_total</code>.</p>
+<table class="table kable_wrapper"><tbody><tr>
+<td>
+<table class="table">
+<thead><tr class="header">
+<th align="left">x</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Center</td>
+</tr>
+<tr class="even">
+<td align="left">East</td>
+</tr>
+<tr class="odd">
+<td align="left">North</td>
+</tr>
+<tr class="even">
+<td align="left">South</td>
+</tr>
+<tr class="odd">
+<td align="left">West</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table class="table">
+<thead><tr class="header">
+<th align="right">x</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">11.48074</td>
+</tr>
+<tr class="even">
+<td align="right">11.06808</td>
+</tr>
+<tr class="odd">
+<td align="right">11.47630</td>
+</tr>
+<tr class="even">
+<td align="right">11.05403</td>
+</tr>
+<tr class="odd">
+<td align="right">11.37794</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table class="table">
+<thead><tr class="header">
+<th align="left">x</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Population-weighted mean concentration</td>
+</tr>
+<tr class="even">
+<td align="left">Population-weighted mean concentration</td>
+</tr>
+<tr class="odd">
+<td align="left">Population-weighted mean concentration</td>
+</tr>
+<tr class="even">
+<td align="left">Population-weighted mean concentration</td>
+</tr>
+<tr class="odd">
+<td align="left">Population-weighted mean concentration</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr></tbody></table>
 </div>
 </div>
 <div class="section level2">
@@ -6706,8 +6781,8 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
 <span><span class="co">#&gt;   parameter      difference_type difference_compared_…¹ difference_value comment</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> impact_rate_s… absolute        last_quantile                   11.5    <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> impact_rate_s… relative        last_quantile                    0.193  <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> impact_rate_s… absolute        bottom_quantile                 11.5    <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> impact_rate_s… relative        bottom_quantile                  0.193  <span style="color: #BB0000;">NA</span>     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> impact_rate_s… absolute        overall                         -<span style="color: #BB0000;">0.834</span>  It can…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> impact_rate_s… relative        overall                         -<span style="color: #BB0000;">0.014</span><span style="color: #BB0000; text-decoration: underline;">3</span> It can…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated name: ¹​difference_compared_with</span></span></span></code></pre>
@@ -7020,11 +7095,6 @@ Levecke, Nicolas Praet, Sophie Roelandt, Suzanne Smit, Pierre Dorny,
 Dirk Berkvens, and Niko Speybroeck. 2022. <em>Prevalence: Tools for
 Prevalence Assessment Studies.</em> <a href="https://cran.r-project.org/package=prevalence" class="external-link">https://cran.r-project.org/package=prevalence</a>.
 </div>
-<div id="ref-Doucet2020_arsia" class="csl-entry">
-Doucet, Arnaud, Anthony Lee, et al. 2020. <span>“Monte Carlo Methods in
-the Twenty-First Century.”</span> <em>Annual Review of Statistics and
-Its Application</em> 7: 435–58. <a href="https://doi.org/10.1146/annurev-statistics-031219-041122" class="external-link">https://doi.org/10.1146/annurev-statistics-031219-041122</a>.
-</div>
 <div id="ref-Frederick2002_jel" class="csl-entry">
 Frederick, Shane, George Loewenstein, and Ted O’Donoghue. 2002.
 <span>“Time Discounting and Time Preference: A Critical Review.”</span>
@@ -7056,7 +7126,7 @@ Jerrett, Michael, Richard T Burnett, Bernardo S Beckerman, Michelle C
 Turner, Daniel Krewski, George Thurston, Randall V Martin, et al. 2013.
 <span>“Spatial Analysis of Air Pollution and Mortality in
 California.”</span> <em>American Journal of Respiratory and Critical
-Care Medicine</em> 188 (5): 593–99. https://doi.org/<a href="https://doi.org/10.1164/rccm.201303-0609OC" class="external-link">https://doi.org/10.1164/rccm.201303-0609OC</a>.
+Care Medicine</em> 188 (5): 593–99. <a href="https://doi.org/10.1164/rccm.201303-0609OC" class="external-link">https://doi.org/10.1164/rccm.201303-0609OC</a>.
 </div>
 <div id="ref-Kim2022_kspm" class="csl-entry">
 Kim, Young-Eun, Yoon-Sun Jung, Minsu Ock, and Seok-Jun Yoon. 2022.
@@ -7111,7 +7181,7 @@ Health Risks Conceptual Framework and Methodological Issues.”</span>
 Murray, Christopher JL, Majid Ezzati, Alan D Lopez, Anthony Rodgers, and
 Stephen Vander Hoorn. 2003. <span>“Comparative Risk Assessment:
 Conceptual Framework and Design.”</span> <em>Epidemiology</em> 14 (4):
-447–58. <a href="https://doi.org/10.1097/01.ede.0000071443.19794.8d" class="external-link">https://doi.org/10.1097/01.ede.0000071443.19794.8d</a>.
+447–58. <a href="https://doi.org/10.1186/1478-7954-1-1" class="external-link">https://doi.org/10.1186/1478-7954-1-1</a>.
 </div>
 <div id="ref-OECD2025_book" class="csl-entry">
 OECD. 2025. <em>Mortality Risk Valuation in Policy Assessment: A Global

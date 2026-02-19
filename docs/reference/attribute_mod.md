@@ -4,11 +4,14 @@ This function quantifies the attributable health impacts in a new
 scenario 2 as follows:
 
 - taking the input data of an existing scenario 1 (obtained using
-  \`attribute_health()\`),
+  [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)),
 
 - modifying some of these input data of scenario 1 for the scenario 2
-  and calling in the background \`attribute_health()\` with the new data
-  for scenario 2
+  and
+
+- calling in the background
+  [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+  with the new data for scenario 2
 
 ## Usage
 
@@ -207,9 +210,10 @@ results.
 
 **Methodology**
 
-This function calls in the background \`attribute_health()\`, which can
-use the relative risk (Murray et al. 2003) and absolute risk (WHO 2011)
-.
+This function calls in the background
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+which can use the relative risk (Murray et al. 2003) and absolute risk
+(WHO 2011) .
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
@@ -228,15 +232,52 @@ available in the package vignette. More specifically, see chapters:
 Murray CJ, Ezzati M, Lopez AD, Rodgers A, Hoorn SV (2003). “Comparative
 risk assessment: conceptual framework and design.” *Epidemiology*,
 **14**(4), 447-458.
-[doi:10.1097/01.ede.0000071443.19794.8d](https://doi.org/10.1097/01.ede.0000071443.19794.8d)
-.  
+[doi:10.1186/1478-7954-1-1](https://doi.org/10.1186/1478-7954-1-1) .  
   
 WHO (2011). “Burden of disease from environmental noise: Quantification
 of healthy life years lost in Europe.” World Health Organization.
 <https://www.who.int/publications/i/item/burden-of-disease-from-environmental-noise-quantification-of-healthy-life-years-lost-in-europe>.
+
+## See also
+
+- Upstream:
+  [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+  [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+
+- Downstream:
+  [`compare`](https://swisstph.github.io/healthiar/reference/compare.md)
 
 ## Author
 
 Alberto Castro & Axel Luyten
 
 ## Examples
+
+``` r
+# Goal: adjust an existing healthiar scenario and determine the health
+# impacts in the modified scenario
+
+## First create a scenario to be modified
+scenario_A <- attribute_health(
+  exp_central = 8.85,   # EXPOSURE 1
+  cutoff_central = 5,
+  bhd_central = 25000,
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.118,
+  rr_increment = 10
+)
+
+scenario_A$health_main$impact # Attributable impact in scenario A
+#> [1] 1050.86
+
+## Modify scenario (adjust exposure value)
+scenario_B <- attribute_mod(
+  output_attribute = scenario_A,
+  exp_central = 6       # EXPOSURE 2
+)
+
+scenario_B$health_main$impact # Attributable impact in scenario B
+#> [1] 277.304
+
+```
