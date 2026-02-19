@@ -25,7 +25,7 @@
 #' }
 #' @source Real-world data
 
-#' @usage data(exdat_cantons)
+#' @usage base::data(exdat_cantons)
 
 #' @docType data
 
@@ -51,7 +51,7 @@
 #' }
 #' @source Real-world data
 
-#' @usage data(exdat_lifetable)
+#' @usage base::data(exdat_lifetable)
 
 #' @docType data
 
@@ -77,7 +77,7 @@
 #' }
 #' @source Real-world data
 
-#' @usage data(exdat_noise)
+#' @usage base::data(exdat_noise)
 
 #' @docType data
 
@@ -115,7 +115,7 @@
 
 #' @source Real-world data
 
-#' @usage data(exdat_ozone)
+#' @usage base::data(exdat_ozone)
 
 #' @docType data
 
@@ -148,7 +148,7 @@
 #' }
 #' @source Real-world data
 
-#' @usage data(exdat_pm)
+#' @usage base::data(exdat_pm)
 
 #' @docType data
 
@@ -178,7 +178,7 @@
 
 #' @source Real-world data
 
-#' @usage data(exdat_prepare_mdi)
+#' @usage base::data(exdat_prepare_mdi)
 
 #' @docType data
 
@@ -188,12 +188,51 @@
 
 "exdat_prepare_mdi"
 
+# exdat_pwm_1 ##################################################################
+
+#' Air pollution expsoure data of the Brussels-Capital region (Belgium)
+
+#' @description
+#' The data can be loaded using
+#'
+#' \code{terra::rast(}
+#'
+#' \code{base::system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")}
+#'
+#' \code{)}
+#'
+#' (see Examples section below).
+#'
+#' When loaded it is a variable of class \code{SpatRaster}, which contains air pollution exposure levels
+#' of municipalities in the Brussels-Capital region (Belgium).
+#'
+#' Because it is a \code{.tif} file it is stored in the package's \code{inst/extdata} directory.
+
+#' @docType data
+
+#' @format GeoTIFF raster
+
+#' @source Real-world data
+
+#' @name exdat_pwm_1
+
+#' @examples
+#' path <- base::system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
+#' exdat_pwm_1 <- terra::rast(path)
+
+#' @author Arno Pauwels
+
+#' @keywords internal
+
+NULL
+
+
 # exdat_pwm_2 ##################################################################
 
 #' Geospatial outlines and populations of the Brussels-Capital region (Belgium)
 
 #' @description
-#' This variable of class `sf` and `data.frame` contains the geospatial outlines and populations of
+#' This variable of class \code{sf} and \code{data.frame} contains the geospatial outlines and populations of
 #' municipalities in the Brussels-Capital region (Belgium).
 
 #' @docType data
@@ -209,7 +248,7 @@
 
 #' @source Real-world data
 
-#' @usage data(exdat_socialize)
+#' @usage base::data(exdat_pwm_2)
 
 #' @docType data
 
@@ -243,7 +282,7 @@
 
 #' @source Real-world data combined with fake population and mortality data
 
-#' @usage data(exdat_socialize)
+#' @usage base::data(exdat_socialize)
 
 #' @docType data
 
