@@ -20,7 +20,7 @@
 Real-world data
 }
 \usage{
-base::data(exdat_prepare_mdi)
+data(exdat_prepare_mdi)
 }
 \description{
 This tibble contains social indicators of the BEST-COST Multidimensional Deprivation Index (MDI) of geo units in Belgium.

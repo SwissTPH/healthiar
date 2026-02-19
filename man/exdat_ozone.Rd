@@ -28,7 +28,7 @@
 Real-world data
 }
 \usage{
-base::data(exdat_ozone)
+data(exdat_ozone)
 }
 \description{
 This tibble contains modelled ozone (\eqn{O_3}) exposure and chronic obstructive pulmonary disease (COPD) incidence data from the Germany in 2016.

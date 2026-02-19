@@ -18,7 +18,7 @@
 Real-world data
 }
 \usage{
-base::data(exdat_pwm_2)
+data(exdat_pwm_2)
 }
 \description{
 This variable of class \code{sf} and \code{data.frame} contains the geospatial outlines and populations of

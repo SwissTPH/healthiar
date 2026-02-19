@@ -17,7 +17,7 @@
 Real-world data
 }
 \usage{
-base::data(exdat_lifetable)
+data(exdat_lifetable)
 }
 \description{
 This tibble contains population per age and sex for Switzerland.

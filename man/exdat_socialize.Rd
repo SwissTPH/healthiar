@@ -24,7 +24,7 @@
 Real-world data combined with fake population and mortality data
 }
 \usage{
-base::data(exdat_socialize)
+data(exdat_socialize)
 }
 \description{
 This tibble contains data for municipalities in Belgium ranked by BEST-COST Multidimensional Deprivation Index (MDI).
