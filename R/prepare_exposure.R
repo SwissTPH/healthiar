@@ -203,29 +203,45 @@ prepare_exposure <-
       )
 
       ## get population by exposure bin
-      exp_bins <- base::lapply(exp_vals, function(df) {
-        df$pop <- df$coverage_fraction*df$pop
-        df$bin <- base::cut(df$poll, base::seq(bin_min, bin_max, by = bin_width), right = FALSE)
-        geo_id_micro <- unique(df$geo_id_micro)
-        df <- stats::aggregate(pop~bin, df, sum)
-        df <- dplyr::left_join(bins, df, by = "bin")
-        df$geo_id_micro <- geo_id_micro
-        df[base::is.na(df$pop), "pop"] <- 0
-        return(df)
-      }) |> data.table::rbindlist()
+      exp_bins <- purrr::map_dfr(exp_vals, function(df) {
+        df |>
+          # 1. Calculate weighted population
+          dplyr::mutate(pop = coverage_fraction * pop) |>
+          # 2. Create bins for pollutant levels
+          dplyr::mutate(bin = base::cut(
+            poll,
+            base::seq(bin_min, bin_max, by = bin_width),
+            right = FALSE
+          )) |>
+          # 3. Aggregate population by bin
+          dplyr::group_by(bin) |>
+          dplyr::summarise(
+            pop = base::sum(pop, na.rm = TRUE),
+            .groups = "drop"
+          ) |>
+          # 4. Join with master 'bins' table to ensure all bins are represented
+          dplyr::left_join(bins, by = "bin") |>
+          # 5. Add back the geo_id and fill empty bins with 0
+          dplyr::mutate(
+            geo_id_micro = base::unique(df$geo_id_micro),
+            pop = dplyr::coalesce(pop, 0)
+          )
+      })
+
 
       ## get population-weighted average
-      exp_mean <- base::lapply(exp_vals, function(df) {
-        df$pop <- df$coverage_fraction*df$pop
-        mean <- stats::weighted.mean(df$poll, df$pop, na.rm = TRUE)
-        pop <- base::round(base::sum(df$pop))
-        df <- base::data.frame(
-          geo_id_micro = base::unique(df$geo_id_micro),
-          mean = mean,
-          pop = pop
-        )
-        return(df)
-      }) |> data.table::rbindlist()
+      exp_mean <- purrr::map_dfr(exp_vals, function(df) {
+        df |>
+          # 1. Update population by coverage fraction
+          dplyr::mutate(pop = coverage_fraction * pop) |>
+          # 2. Calculate weighted mean and total population
+          dplyr::summarise(
+            geo_id_micro = base::unique(geo_id_micro),
+            mean = stats::weighted.mean(poll, pop, na.rm = TRUE),
+            pop = base::round(base::sum(pop, na.rm = TRUE)),
+            .groups = "drop"
+          )
+      })
 
       ## build output lists
       exposure_main <- base::list(
@@ -290,21 +306,33 @@ prepare_exposure <-
       )
 
       ## get population by exposure bin
-      exp_bins <- base::by(
-        exp_vals,
-        base::list(exp_vals$geo_id_macro),
-        function(df) {
-          # df$pop <- df$coverage_fraction*df$pop
-          df$bin <- base::cut(df$poll, base::seq(bin_min, bin_max, by = bin_width), right = FALSE)
-          geo_id_macro <- unique(df$geo_id_macro)
-          df <- stats::aggregate(pop~bin, df, sum)
-          df <- dplyr::left_join(bins, df, by = "bin")
-          df$geo_id_macro <- geo_id_macro
-          df[base::is.na(df$pop), "pop"] <- 0
-          return(df)
-        },
-        simplify = FALSE
-      ) |> data.table::rbindlist()
+      exp_bins <- exp_vals |>
+        # 1. Create bins for the whole dataset at once (Fastest)
+        dplyr::mutate(
+          bin = base::cut(
+            poll,
+            base::seq(bin_min, bin_max, by = bin_width),
+            right = FALSE
+          )
+        ) |>
+        # 2. Aggregate by ID and Bin
+        dplyr::group_by(geo_id_macro, bin) |>
+        dplyr::summarise(
+          pop = base::sum(pop, na.rm = TRUE),
+          .groups = "drop"
+        ) |>
+        # 3. Join with a grid of ALL IDs and ALL Bins (from your master 'bins' table)
+        # This ensures 'mid' and any other bin metadata are included
+        dplyr::right_join(
+          tidyr::expand_grid(
+            geo_id_macro = base::unique(exp_vals$geo_id_macro),
+            bin = bins$bin
+          ) |>
+            dplyr::left_join(bins, by = "bin"), # This brings 'mid' back in
+          by = base::c("geo_id_macro", "bin")
+        ) |>
+        # 4. Cleanup NAs
+        dplyr::mutate(pop = dplyr::coalesce(pop, 0))
 
       ## get population-weighted average
       exp_mean <- exp_vals |>
