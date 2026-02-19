@@ -35,7 +35,8 @@
 #' # Goal: determine population-weighted mean PM2.5 exposure for several
 #' # neighborhoods of Brussels (Belgium)
 #'
-#' exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
+#' path <- system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
+#' exdat_pwm_1 <- terra::rast(path)
 #'
 #' pwm <- prepare_exposure(
 #'   poll_grid = exdat_pwm_1, # Formal class SpatRaster

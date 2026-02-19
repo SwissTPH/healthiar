@@ -195,9 +195,9 @@
 #' @description
 #' The data can be loaded using
 #'
-#' \code{terra::rast(}
+#' \code{exdat_pwm_1 <- terra::rast(}
 #'
-#' \code{base::system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")}
+#' \code{system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")}
 #'
 #' \code{)}
 #'
@@ -217,7 +217,7 @@
 #' @name exdat_pwm_1
 
 #' @examples
-#' path <- base::system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
+#' path <- system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
 #' exdat_pwm_1 <- terra::rast(path)
 
 #' @author Arno Pauwels
@@ -225,7 +225,6 @@
 #' @keywords internal
 
 NULL
-
 
 # exdat_pwm_2 ##################################################################
 
