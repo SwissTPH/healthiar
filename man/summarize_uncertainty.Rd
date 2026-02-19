@@ -28,8 +28,9 @@ for the attributable health impacts obtained through Monte Carlo simulation;
  The two results elements are added to the existing output.
 }
 \description{
-This function determines summary uncertainty (based on central, lower and upper estimates of at least one input variable) using attribute() or compare()
-function output by Monte Carlo simulation.
+This function obtains a summary of uncertainty
+(based on central, lower and upper estimates of at least one input variable)
+using a Monte Carlo simulation.
 
 Input variables that will be processed are:
 \itemize{
