@@ -81,7 +81,7 @@ affiliations:
    index: 8
    
 date: 19 February 2026
-bibliography: paper_healthiar_joss.bib
+bibliography: paper.bib
 
 ---
 
