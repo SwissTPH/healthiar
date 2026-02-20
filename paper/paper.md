@@ -1,5 +1,5 @@
 ---
-title: 'healthiar: An R package to quantify and monetize health impacts attributable to (environmental) exposure'
+title: "healthiar: An R package to quantify and monetize health impacts attributable to (environmental) exposure"
 tags:
   - Health impact quantification
   - Burden of disease
@@ -63,16 +63,6 @@ authors:
     
   
 affiliations:
-
-1.	Swiss Tropical and Public Health Institute, Switzerland 
-2.	University of Basel, Switzerland
-3.	Sciensano, Belgium
-4.	Norwegian Institute of Public Health, Norway
-5.	University of Porto, Portugal
-6.	LMU Munich, Germany
-7.	Tervise Arengu Instituut, Estonia
-8.	Centre Scientifique Et Technique Du Batiment, France
-
  - name: Swiss Tropical and Public Health Institute, Switzerland
    index: 1
  - name: University of Basel, Switzerland
@@ -91,7 +81,7 @@ affiliations:
    index: 8
    
 date: 19 February 2026
-bibliography: paper_healthiar_joss.bib
+bibliography: paper.bib
 
 ---
 
