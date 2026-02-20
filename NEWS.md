@@ -56,7 +56,7 @@ Main changes but not complete list. For this propose see Github.
 
 
 
-# healthiar 0.1.x 
+# healthiar 0.1.1 
 * 19 September 2025
 
 ## Other improvements
