@@ -134,17 +134,18 @@
 
 #' @format \code{exdat_pm}
 #' \describe{
-#'   \item{year_of_analysis}{year that the exposure and incidence data is from}
+#'   \item{pollutant}{air pollutant of data set}
 #'   \item{mean_concentration}{population-weighted annual mean concentration}
+#'   \item{incidence}{COPD incidence in the year of analysis}
 #'   \item{relative_risk}{central relative risk estimate}
 #'   \item{relative_risk_lower}{lower 95\% confidence interval bound of the relative risk estimate}
 #'   \item{relative_risk_upper}{upper 95\% confidence interval bound of the relative risk estimate}
-#'   \item{erf_shape}{shape of the exposure-response function}
-#'   \item{incidence}{COPD incidence in the year of analysis}
-#'   \item{cutoff_value}{cut-off value}
 #'   \item{rr_increment}{exposure increment in \eqn{\mu g/m^3} for which the relative risk estimates are valid}
+#'   \item{erf_shape}{shape of the exposure-response function}
+#'   \item{cutoff_value}{cut-off value}
 #'   \item{rr_source}{source of the relative risk}
 #'   \item{rr_doi}{DOI linking to the publication from which the relative risk was taken}
+#'   \item{year_of_analysis}{year that the exposure and incidence data is from}
 #' }
 #' @source Real-world data
 
