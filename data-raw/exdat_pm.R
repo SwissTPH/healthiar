@@ -1,7 +1,7 @@
-# exdat_pm ##################################################################
+# exdat_pm #####################################################################
 
 ## NOTE AL 2026-02-20: the original data set was called
-## airqplus_COPD.csv; renamed to exdat_pm_airqplus_COPD.rda
+## airqplus_COPD.csv; renamed to exdat_pm_airqplus_COPD.csv
 
 library(dplyr)
 library(tidyr)
@@ -12,7 +12,7 @@ library(tibble)
 airqplus_copd_export <-
   ## Read csv file from AirQ+ export for incidence of COPD
   readr::read_delim(
-    "data-raw/airqplus_COPD.csv",
+    "data-raw/exdat_pm_airqplus_COPD.csv",
     delim = ";",
     col_types = readr::cols()
     )
@@ -25,8 +25,11 @@ airqplus_export <-
   # Add and edit columns
   dplyr::mutate(
     # To identify the sections in the table (all capital letters)
-    section_break = !stringr::str_detect(variable, "[[:lower:]]") & stringr::str_detect(variable, "[[:alpha:]]"),
-    # To give section name to the first row (replacing empty spaces with _ and making lower case)
+    section_break = !stringr::str_detect(
+      variable, "[[:lower:]]"
+      ) & stringr::str_detect(variable, "[[:alpha:]]"),
+    # To give section name to the first row
+    # (replacing empty spaces with _ and making lower case)
     section_name = ifelse(section_break, gsub(" ", "_", tolower(variable)), NA)
   ) |>
   # Stop rowwise
@@ -37,9 +40,11 @@ airqplus_export <-
   ) |>
   # Fill the NAs in section_name with the first non-NA above
   tidyr::fill(section_name) |>
-  # Remove the rows with the section name (not needed anymore since they are in a column now)
+  # Remove the rows with the section name
+  # (not needed anymore since they are in a column now)
   dplyr::filter(!section_break) |>
-  # Remove column section_break (not needed anymore because section_name is defined)
+  # Remove column section_break
+  # (not needed anymore because section_name is defined)
   dplyr::select(-section_break)
 
 # The results need to editing
@@ -74,7 +79,9 @@ exdat_pm <-
   # Keep only rows from input
   dplyr::filter(
     section_name %in%
-      c("analysis_properties", "pollution_concentration", "evaluation_parameters")
+      c("analysis_properties",
+        "pollution_concentration",
+        "evaluation_parameters")
   ) |>
   # Add rows of results
   dplyr::bind_rows(airqplus_output) |>
@@ -104,7 +111,8 @@ exdat_pm <-
     dplyr::across(dplyr::starts_with("estimated_attributable_proportion"),
                   readr::parse_number)
   ) |>
-  # Divide by 100 because the columns were a percentage originally (e.g. 5% = 0.05)
+  # Divide by 100 because the columns were a percentage originally
+  # (e.g. 5% = 0.05)
   dplyr::mutate(
     dplyr::across(dplyr::starts_with("estimated_attributable_proportion"),
                   ~./100)
