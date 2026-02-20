@@ -11,8 +11,6 @@ library(dplyr)
 
 ## Load data ####
 
-
-
 load("C:/Users/luytax/switchdrive/Hitze/HiMoMo/2025_himomo2024/data/clean/canton_key.RData")
 
 ## Prepare datasets ####
@@ -86,61 +84,6 @@ noise_ha_cantons <- noise_ha |>
   dplyr::filter(year == 2023)
 
 rm(canton_key, data_20_plus, noise_ha, pm_lc, population_1969_2024_canton)
-
-# O3 ###############################################################################################
-
-exdat_ozone <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
-
-exdat_ozone <- exdat_ozone |>
-  dplyr::select(
-    exposure = Mean.O3,
-    proportion_population_exposed = Population.affected
-  ) |>
-  dplyr::mutate(
-    exposure = exposure - 0.05
-  ) |>
-  dplyr::mutate(
-    pollutant = "O3", .before = exposure
-  ) |>
-  dplyr::mutate(
-    exp_unit = "\\mu g/m^3", .after = exposure
-  ) |>
-  dplyr::mutate(
-    mortality_copd_total_year = 29908,
-    rr_central = 1.081,
-    rr_lower = 1.075,
-    rr_upper = 1.086,
-    rr_increment = 10,
-    cutoff = 64,
-    erf_shape = "log_linear",
-    exposure_type = "population-weighted_mean_of_maximum_daily_8-hour_averages_april_september)",
-    rr_source = "Kazemiparkouhi (2020)",
-    country = "germany",
-    year = 2016
-  )
-
-save(exdat_ozone, file = "data/exdat_ozone.rda")
-
-# exdat_noise ######################################################################################
-
-# NOTE: right now the existing variable is loaded and adapted; in the best case, all code to create the variable would go here
-
-exdat_noise <- exdat_noise |>
-  dplyr::mutate(
-    exposure = "noise",
-    exposure_metric = "L_den",
-    exposure_unit = "dB(A)",
-    .before = exposure_category) |>
-  dplyr::relocate(region, .before = 1) |>
-  dplyr::mutate(
-    risk_estimate_type = "absolute_risk",
-    erf = "78.9270-3.1162*c+0.0342*c^2",
-    health_outcome = "high_annoyance",
-    country = "norway",
-    year = "unknown"
-  )
-
-save(exdat_noise, file = "data/exdat_noise.rda")
 
 # exdat_pm #########################################################################################
 
