@@ -15,7 +15,7 @@ Useful links:
 \itemize{
   \item \url{https://swisstph.github.io/healthiar/}
   \item \url{https://github.com/SwissTPH/healthiar}
-  \item \doi{10.5281/zenodo.18220361}
+  \item \doi{10.5281/zenodo.18220360}
   \item Report bugs at \url{https://github.com/SwissTPH/healthiar/issues}
 }
 

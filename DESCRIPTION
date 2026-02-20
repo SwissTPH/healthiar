@@ -28,7 +28,7 @@ Description: This R package has been developed with a focus on air pollution and
  WHO (2011) <https://iris.who.int/items/723ab97c-5c33-4e3b-8df1-744aa5bc1c27>,
  GBD 2019 Risk Factors Collaborators (2020) <doi:10.1016/S0140-6736(20)30752-2>.
 License: GPL (>= 3)
-URL: https://swisstph.github.io/healthiar/, https://github.com/SwissTPH/healthiar, https://doi.org/10.5281/zenodo.18220361
+URL: https://swisstph.github.io/healthiar/, https://github.com/SwissTPH/healthiar, https://doi.org/10.5281/zenodo.18220360
 BugReports: https://github.com/SwissTPH/healthiar/issues
 Encoding: UTF-8
 RoxygenNote: 7.3.3

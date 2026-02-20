@@ -2,7 +2,7 @@
 
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/healthiar)](https://cran.r-project.org/package=healthiar)  
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18220361.svg)](https://doi.org/10.5281/zenodo.18220361)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18220360.svg)](https://doi.org/10.5281/zenodo.18220360)
 
 ## Introduction
 
