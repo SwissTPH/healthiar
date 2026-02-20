@@ -2,6 +2,8 @@
 
 ## healthiar 0.2.3
 
+CRAN release: 2026-02-19
+
 - 19 February 2026
 
 ### New features
@@ -77,7 +79,7 @@ CRAN release: 2025-11-11
   parallel
 - Other changes to comply with with manual review of CRAN
 
-## healthiar 0.1.x
+## healthiar 0.1.1
 
 - 19 September 2025
 

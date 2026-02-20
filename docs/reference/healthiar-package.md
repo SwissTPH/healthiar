@@ -27,7 +27,7 @@ Useful links:
 
 - <https://github.com/SwissTPH/healthiar>
 
-- [doi:10.5281/zenodo.18220361](https://doi.org/10.5281/zenodo.18220361)
+- [doi:10.5281/zenodo.18220360](https://doi.org/10.5281/zenodo.18220360)
 
 - Report bugs at <https://github.com/SwissTPH/healthiar/issues>
 
