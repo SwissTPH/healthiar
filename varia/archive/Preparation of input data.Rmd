@@ -503,14 +503,14 @@ runif_with_seed <-
 
 # Generic data
 percentage_pm2.5_in_pm10 <- 
-  read.csv("varia/archive/input/data/generic_data.csv", sep = ";") %>% 
+  read.csv("varia/archive/input/data/rr_other_rawdata/generic_data.csv", sep = ";") %>% 
   dplyr::filter(parameter_name %in% "percentage_pm2.5_in_pm10") %>%
   dplyr::select(value) %>%
   dplyr::pull()
 
 # RR data (inserted manually in the csv table)
 rr_rawdata <- 
-  read.csv("varia/archive/input/data/rr.csv",
+  read.csv("varia/archive/input/data/rr_other_rawdata/rr.csv",
            sep = ";",
            na.strings=c("NA", ""))
 
@@ -529,7 +529,7 @@ population_byAge_rawdata <-
 
 # Baseline health data 
 bhd_rawdata <- 
-  read.csv("varia/archive/input/data/bhd.csv", sep = ";")
+  read.csv("varia/archive/input/data/rr_other_rawdata/bhd.csv", sep = ";")
 
 # Read raw life table data
 lifetable <- list()
@@ -568,14 +568,14 @@ total_mortality_rawdata <-
 # Concentration data
 # Scenario
 exp_rawdata <- 
-  read.csv("varia/archive/input/data/exp.csv",
+  read.csv("varia/archive/input/data/rr_other_rawdata/exp.csv",
            sep = ";",
            na.strings=c("NA", ""))
 
 # cutoff
 cutoff_rawdata <- 
   # Read data
-  read.csv("varia/archive/input/data/cutoff.csv",
+  read.csv("varia/archive/input/data/rr_other_rawdata/cutoff.csv",
            sep = ";",
            na.strings=c("NA", ""))
 
@@ -789,7 +789,7 @@ rr_data_morbidities <-
    dplyr::filter(rr_data,
     !outcome_metric %in% "premature deaths")
 
-mrbrt_stroke <- readRDS(file = "varia/archive/input/MRBRT_stroke.RDS")
+mrbrt_stroke <- readRDS(file = "varia/archive/input/stroke_niph/MRBRT_stroke.RDS")
 ```
 
 ## Population data 
@@ -820,7 +820,7 @@ total_population <-
     sum(population_byAge[["male"]]$population),
     sum(population_byAge[["female"]]$population))
 
-pop_data_norway <- readRDS(file = "varia/archive/input/pop_data.RDS")
+pop_data_norway <- readRDS(file = "varia/archive/input/stroke_niph/pop_data.RDS")
 ```
 
 ## Baseline morbidity data
@@ -1351,6 +1351,6 @@ save.image(file = "../healthiar/data/example_data.RData")
 #                   "mrbrt_stroke",
 #                   "pop_data_norway"
 #                   )))
-# save.image(file = "varia/archive/input/data/input_data_for_testing_Rpackage.RData")
+# save.image(file = "varia/archive/output/input_data_for_testing_Rpackage.RData")
 ```
 
