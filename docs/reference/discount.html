@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1484</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1490</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,8 +48,7 @@
 <span>  impact <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  discount_rate <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n_years <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  discount_shape <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  inflation_rate <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  discount_shape <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -76,10 +75,6 @@
 <dt id="arg-discount-shape">discount_shape<a class="anchor" aria-label="anchor" href="#arg-discount-shape"></a></dt>
 <dd><p><code>String</code> referring to the assumed equation for the discount factor. By default: <code>"exponential"</code>. Otherwise: <code>"hyperbolic_harvey_1986"</code> or <code>"hyperbolic_mazur_1987"</code>.</p></dd>
 
-
-<dt id="arg-inflation-rate">inflation_rate<a class="anchor" aria-label="anchor" href="#arg-inflation-rate"></a></dt>
-<dd><p><code>Numeric value</code> between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -95,14 +90,13 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><strong>Methodology</strong></p>
 <p>This function applies a discount (Frederick et al. 2002; Harvey 1986; Mazur 1987)
-,
-optionally with inflation (Brealey et al. 2023)
-,
+
 to attributable health impacts into the future.</p>
-<p>From an epidemiological perspective, the attributable health impacts
-cannot be discounted (or inflated), only economic costs/benefits can.
-However, in some economic analyses the attributable health impacts are discounted (and/or inflated)
-as a previous step to valuating them. For this specific purpose, this function is offered.</p>
+<p>Burden of disease studies may be interested in calculating +
+discounted health impacts over time,
+and these may also be used in economic evaluation models,
+where benefits are not monetized.
+For this specific purpose, this function is offered.</p>
 
 <p>Detailed information about the methodology (including equations)
 is available in the package vignette.
@@ -110,10 +104,7 @@ More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Brealey RA, Myers SC, Allen F, Benninga S, Read J (2023).
-<em>Principles of Corporate Finance</em>, 14th edition.
-McGraw-Hill Education, New York, NY.
-ISBN 978-1264117464.<br><br> Frederick S, Loewenstein G, O'Donoghue T (2002).
+    <p>Frederick S, Loewenstein G, O'Donoghue T (2002).
 “Time Discounting and Time Preference: A Critical Review.”
 <em>Journal of Economic Literature</em>, <b>40</b>(2), 351–401.
 <a href="https://doi.org/10.1257/002205102320161311" class="external-link">doi:10.1257/002205102320161311</a>

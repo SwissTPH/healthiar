@@ -10,8 +10,7 @@ discount(
   impact = NULL,
   discount_rate = NULL,
   n_years = NULL,
-  discount_shape = NULL,
-  inflation_rate = NULL
+  discount_shape = NULL
 )
 ```
 
@@ -55,13 +54,6 @@ discount(
   default: `"exponential"`. Otherwise: `"hyperbolic_harvey_1986"` or
   `"hyperbolic_mazur_1987"`.
 
-- inflation_rate:
-
-  `Numeric value` between 0 and 1 referring to the annual inflation
-  (increase of prices). Only to be entered if nominal (not real)
-  discount rate is entered in the function. Default value = NULL
-  (assuming no nominal discount rate).
-
 ## Value
 
 This function returns a `list` containing:
@@ -95,14 +87,12 @@ elements are added to the existing output.
 **Methodology**
 
 This function applies a discount (Frederick et al. 2002; Harvey 1986;
-Mazur 1987) , optionally with inflation (Brealey et al. 2023) , to
-attributable health impacts into the future.
+Mazur 1987) to attributable health impacts into the future.
 
-From an epidemiological perspective, the attributable health impacts
-cannot be discounted (or inflated), only economic costs/benefits can.
-However, in some economic analyses the attributable health impacts are
-discounted (and/or inflated) as a previous step to valuating them. For
-this specific purpose, this function is offered.
+Burden of disease studies may be interested in calculating + discounted
+health impacts over time, and these may also be used in economic
+evaluation models, where benefits are not monetized. For this specific
+purpose, this function is offered.
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
@@ -111,10 +101,6 @@ available in the package vignette. More specifically, see chapters:
 
 ## References
 
-Brealey RA, Myers SC, Allen F, Benninga S, Read J (2023). *Principles of
-Corporate Finance*, 14th edition. McGraw-Hill Education, New York, NY.
-ISBN 978-1264117464.  
-  
 Frederick S, Loewenstein G, O'Donoghue T (2002). “Time Discounting and
 Time Preference: A Critical Review.” *Journal of Economic Literature*,
 **40**(2), 351–401.
