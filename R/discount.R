@@ -14,12 +14,11 @@
 #'
 #' \strong{Methodology}
 #'
-#' This function applies a discount \insertCite{Frederick2002_jel,Harvey1986_ms,Mazur1987_book}{healthiar},
-#' optionally with inflation \insertCite{Brealey2023_book}{healthiar},
+#' This function applies a discount \insertCite{Frederick2002_jel,Harvey1986_ms,Mazur1987_book}{healthiar}
 #' to attributable health impacts into the future.
 #'
 #' From an epidemiological perspective, the attributable health impacts
-#' cannot be discounted (or inflated), only economic costs/benefits can.
+#' cannot be discounted, only economic costs/benefits can.
 #' However, in some economic analyses the attributable health impacts are discounted (and/or inflated)
 #' as a previous step to valuating them. For this specific purpose, this function is offered.
 #'
@@ -69,8 +68,7 @@ discount <-
            impact = NULL,
            discount_rate = NULL,
            n_years = NULL,
-           discount_shape = NULL,
-           inflation_rate = NULL) {
+           discount_shape = NULL) {
 
     output_discounting <-
       monetize(
@@ -79,8 +77,7 @@ discount <-
         discount_rate = discount_rate,
         n_years = n_years,
         discount_shape = discount_shape,
-        valuation = 1,
-        inflation_rate = inflation_rate)
+        valuation = 1)
 
 
     output_discounting[["monetization_main"]] <-
