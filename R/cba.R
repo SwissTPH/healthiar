@@ -111,7 +111,7 @@ cba <-
            inflation_rate = NULL,
            discount_shape = "exponential",
            n_years_benefit = 1,
-           n_years_cost = 1) {
+           n_years_cost = 0,
 
     # Define vectors that are relevant below
 
