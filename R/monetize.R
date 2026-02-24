@@ -424,24 +424,37 @@ monetize <- function(output_attribute = NULL,
 
       df_by_year <-
         df_by_year |>
-        # Add discount factor ####
         dplyr::mutate(
-          discount_factor =
-            get_discount_factor(
-              discount_rate = discount_rate,
-              n_years = year,
-              discount_shape = discount_shape),
-          inflation_factor = if(!base::is.null(inflation_rate)) {
-            get_inflation_factor(n_years = year,
-                                 inflation_rate = inflation_rate,
-                                 deflation = !nominal)
+          # 1. Project: Future Nominal Value (Inflation Growth)
+          inflation_factor = get_inflation_factor(
+            n_years = year,
+            inflation_rate = inflation_rate,
+            deflation = FALSE
+          ),
+
+          # 2. Standardize: Convert back to Real terms
+          # We only apply the deflator if the user wants a "Real" present value (nominal = FALSE)
+          deflator = if(nominal == FALSE) {
+            get_inflation_factor(n_years = year, inflation_rate = inflation_rate, deflation = TRUE)
           } else {
             1
           },
-          # Add monetized impact ####
-          monetized_impact = impact * valuation *inflation_factor * discount_factor,
+
+          # 3. Discount: Apply time preference
+          discount_factor = get_discount_factor(
+            discount_rate = if(base::is.null(discount_rate)) 0 else discount_rate,
+            n_years = year,
+            discount_shape = discount_shape
+          ),
+
+          # 4. Final Calculation
+          # If nominal = TRUE: Value grows by inflation, then is discounted.
+          # If nominal = FALSE: Growth and Deflator cancel out (Green Book standard).
+          monetized_impact = impact * valuation * inflation_factor * deflator * discount_factor,
+
           monetized_impact_without_discount_and_inflation = impact * valuation,
-          .after = impact)
+          .after = impact
+        )
 
 
 
