@@ -185,7 +185,8 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_rate = 0.05,
         n_years = 5,
         inflation_rate = 0.08,
-        valuation = 1E3
+        valuation = 1E3,
+        nominal = TRUE
       )$monetization_main$monetized_impact |> base::round(digits = 2),
     expect =
       783.53 # Results on 2025-03-04;  Excel sheet of Uni Porto
@@ -201,7 +202,8 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
         discount_rate = 0.04,
         n_years = 5,
         inflation_rate = 0.03,
-        valuation = 1E4
+        valuation = 1E4,
+        nominal = TRUE
       )$monetization_main$monetized_impact_rounded,
     expect =
       8219 # Results on 2025-03-10; ChatGPT
@@ -219,7 +221,8 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_rate = 0.05,
         discount_shape = "exponential",
         n_years = 5,
-        inflation_rate = 0.08
+        inflation_rate = 0.08,
+        nominal = TRUE
       )$monetization_main$monetized_impact,
     expect =
       83505868243.71
@@ -241,7 +244,8 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_rate = 0.05,
         discount_shape = "exponential",
         n_years = 5,
-        inflation_rate = 0.08
+        inflation_rate = 0.08,
+        nominal = TRUE
       )$monetization_main$monetized_impact,
     expect =
       8392975589.98
@@ -390,7 +394,8 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_rate = 0.05,
         discount_shape = "hyperbolic_harvey_1986",
         n_years = 5,
-        inflation_rate = 0.08
+        inflation_rate = 0.08,
+        nominal = TRUE
       )$monetization_main$monetized_impact,
     expect =
       97444185252.79530
@@ -411,7 +416,8 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_rate = 0.05,
         discount_shape = "hyperbolic_harvey_1986",
         n_years = 5,
-        inflation_rate = 0.08)$monetization_main$monetized_impact,
+        inflation_rate = 0.08,
+        nominal = TRUE)$monetization_main$monetized_impact,
     expect =  9793882578.71)
 
   # ASSESSOR: Iracy Pimenta
@@ -515,7 +521,8 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_rate = 0.05,
         discount_shape = "hyperbolic_mazur_1987",
         n_years = 5,
-        inflation_rate = 0.08)$monetization_main$monetized_impact,
+        inflation_rate = 0.08,
+        nominal = TRUE)$monetization_main$monetized_impact,
     expect =  8569440000)
 
   # ASSESSOR: Iracy Pimenta
@@ -534,7 +541,8 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
         impact = 197000,
         valuation = 541000,
         n_years = 5,
-        inflation_rate = 0.08
+        inflation_rate = 0.08,
+        nominal = TRUE,
       )$monetization_main$monetized_impact,
     expect =
       156596578441.11
@@ -553,7 +561,8 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
         impact = 19800,
         valuation = 541000,
         n_years = 5,
-        inflation_rate = 0.08
+        inflation_rate = 0.08,
+        nominal = TRUE
       )$monetization_main$monetized_impact,
     expect =
       15739148493.07
@@ -694,7 +703,8 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
       discount_rate = 0.05,
       n_years = 5,
       inflation_rate = 0.08,
-      valuation = 1E3
+      valuation = 1E3,
+      nominal = TRUE
       )$monetization_main$monetized_impact_rounded,
     expect =
       c(2743879, 1060162, 4288935) # Results on 2025-04-15; no comparison study
