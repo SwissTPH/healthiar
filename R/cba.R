@@ -112,6 +112,7 @@ cba <-
            discount_shape = "exponential",
            n_years_benefit = 1,
            n_years_cost = 0,
+           nominal = FALSE) {
 
     # Define vectors that are relevant below
 
@@ -137,26 +138,31 @@ cba <-
       discount_shape = discount_shape,
       inflation_rate = inflation_rate,
       n_years = n_years_benefit,
-      valuation = valuation)
+      valuation = valuation,
+      nominal = nominal)
 
-    cba_detailed_benefit <- cba_benefit[["monetization_detailed"]]
 
     cba_main_benefit <- cba_benefit[["monetization_main"]]
+    cba_detailed_benefit <- cba_benefit[["monetization_detailed"]]
+
+
 
 
 
     # For cost, assume 1 impact with full valuation
-    cba_detailed_cost <-
+    cba_cost <-
       monetize(
         impact = 1,
         valuation = cost,
         discount_rate = discount_rate_cost,
         discount_shape = discount_shape,
         inflation_rate = inflation_rate,
-        n_years = n_years_cost)[["monetization_main"]]
+        n_years = n_years_cost,
+        nominal = nominal)
 
     # For costs main and detailed are the same because they only have one row
-    cba_main_cost <- cba_detailed_cost
+    cba_main_cost <- cba_cost[["monetization_main"]]
+    cba_detailed_cost <- cba_cost[["monetization_detailed"]]
 
     # Build the detailed output list
     cba_detailed <-
@@ -186,7 +192,6 @@ cba <-
       c(columns_ci_geo,
         columns_monetization_with_suffix,
         "discount_shape")
-
 
     cba_main <-
       cba_main |>
