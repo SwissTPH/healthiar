@@ -12,6 +12,9 @@
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.
 #' @param n_years \code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).
 #' @param inflation_rate \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).
+#' @param nominal \code{Boolean value} (i.e. TRUE vs. FALSE) indicating if
+#' this is a current valuation and inflation is only used to calculate the real discount rate (FALSE; default)
+#' or the valuation is explicitly grown by the inflation rate (TRUE).
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
 
 # DETAILS ######################################################################
@@ -106,6 +109,7 @@ monetize <- function(output_attribute = NULL,
                      discount_shape = "exponential",
                      n_years = NULL,
                      inflation_rate = NULL,
+                     nominal = FALSE, # Add this
                      info = NULL) {
 
 
@@ -377,6 +381,10 @@ monetize <- function(output_attribute = NULL,
              inflation_rate,
              info = NULL) {
 
+      # Create function to obtain the real_discount_rate
+      # i.e. discount_rate adjusted for inflation
+
+
 
       # Define discount years
       if(base::is.null(n_years)){
@@ -412,29 +420,62 @@ monetize <- function(output_attribute = NULL,
           dplyr::cross_join(x = tibble::tibble(year = n_years_vector),
                             y = df_with_input)
       }
+#
+#
+#       get_real_discount_rate <-
+#         function(discount_rate,
+#                  inflation_rate = NULL){
+#
+#           # If no discount rate is provided, we use 0 to ensure the factor is 1
+#           if(base::is.null(discount_rate)) return(0)
+#
+#           if(nominal == TRUE && !base::is.null(inflation_rate)) {
+#             # NOMINAL PATHWAY (Porto Fix):
+#             # We use the combined nominal rate: (1 + r) * (1 + i) - 1
+#             # This ensures that price growth and discounting cancel out correctly.
+#             return((1 + discount_rate) * (1 + inflation_rate) - 1)
+#
+#           } else if (nominal == FALSE && !base::is.null(inflation_rate)) {
+#             # REAL PATHWAY (Fisher Equation):
+#             # (1 + r) / (1 + i) - 1
+#             return((1 + discount_rate) / (1 + inflation_rate) - 1)
+#
+#           } else {
+#             # Default case: use rate as provided
+#             return(discount_rate)
+#           }
+#         }
+#
+#
+#       # Calculate discount_factor
+#       # and then the monetized impact
+#
+#       real_discount_rate <- get_real_discount_rate(
+#         discount_rate = discount_rate,
+#         inflation_rate = inflation_rate
+#       )
 
-      # Calculate inflation_factor, discount_factor
-      # and with these factors, the monetized impact
 
       df_by_year <-
         df_by_year |>
-        # Add inflation factor ####
-      dplyr::mutate(
-        inflation_factor =
-          get_inflation_factor(
-            n_years = year,
-            inflation_rate = inflation_rate),
         # Add discount factor ####
-        discount_factor =
-          get_discount_factor(
-            discount_rate = discount_rate,
-            n_years = year,
-            discount_shape = discount_shape,
-            inflation_rate = inflation_rate),
-        # Add monetized impact ####
-        monetized_impact = impact * valuation * inflation_factor * discount_factor,
-        monetized_impact_without_discount_and_inflation = impact * valuation,
-        .after = impact)
+        dplyr::mutate(
+          discount_factor =
+            get_discount_factor(
+              discount_rate = discount_rate,
+              n_years = year,
+              discount_shape = discount_shape),
+          inflation_factor = if(!base::is.null(inflation_rate)) {
+            get_inflation_factor(n_years = year,
+                                 inflation_rate = inflation_rate,
+                                 deflation = !nominal)
+          } else {
+            1
+          },
+          # Add monetized impact ####
+          monetized_impact = impact * valuation *inflation_factor * discount_factor,
+          monetized_impact_without_discount_and_inflation = impact * valuation,
+          .after = impact)
 
 
 
