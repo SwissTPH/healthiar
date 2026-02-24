@@ -9,8 +9,7 @@ discount(
   impact = NULL,
   discount_rate = NULL,
   n_years = NULL,
-  discount_shape = NULL,
-  inflation_rate = NULL
+  discount_shape = NULL
 )
 }
 \arguments{
@@ -23,8 +22,6 @@ discount(
 \item{n_years}{\code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.}
-
-\item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).}
 }
 \value{
 This function returns a \code{list} containing:
@@ -50,12 +47,11 @@ This function calculates discounted health impacts (without valuation).
 \details{
 \strong{Methodology}
 
-This function applies a discount \insertCite{Frederick2002_jel,Harvey1986_ms,Mazur1987_book}{healthiar},
-optionally with inflation \insertCite{Brealey2023_book}{healthiar},
+This function applies a discount \insertCite{Frederick2002_jel,Harvey1986_ms,Mazur1987_book}{healthiar}
 to attributable health impacts into the future.
 
 From an epidemiological perspective, the attributable health impacts
-cannot be discounted (or inflated), only economic costs/benefits can.
+cannot be discounted, only economic costs/benefits can.
 However, in some economic analyses the attributable health impacts are discounted (and/or inflated)
 as a previous step to valuating them. For this specific purpose, this function is offered.
 
