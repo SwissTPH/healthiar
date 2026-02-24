@@ -50,10 +50,11 @@ This function calculates discounted health impacts (without valuation).
 This function applies a discount \insertCite{Frederick2002_jel,Harvey1986_ms,Mazur1987_book}{healthiar}
 to attributable health impacts into the future.
 
-From an epidemiological perspective, the attributable health impacts
-cannot be discounted, only economic costs/benefits can.
-However, in some economic analyses the attributable health impacts are discounted (and/or inflated)
-as a previous step to valuating them. For this specific purpose, this function is offered.
+Burden of disease studies may be interested in calculating +
+discounted health impacts over time,
+and these may also be used in economic evaluation models,
+where benefits are not monetized.
+For this specific purpose, this function is offered.
 
 
 Detailed information about the methodology (including equations)
