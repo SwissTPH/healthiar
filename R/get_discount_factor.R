@@ -77,11 +77,12 @@ get_discount_factor <-
           base::ifelse(
             # Exponential ####
             discount_shape == "exponential",
-
             1/((1 + discount_rate) ^ n_years),
+
             # Hyperbolic Harvey ####
             base::ifelse(discount_shape == "hyperbolic_harvey_1986",
                          1/((1 + n_years) ^ discount_rate),
+
                          # Hyperbolic Mazur ####
                          base::ifelse(discount_shape == "hyperbolic_mazur_1987",
                                       1/(1 + discount_rate * n_years),
