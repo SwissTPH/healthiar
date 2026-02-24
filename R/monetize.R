@@ -420,40 +420,6 @@ monetize <- function(output_attribute = NULL,
           dplyr::cross_join(x = tibble::tibble(year = n_years_vector),
                             y = df_with_input)
       }
-#
-#
-#       get_real_discount_rate <-
-#         function(discount_rate,
-#                  inflation_rate = NULL){
-#
-#           # If no discount rate is provided, we use 0 to ensure the factor is 1
-#           if(base::is.null(discount_rate)) return(0)
-#
-#           if(nominal == TRUE && !base::is.null(inflation_rate)) {
-#             # NOMINAL PATHWAY (Porto Fix):
-#             # We use the combined nominal rate: (1 + r) * (1 + i) - 1
-#             # This ensures that price growth and discounting cancel out correctly.
-#             return((1 + discount_rate) * (1 + inflation_rate) - 1)
-#
-#           } else if (nominal == FALSE && !base::is.null(inflation_rate)) {
-#             # REAL PATHWAY (Fisher Equation):
-#             # (1 + r) / (1 + i) - 1
-#             return((1 + discount_rate) / (1 + inflation_rate) - 1)
-#
-#           } else {
-#             # Default case: use rate as provided
-#             return(discount_rate)
-#           }
-#         }
-#
-#
-#       # Calculate discount_factor
-#       # and then the monetized impact
-#
-#       real_discount_rate <- get_real_discount_rate(
-#         discount_rate = discount_rate,
-#         inflation_rate = inflation_rate
-#       )
 
 
       df_by_year <-
