@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1484</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1490</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,11 +48,14 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p><code>exdat_pm</code></p><dl><dt>year_of_analysis</dt>
-<dd><p>year that the exposure and incidence data is from</p></dd>
+    <p><code>exdat_pm</code></p><dl><dt>pollutant</dt>
+<dd><p>air pollutant of data set</p></dd>
 
   <dt>mean_concentration</dt>
 <dd><p>population-weighted annual mean concentration</p></dd>
+
+  <dt>incidence</dt>
+<dd><p>COPD incidence in the year of analysis</p></dd>
 
   <dt>relative_risk</dt>
 <dd><p>central relative risk estimate</p></dd>
@@ -63,23 +66,23 @@
   <dt>relative_risk_upper</dt>
 <dd><p>upper 95% confidence interval bound of the relative risk estimate</p></dd>
 
+  <dt>rr_increment</dt>
+<dd><p>exposure increment in \(\mu g/m^3\) for which the relative risk estimates are valid</p></dd>
+
   <dt>erf_shape</dt>
 <dd><p>shape of the exposure-response function</p></dd>
 
-  <dt>incidence</dt>
-<dd><p>COPD incidence in the year of analysis</p></dd>
-
   <dt>cutoff_value</dt>
 <dd><p>cut-off value</p></dd>
-
-  <dt>rr_increment</dt>
-<dd><p>exposure increment in \(\mu g/m^3\) for which the relative risk estimates are valid</p></dd>
 
   <dt>rr_source</dt>
 <dd><p>source of the relative risk</p></dd>
 
   <dt>rr_doi</dt>
 <dd><p>DOI linking to the publication from which the relative risk was taken</p></dd>
+
+  <dt>year_of_analysis</dt>
+<dd><p>year that the exposure and incidence data is from</p></dd>
 
 
 </dl></div>
