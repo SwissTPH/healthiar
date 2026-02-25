@@ -1831,7 +1831,6 @@ more heavily than outcomes further in the future [@Lipman2024_jru]
 
 See below the equations that are used behind these functions. 
 
-#### Inflation factor (without discounting)
 ### Treatment of inflation
 
 The `monetize()` function distinguishes between two fundamental economic pathways for handling price changes over time. Choosing between these pathways depends on your study's objective and the nature of your input data.
@@ -1854,41 +1853,31 @@ To make these future costs or benefits comparable to today's budget, the `inflat
 
 $$value_{real} = \frac{valuation}{(1 + i)^n} \times \text{discount factor}$$
 
+#### Inflation factor 
+
 As suggested by [@Brealey2023_book; @Samuelson1937_res]
 
 $$inflation\_factor = (1 + inflation\_rate)^{n\_years}$$
 
-### Discount factors (without inflation)
+### Discount factors 
 
-*Exponential discounting (no inflation)*
+*Exponential discounting*
 
 As suggested by @Frederick2002_jel
 
 $$discount\_factor = \frac{1}{(1 + discount\_rate)^{n\_years}}$$
 
-*Hyperbolic discounting Harvey (no inflation)*
+*Hyperbolic discounting Harvey*
 
 As suggested by @Harvey1986_ms
 
 $$discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}$$
 
-*Hyperbolic discounting Mazur (no inflation)*
+*Hyperbolic discounting Mazur*
 
 As suggested by @Mazur1987_book
 
 $$discount\_factor = \frac{1}{1 + (discount\_rate \times n\_years)}$$
-
-### Discount factors with inflation
-
-*Exponential discounting (with inflation)*
-$$discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate))^{n\_years}}$$
-
-*Hyperbolic discounting Harvey (with inflation)*
-$$discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}$$
-
-*Hyperbolic discounting Mazur (with inflation)*
-$$discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)) \times (1 + inflation\_rate)^{n\_years}}$$
-
 
 
 ### Function call
