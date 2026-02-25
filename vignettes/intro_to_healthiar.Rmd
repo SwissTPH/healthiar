@@ -1835,7 +1835,7 @@ See below the equations that are used behind these functions.
 
 The `monetize()` function distinguishes between two fundamental economic pathways for handling price changes over time. Choosing between these pathways depends on your study's objective and the nature of your input data.
 
-**The Deflator Pathway (Accounting Approach)**
+**The Deflator Pathway (Nominal Terms Approach)**
 Setting: `discount_is_nominal = TRUE` (default)
 
 Following guidelines like the UK HM Treasury Green Book [@HMTreasury2022_greenbook], this approach is used when your input data is already in "nominal" terms—meaning the prices are expressed in the currency values expected in that future year. 
@@ -1845,7 +1845,7 @@ To make these future costs or benefits comparable to today's budget, the `inflat
 $$value_{real} = \frac{valuation}{(1 + i)^n} \times \text{discount factor}$$
 
 
-**The Growth Pathway (Social Welfare Approach)**
+**The Growth Pathway (Real Terms Approach)**
 Setting `discount_is_nominal = FALSE` 
 
 In health economics, we often assume that as society becomes wealthier over time, the willingness to pay for health improvements increases. This concept, often linked to income elasticity of the Value of a Statistical Life (VSL), suggests that a life saved in 30 years is worth more in real terms than a life saved today [@OECD2012_book].

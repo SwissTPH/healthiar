@@ -15,10 +15,10 @@
 #' @param discount_is_nominal \code{Boolean value} (i.e. TRUE vs. FALSE).
 #' If \code{TRUE} (default), the \code{discount_rate} is assumed to be nominal (includes inflation).
 #' The \code{inflation_rate} will then be used as a deflator to convert
-#' future impacts into constant prices (Green Book approach).
+#' future impacts into constant prices (Nominal Terms Approach).
 #' If \code{FALSE}, the \code{discount_rate} is assumed to be real.
 #' In this case, providing an \code{inflation_rate} will grow the valuation over time
-#' (Social Welfare approach).
+#' (Real Terms Approach).
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
 
 # DETAILS ######################################################################
@@ -32,11 +32,11 @@
 #'
 #' The function handles inflation based on the \code{discount_is_nominal} argument:
 #' \itemize{
-#'   \item \strong{Growth Pathway} (\code{discount_is_nominal = FALSE}): Used when the
+#'   \item \strong{Nominal Terms Approach or Growth Pathway} (\code{discount_is_nominal = FALSE}): Used when the
 #'   valuation is expected to grow over time (e.g., rising societal value of health).
 #'   In that case, the valuation will be inflated
 #'   \insertCite{OECD2012_book}{healthiar}.
-#'   \item \strong{Deflator Pathway} (\code{discount_is_nominal = TRUE}): Used when
+#'   \item \strong{Real Terms Approach or Deflator Pathway} (\code{discount_is_nominal = TRUE}): Used when
 #'   the input valuation is already a future nominal price.
 #'   In that case, the valuation will be deflated to return to constant Year 0 prices
 #'  \insertCite{HMTreasury2022_greenbook}{healthiar}.
