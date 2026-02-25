@@ -112,7 +112,7 @@ cba <-
            discount_shape = "exponential",
            n_years_benefit = 1,
            n_years_cost = 0,
-           discount_is_nominal = FALSE) {
+           discount_is_nominal = TRUE) {
 
     # Define vectors that are relevant below
 
