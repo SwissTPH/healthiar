@@ -13,10 +13,10 @@
 #' @param n_years \code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).
 #' @param inflation_rate \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Default value = NULL (assuming no nominal discount rate).
 #' @param discount_is_nominal \code{Boolean value} (i.e. TRUE vs. FALSE).
-#' If \code{TRUE}, the \code{discount_rate} is assumed to be nominal (includes inflation).
+#' If \code{TRUE} (default), the \code{discount_rate} is assumed to be nominal (includes inflation).
 #' The \code{inflation_rate} will then be used as a deflator to convert
 #' future impacts into constant prices (Green Book approach).
-#' If \code{FALSE} (default), the \code{discount_rate} is assumed to be real.
+#' If \code{FALSE}, the \code{discount_rate} is assumed to be real.
 #' In this case, providing an \code{inflation_rate} will grow the valuation over time
 #' (Social Welfare approach).
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
@@ -125,7 +125,7 @@ monetize <- function(output_attribute = NULL,
                      discount_shape = "exponential",
                      n_years = NULL,
                      inflation_rate = NULL,
-                     discount_is_nominal = FALSE,
+                     discount_is_nominal = TRUE,
                      info = NULL) {
 
 
@@ -450,7 +450,7 @@ monetize <- function(output_attribute = NULL,
 
           # 2. Standardize: Convert back to Real terms
           # We only apply the deflator if the user wants a "Real" present value (discount_is_nominal = FALSE)
-          deflator = if(discount_is_nominal == FALSE) {
+          deflator = if(discount_is_nominal == TRUE) {
             get_inflation_factor(n_years = year,
                                  inflation_rate = inflation_rate,
                                  deflation = TRUE)

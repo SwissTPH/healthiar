@@ -535,7 +535,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
         valuation = 541000,
         n_years = 5,
         inflation_rate = 0.08,
-        discount_is_nominal = TRUE,
+        discount_is_nominal = FALSE,
       )$monetization_main$monetized_impact,
     expect =
       156596578441.11
@@ -555,7 +555,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
         valuation = 541000,
         n_years = 5,
         inflation_rate = 0.08,
-        discount_is_nominal = TRUE
+        discount_is_nominal = FALSE
       )$monetization_main$monetized_impact,
     expect =
       15739148493.07

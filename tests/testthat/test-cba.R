@@ -71,7 +71,7 @@ testthat::test_that("results the same |pathway_cba|discount_shape_exponential|di
         inflation_rate = 0.05,
         n_years_benefit = 10,
         n_years_cost = 10,
-        discount_is_nominal = TRUE
+        discount_is_nominal = FALSE
       )$cba_main$net_benefit_rounded,
     expect =
       172750790748 # Results on 2026-01-15
@@ -647,7 +647,7 @@ testthat::test_that("results the same |pathway_cba|discount_shape_exponential|di
         discount_shape = "exponential",
         inflation_rate = 0.05,
         n_years_benefit = 10,
-        discount_is_nominal = TRUE
+        discount_is_nominal = FALSE
       )$cba_main$net_benefit_rounded,
     expect =
       4783243401.0 # Result on 2026-01-15
@@ -671,7 +671,7 @@ testthat::test_that("results the same |pathway_cba|discount_shape_exponential|di
         n_years_cost = 0,
         n_years_benefit = 10,
         inflation_rate = 0.05,
-        discount_is_nominal = TRUE
+        discount_is_nominal = FALSE
       )$cba_main$net_benefit_rounded,
     expect =
       4783243401 # Result on 2026-02-27
