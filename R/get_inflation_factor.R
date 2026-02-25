@@ -61,12 +61,12 @@ get_inflation_factor <-
            inflation_rate = NULL,
            is_deflation = FALSE){
 
-    if(!base::is.null(inflation_rate) & deflation == FALSE){ # Default
+    if(!base::is.null(inflation_rate) & is_deflation == FALSE){ # Default
       # if discount_rate is NULL
 
       inflation_factor <- (1 + inflation_rate) ^ n_years
 
-    } else if (!base::is.null(inflation_rate) & deflation == TRUE){ # Deflation
+    } else if (!base::is.null(inflation_rate) & is_deflation == TRUE){ # Deflation
       # if discount_rate is NULL
 
       inflation_factor <- 1/((1 + inflation_rate) ^ n_years)
