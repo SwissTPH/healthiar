@@ -445,7 +445,7 @@ monetize <- function(output_attribute = NULL,
           inflation_factor = get_inflation_factor(
             n_years = year,
             inflation_rate = inflation_rate,
-            deflation = FALSE
+            is_deflation = FALSE
           ),
 
           # 2. Standardize: Convert back to Real terms
@@ -453,7 +453,7 @@ monetize <- function(output_attribute = NULL,
           deflator = if(discount_is_nominal == TRUE) {
             get_inflation_factor(n_years = year,
                                  inflation_rate = inflation_rate,
-                                 deflation = TRUE)
+                                 is_deflation = TRUE)
           } else {
             1
           },
