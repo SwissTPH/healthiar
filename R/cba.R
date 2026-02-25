@@ -112,7 +112,7 @@ cba <-
            discount_shape = "exponential",
            n_years_benefit = 1,
            n_years_cost = 0,
-           nominal = FALSE) {
+           discount_is_nominal = FALSE) {
 
     # Define vectors that are relevant below
 
@@ -139,7 +139,7 @@ cba <-
       inflation_rate = inflation_rate,
       n_years = n_years_benefit,
       valuation = valuation,
-      nominal = nominal)
+      discount_is_nominal = discount_is_nominal)
 
 
     cba_main_benefit <- cba_benefit[["monetization_main"]]
@@ -158,7 +158,7 @@ cba <-
         discount_shape = discount_shape,
         inflation_rate = inflation_rate,
         n_years = n_years_cost,
-        nominal = nominal)
+        discount_is_nominal = discount_is_nominal)
 
     # For costs main and detailed are the same because they only have one row
     cba_main_cost <- cba_cost[["monetization_main"]]
