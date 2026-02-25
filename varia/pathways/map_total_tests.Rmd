@@ -1,0 +1,91 @@
+---
+title: "map_total_tests"
+author: "Gianni Ardielli"
+output: html_document
+---
+
+Goal:
+Map 
+- amount of tests by function
+- percentage of "results the same" and "results correct"
+Calculate how much tests are implemented for each function and evaluate if the
+tests rely on real(results correct) or fake data(results the same).
+This helps to show where more tests should be added.
+
+# Setup
+
+```{r setup}
+
+pacman::p_load(dplyr, tibble, stringr, purrr)
+
+```
+
+
+
+
+
+
+# RR
+
+```{r RR pathways}
+files <- list.files(
+  path = "tests/testthat",
+  pattern = "\\.R$",      # nur R-Dateien
+  full.names = TRUE       # kompletter Pfad
+)
+
+# Function to extract test names from a file
+extract_test_names <- function(file_path) {
+  
+  file_content <- readLines(file_path)
+  file_content <- file_content[!grepl("^\\s*#", file_content)]  # remove comments
+  
+  # Extract test_that descriptions
+  test_names <- regmatches(
+    file_content,
+    gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', 
+             file_content, 
+             perl = TRUE)
+  )
+  
+  tibble(
+    file = basename(file_path),
+    test_name = unlist(test_names)
+  )
+}
+
+# Read all files
+all_tests <- map_dfr(files, extract_test_names)
+
+# Categorize tests
+results_summary <- all_tests %>%
+  mutate(
+    category = case_when(
+      str_detect(test_name, regex("results correct", ignore_case = TRUE)) ~ "results correct",
+      str_detect(test_name, regex("results the same", ignore_case = TRUE)) ~ "results the same",
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  filter(!is.na(category)) %>%
+  count(file, category)
+
+results_summary
+```
+# Transform
+
+```{r Transform}
+
+
+
+results_transformed <- results_summary %>%
+  group_by(file) %>%
+  summarise(
+    n_total = sum(n),
+    n_res_correct = sum(n[category == "results correct"]),
+    percent_res_correct = round(n_res_correct / n_total * 100, 1),
+    .groups = "drop"
+  )
+
+results_transformed
+
+```
