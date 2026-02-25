@@ -26,6 +26,18 @@
 #' applying discounting \insertCite{Frederick2002_jel,Harvey1986_ms,Mazur1987_book}{healthiar}
 #' and/or inflation \insertCite{Brealey2023_book}{healthiar}.
 #'
+#' The function handles inflation based on the \code{discount_is_nominal} argument:
+#' \itemize{
+#'   \item \strong{Growth Pathway} (\code{discount_is_nominal = FALSE}): Used when the
+#'   valuation is expected to grow over time (e.g., rising societal value of health).
+#'   In that case, the valuation will be inflated
+#'   \insertCite{OECD2012_book}{healthiar}.
+#'   \item \strong{Deflator Pathway} (\code{discount_is_nominal = TRUE}): Used when
+#'   the input valuation is already a future nominal price.
+#'   In that case, the valuation will be deflated to return to constant Year 0 prices
+#'  \insertCite{HMTreasury2022_greenbook}{healthiar}.
+#' }
+#'
 #' One of the following three discount shapes can be selected:
 #' \itemize{
 #'  \item Exponential \insertCite{Frederick2002_jel}{healthiar}

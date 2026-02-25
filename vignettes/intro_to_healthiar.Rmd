@@ -1832,6 +1832,27 @@ more heavily than outcomes further in the future [@Lipman2024_jru]
 See below the equations that are used behind these functions. 
 
 #### Inflation factor (without discounting)
+### Treatment of inflation
+
+The `monetize()` function distinguishes between two fundamental economic pathways for handling price changes over time. Choosing between these pathways depends on your study's objective and the nature of your input data.
+
+**The Growth Pathway (Social Welfare Approach)**
+Setting `discount_is_nominal = FALSE` (Default)
+
+In health economics, we often assume that as society becomes wealthier over time, the willingness to pay for health improvements increases. This concept, often linked to income elasticity of the Value of a Statistical Life (VSL), suggests that a life saved in 30 years is worth more in real terms than a life saved today [@OECD2012_book].
+
+In this pathway, the `inflation_rate` acts as a **multiplier**. The valuation is increased year-on-year to reflect this rising social value before being discounted back to the present.
+
+$$value_{real} = valuation \times (1 + i)^n \times \text{discount factor}$$
+
+**The Deflator Pathway (Accounting Approach)**
+Setting: `discount_is_nominal = TRUE`
+
+Following guidelines like the UK HM Treasury Green Book [@HMTreasury2022_greenbook], this approach is used when your input data is already in "nominal" terms—meaning the prices are expressed in the currency values expected in that future year. 
+
+To make these future costs or benefits comparable to today's budget, the `inflation_rate` acts as a **deflator** (divider). This strips away the effect of inflation to return the results to "Constant Prices" (Year 0).
+
+$$value_{real} = \frac{valuation}{(1 + i)^n} \times \text{discount factor}$$
 
 As suggested by [@Brealey2023_book; @Samuelson1937_res]
 
