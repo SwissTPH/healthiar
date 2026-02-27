@@ -252,6 +252,7 @@ if(!"results_the_same" %in% unique(df_counts$category)) {
 # go more into  paths
 
 ```{r go more into  paths}
+# this works only for df_wide from attribute health
 #drop all colums with na
 df_clean <- df_wide %>%
   select(where(~ !any(is.na(.))))
