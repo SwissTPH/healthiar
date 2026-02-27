@@ -3861,7 +3861,7 @@ testthat::test_that("no error ar iteration", {
 )
 })
 
-testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+testthat::test_that("results the same |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -3884,7 +3884,7 @@ testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|
   )
 })
 
-testthat::test_that("detailed results the same |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
+testthat::test_that("results the same |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
   testthat::expect_equal(
     object =
