@@ -16,7 +16,7 @@ This helps to show where more tests should be added.
 
 ```{r setup}
 
-pacman::p_load(dplyr, tibble, stringr, purrr)
+pacman::p_load(dplyr, tibble, stringr, purrr,ggplot2,tidyr)
 
 ```
 
@@ -86,6 +86,38 @@ results_transformed <- results_summary %>%
     .groups = "drop"
   )
 
-results_transformed
+df_plot <- results_transformed %>%
+  mutate(
+    n_incorrect = n_total - n_res_correct
+  ) %>%
+  select(file, n_res_correct, n_incorrect) %>%
+  pivot_longer(
+    cols = c(n_res_correct, n_incorrect),
+    names_to = "type",
+    values_to = "value"
+  )
+
+ggplot(df_plot, aes(x = file, y = value, fill = type)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(
+    values = c(
+      "n_res_correct" = "darkgreen",
+      "n_incorrect" = "grey"
+    ),
+    labels = c(
+      "n_res_correct" = "results correct",
+      "n_incorrect" = "results the same"
+    ),
+    name = ""
+  ) +
+  labs(
+    x = "Test File",
+    y = "Number of Tests",
+    title = "Test Results per File"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 
 ```
