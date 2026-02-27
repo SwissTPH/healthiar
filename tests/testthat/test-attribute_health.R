@@ -1984,7 +1984,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|cutoff_TRUE|varuncer_FALSE|multiexp_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -2013,7 +2013,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
 ## ASSESSMENT DETAILS: I used data from https://keskkonnaportaal.ee/sites/default/files/2024-05/V%C3%A4lis%C3%B5hu%20kvaliteedi%20m%C3%B5ju%20v%C3%B5rdlus%20inimeste%20tervisele%20Eestis%20aastatel%202010%20ja%202020%20ning%20%C3%B5husaaste%20tervisem%C3%B5jude%20prognoos%20aastaks%202030.pdf for Estonian administrative units and data for attributable deaths in the year 2020. The number of deaths was obtained from statistics Estonia
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_FALSE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|cutoff_FALSE|varuncer_FALSE|multiexp_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -2380,7 +2380,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration
 })
 
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FALSE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|cutoff_FALSE|varuncer_FALSE|multiexp_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -2411,7 +2411,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_FA
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|cutoff_TRUE|varuncer_FALSE|multiexp_FALSE|", {
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -2448,7 +2448,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
 ## INPUT DATA DETAILS: obtained from the study mentioned. Calculated attributable deaths from pm2.5 in 2020.
 
 
-testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|",{
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|cutoff_TRUE|varuncer_FALSE|multiexp_FALSE|",{
   ## healthiar FUNCTION CALL
   results_pm2.5 <-
     healthiar::attribute_health(
@@ -2482,7 +2482,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|cutoff_TR
 })
 
 
-testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|cutoff_TRUE|varuncer_FALSE|iteration_TRUE|multiexp_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|",{
+testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|cutoff_TRUE|varuncer_FALSE|multiexp_FALSE|",{
   results_NO2 <-
     healthiar::attribute_health(
       approach_risk = "relative_risk",
@@ -3199,7 +3199,7 @@ func <-stats::splinefun(x = data_erf$exposure,
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|cutoff_TRUE|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
+testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|cutoff_TRUE|",{
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
   #Exotic test based on real data but does produce real world results
 
@@ -3278,7 +3278,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|cutoff_T
 })
 
 
-testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
+testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|cutoff_TRUE|",{
 data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rds"))
   data <- data |> dplyr::slice(-1)
   erf <- stats::splinefun(data$x[1:21], data$y[1:21], method="natural")
@@ -3402,7 +3402,7 @@ data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rd
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|cutoff_TRUE|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|",{
+testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|cutoff_TRUE|",{
   data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rds"))
   data <- data |> dplyr::slice(-1)
   #erf <- stats::splinefun(data$x[1:21], data$y[1:21], method="natural")
