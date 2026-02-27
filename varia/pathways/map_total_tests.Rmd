@@ -249,9 +249,9 @@ if(!"results_the_same" %in% unique(df_counts$category)) {
 
 ```
 
-# go into  paths
+# go more into  paths
 
-```{r go into  paths}
+```{r go more into  paths}
 #drop all colums with na
 df_clean <- df_wide %>%
   select(where(~ !any(is.na(.))))
