@@ -122,66 +122,130 @@ ggplot(df_plot, aes(x = file, y = value, fill = type)) +
 print(results_transformed)
 
 ```
+
+
+
+
 # Single path elements
 
 ```{r Single path elements}
 
-file <- "tests/testthat/test-attribute_health.R"
 
-file_content <- readLines(file)
-file_content <- file_content[!grepl("^\\s*#", file_content)]
+test_folder <- "tests/testthat/"
 
-test_names <- regmatches(
-  file_content,
-  gregexpr(
-    'testthat::test_that\\("\\K[^"]+(?=", \\{)',
+# LOAD all files
+files <- list.files(test_folder, pattern = "\\.R$", full.names = TRUE)
+
+# For-loop along single files
+for(file in files) {
+  cat("Processing file:", file, "\n")
+  
+  file_content <- readLines(file)
+  file_content <- file_content[!grepl("^\\s*#", file_content)]
+  
+  # extract names
+  test_names <- regmatches(
     file_content,
-    perl = TRUE
+    gregexpr(
+      'testthat::test_that\\("\\K[^"]+(?=", \\{)',
+      file_content,
+      perl = TRUE
+    )
   )
-)
+  
+  all_tests <- tibble(test_name = unlist(test_names))
+  
+  # extract elements of the path
+  all_tests_parsed <- all_tests %>%
+    mutate(
+      category = case_when(
+        str_detect(test_name, regex("results correct", ignore_case = TRUE)) ~ "results_correct",
+        str_detect(test_name, regex("results the same", ignore_case = TRUE)) ~ "results_the_same",
+        TRUE ~ NA_character_
+      ),
+      path_elements = str_extract_all(test_name, "(?<=\\|)[^\\|]+(?=\\|)")
+    ) %>%
+    filter(!is.na(category))
+  
+  # cheg if et least two different paths
+  valid_paths <- all_tests_parsed %>%
+    filter(str_detect(test_name, "results correct|results the same")) %>%
+    pull(path_elements) %>%
+    map_chr(~ paste(.x, collapse = "|")) %>%
+    unique()
+  
+  if(length(valid_paths) < 2) {#skip if only one path
+    cat("Skipping file (not enough valid paths):", file, "\n\n")
+    next  
+  }
+  
+  df_wide <- all_tests_parsed %>%
+    tidyr::unnest_wider(path_elements, names_sep = "_")
+  
+  df_long <- df_wide %>%
+    pivot_longer(
+      cols = starts_with("path_elements_"),
+      names_to = "level",
+      values_to = "element"
+    ) %>%
+    filter(!is.na(element))
+  
+  df_counts <- df_long %>%
+    group_by(level, element, category) %>%
+    summarise(n = n(), .groups = "drop")
+  
+  df_counts_wide <- df_counts %>%
+    pivot_wider(
+      names_from = category,
+      values_from = n,
+      values_fill = 0
+    )
+  
+  # add col if necessary 
+if(!"results_correct" %in% unique(df_counts$category)) {
+  df_counts_wide$results_correct <- 0
+}
 
-all_tests <- tibble(
-  test_name = unlist(test_names)
-)
+if(!"results_the_same" %in% unique(df_counts$category)) {
+  df_counts_wide$results_the_same <- 0
+}
+  
+  df_plot <- df_counts_wide %>%
+    select(level, element, results_correct, results_the_same) %>%
+    pivot_longer(
+      cols = c(results_correct, results_the_same),
+      names_to = "type",
+      values_to = "value"
+    ) %>%
+    mutate(type = factor(type, levels = c("results_the_same", "results_correct")))
 
-all_tests_parsed <- all_tests %>%
-  mutate(
-    category = case_when(
-      str_detect(test_name, regex("results correct", ignore_case = TRUE)) ~ "results_correct",
-      str_detect(test_name, regex("results the same", ignore_case = TRUE)) ~ "results_the_same",
-      TRUE ~ NA_character_
-    ),
-    # alles zwischen |...| extrahieren
-    path_elements = str_extract_all(test_name, "(?<=\\|)[^\\|]+(?=\\|)")
-  ) %>%
-  filter(!is.na(category))
-
-#make columns per path element
-df_wide <- all_tests_parsed %>%
-  unnest_wider(
-    path_elements,
-    names_sep = "_"
-  )
-
-# Alle Pfadebenen in long format
-df_long <- df_wide%>%
-  pivot_longer(
-    cols = starts_with("path_elements_"),
-    names_to = "level",
-    values_to = "element"
-  ) %>%
-  filter(!is.na(element))  # NA entfernen
-df_counts <- df_long %>%
-  group_by(level, element, category) %>%
-  summarise(n = n(), .groups = "drop")
-df_counts_wide <- df_counts %>%
-  pivot_wider(
-    names_from = category,
-    values_from = n,
-    values_fill = 0
-  )
-
-
+  p <- ggplot(df_plot, aes(x = element, y = value, fill = type)) +
+    geom_bar(stat = "identity") +
+    scale_fill_manual(
+      values = c(
+        "results_correct" = "darkgreen",
+        "results_the_same" = "grey"
+      ),
+      labels = c(
+        "results_correct" = "results correct",
+        "results_the_same" = "results the same"
+      ),
+      name = ""
+    ) +
+    labs(
+      x = "Element",
+      y = "Number of Tests",
+      title = basename(file)
+    ) +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1)
+    )
+  
+  print(p)  
+  Sys.sleep(0.5)  # short pause to enable plot generation
+  
+}
 
 ```
 
