@@ -15,6 +15,11 @@
 #' This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
 #' If this adjustment for inflation is not needed leave this argument empty
 #' (default value = NULL).
+#' @param real_growth_rate \code{Numeric value} between 0 and 1 referring
+#' to the annual real-term appreciation in the societal value of health
+#' (e.g., income elasticity).
+#' This adjusts the valuation upward to reflect rising wealth,
+#' independent of general price inflation.
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
 
 # DETAILS ######################################################################
@@ -27,7 +32,11 @@
 #' and considering inflation \insertCite{Brealey2023_book}{healthiar}.
 #'
 #' If the monetized values require adjustment for inflation,
-#' a deflator based on on the provided inflation rate is applied
+#' a deflator based on \code{inflation_rate} can be applied
+#' \insertCite{HMTreasury2022_greenbook}{healthiar}.
+#'
+#' If the monetized values require adjustment for base valuation upward,
+#' a factor based \code{valuation growth} can be applied
 #' \insertCite{OECD2012_book}{healthiar}.
 #'
 #' One of the following three discount shapes can be selected:
@@ -113,6 +122,7 @@ monetize <- function(output_attribute = NULL,
                      discount_shape = "exponential",
                      n_years = NULL,
                      inflation_rate = NULL,
+                     real_growth_rate = NULL,
                      info = NULL) {
 
 
@@ -382,6 +392,7 @@ monetize <- function(output_attribute = NULL,
              n_years,
              discount_shape,
              inflation_rate,
+             real_growth_rate,
              info = NULL) {
 
       # Create function to obtain the real_discount_rate
@@ -402,7 +413,8 @@ monetize <- function(output_attribute = NULL,
                       discount_rate = discount_rate,
                       n_years = n_years,
                       discount_shape = discount_shape,
-                      inflation_rate = inflation_rate) |>
+                      inflation_rate = inflation_rate,
+                      real_growth_rate = real_growth_rate) |>
         # Add info
         add_info(info = info)
 
@@ -439,7 +451,7 @@ monetize <- function(output_attribute = NULL,
           # 2. Adjust for inflation (deflate): Convert nominal values back to real
           # We only apply the deflator if the user wants a "Real" present value
           # i.e. if the user entered a value in inflation_rate
-          deflator = if(!base::is.null(inflation_rate)) {
+          deflator_factor = if(!base::is.null(inflation_rate)) {
             get_inflation_factor(n_years = year,
                                  inflation_rate = inflation_rate,
                                  is_deflation = TRUE)
@@ -447,8 +459,17 @@ monetize <- function(output_attribute = NULL,
             1
           },
 
+          # 3. Adjust for real_growth:
+          real_growth_factor = if(!base::is.null(real_growth_rate)) {
+            get_inflation_factor(n_years = year,
+                                 inflation_rate = real_growth_rate,
+                                 is_deflation = FALSE)
+          } else {
+            1
+          },
+
           # 4. Final Calculation
-          monetized_impact = impact * valuation * discount_factor * deflator,
+          monetized_impact = impact * valuation * discount_factor * deflator_factor * real_growth_factor,
 
           monetized_impact_unadjusted = impact * valuation,
           .after = impact
@@ -553,7 +574,8 @@ monetize <- function(output_attribute = NULL,
           n_years = n_years,
           discount_rate = discount_rate,
           discount_shape = discount_shape,
-          inflation_rate = inflation_rate)
+          inflation_rate = inflation_rate,
+          real_growth_rate = real_growth_rate)
 
       impact_detailed  <-
         add_monetized_impact(
@@ -562,7 +584,8 @@ monetize <- function(output_attribute = NULL,
           n_years = n_years,
           discount_shape = discount_shape,
           inflation_rate = inflation_rate,
-          valuation = valuation)[["monetization_main"]]
+          valuation = valuation,
+          real_growth_rate = real_growth_rate)[["monetization_main"]]
 
 
       impact_detailed <- impact_detailed |>
@@ -609,7 +632,8 @@ monetize <- function(output_attribute = NULL,
                              discount_rate = discount_rate,
                              n_years = n_years,
                              discount_shape = discount_shape,
-                             inflation_rate = inflation_rate)
+                             inflation_rate = inflation_rate,
+                             real_growth_rate = real_growth_rate)
 
       # Put together health and monetization output
       output_monetization <-
@@ -623,7 +647,8 @@ monetize <- function(output_attribute = NULL,
                              discount_rate = discount_rate,
                              n_years = n_years,
                              discount_shape = discount_shape,
-                             inflation_rate = inflation_rate)[["monetization_main"]]
+                             inflation_rate = inflation_rate,
+                             real_growth_rate = real_growth_rate)[["monetization_main"]]
     }
 
 
@@ -662,6 +687,7 @@ monetize <- function(output_attribute = NULL,
           n_years = n_years,
           discount_shape = discount_shape,
           inflation_rate = inflation_rate,
+          real_growth_rate = real_growth_rate,
           info = info)
 
   }

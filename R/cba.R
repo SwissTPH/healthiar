@@ -109,6 +109,7 @@ cba <-
            discount_rate_benefit = NULL,
            discount_rate_cost = NULL,
            inflation_rate = NULL,
+           real_growth_rate = NULL,
            discount_shape = "exponential",
            n_years_benefit = 1,
            n_years_cost = 0) {
@@ -136,6 +137,7 @@ cba <-
       discount_rate = discount_rate_benefit,
       discount_shape = discount_shape,
       inflation_rate = inflation_rate,
+      real_growth_rate = real_growth_rate,
       n_years = n_years_benefit,
       valuation = valuation)
 
@@ -155,6 +157,7 @@ cba <-
         discount_rate = discount_rate_cost,
         discount_shape = discount_shape,
         inflation_rate = inflation_rate,
+        real_growth_rate = real_growth_rate,
         n_years = n_years_cost)
 
     # For costs main and detailed are the same because they only have one row
