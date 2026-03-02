@@ -12,11 +12,11 @@
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.
 #' @param n_years \code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).
 #' @param inflation_rate \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Default value = NULL (assuming no nominal discount rate).
-#' @param discount_is_nominal \code{Boolean value} (i.e. TRUE vs. FALSE).
-#' If \code{TRUE} (default), the \code{discount_rate} is assumed to be nominal (includes inflation).
+#' @param approach_monetization \code{String} with two likely values: \code{nominal} (default) or \code{nominal}.
+#' If \code{nominal}, the \code{discount_rate} is assumed to be nominal (includes inflation).
 #' The \code{inflation_rate} will then be used as a deflator to convert
 #' future impacts into constant prices (Nominal Terms Approach).
-#' If \code{FALSE}, the \code{discount_rate} is assumed to be real.
+#' If \code{real}, the \code{discount_rate} is assumed to be real.
 #' In this case, providing an \code{inflation_rate} will grow the valuation over time
 #' (Real Terms Approach).
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
@@ -30,16 +30,16 @@
 #' applying discounting \insertCite{Frederick2002_jel,Harvey1986_ms,Mazur1987_book}{healthiar}
 #' and/or inflation \insertCite{Brealey2023_book}{healthiar}.
 #'
-#' The function handles inflation based on the \code{discount_is_nominal} argument:
+#' The function handles inflation based on the \code{approach_monetization} argument:
 #' \itemize{
-#'   \item \strong{Nominal Terms Approach or Growth Pathway} (\code{discount_is_nominal = FALSE}): Used when the
-#'   valuation is expected to grow over time (e.g., rising societal value of health).
-#'   In that case, the valuation will be inflated
-#'   \insertCite{OECD2012_book}{healthiar}.
-#'   \item \strong{Real Terms Approach or Deflator Pathway} (\code{discount_is_nominal = TRUE}): Used when
+#'   \item \strong{Real Terms Approach or Deflator Pathway} (\code{approach_monetization = nominal}): Used when
 #'   the input valuation is already a future nominal price.
 #'   In that case, the valuation will be deflated to return to constant Year 0 prices
 #'  \insertCite{HMTreasury2022_greenbook}{healthiar}.
+#'   \item \strong{Nominal Terms Approach or Growth Pathway} (\code{approach_monetization = real}): Used when the
+#'   valuation is expected to grow over time (e.g., rising societal value of health).
+#'   In that case, the valuation will be inflated
+#'   \insertCite{OECD2012_book}{healthiar}.
 #' }
 #'
 #' One of the following three discount shapes can be selected:
@@ -125,7 +125,7 @@ monetize <- function(output_attribute = NULL,
                      discount_shape = "exponential",
                      n_years = NULL,
                      inflation_rate = NULL,
-                     discount_is_nominal = TRUE,
+                     approach_monetization = "nominal",
                      info = NULL) {
 
 
@@ -424,7 +424,7 @@ monetize <- function(output_attribute = NULL,
       if(summing_across_years){
         # If lifetable or
         # if impact is inserted as vector to refer to different monetized impacts by year
-        # (case of real costs, not applicable for discount_is_nominal costs)
+        # (case of real costs, not applicable for approach_monetization costs)
 
         df_by_year <-  df_with_input
         df_by_year$year <-
@@ -449,8 +449,8 @@ monetize <- function(output_attribute = NULL,
           ),
 
           # 2. Standardize: Convert back to Real terms
-          # We only apply the deflator if the user wants a "Real" present value (discount_is_nominal = FALSE)
-          deflator = if(discount_is_nominal == TRUE) {
+          # We only apply the deflator if the user wants a "Real" present value (approach_monetization = "real")
+          deflator = if(approach_monetization == "nominal") {
             get_inflation_factor(n_years = year,
                                  inflation_rate = inflation_rate,
                                  is_deflation = TRUE)
@@ -466,8 +466,8 @@ monetize <- function(output_attribute = NULL,
           ),
 
           # 4. Final Calculation
-          # If discount_is_nominal = TRUE: Value grows by inflation, then is discounted.
-          # If discount_is_nominal = FALSE: Growth and Deflator cancel out (Green Book standard).
+          # If approach_monetization = "nominal": Value grows by inflation, then is discounted.
+          # If approach_monetization = "real": Growth and Deflator cancel out (Green Book standard).
           monetized_impact = impact * valuation * inflation_factor * deflator * discount_factor,
 
           monetized_impact_without_discount_and_inflation = impact * valuation,
