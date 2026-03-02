@@ -173,7 +173,23 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
   )
 })
 
-##### INFLATION ################################################################
+##### INFLATION & GROWTH RATE ################################################################
+
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        impact = 1,
+        discount_shape = "exponential",
+        n_years = 5,
+        real_growth_rate = 0.08,
+        valuation = 1E3
+      )$monetization_main$monetized_impact |> base::round(digits = 2),
+    expect =
+      1469.33 # Results on 2026-03-02;  Excel sheet of Uni Porto
+  )
+})
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_TRUE|", {
 
@@ -190,6 +206,25 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
       )$monetization_main$monetized_impact |> base::round(digits = 2),
     expect =
       783.53 # Results on 2025-03-04;  Excel sheet of Uni Porto
+  )
+})
+
+
+
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        impact = 1,
+        discount_shape = "exponential",
+        discount_rate = 0.05,
+        n_years = 1,
+        inflation_rate = 0.08,
+        valuation = 1080
+      )$monetization_main$monetized_impact |> base::round(digits = 2),
+    expect =
+      952.38 # Results on 2025-03-04;  Excel sheet of Uni Porto
   )
 })
 
