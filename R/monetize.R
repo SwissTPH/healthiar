@@ -395,11 +395,6 @@ monetize <- function(output_attribute = NULL,
              real_growth_rate,
              info = NULL) {
 
-      # Create function to obtain the real_discount_rate
-      # i.e. discount_rate adjusted for inflation
-
-
-
       # Define discount years
       if(base::is.null(n_years)){
         n_years_vector <- 0
