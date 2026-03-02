@@ -72,9 +72,23 @@ testthat::test_that("results the same |pathway_cba|discount_shape_exponential|di
         n_years_benefit = 10,
         n_years_cost = 10,
         discount_is_nominal = FALSE
+testthat::test_that("results the same |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
+
+  testthat::expect_equal(
+    object =
+      ## Adapted
+      healthiar::cba(
+        impact_benefit = 197000,
+        valuation = 541000,
+        cost = 523000000,
+        discount_shape = "exponential",
+        inflation_rate = 0.05,
+        real_growth_rate = 0.05,
+        n_years_benefit = 10,
+        n_years_cost = 10
       )$cba_main$net_benefit_rounded,
     expect =
-      172750790748 # Results on 2026-01-15
+      106054000000 # Results on 2026-03-02
   )
 })
 
