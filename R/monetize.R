@@ -450,7 +450,7 @@ monetize <- function(output_attribute = NULL,
           # 4. Final Calculation
           monetized_impact = impact * valuation * discount_factor * deflator,
 
-          monetized_impact_without_discount_and_inflation = impact * valuation,
+          monetized_impact_unadjusted = impact * valuation,
           .after = impact
         )
 
@@ -634,7 +634,7 @@ monetize <- function(output_attribute = NULL,
         "impact",
         "discount_rate", "discount_shape", "inflation_rate", "n_years",
         "valuation",
-        base::paste0("monetized_impact", c("", "_without_discount_and_inflation", "_rounded")))
+        base::paste0("monetized_impact", c("", "_unadjusted", "_rounded")))
 
     # Keep only relevant columns for monetization
     output_monetization[["monetization_main"]] <-
