@@ -56,7 +56,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
   ## DOI: https://doi.org/10.1007/s11270-015-2316-7
 })
 
-#### WITH INFLATION #############################################################
+#### WITH INFLATION AND GROWTH #############################################################
 
 testthat::test_that("results the same |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
@@ -70,8 +70,13 @@ testthat::test_that("results the same |pathway_cba|discount_shape_exponential|di
         discount_shape = "exponential",
         inflation_rate = 0.05,
         n_years_benefit = 10,
-        n_years_cost = 10,
-        discount_is_nominal = FALSE
+        n_years_cost = 10
+      )$cba_main$net_benefit_rounded,
+    expect =
+      65107956191 # Results on 2026-03-02
+  )
+})
+
 testthat::test_that("results the same |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
   testthat::expect_equal(
@@ -639,6 +644,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
         discount_rate_benefit = 0.03,
         discount_rate_cost = 0.03,
         inflation_rate = 0.05,
+        real_growth_rate = 0.05,
         n_years_benefit = 5,
         n_years_cost = 5
       )$cba_main$net_benefit_rounded,
@@ -660,11 +666,10 @@ testthat::test_that("results the same |pathway_cba|discount_shape_exponential|di
         discount_rate_benefit = 0.03,
         discount_shape = "exponential",
         inflation_rate = 0.05,
-        n_years_benefit = 10,
-        discount_is_nominal = FALSE
+        n_years_benefit = 10
       )$cba_main$net_benefit_rounded,
     expect =
-      4783243401.0 # Result on 2026-02-27
+      -3306752109.0 # Result on 2026-03-02
   )
 })
 
@@ -683,11 +688,10 @@ testthat::test_that("results the same |pathway_cba|discount_shape_exponential|di
         discount_shape = "exponential",
         n_years_cost = 5,
         n_years_benefit = 0,
-        inflation_rate = 0.05,
-        discount_is_nominal = FALSE
+        inflation_rate = 0.05
       )$cba_main$net_benefit_rounded,
     expect =
-      1684160165 # Result on 2026-02-27
+      5169612257.0 # Result on 2026-03-02
   )
 
 })
