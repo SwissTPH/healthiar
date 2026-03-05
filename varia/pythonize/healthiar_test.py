@@ -41,4 +41,6 @@ print(result.rx2('health_main').rx2('impact'))
 result.rx2('health_main')
 
 
-print(r('args(healthiar::attribute_health)'))
+# print(r('args(healthiar::attribute_health)'))
+# print(r('help("attribute_health", package="healthiar")'))
+help(healhipy.attribute_health)
