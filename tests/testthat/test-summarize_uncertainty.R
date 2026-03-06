@@ -1,7 +1,7 @@
 ## NOTE 2025-04-30 AL: actually all comparisons for summarize_uncertainty are
 ## "fake", and should be labelled as such - but since it's the way of
 ## corroborating our results that we have, I classify them as
-## "results correct" comparisons.
+## "results the same" comparisons.
 
 # QUANTITATIVE TEST ############################################################
 
@@ -9,7 +9,7 @@
 
 ### SINGLE EXPOSURE #############################################################
 
-testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -45,7 +45,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
 
 
 
-testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_function|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_function|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
@@ -123,7 +123,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_func
 ## Assumed also a SD from the results_noise_ha object
 
 
-testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_formula|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_formula|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
@@ -185,7 +185,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_form
 ## Assumed also a SD from the results_noise_ha object
 
 #### ITERATION #################################################################
-testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_True|", {
+testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_increment|iteration_True|", {
 
   summary_uncertainty_small_iteration <-
     healthiar::attribute_health(
@@ -219,7 +219,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
   )
 })
 
-testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_increment|iteration_TRUE|", {
 
   bestcost_pm_copd_geo_short <-
     healthiar::attribute_health(
@@ -250,7 +250,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
 })
 
 
-testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_function|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_function|iteration_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
@@ -326,7 +326,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_func
 
 
 
-testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_formula|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_formula|iteration_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
   data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
@@ -388,7 +388,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_form
 
 #### YLD ########################################################################
 
-testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
+testthat::test_that("results the same yld |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -429,7 +429,7 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_single|erf_rr_
 
 ### EXPOSURE DISTRIBUTION #######################################################
 
-testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increment|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_uncertainty|exp_dist|erf_rr_increment|iteration_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
   data  <- data_raw |>
@@ -465,7 +465,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_dist|erf_rr_increm
 
 ### YLD #########################################################################
 
-testthat::test_that("results correct yld |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
+testthat::test_that("results the same yld |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>
@@ -495,7 +495,7 @@ testthat::test_that("results correct yld |pathway_uncertainty|exp_dist|erf_ar_fo
 
 # COMPARE ########
 
-testthat::test_that("results correct |pathway_uncertainty_compare|exp_dist|erf_ar_formula|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_uncertainty_compare|exp_dist|erf_ar_formula|iteration_TRUE|", {
 
   rr_scenario_1 <-
     healthiar::attribute_health(
