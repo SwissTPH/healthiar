@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1490</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1491</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_inflation_factor</span><span class="op">(</span><span class="va">n_years</span>, inflation_rate <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_inflation_factor</span><span class="op">(</span><span class="va">n_years</span>, inflation_rate <span class="op">=</span> <span class="cn">NULL</span>, is_deflation <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -55,7 +55,16 @@
 
 
 <dt id="arg-inflation-rate">inflation_rate<a class="anchor" aria-label="anchor" href="#arg-inflation-rate"></a></dt>
-<dd><p><code>Numeric value</code> between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).</p></dd>
+<dd><p><code>Numeric value</code> between 0 and 1 referring to the annual inflation (increase of prices).
+This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
+If this adjustment for inflation is not needed leave this argument empty
+(default value = NULL).</p></dd>
+
+
+<dt id="arg-is-deflation">is_deflation<a class="anchor" aria-label="anchor" href="#arg-is-deflation"></a></dt>
+<dd><p><code>Boolean value</code> (TRUE vs. FALSE) referring to the type of inflation factor.
+FALSE (default) means inflate present values to future nominal values,
+while TRUE means deflate future nominal values to present real values</p></dd>
 
 </dl></div>
     <div class="section level2">

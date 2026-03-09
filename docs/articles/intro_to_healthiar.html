@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1490</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1491</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -6373,7 +6373,8 @@ it in present-value terms.</p>
 <p>If you need the discounted values of a cost or health outcome, you
 can call the <code>healthiar</code> function <code><a href="../reference/discount.html">discount()</a></code>. If
 you just need the discount factor, you can alternatively call
-<code><a href="../reference/get_discount_factor.html">get_discount_factor()</a></code>. If you just need the inflation
+<code><a href="../reference/get_discount_factor.html">get_discount_factor()</a></code> (entering
+<code>is_deflation = TRUE</code>). If you just need the inflation
 factor, you can <code><a href="../reference/get_inflation_factor.html">get_inflation_factor()</a></code>.</p>
 <p>Different functional forms can be used to apply discounting. The most
 common is exponential discounting, also referred to as constant
@@ -6382,37 +6383,57 @@ increases. An alternative is hyperbolic discounting, which tends to
 better capture human behavior by discounting the near present more
 heavily than outcomes further in the future <span class="citation">(Lipman and Attema 2024)</span></p>
 <p>See below the equations that are used behind these functions.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>o</mi><mi>n</mi><mi>e</mi><mi>t</mi><mi>i</mi><mi>z</mi><mi>e</mi><mi>d</mi><mi>_</mi><mi>i</mi><mi>m</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>t</mi><mo>=</mo><mi>i</mi><mi>m</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>t</mi><mo>×</mo><mi>v</mi><mi>a</mi><mi>l</mi><mi>u</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>×</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>×</mo><mi>d</mi><mi>e</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>o</mi><mi>r</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>×</mo><mi>r</mi><mi>e</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>g</mi><mi>r</mi><mi>o</mi><mi>w</mi><mi>t</mi><mi>h</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">monetized\_impact = impact \times valuation \times discount\_factor \times deflator\_factor \times real\_growth\_factor</annotation></semantics></math>
+The arguments <code>discount_factor</code>, <code>deflator_factor</code>
+and <code>real_growth_factor</code> are only used if a value is entered
+in the arguments <code>discount_rate</code>,
+<code>ingflation_rate</code> and <code>real_growth_rate</code>
+respectively<br>
+(otherwise ignored).</p>
 <div class="section level5">
-<h5 id="inflation-factor-without-discounting">Inflation factor (without discounting)<a class="anchor" aria-label="anchor" href="#inflation-factor-without-discounting"></a>
+<h5 id="discount-factor">Discount factor<a class="anchor" aria-label="anchor" href="#discount-factor"></a>
 </h5>
-<p>As suggested by <span class="citation">(Brealey et al. 2023;
-Samuelson 1937)</span></p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mrow><annotation encoding="application/x-tex">inflation\_factor = (1 + inflation\_rate)^{n\_years}</annotation></semantics></math></p>
-</div>
-</div>
-<div class="section level4">
-<h4 id="discount-factors-without-inflation">Discount factors (without inflation)<a class="anchor" aria-label="anchor" href="#discount-factors-without-inflation"></a>
-</h4>
-<p><em>Exponential discounting (no inflation)</em></p>
+<p><em>Exponential discounting</em></p>
 <p>As suggested by <span class="citation">Frederick, Loewenstein, and
 O’Donoghue (2002)</span></p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mfrac></mrow><annotation encoding="application/x-tex">discount\_factor = \frac{1}{(1 + discount\_rate)^{n\_years}}</annotation></semantics></math></p>
-<p><em>Hyperbolic discounting Harvey (no inflation)</em></p>
+<p><em>Hyperbolic discounting Harvey</em></p>
 <p>As suggested by <span class="citation">Harvey (1986)</span></p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi></mrow></msup></mfrac></mrow><annotation encoding="application/x-tex">discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}</annotation></semantics></math></p>
-<p><em>Hyperbolic discounting Mazur (no inflation)</em></p>
+<p><em>Hyperbolic discounting Mazur</em></p>
 <p>As suggested by <span class="citation">Mazur (1987)</span></p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo>×</mo><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">discount\_factor = \frac{1}{1 + (discount\_rate \times n\_years)}</annotation></semantics></math></p>
 </div>
-<div class="section level4">
-<h4 id="discount-factors-with-inflation">Discount factors with inflation<a class="anchor" aria-label="anchor" href="#discount-factors-with-inflation"></a>
-</h4>
-<p><em>Exponential discounting (with inflation)</em>
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><msup><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mfrac></mrow><annotation encoding="application/x-tex">discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate))^{n\_years}}</annotation></semantics></math></p>
-<p><em>Hyperbolic discounting Harvey (with inflation)</em>
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi></mrow></msup><mo>×</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}</annotation></semantics></math></p>
-<p><em>Hyperbolic discounting Mazur (with inflation)</em>
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>_</mi><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo>×</mo><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)) \times (1 + inflation\_rate)^{n\_years}}</annotation></semantics></math></p>
+<div class="section level5">
+<h5 id="deflation-factor">Deflation factor<a class="anchor" aria-label="anchor" href="#deflation-factor"></a>
+</h5>
+<p>Inflation can be handled in <code><a href="../reference/monetize.html">monetize()</a></code> by applying a
+deflator on future values, projected in nominal terms, in order to
+convert them into real values (i.e., express these values in terms of
+constant prices of a single base year). Therefore, if the user of the
+function provides a value for the <code>inflation_rate</code> argument,
+a deflator factor <span class="citation">(HM Treasury 2022; Brealey et
+al. 2023; Samuelson 1937)</span> is applied according to the following
+formulas</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>e</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>o</mi><mi>r</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mfrac></mrow><annotation encoding="application/x-tex">deflator\_factor = \frac{1}{(1 + inflation\_rate)^{n\_years}}</annotation></semantics></math></p>
+</div>
+<div class="section level5">
+<h5 id="real-valuation-growth">Real valuation growth<a class="anchor" aria-label="anchor" href="#real-valuation-growth"></a>
+</h5>
+<p>If a rising societal value of health over time is required in the
+monetization, unlike inflation, this represents a “real” increase in
+value. Thus, as societies become wealthier, their willingness to pay to
+avoid mortality and morbidity risks tends to rise <span class="citation">(OECD 2012)</span>.</p>
+<p>For this use case, you have enter a value in the argument
+<code>real_growth_rate</code> in <code><a href="../reference/monetize.html">monetize()</a></code>, which allows
+you to project this growth by applying a valuation growth factor to
+base-year unit values:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>g</mi><mi>r</mi><mi>o</mi><mi>w</mi><mi>t</mi><mi>h</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>r</mi><mi>e</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>g</mi><mi>r</mi><mi>o</mi><mi>w</mi><mi>t</mi><mi>h</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mrow><annotation encoding="application/x-tex">real\_growth\_factor =(1 + real\_growth\_rate)^{n\_years}</annotation></semantics></math></p>
+<p>Where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>g</mi><mi>r</mi><mi>o</mi><mi>w</mi><mi>t</mi><mi>h</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">real\_growth\_rate</annotation></semantics></math>
+represents the annual real growth rate in health valuation. This ensures
+that long-term environmental impacts are not undervalued.</p>
+</div>
 </div>
 <div class="section level4">
 <h4 id="function-call-21">Function call<a class="anchor" aria-label="anchor" href="#function-call-21"></a>
@@ -7049,6 +7070,10 @@ Economics and Policy</em> 1 (2): 228–40. <a href="https://doi.org/10.1093/reep
 Harvey, Charles M. 1986. <span>“Value Functions for Infinite-Period
 Planning.”</span> <em>Management Science</em> 32 (9): 1123–39. <a href="https://doi.org/10.1287/mnsc.32.9.1123" class="external-link">https://doi.org/10.1287/mnsc.32.9.1123</a>.
 </div>
+<div id="ref-HMTreasury2022_greenbook" class="csl-entry">
+HM Treasury. 2022. <em>The Green Book: Central Government Guidance on
+Appraisal and Evaluation</em>. London, UK: HM Treasury. <a href="https://www.gov.uk/government/publications/the-green-book-appraisal-and-evaluation-in-central-goverment" class="external-link">https://www.gov.uk/government/publications/the-green-book-appraisal-and-evaluation-in-central-goverment</a>.
+</div>
 <div id="ref-Jerrett2013-oup" class="csl-entry">
 Jerrett, Michael, Richard T Burnett, Bernardo S Beckerman, Michelle C
 Turner, Daniel Krewski, George Thurston, Randall V Martin, et al. 2013.
@@ -7110,6 +7135,10 @@ Murray, Christopher JL, Majid Ezzati, Alan D Lopez, Anthony Rodgers, and
 Stephen Vander Hoorn. 2003. <span>“Comparative Risk Assessment:
 Conceptual Framework and Design.”</span> <em>Epidemiology</em> 14 (4):
 447–58. <a href="https://doi.org/10.1186/1478-7954-1-1" class="external-link">https://doi.org/10.1186/1478-7954-1-1</a>.
+</div>
+<div id="ref-OECD2012_book" class="csl-entry">
+OECD. 2012. <em>Mortality Risk Valuation in Environment, Health and
+Transport Policies</em>. Paris: OECD Publishing. <a href="https://doi.org/10.1787/9789264130807-en" class="external-link">https://doi.org/10.1787/9789264130807-en</a>.
 </div>
 <div id="ref-OECD2025_book" class="csl-entry">
 OECD. 2025. <em>Mortality Risk Valuation in Policy Assessment: A Global

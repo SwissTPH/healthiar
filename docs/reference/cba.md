@@ -15,9 +15,10 @@ cba(
   discount_rate_benefit = NULL,
   discount_rate_cost = NULL,
   inflation_rate = NULL,
+  real_growth_rate = NULL,
   discount_shape = "exponential",
   n_years_benefit = 1,
-  n_years_cost = 1
+  n_years_cost = 0
 )
 ```
 
@@ -57,9 +58,17 @@ cba(
 - inflation_rate:
 
   `Numeric value` between 0 and 1 referring to the annual inflation
-  (increase of prices). Only to be entered if nominal (not real)
-  discount rate is entered in the function. Default value = NULL
-  (assuming no nominal discount rate).
+  (increase of prices). This value is used to adjust monetization for
+  inflation (converting nominal into real values by appyling a
+  deflator). If this adjustment for inflation is not needed leave this
+  argument empty (default value = NULL).
+
+- real_growth_rate:
+
+  `Numeric value` between 0 and 1 referring to the annual real-term
+  appreciation in the societal value of health (e.g., income
+  elasticity). This adjusts the valuation upward to reflect rising
+  wealth, independent of general price inflation.
 
 - discount_shape:
 

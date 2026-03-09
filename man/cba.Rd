@@ -12,9 +12,10 @@ cba(
   discount_rate_benefit = NULL,
   discount_rate_cost = NULL,
   inflation_rate = NULL,
+  real_growth_rate = NULL,
   discount_shape = "exponential",
   n_years_benefit = 1,
-  n_years_cost = 1
+  n_years_cost = 0
 )
 }
 \arguments{
@@ -28,7 +29,16 @@ cba(
 
 \item{discount_rate_benefit, discount_rate_cost}{\code{Numeric value} referring to the the discount rate used in the benefit and the cost side (respectively). Their values determine the approach of cost-benefit analysis: direct approach (if the same discount_rate is used for cost and benefit) and indirect approach (different discount rates).}
 
-\item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).}
+\item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices).
+This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
+If this adjustment for inflation is not needed leave this argument empty
+(default value = NULL).}
+
+\item{real_growth_rate}{\code{Numeric value} between 0 and 1 referring
+to the annual real-term appreciation in the societal value of health
+(e.g., income elasticity).
+This adjusts the valuation upward to reflect rising wealth,
+independent of general price inflation.}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.}
 

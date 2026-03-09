@@ -35,10 +35,7 @@ discount(
 
 - discount_rate:
 
-  `Numeric value` showing the discount rate for future years. If it is a
-  nominal discount rate, no inflation is to be entered. If it is a real
-  discount rate, the result can be adjusted by entering inflation in
-  this function.
+  `Numeric value` showing the discount rate for future years.
 
 - n_years:
 

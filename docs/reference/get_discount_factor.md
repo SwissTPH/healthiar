@@ -1,30 +1,18 @@
 # Get discount factor
 
-This function calculates the discount factor based on discount rate. If
-the argument `inflation_rate` is NULL (default), it is assumed that the
-discount rate is already corrected for inflation). Otherwise (if a value
-for `inflation_rate` is entered), the resulted discount factor is
-adjusted for inflation.
+This function calculates the discount factor based on discount rate.
 
 ## Usage
 
 ``` r
-get_discount_factor(
-  discount_rate,
-  n_years,
-  discount_shape = "exponential",
-  inflation_rate = NULL
-)
+get_discount_factor(discount_rate, n_years, discount_shape = "exponential")
 ```
 
 ## Arguments
 
 - discount_rate:
 
-  `Numeric value` showing the discount rate for future years. If it is a
-  nominal discount rate, no inflation is to be entered. If it is a real
-  discount rate, the result can be adjusted by entering inflation in
-  this function.
+  `Numeric value` showing the discount rate for future years.
 
 - n_years:
 
@@ -39,13 +27,6 @@ get_discount_factor(
   `String` referring to the assumed equation for the discount factor. By
   default: `"exponential"`. Otherwise: `"hyperbolic_harvey_1986"` or
   `"hyperbolic_mazur_1987"`.
-
-- inflation_rate:
-
-  `Numeric value` between 0 and 1 referring to the annual inflation
-  (increase of prices). Only to be entered if nominal (not real)
-  discount rate is entered in the function. Default value = NULL
-  (assuming no nominal discount rate).
 
 ## Value
 

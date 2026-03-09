@@ -6,6 +6,9 @@
 
 # ARGUMENTS ####################################################################
 #' @inheritParams monetize
+#' @param is_deflation \code{Boolean value} (TRUE vs. FALSE) referring to the type of inflation factor.
+#' FALSE (default) means inflate present values to future nominal values,
+#' while TRUE means deflate future nominal values to present real values
 
 # DETAILS ######################################################################
 #' @details
@@ -55,12 +58,18 @@
 
 get_inflation_factor <-
   function(n_years,
-           inflation_rate = NULL){
+           inflation_rate = NULL,
+           is_deflation = FALSE){
 
-    if(!base::is.null(inflation_rate)){
+    if(!base::is.null(inflation_rate) & is_deflation == FALSE){ # Default
       # if discount_rate is NULL
 
       inflation_factor <- (1 + inflation_rate) ^ n_years
+
+    } else if (!base::is.null(inflation_rate) & is_deflation == TRUE){ # Deflation
+      # if discount_rate is NULL
+
+      inflation_factor <- 1/((1 + inflation_rate) ^ n_years)
 
     } else {
 

@@ -1818,7 +1818,7 @@ to express it in present-value terms.
 
 If you need the discounted values of a cost or health outcome, 
 you can call the `healthiar` function `discount()`. 
-If you just need the discount factor, you can alternatively call `get_discount_factor()`.
+If you just need the discount factor, you can alternatively call `get_discount_factor()` (entering `is_deflation = TRUE`).
 If you just need the inflation factor, you can `get_inflation_factor()`. 
 
 
@@ -1831,42 +1831,62 @@ more heavily than outcomes further in the future [@Lipman2024_jru]
 
 See below the equations that are used behind these functions. 
 
-#### Inflation factor (without discounting)
 
-As suggested by [@Brealey2023_book; @Samuelson1937_res]
+$$monetized\_impact = impact \times valuation \times discount\_factor \times deflator\_factor \times real\_growth\_factor$$
+The arguments `discount_factor`, `deflator_factor` and `real_growth_factor` 
+are only used if a value is entered in the arguments 
+`discount_rate`, `ingflation_rate` and `real_growth_rate` respectively  
+(otherwise ignored).
 
-$$inflation\_factor = (1 + inflation\_rate)^{n\_years}$$
 
-### Discount factors (without inflation)
+#### Discount factor
 
-*Exponential discounting (no inflation)*
+*Exponential discounting*
 
 As suggested by @Frederick2002_jel
 
 $$discount\_factor = \frac{1}{(1 + discount\_rate)^{n\_years}}$$
 
-*Hyperbolic discounting Harvey (no inflation)*
+*Hyperbolic discounting Harvey*
 
 As suggested by @Harvey1986_ms
 
 $$discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}$$
 
-*Hyperbolic discounting Mazur (no inflation)*
+*Hyperbolic discounting Mazur*
 
 As suggested by @Mazur1987_book
 
 $$discount\_factor = \frac{1}{1 + (discount\_rate \times n\_years)}$$
 
-### Discount factors with inflation
+#### Deflation factor
 
-*Exponential discounting (with inflation)*
-$$discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate))^{n\_years}}$$
+Inflation can be handled in `monetize()` by applying a deflator on future values, 
+projected in nominal terms, in order to convert them into real values 
+(i.e., express these values in terms of constant prices of a single base year). 
+Therefore, if the user of the function provides a value for the `inflation_rate` argument,
+a deflator factor [@HMTreasury2022_greenbook; @Brealey2023_book; @Samuelson1937_res]
+is applied according to the following formulas 
 
-*Hyperbolic discounting Harvey (with inflation)*
-$$discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}$$
+$$deflator\_factor = \frac{1}{(1 + inflation\_rate)^{n\_years}}$$
 
-*Hyperbolic discounting Mazur (with inflation)*
-$$discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)) \times (1 + inflation\_rate)^{n\_years}}$$
+
+
+#### Real valuation growth
+If a rising societal value of health over time is required in the monetization,
+unlike inflation, this represents a "real" increase in value. 
+Thus, as societies become wealthier, their willingness to pay
+to avoid mortality and morbidity risks tends to rise [@OECD2012_book].
+
+For this use case, you have enter a value in the argument `real_growth_rate` in `monetize()`,
+which allows you to project this growth by applying a valuation growth factor to base-year unit values:
+
+$$real\_growth\_factor =(1 + real\_growth\_rate)^{n\_years}$$
+
+Where $real\_growth\_rate$ represents the annual real growth rate in health valuation. 
+This ensures that long-term environmental impacts are not undervalued. 
+
+
 
 
 
