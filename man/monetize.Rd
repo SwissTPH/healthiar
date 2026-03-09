@@ -12,6 +12,7 @@ monetize(
   discount_shape = "exponential",
   n_years = NULL,
   inflation_rate = NULL,
+  real_growth_rate = NULL,
   info = NULL
 )
 }
@@ -22,13 +23,22 @@ monetize(
 
 \item{valuation}{\code{Numberic value} referring to unit value of a health impact.}
 
-\item{discount_rate}{\code{Numeric value} showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.}
+\item{discount_rate}{\code{Numeric value} showing the discount rate for future years.}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.}
 
 \item{n_years}{\code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).}
 
-\item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).}
+\item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices).
+This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
+If this adjustment for inflation is not needed leave this argument empty
+(default value = NULL).}
+
+\item{real_growth_rate}{\code{Numeric value} between 0 and 1 referring
+to the annual real-term appreciation in the societal value of health
+(e.g., income elasticity).
+This adjusts the valuation upward to reflect rising wealth,
+independent of general price inflation.}
 
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}}
 }
@@ -58,7 +68,15 @@ This function monetizes health impacts
 
 This function monetize health impacts valuating them and
 applying discounting \insertCite{Frederick2002_jel,Harvey1986_ms,Mazur1987_book}{healthiar}
-and/or inflation \insertCite{Brealey2023_book}{healthiar}.
+and considering inflation \insertCite{Brealey2023_book}{healthiar}.
+
+If the monetized values require adjustment for inflation,
+a deflator based on \code{inflation_rate} can be applied
+\insertCite{HMTreasury2022_greenbook}{healthiar}.
+
+If the monetized values require adjustment for base valuation upward,
+a factor based \code{valuation growth} can be applied
+\insertCite{OECD2012_book}{healthiar}.
 
 One of the following three discount shapes can be selected:
 \itemize{

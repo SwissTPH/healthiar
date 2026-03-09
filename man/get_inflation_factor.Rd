@@ -4,12 +4,19 @@
 \alias{get_inflation_factor}
 \title{Get inflation factor}
 \usage{
-get_inflation_factor(n_years, inflation_rate = NULL)
+get_inflation_factor(n_years, inflation_rate = NULL, is_deflation = FALSE)
 }
 \arguments{
 \item{n_years}{\code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).}
 
-\item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).}
+\item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices).
+This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
+If this adjustment for inflation is not needed leave this argument empty
+(default value = NULL).}
+
+\item{is_deflation}{\code{Boolean value} (TRUE vs. FALSE) referring to the type of inflation factor.
+FALSE (default) means inflate present values to future nominal values,
+while TRUE means deflate future nominal values to present real values}
 }
 \value{
 This function returns the \code{numeric} inflation factor.
