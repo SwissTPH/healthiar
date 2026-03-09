@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1490</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1491</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,7 @@
 <span>  discount_shape <span class="op">=</span> <span class="st">"exponential"</span>,</span>
 <span>  n_years <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  inflation_rate <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  real_growth_rate <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  info <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -72,7 +73,7 @@
 
 
 <dt id="arg-discount-rate">discount_rate<a class="anchor" aria-label="anchor" href="#arg-discount-rate"></a></dt>
-<dd><p><code>Numeric value</code> showing the discount rate for future years. If it is a nominal discount rate, no inflation is to be entered. If it is a real discount rate, the result can be adjusted by entering inflation in this function.</p></dd>
+<dd><p><code>Numeric value</code> showing the discount rate for future years.</p></dd>
 
 
 <dt id="arg-discount-shape">discount_shape<a class="anchor" aria-label="anchor" href="#arg-discount-shape"></a></dt>
@@ -84,7 +85,18 @@
 
 
 <dt id="arg-inflation-rate">inflation_rate<a class="anchor" aria-label="anchor" href="#arg-inflation-rate"></a></dt>
-<dd><p><code>Numeric value</code> between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).</p></dd>
+<dd><p><code>Numeric value</code> between 0 and 1 referring to the annual inflation (increase of prices).
+This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
+If this adjustment for inflation is not needed leave this argument empty
+(default value = NULL).</p></dd>
+
+
+<dt id="arg-real-growth-rate">real_growth_rate<a class="anchor" aria-label="anchor" href="#arg-real-growth-rate"></a></dt>
+<dd><p><code>Numeric value</code> between 0 and 1 referring
+to the annual real-term appreciation in the societal value of health
+(e.g., income elasticity).
+This adjusts the valuation upward to reflect rising wealth,
+independent of general price inflation.</p></dd>
 
 
 <dt id="arg-info">info<a class="anchor" aria-label="anchor" href="#arg-info"></a></dt>
@@ -107,7 +119,15 @@
 <p>This function monetize health impacts valuating them and
 applying discounting (Frederick et al. 2002; Harvey 1986; Mazur 1987)
 
-and/or inflation (Brealey et al. 2023)
+and considering inflation (Brealey et al. 2023)
+.</p>
+<p>If the monetized values require adjustment for inflation,
+a deflator based on <code>inflation_rate</code> can be applied
+(HM Treasury 2022)
+.</p>
+<p>If the monetized values require adjustment for base valuation upward,
+a factor based <code>valuation growth</code> can be applied
+(OECD 2012)
 .</p>
 <p>One of the following three discount shapes can be selected:</p><ul><li><p>Exponential (Frederick et al. 2002)</p></li>
 <li><p>Hyperbolic as Harvey (1986)</p></li>
@@ -129,11 +149,18 @@ ISBN 978-1264117464.<br><br> Frederick S, Loewenstein G, O'Donoghue T (2002).
 “Value Functions for Infinite-Period Planning.”
 <em>Management Science</em>, <b>32</b>(9), 1123–1139.
 <a href="https://doi.org/10.1287/mnsc.32.9.1123" class="external-link">doi:10.1287/mnsc.32.9.1123</a>
-.<br><br> Mazur JE (1987).
+.<br><br> HM Treasury (2022).
+<em>The Green Book: Central Government Guidance on Appraisal and Evaluation</em>.
+HM Treasury, London, UK.
+<a href="https://www.gov.uk/government/publications/the-green-book-appraisal-and-evaluation-in-central-goverment" class="external-link">https://www.gov.uk/government/publications/the-green-book-appraisal-and-evaluation-in-central-goverment</a>.<br><br> Mazur JE (1987).
 “An adjusting procedure for studying delayed reinforcement.”
 In Commons ML, Mazur JE, Nevin JA, Rachlin H (eds.), <em>Quantitative Analyses of Behavior: Volume V. The Effect of Delay and of Intervening Events on Reinforcement Value</em>, 55–73.
 Lawrence Erlbaum Associates, Hillsdale, NJ.
-ISBN 0-89859-800-1.</p>
+ISBN 0-89859-800-1.<br><br> OECD (2012).
+<em>Mortality Risk Valuation in Environment, Health and Transport Policies</em>.
+OECD Publishing, Paris.
+<a href="https://doi.org/10.1787/9789264130807-en" class="external-link">doi:10.1787/9789264130807-en</a>
+.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

@@ -11,7 +11,7 @@ which generates some costs."><meta property="og:image" content="https://swisstph
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1490</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1491</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,9 +57,10 @@ which generates some costs.</p>
 <span>  discount_rate_benefit <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  discount_rate_cost <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  inflation_rate <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  real_growth_rate <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  discount_shape <span class="op">=</span> <span class="st">"exponential"</span>,</span>
 <span>  n_years_benefit <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  n_years_cost <span class="op">=</span> <span class="fl">1</span></span>
+<span>  n_years_cost <span class="op">=</span> <span class="fl">0</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -88,7 +89,18 @@ which generates some costs.</p>
 
 
 <dt id="arg-inflation-rate">inflation_rate<a class="anchor" aria-label="anchor" href="#arg-inflation-rate"></a></dt>
-<dd><p><code>Numeric value</code> between 0 and 1 referring to the annual inflation (increase of prices). Only to be entered if nominal (not real) discount rate is entered in the function. Default value = NULL (assuming no nominal discount rate).</p></dd>
+<dd><p><code>Numeric value</code> between 0 and 1 referring to the annual inflation (increase of prices).
+This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
+If this adjustment for inflation is not needed leave this argument empty
+(default value = NULL).</p></dd>
+
+
+<dt id="arg-real-growth-rate">real_growth_rate<a class="anchor" aria-label="anchor" href="#arg-real-growth-rate"></a></dt>
+<dd><p><code>Numeric value</code> between 0 and 1 referring
+to the annual real-term appreciation in the societal value of health
+(e.g., income elasticity).
+This adjusts the valuation upward to reflect rising wealth,
+independent of general price inflation.</p></dd>
 
 
 <dt id="arg-discount-shape">discount_shape<a class="anchor" aria-label="anchor" href="#arg-discount-shape"></a></dt>

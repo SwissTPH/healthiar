@@ -1948,8 +1948,9 @@ If you need the discounted values of a cost or health outcome, you can
 call the `healthiar` function
 [`discount()`](https://swisstph.github.io/healthiar/reference/discount.md).
 If you just need the discount factor, you can alternatively call
-[`get_discount_factor()`](https://swisstph.github.io/healthiar/reference/get_discount_factor.md).
-If you just need the inflation factor, you can
+[`get_discount_factor()`](https://swisstph.github.io/healthiar/reference/get_discount_factor.md)
+(entering `is_deflation = TRUE`). If you just need the inflation factor,
+you can
 [`get_inflation_factor()`](https://swisstph.github.io/healthiar/reference/get_inflation_factor.md).
 
 Different functional forms can be used to apply discounting. The most
@@ -1961,17 +1962,18 @@ heavily than outcomes further in the future (Lipman and Attema 2024)
 
 See below the equations that are used behind these functions.
 
-##### Inflation factor (without discounting)
-
-As suggested by (Brealey et al. 2023; Samuelson 1937)
-
 ``` math
-inflation\_factor = (1 + inflation\_rate)^{n\_years}
+monetized\_impact = impact \times valuation \times discount\_factor \times deflator\_factor \times real\_growth\_factor
 ```
+The arguments `discount_factor`, `deflator_factor` and
+`real_growth_factor` are only used if a value is entered in the
+arguments `discount_rate`, `ingflation_rate` and `real_growth_rate`
+respectively  
+(otherwise ignored).
 
-#### Discount factors (without inflation)
+##### Discount factor
 
-*Exponential discounting (no inflation)*
+*Exponential discounting*
 
 As suggested by Frederick, Loewenstein, and O’Donoghue (2002)
 
@@ -1979,7 +1981,7 @@ As suggested by Frederick, Loewenstein, and O’Donoghue (2002)
 discount\_factor = \frac{1}{(1 + discount\_rate)^{n\_years}}
 ```
 
-*Hyperbolic discounting Harvey (no inflation)*
+*Hyperbolic discounting Harvey*
 
 As suggested by Harvey (1986)
 
@@ -1987,7 +1989,7 @@ As suggested by Harvey (1986)
 discount\_factor = \frac{1}{(1 + n\_years)^{discount\_rate}}
 ```
 
-*Hyperbolic discounting Mazur (no inflation)*
+*Hyperbolic discounting Mazur*
 
 As suggested by Mazur (1987)
 
@@ -1995,22 +1997,41 @@ As suggested by Mazur (1987)
 discount\_factor = \frac{1}{1 + (discount\_rate \times n\_years)}
 ```
 
-#### Discount factors with inflation
+##### Deflation factor
 
-*Exponential discounting (with inflation)*
+Inflation can be handled in
+[`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md)
+by applying a deflator on future values, projected in nominal terms, in
+order to convert them into real values (i.e., express these values in
+terms of constant prices of a single base year). Therefore, if the user
+of the function provides a value for the `inflation_rate` argument, a
+deflator factor (HM Treasury 2022; Brealey et al. 2023; Samuelson 1937)
+is applied according to the following formulas
+
 ``` math
-discount\_and\_inflation\_factor = \frac{1}{((1 + discount\_rate) \times (1 + inflation\_rate))^{n\_years}}
+deflator\_factor = \frac{1}{(1 + inflation\_rate)^{n\_years}}
 ```
 
-*Hyperbolic discounting Harvey (with inflation)*
+##### Real valuation growth
+
+If a rising societal value of health over time is required in the
+monetization, unlike inflation, this represents a “real” increase in
+value. Thus, as societies become wealthier, their willingness to pay to
+avoid mortality and morbidity risks tends to rise (OECD 2012).
+
+For this use case, you have enter a value in the argument
+`real_growth_rate` in
+[`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md),
+which allows you to project this growth by applying a valuation growth
+factor to base-year unit values:
+
 ``` math
-discount\_and\_inflation\_factor = \frac{1}{(1 + n\_years)^{discount\_rate} \times (1 + inflation\_rate)^{n\_years}}
+real\_growth\_factor =(1 + real\_growth\_rate)^{n\_years}
 ```
 
-*Hyperbolic discounting Mazur (with inflation)*
-``` math
-discount\_and\_inflation\_factor = \frac{1}{(1 + (discount\_rate \times n\_years)) \times (1 + inflation\_rate)^{n\_years}}
-```
+Where $`real\_growth\_rate`$ represents the annual real growth rate in
+health valuation. This ensures that long-term environmental impacts are
+not undervalued.
 
 #### Function call
 
@@ -2574,6 +2595,10 @@ Harvey, Charles M. 1986. “Value Functions for Infinite-Period Planning.”
 *Management Science* 32 (9): 1123–39.
 <https://doi.org/10.1287/mnsc.32.9.1123>.
 
+HM Treasury. 2022. *The Green Book: Central Government Guidance on
+Appraisal and Evaluation*. London, UK: HM Treasury.
+<https://www.gov.uk/government/publications/the-green-book-appraisal-and-evaluation-in-central-goverment>.
+
 Jerrett, Michael, Richard T Burnett, Bernardo S Beckerman, Michelle C
 Turner, Daniel Krewski, George Thurston, Randall V Martin, et al. 2013.
 “Spatial Analysis of Air Pollution and Mortality in California.”
@@ -2628,6 +2653,10 @@ Murray, Christopher JL, Majid Ezzati, Alan D Lopez, Anthony Rodgers, and
 Stephen Vander Hoorn. 2003. “Comparative Risk Assessment: Conceptual
 Framework and Design.” *Epidemiology* 14 (4): 447–58.
 <https://doi.org/10.1186/1478-7954-1-1>.
+
+OECD. 2012. *Mortality Risk Valuation in Environment, Health and
+Transport Policies*. Paris: OECD Publishing.
+<https://doi.org/10.1787/9789264130807-en>.
 
 OECD. 2025. *Mortality Risk Valuation in Policy Assessment: A Global
 Meta-Analysis of Value of Statistical Life Studies*. Paris: OECD

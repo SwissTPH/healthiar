@@ -13,6 +13,7 @@ monetize(
   discount_shape = "exponential",
   n_years = NULL,
   inflation_rate = NULL,
+  real_growth_rate = NULL,
   info = NULL
 )
 ```
@@ -42,10 +43,7 @@ monetize(
 
 - discount_rate:
 
-  `Numeric value` showing the discount rate for future years. If it is a
-  nominal discount rate, no inflation is to be entered. If it is a real
-  discount rate, the result can be adjusted by entering inflation in
-  this function.
+  `Numeric value` showing the discount rate for future years.
 
 - discount_shape:
 
@@ -64,9 +62,17 @@ monetize(
 - inflation_rate:
 
   `Numeric value` between 0 and 1 referring to the annual inflation
-  (increase of prices). Only to be entered if nominal (not real)
-  discount rate is entered in the function. Default value = NULL
-  (assuming no nominal discount rate).
+  (increase of prices). This value is used to adjust monetization for
+  inflation (converting nominal into real values by appyling a
+  deflator). If this adjustment for inflation is not needed leave this
+  argument empty (default value = NULL).
+
+- real_growth_rate:
+
+  `Numeric value` between 0 and 1 referring to the annual real-term
+  appreciation in the societal value of health (e.g., income
+  elasticity). This adjusts the valuation upward to reflect rising
+  wealth, independent of general price inflation.
 
 - info:
 
@@ -108,8 +114,14 @@ elements are added to the existing output.
 **Methodology**
 
 This function monetize health impacts valuating them and applying
-discounting (Frederick et al. 2002; Harvey 1986; Mazur 1987) and/or
-inflation (Brealey et al. 2023) .
+discounting (Frederick et al. 2002; Harvey 1986; Mazur 1987) and
+considering inflation (Brealey et al. 2023) .
+
+If the monetized values require adjustment for inflation, a deflator
+based on `inflation_rate` can be applied (HM Treasury 2022) .
+
+If the monetized values require adjustment for base valuation upward, a
+factor based `valuation growth` can be applied (OECD 2012) .
 
 One of the following three discount shapes can be selected:
 
@@ -140,11 +152,20 @@ Harvey CM (1986). “Value Functions for Infinite-Period Planning.”
 *Management Science*, **32**(9), 1123–1139.
 [doi:10.1287/mnsc.32.9.1123](https://doi.org/10.1287/mnsc.32.9.1123) .  
   
+HM Treasury (2022). *The Green Book: Central Government Guidance on
+Appraisal and Evaluation*. HM Treasury, London, UK.
+<https://www.gov.uk/government/publications/the-green-book-appraisal-and-evaluation-in-central-goverment>.  
+  
 Mazur JE (1987). “An adjusting procedure for studying delayed
 reinforcement.” In Commons ML, Mazur JE, Nevin JA, Rachlin H (eds.),
 *Quantitative Analyses of Behavior: Volume V. The Effect of Delay and of
 Intervening Events on Reinforcement Value*, 55–73. Lawrence Erlbaum
-Associates, Hillsdale, NJ. ISBN 0-89859-800-1.
+Associates, Hillsdale, NJ. ISBN 0-89859-800-1.  
+  
+OECD (2012). *Mortality Risk Valuation in Environment, Health and
+Transport Policies*. OECD Publishing, Paris.
+[doi:10.1787/9789264130807-en](https://doi.org/10.1787/9789264130807-en)
+.
 
 ## See also
 

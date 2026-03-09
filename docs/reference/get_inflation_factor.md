@@ -5,7 +5,7 @@ This function calculates the inflation factor based on inflation rate.
 ## Usage
 
 ``` r
-get_inflation_factor(n_years, inflation_rate = NULL)
+get_inflation_factor(n_years, inflation_rate = NULL, is_deflation = FALSE)
 ```
 
 ## Arguments
@@ -21,9 +21,17 @@ get_inflation_factor(n_years, inflation_rate = NULL)
 - inflation_rate:
 
   `Numeric value` between 0 and 1 referring to the annual inflation
-  (increase of prices). Only to be entered if nominal (not real)
-  discount rate is entered in the function. Default value = NULL
-  (assuming no nominal discount rate).
+  (increase of prices). This value is used to adjust monetization for
+  inflation (converting nominal into real values by appyling a
+  deflator). If this adjustment for inflation is not needed leave this
+  argument empty (default value = NULL).
+
+- is_deflation:
+
+  `Boolean value` (TRUE vs. FALSE) referring to the type of inflation
+  factor. FALSE (default) means inflate present values to future nominal
+  values, while TRUE means deflate future nominal values to present real
+  values
 
 ## Value
 
