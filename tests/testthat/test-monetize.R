@@ -744,6 +744,38 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
   )
 })
 
+testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_TRUE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+
+  bestcost_pm_copd <-
+    healthiar::attribute_health(
+      exp_central = c(data$mean_concentration, data$mean_concentration+1),
+      cutoff_central = data$cut_off_value,
+      bhd_central = c(data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
+                      data$incidents_per_100_000_per_year/1E5*data$population_at_risk),
+      rr_central = data$relative_risk,
+      rr_lower = data$relative_risk_lower,
+      rr_upper = data$relative_risk_upper,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      geo_id_micro = c("city_a", "city_b"),
+      info = paste0(data$pollutant,"_", data$evaluation_name))
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        output_attribute = bestcost_pm_copd,
+        discount_shape = "exponential",
+        discount_rate = 0.03,
+        inflation_rate = 0.02,
+        n_years = 5,
+        valuation = 20
+      )$monetization_main$monetized_impact_rounded,
+    expect = c(54721, 21143, 85534, 67884, 26480, 105141) # Result on 9 March 2025 ; no comparison study
+  )
+})
+
 ### COMPARE ##########################
 
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
