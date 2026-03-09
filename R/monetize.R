@@ -488,7 +488,7 @@ monetize <- function(output_attribute = NULL,
         grouping_variables <-
           df_by_year |>
           dplyr::select(-dplyr::any_of(c("year")),
-                        -dplyr::contains("discount_factor"),
+                        -dplyr::contains("_factor"),
                         -dplyr::contains("impact")) |>
           base::names()
 
