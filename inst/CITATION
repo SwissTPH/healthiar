@@ -14,6 +14,6 @@ bibentry(
     "Andreia Novais, Maria Jose Rueda Lopez, Pham Minh Nhat, Ana Barbosa,",
     "Joao Vasco Santos, Anette Kocbach Bolling."
     ),
-  doi     = "10.5281/zenodo.18220361",
+  doi     = "10.5281/zenodo.18220360",
   url     = "https://CRAN.R-project.org/package=healthiar"
   )
