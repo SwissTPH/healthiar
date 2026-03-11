@@ -12,3 +12,5 @@
 ^pkgdown$
 ^vignettes/articles$
 ^vignettes/.quarto$
+^\.github$
+^paper$
