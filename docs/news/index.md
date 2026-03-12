@@ -1,5 +1,24 @@
 # Changelog
 
+## healthiar 0.2.4
+
+- 12 March 2026
+
+### Bug Fixes
+
+- Previously, monetize() used the argument inflation_factor for both
+  adjusting discount_rate and increasing value overtime. This has been
+  resolved by introducing a new argument called real_growth_rate.  
+  Now, inflation_rate is used exclusively for adjusting discount_rate,
+  while real_growth_rate handles value growth overtime.
+
+### Other improvements
+
+- get_discount_factor() previously had inflation_rate as argument. Now,
+  not anymore to keep different concepts separated.
+- get_inflation_factor() previously had discount_rate as argument. Now,
+  not anymore to keep different concepts separated.
+
 ## healthiar 0.2.3
 
 CRAN release: 2026-02-19

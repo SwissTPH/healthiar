@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3.1503</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,20 @@
       <small>Source: <a href="https://github.com/SwissTPH/healthiar/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.4" id="healthiar-024">healthiar 0.2.4<a class="anchor" aria-label="anchor" href="#healthiar-024"></a></h2>
+<ul><li>12 March 2026</li>
+</ul><div class="section level3">
+<h3 id="bug-fixes-0-2-4">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-4"></a></h3>
+<ul><li>Previously, monetize() used the argument inflation_factor for both adjusting discount_rate and increasing value overtime. This has been resolved by introducing a new argument called real_growth_rate.<br>
+Now, inflation_rate is used exclusively for adjusting discount_rate, while real_growth_rate handles value growth overtime.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-improvements-0-2-4">Other improvements<a class="anchor" aria-label="anchor" href="#other-improvements-0-2-4"></a></h3>
+<ul><li>get_discount_factor() previously had inflation_rate as argument. Now, not anymore to keep different concepts separated.</li>
+<li>get_inflation_factor() previously had discount_rate as argument. Now, not anymore to keep different concepts separated.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.3" id="healthiar-023">healthiar 0.2.3<a class="anchor" aria-label="anchor" href="#healthiar-023"></a></h2><p class="text-muted">CRAN release: 2026-02-19</p>
 <ul><li>19 February 2026</li>

@@ -56,7 +56,7 @@ Source:
 
 Castro A, Luyten A (2026). *healthiar: Quantifying and Monetizing Health
 Impacts Attributable to Exposure*.
-[doi:10.5281/zenodo.18220361](https://doi.org/10.5281/zenodo.18220361),
+[doi:10.5281/zenodo.18220360](https://doi.org/10.5281/zenodo.18220360),
 Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli,
 Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria
 Lepnurm, Andreia Novais, Maria Jose Rueda Lopez, Pham Minh Nhat, Ana
@@ -68,6 +68,6 @@ Barbosa, Joao Vasco Santos, Anette Kocbach Bolling.,
       author = {Alberto Castro and Axel Luyten},
       year = {2026},
       note = {Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli, Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria Lepnurm, Andreia Novais, Maria Jose Rueda Lopez, Pham Minh Nhat, Ana Barbosa, Joao Vasco Santos, Anette Kocbach Bolling.},
-      doi = {10.5281/zenodo.18220361},
+      doi = {10.5281/zenodo.18220360},
       url = {https://CRAN.R-project.org/package=healthiar},
     }
