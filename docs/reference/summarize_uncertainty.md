@@ -92,7 +92,7 @@ Rubinstein2016_book from package = 'healthiar'. Possible cause - missing
 REFERENCES.bib in package 'healthiar' or 'healthiar' not installed.  
   
 Robert CP, Casella G (2004). *Monte Carlo Statistical Methods*, Springer
-Texts in Statistics. Springer Science & Business Media.
+Texts in Statistics. Springer Science \\ Business Media.
 [doi:10.1007/978-1-4757-4145-2](https://doi.org/10.1007/978-1-4757-4145-2)
 .
 
