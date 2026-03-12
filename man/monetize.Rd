@@ -67,7 +67,7 @@ This function monetizes health impacts
 \strong{Methodology}
 
 This function monetize health impacts valuating them and
-applying discounting \insertCite{Frederick2002_jel, Harvey1986_ms, Mazur1987_book}{healthiar}
+applying discounting \insertCite{Frederick2002_jel}{healthiar}
 and considering inflation \insertCite{Brealey2023_book}{healthiar}.
 
 If the monetized values require adjustment for inflation,

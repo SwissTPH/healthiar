@@ -25,7 +25,7 @@ This function is called internally inside other \code{healthiar} functions, e.g.
 The function calculates the  population attributable fraction
 (i.e. the percent of health cases that are attributable to the exposure)
 based on the relative risk as described in the extensive existing literature
-\insertCite{WHO2003_report, Steenland2006-e, Lehtomaki_2025_eh}{healthiar}.
+\insertCite{WHO2003_report}{healthiar}.
 
 Detailed information about the methodology (including equations)
 is available in the package vignette.

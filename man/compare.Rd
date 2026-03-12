@@ -51,7 +51,7 @@ It can use two approaches:
  \item{Delta: Subtraction of health impacts in the two scenarios (two PAF)
    \insertCite{WHO2014_book}{healthiar}}
  \item{Potential impact fraction (PIF): Single PIF for both scenarios
-   \insertCite{WHO2003_report, Murray2003_spbm, Askari2020_ijph}{healthiar}}}
+   \insertCite{WHO2003_report}{healthiar}}}
 
 
 Detailed information about the methodology (including equations)

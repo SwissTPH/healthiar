@@ -330,13 +330,6 @@ available in the package vignette. More specifically, see chapters:
 
 ## References
 
-Adummy A (2026). “Some keys from package healthiar are not avalable.”
-Failed to insert reference with keys: Murray2003_e, WHO2003_report,
-Steenland2006-e, GBD2020_tl, Soares2020_report, Pozzer2023_gh,
-Lehtomaki_2025_eh, WHO2011_report from package = 'healthiar'. Possible
-cause - missing REFERENCES.bib in package 'healthiar' or 'healthiar' not
-installed.  
-  
 Murray CJ, Ezzati M, Lopez AD, Rodgers A, Hoorn SV (2003). “Comparative
 risk assessment: conceptual framework and design.” *Epidemiology*,
 **14**(4), 447-458.

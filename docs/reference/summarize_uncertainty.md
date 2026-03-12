@@ -74,9 +74,10 @@ independent random draws across variables and scenarios.
 **Methodology**
 
 This function summarizes the uncertainty of the attributable health
-impacts (i.e.a single confidence interval instead of many combinations).
-For this purpose, it applies a Monte Carlo simulation (Robert and
-Casella 2004) .
+impacts (i.e. a single confidence interval instead of many
+combinations). For this purpose, it employs a Monte Carlo simulation
+methodology (Robert and Casella 2004) and framework application
+(Rubinstein and Kroese 2016) .
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
@@ -86,15 +87,14 @@ available in the package vignette. More specifically, see chapters:
 
 ## References
 
-Adummy A (2026). “Some keys from package healthiar are not avalable.”
-Failed to insert reference with keys: Robert2004_book,
-Rubinstein2016_book from package = 'healthiar'. Possible cause - missing
-REFERENCES.bib in package 'healthiar' or 'healthiar' not installed.  
-  
 Robert CP, Casella G (2004). *Monte Carlo Statistical Methods*, Springer
-Texts in Statistics. Springer Science \\ Business Media.
+Texts in Statistics. Springer Science and Business Media.
 [doi:10.1007/978-1-4757-4145-2](https://doi.org/10.1007/978-1-4757-4145-2)
-.
+.  
+  
+Rubinstein RY, Kroese DP (2016). *Simulation and the Monte Carlo
+Method*. John Wiley and Sons.
+[doi:10.1002/9781118631980](https://doi.org/10.1002/9781118631980) .
 
 ## See also
 

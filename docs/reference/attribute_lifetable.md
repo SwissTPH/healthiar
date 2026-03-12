@@ -272,8 +272,8 @@ impact by age/year.
 ## References
 
 Miller BG, Hurley JF (2003). “Life table methods for quantitative impact
-assessments in chronic mortality.” *Journal of Epidemiology & Community
-Health*, **57**(3), 200–206. ISSN 0143-005X,
+assessments in chronic mortality.” *Journal of Epidemiology and
+Community Health*, **57**(3), 200–206. ISSN 0143-005X,
 [doi:10.1136/jech.57.3.200](https://doi.org/10.1136/jech.57.3.200) .  
   
 WHO (2020). “Health impact assessment of air pollution: AirQ+ life table
