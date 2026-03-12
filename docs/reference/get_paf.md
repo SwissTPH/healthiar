@@ -52,11 +52,6 @@ available in the package vignette. More specifically, see chapters:
 
 ## References
 
-Adummy A (2026). “Some keys from package healthiar are not avalable.”
-Failed to insert reference with keys: WHO2003_report, Steenland2006-e,
-Lehtomaki_2025_eh from package = 'healthiar'. Possible cause - missing
-REFERENCES.bib in package 'healthiar' or 'healthiar' not installed.  
-  
 WHO (2003). “Introduction and methods: Assessing the environmental
 burden of disease at national and local levels.” World Health
 Organization. <https://www.who.int/publications/i/item/9241546204>.

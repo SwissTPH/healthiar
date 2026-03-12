@@ -153,11 +153,6 @@ available in the package vignette. More specifically, see chapters:
 
 ## References
 
-Adummy A (2026). “Some keys from package healthiar are not avalable.”
-Failed to insert reference with keys: Renard2019_bmc, Otavova_2022_bmc
-from package = 'healthiar'. Possible cause - missing REFERENCES.bib in
-package 'healthiar' or 'healthiar' not installed.  
-  
 Renard F, Devleesschauwer B, Speybroeck N, Deboosere P (2019).
 “Monitoring health inequalities when the socio-economic composition
 changes: are the slope and relative indices of inequality appropriate?

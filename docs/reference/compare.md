@@ -120,12 +120,6 @@ DALY in the argument `bhd_central` and then use `compare()`
 
 ## References
 
-Adummy A (2026). “Some keys from package healthiar are not avalable.”
-Failed to insert reference with keys: WHO2014_book, WHO2003_report,
-Murray2003_spbm, Askari2020_ijph from package = 'healthiar'. Possible
-cause - missing REFERENCES.bib in package 'healthiar' or 'healthiar' not
-installed.  
-  
 WHO Regional Office for Europe (2014). *WHO Expert Meeting: Methods and
 tools for assessing the health risks of air pollution at local, national
 and international level. Meeting report; 12-13 May 2014; Bonn, Germany*.
