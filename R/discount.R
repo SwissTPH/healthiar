@@ -14,7 +14,7 @@
 #'
 #' \strong{Methodology}
 #'
-#' This function applies a discount \insertCite{Frederick2002_jel,Harvey1986_ms,Mazur1987_book}{healthiar}
+#' This function applies a discount \insertCite{Frederick2002_jel, Harvey1986_ms, Mazur1987_book}{healthiar}
 #' to attributable health impacts into the future.
 #'
 #' Burden of disease studies may be interested in calculating +

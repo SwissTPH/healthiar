@@ -314,9 +314,7 @@ relative risk or an absolute risk (depending on the health outcome).
 - Relative risk: The comparative risk assessment approach (Murray et
   al. 2003) is applied by obtaining the population attributable fraction
   (percent of cases that are attributable to the exposure) based on the
-  relative risk (WHO 2003; Steenland and Armstrong 2006; GBD 2019 Risk
-  Factors Collaborators 2020; Soares et al. 2022; Pozzer et al. 2023;
-  Lehtomäki et al. 2025) .
+  relative risk (WHO 2003) .
 
 - Absolute risk: The attributable cases are directly derived from
   population exposed (WHO 2011) .
@@ -332,42 +330,17 @@ available in the package vignette. More specifically, see chapters:
 
 ## References
 
-GBD 2019 Risk Factors Collaborators (2020). “Global burden of 87 risk
-factors in 204 countries and territories, 1990–2019.” *The Lancet*.
-[doi:10.1016/S0140-6736(20)30752-2](https://doi.org/10.1016/S0140-6736%2820%2930752-2)
-.  
-  
-Lehtomäki H, Aasvang GM, Sulo G, Denby BR, Hänninen OO, Brauer M,
-Pereira G, Dadras O, Bølling AK (2025). “Burden of disease attributable
-to PM2.5 at low exposure levels: impact of methodological choices.”
-*Environmental Health*, **25**(1), 4. ISSN 1476-069X,
-[doi:10.1186/s12940-025-01250-y](https://doi.org/10.1186/s12940-025-01250-y)
-.  
+Adummy A (2026). “Some keys from package healthiar are not avalable.”
+Failed to insert reference with keys: Murray2003_e, WHO2003_report,
+Steenland2006-e, GBD2020_tl, Soares2020_report, Pozzer2023_gh,
+Lehtomaki_2025_eh, WHO2011_report from package = 'healthiar'. Possible
+cause - missing REFERENCES.bib in package 'healthiar' or 'healthiar' not
+installed.  
   
 Murray CJ, Ezzati M, Lopez AD, Rodgers A, Hoorn SV (2003). “Comparative
 risk assessment: conceptual framework and design.” *Epidemiology*,
 **14**(4), 447-458.
 [doi:10.1186/1478-7954-1-1](https://doi.org/10.1186/1478-7954-1-1) .  
-  
-Pozzer A, Anenberg SC, Dey S, Haines A, Lelieveld J, Chowdhury S (2023).
-“Mortality Attributable to Ambient Air Pollution: A Review of Global
-Estimates.” *GeoHealth*, **7**(1), e2022GH000711.
-[doi:10.1029/2022GH000711](https://doi.org/10.1029/2022GH000711) ,
-e2022GH000711 2022GH000711,
-https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2022GH000711,
-<https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2022GH000711>.  
-  
-Soares J, González Ortiz A, Gsella A, Horálek J, Plass D, Kienzler S
-(2022). “Health risk assessment of air pollution and the impact of the
-new WHO guidelines (Eionet Report – ETC HE 2022/10).” European Topic
-Centre on Human Health and the Environment.
-[doi:10.5281/zenodo.7405988](https://doi.org/10.5281/zenodo.7405988) .  
-  
-Steenland K, Armstrong B (2006). “An overview of methods for calculating
-the burden of disease due to specific risk factors.” *Epidemiology*,
-**17**(5), 512–519.
-[doi:10.1097/01.ede.0000229155.05644.43](https://doi.org/10.1097/01.ede.0000229155.05644.43)
-.  
   
 WHO (2003). “Introduction and methods: Assessing the environmental
 burden of disease at national and local levels.” World Health

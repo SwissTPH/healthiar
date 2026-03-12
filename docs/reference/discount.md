@@ -83,8 +83,8 @@ elements are added to the existing output.
 
 **Methodology**
 
-This function applies a discount (Frederick et al. 2002; Harvey 1986;
-Mazur 1987) to attributable health impacts into the future.
+This function applies a discount (Frederick et al. 2002) to attributable
+health impacts into the future.
 
 Burden of disease studies may be interested in calculating + discounted
 health impacts over time, and these may also be used in economic
@@ -98,21 +98,16 @@ available in the package vignette. More specifically, see chapters:
 
 ## References
 
+Adummy A (2026). “Some keys from package healthiar are not avalable.”
+Failed to insert reference with keys: Frederick2002_jel, Harvey1986_ms,
+Mazur1987_book from package = 'healthiar'. Possible cause - missing
+REFERENCES.bib in package 'healthiar' or 'healthiar' not installed.  
+  
 Frederick S, Loewenstein G, O'Donoghue T (2002). “Time Discounting and
 Time Preference: A Critical Review.” *Journal of Economic Literature*,
 **40**(2), 351–401.
 [doi:10.1257/002205102320161311](https://doi.org/10.1257/002205102320161311)
-.  
-  
-Harvey CM (1986). “Value Functions for Infinite-Period Planning.”
-*Management Science*, **32**(9), 1123–1139.
-[doi:10.1287/mnsc.32.9.1123](https://doi.org/10.1287/mnsc.32.9.1123) .  
-  
-Mazur JE (1987). “An adjusting procedure for studying delayed
-reinforcement.” In Commons ML, Mazur JE, Nevin JA, Rachlin H (eds.),
-*Quantitative Analyses of Behavior: Volume V. The Effect of Delay and of
-Intervening Events on Reinforcement Value*, 55–73. Lawrence Erlbaum
-Associates, Hillsdale, NJ. ISBN 0-89859-800-1.
+.
 
 ## See also
 

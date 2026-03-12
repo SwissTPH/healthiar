@@ -79,7 +79,7 @@ in scenario 1 with scenario 2. It can use two approaches:
   (WHO Regional Office for Europe 2014)
 
 - Potential impact fraction (PIF): Single PIF for both scenarios (WHO
-  2003; Murray et al. 2003; Askari and Namayandeh 2020)
+  2003)
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
@@ -120,15 +120,11 @@ DALY in the argument `bhd_central` and then use `compare()`
 
 ## References
 
-Askari M, Namayandeh SM (2020). “The Difference between the Population
-Attributable Risk (PAR) and the Potentioal Impact Fraction (PIF).”
-*Iranian Journal of Public Health*, **49**(10), 2018–2019.
-[doi:10.18502/ijph.v49i10.4713](https://doi.org/10.18502/ijph.v49i10.4713)
-, <https://pmc.ncbi.nlm.nih.gov/articles/PMC7719653/>.  
-  
-Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
-“Comparative quantification of health risks conceptual framework and
-methodological issues.” *Popul. Health Metr.*, **1**(1), 1.  
+Adummy A (2026). “Some keys from package healthiar are not avalable.”
+Failed to insert reference with keys: WHO2014_book, WHO2003_report,
+Murray2003_spbm, Askari2020_ijph from package = 'healthiar'. Possible
+cause - missing REFERENCES.bib in package 'healthiar' or 'healthiar' not
+installed.  
   
 WHO Regional Office for Europe (2014). *WHO Expert Meeting: Methods and
 tools for assessing the health risks of air pollution at local, national

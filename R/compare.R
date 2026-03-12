@@ -17,8 +17,10 @@
 #' This function compares the attributable health impacts in scenario 1 with scenario 2.
 #' It can use two approaches:
 #' \itemize{
-#'  \item{Delta: Subtraction of health impacts in the two scenarios (two PAF) \insertCite{WHO2014_book}{healthiar}}
-#'  \item{Potential impact fraction (PIF): Single PIF for both scenarios \insertCite{WHO2003_report,Murray2003_spbm,Askari2020_ijph}{healthiar}}}
+#'  \item{Delta: Subtraction of health impacts in the two scenarios (two PAF)
+#'    \insertCite{WHO2014_book}{healthiar}}
+#'  \item{Potential impact fraction (PIF): Single PIF for both scenarios
+#'    \insertCite{WHO2003_report, Murray2003_spbm, Askari2020_ijph}{healthiar}}}
 #'
 #'
 #' Detailed information about the methodology (including equations)
