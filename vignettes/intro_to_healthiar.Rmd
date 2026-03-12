@@ -1362,7 +1362,7 @@ Two approaches can be used for the comparison of scenarios:
 
 - Delta: Subtraction of health impact in scenario 1 minus in  scenarios 2 (i.e. two PAF) [@WHO2014_book]
 
-- Population impact fraction (PIF) [@Askari2020_ijph].
+- Population impact fraction (PIF) [@WHO2003_report; @Murray2003_spbm; @Askari2020_ijph].
 
 
 Note that the PIF comparison approach assumes same baseline health data 
