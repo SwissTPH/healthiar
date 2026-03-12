@@ -114,8 +114,8 @@ elements are added to the existing output.
 **Methodology**
 
 This function monetize health impacts valuating them and applying
-discounting (Frederick et al. 2002; Harvey 1986; Mazur 1987) and
-considering inflation (Brealey et al. 2023) .
+discounting (Frederick et al. 2002) and considering inflation (Brealey
+et al. 2023) .
 
 If the monetized values require adjustment for inflation, a deflator
 based on `inflation_rate` can be applied (HM Treasury 2022) .
@@ -138,6 +138,13 @@ available in the package vignette. More specifically, see chapters:
 
 ## References
 
+Adummy A (2026). “Some keys from package healthiar are not avalable.”
+Failed to insert reference with keys: Frederick2002_jel, Harvey1986_ms,
+Mazur1987_book, Brealey2023_book, HMTreasury2022_greenbook,
+OECD2012_book, Harvey1986_ms, Mazur1987_book from package = 'healthiar'.
+Possible cause - missing REFERENCES.bib in package 'healthiar' or
+'healthiar' not installed.  
+  
 Brealey RA, Myers SC, Allen F, Benninga S, Read J (2023). *Principles of
 Corporate Finance*, 14th edition. McGraw-Hill Education, New York, NY.
 ISBN 978-1264117464.  
@@ -154,7 +161,7 @@ Harvey CM (1986). “Value Functions for Infinite-Period Planning.”
   
 HM Treasury (2022). *The Green Book: Central Government Guidance on
 Appraisal and Evaluation*. HM Treasury, London, UK.
-<https://www.gov.uk/government/publications/the-green-book-appraisal-and-evaluation-in-central-goverment>.  
+<https://www.gov.uk/government/publications/the-green-book-appraisal-and-evaluation-in-central-government>.  
   
 Mazur JE (1987). “An adjusting procedure for studying delayed
 reinforcement.” In Commons ML, Mazur JE, Nevin JA, Rachlin H (eds.),

@@ -143,8 +143,7 @@ added next to the existing attribute output.
 
 This function estimates the absolute and relative differences in
 attributable health impacts comparing study areas with different values
-for a socio-economic indicator (Renard et al. 2019; Otavova et al. 2022)
-.
+for a socio-economic indicator (Renard et al. 2019) .
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
@@ -154,12 +153,10 @@ available in the package vignette. More specifically, see chapters:
 
 ## References
 
-Otavova M, Faes C, Bouland C, De Clercq E, Vandeninden B, Eggerickx T,
-Sanderson J, Devleesschauwer B, Masquelier B (2022). “Inequalities in
-mortality associated with housing conditions in Belgium between 1991 and
-2020.” *BMC Public Health*, **22**(1), 2397. ISSN 1471-2458,
-[doi:10.1186/s12889-022-14819-w](https://doi.org/10.1186/s12889-022-14819-w)
-.  
+Adummy A (2026). “Some keys from package healthiar are not avalable.”
+Failed to insert reference with keys: Renard2019_bmc, Otavova_2022_bmc
+from package = 'healthiar'. Possible cause - missing REFERENCES.bib in
+package 'healthiar' or 'healthiar' not installed.  
   
 Renard F, Devleesschauwer B, Speybroeck N, Deboosere P (2019).
 “Monitoring health inequalities when the socio-economic composition

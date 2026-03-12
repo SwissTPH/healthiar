@@ -2597,7 +2597,7 @@ Harvey, Charles M. 1986. “Value Functions for Infinite-Period Planning.”
 
 HM Treasury. 2022. *The Green Book: Central Government Guidance on
 Appraisal and Evaluation*. London, UK: HM Treasury.
-<https://www.gov.uk/government/publications/the-green-book-appraisal-and-evaluation-in-central-goverment>.
+<https://www.gov.uk/government/publications/the-green-book-appraisal-and-evaluation-in-central-government>.
 
 Jerrett, Michael, Richard T Burnett, Bernardo S Beckerman, Michelle C
 Turner, Daniel Krewski, George Thurston, Randall V Martin, et al. 2013.
