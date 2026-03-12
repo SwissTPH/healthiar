@@ -47,8 +47,13 @@ This function calculates discounted health impacts (without valuation).
 \details{
 \strong{Methodology}
 
-This function applies a discount \insertCite{Frederick2002_jel, Harvey1986_ms, Mazur1987_book}{healthiar}
-to attributable health impacts into the future.
+This function applies a discount to attributable health impacts into the future.
+
+One of the following three discount shapes can be selected:
+\itemize{
+ \item Exponential \insertCite{Frederick2002_jel}{healthiar}
+ \item Hyperbolic as \insertCite{Harvey1986_ms;textual}{healthiar}
+ \item Hyperbolic as \insertCite{Mazur1987_book;textual}{healthiar}}
 
 Burden of disease studies may be interested in calculating +
 discounted health impacts over time,
