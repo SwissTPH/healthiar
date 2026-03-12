@@ -88,12 +88,12 @@ available in the package vignette. More specifically, see chapters:
 ## References
 
 Robert CP, Casella G (2004). *Monte Carlo Statistical Methods*, Springer
-Texts in Statistics. Springer Science \\ Business Media.
+Texts in Statistics. Springer Science and Business Media.
 [doi:10.1007/978-1-4757-4145-2](https://doi.org/10.1007/978-1-4757-4145-2)
 .  
   
 Rubinstein RY, Kroese DP (2016). *Simulation and the Monte Carlo
-Method*. John Wiley \\ Sons.
+Method*. John Wiley and Sons.
 [doi:10.1002/9781118631980](https://doi.org/10.1002/9781118631980) .
 
 ## See also

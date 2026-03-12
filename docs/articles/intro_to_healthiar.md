@@ -2629,7 +2629,7 @@ edited by Michael L. Commons, James E. Mazur, John A. Nevin, and Howard
 Rachlin, 55–73. Hillsdale, NJ: Lawrence Erlbaum Associates.
 
 Miller, B G, and J F Hurley. 2003. “Life Table Methods for Quantitative
-Impact Assessments in Chronic Mortality.” *Journal of Epidemiology &
+Impact Assessments in Chronic Mortality.” *Journal of Epidemiology and
 Community Health* 57 (3): 200–206.
 <https://doi.org/10.1136/jech.57.3.200>.
 
@@ -2682,11 +2682,11 @@ Appropriate? Results of a Simulation Study.” *BMC Public Health* 19 (1):
 662. <https://doi.org/10.1186/s12889-019-6980-1>.
 
 Robert, Christian P, and George Casella. 2004. *Monte Carlo Statistical
-Methods*. Springer Texts in Statistics. Springer Science & Business
+Methods*. Springer Texts in Statistics. Springer Science; Business
 Media. <https://doi.org/10.1007/978-1-4757-4145-2>.
 
 Rubinstein, Reuven Y., and Dirk P. Kroese. 2016. *Simulation and the
-Monte Carlo Method*. John Wiley & Sons.
+Monte Carlo Method*. John Wiley; Sons.
 <https://doi.org/10.1002/9781118631980>.
 
 Samuelson, Paul A. 1937. “A Note on Measurement of Utility.” *The Review
