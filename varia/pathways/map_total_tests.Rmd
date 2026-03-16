@@ -28,46 +28,46 @@ pacman::p_load(dplyr, tibble, stringr, purrr,ggplot2,tidyr)
 # RR
 
 ```{r RR pathways}
-files <- list.files(
+files <- base::list.files(
   path = "tests/testthat",
-  pattern = "\\.R$",      # nur R-Dateien
-  full.names = TRUE       # kompletter Pfad
+  pattern = "\\.R$",      # only R scripts
+  full.names = TRUE       
 )
 
 # Function to extract test names from a file
 extract_test_names <- function(file_path) {
   
-  file_content <- readLines(file_path)
-  file_content <- file_content[!grepl("^\\s*#", file_content)]  # remove comments
+  file_content <- base::readLines(file_path)
+  file_content <- file_content[!base::grepl("^\\s*#", file_content)]  # remove comments
   
   # Extract test_that descriptions
-  test_names <- regmatches(
+  test_names <- base::regmatches(
     file_content,
-    gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', 
+    base::gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', 
              file_content, 
              perl = TRUE)
   )
   
-  tibble(
-    file = basename(file_path),
-    test_name = unlist(test_names)
+  tibble::tibble(
+    file = base::basename(file_path),
+    test_name = base::unlist(test_names)
   )
 }
 
 # Read all files
-all_tests <- map_dfr(files, extract_test_names)
+all_tests <- purrr::map_dfr(files, extract_test_names)
 
 # Categorize tests
-results_summary <- all_tests %>%
-  mutate(
-    category = case_when(
-      str_detect(test_name, regex("results correct", ignore_case = TRUE)) ~ "results correct",
-      str_detect(test_name, regex("results the same", ignore_case = TRUE)) ~ "results the same",
+results_summary <- all_tests |>
+  dplyr::mutate(
+    category = dplyr::case_when(
+      stringr::str_detect(test_name, stringr::regex("results correct", ignore_case = TRUE)) ~ "results correct",
+      stringr::str_detect(test_name, stringr::regex("results the same", ignore_case = TRUE)) ~ "results the same",
       TRUE ~ NA_character_
     )
-  ) %>%
-  filter(!is.na(category)) %>%
-  count(file, category)
+  ) |>
+  dplyr::filter(!is.na(category)) |>
+  dplyr::count(file, category)
 
 results_summary
 ```
@@ -77,49 +77,49 @@ results_summary
 
 
 
-results_transformed <- results_summary %>%
-  group_by(file) %>%
-  summarise(
-    n_total = sum(n),
-    n_res_correct = sum(n[category == "results correct"]),
-    percent_res_correct = round(n_res_correct / n_total * 100, 1),
+results_transformed <- results_summary |>
+  dplyr::group_by(file) |>
+  dplyr::summarise(
+    n_total = base::sum(n),
+    n_res_correct = base::sum(n[category == "results correct"]),
+    percent_res_correct = base::round(n_res_correct / n_total * 100, 1),
     .groups = "drop"
   )
 
-df_plot <- results_transformed %>%
-  mutate(
+df_plot <- results_transformed |>
+  dplyr::mutate(
     n_incorrect = n_total - n_res_correct
-  ) %>%
-  select(file, n_res_correct, n_incorrect) %>%
-  pivot_longer(
+  ) |>
+  dplyr::select(file, n_res_correct, n_incorrect) |>
+  tidyr::pivot_longer(
     cols = c(n_res_correct, n_incorrect),
     names_to = "type",
     values_to = "value"
   )
 
-ggplot(df_plot, aes(x = file, y = value, fill = type)) +
-  geom_bar(stat = "identity") +
-  scale_fill_manual(
-    values = c(
+ggplot2::ggplot(df_plot, ggplot2::aes(x = file, y = value, fill = type)) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::scale_fill_manual(
+    values = base::c(
       "n_res_correct" = "darkgreen",
       "n_incorrect" = "grey"
     ),
-    labels = c(
+    labels = base::c(
       "n_res_correct" = "results correct",
       "n_incorrect" = "results the same"
     ),
     name = ""
   ) +
-  labs(
+  ggplot2::labs(
     x = "Test File",
     y = "Number of Tests",
     title = "Test Results per File"
   ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1)
+  ggplot2::theme_minimal() +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)
   )
-print(results_transformed)
+base::print(results_transformed)
 
 ```
 
@@ -134,94 +134,94 @@ print(results_transformed)
 test_folder <- "tests/testthat/"
 
 # LOAD all files
-files <- list.files(test_folder, pattern = "\\.R$", full.names = TRUE)
+files <- base::list.files(test_folder, pattern = "\\.R$", full.names = TRUE)
 
 # For-loop along single files
 for(file in files) {
-  cat("Processing file:", file, "\n")
+  base::cat("Processing file:", file, "\n")
   
-  file_content <- readLines(file)
-  file_content <- file_content[!grepl("^\\s*#", file_content)]
+  file_content <- base::readLines(file)
+  file_content <- file_content[!base::grepl("^\\s*#", file_content)]
   
   # extract names
-  test_names <- regmatches(
+  test_names <- base::regmatches(
     file_content,
-    gregexpr(
+    base::gregexpr(
       'testthat::test_that\\("\\K[^"]+(?=", \\{)',
       file_content,
       perl = TRUE
     )
   )
   
-  all_tests <- tibble(test_name = unlist(test_names))
+  all_tests <- tibble::tibble(test_name = unlist(test_names))
   
   # extract elements of the path
-  all_tests_parsed <- all_tests %>%
-    mutate(
-      category = case_when(
-        str_detect(test_name, regex("results correct", ignore_case = TRUE)) ~ "results_correct",
-        str_detect(test_name, regex("results the same", ignore_case = TRUE)) ~ "results_the_same",
+  all_tests_parsed <- all_tests |>
+    dplyr::mutate(
+      category = dplyr::case_when(
+        stringr::str_detect(test_name, stringr::regex("results correct", ignore_case = TRUE)) ~ "results_correct",
+        stringr::str_detect(test_name, stringr::regex("results the same", ignore_case = TRUE)) ~ "results_the_same",
         TRUE ~ NA_character_
       ),
-      path_elements = str_extract_all(test_name, "(?<=\\|)[^\\|]+(?=\\|)")
-    ) %>%
-    filter(!is.na(category))
+      path_elements = stringr::str_extract_all(test_name, "(?<=\\|)[^\\|]+(?=\\|)")
+    ) |>
+    dplyr::filter(!base::is.na(category))
   
   # cheg if et least two different paths
-  valid_paths <- all_tests_parsed %>%
-    filter(str_detect(test_name, "results correct|results the same")) %>%
-    pull(path_elements) %>%
-    map_chr(~ paste(.x, collapse = "|")) %>%
+  valid_paths <- all_tests_parsed |>
+    dplyr::filter(stringr::str_detect(test_name, "results correct|results the same")) |>
+    dplyr::pull(path_elements) |>
+    purrr::map_chr(~ base::paste(.x, collapse = "|")) |>
     unique()
   
-  if(length(valid_paths) < 2) {#skip if only one path
-    cat("Skipping file (not enough valid paths):", file, "\n\n")
+  if(base::length(valid_paths) < 2) {#skip if only one path
+    base::cat("Skipping file (not enough valid paths):", file, "\n\n")
     next  
   }
   
-  df_wide <- all_tests_parsed %>%
+  df_wide <- all_tests_parsed |>
     tidyr::unnest_wider(path_elements, names_sep = "_")
   
-  df_long <- df_wide %>%
-    pivot_longer(
-      cols = starts_with("path_elements_"),
+  df_long <- df_wide |>
+    tidyr::pivot_longer(
+      cols = tidyr::starts_with("path_elements_"),
       names_to = "level",
       values_to = "element"
-    ) %>%
-    filter(!is.na(element))
+    ) |>
+    filter(!base::is.na(element))
   
-  df_counts <- df_long %>%
-    group_by(level, element, category) %>%
-    summarise(n = n(), .groups = "drop")
+  df_counts <- df_long |>
+    dplyr::group_by(level, element, category) |>
+    dplyr::summarise(n = dplyr::n(), .groups = "drop")
   
-  df_counts_wide <- df_counts %>%
-    pivot_wider(
+  df_counts_wide <- df_counts |>
+    tidyr::pivot_wider(
       names_from = category,
       values_from = n,
       values_fill = 0
     )
   
   # add col if necessary 
-if(!"results_correct" %in% unique(df_counts$category)) {
+if(!"results_correct" %in% base::unique(df_counts$category)) {
   df_counts_wide$results_correct <- 0
 }
 
-if(!"results_the_same" %in% unique(df_counts$category)) {
+if(!"results_the_same" %in% base::unique(df_counts$category)) {
   df_counts_wide$results_the_same <- 0
 }
   
-  df_plot <- df_counts_wide %>%
-    select(level, element, results_correct, results_the_same) %>%
-    pivot_longer(
+  df_plot <- df_counts_wide |>
+    dplyr::select(level, element, results_correct, results_the_same) |>
+    tidyr::pivot_longer(
       cols = c(results_correct, results_the_same),
       names_to = "type",
       values_to = "value"
-    ) %>%
-    mutate(type = factor(type, levels = c("results_the_same", "results_correct")))
+    ) |>
+    dplyr::mutate(type = base::factor(type, levels = base::c("results_the_same", "results_correct")))
 
-  p <- ggplot(df_plot, aes(x = element, y = value, fill = type)) +
-    geom_bar(stat = "identity") +
-    scale_fill_manual(
+  p <- ggplot2::ggplot(df_plot, ggplot2::aes(x = element, y = value, fill = type)) +
+    ggplot2::geom_bar(stat = "identity") +
+    ggplot2::scale_fill_manual(
       values = c(
         "results_correct" = "darkgreen",
         "results_the_same" = "grey"
@@ -232,59 +232,22 @@ if(!"results_the_same" %in% unique(df_counts$category)) {
       ),
       name = ""
     ) +
-    labs(
+    ggplot2::labs(
       x = "Element",
       y = "Number of Tests",
-      title = basename(file)
+      title = base::basename(file)
     ) +
-    theme_minimal() +
-    theme(
-      axis.text.x = element_text(angle = 45, hjust = 1)
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)
     )
   
-  print(p)  
-  Sys.sleep(0.5)  # short pause to enable plot generation
+  base::print(p)  
+  base::Sys.sleep(0.5)  # short pause to enable plot generation
   
 }
 
 ```
 
-# go more into  paths
 
-```{r go more into  paths}
-# this works only for df_wide from attribute health
-#drop all colums with na
-df_clean <- df_wide %>%
-  select(where(~ !any(is.na(.))))
 
-df_addup <- df_clean %>%
-  mutate(
-    path_elements_2 = paste(path_elements_1 , path_elements_2 , sep = "|"),
-    path_elements_3 = paste(path_elements_2 , path_elements_3 , sep = "|"),
-    path_elements_4 = paste(path_elements_3 , path_elements_4 , sep = "|"),
-    path_elements_5 = paste(path_elements_4 , path_elements_5 , sep = "|"),
-    path_elements_6 = paste(path_elements_5 , path_elements_6 , sep = "|"),
-    path_elements_7 = paste(path_elements_6 , path_elements_7 , sep = "|")
-  )
-# change to long format
-df_long <- df_addup%>%
-  pivot_longer(
-    cols = starts_with("path_elements_"),
-    names_to = "level",
-    values_to = "element"
-  ) %>%
-  filter(!is.na(element))  # filter NA
-df_counts <- df_long %>%
-  group_by(level, element, category) %>%
-  summarise(n = n(), .groups = "drop")
-df_counts_wide <- df_counts %>%
-  pivot_wider(
-    names_from = category,
-    values_from = n,
-    values_fill = 0
-  )
-df_by_path <- df_counts_wide %>%
-  separate(element, into = paste0("level_split_", 1:7), sep = "\\|", fill = "right")
-
-```
-# tree
