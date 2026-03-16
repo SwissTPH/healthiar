@@ -1,5 +1,5 @@
 # QUANTITATIVE TEST ############################################################
-testthat::test_that("linear rescaling correct", {
+testthat::test_that("linear rescaling results correct", {
 
   ## exp = 10, cutoff = 5
   testthat::expect_equal(
@@ -52,7 +52,7 @@ testthat::test_that("linear rescaling correct", {
 }
 )
 
-testthat::test_that("log-linear rescaling the same", {
+testthat::test_that("log-linear rescaling results the same", {
 
   ## exp = 20, cutoff = 5
   testthat::expect_equal(
@@ -139,7 +139,7 @@ testthat::test_that("log-linear rescaling the same", {
 # )
 
 ## This example uses the adapted lin-log curve (adapted based on the on the Pozzer 2022 (http://doi.org/10.1029/2022GH000711) log-log ERF)
-testthat::test_that("linear-log rescaling the same", {
+testthat::test_that("linear-log rescaling results the same", {
 
   ## exp = 20, cutoff = 5
   testthat::expect_equal(
@@ -211,7 +211,7 @@ testthat::test_that("linear-log rescaling the same", {
 
 
 ## This example uses the log-log curve based on Pozzer 2022 (http://doi.org/10.1029/2022GH000711)
-testthat::test_that("log-log rescaling the same", {
+testthat::test_that("log-log rescaling results the same", {
 
   ## exp = 15
   ### because exp - cutoff = 15 - 5 = 10, the result matches exactly the rr value from the literature
@@ -310,7 +310,7 @@ testthat::test_that("log-log rescaling the same", {
 # }
 # )
 
-testthat::test_that("log-log rescaling the same based on Lehtomäki et al.", {
+testthat::test_that("log-log rescaling results the same based on Lehtomäki et al.", {
 
 
 data <- read.csv(testthat::test_path("data","HeliLog-logcurve.csv")) #Lehtomäki et al. 2024
