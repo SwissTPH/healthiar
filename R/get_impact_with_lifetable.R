@@ -287,15 +287,17 @@ get_impact_with_lifetable <-
         # E.g. starts with 1 and ends with 98;
         # i (index in the number of years) is used to select both the rows and the columns
 
-        for (i in 1: (n_years_projection - 1)) {
-          # Round result to avoid floating-point precision issue
-          rows <- (i + 2):(n_years_projection + 1)
-          # ENTRY POP YOA+1 <- ( ENTRY POP YOA ) * ( SURVIVAL PROBABILITY YOA )
-          entry_pop[rows, i + 1] <- base::round(entry_pop[rows - 1, i] * prob_survival[rows - 1], 10)
-          # MID-YEAR POP YOA+1 <- ( ENTRY POP YOA+1) * ( SURVIVAL PROBABILITY FROM START OF YOA+1 TO MID YEAR YOA+1)
-          midyear_pop[rows, i + 1]   <- base::round(entry_pop[rows, i + 1] * prob_survival_until_midyear[rows], 10)
-          # DEATHS IN YOA+1 <- ( ENTRY POP YOA+1 ) * (1 - SURVIVAL PROBABILITY YOA+1 )
-          deaths[rows, i + 1]    <- base::round(entry_pop[rows, i + 1] * death_prob[rows], 10)
+        if (n_years_projection > 1) {
+          for (i in 1:(n_years_projection - 1)) {
+            # Round result to avoid floating-point precision issue
+            rows <- (i + 2):(n_years_projection + 1)
+            # ENTRY POP YOA+1 <- ( ENTRY POP YOA ) * ( SURVIVAL PROBABILITY YOA )
+            entry_pop[rows, i + 1] <- base::round(entry_pop[rows - 1, i] * prob_survival[rows - 1], 10)
+            # MID-YEAR POP YOA+1 <- ( ENTRY POP YOA+1) * ( SURVIVAL PROBABILITY FROM START OF YOA+1 TO MID YEAR YOA+1)
+            midyear_pop[rows, i + 1]   <- base::round(entry_pop[rows, i + 1] * prob_survival_until_midyear[rows], 10)
+            # DEATHS IN YOA+1 <- ( ENTRY POP YOA+1 ) * (1 - SURVIVAL PROBABILITY YOA+1 )
+            deaths[rows, i + 1]    <- base::round(entry_pop[rows, i + 1] * death_prob[rows], 10)
+          }
         }
 
         # Column bin matrices to input data frame

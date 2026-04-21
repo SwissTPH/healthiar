@@ -18,6 +18,24 @@ testthat::test_that("results correct|prepare_lifetable", {
   )
 })
 
+testthat::test_that("fractional positive values work|prepare_lifetable", {
+
+  testthat::expect_no_error(
+    out <- healthiar::prepare_lifetable(
+      age_group = c(0, 2),
+      population = c(0.8, 1.6),
+      bhd = c(0.2, 0.4)
+    )
+  )
+
+  testthat::expect_equal(nrow(out), 4)
+  testthat::expect_equal(sum(out$bhd_for_attribute), 0.6, tolerance = 1e-10)
+  testthat::expect_true(all(is.finite(out$population_for_attribute)))
+  testthat::expect_true(all(is.finite(out$bhd_for_attribute)))
+  testthat::expect_true(all(out$population_for_attribute > 0))
+  testthat::expect_true(all(out$bhd_for_attribute >= 0))
+})
+
 # ERROR OR WARNING ########
 ## ERROR #########
 
@@ -60,7 +78,7 @@ testthat::test_that("error if lower than min for population|prepare_lifetable", 
         bhd = c(4727, 472, 557, 1323))$bhd_for_attribute |>
       base::round(),
     regexp =
-      "The values of population cannot be lower than 1."
+      "The values of population cannot be lower than"
   )
 })
 

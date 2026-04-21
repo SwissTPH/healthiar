@@ -117,9 +117,9 @@ prepare_lifetable <-
     # age_group 0 exists
     error_if_lower_than_min("age_group", min = 0)
     error_if_lower_than_min("fraction_lived", min = 0)
-    # population and bhd cannot be 0 (or decimals close to)
-    error_if_lower_than_min("population", min = 1)
-    error_if_lower_than_min("bhd", min = 1)
+    # population must be > 0; bhd may be 0 but not negative
+    error_if_lower_than_min("population", min = .Machine$double.eps)
+    error_if_lower_than_min("bhd", min = 0)
 
     ## Error if_higher_than_max
     error_if_higher_than_max <- function(var_name, max){

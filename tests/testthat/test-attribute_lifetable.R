@@ -512,6 +512,50 @@ testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_const
   )
 })
 
+testthat::test_that("fractional positive population and bhd_central work|attribute_lifetable", {
+
+  testthat::expect_no_error(
+    healthiar::attribute_lifetable(
+      health_outcome = "deaths",
+      approach_exposure = "constant",
+      approach_newborns = "without_newborns",
+      exp_central = 10,
+      cutoff_central = 0,
+      rr_central = 1.05,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      age_group = 0:1,
+      sex = c("male", "male"),
+      population = c(0.8, 0.6),
+      bhd_central = c(0.2, 0.1),
+      year_of_analysis = 2020,
+      min_age = 0
+    )
+  )
+})
+
+testthat::test_that("zero bhd_central with positive population works|attribute_lifetable", {
+
+  testthat::expect_no_error(
+    healthiar::attribute_lifetable(
+      health_outcome = "deaths",
+      approach_exposure = "constant",
+      approach_newborns = "without_newborns",
+      exp_central = 10,
+      cutoff_central = 0,
+      rr_central = 1.05,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      age_group = 0:1,
+      sex = c("male", "male"),
+      population = c(10, 8),
+      bhd_central = c(0, 1),
+      year_of_analysis = 2020,
+      min_age = 0
+    )
+  )
+})
+
 
 # ERROR OR WARNING ########
 ## ERROR #########
@@ -558,14 +602,13 @@ testthat::test_that("error if length of age range higher than deaths", {
 })
 
 
-testthat::test_that("error if bhd argument contains 0", {
+testthat::test_that("zero bhd argument with positive population does not error", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
 
   data[["pop"]]$number_of_deaths_male[47] <- 0 # 47 chosen randomly
 
-  ## argument deaths_male contains 0
-  testthat::expect_error(
+  testthat::expect_no_error(
     object = healthiar::attribute_lifetable(
       health_outcome = "deaths",
       approach_exposure = "constant",
@@ -584,9 +627,7 @@ testthat::test_that("error if bhd argument contains 0", {
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
                       data[["pop"]]$number_of_deaths_female),
       year_of_analysis =  data[["input"]]$start_year,
-      min_age = data[["input"]]$apply_rr_from_age),
-
-    regexp = "The values in the following arguments must be 1 or higher: bhd_central."
+      min_age = data[["input"]]$apply_rr_from_age)
   )
 
 })
@@ -622,7 +663,7 @@ testthat::test_that("error if population argument contains 0", {
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age),
 
-    regexp = "The values in the following arguments must be 1 or higher: population."
+    regexp = "must be higher than 0|population"
   )
 })
 

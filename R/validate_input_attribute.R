@@ -61,8 +61,11 @@ validate_input_attribute <-
 
     categorical_args <- base::names(options_of_categorical_args)
 
-    lifetable_args_with_values_1_or_above <-
-      c("bhd_central", "bhd_lower", "bhd_upper", "population")
+    lifetable_args_with_values_above_0 <-
+      c("population")
+
+    lifetable_args_with_values_0_or_above <-
+      c("bhd_central", "bhd_lower", "bhd_upper")
 
 
     arg_names_available <-
@@ -332,19 +335,38 @@ validate_input_attribute <-
 
     if(is_lifetable){
 
-      ### error_if_below_1 #####
+      ### error_if_not_positive #####
 
-      # Find the arguments with values <1
-      args_value_below_1 <-
-        input_args_value[lifetable_args_with_values_1_or_above] |>
-        purrr::keep(.p = ~ base::any(.x < 1)) |>
+      # Population must be > 0 in life table calculations
+      args_value_not_positive <-
+        input_args_value[lifetable_args_with_values_above_0] |>
+        purrr::keep(.p = ~ base::any(.x <= 0)) |>
         base::names()
 
 
-      if(base::length(args_value_below_1) > 0) {
+      if(base::length(args_value_not_positive) > 0) {
         base::stop(
-          base::paste0("The values in the following arguments must be 1 or higher: ",
-                       base::toString(args_value_below_1),
+          base::paste0("The values in the following arguments must be higher than 0: ",
+                       base::toString(args_value_not_positive),
+                       "."),
+          call. = FALSE
+        )
+
+      }
+
+      ### error_if_negative #####
+
+      # Baseline health data may be 0 but not negative in life table calculations
+      args_value_below_0_lifetable <-
+        input_args_value[lifetable_args_with_values_0_or_above] |>
+        purrr::keep(.p = ~ base::any(.x < 0)) |>
+        base::names()
+
+
+      if(base::length(args_value_below_0_lifetable) > 0) {
+        base::stop(
+          base::paste0("The values in the following arguments must be 0 or higher: ",
+                       base::toString(args_value_below_0_lifetable),
                        "."),
           call. = FALSE
         )
