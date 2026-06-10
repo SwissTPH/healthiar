@@ -187,7 +187,7 @@ the correctness of its results.
 
 # Research Impact Statement
 Before the GitHub repository became public, `healthiar` was first presented at 
-the scientific conference Urban Transitions in November 2024 [Castro2024]. 
+the scientific conference Urban Transitions in November 2024 [@Castro2024]. 
 After this, international experts from the European research projects 
 BEST-COST [@EC_Burden_2025] and UBD-Policy10 used `healthiar` [@EC_Urban_2025]
 for health impact quantifications of their case studies (to be published). 
