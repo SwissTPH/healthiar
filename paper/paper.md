@@ -186,25 +186,24 @@ more than 350 internal tests check the correct behavior of `healthiar`, includin
 the correctness of its results.
 
 # Research Impact Statement
-Before the GitHub repository became public, `healthiar` was first presented at 
+Still as a non-public prototype, `healthiar` was firstly presented at
 the scientific conference Urban Transitions in November 2024 [@Castro2024]. 
-After this, international experts from the European research projects 
-BEST-COST [@EC_Burden_2025] and UBD-Policy10 used `healthiar` [@EC_Urban_2025]
-for health impact quantifications of their case studies (to be published). 
-
-In September-October 2025, a few days after making the GitHub repository public, 
-we organized two international online workshops to show how to use `healthiar`. 
-In total, around 110 people participated.
-
+In September-October 2025, a few days after the public release on GitHub, 
+two international online workshops introduced `healthiar` to around 110 participants. 
 `healthiar` was published in [CRAN](https://cran.r-project.org/web/packages/healthiar/) 
-on 11 November 2025. Three months later, `healthiar` had been downloaded around 1,000 times 
-[@Csardi2026].  
+on 11 November 2025 and, eight months later, had been downloaded over 
+2,000 times [@Csardi2026].  
 
-So far, `healthiar` has been used in scientific studies to quantify 
-the prevented health impacts of air pollution reduction in Barcelona[@Cussotto2025] 
-and existing dementia cases attributable to transport noise in Europe 
-(to be published) [@Engelmann2026].
+`healthiar` has been cited in scientific studies to quantify 
+the health impacts attributable to air pollution in Barcelona[@Cussotto2025] 
+and to noise in Europe [@Engelmann2026] and Germany [walsch2026].
+The European research projects BEST-COST [@EC_Burden_2025] and 
+UBD-Policy [@EC_Urban_2025] have also adopted `healthiar`
+for health impact quantifications in their case studies, with scientific publications
+citing `healthiar` currently in preparation. 
 
+Additionally, new international research projects and existing exposure assessment tools
+have expressed interest in adopting `healthiar` to quantify health impacts.
 
 # AI usage disclosure
 We only used artificial intelligence (AI) in a few cases for code optimization 
@@ -215,8 +214,7 @@ The whole code was internally reviewed by the two main developers.
 `healthiar` has been developed under the framework of European project BEST-COST, 
 which has been funded by the European Union’s Horizon Europe program 
 under Grant Agreement No.101095408. 
-We also appreciate the feedback of all test users, 
-including partners of the European Project UBD-Policy.
+We also appreciate the feedback of all test users.
 
 # Author contributions
 AC and AL are the main authors of `healthiar` and this manuscript. 
