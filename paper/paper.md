@@ -154,7 +154,7 @@ None of these WHO-tools have an R package counterpart,
 which hinders integration into R scripts or tools.
 
 # Software design 
-The functions included in `healthiar` enable a modular workflow \autoref{fig:workflow}. 
+The functions included in `healthiar` enable a modular workflow (@fig:workflow). 
 Functions for additional analyses, such as modification of existing scenarios, 
 scenario comparisons, or multi-exposure assessments, use `healthiar` 
 outputs as input data. 
