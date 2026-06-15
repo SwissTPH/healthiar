@@ -128,14 +128,20 @@
 </h2>
 <p>We recommend frequently installing the newest <em>healthiar</em> version. Please note that <strong><code>healthiar</code> requires R version 4.3.0 or higher</strong>. There are two options to install <em>healthiar</em>:</p>
 <ol style="list-style-type: lower-alpha">
-<li><p><strong>From CRAN</strong>: Click on the <em>Packages</em> tab in RStudio and on the <em>Install</em> button. Leave the <em>Install from:</em> option set to <em>Reporsitory (CRAN)</em> and then search and select <em>healthiar</em> and finally click on <em>Install</em>, keeping <em>Install dependencies</em> activated.</p></li>
-<li><p><strong>From Github (most recent version)</strong>: Run the following commands below in RStudio to install <em>healthiar</em>:</p></li>
+<li>
+<strong>From CRAN</strong>:</li>
 </ol>
-<ul>
-<li><code>install.packages(c("knitr", "rmarkdown"))</code></li>
-<li><code>remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)</code></li>
-<li>Note: install or update all package dependencies (= other packages that are needed for <em>healthiar</em>) if you get asked to do so</li>
-</ul>
+<p>1.- Click on the <em>Packages</em> tab in RStudio and on the <em>Install</em> button.</p>
+<p>2.- Leave the <em>Install from:</em> option set to <em>Reporsitory (CRAN)</em>.</p>
+<p>3.- Search and select <em>healthiar</em>.</p>
+<p>4.- Click on <em>Install</em> keeping <em>Install dependencies</em> activated.</p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>
+<strong>From Github (most recent version)</strong>: Run the following commands below in RStudio:</li>
+</ol>
+<p>1.- Install the package <code>remotes</code> (if not already installed):<br><code>install.packages("remotes")</code></p>
+<p>2.- Install <code>healthiar</code>: <code>remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE, dependencies = TRUE)</code></p>
+<p>Note that you may be prompted to install or update additional packages dependencies required by <code>healthiar</code>.</p>
 <p><strong>After installation</strong>, do not forget to load the package by running the call <code><a href="https://swisstph.github.io/healthiar/">library(healthiar)</a></code>.</p>
 </div>
 <div class="section level2">
