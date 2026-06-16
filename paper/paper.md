@@ -135,23 +135,38 @@ and noise exposure, it can potentially be used for other exposures
 
 
 # State of the field 
-R packages similar to `healthiar` are `rhap` [@Sampedro2025] and `ithimr` [@Abbas2023]. 
-`rhap` quantifies health impacts attributable to household air pollution based on 
-predefined scenarios, while `healthiar` focuses on ambient air pollution (not indoor), 
-allowing users to enter any exposure scenario. 
+Existing R packages and tools for quantifying health impacts 
+do not fully meet the needs of 
+`healthiar` due to fundamental differences in scope and design:
 
-`ithimr` is the R package of the ITHIM (Integrated Transport and Health Impact Modelling) tool. 
-It quantifies health impacts attributable to air pollution, traffic safety and 
-physical activity resulting from changes in walking and cycling mobility. 
-Thus, the main user input data of `ithimr` is mobility-related, 
-whereas `healthiar` requires (changes in) exposure. 
+- The World Health Organization (WHO) tool AirQ+ [@Amini2024] 
+focuses on ambient air pollution, but is offline and not an R package, 
+limiting integration with programming workflows. While it partly overlaps 
+with `healthiar` (and used to validate some `healthiar` results),
+it lacks flexibility for other exposures. 
 
-The World Health Organization (WHO) tool HEAT (Health-Economic Assessment Tool 
-for walking and cycling) [@Gotschi2020] also quantifies health benefits of walking and cycling, 
-but using an online R-Shiny web application. 
-The offline WHO tool AirQ+ [@Amini2024] focuses on ambient air pollution, but not noise. 
-None of these WHO-tools have an R package counterpart, 
-which hinders integration into R scripts or tools.
+- The R package `rhap` [@Sampedro2025] targets household air pollution 
+with predefined scenarios from the Global Change Analysis Model, 
+lacking the flexibility for ambient exposures and custom scenarios offered 
+by `healthiar`.  
+
+- The R package `ithimr` [@Abbas2023], based on ITHIM 
+(Integrated Transport and Health Impact Modelling tool), and 
+the online WHO tool HEAT (Health-Economic Assessment Tool 
+for walking and cycling) [@Gotschi2020] use 
+walking and cycling data to quantify health impacts (from 
+physical activity, air pollution, and traffic crashes). Instead, 
+`healthiar` derives health impacts directly from environmental exposures, 
+enabling broader applications. 
+Additionally, HEAT (like AirQ+) lacks an R package counterpart, limiting
+integration in programming workflows.
+
+Extending these R packages and tools was impractical because it would have required 
+major architectural changes, distorting their original purpose and 
+complicating usage. 
+Thus, `healthiar` was developed as a standalone R package to provide flexibility,
+modularity, and programming integration.
+
 
 # Software design 
 The functions included in `healthiar` enable a modular workflow (@fig:workflow). 
@@ -174,7 +189,6 @@ Input data for `healthiar` functions are entered as separate arguments using
 vectors instead of within a data set/frame. This has two objectives: 
 a) to facilitate simple assessment without creating a table, and 
 b) to explicitly identify input data, avoiding mismatches.   
-
 
 The use of tidy data [@Wickham2014] is supported and encouraged by `healthiar`. 
 Thus, each row in the user data set corresponds to a unique stratification level 
