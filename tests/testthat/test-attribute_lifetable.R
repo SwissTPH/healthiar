@@ -632,13 +632,89 @@ testthat::test_that("zero bhd argument with positive population does not error",
 
 })
 
-testthat::test_that("error if population argument contains 0", {
+testthat::test_that("wholly unpopulated units are dropped before lifetable projection", {
+
+  expected <-
+    healthiar::attribute_lifetable(
+      health_outcome = "deaths",
+      approach_exposure = "constant",
+      approach_newborns = "without_newborns",
+      exp_central = 10,
+      cutoff_central = 0,
+      rr_central = 1.05,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      age_group = 0:1,
+      sex = c("male", "male"),
+      population = c(10, 8),
+      bhd_central = c(1, 1),
+      year_of_analysis = 2020,
+      min_age = 0,
+      geo_id_micro = c("a", "a"),
+      geo_id_macro = c("m", "m")
+    )
+
+  observed <-
+    healthiar::attribute_lifetable(
+      health_outcome = "deaths",
+      approach_exposure = "constant",
+      approach_newborns = "without_newborns",
+      exp_central = 10,
+      cutoff_central = 0,
+      rr_central = 1.05,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      age_group = c(0, 1, 0, 1),
+      sex = c("male", "male", "male", "male"),
+      population = c(10, 8, 0, 0),
+      bhd_central = c(1, 1, 0, 0),
+      year_of_analysis = 2020,
+      min_age = 0,
+      geo_id_micro = c("a", "a", "b", "b"),
+      geo_id_macro = c("m", "m", "m", "m")
+    )
+
+  testthat::expect_equal(
+    observed$health_main$impact,
+    expected$health_main$impact
+  )
+
+  testthat::expect_equal(
+    base::unique(observed$health_detailed$results_by_geo_id_micro$geo_id_micro),
+    "a"
+  )
+})
+
+testthat::test_that("error if population is 0 and bhd is positive", {
+
+  testthat::expect_error(
+    healthiar::attribute_lifetable(
+      health_outcome = "deaths",
+      approach_exposure = "constant",
+      approach_newborns = "without_newborns",
+      exp_central = 10,
+      cutoff_central = 0,
+      rr_central = 1.05,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      age_group = 0:1,
+      sex = c("male", "male"),
+      population = c(0, 8),
+      bhd_central = c(5, 1),
+      year_of_analysis = 2020,
+      min_age = 0),
+    regexp = "population = 0 and bhd > 0"
+  )
+})
+
+testthat::test_that("error if population argument contains internal 0 rows", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
 
   data[["pop"]]$midyear_population_male[47] <- 0 # 47 chosen randomly
+  data[["pop"]]$number_of_deaths_male[47] <- 0
 
   ## argument population contains 0
   ## argument bhd contains 0
@@ -663,7 +739,7 @@ testthat::test_that("error if population argument contains 0", {
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age),
 
-    regexp = "must be higher than 0|population"
+    regexp = "zero-population age rows inside otherwise populated units"
   )
 })
 

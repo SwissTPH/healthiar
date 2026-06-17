@@ -77,6 +77,11 @@ get_impact_with_lifetable <-
         # It is better to do it  now (before nesting tables)
         midyear_population_yoa = population)
 
+    lifetable_calculation <-
+      sanitize_lifetable_units_before_projection(
+        lifetable_calculation = lifetable_calculation
+      )
+
 
     lifetable_calculation <- lifetable_calculation |>
       # Get modification factor

@@ -61,11 +61,11 @@ validate_input_attribute <-
 
     categorical_args <- base::names(options_of_categorical_args)
 
-    lifetable_args_with_values_above_0 <-
-      c("population")
+    lifetable_args_with_values_above_0 <- character(0)
 
     lifetable_args_with_values_0_or_above <-
-      c("bhd_central", "bhd_lower", "bhd_upper")
+      c("population",
+        "bhd_central", "bhd_lower", "bhd_upper")
 
 
     arg_names_available <-
@@ -337,7 +337,7 @@ validate_input_attribute <-
 
       ### error_if_not_positive #####
 
-      # Population must be > 0 in life table calculations
+      # No life table arguments currently require values > 0 at validation stage
       args_value_not_positive <-
         input_args_value[lifetable_args_with_values_above_0] |>
         purrr::keep(.p = ~ base::any(.x <= 0)) |>
@@ -356,7 +356,8 @@ validate_input_attribute <-
 
       ### error_if_negative #####
 
-      # Baseline health data may be 0 but not negative in life table calculations
+      # Population and baseline health data may be 0 but not negative in life
+      # table calculations; structural zero-population cases are handled later
       args_value_below_0_lifetable <-
         input_args_value[lifetable_args_with_values_0_or_above] |>
         purrr::keep(.p = ~ base::any(.x < 0)) |>
