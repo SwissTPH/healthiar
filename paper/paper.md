@@ -77,7 +77,7 @@ affiliations:
    index: 6
  - name: Tervise Arengu Instituut, Estonia
    index: 7
- - name: Centre Scientifique Et Technique Du Batiment, France
+ - name: Centre Scientifique et Technique du Batiment, France
    index: 8
    
 date: 19 February 2026
@@ -104,7 +104,7 @@ practitioners quantify the (negative or positive) health impacts that are
 attributable to (no) changes in exposure to inform policy making. 
 
 The general methodology for quantifying health impacts has been documented 
-in the literature [@Lehtomaki2025]. However, studies/reports of specific assessments are not 
+in the literature [@Lehtomaki2025]. However, studies of specific assessments are not 
 always transparent or complete about the specific methods used and the assumptions made, 
 hindering reproducibility and plausibility checks. 
 Additionally, the calculation can become tedious and error-prone, 
@@ -122,16 +122,16 @@ and provides online documentation
 
 `healthiar` enables multiple calculation pathways and options. 
 Health impacts can be quantified using a) relative or absolute risk, 
-b) single or age-specific baseline health data, 
-c) fixed-shape (e.g. linear, log-linear…) or user-defined exposure-response functions, 
+b) single or sex- and age-specific baseline health data, 
+c) fixed-shape (e.g. linear, log-linear...) or user-defined exposure-response functions, 
 d) population-weighted mean or categorical exposure. 
 Additionally, `healthiar` offers the option to specify disability weight, cutoff 
 and confidence interval, stratify by socio-economic group, iterate assessments 
 across geographical units, compare scenarios, summarize uncertainty 
 using Monte Carlo simulation, monetize health impacts or consider social 
 inequalities in exposures. While `healthiar` focuses on ambient air pollution 
-and noise exposure, it can potentially be used for other exposures 
-(e.g., green spaces or chemicals). 
+and noise exposure, it can potentially be used for other environmental or 
+non-environmental exposures (e.g., green spaces, chemicals or physical activity). 
 
 
 # State of the field 
@@ -143,11 +143,11 @@ do not fully meet the needs of
 focuses on ambient air pollution, but is offline and not an R package, 
 limiting integration with programming workflows. While it partly overlaps 
 with `healthiar` (and used to validate some `healthiar` results),
-it lacks flexibility for other exposures. 
+it lacks the applicability for other exposures. 
 
 - The R package `rhap` [@Sampedro2025] targets household air pollution 
-with predefined scenarios from the Global Change Analysis Model, 
-lacking the flexibility for ambient exposures and custom scenarios offered 
+using predefined scenarios from the Global Change Analysis Model, 
+lacking the applicability for ambient exposures and custom scenarios offered 
 by `healthiar`.  
 
 - The R package `ithimr` [@Abbas2023], based on ITHIM 
@@ -157,7 +157,7 @@ for walking and cycling) [@Gotschi2020] use
 walking and cycling data to quantify health impacts (from 
 physical activity, air pollution, and traffic crashes). Instead, 
 `healthiar` derives health impacts directly from environmental exposures, 
-enabling broader applications. 
+enabling broader applications beyond transport. 
 Additionally, HEAT (like AirQ+) lacks an R package counterpart, limiting
 integration in programming workflows.
 
@@ -213,8 +213,10 @@ the package was adopted to quantify health impacts attributable to air pollution
 in case studies (publications in preparation). External 
 adoption of `healthiar` (beyond BEST-COST) further demonstrates its significance 
 as a research tool:
+
 - The European research project UBD-Policy [@EC_Urban_2025] also adopted `healthiar`
-for case studies on air pollution, e.g. in Barcelona [@Cussotto2025]. 
+for case studies on air pollution, e.g. in Barcelona [@Cussotto2025].
+
 - Other researchers deployed `healthiar` to quantify 
 health impacts attributable to noise 
 in Europe [@Engelmann2026] and Germany [walsch2026].
@@ -231,7 +233,7 @@ The whole code was internally reviewed by the two main developers.
 `healthiar` has been developed under the framework of European project BEST-COST, 
 which has been funded by the European Union’s Horizon Europe program 
 under Grant Agreement No.101095408. 
-We also appreciate the feedback of all test users.
+We also appreciate the feedback provided by all the test users.
 
 # Author contributions
 AC and AL are the main authors of `healthiar` and this manuscript. 
