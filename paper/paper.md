@@ -169,7 +169,7 @@ modularity, and programming integration.
 
 
 # Software design 
-The functions included in `healthiar` enable a modular workflow (@fig:figure_1). 
+The functions included in `healthiar` enable a modular workflow (Figure 1). 
 Functions for additional analyses, such as modification of existing scenarios, 
 scenario comparisons, or multi-exposure assessments, use `healthiar` 
 outputs as input data. 
@@ -177,6 +177,8 @@ In other cases, for instance, for monetization and social inequalities,
 the health impact can be entered either using `healthiar` outputs 
 or directly from user input. Furthermore, smaller helper functions covering preparatory steps or 
 single calculation steps are available. 
+
+![Overview of the `healthiar` functions (June 2026 snapshot; latest version on the `healthiar` website)](figure_1.png){#fig:figure_1}
 
 We refrained from providing default or background input data 
 (e.g., exposure data, exposure-response functions, or baseline health data), 
