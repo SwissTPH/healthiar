@@ -169,7 +169,7 @@ modularity, and programming integration.
 
 
 # Software design 
-The functions included in `healthiar` enable a modular workflow (@fig:workflow). 
+The functions included in `healthiar` enable a modular workflow (@fig:figure_1). 
 Functions for additional analyses, such as modification of existing scenarios, 
 scenario comparisons, or multi-exposure assessments, use `healthiar` 
 outputs as input data. 
@@ -245,5 +245,5 @@ provided feedback on the manuscript.
 AP, CB and VG are also co-authors of helper functions.
 
 # Figures
-![Overview of the `healthiar` functions (June 2026 snapshot of the cheat sheet; latest version available on the `healthiar` website)](cheatsheet_healthiar_1st_page_june_2026.png){#fig:workflow}
+![Overview of the `healthiar` functions (June 2026 snapshot of the cheat sheet; latest version available on the `healthiar` website)](figure_1.png){#fig:figure_1}
 
