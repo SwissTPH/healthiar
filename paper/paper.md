@@ -178,7 +178,7 @@ the health impact can be entered either using `healthiar` outputs
 or directly from user input. Furthermore, smaller helper functions covering preparatory steps or 
 single calculation steps are available. 
 
-![Figure 1: Overview of the `healthiar` functions (June 2026 snapshot; latest version on the `healthiar` website).](figure_1.png)
+![Overview of the `healthiar` functions (June 2026 snapshot; latest version on the `healthiar` website).](figure_1.png)
 
 We refrained from providing default or background input data 
 (e.g., exposure data, exposure-response functions, or baseline health data), 
