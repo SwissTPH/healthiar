@@ -245,5 +245,5 @@ provided feedback on the manuscript.
 AP, CB and VG are also co-authors of helper functions.
 
 # Figures
-![Overview of the `healthiar` functions (June 2026 snapshot; latest version at the [package website](https://swisstph.github.io/healthiar/))](cheatsheet_healthiar_1st_page_june_2026.png){#fig:workflow}
+![Overview of the `healthiar` functions (June 2026 snapshot of the cheat sheet; latest version available on the `healthiar` website](cheatsheet_healthiar_1st_page_june_2026.png){#fig:workflow}
 
