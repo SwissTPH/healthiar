@@ -116,9 +116,9 @@ comparability and transparency of results by using established methodology
 approved by international experts and making it publicly available. 
 The package is available on the Comprehensive R Archive Network (CRAN), 
 with a development version accessible via a public 
-[GitHub repository](https://github.com/SwissTPH/healthiar)
-and provides online documentation 
-(see [package website](https://swisstph.github.io/healthiar/)). 
+[GitHub repository](https://github.com/SwissTPH/healthiar).
+Online documentation is provided on the 
+[package website](https://swisstph.github.io/healthiar/). 
 
 `healthiar` enables multiple calculation pathways and options. 
 Health impacts can be quantified using a) relative or absolute risk, 
