@@ -246,6 +246,5 @@ The rest of the JOSS manuscript authors are contributors to `healthiar`
 provided feedback on the manuscript. 
 AP, CB and VG are also co-authors of helper functions.
 
-# Figures
-![Overview of the `healthiar` functions (June 2026 snapshot of the cheat sheet; latest version available on the `healthiar` website)](figure_1.png){#fig:figure_1}
+
 
