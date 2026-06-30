@@ -14,3 +14,4 @@
 ^vignettes/.quarto$
 ^\.github$
 ^paper$
+^\.zenodo\.json$
