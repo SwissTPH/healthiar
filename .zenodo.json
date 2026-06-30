@@ -1,0 +1,109 @@
+{
+  "title": "healthiar: Quantifying and Monetizing Health Impacts Attributable to Exposure",
+  "description": "An R package for quantifying and monetizing the burden of disease attributable to environmental exposures (such as air and noise pollution). Developed under the framework of the European Union project BEST-COST. Disclaimer: It is work in progress and the developers are not liable for any calculation errors or inaccuracies resulting from the use of this package.",
+  "license": "GPL-3.0-or-later",
+  "keywords": [
+    "R",
+    "package",
+    "environmental-health",
+    "burden-of-disease",
+    "air-pollution",
+    "noise-pollution",
+    "monetization",
+    "best-cost"
+  ],
+  "creators": [
+    {
+      "name": "Castro, Alberto",
+      "affiliation": "Swiss Tropical and Public Health Institute (SwissTPH)",
+      "orcid": "0000-0002-4665-3299"
+    },
+    {
+      "name": "Luyten, Axel",
+      "affiliation": "Swiss Tropical and Public Health Institute (SwissTPH)",
+      "orcid": "0000-0002-7005-5889"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Pauwels, Arno",
+      "type": "ProjectMember",
+      "orcid": "0000-0001-7519-8080"
+    },
+    {
+      "name": "Vazquez Fernandez, Liliana",
+      "type": "ProjectMember",
+      "orcid": "0000-0003-3778-9415"
+    },
+    {
+      "name": "Ardielli, Gianni",
+      "type": "ProjectMember",
+      "orcid": "0009-0000-3408-2217"
+    },
+    {
+      "name": "Pimenta, Iracy",
+      "type": "ProjectMember",
+      "orcid": "0000-0003-0032-1536"
+    },
+    {
+      "name": "Breitner, Susanne",
+      "type": "ProjectMember",
+      "orcid": "0000-0002-0956-6911"
+    },
+    {
+      "name": "Baravelli, Carl",
+      "type": "ProjectMember",
+      "orcid": "0000-0001-7772-5315"
+    },
+    {
+      "name": "Gorasso, Vanessa",
+      "type": "ProjectMember",
+      "orcid": "0000-0001-6884-9316"
+    },
+    {
+      "name": "Lepnurm, Maria",
+      "type": "ProjectMember",
+      "orcid": "0009-0009-4372-6227"
+    },
+    {
+      "name": "Novais, Andreia",
+      "type": "ProjectMember",
+      "orcid": "0009-0007-7775-108X"
+    },
+    {
+      "name": "Rueda Lopez, Maria Jose",
+      "type": "ProjectMember",
+      "orcid": "0000-0002-2443-1038"
+    },
+    {
+      "name": "Pham, Minh Nhat",
+      "type": "ProjectMember",
+      "orcid": "0000-0002-5972-1668"
+    },
+    {
+      "name": "Barbosa, Ana",
+      "type": "ProjectMember",
+      "orcid": "0000-0002-9623-9002"
+    },
+    {
+      "name": "Vasco Santos, Joao",
+      "type": "ProjectMember",
+      "orcid": "0000-0003-4696-1002"
+    },
+    {
+      "name": "Kocbach Bolling, Anette",
+      "type": "ProjectMember",
+      "orcid": "0000-0003-4209-7448"
+    },
+    {
+      "name": "BEST-COST Consortium",
+      "type": "ProjectMember",
+      "affiliation": "European Union Horizon Europe"
+    }
+  ],
+  "grants": [
+    {
+      "id": "101095408"
+    }
+  ]
+}
