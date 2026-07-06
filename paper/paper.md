@@ -202,7 +202,7 @@ more than 350 internal tests check the correct behavior of `healthiar`, includin
 the correctness of its results.
 
 # Research Impact Statement
-Still as a non-public prototype, `healthiar` was firstly presented at
+Still as a non-public prototype, `healthiar` was firstly presented in 2024 at
 the scientific conferences European Public Health Conference [@Luyten2024] and
 Urban Transitions [@Castro2024]. 
 In September and October 2025, shortly after the public release on GitHub, 
