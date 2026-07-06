@@ -142,12 +142,12 @@ do not fully meet the needs of
 - The World Health Organization (WHO) tool AirQ+ [@Amini2024] 
 focuses on ambient air pollution, but is offline and not an R package, 
 limiting integration with programming workflows. While it partly overlaps 
-with `healthiar` (and used to validate some `healthiar` results),
-it lacks the applicability for other exposures. 
+with `healthiar` (and was used to validate some `healthiar` results),
+it lacks applicability for other exposures. 
 
 - The R package `rhap` [@Sampedro2025] targets household air pollution 
 using predefined scenarios from the Global Change Analysis Model, 
-lacking the applicability for ambient exposures and custom scenarios offered 
+lacking applicability for ambient exposures and custom scenarios offered 
 by `healthiar`.  
 
 - The R package `ithimr` [@Abbas2023], based on ITHIM 
@@ -157,7 +157,7 @@ for walking and cycling) [@Gotschi2020] use
 walking and cycling data to quantify health impacts (from 
 physical activity, air pollution, and traffic crashes). Instead, 
 `healthiar` derives health impacts directly from environmental exposures, 
-enabling broader applications beyond transport. 
+enabling broader applications beyond transportation. 
 Additionally, HEAT (like AirQ+) lacks an R package counterpart, limiting
 integration in programming workflows.
 
@@ -246,6 +246,9 @@ The rest of the JOSS manuscript authors are contributors to `healthiar`
 (methodological advice and systematic testing) and 
 provided feedback on the manuscript. 
 AP, CB and VG are also co-authors of helper functions.
+
+
+# References
 
 
 
