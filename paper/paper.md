@@ -157,7 +157,7 @@ for walking and cycling) [@Gotschi2020] use
 walking and cycling data to quantify health impacts (from 
 physical activity, air pollution, and traffic crashes). Instead, 
 `healthiar` derives health impacts directly from environmental exposures, 
-enabling broader applications beyond transport. 
+enabling broader applications beyond transportation. 
 Additionally, HEAT (like AirQ+) lacks an R package counterpart, limiting
 integration in programming workflows.
 
