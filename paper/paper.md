@@ -142,12 +142,12 @@ do not fully meet the needs of
 - The World Health Organization (WHO) tool AirQ+ [@Amini2024] 
 focuses on ambient air pollution, but is offline and not an R package, 
 limiting integration with programming workflows. While it partly overlaps 
-it lacks the applicability for other exposures. 
 with `healthiar` (and was used to validate some `healthiar` results),
+it lacks applicability for other exposures. 
 
 - The R package `rhap` [@Sampedro2025] targets household air pollution 
 using predefined scenarios from the Global Change Analysis Model, 
-lacking the applicability for ambient exposures and custom scenarios offered 
+lacking applicability for ambient exposures and custom scenarios offered 
 by `healthiar`.  
 
 - The R package `ithimr` [@Abbas2023], based on ITHIM 
