@@ -203,8 +203,9 @@ the correctness of its results.
 
 # Research Impact Statement
 Still as a non-public prototype, `healthiar` was firstly presented at
-the scientific conference Urban Transitions in November 2024 [@Castro2024]. 
-In September-October 2025, shortly after the public release on GitHub, 
+the scientific conferences European Public Health Conference [@Luyten2024] and
+Urban Transitions [@Castro2024]. 
+In September and October 2025, shortly after the public release on GitHub, 
 two international online workshops introduced `healthiar` to around 110 participants. 
 `healthiar` was published in [CRAN](https://cran.r-project.org/web/packages/healthiar/) 
 on 11 November 2025 and, eight months later, had been downloaded over 
