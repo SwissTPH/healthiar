@@ -1,8 +1,8 @@
 @article{GBD2023,
   author = {{GBD 2023 Disease and Injury and Risk Factor Collaborators}},
-  title = {Burden of 375 diseases and injuries, risk-attributable burden of 
-  88 risk factors, and healthy life expectancy in 204 countries and territories, 
-  including 660 subnational locations, 1990--2023: 
+  title = {Burden of 375 diseases and injuries, risk-attributable burden of
+  88 risk factors, and healthy life expectancy in 204 countries and territories,
+  including 660 subnational locations, 1990--2023:
   a systematic analysis for the Global Burden of Disease Study 2023},
   journal = {The Lancet},
   year = {2025},
@@ -14,7 +14,7 @@
 
 @article{Lehtomaki2025,
   author = {Lehtomäki, H. and Aasvang, G. M. and Sulo, G. and others},
-  title = {Burden of disease attributable to PM2.5 at low exposure levels: 
+  title = {Burden of disease attributable to PM2.5 at low exposure levels:
   impact of methodological choices},
   journal = {Environ Health},
   year = {2025},
@@ -30,28 +30,34 @@
   organization = {R Foundation for Statistical Computing},
   address = {Vienna, Austria},
   year = {2023},
+  doi = {10.32614/R.manuals},
   url = {https://www.R-project.org/}
 }
 
-@misc{Sampedro2025,
+@article{Sampedro2025,
   author = {Sampedro, J. and Rodés-Bachs, C. and Smith, S. and Tomas, M. and Urrutia, I. and Van de Ven, D. J.},
-  title = {rhap},
+  title = {rhap: A tool to analyze health impacts attributable to household air pollution},
   year = {2025},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  url = {https://github.com/bc3LC/rhap}
+  publisher = {The Open Journal},
+  volume = {10},
+  number = {114},
+  pages = {8091},
+  journal = {Journal of Open Source Software},
+  doi = {10.21105/joss.08091},
+  url = {https://doi.org/10.21105/joss.08091}
 }
 
 @misc{Abbas2023,
   author = {Abbas, A. and Schroeder, A. and Gil, D. and Tatah, L. and Khreis, H. and Johnson, R.},
   title = {ithimr: Integrated Transport and Health Impact Model},
   year = {2023},
-  url = {https://ithim.github.io/ITHIM-R/}
+  url = {https://ithim.github.io/ITHIM-R/},
+  doi = {https://doi.org/10.5281/zenodo.14712046}
 }
 
 @article{Gotschi2020,
   author = {Götschi, T. and Kahlmeier, S. and Castro, A. and others},
-  title = {Integrated Impact Assessment of Active Travel: 
+  title = {Integrated Impact Assessment of Active Travel:
   Expanding the Scope of the Health Economic Assessment Tool (HEAT) for Walking and Cycling},
   journal = {Int J Environ Res Public Health},
   year = {2020},
@@ -86,29 +92,51 @@
   title = {Burden of disease based methods for estimating the socio-economic cost of environmental stressors},
   howpublished = {CORDIS},
   year = {2025},
-  url = {https://cordis.europa.eu/project/id/101095408}
+  url = {https://cordis.europa.eu/project/id/101095408},
+  doi = {10.3030/101095408}
 }
 
-@proceedings{Castro2024,
+@misc{Castro2024,
   author = {Castro, A.},
   title = {healthiar: R package to quantify and monetize the burden of disease attributable to air pollution and noise},
   year = {2024},
-  note = {Oral presentation at Urban Transitions 2024, Sitges}
+  note = {Oral presentation at the conference Urban Transitions 2024, Sitges}
 }
+
+@article{Luyten2024,
+    author = {Luyten, A. and Breitner, S. and Barbosa, A. and Kocbach Bølling, A. and Lepnurm, M. and Pauwels, A. and Rueda-López, M. J. and Castro, A.},
+    title = {Novel {R} package to quantify and monetize burden of disease attributable to air pollution and noise},
+    journal = {European Journal of Public Health},
+    volume = {34},
+    number = {Supplement 3},
+    pages = {ckae144.1559},
+    year = {2024},
+    month = {11},
+    abstract = {Ambient air pollution and noise substantially impact public health and the economy. Different methods to quantify these impacts are described in the literature.Within the European project BEST-COST (Burden of disease-based methods for estimating the socio-economic cost of environmental stressors), we aim to develop an open-source R package to quantify and monetise the disease burden attributable to air pollution and noise, including the impact of social inequalities.The developed code will allow for different calculation pathways including: single baseline health data vs. age-specific estimates from life tables; relative and absolute risk; scenario comparison based on the population attributable fraction vs. population impact fraction; single-pollutant vs. correlated exposures; and outdoor vs. indoor air pollution. Moreover, the package can digest a variety of input data formats for the exposure-response function (e.g. relative risk with fixed shape vs. user-defined function) and exposure data (e.g. population-weighted mean vs. categorical distribution, spatial data). Eligible impact metrics will include morbidity incidence and prevalence, number of deaths, years of life lost, and years lived with disability. Finally, the R package will enable quantifying social inequities (using a novel multiple deprivation index) and monetising the attributable disease burden (using a state-of-the-art approach).During development, the R package will be tested in BEST-COST case studies in 5 European countries (BE, EE, FR, NO, PT), compared with existing tools, and discussed with key users in a workshop. The final R package will be available on GitHub in 2026.This tool will allow the quantification and monetisation of the health impact of air pollution and noise. The R package will be a flexible programming resource that can be used as a standalone or combined with existing tools to build a more solid basis for evidence-based policy making.• This open-source tool will allow the quantification and monetisation of the health impact of air pollution and noise, including the impact of social inequalities.• The R package will be a flexible programming resource that can be used as a standalone or combined with existing tools to build a more solid basis for evidence-based policy making.},
+    issn = {1464-360X},
+    note = {Poster presented at the 17th European Public Health Conference, Lisbon, Portugal},
+    doi = {10.1093/eurpub/ckae144.1559},
+    url = {https://doi.org/10.1093/eurpub/ckae144.1559},
+    eprint = {https://academic.oup.com/eurpub/article-pdf/34/Supplement_3/ckae144.1559/60116903/ckae144.1559.pdf},
+}
+
+
 
 @misc{EC_Urban_2025,
   author = {{European Commission}},
   title = {The Urban Burden of Disease Estimation for Policy Making (Project 101094639)},
   howpublished = {CORDIS},
   year = {2025},
-  url = {https://cordis.europa.eu/project/id/101094639}
+  url = {https://cordis.europa.eu/project/id/101094639},
+  doi = {10.3030/101094639}
 }
 
 @manual{Csardi2026,
   author = {Csárdi, G.},
   title = {cranlogs: Download Logs from the 'RStudio' 'CRAN' Mirror},
   year = {2026},
-  url = {https://cran.r-project.org}
+  url = {https://cran.r-project.org},
+  doi = {10.32614/CRAN.package.cranlogs}
 }
 
 @article{Cussotto2025,
@@ -125,7 +153,21 @@
 @article{Engelmann2026,
   author = {Engelmann, N. and Vienneau, D. and Jiang, X. and Röösli, M.},
   title = {Transportation noise in relation to depression and dementia: A burden of disease study for Europe},
-  journal = {Scientific Article in Preparation},
+  journal = {Environmental Research},
   year = {2026},
-  note = {Expected publication 2026}
+  doi = {10.1016/j.envres.2026.125005},
+  url = {https://www.sciencedirect.com/science/article/pii/S0013935126013368}
+}
+
+@inproceedings{walsch2026,
+  author = {Walsch, K. and Lochmann, M.},
+  title = {Quantifizierung von Lärmschadenskosten - Werkzeug zur praktischen Nutzung in der Lärmaktionsplanung},
+  booktitle = {Fortschritte der Akustik - DAGA 2026},
+  year = {2026},
+  organization = {Deutsche Gesellschaft für Akustik e.V. (DEGA)},
+  address = {Berlin},
+  pages = {742},
+  publisher = {DEGA-Eigenverlag},
+  url = {https://www.daga2026.de/en/},
+  doi = {https://doi.org/10.71568/daga2026.060}
 }

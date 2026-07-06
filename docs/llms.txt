@@ -47,8 +47,8 @@ Cheatsheet](reference/figures/cheatsheet_healthiar_1st_page.png)](https://swisst
 
 ### Vignette
 
-Read the vignette (~ package manual) *intro_to_healthiar*, which you you
-can access
+Read the vignette (~ package manual) *intro_to_healthiar*, which you can
+access
 
 1.  on the [package
     website](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html)
@@ -86,23 +86,31 @@ the presentation can be found
 
 ## Installation
 
-We recommend to frequently install the newest *healthiar* version.
+We recommend frequently installing the newest *healthiar* version.
 Please note that **`healthiar` requires R version 4.3.0 or higher**.
 There are two options to install *healthiar*:
 
-1.  **From CRAN**: Click on the *Packages* tab in RStudio and on the
-    *Install* button. Leave the *Install from:* option set to
-    *Reporsitory (CRAN)* and then search and select *healthiar* and
-    finally click on *Install*, keeping *Install dependencies*
-    activated.
+1.  **From CRAN**:
+
+1.- Click on the *Packages* tab in RStudio and on the *Install* button.
+
+2.- Leave the *Install from:* option set to *Reporsitory (CRAN)*.
+
+3.- Search and select *healthiar*.
+
+4.- Click on *Install* keeping *Install dependencies* activated.
 
 2.  **From Github (most recent version)**: Run the following commands
-    below in RStudio to install *healthiar*:
+    below in RStudio:
 
-- `install.packages(c("knitr", "rmarkdown"))`
-- `remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE)`
-- Note: install or update all package dependencies (= other packages
-  that are needed for *healthiar*) if you get asked to do so
+1.- Install the package `remotes` (if not already installed):  
+`install.packages("remotes")`
+
+2.- Install `healthiar`:
+`remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE, dependencies = TRUE)`
+
+Note that you may be prompted to install or update additional packages
+dependencies required by `healthiar`.
 
 **After installation**, do not forget to load the package by running the
 call [`library(healthiar)`](https://swisstph.github.io/healthiar/).
@@ -133,18 +141,22 @@ disclaimer and terms of the licence:
     developers are not liable for the results.
 
 2.  License: Available
-    [here](https://github.com/SwissTPH/healthiar/blob/master/LICENSE.md).
+    [here](https://swisstph.github.io/healthiar/LICENSE.md).
 
-## Feedback
+## Contributions
 
-Feel free provide feedback via [GitHub
-issues](https://github.com/SwissTPH/healthiar/issues)
+We welcome your contributions! Do you want to report a bug, provide code
+or just make a question/comment? Please, read and follow the guidelines
+of our [guide for
+contributions](https://swisstph.github.io/healthiar/CONTRIBUTING.md) By
+contributing to *healthiar*, you agree to abide by our [code of
+conduct](https://swisstph.github.io/healthiar/CODE_OF_CONDUCT.md).
 
 ## Presenting *healthiar*
 
 If you would like us to present *healthiar* at a conference, lecture or
 training, please, contact us: <alberto.castrofernandez@swisstph.ch> and
-<axel.luyten@swisstph.ch>
+<axel.luyten@swisstph.ch>.
 
 ## Acknowledgements
 
