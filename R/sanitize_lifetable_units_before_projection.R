@@ -14,6 +14,7 @@
 #' @author Alberto Castro & Axel Luyten
 #'
 #' @keywords internal
+#' @noRd
 
 
 
@@ -86,8 +87,7 @@ sanitize_lifetable_units_before_projection <- function(lifetable_calculation) {
     )
   }
 
-  units_to_keep <- unit_status |>
-    dplyr::filter(!all_zero_pop_and_bhd) |>
+  units_to_keep <- unit_status[which(!unit_status[["all_zero_pop_and_bhd"]]), , drop = FALSE] |>
     dplyr::select(dplyr::all_of(grouping_cols))
 
   lifetable_calculation_filtered <-
