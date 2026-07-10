@@ -157,7 +157,7 @@ The output of the `healthiar`function `attribute_health()` and
 
 - `health_main` contains the main results
 
-- `health_detailed` contained detailed results and additional info about
+- `health_detailed` contains detailed results and additional info about
   the assessment.
 
 In other `healthiar` functions you can find a similar output structure
@@ -167,7 +167,7 @@ but using different prefixes. E.g., `social_`in `socialize()` and
 #### Access
 
 A similar structure can be found in other large functions in
-`helathiar`, e.g., `attribute_lifetable()`, `compare()`, `socialize()`
+`healthiar`, e.g., `attribute_lifetable()`, `compare()`, `socialize()`
 or `monetize()`. In some functions, different elements are available in
 the output. For instance, `attribute_lifetable()` creates additional
 output that is specific to life table calculations.
@@ -2560,7 +2560,7 @@ To run `healthiar` in Python, you need:
 ## Installation
 
 1.  Install the `healthiar` wrapper module using pip... [requires the
-    healthiar wrapper to be packaged on pypi.org -\> investigation this]
+    healthiar wrapper to be packaged on pypi.org -\> work in progress]
 
 2.  Add the path of your R installation as environment variable. In
     Python, you can do this as follows:
@@ -2576,34 +2576,98 @@ os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
 ## Usage
 
 The wrapper lets you call `healthiar` functions in usual Python syntax.
-Let's replicate the first example of a call to `attribute_health()`:
+A correct usage requires a conversion of the input and output data using
+these functions:
+
+- `py_to_r()`: To convert Python input data to the `rpy2` format
+  required by the wrapper;
+
+- `r_to_py()`: To convert the `rpy2` output back to Python.
+
+In some cases (e.g., floats and strings) the conversion from Python to
+`rpy2` object happens automatically. In other cases (e.g., tuples and
+lists) the conversion needs to be made explicit through a call to
+`py_to_r()`. The table below gives the R object class corresponding to
+each relevant Python class, and the function used for conversion in case
+this does not happen automatically.
+
+| Python type | R class | Conversion |
+|----|----|----|
+| `int` | `integer` | *automatic* |
+| `float` | `double` | *automatic* |
+| `str` | `character` | *automatic* |
+| `list`, `tuple` | `vector` | `py_to_r()` |
+| `pandas.DataFrame, pandas.Series` | `data.frame` | `py_to_r()` |
+| `function` | `function` | *use a decorator (see below)* |
+
+To illustrate a typical workflow, let's replicate the above example of a
+call to `attribute_health()` for multiple geographic units.
 
 ``` python
 import healthiar
 
-results_pm_copd = healthiar.attribute_health(
-  exp_central = 8.85, 
-  rr_central = 1.369, 
-  rr_increment = 10,  
-  erf_shape = "log_linear",
-  cutoff_central = 5,
-  bhd_central = 30747 
+results_iteration = healthiar.attribute_health(
+    # Names of Swiss cantons
+    geo_id_micro = py_to_r(["Zurich", "Basel", "Geneva", "Ticino", "Jura"]),
+    # Names of languages spoken in the selected Swiss cantons
+    geo_id_macro = py_to_r(["German","German","French","Italian","French"]),
+    rr_central = 1.369,
+    rr_increment = 10, 
+    cutoff_central = 5,
+    erf_shape = "log_linear",
+    exp_central = py_to_r([11, 11, 10, 8, 7]),
+    bhd_central = py_to_r([4000, 2500, 3000, 1500, 500])
 )
 ```
 
-The output will be an `rpy2` object. To convert the result to a regular
-Python object, pass it to the `rpy2_to_py()` function:
+The output is an `rpy2` object. The result in this format can be passed
+directly to another `healthiar` function, such as `compare()`. To
+convert the result to a regular Python object, pass it to the
+`r_to_py()` function:
 
 ``` python
-results_pm_copd_py = rpy2_to_py(results_pm_copd)
-results_pm_copd_py["health_main"].head()
+py_results_iteration = r_to_py(results_iteration)
+py_results_iteration["health_main"][["geo_id_macro", "impact_rounded", "erf_ci", "exp_ci", "bhd_ci"]].head()
 ```
 
-| geo_id_micro | erf_ci | exp_ci | bhd_ci | cutoff_ci | exp_category | sex | age_group | impact | impact_rounded | ... | pop_fraction |
-|----|----|----|----|----|----|----|----|----|----|----|----|
-| a | central | central | central | central | 1 | all | all | 3501.961853 | 3502.0 | ... | 0.113896 |
+| geo_id_macro | impact_rounded | erf_ci  | exp_ci  | bhd_ci  |
+|--------------|----------------|---------|---------|---------|
+| German       | 1116.0         | central | central | central |
+| French       | 466.0          | central | central | central |
+| Italian      | 135.0          | central | central | central |
 
-`1 rows x 24 columns`
+To pass a Python function as input to a function from `healthiar`, you
+need to wrap the `rpy2` function `rternalize()` around it using a
+decorator. Let's take the `CubicSpline()` function from `scipy` as an
+example:
+
+``` python
+from scipy.interpolate import CubicSpline
+
+## define ERF with decorator ('@')
+@ri.rternalize
+def erf_fun(x):
+    cs = CubicSpline(
+      x = [0, 5, 10, 15, 20, 25, 30, 50, 70, 90, 110],
+      y = [1.00, 1.04, 1.08, 1.12, 1.16, 1.20, 1.23, 1.35, 1.45, 1.53, 1.60]
+    )
+    return float(cs(x)[0])
+
+## pass ERF to attribute_health()
+results_pm_copd_mr_brt = healthiar.attribute_health(
+  exp_central = 8.85,
+  bhd_central = 30747,
+  cutoff_central = 0,
+  erf_eq_central = erf_fun
+)
+```
+
+To access the documentation of a `healthiar` function, use the default
+`?` method from R:
+
+``` Python
+?healthiar.attribute_health
+```
 
 ------------------------------------------------------------------------
 
