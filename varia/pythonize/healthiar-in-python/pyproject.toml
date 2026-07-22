@@ -1,0 +1,65 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "healthiar"
+dynamic = ["version"]
+description = 'Python wrapper for the healthiar R package.'
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Arno Pauwels", email = "arno.pauwels@sciensano.be" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "pandas",
+  "numpy",
+]
+
+[project.urls]
+Homepage = "https://swisstph.github.io/healthiar/index.html"
+Documentation = "https://swisstph.github.io/healthiar/reference/index.html"
+Repository = "https://github.com/SwissTPH/healthiar.git"
+Issues = "https://github.com/SwissTPH/healthiar/issues"
+
+[tool.hatch.version]
+path = "src/healthiar/__about__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/healthiar tests}"
+
+[tool.coverage.run]
+source_pkgs = ["healthiar", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/healthiar/__about__.py",
+]
+
+[tool.coverage.paths]
+healthiar = ["src/healthiar", "*/healthiar-in-python/src/healthiar"]
+tests = ["tests", "*/healthiar-in-python/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
