@@ -25,8 +25,10 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
+  "rpy2",
   "pandas",
   "numpy",
+  "pytest",
 ]
 
 [project.urls]

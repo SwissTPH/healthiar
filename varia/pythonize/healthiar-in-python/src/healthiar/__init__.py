@@ -4,6 +4,6 @@
 
 __all__ = [
     "wrapper",
-    "translation",
+    "conversion",
     "spatial"
 ]
