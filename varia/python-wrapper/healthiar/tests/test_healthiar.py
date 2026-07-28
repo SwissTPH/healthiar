@@ -28,6 +28,8 @@ terra = importr("terra")
 from importlib.resources import files
 path = files("healthiar.data")
 
+import pathlib
+
 ## Test different inputs
 def test_tuple_input():
     ## Define expected result
@@ -293,9 +295,9 @@ def test_spatial_input():
     ## Get python data
 
     ## Convert to R data
-    r_poll_grid = read_raster(path.joinpath("pm25.tif"))
-    r_pop_grid = read_raster(path.joinpath("population.tif"))
-    r_geo_units = read_vector(path.joinpath("municipalities_brussels.gpkg"), quiet = True)
+    r_poll_grid = read_raster(path.joinpath("pm25.tif").as_posix())
+    r_pop_grid = read_raster(path.joinpath("population.tif").as_posix())
+    r_geo_units = read_vector(path.joinpath("municipalities_brussels.gpkg").as_posix(), quiet = True)
 
     ## Call healthiar function
     result = healthiar.prepare_exposure(
