@@ -2548,7 +2548,8 @@ wrapper acts as a Python front-end for the `healthiar` package running
 in the R back-end. This allows you to call functions from `healthiar` as
 regular Python functions.
 
-The Python wrapper is an implementation the `rpy2` interface (link).
+The Python wrapper is an implementation of the [`rpy2`
+interface](https://rpy2.github.io/).
 
 ## Requirements
 
@@ -2559,8 +2560,11 @@ To run `healthiar` in Python, you need:
 
 ## Installation
 
-1.  Install the `healthiar` wrapper module using pip... [requires the
-    healthiar wrapper to be packaged on pypi.org -\> work in progress]
+1.  Install the `healthiar` wrapper package with `pip`:
+
+    ``` python
+    pip install healthiar
+    ```
 
 2.  Add the path of your R installation as environment variable. In
     Python, you can do this as follows:
@@ -2573,14 +2577,14 @@ os.environ['R_HOME'] = "/path/to/R/R-4.6.0"
 os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
 ```
 
-## Usage
+## Modules
 
-The wrapper lets you call `healthiar` functions in usual Python syntax.
-A correct usage requires a conversion of the input and output data using
-these functions:
+### Conversion
 
-- `py_to_r()`: To convert Python input data to the `rpy2` format
-  required by the wrapper;
+The `conversion` module contains the functions for converting input and
+output data, needed for a correct functioning of the wrapper:
+
+- `py_to_r()`: To convert Python input data to the `rpy2` format;
 
 - `r_to_py()`: To convert the `rpy2` output back to Python.
 
@@ -2588,23 +2592,28 @@ In some cases (e.g., floats and strings) the conversion from Python to
 `rpy2` object happens automatically. In other cases (e.g., tuples and
 lists) the conversion needs to be made explicit through a call to
 `py_to_r()`. The table below gives the R object class corresponding to
-each relevant Python class, and the function used for conversion in case
-this does not happen automatically.
+each relevant Python class, and indicates when to use the conversion
+function.
 
 | Python type | R class | Conversion |
 |----|----|----|
 | `int` | `integer` | *automatic* |
 | `float` | `double` | *automatic* |
 | `str` | `character` | *automatic* |
-| `list`, `tuple` | `vector` | `py_to_r()` |
-| `pandas.DataFrame, pandas.Series` | `data.frame` | `py_to_r()` |
+| `tuple`, `list` | `vector` | `py_to_r()` |
+| `pandas.DataFrame`, `pandas.Series`, `numpy.ndarray` | `data.frame` | `py_to_r()` |
 | `function` | `function` | *use a decorator (see below)* |
 
-To illustrate a typical workflow, let's replicate the above example of a
-call to `attribute_health()` for multiple geographic units.
+### Wrapper
+
+The `healthiar` module contains the wrapper itself, allowing you to call
+any function available in the R package. To illustrate a typical workflow, 
+let's replicate the above example of a call to `attribute_health()` 
+for multiple geographic units:
 
 ``` python
-import healthiar
+from healthiar.healthiar import healthiar
+from healthiar.conversion import py_to_r, r_to_py
 
 results_iteration = healthiar.attribute_health(
     # Names of Swiss cantons
@@ -2642,6 +2651,7 @@ decorator. Let's take the `CubicSpline()` function from `scipy` as an
 example:
 
 ``` python
+import rpy2.rinterface as ri
 from scipy.interpolate import CubicSpline
 
 ## define ERF with decorator ('@')
@@ -2662,10 +2672,44 @@ results_pm_copd_mr_brt = healthiar.attribute_health(
 )
 ```
 
+Note: The use of a decorator is only required when passing Python
+functions as `erf_eq_central`. Passing equations in the form of a string
+requires no conversion.
+
+### Spatial data
+
+Conversion of spatial data formats from Python (e.g., `geopandas`,
+`xarray`) to `rpy2` format is not possible. However, the module
+`spatial` contains functions to read geographic vector or raster data in way that
+is compatible with the `healthiar` function `prepare_exposure()`:
+
+``` python
+from healthiar.spatial import read_raster, read_vector
+from importlib.resources import files # to access package data files
+import pathlib # to convert Windows path to POSIX path, if running Windows
+
+path = files("healthiar.data")
+exdat_pwm_1 = read_raster(path.joinpath("pm25.tif").as_posix())
+exdat_pwm_2 = read_vector(path.joinpath("municipalities_brussels.gpkg").as_posix(), quiet = True)
+
+population = [27335, 131426, 86534, 25425, 59840, 42638, 125734, 35369, 203105, 50060, 44735, 57993, 89204, 54077, 22901, 99096, 25630, 49704, 25441]
+
+geo_id_macro = ["North", "North", "South", "South", "East", "East", "West", "East", "Center", "East", "North", "South", "South", "North", "West", "West", "West", "South", "West"]
+
+pwm = healthiar.prepare_exposure(
+  poll_grid = exdat_pwm_1, # Formal class SpatRaster,
+  geo_units = exdat_pwm_2, # sf of the geographic sub-units
+  population = py_to_r(population), # population per geographic sub-unit
+  geo_id_macro = py_to_r(geo_id_macro)
+)
+```
+
+## Documentation
+
 To access the documentation of a `healthiar` function, use the default
 `?` method from R:
 
-``` Python
+``` python
 ?healthiar.attribute_health
 ```
 
