@@ -7,5 +7,3 @@ ri.initr()
 
 ## Import healthiar
 healthiar = importr("healthiar")
-
-

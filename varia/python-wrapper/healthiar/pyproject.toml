@@ -8,10 +8,11 @@ dynamic = ["version"]
 description = 'Python wrapper for the healthiar R package.'
 readme = "README.md"
 requires-python = ">=3.8"
-license = "MIT"
+license = "GPL-3.0-only"
 keywords = []
 authors = [
   { name = "Arno Pauwels", email = "arno.pauwels@sciensano.be" },
+  { name = "Gianni Ardielli", email = "gianni.ardielli@swisstph.ch" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -28,6 +29,7 @@ dependencies = [
   "rpy2",
   "pandas",
   "numpy",
+  "scipy",
   "pytest",
 ]
 
@@ -56,8 +58,8 @@ omit = [
 ]
 
 [tool.coverage.paths]
-healthiar = ["src/healthiar", "*/healthiar-in-python/src/healthiar"]
-tests = ["tests", "*/healthiar-in-python/tests"]
+healthiar = ["src/healthiar", "*/healthiar/src/healthiar"]
+tests = ["tests", "*/healthiar/tests"]
 
 [tool.coverage.report]
 exclude_lines = [

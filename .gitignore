@@ -5,3 +5,4 @@ inst/doc
 .Rproj.user
 healthiar_0.0.4.1155.tar.gz
 .Rhistory
+*.pyc

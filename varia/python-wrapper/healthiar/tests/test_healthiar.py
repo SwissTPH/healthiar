@@ -6,7 +6,8 @@ import os
 os.environ["PATH"] = r"C:\Users\ArPa3547\AppData\Local\Programs\R\R-4.6.0\bin\x64"
 
 ## Import healthiar modules
-from healthiar.wrapper import healthiar
+import healthiar
+from healthiar.healthiar import healthiar
 from healthiar.conversion import py_to_r, r_to_py
 from healthiar.spatial import read_raster, read_vector
 
@@ -16,17 +17,16 @@ from rpy2.robjects.packages import importr
 
 ## Import other modules
 import pandas as pd
-import geopandas as gpd
-import matplotlib as plt
-import xarray as xr
-import rioxarray
-#import numpy
 import numpy as np
 from scipy import interpolate
 
 ## Import R packages
 sf = importr("sf")
 terra = importr("terra")
+
+## Set path to data
+from importlib.resources import files
+path = files("healthiar.data")
 
 ## Test different inputs
 def test_tuple_input():
@@ -212,7 +212,7 @@ def test_function_input():
     expected = [350, 267, 424, 313, 238, 379]
     
     ## Get Python data
-    data = pd.read_csv("tests/data/LMU_O3_COPD_mort_2015_2016.csv", skiprows = [1])
+    data = pd.read_csv(path.joinpath("LMU_O3_COPD_mort_2015_2016.csv"), skiprows = [1])
 
     ## Convert to R data
     @ri.rternalize
@@ -257,7 +257,7 @@ def test_function_input2():
     expected = 14136
 
     ## Get Python data
-    data = pd.read_csv("tests/data/roadnoise_ha_Lden_StavangerandVicinity.csv")
+    data = pd.read_csv(path.joinpath("roadnoise_ha_Lden_StavangerandVicinity.csv"))
     info = pd.DataFrame({
         "pollutant": ["road_noise"],
         "outcome": ["highly_annoyance"]
@@ -287,15 +287,15 @@ def test_function_input2():
 
 def test_spatial_input():
     ## Define expected result
-    expected = pd.read_csv("tests/data/exp_grid_results.csv")
+    expected = pd.read_csv(path.joinpath("exp_grid_results.csv"))
     expected = list(expected["exposure"])
 
     ## Get python data
 
     ## Convert to R data
-    r_poll_grid = read_raster("tests/data/pm25.tif")
-    r_pop_grid = read_raster("tests/data/population.tif")
-    r_geo_units = read_vector("tests/data/municipalities_brussels.gpkg", quiet = True)
+    r_poll_grid = read_raster(path.joinpath("pm25.tif"))
+    r_pop_grid = read_raster(path.joinpath("population.tif"))
+    r_geo_units = read_vector(path.joinpath("municipalities_brussels.gpkg"), quiet = True)
 
     ## Call healthiar function
     result = healthiar.prepare_exposure(
@@ -352,6 +352,3 @@ def test_output_reuse():
     
     ## Verify actual result
     assert all(actual == expected), "Test failed."
-
-
-    
