@@ -2543,24 +2543,22 @@ Visualization is out of scope of `healthiar`. You can visualize in:
 
 # Python wrapper
 
-Using `healthiar` in Python is possible with the dedicated wrapper. The
-wrapper acts as a Python front-end for the `healthiar` package running
-in the R back-end. This allows you to call functions from `healthiar` as
-regular Python functions.
+Using `healthiar` in Python is possible with the dedicated wrapper. 
+The wrapper consists of a Python program that allows you to use the
+`healthiar` R package as if it were a Python package. In technical terms,
+the Python package works by running R embedded in a Python
+process.
 
-The Python wrapper is an implementation of the [`rpy2`
+The Python wrapper for `healthiar` is an implementation of the [`rpy2`
 interface](https://rpy2.github.io/).
 
 ## Requirements
 
-To run `healthiar` in Python, you need:
-
-- Python,
-- R, with the `healthiar` package installed.
+To run `healthiar` in Python, you need R, with the `healthiar` package installed.
 
 ## Installation
 
-1.  Install the `healthiar` wrapper package with `pip`:
+1.  Install the `healthiar` Python package with `pip`:
 
     ``` python
     pip install healthiar
@@ -2569,13 +2567,13 @@ To run `healthiar` in Python, you need:
 2.  Add the path of your R installation as environment variable. In
     Python, you can do this as follows:
 
-``` python
-import os
-
-os.environ['R_HOME'] = "/path/to/R/R-4.6.0"
-# or
-os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
-```
+    ``` python
+    import os
+    
+    os.environ['R_HOME'] = "/path/to/R/R-4.6.0"
+    # or
+    os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
+    ```
 
 ## Modules
 
@@ -2596,7 +2594,7 @@ each relevant Python class, and indicates when to use the conversion
 function.
 
 | Python type | R class | Conversion |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | `int` | `integer` | *automatic* |
 | `float` | `double` | *automatic* |
 | `str` | `character` | *automatic* |
@@ -2607,9 +2605,9 @@ function.
 ### Wrapper
 
 The `healthiar` module contains the wrapper itself, allowing you to call
-any function available in the R package. To illustrate a typical workflow, 
-let's replicate the above example of a call to `attribute_health()` 
-for multiple geographic units:
+any function available in the R package. To illustrate a typical
+workflow, let's replicate the above example of a call to
+`attribute_health()` for multiple geographic units:
 
 ``` python
 from healthiar.healthiar import healthiar
@@ -2680,8 +2678,9 @@ requires no conversion.
 
 Conversion of spatial data formats from Python (e.g., `geopandas`,
 `xarray`) to `rpy2` format is not possible. However, the module
-`spatial` contains functions to read geographic vector or raster data in way that
-is compatible with the `healthiar` function `prepare_exposure()`:
+`spatial` contains functions to read geographic vector or raster data in
+way that is compatible with the `healthiar` function
+`prepare_exposure()`:
 
 ``` python
 from healthiar.spatial import read_raster, read_vector
