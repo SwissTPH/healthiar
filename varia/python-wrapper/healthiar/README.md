@@ -1,7 +1,7 @@
 # healthiar
 
-[![PyPI - Version](https://img.shields.io/pypi/v/healthiar.svg)](https://test.pypi.org/project/healthiar)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/healthiar.svg)](https://test.pypi.org/project/healthiar)
+[![PyPI - Version](https://img.shields.io/pypi/v/healthiar.svg)](https://pypi.org/project/healthiar)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/healthiar.svg)](https://pypi.org/project/healthiar)
 
 -----
 
@@ -14,11 +14,11 @@
 
 ## Requirements
 
-To use the wrapper, you need [R](https://www.r-project.org/), with the [`healthiar`](https://swisstph.github.io/healthiar/index.html) package installed.
+To use this Python package, you need [R](https://www.r-project.org/), with the [`healthiar`](https://swisstph.github.io/healthiar/index.html) package installed.
 
 ## Installation
 
-1.  Install the `healthiar` wrapper package with `pip`:
+1.  Install the `healthiar` package with `pip`:
 
     ```console
     pip install healthiar
@@ -26,13 +26,13 @@ To use the wrapper, you need [R](https://www.r-project.org/), with the [`healthi
 
 2.  Add the path of your R installation as environment variable:
 
-```console
-import os
+    ```console
+    import os
 
-os.environ['R_HOME'] = "/path/to/R/R-4.6.0"
-# or
-os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
-```
+    os.environ['R_HOME'] = "/path/to/R/R-4.6.0"
+    # or
+    os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
+    ```
 
 ## Documentation
 

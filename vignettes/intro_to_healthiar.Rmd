@@ -2541,7 +2541,7 @@ Visualization is out of scope of `healthiar`. You can visualize in:
 
 ------------------------------------------------------------------------
 
-# Python wrapper
+# Python package
 
 Using `healthiar` in Python is possible with the dedicated wrapper. 
 The wrapper consists of a Python program that allows you to use the
@@ -2554,7 +2554,7 @@ interface](https://rpy2.github.io/).
 
 ## Requirements
 
-To run `healthiar` in Python, you need R, with the `healthiar` package installed.
+To use the Python package, you need R, with the `healthiar` package installed.
 
 ## Installation
 
