@@ -159,7 +159,7 @@ attribute_mod(
 
 - min_age, max_age:
 
-  `Numberic value` specifying the minimum and maximum age for which the
+  `Numeric value` specifying the minimum and maximum age for which the
   exposure will affect the exposed population, respectively. Default
   `min_age`: 30. Default `max_age`: none. See Details for more info.
 

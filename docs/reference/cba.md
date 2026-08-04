@@ -40,7 +40,7 @@ cba(
 
 - valuation:
 
-  `Numberic value` referring to unit value of a health impact.
+  `Numeric value` referring to unit value of a health impact.
 
 - cost:
 
