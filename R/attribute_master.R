@@ -67,7 +67,7 @@
 #' \code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).
 
 #' @param min_age,max_age
-#' \code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.
+#' \code{Numeric value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.
 
 #' @param approach_exposure
 #' \code{String} specifying whether exposure is constant or only in one year. Options: \code{"single_year"} (default), \code{"constant"}.
