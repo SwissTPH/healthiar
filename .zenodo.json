@@ -1,6 +1,6 @@
 {
-  "title": "healthiar: Quantifying and Monetizing Health Impacts Attributable to Exposure",
-  "description": "An R package for quantifying and monetizing the burden of disease attributable to environmental exposures (such as air and noise pollution). Developed under the framework of the European Union project BEST-COST. Disclaimer: It is work in progress and the developers are not liable for any calculation errors or inaccuracies resulting from the use of this package.",
+  "title": "healthiar: An R package to quantify and monetize health impacts attributable to (environmental) exposure",
+  "description": "An R package for quantifying and monetizing the burden of disease attributable to environmental exposures (such as air and noise pollution). Developed under the framework of the European Union project BEST-COST.",
   "license": "GPL-3.0-or-later",
   "keywords": [
     "R",
