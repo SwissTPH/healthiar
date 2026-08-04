@@ -206,7 +206,7 @@ $$PAF = \frac{rr\_at\_exp - 1}{rr\_at\_exp }$$
 #### Scaling relative risk
 How to get this relative risk at exposure level (`rr_at_exp`)? This is normally different to the relative risk published in the epidemiological literature (`rr`) together with the (concentration/dose) `increment` that corresponds to this relative risk. The equations used for scaling relative risk depend on the chosen exposure-response function shapes:
 
-- linear [Lehtomaki_2025_eh]
+- linear [@Lehtomaki_2025_eh]
 $$RRexp = 1 + \frac{rr - 1}{increment} \times (exp - cutoff)$$
 
 - log-linear [@Lehtomaki_2025_eh]
@@ -565,7 +565,7 @@ by using a Monte Carlo simulation.
 
 #### General concepts
 A Monte Carlo simulation is a statistical method that 
-generates repeated random sampling [@Robert2004_book; @Rubinstein2016_book. 
+generates repeated random sampling [@Robert2004_book; @Rubinstein2016_book]. 
 In `healthiar`, you can use the function `summarize_uncertainty()` 
 to simulate values in the arguments with uncertainty and 
 estimate a single confidence interval in the results.
@@ -1395,7 +1395,7 @@ Where:
 * $rr\_at\_exp(x)$ = relative risk at exposure level compared to the reference level
 
 ##### Categorical Exposure Form
-If the population exposure is described as a categorical rather than continuous exposure, the integrals may be converted to sums [@WHO2003_report; Murray2003-spbm]:
+If the population exposure is described as a categorical rather than continuous exposure, the integrals may be converted to sums [@WHO2003_report; @Murray2003-spbm]:
 
 $$PIF = \frac{\sum rr\_at\_exp_{i} \times PE_{i} - \sum rr\_at\_exp_{i}PE'_{i}}{\sum rr\_at\_exp_{i}PE_{i}}$$
 
