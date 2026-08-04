@@ -1,19 +1,23 @@
-citHeader("To cite package 'healthiar' in publications use:")
+citHeader("To cite the R package 'healthiar' in publications use:")
 
 bibentry(
-  bibtype = "Manual",
-  title   = "healthiar: Quantifying and Monetizing Health Impacts Attributable to Exposure",
-  author  = as.person(c(
-    "Alberto Castro",
-    "Axel Luyten"
+  bibtype   = "Article",
+  title     = "healthiar: An R package to quantify and monetize health impacts attributable to (environmental) exposure",
+  author    = as.person(c(
+    "Alberto Castro", "Axel Luyten", "Arno Pauwels", 
+    "Liliana Vázquez Fernández", "Gianni Ardielli", "Iracy Pimenta", 
+    "Susanne Breitner", "Carl Baravelli", "Vanessa Gorasso", 
+    "Maria Lepnurm", "Andreia Novais", "María José Rueda-López", 
+    "Pham Minh Nhat", "Ana Barbosa", "João Vasco Santos", 
+    "Anette Kocbach Bølling"
   )),
-  year    = "2026",
-  note    = paste(
-    "Contributors: Arno Pauwels, Liliana Vazquez Fernandez, Gianni Ardielli,",
-    "Iracy Pimenta, Carl Baravelli, Vanessa Gorasso, Susanne Breitner, Maria Lepnurm,",
-    "Andreia Novais, Maria Jose Rueda Lopez, Pham Minh Nhat, Ana Barbosa,",
-    "Joao Vasco Santos, Anette Kocbach Bolling."
-    ),
-  doi     = "10.5281/zenodo.18220360",
-  url     = "https://CRAN.R-project.org/package=healthiar"
-  )
+  journal   = "Journal of Open Source Software",
+  year      = "2026",
+  volume    = "11",
+  number    = "123",
+  pages     = "10599",
+  doi       = "10.21105/joss.10599",
+  url       = "https://theoj.org"
+)
+
+citFooter("Note: Detailed development roles (authors vs. contributors) are listed in the package DESCRIPTION file.")
