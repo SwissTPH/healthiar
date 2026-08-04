@@ -248,7 +248,7 @@ published in the epidemiological literature (`rr`) together with the
 The equations used for scaling relative risk depend on the chosen
 exposure-response function shapes:
 
-- linear \[Lehtomaki_2025_eh\]
+- linear (Lehtomäki et al. 2025)
   ``` math
   RRexp = 1 + \frac{rr - 1}{increment} \times (exp - cutoff)
   ```
@@ -652,8 +652,8 @@ a Monte Carlo simulation.
 ##### General concepts
 
 A Monte Carlo simulation is a statistical method that generates repeated
-random sampling \[Robert and Casella (2004); Rubinstein and Kroese
-(2016). In `healthiar`, you can use the function
+random sampling (Robert and Casella 2004; Rubinstein and Kroese 2016).
+In `healthiar`, you can use the function
 [`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
 to simulate values in the arguments with uncertainty and estimate a
 single confidence interval in the results.
@@ -1585,8 +1585,8 @@ Where:
 ###### Categorical Exposure Form
 
 If the population exposure is described as a categorical rather than
-continuous exposure, the integrals may be converted to sums \[WHO
-(2003); Murray2003-spbm\]:
+continuous exposure, the integrals may be converted to sums (WHO 2003;
+**Murray2003-spbm?**):
 
 ``` math
 PIF = \frac{\sum rr\_at\_exp_{i} \times PE_{i} - \sum rr\_at\_exp_{i}PE'_{i}}{\sum rr\_at\_exp_{i}PE_{i}}
