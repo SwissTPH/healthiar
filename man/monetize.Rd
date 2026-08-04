@@ -19,9 +19,9 @@ monetize(
 \arguments{
 \item{output_attribute}{\code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()} or \code{healthiar::compare()} as results.}
 
-\item{impact}{\code{Numberic value} referring to the health impacts to be monetized (without attribute function). If a \code{Numberic vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.}
+\item{impact}{\code{Numeric value} referring to the health impacts to be monetized (without attribute function). If a \code{Numeric vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.}
 
-\item{valuation}{\code{Numberic value} referring to unit value of a health impact.}
+\item{valuation}{\code{Numeric value} referring to unit value of a health impact.}
 
 \item{discount_rate}{\code{Numeric value} showing the discount rate for future years.}
 

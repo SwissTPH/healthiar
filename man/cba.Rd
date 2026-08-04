@@ -23,7 +23,7 @@ cba(
 
 \item{impact_benefit}{\code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure.}
 
-\item{valuation}{\code{Numberic value} referring to unit value of a health impact.}
+\item{valuation}{\code{Numeric value} referring to unit value of a health impact.}
 
 \item{cost}{\code{Numeric value} referring to the investment cost to achieve the reduction of exposure.}
 

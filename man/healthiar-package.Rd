@@ -31,7 +31,7 @@ Authors:
 Other contributors:
 \itemize{
   \item Arno Pauwels (\href{https://orcid.org/0000-0001-7519-8080}{ORCID}) [contributor]
-  \item Liliana Vazquez Fernandez (\href{https://orcid.org/0000-0003-3778-9415}{ORCID}) [contributor]
+  \item Liliana Vazquez Fernández (\href{https://orcid.org/0000-0003-3778-9415}{ORCID}) [contributor]
   \item Gianni Ardielli (\href{https://orcid.org/0009-0000-3408-2217}{ORCID}) [contributor]
   \item Iracy Pimenta (\href{https://orcid.org/0000-0003-0032-1536}{ORCID}) [contributor]
   \item Susanne Breitner (\href{https://orcid.org/0000-0002-0956-6911}{ORCID}) [contributor]
@@ -39,11 +39,11 @@ Other contributors:
   \item Vanessa Gorasso (\href{https://orcid.org/0000-0001-6884-9316}{ORCID}) [contributor]
   \item Maria Lepnurm (\href{https://orcid.org/0009-0009-4372-6227}{ORCID}) [contributor]
   \item Andreia Novais (\href{https://orcid.org/0009-0007-7775-108X}{ORCID}) [contributor]
-  \item Maria Jose Rueda Lopez (\href{https://orcid.org/0000-0002-2443-1038}{ORCID}) [contributor]
+  \item María José Rueda-López (\href{https://orcid.org/0000-0002-2443-1038}{ORCID}) [contributor]
   \item Minh Nhat Pham (\href{https://orcid.org/0000-0002-5972-1668}{ORCID}) [contributor]
   \item Ana Barbosa (\href{https://orcid.org/0000-0002-9623-9002}{ORCID}) [contributor]
-  \item Joao Vasco Santos (\href{https://orcid.org/0000-0003-4696-1002}{ORCID}) [contributor]
-  \item Anette Kocbach Bolling (\href{https://orcid.org/0000-0003-4209-7448}{ORCID}) [contributor]
+  \item João Vasco Santos (\href{https://orcid.org/0000-0003-4696-1002}{ORCID}) [contributor]
+  \item Anette Kocbach Bølling (\href{https://orcid.org/0000-0003-4209-7448}{ORCID}) [contributor]
 }
 
 }
