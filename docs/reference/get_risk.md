@@ -122,6 +122,7 @@ Alberto Castro & Axel Luyten
 ## Examples
 
 ``` r
+
 # Goal: scale relative risk to observed exposure level
 get_risk(
   rr = 1.05,

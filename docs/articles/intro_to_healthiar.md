@@ -54,6 +54,7 @@ Depending on the function argument, you will need to enter numeric or
 character values.
 
 ``` r
+
 results_pm_copd <- attribute_health(
   exp_central = 8.85, 
   rr_central = 1.369, 
@@ -77,6 +78,7 @@ easily provide input data to the function argument using the `$`
 operator.
 
 ``` r
+
 results_pm_copd <- attribute_health(
   erf_shape = "log_linear",
   rr_central = exdat_pm$relative_risk, 
@@ -283,6 +285,7 @@ the Teaching group in EBM in 2022 for hazard ratios
 #### Function call
 
 ``` r
+
 results_pm_copd <- attribute_health(
   approach_risk = "relative_risk", # If you do not call this argument, "relative_risk" will be assigned by default.
   erf_shape = "log_linear",
@@ -297,6 +300,7 @@ results_pm_copd <- attribute_health(
 #### Main results
 
 ``` r
+
 results_pm_copd$health_main
 #> # A tibble: 1 × 24
 #>   geo_id_micro erf_ci  exp_ci  bhd_ci  cutoff_ci exp_category sex   age_group
@@ -316,6 +320,7 @@ the final results in different formats.
 Let’s zoom in on some relevant aspects.
 
 ``` r
+
 results_pm_copd$health_main |> 
   dplyr::select(exp, bhd, rr, erf_ci, pop_fraction, impact_rounded) |> 
   knitr::kable() # For formatting reasons only: prints tibble in nice layout
@@ -371,6 +376,7 @@ Where:
 #### Function call
 
 ``` r
+
 results_noise_ha <- attribute_health(
   approach_risk = "absolute_risk", # default is "relative_risk"
   exp_central = c(57.5, 62.5, 67.5, 72.5, 77.5), # mean of the exposure categories
@@ -391,6 +397,7 @@ section on user-defined ERF).
 #### Results per noise exposure band
 
 ``` r
+
 results_noise_ha$health_detailed$results_raw
 ```
 
@@ -412,6 +419,7 @@ an element-wise maximum is required (the output will be a vector), while
 maximum for the entire vector. For example:
 
 ``` r
+
 erf_eq_central <- 
   "exp(0.2969*log((pmax(0,c-2.4)/1.9+1))/(1+exp(-(pmax(0,c-2.4)-12)/40.2)))"  
 ```
@@ -422,6 +430,7 @@ Alternatively, it’s also possible to only assess the absolute risk
 impacts for one exposure category (e.g., a single noise exposure band).
 
 ``` r
+
 results_noise_ha <- attribute_health(
   approach_risk = "absolute_risk",
   exp_central = 57.5,
@@ -458,6 +467,7 @@ vector or a single values (which will be recycled to match the length of
 the other input vectors).
 
 ``` r
+
 results_iteration <- attribute_health(
     # Names of Swiss cantons
     geo_id_micro = c("Zurich", "Basel", "Geneva", "Ticino", "Jura"),
@@ -517,12 +527,14 @@ rural and urban areas.
 #### Function call
 
 ``` r
+
 data <- exdat_noise |> 
   ## Filter for urban and rural regions
   dplyr::filter(region == "urban" | region == "rural")
 ```
 
 ``` r
+
 results_iteration_ar <- attribute_health( 
     # Both the rural and urban areas belong to the higher-level "total" region
     geo_id_macro = "total",
@@ -576,6 +588,7 @@ data.
 #### Function call
 
 ``` r
+
 results_pm_copd <- attribute_health(
     erf_shape = "log_linear",
     rr_central = 1.369, 
@@ -706,6 +719,7 @@ uses n_sim = 100 for brevity.
 #### Function call
 
 ``` r
+
 results_pm_copd_summarized <- 
   summarize_uncertainty(
     output_attribute = results_pm_copd,
@@ -771,6 +785,7 @@ input, so we use an auxiliary function
 the points on the ERF into type `function`.
 
 ``` r
+
 results_pm_copd_mr_brt <- attribute_health(
   exp_central = 8.85,
   bhd_central = 30747,
@@ -811,6 +826,7 @@ available under `health_detailed` in the sub-folder
 `results_by_age_group`.
 
 ``` r
+
 results_age_group <- attribute_health(
         approach_risk = "relative_risk",
         age = c("below_65", "65_plus"),
@@ -826,6 +842,7 @@ results_age_group <- attribute_health(
 #### Results by age group
 
 ``` r
+
 results_age_group$health_detailed$results_by_age_group |> 
   dplyr::select(age_group, impact_rounded, exp, bhd) |> 
   knitr::kable()
@@ -848,6 +865,7 @@ country *by sex*.
 The baseline health data (and possibly exposure) must be entered by sex.
 
 ``` r
+
 results_sex <- attribute_health(
         approach_risk = "relative_risk",
         sex = c("female", "male"),
@@ -866,6 +884,7 @@ If the `sex` argument was specified, sex-specific results are available
 under `health_detailed` in the sub-folder `results_by_sex`.
 
 ``` r
+
 results_sex$health_detailed$results_by_sex |> 
   dplyr::select(sex, impact_rounded, exp, bhd) |> 
   knitr::kable()
@@ -893,6 +912,7 @@ In a second step one can group the results based on one or more columns
 and so summarize the results by the preferred sub-groups.
 
 ``` r
+
 output_attribute <- healthiar::attribute_health(
     rr_central = 1.063,
     rr_increment = 10,
@@ -915,6 +935,7 @@ output_attribute <- healthiar::attribute_health(
 #### Results by other sub-group
 
 ``` r
+
 output_stratified <- output_attribute$health_detailed$results_raw |>
       dplyr::group_by(info_column_1) |>
       dplyr::summarize(mean_impact = mean(impact))|>
@@ -933,6 +954,7 @@ and additional sub-group e.g. education level*.
 #### Function call
 
 ``` r
+
 output_attribute <- healthiar::attribute_health(
     rr_central = 1.063,
     rr_increment = 10,
@@ -953,6 +975,7 @@ output_attribute <- healthiar::attribute_health(
 #### Results by all sub-groups
 
 ``` r
+
 output_stratified <- output_attribute$health_detailed$results_raw |>
       dplyr::group_by(info_column_1) |>
       dplyr::summarize(mean_impact = mean(impact))|>
@@ -994,7 +1017,7 @@ groups (e.g., 5-year data: 0-4 years old, 5-9 years old, …). What to do?
 The life table methodology of
 [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
 follows that of the WHO tool AirQ+ (WHO 2020), which is described in
-more detail by B. G. Miller and Hurley (2003).
+more detail by Miller and Hurley (2003).
 
 In short, two scenarios are compared:
 
@@ -1011,8 +1034,8 @@ Third, by subtracting the populations in the unexposed scenario from the
 populations in the exposed scenario the premature deaths/years of life
 lost attributable to the exposure are determined.
 
-An expansive life table case study for is available in a report of Brian
-G. Miller (2010).
+An expansive life table case study for is available in a report of
+Miller (2010).
 
 ##### Determination of populations in the (first) year of analysis
 
@@ -1149,6 +1172,7 @@ combined with life table input data to determine YLL attributable to an
 environmental stressor.
 
 ``` r
+
 results_pm_yll <- attribute_lifetable(
   year_of_analysis = 2019, 
   health_outcome = "yll",
@@ -1216,6 +1240,7 @@ available.
 *NOTE*: only a selection of years is shown.
 
 ``` r
+
 results_pm_yll$health_detailed$results_raw |>
   dplyr::summarize(
     .by = year, 
@@ -1238,6 +1263,7 @@ results_pm_yll$health_detailed$results_raw |>
 ```
 
 ``` r
+
 results_pm_yll$health_detailed$results_raw |>
   dplyr::summarize(
     .by = year, 
@@ -1319,6 +1345,7 @@ See example on YLL for additional info on
 calculations and its output.
 
 ``` r
+
 results_pm_deaths <- attribute_lifetable(
   health_outcome = "deaths",
   year_of_analysis = 2019,
@@ -1397,6 +1424,7 @@ incidence-based approach (Kim et al. 2022).
 #### Function call
 
 ``` r
+
 results_pm_copd_yld  <- attribute_health(
   rr_central = 1.1, 
   rr_increment = 10, 
@@ -1438,6 +1466,7 @@ This is possible using the function
 [`daly()`](https://swisstph.github.io/healthiar/reference/daly.md).
 
 ``` r
+
 results_daly <- daly(
      output_attribute_yll = results_pm_yll,
      output_attribute_yld = results_pm_copd_yld
@@ -1462,6 +1491,7 @@ B very similar to a previous scenario A.
 #### Function call
 
 ``` r
+
 scenario_A <- attribute_health(
     exp_central = 8.85,   # EXPOSURE 1
     cutoff_central = 5, 
@@ -1478,6 +1508,7 @@ can be used to modify one or multiple arguments of `attribute_health`in
 an existing scenario, e.g. `scenario_A`.
 
 ``` r
+
 scenario_B <- attribute_mod(
   output_attribute = scenario_A, 
   exp_central = 6
@@ -1488,6 +1519,7 @@ This is equivalent to building the whole scenario again (see below), but
 more time and code efficient.
 
 ``` r
+
 scenario_B <- attribute_health(
     exp_central = 6,     # EXPOSURE 2
     cutoff_central = 5, 
@@ -1592,6 +1624,7 @@ Where:
     to calculate burden of scenarios A & B.
 
 ``` r
+
 scenario_A <- attribute_health(
     exp_central = 8.85,   # EXPOSURE 1
     cutoff_central = 5, 
@@ -1603,6 +1636,7 @@ scenario_A <- attribute_health(
 ```
 
 ``` r
+
 scenario_B <- attribute_mod(
   output_attribute = scenario_A, 
   exp_central = 6
@@ -1614,6 +1648,7 @@ scenario_B <- attribute_mod(
     to compare scenarios A & B.
 
 ``` r
+
 
 results_comparison <- healthiar::compare(
   approach_comparison = "delta", # or "pif" (population impact fraction)
@@ -1655,9 +1690,9 @@ E.g., to quantify the total health impact attributable to PM2.5 and NO2.
 
 #### Methodology
 
-A methodological report of the EU project BEST-COST (Strak, Houthuijs,
-and Staatsen 2024) identified three approaches to add up attributable
-health impacts from correlated exposures:
+A methodological report of the EU project BEST-COST (Strak et al. 2024)
+identified three approaches to add up attributable health impacts from
+correlated exposures:
 
 - Additive approach (Steenland and Armstrong 2006):
 
@@ -1690,6 +1725,7 @@ For this purpose, you can use the function
 [`multiexpose()`](https://swisstph.github.io/healthiar/reference/multiexpose.md).
 
 ``` r
+
 results_pm <- attribute_health(
   erf_shape = "log_linear",
   rr_central = 1.369, 
@@ -1717,6 +1753,7 @@ results_multiplicative <- multiexpose(
 #### Main results
 
 ``` r
+
 results_multiplicative$health_main
 ```
 
@@ -1761,6 +1798,7 @@ where:
 #### Function call
 
 ``` r
+
 output_attribute <- attribute_health(
   rr_central = 1.063,
   rr_increment = 10,
@@ -1784,6 +1822,7 @@ results <- standardize(
 Age-standardized impact rate:
 
 ``` r
+
 print(results$health_main$impact_per_100k_inhab)  
 #> [1] 49.91113
 ```
@@ -1791,6 +1830,7 @@ print(results$health_main$impact_per_100k_inhab)
 Age group-specific impact rate:
 
 ``` r
+
 print(results$health_detailed$results_raw$impact_per_100k_inhab)  
 #> [1] 48.28250 51.53977
 ```
@@ -1837,6 +1877,7 @@ can be entered in the argument `exp_mean`, `exp_lower` and/or
 #### Function call
 
 ``` r
+
 # exdat_pwm_1 = Pollution grid data
 exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
 
@@ -1873,6 +1914,7 @@ can also be fulfilled by using a ‘function(c)’ which is of type
 ‘function’.
 
 ``` r
+
 #setting up function parameters
 threshold_effect <- 45
 RR <- 1.055
@@ -1896,7 +1938,6 @@ results_catERF_different_calc_thesh <- healthiar::attribute_health(
 
 The used function is equal to
 ``` math
-
 f(c) =
 \begin{cases}
 1, & c < \text{threshold} \\
@@ -1938,7 +1979,7 @@ impacts as previous step to valuating them) into their present value.
 The underlying rationale is that the value placed on outcomes declines
 as they occur further in the future. Therefore, future costs and effects
 are converted into present-value terms to make them comparable over time
-(Attema, Brouwer, and Claxton 2018).
+(Attema et al. 2018).
 
 Discounting is implemented by selecting a discount rate, which is used
 to compute a discount factor for each time period. This factor is then
@@ -1976,7 +2017,7 @@ respectively
 
 *Exponential discounting*
 
-As suggested by Frederick, Loewenstein, and O’Donoghue (2002)
+As suggested by Frederick et al. (2002)
 
 ``` math
 discount\_factor = \frac{1}{(1 + discount\_rate)^{n\_years}}
@@ -2037,6 +2078,7 @@ not undervalued.
 #### Function call
 
 ``` r
+
 monetized_pm_copd <- monetize(
     output_attribute = results_pm_copd,
     discount_shape = "exponential",
@@ -2076,6 +2118,7 @@ Alternatively, you can also monetize (attributable) health impacts from
 a non-`healthiar` source.
 
 ``` r
+
 results <- monetize(
   impact = 1151,
   valuation = 100
@@ -2146,6 +2189,7 @@ find out using the functions `healthiar` and
 [`cba()`](https://swisstph.github.io/healthiar/reference/cba.md)
 
 ``` r
+
 cba <- cba(
     output_attribute = results_pm_copd,
     valuation = 50000,
@@ -2175,6 +2219,7 @@ the existing assessment:
     specified in the `n_years_cost` argument
 
 ``` r
+
 cba$cba_main |>  
   dplyr::select(benefit, cost, net_benefit) |> 
   knitr::kable()
@@ -2258,6 +2303,7 @@ inequalities.
 First, quantify health impacts.
 
 ``` r
+
  health_impact <- healthiar::attribute_health(
    age_group = exdat_socialize$age_group,
    exp_central = exdat_socialize$pm25_mean,
@@ -2277,6 +2323,7 @@ entering the whole output of
 in the argument `output_attribute`.
 
 ``` r
+
 social_t <- healthiar::socialize(
   output_attribute = health_impact,
   age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
@@ -2292,6 +2339,7 @@ Alternatively, you can directly enter the health impact in the
 argument `impact`.
 
 ``` r
+
 social <- healthiar::socialize(
   impact = health_impact$health_detailed$results_by_age_group$impact,
   age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
@@ -2357,6 +2405,7 @@ R^2 lower than 0.7, consider alternative data sources or methods.
 #### Function call
 
 ``` r
+
 mdi <- prepare_mdi(
   geo_id_micro = exdat_prepare_mdi$id,
   edu = exdat_prepare_mdi$edu,
@@ -2379,6 +2428,7 @@ Function output includes:
 - `mdi_main`, a tibble containing the BEST-COST MDI
 
 ``` r
+
 mdi$mdi_main |> 
   select(geo_id_micro, MDI, MDI_index)
 ```
@@ -2420,6 +2470,7 @@ between 0.8 (included) and 0.9: Good reliability - between 0.7
 To reproduce the boxlots run
 
 ``` r
+
 eval(mdi$mdi_detailed$boxplot)
 ```
 
@@ -2428,6 +2479,7 @@ MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-113-1.png)
 Analogeously, to reproduce the histogram run
 
 ``` r
+
 eval(mdi$mdi_detailed$histogram)
 ```
 
@@ -2444,6 +2496,7 @@ curve](intro_to_healthiar_files/figure-html/unnamed-chunk-114-1.png)
 below.
 
 ``` r
+
 exdat_noise |>
   (\(df) {
     healthiar::attribute_health(
@@ -2459,6 +2512,7 @@ Shorter making used of the base R function
 [`with()`](https://rdrr.io/r/base/with.html).
 
 ``` r
+
 exdat_noise |>
       (\(df) {
         with(df, healthiar::attribute_health(
@@ -2476,6 +2530,7 @@ exdat_noise |>
 `healthiar` can also be used inside *magrittr* pipes `%>%` as follows.
 
 ``` r
+
 exdat_noise %>%
   {
     healthiar::attribute_health(
@@ -2536,9 +2591,9 @@ YLL/yll = years of life lost
 ## References
 
 Ahmad, Omar B, Cynthia Boschi Pinto, Alan D Lopez, Christopher JL
-Murray, Rafael Lozano, and Mie Inoue. 2001. “Age Standardization of
-Rates: A New WHO Standard.” GPE Discussion Paper Series: No. 31. Geneva:
-World Health Organization.
+Murray, Rafael Lozano, and Mie Inoue. 2001. *Age Standardization of
+Rates: A New WHO Standard*. GPE Discussion Paper Series: No. 31. World
+Health Organization.
 
 Askari, Maryam, and Seyedeh Mahdieh Namayandeh. 2020. “The Difference
 Between the Population Attributable Risk (PAR) and the Potentioal Impact
@@ -2551,7 +2606,7 @@ Attema, Arthur E., Werner B. F. Brouwer, and Karl Claxton. 2018.
 
 Boardman, Anthony E., David H. Greenberg, Aidan R. Vining, and David L.
 Weimer. 2018. *Cost-Benefit Analysis: Concepts and Practice*. 5th ed.
-Cambridge, UK: Cambridge University Press.
+Cambridge University Press.
 
 Bobinac, N., J. van Exel, F. F. H. Rutten, and W. B. F. Brouwer. 2010.
 “Willingness to Pay for a Quality-Adjusted Life-Year: The Individual
@@ -2559,17 +2614,15 @@ Perspective.” *Value in Health* 13 (8): 1046–55.
 <https://doi.org/10.1111/j.1524-4733.2010.00783.x>.
 
 Brealey, Richard A., Stewart C. Myers, Franklin Allen, Simon Benninga,
-and Julian Read. 2023. *Principles of Corporate Finance*. 14th ed. New
-York, NY: McGraw-Hill Education.
+and Julian Read. 2023. *Principles of Corporate Finance*. 14th ed.
+McGraw-Hill Education.
 
 Cronbach, Lee J. 1951. “Coefficient Alpha and the Internal Structure of
 Tests.” *Psychometrika* 16 (3): 297–334.
 <https://doi.org/10.1007/BF02310555>.
 
-Devleesschauwer, Brecht, Paul Torgerson, Johannes Charlier, Bruno
-Levecke, Nicolas Praet, Sophie Roelandt, Suzanne Smit, Pierre Dorny,
-Dirk Berkvens, and Niko Speybroeck. 2022. *Prevalence: Tools for
-Prevalence Assessment Studies.*
+Devleesschauwer, Brecht, Paul Torgerson, Johannes Charlier, et al. 2022.
+*Prevalence: Tools for Prevalence Assessment Studies.*
 <https://cran.r-project.org/package=prevalence>.
 
 Frederick, Shane, George Loewenstein, and Ted O’Donoghue. 2002. “Time
@@ -2581,12 +2634,12 @@ GBD 2019 Demographics Collaborators. 2020. “Global Age-Sex-Specific
 Fertility, Mortality, Healthy Life Expectancy (HALE), and Population
 Estimates in 204 Countries and Territories, 1950-2019: A Comprehensive
 Demographic Analysis for the Global Burden of Disease Study 2019.” *The
-Lancet* 396 (10258): 1160–1203.
+Lancet* 396 (10258): 1160–203.
 <https://doi.org/10.1016/S0140-6736(20)30977-6>.
 
 GBD 2019 Risk Factors Collaborators. 2020. “Global Burden of 87 Risk
-Factors in 204 Countries and Territories, 1990–2019.” *The Lancet*.
-<https://doi.org/10.1016/S0140-6736(20)30752-2>.
+Factors in 204 Countries and Territories, 1990–2019.” *The Lancet*,
+ahead of print. <https://doi.org/10.1016/S0140-6736(20)30752-2>.
 
 Hammitt, James K. 2007. “Valuing Changes in Mortality Risk: Lives Saved
 Versus Life Years Saved.” *Review of Environmental Economics and Policy*
@@ -2597,11 +2650,10 @@ Harvey, Charles M. 1986. “Value Functions for Infinite-Period Planning.”
 <https://doi.org/10.1287/mnsc.32.9.1123>.
 
 HM Treasury. 2022. *The Green Book: Central Government Guidance on
-Appraisal and Evaluation*. London, UK: HM Treasury.
+Appraisal and Evaluation*. HM Treasury.
 <https://www.gov.uk/government/publications/the-green-book-appraisal-and-evaluation-in-central-government>.
 
-Jerrett, Michael, Richard T Burnett, Bernardo S Beckerman, Michelle C
-Turner, Daniel Krewski, George Thurston, Randall V Martin, et al. 2013.
+Jerrett, Michael, Richard T Burnett, Bernardo S Beckerman, et al. 2013.
 “Spatial Analysis of Air Pollution and Mortality in California.”
 *American Journal of Respiratory and Critical Care Medicine* 188 (5):
 593–99. <https://doi.org/10.1164/rccm.201303-0609OC>.
@@ -2611,11 +2663,10 @@ Estimation Approaches: Understanding and Using the Incidence-Based
 Approach and the Prevalence-Based Approach.” *J. Prev. Med. Public
 Health* 55 (1): 10–18. <https://doi.org/10.3961/jpmph.21.597>.
 
-Lehtomäki, Heli, Gunn Marit Aasvang, Gerhard Sulo, Bruce R. Denby, Otto
-Olavi Hänninen, Michael Brauer, Gavin Pereira, Omid Dadras, and Anette
-Kocbach Bølling. 2025. “Burden of Disease Attributable to PM2.5 at Low
-Exposure Levels: Impact of Methodological Choices.” *Environmental
-Health* 25 (1): 4. <https://doi.org/10.1186/s12940-025-01250-y>.
+Lehtomäki, Heli, Gunn Marit Aasvang, Gerhard Sulo, et al. 2025. “Burden
+of Disease Attributable to PM2.5 at Low Exposure Levels: Impact of
+Methodological Choices.” *Environmental Health* 25 (1): 4.
+<https://doi.org/10.1186/s12940-025-01250-y>.
 
 Lipman, Stefan A., and Arthur E. Attema. 2024. “A Systematic Review of
 Unique Methods for Measuring Discount Rates.” *Journal of Risk and
@@ -2626,21 +2677,19 @@ Mazur, James E. 1987. “An Adjusting Procedure for Studying Delayed
 Reinforcement.” In *Quantitative Analyses of Behavior: Volume v. The
 Effect of Delay and of Intervening Events on Reinforcement Value*,
 edited by Michael L. Commons, James E. Mazur, John A. Nevin, and Howard
-Rachlin, 55–73. Hillsdale, NJ: Lawrence Erlbaum Associates.
+Rachlin. Lawrence Erlbaum Associates.
 
 Miller, B G, and J F Hurley. 2003. “Life Table Methods for Quantitative
 Impact Assessments in Chronic Mortality.” *Journal of Epidemiology and
 Community Health* 57 (3): 200–206.
 <https://doi.org/10.1136/jech.57.3.200>.
 
-Miller, Brian G. 2010. “Report on Estimation of Mortality Impacts of
-Particulate Air Pollution in London.” Institute of Occupational Medicine
+Miller, Brian G. 2010. *Report on Estimation of Mortality Impacts of
+Particulate Air Pollution in London*. Institute of Occupational Medicine
 (IOM).
 <https://cleanair.london/app/uploads/CAL-098-Mayors-health-study-report-June-2010-1.pdf>.
 
-Mogin, Gaëlle, Vanessa Gorasso, Jane Idavain, Maria Lepnurm, Sabrina
-Delaunay-Havard, Anette Kocbach Bølling, Jurgen Buekers, Axel Luyten,
-Brecht Devleesschauwer, and Carl Michael Baravelli. 2025. “A Scoping
+Mogin, Gaëlle, Vanessa Gorasso, Jane Idavain, et al. 2025. “A Scoping
 Review of Multiple Deprivation Indices in Europe.” *European Journal of
 Public Health* 35 (6): 1122–28.
 <https://doi.org/10.1093/eurpub/ckaf190>.
@@ -2656,18 +2705,16 @@ Framework and Design.” *Epidemiology* 14 (4): 447–58.
 <https://doi.org/10.1186/1478-7954-1-1>.
 
 OECD. 2012. *Mortality Risk Valuation in Environment, Health and
-Transport Policies*. Paris: OECD Publishing.
+Transport Policies*. OECD Publishing.
 <https://doi.org/10.1787/9789264130807-en>.
 
 OECD. 2025. *Mortality Risk Valuation in Policy Assessment: A Global
-Meta-Analysis of Value of Statistical Life Studies*. Paris: OECD
-Publishing. <https://doi.org/10.1787/76ca89a2-en>.
+Meta-Analysis of Value of Statistical Life Studies*. OECD Publishing.
+<https://doi.org/10.1787/76ca89a2-en>.
 
-Otavova, Martina, Christel Faes, Catherine Bouland, Eva De Clercq, Bram
-Vandeninden, Thierry Eggerickx, Jean-Paul Sanderson, Brecht
-Devleesschauwer, and Bruno Masquelier. 2022. “Inequalities in Mortality
-Associated with Housing Conditions in Belgium Between 1991 and 2020.”
-*BMC Public Health* 22 (1): 2397.
+Otavova, Martina, Christel Faes, Catherine Bouland, et al. 2022.
+“Inequalities in Mortality Associated with Housing Conditions in Belgium
+Between 1991 and 2020.” *BMC Public Health* 22 (1): 2397.
 <https://doi.org/10.1186/s12889-022-14819-w>.
 
 Pozzer, A., S. C. Anenberg, S. Dey, A. Haines, J. Lelieveld, and S.
@@ -2693,8 +2740,8 @@ Samuelson, Paul A. 1937. “A Note on Measurement of Utility.” *The Review
 of Economic Studies* 4 (2): 155–61. <https://doi.org/10.2307/2967612>.
 
 Soares, J., A. González Ortiz, A. Gsella, J. Horálek, D. Plass, and S.
-Kienzler. 2022. “Health Risk Assessment of Air Pollution and the Impact
-of the New WHO Guidelines (Eionet Report – ETC HE 2022/10).” Eionet
+Kienzler. 2022. *Health Risk Assessment of Air Pollution and the Impact
+of the New WHO Guidelines (Eionet Report – ETC HE 2022/10)*. Eionet
 Report -- ETC HE 2022/10. European Topic Centre on Human Health; the
 Environment. <https://doi.org/10.5281/zenodo.7405988>.
 
@@ -2703,34 +2750,34 @@ Calculating the Burden of Disease Due to Specific Risk Factors.”
 *Epidemiology* 17 (5): 512–19.
 <https://doi.org/10.1097/01.ede.0000229155.05644.43>.
 
-Strak, Maciek, Danny Houthuijs, and Brigit Staatsen. 2024. “D1.2 Report
-on the Methodology for Assessing the Burden of Correlated Exposures.” EU
+Strak, Maciek, Danny Houthuijs, and Brigit Staatsen. 2024. *D1.2 Report
+on the Methodology for Assessing the Burden of Correlated Exposures*. EU
 Project BEST-COST.
 
 VanderWeele, Tyler J. 2019. “Optimal Approximate Conversions of Odds
 Ratios and Hazard Ratios to Risk Ratios.” *Biometrics* 76 (3): 746–52.
 <https://doi.org/10.1111/biom.13197>.
 
-WHO. 2003. “Introduction and Methods: Assessing the Environmental Burden
-of Disease at National and Local Levels.” World Health Organization.
+WHO. 2003. *Introduction and Methods: Assessing the Environmental Burden
+of Disease at National and Local Levels*. World Health Organization.
 <https://www.who.int/publications/i/item/9241546204>.
 
-———. 2011. “Burden of Disease from Environmental Noise: Quantification
-of Healthy Life Years Lost in Europe.” World Health Organization.
+WHO. 2011. *Burden of Disease from Environmental Noise: Quantification
+of Healthy Life Years Lost in Europe*. World Health Organization.
 <https://www.who.int/publications/i/item/burden-of-disease-from-environmental-noise-quantification-of-healthy-life-years-lost-in-europe>.
 
-———. 2020. “Health Impact Assessment of Air Pollution: AirQ+ Life Table
-Manual.” World Health Organization - Regional Office for Europe.
+WHO. 2020. *Health Impact Assessment of Air Pollution: AirQ+ Life Table
+Manual*. World Health Organization - Regional Office for Europe.
 <https://www.who.int/europe/publications/i/item/WHO-EURO-2020-1559-41310-56212>.
 
 WHO Regional Office for Europe. 2014. *WHO Expert Meeting: Methods and
 Tools for Assessing the Health Risks of Air Pollution at Local, National
 and International Level. Meeting Report; 12-13 May 2014; Bonn, Germany*.
-Copenhagen: WHO Regional Office for Europe.
+WHO Regional Office for Europe.
 <https://iris.who.int/handle/10665/142940>.
 
 Wickham, Hadley. 2014. “Tidy Data.” *Journal of Statistical Software* 59
 (10): 1–23. <https://doi.org/10.18637/jss.v059.i10>.
 
-———. 2016. *Ggplot2: Elegant Graphics for Data Analysis*.
+Wickham, Hadley. 2016. *Ggplot2: Elegant Graphics for Data Analysis*.
 Springer-Verlag New York. <https://ggplot2.tidyverse.org>.

@@ -1,0 +1,77 @@
+CITATION.cff 
+cff-version: "1.2.0"
+authors:
+- family-names: Castro
+  given-names: Alberto
+  orcid: "https://orcid.org/0000-0002-4665-3299"
+- family-names: Luyten
+  given-names: Axel
+  orcid: "https://orcid.org/0000-0002-7005-5889"
+doi: 10.5281/zenodo.21232269
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Castro
+    given-names: Alberto
+    orcid: "https://orcid.org/0000-0002-4665-3299"
+  - family-names: Luyten
+    given-names: Axel
+    orcid: "https://orcid.org/0000-0002-7005-5889"
+  - family-names: Pauwels
+    given-names: Arno
+    orcid: "https://orcid.org/0000-0001-7519-8080"
+  - family-names: Fernández
+    given-names: Liliana Vázquez
+    orcid: "https://orcid.org/0000-0003-3778-9415"
+  - family-names: Ardielli
+    given-names: Gianni
+    orcid: "https://orcid.org/0009-0000-3408-2217"
+  - family-names: Pimenta
+    given-names: Iracy
+    orcid: "https://orcid.org/0000-0003-0032-1536"
+  - family-names: Breitner
+    given-names: Susanne
+    orcid: "https://orcid.org/0000-0002-0956-6911"
+  - family-names: Baravelli
+    given-names: Carl
+    orcid: "https://orcid.org/0000-0001-7772-5315"
+  - family-names: Gorasso
+    given-names: Vanessa
+    orcid: "https://orcid.org/0000-0001-6884-9316"
+  - family-names: Lepnurm
+    given-names: Maria
+    orcid: "https://orcid.org/0009-0009-4372-6227"
+  - family-names: Novais
+    given-names: Andreia
+    orcid: "https://orcid.org/0009-0007-7775-108X"
+  - family-names: Rueda-López
+    given-names: María José
+    orcid: "https://orcid.org/0000-0002-2443-1038"
+  - family-names: Nhat
+    given-names: Pham Minh
+    orcid: "https://orcid.org/0000-0002-5972-1668"
+  - family-names: Barbosa
+    given-names: Ana
+    orcid: "https://orcid.org/0000-0002-9623-9002"
+  - family-names: Santos
+    given-names: João Vasco
+    orcid: "https://orcid.org/0000-0003-4696-1002"
+  - family-names: Bølling
+    given-names: Anette Kocbach
+    orcid: "https://orcid.org/0000-0003-4209-7448"
+  date-published: 2026-07-29
+  doi: 10.21105/joss.10599
+  issn: 2475-9066
+  issue: 123
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 10599
+  title: "healthiar: An R package to quantify and monetize health
+    impacts attributable to (environmental) exposure"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.10599"
+  volume: 11
+title: "healthiar: An R package to quantify and monetize health impacts
+  attributable to (environmental) exposure"
