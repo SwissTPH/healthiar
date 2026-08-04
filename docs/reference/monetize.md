@@ -31,15 +31,15 @@ monetize(
 
 - impact:
 
-  `Numberic value` referring to the health impacts to be monetized
-  (without attribute function). If a `Numberic vector` is entered
+  `Numeric value` referring to the health impacts to be monetized
+  (without attribute function). If a `Numeric vector` is entered
   multiple assessments (by year) will be carried out. Be aware that the
   value for year 0 (current) must be entered, while n_years does not
   include the year 0. Thus, length of impact = n_years + 1.
 
 - valuation:
 
-  `Numberic value` referring to unit value of a health impact.
+  `Numeric value` referring to unit value of a health impact.
 
 - discount_rate:
 

@@ -45,7 +45,7 @@ Other contributors:
 - Arno Pauwels ([ORCID](https://orcid.org/0000-0001-7519-8080))
   \[contributor\]
 
-- Liliana Vazquez Fernandez
+- Liliana Vazquez Fernández
   ([ORCID](https://orcid.org/0000-0003-3778-9415)) \[contributor\]
 
 - Gianni Ardielli ([ORCID](https://orcid.org/0009-0000-3408-2217))
@@ -69,7 +69,7 @@ Other contributors:
 - Andreia Novais ([ORCID](https://orcid.org/0009-0007-7775-108X))
   \[contributor\]
 
-- Maria Jose Rueda Lopez
+- María José Rueda-López
   ([ORCID](https://orcid.org/0000-0002-2443-1038)) \[contributor\]
 
 - Minh Nhat Pham ([ORCID](https://orcid.org/0000-0002-5972-1668))
@@ -78,8 +78,8 @@ Other contributors:
 - Ana Barbosa ([ORCID](https://orcid.org/0000-0002-9623-9002))
   \[contributor\]
 
-- Joao Vasco Santos ([ORCID](https://orcid.org/0000-0003-4696-1002))
+- João Vasco Santos ([ORCID](https://orcid.org/0000-0003-4696-1002))
   \[contributor\]
 
-- Anette Kocbach Bolling
+- Anette Kocbach Bølling
   ([ORCID](https://orcid.org/0000-0003-4209-7448)) \[contributor\]
