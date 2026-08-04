@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4.1561</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4.1562</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -292,7 +292,7 @@ relative risk published in the epidemiological literature
 equations used for scaling relative risk depend on the chosen
 exposure-response function shapes:</p>
 <ul>
-<li><p>linear [Lehtomaki_2025_eh]
+<li><p>linear <span class="citation">(Lehtomäki et al. 2025)</span>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo>=</mo><mn>1</mn><mo>+</mo><mfrac><mrow><mi>r</mi><mi>r</mi><mo>−</mo><mn>1</mn></mrow><mrow><mi>i</mi><mi>n</mi><mi>c</mi><mi>r</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></mfrac><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">RRexp = 1 + \frac{rr - 1}{increment} \times (exp - cutoff)</annotation></semantics></math></p></li>
 <li><p>log-linear <span class="citation">(Lehtomäki et al. 2025)</span>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>R</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo>=</mo><msup><mi>e</mi><mrow><mfrac><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>i</mi><mi>n</mi><mi>c</mi><mi>r</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></mfrac><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">RRexp = e^{\frac{\log(rr)}{increment} \times (exp - cutoff)}</annotation></semantics></math></p></li>
@@ -872,12 +872,11 @@ by using a Monte Carlo simulation.</p>
 <h5 id="general-concepts">General concepts<a class="anchor" aria-label="anchor" href="#general-concepts"></a>
 </h5>
 <p>A Monte Carlo simulation is a statistical method that generates
-repeated random sampling [<span class="citation">Robert and Casella
-(2004)</span>; <span class="citation">Rubinstein and Kroese
-(2016)</span>. In <code>healthiar</code>, you can use the function
-<code><a href="../reference/summarize_uncertainty.html">summarize_uncertainty()</a></code> to simulate values in the arguments
-with uncertainty and estimate a single confidence interval in the
-results.</p>
+repeated random sampling <span class="citation">(Robert and Casella
+2004; Rubinstein and Kroese 2016)</span>. In <code>healthiar</code>, you
+can use the function <code><a href="../reference/summarize_uncertainty.html">summarize_uncertainty()</a></code> to simulate
+values in the arguments with uncertainty and estimate a single
+confidence interval in the results.</p>
 <p>For each entered input argument that includes a (95%) confidence
 interval (i.e. <code>_lower</code> and <code>_upper</code> bound value)
 a distribution is fitted (see distributions below). The median of the
@@ -5921,7 +5920,8 @@ integral form <span class="citation">(WHO 2003; C. J. L. Murray et al.
 <h6 id="categorical-exposure-form">Categorical Exposure Form<a class="anchor" aria-label="anchor" href="#categorical-exposure-form"></a>
 </h6>
 <p>If the population exposure is described as a categorical rather than
-continuous exposure, the integrals may be converted to sums [<span class="citation">WHO (2003)</span>; Murray2003-spbm]:</p>
+continuous exposure, the integrals may be converted to sums <span class="citation">(WHO 2003;
+<strong>Murray2003-spbm?</strong>)</span>:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>I</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mo>∑</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mo>×</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub><mo>−</mo><mo>∑</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mi>P</mi><msubsup><mi>E</mi><mi>i</mi><mo>′</mo></msubsup></mrow><mrow><mo>∑</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">PIF = \frac{\sum rr\_at\_exp_{i} \times PE_{i} - \sum rr\_at\_exp_{i}PE'_{i}}{\sum rr\_at\_exp_{i}PE_{i}}</annotation></semantics></math></p>
 <p>Where:</p>
 <ul>
