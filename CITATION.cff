@@ -21,8 +21,8 @@ preferred-citation:
   - family-names: Pauwels
     given-names: Arno
     orcid: "https://orcid.org/0000-0001-7519-8080"
-  - family-names: Fernández
-    given-names: Liliana Vázquez
+  - family-names: Vázquez Fernández
+    given-names: Liliana
     orcid: "https://orcid.org/0000-0003-3778-9415"
   - family-names: Ardielli
     given-names: Gianni
@@ -48,17 +48,17 @@ preferred-citation:
   - family-names: Rueda-López
     given-names: María José
     orcid: "https://orcid.org/0000-0002-2443-1038"
-  - family-names: Nhat
-    given-names: Pham Minh
+  - family-names: Pham 
+    given-names: Minh Nhat
     orcid: "https://orcid.org/0000-0002-5972-1668"
   - family-names: Barbosa
     given-names: Ana
     orcid: "https://orcid.org/0000-0002-9623-9002"
-  - family-names: Santos
-    given-names: João Vasco
+  - family-names: Vasco Santos
+    given-names: João 
     orcid: "https://orcid.org/0000-0003-4696-1002"
-  - family-names: Bølling
-    given-names: Anette Kocbach
+  - family-names: Kocbach Bølling
+    given-names: Anette
     orcid: "https://orcid.org/0000-0003-4209-7448"
   date-published: 2026-07-29
   doi: 10.21105/joss.10599
