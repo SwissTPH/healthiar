@@ -53,4 +53,4 @@ Suggests:
     knitr,
     rmarkdown
 Config/Needs/website: rmarkdown
-Encoding: UTF-8
+
