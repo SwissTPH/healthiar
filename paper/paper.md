@@ -10,54 +10,70 @@ tags:
   - Air pollution
   - Noise
 authors:
-  - name: Alberto Castro
+  - given-names: Alberto
+    surname: Castro
     orcid: 0000-0002-4665-3299
     equal-contrib: true
-    affiliation: "1, 2" 
-  - name: Axel Luyten
+    affiliation: "1, 2"
+  - given-names: Axel
+    surname: Luyten
     orcid: 0000-0002-7005-5889
     equal-contrib: true
     affiliation: "1, 2" 
-  - name: Arno Pauwels 
+  - given-names: Arno
+    surname: Pauwels
     orcid: 0000-0001-7519-8080
     affiliation: 3
-  - name: Liliana Vázquez Fernández 
+  - given-names: Liliana
+    surname: Vázquez Fernández
     orcid: 0000-0003-3778-9415
     affiliation: 4 
-  - name: Gianni Ardielli
+  - given-names: Gianni
+    surname: Ardielli
     orcid: 0009-0000-3408-2217
     affiliation: "1, 2" 
-  - name: Iracy Pimenta 
+  - given-names: Iracy
+    surname: Pimenta
     orcid: 0000-0003-0032-1536
     affiliation: 5
-  - name: Susanne Breitner
+  - given-names: Susanne
+    surname: Breitner
     orcid: 0000-0002-0956-6911
     affiliation: 6
-  - name: Carl Baravelli
+  - given-names: Carl
+    surname: Baravelli
     orcid: 0000-0001-7772-5315
     affiliation: 4
-  - name: Vanessa Gorasso
+  - given-names: Vanessa
+    surname: Gorasso
     orcid: 0000-0001-6884-9316
     affiliation: 3
-  - name: Maria Lepnurm
+  - given-names: Maria
+    surname: Lepnurm
     orcid: 0009-0009-4372-6227
     affiliation: 7
-  - name: Andreia Novais 
+  - given-names: Andreia
+    surname: Novais
     orcid: 0009-0007-7775-108X
     affiliation: 5
-  - name: María José Rueda-López 
+  - given-names: María José
+    surname: Rueda-López
     orcid: 0000-0002-2443-1038
     affiliation: 8
-  - name: Pham Minh Nhat 
+  - given-names: Minh Nhat
+    surname: Pham 
     orcid: 0000-0002-5972-1668 
     affiliation: 4
-  - name: Ana Barbosa 
+  - given-names: Ana
+    surname: Barbosa
     orcid: 0000-0002-9623-9002
     affiliation: 5
-  - name: João Vasco Santos
+  - given-names: João
+    surname: Vasco Santos
     orcid: 0000-0003-4696-1002
     affiliation: 5
-  - name: Anette Kocbach Bølling
+  - given-names: Anette
+    surname: Kocbach Bølling
     orcid: 0000-0003-4209-7448
     affiliation: 4
     
