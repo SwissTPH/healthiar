@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   articles/cheatsheet: cheatsheet.html
   intro_to_healthiar: intro_to_healthiar.html
-last_built: 2026-08-05T04:51Z
+last_built: 2026-08-06T12:30Z
 urls:
   reference: https://swisstph.github.io/healthiar/reference
   article: https://swisstph.github.io/healthiar/articles

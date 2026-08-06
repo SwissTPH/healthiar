@@ -234,6 +234,35 @@ testthat::test_that("number of rows in detailed results correct |meta_rr|erf_log
 
 })
 
+testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
+  testthat::expect_equal(
+    rr_central2 <- attribute_health(
+      approach_risk = "relative_risk",  
+      erf_eq_central = function(c) {1 + 0.018*c},  
+      erf_eq_lower = function(c) {1 + 0.005*c},         
+      erf_eq_upper = function(c) {1 + 0.031*c},
+      cutoff_central = 10,            
+      exp_central = 75, 
+      bhd_central = 100)$health_main$impact,
+    expect = c(53.91705069, 24.52830189, 66.83250415))
+})
+
+
+testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
+
+  testthat::expect_equal(
+    object = healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_eq_central = "1+0.018*c",
+      erf_eq_lower = "1+0.005*c",                
+      erf_eq_upper = "1+0.031*c",
+      cutoff_central = 10,           
+      exp_central = 75,  
+      bhd_central = 100)$health_main$impact,
+    expect = c(53.91705069, 24.52830189, 66.83250415))
+})
+
+
 testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
