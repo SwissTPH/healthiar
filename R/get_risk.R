@@ -135,10 +135,19 @@ get_risk <-
 
         } else if (base::is.character(erf_eq)) {
         # The function must in this case created to be used below
-        erf_fun <- base::eval(base::parse(text = base::paste0("function(c) { ", erf_eq, " }")))
+        erf_fun <- 
+          purrr::map(
+            erf_eq, 
+            ~ base::eval(base::parse(text = paste0("function(c) { ", .x, " }"))))
+        
+        rr_at_exp <- 
+          #_dbl to convert list of functions into vector with numberic values
+          purrr::map2_dbl(
+            .x = erf_fun, 
+            .y = exp - cutoff, 
+            ~ .x(.y))
 
-        rr_at_exp <- erf_fun(exp - cutoff)
-      }
+        }
 
     # If erf_eq is not entered by the user
     } else if (base::is.null(erf_eq)){
