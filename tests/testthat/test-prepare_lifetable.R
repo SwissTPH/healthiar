@@ -45,7 +45,7 @@ testthat::test_that("error if lower than min for age_group|prepare_lifetable", {
         bhd = c(4727, 472, 557, 1323))$bhd_for_attribute |>
       base::round(),
     regexp =
-      "The values of age_group cannot be lower than 0."
+      "The values of age_group must be greater than or equal to 0."
   )
 })
 
@@ -60,7 +60,7 @@ testthat::test_that("error if lower than min for population|prepare_lifetable", 
         bhd = c(4727, 472, 557, 1323))$bhd_for_attribute |>
       base::round(),
     regexp =
-      "The values of population cannot be lower than 1."
+      "The values of population must be greater than 0."
   )
 })
 
