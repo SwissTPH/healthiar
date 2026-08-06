@@ -451,7 +451,7 @@ validate_input_attribute <-
 
     if(base::length(args_value_below_0) > 0) {
       base::stop(
-        base::paste0("The values in the following arguments must be higher than 0: ",
+        base::paste0("The values in the following arguments must not be lower than 0: ",
                      base::toString(args_value_below_0),
                      "."),
         call. = FALSE
