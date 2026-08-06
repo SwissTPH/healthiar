@@ -61,8 +61,10 @@ validate_input_attribute <-
 
     categorical_args <- base::names(options_of_categorical_args)
 
-    lifetable_args_with_values_1_or_above <-
-      c("bhd_central", "bhd_lower", "bhd_upper", "population")
+    lifetable_args_with_values_above_0 <- "population"  
+
+    lifetable_args_with_values_0_or_above <-
+      c("bhd_central", "bhd_lower", "bhd_upper")
 
 
     arg_names_available <-
@@ -332,19 +334,39 @@ validate_input_attribute <-
 
     if(is_lifetable){
 
-      ### error_if_below_1 #####
+      ### error_if_not_positive #####
 
-      # Find the arguments with values <1
-      args_value_below_1 <-
-        input_args_value[lifetable_args_with_values_1_or_above] |>
-        purrr::keep(.p = ~ base::any(.x < 1)) |>
+      # No life table arguments currently require values > 0 at validation stage
+      args_value_not_positive <-
+        input_args_value[lifetable_args_with_values_above_0] |>
+        purrr::keep(.p = ~ base::any(.x <= 0)) |>
         base::names()
 
 
-      if(base::length(args_value_below_1) > 0) {
+      if(base::length(args_value_not_positive) > 0) {
         base::stop(
-          base::paste0("The values in the following arguments must be 1 or higher: ",
-                       base::toString(args_value_below_1),
+          base::paste0("The values in the following arguments must not be lower than 0: ",
+                       base::toString(args_value_not_positive),
+                       "."),
+          call. = FALSE
+        )
+
+      }
+
+      ### error_if_negative #####
+
+      # Population and baseline health data may be 0 but not negative in life
+      # table calculations; structural zero-population cases are handled later
+      args_value_below_0_lifetable <-
+        input_args_value[lifetable_args_with_values_0_or_above] |>
+        purrr::keep(.p = ~ base::any(.x < 0)) |>
+        base::names()
+
+
+      if(base::length(args_value_below_0_lifetable) > 0) {
+        base::stop(
+          base::paste0("The values in the following arguments must be 0 or higher: ",
+                       base::toString(args_value_below_0_lifetable),
                        "."),
           call. = FALSE
         )
@@ -371,6 +393,21 @@ validate_input_attribute <-
       }
 
       error_if_not_consecutive_sequence(var_name = "age_group")
+
+      ### warning if bhd = 0 #####
+      any_zero_in_bhd <- 
+        base::any(base::unlist(
+          input_args_value[base::intersect(
+                        arg_names_passed, 
+                        c("bhd_central", "bhd_lower", "bhd_upper"))]) ==0)
+
+      if(any_zero_in_bhd){
+        base::warning(
+          "Zeros in bhd_ arguments are theoretically possible, 
+          but they lack conceptual logic, 
+          because survival probability become 100% in the age group with zero deaths",
+          call. = FALSE)
+      }
 
     }
 
@@ -414,7 +451,7 @@ validate_input_attribute <-
 
     if(base::length(args_value_below_0) > 0) {
       base::stop(
-        base::paste0("The values in the following arguments must be higher than 0: ",
+        base::paste0("The values in the following arguments must not be lower than 0: ",
                      base::toString(args_value_below_0),
                      "."),
         call. = FALSE
