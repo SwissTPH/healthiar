@@ -394,6 +394,21 @@ validate_input_attribute <-
 
       error_if_not_consecutive_sequence(var_name = "age_group")
 
+      ### warning if bhd = 0 #####
+      any_zero_in_bhd <- 
+        base::any(base::unlist(
+          input_args_value[base::intersect(
+                        arg_names_passed, 
+                        c("bhd_central", "bhd_lower", "bhd_upper"))]) ==0)
+
+      if(any_zero_in_bhd){
+        base::warning(
+          "Zeros in bhd_ arguments are theoretically possible, 
+          but they lack conceptual logic, 
+          because survival probability become 100% in the age group with zero deaths",
+          call. = FALSE)
+      }
+
     }
 
     ### error_if_erf_eq_not_function_or_string #####
