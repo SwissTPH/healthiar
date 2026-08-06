@@ -101,40 +101,55 @@ prepare_lifetable <-
 
     error_if_different_length(c("age_group", "population", "bhd"))
 
-    ## Error if_lower_than_min
-    error_if_lower_than_min <- function(var_name, min){
+    ## error_if_not_greater_than_or_equal_to_min
+    error_if_not_greater_than_or_equal_to_min <- function(var_name, min){
       # Store var_value
       var_value <- input_args_value[[var_name]]
 
-      if(base::any(var_value < min)){
+      if(base::any(!var_value >= min)){
         base::stop(
-          base::paste0("The values of ", var_name, " cannot be lower than ", min, "."),
+          base::paste0("The values of ", var_name, " must be greater or equal to ", min, "."),
           call. = FALSE
         )
       }
     }
 
-    # age_group 0 exists
-    error_if_lower_than_min("age_group", min = 0)
-    error_if_lower_than_min("fraction_lived", min = 0)
-    # population and bhd cannot be 0 (or decimals close to)
-    error_if_lower_than_min("population", min = 1)
-    error_if_lower_than_min("bhd", min = 1)
+    # error_if_not_greater_than_min
+    error_if_not_greater_than_min <- function(var_name, min){
+      # Store var_value
+      var_value <- input_args_value[[var_name]]
 
-    ## Error if_higher_than_max
-    error_if_higher_than_max <- function(var_name, max){
+      if(base::any(!var_value > min)){
+        base::stop(
+          base::paste0("The values of ", var_name, " must be greater than ", min, "."),
+          call. = FALSE
+        )
+      }
+    }
+
+    # Variables that must 0 or greater
+    error_if_not_greater_than_or_equal_to_min("age_group", min = 0)
+    error_if_not_greater_than_or_equal_to_min("fraction_lived", min = 0)
+    error_if_not_greater_than_or_equal_to_min("bhd", min = 0)
+    # population must be > 0 (zero is not accepted)
+    error_if_not_greater_than_min("population", min = 0)
+  
+
+    ## Error if_greater_than_max
+    error_if_greater_than_max <- function(var_name, max){
       # Store var_value
       var_value <- input_args_value[[var_name]]
 
       if(base::any(var_value > max)){
         base::stop(
-          base::paste0("The values of ", var_name, " cannot be higher than ", max, "."),
+          base::paste0("The values of ", var_name, " cannot be greater than ", max, "."),
           call. = FALSE
         )
       }
     }
 
-    error_if_higher_than_max("fraction_lived", max = 1)
+    error_if_greater_than_max("fraction_lived", max = 1)
+
 
 
     # STORE AND CALCULATE RELEVANT DATA FOR N-YEARS LEVEL ####
