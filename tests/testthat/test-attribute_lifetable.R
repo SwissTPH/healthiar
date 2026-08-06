@@ -73,7 +73,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
     expected =
       c(28810.0511, 15083.5908, 42437.0574)/pop*1E5 # Result on 28 Oct 2025
   )
-
+ # Check the same but for impact_per_100k_inhab AND detailed results
   testthat::expect_equal(
     object =
       healthiar::attribute_lifetable(
@@ -562,9 +562,9 @@ testthat::test_that("error if bhd argument contains 0", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
 
-  data[["pop"]]$number_of_deaths_male[47] <- 0 # 47 chosen randomly
+  data[["pop"]]$number_of_deaths_male[47] <- -1 # 47 chosen randomly
 
-  ## argument deaths_male contains 0
+  ## argument deaths_male contains negative numbers
   testthat::expect_error(
     object = healthiar::attribute_lifetable(
       health_outcome = "deaths",
@@ -586,7 +586,7 @@ testthat::test_that("error if bhd argument contains 0", {
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age),
 
-    regexp = "The values in the following arguments must be 1 or higher: bhd_central."
+    regexp = "The values in the following arguments must be 0 or higher: bhd_central."
   )
 
 })
@@ -622,7 +622,7 @@ testthat::test_that("error if population argument contains 0", {
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age),
 
-    regexp = "The values in the following arguments must be 1 or higher: population."
+    regexp = "The values in the following arguments must not be lower than 0: population."
   )
 })
 
@@ -653,7 +653,7 @@ testthat::test_that("error if exposuer lower than 0 | lifetable", {
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age),
 
-    regexp = "The values in the following arguments must be higher than 0: exp_central."
+    regexp = "The values in the following arguments must not be lower than 0: exp_central."
   )
 })
 
