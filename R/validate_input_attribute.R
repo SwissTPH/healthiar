@@ -61,8 +61,10 @@ validate_input_attribute <-
 
     categorical_args <- base::names(options_of_categorical_args)
 
-    lifetable_args_with_values_1_or_above <-
-      c("bhd_central", "bhd_lower", "bhd_upper", "population")
+    lifetable_args_with_values_above_0 <- "population"  
+
+    lifetable_args_with_values_0_or_above <-
+      c("bhd_central", "bhd_lower", "bhd_upper")
 
 
     arg_names_available <-
