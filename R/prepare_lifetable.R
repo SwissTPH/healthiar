@@ -108,7 +108,7 @@ prepare_lifetable <-
 
       if(base::any(!var_value >= min)){
         base::stop(
-          base::paste0("The values of ", var_name, " must be greater or equal to ", min, "."),
+          base::paste0("The values of ", var_name, " must be greater than or equal to ", min, "."),
           call. = FALSE
         )
       }
