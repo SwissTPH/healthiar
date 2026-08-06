@@ -659,4 +659,46 @@ testthat::test_that("error if exposuer lower than 0 | lifetable", {
 
 
 ## WARNING #########
+testthat::test_that("warning if any bhd = 0", {
 
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+
+  # Check that 0 in bhd is allowed allowed with warning
+  population <- 
+    c(data_lifetable[["male"]]$population,
+      data_lifetable[["female"]]$population)
+  population[99] <- 0.5 
+
+  bhd_central <- 
+    c(data[["pop"]]$number_of_deaths_male,
+      data[["pop"]]$number_of_deaths_female)
+  bhd_central[99] <- 0  
+    
+
+    testthat::expect_warning(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "single_year",
+        exp_central = data_mort$exp[2], #exp CH 2019
+        prop_pop_exp = 1,
+        cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
+        rr_central = data_mort[2,"rr_central"],
+        rr_lower = data_mort[2,"rr_lower"],
+        rr_upper = data_mort[2,"rr_upper"],
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = c(data_lifetable[["male"]]$age,
+                      data_lifetable[["female"]]$age),
+        sex = base::rep(c("male", "female"), each = 100),
+        population = population,
+        bhd_central = bhd_central,
+        year_of_analysis = 2019,
+        info = data_mort$pollutant[2],
+        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
+      )$health_main$impact,
+    regexp =
+      "Zeros in bhd_ arguments are theoretically possible") # Result on 06 August 2026
+})
