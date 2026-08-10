@@ -435,14 +435,14 @@ socialize <- function(output_attribute = NULL,
 
         social_component <- social_component_before_quantile |>
           dplyr::mutate(
-            social_ranking = base::rank(-social_indicator, na.last = "keep", ties.method = "random"))
+            social_ranking = base::rank(-social_indicator, na.last = "keep", ties.method = "min"))
 
 
       } else if(decreasing_deprivation) {
         # * * If NOT increasing_deprivation, i.e. decreasing #########
         social_component <- social_component_before_quantile |>
           dplyr::mutate(
-            social_ranking = base::rank(social_indicator, na.last = "keep", ties.method = "random"))
+            social_ranking = base::rank(social_indicator, na.last = "keep", ties.method = "min"))
       }
 
       # Add quantile which is common for both case increasing and decreasing deprivation
@@ -453,7 +453,7 @@ socialize <- function(output_attribute = NULL,
             breaks = 
               stats::quantile(
                 social_ranking, 
-                probs = seq(0, 1, by = length.out = n_quantile + 1)),
+                probs = seq(0, 1, length.out = n_quantile + 1)),
             labels = FALSE, include.lowest = TRUE
           ))
 
