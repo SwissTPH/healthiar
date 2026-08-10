@@ -14,7 +14,7 @@ get_risk(
 )
 }
 \arguments{
-\item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
+\item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. Input exposure values must be expressed in same unit as the increment of the relative risk. The re-scale of the relative risk is unbounded above and users are responsible for the plausible range. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
 \item{rr}{\code{Numeric value} or \code{numeric vector} specifying the \strong{relative risk} estimate(s) and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Not required if the \code{erf_eq} argument is already specified.}
 

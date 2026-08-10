@@ -23,8 +23,11 @@ get_risk(
 
   `String value` specifying the **exposure-response function shape** to
   be assumed. Options (no default): `"linear"`, `log_linear`",
-  `"linear_log"`, `"log_log"`. *Only applicable in RR pathways; not
-  required if `erf_eq_...` argument(s) already specified.*
+  `"linear_log"`, `"log_log"`. Input exposure values must be expressed
+  in same unit as the increment of the relative risk. The re-scale of
+  the relative risk is unbounded above and users are responsible for the
+  plausible range. *Only applicable in RR pathways; not required if
+  `erf_eq_...` argument(s) already specified.*
 
 - rr:
 

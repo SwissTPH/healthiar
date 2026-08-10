@@ -8,6 +8,9 @@
 #' @param age_group \code{Numeric vector} referring to the first years of the age groups. E.g. c(0, 20, 40, 60) means [0, 20), [20, 40), [40, 60), [60, )
 #' @param population \code{Numeric vector} referring to mid-year populations by age group.
 #' @param bhd \code{Numeric vector} referring to the baseline health data (deaths) by age group.
+#' @param fraction_lived \code{Numeric vector} Numeric vector or \code{single numeric scalar} referring to the average 
+#' fraction of the age interval lived by individuals who die within that interval. Default is 0.5.
+
 
 # DETAILS ######################################################################
 #' @details
@@ -19,6 +22,16 @@
 #' "Health impact assessment of air pollution: AirQ+ life table manual"
 #' for guidance on how to convert larger age groups to 1 year age groups,
 #' section "Estimation of yearly values" \insertCite{WHO2020_report}{healthiar}.
+#' 
+#' \code{fraction_lived} is by default 0.5 for all age groups. However, 
+#' in low-mortality settings, infant deaths are heavily concentrated
+#' in the first weeks of life. 
+#' Therefore, \code{fraction_lived} can be lower e.g. 0.1 for the first age group.
+#' 
+#' When \code{fraction_lived[1] < 0.5}, the function reallocates the baseline 
+#' health data (\code{bhd}) for the first age group \eqn{[0, 5)} such that 
+#' \code{bhd[1] * (1 - fraction_lived[1])} deaths are assigned to single-year 
+#' age 0, and the remaining deaths are split equally across single-year ages 1–4.
 #'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
@@ -63,11 +76,11 @@
 prepare_lifetable <-
   function(age_group,
            population,
-           bhd) {
+           bhd,
+           fraction_lived = 0.5) {
 
     # DATA VALIDATION ######
 
-    fraction_lived <- 0.5
 
     input_args_value <- base::list(
       age_group = age_group,
@@ -78,6 +91,10 @@ prepare_lifetable <-
 
     ## Error if different length
     error_if_different_length  <- function(var_names){
+
+      if(dplyr::n_distinct(input_args_value[["fraction_lived"]]) == 1){
+        var_names <- var_names[!var_names %in% "fraction_lived"]
+      }
 
       # Store variables in a list
       vars_with_same_length <- input_args_value[var_names]
@@ -99,7 +116,7 @@ prepare_lifetable <-
       }
     }
 
-    error_if_different_length(c("age_group", "population", "bhd"))
+    error_if_different_length(var_names = c("age_group", "population", "bhd", "fraction_lived"))
 
     ## error_if_not_greater_than_or_equal_to_min
     error_if_not_greater_than_or_equal_to_min <- function(var_name, min){
@@ -213,22 +230,25 @@ prepare_lifetable <-
       # but this is only for 5-years interval.
       # A solution for all lengths of interval is needed.
 
-      # Get weights of the formula
-      if (age_interval_length == 1) {
-        weights <- 1
-      } else {
-        weights <- c(0.5, base::rep(1, age_interval_length - 1), 0.5)
-      }
-
-      # Get powers of the formula
-
-      powers <- 0:age_interval_length
+      
 
       # Use pmap_dbl to vectorialize the function
       # and consequently to accept vectors
       entry_population <- purrr::map_dbl(
         base::seq_along(prob_surviving_1_year),
         \(i) {
+
+          # Get weights of the formula dynamically
+          if (age_interval_length == 1) {
+            weights <- 1
+          } else {
+            weights <- c(0.5, base::rep(1, age_interval_length - 1), 0.5)
+          }
+
+          # Get powers of the formula
+          powers <- 0:age_interval_length
+
+          # Calculate numerator and denominator
           numerator <- prob_surviving_1_year[i]^(age_interval_index[i] - 1) * population_n_years[i]
           denominator <- base::sum(weights * prob_surviving_1_year[i] ^ powers)
 
@@ -257,17 +277,23 @@ prepare_lifetable <-
           age_interval_index = age_interval_index,
           # For age_interval_length enter the value of the varible
           # And not the column which is a vector repeating the value (not needed)
-          age_interval_length = {{age_interval_length}}
-          ),
-        # Calculate mid-year population for 1-year interval
-        # This is the average between the entry-population in year y and y+1
-        # lead() gives the value for y+1
-        # colesce(x, 0) replaces the NA with 0
-        # There is a NA at the end because the last row has not y+1
-        # The assumption is that everybody is death in the row after the last one
-        # *0.5 because it is the average
+          age_interval_length = {{age_interval_length}}),
+        # # Calculate mid-year population for 1-year interval
+        # # This is the average between the entry-population in year y and y+1
+        # # lead() gives the value for y+1
+        # # colesce(x, 0) replaces the NA with 0
+        # # There is a NA at the end because the last row has not y+1
+        # # The assumption is that everybody is death in the row after the last one
+        # # *0.5 because it is the average
         population_1_year =  0.5 * (entry_population_1_year + dplyr::coalesce(dplyr::lead(entry_population_1_year), 0)),
-        bhd_1_year = 2 * (entry_population_1_year - population_1_year)
+        bhd_1_year_base = 2 * (entry_population_1_year - population_1_year),
+          
+        # Reallocate Age 0 deaths if custom fraction_lived (e.g., a0 = 0.1) is passed
+        bhd_1_year = dplyr::if_else(
+          age_interval_index == 1 & fraction_lived_n_years != 0.5,
+          bhd_n_years * (1 - fraction_lived_n_years),
+          bhd_1_year_base
+        )
       )
 
     # Fix the last element of each interval
@@ -276,11 +302,24 @@ prepare_lifetable <-
     calculation_fixed <- calculation |>
       dplyr::mutate(
         .by = age_group_n_years,
+        
+        # Evenly distribute remaining deaths to intermediate years (indices 2 to n-1) if index 1 was customized
+        bhd_1_year = dplyr::if_else(
+          age_interval_index > 1 & dplyr::first(fraction_lived_n_years) != 0.5 & age_interval_index != age_interval_length,
+          (bhd_n_years - dplyr::first(bhd_1_year)) / (age_interval_length - 1),
+          bhd_1_year
+        ),
+        
+        # AirQ+ rule assigning exact residual to last index of the group
         bhd_1_year = dplyr::if_else(
           age_interval_index == age_interval_length,
           bhd_n_years - base::sum(bhd_1_year[age_interval_index != age_interval_length]),
           bhd_1_year
-        )
+        ),
+        
+        # Dynamically update final single-year mid-year population from allocated deaths
+        fraction_lived_1_year = dplyr::if_else(age_interval_index == 1, fraction_lived_n_years, 0.5),
+        population_1_year = entry_population_1_year - (fraction_lived_1_year * bhd_1_year)
       )
 
 
