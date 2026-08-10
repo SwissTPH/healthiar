@@ -450,7 +450,10 @@ socialize <- function(output_attribute = NULL,
         dplyr::mutate(
           social_quantile = base::cut(
             social_ranking,
-            breaks = stats::quantile(social_ranking, probs = seq(0, 1, by = 0.1)),
+            breaks = 
+              stats::quantile(
+                social_ranking, 
+                probs = seq(0, 1, by = length.out = n_quantile + 1)),
             labels = FALSE, include.lowest = TRUE
           ))
 
