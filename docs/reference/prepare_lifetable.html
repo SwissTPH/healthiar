@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4.1569</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4.1584</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">prepare_lifetable</span><span class="op">(</span><span class="va">age_group</span>, <span class="va">population</span>, <span class="va">bhd</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">prepare_lifetable</span><span class="op">(</span><span class="va">age_group</span>, <span class="va">population</span>, <span class="va">bhd</span>, fraction_lived <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -61,6 +61,11 @@
 <dt id="arg-bhd">bhd<a class="anchor" aria-label="anchor" href="#arg-bhd"></a></dt>
 <dd><p><code>Numeric vector</code> referring to the baseline health data (deaths) by age group.</p></dd>
 
+
+<dt id="arg-fraction-lived">fraction_lived<a class="anchor" aria-label="anchor" href="#arg-fraction-lived"></a></dt>
+<dd><p><code>Numeric vector</code> Numeric vector or <code>single numeric scalar</code> referring to the average
+fraction of the age interval lived by individuals who die within that interval. Default is 0.5.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -77,6 +82,14 @@ See the AirQ+ manual
 for guidance on how to convert larger age groups to 1 year age groups,
 section "Estimation of yearly values" (WHO 2020)
 .</p>
+<p><code>fraction_lived</code> is by default 0.5 for all age groups. However,
+in low-mortality settings, infant deaths are heavily concentrated
+in the first weeks of life.
+Therefore, <code>fraction_lived</code> can be lower e.g. 0.1 for the first age group.</p>
+<p>When <code>fraction_lived[1] &lt; 0.5</code>, the function reallocates the baseline
+health data (<code>bhd</code>) for the first age group \([0, 5)\) such that
+<code>bhd[1] * (1 - fraction_lived[1])</code> deaths are assigned to single-year
+age 0, and the remaining deaths are split equally across single-year ages 1–4.</p>
 <p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table">YLL and deaths with life table</a></p></li>

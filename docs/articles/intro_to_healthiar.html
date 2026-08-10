@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4.1569</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4.1584</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1586,6 +1586,50 @@ sex and additional sub-group e.g. education level</em>.</p>
 <h2 id="yll-deaths-with-life-table">YLL &amp; deaths with life table<a class="anchor" aria-label="anchor" href="#yll-deaths-with-life-table"></a>
 </h2>
 <div class="section level3">
+<h3 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
+</h3>
+<p>The life table approach to obtain YLL and deaths requires population
+and baseline mortality data to be stratified by <em>one year</em> age
+groups. However, in some cases these data are only available for larger
+age groups (e.g., 5-year data: 0-4 years old, 5-9 years old, …). What to
+do?</p>
+<ul>
+<li><p>If your population and mortality data are <em>not</em> available
+by one-year age group, data must be prepared by interpolating values.
+The <code>healthiar</code> function <code><a href="../reference/prepare_lifetable.html">prepare_lifetable()</a></code>
+makes this conversion using the same approach as the WHO tool AirQ+
+<span class="citation">(WHO 2020)</span>. In standard AirQ+ life table
+disaggregations, deaths are assumed to be distributed uniformly across
+age intervals with a fraction of the age interval lived of 0.5. However,
+in modern public health settings, infant mortality is highly skewed
+because the vast majority of deaths occur within the first year of life.
+In countries with low infant mortality the fraction lived can be
+e.g. 0.1.</p></li>
+<li><p>If your population and death data are stratified by one-year age
+group, you are lucky, you can ignore this initial step.</p></li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">age_groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span><span class="op">)</span></span>
+<span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">438200</span>, <span class="fl">445100</span>, <span class="fl">439800</span>, <span class="fl">421500</span><span class="op">)</span></span>
+<span><span class="va">bhd_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1420</span>, <span class="fl">45</span>, <span class="fl">50</span>, <span class="fl">125</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Standard uniform disaggregation (fraction_lived = 0.5)</span></span>
+<span><span class="va">prepared_data</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/prepare_lifetable.html">prepare_lifetable</a></span><span class="op">(</span></span>
+<span>  age_group <span class="op">=</span> <span class="va">age_groups</span>,</span>
+<span>  population <span class="op">=</span> <span class="va">pop</span>,</span>
+<span>  bhd <span class="op">=</span> <span class="va">bhd_counts</span></span>
+<span>  <span class="co"># fraction_lived = 0.5 (default)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Demographic adjustment for low infant mortality (first fraction_lived = 0.1)</span></span>
+<span><span class="va">prepared_data_adjusting_for_low_infant_mortality</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/prepare_lifetable.html">prepare_lifetable</a></span><span class="op">(</span></span>
+<span>  age_group <span class="op">=</span> <span class="va">age_groups</span>,</span>
+<span>  population <span class="op">=</span> <span class="va">pop</span>,</span>
+<span>  bhd <span class="op">=</span> <span class="va">bhd_counts</span>,</span>
+<span>  fraction_lived <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="yll">YLL<a class="anchor" aria-label="anchor" href="#yll"></a>
 </h3>
 <div class="section level4">
@@ -1598,44 +1642,28 @@ COPD attributable to PM2.5 exposure during one year.</p>
 <h4 id="methodology-3">Methodology<a class="anchor" aria-label="anchor" href="#methodology-3"></a>
 </h4>
 <div class="section level5">
-<h5 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
-</h5>
-<p>The life table approach to obtain YLL and deaths requires population
-and baseline mortality data to be stratified by <em>one year</em> age
-groups. However, in some cases these data are only available for larger
-age groups (e.g., 5-year data: 0-4 years old, 5-9 years old, …). What to
-do?</p>
-<ul>
-<li><p>If your population and mortality data are <em>not</em> available
-by one-year age group, your data must be prepared by interpolating
-values. The <code>healthiar</code> function
-<code><a href="../reference/prepare_lifetable.html">prepare_lifetable()</a></code> makes this conversion using the same
-approach as the WHO tool AirQ+ <span class="citation">(WHO
-2020)</span>.</p></li>
-<li><p>If your population and death data are stratified by one-year age
-group, you are lucky, you can ignore this initial step.</p></li>
-</ul>
-</div>
-<div class="section level5">
 <h5 id="general-concept">General concept<a class="anchor" aria-label="anchor" href="#general-concept"></a>
 </h5>
 <p>The life table methodology of <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>
 follows that of the WHO tool AirQ+ <span class="citation">(WHO
-2020)</span>, which is described in more detail by <span class="citation">Miller and Hurley (2003)</span>.</p>
-<p>In short, two scenarios are compared:</p>
+2020)</span>, which is described in more detail by <span class="citation">Miller and Hurley (2003)</span>. The generalized
+formulas, which do not assume a fixed fraction of life lived
+(fraction_lived = 0.5), are based on the foundational work by <span class="citation">Chiang (1984)</span>. In short, two scenarios are
+compared:</p>
 <ol style="list-style-type: lower-alpha">
 <li><p>a scenario with the exposure level specified in the function
 (“exposed scenario”) and</p></li>
 <li><p>a scenario with no exposure (“unexposed scenario”).</p></li>
 </ol>
 <p>First, the entry and mid-year populations of the (first) year of
-analysis in the unexposed scenario is determined using modified survival
-probabilities. Second, age-specific population projections using
-scenario-specific survival probabilities are done for both scenarios.
-Third, by subtracting the populations in the unexposed scenario from the
-populations in the exposed scenario the premature deaths/years of life
-lost attributable to the exposure are determined.</p>
-<p>An expansive life table case study for is available in a report of
+analysis in the unexposed scenario are determined using modified
+survival probabilities. Second, age-specific population projections
+using scenario-specific survival probabilities are done for both
+scenarios. Third, by subtracting the populations in the unexposed
+scenario from the populations in the exposed scenario the premature
+deaths/years of life lost attributable to the exposure are
+determined.</p>
+<p>An expansive life table case study for is available in a report by
 <span class="citation">Miller (2010)</span>.</p>
 </div>
 <div class="section level5">
@@ -1646,7 +1674,7 @@ lost attributable to the exposure are determined.</p>
 </h6>
 <p>The entry (i.e. start of year) populations in both scenarios (exposed
 and unexposed) is determined as follows:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub><mo>=</mo><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub><mo>+</mo><mfrac><mrow><mi>d</mi><mi>e</mi><mi>a</mi><mi>t</mi><mi>h</mi><msub><mi>s</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">entry\_population_{year_1} = midyear\_population_{year_1} + \frac{deaths_{year_1}}{2}</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub><mo>=</mo><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>d</mi><mi>e</mi><mi>a</mi><mi>t</mi><mi>h</mi><msub><mi>s</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub></mrow><annotation encoding="application/x-tex">entry\_population_{year_1} = midyear\_population_{year_1} + (1 - fraction\_lived) \times deaths_{year_1}</annotation></semantics></math></p>
 </div>
 <div class="section level6">
 <h6 id="survival-probabilities">Survival probabilities<a class="anchor" aria-label="anchor" href="#survival-probabilities"></a>
@@ -1659,12 +1687,12 @@ and unexposed) is determined as follows:</p>
 to start of year
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i+1</annotation></semantics></math>
 are calculated as follows:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mo>=</mo><mfrac><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>i</mi></msub><mo>−</mo><mfrac><mrow><mi>d</mi><mi>e</mi><mi>a</mi><mi>t</mi><mi>h</mi><msub><mi>s</mi><mi>i</mi></msub></mrow><mn>2</mn></mfrac></mrow><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>i</mi></msub><mo>+</mo><mfrac><mrow><mi>d</mi><mi>e</mi><mi>a</mi><mi>t</mi><mi>h</mi><msub><mi>s</mi><mi>i</mi></msub></mrow><mn>2</mn></mfrac></mrow></mfrac></mrow><annotation encoding="application/x-tex">prob\_survival = \frac{midyear\_population_i - \frac{deaths_i}{2}}{midyear\_population_i + \frac{deaths_i}{2}}</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mo>=</mo><mfrac><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>i</mi></msub><mo>−</mo><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi><mo>×</mo><mi>d</mi><mi>e</mi><mi>a</mi><mi>t</mi><mi>h</mi><msub><mi>s</mi><mi>i</mi></msub></mrow><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>i</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>d</mi><mi>e</mi><mi>a</mi><mi>t</mi><mi>h</mi><msub><mi>s</mi><mi>i</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">prob\_survival = \frac{midyear\_population_i - fraction\_lived \times deaths_i}{midyear\_population_i + (1 - fraction\_lived) \times deaths_i}</annotation></semantics></math></p>
 <p>Analogously, the probability of survival from start of year
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 to mid-year
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mo>=</mo><mn>1</mn><mo>−</mo><mfrac><mrow><mn>1</mn><mo>−</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">prob\_survival\_until\_midyear = 1 - \frac{1 - prob\_survival}{2}</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mo>=</mo><mn>1</mn><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">prob\_survival\_until\_midyear = 1 - (1 - fraction\_lived) \times (1 - prob\_survival)</annotation></semantics></math></p>
 </div>
 <div class="section level7">
 <h6 id="unexposed-scenario">Unexposed scenario<a class="anchor" aria-label="anchor" href="#unexposed-scenario"></a>
@@ -1675,27 +1703,27 @@ as follows:</p>
 calculated using the inputted age-specific mid-year populations and
 deaths.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo>=</mo><mfrac><mrow><mi>d</mi><mi>e</mi><mi>a</mi><mi>t</mi><mi>h</mi><mi>s</mi></mrow><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">hazard\_rate = \frac{deaths}{mid\_year\_population}</annotation></semantics></math></p>
-<p>Second, the hazard rate is multiplied with the modification factor
+<p>Second, the hazard rate is multiplied by the modification factor
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mn>1</mn><mo>−</mo><mi>P</mi><mi>A</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">= 1 - PAF</annotation></semantics></math>)
 to obtain the age-specific hazard rate in the unexposed scenario.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi><mo>=</mo><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo>×</mo><mi>m</mi><mi>o</mi><mi>d</mi><mi>i</mi><mi>f</mi><mi>i</mi><mi>c</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">hazard\_rate\_mod = hazard\_rate \times modification\_factor</annotation></semantics></math></p>
-<p>Third, the the age-specific survival probabilities (from the start
-until the end in a given age group) in the unexposed scenario are
-calculated as follows (cf. Miller &amp; Hurley 2003):</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi><mo>=</mo><mfrac><mrow><mn>2</mn><mo>−</mo><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi></mrow><mrow><mn>2</mn><mo>+</mo><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">prob\_survival\_mod = \frac{2-hazard\_rate\_mod}{2+hazard\_rate\_mod}</annotation></semantics></math></p>
+<p>Third, the age-specific survival probabilities (from the start until
+the end in a given age group) in the unexposed scenario are calculated
+as follows:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi><mo>=</mo><mfrac><mrow><mn>1</mn><mo>−</mo><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi><mo>×</mo><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi></mrow><mrow><mn>1</mn><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">prob\_survival\_mod = \frac{1 - fraction\_lived \times hazard\_rate\_mod}{1 + (1 - fraction\_lived) \times hazard\_rate\_mod}</annotation></semantics></math></p>
 </div>
 </div>
 <div class="section level6">
 <h6 id="mid-year-population">Mid-year population<a class="anchor" aria-label="anchor" href="#mid-year-population"></a>
 </h6>
-<p>The mid-year populatios of the (first) year of analysis (year_1) in
+<p>The mid-year population of the (first) year of analysis (year_1) in
 the unexposed scenario are determined as follows:</p>
 <p>First, the survival probabilities from start of year
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 to mid-year
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 in the unexposed scenario is calculated as:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi></mrow></msub><mo>=</mo><mn>1</mn><mo>−</mo><mfrac><mrow><mn>1</mn><mo>−</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">prob\_survival\_until\_midyear_{mod} = 1 - \frac{1 - prob\_survival\_mod}{2}</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi></mrow></msub><mo>=</mo><mn>1</mn><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>o</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">prob\_survival\_until\_midyear_{mod} = 1 - (1 - fraction\_lived) \times (1 - prob\_survival\_mod)</annotation></semantics></math></p>
 <p>Second, the mid-year populations of the (first) year of analysis
 (year_1) in the unexposed scenario is calculated:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>u</mi><mi>n</mi><mi>e</mi><mi>x</mi><mi>p</mi><mi>o</mi><mi>s</mi><mi>e</mi><msub><mi>d</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub><mo>=</mo><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mn>1</mn></msub></mrow></msub><mo>×</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi>_</mi><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><msub><mi>r</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">midyear\_population\_unexposed_{year_1} = entry\_population_{year_1} \times prob\_survival\_until\_midyear_{mod}</annotation></semantics></math></p>
@@ -1733,8 +1761,8 @@ is calculated.</p>
 <div class="section level7">
 <h6 id="unexposed-scenario-1">Unexposed scenario<a class="anchor" aria-label="anchor" href="#unexposed-scenario-1"></a>
 </h6>
-<p>The entry and mid-year population projections of in the exposed
-scenario is done as follows:</p>
+<p>The entry and mid-year population projections in the unexposed
+scenario are done as follows:</p>
 <p>First, the entry population of year
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i+1</annotation></semantics></math>
 is calculated (which is the same as the end of year population of year
@@ -1756,7 +1784,7 @@ is calculated.</p>
 <p>We can use <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code> combined with life
 table input data to determine YLL attributable to an environmental
 stressor.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm_yll</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_lifetable.html">attribute_lifetable</a></span><span class="op">(</span></span>
 <span>  year_of_analysis <span class="op">=</span> <span class="fl">2019</span>, </span>
 <span>  health_outcome <span class="op">=</span> <span class="st">"yll"</span>,</span>
@@ -1834,7 +1862,7 @@ are also available.</p>
 <h4 id="results-per-year">Results per year<a class="anchor" aria-label="anchor" href="#results-per-year"></a>
 </h4>
 <p><em>NOTE</em>: only a selection of years is shown.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm_yll</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_raw</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
 <span>    .by <span class="op">=</span> <span class="va">year</span>, </span>
@@ -1854,7 +1882,7 @@ are also available.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 2027   <span style="text-decoration: underline;">1</span>284.</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 2028   <span style="text-decoration: underline;">1</span>171.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 90 more rows</span></span></span></code></pre></div>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm_yll</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_raw</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
 <span>    .by <span class="op">=</span> <span class="va">year</span>, </span>
@@ -2155,7 +2183,7 @@ exposure during one year.</p>
 </h4>
 <p>See example on YLL for additional info on
 <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code> calculations and its output.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm_deaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_lifetable.html">attribute_lifetable</a></span><span class="op">(</span></span>
 <span>  health_outcome <span class="op">=</span> <span class="st">"deaths"</span>,</span>
 <span>  year_of_analysis <span class="op">=</span> <span class="fl">2019</span>,</span>
@@ -5740,7 +5768,7 @@ incidence-based approach <span class="citation">(Kim et al.
 <div class="section level4">
 <h4 id="function-call-13">Function call<a class="anchor" aria-label="anchor" href="#function-call-13"></a>
 </h4>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm_copd_yld</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>  rr_central <span class="op">=</span> <span class="fl">1.1</span>, </span>
 <span>  rr_increment <span class="op">=</span> <span class="fl">10</span>, </span>
@@ -5789,7 +5817,7 @@ life lost (YLL) and years lived with disability (YLD), must be summed
 <h4 id="function-call-14">Function call<a class="anchor" aria-label="anchor" href="#function-call-14"></a>
 </h4>
 <p>This is possible using the function <code><a href="../reference/daly.html">daly()</a></code>.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_daly</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/daly.html">daly</a></span><span class="op">(</span></span>
 <span>     output_attribute_yll <span class="op">=</span> <span class="va">results_pm_yll</span>,</span>
 <span>     output_attribute_yld <span class="op">=</span> <span class="va">results_pm_copd_yld</span></span>
@@ -5826,7 +5854,7 @@ scenario A.</p>
 <div class="section level4">
 <h4 id="function-call-15">Function call<a class="anchor" aria-label="anchor" href="#function-call-15"></a>
 </h4>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scenario_A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>    exp_central <span class="op">=</span> <span class="fl">8.85</span>,   <span class="co"># EXPOSURE 1</span></span>
 <span>    cutoff_central <span class="op">=</span> <span class="fl">5</span>, </span>
@@ -5838,14 +5866,14 @@ scenario A.</p>
 <p>The function <code><a href="../reference/attribute_mod.html">attribute_mod()</a></code> can be used to modify one
 or multiple arguments of <code>attribute_health</code>in an existing
 scenario, e.g. <code>scenario_A</code>.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scenario_B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_mod.html">attribute_mod</a></span><span class="op">(</span></span>
 <span>  output_attribute <span class="op">=</span> <span class="va">scenario_A</span>, </span>
 <span>  exp_central <span class="op">=</span> <span class="fl">6</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>This is equivalent to building the whole scenario again (see below),
 but more time and code efficient.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scenario_B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>    exp_central <span class="op">=</span> <span class="fl">6</span>,     <span class="co"># EXPOSURE 2</span></span>
 <span>    cutoff_central <span class="op">=</span> <span class="fl">5</span>, </span>
@@ -5973,7 +6001,7 @@ scenario</li>
 <li>Use <code><a href="../reference/attribute_health.html">attribute_health()</a></code> to calculate burden of scenarios
 A &amp; B.</li>
 </ol>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scenario_A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>    exp_central <span class="op">=</span> <span class="fl">8.85</span>,   <span class="co"># EXPOSURE 1</span></span>
 <span>    cutoff_central <span class="op">=</span> <span class="fl">5</span>, </span>
@@ -5982,7 +6010,7 @@ A &amp; B.</li>
 <span>    erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span>
 <span>    rr_central <span class="op">=</span> <span class="fl">1.118</span>,</span>
 <span>    rr_increment <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scenario_B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_mod.html">attribute_mod</a></span><span class="op">(</span></span>
 <span>  output_attribute <span class="op">=</span> <span class="va">scenario_A</span>, </span>
 <span>  exp_central <span class="op">=</span> <span class="fl">6</span></span>
@@ -5990,7 +6018,7 @@ A &amp; B.</li>
 <ol start="2" style="list-style-type: decimal">
 <li>Use <code><a href="../reference/compare.html">compare()</a></code> to compare scenarios A &amp; B.</li>
 </ol>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">results_comparison</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/compare.html">compare</a></span><span class="op">(</span></span>
 <span>  approach_comparison <span class="op">=</span> <span class="st">"delta"</span>, <span class="co"># or "pif" (population impact fraction)</span></span>
@@ -6101,7 +6129,7 @@ way round.</p>
 </h4>
 <p>For this purpose, you can use the function
 <code><a href="../reference/multiexpose.html">multiexpose()</a></code>.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>  erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span>
 <span>  rr_central <span class="op">=</span> <span class="fl">1.369</span>, </span>
@@ -6128,7 +6156,7 @@ way round.</p>
 <div class="section level4">
 <h4 id="main-results-10">Main results<a class="anchor" aria-label="anchor" href="#main-results-10"></a>
 </h4>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_multiplicative</span><span class="op">$</span><span class="va">health_main</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -6186,7 +6214,7 @@ is the number of age groups.</li>
 <div class="section level4">
 <h4 id="function-call-18">Function call<a class="anchor" aria-label="anchor" href="#function-call-18"></a>
 </h4>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output_attribute</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>  rr_central <span class="op">=</span> <span class="fl">1.063</span>,</span>
 <span>  rr_increment <span class="op">=</span> <span class="fl">10</span>,</span>
@@ -6208,11 +6236,11 @@ is the number of age groups.</li>
 <h4 id="main-results-11">Main results<a class="anchor" aria-label="anchor" href="#main-results-11"></a>
 </h4>
 <p>Age-standardized impact rate:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_per_100k_inhab</span><span class="op">)</span>  </span>
 <span><span class="co">#&gt; [1] 49.91113</span></span></code></pre></div>
 <p>Age group-specific impact rate:</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_raw</span><span class="op">$</span><span class="va">impact_per_100k_inhab</span><span class="op">)</span>  </span>
 <span><span class="co">#&gt; [1] 48.28250 51.53977</span></span></code></pre></div>
 </div>
@@ -6265,7 +6293,7 @@ argument <code>exp_mean</code>, <code>exp_lower</code> and/or
 <div class="section level4">
 <h4 id="function-call-19">Function call<a class="anchor" aria-label="anchor" href="#function-call-19"></a>
 </h4>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># exdat_pwm_1 = Pollution grid data</span></span>
 <span><span class="va">exdat_pwm_1</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exdat_pwm_1.tif"</span>, package <span class="op">=</span> <span class="st">"healthiar"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -6303,7 +6331,7 @@ threshold of 45 dB (cut-off).</p>
 <p>The function arguments <code>erf_eq_...</code> require a function as
 input. Instead of using a <code><a href="https://rdrr.io/r/stats/splinefun.html" class="external-link">splinefun()</a></code> this can also be
 fulfilled by using a ‘function(c)’ which is of type ‘function’.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#setting up function parameters</span></span>
 <span><span class="va">threshold_effect</span> <span class="op">&lt;-</span> <span class="fl">45</span></span>
 <span><span class="va">RR</span> <span class="op">&lt;-</span> <span class="fl">1.055</span></span>
@@ -6438,7 +6466,7 @@ that long-term environmental impacts are not undervalued.</p>
 <div class="section level4">
 <h4 id="function-call-21">Function call<a class="anchor" aria-label="anchor" href="#function-call-21"></a>
 </h4>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">monetized_pm_copd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/monetize.html">monetize</a></span><span class="op">(</span></span>
 <span>    output_attribute <span class="op">=</span> <span class="va">results_pm_copd</span>,</span>
 <span>    discount_shape <span class="op">=</span> <span class="st">"exponential"</span>,</span>
@@ -6486,7 +6514,7 @@ provided to the initial <code><a href="../reference/attribute_health.html">attri
 million EURO.</p>
 <p>Alternatively, you can also monetize (attributable) health impacts
 from a non-<code>healthiar</code> source.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/monetize.html">monetize</a></span><span class="op">(</span></span>
 <span>  impact <span class="op">=</span> <span class="fl">1151</span>,</span>
 <span>  valuation <span class="op">=</span> <span class="fl">100</span></span>
@@ -6545,7 +6573,7 @@ could avoid all COPD cases attributed to air pollution.</p>
 million EURO), what would be the monetary net benefit of such a policy?
 We can find out using the functions <code>healthiar</code> and
 <code><a href="../reference/cba.html">cba()</a></code></p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cba</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cba.html">cba</a></span><span class="op">(</span></span>
 <span>    output_attribute <span class="op">=</span> <span class="va">results_pm_copd</span>,</span>
 <span>    valuation <span class="op">=</span> <span class="fl">50000</span>,</span>
@@ -6576,7 +6604,7 @@ the period specified in the <code>n_years_cost</code> argument</p></li>
 </ul>
 </li>
 </ul>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cba</span><span class="op">$</span><span class="va">cba_main</span> <span class="op">|&gt;</span>  </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">benefit</span>, <span class="va">cost</span>, <span class="va">net_benefit</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -6688,7 +6716,7 @@ inequalities.</p>
 <h4 id="function-call-23">Function call<a class="anchor" aria-label="anchor" href="#function-call-23"></a>
 </h4>
 <p>First, quantify health impacts.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="va">health_impact</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>   age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>,</span>
 <span>   exp_central <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">pm25_mean</span>,</span>
@@ -6702,7 +6730,7 @@ inequalities.</p>
 <p>Second, use the function <code><a href="../reference/socialize.html">socialize()</a></code> entering the whole
 output of <code><a href="../reference/attribute_health.html">attribute_health()</a></code> in the argument
 <code>output_attribute</code>.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">social_t</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/socialize.html">socialize</a></span><span class="op">(</span></span>
 <span>  output_attribute <span class="op">=</span> <span class="va">health_impact</span>,</span>
 <span>  age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>, <span class="co"># They have to be the same in socialize() and in attribute_health()</span></span>
@@ -6713,7 +6741,7 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Alternatively, you can directly enter the health impact in the
 <code><a href="../reference/socialize.html">socialize()</a></code> argument <code>impact</code>.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">social</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/socialize.html">socialize</a></span><span class="op">(</span></span>
 <span>  impact <span class="op">=</span> <span class="va">health_impact</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_by_age_group</span><span class="op">$</span><span class="va">impact</span>,</span>
 <span>  age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>, <span class="co"># They have to be the same in socialize() and in attribute_health()</span></span>
@@ -6787,7 +6815,7 @@ R^2 lower than 0.7, consider alternative data sources or methods.</p>
 <div class="section level4">
 <h4 id="function-call-24">Function call<a class="anchor" aria-label="anchor" href="#function-call-24"></a>
 </h4>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mdi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_mdi.html">prepare_mdi</a></span><span class="op">(</span></span>
 <span>  geo_id_micro <span class="op">=</span> <span class="va">exdat_prepare_mdi</span><span class="op">$</span><span class="va">id</span>,</span>
 <span>  edu <span class="op">=</span> <span class="va">exdat_prepare_mdi</span><span class="op">$</span><span class="va">edu</span>,</span>
@@ -6810,7 +6838,7 @@ turned on).</p>
 <li>
 <code>mdi_main</code>, a tibble containing the BEST-COST MDI</li>
 </ul>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_main</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">select</span><span class="op">(</span><span class="va">geo_id_micro</span>, <span class="va">MDI</span>, <span class="va">MDI_index</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -6896,11 +6924,11 @@ distribution curve</p></li>
 </li>
 </ul>
 <p>To reproduce the boxlots run</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">boxplot</span><span class="op">)</span></span></code></pre></div>
 <p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-113-1.png" class="r-plt" alt="Boxplot of Normalized Indicators and MDI" width="700">
 Analogeously, to reproduce the histogram run</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">histogram</span><span class="op">)</span></span></code></pre></div>
 <p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-114-1.png" class="r-plt" alt="Histogram of MDI with normal curve" width="700"></p>
 <hr>
@@ -6915,7 +6943,7 @@ Analogeously, to reproduce the histogram run</p>
 </h3>
 <p><code>healthiar</code> can be used inside the <em>native</em> pipes
 <code>|&gt;</code>. See the example below.</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">|&gt;</span></span>
 <span>  <span class="op">(</span>\<span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -6926,7 +6954,7 @@ Analogeously, to reproduce the histogram run</p>
 <span>      <span class="op">)</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_rounded</span></span>
 <span>    <span class="op">}</span><span class="op">)</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Shorter making used of the base R function <code><a href="https://rdrr.io/r/base/with.html" class="external-link">with()</a></code>.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">|&gt;</span></span>
 <span>      <span class="op">(</span>\<span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -6943,7 +6971,7 @@ Analogeously, to reproduce the histogram run</p>
 </h3>
 <p><code>healthiar</code> can also be used inside <em>magrittr</em>
 pipes <code>%&gt;%</code> as follows.</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="op">{</span></span>
 <span>    <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -7033,6 +7061,10 @@ Individual Perspective.”</span> <em>Value in Health</em> 13 (8):
 Brealey, Richard A., Stewart C. Myers, Franklin Allen, Simon Benninga,
 and Julian Read. 2023. <em>Principles of Corporate Finance</em>. 14th
 ed. McGraw-Hill Education.
+</div>
+<div id="ref-Chiang1984_book" class="csl-entry">
+Chiang, Chin Long. 1984. <em>The Life Table and Its Applications</em>.
+Robert E. Krieger Publishing Company.
 </div>
 <div id="ref-Cronbach1951_p" class="csl-entry">
 Cronbach, Lee J. 1951. <span>“Coefficient Alpha and the Internal

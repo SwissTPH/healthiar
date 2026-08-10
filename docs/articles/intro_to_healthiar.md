@@ -986,6 +986,51 @@ output_stratified <- output_attribute$health_detailed$results_raw |>
 
 ## YLL & deaths with life table
 
+### Data preparation
+
+The life table approach to obtain YLL and deaths requires population and
+baseline mortality data to be stratified by *one year* age groups.
+However, in some cases these data are only available for larger age
+groups (e.g., 5-year data: 0-4 years old, 5-9 years old, …). What to do?
+
+- If your population and mortality data are *not* available by one-year
+  age group, data must be prepared by interpolating values. The
+  `healthiar` function
+  [`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
+  makes this conversion using the same approach as the WHO tool AirQ+
+  (WHO 2020). In standard AirQ+ life table disaggregations, deaths are
+  assumed to be distributed uniformly across age intervals with a
+  fraction of the age interval lived of 0.5. However, in modern public
+  health settings, infant mortality is highly skewed because the vast
+  majority of deaths occur within the first year of life. In countries
+  with low infant mortality the fraction lived can be e.g. 0.1.
+
+- If your population and death data are stratified by one-year age
+  group, you are lucky, you can ignore this initial step.
+
+``` r
+
+age_groups <- c(0, 5, 10, 15)
+pop <- c(438200, 445100, 439800, 421500)
+bhd_counts <- c(1420, 45, 50, 125)
+
+# Standard uniform disaggregation (fraction_lived = 0.5)
+prepared_data <- healthiar::prepare_lifetable(
+  age_group = age_groups,
+  population = pop,
+  bhd = bhd_counts
+  # fraction_lived = 0.5 (default)
+)
+
+# Demographic adjustment for low infant mortality (first fraction_lived = 0.1)
+prepared_data_adjusting_for_low_infant_mortality <- healthiar::prepare_lifetable(
+  age_group = age_groups,
+  population = pop,
+  bhd = bhd_counts,
+  fraction_lived = c(0.1, 0.5, 0.5, 0.5)
+)
+```
+
 ### YLL
 
 #### Goal
@@ -995,31 +1040,15 @@ attributable to PM2.5 exposure during one year.
 
 #### Methodology
 
-##### Data preparation
-
-The life table approach to obtain YLL and deaths requires population and
-baseline mortality data to be stratified by *one year* age groups.
-However, in some cases these data are only available for larger age
-groups (e.g., 5-year data: 0-4 years old, 5-9 years old, …). What to do?
-
-- If your population and mortality data are *not* available by one-year
-  age group, your data must be prepared by interpolating values. The
-  `healthiar` function
-  [`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
-  makes this conversion using the same approach as the WHO tool AirQ+
-  (WHO 2020).
-
-- If your population and death data are stratified by one-year age
-  group, you are lucky, you can ignore this initial step.
-
 ##### General concept
 
 The life table methodology of
 [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
 follows that of the WHO tool AirQ+ (WHO 2020), which is described in
-more detail by Miller and Hurley (2003).
-
-In short, two scenarios are compared:
+more detail by Miller and Hurley (2003). The generalized formulas, which
+do not assume a fixed fraction of life lived (fraction_lived = 0.5), are
+based on the foundational work by Chiang (1984). In short, two scenarios
+are compared:
 
 1.  a scenario with the exposure level specified in the function
     (“exposed scenario”) and
@@ -1027,14 +1056,14 @@ In short, two scenarios are compared:
 2.  a scenario with no exposure (“unexposed scenario”).
 
 First, the entry and mid-year populations of the (first) year of
-analysis in the unexposed scenario is determined using modified survival
-probabilities. Second, age-specific population projections using
-scenario-specific survival probabilities are done for both scenarios.
-Third, by subtracting the populations in the unexposed scenario from the
-populations in the exposed scenario the premature deaths/years of life
-lost attributable to the exposure are determined.
+analysis in the unexposed scenario are determined using modified
+survival probabilities. Second, age-specific population projections
+using scenario-specific survival probabilities are done for both
+scenarios. Third, by subtracting the populations in the unexposed
+scenario from the populations in the exposed scenario the premature
+deaths/years of life lost attributable to the exposure are determined.
 
-An expansive life table case study for is available in a report of
+An expansive life table case study for is available in a report by
 Miller (2010).
 
 ##### Determination of populations in the (first) year of analysis
@@ -1045,7 +1074,7 @@ The entry (i.e. start of year) populations in both scenarios (exposed
 and unexposed) is determined as follows:
 
 ``` math
-entry\_population_{year_1} = midyear\_population_{year_1} + \frac{deaths_{year_1}}{2}
+entry\_population_{year_1} = midyear\_population_{year_1} + (1 - fraction\_lived) \times deaths_{year_1}
 ```
 
 ###### Survival probabilities
@@ -1056,14 +1085,14 @@ The survival probabilities in the exposed scenario from start of year
 $`i`$ to start of year $`i+1`$ are calculated as follows:
 
 ``` math
-prob\_survival = \frac{midyear\_population_i - \frac{deaths_i}{2}}{midyear\_population_i + \frac{deaths_i}{2}}
+prob\_survival = \frac{midyear\_population_i - fraction\_lived \times deaths_i}{midyear\_population_i + (1 - fraction\_lived) \times deaths_i}
 ```
 
 Analogously, the probability of survival from start of year $`i`$ to
 mid-year $`i`$:
 
 ``` math
-prob\_survival\_until\_midyear = 1 - \frac{1 - prob\_survival}{2}
+prob\_survival\_until\_midyear = 1 - (1 - fraction\_lived) \times (1 - prob\_survival)
 ```
 
 ###### Unexposed scenario
@@ -1079,7 +1108,7 @@ deaths.
 hazard\_rate = \frac{deaths}{mid\_year\_population}
 ```
 
-Second, the hazard rate is multiplied with the modification factor
+Second, the hazard rate is multiplied by the modification factor
 ($`= 1 - PAF`$) to obtain the age-specific hazard rate in the unexposed
 scenario.
 
@@ -1087,24 +1116,24 @@ scenario.
 hazard\_rate\_mod = hazard\_rate \times modification\_factor
 ```
 
-Third, the the age-specific survival probabilities (from the start until
-the end in a given age group) in the unexposed scenario are calculated
-as follows (cf. Miller & Hurley 2003):
+Third, the age-specific survival probabilities (from the start until the
+end in a given age group) in the unexposed scenario are calculated as
+follows:
 
 ``` math
-prob\_survival\_mod = \frac{2-hazard\_rate\_mod}{2+hazard\_rate\_mod}
+prob\_survival\_mod = \frac{1 - fraction\_lived \times hazard\_rate\_mod}{1 + (1 - fraction\_lived) \times hazard\_rate\_mod}
 ```
 
 ###### Mid-year population
 
-The mid-year populatios of the (first) year of analysis (year_1) in the
+The mid-year population of the (first) year of analysis (year_1) in the
 unexposed scenario are determined as follows:
 
 First, the survival probabilities from start of year $`i`$ to mid-year
 $`i`$ in the unexposed scenario is calculated as:
 
 ``` math
-prob\_survival\_until\_midyear_{mod} = 1 - \frac{1 - prob\_survival\_mod}{2}
+prob\_survival\_until\_midyear_{mod} = 1 - (1 - fraction\_lived) \times (1 - prob\_survival\_mod)
 ```
 
 Second, the mid-year populations of the (first) year of analysis
@@ -1147,8 +1176,8 @@ midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until
 
 ###### Unexposed scenario
 
-The entry and mid-year population projections of in the exposed scenario
-is done as follows:
+The entry and mid-year population projections in the unexposed scenario
+are done as follows:
 
 First, the entry population of year $`i+1`$ is calculated (which is the
 same as the end of year population of year $`i`$) by multiplying the
@@ -2616,6 +2645,9 @@ Perspective.” *Value in Health* 13 (8): 1046–55.
 Brealey, Richard A., Stewart C. Myers, Franklin Allen, Simon Benninga,
 and Julian Read. 2023. *Principles of Corporate Finance*. 14th ed.
 McGraw-Hill Education.
+
+Chiang, Chin Long. 1984. *The Life Table and Its Applications*. Robert
+E. Krieger Publishing Company.
 
 Cronbach, Lee J. 1951. “Coefficient Alpha and the Internal Structure of
 Tests.” *Psychometrika* 16 (3): 297–334.
