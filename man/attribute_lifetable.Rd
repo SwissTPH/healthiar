@@ -70,7 +70,7 @@ attribute_lifetable(
 
 \item{rr_increment}{\code{Numeric value} specifying the \strong{exposure increment} for which the provided relative risk is valid. See Details for more info. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
-\item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
+\item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. Input exposure values must be expressed in same unit as the increment of the relative risk. The re-scale of the relative risk is unbounded above and users are responsible for the plausible range. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
 \item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}}
 

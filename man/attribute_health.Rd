@@ -54,7 +54,7 @@ attribute_health(
 
 \item{rr_increment}{\code{Numeric value} specifying the \strong{exposure increment} for which the provided relative risk is valid. See Details for more info. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
-\item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
+\item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. Input exposure values must be expressed in same unit as the increment of the relative risk. The re-scale of the relative risk is unbounded above and users are responsible for the plausible range. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{baseline health data} of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}}
 

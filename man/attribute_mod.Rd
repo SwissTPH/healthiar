@@ -41,7 +41,7 @@ attribute_mod(
 \arguments{
 \item{output_attribute}{\code{List} containing the output of the function attribute() for scenario 1.}
 
-\item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
+\item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. Input exposure values must be expressed in same unit as the increment of the relative risk. The re-scale of the relative risk is unbounded above and users are responsible for the plausible range. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
 \item{rr_central, rr_lower, rr_upper}{\code{Numeric value} specifying the \strong{central relative risk} estimate and (optionally) the corresponding lower and upper 95\% confidence interval bounds. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 

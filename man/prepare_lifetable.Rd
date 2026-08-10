@@ -4,7 +4,7 @@
 \alias{prepare_lifetable}
 \title{Convert multi-year life table to single year life table}
 \usage{
-prepare_lifetable(age_group, population, bhd)
+prepare_lifetable(age_group, population, bhd, fraction_lived = 0.5)
 }
 \arguments{
 \item{age_group}{\code{Numeric vector} referring to the first years of the age groups. E.g. c(0, 20, 40, 60) means [0, 20), [20, 40), [40, 60), [60, )}
@@ -12,6 +12,9 @@ prepare_lifetable(age_group, population, bhd)
 \item{population}{\code{Numeric vector} referring to mid-year populations by age group.}
 
 \item{bhd}{\code{Numeric vector} referring to the baseline health data (deaths) by age group.}
+
+\item{fraction_lived}{\code{Numeric vector} Numeric vector or \code{single numeric scalar} referring to the average 
+fraction of the age interval lived by individuals who die within that interval. Default is 0.5.}
 }
 \value{
 This function returns a \code{tibble} containing the columns:
@@ -32,6 +35,16 @@ See the AirQ+ manual
 "Health impact assessment of air pollution: AirQ+ life table manual"
 for guidance on how to convert larger age groups to 1 year age groups,
 section "Estimation of yearly values" \insertCite{WHO2020_report}{healthiar}.
+
+\code{fraction_lived} is by default 0.5 for all age groups. However, 
+in low-mortality settings, infant deaths are heavily concentrated
+in the first weeks of life. 
+Therefore, \code{fraction_lived} can be lower e.g. 0.1 for the first age group.
+
+When \code{fraction_lived[1] < 0.5}, the function reallocates the baseline 
+health data (\code{bhd}) for the first age group \eqn{[0, 5)} such that 
+\code{bhd[1] * (1 - fraction_lived[1])} deaths are assigned to single-year 
+age 0, and the remaining deaths are split equally across single-year ages 1–4.
 
 Detailed information about the methodology (including equations)
 is available in the package vignette.
