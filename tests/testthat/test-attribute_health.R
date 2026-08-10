@@ -922,6 +922,28 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
 })
 
 
+# By year (using info)
+testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|cutoff_TRUE|", {
+
+  testthat::expect_equal(
+    object = healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      exp_central = c(11, 12, 13),
+      cutoff_central = rep(10, 3),
+      bhd_central = c(10E3, 11E3, 12E3),
+      rr_central = 1.105,
+      rr_lower = 1.008,
+      rr_upper = 1.160,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      info = data.frame(year = c(2021, 2022, 2023)))$health_detailed$results_raw$impact_rounded,
+    expected = c(99, 8, 147, 217, 18, 322,354, 29, 523)
+  )
+})
+
+
+
+
 
 #### ITERATION ##################################################################
 
