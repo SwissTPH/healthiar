@@ -66,7 +66,7 @@ get_paf <-
         rr_at_exp_1 = rr_at_exp,
         rr_at_exp_2 = base::rep(1, base::length(rr_at_exp)),
         prop_pop_exp_1 = prop_pop_exp,
-        prop_pop_exp_2 = base::rep(1, base::length(prop_pop_exp)))
+        prop_pop_exp_2 = prop_pop_exp)
 
 
 
