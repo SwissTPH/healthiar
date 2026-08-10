@@ -895,7 +895,7 @@ are only available for larger age groups (e.g., 5-year data: 0-4 years old, 5-9 
 data must be prepared by interpolating values. 
 The `healthiar` function `prepare_lifetable()` makes this conversion using the same approach as the WHO tool
 AirQ+ [@WHO2020_report]. In standard AirQ+ life table disaggregations, deaths are assumed to be distributed uniformly across age intervals with a fraction of the age interval lived of 0.5. 
-However, in modern public health settings, **infant mortality is highly skewed** because the vast majority of deaths occur within the first year of life. In countries with low infant mortality the fraction lived can be e.g. 0.1.
+However, in modern public health settings, infant mortality is highly skewed because the vast majority of deaths occur within the first year of life. In countries with low infant mortality the fraction lived can be e.g. 0.1.
 
 - If your population and death data are stratified by one-year age group, you are lucky, you can ignore this initial step.
 
