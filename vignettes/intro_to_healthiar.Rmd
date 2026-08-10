@@ -886,6 +886,42 @@ rm(output_attribute, output_stratified)
 
 # YLL & deaths with life table
 
+## Data preparation
+The life table approach to obtain YLL and deaths requires population and baseline mortality data to be 
+stratified by *one year* age groups. However, in some cases these data 
+are only available for larger age groups (e.g., 5-year data: 0-4 years old, 5-9 years old, ...). What to do?
+
+- If your population and mortality data are *not* available by one-year age group, 
+data must be prepared by interpolating values. 
+The `healthiar` function `prepare_lifetable()` makes this conversion using the same approach as the WHO tool
+AirQ+ [@WHO2020_report]. In standard AirQ+ life table disaggregations, deaths are assumed to be distributed uniformly across age intervals with a fraction of the age interval lived of 0.5. 
+However, in modern public health settings, **infant mortality is highly skewed** because the vast majority of deaths occur within the first year of life. In countries with low infant mortality the fraction lived can be e.g. 0.1.
+
+- If your population and death data are stratified by one-year age group, you are lucky, you can ignore this initial step.
+
+
+```{r}
+age_groups <- c(0, 5, 10, 15)
+pop <- c(438200, 445100, 439800, 421500)
+bhd_counts <- c(1420, 45, 50, 125)
+
+# Standard uniform disaggregation (fraction_lived = 0.5)
+prepared_data <- healthiar::prepare_lifetable(
+  age_group = age_groups,
+  population = pop,
+  bhd = bhd_counts,
+  # fraction_lived = 0.5 (default)
+)
+
+# Demographic adjustment for low infant mortality (first fraction_lived = 0.1)
+prepared_data_adjusting_for_low_infant_mortality <- healthiar::prepare_lifetable(
+  age_group = age_groups,
+  population = pop,
+  bhd = bhd_counts,
+  fraction_lived = c(0.1, 0.5, 0.5, 0.5)
+)
+```
+
 ## YLL
 
 ### Goal
@@ -893,16 +929,6 @@ rm(output_attribute, output_stratified)
 E.g., to quantify the years of life lost (YLL) due to deaths from COPD attributable to PM2.5 exposure during one year.
 
 ### Methodology
-
-#### Data preparation
-The life table approach to obtain YLL and deaths requires population and baseline mortality data to be 
-stratified by *one year* age groups. However, in some cases these data 
-are only available for larger age groups (e.g., 5-year data: 0-4 years old, 5-9 years old, ...). What to do?
-
-- If your population and mortality data are *not* available by one-year age group, your data must be prepared by interpolating values. The `healthiar` function `prepare_lifetable()` makes this conversion using the same approach as the WHO tool
-AirQ+ [@WHO2020_report]. 
-
-- If your population and death data are stratified by one-year age group, you are lucky, you can ignore this initial step.
 
 #### General concept
 The life table methodology of `attribute_lifetable()` follows that of the WHO tool AirQ+ [@WHO2020_report], which is described in more detail by @Miller2003_jech. 
