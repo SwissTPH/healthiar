@@ -312,8 +312,10 @@ testthat::test_that("log-log rescaling results the same", {
 
 testthat::test_that("log-log rescaling results the same based on Lehtomäki et al.", {
 
-
-data <- read.csv(testthat::test_path("data","HeliLog-logcurve.csv")) #Lehtomäki et al. 2024
+#Lehtomäki et al. 2024
+data <- 
+  read.csv(testthat::test_path("data","HeliLog-logcurve.csv"),
+           fileEncoding = "UTF-8-BOM") 
 
 testthat::expect_equal(
   signif(healthiar::get_risk(
