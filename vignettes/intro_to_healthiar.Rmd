@@ -900,7 +900,7 @@ However, in modern public health settings, **infant mortality is highly skewed**
 - If your population and death data are stratified by one-year age group, you are lucky, you can ignore this initial step.
 
 
-```{r}
+```{r Examples using prepare_lifetable()}
 age_groups <- c(0, 5, 10, 15)
 pop <- c(438200, 445100, 439800, 421500)
 bhd_counts <- c(1420, 45, 50, 125)
@@ -909,7 +909,7 @@ bhd_counts <- c(1420, 45, 50, 125)
 prepared_data <- healthiar::prepare_lifetable(
   age_group = age_groups,
   population = pop,
-  bhd = bhd_counts,
+  bhd = bhd_counts
   # fraction_lived = 0.5 (default)
 )
 
