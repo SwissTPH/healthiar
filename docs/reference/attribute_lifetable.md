@@ -229,6 +229,16 @@ survival probabilities.
 for each year after the year of analysis n babies (population aged 0)
 are born.
 
+`approach_exposure` Strategy for modeling exposure over time:
+
+- `"single_year"`: Air pollution exposure is evaluated for a single year
+  (year of analysis). Attributable premature deaths are calculated for
+  this year only.
+
+- `"constant"`: Air pollution exposure is sustained across the full
+  projection horizon. Attributable premature deaths and YLLs are
+  accumulated across all years within `time_horizon`.
+
 `time_horizon` Applicable for the following cases:
 
 - YLL: `single_year` or `constant` exposure
