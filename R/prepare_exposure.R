@@ -165,7 +165,7 @@ prepare_exposure <-
         poll_grid <- terra::project(poll_grid, pop_grid, method = "near")
         warning("'poll_grid' was reprojected to match the extent and resolution of 'pop_grid'.")}
       if (sf::st_crs(geo_units) != sf::st_crs(poll_grid)) {
-        geo_units <- sf::st_transform(geo_units, st_crs(poll_grid))
+        geo_units <- sf::st_transform(geo_units, sf::st_crs(poll_grid))
         warning("'geo_units' was reprojected to match the CRS of 'poll_grid' and 'pop_grid'.")}
 
       ## crop & mask pollution & population grid
@@ -270,7 +270,7 @@ prepare_exposure <-
 
       ## check for matching CRS
       if (sf::st_crs(geo_units) != sf::st_crs(poll_grid)) {
-        geo_units <- sf::st_transform(geo_units, st_crs(poll_grid))
+        geo_units <- sf::st_transform(geo_units, sf::st_crs(poll_grid))
         warning("'geo_units' was reprojected to match the CRS of 'poll_grid' and 'population'.")}
 
       ## crop & mask pollution grid
