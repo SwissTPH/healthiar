@@ -77,7 +77,7 @@ testthat::test_that("results the same |pathway_standardize|single_geo|", {
 ### MULTIPLE GEO UNITS ############################################################
 
 
-testthat::test_that("results correct |pathway_standardize|multi_geo|", {
+testthat::test_that("results the same |pathway_standardize|multi_geo|", {
 
   bestcost_pm_mortality_multigeo <-
     healthiar::attribute_health(

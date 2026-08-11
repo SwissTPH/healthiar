@@ -214,7 +214,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 
 ### WITHOUT REF_PROP_POP  ################################
 
-  testthat::test_that("results the same |pathway_socialize|input_is_attribute_output_FALSE|social_indicator_TRUE|ref_pop_TRUE|", {
+  testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_FALSE|social_indicator_TRUE|ref_pop_TRUE|", {
 
     ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
     data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))

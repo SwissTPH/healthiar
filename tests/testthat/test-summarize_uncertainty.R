@@ -388,7 +388,7 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_for
 
 #### YLD ########################################################################
 
-testthat::test_that("results the same yld |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
 
@@ -465,7 +465,7 @@ testthat::test_that("results the same |pathway_uncertainty|exp_dist|erf_rr_incre
 
 ### YLD #########################################################################
 
-testthat::test_that("results the same yld |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 
   data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
   data  <- data_raw |>

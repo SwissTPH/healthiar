@@ -49,7 +49,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
 
 ##### NO INFLATION #############################################################
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
+testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
   testthat::expect_equal(
     object =
@@ -129,7 +129,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
 })
 
 
-testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
+testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
   testthat::expect_equal(
     object =
