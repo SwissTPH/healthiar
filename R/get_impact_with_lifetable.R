@@ -36,6 +36,9 @@ get_impact_with_lifetable <-
 
     health_outcome <- base::unique(input_with_risk_and_pop_fraction$health_outcome)
 
+    is_deaths <- health_outcome == "deaths"
+    is_yll <- health_outcome == "yll"
+
     is_single_year_exposure <- base::unique(input_with_risk_and_pop_fraction$approach_exposure) == "single_year"
     is_constant_exposure <- base::unique(input_with_risk_and_pop_fraction$approach_exposure) == "constant"
 
