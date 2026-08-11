@@ -3,10 +3,14 @@
 # Please alphabetically
 # How to update this list:
 # 1) Run checkhelper::fix_globals()
-# 2) Copy the list of utils::globalVariables() from the console
-# 3) Paste the content below
+# 2) Copy the list of variables inside utils::globalVariables() from the console
+# 3) Paste the content below 
+# 4) Keep .data, which is not outputed by checkhelper::fix_globals()
 
 utils::globalVariables(unique(c(
+# KEEP THIS  
+".data",
+# PASTE BELOW THE VARIABLES FROM checkhelper::fix_globals()
 # cba: 
 "benefit", "net_benefit", 
 # compare: 
