@@ -490,7 +490,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
   testthat::expect_equal(
     object = healthiar::attribute_lifetable(
       health_outcome = "deaths",
-      approach_exposure = "constant",
+      approach_exposure = "single_year",
       approach_newborns = "with_newborns",
       exp_central = data[["input"]]$mean_concentration,
       cutoff_central = data[["input"]]$cut_off_value,
@@ -510,7 +510,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
     )$health_main$impact,
     expected =
       # c(2601, 1371, 3804) # Results on 2025-04-15;Rounded impacts from "airqplus_deaths_yll_lifetable_adults.xlsx" (the YLL impacts were multiplied by 2 to obtain the total premature deaths deaths)
-      c(2599.365941, 1370.612959, 3801.987144) # Results on 2025-07-09;
+      c(2599.4, 1370.6, 3802.0) # Results on 2026-08-10;
   )
 })
 
@@ -556,6 +556,37 @@ testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_const
       )$health_main$impact,
     expected =
       c(2898.8254341, 1529.6159982, 4236.9347910) # Result on 20 August 2024; no comparison study
+  )
+})
+
+### CONSTANT EXPOSURE & WITH NEWBORNS ###########################################
+testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+
+  testthat::expect_equal(
+    object = healthiar::attribute_lifetable(
+      health_outcome = "deaths",
+      approach_exposure = "constant",
+      approach_newborns = "with_newborns",
+      exp_central = data[["input"]]$mean_concentration,
+      cutoff_central = data[["input"]]$cut_off_value,
+      rr_central = data[["input"]]$relative_risk,
+      rr_lower = data[["input"]]$relative_risk_lower,
+      rr_upper = data[["input"]]$relative_risk_upper,
+      rr_increment = 10,
+      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = base::rep(c("male", "female"), each = 100),
+      population = c(data[["pop"]]$midyear_population_male,
+                     data[["pop"]]$midyear_population_female),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      year_of_analysis =  data[["input"]]$start_year,
+      min_age = data[["input"]]$apply_rr_from_age
+    )$health_main$impact,
+    expected =
+      c(59902.2923, 30852.311, 89698.1514) # Results on 2026-08-11;
   )
 })
 
