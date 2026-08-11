@@ -488,12 +488,12 @@ get_impact_with_lifetable <-
               dplyr::mutate(.by = c(age_start, age_end),
                             population = ifelse(year == yoa, population, NA))
 
-            if({{health_outcome}} == "deaths"){
+            if(is_deaths && is_single_year_exposure){
               .x <- .x |>
                 ## Select first year of projection
                 dplyr::filter(year == yoa)
 
-            } else if ({{health_outcome}} == "yll"){
+            } else {
               .x <- .x |>
                 ## Select all years within time horizon
                 dplyr::filter(year <= last_year_projection )
