@@ -1,5 +1,5 @@
 # QUANTITATIVE TEST ############################################################
-testthat::test_that("results correct direct discounting without valuation with exponential discount shape", {
+testthat::test_that("results the same |direct discounting without valuation with exponential discount shape", {
 
   testthat::expect_equal(
     object =
