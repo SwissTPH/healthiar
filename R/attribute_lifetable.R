@@ -34,6 +34,15 @@
 #' \code{approach_newborns}
 #' If \code{"with_newborns"} is selected, it is assumed that
 #' for each year after the year of analysis n babies (population aged 0) are born.
+#' 
+#' \code{approach_exposure}
+#' Strategy for modeling exposure over time:
+#'   \itemize{
+#'     \item \code{"single_year"}: Air pollution exposure is evaluated for a single year (year of analysis).
+#'       Attributable premature deaths are calculated for this year only.
+#'     \item \code{"constant"}: Air pollution exposure is sustained across the full projection horizon.
+#'       Attributable premature deaths and YLLs are accumulated across all years within \code{time_horizon}.
+#'   }
 #'
 #' \code{time_horizon}
 #' Applicable for the following cases:

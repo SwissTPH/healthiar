@@ -39,7 +39,7 @@ Hi there!
 
 This vignette will tell you about `healthiar` and show you how to use `healthiar` with the help of examples.
 
-*NOTE*: Before using `healthiar`, please read carefully the information provided in the [readme file](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) or the [welcome webpage](https://swisstph.github.io/healthiar/). By using `healthiar`, you agree to the [terms of use and disclaimer](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme).
+*Note*: Before using `healthiar`, please read carefully the information provided in the [readme file](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) or the [welcome webpage](https://swisstph.github.io/healthiar/). By using `healthiar`, you agree to the [terms of use and disclaimer](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme).
 
 
 
@@ -460,7 +460,7 @@ results_iteration_ar <- attribute_health(
 )
 ```
 
-*NOTE*: the length of the input vectors fed to `geo_id_micro`, `exp_central`, `pop_exp` must match and must be
+*Note*: the length of the input vectors fed to `geo_id_micro`, `exp_central`, `pop_exp` must match and must be
 
 (number of geo units) x (number of exposure categories) = 2 x 5 = **10**,
 
@@ -548,9 +548,9 @@ Each row contains the estimated attributable cases (`impact_rounded`) obtained b
 
 -   ...
 
-*NOTE*: only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_raw$impact)` possible combinations are displayed due to space constraints.
+*Note*: only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_raw$impact)` possible combinations are displayed due to space constraints.
 
-*NOTE*: only a selection of columns are shown.
+*Note*: only a selection of columns are shown.
 
 
 ## Monte Carlo simulation
@@ -939,9 +939,36 @@ a) a scenario with the exposure level specified in the function ("exposed scenar
 
 b) a scenario with no exposure ("unexposed scenario").
 
-First, the entry and mid-year populations of the (first) year of analysis in the unexposed scenario are determined using modified survival probabilities. Second, age-specific population projections using scenario-specific survival probabilities are done for both scenarios. Third, by subtracting the populations in the unexposed scenario from the populations in the exposed scenario the premature deaths/years of life lost attributable to the exposure are determined.
+First, the entry and mid-year populations of the (first) year of analysis in the unexposed scenario are determined using modified survival probabilities. Second, age-specific population projections using scenario-specific survival probabilities are done for both scenarios. Third, by subtracting the populations in the unexposed scenario from the populations in the exposed scenario the premature deaths/years of life lost attributable to the exposure are determined. An expansive life table case study for is available in a report by @Miller2010_report.
 
-An expansive life table case study for is available in a report by @Miller2010_report.
+Use the two arguments `approach_exposure` and `approach_newborns` to modify the life table calculation:
+
+-   `approach_exposure`
+
+    -   `"single_year"` (default): Population is exposed for only one year 
+    (year of analysis) and attributable health impacts reflect the single-year snapshot. 
+    Applicable only for deaths. AirQ+ approach for deaths in 2025.
+
+    -   `"constant"` : Population is exposed every year, 
+    i.e. air pollution exposure is sustained across the full projection horizon 
+    and attributable health impacts are projected and cumulated 
+    across the full lifetime period. 
+    Applicable for both deaths and YLL. AirQ+ approach for YLL in 2025.
+
+-   `approach_newborns`
+
+    -   `"without_newborns"` (default): Population in the year of analysis 
+    is followed over time, without considering newborns being born.
+
+    -   `"with_newborns"`: For each year after the year of analysis n babies are born, 
+    with n being equal to the (male and female) population aged 0 
+    that is provided in the argument population.
+
+*Note*: Although `healthiar` alligns methodologically with AirQ+, 
+the results using life table can marginally differ 
+(e.g. around 0.06% for 2,600 attributable deaths). 
+This minor variance might arise (at least partly) because of a rounding issue.
+AirQ+ might apply intermediate column-level rounding, while `healthiar` does not.
 
 
 #### Determination of populations in the (first) year of analysis
@@ -1058,19 +1085,7 @@ results_pm_yll$health_main |>
   knitr::kable()
 ```
 
-Use the two arguments `approach_exposure` and `approach_newborns` to modify the life table calculation:
 
--   `approach_exposure`
-
-    -   `"single_year"` (default) population is exposed for a single year and the impacts of that exposure are calculated
-
-    -   `"constant"` population is exposed every year
-
--   `approach_newborns`
-
-    -   `"without_newborns"` (default) assumes that the population in the year of analysis is followed over time, without considering newborns being born
-
-    -   `"with_newborns"` assumes that for each year after the year of analysis n babies are born, with n being equal to the (male and female) population aged 0 that is provided in the argument population
 
 ### Detailed results
 
@@ -1088,7 +1103,7 @@ are available.
 
 ### Results per year
 
-*NOTE*: only a selection of years is shown.
+*Note*: only a selection of years is shown.
 
 ```{r}
 results_pm_yll$health_detailed$results_raw |>
@@ -1226,9 +1241,9 @@ Attributable premature deaths results
 
 are available.
 
-*Note*: we will inspect the results for females; male results are also available.
+*Note*: We inspect below the results for females; male results are also available.
 
-*Note*: because we set the function argument `approach_exposure = "constant"` in the function call results are available for one year (the year of analysis).
+*Note*: Because we set the function argument `approach_exposure = "constant"` results are projected and accumulated across the full time_horizon. If you set approach_exposure = "single_year", results for premature deaths are available for one year (the year of analysis).
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
 results_pm_deaths$health_detailed$intermediate_calculations|> 
@@ -1238,7 +1253,7 @@ results_pm_deaths$health_detailed$intermediate_calculations|>
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_yll$health_detailed$intermediate_calculations|> 
+results_pm_deaths$health_detailed$intermediate_calculations|> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(projection_if_unexposed_by_age_and_year) |>
   purrr::pluck(1) |>

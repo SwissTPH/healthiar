@@ -36,6 +36,9 @@ get_impact_with_lifetable <-
 
     health_outcome <- base::unique(input_with_risk_and_pop_fraction$health_outcome)
 
+    is_deaths <- health_outcome == "deaths"
+    is_yll <- health_outcome == "yll"
+
     is_single_year_exposure <- base::unique(input_with_risk_and_pop_fraction$approach_exposure) == "single_year"
     is_constant_exposure <- base::unique(input_with_risk_and_pop_fraction$approach_exposure) == "constant"
 
@@ -213,8 +216,7 @@ get_impact_with_lifetable <-
 
     # PREMATURE DEATHS (SINGLE YEAR EXPOSURE) ######################################################
     # YOA = YEAR OF ANALYSIS
-    if (health_outcome == "deaths" &
-        is_single_year_exposure) {
+    if (is_deaths && is_single_year_exposure) {
 
       lifetable_calculation <- lifetable_calculation |>
         # Premature deaths = YOA end-of-year population of unexposed minus exposed
@@ -246,7 +248,7 @@ get_impact_with_lifetable <-
 
     # YLL & PREMATURE DEATHS (CONSTANT EXPOSURE) ####################################################
 
-    if (health_outcome == "yll"| #And  ("yld", "daly") if yld for life table ever implemented
+    if (is_yll | #And  ("yld", "daly") if yld for life table ever implemented
          is_constant_exposure) {
 
 
@@ -463,7 +465,6 @@ get_impact_with_lifetable <-
 
     # GET DEATHS AND YLL FROM LIFETABLE
 
-
     # Store total impacts by age #########
     ## Sum impacts
     lifetable_calculation <- lifetable_calculation |>
@@ -487,12 +488,12 @@ get_impact_with_lifetable <-
               dplyr::mutate(.by = c(age_start, age_end),
                             population = ifelse(year == yoa, population, NA))
 
-            if({{health_outcome}} == "deaths"){
+            if(is_deaths && is_single_year_exposure){
               .x <- .x |>
                 ## Select first year of projection
                 dplyr::filter(year == yoa)
 
-            } else if ({{health_outcome}} == "yll"){
+            } else {
               .x <- .x |>
                 ## Select all years within time horizon
                 dplyr::filter(year <= last_year_projection )
