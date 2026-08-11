@@ -1855,17 +1855,19 @@ policy or evaluation threshold
 
 ```{r Cut-off vs. threshold}
 # Case A: Epidemiological Cut-off (Curve shifted by healthiar)
-attribute_health(
+epi_cutoff <- healthiar::attribute_health(
   approach_risk = "absolute_risk",
   exp_central = c(50, 60, 70),
+  pop_exp = c(300000,200000,150000),
   cutoff_central = 53,
   erf_eq_central = "78.9270 - 3.1162 * (c + 53) + 0.0342 * (c + 53)^2"
 )
 
 # Case B: Unshifted Policy Threshold (Exposure truncated, curve unshifted)
-attribute_health(
+policy_threshold <- healthiar::attribute_health(
   approach_risk = "absolute_risk",
   exp_central = c(50, 60, 70),
+  pop_exp = c(300000,200000,150000),
   cutoff_central = 0,
   erf_eq_central = "ifelse(c >= 53, 78.9270 - 3.1162 * c + 0.0342 * c^2, 0)"
 )
