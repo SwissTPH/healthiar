@@ -510,7 +510,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
     )$health_main$impact,
     expected =
       # c(2601, 1371, 3804) # Results on 2025-04-15;Rounded impacts from "airqplus_deaths_yll_lifetable_adults.xlsx" (the YLL impacts were multiplied by 2 to obtain the total premature deaths deaths)
-      c(2599.4, 1370.6, 3802.0) # Results on 2026-08-10;
+      c(2599.365941, 1370.612959, 3801.987144) # Results on 2026-08-10;
   )
 })
 
