@@ -216,8 +216,7 @@ get_impact_with_lifetable <-
 
     # PREMATURE DEATHS (SINGLE YEAR EXPOSURE) ######################################################
     # YOA = YEAR OF ANALYSIS
-    if (health_outcome == "deaths" &
-        is_single_year_exposure) {
+    if (is_deaths && is_single_year_exposure) {
 
       lifetable_calculation <- lifetable_calculation |>
         # Premature deaths = YOA end-of-year population of unexposed minus exposed
@@ -249,7 +248,7 @@ get_impact_with_lifetable <-
 
     # YLL & PREMATURE DEATHS (CONSTANT EXPOSURE) ####################################################
 
-    if (health_outcome == "yll"| #And  ("yld", "daly") if yld for life table ever implemented
+    if (is_yll | #And  ("yld", "daly") if yld for life table ever implemented
          is_constant_exposure) {
 
 
@@ -465,7 +464,6 @@ get_impact_with_lifetable <-
     # Data wrangling to get the results in the needed format
 
     # GET DEATHS AND YLL FROM LIFETABLE
-
 
     # Store total impacts by age #########
     ## Sum impacts
