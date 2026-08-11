@@ -3774,7 +3774,7 @@ testthat::test_that("results the same |pathway_ar|erf_formula|exp_dist|iteration
 
   testthat::expect_equal(
     object =
-      healthiar::attribute_health(
+      suppressWarnings(healthiar::attribute_health(
         approach_risk = "absolute_risk",
         exp_central = data$average_cat,
         cutoff_central = 2, # This cutoff shift the erf_eq
@@ -3783,7 +3783,7 @@ testthat::test_that("results the same |pathway_ar|erf_formula|exp_dist|iteration
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         info = data.frame(pollutant = "road_noise",
                           outcome = "highly_annoyance")
-      )$health_main$impact_rounded,
+      ))$health_main$impact_rounded,
     expected = 12497  # Results on 11 Aug 2026
   )
 })
