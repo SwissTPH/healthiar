@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4.1585</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4.1586</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -417,6 +417,22 @@ health data, as is the case in the relative risk pathway <span class="citation">
 = absolute population exposed at category
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math></p></li>
 </ul>
+<p><code>healthiar</code> consistently handles cut-off values across
+both relative and absolute risk approaches. When a <code>cutoff_</code>
+argument is specified alongside an exposure–response function
+(<code>erf_eq_</code>), the function evaluates exposure as excess
+exposure relative to the cut-off (<code>c</code> as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">exp</mtext><mo>−</mo><mtext mathvariant="normal">cutoff</mtext></mrow><annotation encoding="application/x-tex">\text{exp} - \text{cutoff}</annotation></semantics></math>),
+effectively shifting the function by the cut-off. However, many absolute
+risk curves published in the literature are parameterized on raw
+exposure levels that already incorporate the cut-off directly into the
+function definition. Therefore, <code>healthiar</code> issues an
+informative warning if both <code>erf_eq_</code> and a
+<code>cutoff_</code> are specified when using
+<code><a href="../reference/attribute_health.html">attribute_health()</a></code>. If your absolute risk function uses an
+unshifted policy threshold rather than an epidemiological cut-off, see
+chapter <a href="#threshold-additional-to-cut-off">Threshold additional
+to cut-off</a>.</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-1">Function call<a class="anchor" aria-label="anchor" href="#function-call-1"></a>
@@ -3116,6 +3132,45 @@ f(c) =
 </annotation></semantics></math></p>
 <p>The categorical ERF curve created looks as follows.</p>
 <p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-98-1.png" class="r-plt" alt="ERF curve" width="700"></p>
+<p>It is important to distinguish between an epidemiological cut-off
+(which shifts the exposure-response function) and a policy or evaluation
+threshold (which truncates exposure without shifting the underlying
+curve shape):</p>
+<ol style="list-style-type: decimal">
+<li><p>Shifted Epidemiological Cut-off (Default <code>healthiar</code>
+behavior): Passing <code>cutoff</code> shifts the exposure axis so that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mtext mathvariant="normal">exp</mtext><mo>−</mo><mtext mathvariant="normal">cutoff</mtext></mrow><annotation encoding="application/x-tex">c = \text{exp} - \text{cutoff}</annotation></semantics></math>
+and grounds the excess risk at zero at the cut-off point.</p></li>
+<li><p>Unshifted Policy Threshold: If you wish to calculate attributable
+risk using a raw exposure-response function where exposure below a
+policy threshold does not contribute to health outcomes, but without
+shifting the curve horizontally, set <code>cutoff = 0</code> and
+pre-truncate your exposure vector or incorporate <code><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax()</a></code>
+directly into your string formula.</p></li>
+</ol>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Case A: Epidemiological Cut-off (Curve shifted by healthiar)</span></span>
+<span><span class="va">epi_cutoff</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
+<span>  approach_risk <span class="op">=</span> <span class="st">"absolute_risk"</span>,</span>
+<span>  exp_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">60</span>, <span class="fl">70</span><span class="op">)</span>,</span>
+<span>  pop_exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300000</span>,<span class="fl">200000</span>,<span class="fl">150000</span><span class="op">)</span>,</span>
+<span>  cutoff_central <span class="op">=</span> <span class="fl">53</span>,</span>
+<span>  erf_eq_central <span class="op">=</span> <span class="st">"78.9270 - 3.1162 * (c + 53) + 0.0342 * (c + 53)^2"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: You entered a value for: cutoff_central. </span></span>
+<span><span class="co">#&gt; Be aware that for the absolute risk, the cutoff arguments are not used.</span></span>
+<span><span class="co">#&gt; Thus, all exposures (including those below your entered cutoff)</span></span>
+<span><span class="co">#&gt; will contribute to the attributable health impact. </span></span>
+<span><span class="co">#&gt; Consider handling the cutoff in the exposure-response function.</span></span>
+<span></span>
+<span><span class="co"># Case B: Unshifted Policy Threshold (Exposure truncated, curve unshifted)</span></span>
+<span><span class="va">policy_threshold</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
+<span>  approach_risk <span class="op">=</span> <span class="st">"absolute_risk"</span>,</span>
+<span>  exp_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">60</span>, <span class="fl">70</span><span class="op">)</span>,</span>
+<span>  pop_exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300000</span>,<span class="fl">200000</span>,<span class="fl">150000</span><span class="op">)</span>,</span>
+<span>  cutoff_central <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  erf_eq_central <span class="op">=</span> <span class="st">"ifelse(c &gt;= 53, 78.9270 - 3.1162 * c + 0.0342 * c^2, 0)"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -3221,7 +3276,7 @@ that long-term environmental impacts are not undervalued.</p>
 <div class="section level4">
 <h4 id="function-call-21">Function call<a class="anchor" aria-label="anchor" href="#function-call-21"></a>
 </h4>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">monetized_pm_copd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/monetize.html">monetize</a></span><span class="op">(</span></span>
 <span>    output_attribute <span class="op">=</span> <span class="va">results_pm_copd</span>,</span>
 <span>    discount_shape <span class="op">=</span> <span class="st">"exponential"</span>,</span>
@@ -3269,7 +3324,7 @@ provided to the initial <code><a href="../reference/attribute_health.html">attri
 million EURO.</p>
 <p>Alternatively, you can also monetize (attributable) health impacts
 from a non-<code>healthiar</code> source.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/monetize.html">monetize</a></span><span class="op">(</span></span>
 <span>  impact <span class="op">=</span> <span class="fl">1151</span>,</span>
 <span>  valuation <span class="op">=</span> <span class="fl">100</span></span>
@@ -3328,7 +3383,7 @@ could avoid all COPD cases attributed to air pollution.</p>
 million EURO), what would be the monetary net benefit of such a policy?
 We can find out using the functions <code>healthiar</code> and
 <code><a href="../reference/cba.html">cba()</a></code></p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cba</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cba.html">cba</a></span><span class="op">(</span></span>
 <span>    output_attribute <span class="op">=</span> <span class="va">results_pm_copd</span>,</span>
 <span>    valuation <span class="op">=</span> <span class="fl">50000</span>,</span>
@@ -3359,7 +3414,7 @@ the period specified in the <code>n_years_cost</code> argument</p></li>
 </ul>
 </li>
 </ul>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cba</span><span class="op">$</span><span class="va">cba_main</span> <span class="op">|&gt;</span>  </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">benefit</span>, <span class="va">cost</span>, <span class="va">net_benefit</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -3471,7 +3526,7 @@ inequalities.</p>
 <h4 id="function-call-23">Function call<a class="anchor" aria-label="anchor" href="#function-call-23"></a>
 </h4>
 <p>First, quantify health impacts.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="va">health_impact</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>   age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>,</span>
 <span>   exp_central <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">pm25_mean</span>,</span>
@@ -3485,7 +3540,7 @@ inequalities.</p>
 <p>Second, use the function <code><a href="../reference/socialize.html">socialize()</a></code> entering the whole
 output of <code><a href="../reference/attribute_health.html">attribute_health()</a></code> in the argument
 <code>output_attribute</code>.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">social_t</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/socialize.html">socialize</a></span><span class="op">(</span></span>
 <span>  output_attribute <span class="op">=</span> <span class="va">health_impact</span>,</span>
 <span>  age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>, <span class="co"># They have to be the same in socialize() and in attribute_health()</span></span>
@@ -3496,7 +3551,7 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Alternatively, you can directly enter the health impact in the
 <code><a href="../reference/socialize.html">socialize()</a></code> argument <code>impact</code>.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">social</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/socialize.html">socialize</a></span><span class="op">(</span></span>
 <span>  impact <span class="op">=</span> <span class="va">health_impact</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_by_age_group</span><span class="op">$</span><span class="va">impact</span>,</span>
 <span>  age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>, <span class="co"># They have to be the same in socialize() and in attribute_health()</span></span>
@@ -3570,7 +3625,7 @@ R^2 lower than 0.7, consider alternative data sources or methods.</p>
 <div class="section level4">
 <h4 id="function-call-24">Function call<a class="anchor" aria-label="anchor" href="#function-call-24"></a>
 </h4>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mdi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_mdi.html">prepare_mdi</a></span><span class="op">(</span></span>
 <span>  geo_id_micro <span class="op">=</span> <span class="va">exdat_prepare_mdi</span><span class="op">$</span><span class="va">id</span>,</span>
 <span>  edu <span class="op">=</span> <span class="va">exdat_prepare_mdi</span><span class="op">$</span><span class="va">edu</span>,</span>
@@ -3593,7 +3648,7 @@ turned on).</p>
 <li>
 <code>mdi_main</code>, a tibble containing the BEST-COST MDI</li>
 </ul>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_main</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">select</span><span class="op">(</span><span class="va">geo_id_micro</span>, <span class="va">MDI</span>, <span class="va">MDI_index</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -3679,11 +3734,11 @@ distribution curve</p></li>
 </li>
 </ul>
 <p>To reproduce the boxlots run</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">boxplot</span><span class="op">)</span></span></code></pre></div>
 <p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-113-1.png" class="r-plt" alt="Boxplot of Normalized Indicators and MDI" width="700">
 Analogeously, to reproduce the histogram run</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">histogram</span><span class="op">)</span></span></code></pre></div>
 <p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-114-1.png" class="r-plt" alt="Histogram of MDI with normal curve" width="700"></p>
 <hr>
@@ -3698,7 +3753,7 @@ Analogeously, to reproduce the histogram run</p>
 </h3>
 <p><code>healthiar</code> can be used inside the <em>native</em> pipes
 <code>|&gt;</code>. See the example below.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">|&gt;</span></span>
 <span>  <span class="op">(</span>\<span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -3709,7 +3764,7 @@ Analogeously, to reproduce the histogram run</p>
 <span>      <span class="op">)</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_rounded</span></span>
 <span>    <span class="op">}</span><span class="op">)</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Shorter making used of the base R function <code><a href="https://rdrr.io/r/base/with.html" class="external-link">with()</a></code>.</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">|&gt;</span></span>
 <span>      <span class="op">(</span>\<span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -3726,7 +3781,7 @@ Analogeously, to reproduce the histogram run</p>
 </h3>
 <p><code>healthiar</code> can also be used inside <em>magrittr</em>
 pipes <code>%&gt;%</code> as follows.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="op">{</span></span>
 <span>    <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
