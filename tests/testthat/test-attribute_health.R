@@ -3767,6 +3767,28 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
   ## INPUT DATA DETAILS:
 })
 
+# Now with cutoff
+testthat::test_that("results the same |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "roadnoise_ha_Lden_StavangerandVicinity.rds"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = data$average_cat,
+        cutoff_central = 2, # This cutoff shift the erf_eq
+        population  = unique(data$totpop),
+        pop_exp = data$ANTALL_PER,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        info = data.frame(pollutant = "road_noise",
+                          outcome = "highly_annoyance")
+      )$health_main$impact_rounded,
+    expected = 12497  # Results on 11 Aug 2026
+  )
+})
+
+
 testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   ## The inputs to the arguments are all vectors
@@ -4232,101 +4254,6 @@ testthat::test_that("error if rr lower than 0", {
   )
 })
 
-## NOTE 2025-08-08: the two error message tests for log-log and log-lin have been commented out, as with the new ERFs it's no problem to calculate RR's for exp=0 or when exp <= cutoff; once we've settled on these new ERFs remove these error messages
-# testthat::test_that("error if cutoff higher than exposure when erf_shape == log_log", {
-#
-#   error <- "if the exposure-response function shape is log-log or linear-log then the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust."
-#
-#   ## cutoff_central > exp_central
-#   testthat::expect_error(
-#     object =
-#       healthiar::attribute_health(
-#         exp_central = 4, cutoff_central = 5,
-#         exp_lower = NULL, cutoff_lower = NULL,
-#         exp_upper = NULL, cutoff_upper = NULL,
-#         bhd_central = 1000,
-#         rr_central = 1.05,
-#         rr_increment = 10,
-#         erf_shape = "log_log"),
-#     regexp = error)
-#
-#   ## cutoff_upper > exp_upper
-#   testthat::expect_error(
-#     object =
-#       healthiar::attribute_health(
-#         exp_central = 3, cutoff_central = 1,
-#         exp_lower = 2, cutoff_lower = 0,
-#         exp_upper = 5, cutoff_upper = 7,
-#         bhd_central = 1000,
-#         rr_central = 1.05,
-#         rr_increment = 10,
-#         erf_shape = "log_log"),
-#     regexp = error)
-#
-#   ## cutoff_lower == exp_lower
-#   testthat::expect_error(
-#     object =
-#       healthiar::attribute_health(
-#         exp_central = 3,
-#         exp_lower = 2,
-#         exp_upper = 5,
-#         cutoff_central = 2,
-#         cutoff_lower = 0,
-#         cutoff_upper = 4,
-#         bhd_central = 1000,
-#         rr_central = 1.05,
-#         rr_increment = 10,
-#         erf_shape = "log_log"),
-#     regexp = error)
-# })
-#
-# testthat::test_that("error if cutoff higher than exposure when erf_shape == linear_log", {
-#
-#   error <- "if the exposure-response function shape is log-log or linear-log then the values of cutoff_central, cutoff_lower and cutoff_upper must be lower than the values of exposure_central, exposure_lower and exposure_upper. please adjust."
-#
-#   ## cutoff_central > exp_central
-#   testthat::expect_error(
-#     object =
-#       healthiar::attribute_health(
-#         exp_central = 4, cutoff_central = 5,
-#         exp_lower = NULL, cutoff_lower = NULL,
-#         exp_upper = NULL, cutoff_upper = NULL,
-#         bhd_central = 1000,
-#         rr_central = 1.05,
-#         rr_increment = 10,
-#         erf_shape = "linear_log"),
-#     regexp = error)
-#
-#   ## cutoff_upper > exp_upper
-#   testthat::expect_error(
-#     object =
-#       healthiar::attribute_health(
-#         exp_central = 3, cutoff_central = 1,
-#         exp_lower = 2, cutoff_lower = 0,
-#         exp_upper = 5, cutoff_upper = 7,
-#         bhd_central = 1000,
-#         rr_central = 1.05,
-#         rr_increment = 10,
-#         erf_shape = "linear_log"),
-#     regexp = error)
-#
-#   ## cutoff_lower == exp_lower
-#   testthat::expect_error(
-#     object =
-#       healthiar::attribute_health(
-#         exp_central = 3,
-#         exp_lower = 2,
-#         exp_upper = 5,
-#         cutoff_central = 2,
-#         cutoff_lower = 0,
-#         cutoff_upper = 4,
-#         bhd_central = 1000,
-#         rr_central = 1.05,
-#         rr_increment = 10,
-#         erf_shape = "linear_log"),
-#     regexp = error)
-#
-# })
 
 testthat::test_that("error if dw higher than 1", {
 
@@ -4664,7 +4591,7 @@ testthat::test_that("warning if absolute risk and cutoff", {
         erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
         info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
       ),
-    regexp = "Be aware that for the absolute risk, the cutoff arguments are not used.",
+    regexp = "Be aware that healthiar shifts the exposure",
     fixed = FALSE
   )
 })
