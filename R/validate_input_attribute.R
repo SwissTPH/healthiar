@@ -731,11 +731,8 @@ validate_input_attribute <-
         # Create warning message
         base::warning(
           base::paste0(
-            "You entered a value for: ", paste(available_var_names, collapse = ", "), ". ", "\n",
-            "Be aware that for the absolute risk, the cutoff arguments are not used.", "\n",
-            "Thus, all exposures (including those below your entered cutoff)", "\n",
-            "will contribute to the attributable health impact. ", "\n",
-            "Consider handling the cutoff in the exposure-response function."),
+            "You entered a value for: ", paste(available_var_names, collapse = ", "), " alongside absolute risk.\n",
+            "Be aware that healthiar shifts the exposure in 'erf_eq' as c = (exp - cutoff).\n"),
           call. = FALSE)
       }
     }

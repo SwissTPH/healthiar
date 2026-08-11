@@ -373,6 +373,21 @@ Where:
 
 - $`PE_i`$ = absolute population exposed at category $`i`$
 
+`healthiar` consistently handles cut-off values across both relative and
+absolute risk approaches. When a `cutoff_` argument is specified
+alongside an exposure–response function (`erf_eq_`), the function
+evaluates exposure as excess exposure relative to the cut-off (`c` as
+$`\text{exp} - \text{cutoff}`$), effectively shifting the function by
+the cut-off. However, many absolute risk curves published in the
+literature are parameterized on raw exposure levels that already
+incorporate the cut-off directly into the function definition.
+Therefore, `healthiar` issues an informative warning if both `erf_eq_`
+and a `cutoff_` are specified when using
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
+If your absolute risk function uses an unshifted policy threshold rather
+than an epidemiological cut-off, see chapter [Threshold additional to
+cut-off](#threshold-additional-to-cut-off).
+
 #### Function call
 
 ``` r
@@ -1989,6 +2004,50 @@ The categorical ERF curve created looks as follows.
 
 ![ERF
 curve](intro_to_healthiar_files/figure-html/unnamed-chunk-98-1.png)
+
+It is important to distinguish between an epidemiological cut-off (which
+shifts the exposure-response function) and a policy or evaluation
+threshold (which truncates exposure without shifting the underlying
+curve shape):
+
+1.  Shifted Epidemiological Cut-off (Default `healthiar` behavior):
+    Passing `cutoff` shifts the exposure axis so that
+    $`c = \text{exp} - \text{cutoff}`$ and grounds the excess risk at
+    zero at the cut-off point.
+
+2.  Unshifted Policy Threshold: If you wish to calculate attributable
+    risk using a raw exposure-response function where exposure below a
+    policy threshold does not contribute to health outcomes, but without
+    shifting the curve horizontally, set `cutoff = 0` and pre-truncate
+    your exposure vector or incorporate
+    [`pmax()`](https://rdrr.io/r/base/Extremes.html) directly into your
+    string formula.
+
+``` r
+
+# Case A: Epidemiological Cut-off (Curve shifted by healthiar)
+epi_cutoff <- healthiar::attribute_health(
+  approach_risk = "absolute_risk",
+  exp_central = c(50, 60, 70),
+  pop_exp = c(300000,200000,150000),
+  cutoff_central = 53,
+  erf_eq_central = "78.9270 - 3.1162 * (c + 53) + 0.0342 * (c + 53)^2"
+)
+#> Warning: You entered a value for: cutoff_central. 
+#> Be aware that for the absolute risk, the cutoff arguments are not used.
+#> Thus, all exposures (including those below your entered cutoff)
+#> will contribute to the attributable health impact. 
+#> Consider handling the cutoff in the exposure-response function.
+
+# Case B: Unshifted Policy Threshold (Exposure truncated, curve unshifted)
+policy_threshold <- healthiar::attribute_health(
+  approach_risk = "absolute_risk",
+  exp_central = c(50, 60, 70),
+  pop_exp = c(300000,200000,150000),
+  cutoff_central = 0,
+  erf_eq_central = "ifelse(c >= 53, 78.9270 - 3.1162 * c + 0.0342 * c^2, 0)"
+)
+```
 
 ## Economic dimension
 
