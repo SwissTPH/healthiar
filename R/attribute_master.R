@@ -83,6 +83,9 @@
 
 #' @param is_lifetable
 #' \code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)
+#' 
+#' @param fraction_lived \code{Numeric vector} Numeric vector or \code{single numeric scalar} referring to the average 
+#' fraction of the age interval lived by individuals who die within that interval. Default is 0.5.
 
 # VALUE ########################################################################
 #' @returns
@@ -143,6 +146,7 @@ attribute_master <-
     approach_exposure = NULL,
     year_of_analysis = NULL,
     time_horizon = NULL,
+    fraction_lived = NULL,
     # INTERNAL ARGUMENTS
     input_args = NULL){
 
