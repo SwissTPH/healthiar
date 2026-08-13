@@ -4,6 +4,10 @@ Main changes but not complete list. For this propose see Github commits.
 * 11 August 2026
 
 ## New features
+- attribute_lifetable() and prepare_lifetable() now have 
+the new argument fraction_lived to enter 
+the fraction of year lived specific for each age group. 
+Previously, 0.5 was internally fixed for all age groups.
 - attribute_health() has been expanded to now accept 
 the argument cutoff_ together with erf_eq_ 
 in the absolute risk approach (consistent with relative risk risk). 
