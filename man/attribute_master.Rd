@@ -45,6 +45,7 @@ attribute_master(
   approach_exposure = NULL,
   year_of_analysis = NULL,
   time_horizon = NULL,
+  fraction_lived = NULL,
   input_args = NULL
 )
 }
@@ -97,6 +98,9 @@ attribute_master(
 \item{year_of_analysis}{\code{Numeric value} providing the first with exposure to the environmental stressor.}
 
 \item{time_horizon}{\code{Numeric value} specifying the time horizon (number of years) for which the attributable YLL or premature deaths are to be considered. See Details for more info. \emph{Optional argument.}}
+
+\item{fraction_lived}{\code{Numeric vector} Numeric vector or \code{single numeric scalar} referring to the average 
+fraction of the age interval lived by individuals who die within that interval. Default is 0.5.}
 }
 \value{
 This function returns a \code{list} containing:
