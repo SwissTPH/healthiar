@@ -42,7 +42,7 @@ have been created to provide information on how to interact with the community.
 include instructions of new features.
 
 ## Testing
-- Additional internal tests were added. Now a total of 380 test.
+- Additional internal tests were added. Now a total of 382 test.
 
 
 # healthiar 0.2.4
