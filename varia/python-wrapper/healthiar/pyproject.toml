@@ -32,7 +32,6 @@ dependencies = [
   "scipy",
   "pytest",
   "importlib",
-  "pathlib"
 ]
 
 [project.urls]
