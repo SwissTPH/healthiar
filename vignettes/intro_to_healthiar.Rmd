@@ -978,12 +978,12 @@ Use the two arguments `approach_exposure` and `approach_newborns` to modify the 
     with n being equal to the (male and female) population aged 0 
     that is provided in the argument population.
 
-*Note*: Although `healthiar` tried to allign methodologically with AirQ+, 
-the results using the life table marginally differ 
-(being AirQ+ around 0.02% higher per 1,000 attributable deaths or 0.05% per 1,000 YLL). 
-The reasons of this minor variance are unknown, 
-altough it might be caused (at least partly) to different rounding
-strategies.
+*Note*: Although `healthiar` tries to align with AirQ+ methodologically, 
+the results using the life table marginally differ slightly
+(AirQ+ results are around 0.02% higher per 1,000 attributable deaths or
+0.05% per 1,000 YLL). 
+The reason for this minor variance is unknown. A different rounding 
+strategy might be behind (at least in part).
 
 
 #### Determination of populations in the (first) year of analysis
