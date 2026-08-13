@@ -90,20 +90,20 @@ get_impact_with_lifetable <-
 
       # CALCULATE ENTRY POPULATION OF YEAR OF ANALYSIS (YOA)
       dplyr::mutate(
-        entry_population_yoa = midyear_population_yoa + (deaths / 2),
+        entry_population_yoa = midyear_population_yoa + ((1 - fraction_lived) * deaths),
         .before = midyear_population_yoa) |>
 
       # CALCULATE PROBABILITY OF SURVIVAL FROM START YEAR TO END YEAR & START YEAR TO MID YEAR
       dplyr::mutate(
         # probability of survival from start of year i to start of year i+1 (entry to entry)
         prob_survival =
-          (midyear_population_yoa - (deaths / 2)) /
-          (midyear_population_yoa + (deaths / 2) ),
+          (midyear_population_yoa - (fraction_lived * deaths)) /
+          (midyear_population_yoa + ((1 - fraction_lived) * deaths)),
 
         # Probability of survival from start to midyear
         # For example entry_pop = 100, prob_survival = 0.8 then end_of_year_pop = 100 * 0.8 = 80.
         # midyear_pop = 100 - (20/2) = 90.
-        prob_survival_until_midyear = 1 - ((1 - prob_survival) / 2),
+        prob_survival_until_midyear = 1 - ((1 - fraction_lived) * (1 - prob_survival)),
 
         # Hazard rate for calculating survival probabilities
         hazard_rate = deaths / midyear_population_yoa,
@@ -128,12 +128,12 @@ get_impact_with_lifetable <-
         # ( 2 - modified hazard rate ) / ( 2 + modified hazard rate )
         prob_survival_mod =
           dplyr::if_else(age_end_over_min_age,
-                         (2 - hazard_rate_mod) / (2 + hazard_rate_mod),
+                         (1 - (fraction_lived * hazard_rate_mod)) / (1 + ((1 - fraction_lived) * hazard_rate_mod)),
                          prob_survival),
 
         prob_survival_until_midyear_mod =
           dplyr::if_else(age_end_over_min_age,
-                         1 - ((1 - prob_survival_mod) / 2),
+                         1 - ((1 - fraction_lived) * (1 - prob_survival_mod)),
                          prob_survival_until_midyear),
 
         .after = deaths)
@@ -144,10 +144,11 @@ get_impact_with_lifetable <-
       tidyr::nest(
         data_by_age =
         c(yoa, age_group, age_start, age_end, bhd, deaths,
-          population,
+          population, fraction_lived, 
           modification_factor,
           prob_survival, prob_survival_until_midyear, hazard_rate,
           age_end_over_min_age, prob_survival_mod, prob_survival_until_midyear_mod, hazard_rate_mod,
+          fraction_lived,
           # These columns at the end to link with projections
           midyear_population_yoa, entry_population_yoa))
 
