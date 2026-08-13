@@ -67,7 +67,7 @@ get_impact <-
 
         } else if (is_lifetable) {
           ## ** If is_lifetable ##########################################################
-
+          
           # Calculate impact
           # using get_impact_with_lifetable().
           # The function is not used somewhere else
