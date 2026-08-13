@@ -6,7 +6,7 @@
 
 #### ONE GEO UNIT ##############################################################
 
-testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
   data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
@@ -39,6 +39,70 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
     expected =
       # c(29274.89, 15328.16,	43118.30), # AirQ+ results from "Lifetable_CH_2019_PM_single_year_AP_no_newborns_default.csv"
       c(28810.0511, 15083.5908, 42437.0574) # Result on 09 July 2025
+  )
+
+  # The same but using fraction_lived
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "single_year",
+        exp_central = data_mort$exp[2], #exp CH 2019
+        prop_pop_exp = 1,
+        cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
+        rr_central = data_mort[2,"rr_central"],
+        rr_lower = data_mort[2,"rr_lower"],
+        rr_upper = data_mort[2,"rr_upper"],
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = c(data_lifetable[["male"]]$age,
+                      data_lifetable[["female"]]$age),
+        sex = base::rep(c("male", "female"), each = 100),
+        population = c(data_lifetable[["male"]]$population,
+                       data_lifetable[["female"]]$population),
+        bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                        data[["pop"]]$number_of_deaths_female),
+        year_of_analysis = 2019,
+        fraction_lived = 0.5,  # The only new input data compared to test above
+        info = data_mort$pollutant[2],
+        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
+      )$health_main$impact,
+    expected =
+      # c(29274.89, 15328.16,	43118.30), # AirQ+ results from "Lifetable_CH_2019_PM_single_year_AP_no_newborns_default.csv"
+      c(28810.0511, 15083.5908, 42437.0574) # Result on 13 Aug 2026 
+      # Same result as above because fraction_lived = 0.5 is default value
+  )
+
+  # The same but using a different fraction_lived
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "single_year",
+        exp_central = data_mort$exp[2], #exp CH 2019
+        prop_pop_exp = 1,
+        cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
+        rr_central = data_mort[2,"rr_central"],
+        rr_lower = data_mort[2,"rr_lower"],
+        rr_upper = data_mort[2,"rr_upper"],
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = c(data_lifetable[["male"]]$age,
+                      data_lifetable[["female"]]$age),
+        sex = base::rep(c("male", "female"), each = 100),
+        population = c(data_lifetable[["male"]]$population,
+                       data_lifetable[["female"]]$population),
+        bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                        data[["pop"]]$number_of_deaths_female),
+        year_of_analysis = 2019,
+        fraction_lived = 0.4,  # The only new input data compared to test above
+        info = data_mort$pollutant[2],
+        min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
+      )$health_main$impact,
+    expected =
+      # c(29274.89, 15328.16,	43118.30), # AirQ+ results from "Lifetable_CH_2019_PM_single_year_AP_no_newborns_default.csv"
+      c(28853.312, 15106.332, 42500.549) # Result on 13 Aug 2026 
+      # Same result as above because fraction_lived = 0.5 is default value
   )
 
   # Check the same but for impact_per_100k_inhab
