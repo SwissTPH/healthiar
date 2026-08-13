@@ -1105,11 +1105,11 @@ modify the life table calculation:
     are born, with n being equal to the (male and female) population
     aged 0 that is provided in the argument population.
 
-*Note*: Although `healthiar` alligns methodologically with AirQ+, the
-results using life table can marginally differ (e.g. around 0.06% for
-2,600 attributable deaths). This minor variance might arise (at least
-partly) because of a rounding issue. AirQ+ might apply intermediate
-column-level rounding, while `healthiar` does not.
+*Note*: Although `healthiar` tries to align with AirQ+ methodologically,
+the results using the life table marginally differ slightly (AirQ+
+results are around 0.02% higher per 1,000 attributable deaths or 0.05%
+per 1,000 YLL). The reason for this minor variance is unknown. A
+different rounding strategy might be behind (at least in part).
 
 ##### Determination of populations in the (first) year of analysis
 

@@ -41,7 +41,8 @@
 <ul><li>11 August 2026</li>
 </ul><div class="section level3">
 <h3 id="new-features-0-2-5">New features<a class="anchor" aria-label="anchor" href="#new-features-0-2-5"></a></h3>
-<ul><li>attribute_health() has been expanded to now accept the argument cutoff_ together with erf_eq_ in the absolute risk approach (consistent with relative risk risk). A warning is shown in this case because, for absolute risk, it is assumed that erf_eq_ already contains a cutoff.</li>
+<ul><li>attribute_lifetable() and prepare_lifetable() now have the new argument fraction_lived to enter the fraction of year lived specific for each age group. Previously, 0.5 was internally fixed for all age groups.</li>
+<li>attribute_health() has been expanded to now accept the argument cutoff_ together with erf_eq_ in the absolute risk approach (consistent with relative risk risk). A warning is shown in this case because, for absolute risk, it is assumed that erf_eq_ already contains a cutoff.</li>
 <li>Fractional positive deaths and bhd values (with values between 0 and 1) are now allowed for lifetable calculations.</li>
 <li>The attributable deaths can now be quantifed with constant exposure in attribute_lifetable(). Previously, only possible with single year exposure.</li>
 </ul></div>
