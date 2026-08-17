@@ -14,7 +14,7 @@
 
 ## Requirements
 
-To use this Python package, you need [R](https://www.r-project.org/), with the [`healthiar`](https://swisstph.github.io/healthiar/index.html) package installed.
+To use this Python package, you need [R](https://www.r-project.org/), with the [`healthiar`](https://cran.r-project.org/web/packages/healthiar/) package installed.
 
 | Software | Versions |
 |----------|----------|
@@ -43,7 +43,8 @@ To use this Python package, you need [R](https://www.r-project.org/), with the [
 ## Documentation
 
 For the documentation on using `healthiar`, we refer to the R package documentation:
-- [Intro to healthiar](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#python-wrapper) vignette;
+- [Intro to healthiar](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html) vignette;
+- [healthiar with Python](https://swisstph.github.io/healthiar/articles/healthiar_with_python.html) vignette;
 - [Reference page](https://swisstph.github.io/healthiar/reference/index.html) of the package website.
 
 ## License
