@@ -2,7 +2,7 @@
 import os
 
 ## Add environment variable for R installation
-#os.environ['R_HOME'] = r"C:\Program Files\R\R-4.4.1"
+#os.environ['R_HOME'] = r"C:\Users\ArPa3547\AppData\Local\Programs\R\R-4.4.0"
 os.environ["PATH"] = r"C:\Users\ArPa3547\AppData\Local\Programs\R\R-4.6.0\bin\x64"
 
 ## Import healthiar modules
