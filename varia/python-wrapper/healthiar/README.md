@@ -16,13 +16,19 @@
 
 To use this Python package, you need [R](https://www.r-project.org/), with the [`healthiar`](https://swisstph.github.io/healthiar/index.html) package installed.
 
+| Software | Versions |
+|----------|----------|
+| Python   | >=3.9    |
+| R        | >=4.5    |
+
 ## Installation
 
-1.  Install the `healthiar` package with `pip`:
+1.  Install the `healthiar` wrapper package with `pip`:
 
     ```console
     pip install healthiar
     ```
+    Be aware that this does **not** install the `healthiar` R package.
 
 2.  Add the path of your R installation as environment variable:
 
