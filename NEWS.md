@@ -19,8 +19,6 @@ are now allowed for lifetable calculations.
 - The attributable deaths can now be quantifed with constant exposure 
 in attribute_lifetable(). Previously, only possible with single year exposure.
 
-
-
 ## Bug Fixes
 - Error when installing the package without package dependences has been prevented.
 - The wrong behaviour of erf_eq_lower and erf_eq_upper as string in attribute_health(), 
