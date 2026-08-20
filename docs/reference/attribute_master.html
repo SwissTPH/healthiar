@@ -84,6 +84,7 @@
 <span>  approach_exposure <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  year_of_analysis <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  time_horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fraction_lived <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  input_args <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -187,6 +188,11 @@
 
 <dt id="arg-time-horizon">time_horizon<a class="anchor" aria-label="anchor" href="#arg-time-horizon"></a></dt>
 <dd><p><code>Numeric value</code> specifying the time horizon (number of years) for which the attributable YLL or premature deaths are to be considered. See Details for more info. <em>Optional argument.</em></p></dd>
+
+
+<dt id="arg-fraction-lived">fraction_lived<a class="anchor" aria-label="anchor" href="#arg-fraction-lived"></a></dt>
+<dd><p><code>Numeric vector</code> Numeric vector or <code>single numeric scalar</code> referring to the average
+fraction of the age interval lived by individuals who die within that interval. Default is 0.5.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -21,6 +21,7 @@ attribute_lifetable(
   approach_newborns = "without_newborns",
   year_of_analysis,
   time_horizon = NULL,
+  fraction_lived = 0.5,
   exp_central = NULL,
   exp_lower = NULL,
   exp_upper = NULL,
@@ -107,6 +108,12 @@ attribute_lifetable(
   `Numeric value` specifying the time horizon (number of years) for
   which the attributable YLL or premature deaths are to be considered.
   See Details for more info. *Optional argument.*
+
+- fraction_lived:
+
+  `Numeric vector` Numeric vector or `single numeric scalar` referring
+  to the average fraction of the age interval lived by individuals who
+  die within that interval. Default is 0.5.
 
 - exp_central, exp_lower, exp_upper:
 
@@ -253,7 +260,10 @@ total). Default value: length of the numeric vector specified in the
 `min_age`, `max_age` The `min_age` default value 30 implies that all
 adults aged 30 or older will be affected by the exposure; `max_age`
 analogeously specifies the age above which no health effects of the
-exposure are considered.
+exposure are considered. \#' \#' `fraction_lived` is by default 0.5 for
+all age groups. However, in low-mortality settings, infant deaths are
+heavily concentrated in the first weeks of life. Therefore,
+`fraction_lived` can be lower e.g. 0.1 for the first age group.
 
 **Methodology**
 
