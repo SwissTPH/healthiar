@@ -61,7 +61,7 @@ package to quantify and monetize health impacts attributable to
 (environmental) exposure.” *Journal of Open Source Software*,
 **11**(123), 10599.
 [doi:10.21105/joss.10599](https://doi.org/10.21105/joss.10599),
-<https://theoj.org>.
+<https://joss.theoj.org/papers/10.21105/joss.10599>.
 
     @Article{,
       title = {healthiar: An R package to quantify and monetize health impacts attributable to (environmental) exposure},
@@ -72,5 +72,5 @@ package to quantify and monetize health impacts attributable to
       number = {123},
       pages = {10599},
       doi = {10.21105/joss.10599},
-      url = {https://theoj.org},
+      url = {https://joss.theoj.org/papers/10.21105/joss.10599},
     }
