@@ -141,16 +141,16 @@ disclaimer and terms of the licence:
     developers are not liable for the results.
 
 2.  License: Available
-    [here](https://swisstph.github.io/healthiar/LICENSE.md).
+    [here](https://github.com/SwissTPH/healthiar?tab=GPL-3.0-1-ov-file).
 
 ## Contributions
 
 We welcome your contributions! Do you want to report a bug, provide code
 or just make a question/comment? Please, read and follow the guidelines
 of our [guide for
-contributions](https://swisstph.github.io/healthiar/CONTRIBUTING.md) By
-contributing to *healthiar*, you agree to abide by our [code of
-conduct](https://swisstph.github.io/healthiar/CODE_OF_CONDUCT.md).
+contributions](https://github.com/SwissTPH/healthiar?tab=contributing-ov-file)
+By contributing to *healthiar*, you agree to abide by our [code of
+conduct](https://github.com/SwissTPH/healthiar?tab=coc-ov-file).
 
 ## Presenting *healthiar*
 
