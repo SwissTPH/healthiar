@@ -17,7 +17,7 @@ bibentry(
   number    = "123",
   pages     = "10599",
   doi       = "10.21105/joss.10599",
-  url       = "https://theoj.org"
+  url       = "https://joss.theoj.org/papers/10.21105/joss.10599"
 )
 
 citFooter("Note: Detailed development roles (authors vs. contributors) are listed in the package DESCRIPTION file.")
