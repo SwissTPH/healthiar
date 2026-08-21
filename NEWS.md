@@ -1,5 +1,48 @@
 Main changes but not complete list. For this propose see Github commits.
 
+# healthiar 0.2.5
+* 11 August 2026
+
+## New features
+- attribute_lifetable() and prepare_lifetable() now have 
+the new argument fraction_lived to enter 
+the fraction of year lived specific for each age group. 
+Previously, 0.5 was internally fixed for all age groups.
+- attribute_health() has been expanded to now accept 
+the argument cutoff_ together with erf_eq_ 
+in the absolute risk approach (consistent with relative risk risk). 
+A warning is shown in this case because, for absolute risk,
+it is assumed that erf_eq_ already 
+contains a cutoff.
+- Fractional positive deaths and bhd values (with values between 0 and 1) 
+are now allowed for lifetable calculations.
+- The attributable deaths can now be quantifed with constant exposure 
+in attribute_lifetable(). Previously, only possible with single year exposure.
+
+## Bug Fixes
+- Error when installing the package without package dependences has been prevented.
+- The wrong behaviour of erf_eq_lower and erf_eq_upper as string in attribute_health(), 
+providing the same result for both, has been corrected.
+- The wrong behaviour of socialize() 
+providing deciles for other requested quantiles has been fixed.
+- The wrong behaviour of get_paf() for categorical exposure distributions has been fixed.
+
+## Documentation
+- Bugs in references of function descriptions and vignette have been fixed.
+- More clear instructions on how to install the package has been provided.
+- Contributing and a Code of Conduct files (sections in pkgdown web pages) 
+have been created to provide information on how to interact with the community.
+- The final version of paper published in the Journal of Open Source Software 
+(JOSS) is now available.
+- An updated citation of the package is now available refering to the JOSS paper.
+- CITATION.cff has been added.
+- The function descriptions and vignette have been updated to 
+include instructions of new features.
+
+## Testing
+- Additional internal tests were added. Now a total of 382 test.
+
+
 # healthiar 0.2.4
 * 12 March 2026
 

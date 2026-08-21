@@ -18,6 +18,7 @@ attribute_lifetable(
   approach_newborns = "without_newborns",
   year_of_analysis,
   time_horizon = NULL,
+  fraction_lived = 0.5,
   exp_central = NULL,
   exp_lower = NULL,
   exp_upper = NULL,
@@ -59,6 +60,9 @@ attribute_lifetable(
 \item{year_of_analysis}{\code{Numeric value} providing the first with exposure to the environmental stressor.}
 
 \item{time_horizon}{\code{Numeric value} specifying the time horizon (number of years) for which the attributable YLL or premature deaths are to be considered. See Details for more info. \emph{Optional argument.}}
+
+\item{fraction_lived}{\code{Numeric vector} Numeric vector or \code{single numeric scalar} referring to the average 
+fraction of the age interval lived by individuals who die within that interval. Default is 0.5.}
 
 \item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
 
@@ -151,6 +155,11 @@ The \code{min_age} default value 30 implies that all adults aged 30 or older
 will be affected by the exposure;
 \code{max_age} analogeously specifies the age above
 which no health effects of the exposure are considered.
+#' 
+#' \code{fraction_lived} is by default 0.5 for all age groups. However, 
+in low-mortality settings, infant deaths are heavily concentrated
+in the first weeks of life. 
+Therefore, \code{fraction_lived} can be lower e.g. 0.1 for the first age group.
 
 \strong{Methodology}
 

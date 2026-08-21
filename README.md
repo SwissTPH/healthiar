@@ -107,14 +107,14 @@ By using *healthiar*, you confirm that you agree with the following disclaimer a
 
 a) Disclaimer: The R package *healthiar* is work in progress and the developers are not liable for the results. 
 
-b) License: Available [here](LICENSE.md).
+b) License: Available [here](https://github.com/SwissTPH/healthiar?tab=GPL-3.0-1-ov-file).
 
 ## Contributions
 We welcome your contributions! 
 Do you want to report a bug, provide code or just make a question/comment? 
-Please, read and follow the guidelines of our [guide for contributions](CONTRIBUTING.md)
+Please, read and follow the guidelines of our [guide for contributions](https://github.com/SwissTPH/healthiar?tab=contributing-ov-file)
 By contributing to *healthiar*,
-you agree to abide by our [code of conduct](CODE_OF_CONDUCT.md).
+you agree to abide by our [code of conduct](https://github.com/SwissTPH/healthiar?tab=coc-ov-file).
 
 
 ## Presenting *healthiar*

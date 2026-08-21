@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4.1586</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,6 +57,7 @@
 <span>  approach_newborns <span class="op">=</span> <span class="st">"without_newborns"</span>,</span>
 <span>  <span class="va">year_of_analysis</span>,</span>
 <span>  time_horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fraction_lived <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  exp_central <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  exp_lower <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  exp_upper <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -121,6 +122,11 @@
 
 <dt id="arg-time-horizon">time_horizon<a class="anchor" aria-label="anchor" href="#arg-time-horizon"></a></dt>
 <dd><p><code>Numeric value</code> specifying the time horizon (number of years) for which the attributable YLL or premature deaths are to be considered. See Details for more info. <em>Optional argument.</em></p></dd>
+
+
+<dt id="arg-fraction-lived">fraction_lived<a class="anchor" aria-label="anchor" href="#arg-fraction-lived"></a></dt>
+<dd><p><code>Numeric vector</code> Numeric vector or <code>single numeric scalar</code> referring to the average
+fraction of the age interval lived by individuals who die within that interval. Default is 0.5.</p></dd>
 
 
 <dt id="arg-exp-central-exp-lower-exp-upper">exp_central, exp_lower, exp_upper<a class="anchor" aria-label="anchor" href="#arg-exp-central-exp-lower-exp-upper"></a></dt>
@@ -207,7 +213,12 @@ Default value: length of the numeric vector specified in the <code>age_group</co
 The <code>min_age</code> default value 30 implies that all adults aged 30 or older
 will be affected by the exposure;
 <code>max_age</code> analogeously specifies the age above
-which no health effects of the exposure are considered.</p>
+which no health effects of the exposure are considered.
+#'
+#' <code>fraction_lived</code> is by default 0.5 for all age groups. However,
+in low-mortality settings, infant deaths are heavily concentrated
+in the first weeks of life.
+Therefore, <code>fraction_lived</code> can be lower e.g. 0.1 for the first age group.</p>
 <p><strong>Methodology</strong></p>
 <p>The life table approach to obtain YLL and deaths requires population and
 baseline mortality data to be stratified by one year age groups.
