@@ -31,6 +31,9 @@ dependencies = [
   "scipy",
   "pytest",
   "importlib",
+  "geopandas",
+  "xarray",
+  "rioxarray",
 ]
 
 [project.urls]

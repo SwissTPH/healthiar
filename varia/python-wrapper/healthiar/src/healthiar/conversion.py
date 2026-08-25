@@ -2,8 +2,19 @@
 import rpy2.robjects as ro
 from rpy2.robjects import pandas2ri
 from rpy2.robjects import numpy2ri
+from rpy2.robjects.packages import importr
+import os
+import pathlib
+import tempfile
 import pandas as pd
 import numpy as np
+import geopandas as gpd
+import xarray as xr
+import rioxarray
+
+## Import R packages
+sf = importr("sf")
+terra = importr("terra")
 
 ## Define functions
 def py_to_r(obj):
@@ -38,11 +49,22 @@ def py_to_r(obj):
         else:
             raise ValueError("Conversion not possible for tuple/list with these element types.")
     elif isinstance(obj, pd.DataFrame):
-        with (ro.default_converter + pandas2ri.converter).context():
-            return ro.conversion.get_conversion().py2rpy(obj)
+        if isinstance(obj, gpd.geodataframe.GeoDataFrame):
+            tmp_dir = pathlib.Path(tempfile.mkdtemp())
+            obj.to_file(tmp_dir.joinpath("temp_conv_vector.gpkg"), layer = "1", driver = "GPKG")
+            obj = sf.st_read(tmp_dir.joinpath("temp_conv_vector.gpkg").as_posix(), quiet = True)
+            return obj
+        else:
+            with (ro.default_converter + pandas2ri.converter).context():
+                return ro.conversion.get_conversion().py2rpy(obj)
     elif isinstance(obj, np.ndarray):
         with (ro.default_converter + numpy2ri.converter).context():
             return ro.conversion.get_conversion().py2rpy(obj)
+    elif isinstance(obj, xr.core.dataset.Dataset):
+        tmp_dir = pathlib.Path(tempfile.mkdtemp())
+        obj.squeeze().rio.to_raster(tmp_dir.joinpath(".temp_conv_raster.tiff"))
+        obj = terra.rast(tmp_dir.joinpath(".temp_conv_raster.tiff").as_posix())
+        return obj
     else:
         raise ValueError("Conversion not possible for this object type.")
 

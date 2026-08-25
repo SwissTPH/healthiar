@@ -3,6 +3,5 @@
 # SPDX-License-Identifier: MIT
 __all__ = [
     "healthiar",
-    "conversion",
-    "spatial"
+    "conversion"
 ]
