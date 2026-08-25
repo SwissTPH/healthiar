@@ -9,7 +9,6 @@ os.environ["PATH"] = r"C:\Users\ArPa3547\AppData\Local\Programs\R\R-4.6.0\bin\x6
 import healthiar
 from healthiar.healthiar import healthiar
 from healthiar.conversion import py_to_r, r_to_py
-from healthiar.spatial import read_raster, read_vector
 
 ## Import rpy2 modules
 import rpy2.rinterface as ri
@@ -19,6 +18,9 @@ from rpy2.robjects.packages import importr
 import pandas as pd
 import numpy as np
 from scipy import interpolate
+import geopandas as gpd
+import xarray as xr
+import rioxarray
 
 ## Import R packages
 sf = importr("sf")
@@ -293,18 +295,22 @@ def test_spatial_input():
     expected = list(expected["exposure"])
 
     ## Get python data
+    poll_grid = xr.open_dataset(path.joinpath("pm25.tif"), engine = "rasterio", masked = True)
+    pop_grid = xr.open_dataset(path.joinpath("population.tif"), engine = "rasterio", masked = True)
+    geo_units = gpd.read_file(path.joinpath("municipalities_brussels.gpkg"))
 
     ## Convert to R data
-    r_poll_grid = read_raster(path.joinpath("pm25.tif").as_posix())
-    r_pop_grid = read_raster(path.joinpath("population.tif").as_posix())
-    r_geo_units = read_vector(path.joinpath("municipalities_brussels.gpkg").as_posix(), quiet = True)
+    r_poll_grid = py_to_r(poll_grid)
+    r_pop_grid = py_to_r(pop_grid)
+    r_geo_units = py_to_r(geo_units)
+    r_geo_id_micro = py_to_r(geo_units["name"])
 
     ## Call healthiar function
     result = healthiar.prepare_exposure(
         poll_grid = r_poll_grid,
         geo_units = r_geo_units,
         pop_grid = r_pop_grid,
-        geo_id_micro = sf.st_drop_geometry(r_geo_units.rx2["name"])
+        geo_id_micro = r_geo_id_micro
     )
     py_result = r_to_py(result)["exposure_main"]["exposure_mean"]
     actual = [round(x, 13) for x in py_result]
