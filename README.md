@@ -62,7 +62,7 @@ The slides of the presentation can be found [here](https://github.com/SwissTPH/h
 
 ## Installation
 We recommend frequently installing the newest *healthiar* version. 
-Please note that **`healthiar` requires R version 4.3.0 or higher**. 
+Please note that **`healthiar` requires R version 4.2.0 or higher**. 
 There are two options to install *healthiar*:
 
 a) **From CRAN**: 
