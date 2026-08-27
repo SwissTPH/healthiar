@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1598</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -2263,7 +2263,7 @@ are also available.</p>
 accumulated across the full time_horizon. If you set approach_exposure =
 “single_year”, results for premature deaths are available for one year
 (the year of analysis).</p>
-<table class="table">
+<table style="width:100%;" class="table">
 <colgroup>
 <col width="1%">
 <col width="3%">
@@ -2272,14 +2272,15 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <col width="1%">
 <col width="2%">
 <col width="3%">
+<col width="4%">
 <col width="6%">
 <col width="4%">
 <col width="8%">
 <col width="3%">
-<col width="6%">
+<col width="4%">
 <col width="5%">
-<col width="10%">
-<col width="5%">
+<col width="9%">
+<col width="4%">
 <col width="7%">
 <col width="6%">
 <col width="5%">
@@ -2294,11 +2295,12 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <th align="right">bhd</th>
 <th align="right">deaths</th>
 <th align="right">population</th>
+<th align="right">fraction_lived</th>
 <th align="right">modification_factor</th>
 <th align="right">prob_survival</th>
 <th align="right">prob_survival_until_midyear</th>
 <th align="right">hazard_rate</th>
-<th align="left">age_end_over_min_age</th>
+<th align="left">is_exposed_age</th>
 <th align="right">prob_survival_mod</th>
 <th align="right">prob_survival_until_midyear_mod</th>
 <th align="right">hazard_rate_mod</th>
@@ -2317,6 +2319,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">1498</td>
 <td align="right">1498</td>
 <td align="right">10560</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.8675391</td>
 <td align="right">0.9337696</td>
@@ -2339,6 +2342,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">1412</td>
 <td align="right">1412</td>
 <td align="right">8728</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.8503286</td>
 <td align="right">0.9251643</td>
@@ -2361,6 +2365,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">1302</td>
 <td align="right">1302</td>
 <td align="right">7140</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.8328841</td>
 <td align="right">0.9164420</td>
@@ -2383,6 +2388,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">1155</td>
 <td align="right">1155</td>
 <td align="right">5655</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.8146811</td>
 <td align="right">0.9073406</td>
@@ -2405,6 +2411,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">976</td>
 <td align="right">976</td>
 <td align="right">4332</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.7975104</td>
 <td align="right">0.8987552</td>
@@ -2427,6 +2434,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">772</td>
 <td align="right">772</td>
 <td align="right">3118</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.7796804</td>
 <td align="right">0.8898402</td>
@@ -2449,6 +2457,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">603</td>
 <td align="right">603</td>
 <td align="right">2234</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.7621771</td>
 <td align="right">0.8810885</td>
@@ -2471,6 +2480,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">443</td>
 <td align="right">443</td>
 <td align="right">1520</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.7456216</td>
 <td align="right">0.8728108</td>
@@ -2493,6 +2503,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">2231</td>
 <td align="right">2231</td>
 <td align="right">2246</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.3363082</td>
 <td align="right">0.6681541</td>
@@ -3157,11 +3168,8 @@ directly into your string formula.</p></li>
 <span>  cutoff_central <span class="op">=</span> <span class="fl">53</span>,</span>
 <span>  erf_eq_central <span class="op">=</span> <span class="st">"78.9270 - 3.1162 * (c + 53) + 0.0342 * (c + 53)^2"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: You entered a value for: cutoff_central. </span></span>
-<span><span class="co">#&gt; Be aware that for the absolute risk, the cutoff arguments are not used.</span></span>
-<span><span class="co">#&gt; Thus, all exposures (including those below your entered cutoff)</span></span>
-<span><span class="co">#&gt; will contribute to the attributable health impact. </span></span>
-<span><span class="co">#&gt; Consider handling the cutoff in the exposure-response function.</span></span>
+<span><span class="co">#&gt; Warning: You entered a value for: cutoff_central alongside absolute risk.</span></span>
+<span><span class="co">#&gt; Be aware that healthiar shifts the exposure in 'erf_eq' as c = (exp - cutoff).</span></span>
 <span></span>
 <span><span class="co"># Case B: Unshifted Policy Threshold (Exposure truncated, curve unshifted)</span></span>
 <span><span class="va">policy_threshold</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
