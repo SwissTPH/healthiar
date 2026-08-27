@@ -115,7 +115,8 @@ get_impact_with_lifetable <-
     # CALCULATE MODIFIED SURVIVAL PROBABILITIES
     lifetable_calculation <- lifetable_calculation |>
       dplyr::mutate(
-        # For all ages min_age and higher calculate modified survival probabilities
+        # For age intervals starting at min_age and above, calculate modified
+        # survival probabilities.
         # Calculate first the boolean/logic column to speed up calculations below
         is_exposed_age = age_end > min_age,
 
