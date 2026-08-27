@@ -39,7 +39,8 @@ validate_input_attribute <-
     numeric_args <-
       c(ci_args_wo_eq,
         "prop_pop_exp", "pop_exp", "rr_increment", "population",
-        "year_of_analysis", "time_horizon", "min_age", "max_age")
+        "year_of_analysis", "time_horizon", "min_age", "max_age",
+        "fraction_lived")
 
     # Only if is_lifetable, then age_group is numeric.
     # Otherwise, it can be a string e.g. for socialize()
@@ -64,7 +65,7 @@ validate_input_attribute <-
     lifetable_args_with_values_above_0 <- "population"  
 
     lifetable_args_with_values_0_or_above <-
-      c("bhd_central", "bhd_lower", "bhd_upper")
+      c("bhd_central", "bhd_lower", "bhd_upper", "fraction_lived")
 
 
     arg_names_available <-
@@ -464,7 +465,7 @@ validate_input_attribute <-
     ### error_if_higher_than_1 #####
 
     args_value_above_1 <-
-      input_args_value[c("prop_pop_exp", base::paste0("dw", ci_suffix))] |>
+      input_args_value[c("prop_pop_exp", "fraction_lived", base::paste0("dw", ci_suffix))] |>
       purrr::keep(.p = ~ base::any(.x > 1)) |>
       base::names()
 
