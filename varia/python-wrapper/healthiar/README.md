@@ -34,9 +34,6 @@ To use this Python package, you need [R](https://www.r-project.org/), with the [
 
     ```console
     import os
-
-    os.environ['R_HOME'] = "/path/to/R/R-4.6.0"
-    # or
     os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
     ```
 
@@ -44,7 +41,7 @@ To use this Python package, you need [R](https://www.r-project.org/), with the [
 
 For the documentation on using `healthiar`, we refer to the R package documentation:
 - [Intro to healthiar](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html) vignette;
-- [healthiar with Python](https://swisstph.github.io/healthiar/articles/healthiar_with_python.html) vignette;
+- [Using healthiar with Python](https://swisstph.github.io/healthiar/articles/using_healthiar_with_python.html) vignette;
 - [Reference page](https://swisstph.github.io/healthiar/reference/index.html) of the package website.
 
 ## License

@@ -1,0 +1,189 @@
+---
+title: 'Vignette: Using healthiar with Python'
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+# bibliography: ../inst/REFERENCES.bib
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Vignette: Using healthiar with Python}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, eval=FALSE, include=TRUE)
+knitr::knit_engines$set(python = reticulate::eng_python)
+```
+
+Using `healthiar` in Python is possible with the dedicated [wrapper package](https://pypi.org/project/healthiar/). The wrapper consists of a Python program that allows you to use the `healthiar` R package as if it were a Python package. In technical terms, the Python package works by running R embedded in Python. In addition to the wrapper, the package contains functions to convert Python data to R and back.
+
+The Python wrapper for `healthiar` is an implementation of the [`rpy2` interface](https://rpy2.github.io/).
+ 
+# Requirements
+
+To use the Python package, you need R, with the `healthiar` package installed.
+ 
+# Installation
+ 
+1.  Install the `healthiar` Python wrapper package with `pip`:
+    ```{python}
+    pip install healthiar
+    ```
+    Note that this does **not** install the `healthiar` R package.
+ 
+2.  Add the path of your R installation as environment variable. In Python, you can do this as follows:
+    ```{python}
+    import os
+    os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
+    ```
+
+# Modules
+
+## Wrapper
+ 
+The `healthiar.py` module loads the R package in the background, allowing you to call any function available in `healthiar`. Accessing a `healthiar` function is possible with the usual Python dot notation, e.g. `healthiar.monetize()`.
+
+## Data conversion
+ 
+The `conversion.py` module contains the functions for converting input and output data, needed for a correct functioning of the wrapper:
+ 
+- `py_to_r()`: To convert Python input data to the `rpy2` format;
+ 
+- `r_to_py()`: To convert the `rpy2` output back to Python.
+ 
+In some cases (e.g., floats and strings) the conversion from Python to `rpy2` object happens automatically. In other cases (e.g., tuples and lists) the conversion needs to be made explicit through a call to `py_to_r()`. The table below gives the R object class corresponding to each relevant Python class, and indicates when to use the conversion function.
+ 
+| Python type                                          | R class      | Conversion                        |
+|------------------------------------------------------|--------------|-----------------------------------|
+| `int`                                                | `integer`    | *automatic*                       |
+| `float`                                              | `double`     | *automatic*                       |
+| `str`                                                | `character`  | *automatic*                       |
+| `tuple`, `list`                                      | `vector`     | `py_to_r()`                       |
+| `pandas.DataFrame`, `pandas.Series`, `numpy.ndarray` | `data.frame` | `py_to_r()`                       |
+| `function`                                           | `function`   | *use a decorator (see example 2)* |
+| `geopandas.geodataframe.GeoDataFrame`                | `sf`         | `py_to_r()` *(see example 3)*     |
+| `xarray.core.dataset.Dataset`                        | `SpatRaster` | `py_to_r()` *(see example 3)*     |
+
+# Examples
+
+## Example 1: Typical case
+ 
+This example illustrates a typical workflow, in this case comparing the health impact under two exposure scenarios. To start, let's make a call to `attribute_health()` for the reference scenario, after doing the necessary conversions of the input data:
+
+```{python}
+from healthiar.healthiar import healthiar
+from healthiar.conversion import py_to_r, r_to_py
+
+## convert Python lists to R vectors
+exp_central_A = py_to_r([10, 18])
+prop_pop_exp = py_to_r([0.7, 0.3])
+
+## call healthiar function
+scenario_A = healthiar.attribute_health(
+    exp_central = exp_central_A,
+    prop_pop_exp = prop_pop_exp,
+    cutoff_central = 5,
+    rr_central = 1.08,
+    rr_increment = 10,
+    erf_shape = "linear_log",
+    bhd_central = 1200
+)
+```
+
+Let's now calculate the health impact under a scenario where population exposure is halved, by passing the output of the previous call to `mod()` along with the alternative exposure values:
+
+```{python}
+exp_central_B = py_to_r([5, 9])
+
+scenario_B = healthiar.attribute_mod(
+    output_attribute = scenario_A,
+    exp_central = exp_central_B
+)
+```
+
+The final step in the analysis is to calculate the hypothetical avoided impact, by passing both outputs to `compare()`:
+
+```{python}
+results_comparison = healthiar.compare(
+    approach_comparison = "delta", # or "pif" (population impact fraction)
+    output_attribute_scen_1 = scenario_A,
+    output_attribute_scen_2 = scenario_B
+)
+```
+
+We can now convert the end result back to Python:
+
+```{python}
+py_results_comparison = r_to_py(results_comparison)
+py_results_comparison["health_main"][["impact", "impact_rounded", "impact_scen_1", "impact_scen_2", "bhd", "exp_type", "exp_scen_1", "exp_scen_2"]].head()
+```
+
+|impact   |	impact_rounded | impact_scen_1 | impact_scen_2 | bhd  | exp_type              |	exp_scen_1 | exp_scen_2 |
+|---------|----------------|---------------|---------------|------|-----------------------|------------|------------|
+| 56.1057 |	56.0           | 70.919858     | 14.814158     | 1200	| exposure_distribution |	10, 18     | 5, 9       |
+
+
+## Example 2: Function input
+To pass a Python function as input to a function from `healthiar`, it needs to be wrapped in the `rpy2` function `rternalize()` using a decorator (`@`). Let's take the `CubicSpline()` function from `scipy` as an example:
+
+```{python}
+import rpy2.rinterface as ri
+from scipy.interpolate import CubicSpline
+
+## define ERF with decorator ('@')
+@ri.rternalize
+def erf_fun(x):
+    cs = CubicSpline(
+      x = [0, 5, 10, 15, 20, 25, 30, 50, 70, 90, 110],
+      y = [1.00, 1.04, 1.08, 1.12, 1.16, 1.20, 1.23, 1.35, 1.45, 1.53, 1.60]
+    )
+    return float(cs(x)[0])
+
+## pass ERF to attribute_health()
+results_pm_copd_mr_brt = healthiar.attribute_health(
+  exp_central = 8.85,
+  bhd_central = 30747,
+  cutoff_central = 0,
+  erf_eq_central = erf_fun
+)
+```
+
+Note: The use of a decorator is only required when passing Python functions as `erf_eq_central`. Passing equations in the form of a string requires no conversion.
+
+## Example 3: Spatial input
+With `prepare_exposure()`, it's possible to obtain exposure data from spatial data formats, where the output is compatible with `healthiar` functions such as `attribute_health()`. Let's calculate a population-weighted average concentration of PM<sub>2.5</sub> for each region in Brussels, based on the population by municipality:
+
+```{python}
+import geopandas as gpd # to read spatial vector data
+import xarray as xr # to read spatial raster data
+import rioxarray # rasterio engine
+from importlib.resources import files # to access package data files
+
+## read spatial data
+path = files("healthiar.data")
+exdat_pwm_1 = xr.open_dataset(path.joinpath("pm25.tif"), engine = "rasterio", masked = True)
+exdat_pwm_2 = gpd.read_file(path.joinpath("municipalities_brussels.gpkg"))
+
+## extract non-spatial inputs
+population = exdat_pwm_2["population"]
+geo_id_macro = exdat_pwm_2["region"]
+
+## convert to R format
+r_exdat_pwm_1 = py_to_r(exdat_pwm_1)
+r_exdat_pwm_2 = py_to_r(exdat_pwm_2)
+r_population = py_to_r(population)
+r_geo_id_macro = py_to_r(geo_id_macro)
+
+pwm = healthiar.prepare_exposure(
+  poll_grid = r_exdat_pwm_1, 
+  geo_units = r_exdat_pwm_2,
+  population = r_population,
+  geo_id_macro = r_geo_id_macro
+)
+```
+
+
