@@ -125,7 +125,7 @@ and `attribute_lifetable` consists of two lists (“folders”):
 
 - `health_main` contains the main results
 
-- `health_detailed` contained detailed results and additional info about
+- `health_detailed` contains detailed results and additional info about
   the assessment.
 
 In other `healthiar` functions you can find a similar output structure
@@ -136,7 +136,7 @@ and `monetization_`in `monetitize()`.
 ##### Access
 
 A similar structure can be found in other large functions in
-`helathiar`, e.g.,
+`healthiar`, e.g.,
 [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
 [`compare()`](https://swisstph.github.io/healthiar/reference/compare.md),
 [`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md)
@@ -162,8 +162,8 @@ There exist different, equivalent ways of accessing the output:
   [`purrr::pluck`](https://purrr.tidyverse.org/reference/pluck.html)
   function to select a list and then the
   [`dplyr::pull`](https://dplyr.tidyverse.org/reference/pull.html)
-  function extract values from a specified column,
-  e.g. `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
+  function extract values from a specified column, e.g.
+  `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
 
 ------------------------------------------------------------------------
 
@@ -1475,7 +1475,7 @@ scenario_A <- attribute_health(
 The function
 [`attribute_mod()`](https://swisstph.github.io/healthiar/reference/attribute_mod.md)
 can be used to modify one or multiple arguments of `attribute_health`in
-an existing scenario, e.g. `scenario_A`.
+an existing scenario, e.g. `scenario_A`.
 
 ``` r
 scenario_B <- attribute_mod(
@@ -1896,7 +1896,6 @@ results_catERF_different_calc_thesh <- healthiar::attribute_health(
 
 The used function is equal to
 ``` math
-
 f(c) =
 \begin{cases}
 1, & c < \text{threshold} \\
@@ -2425,6 +2424,7 @@ eval(mdi$mdi_detailed$boxplot)
 
 ![Boxplot of Normalized Indicators and
 MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-113-1.png)
+
 Analogeously, to reproduce the histogram run
 
 ``` r
@@ -2510,6 +2510,182 @@ Visualization is out of scope of `healthiar`. You can visualize in:
 - R using base programming or packages such as `ggplot2` (Wickham 2016),
 - Excel (export results first) or
 - Other tools.
+
+------------------------------------------------------------------------
+
+## Python package
+
+Using `healthiar` in Python is possible with the dedicated wrapper. The
+wrapper consists of a Python program that allows you to use the
+`healthiar` R package as if it were a Python package. In technical
+terms, the Python package works by running R embedded in a Python
+process.
+
+The Python wrapper for `healthiar` is an implementation of the [`rpy2`
+interface](https://rpy2.github.io/).
+
+### Requirements
+
+To use the Python package, you need R, with the `healthiar` package
+installed.
+
+### Installation
+
+1.  Install the `healthiar` Python package with `pip`:
+
+    ``` python
+    pip install healthiar
+    ```
+
+2.  Add the path of your R installation as environment variable. In
+    Python, you can do this as follows:
+
+    ``` python
+    import os
+
+    os.environ['R_HOME'] = "/path/to/R/R-4.6.0"
+    # or
+    os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
+    ```
+
+### Modules
+
+#### Conversion
+
+The `conversion` module contains the functions for converting input and
+output data, needed for a correct functioning of the wrapper:
+
+- `py_to_r()`: To convert Python input data to the `rpy2` format;
+
+- `r_to_py()`: To convert the `rpy2` output back to Python.
+
+In some cases (e.g., floats and strings) the conversion from Python to
+`rpy2` object happens automatically. In other cases (e.g., tuples and
+lists) the conversion needs to be made explicit through a call to
+`py_to_r()`. The table below gives the R object class corresponding to
+each relevant Python class, and indicates when to use the conversion
+function.
+
+| Python type | R class | Conversion |
+|----|----|----|
+| `int` | `integer` | *automatic* |
+| `float` | `double` | *automatic* |
+| `str` | `character` | *automatic* |
+| `tuple`, `list` | `vector` | `py_to_r()` |
+| `pandas.DataFrame`, `pandas.Series`, `numpy.ndarray` | `data.frame` | `py_to_r()` |
+| `function` | `function` | *use a decorator (see below)* |
+
+#### Wrapper
+
+The `healthiar` module contains the wrapper itself, allowing you to call
+any function available in the R package. To illustrate a typical
+workflow, let’s replicate the above example of a call to
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+for multiple geographic units:
+
+``` python
+from healthiar.healthiar import healthiar
+from healthiar.conversion import py_to_r, r_to_py
+
+results_iteration = healthiar.attribute_health(
+    # Names of Swiss cantons
+    geo_id_micro = py_to_r(["Zurich", "Basel", "Geneva", "Ticino", "Jura"]),
+    # Names of languages spoken in the selected Swiss cantons
+    geo_id_macro = py_to_r(["German","German","French","Italian","French"]),
+    rr_central = 1.369,
+    rr_increment = 10, 
+    cutoff_central = 5,
+    erf_shape = "log_linear",
+    exp_central = py_to_r([11, 11, 10, 8, 7]),
+    bhd_central = py_to_r([4000, 2500, 3000, 1500, 500])
+)
+```
+
+The output is an `rpy2` object. The result in this format can be passed
+directly to another `healthiar` function, such as
+[`compare()`](https://swisstph.github.io/healthiar/reference/compare.md).
+To convert the result to a regular Python object, pass it to the
+`r_to_py()` function:
+
+``` python
+py_results_iteration = r_to_py(results_iteration)
+py_results_iteration["health_main"][["geo_id_macro", "impact_rounded", "erf_ci", "exp_ci", "bhd_ci"]].head()
+```
+
+| geo_id_macro | impact_rounded | erf_ci  | exp_ci  | bhd_ci  |
+|--------------|----------------|---------|---------|---------|
+| German       | 1116.0         | central | central | central |
+| French       | 466.0          | central | central | central |
+| Italian      | 135.0          | central | central | central |
+
+To pass a Python function as input to a function from `healthiar`, you
+need to wrap the `rpy2` function `rternalize()` around it using a
+decorator. Let’s take the `CubicSpline()` function from `scipy` as an
+example:
+
+``` python
+import rpy2.rinterface as ri
+from scipy.interpolate import CubicSpline
+
+## define ERF with decorator ('@')
+@ri.rternalize
+def erf_fun(x):
+    cs = CubicSpline(
+      x = [0, 5, 10, 15, 20, 25, 30, 50, 70, 90, 110],
+      y = [1.00, 1.04, 1.08, 1.12, 1.16, 1.20, 1.23, 1.35, 1.45, 1.53, 1.60]
+    )
+    return float(cs(x)[0])
+
+## pass ERF to attribute_health()
+results_pm_copd_mr_brt = healthiar.attribute_health(
+  exp_central = 8.85,
+  bhd_central = 30747,
+  cutoff_central = 0,
+  erf_eq_central = erf_fun
+)
+```
+
+Note: The use of a decorator is only required when passing Python
+functions as `erf_eq_central`. Passing equations in the form of a string
+requires no conversion.
+
+#### Spatial data
+
+Conversion of spatial data formats from Python (e.g., `geopandas`,
+`xarray`) to `rpy2` format is not possible. However, the module
+`spatial` contains functions to read geographic vector or raster data in
+way that is compatible with the `healthiar` function
+[`prepare_exposure()`](https://swisstph.github.io/healthiar/reference/prepare_exposure.md):
+
+``` python
+from healthiar.spatial import read_raster, read_vector
+from importlib.resources import files # to access package data files
+import pathlib # to convert Windows path to POSIX path, if running Windows
+
+path = files("healthiar.data")
+exdat_pwm_1 = read_raster(path.joinpath("pm25.tif").as_posix())
+exdat_pwm_2 = read_vector(path.joinpath("municipalities_brussels.gpkg").as_posix(), quiet = True)
+
+population = [27335, 131426, 86534, 25425, 59840, 42638, 125734, 35369, 203105, 50060, 44735, 57993, 89204, 54077, 22901, 99096, 25630, 49704, 25441]
+
+geo_id_macro = ["North", "North", "South", "South", "East", "East", "West", "East", "Center", "East", "North", "South", "South", "North", "West", "West", "West", "South", "West"]
+
+pwm = healthiar.prepare_exposure(
+  poll_grid = exdat_pwm_1, # Formal class SpatRaster,
+  geo_units = exdat_pwm_2, # sf of the geographic sub-units
+  population = py_to_r(population), # population per geographic sub-unit
+  geo_id_macro = py_to_r(geo_id_macro)
+)
+```
+
+### Documentation
+
+To access the documentation of a `healthiar` function, use the default
+`?` method from R:
+
+``` python
+?healthiar.attribute_health
+```
 
 ------------------------------------------------------------------------
 

@@ -157,7 +157,7 @@ Renard F, Devleesschauwer B, Speybroeck N, Deboosere P (2019).
 “Monitoring health inequalities when the socio-economic composition
 changes: are the slope and relative indices of inequality appropriate?
 Results of a simulation study.” *BMC Public Health*, **19**(1), 662.
-ISSN 1471-2458,
+ISSN 1471-2458.
 [doi:10.1186/s12889-019-6980-1](https://doi.org/10.1186/s12889-019-6980-1)
 .
 

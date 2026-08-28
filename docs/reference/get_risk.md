@@ -97,14 +97,14 @@ specifically, see chapters:
 Lehtomäki H, Aasvang GM, Sulo G, Denby BR, Hänninen OO, Brauer M,
 Pereira G, Dadras O, Bølling AK (2025). “Burden of disease attributable
 to PM2.5 at low exposure levels: impact of methodological choices.”
-*Environmental Health*, **25**(1), 4. ISSN 1476-069X,
+*Environmental Health*, **25**(1), 4. ISSN 1476-069X.
 [doi:10.1186/s12940-025-01250-y](https://doi.org/10.1186/s12940-025-01250-y)
 .  
   
 Pozzer A, Anenberg SC, Dey S, Haines A, Lelieveld J, Chowdhury S (2023).
 “Mortality Attributable to Ambient Air Pollution: A Review of Global
 Estimates.” *GeoHealth*, **7**(1), e2022GH000711.
-[doi:10.1029/2022GH000711](https://doi.org/10.1029/2022GH000711) ,
+[doi:10.1029/2022GH000711](https://doi.org/10.1029/2022GH000711) .
 e2022GH000711 2022GH000711,
 https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2022GH000711,
 <https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2022GH000711>.

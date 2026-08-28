@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Vignette: Intro to healthiar">
 </head>
@@ -40,6 +40,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/cheatsheet.html">Cheat sheet</a></li>
     <li><a class="dropdown-item" href="../articles/intro_to_healthiar.html">Vignette: Intro to healthiar</a></li>
+    <li><a class="dropdown-item" href="../articles/using_healthiar_with_python.html">Vignette: Using healthiar with Python</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -182,7 +183,7 @@ result of the combinations of the different values of:</p>
 consists of two lists (“folders”):</p>
 <ul>
 <li><p><code>health_main</code> contains the main results</p></li>
-<li><p><code>health_detailed</code> contained detailed results and
+<li><p><code>health_detailed</code> contains detailed results and
 additional info about the assessment.</p></li>
 </ul>
 <p>In other <code>healthiar</code> functions you can find a similar
@@ -194,7 +195,7 @@ output structure but using different prefixes. E.g.,
 <h5 id="access">Access<a class="anchor" aria-label="anchor" href="#access"></a>
 </h5>
 <p>A similar structure can be found in other large functions in
-<code>helathiar</code>, e.g., <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>,
+<code>healthiar</code>, e.g., <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>,
 <code><a href="../reference/compare.html">compare()</a></code>, <code><a href="../reference/socialize.html">socialize()</a></code> or
 <code><a href="../reference/monetize.html">monetize()</a></code>. In some functions, different elements are
 available in the output. For instance,
@@ -213,8 +214,8 @@ on the variable you want to inspect, and then open the
 <li><p>With <code>pluck()</code> &amp; <code>pull()</code>: use the
 <code><a href="https://purrr.tidyverse.org/reference/pluck.html" class="external-link">purrr::pluck</a></code> function to select a list and then the
 <code><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">dplyr::pull</a></code> function extract values from a specified
-column,
-e.g. <code>results_pm_copd |&gt; purrr::pluck("health_main") |&gt; dplyr::pull("impact_rounded")</code></p></li>
+column, e.g.
+<code>results_pm_copd |&gt; purrr::pluck("health_main") |&gt; dplyr::pull("impact_rounded")</code></p></li>
 </ul>
 <hr>
 </div>
@@ -5838,7 +5839,7 @@ scenario A.</p>
 <span>    rr_increment <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p>The function <code><a href="../reference/attribute_mod.html">attribute_mod()</a></code> can be used to modify one
 or multiple arguments of <code>attribute_health</code>in an existing
-scenario, e.g. <code>scenario_A</code>.</p>
+scenario, e.g. <code>scenario_A</code>.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scenario_B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_mod.html">attribute_mod</a></span><span class="op">(</span></span>
 <span>  output_attribute <span class="op">=</span> <span class="va">scenario_A</span>, </span>
@@ -6325,13 +6326,11 @@ fulfilled by using a ‘function(c)’ which is of type ‘function’.</p>
 <span>  cutoff_central<span class="op">=</span><span class="fl">0</span>,</span>
 <span>  bhd_central<span class="op">=</span><span class="fl">50000</span><span class="op">)</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_rounded</span></span></code></pre></div>
 <p>The used function is equal to
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>c</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>1</mn><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>c</mi><mo>&lt;</mo><mtext mathvariant="normal">threshold</mtext></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>R</mi><mi>R</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>r</mi><msub><mi>r</mi><mrow><mi>i</mi><mi>n</mi><mi>c</mi><mi>r</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mi>c</mi><mo>−</mo><mi>t</mi><mi>h</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>h</mi><mi>o</mi><mi>l</mi><msub><mi>d</mi><mrow><mi>e</mi><mi>f</mi><mi>f</mi><mi>e</mi><mi>c</mi><mi>t</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>c</mi><mo>≥</mo><mtext mathvariant="normal">threshold</mtext></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
-f(c) =
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>c</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>1</mn><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>c</mi><mo>&lt;</mo><mtext mathvariant="normal">threshold</mtext></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>R</mi><mi>R</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>r</mi><msub><mi>r</mi><mrow><mi>i</mi><mi>n</mi><mi>c</mi><mi>r</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mi>c</mi><mo>−</mo><mi>t</mi><mi>h</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>h</mi><mi>o</mi><mi>l</mi><msub><mi>d</mi><mrow><mi>e</mi><mi>f</mi><mi>f</mi><mi>e</mi><mi>c</mi><mi>t</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>c</mi><mo>≥</mo><mtext mathvariant="normal">threshold</mtext></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">f(c) =
 \begin{cases}
 1, &amp; c &lt; \text{threshold} \\
 \exp\left( \frac{\log(RR)}{rr_{increment}} (c - threshold_{effect}) \right), &amp; c \ge \text{threshold}
-\end{cases}
-</annotation></semantics></math></p>
+\end{cases}</annotation></semantics></math></p>
 <p>The categorical ERF curve created looks as follows.</p>
 <p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-98-1.png" class="r-plt" alt="ERF curve" width="700"></p>
 </div>
@@ -6899,8 +6898,8 @@ distribution curve</p></li>
 <p>To reproduce the boxlots run</p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">boxplot</span><span class="op">)</span></span></code></pre></div>
-<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-113-1.png" class="r-plt" alt="Boxplot of Normalized Indicators and MDI" width="700">
-Analogeously, to reproduce the histogram run</p>
+<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-113-1.png" class="r-plt" alt="Boxplot of Normalized Indicators and MDI" width="700"></p>
+<p>Analogeously, to reproduce the histogram run</p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">histogram</span><span class="op">)</span></span></code></pre></div>
 <p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-114-1.png" class="r-plt" alt="Histogram of MDI with normal curve" width="700"></p>
@@ -6982,6 +6981,241 @@ visualize in:</p>
 <li>Excel (export results first) or</li>
 <li>Other tools.</li>
 </ul>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="python-package">Python package<a class="anchor" aria-label="anchor" href="#python-package"></a>
+</h2>
+<p>Using <code>healthiar</code> in Python is possible with the dedicated
+wrapper. The wrapper consists of a Python program that allows you to use
+the <code>healthiar</code> R package as if it were a Python package. In
+technical terms, the Python package works by running R embedded in a
+Python process.</p>
+<p>The Python wrapper for <code>healthiar</code> is an implementation of
+the <a href="https://rpy2.github.io/" class="external-link"><code>rpy2</code>
+interface</a>.</p>
+<div class="section level3">
+<h3 id="requirements">Requirements<a class="anchor" aria-label="anchor" href="#requirements"></a>
+</h3>
+<p>To use the Python package, you need R, with the
+<code>healthiar</code> package installed.</p>
+</div>
+<div class="section level3">
+<h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h3>
+<ol style="list-style-type: decimal">
+<li>
+<p>Install the <code>healthiar</code> Python package with
+<code>pip</code>:</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a>pip install healthiar</span></code></pre></div>
+</li>
+<li>
+<p>Add the path of your R installation as environment variable. In
+Python, you can do this as follows:</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="#cb59-3" tabindex="-1"></a>os.environ[<span class="st">'R_HOME'</span>] <span class="op">=</span> <span class="st">"/path/to/R/R-4.6.0"</span></span>
+<span id="cb59-4"><a href="#cb59-4" tabindex="-1"></a><span class="co"># or</span></span>
+<span id="cb59-5"><a href="#cb59-5" tabindex="-1"></a>os.environ[<span class="st">"PATH"</span>] <span class="op">=</span> <span class="st">"/path/to/R/R-4.6.0/bin/x64"</span></span></code></pre></div>
+</li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="modules">Modules<a class="anchor" aria-label="anchor" href="#modules"></a>
+</h3>
+<div class="section level4">
+<h4 id="conversion">Conversion<a class="anchor" aria-label="anchor" href="#conversion"></a>
+</h4>
+<p>The <code>conversion</code> module contains the functions for
+converting input and output data, needed for a correct functioning of
+the wrapper:</p>
+<ul>
+<li><p><code>py_to_r()</code>: To convert Python input data to the
+<code>rpy2</code> format;</p></li>
+<li><p><code>r_to_py()</code>: To convert the <code>rpy2</code> output
+back to Python.</p></li>
+</ul>
+<p>In some cases (e.g., floats and strings) the conversion from Python
+to <code>rpy2</code> object happens automatically. In other cases (e.g.,
+tuples and lists) the conversion needs to be made explicit through a
+call to <code>py_to_r()</code>. The table below gives the R object class
+corresponding to each relevant Python class, and indicates when to use
+the conversion function.</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th>Python type</th>
+<th>R class</th>
+<th>Conversion</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>int</code></td>
+<td><code>integer</code></td>
+<td><em>automatic</em></td>
+</tr>
+<tr class="even">
+<td><code>float</code></td>
+<td><code>double</code></td>
+<td><em>automatic</em></td>
+</tr>
+<tr class="odd">
+<td><code>str</code></td>
+<td><code>character</code></td>
+<td><em>automatic</em></td>
+</tr>
+<tr class="even">
+<td>
+<code>tuple</code>, <code>list</code>
+</td>
+<td><code>vector</code></td>
+<td><code>py_to_r()</code></td>
+</tr>
+<tr class="odd">
+<td>
+<code>pandas.DataFrame</code>, <code>pandas.Series</code>,
+<code>numpy.ndarray</code>
+</td>
+<td><code>data.frame</code></td>
+<td><code>py_to_r()</code></td>
+</tr>
+<tr class="even">
+<td><code>function</code></td>
+<td><code>function</code></td>
+<td><em>use a decorator (see below)</em></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="wrapper">Wrapper<a class="anchor" aria-label="anchor" href="#wrapper"></a>
+</h4>
+<p>The <code>healthiar</code> module contains the wrapper itself,
+allowing you to call any function available in the R package. To
+illustrate a typical workflow, let’s replicate the above example of a
+call to <code><a href="../reference/attribute_health.html">attribute_health()</a></code> for multiple geographic
+units:</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a><span class="im">from</span> healthiar.healthiar <span class="im">import</span> healthiar</span>
+<span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a><span class="im">from</span> healthiar.conversion <span class="im">import</span> py_to_r, r_to_py</span>
+<span id="cb60-3"><a href="#cb60-3" tabindex="-1"></a></span>
+<span id="cb60-4"><a href="#cb60-4" tabindex="-1"></a>results_iteration <span class="op">=</span> healthiar.attribute_health(</span>
+<span id="cb60-5"><a href="#cb60-5" tabindex="-1"></a>    <span class="co"># Names of Swiss cantons</span></span>
+<span id="cb60-6"><a href="#cb60-6" tabindex="-1"></a>    geo_id_micro <span class="op">=</span> py_to_r([<span class="st">"Zurich"</span>, <span class="st">"Basel"</span>, <span class="st">"Geneva"</span>, <span class="st">"Ticino"</span>, <span class="st">"Jura"</span>]),</span>
+<span id="cb60-7"><a href="#cb60-7" tabindex="-1"></a>    <span class="co"># Names of languages spoken in the selected Swiss cantons</span></span>
+<span id="cb60-8"><a href="#cb60-8" tabindex="-1"></a>    geo_id_macro <span class="op">=</span> py_to_r([<span class="st">"German"</span>,<span class="st">"German"</span>,<span class="st">"French"</span>,<span class="st">"Italian"</span>,<span class="st">"French"</span>]),</span>
+<span id="cb60-9"><a href="#cb60-9" tabindex="-1"></a>    rr_central <span class="op">=</span> <span class="fl">1.369</span>,</span>
+<span id="cb60-10"><a href="#cb60-10" tabindex="-1"></a>    rr_increment <span class="op">=</span> <span class="dv">10</span>, </span>
+<span id="cb60-11"><a href="#cb60-11" tabindex="-1"></a>    cutoff_central <span class="op">=</span> <span class="dv">5</span>,</span>
+<span id="cb60-12"><a href="#cb60-12" tabindex="-1"></a>    erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span>
+<span id="cb60-13"><a href="#cb60-13" tabindex="-1"></a>    exp_central <span class="op">=</span> py_to_r([<span class="dv">11</span>, <span class="dv">11</span>, <span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">7</span>]),</span>
+<span id="cb60-14"><a href="#cb60-14" tabindex="-1"></a>    bhd_central <span class="op">=</span> py_to_r([<span class="dv">4000</span>, <span class="dv">2500</span>, <span class="dv">3000</span>, <span class="dv">1500</span>, <span class="dv">500</span>])</span>
+<span id="cb60-15"><a href="#cb60-15" tabindex="-1"></a>)</span></code></pre></div>
+<p>The output is an <code>rpy2</code> object. The result in this format
+can be passed directly to another <code>healthiar</code> function, such
+as <code><a href="../reference/compare.html">compare()</a></code>. To convert the result to a regular Python
+object, pass it to the <code>r_to_py()</code> function:</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a>py_results_iteration <span class="op">=</span> r_to_py(results_iteration)</span>
+<span id="cb61-2"><a href="#cb61-2" tabindex="-1"></a>py_results_iteration[<span class="st">"health_main"</span>][[<span class="st">"geo_id_macro"</span>, <span class="st">"impact_rounded"</span>, <span class="st">"erf_ci"</span>, <span class="st">"exp_ci"</span>, <span class="st">"bhd_ci"</span>]].head()</span></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th>geo_id_macro</th>
+<th>impact_rounded</th>
+<th>erf_ci</th>
+<th>exp_ci</th>
+<th>bhd_ci</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>German</td>
+<td>1116.0</td>
+<td>central</td>
+<td>central</td>
+<td>central</td>
+</tr>
+<tr class="even">
+<td>French</td>
+<td>466.0</td>
+<td>central</td>
+<td>central</td>
+<td>central</td>
+</tr>
+<tr class="odd">
+<td>Italian</td>
+<td>135.0</td>
+<td>central</td>
+<td>central</td>
+<td>central</td>
+</tr>
+</tbody>
+</table>
+<p>To pass a Python function as input to a function from
+<code>healthiar</code>, you need to wrap the <code>rpy2</code> function
+<code>rternalize()</code> around it using a decorator. Let’s take the
+<code>CubicSpline()</code> function from <code>scipy</code> as an
+example:</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a><span class="im">import</span> rpy2.rinterface <span class="im">as</span> ri</span>
+<span id="cb62-2"><a href="#cb62-2" tabindex="-1"></a><span class="im">from</span> scipy.interpolate <span class="im">import</span> CubicSpline</span>
+<span id="cb62-3"><a href="#cb62-3" tabindex="-1"></a></span>
+<span id="cb62-4"><a href="#cb62-4" tabindex="-1"></a><span class="co">## define ERF with decorator ('@')</span></span>
+<span id="cb62-5"><a href="#cb62-5" tabindex="-1"></a><span class="at">@ri.rternalize</span></span>
+<span id="cb62-6"><a href="#cb62-6" tabindex="-1"></a><span class="kw">def</span> erf_fun(x):</span>
+<span id="cb62-7"><a href="#cb62-7" tabindex="-1"></a>    cs <span class="op">=</span> CubicSpline(</span>
+<span id="cb62-8"><a href="#cb62-8" tabindex="-1"></a>      x <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">70</span>, <span class="dv">90</span>, <span class="dv">110</span>],</span>
+<span id="cb62-9"><a href="#cb62-9" tabindex="-1"></a>      y <span class="op">=</span> [<span class="fl">1.00</span>, <span class="fl">1.04</span>, <span class="fl">1.08</span>, <span class="fl">1.12</span>, <span class="fl">1.16</span>, <span class="fl">1.20</span>, <span class="fl">1.23</span>, <span class="fl">1.35</span>, <span class="fl">1.45</span>, <span class="fl">1.53</span>, <span class="fl">1.60</span>]</span>
+<span id="cb62-10"><a href="#cb62-10" tabindex="-1"></a>    )</span>
+<span id="cb62-11"><a href="#cb62-11" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">float</span>(cs(x)[<span class="dv">0</span>])</span>
+<span id="cb62-12"><a href="#cb62-12" tabindex="-1"></a></span>
+<span id="cb62-13"><a href="#cb62-13" tabindex="-1"></a><span class="co">## pass ERF to attribute_health()</span></span>
+<span id="cb62-14"><a href="#cb62-14" tabindex="-1"></a>results_pm_copd_mr_brt <span class="op">=</span> healthiar.attribute_health(</span>
+<span id="cb62-15"><a href="#cb62-15" tabindex="-1"></a>  exp_central <span class="op">=</span> <span class="fl">8.85</span>,</span>
+<span id="cb62-16"><a href="#cb62-16" tabindex="-1"></a>  bhd_central <span class="op">=</span> <span class="dv">30747</span>,</span>
+<span id="cb62-17"><a href="#cb62-17" tabindex="-1"></a>  cutoff_central <span class="op">=</span> <span class="dv">0</span>,</span>
+<span id="cb62-18"><a href="#cb62-18" tabindex="-1"></a>  erf_eq_central <span class="op">=</span> erf_fun</span>
+<span id="cb62-19"><a href="#cb62-19" tabindex="-1"></a>)</span></code></pre></div>
+<p>Note: The use of a decorator is only required when passing Python
+functions as <code>erf_eq_central</code>. Passing equations in the form
+of a string requires no conversion.</p>
+</div>
+<div class="section level4">
+<h4 id="spatial-data">Spatial data<a class="anchor" aria-label="anchor" href="#spatial-data"></a>
+</h4>
+<p>Conversion of spatial data formats from Python (e.g.,
+<code>geopandas</code>, <code>xarray</code>) to <code>rpy2</code> format
+is not possible. However, the module <code>spatial</code> contains
+functions to read geographic vector or raster data in way that is
+compatible with the <code>healthiar</code> function
+<code><a href="../reference/prepare_exposure.html">prepare_exposure()</a></code>:</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" tabindex="-1"></a><span class="im">from</span> healthiar.spatial <span class="im">import</span> read_raster, read_vector</span>
+<span id="cb63-2"><a href="#cb63-2" tabindex="-1"></a><span class="im">from</span> importlib.resources <span class="im">import</span> files <span class="co"># to access package data files</span></span>
+<span id="cb63-3"><a href="#cb63-3" tabindex="-1"></a><span class="im">import</span> pathlib <span class="co"># to convert Windows path to POSIX path, if running Windows</span></span>
+<span id="cb63-4"><a href="#cb63-4" tabindex="-1"></a></span>
+<span id="cb63-5"><a href="#cb63-5" tabindex="-1"></a>path <span class="op">=</span> files(<span class="st">"healthiar.data"</span>)</span>
+<span id="cb63-6"><a href="#cb63-6" tabindex="-1"></a>exdat_pwm_1 <span class="op">=</span> read_raster(path.joinpath(<span class="st">"pm25.tif"</span>).as_posix())</span>
+<span id="cb63-7"><a href="#cb63-7" tabindex="-1"></a>exdat_pwm_2 <span class="op">=</span> read_vector(path.joinpath(<span class="st">"municipalities_brussels.gpkg"</span>).as_posix(), quiet <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb63-8"><a href="#cb63-8" tabindex="-1"></a></span>
+<span id="cb63-9"><a href="#cb63-9" tabindex="-1"></a>population <span class="op">=</span> [<span class="dv">27335</span>, <span class="dv">131426</span>, <span class="dv">86534</span>, <span class="dv">25425</span>, <span class="dv">59840</span>, <span class="dv">42638</span>, <span class="dv">125734</span>, <span class="dv">35369</span>, <span class="dv">203105</span>, <span class="dv">50060</span>, <span class="dv">44735</span>, <span class="dv">57993</span>, <span class="dv">89204</span>, <span class="dv">54077</span>, <span class="dv">22901</span>, <span class="dv">99096</span>, <span class="dv">25630</span>, <span class="dv">49704</span>, <span class="dv">25441</span>]</span>
+<span id="cb63-10"><a href="#cb63-10" tabindex="-1"></a></span>
+<span id="cb63-11"><a href="#cb63-11" tabindex="-1"></a>geo_id_macro <span class="op">=</span> [<span class="st">"North"</span>, <span class="st">"North"</span>, <span class="st">"South"</span>, <span class="st">"South"</span>, <span class="st">"East"</span>, <span class="st">"East"</span>, <span class="st">"West"</span>, <span class="st">"East"</span>, <span class="st">"Center"</span>, <span class="st">"East"</span>, <span class="st">"North"</span>, <span class="st">"South"</span>, <span class="st">"South"</span>, <span class="st">"North"</span>, <span class="st">"West"</span>, <span class="st">"West"</span>, <span class="st">"West"</span>, <span class="st">"South"</span>, <span class="st">"West"</span>]</span>
+<span id="cb63-12"><a href="#cb63-12" tabindex="-1"></a></span>
+<span id="cb63-13"><a href="#cb63-13" tabindex="-1"></a>pwm <span class="op">=</span> healthiar.prepare_exposure(</span>
+<span id="cb63-14"><a href="#cb63-14" tabindex="-1"></a>  poll_grid <span class="op">=</span> exdat_pwm_1, <span class="co"># Formal class SpatRaster,</span></span>
+<span id="cb63-15"><a href="#cb63-15" tabindex="-1"></a>  geo_units <span class="op">=</span> exdat_pwm_2, <span class="co"># sf of the geographic sub-units</span></span>
+<span id="cb63-16"><a href="#cb63-16" tabindex="-1"></a>  population <span class="op">=</span> py_to_r(population), <span class="co"># population per geographic sub-unit</span></span>
+<span id="cb63-17"><a href="#cb63-17" tabindex="-1"></a>  geo_id_macro <span class="op">=</span> py_to_r(geo_id_macro)</span>
+<span id="cb63-18"><a href="#cb63-18" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h3>
+<p>To access the documentation of a <code>healthiar</code> function, use
+the default <code>?</code> method from R:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a>?healthiar.attribute_health</span></code></pre></div>
 <hr>
 </div>
 </div>
@@ -7245,7 +7479,7 @@ Springer-Verlag New York. <a href="https://ggplot2.tidyverse.org" class="externa
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

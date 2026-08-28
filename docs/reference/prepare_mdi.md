@@ -130,7 +130,7 @@ Mogin G, Gorasso V, Idavain J, Lepnurm M, Delaunay-Havard S, Kocbach
 Bølling A, Buekers J, Luyten A, Devleesschauwer B, Baravelli CM (2025).
 “A scoping review of multiple deprivation indices in Europe.” *European
 Journal of Public Health*, **35**(6), 1122-1128.
-[doi:10.1093/eurpub/ckaf190](https://doi.org/10.1093/eurpub/ckaf190) ,
+[doi:10.1093/eurpub/ckaf190](https://doi.org/10.1093/eurpub/ckaf190) .
 https://academic.oup.com/eurpub/article-pdf/35/6/1122/65042936/ckaf190.pdf.
 
 ## See also

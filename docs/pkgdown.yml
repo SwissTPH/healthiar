@@ -1,10 +1,11 @@
-pandoc: '3.4'
-pkgdown: 2.2.0
+pandoc: 3.6.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   articles/cheatsheet: cheatsheet.html
   intro_to_healthiar: intro_to_healthiar.html
-last_built: 2026-06-30T09:32Z
+  using_healthiar_with_python: using_healthiar_with_python.html
+last_built: 2026-08-28T08:52Z
 urls:
   reference: https://swisstph.github.io/healthiar/reference
   article: https://swisstph.github.io/healthiar/articles

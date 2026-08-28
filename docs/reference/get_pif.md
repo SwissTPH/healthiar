@@ -69,7 +69,7 @@ Askari M, Namayandeh SM (2020). “The Difference between the Population
 Attributable Risk (PAR) and the Potentioal Impact Fraction (PIF).”
 *Iranian Journal of Public Health*, **49**(10), 2018–2019.
 [doi:10.18502/ijph.v49i10.4713](https://doi.org/10.18502/ijph.v49i10.4713)
-, <https://pmc.ncbi.nlm.nih.gov/articles/PMC7719653/>.  
+. <https://pmc.ncbi.nlm.nih.gov/articles/PMC7719653/>.  
   
 Murray CJL, Ezzati M, Lopez AD, Rodgers A, Vander Hoorn S (2003).
 “Comparative quantification of health risks conceptual framework and
