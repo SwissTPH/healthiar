@@ -96,26 +96,50 @@ validate_input_attribute <-
 
     ### error_if_var_1_but_not_var_2 #####
 
-    error_if_var_1_but_not_var_2 <- function(var_name_1, var_name_2){
-      # Check arg_names_passed in case that there is a default value (safer)
-      if(var_name_1 %in% arg_names_passed &&
-         !var_name_2 %in% arg_names_passed){
-        stop(
-          base::paste0(
-            "If you do not pass a value for ",
-            var_name_2,
-            ", you cannot use ",
-            var_name_1,
-            "."),
-          call. = FALSE)
+    # Create validate_arg_pair() for checks that do not depend on the
+    # VALUES of an argument but on WHICH arguments were entered.
+    # present_arg_names: the names that count as entered, i.e. arg_names_passed
+    # if a default value must not count and arg_names_available if any non-NULL
+    # value counts.
+    # relation: the relation that must hold between the two arguments.
+
+    validate_arg_pair <-
+      function(present_arg_names, arg_names, relation, message, type = "error"){
+
+        is_present <- arg_names %in% present_arg_names
+
+        is_valid <-
+          base::switch(
+            relation,
+            # The two arguments exclude each other
+            "not_both" = !base::all(is_present),
+            # The first argument cannot be used without the second one
+            "requires" = !is_present[1] || is_present[2],
+            # Either both arguments or none of them
+            "both_or_none" = is_present[1] == is_present[2])
+
+        if(!is_valid){
+
+          text <- base::gsub("{arg_1}", arg_names[1], message, fixed = TRUE)
+          text <- base::gsub("{arg_2}", arg_names[2], text, fixed = TRUE)
+
+          if(type == "error"){
+            base::stop(text, call. = FALSE)
+          } else if (type == "warning"){
+            base::warning(text, call. = FALSE)
+          }
+        }
       }
-    }
 
 
     # If users enter a value for geo_id_macro but not for geo_id_micro
     # the impact cannot be grouped accordingly (multiple geo_id_micro are needed)
-    error_if_var_1_but_not_var_2(var_name_1 = "geo_id_macro",
-                                 var_name_2 = "geo_id_micro")
+    # arg_names_passed in case that there is a default value (safer)
+    validate_arg_pair(
+      present_arg_names = arg_names_passed,
+      arg_names = c("geo_id_macro", "geo_id_micro"),
+      relation = "requires",
+      message = "If you do not pass a value for {arg_2}, you cannot use {arg_1}.")
 
 
     ### error_if_not_numeric #####
@@ -589,37 +613,16 @@ validate_input_attribute <-
       purrr::keep(~ . == 2) |>
       base::names()
 
-    if(base::length(arg_names_with_two_ci_prefix) > 0){
+    # Check if lower but not upper (or vice versa).
+    # arg_names_available (and not arg_names_passed) because here any
+    # non-NULL value counts as entered
+    for (x in arg_names_with_two_ci_prefix) {
 
-      error_if_only_lower_or_upper <- function(var_short){
-        var_name_lower <- base::paste0(var_short, "_lower")
-        var_name_upper <- base::paste0(var_short, "_upper")
-
-        var_value_lower <- input_args_value [[var_name_lower]]
-        var_value_upper <- input_args_value [[var_name_upper]]
-
-        if((!base::is.null(var_value_lower) && base::is.null(var_value_upper)) |
-           (base::is.null(var_value_lower) && !base::is.null(var_value_upper)) ){ # Only if available
-          {
-            # Create error message
-            stop(
-              base::paste0(
-                "Either both, ",
-                var_name_lower,
-                " and ",
-                var_name_upper,
-                ", or none of them must entered, but not only one."),
-              call. = FALSE)
-          }
-        }
-      }
-
-      # Call function checking if lower but not upper (or vice versa)
-      for (x in arg_names_with_two_ci_prefix) {
-        error_if_only_lower_or_upper(var_short = x)
-      }
-
-
+      validate_arg_pair(
+        present_arg_names = arg_names_available,
+        arg_names = base::paste0(x, c("_lower", "_upper")),
+        relation = "both_or_none",
+        message = "Either both, {arg_1} and {arg_2}, or none of them must entered, but not only one.")
     }
 
 
@@ -693,24 +696,14 @@ validate_input_attribute <-
 
     ### error_if_var_1_and_var_2 #####
 
-    error_if_var_1_and_var_2 <- function(var_name_1, var_name_2){
-      # Identify the alternative options
-
-      if(var_name_1 %in% arg_names_passed &&
-         var_name_2 %in% arg_names_passed){
-        stop(base::paste0("The argument ",
-                          var_name_1,
-                          " cannot be used together with the argument ",
-                          var_name_2,
-                          " (either one or the other but not both)."),
-             call. = FALSE
-        )
-      }
-    }
-
-    # Call function
+    # The erf can be defined either by rr_ (and shape and increment) or by erf_eq_
     for (a in c("rr_central", "erf_shape", "rr_increment")){
-      error_if_var_1_and_var_2(var_name_1 = a, var_name_2 = "erf_eq_central")
+
+      validate_arg_pair(
+        present_arg_names = arg_names_passed,
+        arg_names = c(a, "erf_eq_central"),
+        relation = "not_both",
+        message = "The argument {arg_1} cannot be used together with the argument {arg_2} (either one or the other but not both).")
     }
 
 
