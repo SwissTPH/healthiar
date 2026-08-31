@@ -145,49 +145,37 @@ validate_input_attribute <-
     ### error_if_not_numeric #####
 
     # Find the arguments that should be numeric but are not
-    # Avoid for loop here because it expected to review quite a lot of arguments.
-    # And also nice to have all incorrect args at once
-    numeric_args_that_are_not <-
-      input_args_value[numeric_arg_names_available] |>
-      purrr::keep(~ !base::is.numeric(.x) | any(is.na(.x))) |>
-      base::names()
-
-    if(base::length(numeric_args_that_are_not) > 0) {
-
-      base::stop(
-        base::paste0("The following arguments should be numeric without NAs: ",
-                     base::toString(numeric_args_that_are_not),
-                     "."),
-        call. = FALSE
-      )
-
-    }
+    # report = "all" (and not the default "first") because it is expected to
+    # review quite a lot of arguments here
+    # and it is nice to have all incorrect args at once
+    validate_args(
+      args = input_args_value,
+      arg_names = numeric_arg_names_available,
+      is_valid = function(x){base::is.numeric(x) & !base::is.na(x)},
+      message = "The following arguments should be numeric without NAs: {arg}.",
+      report = "all")
 
 
     ### error_if_not_an_option #####
-    # Create here a function because showing all incorrect args with the values here at once
-    # because otherwise it could be overwhelming for the user
-
-    error_if_not_an_option <- function(var_name){
-
-      var_value <- input_args_value[[var_name]]
-      var_options <- options_of_categorical_args[[var_name]]
-
-      # any() for the case that people enter this argument as column with repeated (or multiple) values
-      if(base::any(!var_value %in% var_options)){
-
-        base::stop(
-          base::paste0(
-            "For ", var_name,
-            ", please, type (between quotation marks) one of these options: ",
-            base::toString(var_options), "."),
-          call. = FALSE)
-      }
-    }
-
+    # One call per argument (and not one call with all of them) because
+    # the options and therefore also the message differ per argument.
+    # In this way the users see the options of the argument they got wrong
+    # instead of the options of all categorical arguments at once
 
     for (x in categorical_arg_names_available) {
-      error_if_not_an_option(var_name = x)
+
+      var_options <- options_of_categorical_args[[x]]
+
+      validate_args(
+        args = input_args_value,
+        arg_names = x,
+        # validate_args() applies any(), so this also covers the case that
+        # people enter this argument as column with repeated (or multiple) values
+        is_valid = function(v){v %in% var_options},
+        message =
+          base::paste0(
+            "For {arg}, please, type (between quotation marks) one of these options: ",
+            base::toString(var_options), "."))
     }
 
 
@@ -362,41 +350,23 @@ validate_input_attribute <-
       ### error_if_not_positive #####
 
       # No life table arguments currently require values > 0 at validation stage
-      args_value_not_positive <-
-        input_args_value[lifetable_args_with_values_above_0] |>
-        purrr::keep(.p = ~ base::any(.x <= 0)) |>
-        base::names()
-
-
-      if(base::length(args_value_not_positive) > 0) {
-        base::stop(
-          base::paste0("The values in the following arguments must not be lower than 0: ",
-                       base::toString(args_value_not_positive),
-                       "."),
-          call. = FALSE
-        )
-
-      }
+      validate_args(
+        args = input_args_value,
+        arg_names = lifetable_args_with_values_above_0,
+        is_valid = function(x){x > 0},
+        message = "The values in the following arguments must not be lower than 0: {arg}.",
+        report = "all")
 
       ### error_if_negative #####
 
       # Population and baseline health data may be 0 but not negative in life
       # table calculations; structural zero-population cases are handled later
-      args_value_below_0_lifetable <-
-        input_args_value[lifetable_args_with_values_0_or_above] |>
-        purrr::keep(.p = ~ base::any(.x < 0)) |>
-        base::names()
-
-
-      if(base::length(args_value_below_0_lifetable) > 0) {
-        base::stop(
-          base::paste0("The values in the following arguments must be 0 or higher: ",
-                       base::toString(args_value_below_0_lifetable),
-                       "."),
-          call. = FALSE
-        )
-
-      }
+      validate_args(
+        args = input_args_value,
+        arg_names = lifetable_args_with_values_0_or_above,
+        is_valid = function(x){x >= 0},
+        message = "The values in the following arguments must be 0 or higher: {arg}.",
+        report = "all")
 
 
       ### error_if_not_consecutive_sequence #####
@@ -420,19 +390,19 @@ validate_input_attribute <-
       error_if_not_consecutive_sequence(var_name = "age_group")
 
       ### warning if bhd = 0 #####
-      any_zero_in_bhd <- 
-        base::any(base::unlist(
-          input_args_value[base::intersect(
-                        arg_names_passed, 
-                        c("bhd_central", "bhd_lower", "bhd_upper"))]) ==0)
-
-      if(any_zero_in_bhd){
-        base::warning(
-          "Zeros in bhd_ arguments are theoretically possible, 
-          but they lack conceptual logic, 
+      # arg_names_passed (and not arg_names_available) because only the bhd_
+      # arguments that the users entered themselves are of interest here
+      validate_args(
+        args = input_args_value,
+        arg_names =
+          base::intersect(arg_names_passed,
+                          c("bhd_central", "bhd_lower", "bhd_upper")),
+        is_valid = function(x){x != 0},
+        message =
+          "Zeros in bhd_ arguments are theoretically possible,
+          but they lack conceptual logic,
           because survival probability become 100% in the age group with zero deaths",
-          call. = FALSE)
-      }
+        type = "warning")
 
     }
 
@@ -442,67 +412,36 @@ validate_input_attribute <-
       base::intersect(arg_names_available,
                       c("erf_eq_central", "erf_eq_lower", "erf_eq_upper"))
 
-    if(base::length(erf_eq_args_available) > 0){
-
-      error_if_erf_eq_not_function_or_string <- function(erf_eq_name){
-        erf_eq_value <- input_args_value[[erf_eq_name]]
-
-          # If it is a function (single function or multiple functions in a list)
-          # and it is not a character
-          if(! base::is.function(erf_eq_value) && ! base::is.character(erf_eq_value)){
-            base::stop(
-              base::paste0(erf_eq_name , " must be a function or a character string."),
-              call. = FALSE
-            )
-        }
-      }
-
-      for(x in erf_eq_args_available){
-        error_if_erf_eq_not_function_or_string(x)
-      }
-
-    }
+    # If it is a function (single function or multiple functions in a list)
+    # and it is not a character
+    validate_args(
+      args = input_args_value,
+      arg_names = erf_eq_args_available,
+      is_valid = function(x){base::is.function(x) || base::is.character(x)},
+      message = "{arg} must be a function or a character string.")
 
 
 
     ### error_if_lower_than_0 #####
 
     # Find the arguments with values <0
-    args_value_below_0 <-
-      input_args_value[numeric_arg_names_available] |>
-      purrr::keep(.p = ~ base::any(.x < 0)) |>
-      base::names()
-
-
-    if(base::length(args_value_below_0) > 0) {
-      base::stop(
-        base::paste0("The values in the following arguments must not be lower than 0: ",
-                     base::toString(args_value_below_0),
-                     "."),
-        call. = FALSE
-      )
-
-    }
+    validate_args(
+      args = input_args_value,
+      arg_names = numeric_arg_names_available,
+      is_valid = function(x){x >= 0},
+      message = "The values in the following arguments must not be lower than 0: {arg}.",
+      report = "all")
 
 
 
     ### error_if_higher_than_1 #####
 
-    args_value_above_1 <-
-      input_args_value[c("prop_pop_exp", "fraction_lived", base::paste0("dw", ci_suffix))] |>
-      purrr::keep(.p = ~ base::any(.x > 1)) |>
-      base::names()
-
-
-    if(base::length(args_value_above_1) > 0) {
-      base::stop(
-        base::paste0("The values in the following arguments must not be higher than 1: ",
-                     base::toString(args_value_above_1),
-                     "."),
-        call. = FALSE
-      )
-
-    }
+    validate_args(
+      args = input_args_value,
+      arg_names = c("prop_pop_exp", "fraction_lived", base::paste0("dw", ci_suffix)),
+      is_valid = function(x){x <= 1},
+      message = "The values in the following arguments must not be higher than 1: {arg}.",
+      report = "all")
 
 
     ### error_if_sum_higher_than_1 #####
@@ -572,37 +511,20 @@ validate_input_attribute <-
 
 
 
-    if(base::length(arg_names_with_all_ci_prefix) > 0){
+    # Check if error if not lower>central>upper.
+    # One call per prefix (rr, exp, bhd...) because the message names
+    # the three arguments of that prefix
+    for (x in arg_names_with_all_ci_prefix) {
 
-      error_if_not_increasing_lower_central_upper <-
-        function(var_name_central, var_name_lower, var_name_upper){
-
-          # Store var_value
-          var_value_central <- input_args_value [[var_name_central]]
-          var_value_lower <- input_args_value [[var_name_lower]]
-          var_value_upper <- input_args_value [[var_name_upper]]
-
-          if(base::any(var_value_central < var_value_lower) |
-             base::any(var_value_central > var_value_upper)){
-            # Create error message
-            stop(
-              base::paste0(
-                var_name_central, " must be higher than ", var_name_lower,
-                " and lower than ", var_name_upper, "."),
-              call. = FALSE)
-
-          }
-        }
-
-      # Call function checking if error if not lower>central>upper
-      for (x in arg_names_with_all_ci_prefix) {
-        error_if_not_increasing_lower_central_upper(
-          var_name_central = base::paste0(x, "_central"),
-          var_name_lower = base::paste0(x, "_lower"),
-          var_name_upper = base::paste0(x, "_upper"))
-      }
-
-
+      validate_args(
+        args = input_args_value,
+        arg_names = base::paste0(x, "_central"),
+        is_valid = function(v){
+          base::all(v >= input_args_value[[base::paste0(x, "_lower")]]) &&
+            base::all(v <= input_args_value[[base::paste0(x, "_upper")]])},
+        message =
+          base::paste0("{arg} must be higher than ", x, "_lower",
+                       " and lower than ", x, "_upper."))
     }
 
 

@@ -219,28 +219,22 @@ monetize <- function(output_attribute = NULL,
   # Validate input data ####
 
   ## Error if value lower than 0 ####
-  for(var_name in c("valuation", "n_years")){
-
-    if(!base::is.null(base::get(var_name)) &&
-       base::get(var_name) < 0){
-
-      stop(base::paste0(var_name, " must be higher than 0."),
-           call. = FALSE)
-    }
-
-  }
+  # The local values are used (and not input_args$value)
+  # because n_years may have been overwritten above
+  validate_args(
+    args = base::list(valuation = valuation,
+                      n_years = n_years),
+    arg_names = c("valuation", "n_years"),
+    is_valid = function(x){x >= 0},
+    message = "{arg} must be higher than 0.")
 
   ## Error if value higher than 1 and lower than 0 ####
-  for(var_name in c("discount_rate", "inflation_rate")){
-
-    if(!base::is.null(base::get(var_name)) &&
-       (base::get(var_name) < 0 | base::get(var_name) > 1)){
-
-      stop(base::paste0(var_name, " must be higher than 0 and lower than 1."),
-           call. = FALSE)
-    }
-
-  }
+  validate_args(
+    args = base::list(discount_rate = discount_rate,
+                      inflation_rate = inflation_rate),
+    arg_names = c("discount_rate", "inflation_rate"),
+    is_valid = function(x){x >= 0 & x <= 1},
+    message = "{arg} must be higher than 0 and lower than 1.")
 
 
 
@@ -252,14 +246,16 @@ monetize <- function(output_attribute = NULL,
   }
 
   ## Error if no right category is passed passed ####
-
-  if(!discount_shape %in%
-     c("exponential", "hyperbolic_harvey_1986", "hyperbolic_mazur_1987")){
-
-    stop(base::paste0("Please, check spelling. discount_shape must have one of this values: ",
-                      "exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987."),
-         call. = FALSE)
-  }
+  # Here input_args$value (and not the local value) is enough
+  # because discount_shape is not overwritten above
+  validate_args(
+    args = input_args$value,
+    arg_names = "discount_shape",
+    is_valid = function(x){
+      x %in% c("exponential", "hyperbolic_harvey_1986", "hyperbolic_mazur_1987")},
+    message =
+      base::paste0("Please, check spelling. {arg} must have one of this values: ",
+                   "exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987."))
 
   ## Error if different year of analysis in life table approach ####
 

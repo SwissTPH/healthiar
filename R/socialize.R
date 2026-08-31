@@ -167,132 +167,51 @@ socialize <- function(output_attribute = NULL,
   available_fraction_vars <- base::intersect(fraction_vars, available_vars)
 
   ## error_if_not_numeric #####
-  error_if_not_numeric <- function(var_name){
+  # Must come first: the checks below assume numeric values
+  validate_args(
+    args = input_args_value,
+    arg_names = c(numeric_vars, integer_vars),
+    is_valid = base::is.numeric,
+    message = "{arg} must contain numeric value(s).")
 
-    var_value <- input_args_value [[var_name]]
-
-    if(base::any(!base::is.numeric(var_value))){
-
-      base::stop(
-        base::paste0(
-          var_name,
-          " must contain numeric value(s)."),
-        call. = FALSE)
-    }
-  }
-
-  if(base::length(available_numeric_and_integer_vars) > 0){
-    for (x in available_numeric_and_integer_vars) {
-      error_if_not_numeric(var_name = x)
-    }
-  }
-
-  ## error_if_not_whole number #####
-  error_if_not_whole_number <- function(var_name){
-    var_value <- input_args_value [[var_name]]
-
-    if(base::any(base::is.numeric(var_value)) &
-       base::any(var_value != base::floor(var_value))){
-
-      base::stop(
-        base::paste0(
-          var_name,
-          " must contain whole numeric value(s)."),
-        call. = FALSE)
-    }
-  }
-
-  if(base::length(available_integer_vars) > 0){
-    for (x in available_integer_vars) {
-      error_if_not_whole_number(var_name = x)
-    }
-  }
+  ## error_if_not_whole_number #####
+  validate_args(
+    args = input_args_value,
+    arg_names = integer_vars,
+    is_valid = function(x){x == base::floor(x)},
+    message = "{arg} must contain whole numeric value(s).")
 
   ## error_if_not_fraction #####
-  error_if_not_fraction <- function(var_name){
-
-    var_value <- input_args_value [[var_name]]
-
-    if(base::any(var_value < 0 | var_value > 1)){
-
-      base::stop(
-        base::paste0(
-          var_name,
-          " must have values between 0 and 1."),
-        call. = FALSE)
-    }
-  }
-
-  if(base::length(available_fraction_vars) > 0){
-    for (x in available_fraction_vars) {
-      error_if_not_fraction(var_name = x)
-    }
-  }
+  validate_args(
+    args = input_args_value,
+    arg_names = fraction_vars,
+    is_valid = function(x){x >= 0 & x <= 1},
+    message = "{arg} must have values between 0 and 1.")
 
   ## error_if_lower_than_0 #####
-  error_if_lower_than_0 <- function(var_name){
-    var_value <- input_args_value [[var_name]]
-
-    if(base::any(var_value < 0)){
-
-      base::stop(
-        base::paste0(
-          "The value(s) of ",
-          var_name,
-          " cannot be lower than 0."),
-        call. = FALSE)
-    }
-  }
-
-  if(base::length(available_positive_vars) > 0){
-    for (x in available_positive_vars) {
-      error_if_lower_than_0(var_name = x)
-    }
-  }
+  validate_args(
+    args = input_args_value,
+    arg_names = positive_vars,
+    is_valid = function(x){x >= 0},
+    message = "The value(s) of {arg} cannot be lower than 0.")
 
   ## error_if_not_boolean #####
-  error_if_not_boolean <- function(var_name){
-    var_value <- input_args_value [[var_name]]
-
-    if(base::any(!base::is.logical(var_value))){
-
-      base::stop(
-        base::paste0(
-          var_name,
-          " must be TRUE or FALSE."),
-        call. = FALSE)
-    }
-  }
-
-  if(base::length(available_boolean_vars) > 0){
-    for (x in available_boolean_vars) {
-      error_if_not_boolean(var_name = x)
-    }
-  }
+  validate_args(
+    args = input_args_value,
+    arg_names = boolean_vars,
+    is_valid = base::is.logical,
+    message = "{arg} must be TRUE or FALSE.")
 
   ## error_if_no_match #####
-  error_if_no_match <- function(var_name){
-    var_value_user <- base::unique(input_args_value[[var_name]])
-    var_value_attribute <-
-      base::unique(output_attribute$health_detailed$results_raw$age_group)
-
-    if(! base::identical(var_value_user, var_value_attribute)){
-
-      base::stop(
-        base::paste0(
-          var_name,
-          " must be identical to the values in the column ",
-          var_name,
-          " in output_attribute."),
-        call. = FALSE)
-
-    }
-  }
-
   if(! base::is.null(output_attribute)){
-    for (x in c("age_group")) {
-      error_if_no_match(var_name = x)
-    }
+    validate_args(
+      args = input_args_value,
+      arg_names = "age_group",
+      is_valid = function(x){
+        base::identical(
+          base::unique(x),
+          base::unique(output_attribute$health_detailed$results_raw$age_group))},
+      message = "{arg} must be identical to the values in the column {arg} in output_attribute.")
   }
 
 
