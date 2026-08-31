@@ -4596,7 +4596,7 @@ testthat::test_that("warning if absolute risk and cutoff", {
   )
 })
 
-testthat::test_that("error if multi geo units but different length of geo-depending arguments", {
+testthat::test_that("warning if no cutoff", {
 
   testthat::expect_warning(
     object =
