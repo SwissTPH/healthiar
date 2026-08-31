@@ -1,6 +1,6 @@
 Main changes but not complete list. For this propose see Github commits.
 
-# healthiar 0.2.5
+# healthiar v0.2.5
 * 11 August 2026
 
 ## New features
@@ -43,7 +43,7 @@ include instructions of new features.
 - Additional internal tests were added. Now a total of 382 test.
 
 
-# healthiar 0.2.4
+# healthiar v0.2.4
 * 12 March 2026
 
 ## Bug Fixes
@@ -58,7 +58,7 @@ Now, not anymore to keep different concepts separated.
 - get_inflation_factor() previously had discount_rate as argument. 
 Now, not anymore to keep different concepts separated. 
 
-# healthiar 0.2.3
+# healthiar v0.2.3
 * 19 February 2026
 
 ## New features
@@ -83,7 +83,7 @@ Now, not anymore to keep different concepts separated.
 
 
 
-# healthiar 0.2.2
+# healthiar v0.2.2
 * 08 January 2026
 
 ## Bug Fixes
@@ -99,7 +99,7 @@ Now, not anymore to keep different concepts separated.
 
 
 
-# healthiar 0.2.1
+# healthiar v0.2.1
 * 06 November 2025
 
 ## Bug Fixes 
@@ -113,7 +113,7 @@ Now, not anymore to keep different concepts separated.
 
 
 
-# healthiar 0.1.1 
+# healthiar v0.1.1 
 * 19 September 2025
 
 ## Other improvements
@@ -121,7 +121,7 @@ Now, not anymore to keep different concepts separated.
 
 
 
-# healthiar 0.1.0
+# healthiar v0.1.0
 
 * 19 September 2025 (1st submission to CRAN, automatic review)
 
@@ -147,7 +147,7 @@ Now, not anymore to keep different concepts separated.
 
 
 
-# healthiar 0.0.4
+# healthiar v0.0.4
 
 * 01 September 2025
 
@@ -171,7 +171,7 @@ Now, not anymore to keep different concepts separated.
 - Higher speed because of shorter and/or optimized code in attribute_...() functions
 
 
-# healthiar 0.0.3
+# healthiar v0.0.3
 
 * 14 July 2025
 
@@ -196,7 +196,7 @@ Now, not anymore to keep different concepts separated.
 - More validation in attribute_...()
 
 
-# healthiar 0.0.2
+# healthiar v0.0.2
 
 * 02 June 2025
 
@@ -221,7 +221,7 @@ Now, not anymore to keep different concepts separated.
 
 
 
-# healthiar 0.0.1
+# healthiar v0.0.1
 
 * 05 May 2025
 

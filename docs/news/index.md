@@ -1,6 +1,6 @@
 # Changelog
 
-## healthiar 0.2.5
+## healthiar v0.2.5
 
 CRAN release: 2026-08-21
 
@@ -56,7 +56,7 @@ CRAN release: 2026-08-21
 
 - Additional internal tests were added. Now a total of 382 test.
 
-## healthiar 0.2.4
+## healthiar v0.2.4
 
 CRAN release: 2026-03-12
 
@@ -77,7 +77,7 @@ CRAN release: 2026-03-12
 - get_inflation_factor() previously had discount_rate as argument. Now,
   not anymore to keep different concepts separated.
 
-## healthiar 0.2.3
+## healthiar v0.2.3
 
 CRAN release: 2026-02-19
 
@@ -116,7 +116,7 @@ CRAN release: 2026-02-19
   attributable to policy intervention)
 - More complete warning message if absolute risk and cutoff is provided
 
-## healthiar 0.2.2
+## healthiar v0.2.2
 
 CRAN release: 2026-01-09
 
@@ -137,7 +137,7 @@ CRAN release: 2026-01-09
 
 - Around 70 additional internal tests for attribute_health()
 
-## healthiar 0.2.1
+## healthiar v0.2.1
 
 CRAN release: 2025-11-11
 
@@ -156,7 +156,7 @@ CRAN release: 2025-11-11
   parallel
 - Other changes to comply with with manual review of CRAN
 
-## healthiar 0.1.1
+## healthiar v0.1.1
 
 - 19 September 2025
 
@@ -164,7 +164,7 @@ CRAN release: 2025-11-11
 
 - Small changes to comply with with automatic review of CRAN
 
-## healthiar 0.1.0
+## healthiar v0.1.0
 
 - 19 September 2025 (1st submission to CRAN, automatic review)
 
@@ -191,7 +191,7 @@ CRAN release: 2025-11-11
 - attribute_by_geo_id_micro is not anymore available as output
 - Faster performance of summarize_uncertainty()
 
-## healthiar 0.0.4
+## healthiar v0.0.4
 
 - 01 September 2025
 
@@ -220,7 +220,7 @@ CRAN release: 2025-11-11
 - Higher speed because of shorter and/or optimized code in
   attribute\_…() functions
 
-## healthiar 0.0.3
+## healthiar v0.0.3
 
 - 14 July 2025
 
@@ -249,7 +249,7 @@ CRAN release: 2025-11-11
 - Data validation in summarize_uncertainty()
 - More validation in attribute\_…()
 
-## healthiar 0.0.2
+## healthiar v0.0.2
 
 - 02 June 2025
 
@@ -277,7 +277,7 @@ CRAN release: 2025-11-11
 - Input data validation in compare()
 - Warning if cutoff is NULL and 0 as default
 
-## healthiar 0.0.1
+## healthiar v0.0.1
 
 - 05 May 2025
 
