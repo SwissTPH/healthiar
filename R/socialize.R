@@ -144,27 +144,16 @@ socialize <- function(output_attribute = NULL,
     get_input_args(environment = base::environment(),
                    call = match.call())$value
 
-  # Identify available_vars
-  # i.e. variables/arguments that have been entered by the user
-  available_vars <- input_args_value |>
-    purrr::discard(~ base::is.null(.x)) |>
-    base::names()
-
   # All variables by type
+  # The validate_args() calls below skip the variables that are NULL
+  # (i.e. not entered by the user), so no filtering is needed here
   numeric_vars <- c("social_indicator", "pop_fraction", "ref_prop_pop", "exp", "impact")
   integer_vars <- c("social_quantile", "n_quantile")
   boolean_vars <- c("increasing_deprivation")
   fraction_vars <- c("ref_prop_pop", "pop_fraction")
-
-  # Available variables by type
-  available_numeric_vars <- base::intersect(numeric_vars, available_vars)
-  available_integer_vars <- base::intersect(integer_vars, available_vars)
-  available_numeric_and_integer_vars <- c(available_numeric_vars, available_integer_vars)
   ## social_indicator and impact might be lower than 0, therefore excluded here
-  available_positive_vars <-
-    base::setdiff(available_numeric_and_integer_vars, c("social_indicator", "impact"))
-  available_boolean_vars <- base::intersect(boolean_vars, available_vars)
-  available_fraction_vars <- base::intersect(fraction_vars, available_vars)
+  positive_vars <-
+    base::setdiff(c(numeric_vars, integer_vars), c("social_indicator", "impact"))
 
   ## error_if_not_numeric #####
   # Must come first: the checks below assume numeric values
