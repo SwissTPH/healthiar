@@ -12,11 +12,18 @@
 
 # ARGUMENTS ####################################################################
 #' @param args \code{List} with the argument values, i.e. \code{input_args$value}.
-#' @param arg_names \code{Character vector} with the names of the arguments to be checked. Names that are not in \code{args} are ignored.
-#' @param is_valid \code{Function} taking the argument value and returning \code{TRUE} for the valid values. It can be vectorized; the argument is invalid if \strong{any} of its values is not valid.
-#' @param message \code{String} with the message. Write \code{\{arg\}} where the name(s) of the argument(s) concerned have to appear.
-#' @param report \code{String} specifying which arguments are named in the message. Options: \code{"first"} (default, only the first argument found to be invalid), \code{"all"} (all invalid arguments, separated by commas).
-#' @param type \code{String} specifying the condition to be signalled. Options: \code{"error"} (default), \code{"warning"}.
+#' @param arg_names \code{Character vector} with the names of the arguments 
+#' to be checked. Names that are not in \code{args} are ignored.
+#' @param is_valid \code{Function} taking the argument value and returning 
+#' \code{TRUE} for the valid values. It can be vectorized; 
+#' the argument is invalid if \strong{any} of its values is not valid.
+#' @param message \code{String} with the message. 
+#' Write \code{\{arg\}} where the name(s) of the argument(s) concerned have to appear.
+#' @param report \code{String} specifying which arguments are named in the message. 
+#' Options: \code{"first"} (default, only the first argument found to be invalid), 
+#' \code{"all"} (all invalid arguments, separated by commas).
+#' @param type \code{String} specifying the condition to be signalled. 
+#' Options: \code{"error"} (default), \code{"warning"}.
 
 # DETAILS ######################################################################
 #' @details
