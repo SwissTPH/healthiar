@@ -68,15 +68,13 @@ validate_input_attribute <-
       c("bhd_central", "bhd_lower", "bhd_upper", "fraction_lived")
 
 
+    # Only needed where the number of non-NULL arguments matters
+    # (the _ci prefixes below) or where non-NULL counts as entered
+    # (validate_arg_pair). The validate_args() calls do NOT need it because
+    # validate_args() skips the NULL arguments itself
     arg_names_available <-
       purrr::keep(input_args_value, ~!base::is.null(.x)) |>
       base::names()
-
-    numeric_arg_names_available <-
-      base::intersect(arg_names_available, numeric_args)
-
-    categorical_arg_names_available <-
-      base::intersect(arg_names_available, categorical_args)
 
 
     # Define approach_risk here because in the life table approach
@@ -150,7 +148,7 @@ validate_input_attribute <-
     # and it is nice to have all incorrect args at once
     validate_args(
       args = input_args_value,
-      arg_names = numeric_arg_names_available,
+      arg_names = numeric_args,
       is_valid = function(x){base::is.numeric(x) & !base::is.na(x)},
       message = "The following arguments should be numeric without NAs: {arg}.",
       report = "all")
@@ -162,7 +160,7 @@ validate_input_attribute <-
     # In this way the users see the options of the argument they got wrong
     # instead of the options of all categorical arguments at once
 
-    for (x in categorical_arg_names_available) {
+    for (x in categorical_args) {
 
       var_options <- options_of_categorical_args[[x]]
 
@@ -408,16 +406,11 @@ validate_input_attribute <-
     }
 
     ### error_if_erf_eq_not_function_or_string #####
-    # If erf_eq_... is not null (user may not enter a value for this argument)
-    erf_eq_args_available <-
-      base::intersect(arg_names_available,
-                      c("erf_eq_central", "erf_eq_lower", "erf_eq_upper"))
-
     # If it is a function (single function or multiple functions in a list)
     # and it is not a character
     validate_args(
       args = input_args_value,
-      arg_names = erf_eq_args_available,
+      arg_names = base::paste0("erf_eq", ci_suffix),
       is_valid = function(x){base::is.function(x) || base::is.character(x)},
       message = "{arg} must be a function or a character string.")
 
@@ -428,7 +421,7 @@ validate_input_attribute <-
     # Find the arguments with values <0
     validate_args(
       args = input_args_value,
-      arg_names = numeric_arg_names_available,
+      arg_names = numeric_args,
       is_valid = function(x){x >= 0},
       message = "The values in the following arguments must not be lower than 0: {arg}.",
       report = "all")

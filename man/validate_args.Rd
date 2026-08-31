@@ -16,15 +16,22 @@ validate_args(
 \arguments{
 \item{args}{\code{List} with the argument values, i.e. \code{input_args$value}.}
 
-\item{arg_names}{\code{Character vector} with the names of the arguments to be checked. Names that are not in \code{args} are ignored.}
+\item{arg_names}{\code{Character vector} with the names of the arguments 
+to be checked. Names that are not in \code{args} are ignored.}
 
-\item{is_valid}{\code{Function} taking the argument value and returning \code{TRUE} for the valid values. It can be vectorized; the argument is invalid if \strong{any} of its values is not valid.}
+\item{is_valid}{\code{Function} taking the argument value and returning 
+\code{TRUE} for the valid values. It can be vectorized; 
+the argument is invalid if \strong{any} of its values is not valid.}
 
-\item{message}{\code{String} with the message. Write \code{\{arg\}} where the name(s) of the argument(s) concerned have to appear.}
+\item{message}{\code{String} with the message. 
+Write \code{\{arg\}} where the name(s) of the argument(s) concerned have to appear.}
 
-\item{report}{\code{String} specifying which arguments are named in the message. Options: \code{"first"} (default, only the first argument found to be invalid), \code{"all"} (all invalid arguments, separated by commas).}
+\item{report}{\code{String} specifying which arguments are named in the message. 
+Options: \code{"first"} (default, only the first argument found to be invalid), 
+\code{"all"} (all invalid arguments, separated by commas).}
 
-\item{type}{\code{String} specifying the condition to be signalled. Options: \code{"error"} (default), \code{"warning"}.}
+\item{type}{\code{String} specifying the condition to be signalled. 
+Options: \code{"error"} (default), \code{"warning"}.}
 }
 \value{
 This function returns nothing. It is called for its side effect, i.e. an
