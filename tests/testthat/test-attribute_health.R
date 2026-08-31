@@ -4626,6 +4626,44 @@ testthat::test_that("error if erf_eq is not function or string", {
 })
 
 
+testthat::test_that("error if value lower than 0 lists ALL arguments concerned", {
+
+  # The error message must not stop at the first argument concerned,
+  # otherwise the users have to correct their input data one argument at a time
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        erf_shape = "log_linear",
+        rr_central = 1.369,
+        rr_increment = 10,
+        exp_central = 8.85,
+        cutoff_central = -5,    # Negative value to force error
+        bhd_central = -30747),  # Negative value to force error
+    regexp = "The values in the following arguments must not be lower than 0: cutoff_central, bhd_central." ,
+    fixed = TRUE)
+})
+
+
+testthat::test_that("error if value lower than 0 is not in the first position", {
+
+  # All values of the argument must be checked and not only the first one.
+  # Relevant because bhd_central is often a long vector
+  # (one value per exposure category, geo unit, sex and age group)
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        erf_shape = "log_linear",
+        rr_central = 1.369,
+        rr_increment = 10,
+        exp_central = c(8.85, 9.0, 9.5),
+        prop_pop_exp = c(0.3, 0.3, 0.4),
+        cutoff_central = 5,
+        bhd_central = c(30747, 30747, -1)), # Negative value in the LAST position
+    regexp = "The values in the following arguments must not be lower than 0: bhd_central." ,
+    fixed = TRUE)
+})
+
+
 testthat::test_that("error if bhd does not match the geo_id_micro, sex and age_group
 composition", {
 
