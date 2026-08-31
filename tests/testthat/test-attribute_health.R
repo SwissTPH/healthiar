@@ -4573,42 +4573,6 @@ testthat::test_that("error if multiple rr for one go_id, sex, age_group ... comb
 
 
 
-## WARNING #########
-
-testthat::test_that("warning if absolute risk and cutoff", {
-
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
-  data  <- data_raw |>
-    dplyr::filter(!base::is.na(data_raw$exposure_mean))
-
-  testthat::expect_warning(
-    object =
-      healthiar::attribute_health(
-        approach_risk = "absolute_risk",
-        exp_central = data$exposure_mean,
-        cutoff_central = 5,
-        pop_exp = data$population_exposed_total,
-        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
-        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
-      ),
-    regexp = "Be aware that healthiar shifts the exposure",
-    fixed = FALSE
-  )
-})
-
-testthat::test_that("warning if no cutoff", {
-
-  testthat::expect_warning(
-    object =
-      healthiar::attribute_health(
-        exp_central = 6,
-        prop_pop_exp = 1,
-        bhd_central = 1000,
-        rr_central = 1.05,
-        rr_increment = 10,
-        erf_shape = "log_linear"),
-    regexp = "You entered no value for cutoff_central. Therefore, 0 has been assumed as default. Be aware that this can determine your results.")
-})
 
 
 testthat::test_that("error if erf_eq is not function or string", {
@@ -4711,6 +4675,42 @@ composition", {
 })
 
 
+## WARNING #########
+
+testthat::test_that("warning if absolute risk and cutoff", {
+
+  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data  <- data_raw |>
+    dplyr::filter(!base::is.na(data_raw$exposure_mean))
+
+  testthat::expect_warning(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = data$exposure_mean,
+        cutoff_central = 5,
+        pop_exp = data$population_exposed_total,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        info = data.frame(pollutant = "road_noise", outcome = "highly_annoyance")
+      ),
+    regexp = "Be aware that healthiar shifts the exposure",
+    fixed = FALSE
+  )
+})
+
+testthat::test_that("warning if no cutoff", {
+
+  testthat::expect_warning(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear"),
+    regexp = "You entered no value for cutoff_central. Therefore, 0 has been assumed as default. Be aware that this can determine your results.")
+})
 
 
 
