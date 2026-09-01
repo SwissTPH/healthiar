@@ -696,7 +696,24 @@ validate_input_attribute <-
 
     # Call function only if absolute risk
 
-    warning_if_ar_and_cutoff(var_names = base::paste0("cutoff", ci_suffix))
+    warning_if_ar_and_cutoff(var_names = c(base::paste0("cutoff", ci_suffix), "threshold"))
+
+
+    ### warning_if_threshold_higher_than_cutoff #####
+    # The cut-off is only effective if it is higher than the effect threshold.
+    # Otherwise it has no impact on the results
+    # (exposures below the effect threshold get the risk at the reference level)
+    if(!base::is.null(input_args_value[["threshold"]]) &&
+       !base::is.null(input_args_value[["cutoff_central"]]) &&
+       # A cutoff of 0 means that there is no cutoff, so it takes the threshold
+       # value in compile_input() and there is nothing to warn about
+       !base::all(input_args_value[["cutoff_central"]] == 0) &&
+       base::all(input_args_value$threshold > input_args_value$cutoff_central)){
+
+      base::warning(
+        "The threshold is higher than the cut-off. Therefore, the cut-off has no effect on the results.",
+        call. = FALSE)
+    }
 
 
 

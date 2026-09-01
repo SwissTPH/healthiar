@@ -4775,5 +4775,22 @@ testthat::test_that("warning if no cutoff", {
     regexp = "You entered no value for cutoff_central. Therefore, 0 has been assumed as default. Be aware that this can determine your results.")
 })
 
+testthat::test_that("warning if threshold higher than cutoff", {
+
+  testthat::expect_warning(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        cutoff = 5,
+        threshold = 6),
+    regexp = "The threshold is higher than the cut-off. Therefore, the cut-off has no effect on the results.")
+})
+
+
 
 
