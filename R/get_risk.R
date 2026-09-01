@@ -111,6 +111,7 @@ get_risk <-
     rr_increment = NULL,
     erf_eq = NULL,
     cutoff = 0,
+    threshold = NULL,
     exp
   ) {
 
