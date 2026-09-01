@@ -58,6 +58,17 @@
 #'   cutoff = 5
 #' )
 #'
+#' # Goal: scale relative risk to observed noise exposure levels assuming
+#' # health effects above 45 dB (threshold) but exposure data only above 55 dB (cutoff)
+#' get_risk(
+#'   rr = 1.055,
+#'   rr_increment = 10,
+#'   erf_shape = "log_linear",
+#'   exp = c(47, 52, 57, 62, 67, 72, 77),
+#'   cutoff = 55,
+#'   threshold = 45
+#' )
+#'
 #' # Goal: determine the absolute risk for high annoyance at specific noise exposure levels
 #' get_risk(
 #'   erf_eq = "78.9270-3.1162*c+0.0342*c^2",
