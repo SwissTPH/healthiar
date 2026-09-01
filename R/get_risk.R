@@ -209,7 +209,14 @@ get_risk <-
         rr_at_exp <- 1 + ( ( rr - 1 ) / ( base::log(rr_increment + threshold + 1) - base::log(threshold + 1) ) ) * base::log( (exp + 1) / (threshold + 1) )
     }
   }
-      
+
+    # Truncate the exposure-response function below the cut-off
+    # if the cut-off is higher than the effect threshold (see above).
+    # The if condition keeps the default case (cut-off = threshold) untouched,
+    # which matters for user-defined erf_eq that are not anchored at 1
+    if (base::any(is_below_cutoff)) {
+      rr_at_exp <- base::ifelse(is_below_cutoff, 1, rr_at_exp)
+    }
 
     return(rr_at_exp)
 
