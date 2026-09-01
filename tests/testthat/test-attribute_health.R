@@ -4573,6 +4573,100 @@ testthat::test_that("error if multiple rr for one go_id, sex, age_group ... comb
 
 
 
+
+
+testthat::test_that("error if erf_eq is not function or string", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        erf_eq_central = c(1)),
+    regexp = "erf_eq_central must be a function or a character string." ,
+    fixed = TRUE)
+})
+
+
+testthat::test_that("error if value lower than 0 lists ALL arguments concerned", {
+
+  # The error message must not stop at the first argument concerned,
+  # otherwise the users have to correct their input data one argument at a time
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        erf_shape = "log_linear",
+        rr_central = 1.369,
+        rr_increment = 10,
+        exp_central = 8.85,
+        cutoff_central = -5,    # Negative value to force error
+        bhd_central = -30747),  # Negative value to force error
+    regexp = "The values in the following arguments must not be lower than 0: cutoff_central, bhd_central." ,
+    fixed = TRUE)
+})
+
+
+testthat::test_that("error if value lower than 0 is not in the first position", {
+
+  # All values of the argument must be checked and not only the first one.
+  # Relevant because bhd_central is often a long vector
+  # (one value per exposure category, geo unit, sex and age group)
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        erf_shape = "log_linear",
+        rr_central = 1.369,
+        rr_increment = 10,
+        exp_central = c(8.85, 9.0, 9.5),
+        prop_pop_exp = c(0.3, 0.3, 0.4),
+        cutoff_central = 5,
+        bhd_central = c(30747, 30747, -1)), # Negative value in the LAST position
+    regexp = "The values in the following arguments must not be lower than 0: bhd_central." ,
+    fixed = TRUE)
+})
+
+
+testthat::test_that("error if bhd does not match the geo_id_micro, sex and age_group
+composition", {
+
+
+  testthat::expect_error(
+    object = healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear", 
+      rr_central = 1.023, 
+      rr_increment = 10,
+      exp_central = c(11.5, 12.4, 13.2,5.3,11.5, 12.4, 13.2,5.3), 
+      cutoff_central = 10, 
+      bhd_central = c(10000,10000,30000,30000,50000,50000,70000,70000),
+      geo_id_micro = c("basel","basel","zurich","zurich","basel","basel","bern","bern"),
+      geo_id_macro = c("switzerland","switzerland","switzerland","switzerland","germany","germany","germany","germany")
+    ),
+    regexp = "Allocation from bhd_central to geo_id_micro is ambiguous." ,
+    fixed = TRUE)
+
+
+
+  testthat::expect_error(
+    object = healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear", 
+      rr_central = 1.023, 
+      rr_increment = 10, 
+      exp_central = c(11.5, 12.4, 13.2,5.3,11.5, 12.4, 13.2,5.3), 
+      cutoff_central = 10, 
+      bhd_central = c(10000,10000,20000,20000,50000,50000,60000,60000),
+      sex = c('male','male', 'male','male','female','female', 'female','male'),
+      age_group = c("above_50","above_50","above_50","above_50","below_50","below_50","below_50","below_50"),
+      geo_id_micro = c("bern","bern","bern","bern","berlin","berlin","berlin","berlin"),
+    ),
+    regexp = paste0("Allocation from bhd_central to geo_id_micro, age_group, sex is ambiguous.") ,
+    fixed = TRUE)
+})
+
+
 ## WARNING #########
 
 testthat::test_that("warning if absolute risk and cutoff", {
@@ -4596,7 +4690,7 @@ testthat::test_that("warning if absolute risk and cutoff", {
   )
 })
 
-testthat::test_that("error if multi geo units but different length of geo-depending arguments", {
+testthat::test_that("warning if no cutoff", {
 
   testthat::expect_warning(
     object =
@@ -4609,70 +4703,6 @@ testthat::test_that("error if multi geo units but different length of geo-depend
         erf_shape = "log_linear"),
     regexp = "You entered no value for cutoff_central. Therefore, 0 has been assumed as default. Be aware that this can determine your results.")
 })
-
-
-testthat::test_that("error if erf_eq is not function or string", {
-
-  testthat::expect_error(
-    object =
-      healthiar::attribute_health(
-        exp_central = 6,
-        prop_pop_exp = 1,
-        cutoff_central = 5,
-        bhd_central = 1000,
-        erf_eq_central = c(1)),
-    regexp = "erf_eq_central must be a function or a character string." ,
-    fixed = TRUE)
-})
-
-
-testthat::test_that("error if bhd does not match the geo_id_micro, sex and age_group
-composition", {
-
-
-  testthat::expect_error(
-    object = healthiar::attribute_health(
-      approach_risk = "relative_risk",
-      erf_shape = "log_linear", # Page 18
-      rr_central = 1.023, # Page 14
-      rr_lower = NULL, #1.008 # Page 14
-      rr_upper = NULL, #1.037 # Page 14
-      rr_increment = 10, # Page 18
-      exp_central = c(11.5, 12.4, 13.2,5.3,11.5, 12.4, 13.2,5.3), # Table 5 page 29
-      exp_lower = NULL, #list(7.4, 7.6, 7.9, 8.0, 7.4), # Table 5 page 29
-      exp_upper = NULL, #list(23.5, 22.8, 21.0, 34.3, 34.3), # Table 5 page 29
-      cutoff_central = 10, # Page 33
-      bhd_central = c(10000,10000,30000,30000,50000,50000,70000,70000), # Table 3 page 22
-      geo_id_micro = c("basel","basel","zurich","zurich","basel","basel","bern","bern"),
-      geo_id_macro = c("switzerland","switzerland","switzerland","switzerland","germany","germany","germany","germany")
-    ),
-    regexp = "Allocation from bhd_central to geo_id_micro is ambiguous." ,
-    fixed = TRUE)
-
-
-
-  testthat::expect_error(
-    object = healthiar::attribute_health(
-      approach_risk = "relative_risk",
-      erf_shape = "log_linear", # Page 18
-      rr_central = 1.023, # Page 14
-      rr_lower = NULL, #1.008 # Page 14
-      rr_upper = NULL, #1.037 # Page 14
-      rr_increment = 10, # Page 18
-      exp_central = c(11.5, 12.4, 13.2,5.3,11.5, 12.4, 13.2,5.3), # Table 5 page 29
-      exp_lower = NULL, #list(7.4, 7.6, 7.9, 8.0, 7.4), # Table 5 page 29
-      exp_upper = NULL, #list(23.5, 22.8, 21.0, 34.3, 34.3), # Table 5 page 29
-      cutoff_central = 10, # Page 33
-      bhd_central = c(10000,10000,20000,20000,50000,50000,60000,60000), # Table 3 page 2
-      sex = c('male','male', 'male','male','female','female', 'female','male'),
-      age_group = c("above_50","above_50","above_50","above_50","below_50","below_50","below_50","below_50"),
-      geo_id_micro = c("bern","bern","bern","bern","berlin","berlin","berlin","berlin"),
-    ),
-    regexp = paste0("Allocation from bhd_central to geo_id_micro, age_group, sex is ambiguous.") ,
-    fixed = TRUE)
-})
-
-
 
 
 

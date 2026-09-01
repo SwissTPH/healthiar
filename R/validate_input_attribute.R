@@ -68,15 +68,13 @@ validate_input_attribute <-
       c("bhd_central", "bhd_lower", "bhd_upper", "fraction_lived")
 
 
+    # Only needed where the number of non-NULL arguments matters
+    # (the _ci prefixes below) or where non-NULL counts as entered
+    # (validate_arg_pair). The validate_args() calls do NOT need it because
+    # validate_args() skips the NULL arguments itself
     arg_names_available <-
       purrr::keep(input_args_value, ~!base::is.null(.x)) |>
       base::names()
-
-    numeric_arg_names_available <-
-      base::intersect(arg_names_available, numeric_args)
-
-    categorical_arg_names_available <-
-      base::intersect(arg_names_available, categorical_args)
 
 
     # Define approach_risk here because in the life table approach
@@ -96,74 +94,86 @@ validate_input_attribute <-
 
     ### error_if_var_1_but_not_var_2 #####
 
-    error_if_var_1_but_not_var_2 <- function(var_name_1, var_name_2){
-      # Check arg_names_passed in case that there is a default value (safer)
-      if(var_name_1 %in% arg_names_passed &&
-         !var_name_2 %in% arg_names_passed){
-        stop(
-          base::paste0(
-            "If you do not pass a value for ",
-            var_name_2,
-            ", you cannot use ",
-            var_name_1,
-            "."),
-          call. = FALSE)
+    # Create validate_arg_pair() for checks that do not depend on the
+    # VALUES of an argument but on WHICH arguments were entered.
+    # present_arg_names: the names that count as entered, i.e. arg_names_passed
+    # if a default value must not count and arg_names_available if any non-NULL
+    # value counts.
+    # relation: the relation that must hold between the two arguments.
+
+    validate_arg_pair <-
+      function(present_arg_names, arg_names, relation, message, type = "error"){
+
+        is_present <- arg_names %in% present_arg_names
+
+        is_valid <-
+          base::switch(
+            relation,
+            # The two arguments exclude each other
+            "not_both" = !base::all(is_present),
+            # The first argument cannot be used without the second one
+            "requires" = !is_present[1] || is_present[2],
+            # Either both arguments or none of them
+            "both_or_none" = is_present[1] == is_present[2])
+
+        if(!is_valid){
+
+          text <- base::gsub("{arg_1}", arg_names[1], message, fixed = TRUE)
+          text <- base::gsub("{arg_2}", arg_names[2], text, fixed = TRUE)
+
+          if(type == "error"){
+            base::stop(text, call. = FALSE)
+          } else if (type == "warning"){
+            base::warning(text, call. = FALSE)
+          }
+        }
       }
-    }
 
 
     # If users enter a value for geo_id_macro but not for geo_id_micro
     # the impact cannot be grouped accordingly (multiple geo_id_micro are needed)
-    error_if_var_1_but_not_var_2(var_name_1 = "geo_id_macro",
-                                 var_name_2 = "geo_id_micro")
+    # arg_names_passed in case that there is a default value (safer)
+    validate_arg_pair(
+      present_arg_names = arg_names_passed,
+      arg_names = c("geo_id_macro", "geo_id_micro"),
+      relation = "requires",
+      message = "If you do not pass a value for {arg_2}, you cannot use {arg_1}.")
 
 
     ### error_if_not_numeric #####
 
     # Find the arguments that should be numeric but are not
-    # Avoid for loop here because it expected to review quite a lot of arguments.
-    # And also nice to have all incorrect args at once
-    numeric_args_that_are_not <-
-      input_args_value[numeric_arg_names_available] |>
-      purrr::keep(~ !base::is.numeric(.x) | any(is.na(.x))) |>
-      base::names()
-
-    if(base::length(numeric_args_that_are_not) > 0) {
-
-      base::stop(
-        base::paste0("The following arguments should be numeric without NAs: ",
-                     base::toString(numeric_args_that_are_not),
-                     "."),
-        call. = FALSE
-      )
-
-    }
+    # report = "all" (and not the default "first") because it is expected to
+    # review quite a lot of arguments here
+    # and it is nice to have all incorrect args at once
+    validate_args(
+      args = input_args_value,
+      arg_names = numeric_args,
+      is_valid = function(x){base::is.numeric(x) & !base::is.na(x)},
+      message = "The following arguments should be numeric without NAs: {arg}.",
+      report = "all")
 
 
     ### error_if_not_an_option #####
-    # Create here a function because showing all incorrect args with the values here at once
-    # because otherwise it could be overwhelming for the user
+    # One call per argument (and not one call with all of them) because
+    # the options and therefore also the message differ per argument.
+    # In this way the users see the options of the argument they got wrong
+    # instead of the options of all categorical arguments at once
 
-    error_if_not_an_option <- function(var_name){
+    for (x in categorical_args) {
 
-      var_value <- input_args_value[[var_name]]
-      var_options <- options_of_categorical_args[[var_name]]
+      var_options <- options_of_categorical_args[[x]]
 
-      # any() for the case that people enter this argument as column with repeated (or multiple) values
-      if(base::any(!var_value %in% var_options)){
-
-        base::stop(
+      validate_args(
+        args = input_args_value,
+        arg_names = x,
+        # validate_args() applies any(), so this also covers the case that
+        # people enter this argument as column with repeated (or multiple) values
+        is_valid = function(v){v %in% var_options},
+        message =
           base::paste0(
-            "For ", var_name,
-            ", please, type (between quotation marks) one of these options: ",
-            base::toString(var_options), "."),
-          call. = FALSE)
-      }
-    }
-
-
-    for (x in categorical_arg_names_available) {
-      error_if_not_an_option(var_name = x)
+            "For {arg}, please, type (between quotation marks) one of these options: ",
+            base::toString(var_options), "."))
     }
 
 
@@ -233,104 +243,105 @@ validate_input_attribute <-
           "."))
     }
 
-    if ((input_args$is_entered_by_user$geo_id_micro |
-         input_args$is_entered_by_user$age_group |
-         input_args$is_entered_by_user$sex |
-         input_args$is_entered_by_user$info) &
-        input_args$is_entered_by_user$bhd_central){
+    ### error_if_ambiguous_allocation #####
 
+    # Some arguments (e.g. bhd_central, rr_central) must have exactly one value
+    # for each combination of the id arguments (e.g. geo_id_micro, sex, age_group
+    # and the columns of info). Otherwise it is not clear which value has to be
+    # allocated to which combination.
+    # The callers check first whether the argument and at least one id argument
+    # were entered. Otherwise there is nothing to check
+    # (and rr_central needs to know it to apply an alternative check).
 
-      names_info <- base::names(input_args_value$info)
+    error_if_ambiguous_allocation <- function(var_name, id_arg_names){
 
       # Add info columns as list element for the operation below
+      input_args_value_flat <-
+        c(input_args_value,
+          base::as.list(input_args_value$info))
 
-      input_args_value_flat <- c(input_args_value,
-                                 base::as.list(input_args_value$info))
+      arguments_for_combination <-
+        base::intersect(
+          base::names(input_args_value_flat),
+          c(id_arg_names, base::names(input_args_value$info)))
 
-      ### error_if_bhd_unique_longer_than_id_unique #####
-      # geo_id_macro is left out because it does not interact with bhd_central
-      arguments_for_bhd_combination <- base::intersect(
-        base::names(input_args_value_flat),
-        c("geo_id_micro", "sex", "age_group", names_info))
+      # Find all ids which were used
+      valid_ids <-
+        purrr::map_lgl(
+          input_args_value_flat[arguments_for_combination],
+          ~ base::length(.x) == base::length(input_args_value_flat[[var_name]]))
 
-      #find all ids which were used
-      valid_ids <- purrr::map_lgl(input_args_value_flat[arguments_for_bhd_combination],
-                                  ~ base::length(.x) == base::length(input_args_value_flat$bhd_central))
-
-      #create dataframe with used ids and bhd as cols
+      # Create data frame with used ids and var_name as cols
       df_id_structure <-
-        base::as.data.frame(input_args_value_flat[c(c("bhd_central"),
-                                                    arguments_for_bhd_combination[valid_ids])])
+        base::as.data.frame(
+          input_args_value_flat[c(var_name,
+                                  arguments_for_combination[valid_ids])])
 
       if(base::nrow(df_id_structure) > 0){
 
-        #check if every id combination has only one assigned bhd_central value
+        # Check if every id combination has only one assigned value
         id_ambiguity <- df_id_structure |>
-          dplyr::group_by(dplyr::across(!bhd_central)) |>
-          dplyr::summarize(not_same = dplyr::n_distinct(.data$bhd_central) != 1)
+          dplyr::group_by(dplyr::across(!dplyr::all_of(var_name))) |>
+          dplyr::summarize(not_same = dplyr::n_distinct(.data[[var_name]]) != 1)
 
         if(base::any(id_ambiguity$not_same)){
           base::stop(
             base::paste0(
-              "Allocation from bhd_central to ",base::toString(arguments_for_bhd_combination[valid_ids])," is ambiguous.\n",
-              "The following combinations have multiple bhd_central values: \n",
-              base::toString(base::do.call(base::paste, c(id_ambiguity[id_ambiguity$not_same, 1:(base::ncol(id_ambiguity)-1)],sep = "_"))),
+              "Allocation from ", var_name, " to ",
+              base::toString(arguments_for_combination[valid_ids]), " is ambiguous.\n",
+              "The following combinations have multiple ", var_name, " values: \n",
+              base::toString(
+                base::do.call(
+                  base::paste,
+                  c(id_ambiguity[id_ambiguity$not_same, 1:(base::ncol(id_ambiguity) - 1)],
+                    sep = "_"))),
               "\n",
-              "Within every combination, the bhd_central values need to be the same."),
-            call. = FALSE)
-        }}}
-
-    ### error_if_multiple_rr_in_one_exp_category #####
-    if ((input_args$is_entered_by_user$geo_id_macro |
-         input_args$is_entered_by_user$geo_id_micro |
-         input_args$is_entered_by_user$age_group |
-         input_args$is_entered_by_user$sex |
-         input_args$is_entered_by_user$info) &
-        input_args$is_entered_by_user$rr_central){
-
-
-      names_info <- base::names(input_args_value$info)
-
-      # Add info columns as list element for the operation below
-      input_args_value_flat <- c(input_args_value,
-                                 base::as.list(input_args_value$info))
-
-      arguments_for_rr_combination <- base::intersect(
-        base::names(input_args_value_flat),
-        c("geo_id_macro","geo_id_micro", "sex", "age_group", names_info))
-
-      #find all ids which were used
-      valid_ids <- purrr::map_lgl(input_args_value_flat[arguments_for_rr_combination],
-                                  ~ base::length(.x) == base::length(input_args_value_flat$rr_central))
-
-      #create dataframe with used ids and rr as cols
-      df_id_structure <-
-        base::as.data.frame(input_args_value_flat[c(c("rr_central"),
-                                                    arguments_for_rr_combination[valid_ids])])
-
-      if(base::nrow(df_id_structure) > 0){
-
-        #check if every id combination has only one assigned rr_central value
-        id_ambiguity <- df_id_structure |>
-          dplyr::group_by(dplyr::across(!rr_central)) |>
-          dplyr::summarize(not_same = dplyr::n_distinct(.data$rr_central) != 1)
-
-        if(base::any(id_ambiguity$not_same)){
-          base::stop(
-            base::paste0(
-              "Allocation from rr_central to ",base::toString(arguments_for_rr_combination[valid_ids])," is ambiguous.\n",
-              "The following combinations have multiple rr_central values: \n",
-              base::toString(base::do.call(base::paste, c(id_ambiguity[id_ambiguity$not_same, 1:(base::ncol(id_ambiguity)-1)],sep = "_"))),
-              "\n",
-              "Within every combination, the rr_central values need to be the same."),
-            call. = FALSE)
-        }}}
-        else if (input_args$is_entered_by_user$rr_central & (base::length(base::unique(input_args_value$rr_central))>1)) {
-          base::stop(
-            base::paste0(
-              "rr_central must be the same for all exposures."),
+              "Within every combination, the ", var_name, " values need to be the same."),
             call. = FALSE)
         }
+      }
+    }
+
+
+    bhd_id_arg_names <-
+      # geo_id_macro is left out because it does not interact with bhd_central
+      c("geo_id_micro", "sex", "age_group")
+
+    rr_id_arg_names <-
+      c("geo_id_macro", "geo_id_micro", "sex", "age_group")
+
+
+    ### error_if_bhd_unique_longer_than_id_unique #####
+    # info is in the condition because entering it is also a way of identifying
+    # subgroups, but not in id_arg_names because there the COLUMNS of info count
+    if(input_args$is_entered_by_user$bhd_central &&
+       base::any(base::unlist(
+         input_args$is_entered_by_user[c(bhd_id_arg_names, "info")]))){
+
+      error_if_ambiguous_allocation(
+        var_name = "bhd_central",
+        id_arg_names = bhd_id_arg_names)
+    }
+
+
+    ### error_if_multiple_rr_in_one_exp_category #####
+    if(input_args$is_entered_by_user$rr_central &&
+       base::any(base::unlist(
+         input_args$is_entered_by_user[c(rr_id_arg_names, "info")]))){
+
+      error_if_ambiguous_allocation(
+        var_name = "rr_central",
+        id_arg_names = rr_id_arg_names)
+
+      # If the allocation cannot be checked (no id argument entered by the user)
+      # then rr_central can only have one single value
+    } else if (input_args$is_entered_by_user$rr_central &&
+               base::length(base::unique(input_args_value$rr_central)) > 1) {
+
+      base::stop(
+        "rr_central must be the same for all exposures.",
+        call. = FALSE)
+    }
 
 
     if(is_lifetable){
@@ -338,41 +349,23 @@ validate_input_attribute <-
       ### error_if_not_positive #####
 
       # No life table arguments currently require values > 0 at validation stage
-      args_value_not_positive <-
-        input_args_value[lifetable_args_with_values_above_0] |>
-        purrr::keep(.p = ~ base::any(.x <= 0)) |>
-        base::names()
-
-
-      if(base::length(args_value_not_positive) > 0) {
-        base::stop(
-          base::paste0("The values in the following arguments must not be lower than 0: ",
-                       base::toString(args_value_not_positive),
-                       "."),
-          call. = FALSE
-        )
-
-      }
+      validate_args(
+        args = input_args_value,
+        arg_names = lifetable_args_with_values_above_0,
+        is_valid = function(x){x > 0},
+        message = "The values in the following arguments must not be lower than 0: {arg}.",
+        report = "all")
 
       ### error_if_negative #####
 
       # Population and baseline health data may be 0 but not negative in life
       # table calculations; structural zero-population cases are handled later
-      args_value_below_0_lifetable <-
-        input_args_value[lifetable_args_with_values_0_or_above] |>
-        purrr::keep(.p = ~ base::any(.x < 0)) |>
-        base::names()
-
-
-      if(base::length(args_value_below_0_lifetable) > 0) {
-        base::stop(
-          base::paste0("The values in the following arguments must be 0 or higher: ",
-                       base::toString(args_value_below_0_lifetable),
-                       "."),
-          call. = FALSE
-        )
-
-      }
+      validate_args(
+        args = input_args_value,
+        arg_names = lifetable_args_with_values_0_or_above,
+        is_valid = function(x){x >= 0},
+        message = "The values in the following arguments must be 0 or higher: {arg}.",
+        report = "all")
 
 
       ### error_if_not_consecutive_sequence #####
@@ -396,89 +389,53 @@ validate_input_attribute <-
       error_if_not_consecutive_sequence(var_name = "age_group")
 
       ### warning if bhd = 0 #####
-      any_zero_in_bhd <- 
-        base::any(base::unlist(
-          input_args_value[base::intersect(
-                        arg_names_passed, 
-                        c("bhd_central", "bhd_lower", "bhd_upper"))]) ==0)
-
-      if(any_zero_in_bhd){
-        base::warning(
-          "Zeros in bhd_ arguments are theoretically possible, 
-          but they lack conceptual logic, 
+      # arg_names_passed (and not arg_names_available) because only the bhd_
+      # arguments that the users entered themselves are of interest here
+      validate_args(
+        args = input_args_value,
+        arg_names =
+          base::intersect(arg_names_passed,
+                          c("bhd_central", "bhd_lower", "bhd_upper")),
+        is_valid = function(x){x != 0},
+        message =
+          "Zeros in bhd_ arguments are theoretically possible,
+          but they lack conceptual logic,
           because survival probability become 100% in the age group with zero deaths",
-          call. = FALSE)
-      }
+        type = "warning")
 
     }
 
     ### error_if_erf_eq_not_function_or_string #####
-    # If erf_eq_... is not null (user may not enter a value for this argument)
-    erf_eq_args_available <-
-      base::intersect(arg_names_available,
-                      c("erf_eq_central", "erf_eq_lower", "erf_eq_upper"))
-
-    if(base::length(erf_eq_args_available) > 0){
-
-      error_if_erf_eq_not_function_or_string <- function(erf_eq_name){
-        erf_eq_value <- input_args_value[[erf_eq_name]]
-
-          # If it is a function (single function or multiple functions in a list)
-          # and it is not a character
-          if(! base::is.function(erf_eq_value) && ! base::is.character(erf_eq_value)){
-            base::stop(
-              base::paste0(erf_eq_name , " must be a function or a character string."),
-              call. = FALSE
-            )
-        }
-      }
-
-      for(x in erf_eq_args_available){
-        error_if_erf_eq_not_function_or_string(x)
-      }
-
-    }
+    # If it is a function (single function or multiple functions in a list)
+    # and it is not a character
+    validate_args(
+      args = input_args_value,
+      arg_names = base::paste0("erf_eq", ci_suffix),
+      is_valid = function(x){base::is.function(x) || base::is.character(x)},
+      message = "{arg} must be a function or a character string.")
 
 
 
     ### error_if_lower_than_0 #####
 
     # Find the arguments with values <0
-    args_value_below_0 <-
-      input_args_value[numeric_arg_names_available] |>
-      purrr::keep(.p = ~ base::any(.x < 0)) |>
-      base::names()
-
-
-    if(base::length(args_value_below_0) > 0) {
-      base::stop(
-        base::paste0("The values in the following arguments must not be lower than 0: ",
-                     base::toString(args_value_below_0),
-                     "."),
-        call. = FALSE
-      )
-
-    }
+    validate_args(
+      args = input_args_value,
+      arg_names = numeric_args,
+      is_valid = function(x){x >= 0},
+      message = "The values in the following arguments must not be lower than 0: {arg}.",
+      report = "all")
 
 
 
     ### error_if_higher_than_1 #####
 
-    args_value_above_1 <-
-      input_args_value[c("prop_pop_exp", "fraction_lived", base::paste0("dw", ci_suffix))] |>
-      purrr::keep(.p = ~ base::any(.x > 1)) |>
-      base::names()
-
-
-    if(base::length(args_value_above_1) > 0) {
-      base::stop(
-        base::paste0("The values in the following arguments must not be higher than 1: ",
-                     base::toString(args_value_above_1),
-                     "."),
-        call. = FALSE
-      )
-
-    }
+    validate_args(
+      args = input_args_value,
+      arg_names = c("prop_pop_exp", "fraction_lived", base::paste0("dw", ci_suffix)),
+      is_valid = function(x){x <= 1},
+      message = "The values in the following arguments must not be higher than 1: {arg}.",
+      report = "all")
 
 
     ### error_if_sum_higher_than_1 #####
@@ -548,37 +505,20 @@ validate_input_attribute <-
 
 
 
-    if(base::length(arg_names_with_all_ci_prefix) > 0){
+    # Check if error if not lower>central>upper.
+    # One call per prefix (rr, exp, bhd...) because the message names
+    # the three arguments of that prefix
+    for (x in arg_names_with_all_ci_prefix) {
 
-      error_if_not_increasing_lower_central_upper <-
-        function(var_name_central, var_name_lower, var_name_upper){
-
-          # Store var_value
-          var_value_central <- input_args_value [[var_name_central]]
-          var_value_lower <- input_args_value [[var_name_lower]]
-          var_value_upper <- input_args_value [[var_name_upper]]
-
-          if(base::any(var_value_central < var_value_lower) |
-             base::any(var_value_central > var_value_upper)){
-            # Create error message
-            stop(
-              base::paste0(
-                var_name_central, " must be higher than ", var_name_lower,
-                " and lower than ", var_name_upper, "."),
-              call. = FALSE)
-
-          }
-        }
-
-      # Call function checking if error if not lower>central>upper
-      for (x in arg_names_with_all_ci_prefix) {
-        error_if_not_increasing_lower_central_upper(
-          var_name_central = base::paste0(x, "_central"),
-          var_name_lower = base::paste0(x, "_lower"),
-          var_name_upper = base::paste0(x, "_upper"))
-      }
-
-
+      validate_args(
+        args = input_args_value,
+        arg_names = base::paste0(x, "_central"),
+        is_valid = function(v){
+          base::all(v >= input_args_value[[base::paste0(x, "_lower")]]) &&
+            base::all(v <= input_args_value[[base::paste0(x, "_upper")]])},
+        message =
+          base::paste0("{arg} must be higher than ", x, "_lower",
+                       " and lower than ", x, "_upper."))
     }
 
 
@@ -589,37 +529,16 @@ validate_input_attribute <-
       purrr::keep(~ . == 2) |>
       base::names()
 
-    if(base::length(arg_names_with_two_ci_prefix) > 0){
+    # Check if lower but not upper (or vice versa).
+    # arg_names_available (and not arg_names_passed) because here any
+    # non-NULL value counts as entered
+    for (x in arg_names_with_two_ci_prefix) {
 
-      error_if_only_lower_or_upper <- function(var_short){
-        var_name_lower <- base::paste0(var_short, "_lower")
-        var_name_upper <- base::paste0(var_short, "_upper")
-
-        var_value_lower <- input_args_value [[var_name_lower]]
-        var_value_upper <- input_args_value [[var_name_upper]]
-
-        if((!base::is.null(var_value_lower) && base::is.null(var_value_upper)) |
-           (base::is.null(var_value_lower) && !base::is.null(var_value_upper)) ){ # Only if available
-          {
-            # Create error message
-            stop(
-              base::paste0(
-                "Either both, ",
-                var_name_lower,
-                " and ",
-                var_name_upper,
-                ", or none of them must entered, but not only one."),
-              call. = FALSE)
-          }
-        }
-      }
-
-      # Call function checking if lower but not upper (or vice versa)
-      for (x in arg_names_with_two_ci_prefix) {
-        error_if_only_lower_or_upper(var_short = x)
-      }
-
-
+      validate_arg_pair(
+        present_arg_names = arg_names_available,
+        arg_names = base::paste0(x, c("_lower", "_upper")),
+        relation = "both_or_none",
+        message = "Either both, {arg_1} and {arg_2}, or none of them must entered, but not only one.")
     }
 
 
@@ -693,24 +612,14 @@ validate_input_attribute <-
 
     ### error_if_var_1_and_var_2 #####
 
-    error_if_var_1_and_var_2 <- function(var_name_1, var_name_2){
-      # Identify the alternative options
-
-      if(var_name_1 %in% arg_names_passed &&
-         var_name_2 %in% arg_names_passed){
-        stop(base::paste0("The argument ",
-                          var_name_1,
-                          " cannot be used together with the argument ",
-                          var_name_2,
-                          " (either one or the other but not both)."),
-             call. = FALSE
-        )
-      }
-    }
-
-    # Call function
+    # The erf can be defined either by rr_ (and shape and increment) or by erf_eq_
     for (a in c("rr_central", "erf_shape", "rr_increment")){
-      error_if_var_1_and_var_2(var_name_1 = a, var_name_2 = "erf_eq_central")
+
+      validate_arg_pair(
+        present_arg_names = arg_names_passed,
+        arg_names = c(a, "erf_eq_central"),
+        relation = "not_both",
+        message = "The argument {arg_1} cannot be used together with the argument {arg_2} (either one or the other but not both).")
     }
 
 

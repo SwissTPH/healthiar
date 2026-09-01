@@ -119,53 +119,27 @@ prepare_lifetable <-
     error_if_different_length(var_names = c("age_group", "population", "bhd", "fraction_lived"))
 
     ## error_if_not_greater_than_or_equal_to_min
-    error_if_not_greater_than_or_equal_to_min <- function(var_name, min){
-      # Store var_value
-      var_value <- input_args_value[[var_name]]
+    # Variables that must be 0 or greater
+    validate_args(
+      args = input_args_value,
+      arg_names = c("age_group", "fraction_lived", "bhd"),
+      is_valid = function(x){x >= 0},
+      message = "The values of {arg} must be greater than or equal to 0.")
 
-      if(base::any(!var_value >= min)){
-        base::stop(
-          base::paste0("The values of ", var_name, " must be greater than or equal to ", min, "."),
-          call. = FALSE
-        )
-      }
-    }
-
-    # error_if_not_greater_than_min
-    error_if_not_greater_than_min <- function(var_name, min){
-      # Store var_value
-      var_value <- input_args_value[[var_name]]
-
-      if(base::any(!var_value > min)){
-        base::stop(
-          base::paste0("The values of ", var_name, " must be greater than ", min, "."),
-          call. = FALSE
-        )
-      }
-    }
-
-    # Variables that must 0 or greater
-    error_if_not_greater_than_or_equal_to_min("age_group", min = 0)
-    error_if_not_greater_than_or_equal_to_min("fraction_lived", min = 0)
-    error_if_not_greater_than_or_equal_to_min("bhd", min = 0)
+    ## error_if_not_greater_than_min
     # population must be > 0 (zero is not accepted)
-    error_if_not_greater_than_min("population", min = 0)
-  
+    validate_args(
+      args = input_args_value,
+      arg_names = "population",
+      is_valid = function(x){x > 0},
+      message = "The values of {arg} must be greater than 0.")
 
-    ## Error if_greater_than_max
-    error_if_greater_than_max <- function(var_name, max){
-      # Store var_value
-      var_value <- input_args_value[[var_name]]
-
-      if(base::any(var_value > max)){
-        base::stop(
-          base::paste0("The values of ", var_name, " cannot be greater than ", max, "."),
-          call. = FALSE
-        )
-      }
-    }
-
-    error_if_greater_than_max("fraction_lived", max = 1)
+    ## error_if_greater_than_max
+    validate_args(
+      args = input_args_value,
+      arg_names = "fraction_lived",
+      is_valid = function(x){x <= 1},
+      message = "The values of {arg} cannot be greater than 1.")
 
 
 

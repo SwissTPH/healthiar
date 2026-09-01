@@ -223,39 +223,30 @@ attribute_lifetable <-
       get_input_args(environment = base::environment(),
                      call = match.call())
 
+    # input_args$value already contains ALL arguments of this function
+    # (with the same names as in attribute_master), so they are forwarded with
+    # do.call() instead of one by one. In this way a new argument only has to be
+    # added to the signature and not to the call below, too.
     output <-
-      attribute_master(
-        # RR & AR
-        approach_risk = "relative_risk",
-        exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
-        cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
-        # pop_exp can only be used with absolute risk
-        # and this is not compatible with life table method
-        pop_exp = NULL,
-        erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
-        # RR ONLY
-        rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
-        rr_increment = rr_increment,
-        erf_shape = erf_shape,
-        bhd_central = bhd_central, bhd_lower = bhd_lower, bhd_upper = bhd_upper,
-        prop_pop_exp = prop_pop_exp,
-        # Life table
-        health_outcome = health_outcome,
-        is_lifetable = TRUE,
-        population = population,
-        sex = sex,
-        min_age = min_age, max_age = max_age,
-        approach_exposure = approach_exposure,
-        approach_newborns = approach_newborns,
-        year_of_analysis = year_of_analysis,
-        time_horizon = time_horizon,
-        fraction_lived = fraction_lived,
-        # ITERATION (OPTIONAL)
-        geo_id_micro = geo_id_micro, geo_id_macro = geo_id_macro,
-        # META (OPTIONAL)
-        info = info,
-        # INTERNAL ARGUMENTS
-        input_args = input_args)
+      base::do.call(
+        what = attribute_master,
+        args =
+          c(input_args$value,
+            base::list(
+              # Life table
+              is_lifetable = TRUE,
+              # approach_risk cannot be entered by the user 
+              # in the life table approach, 
+              # so it is set here
+              approach_risk = "relative_risk",
+              # pop_exp can only be used with absolute risk
+              # and this is not compatible with life table method
+              pop_exp = NULL,
+              # INTERNAL ARGUMENTS
+              input_args = input_args)),
+        # quote = TRUE so that the argument values (e.g. a function in
+        # erf_eq_central) are not evaluated a second time
+        quote = TRUE)
 
     return(output)
 
