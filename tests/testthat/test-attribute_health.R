@@ -419,6 +419,103 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
 
 })
 
+testthat::test_that("results correct |pathway_rr|threshold_below_cutoff|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+
+  # Same goal as in the test above, but using the argument threshold
+  # instead of a user-defined exposure-response function.
+  # Health impacts in the exposure group 55dB+ (cutoff, e.g. because no exposure
+  # data are available below) that are affected by an exposure above the
+  # effect threshold (45 dB)
+
+  exp <- c(300000,200000,150000,120000,100000,70000,60000)
+  totpop <- 10000000
+  exp_lab <- c(47,52,57,62,67,72,77)
+  diseased <- 50000
+
+  results <-
+    healthiar::attribute_health(
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.055,
+      rr_increment = 10,
+      prop_pop_exp = exp/totpop,
+      exp_central = exp_lab,
+      # Effect threshold, i.e. the anchor of the exposure-response function
+      threshold = 45,
+      # Cut-off, i.e. the exposures below it are not quantified
+      cutoff_central = 55,
+      bhd_central = diseased)
+
+  # Same result as with the user-defined (truncated) exposure-response function
+  testthat::expect_equal(
+    object = results$health_main$impact_rounded,
+    expected = 2651)
+
+  # The exposure categories below the cutoff get the risk at the reference level
+  testthat::expect_equal(
+    object =
+      healthiar::get_risk(
+        rr = 1.055,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        exp = exp_lab,
+        threshold = 45,
+        cutoff = 55)[1:2],
+    expected = c(1, 1))
+
+})
+
+testthat::test_that("results the same |pathway_rr|threshold_equal_cutoff|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+
+  # If only one of cutoff and threshold is entered,
+  # the other one takes the same value.
+  # Therefore all three calls below must deliver the same result
+
+  args <-
+    base::list(
+      exp_central = 8.85,
+      bhd_central = 30747,
+      erf_shape = "log_linear",
+      rr_central = 1.369,
+      rr_increment = 10)
+
+  only_cutoff <-
+    base::do.call(healthiar::attribute_health,
+                  c(args, base::list(cutoff_central = 5)))
+
+  only_threshold <-
+    base::do.call(healthiar::attribute_health,
+                  c(args, base::list(threshold = 5)))
+
+  both <-
+    base::do.call(healthiar::attribute_health,
+                  c(args, base::list(cutoff_central = 5, threshold = 5)))
+
+  testthat::expect_equal(
+    object = only_threshold$health_main$impact,
+    expected = only_cutoff$health_main$impact)
+
+  testthat::expect_equal(
+    object = both$health_main$impact,
+    expected = only_cutoff$health_main$impact)
+
+  # If only threshold is entered, cutoff takes the same value (and not the default 0)
+  testthat::expect_equal(
+    object = base::unique(only_threshold$health_detailed$results_raw$cutoff),
+    expected = 5)
+
+  # A cutoff of 0 means that there is no cutoff and is therefore equivalent to
+  # a cutoff equal to the threshold, i.e. entering it explicitly changes nothing
+  cutoff_0_and_threshold <-
+    base::do.call(healthiar::attribute_health,
+                  c(args, base::list(cutoff_central = 0, threshold = 5)))
+
+  testthat::expect_equal(
+    object = cutoff_0_and_threshold$health_main$impact,
+    expected = only_cutoff$health_main$impact)
+
+})
+
 testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   testthat::expect_equal(
