@@ -43,7 +43,6 @@ get_impact_with_lifetable <-
     is_constant_exposure <- base::unique(input_with_risk_and_pop_fraction$approach_exposure) == "constant"
 
     is_with_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "with_newborns"
-    is_without_newborns <- base::unique(input_with_risk_and_pop_fraction$approach_newborns) == "without_newborns"
 
 
     # Store the value of time horizon (defined in compile_input())
