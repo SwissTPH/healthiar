@@ -9,7 +9,7 @@
 #' @inheritParams attribute_master
 #' @param rr \code{Numeric value} or \code{numeric vector} specifying the \strong{relative risk} estimate(s) and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Not required if the \code{erf_eq} argument is already specified.
 #' @param exp \code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor (e.g. annual population-weighted mean) and (optionally) the corresponding lower and upper bound of the 95\% confidence interval.
-#' @param cutoff \code{Numeric value} specifying the \strong{exposure cut-off value} (i.e. the exposure level below which no health effects occur) and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
+#' @param cutoff \code{Numeric value} specifying the \strong{exposure cut-off value}, i.e. the exposure level below which no health impacts are quantified. Default: 0, or same value as \code{threshold}, if it is entered. If \code{cutoff} is higher than \code{threshold}, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.
 #' @param erf_eq \code{String} or \code{function} specifying the \strong{exposure-response function} and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details and Examples sections below.
 
 # DETAILS ######################################################################
