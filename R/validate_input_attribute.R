@@ -736,7 +736,11 @@ validate_input_attribute <-
       }
     }
 
-    warning_if_rr_and_no_var_with_default(var_name = "cutoff_central", default = 0)
+    # If threshold is entered, then cutoff takes the same value (see compile_input())
+    # and therefore 0 is not assumed as default
+    if(base::is.null(input_args_value[["threshold"]])){
+      warning_if_rr_and_no_var_with_default(var_name = "cutoff_central", default = 0)
+    }
 
 
   }
