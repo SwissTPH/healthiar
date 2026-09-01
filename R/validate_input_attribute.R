@@ -370,14 +370,20 @@ validate_input_attribute <-
 
       ### error_if_not_consecutive_sequence #####
       error_if_not_consecutive_sequence <- function(var_name){
-        var_value <- input_args_value[[var_name]]
         # Here a function because it expected to use it in one or two arguments
         # (not like e.g. the check of is.numeric)
 
+        # Only the distinct values, because the age groups are repeated
+        # for each sex, geo unit or exposure category
+        # (e.g. 0:99 for males and 0:99 for females)
+        var_value <- base::sort(base::unique(input_args_value[[var_name]]))
+
         if(# Check that values are integers
-          base::any(var_value != base::floor(var_value)) &&
-          # Check difference between consecutive elements is exactly 1
-          base::all(base::diff(var_value))) {
+          base::any(var_value != base::floor(var_value)) ||
+          # Check that the difference between consecutive elements is exactly 1.
+          # Attention: all(diff(x)) (without == 1) only checks that consecutive
+          # values are different, which does not detect e.g. 5-year age groups
+          !base::all(base::diff(var_value) == 1)) {
 
           base::stop(
             base::paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements is 1."),
