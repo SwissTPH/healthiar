@@ -393,8 +393,7 @@ get_impact_with_lifetable <-
       # from exposed and unexposed projections
 
       var_prefix_for_function <-
-        base::ifelse(health_outcome == "deaths", "deaths_",
-                     base::ifelse(health_outcome == "yll", "midyear_population_", NA))
+        base::ifelse(is_deaths, "deaths_", "midyear_population_")
 
       lifetable_calculation <- lifetable_calculation |>
         dplyr::mutate(
