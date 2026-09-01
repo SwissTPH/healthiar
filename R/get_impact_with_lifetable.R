@@ -448,6 +448,7 @@ get_impact_with_lifetable <-
               .f = fill_right_of_diag))
 
       }
+      # If without newborns nothing has to be done
     }
 
 
