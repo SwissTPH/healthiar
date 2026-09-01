@@ -109,10 +109,14 @@ get_impact_with_lifetable <-
     # CALCULATE MODIFIED SURVIVAL PROBABILITIES
     lifetable_calculation <- lifetable_calculation |>
       dplyr::mutate(
-        # For age intervals starting at min_age and above, calculate modified
+        # For age intervals between min_age and max_age, calculate modified
         # survival probabilities.
+        # min_age and max_age are inclusive, i.e. the exposure affects
+        # the age groups from min_age to max_age (both included).
+        # If the user did not enter them, compile_input() sets them to the
+        # first and the last age group, so that all age groups are affected
         # Calculate first the boolean/logic column to speed up calculations below
-        is_exposed_age = age_end > min_age,
+        is_exposed_age = age_end > min_age & age_start <= max_age,
 
         # Calculate modified hazard rate = modification factor * hazard rate = mod factor * (deaths / mid-year pop)
         hazard_rate_mod =
@@ -278,10 +282,19 @@ get_impact_with_lifetable <-
         # Loop across years
         # E.g. starts with 1 and ends with 98;
         # i (index in the number of years) is used to select both the rows and the columns
+        # seq_len() (and not 1:) to get no iteration at all
+        # if the projection covers only one year
 
-        for (i in 1: (n_years_projection - 1)) {
-          
-          rows <- (i + 2):(n_years_projection + 1)
+        for (i in base::seq_len(n_years_projection - 1)) {
+
+          # Each year the survivors of the previous year get one year older.
+          # The upper limit is the number of age groups (and NOT the number of
+          # projection years) because nobody gets older than the last age group.
+          # If the cohort is already older than the last age group,
+          # then there is nothing left to project
+          if (i + 2 > n_ages) { break }
+
+          rows <- (i + 2):n_ages
           # ENTRY POP YOA+1 <- ( ENTRY POP YOA ) * ( SURVIVAL PROBABILITY YOA )
           entry_pop[rows, i + 1] <- base::round(entry_pop[rows - 1, i] * prob_survival[rows - 1], 10)
           # MID-YEAR POP YOA+1 <- ( ENTRY POP YOA+1) * ( SURVIVAL PROBABILITY FROM START OF YOA+1 TO MID YEAR YOA+1)
@@ -292,8 +305,10 @@ get_impact_with_lifetable <-
 
         # Column bin matrices to input data frame
         # Remove first column of entry_pop, because it exists already in input data frame
+        # drop = FALSE to keep a matrix (with column names) also if only one
+        # column is left, otherwise the column would lose its name
         df <-
-          dplyr::bind_cols(df, midyear_pop, entry_pop[, -1], deaths)
+          dplyr::bind_cols(df, midyear_pop, entry_pop[, -1, drop = FALSE], deaths)
 
 
         return(df)
@@ -416,16 +431,23 @@ get_impact_with_lifetable <-
           cols <- base::setdiff(base::names(tbl), c("age_start", "age_end", "population"))
           data_selection <- tbl[, cols, drop = FALSE]
 
-          for (i in 1 : base::nrow(data_selection)) {
+          n_years <- base::ncol(data_selection)
+
+          # Once an age group is not in the population anymore
+          # (i.e. right of the diagonal) it is assumed that the newborns
+          # replacing it have the same impact as in the last year with
+          # population (i.e. the value in the diagonal).
+          # Only the rows that have a diagonal value AND at least one year
+          # to the right of it have to be filled.
+          # min() with the number of years because there can be
+          # more age groups than projection years (and the other way round)
+          for (i in base::seq_len(base::min(base::nrow(data_selection),
+                                            n_years - 1))) {
             # Extract the diagonal value
             diag_value <- data_selection[i, i, drop = TRUE]
             # Replace NAs to the right of the diagonal with the diagonal value
-            data_selection[i, (i+1):base::ncol(data_selection)] <- diag_value
+            data_selection[i, (i + 1):n_years] <- diag_value
           }
-
-
-          # Drop last column from the data part
-          data_selection <- data_selection[, -base::ncol(data_selection), drop = FALSE]
 
           # Assign back into the same positions
           tbl[, cols] <- data_selection
