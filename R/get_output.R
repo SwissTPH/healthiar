@@ -174,41 +174,21 @@ get_output <-
     # Create function to aggregate impacts
     # To be used multiple times below
 
-    sum_round_and_relative_impact <- function(df, var){
+    sum_round_and_relative_impact <- function(var){
 
-      grouping_cols <- grouping_cols_for_results_by[[var]]
-
-      # Collapse df using the intern healthiar function
-      df_collapsed <-
+      # Collapse the columns with multiple values within a group and
+      # sum the impacts, obtaining one row per group.
+      # The rounded and relative impacts are not aggregated
+      # because they are re-calculated below (after summing)
+      impact_agg <-
         collapse_df_by_group(
-          df = df,
-          group_col_names = grouping_cols,
-          # If these two last arguments are empty the function can obtain them internally
-          # but we enter them because they are the same for all results_by_vars
-          # and we increase speed in this way (instead of repeating the process)
-          multi_value_col_names = cols_eligible_for_collapse,
-          ci_col_names = ci_cols_available,
-          only_unique_rows = FALSE)
-
-      # Sum impact columns (keep original names)
-      impact_agg <- df_collapsed |>
-        # Deselect columns to be summed
-        # Otherwise conflict with left_join behind
-        dplyr::select(- dplyr::matches("_rounded|_per_100k_inhab")) |>
-        dplyr::mutate(
-          .by = dplyr::all_of(grouping_cols),
-          dplyr::across(
-            # Important: across() because this is to be done in all impact columns
-            # In attribute_health() only one impact column
-            # but get_output is also used by monetize()
-            # this function also have other columns with impact discounted and monetized
-            # and even comparison scenarios
-            # which also have to be included in this aggregation
-            .cols = dplyr::all_of(cols_to_be_summed),
-            .fns = ~ base::sum(.x, na.rm = TRUE),
-            .names = "{.col}"))|>
-        # Keep only distinct rows because above mutate() not summarize()
-        dplyr::distinct() |>
+          df = results_raw_to_aggregate,
+          group_col_names = grouping_cols_for_results_by[[var]],
+          sum_col_names = cols_to_be_summed,
+          # This last argument could be obtained within the function,
+          # but it is entered because it is the same for all results_by vars
+          # and in this way the process is not repeated (faster)
+          multi_value_col_names = cols_eligible_for_collapse) |>
         # Calculate rounded impacts
         dplyr::mutate(
           dplyr::across(
