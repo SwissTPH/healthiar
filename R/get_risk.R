@@ -115,8 +115,27 @@ get_risk <-
     exp
   ) {
 
-    # Check if exposure is upper than cutoff
-    # Otherwise the value of the exposure must be the cutoff (minimum possible)
+    # If the user does not separate the effect threshold from the cut-off,
+    # the exposure-response function is anchored at the cut-off (default case)
+    if (base::is.null(threshold)) { threshold <- cutoff }
+
+    # The threshold can be NA for some cases only, e.g. in multiexpose()
+    # if the threshold was entered for one exposure but not for the other one.
+    # Also in that case the cut-off is taken as threshold
+    if (base::any(base::is.na(threshold))) {
+      threshold <- base::ifelse(base::is.na(threshold), cutoff, threshold)
+    }
+
+    # Identify the exposures below the cut-off.
+    # Only relevant if the cut-off is higher than the effect threshold,
+    # e.g. noise exposure data are only available above 55 dB (cut-off)
+    # while health effects already occur above 45 dB (threshold).
+    # In that case the exposures below the cut-off are not quantified,
+    # i.e. the population is treated as unexposed (risk at reference level)
+    is_below_cutoff <- cutoff > threshold & exp < cutoff
+
+    # Check if exposure is upper than the effect threshold
+    # Otherwise the value of the exposure must be the threshold (minimum possible)
     exp <-
       base::ifelse(exp > cutoff,
                    exp,
