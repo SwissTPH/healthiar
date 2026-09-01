@@ -1760,32 +1760,136 @@ rm(pwm)
 
 
 
-# Threshold additional to cut-off
-
+# Cut-off vs. threshold {#cutoff-vs-threshold}
 
 ### Goal
 
-E.g., to quantify health impacts in the exposure group 55dB+ (calculation threshold) 
-that are affected by a exposure above the effect threshold of 45 dB (cut-off).
+E.g., to quantify health impacts with an exposure-response function
+whose effect threshold differs from the counterfactual exposure of the assessment,
+such as noise assessments in which exposure data are only available above 55 dB
+although health effects already occur at lower exposures.
+
+### Methodology
+
+`healthiar` distinguishes two exposure levels:
+
+* `threshold` is the **effect threshold**, i.e. the exposure level
+from which the exposure-response function starts to show an effect.
+It is the anchor of the curve and is therefore subtracted from the exposure.
+The term is used in this sense in health risk assessment guidance, e.g.,
+for environmental noise [@Engelmann2025_report].
+* `cutoff_...` is the exposure level below which no health impacts are quantified.
+As long as it is identical to the effect threshold,
+it is also the **counterfactual exposure** of the assessment.
+If it is higher, it only determines which exposures are assessed,
+while the effect threshold remains the counterfactual exposure.
+The term is used in this sense in health risk assessment guidance, e.g.,
+for air pollution [@WHO2025_report].
+Be aware that a cut-off recommended in guidance documents may reflect
+the exposure range covered by the evidence
+rather than a demonstrated no-effect level,
+i.e. it does not necessarily indicate
+that there are no health effects below it.
+
+Both levels are usually identical.
+Therefore it is enough to enter only one of them,
+and the other one takes the same value in the background.
+Accordingly, there are three possible combinations:
+
+**1. Cut-off equal to the effect threshold**
+
+This is the default situation.
+The exposure-response function is anchored at that level,
+which is therefore subtracted from the exposure,
+and the exposures below it get the risk at the reference level:
+
+$$
+rr_{at\_exp} = f(\max(exp, cutoff) - cutoff)
+$$
+
+The same result is obtained by entering only `cutoff_...`,
+only `threshold`, or both with the same value.
+
+**2. Cut-off higher than the effect threshold**
+
+The exposure-response function is truncated at the cut-off.
+The exposures above the cut-off are assessed with the risk referring to
+the effect threshold, while the exposures below the cut-off
+are treated as unexposed:
+
+$$
+rr_{at\_exp} =
+\begin{cases}
+1, & exp < cutoff \\
+f(exp - threshold), & exp \ge cutoff
+\end{cases}
+$$
+
+In the absolute risk approach, the exposures below the cut-off
+get an absolute risk of 0 instead of a relative risk of 1,
+i.e. in both approaches no health impacts are attributed to them.
+
+This is the case, e.g., in noise assessments under the Environmental Noise Directive,
+in which exposure data are only reported above a given exposure level (cut-off)
+although the exposure-response functions show effects
+already at lower exposures (effect threshold).
+Be aware that this results in a step in the exposure-response function
+at the cut-off and that the people exposed between the effect threshold and
+the cut-off get no attributable health impacts (i.e. a conservative estimate).
+
+**3. Cut-off lower than the effect threshold**
+
+The cut-off has no effect on the results and `healthiar` shows a warning.
+The reason is that the exposure-response function is anchored at
+the effect threshold, so the exposures below the effect threshold
+already get the risk at the reference level.
+A cut-off below the effect threshold cannot remove any additional exposure
+and the results are the same as if only `threshold` had been entered.
 
 ### Function call
 
-The function arguments `erf_eq_...` require a function as input. Instead of using a `splinefun()` this can also be fulfilled by using a 'function(c)' which is of type 'function'.
+The example below refers to case 2 above:
+health impacts in the exposure group 55 dB+ (cut-off)
+that are affected by an exposure above the effect threshold of 45 dB.
+
+```{r}
+results_cutoff_above_threshold <- healthiar::attribute_health(
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.055,
+  rr_increment = 10,
+  prop_pop_exp = c(300000,200000,150000,120000,100000,70000,60000)/10000000,
+  exp_central = c(47,52,57,62,67,72,77),
+  # Effect threshold, i.e. the anchor of the exposure-response function
+  threshold = 45,
+  # Cut-off, i.e. the exposures below it are not quantified
+  cutoff_central = 55,
+  bhd_central = 50000)$health_main$impact_rounded
+```
+
+Alternatively, the same result can be obtained by entering
+a user-defined exposure-response function in `erf_eq_...`
+which already includes the case distinction.
+This is only needed if the shape of the curve above the cut-off
+is not covered by the `erf_shape` options.
+The function arguments `erf_eq_...` require a function as input.
+Instead of using a `splinefun()` this can also be fulfilled
+by using a 'function(c)' which is of type 'function'.
 
 ```{r}
 #setting up function parameters
-threshold_effect <- 45
+threshold <- 45
 RR <- 1.055
 threshold_calculation <- 55
 rr_increment <- 10
 
 # define categorical function, the ifelse condition enables the case distinction
 erf_function <- function(c){
-  output <- ifelse(c<threshold_calculation, 1, exp((log(RR)/rr_increment)*(c-threshold_effect)))
+  output <- ifelse(c<cutoff, 1, exp((log(RR)/rr_increment)*(c-threshold)))
   return(output)
 }
 # attribute_health
-results_catERF_different_calc_thesh <- healthiar::attribute_health(
+results_catERF_different_cutoff <- healthiar::attribute_health(
   approach_risk = "relative_risk",
   erf_eq_central = erf_function,
   prop_pop_exp = c(300000,200000,150000,120000,100000,70000,60000)/10000000,
@@ -1794,16 +1898,8 @@ results_catERF_different_calc_thesh <- healthiar::attribute_health(
   bhd_central=50000)$health_main$impact_rounded
 ```
 
-The used function is equal to
-$$
-f(c) =
-\begin{cases}
-1, & c < \text{threshold} \\
-\exp\left( \frac{\log(RR)}{rr_{increment}} (c - threshold_{effect}) \right), & c \ge \text{threshold}
-\end{cases}
-$$
-
 The categorical ERF curve created looks as follows.
+The step at the cut-off is clearly visible.
 
 ```{r fig.alt="ERF curve", eval=TRUE, include=TRUE, echo=FALSE}
 
