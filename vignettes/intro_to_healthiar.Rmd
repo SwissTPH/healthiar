@@ -1451,7 +1451,7 @@ Where:
 * $rr\_at\_exp(x)$ = relative risk at exposure level compared to the reference level
 
 ##### Categorical Exposure Form
-If the population exposure is described as a categorical rather than continuous exposure, the integrals may be converted to sums [@WHO2003_report; @Murray2003-spbm]:
+If the population exposure is described as a categorical rather than continuous exposure, the integrals may be converted to sums [@WHO2003_report; @Murray2003_spbm]:
 
 $$PIF = \frac{\sum rr\_at\_exp_{i} \times PE_{i} - \sum rr\_at\_exp_{i}PE'_{i}}{\sum rr\_at\_exp_{i}PE_{i}}$$
 
