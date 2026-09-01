@@ -65,6 +65,33 @@ compile_input <-
       }
     }
 
+    # PROCESS THRESHOLD ################################################################
+    # The threshold is the exposure level from which the exposure-response function
+    # shows an effect, while the cutoff is the counterfactual exposure level
+    # below which no health impacts are quantified.
+    # Both are usually identical. Therefore, if the user enters only one of them,
+    # the other one takes the same value.
+    # Only if cutoff > threshold, the exposure-response function is truncated
+    # at the cutoff (see get_risk()).
+    # If only cutoff is entered, no threshold column is added to the input table.
+    # In that way the threshold always follows the cutoff,
+    # also if the cutoff is re-calculated afterwards, e.g. in
+    # summarize_uncertainty(), and no uncertainty dimension is added
+
+    # If only threshold is entered, then cutoff takes the same value.
+    # A cutoff of 0 means that there is no cutoff, because exposures are never
+    # below 0 and therefore no exposure is excluded. It is thus equivalent to
+    # a cutoff equal to the threshold, which is the value actually used to
+    # quantify the impacts. In other words, this step does not change any
+    # result (also not if the user entered the 0 explicitly). It only makes
+    # the cutoff in the results tables show the counterfactual exposure
+    # that was used instead of a 0 that had no effect
+    if (!base::is.null(input_args_edited[["threshold"]]) &&
+        (base::is.null(input_args_edited[["cutoff_central"]]) ||
+         base::all(input_args_edited[["cutoff_central"]] == 0))) {
+      input_args_edited[["cutoff_central"]] <- input_args_edited[["threshold"]]
+    }
+
     # Remove list elements that are null,
     # otherwise the list cannot be converted into a tibble
     input_args_edited <-
