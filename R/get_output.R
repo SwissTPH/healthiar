@@ -149,6 +149,11 @@ get_output <-
       base::setdiff(cols_with_multiple_values,
                     ci_cols_available)
 
+    # The rounded and the relative impacts are re-calculated after summing,
+    # so they are removed before aggregating
+    results_raw_to_aggregate <- results_raw |>
+      dplyr::select(-dplyr::matches("_rounded|_per_100k_inhab"))
+
 
     # Get main results from detailed results ###################################
     # Put all health detailed tables together in a list
