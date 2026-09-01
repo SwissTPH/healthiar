@@ -353,7 +353,7 @@ validate_input_attribute <-
         args = input_args_value,
         arg_names = lifetable_args_with_values_above_0,
         is_valid = function(x){x > 0},
-        message = "The values in the following arguments must not be lower than 0: {arg}.",
+        message = "The values in the following arguments must be higher than 0: {arg}.",
         report = "all")
 
       ### error_if_negative #####

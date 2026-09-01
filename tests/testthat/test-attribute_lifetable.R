@@ -764,7 +764,7 @@ testthat::test_that("error if population argument contains 0", {
       year_of_analysis =  data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age),
 
-    regexp = "The values in the following arguments must not be lower than 0: population."
+    regexp = "The values in the following arguments must be higher than 0: population."
   )
 })
 
