@@ -50,10 +50,8 @@ get_output <-
     id_cols_available <-
       base::intersect(id_cols, colnames_results_raw)
 
-    # Define all the ci columns have that have to be filtered to keep only central
-    ci_cols <- base::grep("_ci", id_cols, value = TRUE)
-
-    # Identify which of the ci_cols are present in the assessment
+    # Identify the ci columns that are present in the assessment
+    # (they have to be filtered below to keep only the central estimates)
     ci_cols_available <- base::grep("_ci", id_cols_available, value = TRUE)
 
     ci_cols_available_except_erf <- base::setdiff(ci_cols_available, "erf_ci")
@@ -137,6 +135,11 @@ get_output <-
       # because at leaset results_by_geo_id_micro must be available
       # for other healthiar functions
       base::union(geo_id_available)
+    
+    # Name of the results in the detailed output
+    # e.g. results_by_geo_id_micro
+    results_by_names <-
+      base::paste0("results_by_", results_by_vars_to_be_used)
 
     # Build list with the result_by_vars and the correponding grouping_cols
     grouping_cols_for_results_by <-
@@ -145,22 +148,16 @@ get_output <-
         ~ base::setdiff(id_cols_available, .x)
       )
 
-    # Other columns: e.g. info, scen_, pop_fraction...
-    # grepl() because no fix number and names
-    # scen columns only for the case of compare()
-    other_cols_with_multiple_values <-
-      base::intersect(cols_with_multiple_values,
-                      colnames_results_raw[base::grepl("info_|scen_|pop_fraction", colnames_results_raw)])
-
-
-    results_by_vars_to_be_used_except_geo_id_macro <-
-      base::setdiff(results_by_vars_to_be_used, c("geo_id_macro"))
-
     # The _ci columns will never be collapsed
     # This step avoid unneded data processing below
     cols_eligible_for_collapse <-
       base::setdiff(cols_with_multiple_values,
                     ci_cols_available)
+
+    # The rounded and the relative impacts are re-calculated after summing,
+    # so they are removed before aggregating
+    results_raw_to_aggregate <- results_raw |>
+      dplyr::select(-dplyr::matches("_rounded|_per_100k_inhab"))
 
 
     # Get main results from detailed results ###################################
@@ -182,41 +179,21 @@ get_output <-
     # Create function to aggregate impacts
     # To be used multiple times below
 
-    sum_round_and_relative_impact <- function(df, var){
+    sum_round_and_relative_impact <- function(var){
 
-      grouping_cols <- grouping_cols_for_results_by[[var]]
-
-      # Collapse df using the intern healthiar function
-      df_collapsed <-
+      # Collapse the columns with multiple values within a group and
+      # sum the impacts, obtaining one row per group.
+      # The rounded and relative impacts are not aggregated
+      # because they are re-calculated below (after summing)
+      impact_agg <-
         collapse_df_by_group(
-          df = df,
-          group_col_names = grouping_cols,
-          # If these two last arguments are empty the function can obtain them internally
-          # but we enter them because they are the same for all results_by_vars
-          # and we increase speed in this way (instead of repeating the process)
-          multi_value_col_names = cols_eligible_for_collapse,
-          ci_col_names = ci_cols_available,
-          only_unique_rows = FALSE)
-
-      # Sum impact columns (keep original names)
-      impact_agg <- df_collapsed |>
-        # Deselect columns to be summed
-        # Otherwise conflict with left_join behind
-        dplyr::select(- dplyr::matches("_rounded|_per_100k_inhab")) |>
-        dplyr::mutate(
-          .by = dplyr::all_of(grouping_cols),
-          dplyr::across(
-            # Important: across() because this is to be done in all impact columns
-            # In attribute_health() only one impact column
-            # but get_output is also used by monetize()
-            # this function also have other columns with impact discounted and monetized
-            # and even comparison scenarios
-            # which also have to be included in this aggregation
-            .cols = dplyr::all_of(cols_to_be_summed),
-            .fns = ~ base::sum(.x, na.rm = TRUE),
-            .names = "{.col}"))|>
-        # Keep only distinct rows because above mutate() not summarize()
-        dplyr::distinct() |>
+          df = results_raw_to_aggregate,
+          group_col_names = grouping_cols_for_results_by[[var]],
+          sum_col_names = cols_to_be_summed,
+          # This last argument could be obtained within the function,
+          # but it is entered because it is the same for all results_by vars
+          # and in this way the process is not repeated (faster)
+          multi_value_col_names = cols_eligible_for_collapse) |>
         # Calculate rounded impacts
         dplyr::mutate(
           dplyr::across(
@@ -228,7 +205,7 @@ get_output <-
 
 
       # If population is available, recompute with population and normalized metrics
-      if ("population" %in% base::names(df)) {
+      if ("population" %in% colnames_results_raw) {
 
         # Relative impact dividing by population in the subgroup (100k)
         # i.e. x impacts in the subgroup / population in the subgroup
@@ -247,17 +224,13 @@ get_output <-
 
     }
 
+
+
     # At least result_by_geo_id_micro is to be calculated
     # so no if statement here
-
-    for(var in results_by_vars_to_be_used){
-
-      output$health_detailed[[base::paste0("results_by_", var)]] <-
-        sum_round_and_relative_impact(
-          df = results_raw,
-          var = var)
-
-    }
+    output$health_detailed[results_by_names] <-
+      purrr::map(.x = results_by_vars_to_be_used,
+                 .f = sum_round_and_relative_impact)
 
 
     # Keep only the ci central in main output ###########
