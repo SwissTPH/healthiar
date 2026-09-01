@@ -4883,7 +4883,7 @@ testthat::test_that("warning if threshold higher than cutoff", {
         rr_central = 1.05,
         rr_increment = 10,
         erf_shape = "log_linear",
-        cutoff = 5,
+        cutoff_central = 5,
         threshold = 6),
     regexp = "The threshold is higher than the cut-off. Therefore, the cut-off has no effect on the results.")
 })
