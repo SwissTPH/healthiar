@@ -60,11 +60,6 @@ get_impact_with_lifetable <-
     midyear_names   <- base::paste0("midyear_population_", years_projection)
     death_names <- base::paste0("deaths_", years_projection)
 
-    id_columns <-
-      c("geo_id_micro",
-        "erf_ci", "bhd_ci", "exp_ci", "dw_ci", "cutoff_ci", "duration_ci",
-        "sex")
-
 
     # LIFETABLE SETUP ##############################################################################
 
