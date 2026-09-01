@@ -53,38 +53,6 @@
 #' \code{exp_central}, \code{exp_lower}, \code{exp_upper}
 #' In case of exposure bands enter only one exposure value per band (e.g. the means of the lower and upper bounds of the exposure bands).
 #'
-#' \code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper} and \code{threshold}
-#' Both refer to exposure levels and are therefore expressed in the same unit 
-#' as the exposure. 
-#' If exposure categories are used, 
-#' the length of these inputs must be either 1 or 
-#' the same as in the \code{exp_...} argument(s).
-#' \itemize{
-#'  \item \code{threshold} is the \emph{effect threshold}, i.e. the exposure level 
-#' from which the exposure-response function starts to show an effect. 
-#' It is the anchor of the curve and is therefore subtracted from the exposure. 
-#' The term is used in this sense in health risk assessment guidance for environmental 
-#' noise \insertCite{Engelmann2025_report}{healthiar}.
-#'  \item \code{cutoff_...} is the exposure level below which no health impacts 
-#' are quantified. 
-#' As long as it is identical to the effect threshold, 
-#' it is also the \emph{counterfactual exposure} of the assessment. 
-#' If it is higher, it only determines which exposures are assessed, 
-#' while the effect threshold remains the counterfactual exposure.
-#'  }
-#' Both levels are usually identical. Therefore it is enough to enter one of them, 
-#' and the other one takes the same value.
-#'
-#' Only if the cut-off is higher than the effect threshold, 
-#' the exposure-response function is truncated at the cut-off level: 
-#' exposures below the cut-off are treated as unexposed 
-#' (relative risk = 1, absolute risk = 0), 
-#' while exposures above the cut-off are assessed with the risk referring to 
-#' the effect threshold. 
-#' Be aware that this results in a step in the exposure-response function 
-#' at the cut-off and that the people exposed between the effect threshold and 
-#' the cut-off get no attributable impacts (i.e. a conservative estimate).
-#'
 #' \code{pop_exp}
 #' \emph{Only applicable in AR pathways; always required.} In AR pathways the population exposed per exposure category is multiplied with the corresonding category-specific risk to obtain the absolute number of people affected by the health outcome.
 #'
@@ -136,7 +104,8 @@
 #' More specifically, see chapters:
 #' \itemize{
 #'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{Relative risk}
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{Absolute risk}}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{Absolute risk}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 #'
 #'
 # VALUE ########################################################################
