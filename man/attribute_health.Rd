@@ -12,6 +12,7 @@ attribute_health(
   cutoff_central = 0,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
+  threshold = NULL,
   pop_exp = NULL,
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
@@ -44,7 +45,9 @@ attribute_health(
 
 \item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
 
-\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.}
+\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value}, i.e. the exposure level below which no health impacts are quantified, and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0, or same value as \code{threshold}, if it is entered. If \code{cutoff} is higher than \code{threshold}, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
+
+\item{threshold}{\code{Numeric value} specifying the \strong{effect threshold}, i.e. the exposure level from which the exposure-response function starts to show an effect. It is the anchor of the curve and is therefore subtracted from the exposure. Default: same value as the cut-off. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
 
 \item{pop_exp}{\code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. See Details for more info. \emph{Only applicable in AR pathways; always required.}}
 
@@ -125,6 +128,7 @@ Arguments only for \strong{RR} pathways
 \itemize{
  \item \code{geo_id_micro}, \code{geo_id_macro},
  \item \code{age_group}, \code{sex}, \code{info}, \code{population}
+ \item \code{threshold}
  \item \code{dw_central}, \code{dw_lower}, \code{dw_upper}
  \item \code{duration_central}, \code{duration_lower}, \code{duration_upper}
  }
@@ -141,9 +145,6 @@ The health metric you put in (e.g. absolute disease cases, deaths per 100 000 po
 
 \code{exp_central}, \code{exp_lower}, \code{exp_upper}
 In case of exposure bands enter only one exposure value per band (e.g. the means of the lower and upper bounds of the exposure bands).
-
-\code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper}
-The cutoff level refers to the exposure level below which no health effects occur in the same unit as the exposure. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
 
 \code{pop_exp}
 \emph{Only applicable in AR pathways; always required.} In AR pathways the population exposed per exposure category is multiplied with the corresonding category-specific risk to obtain the absolute number of people affected by the health outcome.
@@ -196,7 +197,8 @@ is available in the package vignette.
 More specifically, see chapters:
 \itemize{
  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{Relative risk}
- \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{Absolute risk}}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{Absolute risk}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 }
 \examples{
 # Goal: attribute lung cancer cases to population-weighted PM2.5 exposure

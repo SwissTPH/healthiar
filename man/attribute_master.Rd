@@ -12,6 +12,7 @@ attribute_master(
   cutoff_central = NULL,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
+  threshold = NULL,
   pop_exp = NULL,
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
@@ -54,7 +55,9 @@ attribute_master(
 
 \item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
 
-\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.}
+\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value}, i.e. the exposure level below which no health impacts are quantified, and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0, or same value as \code{threshold}, if it is entered. If \code{cutoff} is higher than \code{threshold}, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
+
+\item{threshold}{\code{Numeric value} specifying the \strong{effect threshold}, i.e. the exposure level from which the exposure-response function starts to show an effect. It is the anchor of the curve and is therefore subtracted from the exposure. Default: same value as the cut-off. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
 
 \item{pop_exp}{\code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. See Details for more info. \emph{Only applicable in AR pathways; always required.}}
 

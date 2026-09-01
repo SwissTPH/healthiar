@@ -22,6 +22,7 @@ attribute_mod(
   cutoff_central = NULL,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
+  threshold = NULL,
   bhd_central = NULL,
   bhd_lower = NULL,
   bhd_upper = NULL,
@@ -55,7 +56,9 @@ attribute_mod(
 
 \item{pop_exp}{\code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. See Details for more info. \emph{Only applicable in AR pathways; always required.}}
 
-\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.}
+\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value}, i.e. the exposure level below which no health impacts are quantified, and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0, or same value as \code{threshold}, if it is entered. If \code{cutoff} is higher than \code{threshold}, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
+
+\item{threshold}{\code{Numeric value} specifying the \strong{effect threshold}, i.e. the exposure level from which the exposure-response function starts to show an effect. It is the anchor of the curve and is therefore subtracted from the exposure. Default: same value as the cut-off. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
 
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{baseline health data} of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}}
 
