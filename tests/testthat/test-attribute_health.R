@@ -4283,7 +4283,7 @@ testthat::test_that("error if not lower>central>upper", {
         rr_upper = 1.20,
         rr_increment = 10,
         erf_shape = "log_linear"),
-    regexp = "rr_central must be higher than rr_lower and lower than rr_upper."
+    regexp = "rr_central must not be lower than rr_lower and not higher than rr_upper."
   )
 })
 
