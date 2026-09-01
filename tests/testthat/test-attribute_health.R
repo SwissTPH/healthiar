@@ -4453,6 +4453,77 @@ testthat::test_that("error if rr and erf_eq", {
     fixed = TRUE)
 })
 
+testthat::test_that("error if no erf at all", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        bhd_central = 1000),
+    regexp = "Please define the exposure-response function either with rr_central (together with erf_shape and rr_increment) or with erf_eq_central.",
+    fixed = TRUE)
+})
+
+testthat::test_that("error if rr but no erf_shape", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 10),
+    regexp = "If you pass a value for rr_central, you must also pass a value for erf_shape.",
+    fixed = TRUE)
+})
+
+testthat::test_that("error if rr but no rr_increment", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        erf_shape = "log_linear"),
+    regexp = "If you pass a value for rr_central, you must also pass a value for rr_increment.",
+    fixed = TRUE)
+})
+
+testthat::test_that("error if rr_increment is 0", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        rr_central = 1.05,
+        rr_increment = 0,
+        erf_shape = "log_linear"),
+    regexp = "rr_increment must be higher than 0.",
+    fixed = TRUE)
+})
+
+testthat::test_that("no error if erf defined with erf_eq instead of rr", {
+
+  testthat::expect_no_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 6,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        bhd_central = 1000,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"))
+})
+
 testthat::test_that("error if multi geo units but different length of geo-depending arguments", {
 
   testthat::expect_error(

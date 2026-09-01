@@ -629,6 +629,47 @@ validate_input_attribute <-
     }
 
 
+    ### error_if_no_erf #####
+
+    # The exposure-response function must be defined in one of the two ways.
+    # Otherwise the error comes later from get_risk() and is not understandable
+    if(!base::any(c("rr_central", "erf_eq_central") %in% arg_names_passed)){
+
+      base::stop(
+        base::paste0(
+          "Please define the exposure-response function ",
+          "either with rr_central (together with erf_shape and rr_increment) ",
+          "or with erf_eq_central."),
+        call. = FALSE)
+    }
+
+
+    ### error_if_rr_increment_is_0 #####
+
+    # The relative risk is re-scaled dividing the exposure by the increment,
+    # so an increment of 0 does not deliver any meaningful result
+    validate_args(
+      args = input_args_value,
+      arg_names = "rr_increment",
+      is_valid = function(x){x > 0},
+      message = "{arg} must be higher than 0.")
+
+
+    ### error_if_rr_without_shape_or_increment #####
+
+    # If the erf is defined by rr_, then the shape and the increment are needed
+    # to re-scale the relative risk to the exposure.
+    # Otherwise the error comes later from get_risk() and is not understandable
+    for (a in c("erf_shape", "rr_increment")){
+
+      validate_arg_pair(
+        present_arg_names = arg_names_passed,
+        arg_names = c("rr_central", a),
+        relation = "requires",
+        message = "If you pass a value for {arg_1}, you must also pass a value for {arg_2}.")
+    }
+
+
 
     ## Warnings ########################
 
