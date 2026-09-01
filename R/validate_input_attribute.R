@@ -38,7 +38,7 @@ validate_input_attribute <-
 
     numeric_args <-
       c(ci_args_wo_eq,
-        "prop_pop_exp", "pop_exp", "rr_increment", "population",
+        "prop_pop_exp", "pop_exp", "rr_increment", "population", "threshold",
         "year_of_analysis", "time_horizon", "min_age", "max_age",
         "fraction_lived")
 
