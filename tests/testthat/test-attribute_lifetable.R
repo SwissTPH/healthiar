@@ -799,6 +799,56 @@ testthat::test_that("error if exposuer lower than 0 | lifetable", {
   )
 })
 
+testthat::test_that("error if age_group is not a 1-year consecutive sequence", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+
+  attribute_lifetable_with_age_group <- function(age_group){
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
+      approach_exposure = "single_year",
+      exp_central = 8.85,
+      prop_pop_exp = 1,
+      cutoff_central = 5,
+      rr_central = 1.118,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      age_group = base::rep(age_group, times = 2),
+      sex = base::rep(c("male", "female"), each = base::length(age_group)),
+      population = base::rep(10000, 2 * base::length(age_group)),
+      bhd_central = base::rep(50, 2 * base::length(age_group)),
+      year_of_analysis = 2019,
+      min_age = 20)
+  }
+
+  regexp_age_group <-
+    "age_group must be a consecutive sequence of integer values where the difference between elements is 1."
+
+  # 5-year age groups
+  testthat::expect_error(
+    object = attribute_lifetable_with_age_group(base::seq(0, 95, 5)),
+    regexp = regexp_age_group,
+    fixed = TRUE)
+
+  # Gap in the sequence
+  testthat::expect_error(
+    object = attribute_lifetable_with_age_group(c(0:49, 60:99)),
+    regexp = regexp_age_group,
+    fixed = TRUE)
+
+  # Not integers
+  testthat::expect_error(
+    object = attribute_lifetable_with_age_group(base::seq(0, 49.5, 0.5)),
+    regexp = regexp_age_group,
+    fixed = TRUE)
+
+  # 1-year age groups must NOT raise the error
+  # (the age groups are repeated for each sex, so the check must be done
+  # on the distinct values and not on the vector as entered)
+  testthat::expect_no_error(
+    object = attribute_lifetable_with_age_group(0:99))
+})
+
 
 ## WARNING #########
 testthat::test_that("warning if any bhd = 0", {
