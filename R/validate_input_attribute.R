@@ -524,7 +524,7 @@ validate_input_attribute <-
             base::all(v <= input_args_value[[base::paste0(x, "_upper")]])},
         message =
           base::paste0("{arg} must not be lower than ", x, "_lower",
-                       " and lower than ", x, "_upper."))
+                       " and not higher than ", x, "_upper."))
     }
 
 
