@@ -384,9 +384,9 @@ incorporate the cut-off directly into the function definition.
 Therefore, `healthiar` issues an informative warning if both `erf_eq_`
 and a `cutoff_` are specified when using
 [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
-If your absolute risk function uses an unshifted policy threshold rather
-than an epidemiological cut-off, see chapter [Threshold additional to
-cut-off](#threshold-additional-to-cut-off).
+If your absolute risk function is parameterized on raw exposure levels
+rather than on the exposure above the cut-off, see chapter [Shifted
+vs. unshifted exposure-response functions](#shifted-vs-unshifted-erf).
 
 #### Function call
 
@@ -1446,17 +1446,17 @@ across the full time_horizon. If you set approach_exposure =
 “single_year”, results for premature deaths are available for one year
 (the year of analysis).
 
-| yoa | age_group | age_start | age_end | bhd | deaths | population | modification_factor | prob_survival | prob_survival_until_midyear | hazard_rate | age_end_over_min_age | prob_survival_mod | prob_survival_until_midyear_mod | hazard_rate_mod | midyear_population_yoa | entry_population_yoa | end_population_yoa | deaths_yoa | entry_population_yoa_plus_1 |
-|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| 2019 | 91 | 91 | 92 | 1498 | 1498 | 10560 | 0.9579656 | 0.8675391 | 0.9337696 | 0.1418561 | TRUE | 0.8727528 | 0.9363764 | 0.1358932 | 10589.481 | 11309.0 | 9869.961 | 1439.0387 | 11787.888 |
-| 2019 | 92 | 92 | 93 | 1412 | 1412 | 8728 | 0.9579656 | 0.8503286 | 0.9251643 | 0.1617782 | TRUE | 0.8561675 | 0.9280837 | 0.1549779 | 8755.542 | 9434.0 | 8077.084 | 1356.9158 | 9869.961 |
-| 2019 | 93 | 93 | 94 | 1302 | 1302 | 7140 | 0.9579656 | 0.8328841 | 0.9164420 | 0.1823529 | TRUE | 0.8393444 | 0.9196722 | 0.1746878 | 7165.166 | 7791.0 | 6539.333 | 1251.6674 | 8077.084 |
-| 2019 | 94 | 94 | 95 | 1155 | 1155 | 5655 | 0.9579656 | 0.8146811 | 0.9073406 | 0.2042440 | TRUE | 0.8217767 | 0.9108884 | 0.1956588 | 5677.112 | 6232.5 | 5121.723 | 1110.7766 | 6539.333 |
-| 2019 | 95 | 95 | 96 | 976 | 976 | 4332 | 0.9579656 | 0.7975104 | 0.8987552 | 0.2253001 | TRUE | 0.8051929 | 0.9025964 | 0.2158297 | 4350.515 | 4820.0 | 3881.030 | 938.9704 | 5121.723 |
-| 2019 | 96 | 96 | 97 | 772 | 772 | 3118 | 0.9579656 | 0.7796804 | 0.8898402 | 0.2475946 | TRUE | 0.7879595 | 0.8939798 | 0.2371871 | 3132.505 | 3504.0 | 2761.010 | 742.9898 | 3881.030 |
-| 2019 | 97 | 97 | 98 | 603 | 603 | 2234 | 0.9579656 | 0.7621771 | 0.8810885 | 0.2699194 | TRUE | 0.7710294 | 0.8855147 | 0.2585735 | 2245.222 | 2535.5 | 1954.945 | 580.5551 | 2761.010 |
-| 2019 | 98 | 98 | 99 | 443 | 443 | 1520 | 0.9579656 | 0.7456216 | 0.8728108 | 0.2914474 | TRUE | 0.7550044 | 0.8775022 | 0.2791965 | 1528.170 | 1741.5 | 1314.840 | 426.6598 | 1954.945 |
-| 2019 | 99 | 99 | 100 | 2231 | 2231 | 2246 | 0.9579656 | 0.3363082 | 0.6681541 | 0.9933215 | TRUE | 0.3552120 | 0.6776060 | 0.9515678 | 2277.773 | 3361.5 | 1194.045 | 2167.4549 | 1314.840 |
+| yoa | age_group | age_start | age_end | bhd | deaths | population | fraction_lived | modification_factor | prob_survival | prob_survival_until_midyear | hazard_rate | is_exposed_age | prob_survival_mod | prob_survival_until_midyear_mod | hazard_rate_mod | midyear_population_yoa | entry_population_yoa | end_population_yoa | deaths_yoa | entry_population_yoa_plus_1 |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| 2019 | 91 | 91 | 92 | 1498 | 1498 | 10560 | 0.5 | 0.9579656 | 0.8675391 | 0.9337696 | 0.1418561 | TRUE | 0.8727528 | 0.9363764 | 0.1358932 | 10589.481 | 11309.0 | 9869.961 | 1439.0387 | 11787.888 |
+| 2019 | 92 | 92 | 93 | 1412 | 1412 | 8728 | 0.5 | 0.9579656 | 0.8503286 | 0.9251643 | 0.1617782 | TRUE | 0.8561675 | 0.9280837 | 0.1549779 | 8755.542 | 9434.0 | 8077.084 | 1356.9158 | 9869.961 |
+| 2019 | 93 | 93 | 94 | 1302 | 1302 | 7140 | 0.5 | 0.9579656 | 0.8328841 | 0.9164420 | 0.1823529 | TRUE | 0.8393444 | 0.9196722 | 0.1746878 | 7165.166 | 7791.0 | 6539.333 | 1251.6674 | 8077.084 |
+| 2019 | 94 | 94 | 95 | 1155 | 1155 | 5655 | 0.5 | 0.9579656 | 0.8146811 | 0.9073406 | 0.2042440 | TRUE | 0.8217767 | 0.9108884 | 0.1956588 | 5677.112 | 6232.5 | 5121.723 | 1110.7766 | 6539.333 |
+| 2019 | 95 | 95 | 96 | 976 | 976 | 4332 | 0.5 | 0.9579656 | 0.7975104 | 0.8987552 | 0.2253001 | TRUE | 0.8051929 | 0.9025964 | 0.2158297 | 4350.515 | 4820.0 | 3881.030 | 938.9704 | 5121.723 |
+| 2019 | 96 | 96 | 97 | 772 | 772 | 3118 | 0.5 | 0.9579656 | 0.7796804 | 0.8898402 | 0.2475946 | TRUE | 0.7879595 | 0.8939798 | 0.2371871 | 3132.505 | 3504.0 | 2761.010 | 742.9898 | 3881.030 |
+| 2019 | 97 | 97 | 98 | 603 | 603 | 2234 | 0.5 | 0.9579656 | 0.7621771 | 0.8810885 | 0.2699194 | TRUE | 0.7710294 | 0.8855147 | 0.2585735 | 2245.222 | 2535.5 | 1954.945 | 580.5551 | 2761.010 |
+| 2019 | 98 | 98 | 99 | 443 | 443 | 1520 | 0.5 | 0.9579656 | 0.7456216 | 0.8728108 | 0.2914474 | TRUE | 0.7550044 | 0.8775022 | 0.2791965 | 1528.170 | 1741.5 | 1314.840 | 426.6598 | 1954.945 |
+| 2019 | 99 | 99 | 100 | 2231 | 2231 | 2246 | 0.5 | 0.9579656 | 0.3363082 | 0.6681541 | 0.9933215 | TRUE | 0.3552120 | 0.6776060 | 0.9515678 | 2277.773 | 3361.5 | 1194.045 | 2167.4549 | 1314.840 |
 
 ## YLD
 
@@ -1641,7 +1641,7 @@ Where:
 
 If the population exposure is described as a categorical rather than
 continuous exposure, the integrals may be converted to sums (WHO 2003;
-**Murray2003-spbm?**):
+C. J. L. Murray et al. 2003):
 
 ``` math
 PIF = \frac{\sum rr\_at\_exp_{i} \times PE_{i} - \sum rr\_at\_exp_{i}PE'_{i}}{\sum rr\_at\_exp_{i}PE_{i}}
@@ -1953,36 +1953,134 @@ population-weighted mean exposures for the (higher-level) geographic
 units in the column `exposure_mean` and the total population in each
 unit in column `population_total`.
 
-## Threshold additional to cut-off
+## Cut-off vs. threshold
 
 #### Goal
 
-E.g., to quantify health impacts in the exposure group 55dB+
-(calculation threshold) that are affected by a exposure above the effect
-threshold of 45 dB (cut-off).
+E.g., to quantify health impacts with an exposure-response function
+whose effect threshold differs from the counterfactual exposure of the
+assessment, such as noise assessments in which exposure data are only
+available above 55 dB although health effects already occur at lower
+exposures.
+
+#### Methodology
+
+`healthiar` distinguishes two exposure levels:
+
+- `threshold` is the **effect threshold**, i.e. the exposure level from
+  which the exposure-response function starts to show an effect. It is
+  the anchor of the curve and is therefore subtracted from the exposure.
+  The term is used in this sense in health risk assessment guidance,
+  e.g., for environmental noise (Engelmann et al. 2025).
+- `cutoff_...` is the exposure level below which no health impacts are
+  quantified. As long as it is identical to the effect threshold, it is
+  also the **counterfactual exposure** of the assessment. If it is
+  higher, it only determines which exposures are assessed, while the
+  effect threshold remains the counterfactual exposure. The term is used
+  in this sense in health risk assessment guidance, e.g., for air
+  pollution (WHO 2025). Be aware that a cut-off recommended in guidance
+  documents may reflect the exposure range covered by the evidence
+  rather than a demonstrated no-effect level, i.e. it does not
+  necessarily indicate that there are no health effects below it.
+
+Both levels are usually identical. Therefore it is enough to enter only
+one of them, and the other one takes the same value in the background.
+Accordingly, there are three possible combinations:
+
+**1. Cut-off equal to the effect threshold**
+
+This is the default situation. The exposure-response function is
+anchored at that level, which is therefore subtracted from the exposure,
+and the exposures below it get the risk at the reference level:
+
+``` math
+rr_{at\_exp} = f(\max(exp, cutoff) - cutoff)
+```
+
+The same result is obtained by entering only `cutoff_...`, only
+`threshold`, or both with the same value.
+
+**2. Cut-off higher than the effect threshold**
+
+The exposure-response function is truncated at the cut-off. The
+exposures above the cut-off are assessed with the risk referring to the
+effect threshold, while the exposures below the cut-off are treated as
+unexposed:
+
+``` math
+rr_{at\_exp} =
+\begin{cases}
+1, & exp < cutoff \\
+f(exp - threshold), & exp \ge cutoff
+\end{cases}
+```
+
+In the absolute risk approach, the exposures below the cut-off get an
+absolute risk of 0 instead of a relative risk of 1, i.e. in both
+approaches no health impacts are attributed to them.
+
+This is the case, e.g., in noise assessments under the Environmental
+Noise Directive, in which exposure data are only reported above a given
+exposure level (cut-off) although the exposure-response functions show
+effects already at lower exposures (effect threshold). Be aware that
+this results in a step in the exposure-response function at the cut-off
+and that the people exposed between the effect threshold and the cut-off
+get no attributable health impacts (i.e. a conservative estimate).
+
+**3. Cut-off lower than the effect threshold**
+
+The cut-off has no effect on the results and `healthiar` shows a
+warning. The reason is that the exposure-response function is anchored
+at the effect threshold, so the exposures below the effect threshold
+already get the risk at the reference level. A cut-off below the effect
+threshold cannot remove any additional exposure and the results are the
+same as if only `threshold` had been entered.
 
 #### Function call
 
-The function arguments `erf_eq_...` require a function as input. Instead
-of using a [`splinefun()`](https://rdrr.io/r/stats/splinefun.html) this
-can also be fulfilled by using a ‘function(c)’ which is of type
-‘function’.
+The example below refers to case 2 above: health impacts in the exposure
+group 55 dB+ (cut-off) that are affected by an exposure above the effect
+threshold of 45 dB.
+
+``` r
+
+results_cutoff_above_threshold <- healthiar::attribute_health(
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.055,
+  rr_increment = 10,
+  prop_pop_exp = c(300000,200000,150000,120000,100000,70000,60000)/10000000,
+  exp_central = c(47,52,57,62,67,72,77),
+  # Effect threshold, i.e. the anchor of the exposure-response function
+  threshold = 45,
+  # Cut-off, i.e. the exposures below it are not quantified
+  cutoff_central = 55,
+  bhd_central = 50000)$health_main$impact_rounded
+```
+
+Alternatively, the same result can be obtained by entering a
+user-defined exposure-response function in `erf_eq_...` which already
+includes the case distinction. This is only needed if the shape of the
+curve above the cut-off is not covered by the `erf_shape` options. The
+function arguments `erf_eq_...` require a function as input. Instead of
+using a [`splinefun()`](https://rdrr.io/r/stats/splinefun.html) this can
+also be fulfilled by using a ‘function(c)’ which is of type ‘function’.
 
 ``` r
 
 #setting up function parameters
-threshold_effect <- 45
+threshold <- 45
 RR <- 1.055
-threshold_calculation <- 55
+cutoff <- 55
 rr_increment <- 10
 
 # define categorical function, the ifelse condition enables the case distinction
 erf_function <- function(c){
-  output <- ifelse(c<threshold_calculation, 1, exp((log(RR)/rr_increment)*(c-threshold_effect)))
+  output <- ifelse(c<cutoff, 1, exp((log(RR)/rr_increment)*(c-threshold)))
   return(output)
 }
 # attribute_health
-results_catERF_different_calc_thesh <- healthiar::attribute_health(
+results_catERF_different_cutoff <- healthiar::attribute_health(
   approach_risk = "relative_risk",
   erf_eq_central = erf_function,
   prop_pop_exp = c(300000,200000,150000,120000,100000,70000,60000)/10000000,
@@ -1991,63 +2089,72 @@ results_catERF_different_calc_thesh <- healthiar::attribute_health(
   bhd_central=50000)$health_main$impact_rounded
 ```
 
-The used function is equal to
-``` math
-f(c) =
-\begin{cases}
-1, & c < \text{threshold} \\
-\exp\left( \frac{\log(RR)}{rr_{increment}} (c - threshold_{effect}) \right), & c \ge \text{threshold}
-\end{cases}
-```
-
-The categorical ERF curve created looks as follows.
+The categorical ERF curve created looks as follows. The step at the
+cut-off is clearly visible.
 
 ![ERF
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-98-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-99-1.png)
 
-It is important to distinguish between an epidemiological cut-off (which
-shifts the exposure-response function) and a policy or evaluation
-threshold (which truncates exposure without shifting the underlying
-curve shape):
+## Shifted vs. unshifted exposure-response functions
 
-1.  Shifted Epidemiological Cut-off (Default `healthiar` behavior):
-    Passing `cutoff` shifts the exposure axis so that
-    $`c = \text{exp} - \text{cutoff}`$ and grounds the excess risk at
-    zero at the cut-off point.
+#### Goal
 
-2.  Unshifted Policy Threshold: If you wish to calculate attributable
-    risk using a raw exposure-response function where exposure below a
-    policy threshold does not contribute to health outcomes, but without
-    shifting the curve horizontally, set `cutoff = 0` and pre-truncate
-    your exposure vector or incorporate
-    [`pmax()`](https://rdrr.io/r/base/Extremes.html) directly into your
-    string formula.
+E.g., to use an exposure-response function published in the literature
+which is parameterized on raw exposure levels instead of on the exposure
+above a cut-off.
+
+#### Methodology
+
+`healthiar` evaluates the exposure-response function entered in
+`erf_eq_...` at $`c = exp - threshold`$, and the threshold takes the
+value of the cut-off if it is not entered (see chapter [Cut-off
+vs. threshold](#cutoff-vs-threshold)). Therefore, the cut-off moves the
+exposure-response function horizontally:
+
+1.  Shifted exposure-response function. If a cut-off is entered, the
+    exposure-response function is moved by the cut-off,
+    i.e. $`c = exp - cutoff`$. The function must therefore be
+    parameterized on the exposure above the cut-off.
+
+2.  Unshifted exposure-response function. If no cut-off is entered,
+    nothing is subtracted from the exposure, i.e. $`c = exp`$. The
+    function must therefore be parameterized on raw exposure levels.
+
+Be aware that `healthiar` shows a warning if both `erf_eq_...` and
+`cutoff_...` are entered, because many exposure-response functions
+published in the literature already incorporate the cut-off in the
+function definition.
+
+#### Function call
 
 ``` r
 
-# Case A: Epidemiological Cut-off (Curve shifted by healthiar)
-epi_cutoff <- healthiar::attribute_health(
+# Case A: Shifted exposure-response function
+# The function is parameterized on the exposure above the cut-off
+shifted_erf <- healthiar::attribute_health(
   approach_risk = "absolute_risk",
   exp_central = c(50, 60, 70),
   pop_exp = c(300000,200000,150000),
   cutoff_central = 53,
   erf_eq_central = "78.9270 - 3.1162 * (c + 53) + 0.0342 * (c + 53)^2"
 )
-#> Warning: You entered a value for: cutoff_central. 
-#> Be aware that for the absolute risk, the cutoff arguments are not used.
-#> Thus, all exposures (including those below your entered cutoff)
-#> will contribute to the attributable health impact. 
-#> Consider handling the cutoff in the exposure-response function.
+#> Warning: You entered a value for: cutoff_central alongside absolute risk.
+#> Be aware that healthiar shifts the exposure in 'erf_eq' as c = (exp - cutoff).
 
-# Case B: Unshifted Policy Threshold (Exposure truncated, curve unshifted)
-policy_threshold <- healthiar::attribute_health(
+# Case B: Unshifted exposure-response function
+# The function is parameterized on raw exposure levels
+unshifted_erf <- healthiar::attribute_health(
   approach_risk = "absolute_risk",
   exp_central = c(50, 60, 70),
   pop_exp = c(300000,200000,150000),
-  cutoff_central = 0,
-  erf_eq_central = "ifelse(c >= 53, 78.9270 - 3.1162 * c + 0.0342 * c^2, 0)"
+  erf_eq_central = "78.9270 - 3.1162 * c + 0.0342 * c^2"
 )
 ```
+
+If you want the exposure-response function to stay unshifted but the
+exposures below a given level not to be quantified, enter a `cutoff_...`
+value higher than the `threshold` (see chapter [Cut-off
+vs. threshold](#cutoff-vs-threshold)).
 
 ## Economic dimension
 
@@ -2574,7 +2681,7 @@ eval(mdi$mdi_detailed$boxplot)
 ```
 
 ![Boxplot of Normalized Indicators and
-MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-113-1.png)
+MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-114-1.png)
 Analogeously, to reproduce the histogram run
 
 ``` r
@@ -2583,7 +2690,7 @@ eval(mdi$mdi_detailed$histogram)
 ```
 
 ![Histogram of MDI with normal
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-114-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-115-1.png)
 
 ------------------------------------------------------------------------
 
@@ -2726,6 +2833,14 @@ Tests.” *Psychometrika* 16 (3): 297–334.
 Devleesschauwer, Brecht, Paul Torgerson, Johannes Charlier, et al. 2022.
 *Prevalence: Tools for Prevalence Assessment Studies.*
 <https://cran.r-project.org/package=prevalence>.
+
+Engelmann, Nicole, Núria Blanes Guàrdia, Jaume Fons-Esteve, Danielle
+Vienneau, Eulàlia Peris, and Martin Röösli. 2025. *Environmental Noise
+Health Risk Assessment: Methodology for Assessing Health Risks Using
+Data Reported Under the Environmental Noise Directive*. ETC HE Report
+2023/11. European Topic Centre on Human Health; the Environment (ETC
+HE).
+<https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2023-11-environmental-noise-health-risk-assessment-methodology-for-assessing-health-risks-using-data-reported-under-the-environmental-noise-directive>.
 
 Frederick, Shane, George Loewenstein, and Ted O’Donoghue. 2002. “Time
 Discounting and Time Preference: A Critical Review.” *Journal of
@@ -2871,6 +2986,12 @@ of Healthy Life Years Lost in Europe*. World Health Organization.
 WHO. 2020. *Health Impact Assessment of Air Pollution: AirQ+ Life Table
 Manual*. World Health Organization - Regional Office for Europe.
 <https://www.who.int/europe/publications/i/item/WHO-EURO-2020-1559-41310-56212>.
+
+WHO. 2025. *Health Risks of Air Pollution in Europe: HRAPIE-2 Project.
+Updated Guidance on Concentration-Response Functions for Health Risk
+Assessment of Air Pollution in the WHO European Region*. World Health
+Organization - Regional Office for Europe.
+<https://www.who.int/europe/publications/i/item/9789289062633>.
 
 WHO Regional Office for Europe. 2014. *WHO Expert Meeting: Methods and
 Tools for Assessing the Health Risks of Air Pollution at Local, National

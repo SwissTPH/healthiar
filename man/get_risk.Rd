@@ -10,6 +10,7 @@ get_risk(
   rr_increment = NULL,
   erf_eq = NULL,
   cutoff = 0,
+  threshold = NULL,
   exp
 )
 }
@@ -22,7 +23,9 @@ get_risk(
 
 \item{erf_eq}{\code{String} or \code{function} specifying the \strong{exposure-response function} and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details and Examples sections below.}
 
-\item{cutoff}{\code{Numeric value} specifying the \strong{exposure cut-off value} (i.e. the exposure level below which no health effects occur) and (optionally) the corresponding lower and upper 95\% confidence interval bounds.}
+\item{cutoff}{\code{Numeric value} specifying the \strong{exposure cut-off value}, i.e. the exposure level below which no health impacts are quantified. Default: 0, or same value as \code{threshold}, if it is entered. If \code{cutoff} is higher than \code{threshold}, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
+
+\item{threshold}{\code{Numeric value} specifying the \strong{effect threshold}, i.e. the exposure level from which the exposure-response function starts to show an effect. It is the anchor of the curve and is therefore subtracted from the exposure. Default: same value as the cut-off. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
 
 \item{exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor (e.g. annual population-weighted mean) and (optionally) the corresponding lower and upper bound of the 95\% confidence interval.}
 }
@@ -58,7 +61,8 @@ Detailed information about the methodology
 is available in the package vignette.
 More specifically, see chapters:
 \itemize{
- \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 }
 \examples{
 
@@ -69,6 +73,17 @@ get_risk(
   erf_shape = "linear",
   exp = 10,
   cutoff = 5
+)
+
+# Goal: scale relative risk to observed noise exposure levels assuming
+# health effects above 45 dB (threshold) but exposure data only above 55 dB (cutoff)
+get_risk(
+  rr = 1.055,
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  exp = c(47, 52, 57, 62, 67, 72, 77),
+  cutoff = 55,
+  threshold = 45
 )
 
 # Goal: determine the absolute risk for high annoyance at specific noise exposure levels

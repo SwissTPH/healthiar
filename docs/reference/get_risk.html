@@ -9,7 +9,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1613</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1614</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,6 +52,7 @@
 <span>  rr_increment <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  erf_eq <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cutoff <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  threshold <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">exp</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -77,7 +78,11 @@
 
 
 <dt id="arg-cutoff">cutoff<a class="anchor" aria-label="anchor" href="#arg-cutoff"></a></dt>
-<dd><p><code>Numeric value</code> specifying the <strong>exposure cut-off value</strong> (i.e. the exposure level below which no health effects occur) and (optionally) the corresponding lower and upper 95% confidence interval bounds.</p></dd>
+<dd><p><code>Numeric value</code> specifying the <strong>exposure cut-off value</strong>, i.e. the exposure level below which no health impacts are quantified. Default: 0, or same value as <code>threshold</code>, if it is entered. If <code>cutoff</code> is higher than <code>threshold</code>, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter <em>Cut-off vs. threshold</em>.</p></dd>
+
+
+<dt id="arg-threshold">threshold<a class="anchor" aria-label="anchor" href="#arg-threshold"></a></dt>
+<dd><p><code>Numeric value</code> specifying the <strong>effect threshold</strong>, i.e. the exposure level from which the exposure-response function starts to show an effect. It is the anchor of the curve and is therefore subtracted from the exposure. Default: same value as the cut-off. Expressed in the same unit as the exposure. See the vignette chapter <em>Cut-off vs. threshold</em>.</p></dd>
 
 
 <dt id="arg-exp">exp<a class="anchor" aria-label="anchor" href="#arg-exp"></a></dt>
@@ -111,6 +116,7 @@ of the exposure-response function
 (including corresponding equations and literature)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk">relative risk</a></p></li>
+<li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold">Cut-off vs. threshold</a></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -147,6 +153,18 @@ ISSN 1476-069X, <a href="https://doi.org/10.1186/s12940-025-01250-y" class="exte
 <span class="r-in"><span>  cutoff <span class="op">=</span> <span class="fl">5</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.025</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Goal: scale relative risk to observed noise exposure levels assuming</span></span></span>
+<span class="r-in"><span><span class="co"># health effects above 45 dB (threshold) but exposure data only above 55 dB (cutoff)</span></span></span>
+<span class="r-in"><span><span class="fu">get_risk</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  rr <span class="op">=</span> <span class="fl">1.055</span>,</span></span>
+<span class="r-in"><span>  rr_increment <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>  erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span></span>
+<span class="r-in"><span>  exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">47</span>, <span class="fl">52</span>, <span class="fl">57</span>, <span class="fl">62</span>, <span class="fl">67</span>, <span class="fl">72</span>, <span class="fl">77</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  cutoff <span class="op">=</span> <span class="fl">55</span>,</span></span>
+<span class="r-in"><span>  threshold <span class="op">=</span> <span class="fl">45</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.000000 1.000000 1.066358 1.095290 1.125007 1.155531 1.186883</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Goal: determine the absolute risk for high annoyance at specific noise exposure levels</span></span></span>
 <span class="r-in"><span><span class="fu">get_risk</span><span class="op">(</span></span></span>

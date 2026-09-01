@@ -77,7 +77,8 @@
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 #'
 #'
 #' \strong{Conversion of multi-year to single year age groups}
@@ -205,6 +206,7 @@ attribute_lifetable <-
     # AR & RR
     exp_central = NULL, exp_lower = NULL, exp_upper = NULL,
     cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
+    threshold = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
     # RR ONLY
     rr_central = NULL, rr_lower = NULL, rr_upper = NULL,

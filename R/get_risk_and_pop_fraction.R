@@ -77,6 +77,12 @@ get_risk_and_pop_fraction <-
     if ( !base::any(base::grepl("erf_eq", names_input_table)) ) {
       erf_eq <- NULL }
 
+    # Same for threshold, which is only a column in input_table
+    # if the user entered a value for it.
+    # If NULL, get_risk() anchors the exposure-response function at the cutoff
+    if ( ! "threshold" %in% names_input_table ) {
+      threshold <- NULL }
+
     input_with_risk_and_pop_fraction <-
       input_table |>
       ## Add pop fraction type
@@ -92,6 +98,7 @@ get_risk_and_pop_fraction <-
                           rr = rr,
                           exp = exp,
                           cutoff = cutoff,
+                          threshold = threshold,
                           rr_increment = rr_increment,
                           erf_shape = erf_shape,
                           erf_eq = erf_eq))
@@ -104,6 +111,7 @@ get_risk_and_pop_fraction <-
                           rr = rr,
                           exp = exp_scen_1,
                           cutoff = cutoff,
+                          threshold = threshold,
                           rr_increment = rr_increment,
                           erf_shape = erf_shape,
                           erf_eq = erf_eq),
@@ -112,6 +120,7 @@ get_risk_and_pop_fraction <-
                           rr = rr,
                           exp = exp_scen_2,
                           cutoff = cutoff,
+                          threshold = threshold,
                           rr_increment = rr_increment,
                           erf_shape = erf_shape,
                           erf_eq = erf_eq))

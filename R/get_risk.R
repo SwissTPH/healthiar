@@ -9,7 +9,7 @@
 #' @inheritParams attribute_master
 #' @param rr \code{Numeric value} or \code{numeric vector} specifying the \strong{relative risk} estimate(s) and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Not required if the \code{erf_eq} argument is already specified.
 #' @param exp \code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor (e.g. annual population-weighted mean) and (optionally) the corresponding lower and upper bound of the 95\% confidence interval.
-#' @param cutoff \code{Numeric value} specifying the \strong{exposure cut-off value} (i.e. the exposure level below which no health effects occur) and (optionally) the corresponding lower and upper 95\% confidence interval bounds.
+#' @param cutoff \code{Numeric value} specifying the \strong{exposure cut-off value}, i.e. the exposure level below which no health impacts are quantified. Default: 0, or same value as \code{threshold}, if it is entered. If \code{cutoff} is higher than \code{threshold}, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.
 #' @param erf_eq \code{String} or \code{function} specifying the \strong{exposure-response function} and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details and Examples sections below.
 
 # DETAILS ######################################################################
@@ -39,7 +39,8 @@
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{relative risk}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 #'
 # VALUE ########################################################################
 #' @returns
@@ -55,6 +56,17 @@
 #'   erf_shape = "linear",
 #'   exp = 10,
 #'   cutoff = 5
+#' )
+#'
+#' # Goal: scale relative risk to observed noise exposure levels assuming
+#' # health effects above 45 dB (threshold) but exposure data only above 55 dB (cutoff)
+#' get_risk(
+#'   rr = 1.055,
+#'   rr_increment = 10,
+#'   erf_shape = "log_linear",
+#'   exp = c(47, 52, 57, 62, 67, 72, 77),
+#'   cutoff = 55,
+#'   threshold = 45
 #' )
 #'
 #' # Goal: determine the absolute risk for high annoyance at specific noise exposure levels
@@ -99,16 +111,36 @@ get_risk <-
     rr_increment = NULL,
     erf_eq = NULL,
     cutoff = 0,
+    threshold = NULL,
     exp
   ) {
 
-    # Check if exposure is upper than cutoff
-    # Otherwise the value of the exposure must be the cutoff (minimum possible)
+    # If the user does not separate the effect threshold from the cut-off,
+    # the exposure-response function is anchored at the cut-off (default case)
+    if (base::is.null(threshold)) { threshold <- cutoff }
+
+    # The threshold can be NA for some cases only, e.g. in multiexpose()
+    # if the threshold was entered for one exposure but not for the other one.
+    # Also in that case the cut-off is taken as threshold
+    if (base::any(base::is.na(threshold))) {
+      threshold <- base::ifelse(base::is.na(threshold), cutoff, threshold)
+    }
+
+    # Identify the exposures below the cut-off.
+    # Only relevant if the cut-off is higher than the effect threshold,
+    # e.g. noise exposure data are only available above 55 dB (cut-off)
+    # while health effects already occur above 45 dB (threshold).
+    # In that case the exposures below the cut-off are not quantified,
+    # i.e. the population is treated as unexposed (risk at reference level)
+    is_below_cutoff <- cutoff > threshold & exp < cutoff
+
+    # Check if exposure is upper than the effect threshold
+    # Otherwise the value of the exposure must be the threshold (minimum possible)
     exp <-
-      base::ifelse(exp > cutoff,
+      base::ifelse(exp > threshold,
                    exp,
-                   # if exp < cutoff, then exp should be cutoff
-                   cutoff)
+                   # if exp < threshold, then exp should be threshold
+                   threshold)
 
     # Obtain rr_at_exp, i.e. the relative risk the level of exposure
     # instead of for the increment
@@ -119,16 +151,16 @@ get_risk <-
       # If get_risk is used independently of attribute_health()
       # and only one function is entered by the user
       if(base::is.function(erf_eq)){
-        rr_at_exp <- erf_eq(exp - cutoff)
+        rr_at_exp <- erf_eq(exp - threshold)
         # when get_risk() is used inside attribute_health(),
         # erf_eq that are functions are encapsulated in lists to be included in tibbles
         # That is why we need is.list() and map()
         } else if (base::is.list(erf_eq) && base::all(purrr::map_lgl(erf_eq, base::is.function))) {
 
-           rr_at_exp <- base::mapply(function(f, cval) f(cval), erf_eq, exp - cutoff)
+           rr_at_exp <- base::mapply(function(f, cval) f(cval), erf_eq, exp - threshold)
            # A map() approach does not work here. Therefore, mapply
            # rr_at_exp <- erf_eq |>
-           #   purrr::map_dbl(~ .x(exp - cutoff))
+           #   purrr::map_dbl(~ .x(exp - threshold))
 
 
           # If the function is a string (vector)
@@ -144,7 +176,7 @@ get_risk <-
           #_dbl to convert list of functions into vector with numberic values
           purrr::map2_dbl(
             .x = erf_fun, 
-            .y = exp - cutoff, 
+            .y = exp - threshold, 
             ~ .x(.y))
 
         }
@@ -157,27 +189,34 @@ get_risk <-
       # Calculate the rr_at_exp based on erf_shape
       if (erf_shape == "linear") {
         # LINEAR ####
-        rr_at_exp <- 1 + ( (rr - 1) * (exp - cutoff) / rr_increment )
+        rr_at_exp <- 1 + ( (rr - 1) * (exp - threshold) / rr_increment )
 
       } else if (erf_shape == "log_linear") {
         # LOG-LINEAR ####
-        rr_at_exp <- base::exp( base::log(rr) * (exp - cutoff) / rr_increment )
+        rr_at_exp <- base::exp( base::log(rr) * (exp - threshold) / rr_increment )
 
       } else if (erf_shape == "log_log") {
         ## This curve below follows the definition by Pozzer 2022 (http://doi.org/10.1029/2022GH000711)
         ## It is defined at all exposures and RR equals RR₁₀ when Ci=C0+10 exactly.
-        ## rr_at_exp = ((exp + 1) / (cutoff + 1)) ^ beta, where beta = log(rr) / ( log(rr_increment + cutoff + 1) - log(cutoff + 1) )
-        rr_at_exp <- ( ( exp + 1 ) / ( cutoff + 1 ) )^( base::log(rr) / ( base::log(rr_increment + cutoff + 1) - base::log(cutoff + 1) ) )
+        ## rr_at_exp = ((exp + 1) / (threshold + 1)) ^ beta, where beta = log(rr) / ( log(rr_increment + threshold + 1) - log(threshold + 1) )
+        rr_at_exp <- ( ( exp + 1 ) / ( threshold + 1 ) )^( base::log(rr) / ( base::log(rr_increment + threshold + 1) - base::log(threshold + 1) ) )
 
       } else if (erf_shape == "linear_log") {
         # LINEAR-LOG ####
         ## This curve below has been proposed by ChatGPT: 
         # it's an adaption of the initially proposed curve with the structure of Pozzer 2022's log-log ERF
 
-        rr_at_exp <- 1 + ( ( rr - 1 ) / ( base::log(rr_increment + cutoff + 1) - base::log(cutoff + 1) ) ) * base::log( (exp + 1) / (cutoff + 1) )
+        rr_at_exp <- 1 + ( ( rr - 1 ) / ( base::log(rr_increment + threshold + 1) - base::log(threshold + 1) ) ) * base::log( (exp + 1) / (threshold + 1) )
     }
   }
-      
+
+    # Truncate the exposure-response function below the cut-off
+    # if the cut-off is higher than the effect threshold (see above).
+    # The if condition keeps the default case (cut-off = threshold) untouched,
+    # which matters for user-defined erf_eq that are not anchored at 1
+    if (base::any(is_below_cutoff)) {
+      rr_at_exp <- base::ifelse(is_below_cutoff, 1, rr_at_exp)
+    }
 
     return(rr_at_exp)
 

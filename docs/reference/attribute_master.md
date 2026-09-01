@@ -15,6 +15,7 @@ attribute_master(
   cutoff_central = NULL,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
+  threshold = NULL,
   pop_exp = NULL,
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
@@ -69,9 +70,22 @@ attribute_master(
 
 - cutoff_central, cutoff_lower, cutoff_upper:
 
-  `Numeric value` specifying the **exposure cut-off value** and
+  `Numeric value` specifying the **exposure cut-off value**, i.e. the
+  exposure level below which no health impacts are quantified, and
   (optionally) the corresponding lower and upper 95% confidence interval
-  bounds. Default: 0. See Details for more info.
+  bounds. Default: 0, or same value as `threshold`, if it is entered. If
+  `cutoff` is higher than `threshold`, the exposure-response function is
+  truncated at the cut-off value. Expressed in the same unit as the
+  exposure. See the vignette chapter *Cut-off vs. threshold*.
+
+- threshold:
+
+  `Numeric value` specifying the **effect threshold**, i.e. the exposure
+  level from which the exposure-response function starts to show an
+  effect. It is the anchor of the curve and is therefore subtracted from
+  the exposure. Default: same value as the cut-off. Expressed in the
+  same unit as the exposure. See the vignette chapter *Cut-off vs.
+  threshold*.
 
 - pop_exp:
 

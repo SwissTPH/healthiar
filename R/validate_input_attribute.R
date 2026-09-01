@@ -38,7 +38,7 @@ validate_input_attribute <-
 
     numeric_args <-
       c(ci_args_wo_eq,
-        "prop_pop_exp", "pop_exp", "rr_increment", "population",
+        "prop_pop_exp", "pop_exp", "rr_increment", "population", "threshold",
         "year_of_analysis", "time_horizon", "min_age", "max_age",
         "fraction_lived")
 
@@ -696,7 +696,24 @@ validate_input_attribute <-
 
     # Call function only if absolute risk
 
-    warning_if_ar_and_cutoff(var_names = base::paste0("cutoff", ci_suffix))
+    warning_if_ar_and_cutoff(var_names = c(base::paste0("cutoff", ci_suffix), "threshold"))
+
+
+    ### warning_if_threshold_higher_than_cutoff #####
+    # The cut-off is only effective if it is higher than the effect threshold.
+    # Otherwise it has no impact on the results
+    # (exposures below the effect threshold get the risk at the reference level)
+    if(!base::is.null(input_args_value[["threshold"]]) &&
+       !base::is.null(input_args_value[["cutoff_central"]]) &&
+       # A cutoff of 0 means that there is no cutoff, so it takes the threshold
+       # value in compile_input() and there is nothing to warn about
+       !base::all(input_args_value[["cutoff_central"]] == 0) &&
+       base::all(input_args_value$threshold > input_args_value$cutoff_central)){
+
+      base::warning(
+        "The threshold is higher than the cut-off. Therefore, the cut-off has no effect on the results.",
+        call. = FALSE)
+    }
 
 
 
@@ -719,7 +736,11 @@ validate_input_attribute <-
       }
     }
 
-    warning_if_rr_and_no_var_with_default(var_name = "cutoff_central", default = 0)
+    # If threshold is entered, then cutoff takes the same value (see compile_input())
+    # and therefore 0 is not assumed as default
+    if(base::is.null(input_args_value[["threshold"]])){
+      warning_if_rr_and_no_var_with_default(var_name = "cutoff_central", default = 0)
+    }
 
 
   }

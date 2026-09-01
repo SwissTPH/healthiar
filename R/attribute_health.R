@@ -31,6 +31,7 @@
 #' \itemize{
 #'  \item \code{geo_id_micro}, \code{geo_id_macro},
 #'  \item \code{age_group}, \code{sex}, \code{info}, \code{population}
+#'  \item \code{threshold}
 #'  \item \code{dw_central}, \code{dw_lower}, \code{dw_upper}
 #'  \item \code{duration_central}, \code{duration_lower}, \code{duration_upper}
 #'  }
@@ -51,9 +52,6 @@
 #'
 #' \code{exp_central}, \code{exp_lower}, \code{exp_upper}
 #' In case of exposure bands enter only one exposure value per band (e.g. the means of the lower and upper bounds of the exposure bands).
-#'
-#' \code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper}
-#' The cutoff level refers to the exposure level below which no health effects occur in the same unit as the exposure. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
 #'
 #' \code{pop_exp}
 #' \emph{Only applicable in AR pathways; always required.} In AR pathways the population exposed per exposure category is multiplied with the corresonding category-specific risk to obtain the absolute number of people affected by the health outcome.
@@ -106,7 +104,8 @@
 #' More specifically, see chapters:
 #' \itemize{
 #'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{Relative risk}
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{Absolute risk}}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{Absolute risk}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 #'
 #'
 # VALUE ########################################################################
@@ -211,6 +210,7 @@ attribute_health <-
     approach_risk = "relative_risk",
     exp_central, exp_lower = NULL, exp_upper = NULL,
     cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
+    threshold = NULL,
     pop_exp = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
     # RR ONLY

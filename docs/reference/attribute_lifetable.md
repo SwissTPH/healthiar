@@ -28,6 +28,7 @@ attribute_lifetable(
   cutoff_central = 0,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
+  threshold = NULL,
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
   erf_eq_upper = NULL,
@@ -124,9 +125,22 @@ attribute_lifetable(
 
 - cutoff_central, cutoff_lower, cutoff_upper:
 
-  `Numeric value` specifying the **exposure cut-off value** and
+  `Numeric value` specifying the **exposure cut-off value**, i.e. the
+  exposure level below which no health impacts are quantified, and
   (optionally) the corresponding lower and upper 95% confidence interval
-  bounds. Default: 0. See Details for more info.
+  bounds. Default: 0, or same value as `threshold`, if it is entered. If
+  `cutoff` is higher than `threshold`, the exposure-response function is
+  truncated at the cut-off value. Expressed in the same unit as the
+  exposure. See the vignette chapter *Cut-off vs. threshold*.
+
+- threshold:
+
+  `Numeric value` specifying the **effect threshold**, i.e. the exposure
+  level from which the exposure-response function starts to show an
+  effect. It is the anchor of the curve and is therefore subtracted from
+  the exposure. Default: same value as the cut-off. Expressed in the
+  same unit as the exposure. See the vignette chapter *Cut-off vs.
+  threshold*.
 
 - erf_eq_central, erf_eq_lower, erf_eq_upper:
 
@@ -278,6 +292,9 @@ available in the package vignette. More specifically, see chapters:
 
 - [YLL and deaths with life
   table](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table)
+
+- [Cut-off vs.
+  threshold](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold)
 
 **Conversion of multi-year to single year age groups**
 

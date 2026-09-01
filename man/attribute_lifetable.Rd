@@ -25,6 +25,7 @@ attribute_lifetable(
   cutoff_central = 0,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
+  threshold = NULL,
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
   erf_eq_upper = NULL,
@@ -66,7 +67,9 @@ fraction of the age interval lived by individuals who die within that interval. 
 
 \item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
 
-\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.}
+\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value}, i.e. the exposure level below which no health impacts are quantified, and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0, or same value as \code{threshold}, if it is entered. If \code{cutoff} is higher than \code{threshold}, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
+
+\item{threshold}{\code{Numeric value} specifying the \strong{effect threshold}, i.e. the exposure level from which the exposure-response function starts to show an effect. It is the anchor of the curve and is therefore subtracted from the exposure. Default: same value as the cut-off. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
 
 \item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the \strong{exposure-response function} and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info. \emph{Required in AR pathways; in RR pathways required only if \code{rr_...} argument(s) not specified.}}
 
@@ -173,7 +176,8 @@ Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
 \itemize{
- \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 
 
 \strong{Conversion of multi-year to single year age groups}

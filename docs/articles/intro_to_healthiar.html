@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1613</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1614</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -429,10 +429,10 @@ exposure levels that already incorporate the cut-off directly into the
 function definition. Therefore, <code>healthiar</code> issues an
 informative warning if both <code>erf_eq_</code> and a
 <code>cutoff_</code> are specified when using
-<code><a href="../reference/attribute_health.html">attribute_health()</a></code>. If your absolute risk function uses an
-unshifted policy threshold rather than an epidemiological cut-off, see
-chapter <a href="#threshold-additional-to-cut-off">Threshold additional
-to cut-off</a>.</p>
+<code><a href="../reference/attribute_health.html">attribute_health()</a></code>. If your absolute risk function is
+parameterized on raw exposure levels rather than on the exposure above
+the cut-off, see chapter <a href="#shifted-vs-unshifted-erf">Shifted
+vs. unshifted exposure-response functions</a>.</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-1">Function call<a class="anchor" aria-label="anchor" href="#function-call-1"></a>
@@ -2263,7 +2263,7 @@ are also available.</p>
 accumulated across the full time_horizon. If you set approach_exposure =
 “single_year”, results for premature deaths are available for one year
 (the year of analysis).</p>
-<table class="table">
+<table style="width:100%;" class="table">
 <colgroup>
 <col width="1%">
 <col width="3%">
@@ -2272,14 +2272,15 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <col width="1%">
 <col width="2%">
 <col width="3%">
+<col width="4%">
 <col width="6%">
 <col width="4%">
 <col width="8%">
 <col width="3%">
-<col width="6%">
+<col width="4%">
 <col width="5%">
-<col width="10%">
-<col width="5%">
+<col width="9%">
+<col width="4%">
 <col width="7%">
 <col width="6%">
 <col width="5%">
@@ -2294,11 +2295,12 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <th align="right">bhd</th>
 <th align="right">deaths</th>
 <th align="right">population</th>
+<th align="right">fraction_lived</th>
 <th align="right">modification_factor</th>
 <th align="right">prob_survival</th>
 <th align="right">prob_survival_until_midyear</th>
 <th align="right">hazard_rate</th>
-<th align="left">age_end_over_min_age</th>
+<th align="left">is_exposed_age</th>
 <th align="right">prob_survival_mod</th>
 <th align="right">prob_survival_until_midyear_mod</th>
 <th align="right">hazard_rate_mod</th>
@@ -2317,6 +2319,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">1498</td>
 <td align="right">1498</td>
 <td align="right">10560</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.8675391</td>
 <td align="right">0.9337696</td>
@@ -2339,6 +2342,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">1412</td>
 <td align="right">1412</td>
 <td align="right">8728</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.8503286</td>
 <td align="right">0.9251643</td>
@@ -2361,6 +2365,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">1302</td>
 <td align="right">1302</td>
 <td align="right">7140</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.8328841</td>
 <td align="right">0.9164420</td>
@@ -2383,6 +2388,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">1155</td>
 <td align="right">1155</td>
 <td align="right">5655</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.8146811</td>
 <td align="right">0.9073406</td>
@@ -2405,6 +2411,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">976</td>
 <td align="right">976</td>
 <td align="right">4332</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.7975104</td>
 <td align="right">0.8987552</td>
@@ -2427,6 +2434,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">772</td>
 <td align="right">772</td>
 <td align="right">3118</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.7796804</td>
 <td align="right">0.8898402</td>
@@ -2449,6 +2457,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">603</td>
 <td align="right">603</td>
 <td align="right">2234</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.7621771</td>
 <td align="right">0.8810885</td>
@@ -2471,6 +2480,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">443</td>
 <td align="right">443</td>
 <td align="right">1520</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.7456216</td>
 <td align="right">0.8728108</td>
@@ -2493,6 +2503,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <td align="right">2231</td>
 <td align="right">2231</td>
 <td align="right">2246</td>
+<td align="right">0.5</td>
 <td align="right">0.9579656</td>
 <td align="right">0.3363082</td>
 <td align="right">0.6681541</td>
@@ -2719,8 +2730,7 @@ integral form <span class="citation">(WHO 2003; C. J. L. Murray et al.
 <h6 id="categorical-exposure-form">Categorical Exposure Form<a class="anchor" aria-label="anchor" href="#categorical-exposure-form"></a>
 </h6>
 <p>If the population exposure is described as a categorical rather than
-continuous exposure, the integrals may be converted to sums <span class="citation">(WHO 2003;
-<strong>Murray2003-spbm?</strong>)</span>:</p>
+continuous exposure, the integrals may be converted to sums <span class="citation">(WHO 2003; C. J. L. Murray et al. 2003)</span>:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>I</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mo>∑</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mo>×</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub><mo>−</mo><mo>∑</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mi>P</mi><msubsup><mi>E</mi><mi>i</mi><mo>′</mo></msubsup></mrow><mrow><mo>∑</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">PIF = \frac{\sum rr\_at\_exp_{i} \times PE_{i} - \sum rr\_at\_exp_{i}PE'_{i}}{\sum rr\_at\_exp_{i}PE_{i}}</annotation></semantics></math></p>
 <p>Where:</p>
 <ul>
@@ -3087,90 +3097,202 @@ in each unit in column <code>population_total</code>.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="threshold-additional-to-cut-off">Threshold additional to cut-off<a class="anchor" aria-label="anchor" href="#threshold-additional-to-cut-off"></a>
+<h2 id="cutoff-vs-threshold">Cut-off vs. threshold<a class="anchor" aria-label="anchor" href="#cutoff-vs-threshold"></a>
 </h2>
 <div class="section level4">
 <h4 id="goal-18">Goal<a class="anchor" aria-label="anchor" href="#goal-18"></a>
 </h4>
-<p>E.g., to quantify health impacts in the exposure group 55dB+
-(calculation threshold) that are affected by a exposure above the effect
-threshold of 45 dB (cut-off).</p>
+<p>E.g., to quantify health impacts with an exposure-response function
+whose effect threshold differs from the counterfactual exposure of the
+assessment, such as noise assessments in which exposure data are only
+available above 55 dB although health effects already occur at lower
+exposures.</p>
+</div>
+<div class="section level4">
+<h4 id="methodology-10">Methodology<a class="anchor" aria-label="anchor" href="#methodology-10"></a>
+</h4>
+<p><code>healthiar</code> distinguishes two exposure levels:</p>
+<ul>
+<li>
+<code>threshold</code> is the <strong>effect threshold</strong>,
+i.e. the exposure level from which the exposure-response function starts
+to show an effect. It is the anchor of the curve and is therefore
+subtracted from the exposure. The term is used in this sense in health
+risk assessment guidance, e.g., for environmental noise <span class="citation">(Engelmann et al. 2025)</span>.</li>
+<li>
+<code>cutoff_...</code> is the exposure level below which no health
+impacts are quantified. As long as it is identical to the effect
+threshold, it is also the <strong>counterfactual exposure</strong> of
+the assessment. If it is higher, it only determines which exposures are
+assessed, while the effect threshold remains the counterfactual
+exposure. The term is used in this sense in health risk assessment
+guidance, e.g., for air pollution <span class="citation">(WHO
+2025)</span>. Be aware that a cut-off recommended in guidance documents
+may reflect the exposure range covered by the evidence rather than a
+demonstrated no-effect level, i.e. it does not necessarily indicate that
+there are no health effects below it.</li>
+</ul>
+<p>Both levels are usually identical. Therefore it is enough to enter
+only one of them, and the other one takes the same value in the
+background. Accordingly, there are three possible combinations:</p>
+<p><strong>1. Cut-off equal to the effect threshold</strong></p>
+<p>This is the default situation. The exposure-response function is
+anchored at that level, which is therefore subtracted from the exposure,
+and the exposures below it get the risk at the reference level:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><msub><mi>r</mi><mrow><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi></mrow></msub><mo>=</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>,</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+rr_{at\_exp} = f(\max(exp, cutoff) - cutoff)
+</annotation></semantics></math></p>
+<p>The same result is obtained by entering only <code>cutoff_...</code>,
+only <code>threshold</code>, or both with the same value.</p>
+<p><strong>2. Cut-off higher than the effect threshold</strong></p>
+<p>The exposure-response function is truncated at the cut-off. The
+exposures above the cut-off are assessed with the risk referring to the
+effect threshold, while the exposures below the cut-off are treated as
+unexposed:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><msub><mi>r</mi><mrow><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi></mrow></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>1</mn><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>e</mi><mi>x</mi><mi>p</mi><mo>&lt;</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>t</mi><mi>h</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>h</mi><mi>o</mi><mi>l</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>e</mi><mi>x</mi><mi>p</mi><mo>≥</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
+rr_{at\_exp} =
+\begin{cases}
+1, &amp; exp &lt; cutoff \\
+f(exp - threshold), &amp; exp \ge cutoff
+\end{cases}
+</annotation></semantics></math></p>
+<p>In the absolute risk approach, the exposures below the cut-off get an
+absolute risk of 0 instead of a relative risk of 1, i.e. in both
+approaches no health impacts are attributed to them.</p>
+<p>This is the case, e.g., in noise assessments under the Environmental
+Noise Directive, in which exposure data are only reported above a given
+exposure level (cut-off) although the exposure-response functions show
+effects already at lower exposures (effect threshold). Be aware that
+this results in a step in the exposure-response function at the cut-off
+and that the people exposed between the effect threshold and the cut-off
+get no attributable health impacts (i.e. a conservative estimate).</p>
+<p><strong>3. Cut-off lower than the effect threshold</strong></p>
+<p>The cut-off has no effect on the results and <code>healthiar</code>
+shows a warning. The reason is that the exposure-response function is
+anchored at the effect threshold, so the exposures below the effect
+threshold already get the risk at the reference level. A cut-off below
+the effect threshold cannot remove any additional exposure and the
+results are the same as if only <code>threshold</code> had been
+entered.</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-20">Function call<a class="anchor" aria-label="anchor" href="#function-call-20"></a>
 </h4>
-<p>The function arguments <code>erf_eq_...</code> require a function as
-input. Instead of using a <code><a href="https://rdrr.io/r/stats/splinefun.html" class="external-link">splinefun()</a></code> this can also be
-fulfilled by using a ‘function(c)’ which is of type ‘function’.</p>
+<p>The example below refers to case 2 above: health impacts in the
+exposure group 55 dB+ (cut-off) that are affected by an exposure above
+the effect threshold of 45 dB.</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results_cutoff_above_threshold</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
+<span>  approach_risk <span class="op">=</span> <span class="st">"relative_risk"</span>,</span>
+<span>  erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span>
+<span>  rr_central <span class="op">=</span> <span class="fl">1.055</span>,</span>
+<span>  rr_increment <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  prop_pop_exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300000</span>,<span class="fl">200000</span>,<span class="fl">150000</span>,<span class="fl">120000</span>,<span class="fl">100000</span>,<span class="fl">70000</span>,<span class="fl">60000</span><span class="op">)</span><span class="op">/</span><span class="fl">10000000</span>,</span>
+<span>  exp_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">47</span>,<span class="fl">52</span>,<span class="fl">57</span>,<span class="fl">62</span>,<span class="fl">67</span>,<span class="fl">72</span>,<span class="fl">77</span><span class="op">)</span>,</span>
+<span>  <span class="co"># Effect threshold, i.e. the anchor of the exposure-response function</span></span>
+<span>  threshold <span class="op">=</span> <span class="fl">45</span>,</span>
+<span>  <span class="co"># Cut-off, i.e. the exposures below it are not quantified</span></span>
+<span>  cutoff_central <span class="op">=</span> <span class="fl">55</span>,</span>
+<span>  bhd_central <span class="op">=</span> <span class="fl">50000</span><span class="op">)</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_rounded</span></span></code></pre></div>
+<p>Alternatively, the same result can be obtained by entering a
+user-defined exposure-response function in <code>erf_eq_...</code> which
+already includes the case distinction. This is only needed if the shape
+of the curve above the cut-off is not covered by the
+<code>erf_shape</code> options. The function arguments
+<code>erf_eq_...</code> require a function as input. Instead of using a
+<code><a href="https://rdrr.io/r/stats/splinefun.html" class="external-link">splinefun()</a></code> this can also be fulfilled by using a
+‘function(c)’ which is of type ‘function’.</p>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#setting up function parameters</span></span>
-<span><span class="va">threshold_effect</span> <span class="op">&lt;-</span> <span class="fl">45</span></span>
+<span><span class="va">threshold</span> <span class="op">&lt;-</span> <span class="fl">45</span></span>
 <span><span class="va">RR</span> <span class="op">&lt;-</span> <span class="fl">1.055</span></span>
-<span><span class="va">threshold_calculation</span> <span class="op">&lt;-</span> <span class="fl">55</span></span>
+<span><span class="va">cutoff</span> <span class="op">&lt;-</span> <span class="fl">55</span></span>
 <span><span class="va">rr_increment</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
 <span></span>
 <span><span class="co"># define categorical function, the ifelse condition enables the case distinction</span></span>
 <span><span class="va">erf_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">c</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">c</span><span class="op">&lt;</span><span class="va">threshold_calculation</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">RR</span><span class="op">)</span><span class="op">/</span><span class="va">rr_increment</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="va">c</span><span class="op">-</span><span class="va">threshold_effect</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">c</span><span class="op">&lt;</span><span class="va">cutoff</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">RR</span><span class="op">)</span><span class="op">/</span><span class="va">rr_increment</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="va">c</span><span class="op">-</span><span class="va">threshold</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="co"># attribute_health</span></span>
-<span><span class="va">results_catERF_different_calc_thesh</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
+<span><span class="va">results_catERF_different_cutoff</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>  approach_risk <span class="op">=</span> <span class="st">"relative_risk"</span>,</span>
 <span>  erf_eq_central <span class="op">=</span> <span class="va">erf_function</span>,</span>
 <span>  prop_pop_exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300000</span>,<span class="fl">200000</span>,<span class="fl">150000</span>,<span class="fl">120000</span>,<span class="fl">100000</span>,<span class="fl">70000</span>,<span class="fl">60000</span><span class="op">)</span><span class="op">/</span><span class="fl">10000000</span>,</span>
 <span>  exp_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">47</span>,<span class="fl">52</span>,<span class="fl">57</span>,<span class="fl">62</span>,<span class="fl">67</span>,<span class="fl">72</span>,<span class="fl">77</span><span class="op">)</span>,</span>
 <span>  cutoff_central<span class="op">=</span><span class="fl">0</span>,</span>
 <span>  bhd_central<span class="op">=</span><span class="fl">50000</span><span class="op">)</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_rounded</span></span></code></pre></div>
-<p>The used function is equal to
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>1</mn><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>c</mi><mo>&lt;</mo><mtext mathvariant="normal">threshold</mtext></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>R</mi><mi>R</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>r</mi><msub><mi>r</mi><mrow><mi>i</mi><mi>n</mi><mi>c</mi><mi>r</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub></mrow></mfrac><mo stretchy="false" form="prefix">(</mo><mi>c</mi><mo>−</mo><mi>t</mi><mi>h</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>h</mi><mi>o</mi><mi>l</mi><msub><mi>d</mi><mrow><mi>e</mi><mi>f</mi><mi>f</mi><mi>e</mi><mi>c</mi><mi>t</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>c</mi><mo>≥</mo><mtext mathvariant="normal">threshold</mtext></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
-f(c) =
-\begin{cases}
-1, &amp; c &lt; \text{threshold} \\
-\exp\left( \frac{\log(RR)}{rr_{increment}} (c - threshold_{effect}) \right), &amp; c \ge \text{threshold}
-\end{cases}
-</annotation></semantics></math></p>
-<p>The categorical ERF curve created looks as follows.</p>
-<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-98-1.png" class="r-plt" alt="ERF curve" width="700"></p>
-<p>It is important to distinguish between an epidemiological cut-off
-(which shifts the exposure-response function) and a policy or evaluation
-threshold (which truncates exposure without shifting the underlying
-curve shape):</p>
+<p>The categorical ERF curve created looks as follows. The step at the
+cut-off is clearly visible.</p>
+<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-99-1.png" class="r-plt" alt="ERF curve" width="700"></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="shifted-vs-unshifted-erf">Shifted vs. unshifted exposure-response functions<a class="anchor" aria-label="anchor" href="#shifted-vs-unshifted-erf"></a>
+</h2>
+<div class="section level4">
+<h4 id="goal-19">Goal<a class="anchor" aria-label="anchor" href="#goal-19"></a>
+</h4>
+<p>E.g., to use an exposure-response function published in the
+literature which is parameterized on raw exposure levels instead of on
+the exposure above a cut-off.</p>
+</div>
+<div class="section level4">
+<h4 id="methodology-11">Methodology<a class="anchor" aria-label="anchor" href="#methodology-11"></a>
+</h4>
+<p><code>healthiar</code> evaluates the exposure-response function
+entered in <code>erf_eq_...</code> at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>t</mi><mi>h</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>h</mi><mi>o</mi><mi>l</mi><mi>d</mi></mrow><annotation encoding="application/x-tex">c = exp - threshold</annotation></semantics></math>,
+and the threshold takes the value of the cut-off if it is not entered
+(see chapter <a href="#cutoff-vs-threshold">Cut-off vs. threshold</a>).
+Therefore, the cut-off moves the exposure-response function
+horizontally:</p>
 <ol style="list-style-type: decimal">
-<li><p>Shifted Epidemiological Cut-off (Default <code>healthiar</code>
-behavior): Passing <code>cutoff</code> shifts the exposure axis so that
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mtext mathvariant="normal">exp</mtext><mo>−</mo><mtext mathvariant="normal">cutoff</mtext></mrow><annotation encoding="application/x-tex">c = \text{exp} - \text{cutoff}</annotation></semantics></math>
-and grounds the excess risk at zero at the cut-off point.</p></li>
-<li><p>Unshifted Policy Threshold: If you wish to calculate attributable
-risk using a raw exposure-response function where exposure below a
-policy threshold does not contribute to health outcomes, but without
-shifting the curve horizontally, set <code>cutoff = 0</code> and
-pre-truncate your exposure vector or incorporate <code><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax()</a></code>
-directly into your string formula.</p></li>
+<li><p>Shifted exposure-response function. If a cut-off is entered, the
+exposure-response function is moved by the cut-off,
+i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">c = exp - cutoff</annotation></semantics></math>.
+The function must therefore be parameterized on the exposure above the
+cut-off.</p></li>
+<li><p>Unshifted exposure-response function. If no cut-off is entered,
+nothing is subtracted from the exposure,
+i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi>e</mi><mi>x</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">c = exp</annotation></semantics></math>.
+The function must therefore be parameterized on raw exposure
+levels.</p></li>
 </ol>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Case A: Epidemiological Cut-off (Curve shifted by healthiar)</span></span>
-<span><span class="va">epi_cutoff</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
+<p>Be aware that <code>healthiar</code> shows a warning if both
+<code>erf_eq_...</code> and <code>cutoff_...</code> are entered, because
+many exposure-response functions published in the literature already
+incorporate the cut-off in the function definition.</p>
+</div>
+<div class="section level4">
+<h4 id="function-call-21">Function call<a class="anchor" aria-label="anchor" href="#function-call-21"></a>
+</h4>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Case A: Shifted exposure-response function</span></span>
+<span><span class="co"># The function is parameterized on the exposure above the cut-off</span></span>
+<span><span class="va">shifted_erf</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>  approach_risk <span class="op">=</span> <span class="st">"absolute_risk"</span>,</span>
 <span>  exp_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">60</span>, <span class="fl">70</span><span class="op">)</span>,</span>
 <span>  pop_exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300000</span>,<span class="fl">200000</span>,<span class="fl">150000</span><span class="op">)</span>,</span>
 <span>  cutoff_central <span class="op">=</span> <span class="fl">53</span>,</span>
 <span>  erf_eq_central <span class="op">=</span> <span class="st">"78.9270 - 3.1162 * (c + 53) + 0.0342 * (c + 53)^2"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: You entered a value for: cutoff_central. </span></span>
-<span><span class="co">#&gt; Be aware that for the absolute risk, the cutoff arguments are not used.</span></span>
-<span><span class="co">#&gt; Thus, all exposures (including those below your entered cutoff)</span></span>
-<span><span class="co">#&gt; will contribute to the attributable health impact. </span></span>
-<span><span class="co">#&gt; Consider handling the cutoff in the exposure-response function.</span></span>
+<span><span class="co">#&gt; Warning: You entered a value for: cutoff_central alongside absolute risk.</span></span>
+<span><span class="co">#&gt; Be aware that healthiar shifts the exposure in 'erf_eq' as c = (exp - cutoff).</span></span>
 <span></span>
-<span><span class="co"># Case B: Unshifted Policy Threshold (Exposure truncated, curve unshifted)</span></span>
-<span><span class="va">policy_threshold</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
+<span><span class="co"># Case B: Unshifted exposure-response function</span></span>
+<span><span class="co"># The function is parameterized on raw exposure levels</span></span>
+<span><span class="va">unshifted_erf</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>  approach_risk <span class="op">=</span> <span class="st">"absolute_risk"</span>,</span>
 <span>  exp_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">60</span>, <span class="fl">70</span><span class="op">)</span>,</span>
 <span>  pop_exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300000</span>,<span class="fl">200000</span>,<span class="fl">150000</span><span class="op">)</span>,</span>
-<span>  cutoff_central <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  erf_eq_central <span class="op">=</span> <span class="st">"ifelse(c &gt;= 53, 78.9270 - 3.1162 * c + 0.0342 * c^2, 0)"</span></span>
+<span>  erf_eq_central <span class="op">=</span> <span class="st">"78.9270 - 3.1162 * c + 0.0342 * c^2"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>If you want the exposure-response function to stay unshifted but the
+exposures below a given level not to be quantified, enter a
+<code>cutoff_...</code> value higher than the <code>threshold</code>
+(see chapter <a href="#cutoff-vs-threshold">Cut-off
+vs. threshold</a>).</p>
 </div>
 </div>
 <div class="section level2">
@@ -3180,13 +3302,13 @@ directly into your string formula.</p></li>
 <h3 id="monetization">Monetization<a class="anchor" aria-label="anchor" href="#monetization"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-19">Goal<a class="anchor" aria-label="anchor" href="#goal-19"></a>
+<h4 id="goal-20">Goal<a class="anchor" aria-label="anchor" href="#goal-20"></a>
 </h4>
 <p>E.g., to monetize the attributable health impact of a policy that
 will have health benefits five years from now.</p>
 </div>
 <div class="section level4">
-<h4 id="methodology-10">Methodology<a class="anchor" aria-label="anchor" href="#methodology-10"></a>
+<h4 id="methodology-12">Methodology<a class="anchor" aria-label="anchor" href="#methodology-12"></a>
 </h4>
 <p>In health economic evaluations and economic burden of disease
 assessments, health impacts may need to be converted into monetary
@@ -3274,9 +3396,9 @@ that long-term environmental impacts are not undervalued.</p>
 </div>
 </div>
 <div class="section level4">
-<h4 id="function-call-21">Function call<a class="anchor" aria-label="anchor" href="#function-call-21"></a>
+<h4 id="function-call-22">Function call<a class="anchor" aria-label="anchor" href="#function-call-22"></a>
 </h4>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">monetized_pm_copd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/monetize.html">monetize</a></span><span class="op">(</span></span>
 <span>    output_attribute <span class="op">=</span> <span class="va">results_pm_copd</span>,</span>
 <span>    discount_shape <span class="op">=</span> <span class="st">"exponential"</span>,</span>
@@ -3324,7 +3446,7 @@ provided to the initial <code><a href="../reference/attribute_health.html">attri
 million EURO.</p>
 <p>Alternatively, you can also monetize (attributable) health impacts
 from a non-<code>healthiar</code> source.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/monetize.html">monetize</a></span><span class="op">(</span></span>
 <span>  impact <span class="op">=</span> <span class="fl">1151</span>,</span>
 <span>  valuation <span class="op">=</span> <span class="fl">100</span></span>
@@ -3341,7 +3463,7 @@ from a non-<code>healthiar</code> source.</p>
 comparing its benefits and costs via Cost-Benefit Analysis (CBA).</p>
 </div>
 <div class="section level4">
-<h4 id="methodology-11">Methodology<a class="anchor" aria-label="anchor" href="#methodology-11"></a>
+<h4 id="methodology-13">Methodology<a class="anchor" aria-label="anchor" href="#methodology-13"></a>
 </h4>
 <p>The CBA is a type of economic evaluation that compares the costs and
 the benefits of an intervention, considering both measures expressed in
@@ -3372,7 +3494,7 @@ following formulas.</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>o</mi><mi>i</mi><mo>=</mo><mfrac><mrow><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi><mo>−</mo><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow><mrow><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow></mfrac><mo>×</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">roi = \frac{benefit - cost}{cost} \times 100</annotation></semantics></math></p>
 </div>
 <div class="section level4">
-<h4 id="function-call-22">Function call<a class="anchor" aria-label="anchor" href="#function-call-22"></a>
+<h4 id="function-call-23">Function call<a class="anchor" aria-label="anchor" href="#function-call-23"></a>
 </h4>
 <p>Let’s imagine we design a policy that would reduce air pollution to 5
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mi>g</mi><mi>/</mi><msup><mi>m</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">\mu g/m^3</annotation></semantics></math>,
@@ -3383,7 +3505,7 @@ could avoid all COPD cases attributed to air pollution.</p>
 million EURO), what would be the monetary net benefit of such a policy?
 We can find out using the functions <code>healthiar</code> and
 <code><a href="../reference/cba.html">cba()</a></code></p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cba</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cba.html">cba</a></span><span class="op">(</span></span>
 <span>    output_attribute <span class="op">=</span> <span class="va">results_pm_copd</span>,</span>
 <span>    valuation <span class="op">=</span> <span class="fl">50000</span>,</span>
@@ -3414,7 +3536,7 @@ the period specified in the <code>n_years_cost</code> argument</p></li>
 </ul>
 </li>
 </ul>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cba</span><span class="op">$</span><span class="va">cba_main</span> <span class="op">|&gt;</span>  </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">benefit</span>, <span class="va">cost</span>, <span class="va">net_benefit</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -3456,14 +3578,14 @@ a net cost!</p>
 <h3 id="health-impact-attributable-to-social-indicator">Health impact attributable to social indicator<a class="anchor" aria-label="anchor" href="#health-impact-attributable-to-social-indicator"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-20">Goal<a class="anchor" aria-label="anchor" href="#goal-20"></a>
+<h4 id="goal-21">Goal<a class="anchor" aria-label="anchor" href="#goal-21"></a>
 </h4>
 <p>E.g., to estimate the health impact that is theoretically
 attributable to the difference in degree of deprivation of the
 population exposed.</p>
 </div>
 <div class="section level4">
-<h4 id="methodology-12">Methodology<a class="anchor" aria-label="anchor" href="#methodology-12"></a>
+<h4 id="methodology-14">Methodology<a class="anchor" aria-label="anchor" href="#methodology-14"></a>
 </h4>
 <p>Taking into account socio-economic indicators, e.g. a multiple
 deprivation index <span class="citation">(Mogin et al. 2025)</span>, the
@@ -3523,10 +3645,10 @@ inequalities.</p>
 </div>
 </div>
 <div class="section level4">
-<h4 id="function-call-23">Function call<a class="anchor" aria-label="anchor" href="#function-call-23"></a>
+<h4 id="function-call-24">Function call<a class="anchor" aria-label="anchor" href="#function-call-24"></a>
 </h4>
 <p>First, quantify health impacts.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="va">health_impact</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>   age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>,</span>
 <span>   exp_central <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">pm25_mean</span>,</span>
@@ -3540,7 +3662,7 @@ inequalities.</p>
 <p>Second, use the function <code><a href="../reference/socialize.html">socialize()</a></code> entering the whole
 output of <code><a href="../reference/attribute_health.html">attribute_health()</a></code> in the argument
 <code>output_attribute</code>.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">social_t</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/socialize.html">socialize</a></span><span class="op">(</span></span>
 <span>  output_attribute <span class="op">=</span> <span class="va">health_impact</span>,</span>
 <span>  age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>, <span class="co"># They have to be the same in socialize() and in attribute_health()</span></span>
@@ -3551,7 +3673,7 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Alternatively, you can directly enter the health impact in the
 <code><a href="../reference/socialize.html">socialize()</a></code> argument <code>impact</code>.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">social</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/socialize.html">socialize</a></span><span class="op">(</span></span>
 <span>  impact <span class="op">=</span> <span class="va">health_impact</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_by_age_group</span><span class="op">$</span><span class="va">impact</span>,</span>
 <span>  age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>, <span class="co"># They have to be the same in socialize() and in attribute_health()</span></span>
@@ -3579,14 +3701,14 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <h3 id="multiple-deprivation-index">Multiple deprivation index<a class="anchor" aria-label="anchor" href="#multiple-deprivation-index"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-21">Goal<a class="anchor" aria-label="anchor" href="#goal-21"></a>
+<h4 id="goal-22">Goal<a class="anchor" aria-label="anchor" href="#goal-22"></a>
 </h4>
 <p>E.g., to estimate the multiple deprivation index (MDI) to use it for
 the argument <code>social_indicator</code> in the function
 <code><a href="../reference/socialize.html">socialize()</a></code>.</p>
 </div>
 <div class="section level4">
-<h4 id="methodology-13">Methodology<a class="anchor" aria-label="anchor" href="#methodology-13"></a>
+<h4 id="methodology-15">Methodology<a class="anchor" aria-label="anchor" href="#methodology-15"></a>
 </h4>
 <p>Socio-economic indicators (e.g., education level, employment status
 and family structure) can be condensed into a multiple deprivation index
@@ -3623,9 +3745,9 @@ with others.</p>
 R^2 lower than 0.7, consider alternative data sources or methods.</p>
 </div>
 <div class="section level4">
-<h4 id="function-call-24">Function call<a class="anchor" aria-label="anchor" href="#function-call-24"></a>
+<h4 id="function-call-25">Function call<a class="anchor" aria-label="anchor" href="#function-call-25"></a>
 </h4>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mdi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_mdi.html">prepare_mdi</a></span><span class="op">(</span></span>
 <span>  geo_id_micro <span class="op">=</span> <span class="va">exdat_prepare_mdi</span><span class="op">$</span><span class="va">id</span>,</span>
 <span>  edu <span class="op">=</span> <span class="va">exdat_prepare_mdi</span><span class="op">$</span><span class="va">edu</span>,</span>
@@ -3648,7 +3770,7 @@ turned on).</p>
 <li>
 <code>mdi_main</code>, a tibble containing the BEST-COST MDI</li>
 </ul>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_main</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">select</span><span class="op">(</span><span class="va">geo_id_micro</span>, <span class="va">MDI</span>, <span class="va">MDI_index</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -3734,13 +3856,13 @@ distribution curve</p></li>
 </li>
 </ul>
 <p>To reproduce the boxlots run</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">boxplot</span><span class="op">)</span></span></code></pre></div>
-<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-113-1.png" class="r-plt" alt="Boxplot of Normalized Indicators and MDI" width="700">
-Analogeously, to reproduce the histogram run</p>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">boxplot</span><span class="op">)</span></span></code></pre></div>
+<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-114-1.png" class="r-plt" alt="Boxplot of Normalized Indicators and MDI" width="700">
+Analogeously, to reproduce the histogram run</p>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">histogram</span><span class="op">)</span></span></code></pre></div>
-<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-114-1.png" class="r-plt" alt="Histogram of MDI with normal curve" width="700"></p>
+<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-115-1.png" class="r-plt" alt="Histogram of MDI with normal curve" width="700"></p>
 <hr>
 </div>
 </div>
@@ -3753,7 +3875,7 @@ Analogeously, to reproduce the histogram run</p>
 </h3>
 <p><code>healthiar</code> can be used inside the <em>native</em> pipes
 <code>|&gt;</code>. See the example below.</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">|&gt;</span></span>
 <span>  <span class="op">(</span>\<span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -3764,7 +3886,7 @@ Analogeously, to reproduce the histogram run</p>
 <span>      <span class="op">)</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_rounded</span></span>
 <span>    <span class="op">}</span><span class="op">)</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Shorter making used of the base R function <code><a href="https://rdrr.io/r/base/with.html" class="external-link">with()</a></code>.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">|&gt;</span></span>
 <span>      <span class="op">(</span>\<span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -3781,7 +3903,7 @@ Analogeously, to reproduce the histogram run</p>
 </h3>
 <p><code>healthiar</code> can also be used inside <em>magrittr</em>
 pipes <code>%&gt;%</code> as follows.</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="op">{</span></span>
 <span>    <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -3883,6 +4005,14 @@ Structure of Tests.”</span> <em>Psychometrika</em> 16 (3): 297–334. <a href=
 <div id="ref-Devleesschauwer2022_package" class="csl-entry">
 Devleesschauwer, Brecht, Paul Torgerson, Johannes Charlier, et al. 2022.
 <em>Prevalence: Tools for Prevalence Assessment Studies.</em> <a href="https://cran.r-project.org/package=prevalence" class="external-link">https://cran.r-project.org/package=prevalence</a>.
+</div>
+<div id="ref-Engelmann2025_report" class="csl-entry">
+Engelmann, Nicole, Núria Blanes Guàrdia, Jaume Fons-Esteve, Danielle
+Vienneau, Eulàlia Peris, and Martin Röösli. 2025. <em>Environmental
+Noise Health Risk Assessment: Methodology for Assessing Health Risks
+Using Data Reported Under the Environmental Noise Directive</em>. ETC HE
+Report 2023/11. European Topic Centre on Human Health; the Environment
+(ETC HE). <a href="https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2023-11-environmental-noise-health-risk-assessment-methodology-for-assessing-health-risks-using-data-reported-under-the-environmental-noise-directive" class="external-link">https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2023-11-environmental-noise-health-risk-assessment-methodology-for-assessing-health-risks-using-data-reported-under-the-environmental-noise-directive</a>.
 </div>
 <div id="ref-Frederick2002_jel" class="csl-entry">
 Frederick, Shane, George Loewenstein, and Ted O’Donoghue. 2002.
@@ -4050,6 +4180,12 @@ Organization. <a href="https://www.who.int/publications/i/item/burden-of-disease
 WHO. 2020. <em>Health Impact Assessment of Air Pollution: AirQ+ Life
 Table Manual</em>. World Health Organization - Regional Office for
 Europe. <a href="https://www.who.int/europe/publications/i/item/WHO-EURO-2020-1559-41310-56212" class="external-link">https://www.who.int/europe/publications/i/item/WHO-EURO-2020-1559-41310-56212</a>.
+</div>
+<div id="ref-WHO2025_report" class="csl-entry">
+WHO. 2025. <em>Health Risks of Air Pollution in Europe: HRAPIE-2
+Project. Updated Guidance on Concentration-Response Functions for Health
+Risk Assessment of Air Pollution in the WHO European Region</em>. World
+Health Organization - Regional Office for Europe. <a href="https://www.who.int/europe/publications/i/item/9789289062633" class="external-link">https://www.who.int/europe/publications/i/item/9789289062633</a>.
 </div>
 <div id="ref-WHO2014_book" class="csl-entry">
 WHO Regional Office for Europe. 2014. <em>WHO Expert Meeting: Methods

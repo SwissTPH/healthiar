@@ -37,6 +37,8 @@ Argument for **AR** pathways
 
 - `age_group`, `sex`, `info`, `population`
 
+- `threshold`
+
 - `dw_central`, `dw_lower`, `dw_upper`
 
 - `duration_central`, `duration_lower`, `duration_upper`
@@ -52,6 +54,7 @@ attribute_health(
   cutoff_central = 0,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
+  threshold = NULL,
   pop_exp = NULL,
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
@@ -96,9 +99,22 @@ attribute_health(
 
 - cutoff_central, cutoff_lower, cutoff_upper:
 
-  `Numeric value` specifying the **exposure cut-off value** and
+  `Numeric value` specifying the **exposure cut-off value**, i.e. the
+  exposure level below which no health impacts are quantified, and
   (optionally) the corresponding lower and upper 95% confidence interval
-  bounds. Default: 0. See Details for more info.
+  bounds. Default: 0, or same value as `threshold`, if it is entered. If
+  `cutoff` is higher than `threshold`, the exposure-response function is
+  truncated at the cut-off value. Expressed in the same unit as the
+  exposure. See the vignette chapter *Cut-off vs. threshold*.
+
+- threshold:
+
+  `Numeric value` specifying the **effect threshold**, i.e. the exposure
+  level from which the exposure-response function starts to show an
+  effect. It is the anchor of the curve and is therefore subtracted from
+  the exposure. Default: same value as the cut-off. Expressed in the
+  same unit as the exposure. See the vignette chapter *Cut-off vs.
+  threshold*.
 
 - pop_exp:
 
@@ -248,11 +264,6 @@ arguments) the attributable impact will be in YLD.
 only one exposure value per band (e.g. the means of the lower and upper
 bounds of the exposure bands).
 
-`cutoff_central`, `cutoff_lower`, `cutoff_upper` The cutoff level refers
-to the exposure level below which no health effects occur in the same
-unit as the exposure. If exposure categories are used, the length of
-this input must be the same as in the `exp_...` argument(s).
-
 `pop_exp` *Only applicable in AR pathways; always required.* In AR
 pathways the population exposed per exposure category is multiplied with
 the corresonding category-specific risk to obtain the absolute number of
@@ -330,6 +341,9 @@ available in the package vignette. More specifically, see chapters:
 
 - [Absolute
   risk](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk)
+
+- [Cut-off vs.
+  threshold](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold)
 
 ## References
 
