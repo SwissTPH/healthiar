@@ -23,6 +23,7 @@ pop_exp
 Optional arguments for both RR &amp;amp; AR pathways
 geo_id_micro, geo_id_macro,
 age_group, sex, info, population
+threshold
 dw_central, dw_lower, dw_upper
 duration_central, duration_lower, duration_upper
 
@@ -50,6 +51,7 @@ pop_exp
 Optional arguments for both RR &amp;amp; AR pathways
 geo_id_micro, geo_id_macro,
 age_group, sex, info, population
+threshold
 dw_central, dw_lower, dw_upper
 duration_central, duration_lower, duration_upper
 
@@ -61,7 +63,7 @@ duration_central, duration_lower, duration_upper
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1613</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1614</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,6 +108,7 @@ exposure to an environmental stressor (air pollution or noise), using either rel
 </ul><p>Argument for <strong>AR</strong> pathways</p><ul><li><p><code>pop_exp</code></p></li>
 </ul><p><strong>Optional</strong> arguments for both <strong>RR &amp; AR</strong> pathways</p><ul><li><p><code>geo_id_micro</code>, <code>geo_id_macro</code>,</p></li>
 <li><p><code>age_group</code>, <code>sex</code>, <code>info</code>, <code>population</code></p></li>
+<li><p><code>threshold</code></p></li>
 <li><p><code>dw_central</code>, <code>dw_lower</code>, <code>dw_upper</code></p></li>
 <li><p><code>duration_central</code>, <code>duration_lower</code>, <code>duration_upper</code></p></li>
 </ul></div>
@@ -120,6 +123,7 @@ exposure to an environmental stressor (air pollution or noise), using either rel
 <span>  cutoff_central <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  cutoff_lower <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cutoff_upper <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  threshold <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pop_exp <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  erf_eq_central <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  erf_eq_lower <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -161,7 +165,11 @@ exposure to an environmental stressor (air pollution or noise), using either rel
 
 
 <dt id="arg-cutoff-central-cutoff-lower-cutoff-upper">cutoff_central, cutoff_lower, cutoff_upper<a class="anchor" aria-label="anchor" href="#arg-cutoff-central-cutoff-lower-cutoff-upper"></a></dt>
-<dd><p><code>Numeric value</code> specifying the <strong>exposure cut-off value</strong> and (optionally) the corresponding lower and upper 95% confidence interval bounds. Default: 0. See Details for more info.</p></dd>
+<dd><p><code>Numeric value</code> specifying the <strong>exposure cut-off value</strong>, i.e. the exposure level below which no health impacts are quantified, and (optionally) the corresponding lower and upper 95% confidence interval bounds. Default: 0, or same value as <code>threshold</code>, if it is entered. If <code>cutoff</code> is higher than <code>threshold</code>, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter <em>Cut-off vs. threshold</em>.</p></dd>
+
+
+<dt id="arg-threshold">threshold<a class="anchor" aria-label="anchor" href="#arg-threshold"></a></dt>
+<dd><p><code>Numeric value</code> specifying the <strong>effect threshold</strong>, i.e. the exposure level from which the exposure-response function starts to show an effect. It is the anchor of the curve and is therefore subtracted from the exposure. Default: same value as the cut-off. Expressed in the same unit as the exposure. See the vignette chapter <em>Cut-off vs. threshold</em>.</p></dd>
 
 
 <dt id="arg-pop-exp">pop_exp<a class="anchor" aria-label="anchor" href="#arg-pop-exp"></a></dt>
@@ -241,8 +249,6 @@ exposure to an environmental stressor (air pollution or noise), using either rel
 <p><strong>Function arguments</strong></p>
 <p><code>exp_central</code>, <code>exp_lower</code>, <code>exp_upper</code>
 In case of exposure bands enter only one exposure value per band (e.g. the means of the lower and upper bounds of the exposure bands).</p>
-<p><code>cutoff_central</code>, <code>cutoff_lower</code>, <code>cutoff_upper</code>
-The cutoff level refers to the exposure level below which no health effects occur in the same unit as the exposure. If exposure categories are used, the length of this input must be the same as in the <code>exp_...</code> argument(s).</p>
 <p><code>pop_exp</code>
 <em>Only applicable in AR pathways; always required.</em> In AR pathways the population exposed per exposure category is multiplied with the corresonding category-specific risk to obtain the absolute number of people affected by the health outcome.</p>
 <p><code>erf_eq_central</code>, <code>erf_eq_lower</code>, <code>erf_eq_upper</code>
@@ -282,6 +288,7 @@ based on the relative risk (WHO 2003)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk">Relative risk</a></p></li>
 <li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk">Absolute risk</a></p></li>
+<li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold">Cut-off vs. threshold</a></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

@@ -13,6 +13,7 @@ get_risk(
   rr_increment = NULL,
   erf_eq = NULL,
   cutoff = 0,
+  threshold = NULL,
   exp
 )
 ```
@@ -51,9 +52,21 @@ get_risk(
 
 - cutoff:
 
-  `Numeric value` specifying the **exposure cut-off value** (i.e. the
-  exposure level below which no health effects occur) and (optionally)
-  the corresponding lower and upper 95% confidence interval bounds.
+  `Numeric value` specifying the **exposure cut-off value**, i.e. the
+  exposure level below which no health impacts are quantified. Default:
+  0, or same value as `threshold`, if it is entered. If `cutoff` is
+  higher than `threshold`, the exposure-response function is truncated
+  at the cut-off value. Expressed in the same unit as the exposure. See
+  the vignette chapter *Cut-off vs. threshold*.
+
+- threshold:
+
+  `Numeric value` specifying the **effect threshold**, i.e. the exposure
+  level from which the exposure-response function starts to show an
+  effect. It is the anchor of the curve and is therefore subtracted from
+  the exposure. Default: same value as the cut-off. Expressed in the
+  same unit as the exposure. See the vignette chapter *Cut-off vs.
+  threshold*.
 
 - exp:
 
@@ -95,6 +108,9 @@ specifically, see chapters:
 - [relative
   risk](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk)
 
+- [Cut-off vs.
+  threshold](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold)
+
 ## References
 
 Lehtomäki H, Aasvang GM, Sulo G, Denby BR, Hänninen OO, Brauer M,
@@ -135,6 +151,18 @@ get_risk(
   cutoff = 5
 )
 #> [1] 1.025
+
+# Goal: scale relative risk to observed noise exposure levels assuming
+# health effects above 45 dB (threshold) but exposure data only above 55 dB (cutoff)
+get_risk(
+  rr = 1.055,
+  rr_increment = 10,
+  erf_shape = "log_linear",
+  exp = c(47, 52, 57, 62, 67, 72, 77),
+  cutoff = 55,
+  threshold = 45
+)
+#> [1] 1.000000 1.000000 1.066358 1.095290 1.125007 1.155531 1.186883
 
 # Goal: determine the absolute risk for high annoyance at specific noise exposure levels
 get_risk(

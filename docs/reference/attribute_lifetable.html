@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1613</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1614</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,6 +64,7 @@
 <span>  cutoff_central <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  cutoff_lower <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cutoff_upper <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  threshold <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  erf_eq_central <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  erf_eq_lower <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  erf_eq_upper <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -134,7 +135,11 @@ fraction of the age interval lived by individuals who die within that interval. 
 
 
 <dt id="arg-cutoff-central-cutoff-lower-cutoff-upper">cutoff_central, cutoff_lower, cutoff_upper<a class="anchor" aria-label="anchor" href="#arg-cutoff-central-cutoff-lower-cutoff-upper"></a></dt>
-<dd><p><code>Numeric value</code> specifying the <strong>exposure cut-off value</strong> and (optionally) the corresponding lower and upper 95% confidence interval bounds. Default: 0. See Details for more info.</p></dd>
+<dd><p><code>Numeric value</code> specifying the <strong>exposure cut-off value</strong>, i.e. the exposure level below which no health impacts are quantified, and (optionally) the corresponding lower and upper 95% confidence interval bounds. Default: 0, or same value as <code>threshold</code>, if it is entered. If <code>cutoff</code> is higher than <code>threshold</code>, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter <em>Cut-off vs. threshold</em>.</p></dd>
+
+
+<dt id="arg-threshold">threshold<a class="anchor" aria-label="anchor" href="#arg-threshold"></a></dt>
+<dd><p><code>Numeric value</code> specifying the <strong>effect threshold</strong>, i.e. the exposure level from which the exposure-response function starts to show an effect. It is the anchor of the curve and is therefore subtracted from the exposure. Default: same value as the cut-off. Expressed in the same unit as the exposure. See the vignette chapter <em>Cut-off vs. threshold</em>.</p></dd>
 
 
 <dt id="arg-erf-eq-central-erf-eq-lower-erf-eq-upper">erf_eq_central, erf_eq_lower, erf_eq_upper<a class="anchor" aria-label="anchor" href="#arg-erf-eq-central-erf-eq-lower-erf-eq-upper"></a></dt>
@@ -230,6 +235,7 @@ which is described in previous literature (Miller and Hurley 2003)
 <p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table">YLL and deaths with life table</a></p></li>
+<li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold">Cut-off vs. threshold</a></p></li>
 </ul><p><strong>Conversion of multi-year to single year age groups</strong></p>
 <p>To convert multi-year/larger age groups to 1 year age groups,
 use the <code>healthiar</code> function <code><a href="prepare_lifetable.html">prepare_lifetable()</a></code>.</p>
