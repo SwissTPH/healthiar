@@ -50,10 +50,8 @@ get_output <-
     id_cols_available <-
       base::intersect(id_cols, colnames_results_raw)
 
-    # Define all the ci columns have that have to be filtered to keep only central
-    ci_cols <- base::grep("_ci", id_cols, value = TRUE)
-
-    # Identify which of the ci_cols are present in the assessment
+    # Identify the ci columns that are present in the assessment
+    # (they have to be filtered below to keep only the central estimates)
     ci_cols_available <- base::grep("_ci", id_cols_available, value = TRUE)
 
     ci_cols_available_except_erf <- base::setdiff(ci_cols_available, "erf_ci")
