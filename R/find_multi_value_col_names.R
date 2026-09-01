@@ -21,19 +21,29 @@
 find_multi_value_col_names <- function(df,
                                        group_col_names = NULL){
 
-  multi_value_col_names <- df |>
-    dplyr::summarise(
-      .by = dplyr::all_of(c(group_col_names)),
-      dplyr::across(
-        .cols = dplyr::everything(),
-        .fns = ~ base::length(base::unique(.x)) > 1)) |>
-    # Select only columns that have potentially multiple values
-    dplyr::select(-dplyr::all_of(group_col_names)) |>
-    # Select columns where there is at least a TRUE (different value)
-    dplyr::select(dplyr::where(~ any(.x)))|>
-    base::names()
+  # Only the columns that are not grouping columns have to be scanned
+  col_names <- base::setdiff(base::names(df), group_col_names)
+
+  # Id of the group of each row
+  # (1 for all rows if there are no grouping columns)
+  group_id <- df |>
+    dplyr::mutate(
+      .by = dplyr::all_of(group_col_names),
+      group_id = dplyr::cur_group_id()) |>
+    dplyr::pull(group_id) 
+
+  n_groups <- dplyr::n_distinct(group_id)
+
+  # A column has multiple values if it builds more combinations with the group id
+  # than there are groups.
+  # This is much faster than scanning the values of each group separately
+  has_multiple_values <-
+    purrr::map_lgl(
+      .x = col_names,
+      .f = ~ dplyr::n_distinct(group_id, df[[.x]]) > n_groups)
+
+  multi_value_col_names <- col_names[has_multiple_values]
 
   return(multi_value_col_names)
-
 
 }
