@@ -447,10 +447,6 @@ get_impact_with_lifetable <-
               .x = impact_by_age_and_year,
               .f = fill_right_of_diag))
 
-      } else if(is_without_newborns) {
-
-        lifetable_calculation <- lifetable_calculation
-
       }
     }
 
