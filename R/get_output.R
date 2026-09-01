@@ -135,6 +135,11 @@ get_output <-
       # because at leaset results_by_geo_id_micro must be available
       # for other healthiar functions
       base::union(geo_id_available)
+    
+    # Name of the results in the detailed output
+    # e.g. results_by_geo_id_micro
+    results_by_names <-
+      base::paste0("results_by_", results_by_vars_to_be_used)
 
     # Build list with the result_by_vars and the correponding grouping_cols
     grouping_cols_for_results_by <-
@@ -219,17 +224,13 @@ get_output <-
 
     }
 
+
+
     # At least result_by_geo_id_micro is to be calculated
     # so no if statement here
-
-    for(var in results_by_vars_to_be_used){
-
-      output$health_detailed[[base::paste0("results_by_", var)]] <-
-        sum_round_and_relative_impact(
-          df = results_raw,
-          var = var)
-
-    }
+    output$health_detailed[results_by_names] <-
+      purrr::map(.x = results_by_vars_to_be_used,
+                 .f = sum_round_and_relative_impact)
 
 
     # Keep only the ci central in main output ###########
