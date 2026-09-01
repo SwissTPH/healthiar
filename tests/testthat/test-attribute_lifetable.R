@@ -246,7 +246,14 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
         time_horizon = 80,
         min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
       )$health_main$impact,
-    expected = c(13417.327414, 7069.442606, 19639.461930) # Result on 11 Sept 2025
+    # Result on 01 Sept 2026.
+    # The previous expected values (13417.327414, 7069.442606, 19639.461930)
+    # were obtained before the fix of the projection of the population:
+    # with a time_horizon shorter than the number of age groups
+    # the oldest age groups were not projected and their impacts were lost.
+    # Cross-check: the sum of the impacts by year of an assessment without
+    # time_horizon, up to the 80th year, is equal to the central value below
+    expected = c(28810.051073, 15083.590793, 42437.057422)
   )
 })
 
