@@ -353,7 +353,7 @@ validate_input_attribute <-
         args = input_args_value,
         arg_names = lifetable_args_with_values_above_0,
         is_valid = function(x){x > 0},
-        message = "The values in the following arguments must not be lower than 0: {arg}.",
+        message = "The values in the following arguments must be higher than 0: {arg}.",
         report = "all")
 
       ### error_if_negative #####
@@ -370,14 +370,20 @@ validate_input_attribute <-
 
       ### error_if_not_consecutive_sequence #####
       error_if_not_consecutive_sequence <- function(var_name){
-        var_value <- input_args_value[[var_name]]
         # Here a function because it expected to use it in one or two arguments
         # (not like e.g. the check of is.numeric)
 
+        # Only the distinct values, because the age groups are repeated
+        # for each sex, geo unit or exposure category
+        # (e.g. 0:99 for males and 0:99 for females)
+        var_value <- base::sort(base::unique(input_args_value[[var_name]]))
+
         if(# Check that values are integers
-          base::any(var_value != base::floor(var_value)) &&
-          # Check difference between consecutive elements is exactly 1
-          base::all(base::diff(var_value))) {
+          base::any(var_value != base::floor(var_value)) ||
+          # Check that the difference between consecutive elements is exactly 1.
+          # Attention: all(diff(x)) (without == 1) only checks that consecutive
+          # values are different, which does not detect e.g. 5-year age groups
+          !base::all(base::diff(var_value) == 1)) {
 
           base::stop(
             base::paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements is 1."),
@@ -517,8 +523,8 @@ validate_input_attribute <-
           base::all(v >= input_args_value[[base::paste0(x, "_lower")]]) &&
             base::all(v <= input_args_value[[base::paste0(x, "_upper")]])},
         message =
-          base::paste0("{arg} must be higher than ", x, "_lower",
-                       " and lower than ", x, "_upper."))
+          base::paste0("{arg} must not be lower than ", x, "_lower",
+                       " and not higher than ", x, "_upper."))
     }
 
 
@@ -620,6 +626,47 @@ validate_input_attribute <-
         arg_names = c(a, "erf_eq_central"),
         relation = "not_both",
         message = "The argument {arg_1} cannot be used together with the argument {arg_2} (either one or the other but not both).")
+    }
+
+
+    ### error_if_no_erf #####
+
+    # The exposure-response function must be defined in one of the two ways.
+    # Otherwise the error comes later from get_risk() and is not understandable
+    if(!base::any(c("rr_central", "erf_eq_central") %in% arg_names_passed)){
+
+      base::stop(
+        base::paste0(
+          "Please define the exposure-response function ",
+          "either with rr_central (together with erf_shape and rr_increment) ",
+          "or with erf_eq_central."),
+        call. = FALSE)
+    }
+
+
+    ### error_if_rr_increment_is_0 #####
+
+    # The relative risk is re-scaled dividing the exposure by the increment,
+    # so an increment of 0 does not deliver any meaningful result
+    validate_args(
+      args = input_args_value,
+      arg_names = "rr_increment",
+      is_valid = function(x){x > 0},
+      message = "{arg} must be higher than 0.")
+
+
+    ### error_if_rr_without_shape_or_increment #####
+
+    # If the erf is defined by rr_, then the shape and the increment are needed
+    # to re-scale the relative risk to the exposure.
+    # Otherwise the error comes later from get_risk() and is not understandable
+    for (a in c("erf_shape", "rr_increment")){
+
+      validate_arg_pair(
+        present_arg_names = arg_names_passed,
+        arg_names = c("rr_central", a),
+        relation = "requires",
+        message = "If you pass a value for {arg_1}, you must also pass a value for {arg_2}.")
     }
 
 
