@@ -285,6 +285,75 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
 })
 
 
+testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_TRUE|time_horizon_FALSE|iteration_FALSE|", {
+
+  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+
+  # Only min_age and max_age change across the calls below,
+  # so they are the only arguments of this function
+  attribute_lifetable_with_age_limits <-
+    function(health_outcome, min_age, max_age = NULL){
+      healthiar::attribute_lifetable(
+        health_outcome = health_outcome,
+        approach_exposure = "single_year",
+        exp_central = data_mort$exp[2], #exp CH 2019
+        prop_pop_exp = 1,
+        cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
+        rr_central = data_mort[2,"rr_central"],
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = c(data_lifetable[["male"]]$age,
+                      data_lifetable[["female"]]$age),
+        sex = base::rep(c("male", "female"), each = 100),
+        population = c(data_lifetable[["male"]]$population,
+                       data_lifetable[["female"]]$population),
+        bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                        data[["pop"]]$number_of_deaths_female),
+        year_of_analysis = 2019,
+        min_age = min_age,
+        max_age = max_age)$health_main$impact
+    }
+
+  # Impacts with an upper age limit
+  testthat::expect_equal(
+    object = attribute_lifetable_with_age_limits("yll", min_age = 20, max_age = 60),
+    expected = 6986.725237) # Result on 01 Sept 2026
+
+  testthat::expect_equal(
+    object = attribute_lifetable_with_age_limits("deaths", min_age = 20, max_age = 60),
+    expected = 214.912935) # Result on 01 Sept 2026
+
+  # The higher the max_age, the higher the impact
+  # (more age groups affected by the exposure)
+  testthat::expect_equal(
+    object = attribute_lifetable_with_age_limits("deaths", min_age = 20, max_age = 70),
+    expected = 512.62539) # Result on 01 Sept 2026
+
+  # A max_age equal to the last age group must deliver the same result
+  # as not entering max_age at all (default)
+  testthat::expect_equal(
+    object = attribute_lifetable_with_age_limits("yll", min_age = 20, max_age = 99),
+    expected = attribute_lifetable_with_age_limits("yll", min_age = 20))
+
+  # If max_age is lower than min_age, no age group is affected by the exposure
+  testthat::expect_equal(
+    object = attribute_lifetable_with_age_limits("yll", min_age = 20, max_age = 10),
+    expected = 0)
+
+  # Premature deaths in the year of analysis are calculated for each age group
+  # separately (no projection involved), so the impacts of two consecutive
+  # age ranges must add up to the impact of the whole age range.
+  # This checks that max_age cuts the age range where it should
+  testthat::expect_equal(
+    object = attribute_lifetable_with_age_limits("deaths", min_age = 20, max_age = 99),
+    expected =
+      attribute_lifetable_with_age_limits("deaths", min_age = 20, max_age = 59) +
+      attribute_lifetable_with_age_limits("deaths", min_age = 60, max_age = 99))
+})
+
+
 testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))

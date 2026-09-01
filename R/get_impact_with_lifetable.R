@@ -109,10 +109,14 @@ get_impact_with_lifetable <-
     # CALCULATE MODIFIED SURVIVAL PROBABILITIES
     lifetable_calculation <- lifetable_calculation |>
       dplyr::mutate(
-        # For age intervals starting at min_age and above, calculate modified
+        # For age intervals between min_age and max_age, calculate modified
         # survival probabilities.
+        # min_age and max_age are inclusive, i.e. the exposure affects
+        # the age groups from min_age to max_age (both included).
+        # If the user did not enter them, compile_input() sets them to the
+        # first and the last age group, so that all age groups are affected
         # Calculate first the boolean/logic column to speed up calculations below
-        is_exposed_age = age_end > min_age,
+        is_exposed_age = age_end > min_age & age_start <= max_age,
 
         # Calculate modified hazard rate = modification factor * hazard rate = mod factor * (deaths / mid-year pop)
         hazard_rate_mod =
