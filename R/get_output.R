@@ -200,7 +200,7 @@ get_output <-
 
 
       # If population is available, recompute with population and normalized metrics
-      if ("population" %in% base::names(df)) {
+      if ("population" %in% colnames_results_raw) {
 
         # Relative impact dividing by population in the subgroup (100k)
         # i.e. x impacts in the subgroup / population in the subgroup
