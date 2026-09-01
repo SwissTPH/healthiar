@@ -143,17 +143,6 @@ get_output <-
         ~ base::setdiff(id_cols_available, .x)
       )
 
-    # Other columns: e.g. info, scen_, pop_fraction...
-    # grepl() because no fix number and names
-    # scen columns only for the case of compare()
-    other_cols_with_multiple_values <-
-      base::intersect(cols_with_multiple_values,
-                      colnames_results_raw[base::grepl("info_|scen_|pop_fraction", colnames_results_raw)])
-
-
-    results_by_vars_to_be_used_except_geo_id_macro <-
-      base::setdiff(results_by_vars_to_be_used, c("geo_id_macro"))
-
     # The _ci columns will never be collapsed
     # This step avoid unneded data processing below
     cols_eligible_for_collapse <-
