@@ -123,6 +123,7 @@ attribute_master <-
     approach_risk = NULL,
     exp_central, exp_lower = NULL, exp_upper = NULL,
     cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
+    threshold = NULL,
     pop_exp = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
     # RR ONLY
