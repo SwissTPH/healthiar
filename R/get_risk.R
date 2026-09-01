@@ -137,10 +137,10 @@ get_risk <-
     # Check if exposure is upper than the effect threshold
     # Otherwise the value of the exposure must be the threshold (minimum possible)
     exp <-
-      base::ifelse(exp > cutoff,
+      base::ifelse(exp > threshold,
                    exp,
-                   # if exp < cutoff, then exp should be cutoff
-                   cutoff)
+                   # if exp < threshold, then exp should be threshold
+                   threshold)
 
     # Obtain rr_at_exp, i.e. the relative risk the level of exposure
     # instead of for the increment
@@ -151,16 +151,16 @@ get_risk <-
       # If get_risk is used independently of attribute_health()
       # and only one function is entered by the user
       if(base::is.function(erf_eq)){
-        rr_at_exp <- erf_eq(exp - cutoff)
+        rr_at_exp <- erf_eq(exp - threshold)
         # when get_risk() is used inside attribute_health(),
         # erf_eq that are functions are encapsulated in lists to be included in tibbles
         # That is why we need is.list() and map()
         } else if (base::is.list(erf_eq) && base::all(purrr::map_lgl(erf_eq, base::is.function))) {
 
-           rr_at_exp <- base::mapply(function(f, cval) f(cval), erf_eq, exp - cutoff)
+           rr_at_exp <- base::mapply(function(f, cval) f(cval), erf_eq, exp - threshold)
            # A map() approach does not work here. Therefore, mapply
            # rr_at_exp <- erf_eq |>
-           #   purrr::map_dbl(~ .x(exp - cutoff))
+           #   purrr::map_dbl(~ .x(exp - threshold))
 
 
           # If the function is a string (vector)
@@ -176,7 +176,7 @@ get_risk <-
           #_dbl to convert list of functions into vector with numberic values
           purrr::map2_dbl(
             .x = erf_fun, 
-            .y = exp - cutoff, 
+            .y = exp - threshold, 
             ~ .x(.y))
 
         }
@@ -189,24 +189,24 @@ get_risk <-
       # Calculate the rr_at_exp based on erf_shape
       if (erf_shape == "linear") {
         # LINEAR ####
-        rr_at_exp <- 1 + ( (rr - 1) * (exp - cutoff) / rr_increment )
+        rr_at_exp <- 1 + ( (rr - 1) * (exp - threshold) / rr_increment )
 
       } else if (erf_shape == "log_linear") {
         # LOG-LINEAR ####
-        rr_at_exp <- base::exp( base::log(rr) * (exp - cutoff) / rr_increment )
+        rr_at_exp <- base::exp( base::log(rr) * (exp - threshold) / rr_increment )
 
       } else if (erf_shape == "log_log") {
         ## This curve below follows the definition by Pozzer 2022 (http://doi.org/10.1029/2022GH000711)
         ## It is defined at all exposures and RR equals RR₁₀ when Ci=C0+10 exactly.
-        ## rr_at_exp = ((exp + 1) / (cutoff + 1)) ^ beta, where beta = log(rr) / ( log(rr_increment + cutoff + 1) - log(cutoff + 1) )
-        rr_at_exp <- ( ( exp + 1 ) / ( cutoff + 1 ) )^( base::log(rr) / ( base::log(rr_increment + cutoff + 1) - base::log(cutoff + 1) ) )
+        ## rr_at_exp = ((exp + 1) / (threshold + 1)) ^ beta, where beta = log(rr) / ( log(rr_increment + threshold + 1) - log(threshold + 1) )
+        rr_at_exp <- ( ( exp + 1 ) / ( threshold + 1 ) )^( base::log(rr) / ( base::log(rr_increment + threshold + 1) - base::log(threshold + 1) ) )
 
       } else if (erf_shape == "linear_log") {
         # LINEAR-LOG ####
         ## This curve below has been proposed by ChatGPT: 
         # it's an adaption of the initially proposed curve with the structure of Pozzer 2022's log-log ERF
 
-        rr_at_exp <- 1 + ( ( rr - 1 ) / ( base::log(rr_increment + cutoff + 1) - base::log(cutoff + 1) ) ) * base::log( (exp + 1) / (cutoff + 1) )
+        rr_at_exp <- 1 + ( ( rr - 1 ) / ( base::log(rr_increment + threshold + 1) - base::log(threshold + 1) ) ) * base::log( (exp + 1) / (threshold + 1) )
     }
   }
       
