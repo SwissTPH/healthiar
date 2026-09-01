@@ -13,7 +13,10 @@
 #' \code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.
 
 #' @param cutoff_central,cutoff_lower,cutoff_upper
-#' \code{Numeric value} specifying the \strong{exposure cut-off value} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.
+#' \code{Numeric value} specifying the \strong{exposure cut-off value}, i.e. the exposure level below which no health impacts are quantified, and (optionally) the corresponding lower and upper 95\% confidence interval bounds. It is the counterfactual exposure of the assessment as long as it is identical to the effect threshold (see \code{threshold}). Default: 0. See Details for more info.
+
+#' @param threshold
+#' \code{Numeric value} specifying the \strong{effect threshold}, i.e. the exposure level from which the exposure-response function starts to show an effect. Default: same value as the cut-off. See Details for more info.
 
 #' @param pop_exp
 #' \code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. See Details for more info. \emph{Only applicable in AR pathways; always required.}
