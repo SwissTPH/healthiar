@@ -31,6 +31,7 @@
 #' \itemize{
 #'  \item \code{geo_id_micro}, \code{geo_id_macro},
 #'  \item \code{age_group}, \code{sex}, \code{info}, \code{population}
+#'  \item \code{threshold}
 #'  \item \code{dw_central}, \code{dw_lower}, \code{dw_upper}
 #'  \item \code{duration_central}, \code{duration_lower}, \code{duration_upper}
 #'  }
@@ -211,6 +212,7 @@ attribute_health <-
     approach_risk = "relative_risk",
     exp_central, exp_lower = NULL, exp_upper = NULL,
     cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
+    threshold = NULL,
     pop_exp = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
     # RR ONLY
