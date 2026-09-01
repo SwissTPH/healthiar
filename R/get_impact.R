@@ -89,12 +89,34 @@ get_impact <-
 
         # Calculate absolute risk for each exposure category
         # Absolute risk is only possible without life table method
+
+        # threshold is only a column in input_table
+        # if the user entered a value for it.
+        # If NULL, get_risk() anchors the exposure-response function at the cutoff
+        # and no exposure category is below the cutoff
+        if ( ! "threshold" %in% base::names(input_table) ) {
+          threshold <- NULL
+          is_below_cutoff <- base::rep(FALSE, base::nrow(input_table))
+        } else {
+          is_below_cutoff <-
+            !base::is.na(input_table$threshold) &
+            input_table$cutoff > input_table$threshold &
+            input_table$exp < input_table$cutoff
+        }
+
         results_raw <- input_table |>
           # To calculate health impacts with absolute risk
           # no pop_fraction is used,
           # therefore it is based on input_table instead of input_with_risk_and_pop_fraction
           dplyr::mutate(
-            absolute_risk_as_percent = get_risk(exp = exp, erf_eq = erf_eq, cutoff = cutoff),
+            absolute_risk_as_percent =
+              # If the cut-off is higher than the effect threshold,
+              # then the exposures below the cut-off are not quantified
+              base::ifelse(
+                is_below_cutoff,
+                0,
+                get_risk(exp = exp, erf_eq = erf_eq,
+                         cutoff = cutoff, threshold = threshold)),
             impact = absolute_risk_as_percent/100 * pop_exp)
       }
 
