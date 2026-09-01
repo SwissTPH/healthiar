@@ -154,67 +154,59 @@ get_impact_with_lifetable <-
           midyear_population_yoa, entry_population_yoa))
 
 
-    ## EXPOSED PROJECTION ###########################################################################
+    ## PROJECTION OF THE YEAR OF ANALYSIS (YOA) #####################################################
     # The exposed projection is the scenario of "business as usual"
-    # i.e. the scenario with the exposure to the environmental stressor as (currently) measured
+    # i.e. the scenario with the exposure to the environmental stressor as (currently) measured.
+    # The unexposed projection is the scenario without any exposure to the environmental stressor,
+    # i.e. it uses the modified survival probabilities and
+    # therefore the mid-year population of the YOA has to be re-calculated.
 
-    # DETERMINE ENTRY POPULATION OF YOA+1 IN EXPOSED SCENARIO
+    # Both scenarios share the same calculation steps,
+    # they only differ in the survival probabilities used
+    project_yoa <- function(df, prob_survival, prob_survival_until_midyear = NULL){
+
+      # All multiplications with a probability of surviving are rounded
+      # to avoid floating-point precision issues
+      # (i.e. a result that should be zero ends up with e.g. 0.0000000000003).
+      # The number of decimals is random, just large enough
+      # to avoid changes in the final results
+
+      # MID-YEAR POP = (entry population YOA) * (survival probability until mid year)
+      # Only in the unexposed scenario (modified survival probabilities)
+      if (!base::is.null(prob_survival_until_midyear)) {
+        df$midyear_population_yoa <-
+          base::round(df$entry_population_yoa * prob_survival_until_midyear, 10)
+      }
+
+      # End-of-year population YOA = (entry population YOA) * (survival probability)
+      df$end_population_yoa <-
+        base::round(df$entry_population_yoa * prob_survival, 10)
+
+      # Deaths YOA = Entry pop YOA - End pop YOA
+      df$deaths_yoa <- df$entry_population_yoa - df$end_population_yoa
+
+      # Entry population YOA+1 = lag ( End-of-year population YOA )
+      df$entry_population_yoa_plus_1 <- dplyr::lag(df$end_population_yoa)
+
+      return(df)
+    }
+
     lifetable_calculation <- lifetable_calculation |>
       dplyr::mutate(
         projection_if_exposed_by_age_and_year =
           purrr::map(
             .x = data_by_age,
-            function(.x){
-              .x <- .x |>
-                dplyr::mutate(
-                  # End-of-year population YOA = (entry population YOA) * ( survival probability )
-                  # Round results when multiplying by probability of surviving
-                  # to avoid floating-point precision issue
-                  # (i.e. result that should be zero ends up with e.g. 0.0000000000003)
-                  # The number of decimas is random, just large to avoid changes in final results
-                  end_population_yoa = base::round(entry_population_yoa * prob_survival, 10),
+            .f = ~ project_yoa(
+              df = .x,
+              prob_survival = .x$prob_survival)),
 
-                  # Deaths YOA = Entry pop YOA - End pop YOA
-                  deaths_yoa = entry_population_yoa - end_population_yoa,
-
-                  # Entry population YOA+1 = lag ( End-of-year population YOA )
-                  entry_population_yoa_plus_1 = dplyr::lag(end_population_yoa))
-            }
-          )
-        )
-
-    ## UNEXPOSED PROJECTION ###########################################################################
-    # The exposed projection is the scenario without any exposure to the environmental stressor
-
-    # CALCULATE YOA MID-YEAR POPOULATION,
-    # YOA END-OF-YEAR POPULATION, YOA DEATHS AND
-    # YOA+1 ENTRY POPULATION USING MODIFIED SURVIVAL PROBABILITIES
-    lifetable_calculation <- lifetable_calculation |>
-      dplyr::mutate(
         projection_if_unexposed_by_age_and_year =
           purrr::map(
-            .x = data_by_age ,
-            function(.x){
-              .x <- .x |>
-                dplyr::mutate(
-                  # Re-calculate population_yoa
-                  # MID-YEAR POP = (entry population YOA) * ( survival probability until mid year )
-                  # Round result to avoid floating-point precision issue
-                  midyear_population_yoa = base::round(entry_population_yoa * prob_survival_until_midyear_mod, 10),
-
-                  # Calculate end-of-year population in YOA to later determine premature deaths
-                  # Round result to avoid floating-point precision issue
-                  end_population_yoa = base::round(entry_population_yoa * prob_survival_mod, 10),
-
-                  # Deaths YOA = Entry pop YOA - End pop YOA
-                  deaths_yoa = entry_population_yoa - end_population_yoa,
-
-                  # Entry population YOA+1 = lag ( End-of-year population YOA )
-                  entry_population_yoa_plus_1 = dplyr::lag(end_population_yoa)
-                  )
-            }
-          )
-      )
+            .x = data_by_age,
+            .f = ~ project_yoa(
+              df = .x,
+              prob_survival = .x$prob_survival_mod,
+              prob_survival_until_midyear = .x$prob_survival_until_midyear_mod)))
 
     # PREMATURE DEATHS (SINGLE YEAR EXPOSURE) ######################################################
     # YOA = YEAR OF ANALYSIS
