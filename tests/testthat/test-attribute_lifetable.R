@@ -766,6 +766,38 @@ testthat::test_that("results the same |pathway_lifetable|age_group entered in an
 
 })
 
+## TIME HORIZON ################################################################
+testthat::test_that("results correct |pathway_lifetable|time_horizon of 1 year", {
+
+  data <- healthiar::exdat_lifetable
+
+  # A time horizon of 1 covers only the year of analysis.
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "single_year",
+        exp_central = 8.85,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        rr_central = 1.118,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = data$age_group,
+        sex = data$sex,
+        bhd_central = data$deaths,
+        population = data$midyear_population,
+        year_of_analysis = 2019,
+        min_age = 20,
+        time_horizon = 1
+      )$health_main$impact,
+    expected = 1299.682971) # Result on 2026-09-02
+
+})
+
+
+
 
 # ERROR OR WARNING ########
 ## ERROR #########
@@ -962,6 +994,7 @@ testthat::test_that("error if age_group is not a 1-year consecutive sequence", {
 })
 
 
+
 testthat::test_that("error if health_outcome is missing or not an option", {
 
   data <- healthiar::exdat_lifetable
@@ -993,6 +1026,36 @@ testthat::test_that("error if health_outcome is missing or not an option", {
   testthat::expect_error(
     object = attribute_lifetable_with_health_outcome(health_outcome = "YLL"),
     regexp = "For health_outcome, please, type")
+
+})
+
+testthat::test_that("error if time_horizon lower than 1", {
+
+  data <- healthiar::exdat_lifetable
+
+  # A time horizon of 1 covers only the year of analysis,
+  # so lower values have no meaning
+  testthat::expect_error(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "single_year",
+        exp_central = 8.85,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        rr_central = 1.118,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = data$age_group,
+        sex = data$sex,
+        bhd_central = data$deaths,
+        population = data$midyear_population,
+        year_of_analysis = 2019,
+        min_age = 20,
+        time_horizon = 0
+      ),
+    regexp = "time_horizon must be an integer value equal to or higher than 1.",
+    fixed = TRUE)
 
 })
 
