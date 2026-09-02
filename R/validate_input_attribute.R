@@ -62,6 +62,11 @@ validate_input_attribute <-
 
     categorical_args <- base::names(options_of_categorical_args)
 
+    # health_outcome is not validated together with the other categorical
+    # arguments above because these options only apply to the life table
+    # approach. In attribute_health() health_outcome may be free text
+    options_of_health_outcome <- c("deaths", "yll")
+
     lifetable_args_with_values_above_0 <- "population"  
 
     lifetable_args_with_values_0_or_above <-
@@ -345,6 +350,36 @@ validate_input_attribute <-
 
 
     if(is_lifetable){
+
+      ### error_if_no_health_outcome #####
+
+      # health_outcome has no meaningful default: without it
+      # get_impact_with_lifetable() cannot know whether years of life lost or
+      # premature deaths are to be calculated.
+      # A dedicated check (and not validate_args()) because
+      # validate_args() skips the arguments that are NULL
+      if(base::is.null(input_args_value$health_outcome)){
+
+        base::stop(
+          base::paste0(
+            "Please, enter a value for health_outcome. ",
+            "Type (between quotation marks) one of these options: ",
+            base::toString(options_of_health_outcome), "."),
+          call. = FALSE)
+      }
+
+      ### error_if_health_outcome_not_an_option #####
+
+      validate_args(
+        args = input_args_value,
+        arg_names = "health_outcome",
+        # validate_args() applies any(), so this also covers the case that
+        # people enter this argument as column with repeated (or multiple) values
+        is_valid = function(v){v %in% options_of_health_outcome},
+        message =
+          base::paste0(
+            "For {arg}, please, type (between quotation marks) one of these options: ",
+            base::toString(options_of_health_outcome), "."))
 
       ### error_if_not_positive #####
 
