@@ -1059,7 +1059,7 @@ $$entry\_population_{i+1} = entry\_population_i \times prob\_survival\_mod$$
 
 Second, the mid-year population of year $i+1$ is calculated.
 
-$$midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear$$
+$$midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear_{mod}$$
 
 
 ### Function call

@@ -92,7 +92,7 @@ attribute_master(
 
 \item{health_outcome}{\code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).}
 
-\item{min_age, max_age}{\code{Numeric value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.}
+\item{min_age, max_age}{\code{Numeric value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. See Details for more info.}
 
 \item{approach_newborns}{\code{String} specifying whether newborns are to be considered in the years after the year of analysis or not. Options: \code{"without_newborns"} (default), \code{"with_newborns"}. See Details for more info.}
 
