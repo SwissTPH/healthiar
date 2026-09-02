@@ -507,19 +507,23 @@ get_impact_with_lifetable <-
               # Keep only first value of population for each year
               # Otherwise the population is repeated for all years
               # and the sum of population, calculated in get_output(),
-              # will be wrong (much higher)
+              # will be wrong (much higher).
+              # year is a character column (it comes from the column names),
+              # so it is compared with a character and not with a number
               dplyr::mutate(.by = c(age_start, age_end),
-                            population = ifelse(year == yoa, population, NA))
+                            population = base::ifelse(year == base::as.character(yoa),
+                                                      population,
+                                                      NA))
 
             if(is_deaths && is_single_year_exposure){
               .x <- .x |>
                 ## Select first year of projection
-                dplyr::filter(year == yoa)
+                dplyr::filter(year == base::as.character(yoa))
 
             } else {
               .x <- .x |>
                 ## Select all years within time horizon
-                dplyr::filter(year <= last_year_projection )
+                dplyr::filter(base::as.numeric(year) <= last_year_projection)
             }
           }
 
