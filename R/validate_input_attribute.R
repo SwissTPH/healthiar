@@ -62,6 +62,11 @@ validate_input_attribute <-
 
     categorical_args <- base::names(options_of_categorical_args)
 
+    # health_outcome is not validated together with the other categorical
+    # arguments above because these options only apply to the life table
+    # approach. In attribute_health() health_outcome may be free text
+    options_of_health_outcome <- c("deaths", "yll")
+
     lifetable_args_with_values_above_0 <- "population"  
 
     lifetable_args_with_values_0_or_above <-
