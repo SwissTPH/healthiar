@@ -432,7 +432,7 @@ get_impact_with_lifetable <-
 
       ## NEWBORNS #################################################################
 
-      if (is_with_newborns) {
+      if (is_with_newborns && is_constant_exposure) {
 
         fill_right_of_diag <- function(tbl) {
 
@@ -472,7 +472,10 @@ get_impact_with_lifetable <-
               .f = fill_right_of_diag))
 
       }
-      # If without newborns nothing has to be done
+      # If without newborns nothing has to be done.
+      # The same applies to a single year exposure: the newborns of the years
+      # after the year of analysis were never exposed, so no impact can be
+      # attributed to them (validate_input_attribute() warns about it)
     }
 
 
