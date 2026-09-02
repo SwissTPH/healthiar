@@ -691,7 +691,8 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
   regexp = "has no effect")
 })
 
-### CONSTANT EXPOSURE & NO NEWBORNS ###########################################
+### SINGLE YEAR EXPOSURE & NO NEWBORNS #########################################
+# Note: approach_exposure is not passed, so the default "single_year" is used
 
 testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
