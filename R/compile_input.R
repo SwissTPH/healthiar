@@ -198,10 +198,12 @@ compile_input <-
           # Obtain the end age summing one because the function only works with
           # single-year age
           age_end = age_group + 1,
+          # min() and max() (and not first() and last()) so that the default
+          # does not depend on the order in which the user entered the age groups
           min_age = if(base::is.null(input_args_edited$min_age)){
-            dplyr::first(base::unique(age_start))} else {min_age},
+            base::min(age_start)} else {min_age},
           max_age = if(base::is.null(input_args_edited$max_age)){
-            dplyr::last(base::unique(age_start))} else {max_age},
+            base::max(age_start)} else {max_age},
           # Determine default time horizon for YLL/YLD if not specified
           time_horizon = if(base::is.null(input_args_edited$time_horizon)){
             base::length(base::unique(input_args_edited$age_group))
