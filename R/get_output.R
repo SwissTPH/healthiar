@@ -214,7 +214,15 @@ get_output <-
           dplyr::mutate(
             dplyr::across(
               .cols = dplyr::all_of(impact_cols_to_be_summed),
-              .fns = base::list(per_100k_inhab = ~ (.x / population) * 1e5),
+              # If the population of the group is not available, the relative
+              # impact cannot be calculated. This is the case for the
+              # projection years of the life table, where the population is
+              # only kept in the year of analysis to avoid summing it up
+              # across years (see get_impact_with_lifetable())
+              .fns = base::list(
+                per_100k_inhab = ~ dplyr::if_else(population > 0,
+                                                  (.x / population) * 1e5,
+                                                  NA_real_)),
               .names = "{.col}_{.fn}"))
 
       }

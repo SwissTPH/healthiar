@@ -835,6 +835,41 @@ testthat::test_that("results correct |pathway_lifetable|time_horizon of 1 year",
 
 
 
+## RELATIVE IMPACT BY YEAR ######################################################
+
+testthat::test_that("results correct |pathway_lifetable|impact_per_100k_inhab by year", {
+
+  data <- healthiar::exdat_lifetable
+
+  results_by_year <-
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
+      approach_exposure = "single_year",
+      exp_central = 8.85,
+      prop_pop_exp = 1,
+      cutoff_central = 5,
+      rr_central = 1.118,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      age_group = data$age_group,
+      sex = data$sex,
+      bhd_central = data$deaths,
+      population = data$midyear_population,
+      year_of_analysis = 2019,
+      min_age = 20
+    )$health_detailed$results_by_year
+
+  # The population is only kept in the year of analysis, so the years after it
+  # have no denominator. Before, dividing by that missing population returned
+  # Inf (or NaN if the impact was 0 too) instead of NA
+  testthat::expect_false(
+    object =
+      base::any(
+        base::is.infinite(results_by_year$impact_per_100k_inhab) |
+          base::is.nan(results_by_year$impact_per_100k_inhab)))
+
+})
+
 
 # ERROR OR WARNING ########
 ## ERROR #########
