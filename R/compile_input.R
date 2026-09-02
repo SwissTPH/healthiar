@@ -32,12 +32,6 @@ compile_input <-
 
 
 
-    args_for_lifetable <-
-      c("approach_exposure", "approach_newborns",
-        "year_of_analysis",
-        "min_age", "max_age")
-
-
     input_args_edited <- input_args$value
 
     # PROCESS GEO ID ###################################################################

@@ -50,8 +50,6 @@ validate_input_attribute <-
 
     boolean_args <- "is_lifetable"
 
-    string_args <- args[!args %in% c(numeric_args, boolean_args)]
-
     options_of_categorical_args <-
       base::list(
         approach_risk = c("relative_risk", "absolute_risk"),
