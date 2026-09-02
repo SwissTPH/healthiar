@@ -392,6 +392,24 @@ validate_input_attribute <-
         is_valid = function(x){x >= 1 & x == base::floor(x)},
         message = "{arg} must be an integer value equal to or higher than 1.")
 
+      ### warning_if_newborns_and_single_year_exposure #####
+
+      # With a single year exposure only the year of analysis is exposed.
+      # The newborns of the following years were therefore never exposed and
+      # no impact can be attributed to them. approach_newborns is thus ignored
+      # (see get_impact_with_lifetable())
+      if(base::any(input_args_value$approach_newborns %in% "with_newborns") &&
+         base::any(input_args_value$approach_exposure %in% "single_year")){
+
+        base::warning(
+          base::paste0(
+            "approach_newborns = \"with_newborns\" has no effect ",
+            "if approach_exposure = \"single_year\", because the newborns of ",
+            "the years after the year of analysis were never exposed. ",
+            "Use approach_exposure = \"constant\" to consider newborns."),
+          call. = FALSE)
+      }
+
       ### error_if_not_positive #####
 
       # No life table arguments currently require values > 0 at validation stage
