@@ -772,8 +772,7 @@ testthat::test_that("results correct |pathway_lifetable|time_horizon of 1 year",
   data <- healthiar::exdat_lifetable
 
   # A time horizon of 1 covers only the year of analysis.
-  # Before, ":" counted backwards (2020, 2019) and the duplicated year
-  # led to duplicated columns and an empty result
+
   testthat::expect_equal(
     object =
       healthiar::attribute_lifetable(
@@ -1055,9 +1054,6 @@ testthat::test_that("error if time_horizon lower than 1", {
         min_age = 20,
         time_horizon = 0
       ),
-    # regexp (and not expected) because that is the argument of expect_error()
-    # that checks the error message. fixed = TRUE so that the dot at the end
-    # is taken literally and not as any character
     regexp = "time_horizon must be an integer value equal to or higher than 1.",
     fixed = TRUE)
 
