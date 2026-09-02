@@ -177,6 +177,16 @@ compile_input <-
 
 
       input_table <- input_wo_lifetable |>
+        # The life table calculations assume that the rows of each life table are
+        # ordered by ascending age, e.g. dplyr::lag() is used to let the cohort
+        # get one year older. Users can enter the age groups in any order
+        # (e.g. sorted descending or grouped by sex), so they are sorted here.
+        # arrange() is stable, i.e. rows with the same age keep their relative
+        # order, so the life tables nested in get_impact_with_lifetable()
+        # (one per sex, geo unit and uncertainty combination)
+        # each keep ascending ages without having to know here
+        # which columns define them
+        dplyr::arrange(age_group) |>
         dplyr::mutate(
           # Add approach risk which cannot be entered by the user
           # TODO: To be removed if attribute_health() and attribute_lifetable() are merged
