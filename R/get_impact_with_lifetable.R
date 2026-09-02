@@ -289,7 +289,7 @@ get_impact_with_lifetable <-
         # Set initial year
         entry_pop[, 1] <- df[[entry_names[1]]]
         midyear_pop[, 1] <- base::round(entry_pop[, 1] * prob_survival_until_midyear, 10)
-        deaths[, 1] <- entry_pop[, 1] * (1 - prob_survival)
+        deaths[, 1] <- base::round(entry_pop[, 1] * death_prob, 10)
 
         # Loop across years
         # E.g. starts with 1 and ends with 98;
