@@ -473,6 +473,39 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
 
 
 
+### SINGLE YEAR EXPOSURE & WITH NEWBORNS ########################################
+
+testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_TRUE|min_age_FALSE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
+
+  data <- healthiar::exdat_lifetable
+
+  # With a single year exposure the newborns of the following years were never
+  # exposed, so with_newborns must give the same result as without_newborns
+  # (30099.1685528). Before, the newborns inherited the impact of
+  # the cohort born in the year of analysis, which inflated the YLL to 89435
+  testthat::expect_warning(
+    testthat::expect_equal(
+      object = healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "single_year",
+        approach_newborns = "with_newborns",
+        exp_central = 8.85,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        rr_central = 1.118,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = data$age_group,
+        sex = data$sex,
+        bhd_central = data$deaths,
+        population = data$midyear_population,
+        year_of_analysis = 2019
+      )$health_main$impact,
+      expected = 30099.1685528), # Result on 2026-09-02
+    regexp = "has no effect")
+
+})
+
 ### CONSTANT EXPOSURE & NO NEWBORNS #############################################
 
 #### ONE GEO UNIT #####################################
@@ -627,6 +660,9 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
 
   data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
 
+  # with_newborns has no effect with a single year exposure,
+  # so healthiar warns about it
+  testthat::expect_warning(
   testthat::expect_equal(
     object = healthiar::attribute_lifetable(
       health_outcome = "deaths",
@@ -651,7 +687,8 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
     expected =
       # c(2601, 1371, 3804) # Results on 2025-04-15;Rounded impacts from "airqplus_deaths_yll_lifetable_adults.xlsx" (the YLL impacts were multiplied by 2 to obtain the total premature deaths deaths)
       c(2599.365941, 1370.612959, 3801.987144) # Results on 2026-08-10;
-  )
+  ),
+  regexp = "has no effect")
 })
 
 ### CONSTANT EXPOSURE & NO NEWBORNS ###########################################
