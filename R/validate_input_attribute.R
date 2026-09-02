@@ -381,6 +381,17 @@ validate_input_attribute <-
             "For {arg}, please, type (between quotation marks) one of these options: ",
             base::toString(options_of_health_outcome), "."))
 
+      ### error_if_time_horizon_lower_than_1 #####
+
+      # A time horizon of 1 means that only the year of analysis is covered.
+      # Lower values have no meaning and integers are needed because the
+      # time horizon defines the number of years to be projected
+      validate_args(
+        args = input_args_value,
+        arg_names = "time_horizon",
+        is_valid = function(x){x >= 1 & x == base::floor(x)},
+        message = "{arg} must be an integer value equal to or higher than 1.")
+
       ### error_if_not_positive #####
 
       # No life table arguments currently require values > 0 at validation stage
