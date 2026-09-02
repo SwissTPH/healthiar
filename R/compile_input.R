@@ -177,6 +177,16 @@ compile_input <-
 
 
       input_table <- input_wo_lifetable |>
+        # The life table calculations assume that the rows of each life table are
+        # ordered by ascending age, e.g. dplyr::lag() is used to let the cohort
+        # get one year older. Users can enter the age groups in any order
+        # (e.g. sorted descending or grouped by sex), so they are sorted here.
+        # arrange() is stable, i.e. rows with the same age keep their relative
+        # order, so the life tables nested in get_impact_with_lifetable()
+        # (one per sex, geo unit and uncertainty combination)
+        # each keep ascending ages without having to know here
+        # which columns define them
+        dplyr::arrange(age_group) |>
         dplyr::mutate(
           # Add approach risk which cannot be entered by the user
           # TODO: To be removed if attribute_health() and attribute_lifetable() are merged
@@ -188,10 +198,12 @@ compile_input <-
           # Obtain the end age summing one because the function only works with
           # single-year age
           age_end = age_group + 1,
+          # min() and max() (and not first() and last()) so that the default
+          # does not depend on the order in which the user entered the age groups
           min_age = if(base::is.null(input_args_edited$min_age)){
-            dplyr::first(base::unique(age_start))} else {min_age},
+            base::min(age_start)} else {min_age},
           max_age = if(base::is.null(input_args_edited$max_age)){
-            dplyr::last(base::unique(age_start))} else {max_age},
+            base::max(age_start)} else {max_age},
           # Determine default time horizon for YLL/YLD if not specified
           time_horizon = if(base::is.null(input_args_edited$time_horizon)){
             base::length(base::unique(input_args_edited$age_group))

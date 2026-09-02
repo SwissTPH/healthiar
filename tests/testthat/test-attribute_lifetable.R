@@ -731,6 +731,42 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
 })
 
 
+## ORDER OF THE AGE GROUPS ######################################################
+# The life table calculations assume ascending ages within each life table,
+# so compile_input() sorts the rows. Without that sorting the results were
+# silently wrong (e.g. 130385 instead of 28810 YLL for descending age groups)
+
+testthat::test_that("results the same |pathway_lifetable|age_group entered in any order", {
+
+  data <- healthiar::exdat_lifetable
+  # Descending age groups within each sex
+  data_descending <- data[base::order(data$sex, -data$age_group), ]
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "single_year",
+        exp_central = 8.85,
+        prop_pop_exp = 1,
+        cutoff_central = 5,
+        rr_central = 1.118,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = data_descending$age_group,
+        sex = data_descending$sex,
+        bhd_central = data_descending$deaths,
+        population = data_descending$midyear_population,
+        year_of_analysis = 2019,
+        # max_age is left to its default, because that default
+        # must not depend on the input order either
+        min_age = 20
+      )$health_main$impact,
+    expected = 28809.8654) # Result on 2026-09-02 with ascending age groups
+
+})
+
+
 # ERROR OR WARNING ########
 ## ERROR #########
 testthat::test_that("error if length of age range higher than deaths", {
