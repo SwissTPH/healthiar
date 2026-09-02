@@ -962,6 +962,40 @@ testthat::test_that("error if age_group is not a 1-year consecutive sequence", {
 })
 
 
+testthat::test_that("error if health_outcome is missing or not an option", {
+
+  data <- healthiar::exdat_lifetable
+
+  attribute_lifetable_with_health_outcome <-
+    function(health_outcome) {
+      healthiar::attribute_lifetable(
+        health_outcome = health_outcome,
+        exp_central = 8.85,
+        cutoff_central = 5,
+        rr_central = 1.118,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = data$age_group,
+        sex = data$sex,
+        bhd_central = data$deaths,
+        population = data$midyear_population,
+        year_of_analysis = 2019,
+        min_age = 20)
+    }
+
+  # health_outcome not entered (its default is NULL)
+  testthat::expect_error(
+    object = attribute_lifetable_with_health_outcome(health_outcome = NULL),
+    regexp = "Please, enter a value for health_outcome")
+
+  # Typo in health_outcome. Without this validation the wrong capitalization
+  # led to a confusing error and, with constant exposure, even to YLL results
+  testthat::expect_error(
+    object = attribute_lifetable_with_health_outcome(health_outcome = "YLL"),
+    regexp = "For health_outcome, please, type")
+
+})
+
 ## WARNING #########
 testthat::test_that("warning if any bhd = 0", {
 
