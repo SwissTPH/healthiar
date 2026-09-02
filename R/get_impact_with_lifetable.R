@@ -49,9 +49,13 @@ get_impact_with_lifetable <-
     time_horizon <- base::unique(input_with_risk_and_pop_fraction$time_horizon)
     # Define the last year of the projection
     last_year_projection <- yoa + time_horizon - 1
-    # Define the years based on n_years_projection
+    # Define the years to be projected, i.e. the years after the year of
+    # analysis that are still within the time horizon.
     # e.g. 2020 to 2118
-    years_projection <- yoa_plus_1 : last_year_projection
+    # seq_len() (and not yoa_plus_1:last_year_projection) because with a
+    # time horizon of 1 the sequence with ":" would count backwards
+    # (e.g. 2020, 2019) instead of covering no year at all
+    years_projection <- yoa + base::seq_len(time_horizon - 1)
     # n_years_projection defines for how many years the population should be projected;
     n_years_projection <- base::length(years_projection)
 
@@ -258,6 +262,11 @@ get_impact_with_lifetable <-
           base::gsub("_yoa_plus_1", base::paste0("_", yoa_plus_1), x = _) |>
           base::gsub("_yoa", base::paste0("_", yoa), x = _)
 
+
+        # If the time horizon covers only the year of analysis there is
+        # nothing to project. The columns of the year of analysis, which were
+        # just renamed above, are the only ones needed to obtain the impacts
+        if (n_years_projection == 0) { return(df) }
 
         # Precompute complements
         death_prob <- 1 - prob_survival
