@@ -52,17 +52,18 @@
 #' }
 #' For example, if 10 is entered one is interested in the impacts of exposure
 #' during the year of analysis and the next 9 years (= 10 years in total).
-#' Default value: length of the numeric vector specified in the \code{age_group} argument.
+#' Default value: the number of age groups entered in the \code{age_group} argument.
 #'
 #' \code{min_age}, \code{max_age}
-#' The \code{min_age} default value 30 implies that all adults aged 30 or older
-#' will be affected by the exposure;
-#' \code{max_age} analogeously specifies the age above
-#' which no health effects of the exposure are considered.
-#' #' 
-#' #' \code{fraction_lived} is by default 0.5 for all age groups. However, 
+#' Both bounds are inclusive, e.g. \code{min_age = 30} implies that all adults
+#' aged 30 or older will be affected by the exposure and \code{max_age = 69}
+#' that no health effects are considered above the age of 69.
+#' By default the exposure affects all age groups, i.e. \code{min_age} is the
+#' youngest and \code{max_age} the oldest age group entered in \code{age_group}.
+#'
+#' \code{fraction_lived} is by default 0.5 for all age groups. However,
 #' in low-mortality settings, infant deaths are heavily concentrated
-#' in the first weeks of life. 
+#' in the first weeks of life.
 #' Therefore, \code{fraction_lived} can be lower e.g. 0.1 for the first age group.
 #'
 #' \strong{Methodology}
