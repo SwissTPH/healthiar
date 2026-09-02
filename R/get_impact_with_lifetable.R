@@ -151,7 +151,6 @@ get_impact_with_lifetable <-
           modification_factor,
           prob_survival, prob_survival_until_midyear, hazard_rate,
           is_exposed_age, prob_survival_mod, prob_survival_until_midyear_mod, hazard_rate_mod,
-          fraction_lived,
           # These columns at the end to link with projections
           midyear_population_yoa, entry_population_yoa))
 
