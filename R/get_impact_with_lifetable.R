@@ -225,7 +225,11 @@ get_impact_with_lifetable <-
                 tibble::tibble(
                   age_start = .x$age_start,
                   age_end = .x$age_end,
-                  population = .x$midyear_population_yoa,
+                  # The population entered by the user (and not the mid-year
+                  # population of the unexposed scenario) so that the column
+                  # means the same as in the other pathways, where
+                  # calculate_impact() also takes the inputted population
+                  population = .x$population,
                   # Change of sign in the difference unexposed minus exposed
                   # because if no exposure
                   # there are less deaths in unexposed
