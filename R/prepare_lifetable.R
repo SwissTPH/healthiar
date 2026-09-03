@@ -295,24 +295,21 @@ prepare_lifetable <-
     calculation_fixed <- calculation |>
       dplyr::mutate(
         .by = age_group_n_years,
-        
-        # Evenly distribute remaining deaths to intermediate years (indices 2 to n-1) if index 1 was customized
-        bhd_1_year = dplyr::if_else(
-          age_interval_index > 1 & dplyr::first(fraction_lived_n_years) != 0.5 & age_interval_index != age_interval_length,
-          (bhd_n_years - dplyr::first(bhd_1_year)) / (age_interval_length - 1),
-          bhd_1_year
-        ),
-        
+
         # AirQ+ rule assigning exact residual to last index of the group
         bhd_1_year = dplyr::if_else(
           age_interval_index == age_interval_length,
           bhd_n_years - base::sum(bhd_1_year[age_interval_index != age_interval_length]),
           bhd_1_year
         ),
-        
-        # Dynamically update final single-year mid-year population from allocated deaths
-        fraction_lived_1_year = dplyr::if_else(age_interval_index == 1, fraction_lived_n_years, 0.5),
-        population_1_year = entry_population_1_year - (fraction_lived_1_year * bhd_1_year)
+
+        # Calculate mid-year population for 1-year interval, i.e. the
+        # person-years lived at that single year of age: one year for each
+        # person reaching the next birthday plus fraction_lived years for
+        # each person dying at that age.
+        # With fraction_lived = 0.5 this is the average of the entry
+        # populations of this and the next age, i.e. the formula of AirQ+
+        population_1_year = entry_population_1_year - ((1 - fraction_lived_n_years) * bhd_1_year)
       )
 
 
@@ -321,7 +318,12 @@ prepare_lifetable <-
       dplyr::mutate(
 
         population_for_attribute = population_1_year,
-        bhd_for_attribute = bhd_1_year
+        bhd_for_attribute = bhd_1_year,
+        # fraction_lived is also passed on because attribute_lifetable()
+        # needs the same assumption to obtain the survival probabilities.
+        # Otherwise the life table would be built with a fraction_lived
+        # that differs from the one used for this conversion
+        fraction_lived_for_attribute = fraction_lived_n_years
       )
 
     return(output)
