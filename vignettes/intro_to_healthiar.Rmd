@@ -590,8 +590,13 @@ a distribution is fitted (see distributions below).
 The median of the simulated attributable impacts is reported as the central estimate. 
 The 2.5th and 97.5th percentiles of these simulated impacts define 
 the lower and upper bounds of the 95% summary uncertainty interval.
-Aggregated central, lower and upper estimates are obtained 
-by summing the corresponding values of each lower level unit.
+Aggregated estimates (e.g. for a `geo_id_macro` covering several `geo_id_micro`)
+are obtained by first summing the impacts of all lower level units
+within each simulation and only then taking the median and the
+2.5th and 97.5th percentiles of these sums.
+Summing instead the central, lower and upper estimates of each lower level unit
+would assume that the uncertainty is perfectly correlated across the units
+and would therefore overestimate the width of the confidence interval.
 
 
 #### Distributions used for simulation

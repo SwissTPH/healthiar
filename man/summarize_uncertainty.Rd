@@ -70,6 +70,11 @@ entered confidence interval only if \code{..._lower} and \code{..._upper}
 are symmetric around \code{..._central}. The more asymmetric the entered
 confidence interval, the more the simulated values depart from it.
 
+If the assessment covers several geographic units, the uncertainty of the
+aggregated unit (\code{geo_id_macro}) is obtained by first summing the
+impacts of all \code{geo_id_micro} within each simulation and only then
+taking the quantiles of those sums.
+
 Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:

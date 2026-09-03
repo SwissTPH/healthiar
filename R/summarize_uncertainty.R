@@ -51,6 +51,11 @@
 #' are symmetric around \code{..._central}. The more asymmetric the entered
 #' confidence interval, the more the simulated values depart from it.
 #'
+#' If the assessment covers several geographic units, the uncertainty of the
+#' aggregated unit (\code{geo_id_macro}) is obtained by first summing the
+#' impacts of all \code{geo_id_micro} within each simulation and only then
+#' taking the quantiles of those sums.
+#'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
@@ -290,6 +295,25 @@ summarize_uncertainty <- function(
       )
 
     return(summary)
+  }
+
+  # Get uncertainty of the aggregated (macro) geographic unit
+  get_summary_by_geo_id_macro <- function(impact_by_sim){
+
+    summary_by_geo_id_macro <-
+      impact_by_sim |>
+      # First sum the impacts of all geographic units within each simulation
+      # and only then obtain the quantiles (in get_summary() below).
+      # Summing instead the central, lower and upper estimates of each
+      # geographic unit would assume that the uncertainty is perfectly
+      # correlated across the geographic units and would therefore
+      # overestimate the width of the confidence interval
+      dplyr::summarise(
+        impact = base::sum(impact),
+        .by = dplyr::all_of(c("geo_id_macro", "sim_id"))) |>
+      get_summary()
+
+    return(summary_by_geo_id_macro)
   }
 
 
@@ -725,14 +749,7 @@ summarize_uncertainty <- function(
 
   if("geo_id_macro" %in% base::names(output_attribute$health_main) ){
 
-    summary_by_geo_id_macro <- summary_by_geo_id_micro |>
-      # Sum impacts
-      dplyr::summarise(impact = base::sum(impact),
-                       .by = c("geo_id_macro", "impact_ci")) |>
-      # Round
-      dplyr::mutate(impact_rounded = round(impact))
-
-    summary <- summary_by_geo_id_macro
+    summary <- get_summary_by_geo_id_macro(impact_by_sim = impact_by_sim)
 
   }
 
@@ -861,14 +878,7 @@ summarize_uncertainty <- function(
 
   if("geo_id_macro" %in% base::names(output_attribute$health_main) ){
 
-    summary_by_geo_id_macro <- summary_by_geo_id_micro |>
-      # Sum impacts
-      dplyr::summarise(impact = base::sum(impact),
-                       .by = c("geo_id_macro", "impact_ci")) |>
-      # Round
-      dplyr::mutate(impact_rounded = round(impact))
-
-    summary <- summary_by_geo_id_macro
+    summary <- get_summary_by_geo_id_macro(impact_by_sim = impact_by_sim)
 
   }
 

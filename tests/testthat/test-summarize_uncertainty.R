@@ -253,8 +253,14 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_inc
         seed = 123
       )$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2026-09-03; no comparison study
-      c(15497, 8007, 24682, 16588, 8486, 25928)
+    expected =
+      # Results on 2026-09-03; no comparison study.
+      # The estimates change only marginally compared to the previous
+      # expectation c(15497, 8007, 24682, 16588, 8486, 25928), because the
+      # dominant uncertainty here is rr, which is identical in all geo units
+      # and therefore perfectly correlated in any case. Only exp differs
+      # across geo units and its interval is narrow (+-0.1)
+      c(15503, 8007, 24679, 16574, 8486, 25928)
   )
 })
 
@@ -394,6 +400,57 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_for
 ## Assumed also a SD from the results_noise_ha object
 
 
+
+#### AGGREGATION BY GEO_ID_MACRO ###############################################
+
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_TRUE|", {
+
+  # The uncertainty of the aggregated geographic unit (geo_id_macro) must be
+  # obtained by summing the impacts of all geo_id_micro within each simulation
+  # and only then taking the quantiles.
+  # Summing instead the central, lower and upper estimates of each geo_id_micro
+  # (as done before) assumes that the uncertainty is perfectly correlated
+  # across the geographic units and overestimates the width of the interval.
+  # Here exp and bhd are simulated separately for each geo_id_micro,
+  # so the two ways of aggregating give clearly different results.
+
+  results_geo <-
+    healthiar::attribute_health(
+      erf_shape = "log_linear",
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      exp_central = base::rep(8, 4),
+      exp_lower = base::rep(7, 4),
+      exp_upper = base::rep(9, 4),
+      cutoff_central = 5,
+      bhd_central = base::rep(1E5, 4),
+      bhd_lower = base::rep(5E4, 4),
+      bhd_upper = base::rep(2E5, 4),
+      geo_id_micro = base::letters[1:4],
+      geo_id_macro = base::rep("CH", 4))
+
+  results_geo_summarised <-
+    healthiar::summarize_uncertainty(
+      output_attribute = results_geo,
+      n_sim = 200,
+      seed = 123)
+
+  # Sum the impacts of all geo_id_micro within each simulation
+  impact_by_sim <-
+    results_geo_summarised$uncertainty_detailed$impact_by_sim |>
+    dplyr::summarise(impact = base::sum(impact),
+                     .by = "sim_id")
+
+  testthat::expect_equal(
+    object = results_geo_summarised$uncertainty_main$impact,
+    # Order of uncertainty_main: central, lower and upper estimate
+    expected =
+      stats::quantile(x = impact_by_sim$impact,
+                      probs = c(0.5, 0.025, 0.975),
+                      names = FALSE))
+})
 
 #### YLD ########################################################################
 
