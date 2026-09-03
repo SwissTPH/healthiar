@@ -72,14 +72,10 @@
 #' By default the exposure affects all age groups, i.e. \code{min_age} is the
 #' youngest and \code{max_age} the oldest age group entered in \code{age_group}.
 #'
-#' \code{fraction_lived} corresponds to \eqn{{}_na_x} in the life table
-#' literature, i.e. the average fraction of the age interval lived by those
-#' who die in it \insertCite{Chiang1984_book}{healthiar}. It is by default 0.5
-#' for all age groups, which is the value that AirQ+ assumes and which means
-#' that deaths are evenly distributed over the year. In low-mortality settings,
-#' however, infant deaths are heavily concentrated in the first weeks of life,
-#' so \code{fraction_lived} can be lower, e.g. 0.1, for age 0
-#' \insertCite{Preston2001_book}{healthiar}.
+#' \code{fraction_lived} is by default 0.5 for all age groups, i.e. the value
+#' that AirQ+ assumes. It determines the survival probabilities and matters
+#' most in the age groups with the highest mortality, i.e. the last ones.
+#' See the vignette for how to choose it.
 #'
 #' If the single-year age groups were obtained with \code{prepare_lifetable()},
 #' enter here the same \code{fraction_lived} that was used there, which is
@@ -100,6 +96,7 @@
 #' More specifically, see chapters:
 #' \itemize{
 #'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#fraction-of-the-age-interval-lived}{Fraction of the age interval lived}
 #'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 #'
 #'
