@@ -678,9 +678,14 @@ interval (i.e. `_lower` and `_upper` bound value) a distribution is
 fitted (see distributions below). The median of the simulated
 attributable impacts is reported as the central estimate. The 2.5th and
 97.5th percentiles of these simulated impacts define the lower and upper
-bounds of the 95% summary uncertainty interval. Aggregated central,
-lower and upper estimates are obtained by summing the corresponding
-values of each lower level unit.
+bounds of the 95% summary uncertainty interval. Aggregated estimates
+(e.g. for a `geo_id_macro` covering several `geo_id_micro`) are obtained
+by first summing the impacts of all lower level units within each
+simulation and only then taking the median and the 2.5th and 97.5th
+percentiles of these sums. Summing instead the central, lower and upper
+estimates of each lower level unit would assume that the uncertainty is
+perfectly correlated across the units and would therefore overestimate
+the width of the confidence interval.
 
 ##### Distributions used for simulation
 
@@ -711,7 +716,20 @@ assumes the following shapes of the distributions in the simulations:
   (upper-lower)/(2*1.96)
   ```
   , since for a normal distribution the 95% CI spans approximately two
-  standard deviations on either side of the mean.
+  standard deviations on either side of the mean. As these four
+  variables cannot be negative, the distribution is truncated at zero,
+  i.e. negative values are discarded and drawn again until they are
+  positive.
+
+Please note that the normal distribution is symmetric. Therefore, the
+simulated values reproduce the entered confidence interval only if the
+entered `_lower` and `_upper` values are symmetric around the `_central`
+value. Only the width of the entered confidence interval is used, not
+its shape. The more asymmetric the entered confidence interval, the more
+the simulated values will depart from it. Moreover, if the entered
+confidence interval is so wide that a relevant share of the distribution
+falls below zero, the truncation at zero shifts the simulated central
+estimate above the entered `_central` value.
 
 - Disability weights: The values are simulated based on a *beta*
   distribution, as both the disability weights and the beta distribution

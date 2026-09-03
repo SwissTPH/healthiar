@@ -19,17 +19,20 @@
 # ARGUMENTS ####################################################################
 #' @param output_attribute \code{variable} in which the output of a \code{healthiar::attribute_...()} function call are stored.
 #' @param n_sim \code{numeric value} indicating the number of simulations to be performed.
-#' @param seed \code{numeric value} for fixing the randomization. Based on it, each geographic unit is assigned a different. If empty, 123 is used as the base seed per default. The function preserves and restores the user's original random seed (if set prior to calling the function) upon function completion.
+#' @param seed \code{numeric value} for fixing the randomization, so that the same call always returns the same results. If empty (default), the base seed is drawn from the random number generator currently in use, i.e. the results differ across calls unless the user calls \code{set.seed()} beforehand. The function preserves and restores the user's original random seed (if set prior to calling the function) upon function completion.
 
 # DETAILS ######################################################################
 #' @details
 #'
 #' \strong{Function arguments}
 #' \code{seed}
-#' If the \code{seed} argument is specified then the \code{parallel} package
-#' is used to generate independent L’Ecuyer random number streams.
+#' The \code{parallel} package is used to generate independent L’Ecuyer random number streams.
 #' One stream is allocated per variable (or per variable–geography combination, as needed),
-#' ensuring reproducible and independent random draws across variables and scenarios.
+#' ensuring reproducible and independent random draws across variables.
+#' The streams are shared by both scenarios of a comparison (see \code{\link{compare}}),
+#' so that the variables that are common to both scenarios (e.g. \code{rr_...})
+#' take the same simulated value in each simulation of both scenarios.
+#' This is the case whether or not \code{seed} is entered by the user.
 #'
 #'
 #' \strong{Methodology}
@@ -39,6 +42,19 @@
 #' For this purpose, it employs
 #' a Monte Carlo simulation methodology \insertCite{Robert2004_book}{healthiar}
 #' and framework application \insertCite{Rubinstein2016_book}{healthiar}.
+#'
+#' The variables that cannot be negative and are simulated with a normal
+#' distribution (\code{exp_...}, \code{cutoff_...}, \code{bhd_...} and
+#' \code{duration_...}) are drawn from that distribution truncated at zero.
+#' As the normal distribution is symmetric, the simulated values reproduce the
+#' entered confidence interval only if \code{..._lower} and \code{..._upper}
+#' are symmetric around \code{..._central}. The more asymmetric the entered
+#' confidence interval, the more the simulated values depart from it.
+#'
+#' If the assessment covers several geographic units, the uncertainty of the
+#' aggregated unit (\code{geo_id_macro}) is obtained by first summing the
+#' impacts of all \code{geo_id_micro} within each simulation and only then
+#' taking the quantiles of those sums.
 #'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
@@ -148,7 +164,8 @@ summarize_uncertainty <- function(
     purrr::keep(~.x == TRUE) |>
     base::names()
 
-  is_lifetable <- base::unique(input_table_to_check$is_lifetable)
+  # No need to store is_lifetable here,
+  # because get_impact() identifies the life table assessments itself
   exp_type <- base::unique(input_table_to_check$exp_type)
 
   # Determine number of geographic units (n_geo)
@@ -170,6 +187,18 @@ summarize_uncertainty <- function(
   ## Seeds ########
 
   # RNG setup for reproducible, independent streams
+
+  # If the user entered no seed, draw the base seed
+  # from the random number generator (RNG) currently in use.
+  # This draw is done before saving the RNG state below on purpose,
+  # so that the state that is restored at the end of the function is the one
+  # advanced by the draw. Thus, consecutive calls without seed return
+  # different results (as before), while set.seed() before the call still makes
+  # the whole sequence reproducible.
+  if (base::is.null(seed)) {
+    seed <- base::sample.int(n = .Machine$integer.max, size = 1)
+  }
+
   # Save user's global random number generator (RNG) state if it exists
   old_seed_exists <- base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
   if (old_seed_exists) {
@@ -181,27 +210,25 @@ summarize_uncertainty <- function(
   # Save the current RNG kind so we can restore it later
   old_RNGkind <- base::RNGkind()
 
-  # Prepare L'Ecuyer stream seeds if user asked for reproducibility
+  # Prepare L'Ecuyer stream seeds
 
-  # If users request reproducibility (seed not being NULL), switch to L'Ecuyer-CMRG,
-  # set.seed(seed) once, and pre-generate full independent L'Ecuyer streams
-  # (.Random.seed vectors) for each vectorized simulate() call using
-  # parallel::nextRNGStream().
+  # Switch to L'Ecuyer-CMRG, set.seed(seed) once, and pre-generate full
+  # independent L'Ecuyer streams (.Random.seed vectors) for each vectorized
+  # simulate() call using parallel::nextRNGStream().
   # We then assign those full .Random.seed vectors
   # before each vectorized simulate() call to guarantee independence and avoid
   # integer-seed collisions.
 
-  if (!is.null(seed)) {
-    # If the user provided a seed, switch to L'Ecuyer-CMRG and initialise it.
-    # This gives a single seed that can be used to derive reproducible streams
-    # (supports parallel-safe advancing / cluster use).
-    use_streams <- TRUE
-    base::RNGkind(kind = "L'Ecuyer-CMRG")
-    base::set.seed(seed)
+  # The streams are prepared no matter whether the user entered a seed or not.
+  # The reason is that the stream map is shared by both scenarios of a
+  # comparison (see compare()). This is what keeps the simulated values of the
+  # variables that are common to both scenarios (e.g. rr) identical in each
+  # simulation. Simulating them independently in each scenario would add
+  # variance to the comparison that does not exist in reality,
+  # because it is the very same variable in both scenarios.
 
-    } else {
-      use_streams <- FALSE
-  }
+  base::RNGkind(kind = "L'Ecuyer-CMRG")
+  base::set.seed(seed)
 
   # Ensure RNG state and kind are restored on exit
   base::on.exit({
@@ -271,38 +298,53 @@ summarize_uncertainty <- function(
     return(summary)
   }
 
+  # Get uncertainty of the aggregated (macro) geographic unit
+  get_summary_by_geo_id_macro <- function(impact_by_sim){
+
+    summary_by_geo_id_macro <-
+      impact_by_sim |>
+      # First sum the impacts of all geographic units within each simulation
+      # and only then obtain the quantiles (in get_summary() below).
+      # Summing instead the central, lower and upper estimates of each
+      # geographic unit would assume that the uncertainty is perfectly
+      # correlated across the geographic units and would therefore
+      # overestimate the width of the confidence interval
+      dplyr::summarise(
+        impact = base::sum(impact),
+        .by = dplyr::all_of(c("geo_id_macro", "sim_id"))) |>
+      get_summary()
+
+    return(summary_by_geo_id_macro)
+  }
+
 
   ## Prepare streams ########
   # Important: Out of summarize_uncertainty_based_on_input(), see below.
   # Otherwise, different seed for each scenario in two cases
   # and results always different  (no reproducibility)
-  if(use_streams){
-    # Current seed vector (after set.seed(seed)) is a valid L'Ecuyer stream
-    current_stream <- base::get(".Random.seed", envir = .GlobalEnv)
+  # Current seed vector (after set.seed(seed)) is a valid L'Ecuyer stream
+  current_stream <- base::get(".Random.seed", envir = .GlobalEnv)
 
-    # Prepare structure to hold full .Random.seed vectors per var and geo
-    stream_map <- stats::setNames(base::vector("list", base::length(var_names)),
-                                  var_names)
-
+  # Prepare structure to hold full .Random.seed vectors per var and geo
+  stream_map <- stats::setNames(base::vector("list", base::length(var_names)),
+                                var_names)
 
 
-    # Iterate vars and allocate one stream per needed item:
-    for (v in var_names) {
-      if (v %in% var_geo_identical) {
-        # only one stream per variable
-        stream_map[[v]] <- base::list(current_stream)
+
+  # Iterate vars and allocate one stream per needed item:
+  for (v in var_names) {
+    if (v %in% var_geo_identical) {
+      # only one stream per variable
+      stream_map[[v]] <- base::list(current_stream)
+      current_stream <- parallel::nextRNGStream(current_stream)
+    } else {
+      # one stream per geo_id for this variable
+      stream_map[[v]] <- base::vector("list", n_geo)
+      for (g in base::seq_len(n_geo)) {
+        stream_map[[v]][[g]] <- current_stream
         current_stream <- parallel::nextRNGStream(current_stream)
-      } else {
-        # one stream per geo_id for this variable
-        stream_map[[v]] <- base::vector("list", n_geo)
-        for (g in base::seq_len(n_geo)) {
-          stream_map[[v]][[g]] <- current_stream
-          current_stream <- parallel::nextRNGStream(current_stream)
-        }
       }
     }
-  } else {
-    stream_map <- NULL
   }
 
 
@@ -411,9 +453,9 @@ summarize_uncertainty <- function(
   # NOTE: the functions were adapted from those provided by Sciensano
 
   # Set gamma distribution specs
+  # No need to set the shape parameter here,
+  # because stats::optimize() below searches it in the interval provided
   probs <- c(0.025, 0.975)
-  # shape parameter of the gamma distribution
-  par <- 2
 
   ## Fit gamma distribution
   f_gamma <-
@@ -458,26 +500,54 @@ summarize_uncertainty <- function(
     if(distribution == "gamma"){
 
       simulation <-
-        #abs() because negative values have to be avoided
-        base::abs(
-          sim_gamma(
-            n_sim = n,
-            central_estimate = central,
-            lower_estimate = lower,
-            upper_estimate = upper))
+        # No need to avoid negative values here,
+        # because the gamma distribution is defined for positive values only
+        sim_gamma(
+          n_sim = n,
+          central_estimate = central,
+          lower_estimate = lower,
+          upper_estimate = upper)
 
       return(simulation)
 
     } else if (distribution == "normal"){
-        simulation <-
-          #abs() because negative values have to be avoided
-          base::abs(
-            stats::rnorm(
-              n = n,
-              mean = central,
-              sd = (upper - lower) / (2 * stats::qnorm(0.975))))
 
+      sd <- (upper - lower) / (2 * stats::qnorm(0.975))
 
+      # Negative values have to be avoided, because the variables simulated
+      # with a normal distribution (exp, cutoff, bhd and duration)
+      # cannot be negative.
+      # For this purpose, the distribution is truncated at zero, i.e. the
+      # negative values are discarded and drawn again until they are positive
+      # (rejection sampling).
+      # Truncating replaces the abs() used before, which mirrored the negative
+      # values onto the positive side. Mirroring does not remove the negative
+      # part of the distribution but adds it again around the mirrored values,
+      # which shifts the central estimate away from the value entered by the user.
+      # Rejection sampling is used (instead of e.g. inverse transform sampling)
+      # because it keeps stats::rnorm() as the only source of random numbers.
+      # Thus, the simulated values remain exactly the same as before
+      # for the (most common) case in which no value is negative at all.
+      simulation <-
+        stats::rnorm(
+          n = n,
+          mean = central,
+          sd = sd)
+
+      is_negative <- simulation < 0
+
+      while (base::any(is_negative)) {
+
+        simulation[is_negative] <-
+          stats::rnorm(
+            n = base::sum(is_negative),
+            mean = central,
+            sd = sd)
+
+        is_negative <- simulation < 0
+      }
+
+      return(simulation)
 
     } else if (distribution == "beta") {
 
@@ -624,17 +694,6 @@ summarize_uncertainty <- function(
     # Unnest to have table layout
     tidyr::unnest(dplyr::any_of(c("sim_id", var_names_with_ci)))
 
-  geo_ids <-
-    base::intersect(base::names(template_with_sim), c("geo_id_macro", "geo_id_micro"))
-
-
-  if( base::length(var_names_with_ci_geo_identical) >= 1 ){
-    test <-  template_with_sim |>
-      # Keep only unique values because they identical for all geo_id_micro
-      dplyr::mutate(dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical),
-                                  ~ purrr::map(.x, base::unique)))
-  }
-
   input_table_with_sim <- input_table |>
     # Remove lower and upper rows (keep only central)
     # In the summary of uncertainties no lower or upper is used
@@ -680,14 +739,7 @@ summarize_uncertainty <- function(
 
   if("geo_id_macro" %in% base::names(output_attribute$health_main) ){
 
-    summary_by_geo_id_macro <- summary_by_geo_id_micro |>
-      # Sum impacts
-      dplyr::summarise(impact = base::sum(impact),
-                       .by = c("geo_id_macro", "impact_ci")) |>
-      # Round
-      dplyr::mutate(impact_rounded = round(impact))
-
-    summary <- summary_by_geo_id_macro
+    summary <- get_summary_by_geo_id_macro(impact_by_sim = impact_by_sim)
 
   }
 
@@ -786,13 +838,22 @@ summarize_uncertainty <- function(
 
       impact_sim_both_scen <-
         get_impact(
-          input_table = output_both_scen,
+          input_table =
+            output_both_scen |>
+            # Change the name of geo_id_micro adding the sim_id
+            # Same trick as in summarize_uncertainty_based_on_input() above:
+            # get_output() below aggregates by geo_id_micro and ignores
+            # sim_id, so without this the simulations would be summed up
+            dplyr::mutate(geo_id_micro =
+                            base::paste0(geo_id_micro, "_sim_", sim_id)),
           pop_fraction_type = "pif")
 
       output_sim_both_scen <-
-        get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["impact_by_sim"]]
+        get_output(results_raw = impact_sim_both_scen$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
 
       impact_by_sim <- output_sim_both_scen|>
+        # Bring back the original geo_id_micro after using the trick above
+        dplyr::mutate(geo_id_micro = base::gsub("_sim_.*", "", geo_id_micro))|>
         dplyr::relocate(impact, impact_rounded,
                         .after = sim_id)
 
@@ -807,14 +868,7 @@ summarize_uncertainty <- function(
 
   if("geo_id_macro" %in% base::names(output_attribute$health_main) ){
 
-    summary_by_geo_id_macro <- summary_by_geo_id_micro |>
-      # Sum impacts
-      dplyr::summarise(impact = base::sum(impact),
-                       .by = c("geo_id_macro", "impact_ci")) |>
-      # Round
-      dplyr::mutate(impact_rounded = round(impact))
-
-    summary <- summary_by_geo_id_macro
+    summary <- get_summary_by_geo_id_macro(impact_by_sim = impact_by_sim)
 
   }
 

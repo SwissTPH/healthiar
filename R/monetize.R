@@ -165,13 +165,13 @@ monetize <- function(output_attribute = NULL,
       is_lifetable <- base::unique(input_table$is_lifetable)
 
     # If after compare(), input table is a list
-    } else if (approach_comparison == "delta") {
+    } else if (approach_comparison %in% c("delta", "pif")) {
 
-        # When delta, two input tables (one per scenario)
+        # When comparing, two input tables (one per scenario)
 
         is_lifetable <- base::unique(input_table[["input_table_scen_1"]]$is_lifetable)
 
-      } else { # If approach comparison "pif" or if no_comparison
+      } else { # If no_comparison
 
         is_lifetable <- base::unique(input_table$is_lifetable)
       }

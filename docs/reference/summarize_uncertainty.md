@@ -37,11 +37,13 @@ summarize_uncertainty(output_attribute, n_sim, seed = NULL)
 
 - seed:
 
-  `numeric value` for fixing the randomization. Based on it, each
-  geographic unit is assigned a different. If empty, 123 is used as the
-  base seed per default. The function preserves and restores the user's
-  original random seed (if set prior to calling the function) upon
-  function completion.
+  `numeric value` for fixing the randomization, so that the same call
+  always returns the same results. If empty (default), the base seed is
+  drawn from the random number generator currently in use, i.e. the
+  results differ across calls unless the user calls
+  [`set.seed()`](https://rdrr.io/r/base/Random.html) beforehand. The
+  function preserves and restores the user's original random seed (if
+  set prior to calling the function) upon function completion.
 
 ## Value
 
@@ -65,11 +67,15 @@ The two results elements are added to the existing output.
 
 ## Details
 
-**Function arguments** `seed` If the `seed` argument is specified then
-the `parallel` package is used to generate independent L’Ecuyer random
-number streams. One stream is allocated per variable (or per
-variable–geography combination, as needed), ensuring reproducible and
-independent random draws across variables and scenarios.
+**Function arguments** `seed` The `parallel` package is used to generate
+independent L’Ecuyer random number streams. One stream is allocated per
+variable (or per variable–geography combination, as needed), ensuring
+reproducible and independent random draws across variables. The streams
+are shared by both scenarios of a comparison (see
+[`compare`](https://swisstph.github.io/healthiar/reference/compare.md)),
+so that the variables that are common to both scenarios (e.g. `rr_...`)
+take the same simulated value in each simulation of both scenarios. This
+is the case whether or not `seed` is entered by the user.
 
 **Methodology**
 
@@ -78,6 +84,19 @@ impacts (i.e. a single confidence interval instead of many
 combinations). For this purpose, it employs a Monte Carlo simulation
 methodology (Robert and Casella 2004) and framework application
 (Rubinstein and Kroese 2016) .
+
+The variables that cannot be negative and are simulated with a normal
+distribution (`exp_...`, `cutoff_...`, `bhd_...` and `duration_...`) are
+drawn from that distribution truncated at zero. As the normal
+distribution is symmetric, the simulated values reproduce the entered
+confidence interval only if `..._lower` and `..._upper` are symmetric
+around `..._central`. The more asymmetric the entered confidence
+interval, the more the simulated values depart from it.
+
+If the assessment covers several geographic units, the uncertainty of
+the aggregated unit (`geo_id_macro`) is obtained by first summing the
+impacts of all `geo_id_micro` within each simulation and only then
+taking the quantiles of those sums.
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
