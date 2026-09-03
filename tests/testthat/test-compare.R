@@ -505,7 +505,7 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
 
 testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|iteration_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
@@ -616,8 +616,8 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|i
 
 testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_yll_lifetable_test <-
     healthiar::attribute_lifetable(
@@ -661,8 +661,8 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
 
 testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_yll_lifetable_geo <-
     healthiar::attribute_lifetable(
@@ -712,8 +712,8 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
 
 testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_yll_lifetable <-
     healthiar::attribute_lifetable(
@@ -758,8 +758,8 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
 
 testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_yll_lifetable_geo <-
     healthiar::attribute_lifetable(
@@ -812,8 +812,8 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
 
 testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_deaths_lifetable <-
     healthiar::attribute_lifetable(
@@ -857,8 +857,8 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
 
 testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_deaths_lifetable_geo <-
     healthiar::attribute_lifetable(
@@ -908,8 +908,8 @@ testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_singl
 
 testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_deaths_lifetable <-
     healthiar::attribute_lifetable(
@@ -954,8 +954,8 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
 
 testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_deaths_lifetable_geo <-
     healthiar::attribute_lifetable(
@@ -1004,7 +1004,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
 
 testthat::test_that("results the same Sciensano tobacco example |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
-  data <- readRDS(testthat::test_path("data/rr_data.RDS"))
+  data <- base::readRDS(testthat::test_path("testdata", "rr_pathways.rds"))
   data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
 
   output_attribute_scen_1 =
@@ -1036,7 +1036,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
 
 testthat::test_that("results the same Sciensano tobacco example |pathway_compare|comp_appr_pif|exp_dist|iteration_FALSE|", {
 
-  data <- readRDS(testthat::test_path("data/rr_data.RDS"))
+  data <- base::readRDS(testthat::test_path("testdata", "rr_pathways.rds"))
   data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
 
   output_attribute_scen_1 =
@@ -1070,7 +1070,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
 
 testthat::test_that("results the same Sciensano tobacco example |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
-  data <- readRDS(testthat::test_path("data/rr_data.RDS"))
+  data <- base::readRDS(testthat::test_path("testdata", "rr_pathways.rds"))
   data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
 
   output_attribute_scen_1 =
@@ -1104,7 +1104,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
 
 testthat::test_that("results the same Sciensano tobacco example |pathway_compare|comp_appr_pif|exp_dist|iteration_TRUE|", {
 
-  data <- readRDS(testthat::test_path("data/rr_data.RDS"))
+  data <- base::readRDS(testthat::test_path("testdata", "rr_pathways.rds"))
   data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
 
   output_attribute_scen_1 =
@@ -1244,7 +1244,7 @@ testthat::test_that("error pif and different bhd", {
 
 testthat::test_that("error pif and absolute risk", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 

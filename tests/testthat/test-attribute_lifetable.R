@@ -8,9 +8,9 @@
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -179,9 +179,9 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_TRUE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   # Check that decimals between 0 and 1 are allowed in bhd and population
   population <- 
@@ -226,9 +226,9 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
 
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_TRUE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -268,9 +268,9 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
 
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -303,9 +303,9 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_TRUE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   # Only min_age and max_age change across the calls below,
   # so they are the only arguments of this function
@@ -372,9 +372,9 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
 
 testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -416,7 +416,7 @@ testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_y
 ##### ONE SEX ###########################
 testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
   # EKV2010 data
-  data <- base::readRDS(testthat::test_path("data", "lifetable_male_ekv_2010.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "lifetable_male_ekv_2010.rds"))
 
   testthat::expect_equal(
     object =
@@ -444,8 +444,8 @@ testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_y
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -486,7 +486,7 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
 
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_TRUE|min_age_FALSE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- healthiar::exdat_lifetable
+  data <- exdat_lifetable
 
   # With a single year exposure the newborns of the following years were never
   # exposed, so with_newborns must give the same result as without_newborns
@@ -520,7 +520,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
 #### ONE GEO UNIT #####################################
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   testthat::expect_equal(
     object =
@@ -553,8 +553,8 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -594,7 +594,7 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
 #### ONE GEO UNIT #############################################################
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   testthat::expect_equal(
     object = healthiar::attribute_lifetable(
@@ -625,8 +625,8 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -667,7 +667,7 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
 
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   # with_newborns has no effect with a single year exposure,
   # so healthiar warns about it
@@ -705,9 +705,9 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
 
 testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -749,7 +749,7 @@ testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_const
 ### CONSTANT EXPOSURE & WITH NEWBORNS ###########################################
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   testthat::expect_equal(
     object = healthiar::attribute_lifetable(
@@ -785,7 +785,7 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
 
 testthat::test_that("results the same |pathway_lifetable|age_group entered in any order", {
 
-  data <- healthiar::exdat_lifetable
+  data <- exdat_lifetable
   # Descending age groups within each sex
   data_descending <- data[base::order(data$sex, -data$age_group), ]
 
@@ -816,7 +816,7 @@ testthat::test_that("results the same |pathway_lifetable|age_group entered in an
 ## TIME HORIZON ################################################################
 testthat::test_that("results correct |pathway_lifetable|time_horizon of 1 year", {
 
-  data <- healthiar::exdat_lifetable
+  data <- exdat_lifetable
 
   # A time horizon of 1 covers only the year of analysis.
 
@@ -849,7 +849,7 @@ testthat::test_that("results correct |pathway_lifetable|time_horizon of 1 year",
 
 testthat::test_that("results correct |pathway_lifetable|impact_per_100k_inhab by year", {
 
-  data <- healthiar::exdat_lifetable
+  data <- exdat_lifetable
 
   results_by_year <-
     healthiar::attribute_lifetable(
@@ -885,9 +885,9 @@ testthat::test_that("results correct |pathway_lifetable|impact_per_100k_inhab by
 ## ERROR #########
 testthat::test_that("error if length of age range higher than deaths", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_error(
     object =
@@ -928,7 +928,7 @@ testthat::test_that("error if length of age range higher than deaths", {
 
 testthat::test_that("error if bhd argument contains 0", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   data[["pop"]]$number_of_deaths_male[47] <- -1 # 47 chosen randomly
 
@@ -961,9 +961,9 @@ testthat::test_that("error if bhd argument contains 0", {
 
 testthat::test_that("error if population argument contains 0", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   data[["pop"]]$midyear_population_male[47] <- 0 # 47 chosen randomly
 
@@ -996,9 +996,9 @@ testthat::test_that("error if population argument contains 0", {
 
 testthat::test_that("error if exposuer lower than 0 | lifetable", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_error(
     object = healthiar::attribute_lifetable(
@@ -1027,7 +1027,7 @@ testthat::test_that("error if exposuer lower than 0 | lifetable", {
 
 testthat::test_that("error if age_group is not a 1-year consecutive sequence", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   attribute_lifetable_with_age_group <- function(age_group){
     healthiar::attribute_lifetable(
@@ -1079,7 +1079,7 @@ testthat::test_that("error if age_group is not a 1-year consecutive sequence", {
 
 testthat::test_that("error if health_outcome is missing or not an option", {
 
-  data <- healthiar::exdat_lifetable
+  data <- exdat_lifetable
 
   attribute_lifetable_with_health_outcome <-
     function(health_outcome) {
@@ -1113,7 +1113,7 @@ testthat::test_that("error if health_outcome is missing or not an option", {
 
 testthat::test_that("error if time_horizon lower than 1", {
 
-  data <- healthiar::exdat_lifetable
+  data <- exdat_lifetable
 
   # A time horizon of 1 covers only the year of analysis,
   # so lower values have no meaning
@@ -1144,9 +1144,9 @@ testthat::test_that("error if time_horizon lower than 1", {
 ## WARNING #########
 testthat::test_that("warning if any bhd = 0", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   # Check that 0 in bhd is allowed allowed with warning
   population <- 

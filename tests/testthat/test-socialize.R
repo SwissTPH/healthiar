@@ -32,7 +32,7 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
 
 testthat::test_that("results the same |fake_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
   data_groups <- dplyr::bind_rows(data, data) |>
     dplyr::mutate(age_group = rep(c("below_40", "above_40"), each = 85))
 
@@ -62,8 +62,8 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
 
 testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|", {
 
-  pop_ref <- base::readRDS(testthat::test_path("data", "pop_ref.rds"))
-  no2_mrt_mdi <- base::readRDS(testthat::test_path("data", "no2_mrt_mdi.rds"))
+  pop_ref <- base::readRDS(testthat::test_path("testdata", "pop_ref.rds"))
+  no2_mrt_mdi <- base::readRDS(testthat::test_path("testdata", "no2_mrt_mdi.rds"))
 
   data <- dplyr::left_join(
     no2_mrt_mdi,
@@ -90,7 +90,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
 
   attribute_result_age <-
     healthiar::attribute_health(
@@ -143,7 +143,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_FALSE|social_indicator_TRUE|ref_pop_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -180,7 +180,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_FALSE|social_indicator_FALSE|ref_pop_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -217,7 +217,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
   testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_FALSE|social_indicator_TRUE|ref_pop_TRUE|", {
 
     ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-    data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+    data <- base::readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
 
     testthat::expect_equal(
       ## healthiar FUNCTION CALL
@@ -251,7 +251,7 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 testthat::test_that("error if non-numeric", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
 
   testthat::expect_error(
     ## healthiar FUNCTION CALL
@@ -272,7 +272,7 @@ testthat::test_that("error if non-numeric", {
 
 testthat::test_that("error if non-numeric in numeric var", {
 
-  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
 
   testthat::expect_error(
     ## healthiar FUNCTION CALL
@@ -292,7 +292,7 @@ testthat::test_that("error if non-numeric in numeric var", {
 
 testthat::test_that("error if non-numeric in integer var", {
 
-  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
 
   testthat::expect_error(
     ## healthiar FUNCTION CALL
@@ -313,7 +313,7 @@ testthat::test_that("error if non-numeric in integer var", {
 
 testthat::test_that("error if non-numeric in integer var", {
 
-  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
 
   testthat::expect_error(
     ## healthiar FUNCTION CALL
@@ -334,7 +334,7 @@ testthat::test_that("error if non-numeric in integer var", {
 
 testthat::test_that("error if not integer var", {
 
-  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
 
   testthat::expect_error(
     ## healthiar FUNCTION CALL
@@ -382,7 +382,7 @@ testthat::test_that("error if age_group does not match in output_attribute", {
 
 testthat::test_that("error if not fraction", {
 
-  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
   data$REF[1] <- 1.2 # Value higher than 0 to force error
 
   testthat::expect_error(
@@ -403,7 +403,7 @@ testthat::test_that("error if not fraction", {
 
 testthat::test_that("error if not fraction in the last position", {
 
-  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
   # Value higher than 1 in the LAST position to force error.
   # All values of the argument must be checked and not only the first one
   data$REF[base::length(data$REF)] <- 1.2
@@ -426,7 +426,7 @@ testthat::test_that("error if not fraction in the last position", {
 
 testthat::test_that("error if var lower than 0", {
 
-  data <- base::readRDS(testthat::test_path("data", "no2_bimd_age.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
 
   testthat::expect_error(
     ## healthiar FUNCTION CALL

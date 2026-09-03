@@ -1,9 +1,9 @@
 testthat::test_that("results correct", {
 
-  municip <- sf::st_read(testthat::test_path("data", "municipalities_brussels.gpkg"), quiet = TRUE)
-  pm25 <- terra::rast(testthat::test_path("data", "pm25.tif"))
-  pop <- terra::rast(testthat::test_path("data", "population.tif"))
-  results <- utils::read.csv(testthat::test_path("data", "exp_grid_results.csv"))
+  municip <- exdat_pwm_2
+  pm25 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
+  pop <- terra::rast(testthat::test_path("testdata", "population.tif"))
+  results <- utils::read.csv(testthat::test_path("testdata", "expected_exposure_grid.csv"))
 
   testthat::expect_equal(
     object =
@@ -19,9 +19,9 @@ testthat::test_that("results correct", {
 
 testthat::test_that("results correct", {
 
-  municip <- sf::st_read(testthat::test_path("data", "municipalities_brussels.gpkg"), quiet = TRUE)
-  pm25 <- terra::rast(testthat::test_path("data", "pm25.tif"))
-  results <- utils::read.csv(testthat::test_path("data", "exp_pwm_results.csv"))
+  municip <- exdat_pwm_2
+  pm25 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
+  results <- utils::read.csv(testthat::test_path("testdata", "expected_exposure_pwm.csv"))
 
   testthat::expect_equal(
     object =
@@ -37,9 +37,9 @@ testthat::test_that("results correct", {
 
 testthat::test_that("results correct", {
 
-  municip <- sf::st_read(testthat::test_path("data", "municipalities_brussels.gpkg"), quiet = TRUE)
-  pm25 <- terra::rast(testthat::test_path("data", "pm25.tif"))
-  results <- utils::read.csv(testthat::test_path("data", "exp_simple_results.csv"))
+  municip <- exdat_pwm_2
+  pm25 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
+  results <- utils::read.csv(testthat::test_path("testdata", "expected_exposure_simple.csv"))
 
   testthat::expect_equal(
     object =
