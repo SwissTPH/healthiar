@@ -271,26 +271,22 @@ prepare_lifetable <-
         entry_population_1_year = get_entry_population(
           prob_surviving_1_year = prob_surviving_1_year,
           population_n_years = population_n_years,
+          bhd_n_years = bhd_n_years,
           age_interval_index = age_interval_index,
           # For age_interval_length enter the value of the varible
           # And not the column which is a vector repeating the value (not needed)
-          age_interval_length = {{age_interval_length}}),
-        # # Calculate mid-year population for 1-year interval
-        # # This is the average between the entry-population in year y and y+1
-        # # lead() gives the value for y+1
-        # # colesce(x, 0) replaces the NA with 0
-        # # There is a NA at the end because the last row has not y+1
-        # # The assumption is that everybody is death in the row after the last one
-        # # *0.5 because it is the average
-        population_1_year =  0.5 * (entry_population_1_year + dplyr::coalesce(dplyr::lead(entry_population_1_year), 0)),
-        bhd_1_year_base = 2 * (entry_population_1_year - population_1_year),
-          
-        # Reallocate Age 0 deaths if custom fraction_lived (e.g., a0 = 0.1) is passed
-        bhd_1_year = dplyr::if_else(
-          age_interval_index == 1 & fraction_lived_n_years != 0.5,
-          bhd_n_years * (1 - fraction_lived_n_years),
-          bhd_1_year_base
-        )
+          age_interval_length = {{age_interval_length}},
+          fraction_lived = fraction_lived_n_years),
+        # Calculate deaths for 1-year interval
+        # The deaths at one single year of age are the difference between
+        # the entry population of that age and the entry population of the
+        # next age, i.e. those who did not make it to the next birthday.
+        # lead() gives the entry population one year older.
+        # coalesce(x, 0) replaces the NA with 0.
+        # There is a NA at the end because the last row has no next age.
+        # The assumption is that nobody survives the last age group
+        bhd_1_year = 
+          entry_population_1_year - dplyr::coalesce(dplyr::lead(entry_population_1_year), 0)
       )
 
     # Fix the last element of each interval
