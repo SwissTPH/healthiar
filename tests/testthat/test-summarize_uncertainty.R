@@ -241,11 +241,15 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_inc
     object =
       healthiar::summarize_uncertainty(
         output_attribute = bestcost_pm_copd_geo_short,
-        n_sim = 100
+        n_sim = 100,
+        # Seed entered explicitly. Without it the expectation below only held
+        # because the runif_with_seed() calls above happened to leave the RNG
+        # in a fixed state
+        seed = 123
       )$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2025-10-29; no comparison study
-      c(16001, 7422, 22292, 16989, 7855, 23587)
+    expected = # Results on 2026-09-03; no comparison study
+      c(15497, 8007, 24682, 16588, 8486, 25928)
   )
 })
 
@@ -572,9 +576,62 @@ testthat::test_that("summary uncertainty comparison iteration", {
     object =
       healthiar::summarize_uncertainty(
         output_attribute = comparison_iteration,
-        n_sim = 100)$uncertainty_main$impact_rounded,
-    expected = # Results on 2025-10-29; no comparison study
-      c(1113, 418, 1729)
+        n_sim = 100,
+        # Seed entered explicitly. Without it this test inherited the RNG state
+        # left by the preceding tests, so it was not reproducible standalone
+        seed = 123)$uncertainty_main$impact_rounded,
+    expected = # Results on 2026-09-03; no comparison study
+      c(1111, 737, 1584)
+  )
+})
+
+## SHARED SIMULATED VALUES ACROSS SCENARIOS #######
+
+testthat::test_that("results correct |pathway_uncertainty_compare|exp_single|erf_rr_increment|iteration_FALSE|", {
+
+  # The variables that are common to both scenarios (here rr and bhd) must take
+  # the same simulated value in both scenarios of each simulation.
+  # Therefore, comparing a scenario with an identical one must result in a
+  # delta of exactly zero, also when the user enters no seed.
+  # Otherwise the comparison would show a variability that does not exist,
+  # because it is the very same variable in both scenarios.
+
+  scen_1 <-
+    healthiar::attribute_health(
+      erf_shape = "log_linear",
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      exp_central = 8,
+      exp_lower = 7,
+      exp_upper = 9,
+      cutoff_central = 5,
+      bhd_central = 1E5,
+      bhd_lower = 5E4,
+      bhd_upper = 2E5)
+
+  scen_2_identical <-
+    healthiar::attribute_mod(
+      output_attribute = scen_1,
+      # Same values as in scenario 1
+      exp_central = 8,
+      exp_lower = 7,
+      exp_upper = 9)
+
+  comparison_of_identical_scenarios <-
+    healthiar::compare(
+      output_attribute_scen_1 = scen_1,
+      output_attribute_scen_2 = scen_2_identical,
+      approach_comparison = "delta")
+
+  testthat::expect_equal(
+    object =
+      healthiar::summarize_uncertainty(
+        output_attribute = comparison_of_identical_scenarios,
+        # No seed on purpose (see comment above)
+        n_sim = 100)$uncertainty_main$impact,
+    expected = c(0, 0, 0)
   )
 })
 

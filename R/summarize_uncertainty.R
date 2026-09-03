@@ -19,17 +19,20 @@
 # ARGUMENTS ####################################################################
 #' @param output_attribute \code{variable} in which the output of a \code{healthiar::attribute_...()} function call are stored.
 #' @param n_sim \code{numeric value} indicating the number of simulations to be performed.
-#' @param seed \code{numeric value} for fixing the randomization. Based on it, each geographic unit is assigned a different. If empty, 123 is used as the base seed per default. The function preserves and restores the user's original random seed (if set prior to calling the function) upon function completion.
+#' @param seed \code{numeric value} for fixing the randomization, so that the same call always returns the same results. If empty (default), the base seed is drawn from the random number generator currently in use, i.e. the results differ across calls unless the user calls \code{set.seed()} beforehand. The function preserves and restores the user's original random seed (if set prior to calling the function) upon function completion.
 
 # DETAILS ######################################################################
 #' @details
 #'
 #' \strong{Function arguments}
 #' \code{seed}
-#' If the \code{seed} argument is specified then the \code{parallel} package
-#' is used to generate independent L’Ecuyer random number streams.
+#' The \code{parallel} package is used to generate independent L’Ecuyer random number streams.
 #' One stream is allocated per variable (or per variable–geography combination, as needed),
-#' ensuring reproducible and independent random draws across variables and scenarios.
+#' ensuring reproducible and independent random draws across variables.
+#' The streams are shared by both scenarios of a comparison (see \code{\link{compare}}),
+#' so that the variables that are common to both scenarios (e.g. \code{rr_...})
+#' take the same simulated value in each simulation of both scenarios.
+#' This is the case whether or not \code{seed} is entered by the user.
 #'
 #'
 #' \strong{Methodology}
@@ -170,6 +173,18 @@ summarize_uncertainty <- function(
   ## Seeds ########
 
   # RNG setup for reproducible, independent streams
+
+  # If the user entered no seed, draw the base seed
+  # from the random number generator (RNG) currently in use.
+  # This draw is done before saving the RNG state below on purpose,
+  # so that the state that is restored at the end of the function is the one
+  # advanced by the draw. Thus, consecutive calls without seed return
+  # different results (as before), while set.seed() before the call still makes
+  # the whole sequence reproducible.
+  if (base::is.null(seed)) {
+    seed <- base::sample.int(n = .Machine$integer.max, size = 1)
+  }
+
   # Save user's global random number generator (RNG) state if it exists
   old_seed_exists <- base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
   if (old_seed_exists) {
@@ -181,27 +196,25 @@ summarize_uncertainty <- function(
   # Save the current RNG kind so we can restore it later
   old_RNGkind <- base::RNGkind()
 
-  # Prepare L'Ecuyer stream seeds if user asked for reproducibility
+  # Prepare L'Ecuyer stream seeds
 
-  # If users request reproducibility (seed not being NULL), switch to L'Ecuyer-CMRG,
-  # set.seed(seed) once, and pre-generate full independent L'Ecuyer streams
-  # (.Random.seed vectors) for each vectorized simulate() call using
-  # parallel::nextRNGStream().
+  # Switch to L'Ecuyer-CMRG, set.seed(seed) once, and pre-generate full
+  # independent L'Ecuyer streams (.Random.seed vectors) for each vectorized
+  # simulate() call using parallel::nextRNGStream().
   # We then assign those full .Random.seed vectors
   # before each vectorized simulate() call to guarantee independence and avoid
   # integer-seed collisions.
 
-  if (!is.null(seed)) {
-    # If the user provided a seed, switch to L'Ecuyer-CMRG and initialise it.
-    # This gives a single seed that can be used to derive reproducible streams
-    # (supports parallel-safe advancing / cluster use).
-    use_streams <- TRUE
-    base::RNGkind(kind = "L'Ecuyer-CMRG")
-    base::set.seed(seed)
+  # The streams are prepared no matter whether the user entered a seed or not.
+  # The reason is that the stream map is shared by both scenarios of a
+  # comparison (see compare()). This is what keeps the simulated values of the
+  # variables that are common to both scenarios (e.g. rr) identical in each
+  # simulation. Simulating them independently in each scenario would add
+  # variance to the comparison that does not exist in reality,
+  # because it is the very same variable in both scenarios.
 
-    } else {
-      use_streams <- FALSE
-  }
+  base::RNGkind(kind = "L'Ecuyer-CMRG")
+  base::set.seed(seed)
 
   # Ensure RNG state and kind are restored on exit
   base::on.exit({
@@ -276,33 +289,29 @@ summarize_uncertainty <- function(
   # Important: Out of summarize_uncertainty_based_on_input(), see below.
   # Otherwise, different seed for each scenario in two cases
   # and results always different  (no reproducibility)
-  if(use_streams){
-    # Current seed vector (after set.seed(seed)) is a valid L'Ecuyer stream
-    current_stream <- base::get(".Random.seed", envir = .GlobalEnv)
+  # Current seed vector (after set.seed(seed)) is a valid L'Ecuyer stream
+  current_stream <- base::get(".Random.seed", envir = .GlobalEnv)
 
-    # Prepare structure to hold full .Random.seed vectors per var and geo
-    stream_map <- stats::setNames(base::vector("list", base::length(var_names)),
-                                  var_names)
-
+  # Prepare structure to hold full .Random.seed vectors per var and geo
+  stream_map <- stats::setNames(base::vector("list", base::length(var_names)),
+                                var_names)
 
 
-    # Iterate vars and allocate one stream per needed item:
-    for (v in var_names) {
-      if (v %in% var_geo_identical) {
-        # only one stream per variable
-        stream_map[[v]] <- base::list(current_stream)
+
+  # Iterate vars and allocate one stream per needed item:
+  for (v in var_names) {
+    if (v %in% var_geo_identical) {
+      # only one stream per variable
+      stream_map[[v]] <- base::list(current_stream)
+      current_stream <- parallel::nextRNGStream(current_stream)
+    } else {
+      # one stream per geo_id for this variable
+      stream_map[[v]] <- base::vector("list", n_geo)
+      for (g in base::seq_len(n_geo)) {
+        stream_map[[v]][[g]] <- current_stream
         current_stream <- parallel::nextRNGStream(current_stream)
-      } else {
-        # one stream per geo_id for this variable
-        stream_map[[v]] <- base::vector("list", n_geo)
-        for (g in base::seq_len(n_geo)) {
-          stream_map[[v]][[g]] <- current_stream
-          current_stream <- parallel::nextRNGStream(current_stream)
-        }
       }
     }
-  } else {
-    stream_map <- NULL
   }
 
 

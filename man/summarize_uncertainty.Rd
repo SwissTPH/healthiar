@@ -11,7 +11,7 @@ summarize_uncertainty(output_attribute, n_sim, seed = NULL)
 
 \item{n_sim}{\code{numeric value} indicating the number of simulations to be performed.}
 
-\item{seed}{\code{numeric value} for fixing the randomization. Based on it, each geographic unit is assigned a different. If empty, 123 is used as the base seed per default. The function preserves and restores the user's original random seed (if set prior to calling the function) upon function completion.}
+\item{seed}{\code{numeric value} for fixing the randomization, so that the same call always returns the same results. If empty (default), the base seed is drawn from the random number generator currently in use, i.e. the results differ across calls unless the user calls \code{set.seed()} beforehand. The function preserves and restores the user's original random seed (if set prior to calling the function) upon function completion.}
 }
 \value{
 This function returns a \code{list} containing:
@@ -45,10 +45,13 @@ Input variables that will be processed are:
 \details{
 \strong{Function arguments}
 \code{seed}
-If the \code{seed} argument is specified then the \code{parallel} package
-is used to generate independent L’Ecuyer random number streams.
+The \code{parallel} package is used to generate independent L’Ecuyer random number streams.
 One stream is allocated per variable (or per variable–geography combination, as needed),
-ensuring reproducible and independent random draws across variables and scenarios.
+ensuring reproducible and independent random draws across variables.
+The streams are shared by both scenarios of a comparison (see \code{\link{compare}}),
+so that the variables that are common to both scenarios (e.g. \code{rr_...})
+take the same simulated value in each simulation of both scenarios.
+This is the case whether or not \code{seed} is entered by the user.
 
 
 \strong{Methodology}
