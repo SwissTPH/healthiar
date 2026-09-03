@@ -21,6 +21,7 @@ This function returns a \code{tibble} containing the columns:
 \itemize{
  \item \code{population_for_attribute} (\code{numeric}) containing  population values for each age
  \item \code{bhd_for_attribute} (\code{numeric}) containing baseline health data values for each age
+ \item \code{fraction_lived_for_attribute} (\code{numeric}) containing the fraction of the year lived for each age
  \item and more columns containing input data or results
 }
 }
@@ -36,15 +37,16 @@ See the AirQ+ manual
 for guidance on how to convert larger age groups to 1 year age groups,
 section "Estimation of yearly values" \insertCite{WHO2020_report}{healthiar}.
 
-\code{fraction_lived} is by default 0.5 for all age groups. However, 
-in low-mortality settings, infant deaths are heavily concentrated
-in the first weeks of life. 
-Therefore, \code{fraction_lived} can be lower e.g. 0.1 for the first age group.
+\code{fraction_lived} is by default 0.5 for all age groups, i.e. the value
+that AirQ+ assumes. It determines the probability of dying in the age
+interval and how the mid-year population of the age group is split over the
+single years of age it contains. It does \strong{not} determine how the
+deaths of the age group are distributed over those single years of age.
 
-When \code{fraction_lived[1] < 0.5}, the function reallocates the baseline 
-health data (\code{bhd}) for the first age group \eqn{[0, 5)} such that 
-\code{bhd[1] * (1 - fraction_lived[1])} deaths are assigned to single-year 
-age 0, and the remaining deaths are split equally across single-year ages 1–4.
+The same value of \code{fraction_lived} has to be used when the resulting
+single-year life table is passed on to \code{attribute_lifetable()}.
+The output column \code{fraction_lived_for_attribute} is provided for
+that purpose.
 
 \strong{Last age group}
 
@@ -57,7 +59,8 @@ Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
 \itemize{
- \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#fraction-of-the-age-interval-lived}{Fraction of the age interval lived}}
 }
 \examples{
 # Goal: Convert 5-year population and death data into single year life table
