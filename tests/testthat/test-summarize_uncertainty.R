@@ -595,6 +595,60 @@ testthat::test_that("results the same |pathway_uncertainty_compare|exp_dist|erf_
   )
 })
 
+## PIF #######
+
+testthat::test_that("results the same |pathway_uncertainty_compare_pif|exp_single|erf_rr_increment|iteration_FALSE|", {
+
+  # Before, this call stopped with the error message of the data validation
+  # saying that no uncertainty was entered, because compare() stored the input
+  # table of the pif approach in a different way than the one of the delta
+  # approach and the comparison was therefore not identified as such
+
+  rr_scenario_1 <-
+    healthiar::attribute_health(
+      exp_central = 8,
+      exp_lower = 7,
+      exp_upper = 9,
+      cutoff_central = 5,
+      cutoff_lower = 4,
+      cutoff_upper = 6,
+      bhd_central = 1E5,
+      bhd_lower = 5E4,
+      bhd_upper = 2E5,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear")
+
+  rr_scenario_2 <-
+    healthiar::attribute_mod(
+      output_attribute = rr_scenario_1,
+      exp_central = 7.5,
+      exp_lower = 6.2,
+      exp_upper = 8.1)
+
+  rr_comparison_pif <-
+    healthiar::compare(
+      output_attribute_scen_1 = rr_scenario_1,
+      output_attribute_scen_2 = rr_scenario_2,
+      approach_comparison = "pif")
+
+  testthat::expect_equal(
+    object =
+      healthiar::summarize_uncertainty(
+        output_attribute = rr_comparison_pif,
+        n_sim = 100,
+        seed = 122)$uncertainty_main$impact_rounded,
+
+    expected =
+      # Results on 2026-09-03; no comparison study.
+      # The central estimate is close to the one obtained without
+      # Monte Carlo simulation, i.e. c(556, 291, 820)
+      c(561, 175, 1156)
+  )
+})
+
 ## ITERATION #######
 
 testthat::test_that("summary uncertainty comparison iteration", {

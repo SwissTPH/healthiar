@@ -379,7 +379,7 @@ compare <-
             )
 
         # Merge the input tables by common columns
-        input_table <-
+        input_table_both_scen <-
           dplyr::left_join(
             input_table_scen_1,
             input_table_scen_2,
@@ -388,12 +388,21 @@ compare <-
 
         results <-
           get_impact(
-            input_table = input_table,
+            input_table = input_table_both_scen,
             pop_fraction_type = "pif")
 
         # Collect results
         results_raw <- results[["results_raw"]]
         intermediate_calculations <- results[["intermediate_calculations"]]
+
+        # Store the input table of each scenario separately (as in delta above)
+        # and not the merged one, which was only needed for get_impact() above.
+        # Keeping the same structure in both approaches enables the functions
+        # downstream (e.g. summarize_uncertainty()) to identify a comparison
+        # and to access the input data of each scenario in the same way
+        input_table <-
+          base::list(input_table_scen_1 = input_table_scen_1,
+                     input_table_scen_2 = input_table_scen_2)
 
       }
 

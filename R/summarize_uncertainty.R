@@ -831,13 +831,22 @@ summarize_uncertainty <- function(
 
       impact_sim_both_scen <-
         get_impact(
-          input_table = output_both_scen,
+          input_table =
+            output_both_scen |>
+            # Change the name of geo_id_micro adding the sim_id
+            # Same trick as in summarize_uncertainty_based_on_input() above:
+            # get_output() below aggregates by geo_id_micro and ignores
+            # sim_id, so without this the simulations would be summed up
+            dplyr::mutate(geo_id_micro =
+                            base::paste0(geo_id_micro, "_sim_", sim_id)),
           pop_fraction_type = "pif")
 
       output_sim_both_scen <-
-        get_output(results_raw = output_sim_after_impact$results_raw)[["health_detailed"]][["impact_by_sim"]]
+        get_output(results_raw = impact_sim_both_scen$results_raw)[["health_detailed"]][["results_by_geo_id_micro"]]
 
       impact_by_sim <- output_sim_both_scen|>
+        # Bring back the original geo_id_micro after using the trick above
+        dplyr::mutate(geo_id_micro = base::gsub("_sim_.*", "", geo_id_micro))|>
         dplyr::relocate(impact, impact_rounded,
                         .after = sim_id)
 
