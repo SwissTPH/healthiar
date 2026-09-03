@@ -959,7 +959,7 @@ For $fraction\_lived = 0.5$ this reproduces the values published in the AirQ+ ma
 
 `fraction_lived` does *not* determine how the deaths of an age group are distributed over the single years of age it contains; that distribution follows from the survival probabilities, as in AirQ+. Both quantities are distinct in the life table literature and the second one cannot be derived from $_na_x$ [@Preston2001_book].
 
-`prepare_lifetable()` can therefore not reproduce the concentration of deaths at age 0 that is observed in low-mortality settings. Aggregating the real single-year data of `exdat_lifetable` into 5-year age groups and converting them back gives about 30 deaths at age 0 where the true number is 137, and `fraction_lived` changes that by less than 0.1%. If the deaths at age 0 matter for your assessment, obtain single-year population and death data for the youngest ages instead of relying on the conversion.
+`prepare_lifetable()` can therefore not reproduce the concentration of deaths at age 0 that is observed in low-mortality settings. If the deaths at age 0 matter for your assessment, obtain single-year population and death data for the youngest ages instead of relying on the conversion.
 
 #### How to choose it
 
