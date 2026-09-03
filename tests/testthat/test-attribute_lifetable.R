@@ -28,8 +28,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
         sex = base::rep(c("male", "female"), each = 100),
-        population = c(data_lifetable[["male"]]$population,
-                       data_lifetable[["female"]]$population),
+        population = c(data_lifetable[["male"]]$population_2019,
+                       data_lifetable[["female"]]$population_2019),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
                         data[["pop"]]$number_of_deaths_female),
         year_of_analysis = 2019,
@@ -37,7 +37,16 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
         min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
       )$health_main$impact,
     expected =
-      # c(29274.89, 15328.16,	43118.30), # AirQ+ results from "Lifetable_CH_2019_PM_single_year_AP_no_newborns_default.csv"
+      # AirQ+ result for the same inputs: c(29274.89, 15328.16, 43118.30)
+      # from "Lifetable_CH_2019_PM_single_year_AP_no_newborns_default.csv".
+      # healthiar is about 1.6% lower. The survival probability and the
+      # modification of the hazard rate are identical in both tools.
+      # The deviation may come in part from the treatment of the last
+      # (open-ended) age group: healthiar closes the life table at the last
+      # age group, and in these data age 99 still has a survival probability
+      # of about 0.34, whose survivors are therefore not projected further.
+      # The rest is unknown. See the chapter "YLL & deaths with life table"
+      # of the vignette.
       c(28810.0511, 15083.5908, 42437.0574) # Result on 09 July 2025
   )
 
@@ -58,8 +67,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
         sex = base::rep(c("male", "female"), each = 100),
-        population = c(data_lifetable[["male"]]$population,
-                       data_lifetable[["female"]]$population),
+        population = c(data_lifetable[["male"]]$population_2019,
+                       data_lifetable[["female"]]$population_2019),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
                         data[["pop"]]$number_of_deaths_female),
         year_of_analysis = 2019,
@@ -90,8 +99,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
         sex = base::rep(c("male", "female"), each = 100),
-        population = c(data_lifetable[["male"]]$population,
-                       data_lifetable[["female"]]$population),
+        population = c(data_lifetable[["male"]]$population_2019,
+                       data_lifetable[["female"]]$population_2019),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
                         data[["pop"]]$number_of_deaths_female),
         year_of_analysis = 2019,
@@ -107,8 +116,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
 
   # Check the same but for impact_per_100k_inhab
 
-  pop <- sum(c(data_lifetable[["male"]]$population,
-               data_lifetable[["female"]]$population))
+  pop <- sum(c(data_lifetable[["male"]]$population_2019,
+               data_lifetable[["female"]]$population_2019))
 
   testthat::expect_equal(
     object =
@@ -126,8 +135,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
         sex = base::rep(c("male", "female"), each = 100),
-        population = c(data_lifetable[["male"]]$population,
-                       data_lifetable[["female"]]$population),
+        population = c(data_lifetable[["male"]]$population_2019,
+                       data_lifetable[["female"]]$population_2019),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
                         data[["pop"]]$number_of_deaths_female),
         year_of_analysis = 2019,
@@ -154,8 +163,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
         sex = base::rep(c("male", "female"), each = 100),
-        population = c(data_lifetable[["male"]]$population,
-                       data_lifetable[["female"]]$population),
+        population = c(data_lifetable[["male"]]$population_2019,
+                       data_lifetable[["female"]]$population_2019),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
                         data[["pop"]]$number_of_deaths_female),
         year_of_analysis = 2019,
@@ -163,8 +172,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
         min_age = if(is.na(data_mort$min_age[2])) NULL else data_mort$min_age[2]
       )$health_detailed$results_by_sex$impact_per_100k_inhab,
     expected = c(
-      c(15143.22958, 7925.86465, 22312.77159) / sum(data_lifetable[["male"]]$population),
-      c(13666.82149, 7157.72614, 20124.28583) / sum(data_lifetable[["female"]]$population)) * 1E5  # Result on 28 Oct 2025
+      c(15143.22958, 7925.86465, 22312.77159) / sum(data_lifetable[["male"]]$population_2019),
+      c(13666.82149, 7157.72614, 20124.28583) / sum(data_lifetable[["female"]]$population_2019)) * 1E5  # Result on 28 Oct 2025
   )  
 })
 
@@ -176,8 +185,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
 
   # Check that decimals between 0 and 1 are allowed in bhd and population
   population <- 
-    c(data_lifetable[["male"]]$population,
-      data_lifetable[["female"]]$population)
+    c(data_lifetable[["male"]]$population_2019,
+      data_lifetable[["female"]]$population_2019)
   population[100] <- 0.5 
 
   bhd_central <- 
@@ -237,8 +246,8 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
         sex = base::rep(c("male", "female"), each = 100),
-        population = c(data_lifetable[["male"]]$population,
-                       data_lifetable[["female"]]$population),
+        population = c(data_lifetable[["male"]]$population_2019,
+                       data_lifetable[["female"]]$population_2019),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
                         data[["pop"]]$number_of_deaths_female),
         year_of_analysis = 2019,
@@ -278,8 +287,8 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
         sex = base::rep(c("male", "female"), each = 100),
-        population = c(data_lifetable[["male"]]$population,
-                       data_lifetable[["female"]]$population),
+        population = c(data_lifetable[["male"]]$population_2019,
+                       data_lifetable[["female"]]$population_2019),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
                         data[["pop"]]$number_of_deaths_female),
         year_of_analysis = 2019,
@@ -314,8 +323,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
         sex = base::rep(c("male", "female"), each = 100),
-        population = c(data_lifetable[["male"]]$population,
-                       data_lifetable[["female"]]$population),
+        population = c(data_lifetable[["male"]]$population_2019,
+                       data_lifetable[["female"]]$population_2019),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
                         data[["pop"]]$number_of_deaths_female),
         year_of_analysis = 2019,
@@ -388,8 +397,8 @@ testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_y
           each = 100,
           times = 3),
         population = base::rep(
-          c(data_lifetable[["male"]]$population,
-            data_lifetable[["female"]]$population),
+          c(data_lifetable[["male"]]$population_2019,
+            data_lifetable[["female"]]$population_2019),
           times = 3),
         bhd_central = base::rep(
           c(data[["pop"]]$number_of_deaths_male,
@@ -459,8 +468,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
             data[["pop"]]$number_of_deaths_female),
           times = 2),
         population = base::rep(
-          c(data_lifetable[["male"]]$population,
-            data_lifetable[["female"]]$population),
+          c(data_lifetable[["male"]]$population_2019,
+            data_lifetable[["female"]]$population_2019),
           times = 2),
         year_of_analysis = 2019,
         min_age = 20,
@@ -568,8 +577,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
             data[["pop"]]$number_of_deaths_female),
           times = 2),
         population = base::rep(
-          c(data_lifetable[["male"]]$population,
-            data_lifetable[["female"]]$population),
+          c(data_lifetable[["male"]]$population_2019,
+            data_lifetable[["female"]]$population_2019),
           times = 2),
         year_of_analysis = 2019,
         min_age = 20,
@@ -640,8 +649,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
             data[["pop"]]$number_of_deaths_female),
           times = 2),
         population = base::rep(
-          c(data_lifetable[["male"]]$population,
-            data_lifetable[["female"]]$population),
+          c(data_lifetable[["male"]]$population_2019,
+            data_lifetable[["female"]]$population_2019),
           times = 2),
         year_of_analysis = 2019,
         min_age = 20,
@@ -721,8 +730,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_const
           each = 100,
           times = 3),
         population = base::rep(
-          c(data_lifetable[["male"]]$population,
-            data_lifetable[["female"]]$population),
+          c(data_lifetable[["male"]]$population_2019,
+            data_lifetable[["female"]]$population_2019),
           times = 3),
         bhd_central = base::rep(
           c(data[["pop"]]$number_of_deaths_male,
@@ -901,8 +910,8 @@ testthat::test_that("error if length of age range higher than deaths", {
           each = 100,
           times = 20), # Should be 3
         population = base::rep(
-          c(data_lifetable[["male"]]$population,
-            data_lifetable[["female"]]$population),
+          c(data_lifetable[["male"]]$population_2019,
+            data_lifetable[["female"]]$population_2019),
           times = 3),
         bhd_central = base::rep(
           c(data[["pop"]]$number_of_deaths_male,
@@ -1141,8 +1150,8 @@ testthat::test_that("warning if any bhd = 0", {
 
   # Check that 0 in bhd is allowed allowed with warning
   population <- 
-    c(data_lifetable[["male"]]$population,
-      data_lifetable[["female"]]$population)
+    c(data_lifetable[["male"]]$population_2019,
+      data_lifetable[["female"]]$population_2019)
   population[99] <- 0.5 
 
   bhd_central <- 

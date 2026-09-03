@@ -17,6 +17,17 @@
 #' To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()}
 #' (see its function documentation for more info).
 #'
+#' \strong{Last age group}
+#' The life table is closed at the last age group,
+#' i.e. its survivors are not projected into a further age.
+#' Therefore, the last age group must be one in which
+#' essentially all remaining deaths occur, as in most national life tables.
+#' Otherwise the attributable health impacts are underestimated.
+#' If needed, condensate the last age group
+#' (i.e. sum the populations and the deaths of the highest ages into it)
+#' instead of adding age groups beyond the data.
+#' More information in the vignette. 
+#'
 #' \code{bhd_central,bhd_lower,bhd_upper}
 #' Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year).
 #' There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities.
