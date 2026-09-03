@@ -26,8 +26,8 @@
 #' \code{fraction_lived} is by default 0.5 for all age groups, i.e. the value
 #' that AirQ+ assumes. It determines the probability of dying in the age
 #' interval and how the mid-year population of the age group is split over the
-#' single years of age it contains. It does \strong{not} determine how the
-#' deaths of the age group are distributed over those single years of age.
+#' single years of age it contains. It is \strong{not} a way to control how
+#' the deaths of the age group are distributed over those single years of age.
 #'
 #' The same value of \code{fraction_lived} has to be used when the resulting
 #' single-year life table is passed on to \code{attribute_lifetable()}.
