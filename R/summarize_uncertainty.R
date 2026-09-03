@@ -164,7 +164,8 @@ summarize_uncertainty <- function(
     purrr::keep(~.x == TRUE) |>
     base::names()
 
-  is_lifetable <- base::unique(input_table_to_check$is_lifetable)
+  # No need to store is_lifetable here,
+  # because get_impact() identifies the life table assessments itself
   exp_type <- base::unique(input_table_to_check$exp_type)
 
   # Determine number of geographic units (n_geo)
@@ -452,9 +453,9 @@ summarize_uncertainty <- function(
   # NOTE: the functions were adapted from those provided by Sciensano
 
   # Set gamma distribution specs
+  # No need to set the shape parameter here,
+  # because stats::optimize() below searches it in the interval provided
   probs <- c(0.025, 0.975)
-  # shape parameter of the gamma distribution
-  par <- 2
 
   ## Fit gamma distribution
   f_gamma <-
@@ -692,17 +693,6 @@ summarize_uncertainty <- function(
     dplyr::bind_cols(sim_template, tibble::as_tibble(sim[var_names_with_ci])) |>
     # Unnest to have table layout
     tidyr::unnest(dplyr::any_of(c("sim_id", var_names_with_ci)))
-
-  geo_ids <-
-    base::intersect(base::names(template_with_sim), c("geo_id_macro", "geo_id_micro"))
-
-
-  if( base::length(var_names_with_ci_geo_identical) >= 1 ){
-    test <-  template_with_sim |>
-      # Keep only unique values because they identical for all geo_id_micro
-      dplyr::mutate(dplyr::across(dplyr::all_of(var_names_with_ci_geo_identical),
-                                  ~ purrr::map(.x, base::unique)))
-  }
 
   input_table_with_sim <- input_table |>
     # Remove lower and upper rows (keep only central)
