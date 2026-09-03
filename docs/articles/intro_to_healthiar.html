@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1644</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1646</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1747,14 +1747,22 @@ is obtained in both tools by dividing the hazard rate by the relative
 risk (which is equivalent to multiplying it by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>P</mi><mi>A</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">1 - PAF</annotation></semantics></math>)
 <span class="citation">(WHO 2020)</span>.</p>
-<p>The results nevertheless differ slightly (for the example above, the
-YLL attributable to the exposure of one single year are about 1.6% lower
-in <code>healthiar</code>, while the YLL of the year of analysis alone
-differ by less than 0.1%). Part of this deviation may be explained by
-the treatment of the last (open-ended) age group described above, which
-is a known source of deviation between health impact assessments <span class="citation">(Miller and Hurley 2003)</span>. The remaining part is
-unknown. A different rounding strategy might also contribute marginally
-to the deviation.</p>
+<p><code>healthiar</code> reproduces the results of AirQ+. For the same
+input data, the attributable YLL and premature deaths of both tools
+agree to the last decimal that AirQ+ prints, for an exposure of one
+single year as well as for a constant exposure, year by year and
+accumulated over several years, and so do the life expectancies with and
+without the exposure.</p>
+<p>The comparison has to be made by sex, though, because the “All
+genders” results of AirQ+ are not the sum of its male and female results
+as in <code>healthiar</code>: AirQ+ obtains them from a life table in
+which the populations and the deaths of both sexes are pooled. With the
+data of the example below, the pooled life table for all genders in
+AirQ+ gives 1.6% more YLL than the sum of two sex-specific ones in
+<code>healthiar</code>. <code>healthiar</code> returns that pooled value
+too, when the populations and the deaths of both sexes are entered as
+one single life table, i.e. passing the same value in <code>sex</code>
+for every age group.</p>
 <p>Be aware when comparing with AirQ+ that its results accumulated over
 several years (e.g. “over 10 years”) correspond to
 <code>approach_exposure = "constant"</code> and not to
