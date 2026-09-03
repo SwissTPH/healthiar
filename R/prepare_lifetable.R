@@ -22,16 +22,17 @@
 #' "Health impact assessment of air pollution: AirQ+ life table manual"
 #' for guidance on how to convert larger age groups to 1 year age groups,
 #' section "Estimation of yearly values" \insertCite{WHO2020_report}{healthiar}.
-#' 
-#' \code{fraction_lived} is by default 0.5 for all age groups. However, 
-#' in low-mortality settings, infant deaths are heavily concentrated
-#' in the first weeks of life. 
-#' Therefore, \code{fraction_lived} can be lower e.g. 0.1 for the first age group.
-#' 
-#' When \code{fraction_lived[1] < 0.5}, the function reallocates the baseline 
-#' health data (\code{bhd}) for the first age group \eqn{[0, 5)} such that 
-#' \code{bhd[1] * (1 - fraction_lived[1])} deaths are assigned to single-year 
-#' age 0, and the remaining deaths are split equally across single-year ages 1–4.
+#'
+#' \code{fraction_lived} is by default 0.5 for all age groups, i.e. the value
+#' that AirQ+ assumes. It determines the probability of dying in the age
+#' interval and how the mid-year population of the age group is split over the
+#' single years of age it contains. It is \strong{not} a way to control how
+#' the deaths of the age group are distributed over those single years of age.
+#'
+#' The same value of \code{fraction_lived} has to be used when the resulting
+#' single-year life table is passed on to \code{attribute_lifetable()}.
+#' The output column \code{fraction_lived_for_attribute} is provided for
+#' that purpose.
 #'
 #' \strong{Last age group}
 #'
@@ -44,13 +45,15 @@
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#fraction-of-the-age-interval-lived}{Fraction of the age interval lived}}
 #'
 # VALUE ########################################################################
 #' @returns This function returns a \code{tibble} containing the columns:
 #' \itemize{
 #'  \item \code{population_for_attribute} (\code{numeric}) containing  population values for each age
 #'  \item \code{bhd_for_attribute} (\code{numeric}) containing baseline health data values for each age
+#'  \item \code{fraction_lived_for_attribute} (\code{numeric}) containing the fraction of the year lived for each age
 #'  \item and more columns containing input data or results
 #' }
 
@@ -203,39 +206,52 @@ prepare_lifetable <-
     # Create function to obtain entry_population
     get_entry_population <- function(prob_surviving_1_year,
                                      population_n_years,
+                                     bhd_n_years,
                                      age_interval_index,
-                                     age_interval_length) {
+                                     age_interval_length,
+                                     fraction_lived) {
 
       # Using the formula of AirQ+ would be
       # entry_population_1_year = prob_surviving_1_year^(age_interval_index-1) * population_n_years/(0.5+prob_surviving_1_year+prob_surviving_1_year^2+prob_surviving_1_year^3+prob_surviving_1_year^4+0.5*prob_surviving_1_year^5),
-      # but this is only for 5-years interval.
-      # A solution for all lengths of interval is needed.
+      # but this is only for 5-years interval and it assumes that
+      # fraction_lived is 0.5.
+      # A solution for all lengths of interval and all values of
+      # fraction_lived is needed.
+      #
+      # The entry population of the first single year of the age group (E_0)
+      # follows from the condition that the conversion may neither create nor
+      # lose population, i.e. that the single-year mid-year populations add up
+      # to the mid-year population of the age group entered by the user.
+      # The mid-year population of a single year of age is the person-years
+      # lived at that age, i.e. one year for each person reaching the next
+      # birthday plus fraction_lived years for each person dying
+      # (see Chiang 1984 and Preston et al. 2001):
+      #   L_k = (E_k - D_k) + fraction_lived * D_k
+      #       = E_k - (1 - fraction_lived) * D_k
+      # The deaths add up to the deaths of the age group entered by the user
+      # (this is enforced by the residual rule below), so with E_k = E_0 * p^k
+      #   sum(L_k) = E_0 * sum(p^0 ... p^(n-1)) - (1 - fraction_lived) * bhd
+      # and setting that equal to the mid-year population of the age group
+      #   E_0 = (population + (1 - fraction_lived) * bhd) / sum(p^0 ... p^(n-1))
+      # For fraction_lived = 0.5 this reproduces the values published in the
+      # AirQ+ manual, and unlike the formula above it holds for any age
+      # interval length and any value of fraction_lived
 
-      
-
-      # Use pmap_dbl to vectorialize the function
+      # Use map_dbl to vectorialize the function
       # and consequently to accept vectors
       entry_population <- purrr::map_dbl(
         base::seq_along(prob_surviving_1_year),
         \(i) {
 
-          # Get weights of the formula dynamically
-          if (age_interval_length == 1) {
-            weights <- 1
-          } else {
-            weights <- c(0.5, base::rep(1, age_interval_length - 1), 0.5)
-          }
+          # Entry population of the first single year of age of the age group
+          entry_population_first_age <-
+            (population_n_years[i] + ((1 - fraction_lived[i]) * bhd_n_years[i])) /
+            base::sum(prob_surviving_1_year[i] ^ (0:(age_interval_length - 1)))
 
-          # Get powers of the formula
-          powers <- 0:age_interval_length
-
-          # Calculate numerator and denominator
-          numerator <- prob_surviving_1_year[i]^(age_interval_index[i] - 1) * population_n_years[i]
-          denominator <- base::sum(weights * prob_surviving_1_year[i] ^ powers)
-
-          # Divide numerator by denominator
-
-          return(numerator / denominator)
+          # The cohort of the age group shrinks by the probability of
+          # surviving with each single year of age within the age group
+          return(entry_population_first_age *
+                   prob_surviving_1_year[i] ^ (age_interval_index[i] - 1))
         }
       )
 
@@ -255,26 +271,22 @@ prepare_lifetable <-
         entry_population_1_year = get_entry_population(
           prob_surviving_1_year = prob_surviving_1_year,
           population_n_years = population_n_years,
+          bhd_n_years = bhd_n_years,
           age_interval_index = age_interval_index,
           # For age_interval_length enter the value of the varible
           # And not the column which is a vector repeating the value (not needed)
-          age_interval_length = {{age_interval_length}}),
-        # # Calculate mid-year population for 1-year interval
-        # # This is the average between the entry-population in year y and y+1
-        # # lead() gives the value for y+1
-        # # colesce(x, 0) replaces the NA with 0
-        # # There is a NA at the end because the last row has not y+1
-        # # The assumption is that everybody is death in the row after the last one
-        # # *0.5 because it is the average
-        population_1_year =  0.5 * (entry_population_1_year + dplyr::coalesce(dplyr::lead(entry_population_1_year), 0)),
-        bhd_1_year_base = 2 * (entry_population_1_year - population_1_year),
-          
-        # Reallocate Age 0 deaths if custom fraction_lived (e.g., a0 = 0.1) is passed
-        bhd_1_year = dplyr::if_else(
-          age_interval_index == 1 & fraction_lived_n_years != 0.5,
-          bhd_n_years * (1 - fraction_lived_n_years),
-          bhd_1_year_base
-        )
+          age_interval_length = {{age_interval_length}},
+          fraction_lived = fraction_lived_n_years),
+        # Calculate deaths for 1-year interval
+        # The deaths at one single year of age are the difference between
+        # the entry population of that age and the entry population of the
+        # next age, i.e. those who did not make it to the next birthday.
+        # lead() gives the entry population one year older.
+        # coalesce(x, 0) replaces the NA with 0.
+        # There is a NA at the end because the last row has no next age.
+        # The assumption is that nobody survives the last age group
+        bhd_1_year = 
+          entry_population_1_year - dplyr::coalesce(dplyr::lead(entry_population_1_year), 0)
       )
 
     # Fix the last element of each interval
@@ -283,24 +295,21 @@ prepare_lifetable <-
     calculation_fixed <- calculation |>
       dplyr::mutate(
         .by = age_group_n_years,
-        
-        # Evenly distribute remaining deaths to intermediate years (indices 2 to n-1) if index 1 was customized
-        bhd_1_year = dplyr::if_else(
-          age_interval_index > 1 & dplyr::first(fraction_lived_n_years) != 0.5 & age_interval_index != age_interval_length,
-          (bhd_n_years - dplyr::first(bhd_1_year)) / (age_interval_length - 1),
-          bhd_1_year
-        ),
-        
+
         # AirQ+ rule assigning exact residual to last index of the group
         bhd_1_year = dplyr::if_else(
           age_interval_index == age_interval_length,
           bhd_n_years - base::sum(bhd_1_year[age_interval_index != age_interval_length]),
           bhd_1_year
         ),
-        
-        # Dynamically update final single-year mid-year population from allocated deaths
-        fraction_lived_1_year = dplyr::if_else(age_interval_index == 1, fraction_lived_n_years, 0.5),
-        population_1_year = entry_population_1_year - (fraction_lived_1_year * bhd_1_year)
+
+        # Calculate mid-year population for 1-year interval, i.e. the
+        # person-years lived at that single year of age: one year for each
+        # person reaching the next birthday plus fraction_lived years for
+        # each person dying at that age.
+        # With fraction_lived = 0.5 this is the average of the entry
+        # populations of this and the next age, i.e. the formula of AirQ+
+        population_1_year = entry_population_1_year - ((1 - fraction_lived_n_years) * bhd_1_year)
       )
 
 
@@ -309,7 +318,12 @@ prepare_lifetable <-
       dplyr::mutate(
 
         population_for_attribute = population_1_year,
-        bhd_for_attribute = bhd_1_year
+        bhd_for_attribute = bhd_1_year,
+        # fraction_lived is also passed on because attribute_lifetable()
+        # needs the same assumption to obtain the survival probabilities.
+        # Otherwise the life table would be built with a fraction_lived
+        # that differs from the one used for this conversion
+        fraction_lived_for_attribute = fraction_lived_n_years
       )
 
     return(output)

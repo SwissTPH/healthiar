@@ -1015,13 +1015,16 @@ groups (e.g., 5-year data: 0-4 years old, 5-9 years old, …). What to do?
   makes this conversion using the same approach as the WHO tool AirQ+
   (WHO 2020). In standard AirQ+ life table disaggregations, deaths are
   assumed to be distributed uniformly across age intervals with a
-  fraction of the age interval lived of 0.5. However, in modern public
-  health settings, infant mortality is highly skewed because the vast
-  majority of deaths occur within the first year of life. In countries
-  with low infant mortality the fraction lived can be e.g. 0.1.
+  fraction of the age interval lived of 0.5. The argument
+  `fraction_lived` allows other assumptions, see the section on the
+  fraction of the age interval lived below.
 
 - If your population and death data are stratified by one-year age
   group, you are lucky, you can ignore this initial step.
+  [`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
+  passes single-year data on unchanged, so it can also be used for a
+  life table that mixes already available single-year data with
+  converted larger age groups.
 
 ``` r
 
@@ -1037,14 +1040,117 @@ prepared_data <- healthiar::prepare_lifetable(
   # fraction_lived = 0.5 (default)
 )
 
-# Demographic adjustment for low infant mortality (first fraction_lived = 0.1)
-prepared_data_adjusting_for_low_infant_mortality <- healthiar::prepare_lifetable(
+# Age-group specific fraction of the age interval lived (first fraction_lived = 0.1)
+prepared_data_with_age_specific_fraction_lived <- healthiar::prepare_lifetable(
   age_group = age_groups,
   population = pop,
   bhd = bhd_counts,
   fraction_lived = c(0.1, 0.5, 0.5, 0.5)
 )
 ```
+
+#### Fraction of the age interval lived
+
+The argument `fraction_lived`, available in both
+[`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
+and
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
+is the average fraction of an age interval that is lived by those who
+die in it. It corresponds to $`_na_x`$ in the life table literature
+(Chiang 1984; Preston et al. 2001). The default of 0.5 for all age
+groups means that deaths are evenly distributed over the age interval,
+which is the value that AirQ+ assumes (WHO 2020). It can be entered as a
+single value applying to all age groups or as one value per age group.
+
+##### What it determines
+
+With $`_nm_x`$ the death rate of an age interval of width $`n`$, the
+probability of dying in that interval is
+
+``` math
+_nq_x = \frac{n \times {}_nm_x}{1 + n \times (1 - {}_na_x) \times {}_nm_x}
+```
+
+and the person-years lived at a single year of age, i.e. its mid-year
+population, is one year for each person reaching the next birthday plus
+$`fraction\_lived`$ years for each person dying at that age:
+
+``` math
+midyear\_population = entry\_population - (1 - fraction\_lived) \times deaths
+```
+
+In
+[`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
+these two relations fix the conversion. The entry population of the
+first single year of age of an age group follows from the condition that
+the conversion may neither create nor lose population, i.e. that the
+single-year mid-year populations have to add up to the mid-year
+population of the age group that was entered:
+
+``` math
+entry\_population_{first} = \frac{population + (1 - fraction\_lived) \times bhd}{\sum_{k = 0}^{n - 1} prob\_survival^{\,k}}
+```
+
+For $`fraction\_lived = 0.5`$ this reproduces the values published in
+the AirQ+ manual, and unlike the formula given there it holds for any
+age interval width and any value of `fraction_lived`.
+
+Both relations are checked in internal tests in `healthiar`against a
+published life table, the abridged life table for Austrian males in 1992
+(Preston et al. 2001), in which the fraction of the age interval lived
+ranges from 0.48 to 0.63 in the 5-year age groups and is 0.068 at age 0.
+Applying the probability of dying obtained by
+[`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
+to the published survivors reproduces the published deaths of that life
+table for every age group, and the entry population it determines from
+the published mid-year population and deaths at age 0 reproduces the
+published number of survivors.
+
+##### What it does not determine
+
+`fraction_lived` is *not* a way to control how the deaths of an age
+group are distributed over the single years of age it contains. That
+distribution follows from the survival probabilities, as in AirQ+, so
+`fraction_lived` influences it only indirectly and far too weakly to be
+used for it. Both quantities are distinct in the life table literature
+and the distribution of the deaths cannot be derived from
+$`_na_x`$(Preston et al. 2001).
+
+[`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
+can therefore not reproduce the concentration of deaths at age 0 that is
+observed in low-mortality settings. If the deaths at age 0 matter for
+your assessment, obtain single-year population and death data for the
+youngest ages instead of relying on the conversion.
+
+##### How to choose it
+
+The sensitivity of the survival probability to `fraction_lived` is
+
+``` math
+\frac{\partial \; prob\_survival}{\partial \; fraction\_lived} = - \frac{hazard\_rate^2}{(1 + (1 - fraction\_lived) \times hazard\_rate)^2}
+```
+
+i.e. it grows with the square of the hazard rate. `fraction_lived`
+therefore matters little in the age groups with a low mortality and most
+in those with the highest mortality, which are the last ones. With the
+example data of this vignette, entering 0.1 for age 0 changes the YLL by
+0.01%, whereas adapting the last age group changes them by 0.25%.
+
+Values of $`_na_x`$ other than 0.5 are usually derived from the
+mortality level itself. For age 0 and for the ages 1 to 4, Preston et
+al. (2001) report rules of thumb going back to Coale and Demeny,
+e.g. $`_1a_0 = 0.045 + 2.684 \times {}_1m_0`$ for males with
+$`_1m_0 < 0.107`$. For an open-ended last age group, $`_na_x`$ is the
+remaining life expectancy $`1 / {}_nm_x`$, which can exceed the width of
+the age interval.
+
+Whichever `fraction_lived` is used in
+[`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
+has to be passed on to
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
+which needs the same assumption to obtain the survival probabilities.
+The output column `fraction_lived_for_attribute` is provided for that
+purpose.
 
 ### YLL
 
@@ -2990,6 +3096,10 @@ Pozzer, A., S. C. Anenberg, S. Dey, A. Haines, J. Lelieveld, and S.
 Chowdhury. 2023. “Mortality Attributable to Ambient Air Pollution: A
 Review of Global Estimates.” *GeoHealth* 7 (1): e2022GH000711.
 https://doi.org/<https://doi.org/10.1029/2022GH000711>.
+
+Preston, Samuel H., Patrick Heuveline, and Michel Guillot. 2001.
+*Demography: Measuring and Modeling Population Processes*. Blackwell
+Publishers.
 
 Renard, Françoise, Brecht Devleesschauwer, Niko Speybroeck, and Patrick
 Deboosere. 2019. “Monitoring Health Inequalities When the Socio-Economic

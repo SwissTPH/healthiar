@@ -171,10 +171,16 @@ that no health effects are considered above the age of 69.
 By default the exposure affects all age groups, i.e. \code{min_age} is the
 youngest and \code{max_age} the oldest age group entered in \code{age_group}.
 
-\code{fraction_lived} is by default 0.5 for all age groups. However,
-in low-mortality settings, infant deaths are heavily concentrated
-in the first weeks of life.
-Therefore, \code{fraction_lived} can be lower e.g. 0.1 for the first age group.
+\code{fraction_lived} is by default 0.5 for all age groups, i.e. the value
+that AirQ+ assumes. It determines the survival probabilities and matters
+most in the age groups with the highest mortality, i.e. the last ones.
+See the vignette for how to choose it.
+
+If the single-year age groups were obtained with \code{prepare_lifetable()},
+enter here the same \code{fraction_lived} that was used there, which is
+available in the output column \code{fraction_lived_for_attribute}.
+Otherwise the life table would be built with an assumption that differs
+from the one used for the conversion.
 
 \strong{Methodology}
 
@@ -189,6 +195,7 @@ is available in the package vignette.
 More specifically, see chapters:
 \itemize{
  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#fraction-of-the-age-interval-lived}{Fraction of the age interval lived}
  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 
 

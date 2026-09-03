@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1646</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1648</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -230,10 +230,15 @@ aged 30 or older will be affected by the exposure and <code>max_age = 69</code>
 that no health effects are considered above the age of 69.
 By default the exposure affects all age groups, i.e. <code>min_age</code> is the
 youngest and <code>max_age</code> the oldest age group entered in <code>age_group</code>.</p>
-<p><code>fraction_lived</code> is by default 0.5 for all age groups. However,
-in low-mortality settings, infant deaths are heavily concentrated
-in the first weeks of life.
-Therefore, <code>fraction_lived</code> can be lower e.g. 0.1 for the first age group.</p>
+<p><code>fraction_lived</code> is by default 0.5 for all age groups, i.e. the value
+that AirQ+ assumes. It determines the survival probabilities and matters
+most in the age groups with the highest mortality, i.e. the last ones.
+See the vignette for how to choose it.</p>
+<p>If the single-year age groups were obtained with <code><a href="prepare_lifetable.html">prepare_lifetable()</a></code>,
+enter here the same <code>fraction_lived</code> that was used there, which is
+available in the output column <code>fraction_lived_for_attribute</code>.
+Otherwise the life table would be built with an assumption that differs
+from the one used for the conversion.</p>
 <p><strong>Methodology</strong></p>
 <p>The life table approach to obtain YLL and deaths requires population and
 baseline mortality data to be stratified by one year age groups.
@@ -245,6 +250,7 @@ which is described in previous literature (Miller and Hurley 2003)
 <p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table">YLL and deaths with life table</a></p></li>
+<li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#fraction-of-the-age-interval-lived">Fraction of the age interval lived</a></p></li>
 <li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold">Cut-off vs. threshold</a></p></li>
 </ul><p><strong>Conversion of multi-year to single year age groups</strong></p>
 <p>To convert multi-year/larger age groups to 1 year age groups,
