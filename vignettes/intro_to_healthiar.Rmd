@@ -1012,13 +1012,20 @@ used here, and the modified survival probability is obtained in both tools by
 dividing the hazard rate by the relative risk (which is equivalent to
 multiplying it by $1 - PAF$) [@WHO2020_report].
 
-The results nevertheless differ slightly (for the example above, the YLL
-attributable to the exposure of one single year are about 1.6% lower in
-`healthiar`, while the YLL of the year of analysis alone differ by less than
-0.1%). Part of this deviation may be explained by the treatment of the last
-(open-ended) age group described above, which is a known source of deviation
-between health impact assessments [@Miller2003_jech]. The remaining part is
-unknown. A different rounding strategy might also contribute marginally to the deviation.
+`healthiar` reproduces the results of AirQ+. For the same input data, the
+attributable YLL and premature deaths of both tools agree to the last decimal
+that AirQ+ prints, for an exposure of one single year as well as for a constant
+exposure, year by year and accumulated over several years, and so do the life
+expectancies with and without the exposure.
+
+The comparison has to be made by sex, though, because the "All genders" results
+of AirQ+ are not the sum of its male and female results as in `healthiar`: AirQ+ obtains them
+from a life table in which the populations and the deaths of both sexes are
+pooled. 
+With the data of the example below, the pooled life table for all genders in AirQ+ gives 1.6% more YLL
+than the sum of two sex-specific ones in `healthiar`. `healthiar` returns that pooled value too, when
+the populations and the deaths of both sexes are entered as one single life
+table, i.e. passing the same value in `sex` for every age group.
 
 Be aware when comparing with AirQ+ that its results accumulated over several
 years (e.g. "over 10 years") correspond to `approach_exposure = "constant"` and
