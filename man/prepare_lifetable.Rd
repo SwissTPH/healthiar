@@ -46,6 +46,13 @@ health data (\code{bhd}) for the first age group \eqn{[0, 5)} such that
 \code{bhd[1] * (1 - fraction_lived[1])} deaths are assigned to single-year 
 age 0, and the remaining deaths are split equally across single-year ages 1–4.
 
+\strong{Last age group}
+
+\code{attribute_lifetable()} closes the life table at the last age group.
+The age groups entered here should therefore reach an age in which
+essentially all remaining deaths occur.
+See more information in the vignette.
+
 Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
