@@ -206,39 +206,52 @@ prepare_lifetable <-
     # Create function to obtain entry_population
     get_entry_population <- function(prob_surviving_1_year,
                                      population_n_years,
+                                     bhd_n_years,
                                      age_interval_index,
-                                     age_interval_length) {
+                                     age_interval_length,
+                                     fraction_lived) {
 
       # Using the formula of AirQ+ would be
       # entry_population_1_year = prob_surviving_1_year^(age_interval_index-1) * population_n_years/(0.5+prob_surviving_1_year+prob_surviving_1_year^2+prob_surviving_1_year^3+prob_surviving_1_year^4+0.5*prob_surviving_1_year^5),
-      # but this is only for 5-years interval.
-      # A solution for all lengths of interval is needed.
+      # but this is only for 5-years interval and it assumes that
+      # fraction_lived is 0.5.
+      # A solution for all lengths of interval and all values of
+      # fraction_lived is needed.
+      #
+      # The entry population of the first single year of the age group (E_0)
+      # follows from the condition that the conversion may neither create nor
+      # lose population, i.e. that the single-year mid-year populations add up
+      # to the mid-year population of the age group entered by the user.
+      # The mid-year population of a single year of age is the person-years
+      # lived at that age, i.e. one year for each person reaching the next
+      # birthday plus fraction_lived years for each person dying
+      # (see Chiang 1984 and Preston et al. 2001):
+      #   L_k = (E_k - D_k) + fraction_lived * D_k
+      #       = E_k - (1 - fraction_lived) * D_k
+      # The deaths add up to the deaths of the age group entered by the user
+      # (this is enforced by the residual rule below), so with E_k = E_0 * p^k
+      #   sum(L_k) = E_0 * sum(p^0 ... p^(n-1)) - (1 - fraction_lived) * bhd
+      # and setting that equal to the mid-year population of the age group
+      #   E_0 = (population + (1 - fraction_lived) * bhd) / sum(p^0 ... p^(n-1))
+      # For fraction_lived = 0.5 this reproduces the values published in the
+      # AirQ+ manual, and unlike the formula above it holds for any age
+      # interval length and any value of fraction_lived
 
-      
-
-      # Use pmap_dbl to vectorialize the function
+      # Use map_dbl to vectorialize the function
       # and consequently to accept vectors
       entry_population <- purrr::map_dbl(
         base::seq_along(prob_surviving_1_year),
         \(i) {
 
-          # Get weights of the formula dynamically
-          if (age_interval_length == 1) {
-            weights <- 1
-          } else {
-            weights <- c(0.5, base::rep(1, age_interval_length - 1), 0.5)
-          }
+          # Entry population of the first single year of age of the age group
+          entry_population_first_age <-
+            (population_n_years[i] + ((1 - fraction_lived[i]) * bhd_n_years[i])) /
+            base::sum(prob_surviving_1_year[i] ^ (0:(age_interval_length - 1)))
 
-          # Get powers of the formula
-          powers <- 0:age_interval_length
-
-          # Calculate numerator and denominator
-          numerator <- prob_surviving_1_year[i]^(age_interval_index[i] - 1) * population_n_years[i]
-          denominator <- base::sum(weights * prob_surviving_1_year[i] ^ powers)
-
-          # Divide numerator by denominator
-
-          return(numerator / denominator)
+          # The cohort of the age group shrinks by the probability of
+          # surviving with each single year of age within the age group
+          return(entry_population_first_age *
+                   prob_surviving_1_year[i] ^ (age_interval_index[i] - 1))
         }
       )
 
