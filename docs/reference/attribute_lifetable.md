@@ -85,8 +85,8 @@ attribute_lifetable(
 - min_age, max_age:
 
   `Numeric value` specifying the minimum and maximum age for which the
-  exposure will affect the exposed population, respectively. Default
-  `min_age`: 30. Default `max_age`: none. See Details for more info.
+  exposure will affect the exposed population, respectively. See Details
+  for more info.
 
 - approach_exposure:
 
@@ -230,6 +230,15 @@ use the function
 [`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
 (see its function documentation for more info).
 
+**Last age group** The life table is closed at the last age group, i.e.
+its survivors are not projected into a further age. Therefore, the last
+age group must be one in which essentially all remaining deaths occur,
+as in most national life tables. Otherwise the attributable health
+impacts are underestimated. If needed, condensate the last age group
+(i.e. sum the populations and the deaths of the highest ages into it)
+instead of adding age groups beyond the data. More information in the
+vignette.
+
 `bhd_central,bhd_lower,bhd_upper` Deaths per age must be inputted with 1
 value per age (i.e. age group size = 1 year). There must be greater than
 or equal to 1 deaths per age to avoid issues during the calculation of
@@ -268,16 +277,20 @@ are born.
 
 For example, if 10 is entered one is interested in the impacts of
 exposure during the year of analysis and the next 9 years (= 10 years in
-total). Default value: length of the numeric vector specified in the
+total). Default value: the number of age groups entered in the
 `age_group` argument.
 
-`min_age`, `max_age` The `min_age` default value 30 implies that all
-adults aged 30 or older will be affected by the exposure; `max_age`
-analogeously specifies the age above which no health effects of the
-exposure are considered. \#' \#' `fraction_lived` is by default 0.5 for
-all age groups. However, in low-mortality settings, infant deaths are
-heavily concentrated in the first weeks of life. Therefore,
-`fraction_lived` can be lower e.g. 0.1 for the first age group.
+`min_age`, `max_age` Both bounds are inclusive, e.g. `min_age = 30`
+implies that all adults aged 30 or older will be affected by the
+exposure and `max_age = 69` that no health effects are considered above
+the age of 69. By default the exposure affects all age groups, i.e.
+`min_age` is the youngest and `max_age` the oldest age group entered in
+`age_group`.
+
+`fraction_lived` is by default 0.5 for all age groups. However, in
+low-mortality settings, infant deaths are heavily concentrated in the
+first weeks of life. Therefore, `fraction_lived` can be lower e.g. 0.1
+for the first age group.
 
 **Methodology**
 

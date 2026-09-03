@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1614</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1642</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,7 +106,7 @@
 
 
 <dt id="arg-min-age-max-age">min_age, max_age<a class="anchor" aria-label="anchor" href="#arg-min-age-max-age"></a></dt>
-<dd><p><code>Numeric value</code> specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default <code>min_age</code>: 30. Default <code>max_age</code>: none. See Details for more info.</p></dd>
+<dd><p><code>Numeric value</code> specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. See Details for more info.</p></dd>
 
 
 <dt id="arg-approach-exposure">approach_exposure<a class="anchor" aria-label="anchor" href="#arg-approach-exposure"></a></dt>
@@ -188,6 +188,16 @@ fraction of the age interval lived by individuals who die within that interval. 
 The numeric values must refer to 1 year age groups, e.g. <code>c(0:99)</code>.
 To convert multi-year/larger age groups to 1 year age groups use the function <code><a href="prepare_lifetable.html">prepare_lifetable()</a></code>
 (see its function documentation for more info).</p>
+<p><strong>Last age group</strong>
+The life table is closed at the last age group,
+i.e. its survivors are not projected into a further age.
+Therefore, the last age group must be one in which
+essentially all remaining deaths occur, as in most national life tables.
+Otherwise the attributable health impacts are underestimated.
+If needed, condensate the last age group
+(i.e. sum the populations and the deaths of the highest ages into it)
+instead of adding age groups beyond the data.
+More information in the vignette.</p>
 <p><code>bhd_central,bhd_lower,bhd_upper</code>
 Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year).
 There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities.
@@ -213,14 +223,14 @@ Applicable for the following cases:</p><ul><li><p>YLL: <code>single_year</code> 
 <li><p>premature deaths: <code>constant</code> exposure</p></li>
 </ul><p>For example, if 10 is entered one is interested in the impacts of exposure
 during the year of analysis and the next 9 years (= 10 years in total).
-Default value: length of the numeric vector specified in the <code>age_group</code> argument.</p>
+Default value: the number of age groups entered in the <code>age_group</code> argument.</p>
 <p><code>min_age</code>, <code>max_age</code>
-The <code>min_age</code> default value 30 implies that all adults aged 30 or older
-will be affected by the exposure;
-<code>max_age</code> analogeously specifies the age above
-which no health effects of the exposure are considered.
-#'
-#' <code>fraction_lived</code> is by default 0.5 for all age groups. However,
+Both bounds are inclusive, e.g. <code>min_age = 30</code> implies that all adults
+aged 30 or older will be affected by the exposure and <code>max_age = 69</code>
+that no health effects are considered above the age of 69.
+By default the exposure affects all age groups, i.e. <code>min_age</code> is the
+youngest and <code>max_age</code> the oldest age group entered in <code>age_group</code>.</p>
+<p><code>fraction_lived</code> is by default 0.5 for all age groups. However,
 in low-mortality settings, infant deaths are heavily concentrated
 in the first weeks of life.
 Therefore, <code>fraction_lived</code> can be lower e.g. 0.1 for the first age group.</p>

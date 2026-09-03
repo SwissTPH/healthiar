@@ -1105,11 +1105,55 @@ modify the life table calculation:
     are born, with n being equal to the (male and female) population
     aged 0 that is provided in the argument population.
 
-*Note*: Although `healthiar` tries to align with AirQ+ methodologically,
-the results using the life table marginally differ slightly (AirQ+
-results are around 0.02% higher per 1,000 attributable deaths or 0.05%
-per 1,000 YLL). The reason for this minor variance is unknown. A
-different rounding strategy might be behind (at least in part).
+##### Last age group
+
+The life table is closed at the last age group, i.e. the survivors of
+the last age group are not projected into a further age. This follows
+the usual practice in the life table method, which extends the life
+table up to an age past which the probability of survival is negligible
+and then sets the survival above it to zero (Miller and Hurley 2003).
+
+The data must therefore reach an age at which survival is negligible,
+i.e. the last age group should be one in which essentially all remaining
+deaths occur. National life tables usually already close in this way,
+with a probability of dying of 1 in the last age group. If the last age
+group still has an appreciable number of survivors, those survivors are
+dropped from the projection: neither the life years they would still
+live, nor the difference in those life years between the exposed and the
+unexposed scenario, are counted. The attributable health impacts are
+then underestimated. With the example data used in this vignette, which
+end at age 99 and still have a survival probability of about 0.34 there,
+the underestimation is around 0.7%.
+
+If that is the case, condensate the last age group, i.e. sum the
+populations and the deaths of the highest ages into it, so that all
+remaining deaths fall within it. Do *not* add extra age groups beyond
+the data instead: the added ages would need a population greater than 0,
+that population would be considered exposed and would generate
+attributable health impacts of its own, and the results would then grow
+with the number of added age groups instead of converging.
+
+##### Comparison with AirQ+
+
+`healthiar` aligns with AirQ+ in the equations of the life table. The
+survival probability of AirQ+, $`S_i = (2 - h_i) / (2 + h_i)`$, is
+identical to the one used here, and the modified survival probability is
+obtained in both tools by dividing the hazard rate by the relative risk
+(which is equivalent to multiplying it by $`1 - PAF`$) (WHO 2020).
+
+The results nevertheless differ slightly (for the example above, the YLL
+attributable to the exposure of one single year are about 1.6% lower in
+`healthiar`, while the YLL of the year of analysis alone differ by less
+than 0.1%). Part of this deviation may be explained by the treatment of
+the last (open-ended) age group described above, which is a known source
+of deviation between health impact assessments (Miller and Hurley 2003).
+The remaining part is unknown. A different rounding strategy might also
+contribute marginally to the deviation.
+
+Be aware when comparing with AirQ+ that its results accumulated over
+several years (e.g. “over 10 years”) correspond to
+`approach_exposure = "constant"` and not to
+`approach_exposure = "single_year"`.
 
 ##### Determination of populations in the (first) year of analysis
 
@@ -1235,7 +1279,7 @@ entry\_population_{i+1} = entry\_population_i \times prob\_survival\_mod
 Second, the mid-year population of year $`i+1`$ is calculated.
 
 ``` math
-midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear
+midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear_{mod}
 ```
 
 #### Function call

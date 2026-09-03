@@ -62,6 +62,13 @@ health data (`bhd`) for the first age group \\\[0, 5)\\ such that
 age 0, and the remaining deaths are split equally across single-year
 ages 1–4.
 
+**Last age group**
+
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+closes the life table at the last age group. The age groups entered here
+should therefore reach an age in which essentially all remaining deaths
+occur. See more information in the vignette.
+
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
 
