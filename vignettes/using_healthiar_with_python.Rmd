@@ -152,7 +152,7 @@ results_pm_copd_mr_brt = healthiar.attribute_health(
 )
 ```
 
-Note: The use of a decorator is only required when passing Python functions as `erf_eq_central`. Passing equations in the form of a string requires no conversion.
+>Note: The use of a decorator is only required when passing Python functions as `erf_eq_central`. Passing equations in the form of a string requires no conversion.
 
 ## Example 3: Spatial input
 With `prepare_exposure()`, it's possible to obtain exposure data from spatial data formats, where the output is compatible with `healthiar` functions such as `attribute_health()`. Let's calculate a population-weighted average concentration of PM<sub>2.5</sub> for each region in Brussels, based on the population by municipality:
