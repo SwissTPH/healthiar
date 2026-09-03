@@ -29,7 +29,7 @@ duration (duration_...)
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1648</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1651</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,7 @@ using a Monte Carlo simulation.</p>
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
-<dd><p><code>numeric value</code> for fixing the randomization. Based on it, each geographic unit is assigned a different. If empty, 123 is used as the base seed per default. The function preserves and restores the user's original random seed (if set prior to calling the function) upon function completion.</p></dd>
+<dd><p><code>numeric value</code> for fixing the randomization, so that the same call always returns the same results. If empty (default), the base seed is drawn from the random number generator currently in use, i.e. the results differ across calls unless the user calls <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> beforehand. The function preserves and restores the user's original random seed (if set prior to calling the function) upon function completion.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -106,10 +106,13 @@ for the attributable health impacts obtained through Monte Carlo simulation;</p>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><strong>Function arguments</strong>
 <code>seed</code>
-If the <code>seed</code> argument is specified then the <code>parallel</code> package
-is used to generate independent L’Ecuyer random number streams.
+The <code>parallel</code> package is used to generate independent L’Ecuyer random number streams.
 One stream is allocated per variable (or per variable–geography combination, as needed),
-ensuring reproducible and independent random draws across variables and scenarios.</p>
+ensuring reproducible and independent random draws across variables.
+The streams are shared by both scenarios of a comparison (see <code><a href="compare.html">compare</a></code>),
+so that the variables that are common to both scenarios (e.g. <code>rr_...</code>)
+take the same simulated value in each simulation of both scenarios.
+This is the case whether or not <code>seed</code> is entered by the user.</p>
 
 <p><strong>Methodology</strong></p>
 <p>This function summarizes the uncertainty of the attributable health impacts
@@ -119,6 +122,17 @@ a Monte Carlo simulation methodology (Robert and Casella 2004)
 
 and framework application (Rubinstein and Kroese 2016)
 .</p>
+<p>The variables that cannot be negative and are simulated with a normal
+distribution (<code>exp_...</code>, <code>cutoff_...</code>, <code>bhd_...</code> and
+<code>duration_...</code>) are drawn from that distribution truncated at zero.
+As the normal distribution is symmetric, the simulated values reproduce the
+entered confidence interval only if <code>..._lower</code> and <code>..._upper</code>
+are symmetric around <code>..._central</code>. The more asymmetric the entered
+confidence interval, the more the simulated values depart from it.</p>
+<p>If the assessment covers several geographic units, the uncertainty of the
+aggregated unit (<code>geo_id_macro</code>) is obtained by first summing the
+impacts of all <code>geo_id_micro</code> within each simulation and only then
+taking the quantiles of those sums.</p>
 <p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monte-carlo-simulation">Monte Carlo simulation</a></p></li>
