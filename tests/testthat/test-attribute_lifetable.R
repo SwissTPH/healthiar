@@ -40,13 +40,13 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
       # AirQ+ result for the same inputs: c(29274.89, 15328.16, 43118.30)
       # from "Lifetable_CH_2019_PM_single_year_AP_no_newborns_default.csv".
       # healthiar is about 1.6% lower. The survival probability and the
-      # modification of the hazard rate are identical in both tools, so the
-      # deviation is not a matter of rounding: it comes at least in part from
-      # the treatment of the last (open-ended) age group. healthiar closes the
-      # life table at the last age group, and in these data age 99 still has a
-      # survival probability of about 0.34, whose survivors are therefore not
-      # projected further. See the chapter "YLL & deaths with life table" of
-      # the vignette. The rest of the deviation is unknown.
+      # modification of the hazard rate are identical in both tools.
+      # The deviation may come in part from the treatment of the last
+      # (open-ended) age group: healthiar closes the life table at the last
+      # age group, and in these data age 99 still has a survival probability
+      # of about 0.34, whose survivors are therefore not projected further.
+      # The rest is unknown. See the chapter "YLL & deaths with life table"
+      # of the vignette.
       c(28810.0511, 15083.5908, 42437.0574) # Result on 09 July 2025
   )
 
