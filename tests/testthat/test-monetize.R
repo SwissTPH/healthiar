@@ -614,7 +614,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_rate_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <-
     healthiar::attribute_health(
@@ -642,9 +642,9 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
 #### DISCOUNTING #################################################################
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   bestcost_pm_yll_exp_single_year_lifetable_geluft <-
     healthiar::attribute_lifetable(
@@ -683,7 +683,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <-
     healthiar::attribute_health(
@@ -714,7 +714,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <- healthiar::attribute_health(
     exp_central = data$mean_concentration,
@@ -746,7 +746,7 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
 
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <-
     healthiar::attribute_health(
@@ -780,7 +780,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd_1 <-
     healthiar::attribute_health(
@@ -840,9 +840,9 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   bestcost_pm_yll_exp_single_year_lifetable_1 <-
     healthiar::attribute_lifetable(
@@ -936,7 +936,7 @@ testthat::test_that("error if negative valuation", {
 
 testthat::test_that("error if negative n_years", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <- healthiar::attribute_health(
     exp_central = data$mean_concentration,
@@ -998,7 +998,7 @@ testthat::test_that("error if inflation higher than 1", {
 
 testthat::test_that("error if both impact and output_attribute are entered", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <- healthiar::attribute_health(
     exp_central = data$mean_concentration,
@@ -1060,9 +1060,9 @@ testthat::test_that("error if incompatible size of info", {
 
 testthat::test_that("errof if different year of analysis", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   bestcost_pm_yll_exp_single_year_lifetable_1 <-
     healthiar::attribute_lifetable(
@@ -1154,7 +1154,7 @@ testthat::test_that("errof if different bhd", {
 
 testthat::test_that("warning if no discount_rate but other discount arguments", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <- healthiar::attribute_health(
     exp_central = data$mean_concentration,
@@ -1210,9 +1210,9 @@ testthat::test_that("warning if user pass n_years with impact", {
 })
 
 testthat::test_that("warning if user pass n_years with life table", {
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("data", "input_data_mortality.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   bestcost_pm_yll_exp_single_year_lifetable_geluft <-
     healthiar::attribute_lifetable(

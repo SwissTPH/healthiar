@@ -314,8 +314,7 @@ testthat::test_that("resuts correct |log-log rescaling results the same based on
 
 #Lehtomäki et al. 2024
 data <-
-  read.csv(testthat::test_path("data","HeliLog-logcurve.csv"),
-           fileEncoding = "UTF-8-BOM")
+  utils::read.csv(testthat::test_path("testdata", "erf_helilog_logcurve.csv"))
 
 testthat::expect_equal(
   signif(healthiar::get_risk(

@@ -700,7 +700,7 @@ testthat::test_that("results the same |pathway_cba|discount_shape_exponential|di
 
 testthat::test_that("results the same |fake_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <-
     healthiar::attribute_health(
@@ -732,7 +732,7 @@ testthat::test_that("results the same |fake_cba|discount_shape_exponential|disco
 
 testthat::test_that("results the same |fake_cba|discount_shape_exp|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <-
     healthiar::attribute_health(

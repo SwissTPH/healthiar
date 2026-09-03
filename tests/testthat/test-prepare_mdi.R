@@ -1,6 +1,6 @@
 testthat::test_that("results correct", { # with verbose = FALSE
 
-  exdat_prepare_mdi <- base::readRDS(testthat::test_path("data", "exdat_get_mdi.rds"))
+  # exdat_prepare_mdi is package data (see R/data.R)
 
   testthat::expect_equal(
     object =
@@ -27,7 +27,7 @@ testthat::test_that("results correct", { # with verbose = FALSE
 ## COMMENTED OUT SO NOTHING IS PRINTED TO CONSOLE DURING OVERALL TESTING
 # testthat::test_that("results correct", { # with verbose = TRUE
 #
-#   # exdat_prepare_mdi <- base::readRDS(testthat::test_path("data", "exdat_get_mdi.rds"))
+#   # # exdat_prepare_mdi is package data (see R/data.R)
 #
 #   testthat::expect_equal(
 #     object =

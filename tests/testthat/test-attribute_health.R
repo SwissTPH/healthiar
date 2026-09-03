@@ -7,7 +7,7 @@
 
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-    data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+    data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
     data$mean_concentration
 
@@ -50,7 +50,7 @@ testthat::test_that("zero effect if exp lower than cutoff |pathway_rr|erf_log_li
 
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
@@ -74,7 +74,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
 ## same as above but with population argument
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
@@ -98,7 +98,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
 
   testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
@@ -153,7 +153,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
 
 testthat::test_that("detailed result the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
@@ -181,7 +181,7 @@ testthat::test_that("detailed result the same |pathway_rr|erf_log_lin|exp_single
 
 testthat::test_that("no error rr_no_error|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   testthat::expect_no_error(
     object =
@@ -207,7 +207,7 @@ testthat::test_that("no error rr_no_error|erf_log_lin|exp_single|iteration_FALSE
 
 testthat::test_that("number of rows in detailed results correct |meta_rr|erf_log_lin|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
@@ -265,7 +265,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
 
 testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
@@ -287,7 +287,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
 
 testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
@@ -308,7 +308,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
 
 testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   testthat::expect_equal(
     object =
@@ -330,7 +330,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iterat
 
 testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "ozone_copd_mort_2016.rds"))
 
   erf <- stats::splinefun(data$x, data$y, method="natural")
   erf_l <- stats::splinefun(data$x, data$y_l, method="natural")
@@ -751,7 +751,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iterati
 ##### Stratification (sex/age) ####################################################################
 
 testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|cutoff_TRUE|", {
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
   #Exotic test based on real data but does produce real world results
 
 
@@ -843,7 +843,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 })
 
 testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|cutoff_TRUE|", {
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
   #Exotic test based on real data but does produce real world results
 
 
@@ -934,7 +934,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iterati
 
 
 testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|cutoff_TRUE|", {
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "ozone_copd_mort_2016.rds"))
   #Exotic test based on real data but does produce real world results
 
 
@@ -1130,7 +1130,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "mort_pm25_sect_2021.rds"))
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1159,7 +1159,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021_cutoff.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "mort_pm25_sect_2021_cutoff.rds"))
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -1186,7 +1186,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_single|iteratio
 
 testthat::test_that("results correct |pathway_rr|erf_function|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "ozone_copd_mort_2016.rds"))
   erf<-stats::splinefun(data$x, data$y, method="natural")
   erf_l<-stats::splinefun(data$x, data$y_l, method="natural")
   erf_u<-stats::splinefun(data$x, data$y_u, method="natural")
@@ -1527,7 +1527,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iterati
 ##### Stratification (sex/age) ####################################################################
 
 testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|cutoff_TRUE|", {
-  data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "mort_pm25_sect_2021.rds"))
   #Exotic test based on real data but does produce real world results
 
   uncert_factor <- 20#set uncertainty factor
@@ -1659,7 +1659,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_single|iterati
 
 
 testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|cutoff_TRUE|", {
-  data <- base::readRDS(testthat::test_path("data", "mort_pm25_sect_2021.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "mort_pm25_sect_2021.rds"))
   #Exotic test based on real data but does produce real world results
 
   uncert_factor <- 20#set uncertainty factor
@@ -1789,7 +1789,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_single|iterati
 })
 
 testthat::test_that("results the same |pathway_rr|erf_function|exp_single|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|cutoff_TRUE|", {
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "ozone_copd_mort_2016.rds"))
   #Exotic test based on real data but does produce real world results
 
 
@@ -1990,7 +1990,7 @@ testthat::test_that("detailed results the same prevalence-based YLD |pathway_rr|
 
 testthat::test_that("results correct with cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
@@ -2019,7 +2019,7 @@ testthat::test_that("results correct with cutoff |pathway_rr|erf_log_lin|exp_dis
 
 testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
@@ -2042,7 +2042,7 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
 
 testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "ozone_copd_mort_2016.rds"))
   erf <- stats::splinefun(data$x, data$y, method="natural")
   erf_l <- stats::splinefun(data$x, data$y_l, method="natural")
   erf_u <- stats::splinefun(data$x, data$y_u, method="natural")
@@ -2071,7 +2071,7 @@ testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration
 
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "ozone_copd_mort_2016.rds"))
 
   testthat::expect_equal(
     object =
@@ -2221,7 +2221,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration
 
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
   #Exotic test based on real data but does produce real world results
@@ -2318,7 +2318,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
 
 testthat::test_that("results correct |pathway_rr|erf_lin_lin|exp_dist|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
   #Exotic test based on real data but does produce real world results
@@ -2462,7 +2462,7 @@ testthat::test_that("results the same no cutoff |pathway_rr|erf_log_lin|exp_dist
 
 testthat::test_that("results correct |pathway_rr|erf_function|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "ozone_copd_mort_2015_2016.rds"))
   data <- data |> dplyr::slice(-1)
   erf <- stats::splinefun(data$x[1:21], data$y[1:21], method="natural")
   erf_l <- stats::splinefun(data$x[1:21], data$y_l[1:21], method="natural")
@@ -2701,7 +2701,7 @@ testthat::test_that("results the same |pathway_rr|erf_lin_lin|exp_dist|iteration
 
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
   bhd_value = data$gbd_daly[1]
@@ -2864,7 +2864,7 @@ testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|iteration_
 
 testthat::test_that("results correct |pathway_rr|erf_lin_lin|exp_dist|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
   bhd_value = data$gbd_daly[1]
@@ -3034,8 +3034,8 @@ testthat::test_that("results correct |pathway_rr|erf_lin_lin|exp_dist|iteration_
 
 testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_erf <- base::readRDS(testthat::test_path("testdata", "erf_mrbrt_stroke.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
@@ -3068,8 +3068,8 @@ testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function
 
 testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_erf <- base::readRDS(testthat::test_path("testdata", "erf_mrbrt_stroke.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
@@ -3102,8 +3102,8 @@ testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|e
 
 testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
-  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+  data_pop <- base::readRDS(testthat::test_path("testdata", "pop_norway.rds"))
+  data_erf <- base::readRDS(testthat::test_path("testdata", "erf_mrbrt_stroke.rds"))
 
   testthat::expect_equal(
     object =
@@ -3126,8 +3126,8 @@ testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function
 
 testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
-  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+  data_pop <- base::readRDS(testthat::test_path("testdata", "pop_norway.rds"))
+  data_erf <- base::readRDS(testthat::test_path("testdata", "erf_mrbrt_stroke.rds"))
 
   testthat::expect_equal(
     object =
@@ -3150,8 +3150,8 @@ testthat::test_that("results the same mrbrt no cutoff |pathway_rr|erf_function|e
 
 testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
-  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+  data_pop <- base::readRDS(testthat::test_path("testdata", "pop_norway.rds"))
+  data_erf <- base::readRDS(testthat::test_path("testdata", "erf_mrbrt_stroke.rds"))
 
   testthat::expect_equal(
     object =
@@ -3175,8 +3175,8 @@ testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function
 
 testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
-  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+  data_pop <- base::readRDS(testthat::test_path("testdata", "pop_norway.rds"))
+  data_erf <- base::readRDS(testthat::test_path("testdata", "erf_mrbrt_stroke.rds"))
 
   testthat::expect_equal(
     object =
@@ -3211,8 +3211,8 @@ testthat::test_that("results the same mrbrt with cutoff |pathway_rr|erf_function
 
 testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data_pop <- base::readRDS(testthat::test_path("data", "pop_data_norway.rds"))
-  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
+  data_pop <- base::readRDS(testthat::test_path("testdata", "pop_norway.rds"))
+  data_erf <- base::readRDS(testthat::test_path("testdata", "erf_mrbrt_stroke.rds"))
 
   testthat::expect_equal(
     object =
@@ -3252,8 +3252,8 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteratio
 testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|", {
 
 
-  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_erf <- base::readRDS(testthat::test_path("testdata", "erf_mrbrt_stroke.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
   #Exotic test based on real data but does produce real world results
@@ -3347,7 +3347,7 @@ func <-stats::splinefun(x = data_erf$exposure,
 })
 
 testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|cutoff_TRUE|", {
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "ozone_copd_mort_2016.rds"))
   #Exotic test based on real data but does produce real world results
 
   #percentage of variation
@@ -3426,7 +3426,7 @@ testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteratio
 
 
 testthat::test_that("results the same |pathway_rr|erf_function|exp_dist|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|cutoff_TRUE|", {
-data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rds"))
+data <- base::readRDS(testthat::test_path("testdata", "ozone_copd_mort_2015_2016.rds"))
   data <- data |> dplyr::slice(-1)
   erf <- stats::splinefun(data$x[1:21], data$y[1:21], method="natural")
   erf_l <- stats::splinefun(data$x[1:21], data$y_l[1:21], method="natural")
@@ -3550,7 +3550,7 @@ data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rd
 })
 
 testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration_TRUE|strat_TRUE|yld_FALSE|uncertainty_TRUE|cutoff_TRUE|", {
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2015_2016.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "ozone_copd_mort_2015_2016.rds"))
   data <- data |> dplyr::slice(-1)
   #erf <- stats::splinefun(data$x[1:21], data$y[1:21], method="natural")
   #Exotic test based on real data but does produce real world results
@@ -3637,8 +3637,8 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
 
 testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration_FALSE|strat_TRUE|yld_FALSE|uncertainty_TRUE|", {
 
-  data_erf <- base::readRDS(testthat::test_path("data", "mrbrt_stroke.rds"))
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_erf <- base::readRDS(testthat::test_path("testdata", "erf_mrbrt_stroke.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
   #Exotic test based on real data but does produce real world results
@@ -3799,7 +3799,7 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
 
 testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
@@ -3842,7 +3842,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
 
 testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "roadnoise_ha_Lden_StavangerandVicinity.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger.rds"))
 
   testthat::expect_equal(
     object =
@@ -3867,7 +3867,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
 # Now with cutoff
 testthat::test_that("results the same |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "roadnoise_ha_Lden_StavangerandVicinity.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger.rds"))
 
   testthat::expect_equal(
     object =
@@ -3960,7 +3960,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
 testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "roadnoise_ha_Lden_StavangerandVicinity.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger.rds"))
 
 
 
@@ -4087,7 +4087,7 @@ testthat::test_that("results the same |pathway_ar|erf_formula|exp_dist|iteration
 
 testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
@@ -4119,7 +4119,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
 testthat::test_that("results correct  |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
 
   testthat::expect_equal(
     ## healthiar FUNCTION CALL
@@ -4155,7 +4155,7 @@ testthat::test_that("results correct  |pathway_ar|erf_formula|exp_dist|iteration
 
 # Now with age groups
 testthat::test_that("results correct  |pathway_ar|erf_formula|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
-  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
   data_groups <- dplyr::bind_rows(data, data) |>
     dplyr::mutate(age_group = rep(c("below_40", "above_40"), each = 85))
 
@@ -4180,7 +4180,7 @@ testthat::test_that("results correct  |pathway_ar|erf_formula|exp_dist|iteration
 testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
 
 
 
@@ -4237,7 +4237,7 @@ testthat::test_that("results correct  |pathway_ar|erf_function|exp_dist|iteratio
 ## Using only the pop_exp argument
 testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
@@ -4262,7 +4262,7 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
 ## Using the prop_pop_exp and pop_exp arguments in combination
 testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
@@ -4286,7 +4286,7 @@ testthat::test_that("results correct prevalence-based YLD |pathway_ar|erf_formul
 
 testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "Bergen_HA_og_HSD.rds"))
+  data <- base::readRDS(testthat::test_path("testdata", "noise_bergen_ha_hsd.rds"))
   totalpop_Bergen <- 269189
 
   testthat::expect_equal(
@@ -4471,7 +4471,7 @@ testthat::test_that("error if sum(prop_pop_exp) higher than 1", {
 
 testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
@@ -4493,7 +4493,7 @@ testthat::test_that("error if pop_exp and rr |pathway_rr|erf_log_lin|exp_dist|it
 
 testthat::test_that("error if prop_pop_exp and ar |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-    data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+    data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
     data  <- data_raw |>
       dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
@@ -4512,7 +4512,7 @@ testthat::test_that("error if prop_pop_exp and ar |pathway_rr|erf_log_lin|exp_di
 
 testthat::test_that("error if pop_exp and prop_pop_exp |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
@@ -4639,7 +4639,7 @@ testthat::test_that("error if multi geo units but different length of geo-depend
 
 testthat::test_that("error if info has incompatible length |pathway_rr|erf_log_lin|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
@@ -4684,7 +4684,7 @@ testthat::test_that("error if length of exp lower than length of prop pop", {
 testthat::test_that("error if multiple rr for one go_id, sex, age_group ... combination", {
 
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
   bhd_value = data$gbd_daly[1]
@@ -4839,7 +4839,7 @@ composition", {
 
 testthat::test_that("warning if absolute risk and cutoff", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!base::is.na(data_raw$exposure_mean))
 
