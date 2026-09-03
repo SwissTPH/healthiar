@@ -955,6 +955,8 @@ $$entry\_population_{first} = \frac{population + (1 - fraction\_lived) \times bh
 
 For $fraction\_lived = 0.5$ this reproduces the values published in the AirQ+ manual, and unlike the formula given there it holds for any age interval width and any value of `fraction_lived`.
 
+Both relations are checked in internal tests in `healthiar`against a published life table, the abridged life table for Austrian males in 1992 [@Preston2001_book], in which the fraction of the age interval lived ranges from 0.48 to 0.63 in the 5-year age groups and is 0.068 at age 0. Applying the probability of dying obtained by `prepare_lifetable()` to the published survivors reproduces the published deaths of that life table for every age group, and the entry population it determines from the published mid-year population and deaths at age 0 reproduces the published number of survivors.
+
 #### What it does not determine
 
 `fraction_lived` is *not* a way to control how the deaths of an age group are distributed over the single years of age it contains. That distribution follows from the survival probabilities, as in AirQ+, so `fraction_lived` influences it only indirectly and far too weakly to be used for it. Both quantities are distinct in the life table literature and the distribution of the deaths cannot be derived from $_na_x$ [@Preston2001_book].
