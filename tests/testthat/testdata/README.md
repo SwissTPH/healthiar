@@ -36,3 +36,27 @@ into this directory:
 
 The raw sources and the scripts that build both are in `data-raw/`, which is
 excluded from the built package via `.Rbuildignore`.
+
+## Provenance of the AirQ+ data
+
+Two data sets hold an AirQ+ life table assessment of the mortality attributable
+to PM2.5 in Switzerland in 2019, each with the input data as entered in AirQ+
+(`input`, `pop`) and the results of AirQ+ (`output`), so that both tools can be
+compared on exactly the same data:
+
+| Data set                          | Exposure         | AirQ+ export in `data-raw/`                              |
+| --------------------------------- | ---------------- | -------------------------------------------------------- |
+| `airqplus_pm_deaths_yll.rds`      | constant         | `exdat_lifetable_airqplus_deaths_yll_lifetable_adults.csv` |
+| `airqplus_pm_yll_single_year.rds` | one single year  | `airqplus_pm_yll_single_year.csv`                          |
+
+Both were parsed from those exports, which are kept as the reference.
+`airqplus_pm_yll_single_year.rds` is built by
+`data-raw/prepare_airqplus_export.R`, whose function reads either export. The
+0 deaths of the females aged 8 were replaced by 1, because a survival
+probability of 100% has no conceptual logic and `healthiar` warns about it;
+this does not change the results of AirQ+ at the two decimals that it exports.
+
+Compare with the male and the female results of AirQ+ and never with its
+"All genders" ones: the latter are not the sum of the former but a life table
+with both sexes pooled. See the chapter "YLL & deaths with life table" of the
+vignette.
