@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1646</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1648</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1616,13 +1616,14 @@ The <code>healthiar</code> function <code><a href="../reference/prepare_lifetabl
 makes this conversion using the same approach as the WHO tool AirQ+
 <span class="citation">(WHO 2020)</span>. In standard AirQ+ life table
 disaggregations, deaths are assumed to be distributed uniformly across
-age intervals with a fraction of the age interval lived of 0.5. However,
-in modern public health settings, infant mortality is highly skewed
-because the vast majority of deaths occur within the first year of life.
-In countries with low infant mortality the fraction lived can be
-e.g. 0.1.</p></li>
+age intervals with a fraction of the age interval lived of 0.5. The
+argument <code>fraction_lived</code> allows other assumptions, see the
+section on the fraction of the age interval lived below.</p></li>
 <li><p>If your population and death data are stratified by one-year age
-group, you are lucky, you can ignore this initial step.</p></li>
+group, you are lucky, you can ignore this initial step.
+<code><a href="../reference/prepare_lifetable.html">prepare_lifetable()</a></code> passes single-year data on unchanged,
+so it can also be used for a life table that mixes already available
+single-year data with converted larger age groups.</p></li>
 </ul>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">age_groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span><span class="op">)</span></span>
@@ -1637,13 +1638,114 @@ group, you are lucky, you can ignore this initial step.</p></li>
 <span>  <span class="co"># fraction_lived = 0.5 (default)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Demographic adjustment for low infant mortality (first fraction_lived = 0.1)</span></span>
-<span><span class="va">prepared_data_adjusting_for_low_infant_mortality</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/prepare_lifetable.html">prepare_lifetable</a></span><span class="op">(</span></span>
+<span><span class="co"># Age-group specific fraction of the age interval lived (first fraction_lived = 0.1)</span></span>
+<span><span class="va">prepared_data_with_age_specific_fraction_lived</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/prepare_lifetable.html">prepare_lifetable</a></span><span class="op">(</span></span>
 <span>  age_group <span class="op">=</span> <span class="va">age_groups</span>,</span>
 <span>  population <span class="op">=</span> <span class="va">pop</span>,</span>
 <span>  bhd <span class="op">=</span> <span class="va">bhd_counts</span>,</span>
 <span>  fraction_lived <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="fraction-of-the-age-interval-lived">Fraction of the age interval lived<a class="anchor" aria-label="anchor" href="#fraction-of-the-age-interval-lived"></a>
+</h4>
+<p>The argument <code>fraction_lived</code>, available in both
+<code><a href="../reference/prepare_lifetable.html">prepare_lifetable()</a></code> and <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>,
+is the average fraction of an age interval that is lived by those who
+die in it. It corresponds to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi></mi><mi>n</mi></msub><msub><mi>a</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">_na_x</annotation></semantics></math>
+in the life table literature <span class="citation">(Chiang 1984;
+Preston et al. 2001)</span>. The default of 0.5 for all age groups means
+that deaths are evenly distributed over the age interval, which is the
+value that AirQ+ assumes <span class="citation">(WHO 2020)</span>. It
+can be entered as a single value applying to all age groups or as one
+value per age group.</p>
+<div class="section level5">
+<h5 id="what-it-determines">What it determines<a class="anchor" aria-label="anchor" href="#what-it-determines"></a>
+</h5>
+<p>With
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi></mi><mi>n</mi></msub><msub><mi>m</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">_nm_x</annotation></semantics></math>
+the death rate of an age interval of width
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>,
+the probability of dying in that interval is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi></mi><mi>n</mi></msub><msub><mi>q</mi><mi>x</mi></msub><mo>=</mo><mfrac><mrow><mi>n</mi><mo>×</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi>m</mi><mi>x</mi></msub></mrow><mrow><mn>1</mn><mo>+</mo><mi>n</mi><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi>a</mi><mi>x</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>×</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi>m</mi><mi>x</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">_nq_x = \frac{n \times {}_nm_x}{1 + n \times (1 - {}_na_x) \times {}_nm_x}</annotation></semantics></math></p>
+<p>and the person-years lived at a single year of age, i.e. its mid-year
+population, is one year for each person reaching the next birthday plus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi></mrow><annotation encoding="application/x-tex">fraction\_lived</annotation></semantics></math>
+years for each person dying at that age:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>=</mo><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>d</mi><mi>e</mi><mi>a</mi><mi>t</mi><mi>h</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">midyear\_population = entry\_population - (1 - fraction\_lived) \times deaths</annotation></semantics></math></p>
+<p>In <code><a href="../reference/prepare_lifetable.html">prepare_lifetable()</a></code> these two relations fix the
+conversion. The entry population of the first single year of age of an
+age group follows from the condition that the conversion may neither
+create nor lose population, i.e. that the single-year mid-year
+populations have to add up to the mid-year population of the age group
+that was entered:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>n</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mrow><mi>f</mi><mi>i</mi><mi>r</mi><mi>s</mi><mi>t</mi></mrow></msub><mo>=</mo><mfrac><mrow><mi>p</mi><mi>o</mi><mi>p</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>b</mi><mi>h</mi><mi>d</mi></mrow><mrow><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></munderover><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><msup><mi>l</mi><mrow><mspace width="0.167em"></mspace><mi>k</mi></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">entry\_population_{first} = \frac{population + (1 - fraction\_lived) \times bhd}{\sum_{k = 0}^{n - 1} prob\_survival^{\,k}}</annotation></semantics></math></p>
+<p>For
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">fraction\_lived = 0.5</annotation></semantics></math>
+this reproduces the values published in the AirQ+ manual, and unlike the
+formula given there it holds for any age interval width and any value of
+<code>fraction_lived</code>.</p>
+<p>Both relations are checked in internal tests in
+<code>healthiar</code>against a published life table, the abridged life
+table for Austrian males in 1992 <span class="citation">(Preston et al.
+2001)</span>, in which the fraction of the age interval lived ranges
+from 0.48 to 0.63 in the 5-year age groups and is 0.068 at age 0.
+Applying the probability of dying obtained by
+<code><a href="../reference/prepare_lifetable.html">prepare_lifetable()</a></code> to the published survivors reproduces
+the published deaths of that life table for every age group, and the
+entry population it determines from the published mid-year population
+and deaths at age 0 reproduces the published number of survivors.</p>
+</div>
+<div class="section level5">
+<h5 id="what-it-does-not-determine">What it does not determine<a class="anchor" aria-label="anchor" href="#what-it-does-not-determine"></a>
+</h5>
+<p><code>fraction_lived</code> is <em>not</em> a way to control how the
+deaths of an age group are distributed over the single years of age it
+contains. That distribution follows from the survival probabilities, as
+in AirQ+, so <code>fraction_lived</code> influences it only indirectly
+and far too weakly to be used for it. Both quantities are distinct in
+the life table literature and the distribution of the deaths cannot be
+derived from
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi></mi><mi>n</mi></msub><msub><mi>a</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">_na_x</annotation></semantics></math><span class="citation">(Preston et al. 2001)</span>.</p>
+<p><code><a href="../reference/prepare_lifetable.html">prepare_lifetable()</a></code> can therefore not reproduce the
+concentration of deaths at age 0 that is observed in low-mortality
+settings. If the deaths at age 0 matter for your assessment, obtain
+single-year population and death data for the youngest ages instead of
+relying on the conversion.</p>
+</div>
+<div class="section level5">
+<h5 id="how-to-choose-it">How to choose it<a class="anchor" aria-label="anchor" href="#how-to-choose-it"></a>
+</h5>
+<p>The sensitivity of the survival probability to
+<code>fraction_lived</code> is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>∂</mi><mspace width="0.278em"></mspace><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>_</mi><mi>s</mi><mi>u</mi><mi>r</mi><mi>v</mi><mi>i</mi><mi>v</mi><mi>a</mi><mi>l</mi></mrow><mrow><mi>∂</mi><mspace width="0.278em"></mspace><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi></mrow></mfrac><mo>=</mo><mi>−</mi><mfrac><mrow><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><msup><mi>e</mi><mn>2</mn></msup></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>h</mi><mi>a</mi><mi>z</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial \; prob\_survival}{\partial \; fraction\_lived} = - \frac{hazard\_rate^2}{(1 + (1 - fraction\_lived) \times hazard\_rate)^2}</annotation></semantics></math></p>
+<p>i.e. it grows with the square of the hazard rate.
+<code>fraction_lived</code> therefore matters little in the age groups
+with a low mortality and most in those with the highest mortality, which
+are the last ones. With the example data of this vignette, entering 0.1
+for age 0 changes the YLL by 0.01%, whereas adapting the last age group
+changes them by 0.25%.</p>
+<p>Values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi></mi><mi>n</mi></msub><msub><mi>a</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">_na_x</annotation></semantics></math>
+other than 0.5 are usually derived from the mortality level itself. For
+age 0 and for the ages 1 to 4, <span class="citation">Preston et al.
+(2001)</span> report rules of thumb going back to Coale and Demeny,
+e.g. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi></mi><mn>1</mn></msub><msub><mi>a</mi><mn>0</mn></msub><mo>=</mo><mn>0.045</mn><mo>+</mo><mn>2.684</mn><mo>×</mo><msub><mrow></mrow><mn>1</mn></msub><msub><mi>m</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">_1a_0 = 0.045 + 2.684 \times {}_1m_0</annotation></semantics></math>
+for males with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi></mi><mn>1</mn></msub><msub><mi>m</mi><mn>0</mn></msub><mo>&lt;</mo><mn>0.107</mn></mrow><annotation encoding="application/x-tex">_1m_0 &lt; 0.107</annotation></semantics></math>.
+For an open-ended last age group,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi></mi><mi>n</mi></msub><msub><mi>a</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">_na_x</annotation></semantics></math>
+is the remaining life expectancy
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><msub><mrow></mrow><mi>n</mi></msub><msub><mi>m</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">1 / {}_nm_x</annotation></semantics></math>,
+which can exceed the width of the age interval.</p>
+<p>Whichever <code>fraction_lived</code> is used in
+<code><a href="../reference/prepare_lifetable.html">prepare_lifetable()</a></code> has to be passed on to
+<code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>, which needs the same assumption to
+obtain the survival probabilities. The output column
+<code>fraction_lived_for_attribute</code> is provided for that
+purpose.</p>
+</div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="yll">YLL<a class="anchor" aria-label="anchor" href="#yll"></a>
@@ -4175,6 +4277,11 @@ Pozzer, A., S. C. Anenberg, S. Dey, A. Haines, J. Lelieveld, and S.
 Chowdhury. 2023. <span>“Mortality Attributable to Ambient Air Pollution:
 A Review of Global Estimates.”</span> <em>GeoHealth</em> 7 (1):
 e2022GH000711. https://doi.org/<a href="https://doi.org/10.1029/2022GH000711" class="external-link">https://doi.org/10.1029/2022GH000711</a>.
+</div>
+<div id="ref-Preston2001_book" class="csl-entry">
+Preston, Samuel H., Patrick Heuveline, and Michel Guillot. 2001.
+<em>Demography: Measuring and Modeling Population Processes</em>.
+Blackwell Publishers.
 </div>
 <div id="ref-Renard2019_bmc" class="csl-entry">
 Renard, Françoise, Brecht Devleesschauwer, Niko Speybroeck, and Patrick

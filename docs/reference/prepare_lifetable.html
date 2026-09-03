@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1646</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1648</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,6 +71,7 @@ fraction of the age interval lived by individuals who die within that interval. 
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>This function returns a <code>tibble</code> containing the columns:</p><ul><li><p><code>population_for_attribute</code> (<code>numeric</code>) containing  population values for each age</p></li>
 <li><p><code>bhd_for_attribute</code> (<code>numeric</code>) containing baseline health data values for each age</p></li>
+<li><p><code>fraction_lived_for_attribute</code> (<code>numeric</code>) containing the fraction of the year lived for each age</p></li>
 <li><p>and more columns containing input data or results</p></li>
 </ul></div>
     <div class="section level2">
@@ -82,14 +83,15 @@ See the AirQ+ manual
 for guidance on how to convert larger age groups to 1 year age groups,
 section "Estimation of yearly values" (WHO 2020)
 .</p>
-<p><code>fraction_lived</code> is by default 0.5 for all age groups. However,
-in low-mortality settings, infant deaths are heavily concentrated
-in the first weeks of life.
-Therefore, <code>fraction_lived</code> can be lower e.g. 0.1 for the first age group.</p>
-<p>When <code>fraction_lived[1] &lt; 0.5</code>, the function reallocates the baseline
-health data (<code>bhd</code>) for the first age group \([0, 5)\) such that
-<code>bhd[1] * (1 - fraction_lived[1])</code> deaths are assigned to single-year
-age 0, and the remaining deaths are split equally across single-year ages 1–4.</p>
+<p><code>fraction_lived</code> is by default 0.5 for all age groups, i.e. the value
+that AirQ+ assumes. It determines the probability of dying in the age
+interval and how the mid-year population of the age group is split over the
+single years of age it contains. It is <strong>not</strong> a way to control how
+the deaths of the age group are distributed over those single years of age.</p>
+<p>The same value of <code>fraction_lived</code> has to be used when the resulting
+single-year life table is passed on to <code><a href="attribute_lifetable.html">attribute_lifetable()</a></code>.
+The output column <code>fraction_lived_for_attribute</code> is provided for
+that purpose.</p>
 <p><strong>Last age group</strong></p>
 <p><code><a href="attribute_lifetable.html">attribute_lifetable()</a></code> closes the life table at the last age group.
 The age groups entered here should therefore reach an age in which
@@ -98,6 +100,7 @@ See more information in the vignette.</p>
 <p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table">YLL and deaths with life table</a></p></li>
+<li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#fraction-of-the-age-interval-lived">Fraction of the age interval lived</a></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

@@ -40,6 +40,9 @@ This function returns a `tibble` containing the columns:
 - `bhd_for_attribute` (`numeric`) containing baseline health data values
   for each age
 
+- `fraction_lived_for_attribute` (`numeric`) containing the fraction of
+  the year lived for each age
+
 - and more columns containing input data or results
 
 ## Details
@@ -51,16 +54,18 @@ manual "Health impact assessment of air pollution: AirQ+ life table
 manual" for guidance on how to convert larger age groups to 1 year age
 groups, section "Estimation of yearly values" (WHO 2020) .
 
-`fraction_lived` is by default 0.5 for all age groups. However, in
-low-mortality settings, infant deaths are heavily concentrated in the
-first weeks of life. Therefore, `fraction_lived` can be lower e.g. 0.1
-for the first age group.
+`fraction_lived` is by default 0.5 for all age groups, i.e. the value
+that AirQ+ assumes. It determines the probability of dying in the age
+interval and how the mid-year population of the age group is split over
+the single years of age it contains. It is **not** a way to control how
+the deaths of the age group are distributed over those single years of
+age.
 
-When `fraction_lived[1] < 0.5`, the function reallocates the baseline
-health data (`bhd`) for the first age group \\\[0, 5)\\ such that
-`bhd[1] * (1 - fraction_lived[1])` deaths are assigned to single-year
-age 0, and the remaining deaths are split equally across single-year
-ages 1–4.
+The same value of `fraction_lived` has to be used when the resulting
+single-year life table is passed on to
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md).
+The output column `fraction_lived_for_attribute` is provided for that
+purpose.
 
 **Last age group**
 
@@ -74,6 +79,9 @@ available in the package vignette. More specifically, see chapters:
 
 - [YLL and deaths with life
   table](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table)
+
+- [Fraction of the age interval
+  lived](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#fraction-of-the-age-interval-lived)
 
 ## References
 
