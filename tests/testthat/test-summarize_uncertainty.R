@@ -214,8 +214,13 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_inc
         seed = 123
       )$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2025-10-29; no comparison study
-      c(2853, 936, 6531, 2943, 875, 7232)
+    expected =
+      # Results on 2026-09-03; no comparison study.
+      # Only the estimates of geo unit "a" change compared to the previous
+      # expectation c(2853, 936, 6531, 2943, 875, 7232), because the bhd
+      # interval entered above puts 0.45% of the normal distribution below
+      # zero and those values are now truncated instead of mirrored
+      c(2908, 979, 6531, 2943, 875, 7232)
   )
 })
 
@@ -492,9 +497,56 @@ testthat::test_that("results the same |pathway_uncertainty|exp_dist|erf_ar_formu
         n_sim = 100,
         seed = 122)$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2025-10-29; no comparison study
-      c(171674, 2430, 614420)
+    expected =
+      # Results on 2026-09-03; no comparison study.
+      # The duration interval entered above (0.1, 1, 10) is strongly
+      # asymmetric, so 35% of the normal distribution falls below zero.
+      # The lower estimate changes a lot compared to the previous expectation
+      # c(171674, 2430, 614420), because those values are now truncated
+      # instead of being mirrored onto the positive side
+      c(175252, 7412, 670185)
   )
+})
+
+### TRUNCATION AT ZERO #########################################################
+
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_formula|iteration_FALSE|", {
+
+  # The duration confidence interval entered below is so wide and asymmetric
+  # that about 35% of the corresponding normal distribution falls below zero.
+  # As duration cannot be negative, the distribution is truncated at zero.
+  # The simulated values must therefore follow the normal distribution
+  # truncated at zero and not the mirrored one obtained with abs() before,
+  # which returns a median of about 1.84 instead of 2.13.
+
+  results_duration <-
+    healthiar::attribute_health(
+      approach_risk = "absolute_risk",
+      exp_central = 65,
+      pop_exp = 1E5,
+      erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+      dw_central = 0.02,
+      duration_central = 1,
+      duration_lower = 0.1,
+      duration_upper = 10)
+
+  simulated_duration <-
+    healthiar::summarize_uncertainty(
+      output_attribute = results_duration,
+      n_sim = 1E4,
+      seed = 123)$uncertainty_detailed$impact_by_sim$duration
+
+  # Median of the normal distribution truncated at zero
+  sd_duration <- (10 - 0.1) / (2 * stats::qnorm(0.975))
+  prob_at_zero <- stats::pnorm(q = 0, mean = 1, sd = sd_duration)
+
+  testthat::expect_equal(
+    object = stats::median(simulated_duration),
+    expected =
+      stats::qnorm(p = prob_at_zero + 0.5 * (1 - prob_at_zero),
+                   mean = 1,
+                   sd = sd_duration),
+    tolerance = 0.02)
 })
 
 # COMPARE ########

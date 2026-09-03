@@ -43,6 +43,14 @@
 #' a Monte Carlo simulation methodology \insertCite{Robert2004_book}{healthiar}
 #' and framework application \insertCite{Rubinstein2016_book}{healthiar}.
 #'
+#' The variables that cannot be negative and are simulated with a normal
+#' distribution (\code{exp_...}, \code{cutoff_...}, \code{bhd_...} and
+#' \code{duration_...}) are drawn from that distribution truncated at zero.
+#' As the normal distribution is symmetric, the simulated values reproduce the
+#' entered confidence interval only if \code{..._lower} and \code{..._upper}
+#' are symmetric around \code{..._central}. The more asymmetric the entered
+#' confidence interval, the more the simulated values depart from it.
+#'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
@@ -467,26 +475,54 @@ summarize_uncertainty <- function(
     if(distribution == "gamma"){
 
       simulation <-
-        #abs() because negative values have to be avoided
-        base::abs(
-          sim_gamma(
-            n_sim = n,
-            central_estimate = central,
-            lower_estimate = lower,
-            upper_estimate = upper))
+        # No need to avoid negative values here,
+        # because the gamma distribution is defined for positive values only
+        sim_gamma(
+          n_sim = n,
+          central_estimate = central,
+          lower_estimate = lower,
+          upper_estimate = upper)
 
       return(simulation)
 
     } else if (distribution == "normal"){
-        simulation <-
-          #abs() because negative values have to be avoided
-          base::abs(
-            stats::rnorm(
-              n = n,
-              mean = central,
-              sd = (upper - lower) / (2 * stats::qnorm(0.975))))
 
+      sd <- (upper - lower) / (2 * stats::qnorm(0.975))
 
+      # Negative values have to be avoided, because the variables simulated
+      # with a normal distribution (exp, cutoff, bhd and duration)
+      # cannot be negative.
+      # For this purpose, the distribution is truncated at zero, i.e. the
+      # negative values are discarded and drawn again until they are positive
+      # (rejection sampling).
+      # Truncating replaces the abs() used before, which mirrored the negative
+      # values onto the positive side. Mirroring does not remove the negative
+      # part of the distribution but adds it again around the mirrored values,
+      # which shifts the central estimate away from the value entered by the user.
+      # Rejection sampling is used (instead of e.g. inverse transform sampling)
+      # because it keeps stats::rnorm() as the only source of random numbers.
+      # Thus, the simulated values remain exactly the same as before
+      # for the (most common) case in which no value is negative at all.
+      simulation <-
+        stats::rnorm(
+          n = n,
+          mean = central,
+          sd = sd)
+
+      is_negative <- simulation < 0
+
+      while (base::any(is_negative)) {
+
+        simulation[is_negative] <-
+          stats::rnorm(
+            n = base::sum(is_negative),
+            mean = central,
+            sd = sd)
+
+        is_negative <- simulation < 0
+      }
+
+      return(simulation)
 
     } else if (distribution == "beta") {
 

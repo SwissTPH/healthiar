@@ -607,13 +607,25 @@ The gamma distribution is parametrized such that its mean is equal to the centra
 with `stats::qgamma()` used to evaluate candidate distributions.
 Finally, `n_sim` relative risk values are simulated using `stats::rgamma()`.
 
-- Exposure, cutoff, baseline health data and duration: 
-The values are simulated based on a *normal* distribution 
-using `stats::rnorm()` with 
-`mean = exp_central`, `mean = cutoff_central`, `mean = bhd_central` or `mean = duration_central` 
-and a standard deviation based on corresponding lower and upper 95% exposure 
+- Exposure, cutoff, baseline health data and duration:
+The values are simulated based on a *normal* distribution
+using `stats::rnorm()` with
+`mean = exp_central`, `mean = cutoff_central`, `mean = bhd_central` or `mean = duration_central`
+and a standard deviation based on corresponding lower and upper 95% exposure
 confidence interval values. The standard deviation is calculated as $$(upper-lower)/(2*1.96)$$,
-since for a normal distribution the 95% CI spans approximately two standard deviations on either side of the mean. 
+since for a normal distribution the 95% CI spans approximately two standard deviations on either side of the mean.
+As these four variables cannot be negative, the distribution is truncated at zero,
+i.e. negative values are discarded and drawn again until they are positive.
+
+Please note that the normal distribution is symmetric.
+Therefore, the simulated values reproduce the entered confidence interval only
+if the entered `_lower` and `_upper` values are symmetric around the `_central` value.
+Only the width of the entered confidence interval is used, not its shape.
+The more asymmetric the entered confidence interval,
+the more the simulated values will depart from it.
+Moreover, if the entered confidence interval is so wide that a relevant share of
+the distribution falls below zero, the truncation at zero shifts
+the simulated central estimate above the entered `_central` value.
 
 - Disability weights: The values are simulated based on a *beta* distribution, 
 as both the disability weights and the beta distribution are bounded by 0 and 1. 

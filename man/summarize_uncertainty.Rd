@@ -62,6 +62,14 @@ For this purpose, it employs
 a Monte Carlo simulation methodology \insertCite{Robert2004_book}{healthiar}
 and framework application \insertCite{Rubinstein2016_book}{healthiar}.
 
+The variables that cannot be negative and are simulated with a normal
+distribution (\code{exp_...}, \code{cutoff_...}, \code{bhd_...} and
+\code{duration_...}) are drawn from that distribution truncated at zero.
+As the normal distribution is symmetric, the simulated values reproduce the
+entered confidence interval only if \code{..._lower} and \code{..._upper}
+are symmetric around \code{..._central}. The more asymmetric the entered
+confidence interval, the more the simulated values depart from it.
+
 Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
