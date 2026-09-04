@@ -151,6 +151,6 @@ results <- summarize_uncertainty(
   n_sim = 100
 )
 results$uncertainty_main$impact # Central, lower and upper estimates
-#> [1] 3488.886 1500.855 5900.141
+#> [1] 3422.472 1528.661 5602.330
 
 ```
