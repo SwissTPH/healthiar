@@ -776,9 +776,9 @@ Two lists (“folders”) are added:
 
 | geo_id_micro | impact_ci        |   impact | impact_rounded |
 |:-------------|:-----------------|---------:|---------------:|
-| a            | central_estimate | 3654.885 |           3655 |
-| a            | lower_estimate   | 1589.442 |           1589 |
-| a            | upper_estimate   | 5600.248 |           5600 |
+| a            | central_estimate | 3530.588 |           3531 |
+| a            | lower_estimate   | 1394.460 |           1394 |
+| a            | upper_estimate   | 6027.056 |           6027 |
 
 #### Detailed results
 
@@ -791,16 +791,16 @@ source of uncertainty component used for that simulation (in the first
 
 | geo_id_micro | erf_ci | exp_ci | bhd_ci | cutoff_ci | exp_category | sex | age_group | sim_id | impact | impact_rounded | approach_risk | rr_increment | erf_shape | prop_pop_exp | exp_length | exp_type | cutoff | is_lifetable | geo_id_number | rr | exp | bhd | pop_fraction_type | rr_at_exp | pop_fraction |
 |:---|:---|:---|:---|:---|---:|:---|:---|---:|---:|---:|:---|---:|:---|---:|---:|:---|---:|:---|---:|---:|---:|---:|:---|---:|---:|
-| a | central | central | central | central | 1 | all | all | 1 | 2629.951 | 2630 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.276850 | 8.740519 | 30103.82 | paf | 1.095725 | 0.0873627 |
-| a | central | central | central | central | 1 | all | all | 2 | 4628.066 | 4628 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.551852 | 8.758388 | 30399.07 | paf | 1.179584 | 0.1522437 |
-| a | central | central | central | central | 1 | all | all | 3 | 4493.994 | 4494 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.543406 | 8.798881 | 29566.80 | paf | 1.179238 | 0.1519946 |
-| a | central | central | central | central | 1 | all | all | 4 | 4474.906 | 4475 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.419867 | 9.213612 | 32586.97 | paf | 1.159181 | 0.1373219 |
-| a | central | central | central | central | 1 | all | all | 5 | 1650.331 | 1650 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.157613 | 8.812466 | 30409.10 | paf | 1.057385 | 0.0542710 |
-| a | central | central | central | central | 1 | all | all | 6 | 3728.251 | 3728 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.430150 | 8.830799 | 29108.69 | paf | 1.146895 | 0.1280803 |
-| a | central | central | central | central | 1 | all | all | 7 | 3879.688 | 3880 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.465879 | 8.502208 | 30948.22 | paf | 1.143328 | 0.1253606 |
-| a | central | central | central | central | 1 | all | all | 8 | 3917.858 | 3918 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.442681 | 8.684553 | 31015.55 | paf | 1.144583 | 0.1263191 |
-| a | central | central | central | central | 1 | all | all | 9 | 3038.873 | 3039 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.320146 | 8.880695 | 29741.04 | paf | 1.113806 | 0.1021778 |
-| a | central | central | central | central | 1 | all | all | 10 | 2145.128 | 2145 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.253879 | 8.549538 | 27799.07 | paf | 1.083618 | 0.0771655 |
+| a | central | central | central | central | 1 | all | all | 1 | 1935.156 | 1935 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.251826 | 7.933793 | 30345.91 | paf | 1.068113 | 0.0637699 |
+| a | central | central | central | central | 1 | all | all | 2 | 4698.352 | 4698 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.430184 | 9.609612 | 30900.10 | paf | 1.179315 | 0.1520498 |
+| a | central | central | central | central | 1 | all | all | 3 | 3722.356 | 3722 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.414326 | 8.826146 | 29967.05 | paf | 1.141833 | 0.1242150 |
+| a | central | central | central | central | 1 | all | all | 4 | 6061.313 | 6061 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.570019 | 9.745453 | 31454.46 | paf | 1.238699 | 0.1927012 |
+| a | central | central | central | central | 1 | all | all | 5 | 4045.348 | 4045 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.479048 | 8.715480 | 29889.41 | paf | 1.156529 | 0.1353439 |
+| a | central | central | central | central | 1 | all | all | 6 | 1756.592 | 1757 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.143280 | 9.464298 | 30272.57 | paf | 1.061600 | 0.0580259 |
+| a | central | central | central | central | 1 | all | all | 7 | 5447.089 | 5447 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.728913 | 8.440255 | 31728.81 | paf | 1.207258 | 0.1716765 |
+| a | central | central | central | central | 1 | all | all | 8 | 2354.822 | 2355 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.202089 | 9.210268 | 31579.59 | paf | 1.080576 | 0.0745678 |
+| a | central | central | central | central | 1 | all | all | 9 | 1699.985 | 1700 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.169202 | 8.728108 | 30028.39 | paf | 1.060010 | 0.0566126 |
+| a | central | central | central | central | 1 | all | all | 10 | 3659.699 | 3660 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.345132 | 9.222098 | 31103.05 | paf | 1.133355 | 0.1176637 |
 
 ## User-defined ERF
 

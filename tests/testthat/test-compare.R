@@ -106,6 +106,44 @@ testthat::test_that("zero difference when scenarios are identical |meta_compare|
   )
 })
 
+testthat::test_that("the same |meta_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
+
+  output_attribute_scen_1 =
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2010")
+
+  output_attribute_scen_2 =
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2020")
+
+  # Identical exposures in both scenarios must not turn exp into a joining
+  # column, otherwise exp_scen_1 and exp_scen_2 are missing downstream
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
+        approach_comparison = "pif"
+      )$health_main$impact_rounded,
+    expected =
+      c(0, 0, 0) # Results on 4 Sep 2026; no comparison study
+  )
+})
+
 #### ITERATION ##################################################################
 
 testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
