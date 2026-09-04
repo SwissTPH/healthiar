@@ -371,11 +371,19 @@ compare <-
             df_1 = input_table_scen_1,
             df_2 = input_table_scen_2,
             # except = scenario_specific_arguments)
-            except = base::setdiff(
-              scenario_specific_arguments,
-              # Keep year_of_analysis in the table
-              # so it can be accessed in the get_impact script
-              c("year_of_analysis", "population"))
+            except = c(
+              base::setdiff(
+                scenario_specific_arguments,
+                # Keep year_of_analysis in the table
+                # so it can be accessed in the get_impact script
+                c("year_of_analysis", "population")),
+              # The exposure is called exp_central, exp_lower and exp_upper
+              # in the arguments (and therefore in scenario_specific_arguments)
+              # but exp in the input table (pivoted longer in compile_input()).
+              # get_impact() needs exp_scen_1 and exp_scen_2 to obtain the pif,
+              # so exp must never become a joining column,
+              # not even if both scenarios have identical exposures
+              "exp")
             )
 
         # Merge the input tables by common columns
