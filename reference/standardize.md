@@ -35,10 +35,35 @@ standardize(output_attribute, age_group, ref_prop_pop = NULL)
 
 This function returns a `list` containing:
 
-1\) `health_main` (`tibble`) containing the age-standardized main
-results;
+1\) `health_main` (`tibble`) containing the main results. The direct
+method of standardization applies the age group-specific rates observed
+in the study population to a reference population distribution. It
+therefore standardizes **rates** and not counts:
 
-2\) `health_detailed` (`tibble`) containing the results per age group.
+- `impact_per_100k_inhab` and `bhd_per_100k_inhab` (`numeric` columns)
+  are age-standardized, i.e. the age group-specific rates weighted with
+  `ref_prop_pop`;
+
+- `pop_fraction` (`numeric` column) is the ratio of these two
+  age-standardized rates, i.e. the age-standardized attributable
+  fraction;
+
+- `impact`, `bhd` and `population` (`numeric` columns) are the crude
+  totals across the age groups, and `exp` (`numeric` column) the
+  population-weighted mean exposure. They are **not** standardized: a
+  standardized count would require the absolute size of the reference
+  population, while `ref_prop_pop` provides only its age distribution.
+
+Note that all results are identical to the crude ones if `ref_prop_pop`
+is not entered, because in that case the age distribution of the study
+population itself is taken as reference.
+
+2\) `health_detailed` (`tibble`) containing the results per age group,
+including the interim columns of the standardization. The columns ending
+in `_std` are the contribution of each age group and add up to the
+corresponding column of `health_main`, i.e.
+`base::sum(impact_per_100k_inhab_std)`, `base::sum(exp_std)` and
+`base::sum(pop_fraction_std)`.
 
 ## Details
 

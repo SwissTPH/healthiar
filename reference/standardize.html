@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1688</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1689</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,8 +65,29 @@
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>This function returns a <code>list</code> containing:</p>
-<p>1) <code>health_main</code> (<code>tibble</code>) containing the age-standardized main results;</p>
-<p>2) <code>health_detailed</code> (<code>tibble</code>) containing the results per age group.</p>
+<p>1) <code>health_main</code> (<code>tibble</code>) containing the main results.
+The direct method of standardization applies the age group-specific rates
+observed in the study population to a reference population distribution.
+It therefore standardizes <strong>rates</strong> and not counts:</p><ul><li><p><code>impact_per_100k_inhab</code> and <code>bhd_per_100k_inhab</code>
+ (<code>numeric</code> columns) are age-standardized, i.e. the age group-specific
+ rates weighted with <code>ref_prop_pop</code>;</p></li>
+<li><p><code>pop_fraction</code> (<code>numeric</code> column) is the ratio of these two
+ age-standardized rates, i.e. the age-standardized attributable fraction;</p></li>
+<li><p><code>impact</code>, <code>bhd</code> and <code>population</code> (<code>numeric</code>
+ columns) are the crude totals across the age groups, and <code>exp</code>
+ (<code>numeric</code> column) the population-weighted mean exposure.
+ They are <strong>not</strong> standardized: a standardized count would require the
+ absolute size of the reference population, while <code>ref_prop_pop</code>
+ provides only its age distribution.</p></li>
+</ul><p>Note that all results are identical to the crude ones if
+<code>ref_prop_pop</code> is not entered, because in that case the age
+distribution of the study population itself is taken as reference.</p>
+<p>2) <code>health_detailed</code> (<code>tibble</code>) containing the results per age
+group, including the interim columns of the standardization. The columns
+ending in <code>_std</code> are the contribution of each age group and add up to
+the corresponding column of <code>health_main</code>, i.e.
+<code>base::sum(impact_per_100k_inhab_std)</code>, <code>base::sum(exp_std)</code> and
+<code>base::sum(pop_fraction_std)</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
