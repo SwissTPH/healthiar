@@ -271,7 +271,7 @@ summarize_uncertainty <- function(
   # Uncertainty in erf_eq is currently not supported
   # It would require a more complex modelling
   if((!base::is.null(input_args_to_check$value$erf_eq_lower) |
-      !base::is.null(input_args_to_check$value$erf_eq_lower))){
+      !base::is.null(input_args_to_check$value$erf_eq_upper))){
     base::stop("Sorry, the summary of uncertainty for erf_eq_... is not currently supported.",
                call. = FALSE)
   }
