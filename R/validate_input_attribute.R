@@ -184,9 +184,9 @@ validate_input_attribute <-
     ### Names of the id columns coming from info #####
 
     # info identifies subgroups (e.g. an exposure-outcome pair) just like
-    # sex or age_group do. add_info() turns a data frame into the columns
-    # info_column_1, info_column_2... and a vector into one column called
-    # "info", so the names by which the user can refer to them differ
+    # sex or age_group do. add_info() prefixes the columns of a data frame
+    # with "info_" and turns a vector into one column called "info",
+    # so the names by which the user can refer to them differ
     info_id_names <-
       if (base::is.data.frame(input_args_value$info)) {
         base::names(input_args_value$info)
