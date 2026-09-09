@@ -446,3 +446,37 @@ testthat::test_that("error if var lower than 0", {
 })
 
 ## WARNING #########
+
+
+## NOT SUMMED #################################################################
+
+testthat::test_that("error if main_results_by and socialize", {
+
+  # The impacts are grouped only by geo unit, age group and social quantile,
+  # and the subgroups cannot be entered in the arguments of socialize() either,
+  # so subgroups kept apart with main_results_by cannot be analyzed together
+  output_attribute <-
+    healthiar::attribute_health(
+      info = base::data.frame(pair = base::rep(c("copd", "asthma"), each = 4)),
+      main_results_by = "pair",
+      age_group = base::rep(c("below_40", "above_40"), times = 4),
+      geo_id_micro = base::rep(base::rep(c("g1", "g2"), each = 2), times = 2),
+      exp_central = base::rep(c(8.1, 22.1), each = 4),
+      cutoff_central = 0,
+      bhd_central = base::rep(c(1000, 4000), times = 4),
+      rr_central = base::rep(c(1.063, 1.041), each = 4),
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      population = base::rep(c(1E5, 5E5), times = 4))
+
+  testthat::expect_error(
+    object =
+      healthiar::socialize(
+        output_attribute = output_attribute,
+        age_group = c("below_40", "above_40"),
+        ref_prop_pop = c(0.5, 0.5),
+        geo_id_micro = c("g1", "g2"),
+        social_indicator = c(1, 2),
+        n_quantile = 2),
+    regexp = "only be applied to one subgroup")
+})

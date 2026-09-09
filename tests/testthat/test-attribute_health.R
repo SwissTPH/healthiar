@@ -4891,3 +4891,43 @@ testthat::test_that("warning if threshold higher than cutoff", {
 
 
 
+
+
+# NOT_SUMMED ###################################################################
+
+testthat::test_that("results the same |main_results_by|multiple_exposure_outcome_pairs_in_one_call|", {
+
+  # Two exposure-outcome pairs with different exposure-response functions
+  # in one single call must give the same impacts as two separate calls
+  exp_central <- c(8.85, 22.1)
+  cutoff_central <- c(5, 10)
+  rr_central <- c(1.369, 1.041)
+  erf_shape <- c("log_linear", "linear")
+  bhd_central <- c(30747, 12000)
+
+  in_one_call <-
+    healthiar::attribute_health(
+      info = base::data.frame(pair = c("pm2.5_copd", "no2_asthma")),
+      main_results_by = "pair",
+      exp_central = exp_central,
+      cutoff_central = cutoff_central,
+      rr_central = rr_central,
+      rr_increment = 10,
+      erf_shape = erf_shape,
+      bhd_central = bhd_central)
+
+  in_separate_calls <-
+    purrr::map_dbl(
+      .x = 1:2,
+      .f = ~ healthiar::attribute_health(
+        exp_central = exp_central[.x],
+        cutoff_central = cutoff_central[.x],
+        rr_central = rr_central[.x],
+        rr_increment = 10,
+        erf_shape = erf_shape[.x],
+        bhd_central = bhd_central[.x])$health_main$impact_rounded)
+
+  testthat::expect_equal(
+    object = in_one_call$health_main$impact_rounded,
+    expected = in_separate_calls)
+})
