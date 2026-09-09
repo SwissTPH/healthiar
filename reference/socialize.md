@@ -204,6 +204,7 @@ results <- socialize(
   social_indicator = exdat_socialize$score,
   n_quantile = 10,
   increasing_deprivation = TRUE)
+#> Warning: 194 geographic unit(s) have no value in social_indicator. They get no social_quantile and are therefore not included in the comparison between the quantiles (first and last), but they are still part of the overall values.
 
 
 results$social_main |>
@@ -213,6 +214,6 @@ results$social_main |>
 #> # A tibble: 1 × 5
 #>   first  last difference_type difference_value comment                          
 #>   <dbl> <dbl> <chr>                      <dbl> <chr>                            
-#> 1  70.9  59.4 relative                 -0.0143 It can be interpreted as fractio…
+#> 1  70.9  44.4 relative                   0.242 It can be interpreted as fractio…
 
 ```

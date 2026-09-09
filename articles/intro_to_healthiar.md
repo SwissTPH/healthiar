@@ -2902,6 +2902,9 @@ social_t <- healthiar::socialize(
   social_indicator = exdat_socialize$score,
   n_quantile = 10,
   increasing_deprivation = TRUE)
+#> Warning: 194 geographic unit(s) have no value in social_indicator. They get no
+#> social_quantile and are therefore not included in the comparison between the
+#> quantiles (first and last), but they are still part of the overall values.
 ```
 
 Alternatively, you can directly enter the health impact in the
@@ -2919,6 +2922,9 @@ social <- healthiar::socialize(
   population = exdat_socialize$population, # Population has to be provided because no output_attribute
   n_quantile = 10,
   increasing_deprivation = TRUE)
+#> Warning: 194 geographic unit(s) have no value in social_indicator. They get no
+#> social_quantile and are therefore not included in the comparison between the
+#> quantiles (first and last), but they are still part of the overall values.
 ```
 
 #### Main results
@@ -2926,10 +2932,10 @@ social <- healthiar::socialize(
     #> # A tibble: 4 × 5
     #>   parameter      difference_type difference_compared_…¹ difference_value comment
     #>   <chr>          <chr>           <chr>                             <dbl> <chr>  
-    #> 1 impact_rate_s… absolute        last_quantile                   11.5    NA     
-    #> 2 impact_rate_s… relative        last_quantile                    0.193  NA     
-    #> 3 impact_rate_s… absolute        overall                         -0.834  It can…
-    #> 4 impact_rate_s… relative        overall                         -0.0143 It can…
+    #> 1 impact_rate_s… absolute        last_quantile                    26.5   NA     
+    #> 2 impact_rate_s… relative        last_quantile                     0.597 NA     
+    #> 3 impact_rate_s… absolute        overall                          14.2   It can…
+    #> 4 impact_rate_s… relative        overall                           0.242 It can…
     #> # ℹ abbreviated name: ¹​difference_compared_with
 
 ### Multiple deprivation index

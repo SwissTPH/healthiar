@@ -13,7 +13,7 @@ it is assumed that all data come from a table and the argument refer to the colu
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1694</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1695</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -199,6 +199,7 @@ ISSN 1471-2458.
 <span class="r-in"><span>  social_indicator <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">score</span>,</span></span>
 <span class="r-in"><span>  n_quantile <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>194 geographic unit(s) have no value in social_indicator. They get no social_quantile and are therefore not included in the comparison between the quantiles (first and last), but they are still part of the overall values.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">social_main</span> <span class="op">|&gt;</span></span></span>
@@ -208,7 +209,7 @@ ISSN 1471-2458.
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   first  last difference_type difference_value comment                          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  70.9  59.4 relative                 -<span style="color: #BB0000;">0.014</span><span style="color: #BB0000; text-decoration: underline;">3</span> It can be interpreted as fractio…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  70.9  44.4 relative                   0.242 It can be interpreted as fractio…</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

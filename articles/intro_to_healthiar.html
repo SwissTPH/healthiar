@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1694</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1695</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -4021,7 +4021,10 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <span>  geo_id_micro <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">geo_unit</span>,</span>
 <span>  social_indicator <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">score</span>,</span>
 <span>  n_quantile <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: 194 geographic unit(s) have no value in social_indicator. They get no</span></span>
+<span><span class="co">#&gt; social_quantile and are therefore not included in the comparison between the</span></span>
+<span><span class="co">#&gt; quantiles (first and last), but they are still part of the overall values.</span></span></code></pre></div>
 <p>Alternatively, you can directly enter the health impact in the
 <code><a href="../reference/socialize.html">socialize()</a></code> argument <code>impact</code>.</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
@@ -4033,7 +4036,10 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <span>  social_indicator <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">score</span>,</span>
 <span>  population <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">population</span>, <span class="co"># Population has to be provided because no output_attribute</span></span>
 <span>  n_quantile <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: 194 geographic unit(s) have no value in social_indicator. They get no</span></span>
+<span><span class="co">#&gt; social_quantile and are therefore not included in the comparison between the</span></span>
+<span><span class="co">#&gt; quantiles (first and last), but they are still part of the overall values.</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="main-results-16">Main results<a class="anchor" aria-label="anchor" href="#main-results-16"></a>
@@ -4041,10 +4047,10 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
 <span><span class="co">#&gt;   parameter      difference_type difference_compared_…¹ difference_value comment</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> impact_rate_s… absolute        last_quantile                   11.5    <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> impact_rate_s… relative        last_quantile                    0.193  <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> impact_rate_s… absolute        overall                         -<span style="color: #BB0000;">0.834</span>  It can…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> impact_rate_s… relative        overall                         -<span style="color: #BB0000;">0.014</span><span style="color: #BB0000; text-decoration: underline;">3</span> It can…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> impact_rate_s… absolute        last_quantile                    26.5   <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> impact_rate_s… relative        last_quantile                     0.597 <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> impact_rate_s… absolute        overall                          14.2   It can…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> impact_rate_s… relative        overall                           0.242 It can…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated name: ¹​difference_compared_with</span></span></span></code></pre>
 </div>
 </div>
