@@ -16,9 +16,33 @@ standardize(output_attribute, age_group, ref_prop_pop = NULL)
 \value{
 This function returns a \code{list} containing:
 
-1) \code{health_main} (\code{tibble}) containing the age-standardized main results;
+1) \code{health_main} (\code{tibble}) containing the main results.
+The direct method of standardization applies the age group-specific rates
+observed in the study population to a reference population distribution.
+It therefore standardizes \strong{rates} and not counts:
+\itemize{
+ \item \code{impact_per_100k_inhab} and \code{bhd_per_100k_inhab}
+ (\code{numeric} columns) are age-standardized, i.e. the age group-specific
+ rates weighted with \code{ref_prop_pop};
+ \item \code{pop_fraction} (\code{numeric} column) is the ratio of these two
+ age-standardized rates, i.e. the age-standardized attributable fraction;
+ \item \code{impact}, \code{bhd} and \code{population} (\code{numeric}
+ columns) are the crude totals across the age groups, and \code{exp}
+ (\code{numeric} column) the population-weighted mean exposure.
+ They are \strong{not} standardized: a standardized count would require the
+ absolute size of the reference population, while \code{ref_prop_pop}
+ provides only its age distribution.
+ }
+Note that all results are identical to the crude ones if
+\code{ref_prop_pop} is not entered, because in that case the age
+distribution of the study population itself is taken as reference.
 
-2) \code{health_detailed} (\code{tibble}) containing the results per age group.
+2) \code{health_detailed} (\code{tibble}) containing the results per age
+group, including the interim columns of the standardization. The columns
+ending in \code{_std} are the contribution of each age group and add up to
+the corresponding column of \code{health_main}, i.e.
+\code{base::sum(impact_per_100k_inhab_std)}, \code{base::sum(exp_std)} and
+\code{base::sum(pop_fraction_std)}.
 }
 \description{
 This function obtains age-standardized health impacts based on multiple age-group specific assessments

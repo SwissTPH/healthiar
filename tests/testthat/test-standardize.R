@@ -199,8 +199,6 @@ testthat::test_that("results the same |pathway_standardize|single_geo|", {
 
 
 
-# ERROR OR WARNING ########
-## ERROR #########
 
 
 ## NOT SUMMED #################################################################
@@ -247,3 +245,63 @@ testthat::test_that("results the same |pathway_standardize|main_results_by|two_s
     object = in_one_call$health_main$impact_per_100k_inhab,
     expected = in_separate_calls)
 })
+
+## EXPOSURE, ATTRIBUTABLE FRACTION AND AGE GROUP ORDER ########################
+
+testthat::test_that("results the same |pathway_standardize|uncertainty|age_group_order|", {
+
+  output_attribute <-
+    healthiar::attribute_health(
+      age_group = c("below_40", "above_40"),
+      exp_central = c(8.1, 10.9),
+      cutoff_central =  0,
+      bhd_central = c(1000, 4000),
+      rr_central = 1.063,
+      rr_lower = 1.02, # Fake lower and upper bound to get three erf_ci rows
+      rr_upper = 1.08,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      population = c(1E5, 5E5))
+
+  standardized <-
+    healthiar::standardize(
+      output_attribute = output_attribute,
+      age_group = c("below_40", "above_40"))
+
+  central <-
+    standardized$health_main[standardized$health_main$erf_ci %in% "central", ]
+
+  # Expected values derived from the arguments above and not from the output,
+  # so that the test does not confirm whatever the function happens to return
+  rr_at_exp <- base::exp(base::log(1.063) * c(8.1, 10.9) / 10)
+  pop_fraction_by_age_group <- (rr_at_exp - 1) / rr_at_exp
+  bhd <- c(1000, 4000)
+  population <- c(1E5, 5E5)
+
+  # exp is the population-weighted mean exposure (not divided once more by the
+  # number of age groups) and pop_fraction the attributable cases divided by
+  # the baseline cases (not the sum of the age group-specific fractions).
+  # Neither may depend on the number of uncertainty combinations, i.e. on how
+  # many _ci rows each age group appears in
+  testthat::expect_equal(
+    object =
+      c(exp = central$exp,
+        pop_fraction = central$pop_fraction),
+    expected =
+      c(exp = base::sum(c(8.1, 10.9) * population / base::sum(population)),
+        pop_fraction = base::sum(pop_fraction_by_age_group * bhd) / base::sum(bhd)))
+
+  # The reference proportions must stay attached to their own age group, so the
+  # order in which the age groups are entered cannot change the result
+  testthat::expect_equal(
+    object =
+      healthiar::standardize(
+        output_attribute = output_attribute,
+        age_group = c("above_40", "below_40"))$health_main$impact_per_100k_inhab,
+    expected = standardized$health_main$impact_per_100k_inhab)
+})
+
+
+
+# ERROR OR WARNING ########
+## ERROR #########
