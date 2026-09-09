@@ -364,6 +364,29 @@ socialize <- function(output_attribute = NULL,
 
     # * If NOT available social_decile, then social_indicator and n_quantile #########
     } else if (has_social_indicator){
+
+      ## Warn about the geographic units without social indicator.
+      ## They cannot be assigned to a quantile of deprivation, so they are
+      ## excluded from the comparison between quantiles below. Silently
+      ## dropping them made it hard to notice that they were reported as the
+      ## least deprived group
+      n_geo_id_micro_without_social_indicator <-
+        social_component_before_quantile |>
+        dplyr::filter( base::is.na(social_indicator) ) |>
+        dplyr::pull(geo_id_micro) |>
+        dplyr::n_distinct()
+
+      if ( n_geo_id_micro_without_social_indicator > 0 ) {
+        base::warning(
+          base::paste0(
+            n_geo_id_micro_without_social_indicator,
+            " geographic unit(s) have no value in social_indicator. ",
+            "They get no social_quantile and are therefore not included in ",
+            "the comparison between the quantiles (first and last), ",
+            "but they are still part of the overall values."),
+          call. = FALSE)
+      }
+
       social_component_before_quantile <-
         social_component_before_quantile |>
         ## Remove rows with NA in social_indicator
@@ -553,6 +576,16 @@ socialize <- function(output_attribute = NULL,
 
   social_calculation <-
     parameters_by_quantile |>
+    ## The geographic units without social_indicator get no social_quantile
+    ## (see above). They are part of the population, so they are kept in the
+    ## results by quantile and in the overall values, but they must not be
+    ## taken as the most or the least deprived group: arrange() puts NA last,
+    ## so last() reported them as the least deprived quantile
+    dplyr::filter(!base::is.na(social_quantile)) |>
+    ## Order by quantile so that first() and last() below really refer to the
+    ## most and the least deprived quantile and do not depend on the order in
+    ## which the rows happen to arrive
+    dplyr::arrange(social_quantile) |>
     ## Pivot longer to prepare the data and have a column for parameter
     tidyr::pivot_longer(cols = -social_quantile,
                         names_to = "parameter",

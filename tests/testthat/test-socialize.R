@@ -25,7 +25,8 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
         social_indicator = exdat_socialize$score,
         n_quantile = 10,
         increasing_deprivation = TRUE)$social_main$difference_value |> base::round(2),
-    expect = c(11.470, 0.190, -0.830, -0.010) # Results on 25 June 2025
+    # Results on 9 September 2026; no comparison study.
+    expect = c(26.480, 0.600, 14.170, 0.240)
   )
 })
 
@@ -446,6 +447,52 @@ testthat::test_that("error if var lower than 0", {
 })
 
 ## WARNING #########
+
+testthat::test_that("warning and no least deprived quantile if social_indicator is NA", {
+
+  # A geographic unit without social_indicator gets no social_quantile.
+  # arrange() puts NA last, so it used to be reported as the last (least
+  # deprived) quantile. It must be excluded from the comparison between the
+  # quantiles, but stay part of the overall values
+  geo_id_micro <- base::paste0("u", 1:8)
+  social_indicator <- c(10, 20, 30, 40, 50, 60, 70, NA)
+  impact <- c(13, 11, 9, 7, 6, 5, 3, 50)
+  population <- base::rep(1000, 8)
+
+  call_socialize <- function(){
+    healthiar::socialize(
+      age_group = base::rep("all", 8),
+      geo_id_micro = geo_id_micro,
+      social_indicator = social_indicator,
+      n_quantile = 4,
+      increasing_deprivation = TRUE,
+      population = population,
+      impact = impact)
+  }
+
+  testthat::expect_warning(
+    object = call_socialize(),
+    regexp = "have no value in social_indicator")
+
+  output_socialize <- base::suppressWarnings(call_socialize())
+
+  # first: quantile 1 = units u7 and u6, i.e. (3 + 5) / 2000 * 1E5 = 400
+  # last: quantile 4 = units u2 and u1, i.e. (11 + 13) / 2000 * 1E5 = 1200
+  #   (and not 50 / 1000 * 1E5 = 5000, the unit without social_indicator)
+  # overall: all eight units, i.e. 104 / 8000 * 1E5 = 1300
+  impact_rate_std <-
+    output_socialize$social_detailed$results_all_parameters |>
+    dplyr::filter(parameter %in% "impact_rate_std") |>
+    # One row per difference_type, but first, last and overall are the same in
+    # all of them
+    dplyr::distinct(first, last, overall)
+
+  testthat::expect_equal(
+    object = base::unlist(impact_rate_std),
+    expected = c(first = 400, last = 1200, overall = 1300))
+})
+
+
 
 
 ## NOT SUMMED #################################################################
