@@ -41,15 +41,16 @@ get_output <-
     colnames_results_raw <- base::names(results_raw)
 
     # Columns added by add_info(), i.e. "info" if the user entered a vector and
-    # info_column_1, info_column_2... if the user entered a data frame.
+    # info_<name of the column entered by the user> if the user entered a
+    # data frame.
     # They are id columns like sex or age_group: they can define subgroups and
     # they are summed over by default (see the exclusions below)
     info_cols <- base::grep("^info", colnames_results_raw, value = TRUE)
 
     # Dimensions whose impacts must never be added together,
     # e.g. different exposure-outcome pairs.
-    # The user enters the column names of info, while add_info() renames them
-    # to info_column_1, info_column_2... so they are resolved here.
+    # The user enters the column names of info without prefix, while
+    # add_info() adds it, so they are resolved here.
     # NULL$value is NULL, so this also works when get_output() is called
     # without input_args (e.g. from multiexpose())
     main_results_by <- input_args$value$main_results_by
