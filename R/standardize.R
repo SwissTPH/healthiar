@@ -180,7 +180,10 @@ standardize <- function(output_attribute,
     #Add total population
     dplyr::mutate(
       # info_cols because otherwise the population of all subgroups would be
-      # summed, i.e. counted as many times as subgroups there are
+      # summed, i.e. counted as many times as subgroups there are.
+      # uncertainty_cols for the same reason: every age group appears once per
+      # uncertainty combination (central, lower, upper), so without them the
+      # population and the baseline health data are counted once per _ci row
       .by = dplyr::any_of(c(geo_id_cols, uncertainty_cols, info_cols)),
       total_population = base::sum(population),
       total_impact = base::sum(impact)) |>
@@ -188,10 +191,33 @@ standardize <- function(output_attribute,
     dplyr::mutate(
       # Calculate
       pop_weight = population / total_population,
-      impact_weight = impact/total_impact,
+      # Share of the total impact that the age group contributes.
+      # Not used for pop_fraction_std below anymore (see there), but kept
+      # because it is a result on its own
+      impact_weight = impact / total_impact,
       impact_per_100k_inhab_std = impact_per_100k_inhab * ref_prop_pop,
       exp_std = exp * pop_weight,
-      pop_fraction_std = pop_fraction * impact_weight)
+      # The baseline health data are also expressed as a rate and standardized,
+      # so that the attributable fraction below can be obtained as the ratio of
+      # two age-standardized rates. if_else() as in get_impact(): without the
+      # population of the age group no rate can be calculated
+      bhd_per_100k_inhab =
+        dplyr::if_else(population > 0,
+                       (bhd / population) * 1E5,
+                       NA_real_),
+      bhd_per_100k_inhab_std = bhd_per_100k_inhab * ref_prop_pop) |>
+    # Contribution of the age group to the age-standardized attributable
+    # fraction, i.e. its standardized attributable rate divided by the
+    # standardized baseline rate of all age groups together. Defined so that
+    # the sum across age groups is the age-standardized attributable fraction,
+    # exactly like exp_std and impact_per_100k_inhab_std.
+    # Previously this column was pop_fraction * impact_weight, which summed up
+    # to neither the crude nor the standardized fraction.
+    # In its own mutate() because the denominator is a sum across age groups
+    dplyr::mutate(
+      .by = dplyr::any_of(c(geo_id_cols, uncertainty_cols, info_cols)),
+      pop_fraction_std =
+        impact_per_100k_inhab_std / base::sum(bhd_per_100k_inhab_std))
 
   # Remove the rows per age group category keeping only the sum
   impact_std_sum <-
@@ -201,8 +227,17 @@ standardize <- function(output_attribute,
       bhd = base::sum(bhd),
       impact = base::sum(impact),
       impact_per_100k_inhab = base::sum(impact_per_100k_inhab_std),
-      exp = base::mean(exp_std),
-      pop_fraction = base::sum(pop_fraction),
+      bhd_per_100k_inhab = base::sum(bhd_per_100k_inhab_std),
+      # sum() and not mean(): pop_weight already adds up to 1 across the age
+      # groups, so the sum of exp * pop_weight is the population-weighted mean
+      # exposure. mean() divided it once more by the number of age groups
+      exp = base::sum(exp_std),
+      # The age-standardized attributable fraction, i.e. the sum of the
+      # contributions of the age groups (identical to the ratio of the two
+      # age-standardized rates above). Adding up the age group-specific
+      # fractions instead (as before) gave a number that is not a fraction and
+      # that can exceed 1
+      pop_fraction = base::sum(pop_fraction_std),
       population = base::sum(population))
 
   output <-
