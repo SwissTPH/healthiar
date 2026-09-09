@@ -553,6 +553,16 @@ socialize <- function(output_attribute = NULL,
 
   social_calculation <-
     parameters_by_quantile |>
+    ## The geographic units without social_indicator get no social_quantile
+    ## (see above). They are part of the population, so they are kept in the
+    ## results by quantile and in the overall values, but they must not be
+    ## taken as the most or the least deprived group: arrange() puts NA last,
+    ## so last() reported them as the least deprived quantile
+    dplyr::filter(!base::is.na(social_quantile)) |>
+    ## Order by quantile so that first() and last() below really refer to the
+    ## most and the least deprived quantile and do not depend on the order in
+    ## which the rows happen to arrive
+    dplyr::arrange(social_quantile) |>
     ## Pivot longer to prepare the data and have a column for parameter
     tidyr::pivot_longer(cols = -social_quantile,
                         names_to = "parameter",
