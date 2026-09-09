@@ -65,6 +65,8 @@ The slides of the presentation can be found [here](https://github.com/SwissTPH/h
 ### Stay updated
 We regularly improve *healthiar* and publish a new [GitHub release](https://github.com/SwissTPH/healthiar/releases) every time a new version reaches CRAN. To make sure you don't miss one:
 
+Each GitHub release is also archived on Zenodo (DOI: [10.5281/zenodo.18220360](https://doi.org/10.5281/zenodo.18220360)) if you need to reference a specific version snapshot rather than the package itself.
+
 - **Watch releases**: on the [GitHub repo](https://github.com/SwissTPH/healthiar), click *Watch* > *Custom* > tick *Releases only*, so you get notified without being flooded by every issue or discussion.
 
 - **Star the repo**: click *Star* on the [GitHub repo](https://github.com/SwissTPH/healthiar) to bookmark it and help others discover *healthiar*.
