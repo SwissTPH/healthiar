@@ -88,20 +88,31 @@ get_discount_factor <-
       # If only discount_rate provided ####
     } else if(!base::is.null(discount_rate)) {
 
+        # case_when() and not nested ifelse(): ifelse() returns a result of the
+        # length of its condition, so one single discount_shape truncated the
+        # whole vector of years to its first element without any warning.
+        # The shape can be one single value (direct call) or one per year
+        # (column added in monetize()), so it is recycled first: case_when()
+        # expects the conditions to have the same length as the results.
+        # Same approach as for erf_shape in get_risk()
+        discount_shape <- base::rep_len(discount_shape, base::length(n_years))
+
         discount_factor <-
-          base::ifelse(
+          dplyr::case_when(
             # Exponential ####
-            discount_shape == "exponential",
-            1/((1 + discount_rate) ^ n_years),
+            discount_shape == "exponential" ~
+              1/((1 + discount_rate) ^ n_years),
 
             # Hyperbolic Harvey ####
-            base::ifelse(discount_shape == "hyperbolic_harvey_1986",
-                         1/((1 + n_years) ^ discount_rate),
+            discount_shape == "hyperbolic_harvey_1986" ~
+              1/((1 + n_years) ^ discount_rate),
 
-                         # Hyperbolic Mazur ####
-                         base::ifelse(discount_shape == "hyperbolic_mazur_1987",
-                                      1/(1 + discount_rate * n_years),
-                                      NA)))
+            # Hyperbolic Mazur ####
+            discount_shape == "hyperbolic_mazur_1987" ~
+              1/(1 + discount_rate * n_years),
+
+            # An unknown shape yields NA instead of a silently wrong number
+            .default = NA_real_)
     }
 
     return(discount_factor)
