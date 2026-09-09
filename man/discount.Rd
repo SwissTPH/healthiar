@@ -9,7 +9,7 @@ discount(
   impact = NULL,
   discount_rate = NULL,
   n_years = NULL,
-  discount_shape = NULL
+  discount_shape = "exponential"
 )
 }
 \arguments{
