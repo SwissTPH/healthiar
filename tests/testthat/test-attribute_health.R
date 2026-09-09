@@ -5066,3 +5066,34 @@ testthat::test_that("results the same |main_results_by|multiple_exposure_outcome
     object = in_one_call$health_main$impact_rounded,
     expected = in_separate_calls)
 })
+
+testthat::test_that("results the same |main_results_by|several_dimensions|", {
+
+  # main_results_by names the dimensions to report by, so its length is a
+  # number of dimensions and not a number of data rows. It was compared with
+  # the length of the data arguments, so exactly two names were rejected with
+  # "All function arguments must have the same length", while one name or (by
+  # coincidence) as many names as data rows passed
+  attribute_two_pairs_by <- function(main_results_by){
+    healthiar::attribute_health(
+      info = base::data.frame(pair = base::rep(c("pm2.5_copd", "no2_asthma"),
+                                               each = 2)),
+      main_results_by = main_results_by,
+      exp_central = c(8.85, 9.20, 22.1, 24.5),
+      cutoff_central = c(5, 5, 10, 10),
+      rr_central = c(1.369, 1.369, 1.041, 1.041),
+      rr_increment = 10,
+      erf_shape = c("log_linear", "log_linear", "linear", "linear"),
+      bhd_central = c(30747, 31500, 12000, 12500),
+      geo_id_micro = base::rep(c("a", "b"), 2))
+  }
+
+  # Both dimensions are kept apart, i.e. one row per exposure-outcome pair and
+  # geo unit, and the impacts are the same as when only the pair is named
+  # (the geo units are already kept apart by default)
+  by_pair_and_geo <- attribute_two_pairs_by(c("pair", "geo_id_micro"))
+
+  testthat::expect_equal(
+    object = by_pair_and_geo$health_main$impact,
+    expected = attribute_two_pairs_by("pair")$health_main$impact)
+})
