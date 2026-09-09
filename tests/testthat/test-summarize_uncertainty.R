@@ -887,6 +887,77 @@ testthat::test_that("error_if_uncertainty_in_exposure_distribution |pathway_unce
     )
 })
 
+testthat::test_that("error_if_erf_eq_only_upper |pathway_uncertainty|exp_single|erf_ar_formula|iteration_FALSE|", {
+
+  # erf_eq is excluded from the validation that requires both the lower and the
+  # upper bound (see validate_input_attribute()), so an assessment with
+  # erf_eq_upper and without erf_eq_lower is a legal input. The guard tested
+  # erf_eq_lower twice and therefore did not catch it: the rows of both
+  # exposure-response functions reached the simulation and the reported
+  # estimates were quantiles of the two of them pooled together
+  bestcost_noise_ha_ar_with_erf_eq_upper <-
+    healthiar::attribute_health(
+      approach_risk = "absolute_risk",
+      exp_central = 65,
+      pop_exp = 1E5,
+      erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+      erf_eq_upper = "78.9270-3.1162*c+0.06*c^2",
+      dw_central = 0.02,
+      duration_central = 1,
+      duration_lower = 0.5,
+      duration_upper = 1.5)
+
+  testthat::expect_error(
+    object =
+      summarize_uncertainty(
+        output_attribute = bestcost_noise_ha_ar_with_erf_eq_upper,
+        n_sim = 10,
+        seed = 1),
+    regexp = "Sorry, the summary of uncertainty for erf_eq_... is not currently supported."
+  )
+})
+
+testthat::test_that("error_if_uncertainty_in_exposure_distribution |pathway_uncertainty_compare|exp_dist|erf_rr_increment|iteration_FALSE|", {
+
+  # In a comparison, input_args is the input_args of compare() itself, which
+  # has no element "value". The guard read NULL and could never fire, so the
+  # exposures were recycled over the simulations, i.e. each simulation took the
+  # exposure of one single exposure category instead of the whole distribution
+  scenario_1 <-
+    healthiar::attribute_health(
+      exp_central = c(60, 65, 70),
+      exp_lower = c(59, 64, 69),
+      exp_upper = c(61, 66, 71),
+      prop_pop_exp = c(0.2, 0.3, 0.5),
+      cutoff_central = 50,
+      bhd_central = 1000,
+      rr_central = 1.08,
+      rr_increment = 10,
+      erf_shape = "log_linear")
+
+  scenario_2 <-
+    healthiar::attribute_mod(
+      output_attribute = scenario_1,
+      exp_central = c(55, 60, 65),
+      exp_lower = c(54, 59, 64),
+      exp_upper = c(56, 61, 66))
+
+  comparison <-
+    healthiar::compare(
+      output_attribute_scen_1 = scenario_1,
+      output_attribute_scen_2 = scenario_2,
+      approach_comparison = "delta")
+
+  testthat::expect_error(
+    object =
+      summarize_uncertainty(
+        output_attribute = comparison,
+        n_sim = 5,
+        seed = 1),
+    regexp = "Sorry, the summary of uncertainty for exp_... in exposure distributions is not currently supported."
+  )
+})
+
 testthat::test_that("error_if_no_uncertainty |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
   data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
