@@ -100,7 +100,9 @@ compile_input <-
       # Remove arguments for life table and info.
       # Info is to added later with a function add_info()
       # because it can be a data frame.
-      purrr::discard(base::names(input_args_edited) %in% c("info")) |>
+      # main_results_by only tells get_output() how to aggregate the results,
+      # so it must not become a column of the input table
+      purrr::discard(base::names(input_args_edited) %in% c("info", "main_results_by")) |>
       # Convert into a tibble
       tibble::as_tibble() |>
       # Add info
