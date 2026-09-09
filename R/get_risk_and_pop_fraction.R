@@ -37,9 +37,6 @@ get_risk_and_pop_fraction <-
 
     names_input_table <- base::names(input_table)
 
-    ci_cols_available <-
-      base::intersect(ci_cols, names_input_table)
-
     is_multiexposure <-
       "approach_multiexposure" %in% names_input_table
 
@@ -151,11 +148,14 @@ get_risk_and_pop_fraction <-
 
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
-          # group by columns that define diversity
-          # Only combine pm2.5 and no2 for rr_at_exp in the same ci |>
+          # Group by every column that identifies a row, i.e. the same key that
+          # collapses the exposures below. Only exp_name is left out, because
+          # that is the dimension being merged: the relative risks of pm2.5 and
+          # no2 must be multiplied within one geo unit, sex, age group and ci,
+          # never across them.
           # prod() multiplies all elements in a vector
           dplyr::mutate(
-            .by = dplyr::all_of(ci_cols_available),
+            .by = dplyr::all_of(grouping_cols_available_multiexposure),
             rr_at_exp_before_multiplying = rr_at_exp,
             rr_at_exp = base::prod(rr_at_exp))
 
@@ -163,11 +163,10 @@ get_risk_and_pop_fraction <-
         } else {
         input_with_risk_and_pop_fraction <-
           input_with_risk_and_pop_fraction |>
-          # group by columns that define diversity
-          # Only combine pm2.5 and no2 for rr_at_exp in the same ci
+          # Group by every column that identifies a row (see the PAF branch above)
           # prod() multiplies all elements in a vector
           dplyr::mutate(
-            .by = dplyr::all_of(ci_cols_available),
+            .by = dplyr::all_of(grouping_cols_available_multiexposure),
             rr_at_exp_scen_1_before_multiplying = rr_at_exp_scen_1,
             rr_at_exp_scen_2_before_multiplying = rr_at_exp_scen_2,
             rr_at_exp_scen_1 = base::prod(rr_at_exp_scen_1),
@@ -216,10 +215,11 @@ get_risk_and_pop_fraction <-
 
       input_with_risk_and_pop_fraction <-
         input_with_risk_and_pop_fraction |>
-        # group by columns that define diversity
-        # Only combine pm2.5 and no2 for rr_at_exp in the same ci
+        # Group by every column that identifies a row, so that the population
+        # attributable fractions of pm2.5 and no2 are combined within one geo
+        # unit, sex, age group and ci, never across them
         dplyr::mutate(
-          .by = dplyr::all_of(ci_cols_available),
+          .by = dplyr::all_of(grouping_cols_available_multiexposure),
           pop_fraction_before_combining = pop_fraction,
           ## Multiply with prod() across all pollutants
           pop_fraction = 1-(prod(1-pop_fraction)))
