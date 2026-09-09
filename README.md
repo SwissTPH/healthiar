@@ -4,6 +4,10 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18220360.svg)](https://doi.org/10.5281/zenodo.18220360)
 
+[![GitHub Repo stars](https://img.shields.io/github/stars/SwissTPH/healthiar?style=social)](https://github.com/SwissTPH/healthiar/stargazers) [![Watch releases](https://img.shields.io/github/watchers/SwissTPH/healthiar?style=social&label=Watch)](https://github.com/SwissTPH/healthiar/subscription)
+
+Want to know as soon as a new *healthiar* version is released? See [Stay updated](#stay-updated) below.
+
 ## Introduction
 
 *healthiar* is an R package to quantify and monetize health impacts attributable to exposure (e.g. air pollution, noise...) in a study area. Using *healthiar*, you can ...
