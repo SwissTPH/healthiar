@@ -7,7 +7,7 @@
 # ARGUMENTS ####################################################################
 #' @param output_attribute_exp_1,output_attribute_exp_2  Output of attribute() for exposure 1 and 2, respectively. Baseline health data and population must be identical in outputs 1 and 2.
 #' @param exp_name_1,exp_name_2 \code{String} referring to the name of the environmental exposures 1 and 2
-#' @param approach_multiexposure \code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined".
+#' @param approach_multiexposure \code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined". The \code{"multiplicative"} and \code{"combined"} approaches merge the exposures within each row and therefore require one single exposure value per exposure (e.g. the population-weighted mean); they cannot be used with exposure distributions, because the exposure categories of two exposures are not paired. Only \code{"additive"} accepts exposure distributions.
 
 # DETAILS ######################################################################
 #' @details
