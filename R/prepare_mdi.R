@@ -293,22 +293,30 @@ prepare_mdi <- function(
 
     base::print(base::paste("CRONBACH'S", alpha, ":", base::round(cronbachs_alpha_value, 3)))
 
-    if ( cronbachs_alpha_value >= 0.9 ) {
-      base::print(base::paste("Excellent reliability:", alpha, higher_or_equal, "0.9"))
-    }
-    if ( cronbachs_alpha_value >= 0.8 & cronbachs_alpha_value < 0.9 ) {
-      base::print(base::paste("Good reliability: 0.8", lower_or_equal, alpha, "< 0.9"))
+    # is.na() because the alpha is NA if fewer than two geographic units have
+    # values in all indicators. Without this guard the comparisons below
+    # aborted with "missing value where TRUE/FALSE needed"
+    if ( base::is.na(cronbachs_alpha_value) ) {
+      base::print(base::paste(
+        "Reliability cannot be assessed:", alpha,
+        "needs at least two geographic units without missing values"))
+    } else {
+      if ( cronbachs_alpha_value >= 0.9 ) {
+        base::print(base::paste("Excellent reliability:", alpha, higher_or_equal, "0.9"))
       }
-    if ( cronbachs_alpha_value >= 0.7 & cronbachs_alpha_value < 0.8 ) {
-      base::print(base::paste("Acceptable reliability: 0.7", lower_or_equal, alpha, "< 0.8"))
+      if ( cronbachs_alpha_value >= 0.8 & cronbachs_alpha_value < 0.9 ) {
+        base::print(base::paste("Good reliability: 0.8", lower_or_equal, alpha, "< 0.9"))
+      }
+      if ( cronbachs_alpha_value >= 0.7 & cronbachs_alpha_value < 0.8 ) {
+        base::print(base::paste("Acceptable reliability: 0.7", lower_or_equal, alpha, "< 0.8"))
+      }
+      if ( cronbachs_alpha_value >= 0.6 & cronbachs_alpha_value < 0.7 ) {
+        base::print(base::paste("Questionable reliability: 0.6", lower_or_equal, alpha, "< 0.7"))
+      }
+      if ( cronbachs_alpha_value < 0.6 ) {
+        base::print(base::paste("Poor reliability:", alpha, "< 0.6"))
+      }
     }
-    if ( cronbachs_alpha_value >= 0.6 & cronbachs_alpha_value < 0.7 ) {
-      base::print(base::paste("Questionable reliability: 0.6", lower_or_equal, alpha, "< 0.7"))
-    }
-    if ( cronbachs_alpha_value < 0.6 ) {
-      base::print(base::paste("Poor reliability:", alpha, "< 0.6"))
-    }
-
     ## with just strings
     # base::print(base::paste("CRONBACH'S alpha:", base::round(cronbachs_alpha_value, 3)))
     #
