@@ -43,17 +43,32 @@ get_risk_and_pop_fraction <-
     is_multiexposure <-
       "approach_multiexposure" %in% names_input_table
 
+    # any() because unique() can return more than one value, e.g. when several
+    # exposure-outcome pairs are assessed in one call. && errors on a length > 1
+    # right-hand side in R >= 4.3
     is_multiexposure_multiplicative <-
       is_multiexposure &&
-      base::unique(input_table$approach_multiexposure) %in% "multiplicative"
+      base::any(base::unique(input_table$approach_multiexposure) %in% "multiplicative")
 
     is_multiexposure_combined <-
       is_multiexposure &&
-      base::unique(input_table$approach_multiexposure) %in% "combined"
+      base::any(base::unique(input_table$approach_multiexposure) %in% "combined")
 
-    info_cols <- input_table |>
-      dplyr::select(dplyr::contains("info_")) |>
-      base::names()
+    # add_info() names the column just "info" if the user entered a vector,
+    # while a data frame gives info_column_1, info_column_2... The bare "info"
+    # is included here so that a vector-valued info identifies the subgroups in
+    # the population attributable fraction below, as it already does in
+    # compile_input().
+    # Not in multiexposure though: there each exposure comes from its own
+    # attribute_health() call and can carry its own info (e.g. "pm2.5" and
+    # "no2"). That info identifies the exposures that are being merged, just
+    # like exp_name does, so it must not keep them apart
+    info_cols <-
+      if (is_multiexposure) {
+        base::grep("^info_", names_input_table, value = TRUE)
+      } else {
+        base::grep("^info", names_input_table, value = TRUE)
+      }
 
     grouping_cols <-
       c(ci_cols,
@@ -222,7 +237,12 @@ get_risk_and_pop_fraction <-
 
     # Only if exposure distribution (multiple exposure categories)
     # then reduce the number of rows to keep the same number as in rr
-    if(base::unique(input_table$exp_type) == "exposure_distribution"){
+    # any() and not unique() because exp_type is determined per geo unit, sex,
+    # age group and info, so it can differ across rows, e.g. when one
+    # exposure-outcome pair has an exposure distribution and another a
+    # population weighted mean. collapse_df_by_group() is a no-op for the
+    # single-row groups, so widening the condition is safe
+    if(base::any(input_table$exp_type == "exposure_distribution")){
 
       input_with_risk_and_pop_fraction <-
         collapse_df_by_group(
