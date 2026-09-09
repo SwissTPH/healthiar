@@ -192,12 +192,18 @@ prepare_mdi <- function(
 
   # * Descriptive analysis ####################################################
 
+  # na.rm = TRUE so that the statistics describe the geo units that do have a
+  # value. Without it, one single missing value turned every statistic of the
+  # affected indicator (and of the MDI) into NA
   descriptive_statistics <- base::sapply(data[c(indicators, "MDI")], function(x)
     tibble::tibble(
-      MEAN = base::round(base::mean(x), 3),
-      SD = base::round(stats::sd(x), 3),
-      MIN = base::min(x),
-      MAX = base::max(x)
+      MEAN = base::round(base::mean(x, na.rm = TRUE), 3),
+      SD = base::round(stats::sd(x, na.rm = TRUE), 3),
+      # If an indicator has no value at all, min() and max() with na.rm return
+      # -Inf and Inf with a warning. NA says the same thing without pretending
+      # to be a number
+      MIN = if (base::all(base::is.na(x))) NA_real_ else base::min(x, na.rm = TRUE),
+      MAX = if (base::all(base::is.na(x))) NA_real_ else base::max(x, na.rm = TRUE)
       )
     )
 
