@@ -35,13 +35,21 @@
 #'
 #'
 # VALUE ########################################################################
-#' @returns This function returns the \code{numeric} discount factor.
+#' @returns This function returns the \code{numeric} discount factor(s),
+#' one per value entered in \code{n_years}.
 #'
 # EXAMPLES #####################################################################
 #' @examples
+#' # Goal: discount factor after a given number of years
 #' get_discount_factor(
 #'   discount_rate = 0.07,
 #'   n_years = 5
+#'  )
+#'
+#' # Goal: discount factor for each year of a time horizon
+#' get_discount_factor(
+#'   discount_rate = 0.07,
+#'   n_years = 0:5
 #'  )
 #'
 #'
