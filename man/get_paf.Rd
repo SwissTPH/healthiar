@@ -9,7 +9,7 @@ get_paf(rr_at_exp, prop_pop_exp)
 \arguments{
 \item{rr_at_exp}{\code{Numerical value} Risk estimate of the concentration response function for a specific concentration. The population attributable fraction is normally calculated using the risk estimate that refers to the concentration that reflects the population exposure and the cut-off. This risk estimate is obtained after re-scaling from the epidemiological study with a particular increment (e.g. for PM2.5 10 or 5 ug/m3) to the aimed concentration.}
 
-\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}}
+\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category), i.e. the proportion of the \strong{total} population that falls in each exposure category. Default: 1. The fractions do not have to add up to 1: the part of the population that they do not cover is treated as unexposed, i.e. it gets the relative risk of the reference level. In air pollution assessments everybody is usually exposed and the fractions add up to 1, whereas in noise assessments they typically add up to less than 1, because exposure is only reported above a given level. Accordingly, \code{bhd_...} must always refer to the total population. See Details for more info. \emph{Only applicable in RR pathways.}}
 }
 \value{
 This function returns the population attributable fraction as a \code{numeric value}.
