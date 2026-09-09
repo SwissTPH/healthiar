@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1693</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1694</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +55,12 @@
 
 
 <dt id="arg-n-years">n_years<a class="anchor" aria-label="anchor" href="#arg-n-years"></a></dt>
-<dd><p><code>Numeric value</code> referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).</p></dd>
+<dd><p><code>Numeric value</code> or <code>numeric vector</code> specifying the number of years
+elapsed for which the discount factor is to be calculated. One factor is
+returned per entered value. The year 0, i.e. the present, gets a factor of 1
+(no discounting). Note that this differs from the argument of the same name
+in <code><a href="monetize.html">monetize()</a></code>, which is the time horizon: <code><a href="monetize.html">monetize()</a></code> calls this
+function with each single year from 0 to that horizon.</p></dd>
 
 
 <dt id="arg-discount-shape">discount_shape<a class="anchor" aria-label="anchor" href="#arg-discount-shape"></a></dt>
@@ -64,7 +69,8 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>This function returns the <code>numeric</code> discount factor.</p>
+    <p>This function returns the <code>numeric</code> discount factor(s),
+one per value entered in <code>n_years</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -106,11 +112,19 @@ ISBN 0-89859-800-1.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_discount_factor</span><span class="op">(</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Goal: discount factor after a given number of years</span></span></span>
+<span class="r-in"><span><span class="fu">get_discount_factor</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  discount_rate <span class="op">=</span> <span class="fl">0.07</span>,</span></span>
 <span class="r-in"><span>  n_years <span class="op">=</span> <span class="fl">5</span></span></span>
 <span class="r-in"><span> <span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7129862</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Goal: discount factor for each year of a time horizon</span></span></span>
+<span class="r-in"><span><span class="fu">get_discount_factor</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  discount_rate <span class="op">=</span> <span class="fl">0.07</span>,</span></span>
+<span class="r-in"><span>  n_years <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">5</span></span></span>
+<span class="r-in"><span> <span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.0000000 0.9345794 0.8734387 0.8162979 0.7628952 0.7129862</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

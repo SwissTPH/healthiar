@@ -16,11 +16,15 @@ get_discount_factor(discount_rate, n_years, discount_shape = "exponential")
 
 - n_years:
 
-  `Numeric value` referring to number of years in the future to be
-  considered in the discounting and/or inflation. Be aware that the year
-  0 (without discounting/inflation, i.e. the present) is not be counted
-  here. If a vector is entered in the argument impact, n_years does not
-  need to be entered (length of impact = n_years + 1).
+  `Numeric value` or `numeric vector` specifying the number of years
+  elapsed for which the discount factor is to be calculated. One factor
+  is returned per entered value. The year 0, i.e. the present, gets a
+  factor of 1 (no discounting). Note that this differs from the argument
+  of the same name in
+  [`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md),
+  which is the time horizon:
+  [`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md)
+  calls this function with each single year from 0 to that horizon.
 
 - discount_shape:
 
@@ -30,7 +34,8 @@ get_discount_factor(discount_rate, n_years, discount_shape = "exponential")
 
 ## Value
 
-This function returns the `numeric` discount factor.
+This function returns the `numeric` discount factor(s), one per value
+entered in `n_years`.
 
 ## Details
 
@@ -82,10 +87,18 @@ Alberto Castro & Axel Luyten
 ## Examples
 
 ``` r
+# Goal: discount factor after a given number of years
 get_discount_factor(
   discount_rate = 0.07,
   n_years = 5
  )
 #> [1] 0.7129862
+
+# Goal: discount factor for each year of a time horizon
+get_discount_factor(
+  discount_rate = 0.07,
+  n_years = 0:5
+ )
+#> [1] 1.0000000 0.9345794 0.8734387 0.8162979 0.7628952 0.7129862
 
 ```
