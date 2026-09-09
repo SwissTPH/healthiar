@@ -391,13 +391,23 @@ prepare_mdi <- function(
     base::print("PEARSON'S CORRELATION COEFFICIENTS")
     base::print(pearsons_corr_coeff)
 
-    # * Boxplot #################################################################
+    # * Boxplot and histogram ###################################################
 
-    base::eval(boxplot_code)
+    # The plots need at least one geo unit with an MDI value. Without this
+    # guard, graphics::hist() aborted with the message "character(0)" when
+    # every MDI was missing, i.e. when no geo unit had a value in all
+    # indicators. The code of both plots is returned in mdi_detailed anyway
+    if ( base::any(!base::is.na(data$MDI)) ) {
 
-    # * Histogram ###############################################################
+      base::eval(boxplot_code)
 
-    base::eval(histogram_code)
+      base::eval(histogram_code)
+
+    } else {
+      base::print(base::paste(
+        "No plots: no geographic unit has a value in all indicators,",
+        "so the MDI could not be calculated for any of them"))
+    }
 
   }
 
