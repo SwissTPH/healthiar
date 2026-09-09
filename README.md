@@ -2,7 +2,7 @@
 
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/healthiar)](https://cran.r-project.org/package=healthiar)  
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18220360.svg)](https://doi.org/10.5281/zenodo.18220360)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.10599/status.svg)](https://doi.org/10.21105/joss.10599)
 
 [![GitHub Repo stars](https://img.shields.io/github/stars/SwissTPH/healthiar?style=social)](https://github.com/SwissTPH/healthiar/stargazers) [![Watch releases](https://img.shields.io/github/watchers/SwissTPH/healthiar?style=social&label=Watch)](https://github.com/SwissTPH/healthiar/subscription)
 
