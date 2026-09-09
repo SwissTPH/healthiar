@@ -147,10 +147,15 @@ daly <-
     cols_for_join <- c(common_cols, info_cols_for_join, "erf_ci")
 
 
+    # Check that the two assessments refer to the same population and exposure.
+    # The columns compared here are the ones used as joining columns below, so
+    # a difference in any of them would silently drop rows in the join (or make
+    # it fail if the column is missing on one side).
+
     identical_cols <-
       check_if_args_identical(
-        args_a = input_args$value$output_attribute_yld,
-        args_b = input_args$value$output_attribute_yld,
+        args_a = results_raw_yll,
+        args_b = results_raw_yld,
         names_to_check = common_cols)
 
     # Remove those containing the word impact
@@ -158,10 +163,16 @@ daly <-
       column_names_results_raw[!base::grepl("impact|lifeyears|lifetable", column_names_results_raw)]
 
 
-    if(!all(identical_cols))
-    {stop("The arguments ",
-          base::toString(base::names(identical_cols)[identical_cols]),
-          " must be identical in both scenarios")}
+    # [!identical_cols] and not [identical_cols]: the message has to name the
+    # columns that differ and not the ones that agree
+    if(!base::all(identical_cols)){
+      base::stop(
+        base::paste0(
+          "The following must be identical in the assessment of years of life ",
+          "lost and in the assessment of years lived with disability: ",
+          base::toString(base::names(identical_cols)[!identical_cols]), "."),
+        call. = FALSE)
+    }
 
 
     # Obtain the new results_raw for DALY
