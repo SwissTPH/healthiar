@@ -2141,7 +2141,10 @@ testthat::test_that("results the same |pathway_rr|erf_log_lin|exp_dist|iteration
         erf_shape = "log_linear",
         rr_central = 1.06, #relative risk for pm2.5 according to WHO, used in the study
         rr_increment = 10,
-        prop_pop_exp = 1,
+        # Two exposure categories, so the proportions of the total population
+        # in them have to add up to 1. Entering prop_pop_exp = 1 was recycled
+        # to both categories, i.e. it assigned the whole population twice
+        prop_pop_exp = c(0.5, 0.5),
         exp_central = c(1.1,1.7), # exposure for pm2.5
         # dist = exposure distribution, e.g. 5 different exposure
         #categories (~ exposure ranges) with the information how many people are
