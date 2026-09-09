@@ -859,7 +859,9 @@ E.g., to quantify attributable health impacts *stratified by a sub-group differe
 ### Function call
 A single vector (or a data frame / tibble with multiple columns) to group the results by can be entered to the `info` argument. In this example, this will be information about the education level.
 
-In a second step one can group the results based on one or more columns and so summarize the results by the preferred sub-groups.
+In a second step one can group the results based on one or more columns and so summarize the results by the preferred sub-groups. 
+
+Be aware that, if the argument `info`is a data frame or tibble, the columns in the `info` argument are renamed adding the prefix `info_`. If the argument `info` is a vector, the column in the results is called `info`. 
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_attribute <- healthiar::attribute_health(
@@ -884,7 +886,7 @@ output_attribute <- healthiar::attribute_health(
 ### Results by other sub-group
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_stratified <- output_attribute$health_detailed$results_raw |>
-      dplyr::group_by(info_column_1) |>
+      dplyr::group_by(info_education) |>
       dplyr::summarize(mean_impact = mean(impact))|>
       dplyr::pull(mean_impact) |>
       print()
@@ -925,7 +927,7 @@ output_attribute <- healthiar::attribute_health(
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_stratified <- output_attribute$health_detailed$results_raw |>
-      dplyr::group_by(info_column_1) |>
+      dplyr::group_by(info_education) |>
       dplyr::summarize(mean_impact = mean(impact))|>
       dplyr::pull(mean_impact) |>
       print()
@@ -994,7 +996,7 @@ unit.
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_attribute$health_main |>
-  dplyr::select(info_column_1, geo_id_micro, erf_ci, impact_rounded) |>
+  dplyr::select(info_pair, geo_id_micro, erf_ci, impact_rounded) |>
   print()
 ```
 
@@ -1016,7 +1018,7 @@ output_sensitivity <- healthiar::attribute_health(
   )
 
 output_sensitivity$health_main |>
-  dplyr::select(info_column_1, erf_ci, impact_rounded) |>
+  dplyr::select(info_rr_source, erf_ci, impact_rounded) |>
   print()
 ```
 
