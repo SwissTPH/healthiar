@@ -12,6 +12,11 @@ or the [welcome webpage](https://swisstph.github.io/healthiar/). By
 using `healthiar`, you agree to the [terms of use and
 disclaimer](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme).
 
+*Tip*: Do you want to be notified when a new `healthiar` version is
+released? See the [Stay
+updated](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#stay-updated)
+section of the readme file.
+
 ------------------------------------------------------------------------
 
 ## About `healthiar`

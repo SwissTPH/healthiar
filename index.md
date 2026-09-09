@@ -5,6 +5,14 @@ downloads](https://cranlogs.r-pkg.org/badges/grand-total/healthiar)](https://cra
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18220360.svg)](https://doi.org/10.5281/zenodo.18220360)
 
+[![GitHub Repo
+stars](https://img.shields.io/github/stars/SwissTPH/healthiar?style=social)](https://github.com/SwissTPH/healthiar/stargazers)
+[![Watch
+releases](https://img.shields.io/github/watchers/SwissTPH/healthiar?style=social&label=Watch)](https://github.com/SwissTPH/healthiar/subscription)
+
+Want to know as soon as a new *healthiar* version is released? See [Stay
+updated](#stay-updated) below.
+
 ## Introduction
 
 *healthiar* is an R package to quantify and monetize health impacts
@@ -83,6 +91,27 @@ September 2025), which can be found
 [here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ). The slides of
 the presentation can be found
 [here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop).
+
+### Stay updated
+
+We regularly improve *healthiar* and publish a new [GitHub
+release](https://github.com/SwissTPH/healthiar/releases) every time a
+new version reaches CRAN. To make sure you don’t miss one:
+
+- **Watch releases**: on the [GitHub
+  repo](https://github.com/SwissTPH/healthiar), click *Watch* \>
+  *Custom* \> tick *Releases only*, so you get notified without being
+  flooded by every issue or discussion.
+
+- **Star the repo**: click *Star* on the [GitHub
+  repo](https://github.com/SwissTPH/healthiar) to bookmark it and help
+  others discover *healthiar*.
+
+- **Subscribe via RSS/Atom**: if you prefer a feed reader, subscribe to
+  <https://github.com/SwissTPH/healthiar/releases.atom>.
+
+- **Check the changelog**: see what changed in each version on the
+  [changelog](https://swisstph.github.io/healthiar/news/index.html).
 
 ## Installation
 
