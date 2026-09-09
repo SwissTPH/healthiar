@@ -414,6 +414,62 @@ testthat::test_that("results correct using 2 pif iteration comparisons as inputs
 
 })
 
+## IMPACT RATE ################################################################
+
+testthat::test_that("results the same |pathway_daly|impact_per_100k_inhab|", {
+
+  # The impact rate must be the DALY rate of the geo unit, i.e. impact divided
+  # by population. Before, daly() called it impact_per_100k, which get_output()
+  # does not recognise as a rate: it was therefore added up like an impact (the
+  # rates of the geo units were summed) while the column that does carry the
+  # expected name kept the rate of the years of life lost only
+  attribute_one_outcome <- function(dw = NULL, duration = NULL, population = NULL){
+    healthiar::attribute_health(
+      exp_central = 10,
+      cutoff_central = 5,
+      bhd_central = c(1000, 1200),
+      geo_id_micro = c("a", "b"),
+      geo_id_macro = c("ch", "ch"),
+      population = population,
+      rr_central = 1.05,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      dw_central = dw,
+      duration_central = duration)
+  }
+
+  # Population entered in both assessments, which is the usual case. The
+  # full_join() in daly() renames it to population_yll and population_yld, so
+  # without restoring it there was no impact rate in the results at all
+  daly_population_in_both <-
+    healthiar::daly(
+      output_attribute_yll = attribute_one_outcome(population = c(1E6, 1E6)),
+      output_attribute_yld = attribute_one_outcome(dw = 0.1, duration = 2,
+                                                   population = c(1E6, 1E6)))
+
+  results_by_geo_id_macro <-
+    daly_population_in_both$health_detailed$results_by_geo_id_macro
+
+  testthat::expect_equal(
+    object = results_by_geo_id_macro$impact_per_100k_inhab,
+    expected =
+      (results_by_geo_id_macro$impact / results_by_geo_id_macro$population) * 1E5)
+
+  # Population only in the assessment of the years of life lost, as in the
+  # examples of daly(). The rate of that assessment must not survive under the
+  # name of the DALY rate
+  daly_population_in_yll <-
+    healthiar::daly(
+      output_attribute_yll = attribute_one_outcome(population = c(1E6, 1E6)),
+      output_attribute_yld = attribute_one_outcome(dw = 0.1, duration = 2))
+
+  results_raw <- daly_population_in_yll$health_detailed$results_raw
+
+  testthat::expect_equal(
+    object = results_raw$impact_per_100k_inhab,
+    expected = (results_raw$impact / results_raw$population) * 1E5)
+})
+
 # ERROR OR WARNING ########
 ## ERROR #########
 

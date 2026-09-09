@@ -182,12 +182,30 @@ daly <-
         impact = impact_yll + impact_yld,
         impact_rounded = base::round(impact))
 
-    # Add impact per 100k inhabitants if population is available
-    if("population" %in% names(results_raw)){
+    # population is not one of the joining columns, so it carries the suffixes
+    # _yll and _yld whenever both assessments provide it. It is the same
+    # population in both (the years of life lost and the years lived with
+    # disability of the same people), so it is restored here under its own name.
+    # Without this, neither the rate below nor the one in get_output() is
+    # calculated and the results tables have no impact rate at all
+    if (base::all(c("population_yll", "population_yld") %in% base::names(results_raw))) {
+      results_raw <- results_raw |>
+        dplyr::mutate(population = dplyr::coalesce(population_yll, population_yld))
+    }
+
+    # Add impact per 100k inhabitants if population is available.
+    # The name must be impact_per_100k_inhab as everywhere else in the package
+    # (get_impact(), monetize(), standardize()): get_output() recognises the
+    # rates by that suffix to keep them out of the sums and to re-calculate
+    # them after aggregating. Named impact_per_100k, the column was added up
+    # like an impact, i.e. the rates of different geo units were summed.
+    # The assignment also overwrites the column of the same name that the join
+    # carries over from the YLL branch, which holds the YLL and not the DALY rate
+    if("population" %in% base::names(results_raw)){
       results_raw <-
         results_raw |>
         dplyr::mutate(
-          impact_per_100k = (impact / population) * 1E5)
+          impact_per_100k_inhab = (impact / population) * 1E5)
     }
 
     # Use args and impact to produce impact
