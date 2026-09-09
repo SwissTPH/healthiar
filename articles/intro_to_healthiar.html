@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1695</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1696</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -279,6 +279,28 @@ fraction (PAF)</strong>:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>A</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mo>∑</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mo>×</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub><mo>−</mo><mn>1</mn></mrow><mrow><mo>∑</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mo>×</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">PAF = \frac{\sum rr\_at\_exp_i \times PE_i - 1}{\sum rr\_at\_exp_i \times PE_i}</annotation></semantics></math></p>
 <p>Alternatively, an equivalent form is:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>A</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mo>∑</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mo>∑</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mn>1</mn></mrow></mfrac></mrow><annotation encoding="application/x-tex">PAF = \frac{\sum PE_i \times (rr\_at\_exp_i - 1)}{\sum PE_i\times (rr\_at\_exp_i - 1) + 1}</annotation></semantics></math></p>
+<p><code>healthiar</code> uses this second form, which is the one
+published as Formula 3 in <a href="https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2023-11-environmental-noise-health-risk-assessment-methodology-for-assessing-health-risks-using-data-reported-under-the-environmental-noise-directive" class="external-link">ETC
+HE Report 2023/11</a>. Note that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">PE_i</annotation></semantics></math>
+is the proportion of the <strong>total</strong> population in the
+exposure category
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>,
+so the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">PE_i</annotation></semantics></math>
+do <strong>not</strong> have to add up to 1: the part of the population
+that they do not cover is treated as unexposed, i.e. it gets the
+relative risk of the reference level. In air pollution assessments
+everybody is usually exposed and the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">PE_i</annotation></semantics></math>
+add up to 1, whereas in noise assessments they typically add up to less
+than 1, because exposure is only reported above a given level.
+Accordingly, the baseline health data entered in <code>bhd_...</code>
+must always refer to the total population. The first form above divides
+by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub><mo>×</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\sum rr\_at\_exp_i \times PE_i</annotation></semantics></math>
+instead and is therefore only equivalent when
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sum PE_i = 1</annotation></semantics></math>.</p>
 </div>
 <div class="section level6">
 <h6 id="simplified-for-single-exposure-value">Simplified for single exposure value<a class="anchor" aria-label="anchor" href="#simplified-for-single-exposure-value"></a>

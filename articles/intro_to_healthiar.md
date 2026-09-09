@@ -237,6 +237,21 @@ Alternatively, an equivalent form is:
 PAF = \frac{\sum PE_i \times (rr\_at\_exp_i - 1)}{\sum PE_i\times (rr\_at\_exp_i - 1) + 1}
 ```
 
+`healthiar` uses this second form, which is the one published as Formula
+3 in [ETC HE Report
+2023/11](https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2023-11-environmental-noise-health-risk-assessment-methodology-for-assessing-health-risks-using-data-reported-under-the-environmental-noise-directive).
+Note that $`PE_i`$ is the proportion of the **total** population in the
+exposure category $`i`$, so the $`PE_i`$ do **not** have to add up to 1:
+the part of the population that they do not cover is treated as
+unexposed, i.e. it gets the relative risk of the reference level. In air
+pollution assessments everybody is usually exposed and the $`PE_i`$ add
+up to 1, whereas in noise assessments they typically add up to less than
+1, because exposure is only reported above a given level. Accordingly,
+the baseline health data entered in `bhd_...` must always refer to the
+total population. The first form above divides by
+$`\sum rr\_at\_exp_i \times PE_i`$ instead and is therefore only
+equivalent when $`\sum PE_i = 1`$.
+
 ###### Simplified for single exposure value
 
 If there is one single single exposure value, corresponding to the

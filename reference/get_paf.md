@@ -24,7 +24,15 @@ get_paf(rr_at_exp, prop_pop_exp)
 - prop_pop_exp:
 
   `Numeric value` or `numeric vector` specifying the **population
-  fraction(s) exposed** for each exposure (category). Default: 1. See
+  fraction(s) exposed** for each exposure (category), i.e. the
+  proportion of the **total** population that falls in each exposure
+  category. Default: 1. The fractions do not have to add up to 1: the
+  part of the population that they do not cover is treated as unexposed,
+  i.e. it gets the relative risk of the reference level. In air
+  pollution assessments everybody is usually exposed and the fractions
+  add up to 1, whereas in noise assessments they typically add up to
+  less than 1, because exposure is only reported above a given level.
+  Accordingly, `bhd_...` must always refer to the total population. See
   Details for more info. *Only applicable in RR pathways.*
 
 ## Value
