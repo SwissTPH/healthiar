@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1656</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1660</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1408,6 +1408,26 @@ used to create the ERF</p>
 <div class="section level2">
 <h2 id="sub-group-analysis">Sub-group analysis<a class="anchor" aria-label="anchor" href="#sub-group-analysis"></a>
 </h2>
+<p>Every sub-group stratifies the assessment: by age group, by sex, or
+by anything entered in <code>info</code>, such as education level. What
+differs is what happens to that stratification in the main results.</p>
+<p>For the sub-groups in this chapter the impacts are
+<strong>summed</strong>, so the stratification disappears from
+<code>health_main</code> and only the total per geographic unit is
+shown. It is still available in the <code>results_by_...</code> tables
+of the detailed output, and that is usually what you want: the total
+across education levels, or across age groups, is a meaningful
+number.</p>
+<p>Not every dimension of an assessment is a sub-group in this sense,
+though. A stratification splits one population into parts that add up to
+the whole, which is exactly why summing them is meaningful. Different
+exposure-outcome pairs do not: PM2.5 and mortality and NO2 and asthma
+cover the <em>same</em> whole population, so they are parallel analyses
+rather than parts of one. Adding them up counts the same people
+twice.</p>
+<p>Those dimensions therefore have to be <strong>kept</strong> in the
+main results, which is what the argument <code>main_results_by</code>
+does. See the chapter <em>Multiple exposure-outcome pairs</em>.</p>
 <div class="section level3">
 <h3 id="by-age-group">by age group<a class="anchor" aria-label="anchor" href="#by-age-group"></a>
 </h3>
@@ -1619,6 +1639,155 @@ sex and additional sub-group e.g. education level</em>.</p>
 </div>
 </div>
 <div class="section level2">
+<h2 id="multiple-exposure-outcome-pairs">Multiple exposure-outcome pairs<a class="anchor" aria-label="anchor" href="#multiple-exposure-outcome-pairs"></a>
+</h2>
+<div class="section level4">
+<h4 id="goal-11">Goal<a class="anchor" aria-label="anchor" href="#goal-11"></a>
+</h4>
+<p>E.g., to quantify in <em>one single call</em> the impacts of
+<em>several exposure-outcome pairs</em>, such as PM2.5 and COPD together
+with NO2 and asthma, or to compare the <em>same pair quantified with the
+relative risks of two different studies</em>.</p>
+</div>
+<div class="section level4">
+<h4 id="parallel-analyses-not-sub-groups">Parallel analyses, not sub-groups<a class="anchor" aria-label="anchor" href="#parallel-analyses-not-sub-groups"></a>
+</h4>
+<p>As explained in the chapter <em>Sub-group analysis</em>, the impacts
+of the sub-groups are summed by default, so only the total per
+geographic unit is shown in <code>health_main</code>.</p>
+<p>That is not what you want here. Premature deaths attributable to
+PM2.5 and asthma cases attributable to NO2 are not two parts of one
+population: they are two analyses of the <em>same</em> population, so
+adding them up counts the same people twice. The same applies to a
+sensitivity analysis in which one pair is quantified with the relative
+risks of two different studies: the two results are alternatives to each
+other, not summands.</p>
+<p>Enter therefore in <code>main_results_by</code> the names of the
+dimensions that the main results have to be reported by. They stay as
+separate rows in <code>health_main</code> and in all
+<code>results_by_...</code> tables. Note that
+<code>main_results_by</code> does not create those tables, which are
+available in the detailed output in any case: it determines which
+dimensions survive in them and in the main results.</p>
+</div>
+<div class="section level4">
+<h4 id="function-call-11">Function call<a class="anchor" aria-label="anchor" href="#function-call-11"></a>
+</h4>
+<p>The pairs are identified in a column of <code>info</code>, and that
+column is named in <code>main_results_by</code>. All other arguments are
+entered as parallel vectors, exactly as for multiple geographic units.
+Note that the pairs can have different exposure-response functions, here
+log-linear for PM2.5 and linear for NO2.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">output_attribute</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
+<span>    info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>      pair <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pm2.5_copd"</span>, <span class="st">"no2_asthma"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    main_results_by <span class="op">=</span> <span class="st">"pair"</span>,</span>
+<span>    exp_central    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8.85</span>, <span class="fl">9.20</span>, <span class="fl">22.1</span>, <span class="fl">24.5</span><span class="op">)</span>,</span>
+<span>    cutoff_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span>,</span>
+<span>    rr_central     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.369</span>, <span class="fl">1.369</span>, <span class="fl">1.041</span>, <span class="fl">1.041</span><span class="op">)</span>,</span>
+<span>    rr_increment   <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    erf_shape      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"log_linear"</span>, <span class="st">"log_linear"</span>, <span class="st">"linear"</span>, <span class="st">"linear"</span><span class="op">)</span>,</span>
+<span>    bhd_central    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30747</span>, <span class="fl">31500</span>, <span class="fl">12000</span>, <span class="fl">12500</span><span class="op">)</span>,</span>
+<span>    geo_id_micro   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="main-results-5">Main results<a class="anchor" aria-label="anchor" href="#main-results-5"></a>
+</h4>
+<p>One row per exposure-outcome pair and geographic unit. Without
+<code>main_results_by</code> the four impacts would have been added up
+into one single number per geographic unit.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">output_attribute</span><span class="op">$</span><span class="va">health_main</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">info_column_1</span>, <span class="va">geo_id_micro</span>, <span class="va">erf_ci</span>, <span class="va">impact_rounded</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 4</span></span></span>
+<span><span class="co">#&gt;   info_column_1 geo_id_micro erf_ci  impact_rounded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> pm2.5_copd    a            central           <span style="text-decoration: underline;">3</span>502</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> pm2.5_copd    b            central           <span style="text-decoration: underline;">3</span>893</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> no2_asthma    a            central            567</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> no2_asthma    b            central            701</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="sensitivity-analysis-with-several-exposure-response-functions">Sensitivity analysis with several exposure-response functions<a class="anchor" aria-label="anchor" href="#sensitivity-analysis-with-several-exposure-response-functions"></a>
+</h4>
+<p>The same mechanism compares one exposure-outcome pair quantified with
+the relative risks of two different studies.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">output_sensitivity</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
+<span>    info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>rr_source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Liu 2020"</span>, <span class="st">"WHO 2021"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    main_results_by <span class="op">=</span> <span class="st">"rr_source"</span>,</span>
+<span>    exp_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8.85</span>, <span class="fl">8.85</span><span class="op">)</span>,</span>
+<span>    cutoff_central <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>    rr_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.369</span>, <span class="fl">1.080</span><span class="op">)</span>,</span>
+<span>    rr_increment <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span>
+<span>    bhd_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30747</span>, <span class="fl">30747</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">output_sensitivity</span><span class="op">$</span><span class="va">health_main</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">info_column_1</span>, <span class="va">erf_ci</span>, <span class="va">impact_rounded</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span></span>
+<span><span class="co">#&gt;   info_column_1 erf_ci  impact_rounded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Liu 2020      central           <span style="text-decoration: underline;">3</span>502</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> WHO 2021      central            898</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="which-dimensions-can-be-entered">Which dimensions can be entered<a class="anchor" aria-label="anchor" href="#which-dimensions-can-be-entered"></a>
+</h4>
+<p><code>main_results_by</code> is available in both
+<code><a href="../reference/attribute_health.html">attribute_health()</a></code> and <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>.
+It accepts:</p>
+<ul>
+<li>the <strong>columns of <code>info</code></strong>, using the names
+that you gave them (e.g. <code>"pair"</code>), or <code>"info"</code>
+itself if you entered a vector instead of a data frame;</li>
+<li>the arguments <strong><code>sex</code></strong>,
+<strong><code>age_group</code></strong>,
+<strong><code>exp_category</code></strong>,
+<strong><code>geo_id_micro</code></strong> and
+<strong><code>geo_id_macro</code></strong>;</li>
+<li>in <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code> also
+<strong><code>year</code></strong>, i.e. the years of the time horizon,
+which are otherwise added up.</li>
+</ul>
+<p>For example, <code>main_results_by = "sex"</code> shows one row per
+sex in <code>health_main</code> instead of the total across sexes. This
+changes nothing in the calculation, only which rows are kept apart in
+the results, and the rows still add up to the total that you would get
+without the argument.</p>
+<p>A name that is not available in the assessment produces an error
+listing the options, so a typo in a column name of <code>info</code>
+cannot pass unnoticed.</p>
+</div>
+<div class="section level4">
+<h4 id="limitations">Limitations<a class="anchor" aria-label="anchor" href="#limitations"></a>
+</h4>
+<p>All pairs in one call must use the same way of defining the
+exposure-response function, i.e. either <code>rr_...</code> or
+<code>erf_eq_...</code> for all of them, and the same
+<code>approach_risk</code>.</p>
+<p><code><a href="../reference/standardize.html">standardize()</a></code> keeps the pairs apart as well, so each
+pair gets its own age-standardized impacts. Nothing has to be done for
+that: its results simply carry the columns of
+<code>main_results_by</code>.</p>
+<p><code><a href="../reference/socialize.html">socialize()</a></code> and <code><a href="../reference/summarize_uncertainty.html">summarize_uncertainty()</a></code>
+analyse one pair at a time and stop with an error otherwise, so for them
+<code><a href="../reference/attribute_health.html">attribute_health()</a></code> has to be called once per pair. The
+reason is different in each case. <code><a href="../reference/socialize.html">socialize()</a></code> groups the
+impacts only by geographic unit, age group and social quantile, and its
+arguments have no way of identifying the pairs when the input is entered
+directly instead of as an <code><a href="../reference/attribute_health.html">attribute_health()</a></code> output.
+<code><a href="../reference/summarize_uncertainty.html">summarize_uncertainty()</a></code> simulates one value per variable
+and geographic unit, assuming that e.g. the relative risk is the same
+everywhere, which is not the case when each pair has its own.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="yll-deaths-with-life-table">YLL &amp; deaths with life table<a class="anchor" aria-label="anchor" href="#yll-deaths-with-life-table"></a>
 </h2>
 <div class="section level3">
@@ -1645,7 +1814,7 @@ group, you are lucky, you can ignore this initial step.
 so it can also be used for a life table that mixes already available
 single-year data with converted larger age groups.</p></li>
 </ul>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">age_groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span><span class="op">)</span></span>
 <span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">438200</span>, <span class="fl">445100</span>, <span class="fl">439800</span>, <span class="fl">421500</span><span class="op">)</span></span>
 <span><span class="va">bhd_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1420</span>, <span class="fl">45</span>, <span class="fl">50</span>, <span class="fl">125</span><span class="op">)</span></span>
@@ -1771,7 +1940,7 @@ purpose.</p>
 <h3 id="yll">YLL<a class="anchor" aria-label="anchor" href="#yll"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-11">Goal<a class="anchor" aria-label="anchor" href="#goal-11"></a>
+<h4 id="goal-12">Goal<a class="anchor" aria-label="anchor" href="#goal-12"></a>
 </h4>
 <p>E.g., to quantify the years of life lost (YLL) due to deaths from
 COPD attributable to PM2.5 exposure during one year.</p>
@@ -2003,12 +2172,12 @@ is calculated.</p>
 </div>
 </div>
 <div class="section level4">
-<h4 id="function-call-11">Function call<a class="anchor" aria-label="anchor" href="#function-call-11"></a>
+<h4 id="function-call-12">Function call<a class="anchor" aria-label="anchor" href="#function-call-12"></a>
 </h4>
 <p>We can use <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code> combined with life
 table input data to determine YLL attributable to an environmental
 stressor.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm_yll</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_lifetable.html">attribute_lifetable</a></span><span class="op">(</span></span>
 <span>  year_of_analysis <span class="op">=</span> <span class="fl">2019</span>, </span>
 <span>  health_outcome <span class="op">=</span> <span class="st">"yll"</span>,</span>
@@ -2027,7 +2196,7 @@ stressor.</p>
 <span><span class="op">)</span> </span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="main-results-5">Main results<a class="anchor" aria-label="anchor" href="#main-results-5"></a>
+<h4 id="main-results-6">Main results<a class="anchor" aria-label="anchor" href="#main-results-6"></a>
 </h4>
 <p>Total YLL attributable to exposure (sum of sex-specific impacts).</p>
 <table class="table">
@@ -2062,7 +2231,7 @@ are also available.</p>
 <h4 id="results-per-year">Results per year<a class="anchor" aria-label="anchor" href="#results-per-year"></a>
 </h4>
 <p><em>Note</em>: only a selection of years is shown.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm_yll</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_raw</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
 <span>    .by <span class="op">=</span> <span class="va">year</span>, </span>
@@ -2082,7 +2251,7 @@ are also available.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 2027   <span style="text-decoration: underline;">1</span>284.</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 2028   <span style="text-decoration: underline;">1</span>171.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 90 more rows</span></span></span></code></pre></div>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm_yll</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_raw</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
 <span>    .by <span class="op">=</span> <span class="va">year</span>, </span>
@@ -2379,11 +2548,11 @@ scenario specified in the assessment).</p>
 exposure during one year.</p>
 </div>
 <div class="section level4">
-<h4 id="function-call-12">Function call<a class="anchor" aria-label="anchor" href="#function-call-12"></a>
+<h4 id="function-call-13">Function call<a class="anchor" aria-label="anchor" href="#function-call-13"></a>
 </h4>
 <p>See example on YLL for additional info on
 <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code> calculations and its output.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm_deaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_lifetable.html">attribute_lifetable</a></span><span class="op">(</span></span>
 <span>  health_outcome <span class="op">=</span> <span class="st">"deaths"</span>,</span>
 <span>  year_of_analysis <span class="op">=</span> <span class="fl">2019</span>,</span>
@@ -2401,7 +2570,7 @@ exposure during one year.</p>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="main-results-6">Main results<a class="anchor" aria-label="anchor" href="#main-results-6"></a>
+<h4 id="main-results-7">Main results<a class="anchor" aria-label="anchor" href="#main-results-7"></a>
 </h4>
 <p>Total premature deaths attributable to exposure (sum of sex-specific
 impacts).</p>
@@ -2702,7 +2871,7 @@ accumulated across the full time_horizon. If you set approach_exposure =
 <h2 id="yld">YLD<a class="anchor" aria-label="anchor" href="#yld"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-12">Goal<a class="anchor" aria-label="anchor" href="#goal-12"></a>
+<h4 id="goal-13">Goal<a class="anchor" aria-label="anchor" href="#goal-13"></a>
 </h4>
 <p>E.g., to quantify the years lived with disability (YLD) attributable
 to air pollution exposure using disability weights.</p>
@@ -2723,9 +2892,9 @@ incidence-based approach <span class="citation">(Kim et al.
 </ul>
 </div>
 <div class="section level4">
-<h4 id="function-call-13">Function call<a class="anchor" aria-label="anchor" href="#function-call-13"></a>
+<h4 id="function-call-14">Function call<a class="anchor" aria-label="anchor" href="#function-call-14"></a>
 </h4>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm_copd_yld</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>  rr_central <span class="op">=</span> <span class="fl">1.1</span>, </span>
 <span>  rr_increment <span class="op">=</span> <span class="fl">10</span>, </span>
@@ -2738,7 +2907,7 @@ incidence-based approach <span class="citation">(Kim et al.
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="main-results-7">Main results<a class="anchor" aria-label="anchor" href="#main-results-7"></a>
+<h4 id="main-results-8">Main results<a class="anchor" aria-label="anchor" href="#main-results-8"></a>
 </h4>
 <table class="table">
 <thead><tr class="header">
@@ -2771,17 +2940,17 @@ life lost (YLL) and years lived with disability (YLD), must be summed
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mi>A</mi><mi>L</mi><mi>Y</mi><mo>=</mo><mi>Y</mi><mi>L</mi><mi>L</mi><mo>+</mo><mi>Y</mi><mi>L</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">DALY = YLL + YLD</annotation></semantics></math></p>
 </div>
 <div class="section level4">
-<h4 id="function-call-14">Function call<a class="anchor" aria-label="anchor" href="#function-call-14"></a>
+<h4 id="function-call-15">Function call<a class="anchor" aria-label="anchor" href="#function-call-15"></a>
 </h4>
 <p>This is possible using the function <code><a href="../reference/daly.html">daly()</a></code>.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_daly</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/daly.html">daly</a></span><span class="op">(</span></span>
 <span>     output_attribute_yll <span class="op">=</span> <span class="va">results_pm_yll</span>,</span>
 <span>     output_attribute_yld <span class="op">=</span> <span class="va">results_pm_copd_yld</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="main-results-8">Main results<a class="anchor" aria-label="anchor" href="#main-results-8"></a>
+<h4 id="main-results-9">Main results<a class="anchor" aria-label="anchor" href="#main-results-9"></a>
 </h4>
 <p>YLL, YLD &amp; DALY</p>
 <table class="table">
@@ -2802,16 +2971,16 @@ life lost (YLL) and years lived with disability (YLD), must be summed
 <h2 id="modification-of-scenarios">Modification of scenarios<a class="anchor" aria-label="anchor" href="#modification-of-scenarios"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-13">Goal<a class="anchor" aria-label="anchor" href="#goal-13"></a>
+<h4 id="goal-14">Goal<a class="anchor" aria-label="anchor" href="#goal-14"></a>
 </h4>
 <p>E.g., to quantify health impacts using
 <code>attribute_health</code>in an scenario B very similar to a previous
 scenario A.</p>
 </div>
 <div class="section level4">
-<h4 id="function-call-15">Function call<a class="anchor" aria-label="anchor" href="#function-call-15"></a>
+<h4 id="function-call-16">Function call<a class="anchor" aria-label="anchor" href="#function-call-16"></a>
 </h4>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scenario_A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>    exp_central <span class="op">=</span> <span class="fl">8.85</span>,   <span class="co"># EXPOSURE 1</span></span>
 <span>    cutoff_central <span class="op">=</span> <span class="fl">5</span>, </span>
@@ -2823,14 +2992,14 @@ scenario A.</p>
 <p>The function <code><a href="../reference/attribute_mod.html">attribute_mod()</a></code> can be used to modify one
 or multiple arguments of <code>attribute_health</code>in an existing
 scenario, e.g. <code>scenario_A</code>.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scenario_B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_mod.html">attribute_mod</a></span><span class="op">(</span></span>
 <span>  output_attribute <span class="op">=</span> <span class="va">scenario_A</span>, </span>
 <span>  exp_central <span class="op">=</span> <span class="fl">6</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>This is equivalent to building the whole scenario again (see below),
 but more time and code efficient.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scenario_B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>    exp_central <span class="op">=</span> <span class="fl">6</span>,     <span class="co"># EXPOSURE 2</span></span>
 <span>    cutoff_central <span class="op">=</span> <span class="fl">5</span>, </span>
@@ -2845,7 +3014,7 @@ but more time and code efficient.</p>
 <h2 id="comparison-of-two-health-scenarios">Comparison of two health scenarios<a class="anchor" aria-label="anchor" href="#comparison-of-two-health-scenarios"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-14">Goal<a class="anchor" aria-label="anchor" href="#goal-14"></a>
+<h4 id="goal-15">Goal<a class="anchor" aria-label="anchor" href="#goal-15"></a>
 </h4>
 <p>E.g., to compare the health impacts in the scenario “before
 intervention” vs. “after intervention”.</p>
@@ -2951,13 +3120,13 @@ scenario</li>
 </div>
 </div>
 <div class="section level4">
-<h4 id="function-call-16">Function call<a class="anchor" aria-label="anchor" href="#function-call-16"></a>
+<h4 id="function-call-17">Function call<a class="anchor" aria-label="anchor" href="#function-call-17"></a>
 </h4>
 <ol style="list-style-type: decimal">
 <li>Use <code><a href="../reference/attribute_health.html">attribute_health()</a></code> to calculate burden of scenarios
 A &amp; B.</li>
 </ol>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scenario_A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>    exp_central <span class="op">=</span> <span class="fl">8.85</span>,   <span class="co"># EXPOSURE 1</span></span>
 <span>    cutoff_central <span class="op">=</span> <span class="fl">5</span>, </span>
@@ -2966,7 +3135,7 @@ A &amp; B.</li>
 <span>    erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span>
 <span>    rr_central <span class="op">=</span> <span class="fl">1.118</span>,</span>
 <span>    rr_increment <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scenario_B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_mod.html">attribute_mod</a></span><span class="op">(</span></span>
 <span>  output_attribute <span class="op">=</span> <span class="va">scenario_A</span>, </span>
 <span>  exp_central <span class="op">=</span> <span class="fl">6</span></span>
@@ -2974,7 +3143,7 @@ A &amp; B.</li>
 <ol start="2" style="list-style-type: decimal">
 <li>Use <code><a href="../reference/compare.html">compare()</a></code> to compare scenarios A &amp; B.</li>
 </ol>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">results_comparison</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/compare.html">compare</a></span><span class="op">(</span></span>
 <span>  approach_comparison <span class="op">=</span> <span class="st">"delta"</span>, <span class="co"># or "pif" (population impact fraction)</span></span>
@@ -2987,7 +3156,7 @@ is <code>"delta"</code>. The alterntive is <code>"pif"</code>
 <code><a href="../reference/compare.html">compare()</a></code> for more details.</p>
 </div>
 <div class="section level4">
-<h4 id="main-results-9">Main results<a class="anchor" aria-label="anchor" href="#main-results-9"></a>
+<h4 id="main-results-10">Main results<a class="anchor" aria-label="anchor" href="#main-results-10"></a>
 </h4>
 <table class="table">
 <colgroup>
@@ -3050,7 +3219,7 @@ our case)</p></li>
 <h2 id="two-correlated-exposures">Two correlated exposures<a class="anchor" aria-label="anchor" href="#two-correlated-exposures"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-15">Goal<a class="anchor" aria-label="anchor" href="#goal-15"></a>
+<h4 id="goal-16">Goal<a class="anchor" aria-label="anchor" href="#goal-16"></a>
 </h4>
 <p>E.g., to quantify the total health impact attributable to PM2.5 and
 NO2.</p>
@@ -3081,11 +3250,11 @@ risks for one exposure must be adjusted for the second exposure and the
 way round.</p>
 </div>
 <div class="section level4">
-<h4 id="function-call-17">Function call<a class="anchor" aria-label="anchor" href="#function-call-17"></a>
+<h4 id="function-call-18">Function call<a class="anchor" aria-label="anchor" href="#function-call-18"></a>
 </h4>
 <p>For this purpose, you can use the function
 <code><a href="../reference/multiexpose.html">multiexpose()</a></code>.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>  erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span>
 <span>  rr_central <span class="op">=</span> <span class="fl">1.369</span>, </span>
@@ -3110,9 +3279,9 @@ way round.</p>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="main-results-10">Main results<a class="anchor" aria-label="anchor" href="#main-results-10"></a>
+<h4 id="main-results-11">Main results<a class="anchor" aria-label="anchor" href="#main-results-11"></a>
 </h4>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_multiplicative</span><span class="op">$</span><span class="va">health_main</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -3128,7 +3297,7 @@ way round.</p>
 <h2 id="standardization">Standardization<a class="anchor" aria-label="anchor" href="#standardization"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-16">Goal<a class="anchor" aria-label="anchor" href="#goal-16"></a>
+<h4 id="goal-17">Goal<a class="anchor" aria-label="anchor" href="#goal-17"></a>
 </h4>
 <p>E.g., to obtain the age-standardized attributable health impacts of
 two age groups.</p>
@@ -3168,9 +3337,9 @@ is the number of age groups.</li>
 </ul>
 </div>
 <div class="section level4">
-<h4 id="function-call-18">Function call<a class="anchor" aria-label="anchor" href="#function-call-18"></a>
+<h4 id="function-call-19">Function call<a class="anchor" aria-label="anchor" href="#function-call-19"></a>
 </h4>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output_attribute</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>  rr_central <span class="op">=</span> <span class="fl">1.063</span>,</span>
 <span>  rr_increment <span class="op">=</span> <span class="fl">10</span>,</span>
@@ -3189,14 +3358,14 @@ is the number of age groups.</li>
 <span>  <span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="main-results-11">Main results<a class="anchor" aria-label="anchor" href="#main-results-11"></a>
+<h4 id="main-results-12">Main results<a class="anchor" aria-label="anchor" href="#main-results-12"></a>
 </h4>
 <p>Age-standardized impact rate:</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_per_100k_inhab</span><span class="op">)</span>  </span>
 <span><span class="co">#&gt; [1] 49.91113</span></span></code></pre></div>
 <p>Age group-specific impact rate:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_raw</span><span class="op">$</span><span class="va">impact_per_100k_inhab</span><span class="op">)</span>  </span>
 <span><span class="co">#&gt; [1] 48.28250 51.53977</span></span></code></pre></div>
 </div>
@@ -3205,7 +3374,7 @@ is the number of age groups.</li>
 <h2 id="preparation-of-exposure-data">Preparation of exposure data<a class="anchor" aria-label="anchor" href="#preparation-of-exposure-data"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-17">Goal<a class="anchor" aria-label="anchor" href="#goal-17"></a>
+<h4 id="goal-18">Goal<a class="anchor" aria-label="anchor" href="#goal-18"></a>
 </h4>
 <p>E.g., to determine population-weighted mean PM2.5 exposure for
 several neighborhoods of Brussels (Belgium)</p>
@@ -3247,9 +3416,9 @@ argument <code>exp_mean</code>, <code>exp_lower</code> and/or
 <code><a href="../reference/attribute_health.html">attribute_health()</a></code>.</p>
 </div>
 <div class="section level4">
-<h4 id="function-call-19">Function call<a class="anchor" aria-label="anchor" href="#function-call-19"></a>
+<h4 id="function-call-20">Function call<a class="anchor" aria-label="anchor" href="#function-call-20"></a>
 </h4>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># exdat_pwm_1 = Pollution grid data</span></span>
 <span><span class="va">exdat_pwm_1</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exdat_pwm_1.tif"</span>, package <span class="op">=</span> <span class="st">"healthiar"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -3263,7 +3432,7 @@ argument <code>exp_mean</code>, <code>exp_lower</code> and/or
 <span>  geo_id_macro <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">exdat_pwm_2</span><span class="op">$</span><span class="va">region</span><span class="op">)</span><span class="op">)</span> <span class="co"># higher-level IDs to aggregate</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="main-results-12">Main results<a class="anchor" aria-label="anchor" href="#main-results-12"></a>
+<h4 id="main-results-13">Main results<a class="anchor" aria-label="anchor" href="#main-results-13"></a>
 </h4>
 <p>Within the function output, the list <code>main</code> contains the
 population-weighted mean exposures for the (higher-level) geographic
@@ -3275,7 +3444,7 @@ in each unit in column <code>population_total</code>.</p>
 <h2 id="cutoff-vs-threshold">Cut-off vs. threshold<a class="anchor" aria-label="anchor" href="#cutoff-vs-threshold"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-18">Goal<a class="anchor" aria-label="anchor" href="#goal-18"></a>
+<h4 id="goal-19">Goal<a class="anchor" aria-label="anchor" href="#goal-19"></a>
 </h4>
 <p>E.g., to quantify health impacts with an exposure-response function
 whose effect threshold differs from the counterfactual exposure of the
@@ -3351,12 +3520,12 @@ results are the same as if only <code>threshold</code> had been
 entered.</p>
 </div>
 <div class="section level4">
-<h4 id="function-call-20">Function call<a class="anchor" aria-label="anchor" href="#function-call-20"></a>
+<h4 id="function-call-21">Function call<a class="anchor" aria-label="anchor" href="#function-call-21"></a>
 </h4>
 <p>The example below refers to case 2 above: health impacts in the
 exposure group 55 dB+ (cut-off) that are affected by an exposure above
 the effect threshold of 45 dB.</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_cutoff_above_threshold</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>  approach_risk <span class="op">=</span> <span class="st">"relative_risk"</span>,</span>
 <span>  erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span>
@@ -3377,7 +3546,7 @@ of the curve above the cut-off is not covered by the
 <code>erf_eq_...</code> require a function as input. Instead of using a
 <code><a href="https://rdrr.io/r/stats/splinefun.html" class="external-link">splinefun()</a></code> this can also be fulfilled by using a
 ‘function(c)’ which is of type ‘function’.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#setting up function parameters</span></span>
 <span><span class="va">threshold</span> <span class="op">&lt;-</span> <span class="fl">45</span></span>
 <span><span class="va">RR</span> <span class="op">&lt;-</span> <span class="fl">1.055</span></span>
@@ -3399,14 +3568,14 @@ of the curve above the cut-off is not covered by the
 <span>  bhd_central<span class="op">=</span><span class="fl">50000</span><span class="op">)</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_rounded</span></span></code></pre></div>
 <p>The categorical ERF curve created looks as follows. The step at the
 cut-off is clearly visible.</p>
-<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-99-1.png" class="r-plt" alt="ERF curve" width="700"></p>
+<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-103-1.png" class="r-plt" alt="ERF curve" width="700"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="shifted-vs-unshifted-erf">Shifted vs. unshifted exposure-response functions<a class="anchor" aria-label="anchor" href="#shifted-vs-unshifted-erf"></a>
 </h2>
 <div class="section level4">
-<h4 id="goal-19">Goal<a class="anchor" aria-label="anchor" href="#goal-19"></a>
+<h4 id="goal-20">Goal<a class="anchor" aria-label="anchor" href="#goal-20"></a>
 </h4>
 <p>E.g., to use an exposure-response function published in the
 literature which is parameterized on raw exposure levels instead of on
@@ -3440,9 +3609,9 @@ many exposure-response functions published in the literature already
 incorporate the cut-off in the function definition.</p>
 </div>
 <div class="section level4">
-<h4 id="function-call-21">Function call<a class="anchor" aria-label="anchor" href="#function-call-21"></a>
+<h4 id="function-call-22">Function call<a class="anchor" aria-label="anchor" href="#function-call-22"></a>
 </h4>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Case A: Shifted exposure-response function</span></span>
 <span><span class="co"># The function is parameterized on the exposure above the cut-off</span></span>
 <span><span class="va">shifted_erf</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -3477,7 +3646,7 @@ vs. threshold</a>).</p>
 <h3 id="monetization">Monetization<a class="anchor" aria-label="anchor" href="#monetization"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-20">Goal<a class="anchor" aria-label="anchor" href="#goal-20"></a>
+<h4 id="goal-21">Goal<a class="anchor" aria-label="anchor" href="#goal-21"></a>
 </h4>
 <p>E.g., to monetize the attributable health impact of a policy that
 will have health benefits five years from now.</p>
@@ -3571,9 +3740,9 @@ that long-term environmental impacts are not undervalued.</p>
 </div>
 </div>
 <div class="section level4">
-<h4 id="function-call-22">Function call<a class="anchor" aria-label="anchor" href="#function-call-22"></a>
+<h4 id="function-call-23">Function call<a class="anchor" aria-label="anchor" href="#function-call-23"></a>
 </h4>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">monetized_pm_copd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/monetize.html">monetize</a></span><span class="op">(</span></span>
 <span>    output_attribute <span class="op">=</span> <span class="va">results_pm_copd</span>,</span>
 <span>    discount_shape <span class="op">=</span> <span class="st">"exponential"</span>,</span>
@@ -3583,7 +3752,7 @@ that long-term environmental impacts are not undervalued.</p>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="main-results-13">Main results<a class="anchor" aria-label="anchor" href="#main-results-13"></a>
+<h4 id="main-results-14">Main results<a class="anchor" aria-label="anchor" href="#main-results-14"></a>
 </h4>
 <p>The outcome of the monetization is added to the variable entered to
 the <code>output_attribute</code> argument, which is
@@ -3621,7 +3790,7 @@ provided to the initial <code><a href="../reference/attribute_health.html">attri
 million EURO.</p>
 <p>Alternatively, you can also monetize (attributable) health impacts
 from a non-<code>healthiar</code> source.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/monetize.html">monetize</a></span><span class="op">(</span></span>
 <span>  impact <span class="op">=</span> <span class="fl">1151</span>,</span>
 <span>  valuation <span class="op">=</span> <span class="fl">100</span></span>
@@ -3669,7 +3838,7 @@ following formulas.</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>o</mi><mi>i</mi><mo>=</mo><mfrac><mrow><mi>b</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>t</mi><mo>−</mo><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow><mrow><mi>c</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow></mfrac><mo>×</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">roi = \frac{benefit - cost}{cost} \times 100</annotation></semantics></math></p>
 </div>
 <div class="section level4">
-<h4 id="function-call-23">Function call<a class="anchor" aria-label="anchor" href="#function-call-23"></a>
+<h4 id="function-call-24">Function call<a class="anchor" aria-label="anchor" href="#function-call-24"></a>
 </h4>
 <p>Let’s imagine we design a policy that would reduce air pollution to 5
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mi>g</mi><mi>/</mi><msup><mi>m</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">\mu g/m^3</annotation></semantics></math>,
@@ -3680,7 +3849,7 @@ could avoid all COPD cases attributed to air pollution.</p>
 million EURO), what would be the monetary net benefit of such a policy?
 We can find out using the functions <code>healthiar</code> and
 <code><a href="../reference/cba.html">cba()</a></code></p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cba</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cba.html">cba</a></span><span class="op">(</span></span>
 <span>    output_attribute <span class="op">=</span> <span class="va">results_pm_copd</span>,</span>
 <span>    valuation <span class="op">=</span> <span class="fl">50000</span>,</span>
@@ -3693,7 +3862,7 @@ We can find out using the functions <code>healthiar</code> and
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="main-results-14">Main results<a class="anchor" aria-label="anchor" href="#main-results-14"></a>
+<h4 id="main-results-15">Main results<a class="anchor" aria-label="anchor" href="#main-results-15"></a>
 </h4>
 <p>The outcome of the CBA is contained in two folders, which are added
 to the existing assessment:</p>
@@ -3711,7 +3880,7 @@ the period specified in the <code>n_years_cost</code> argument</p></li>
 </ul>
 </li>
 </ul>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cba</span><span class="op">$</span><span class="va">cba_main</span> <span class="op">|&gt;</span>  </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">benefit</span>, <span class="va">cost</span>, <span class="va">net_benefit</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -3753,7 +3922,7 @@ a net cost!</p>
 <h3 id="health-impact-attributable-to-social-indicator">Health impact attributable to social indicator<a class="anchor" aria-label="anchor" href="#health-impact-attributable-to-social-indicator"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-21">Goal<a class="anchor" aria-label="anchor" href="#goal-21"></a>
+<h4 id="goal-22">Goal<a class="anchor" aria-label="anchor" href="#goal-22"></a>
 </h4>
 <p>E.g., to estimate the health impact that is theoretically
 attributable to the difference in degree of deprivation of the
@@ -3820,10 +3989,10 @@ inequalities.</p>
 </div>
 </div>
 <div class="section level4">
-<h4 id="function-call-24">Function call<a class="anchor" aria-label="anchor" href="#function-call-24"></a>
+<h4 id="function-call-25">Function call<a class="anchor" aria-label="anchor" href="#function-call-25"></a>
 </h4>
 <p>First, quantify health impacts.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="va">health_impact</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>   age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>,</span>
 <span>   exp_central <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">pm25_mean</span>,</span>
@@ -3837,7 +4006,7 @@ inequalities.</p>
 <p>Second, use the function <code><a href="../reference/socialize.html">socialize()</a></code> entering the whole
 output of <code><a href="../reference/attribute_health.html">attribute_health()</a></code> in the argument
 <code>output_attribute</code>.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">social_t</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/socialize.html">socialize</a></span><span class="op">(</span></span>
 <span>  output_attribute <span class="op">=</span> <span class="va">health_impact</span>,</span>
 <span>  age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>, <span class="co"># They have to be the same in socialize() and in attribute_health()</span></span>
@@ -3848,7 +4017,7 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Alternatively, you can directly enter the health impact in the
 <code><a href="../reference/socialize.html">socialize()</a></code> argument <code>impact</code>.</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">social</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/socialize.html">socialize</a></span><span class="op">(</span></span>
 <span>  impact <span class="op">=</span> <span class="va">health_impact</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_by_age_group</span><span class="op">$</span><span class="va">impact</span>,</span>
 <span>  age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>, <span class="co"># They have to be the same in socialize() and in attribute_health()</span></span>
@@ -3860,7 +4029,7 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="main-results-15">Main results<a class="anchor" aria-label="anchor" href="#main-results-15"></a>
+<h4 id="main-results-16">Main results<a class="anchor" aria-label="anchor" href="#main-results-16"></a>
 </h4>
 <pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
 <span><span class="co">#&gt;   parameter      difference_type difference_compared_…¹ difference_value comment</span></span>
@@ -3876,7 +4045,7 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <h3 id="multiple-deprivation-index">Multiple deprivation index<a class="anchor" aria-label="anchor" href="#multiple-deprivation-index"></a>
 </h3>
 <div class="section level4">
-<h4 id="goal-22">Goal<a class="anchor" aria-label="anchor" href="#goal-22"></a>
+<h4 id="goal-23">Goal<a class="anchor" aria-label="anchor" href="#goal-23"></a>
 </h4>
 <p>E.g., to estimate the multiple deprivation index (MDI) to use it for
 the argument <code>social_indicator</code> in the function
@@ -3920,9 +4089,9 @@ with others.</p>
 R^2 lower than 0.7, consider alternative data sources or methods.</p>
 </div>
 <div class="section level4">
-<h4 id="function-call-25">Function call<a class="anchor" aria-label="anchor" href="#function-call-25"></a>
+<h4 id="function-call-26">Function call<a class="anchor" aria-label="anchor" href="#function-call-26"></a>
 </h4>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mdi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_mdi.html">prepare_mdi</a></span><span class="op">(</span></span>
 <span>  geo_id_micro <span class="op">=</span> <span class="va">exdat_prepare_mdi</span><span class="op">$</span><span class="va">id</span>,</span>
 <span>  edu <span class="op">=</span> <span class="va">exdat_prepare_mdi</span><span class="op">$</span><span class="va">edu</span>,</span>
@@ -3938,14 +4107,14 @@ the console (default: <code>verbose = TRUE</code>, i.e. with printing
 turned on).</p>
 </div>
 <div class="section level4">
-<h4 id="main-results-16">Main results<a class="anchor" aria-label="anchor" href="#main-results-16"></a>
+<h4 id="main-results-17">Main results<a class="anchor" aria-label="anchor" href="#main-results-17"></a>
 </h4>
 <p>Function output includes:</p>
 <ul>
 <li>
 <code>mdi_main</code>, a tibble containing the BEST-COST MDI</li>
 </ul>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_main</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">select</span><span class="op">(</span><span class="va">geo_id_micro</span>, <span class="va">MDI</span>, <span class="va">MDI_index</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -4031,13 +4200,13 @@ distribution curve</p></li>
 </li>
 </ul>
 <p>To reproduce the boxlots run</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">boxplot</span><span class="op">)</span></span></code></pre></div>
-<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-114-1.png" class="r-plt" alt="Boxplot of Normalized Indicators and MDI" width="700">
+<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-118-1.png" class="r-plt" alt="Boxplot of Normalized Indicators and MDI" width="700">
 Analogeously, to reproduce the histogram run</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">histogram</span><span class="op">)</span></span></code></pre></div>
-<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-115-1.png" class="r-plt" alt="Histogram of MDI with normal curve" width="700"></p>
+<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-119-1.png" class="r-plt" alt="Histogram of MDI with normal curve" width="700"></p>
 <hr>
 </div>
 </div>
@@ -4050,7 +4219,7 @@ Analogeously, to reproduce the histogram run</p>
 </h3>
 <p><code>healthiar</code> can be used inside the <em>native</em> pipes
 <code>|&gt;</code>. See the example below.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">|&gt;</span></span>
 <span>  <span class="op">(</span>\<span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -4061,7 +4230,7 @@ Analogeously, to reproduce the histogram run</p>
 <span>      <span class="op">)</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_rounded</span></span>
 <span>    <span class="op">}</span><span class="op">)</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Shorter making used of the base R function <code><a href="https://rdrr.io/r/base/with.html" class="external-link">with()</a></code>.</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">|&gt;</span></span>
 <span>      <span class="op">(</span>\<span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -4078,7 +4247,7 @@ Analogeously, to reproduce the histogram run</p>
 </h3>
 <p><code>healthiar</code> can also be used inside <em>magrittr</em>
 pipes <code>%&gt;%</code> as follows.</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="op">{</span></span>
 <span>    <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>

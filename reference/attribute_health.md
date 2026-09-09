@@ -79,6 +79,7 @@ attribute_health(
   duration_lower = NULL,
   duration_upper = NULL,
   info = NULL,
+  main_results_by = NULL,
   population = NULL
 )
 ```
@@ -211,6 +212,24 @@ attribute_health(
   `String`, `data frame` or `tibble` providing **information about the
   assessment**. See Details for more info. *Optional argument.*
 
+- main_results_by:
+
+  `Character vector` naming the **dimensions that the main results are
+  reported by**, i.e. the dimensions whose impacts must never be added
+  together, e.g. different exposure-outcome pairs. By default all
+  dimensions except the geographic units and the uncertainty (`_ci`)
+  columns are summed in the main results. Names entered here are kept as
+  separate rows instead. Options: the columns of `info` (named as you
+  named them, or `"info"` if you entered a vector instead of a data
+  frame), `"sex"`, `"age_group"`, `"exp_category"`, `"geo_id_micro"`,
+  `"geo_id_macro"` and, in
+  [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
+  `"year"`. Note that this argument does not create the `results_by_...`
+  tables of the detailed output, which are available anyway: it
+  determines which dimensions survive in `health_main` and in all of
+  them. See the vignette chapter *Multiple exposure-outcome pairs*.
+  *Optional argument.*
+
 - population:
 
   `Numeric vector` **`For attribute_lifetable()`**, it is an *obligatory
@@ -306,9 +325,21 @@ refers to the first age of the age group. E.g. `c(0, 40, 80)` means age
 groups `[0, 40), [40, 80), >=80]`.
 
 `info` *Optional argument.* Information entered to this argument will be
-added as column(s) names `info_1`, `info_2`, `info_...` to the results
-table. These additional columns can be used to further stratify the
-analysis in a secondary step (see example below).
+added as column(s) named `info_column_1`, `info_column_2`,
+`info_column_...` to the results table if a `data frame` is entered, or
+as one single column called `info` if a vector is entered. These
+additional columns can be used to further stratify the analysis in a
+secondary step (see example below).
+
+`main_results_by` *Optional argument.* By default the impacts of all
+subgroups are added up in the main results. That is meaningful for
+subgroups such as education level, but not for subgroups that quantify
+overlapping people in different ways, e.g. different exposure-outcome
+pairs (e.g. PM2.5 and mortality vs. NO2 and asthma) or the same pair
+with different relative risks for sensitivity analysis. Adding those up
+would count the same people twice. Enter their names here to keep them
+as separate rows. See the vignette chapter *Multiple exposure-outcome
+pairs*.
 
 `population` *Optional argument.* The population entered here is used to
 determine impact rate per 100 000 population. Note the requirement for

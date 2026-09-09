@@ -40,7 +40,8 @@ attribute_lifetable(
   prop_pop_exp = 1,
   geo_id_micro = "a",
   geo_id_macro = NULL,
-  info = NULL
+  info = NULL,
+  main_results_by = NULL
 )
 ```
 
@@ -193,6 +194,23 @@ attribute_lifetable(
   `String`, `data frame` or `tibble` providing **information about the
   assessment**. See Details for more info. *Optional argument.*
 
+- main_results_by:
+
+  `Character vector` naming the **dimensions that the main results are
+  reported by**, i.e. the dimensions whose impacts must never be added
+  together, e.g. different exposure-outcome pairs. By default all
+  dimensions except the geographic units and the uncertainty (`_ci`)
+  columns are summed in the main results. Names entered here are kept as
+  separate rows instead. Options: the columns of `info` (named as you
+  named them, or `"info"` if you entered a vector instead of a data
+  frame), `"sex"`, `"age_group"`, `"exp_category"`, `"geo_id_micro"`,
+  `"geo_id_macro"` and, in `attribute_lifetable()`, `"year"`. Note that
+  this argument does not create the `results_by_...` tables of the
+  detailed output, which are available anyway: it determines which
+  dimensions survive in `health_main` and in all of them. See the
+  vignette chapter *Multiple exposure-outcome pairs*. *Optional
+  argument.*
+
 ## Value
 
 This function returns a `list` containing:
@@ -229,6 +247,14 @@ results.
 use the function
 [`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
 (see its function documentation for more info).
+
+`main_results_by` *Optional argument.* By default the impacts of all
+subgroups, and of all the years of the time horizon, are added up in the
+main results. That is not meaningful for subgroups that quantify
+overlapping people in different ways, e.g. different exposure-outcome
+pairs. Enter their names here to keep them as separate rows. Entering
+`"year"` shows the impacts per year of the time horizon. See the
+vignette chapter *Multiple exposure-outcome pairs*.
 
 **Last age group** The life table is closed at the last age group, i.e.
 its survivors are not projected into a further age. Therefore, the last

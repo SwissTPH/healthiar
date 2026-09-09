@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1656</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1660</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,6 +71,7 @@
 <span>  sex <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  population <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  info <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  main_results_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dw_central <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dw_lower <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dw_upper <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -157,6 +158,10 @@
 
 <dt id="arg-info">info<a class="anchor" aria-label="anchor" href="#arg-info"></a></dt>
 <dd><p><code>String</code>, <code>data frame</code> or <code>tibble</code> providing <strong>information about the assessment</strong>. See Details for more info. <em>Optional argument.</em></p></dd>
+
+
+<dt id="arg-main-results-by">main_results_by<a class="anchor" aria-label="anchor" href="#arg-main-results-by"></a></dt>
+<dd><p><code>Character vector</code> naming the <strong>dimensions that the main results are reported by</strong>, i.e. the dimensions whose impacts must never be added together, e.g. different exposure-outcome pairs. By default all dimensions except the geographic units and the uncertainty (<code>_ci</code>) columns are summed in the main results. Names entered here are kept as separate rows instead. Options: the columns of <code>info</code> (named as you named them, or <code>"info"</code> if you entered a vector instead of a data frame), <code>"sex"</code>, <code>"age_group"</code>, <code>"exp_category"</code>, <code>"geo_id_micro"</code>, <code>"geo_id_macro"</code> and, in <code><a href="attribute_lifetable.html">attribute_lifetable()</a></code>, <code>"year"</code>. Note that this argument does not create the <code>results_by_...</code> tables of the detailed output, which are available anyway: it determines which dimensions survive in <code>health_main</code> and in all of them. See the vignette chapter <em>Multiple exposure-outcome pairs</em>. <em>Optional argument.</em></p></dd>
 
 
 <dt id="arg-dw-central-dw-lower-dw-upper">dw_central, dw_lower, dw_upper<a class="anchor" aria-label="anchor" href="#arg-dw-central-dw-lower-dw-upper"></a></dt>

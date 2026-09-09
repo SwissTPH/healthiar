@@ -842,6 +842,28 @@ used to create the ERF
 
 ## Sub-group analysis
 
+Every sub-group stratifies the assessment: by age group, by sex, or by
+anything entered in `info`, such as education level. What differs is
+what happens to that stratification in the main results.
+
+For the sub-groups in this chapter the impacts are **summed**, so the
+stratification disappears from `health_main` and only the total per
+geographic unit is shown. It is still available in the `results_by_...`
+tables of the detailed output, and that is usually what you want: the
+total across education levels, or across age groups, is a meaningful
+number.
+
+Not every dimension of an assessment is a sub-group in this sense,
+though. A stratification splits one population into parts that add up to
+the whole, which is exactly why summing them is meaningful. Different
+exposure-outcome pairs do not: PM2.5 and mortality and NO2 and asthma
+cover the *same* whole population, so they are parallel analyses rather
+than parts of one. Adding them up counts the same people twice.
+
+Those dimensions therefore have to be **kept** in the main results,
+which is what the argument `main_results_by` does. See the chapter
+*Multiple exposure-outcome pairs*.
+
 ### by age group
 
 #### Goal
@@ -1016,6 +1038,162 @@ output_stratified <- output_attribute$health_detailed$results_raw |>
       print()
 #> [1] 52.80090 49.83826
 ```
+
+## Multiple exposure-outcome pairs
+
+#### Goal
+
+E.g., to quantify in *one single call* the impacts of *several
+exposure-outcome pairs*, such as PM2.5 and COPD together with NO2 and
+asthma, or to compare the *same pair quantified with the relative risks
+of two different studies*.
+
+#### Parallel analyses, not sub-groups
+
+As explained in the chapter *Sub-group analysis*, the impacts of the
+sub-groups are summed by default, so only the total per geographic unit
+is shown in `health_main`.
+
+That is not what you want here. Premature deaths attributable to PM2.5
+and asthma cases attributable to NO2 are not two parts of one
+population: they are two analyses of the *same* population, so adding
+them up counts the same people twice. The same applies to a sensitivity
+analysis in which one pair is quantified with the relative risks of two
+different studies: the two results are alternatives to each other, not
+summands.
+
+Enter therefore in `main_results_by` the names of the dimensions that
+the main results have to be reported by. They stay as separate rows in
+`health_main` and in all `results_by_...` tables. Note that
+`main_results_by` does not create those tables, which are available in
+the detailed output in any case: it determines which dimensions survive
+in them and in the main results.
+
+#### Function call
+
+The pairs are identified in a column of `info`, and that column is named
+in `main_results_by`. All other arguments are entered as parallel
+vectors, exactly as for multiple geographic units. Note that the pairs
+can have different exposure-response functions, here log-linear for
+PM2.5 and linear for NO2.
+
+``` r
+
+output_attribute <- healthiar::attribute_health(
+    info = data.frame(
+      pair = rep(c("pm2.5_copd", "no2_asthma"), each = 2)),
+    main_results_by = "pair",
+    exp_central    = c(8.85, 9.20, 22.1, 24.5),
+    cutoff_central = c(5, 5, 10, 10),
+    rr_central     = c(1.369, 1.369, 1.041, 1.041),
+    rr_increment   = 10,
+    erf_shape      = c("log_linear", "log_linear", "linear", "linear"),
+    bhd_central    = c(30747, 31500, 12000, 12500),
+    geo_id_micro   = rep(c("a", "b"), times = 2)
+  )
+```
+
+#### Main results
+
+One row per exposure-outcome pair and geographic unit. Without
+`main_results_by` the four impacts would have been added up into one
+single number per geographic unit.
+
+``` r
+
+output_attribute$health_main |>
+  dplyr::select(info_column_1, geo_id_micro, erf_ci, impact_rounded) |>
+  print()
+#> # A tibble: 4 × 4
+#>   info_column_1 geo_id_micro erf_ci  impact_rounded
+#>   <chr>         <chr>        <chr>            <dbl>
+#> 1 pm2.5_copd    a            central           3502
+#> 2 pm2.5_copd    b            central           3893
+#> 3 no2_asthma    a            central            567
+#> 4 no2_asthma    b            central            701
+```
+
+#### Sensitivity analysis with several exposure-response functions
+
+The same mechanism compares one exposure-outcome pair quantified with
+the relative risks of two different studies.
+
+``` r
+
+output_sensitivity <- healthiar::attribute_health(
+    info = data.frame(rr_source = c("Liu 2020", "WHO 2021")),
+    main_results_by = "rr_source",
+    exp_central = c(8.85, 8.85),
+    cutoff_central = 5,
+    rr_central = c(1.369, 1.080),
+    rr_increment = 10,
+    erf_shape = "log_linear",
+    bhd_central = c(30747, 30747)
+  )
+
+output_sensitivity$health_main |>
+  dplyr::select(info_column_1, erf_ci, impact_rounded) |>
+  print()
+#> # A tibble: 2 × 3
+#>   info_column_1 erf_ci  impact_rounded
+#>   <chr>         <chr>            <dbl>
+#> 1 Liu 2020      central           3502
+#> 2 WHO 2021      central            898
+```
+
+#### Which dimensions can be entered
+
+`main_results_by` is available in both
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+and
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md).
+It accepts:
+
+- the **columns of `info`**, using the names that you gave them
+  (e.g. `"pair"`), or `"info"` itself if you entered a vector instead of
+  a data frame;
+- the arguments **`sex`**, **`age_group`**, **`exp_category`**,
+  **`geo_id_micro`** and **`geo_id_macro`**;
+- in
+  [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+  also **`year`**, i.e. the years of the time horizon, which are
+  otherwise added up.
+
+For example, `main_results_by = "sex"` shows one row per sex in
+`health_main` instead of the total across sexes. This changes nothing in
+the calculation, only which rows are kept apart in the results, and the
+rows still add up to the total that you would get without the argument.
+
+A name that is not available in the assessment produces an error listing
+the options, so a typo in a column name of `info` cannot pass unnoticed.
+
+#### Limitations
+
+All pairs in one call must use the same way of defining the
+exposure-response function, i.e. either `rr_...` or `erf_eq_...` for all
+of them, and the same `approach_risk`.
+
+[`standardize()`](https://swisstph.github.io/healthiar/reference/standardize.md)
+keeps the pairs apart as well, so each pair gets its own
+age-standardized impacts. Nothing has to be done for that: its results
+simply carry the columns of `main_results_by`.
+
+[`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md)
+and
+[`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
+analyse one pair at a time and stop with an error otherwise, so for them
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+has to be called once per pair. The reason is different in each case.
+[`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md)
+groups the impacts only by geographic unit, age group and social
+quantile, and its arguments have no way of identifying the pairs when
+the input is entered directly instead of as an
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+output.
+[`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
+simulates one value per variable and geographic unit, assuming that
+e.g. the relative risk is the same everywhere, which is not the case
+when each pair has its own.
 
 ## YLL & deaths with life table
 
@@ -2269,7 +2447,7 @@ The categorical ERF curve created looks as follows. The step at the
 cut-off is clearly visible.
 
 ![ERF
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-99-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-103-1.png)
 
 ## Shifted vs. unshifted exposure-response functions
 
@@ -2857,7 +3035,7 @@ eval(mdi$mdi_detailed$boxplot)
 ```
 
 ![Boxplot of Normalized Indicators and
-MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-114-1.png)
+MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-118-1.png)
 Analogeously, to reproduce the histogram run
 
 ``` r
@@ -2866,7 +3044,7 @@ eval(mdi$mdi_detailed$histogram)
 ```
 
 ![Histogram of MDI with normal
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-115-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-119-1.png)
 
 ------------------------------------------------------------------------
 
