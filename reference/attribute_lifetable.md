@@ -182,7 +182,7 @@ attribute_lifetable(
   proportion of the **total** population that falls in each exposure
   category. Default: 1. The fractions do not have to add up to 1: the
   part of the population that they do not cover is treated as unexposed,
-  i.e. it gets the relative risk of the reference level. In air
+  i.e. it gets the relative risk of the reference level. E.g, in air
   pollution assessments everybody is usually exposed and the fractions
   add up to 1, whereas in noise assessments they typically add up to
   less than 1, because exposure is only reported above a given level.
