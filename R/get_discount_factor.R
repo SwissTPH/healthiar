@@ -6,6 +6,13 @@
 
 # ARGUMENTS ####################################################################
 #' @inheritParams monetize
+#' @param n_years
+#' \code{Numeric value} or \code{numeric vector} specifying the number of years
+#' elapsed for which the discount factor is to be calculated. One factor is
+#' returned per entered value. The year 0, i.e. the present, gets a factor of 1
+#' (no discounting). Note that this differs from the argument of the same name
+#' in \code{monetize()}, which is the time horizon: \code{monetize()} calls this
+#' function with each single year from 0 to that horizon.
 #'
 # DETAILS ######################################################################
 #' @details
@@ -28,13 +35,21 @@
 #'
 #'
 # VALUE ########################################################################
-#' @returns This function returns the \code{numeric} discount factor.
+#' @returns This function returns the \code{numeric} discount factor(s),
+#' one per value entered in \code{n_years}.
 #'
 # EXAMPLES #####################################################################
 #' @examples
+#' # Goal: discount factor after a given number of years
 #' get_discount_factor(
 #'   discount_rate = 0.07,
 #'   n_years = 5
+#'  )
+#'
+#' # Goal: discount factor for each year of a time horizon
+#' get_discount_factor(
+#'   discount_rate = 0.07,
+#'   n_years = 0:5
 #'  )
 #'
 #'
@@ -73,20 +88,31 @@ get_discount_factor <-
       # If only discount_rate provided ####
     } else if(!base::is.null(discount_rate)) {
 
+        # case_when() and not nested ifelse(): ifelse() returns a result of the
+        # length of its condition, so one single discount_shape truncated the
+        # whole vector of years to its first element without any warning.
+        # The shape can be one single value (direct call) or one per year
+        # (column added in monetize()), so it is recycled first: case_when()
+        # expects the conditions to have the same length as the results.
+        # Same approach as for erf_shape in get_risk()
+        discount_shape <- base::rep_len(discount_shape, base::length(n_years))
+
         discount_factor <-
-          base::ifelse(
+          dplyr::case_when(
             # Exponential ####
-            discount_shape == "exponential",
-            1/((1 + discount_rate) ^ n_years),
+            discount_shape == "exponential" ~
+              1/((1 + discount_rate) ^ n_years),
 
             # Hyperbolic Harvey ####
-            base::ifelse(discount_shape == "hyperbolic_harvey_1986",
-                         1/((1 + n_years) ^ discount_rate),
+            discount_shape == "hyperbolic_harvey_1986" ~
+              1/((1 + n_years) ^ discount_rate),
 
-                         # Hyperbolic Mazur ####
-                         base::ifelse(discount_shape == "hyperbolic_mazur_1987",
-                                      1/(1 + discount_rate * n_years),
-                                      NA)))
+            # Hyperbolic Mazur ####
+            discount_shape == "hyperbolic_mazur_1987" ~
+              1/(1 + discount_rate * n_years),
+
+            # An unknown shape yields NA instead of a silently wrong number
+            .default = NA_real_)
     }
 
     return(discount_factor)
