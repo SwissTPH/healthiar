@@ -55,7 +55,7 @@ get_risk_and_pop_fraction <-
       base::any(base::unique(input_table$approach_multiexposure) %in% "combined")
 
     # add_info() names the column just "info" if the user entered a vector,
-    # while a data frame gives info_column_1, info_column_2... The bare "info"
+    # while a data frame gives info_<name entered by the user>. The bare "info"
     # is included here so that a vector-valued info identifies the subgroups in
     # the population attributable fraction below, as it already does in
     # compile_input().

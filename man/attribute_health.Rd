@@ -74,7 +74,7 @@ attribute_health(
 
 \item{duration_central, duration_lower, duration_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{duration} associated with the morbidity health outcome of interest in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval. Default: 1. See Details for more info. \emph{Only applicable in assessments of YLD (years lived with disability).}}
 
-\item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
+\item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. This will be added to the results table as column(s) keeping the name(s) that you entered with the prefix \code{info_} (e.g. a column \code{education} becomes \code{info_education}) if a \code{data frame} is entered, or as one single column called \code{info} if a vector is entered. These additional columns can be used to further stratify the analysis in a secondary step. \emph{Optional argument.}}
 
 \item{main_results_by}{\code{Character vector} naming the \strong{dimensions that the main results are reported by}, i.e. the dimensions whose impacts must never be added together, e.g. different exposure-outcome pairs. By default all dimensions except the geographic units and the uncertainty (\code{_ci}) columns are summed in the main results. Names entered here are kept as separate rows instead. Options: the columns of \code{info} (named as you named them, or \code{"info"} if you entered a vector instead of a data frame), \code{"sex"}, \code{"age_group"}, \code{"exp_category"}, \code{"geo_id_micro"}, \code{"geo_id_macro"} and, in \code{attribute_lifetable()}, \code{"year"}. Note that this argument does not create the \code{results_by_...} tables of the detailed output, which are available anyway: it determines which dimensions survive in \code{health_main} and in all of them. See the vignette chapter \emph{Multiple exposure-outcome pairs}. \emph{Optional argument.}}
 
@@ -170,9 +170,6 @@ Consequently, the vectors fed to \code{geo_id_micro} and \code{geo_id_macro} mus
 
 \code{age_group}
 Can be either \code{numeric} or \code{character}. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}.
-
-\code{info}
-\emph{Optional argument.} Information entered to this argument will be added as column(s) named \code{info_column_1}, \code{info_column_2}, \code{info_column_...} to the results table if a \code{data frame} is entered, or as one single column called \code{info} if a vector is entered. These additional columns can be used to further stratify the analysis in a secondary step (see example below).
 
 \code{main_results_by}
 \emph{Optional argument.} By default the impacts of all subgroups are added up in the main results. That is meaningful for subgroups such as education level, but not for subgroups that quantify overlapping people in different ways, e.g. different exposure-outcome pairs (e.g. PM2.5 and mortality vs. NO2 and asthma) or the same pair with different relative risks for sensitivity analysis. Adding those up would count the same people twice. Enter their names here to keep them as separate rows. See the vignette chapter \emph{Multiple exposure-outcome pairs}.

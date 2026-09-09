@@ -52,7 +52,7 @@
 
 # META (OPTIONAL)
 #' @param info
-#' \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}
+#' \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. This will be added to the results table as column(s) keeping the name(s) that you entered with the prefix \code{info_} (e.g. a column \code{education} becomes \code{info_education}) if a \code{data frame} is entered, or as one single column called \code{info} if a vector is entered. These additional columns can be used to further stratify the analysis in a secondary step. \emph{Optional argument.}
 
 #' @param main_results_by
 #' \code{Character vector} naming the \strong{dimensions that the main results are reported by}, i.e. the dimensions whose impacts must never be added together, e.g. different exposure-outcome pairs. By default all dimensions except the geographic units and the uncertainty (\code{_ci}) columns are summed in the main results. Names entered here are kept as separate rows instead. Options: the columns of \code{info} (named as you named them, or \code{"info"} if you entered a vector instead of a data frame), \code{"sex"}, \code{"age_group"}, \code{"exp_category"}, \code{"geo_id_micro"}, \code{"geo_id_macro"} and, in \code{attribute_lifetable()}, \code{"year"}. Note that this argument does not create the \code{results_by_...} tables of the detailed output, which are available anyway: it determines which dimensions survive in \code{health_main} and in all of them. See the vignette chapter \emph{Multiple exposure-outcome pairs}. \emph{Optional argument.}
