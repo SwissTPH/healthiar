@@ -658,6 +658,11 @@ monetize <- function(output_attribute = NULL,
       dplyr::select(
         # The columns containing "_ci" are the uncertainties that define the rows
         dplyr::contains("_ci"),
+        # The columns containing "info" can identify subgroups or
+        # exposure-outcome pairs, so they also define the rows.
+        # contains("info") and not any_of("info") because add_info() calls them
+        # info_column_1, info_column_2... if the user entered a data frame
+        dplyr::contains("info"),
         # Use any_of() instead of all_of() because depending on the calculation pathway
         # there might not be any of the relevant_columns
         dplyr::any_of(relevant_columns))
