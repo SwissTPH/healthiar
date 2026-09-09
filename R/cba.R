@@ -185,11 +185,13 @@ cba <-
     # This intermediate step is needed to ensure that no errors are produced
     # if no columns with ci or geo are available
     # (i.e, without using the function attribute in a previous step)
-    columns_ci_geo <-
-      base::names(cba_main)[base::grepl("_ci|geo_id", base::names(cba_main))]
+    # info is included because its columns can identify subgroups or
+    # exposure-outcome pairs, i.e. they define the rows just like _ci and geo_id
+    columns_ci_geo_info <-
+      base::names(cba_main)[base::grepl("_ci|geo_id|info", base::names(cba_main))]
 
     relevant_columns <-
-      c(columns_ci_geo,
+      c(columns_ci_geo_info,
         columns_monetization_with_suffix,
         "discount_shape")
 
