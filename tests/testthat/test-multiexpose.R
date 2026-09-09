@@ -307,6 +307,34 @@ testthat::test_that("results the same |fake_multiexposure|approach_multiexposure
 # ERROR OR WARNING ########
 ## ERROR #########
 
+testthat::test_that("error if exposure distribution and approach_multiexposure is not additive", {
+
+  # The exposure categories of two exposures are not paired: category 1 of
+  # pm2.5 has nothing to do with category 1 of no2. Before, the multiplicative
+  # approach silently multiplied the relative risks of every category of both
+  # exposures together
+  attribute_one_exposure <- function(exp_central, rr_central){
+    healthiar::attribute_health(
+      exp_central = exp_central,
+      prop_pop_exp = c(0.5, 0.5),
+      cutoff_central = 0,
+      rr_central = rr_central,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      bhd_central = 1000)
+  }
+
+  testthat::expect_error(
+    object =
+      healthiar::multiexpose(
+        output_attribute_exp_1 = attribute_one_exposure(c(10, 20), 1.10),
+        output_attribute_exp_2 = attribute_one_exposure(c(20, 40), 1.05),
+        exp_name_1 = "pm2.5",
+        exp_name_2 = "no2",
+        approach_multiexposure = "multiplicative"),
+    regexp = "cannot merge exposure distributions")
+})
+
 ## WARNING #########
 
 
