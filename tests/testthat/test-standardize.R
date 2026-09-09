@@ -201,3 +201,49 @@ testthat::test_that("results the same |pathway_standardize|single_geo|", {
 
 # ERROR OR WARNING ########
 ## ERROR #########
+
+
+## NOT SUMMED #################################################################
+
+testthat::test_that("results the same |pathway_standardize|main_results_by|two_subgroups_in_one_call|", {
+
+  # Two exposure-outcome pairs kept apart with main_results_by must give the same
+  # age-standardized impacts as two separate assessments, i.e. standardize()
+  # must be applied once per subgroup instead of pooling them
+  in_one_call <-
+    healthiar::attribute_health(
+      info = base::data.frame(pair = base::rep(c("copd", "asthma"), each = 2)),
+      main_results_by = "pair",
+      age_group = base::rep(c("below_40", "above_40"), times = 2),
+      exp_central = c(8.1, 10.9, 22.1, 24.5),
+      cutoff_central = 0,
+      bhd_central = c(1000, 4000, 800, 3000),
+      rr_central = c(1.063, 1.063, 1.041, 1.041),
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      population = c(1E5, 5E5, 1E5, 5E5)) |>
+    healthiar::standardize(
+      age_group = c("below_40", "above_40"),
+      ref_prop_pop = c(0.5, 0.5))
+
+  in_separate_calls <-
+    purrr::map_dbl(
+      .x = 1:2,
+      .f = ~ healthiar::attribute_health(
+        age_group = c("below_40", "above_40"),
+        exp_central = base::list(c(8.1, 10.9), c(22.1, 24.5))[[.x]],
+        cutoff_central = 0,
+        bhd_central = base::list(c(1000, 4000), c(800, 3000))[[.x]],
+        rr_central = c(1.063, 1.041)[.x],
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        population = c(1E5, 5E5)) |>
+        healthiar::standardize(
+          age_group = c("below_40", "above_40"),
+          ref_prop_pop = c(0.5, 0.5)) |>
+        purrr::pluck("health_main", "impact_per_100k_inhab"))
+
+  testthat::expect_equal(
+    object = in_one_call$health_main$impact_per_100k_inhab,
+    expected = in_separate_calls)
+})

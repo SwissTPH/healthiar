@@ -956,3 +956,30 @@ testthat::test_that("error_if_erf_eq_rr_function |pathway_uncertainty|exp_dist|e
 
 ## WARNING #########
 
+
+
+## NOT SUMMED #################################################################
+
+testthat::test_that("error if main_results_by and summarize_uncertainty", {
+
+  # The values are simulated per geographic unit assuming one single relative
+  # risk, so subgroups kept apart with main_results_by cannot be simulated together
+  output_attribute <-
+    healthiar::attribute_health(
+      info = base::data.frame(pair = c("copd", "asthma")),
+      main_results_by = "pair",
+      exp_central = c(8.85, 22.1),
+      exp_lower = c(8, 20),
+      exp_upper = c(10, 24),
+      cutoff_central = c(5, 10),
+      bhd_central = c(30747, 12000),
+      rr_central = c(1.118, 1.041),
+      rr_lower = c(1.060, 1.020),
+      rr_upper = c(1.179, 1.060),
+      rr_increment = 10,
+      erf_shape = "log_linear")
+
+  testthat::expect_error(
+    object = healthiar::summarize_uncertainty(output_attribute, n_sim = 20),
+    regexp = "only be applied to one subgroup")
+})

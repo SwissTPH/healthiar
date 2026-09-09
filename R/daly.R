@@ -133,7 +133,18 @@ daly <-
                                      column_names_results_raw)]
     # Remove exceptions (columns with any of the keywords that should not be selected)
     common_cols <- common_cols[!base::grepl("approach_exposure|rr_at_exp", common_cols)]
-    cols_for_join <- c(common_cols, "erf_ci")
+
+    # The info columns can identify subgroups or exposure-outcome pairs, so the
+    # years of life lost have to be joined to the years lived with disability
+    # within the same subgroup. Otherwise every pair would be joined to every
+    # other pair. intersect() because column_names_results_raw is the union of
+    # both outputs, while a join column must be present in both of them
+    info_cols_for_join <-
+      base::intersect(
+        base::grep("^info", base::names(results_raw_yll), value = TRUE),
+        base::grep("^info", base::names(results_raw_yld), value = TRUE))
+
+    cols_for_join <- c(common_cols, info_cols_for_join, "erf_ci")
 
 
     identical_cols <-

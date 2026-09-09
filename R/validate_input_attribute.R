@@ -181,6 +181,74 @@ validate_input_attribute <-
 
 
 
+    ### Names of the id columns coming from info #####
+
+    # info identifies subgroups (e.g. an exposure-outcome pair) just like
+    # sex or age_group do. add_info() turns a data frame into the columns
+    # info_column_1, info_column_2... and a vector into one column called
+    # "info", so the names by which the user can refer to them differ
+    info_id_names <-
+      if (base::is.data.frame(input_args_value$info)) {
+        base::names(input_args_value$info)
+      } else if (!base::is.null(input_args_value$info)) {
+        "info"
+      }
+
+
+    ### error_if_main_results_by_not_an_id #####
+
+    # main_results_by names the dimensions whose impacts must never be added
+    # together. Only the arguments that identify rows in the results and the
+    # columns of info can be used, so typos and non-id arguments are caught
+    # here instead of being silently ignored in get_output()
+    if (!base::is.null(input_args_value$main_results_by)) {
+
+      # exp_name is an id column in get_output() too, but it cannot be entered
+      # here because it is created by multiexpose(), which builds its own
+      # input_args without main_results_by.
+      # year only exists in the life table approach, where the impacts are
+      # otherwise summed across the years of the time horizon
+      options_of_main_results_by <-
+        c("geo_id_macro", "geo_id_micro",
+          "exp_category", "sex", "age_group",
+          if (is_lifetable) {"year"},
+          info_id_names)
+
+      main_results_by_without_option <-
+        base::setdiff(input_args_value$main_results_by, options_of_main_results_by)
+
+      if (base::length(main_results_by_without_option) > 0) {
+        base::stop(
+          base::paste0(
+            "The following values of main_results_by are not id columns: ",
+            base::toString(main_results_by_without_option), ".\n",
+            "Please, type (between quotation marks) one of these options: ",
+            base::toString(options_of_main_results_by), "."),
+          call. = FALSE)
+      }
+    }
+
+    ### error_if_multiple_approach_risk #####
+
+    # get_impact() branches once for the whole input table
+    # (base::unique(input_table$approach_risk) feeding an if statement),
+    # so relative and absolute risk cannot be combined in one call.
+    # Without this check the call fails deep inside get_impact() with
+    # "the condition has length > 1", which does not tell users what to do
+    if (base::length(base::unique(input_args_value$approach_risk)) > 1) {
+
+      base::stop(
+        base::paste0(
+          "approach_risk must be the same for the whole assessment, ",
+          "but these values were entered: ",
+          base::toString(base::unique(input_args_value$approach_risk)), ".\n",
+          "Please, call attribute_health() once for the relative risk ",
+          "and once for the absolute risk."),
+        call. = FALSE)
+    }
+
+
+
     ### error_if_different_length #####
 
     # Obtain the length of all arguments
@@ -263,10 +331,14 @@ validate_input_attribute <-
         c(input_args_value,
           base::as.list(input_args_value$info))
 
+      # info_id_names (and not names(info)) because a vector-valued info also
+      # identifies subgroups, in the column that add_info() calls "info".
+      # Without it two exposure-outcome pairs entered through a vector info
+      # would be reported as an ambiguous allocation
       arguments_for_combination <-
         base::intersect(
           base::names(input_args_value_flat),
-          c(id_arg_names, base::names(input_args_value$info)))
+          c(id_arg_names, info_id_names))
 
       # Find all ids which were used
       valid_ids <-
@@ -518,17 +590,18 @@ validate_input_attribute <-
 
         var_table <-
           tibble::tibble(
-            exp_name = input_args_value$exp_name,
             geo_id_micro = input_args_value$geo_id_micro,
             age_group = input_args_value$age_group,
             sex = input_args_value$sex,
-            exp_ci = input_args_value$exp_ci,
-            cutoff_ci = input_args_value$cutoff_ci,
-            erf_ci = input_args_value$erf_ci,
-            bhd_ci = input_args_value$bhd_ci,
-            dw_ci =  input_args_value$dw_ci,
-            duration_ci = input_args_value$duration_ci,
-            var = var_value)
+            var = var_value) |>
+          # The columns of info can identify subgroups, e.g. exposure-outcome
+          # pairs, whose exposure distributions each sum up to 1. Without them
+          # the fractions of two subgroups would be added together and wrongly
+          # reported as higher than 1.
+          # exp_name and the _ci columns were listed here before, but they are
+          # not arguments: they are created later in compile_input(), so they
+          # were always NULL and silently dropped by tibble()
+          add_info(info = input_args_value$info)
 
         if(base::is.null(input_args_value [["pop_exp"]]) &&
            var_table |>

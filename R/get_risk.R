@@ -184,30 +184,35 @@ get_risk <-
     # If erf_eq is not entered by the user
     } else if (base::is.null(erf_eq)){
 
-      erf_shape <- base::unique(erf_shape)
+      # Calculate the rr_at_exp based on erf_shape.
+      # case_when() because the shape can be one single value or one per
+      # exposure, e.g. when several exposure-outcome pairs are assessed in one
+      # call (PM2.5 log-linear and NO2 linear). It expects the conditions to
+      # have the same length as the results, so one single shape is recycled
+      erf_shape <- base::rep_len(erf_shape, base::length(exp))
 
-      # Calculate the rr_at_exp based on erf_shape
-      if (erf_shape == "linear") {
-        # LINEAR ####
-        rr_at_exp <- 1 + ( (rr - 1) * (exp - threshold) / rr_increment )
+      rr_at_exp <-
+        dplyr::case_when(
+          # LINEAR ####
+          erf_shape == "linear" ~
+            1 + ( (rr - 1) * (exp - threshold) / rr_increment ),
+          # LOG-LINEAR ####
+          erf_shape == "log_linear" ~
+            base::exp( base::log(rr) * (exp - threshold) / rr_increment ),
+          ## This curve below follows the definition by Pozzer 2022 (http://doi.org/10.1029/2022GH000711)
+          ## It is defined at all exposures and RR equals RR₁₀ when Ci=C0+10 exactly.
+          ## rr_at_exp = ((exp + 1) / (threshold + 1)) ^ beta, where beta = log(rr) / ( log(rr_increment + threshold + 1) - log(threshold + 1) )
+          erf_shape == "log_log" ~
+            ( ( exp + 1 ) / ( threshold + 1 ) )^( base::log(rr) / ( base::log(rr_increment + threshold + 1) - base::log(threshold + 1) ) ),
+          # LINEAR-LOG ####
+          ## This curve below has been proposed by ChatGPT:
+          # it's an adaption of the initially proposed curve with the structure of Pozzer 2022's log-log ERF
+          erf_shape == "linear_log" ~
+            1 + ( ( rr - 1 ) / ( base::log(rr_increment + threshold + 1) - base::log(threshold + 1) ) ) * base::log( (exp + 1) / (threshold + 1) ),
+          # An unknown shape yields NA instead of silently leaving rr_at_exp
+          # undefined (which was the behaviour of the if/else chain before)
+          .default = NA_real_)
 
-      } else if (erf_shape == "log_linear") {
-        # LOG-LINEAR ####
-        rr_at_exp <- base::exp( base::log(rr) * (exp - threshold) / rr_increment )
-
-      } else if (erf_shape == "log_log") {
-        ## This curve below follows the definition by Pozzer 2022 (http://doi.org/10.1029/2022GH000711)
-        ## It is defined at all exposures and RR equals RR₁₀ when Ci=C0+10 exactly.
-        ## rr_at_exp = ((exp + 1) / (threshold + 1)) ^ beta, where beta = log(rr) / ( log(rr_increment + threshold + 1) - log(threshold + 1) )
-        rr_at_exp <- ( ( exp + 1 ) / ( threshold + 1 ) )^( base::log(rr) / ( base::log(rr_increment + threshold + 1) - base::log(threshold + 1) ) )
-
-      } else if (erf_shape == "linear_log") {
-        # LINEAR-LOG ####
-        ## This curve below has been proposed by ChatGPT: 
-        # it's an adaption of the initially proposed curve with the structure of Pozzer 2022's log-log ERF
-
-        rr_at_exp <- 1 + ( ( rr - 1 ) / ( base::log(rr_increment + threshold + 1) - base::log(threshold + 1) ) ) * base::log( (exp + 1) / (threshold + 1) )
-    }
   }
 
     # Truncate the exposure-response function below the cut-off

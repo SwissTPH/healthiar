@@ -17,6 +17,9 @@
 #' To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()}
 #' (see its function documentation for more info).
 #'
+#' \code{main_results_by}
+#' \emph{Optional argument.} By default the impacts of all subgroups, and of all the years of the time horizon, are added up in the main results. That is not meaningful for subgroups that quantify overlapping people in different ways, e.g. different exposure-outcome pairs. Enter their names here to keep them as separate rows. Entering \code{"year"} shows the impacts per year of the time horizon. See the vignette chapter \emph{Multiple exposure-outcome pairs}.
+#'
 #' \strong{Last age group}
 #' The life table is closed at the last age group,
 #' i.e. its survivors are not projected into a further age.
@@ -235,7 +238,8 @@ attribute_lifetable <-
     # ITERATION (OPTIONAL)
     geo_id_micro = "a", geo_id_macro = NULL,
     # META (OPTIONAL)
-    info = NULL
+    info = NULL,
+    main_results_by = NULL
   ) {
 
     # Get input_args

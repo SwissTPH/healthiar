@@ -308,3 +308,38 @@ testthat::test_that("results the same |fake_multiexposure|approach_multiexposure
 ## ERROR #########
 
 ## WARNING #########
+
+
+## INFO PER EXPOSURE ###########################################################
+
+testthat::test_that("results the same |multiexpose|info_per_exposure|", {
+
+  # Each exposure can come from an attribute_health() call with its own info,
+  # e.g. the name of the pollutant. That info identifies the exposures that are
+  # being merged, just like exp_name, so it must not keep them apart:
+  # otherwise the relative risks are not multiplied and the impacts are counted
+  # once per exposure instead of once in total
+  attribute_one_exposure <- function(info, exp_central, rr_central){
+    healthiar::attribute_health(
+      exp_central = exp_central,
+      cutoff_central = 0,
+      rr_central = rr_central,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      bhd_central = 1000,
+      info = info)
+  }
+
+  output_multiexpose <-
+    healthiar::multiexpose(
+      output_attribute_exp_1 = attribute_one_exposure("pm2.5", 10, 1.10),
+      output_attribute_exp_2 = attribute_one_exposure("no2", 20, 1.05),
+      exp_name_1 = "pm2.5",
+      exp_name_2 = "no2",
+      approach_multiexposure = "multiplicative")
+
+  testthat::expect_equal(
+    object = base::unique(output_multiexpose$health_detailed$results_raw$rr_at_exp),
+    # 1.10 * 1.05^(20/10), i.e. the two relative risks multiplied
+    expected = 1.10 * 1.05^2)
+})

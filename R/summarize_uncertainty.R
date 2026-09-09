@@ -243,6 +243,30 @@ summarize_uncertainty <- function(
 
 
   # DATA VALIDATION ##################
+  # The values are simulated once per variable and geographic unit, assuming
+  # that e.g. the relative risk is the same in all of them. Subgroups kept
+  # apart with the argument main_results_by of attribute_health() (e.g. one
+  # exposure-outcome pair each) have their own relative risk, so they would
+  # share the same simulated values and be pooled into one single distribution
+  results_raw <- output_attribute$health_detailed$results_raw
+
+  info_cols <-
+    base::names(results_raw)[base::grepl("^info", base::names(results_raw))]
+
+  if (base::any(purrr::map_lgl(info_cols,
+                               ~ dplyr::n_distinct(results_raw[[.x]]) > 1))) {
+    base::stop(
+      base::paste0(
+        "summarize_uncertainty() can only be applied to one subgroup at a ",
+        "time, but the results keep several of them apart (see the argument ",
+        "main_results_by).\n",
+        "Please, call attribute_health() once per subgroup ",
+        "(e.g. once per exposure-outcome pair) and then ",
+        "summarize_uncertainty() on each of the results."),
+      call. = FALSE)
+  }
+
+
   ## Error if uncertainty in erf_eq_... ####
   # Uncertainty in erf_eq is currently not supported
   # It would require a more complex modelling
@@ -281,14 +305,20 @@ summarize_uncertainty <- function(
     summary <-
       attribute |>
       dplyr::summarise(
-        .by = dplyr::any_of(c("geo_id_macro", "geo_id_micro")),
+        # The info columns identify subgroups (e.g. exposure-outcome pairs),
+        # so they define the rows as much as the geo units do. Without them
+        # summarise() would drop them and the subgroup could not be recognized
+        .by = c(dplyr::any_of(c("geo_id_macro", "geo_id_micro")),
+                dplyr::contains("info")),
         central_estimate = stats::quantile(x = impact, probs = c(0.5), na.rm = TRUE, names = FALSE),
         lower_estimate = stats::quantile(x = impact, probs = c(0.025), na.rm = TRUE, names = FALSE),
         upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE)) |>
       # Change to same format as other output from healthiar
       tidyr::pivot_longer(
         # data = summary,
-        cols = !dplyr::contains("geo_id"),
+        # Only the three estimates are pivoted. The info columns identify the
+        # rows like the geo units, so they must not become values
+        cols = dplyr::ends_with("_estimate"),
         names_to = "impact_ci", values_to = "impact"
       ) |>
       dplyr::mutate(

@@ -110,6 +110,13 @@ standardize <- function(output_attribute,
   uncertainty_cols <-
     base::names(impact_by_age_group)[base::grepl("_ci", base::names(impact_by_age_group))]
 
+  # Identify the info columns. They can identify subgroups kept apart with the
+  # argument main_results_by of attribute_health() (e.g. one exposure-outcome pair
+  # each), whose impacts must never be summed. They are therefore added to the
+  # groups below, just like the geo units
+  info_cols <-
+    base::names(impact_by_age_group)[base::grepl("^info", base::names(impact_by_age_group))]
+
   # Identify invariant columns
   invariant_cols <- impact_by_age_group |>
     dplyr::summarize(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.x) == 1)) |>
@@ -122,7 +129,8 @@ standardize <- function(output_attribute,
   group_cols <-
     c(geo_id_cols,
       uncertainty_cols,
-      invariant_cols)|>
+      invariant_cols,
+      info_cols)|>
     base::unique()
 
   # Calculate age-standardize health impacts
@@ -135,7 +143,9 @@ standardize <- function(output_attribute,
       by = "age_group")|>
     #Add total population
     dplyr::mutate(
-      .by = dplyr::any_of(geo_id_cols),
+      # info_cols because otherwise the population of all subgroups would be
+      # summed, i.e. counted as many times as subgroups there are
+      .by = dplyr::any_of(c(geo_id_cols, info_cols)),
       total_population = base::sum(population),
       total_impact = base::sum(impact)) |>
     # Calculate population weight and standardized impact

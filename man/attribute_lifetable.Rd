@@ -37,7 +37,8 @@ attribute_lifetable(
   prop_pop_exp = 1,
   geo_id_micro = "a",
   geo_id_macro = NULL,
-  info = NULL
+  info = NULL,
+  main_results_by = NULL
 )
 }
 \arguments{
@@ -84,6 +85,8 @@ fraction of the age interval lived by individuals who die within that interval. 
 \item{geo_id_micro, geo_id_macro}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_micro}) and (optionally) providing higher-level IDs (\code{geo_id_macro}) to aggregate the geographic areas at. See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
+
+\item{main_results_by}{\code{Character vector} naming the \strong{dimensions that the main results are reported by}, i.e. the dimensions whose impacts must never be added together, e.g. different exposure-outcome pairs. By default all dimensions except the geographic units and the uncertainty (\code{_ci}) columns are summed in the main results. Names entered here are kept as separate rows instead. Options: the columns of \code{info} (named as you named them, or \code{"info"} if you entered a vector instead of a data frame), \code{"sex"}, \code{"age_group"}, \code{"exp_category"}, \code{"geo_id_micro"}, \code{"geo_id_macro"} and, in \code{attribute_lifetable()}, \code{"year"}. Note that this argument does not create the \code{results_by_...} tables of the detailed output, which are available anyway: it determines which dimensions survive in \code{health_main} and in all of them. See the vignette chapter \emph{Multiple exposure-outcome pairs}. \emph{Optional argument.}}
 }
 \value{
 This function returns a \code{list} containing:
@@ -115,6 +118,9 @@ This function assesses premature deaths or years of life lost (YLL) attributable
 The numeric values must refer to 1 year age groups, e.g. \code{c(0:99)}.
 To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()}
 (see its function documentation for more info).
+
+\code{main_results_by}
+\emph{Optional argument.} By default the impacts of all subgroups, and of all the years of the time horizon, are added up in the main results. That is not meaningful for subgroups that quantify overlapping people in different ways, e.g. different exposure-outcome pairs. Enter their names here to keep them as separate rows. Entering \code{"year"} shows the impacts per year of the time horizon. See the vignette chapter \emph{Multiple exposure-outcome pairs}.
 
 \strong{Last age group}
 The life table is closed at the last age group,
