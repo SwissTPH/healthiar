@@ -452,6 +452,20 @@ testthat::test_that("results correct |pathway_rr|threshold_below_cutoff|exp_dist
     object = results$health_main$impact_rounded,
     expected = 278)
 
+  # The exposure categories below the cutoff get the risk at the reference level
+  testthat::expect_equal(
+    object =
+      healthiar::get_risk(
+        rr = 1.055,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        exp = exp_lab,
+        threshold = 45,
+        cutoff = 55)[1:2],
+    expected = c(1, 1))
+
+})
+
 testthat::test_that("results correct |pathway_rr|erf_log_lin|exp_dist|threshold_below_cutoff|etc_he_2023_11|", {
 
   # Validation against the methodology published in ETC HE Report 2023/11
@@ -553,20 +567,6 @@ testthat::test_that("results correct |pathway_ar|erf_ar_formula|yld_TRUE|etc_he_
     object = c(end_threshold = attributable_dalys(563774),
                who_guideline = attributable_dalys(607391)),
     expected = c(end_threshold = 7329, who_guideline = 7896))
-})
-
-  # The exposure categories below the cutoff get the risk at the reference level
-  testthat::expect_equal(
-    object =
-      healthiar::get_risk(
-        rr = 1.055,
-        rr_increment = 10,
-        erf_shape = "log_linear",
-        exp = exp_lab,
-        threshold = 45,
-        cutoff = 55)[1:2],
-    expected = c(1, 1))
-
 })
 
 testthat::test_that("results the same |pathway_rr|threshold_equal_cutoff|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
