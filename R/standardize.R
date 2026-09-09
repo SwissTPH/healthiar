@@ -120,8 +120,21 @@ standardize <- function(output_attribute,
       dplyr::select(
         dplyr::any_of(c("geo_id_micro", "age_group", "population")))
 
-    ref_prop_pop <-
-      get_ref_prop_pop(df = input_data)$ref_prop_pop
+    # The whole table of get_ref_prop_pop() is kept (and not only the
+    # ref_prop_pop column) so that each proportion stays attached to its own
+    # age group in the join below. Taking the bare vector assumed that the user
+    # lists the age groups in the age_group argument in the same order as they
+    # appear in results_by_age_group, and silently attached the reference
+    # proportions to the wrong age groups otherwise
+    ref_prop_pop_table <- get_ref_prop_pop(df = input_data)
+
+  } else {
+
+    # If the user enters the reference proportions, they refer to the age
+    # groups in the order in which they were entered in the age_group argument
+    ref_prop_pop_table <-
+      tibble::tibble(age_group = age_group,
+                     ref_prop_pop = ref_prop_pop)
 
   }
 
