@@ -134,8 +134,18 @@ prepare_mdi <- function(
 
   ## Create helper function that calculates total MDI Cronbach's
   cronbach_alpha <- function(x) {
+    # Listwise deletion of the geo units with missing values. The variances of
+    # the items and the variance of the total score have to refer to the same
+    # geo units, so na.rm in each of them separately would mix different
+    # subsets and give an alpha that cannot be interpreted. Without this, one
+    # single missing value made the whole alpha NA
+    x <- x[stats::complete.cases(x), , drop = FALSE]
+    # At least two geo units are needed to calculate a variance
+    if (base::nrow(x) < 2) {
+      return(NA_real_)
+    }
     N <- base::ncol(x)  # Number of items
-    item_variances <- base::apply(x, 2, stats::var)  # Variance of each item
+    item_variances <- purrr::map_dbl(x, stats::var)  # Variance of each item
     total_variance <- stats::var(base::rowSums(x))   # Variance of the total score
 
     ## Cronbach's alpha formula
