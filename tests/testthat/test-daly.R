@@ -473,4 +473,41 @@ testthat::test_that("results the same |pathway_daly|impact_per_100k_inhab|", {
 # ERROR OR WARNING ########
 ## ERROR #########
 
+testthat::test_that("error if the two assessments of daly() are not comparable", {
+
+  # The two assessments must refer to the same population and exposure,
+  # because their results are joined by those columns. The check compared the
+  # assessment of the years lived with disability with itself, and on top of
+  # that it looked up column names of the results tables in the output list,
+  # where they do not exist. It was therefore always TRUE and never fired
+  attribute_one_outcome <- function(exp_central, ...){
+    base::do.call(
+      healthiar::attribute_health,
+      c(base::list(exp_central = exp_central,
+                   cutoff_central = 5,
+                   bhd_central = 1000,
+                   geo_id_micro = "a",
+                   erf_shape = "log_linear",
+                   rr_central = 1.05,
+                   rr_increment = 10),
+        base::list(...)))
+  }
+
+  # Same exposure in both: the assessments are comparable
+  testthat::expect_no_error(
+    healthiar::daly(
+      output_attribute_yll = attribute_one_outcome(10),
+      output_attribute_yld = attribute_one_outcome(10, dw_central = 0.1,
+                                                   duration_central = 2)))
+
+  # Different exposure: the message must name the column that differs (exp)
+  testthat::expect_error(
+    object =
+      healthiar::daly(
+        output_attribute_yll = attribute_one_outcome(10),
+        output_attribute_yld = attribute_one_outcome(12, dw_central = 0.1,
+                                                     duration_central = 2)),
+    regexp = "must be identical in the assessment of years of life lost")
+})
+
 ## WARNING #########
