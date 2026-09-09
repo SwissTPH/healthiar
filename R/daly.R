@@ -149,8 +149,8 @@ daly <-
 
     identical_cols <-
       check_if_args_identical(
-        args_a = input_args$value$output_attribute_yld,
-        args_b = input_args$value$output_attribute_yld,
+        args_a = results_raw_yll,
+        args_b = results_raw_yld,
         names_to_check = common_cols)
 
     # Remove those containing the word impact
