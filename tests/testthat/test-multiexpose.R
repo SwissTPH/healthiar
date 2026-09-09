@@ -343,3 +343,40 @@ testthat::test_that("results the same |multiexpose|info_per_exposure|", {
     # 1.10 * 1.05^(20/10), i.e. the two relative risks multiplied
     expected = 1.10 * 1.05^2)
 })
+
+
+## SEVERAL GEO UNITS ###########################################################
+
+testthat::test_that("results the same |multiexpose|approach_multiexposure_multiplicative|several_geo_units|", {
+
+  # The relative risks must be multiplied across the exposures within one geo
+  # unit, never across geo units (or sexes, age groups and info subgroups).
+  # Grouping only by the _ci columns multiplied every row of the assessment
+  # together, which gave both geo units the same (too high) relative risk
+  attribute_one_exposure <- function(exp_central, rr_central){
+    healthiar::attribute_health(
+      exp_central = exp_central,
+      geo_id_micro = c("a", "b"),
+      cutoff_central = 0,
+      rr_central = rr_central,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      bhd_central = c(1000, 1000))
+  }
+
+  output_multiexpose <-
+    healthiar::multiexpose(
+      output_attribute_exp_1 = attribute_one_exposure(c(10, 20), 1.10),
+      output_attribute_exp_2 = attribute_one_exposure(c(20, 40), 1.05),
+      exp_name_1 = "pm2.5",
+      exp_name_2 = "no2",
+      approach_multiexposure = "multiplicative")
+
+  testthat::expect_equal(
+    object =
+      output_multiexpose$health_main |>
+      dplyr::arrange(geo_id_micro) |>
+      dplyr::pull(rr_at_exp),
+    # geo unit a: 1.10^(10/10) * 1.05^(20/10); geo unit b: 1.10^(20/10) * 1.05^(40/10)
+    expected = c(1.10 * 1.05^2, 1.10^2 * 1.05^4))
+})
