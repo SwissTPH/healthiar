@@ -54,11 +54,11 @@
 
 get_paf <-
   function(rr_at_exp, prop_pop_exp){
-    # paf <- (sum(prop_pop_exp * (rr_at_exp-1))) / (1+(sum(prop_pop_exp *(rr_at_exp-1))))
-
-    # Instead of calculating PAF as above, just use the complete equations
-    # (i.e. PIF form)
-    # but with no effect in the second scenario
+    # The population attributable fraction is
+    # sum(prop_pop_exp * (rr_at_exp - 1)) / (1 + sum(prop_pop_exp * (rr_at_exp - 1)))
+    # It is not written here again: get_pop_fraction() below calculates exactly
+    # this equation, because the second scenario has no effect
+    # (rr_at_exp_2 = 1), so its sum is 0 and only the first scenario remains
     # (same result using paf and pif for comparison with no effect)
 
     paf <-
