@@ -175,8 +175,7 @@ standardize <- function(output_attribute,
     ## Add reference proportion of population
     dplyr::left_join(
       impact_by_age_group,
-      tibble::tibble(age_group = age_group,
-                     ref_prop_pop = ref_prop_pop),
+      ref_prop_pop_table,
       by = "age_group")|>
     #Add total population
     dplyr::mutate(
