@@ -253,10 +253,15 @@ validate_input_attribute <-
 
     # Obtain the length of all arguments
     length_args <- purrr::map_vec(input_args_value, base::length)
-    # Remove erf_eq lengths because they are not vectors (not to be evaluated)
+    # Remove erf_eq lengths because they are not vectors (not to be evaluated).
+    # Remove main_results_by too: its length is the number of dimensions that
+    # the results are to be reported by (e.g. c("pair", "geo_id_micro")) and
+    # not a number of data rows. compile_input() discards it for the same
+    # reason, so it must not be compared with the length of the data arguments
     length_args <-
       length_args[! base::names(length_args) %in%
-                    c("erf_eq_central", "erf_eq_lower", "erf_eq_upper")]
+                    c("erf_eq_central", "erf_eq_lower", "erf_eq_upper",
+                      "main_results_by")]
 
     # If info is a data frame the length is actually the number of rows
     if(base::is.data.frame(input_args_value$info)){
