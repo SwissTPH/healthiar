@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1660</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1662</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1565,6 +1565,10 @@ group the results by can be entered to the <code>info</code> argument.
 In this example, this will be information about the education level.</p>
 <p>In a second step one can group the results based on one or more
 columns and so summarize the results by the preferred sub-groups.</p>
+<p>Be aware that, if the argument <code>info</code>is a data frame or
+tibble, the columns in the <code>info</code> argument are renamed adding
+the prefix <code>info_</code>. If the argument <code>info</code> is a
+vector, the column in the results is called <code>info</code>.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output_attribute</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>    rr_central <span class="op">=</span> <span class="fl">1.063</span>,</span>
@@ -1589,7 +1593,7 @@ columns and so summarize the results by the preferred sub-groups.</p>
 </h4>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output_stratified</span> <span class="op">&lt;-</span> <span class="va">output_attribute</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_raw</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">info_column_1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">info_education</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>mean_impact <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">impact</span><span class="op">)</span><span class="op">)</span><span class="op">|&gt;</span></span>
 <span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">mean_impact</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -1630,7 +1634,7 @@ sex and additional sub-group e.g. education level</em>.</p>
 </h4>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output_stratified</span> <span class="op">&lt;-</span> <span class="va">output_attribute</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_raw</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">info_column_1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">info_education</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>mean_impact <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">impact</span><span class="op">)</span><span class="op">)</span><span class="op">|&gt;</span></span>
 <span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">mean_impact</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -1700,15 +1704,15 @@ log-linear for PM2.5 and linear for NO2.</p>
 into one single number per geographic unit.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output_attribute</span><span class="op">$</span><span class="va">health_main</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">info_column_1</span>, <span class="va">geo_id_micro</span>, <span class="va">erf_ci</span>, <span class="va">impact_rounded</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">info_pair</span>, <span class="va">geo_id_micro</span>, <span class="va">erf_ci</span>, <span class="va">impact_rounded</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 4</span></span></span>
-<span><span class="co">#&gt;   info_column_1 geo_id_micro erf_ci  impact_rounded</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> pm2.5_copd    a            central           <span style="text-decoration: underline;">3</span>502</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> pm2.5_copd    b            central           <span style="text-decoration: underline;">3</span>893</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> no2_asthma    a            central            567</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> no2_asthma    b            central            701</span></span></code></pre></div>
+<span><span class="co">#&gt;   info_pair  geo_id_micro erf_ci  impact_rounded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> pm2.5_copd a            central           <span style="text-decoration: underline;">3</span>502</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> pm2.5_copd b            central           <span style="text-decoration: underline;">3</span>893</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> no2_asthma a            central            567</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> no2_asthma b            central            701</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="sensitivity-analysis-with-several-exposure-response-functions">Sensitivity analysis with several exposure-response functions<a class="anchor" aria-label="anchor" href="#sensitivity-analysis-with-several-exposure-response-functions"></a>
@@ -1728,13 +1732,13 @@ the relative risks of two different studies.</p>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">output_sensitivity</span><span class="op">$</span><span class="va">health_main</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">info_column_1</span>, <span class="va">erf_ci</span>, <span class="va">impact_rounded</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">info_rr_source</span>, <span class="va">erf_ci</span>, <span class="va">impact_rounded</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span></span>
-<span><span class="co">#&gt;   info_column_1 erf_ci  impact_rounded</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Liu 2020      central           <span style="text-decoration: underline;">3</span>502</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> WHO 2021      central            898</span></span></code></pre></div>
+<span><span class="co">#&gt;   info_rr_source erf_ci  impact_rounded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Liu 2020       central           <span style="text-decoration: underline;">3</span>502</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> WHO 2021       central            898</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="which-dimensions-can-be-entered">Which dimensions can be entered<a class="anchor" aria-label="anchor" href="#which-dimensions-can-be-entered"></a>

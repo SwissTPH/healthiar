@@ -192,7 +192,12 @@ attribute_lifetable(
 - info:
 
   `String`, `data frame` or `tibble` providing **information about the
-  assessment**. See Details for more info. *Optional argument.*
+  assessment**. This will be added to the results table as column(s)
+  keeping the name(s) that you entered with the prefix `info_` (e.g. a
+  column `education` becomes `info_education`) if a `data frame` is
+  entered, or as one single column called `info` if a vector is entered.
+  These additional columns can be used to further stratify the analysis
+  in a secondary step. *Optional argument.*
 
 - main_results_by:
 

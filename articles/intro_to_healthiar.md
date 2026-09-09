@@ -966,6 +966,11 @@ example, this will be information about the education level.
 In a second step one can group the results based on one or more columns
 and so summarize the results by the preferred sub-groups.
 
+Be aware that, if the argument `info`is a data frame or tibble, the
+columns in the `info` argument are renamed adding the prefix `info_`. If
+the argument `info` is a vector, the column in the results is called
+`info`.
+
 ``` r
 
 output_attribute <- healthiar::attribute_health(
@@ -992,7 +997,7 @@ output_attribute <- healthiar::attribute_health(
 ``` r
 
 output_stratified <- output_attribute$health_detailed$results_raw |>
-      dplyr::group_by(info_column_1) |>
+      dplyr::group_by(info_education) |>
       dplyr::summarize(mean_impact = mean(impact))|>
       dplyr::pull(mean_impact) |>
       print()
@@ -1032,7 +1037,7 @@ output_attribute <- healthiar::attribute_health(
 ``` r
 
 output_stratified <- output_attribute$health_detailed$results_raw |>
-      dplyr::group_by(info_column_1) |>
+      dplyr::group_by(info_education) |>
       dplyr::summarize(mean_impact = mean(impact))|>
       dplyr::pull(mean_impact) |>
       print()
@@ -1102,15 +1107,15 @@ single number per geographic unit.
 ``` r
 
 output_attribute$health_main |>
-  dplyr::select(info_column_1, geo_id_micro, erf_ci, impact_rounded) |>
+  dplyr::select(info_pair, geo_id_micro, erf_ci, impact_rounded) |>
   print()
 #> # A tibble: 4 × 4
-#>   info_column_1 geo_id_micro erf_ci  impact_rounded
-#>   <chr>         <chr>        <chr>            <dbl>
-#> 1 pm2.5_copd    a            central           3502
-#> 2 pm2.5_copd    b            central           3893
-#> 3 no2_asthma    a            central            567
-#> 4 no2_asthma    b            central            701
+#>   info_pair  geo_id_micro erf_ci  impact_rounded
+#>   <chr>      <chr>        <chr>            <dbl>
+#> 1 pm2.5_copd a            central           3502
+#> 2 pm2.5_copd b            central           3893
+#> 3 no2_asthma a            central            567
+#> 4 no2_asthma b            central            701
 ```
 
 #### Sensitivity analysis with several exposure-response functions
@@ -1132,13 +1137,13 @@ output_sensitivity <- healthiar::attribute_health(
   )
 
 output_sensitivity$health_main |>
-  dplyr::select(info_column_1, erf_ci, impact_rounded) |>
+  dplyr::select(info_rr_source, erf_ci, impact_rounded) |>
   print()
 #> # A tibble: 2 × 3
-#>   info_column_1 erf_ci  impact_rounded
-#>   <chr>         <chr>            <dbl>
-#> 1 Liu 2020      central           3502
-#> 2 WHO 2021      central            898
+#>   info_rr_source erf_ci  impact_rounded
+#>   <chr>          <chr>            <dbl>
+#> 1 Liu 2020       central           3502
+#> 2 WHO 2021       central            898
 ```
 
 #### Which dimensions can be entered

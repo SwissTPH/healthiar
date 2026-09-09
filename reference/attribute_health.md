@@ -210,7 +210,12 @@ attribute_health(
 - info:
 
   `String`, `data frame` or `tibble` providing **information about the
-  assessment**. See Details for more info. *Optional argument.*
+  assessment**. This will be added to the results table as column(s)
+  keeping the name(s) that you entered with the prefix `info_` (e.g. a
+  column `education` becomes `info_education`) if a `data frame` is
+  entered, or as one single column called `info` if a vector is entered.
+  These additional columns can be used to further stratify the analysis
+  in a secondary step. *Optional argument.*
 
 - main_results_by:
 
@@ -323,13 +328,6 @@ be of the same length.
 `age_group` Can be either `numeric` or `character`. If it is numeric, it
 refers to the first age of the age group. E.g. `c(0, 40, 80)` means age
 groups `[0, 40), [40, 80), >=80]`.
-
-`info` *Optional argument.* Information entered to this argument will be
-added as column(s) named `info_column_1`, `info_column_2`,
-`info_column_...` to the results table if a `data frame` is entered, or
-as one single column called `info` if a vector is entered. These
-additional columns can be used to further stratify the analysis in a
-secondary step (see example below).
 
 `main_results_by` *Optional argument.* By default the impacts of all
 subgroups are added up in the main results. That is meaningful for
