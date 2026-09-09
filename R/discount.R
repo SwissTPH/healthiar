@@ -74,7 +74,12 @@ discount <-
            impact = NULL,
            discount_rate = NULL,
            n_years = NULL,
-           discount_shape = NULL) {
+           # Same default as in monetize(), which is called below and which is
+           # also the default that the inherited documentation announces.
+           # Passing NULL instead overrode that default, and validate_args()
+           # skips NULL by design, so get_discount_factor() was reached with an
+           # empty discount_shape and the discount factor came out with length 0
+           discount_shape = "exponential") {
 
     output_discounting <-
       monetize(
