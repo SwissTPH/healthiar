@@ -163,6 +163,41 @@ prepare_mdi <- function(
     no_heating
   )
 
+  # Warn about missing values in the indicators.
+  # The index of a geo unit with a missing indicator cannot be calculated, so
+  # it stays NA, and that geo unit is left out of Cronbach's alpha and of the
+  # descriptive statistics. Without this warning one single missing value made
+  # the function abort with "missing value where TRUE/FALSE needed" when
+  # printing the reliability (verbose = TRUE) or return an alpha of NA and
+  # descriptive statistics of NA without saying anything (verbose = FALSE)
+  indicator_names <-
+    c("edu", "unemployed", "single_parent", "pop_change", "no_heating")
+
+  n_missing_by_indicator <-
+    data |>
+    dplyr::summarise(
+      dplyr::across(dplyr::all_of(indicator_names),
+                    ~ base::sum(base::is.na(.x)))) |>
+    base::unlist()
+
+  if (base::any(n_missing_by_indicator > 0)) {
+
+    indicators_with_missing <- n_missing_by_indicator[n_missing_by_indicator > 0]
+
+    base::warning(
+      base::paste0(
+        "Missing values in ",
+        base::toString(base::paste0(base::names(indicators_with_missing),
+                                    " (", indicators_with_missing, ")")),
+        ".\n",
+        base::sum(!stats::complete.cases(data[, indicator_names])),
+        " of ", base::nrow(data),
+        " geographic unit(s) therefore get no MDI value, and they are not ",
+        "included in Cronbach's alpha and in the descriptive statistics. ",
+        "Consider imputing the missing data (see the Details section)."),
+      call. = FALSE)
+  }
+
   data <- data |>
     dplyr::mutate(
       dplyr::across(
