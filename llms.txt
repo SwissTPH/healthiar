@@ -3,7 +3,7 @@
 [![CRAN
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/healthiar)](https://cran.r-project.org/package=healthiar)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18220360.svg)](https://doi.org/10.5281/zenodo.18220360)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.10599/status.svg)](https://doi.org/10.21105/joss.10599)
 
 [![GitHub Repo
 stars](https://img.shields.io/github/stars/SwissTPH/healthiar?style=social)](https://github.com/SwissTPH/healthiar/stargazers)
@@ -97,6 +97,11 @@ the presentation can be found
 We regularly improve *healthiar* and publish a new [GitHub
 release](https://github.com/SwissTPH/healthiar/releases) every time a
 new version reaches CRAN. To make sure you don’t miss one:
+
+Each GitHub release is also archived on Zenodo (DOI:
+[10.5281/zenodo.18220360](https://doi.org/10.5281/zenodo.18220360)) if
+you need to reference a specific version snapshot rather than the
+package itself.
 
 - **Watch releases**: on the [GitHub
   repo](https://github.com/SwissTPH/healthiar), click *Watch* \>
