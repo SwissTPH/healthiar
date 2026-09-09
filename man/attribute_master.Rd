@@ -32,6 +32,7 @@ attribute_master(
   sex = "all",
   population = NULL,
   info = NULL,
+  main_results_by = NULL,
   dw_central = NULL,
   dw_lower = NULL,
   dw_upper = NULL,
@@ -83,6 +84,8 @@ attribute_master(
 \strong{\code{For attribute_health()}} it is an \emph{optional argument} which specifies the \strong{population used to calculate attributable impacts rate} per 100 000 population. See Details for more info.}
 
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
+
+\item{main_results_by}{\code{Character vector} naming the \strong{dimensions that the main results are reported by}, i.e. the dimensions whose impacts must never be added together, e.g. different exposure-outcome pairs. By default all dimensions except the geographic units and the uncertainty (\code{_ci}) columns are summed in the main results. Names entered here are kept as separate rows instead. Options: the columns of \code{info} (named as you named them, or \code{"info"} if you entered a vector instead of a data frame), \code{"sex"}, \code{"age_group"}, \code{"exp_category"}, \code{"geo_id_micro"}, \code{"geo_id_macro"} and, in \code{attribute_lifetable()}, \code{"year"}. Note that this argument does not create the \code{results_by_...} tables of the detailed output, which are available anyway: it determines which dimensions survive in \code{health_main} and in all of them. See the vignette chapter \emph{Multiple exposure-outcome pairs}. \emph{Optional argument.}}
 
 \item{dw_central, dw_lower, dw_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{disability weight} associated with the morbidity health outcome of interest and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. \emph{Only applicable in assessments of YLD (years lived with disability).}}
 

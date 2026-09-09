@@ -76,7 +76,10 @@
 #' Can be either \code{numeric} or \code{character}. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}.
 #'
 #' \code{info}
-#' \emph{Optional argument.} Information entered to this argument will be added as column(s) names \code{info_1}, \code{info_2}, \code{info_...} to the results table. These additional columns can be used to further stratify the analysis in a secondary step (see example below).
+#' \emph{Optional argument.} Information entered to this argument will be added as column(s) named \code{info_column_1}, \code{info_column_2}, \code{info_column_...} to the results table if a \code{data frame} is entered, or as one single column called \code{info} if a vector is entered. These additional columns can be used to further stratify the analysis in a secondary step (see example below).
+#'
+#' \code{main_results_by}
+#' \emph{Optional argument.} By default the impacts of all subgroups are added up in the main results. That is meaningful for subgroups such as education level, but not for subgroups that quantify overlapping people in different ways, e.g. different exposure-outcome pairs (e.g. PM2.5 and mortality vs. NO2 and asthma) or the same pair with different relative risks for sensitivity analysis. Adding those up would count the same people twice. Enter their names here to keep them as separate rows. See the vignette chapter \emph{Multiple exposure-outcome pairs}.
 #'
 #' \code{population}
 #' \emph{Optional argument.} The population entered here is used to determine impact rate per 100 000 population. Note the requirement for the vector length in the paragraph \emph{Assessment of multiple geographic units} below.
@@ -228,6 +231,7 @@ attribute_health <-
     duration_central = NULL, duration_lower = NULL, duration_upper = NULL,
     # META (OPTIONAL)
     info = NULL,
+    main_results_by = NULL,
     population = NULL){
 
 
