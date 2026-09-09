@@ -59,9 +59,7 @@ get_output <-
       main_results_by <-
         purrr::map_chr(
           main_results_by,
-          ~ if (.x %in% info_names) {
-              base::paste0("info_column_", base::match(.x, info_names))
-            } else {.x})
+          ~ if (.x %in% info_names) {base::paste0("info_", .x)} else {.x})
     }
 
     # ID columns
