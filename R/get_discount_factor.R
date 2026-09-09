@@ -6,6 +6,13 @@
 
 # ARGUMENTS ####################################################################
 #' @inheritParams monetize
+#' @param n_years
+#' \code{Numeric value} or \code{numeric vector} specifying the number of years
+#' elapsed for which the discount factor is to be calculated. One factor is
+#' returned per entered value. The year 0, i.e. the present, gets a factor of 1
+#' (no discounting). Note that this differs from the argument of the same name
+#' in \code{monetize()}, which is the time horizon: \code{monetize()} calls this
+#' function with each single year from 0 to that horizon.
 #'
 # DETAILS ######################################################################
 #' @details
