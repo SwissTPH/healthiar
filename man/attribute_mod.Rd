@@ -71,7 +71,7 @@ attribute_mod(
 \item{population}{\code{Numeric vector} \strong{\code{For attribute_lifetable()}}, it is an \emph{obligatory argument} specifying the \strong{mid-year populations} per age (i.e. age group size = 1 year) for the (first) year of analysis.
 \strong{\code{For attribute_health()}} it is an \emph{optional argument} which specifies the \strong{population used to calculate attributable impacts rate} per 100 000 population. See Details for more info.}
 
-\item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
+\item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. This will be added to the results table as column(s) keeping the name(s) that you entered with the prefix \code{info_} (e.g. a column \code{education} becomes \code{info_education}) if a \code{data frame} is entered, or as one single column called \code{info} if a vector is entered. These additional columns can be used to further stratify the analysis in a secondary step. \emph{Optional argument.}}
 
 \item{min_age, max_age}{\code{Numeric value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. See Details for more info.}
 
