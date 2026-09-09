@@ -134,8 +134,18 @@ prepare_mdi <- function(
 
   ## Create helper function that calculates total MDI Cronbach's
   cronbach_alpha <- function(x) {
+    # Listwise deletion of the geo units with missing values. The variances of
+    # the items and the variance of the total score have to refer to the same
+    # geo units, so na.rm in each of them separately would mix different
+    # subsets and give an alpha that cannot be interpreted. Without this, one
+    # single missing value made the whole alpha NA
+    x <- x[stats::complete.cases(x), , drop = FALSE]
+    # At least two geo units are needed to calculate a variance
+    if (base::nrow(x) < 2) {
+      return(NA_real_)
+    }
     N <- base::ncol(x)  # Number of items
-    item_variances <- base::apply(x, 2, stats::var)  # Variance of each item
+    item_variances <- purrr::map_dbl(x, stats::var)  # Variance of each item
     total_variance <- stats::var(base::rowSums(x))   # Variance of the total score
 
     ## Cronbach's alpha formula
@@ -152,6 +162,41 @@ prepare_mdi <- function(
     pop_change,
     no_heating
   )
+
+  # Warn about missing values in the indicators.
+  # The index of a geo unit with a missing indicator cannot be calculated, so
+  # it stays NA, and that geo unit is left out of Cronbach's alpha and of the
+  # descriptive statistics. Without this warning one single missing value made
+  # the function abort with "missing value where TRUE/FALSE needed" when
+  # printing the reliability (verbose = TRUE) or return an alpha of NA and
+  # descriptive statistics of NA without saying anything (verbose = FALSE)
+  indicator_names <-
+    c("edu", "unemployed", "single_parent", "pop_change", "no_heating")
+
+  n_missing_by_indicator <-
+    data |>
+    dplyr::summarise(
+      dplyr::across(dplyr::all_of(indicator_names),
+                    ~ base::sum(base::is.na(.x)))) |>
+    base::unlist()
+
+  if (base::any(n_missing_by_indicator > 0)) {
+
+    indicators_with_missing <- n_missing_by_indicator[n_missing_by_indicator > 0]
+
+    base::warning(
+      base::paste0(
+        "Missing values in ",
+        base::toString(base::paste0(base::names(indicators_with_missing),
+                                    " (", indicators_with_missing, ")")),
+        ".\n",
+        base::sum(!stats::complete.cases(data[, indicator_names])),
+        " of ", base::nrow(data),
+        " geographic unit(s) therefore get no MDI value, and they are not ",
+        "included in Cronbach's alpha and in the descriptive statistics. ",
+        "Consider imputing the missing data (see the Details section)."),
+      call. = FALSE)
+  }
 
   data <- data |>
     dplyr::mutate(
@@ -192,12 +237,18 @@ prepare_mdi <- function(
 
   # * Descriptive analysis ####################################################
 
+  # na.rm = TRUE so that the statistics describe the geo units that do have a
+  # value. Without it, one single missing value turned every statistic of the
+  # affected indicator (and of the MDI) into NA
   descriptive_statistics <- base::sapply(data[c(indicators, "MDI")], function(x)
     tibble::tibble(
-      MEAN = base::round(base::mean(x), 3),
-      SD = base::round(stats::sd(x), 3),
-      MIN = base::min(x),
-      MAX = base::max(x)
+      MEAN = base::round(base::mean(x, na.rm = TRUE), 3),
+      SD = base::round(stats::sd(x, na.rm = TRUE), 3),
+      # If an indicator has no value at all, min() and max() with na.rm return
+      # -Inf and Inf with a warning. NA says the same thing without pretending
+      # to be a number
+      MIN = if (base::all(base::is.na(x))) NA_real_ else base::min(x, na.rm = TRUE),
+      MAX = if (base::all(base::is.na(x))) NA_real_ else base::max(x, na.rm = TRUE)
       )
     )
 
@@ -287,22 +338,30 @@ prepare_mdi <- function(
 
     base::print(base::paste("CRONBACH'S", alpha, ":", base::round(cronbachs_alpha_value, 3)))
 
-    if ( cronbachs_alpha_value >= 0.9 ) {
-      base::print(base::paste("Excellent reliability:", alpha, higher_or_equal, "0.9"))
-    }
-    if ( cronbachs_alpha_value >= 0.8 & cronbachs_alpha_value < 0.9 ) {
-      base::print(base::paste("Good reliability: 0.8", lower_or_equal, alpha, "< 0.9"))
+    # is.na() because the alpha is NA if fewer than two geographic units have
+    # values in all indicators. Without this guard the comparisons below
+    # aborted with "missing value where TRUE/FALSE needed"
+    if ( base::is.na(cronbachs_alpha_value) ) {
+      base::print(base::paste(
+        "Reliability cannot be assessed:", alpha,
+        "needs at least two geographic units without missing values"))
+    } else {
+      if ( cronbachs_alpha_value >= 0.9 ) {
+        base::print(base::paste("Excellent reliability:", alpha, higher_or_equal, "0.9"))
       }
-    if ( cronbachs_alpha_value >= 0.7 & cronbachs_alpha_value < 0.8 ) {
-      base::print(base::paste("Acceptable reliability: 0.7", lower_or_equal, alpha, "< 0.8"))
+      if ( cronbachs_alpha_value >= 0.8 & cronbachs_alpha_value < 0.9 ) {
+        base::print(base::paste("Good reliability: 0.8", lower_or_equal, alpha, "< 0.9"))
+      }
+      if ( cronbachs_alpha_value >= 0.7 & cronbachs_alpha_value < 0.8 ) {
+        base::print(base::paste("Acceptable reliability: 0.7", lower_or_equal, alpha, "< 0.8"))
+      }
+      if ( cronbachs_alpha_value >= 0.6 & cronbachs_alpha_value < 0.7 ) {
+        base::print(base::paste("Questionable reliability: 0.6", lower_or_equal, alpha, "< 0.7"))
+      }
+      if ( cronbachs_alpha_value < 0.6 ) {
+        base::print(base::paste("Poor reliability:", alpha, "< 0.6"))
+      }
     }
-    if ( cronbachs_alpha_value >= 0.6 & cronbachs_alpha_value < 0.7 ) {
-      base::print(base::paste("Questionable reliability: 0.6", lower_or_equal, alpha, "< 0.7"))
-    }
-    if ( cronbachs_alpha_value < 0.6 ) {
-      base::print(base::paste("Poor reliability:", alpha, "< 0.6"))
-    }
-
     ## with just strings
     # base::print(base::paste("CRONBACH'S alpha:", base::round(cronbachs_alpha_value, 3)))
     #
@@ -332,13 +391,23 @@ prepare_mdi <- function(
     base::print("PEARSON'S CORRELATION COEFFICIENTS")
     base::print(pearsons_corr_coeff)
 
-    # * Boxplot #################################################################
+    # * Boxplot and histogram ###################################################
 
-    base::eval(boxplot_code)
+    # The plots need at least one geo unit with an MDI value. Without this
+    # guard, graphics::hist() aborted with the message "character(0)" when
+    # every MDI was missing, i.e. when no geo unit had a value in all
+    # indicators. The code of both plots is returned in mdi_detailed anyway
+    if ( base::any(!base::is.na(data$MDI)) ) {
 
-    # * Histogram ###############################################################
+      base::eval(boxplot_code)
 
-    base::eval(histogram_code)
+      base::eval(histogram_code)
+
+    } else {
+      base::print(base::paste(
+        "No plots: no geographic unit has a value in all indicators,",
+        "so the MDI could not be calculated for any of them"))
+    }
 
   }
 

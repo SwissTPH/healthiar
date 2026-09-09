@@ -50,3 +50,47 @@ testthat::test_that("results correct", { # with verbose = FALSE
 #                0.3112479) # Results on 2025-04-15; Sciensano results
 #   )
 # })
+
+# ERROR OR WARNING ########
+## WARNING #########
+
+testthat::test_that("warning and no abort if an indicator has a missing value", {
+
+  # One single missing value used to abort the function with "missing value
+  # where TRUE/FALSE needed" (verbose = TRUE), because Cronbach's alpha was NA
+  # and was then compared with the reliability thresholds. With
+  # verbose = FALSE the alpha and all descriptive statistics were silently NA.
+  # Now the geo units with a missing indicator are reported in a warning and
+  # left out of the alpha and of the descriptive statistics
+
+  # exdat_prepare_mdi is package data (see R/data.R) and has no missing values
+  data_with_missing <- healthiar::exdat_prepare_mdi
+  data_with_missing$edu[7] <- NA
+
+  call_prepare_mdi <- function(data){
+    healthiar::prepare_mdi(
+      geo_id_micro = data$id,
+      edu = data$edu,
+      unemployed = data$unemployed,
+      single_parent = data$single_parent,
+      pop_change = data$pop_change,
+      no_heating = data$no_heating,
+      n_quantile = 10,
+      verbose = FALSE)
+  }
+
+  testthat::expect_warning(
+    object = call_prepare_mdi(data_with_missing),
+    regexp = "Missing values in edu")
+
+  # Cronbach's alpha is calculated with listwise deletion, so it must be the
+  # same as when the geo unit with the missing value is not entered at all
+  # (and not NA, as before)
+  testthat::expect_equal(
+    object =
+      base::suppressWarnings(
+        call_prepare_mdi(data_with_missing))$mdi_detailed$cronbachs_alpha_value,
+    expected =
+      call_prepare_mdi(
+        healthiar::exdat_prepare_mdi[-7, ])$mdi_detailed$cronbachs_alpha_value)
+})
