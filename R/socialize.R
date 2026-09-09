@@ -138,7 +138,7 @@ socialize <- function(output_attribute = NULL,
                       pop_fraction = NULL
                       ) {
 
-  # Data validation ######################
+  # Input data and useful variables ######################
 
   input_args_value <-
     get_input_args(environment = base::environment(),
@@ -155,6 +155,30 @@ socialize <- function(output_attribute = NULL,
   positive_vars <-
     base::setdiff(c(numeric_vars, integer_vars), c("social_indicator", "impact"))
 
+  # Variables for ifs #####################
+
+  ## Create readable variables for if statements below
+
+  ## output from healthiar or impact directly entered by user (without healthiar)
+  has_output_attribute <- base::is.null(impact) & !base::is.null(output_attribute)
+  has_impact <- !base::is.null(impact) & base::is.null(output_attribute)
+
+  ## already social quantile (e.g. 1-10) or
+  ## social indicator (e.g. 1-986) which has to be transformed into quantile
+  has_social_quantile <-
+    base::is.null(social_indicator) && base::is.null(n_quantile) && !base::is.null(social_quantile)
+  has_social_indicator <-
+    !base::is.null(social_indicator) && !base::is.null(n_quantile) && base::is.null(social_quantile)
+
+  ## Available ref_prop_pop
+  has_ref_prop_pop <- !base::is.null(ref_prop_pop)
+
+  ## Decreasing order in social_indicator or quantile
+  decreasing_deprivation <- !increasing_deprivation
+
+
+
+  # Data validation ######################
   ## error_if_not_numeric #####
   # Must come first: the checks below assume numeric values
   validate_args(
@@ -205,31 +229,38 @@ socialize <- function(output_attribute = NULL,
 
 
 
-  # Variables for ifs #####################
-
-  ## Create readable variables for if statements below
-
-  ## output from healthiar or impact directly entered by user (without healthiar)
-  has_output_attribute <- base::is.null(impact) & !base::is.null(output_attribute)
-  has_impact <- !base::is.null(impact) & base::is.null(output_attribute)
-
-  ## already social quantile (e.g. 1-10) or
-  ## social indicator (e.g. 1-986) which has to be transformed into quantile
-  has_social_quantile <-
-    base::is.null(social_indicator) && base::is.null(n_quantile) && !base::is.null(social_quantile)
-  has_social_indicator <-
-    !base::is.null(social_indicator) && !base::is.null(n_quantile) && base::is.null(social_quantile)
-
-  ## Available ref_prop_pop
-  has_ref_prop_pop <- !base::is.null(ref_prop_pop)
-
-  ## Decreasing order in social_indicator or quantile
-  decreasing_deprivation <- !increasing_deprivation
-
-  # Compile data (except social) ##########
+  
 
   # * If available output_attribute ########
   if ( has_output_attribute ) {
+
+    # The impacts are grouped below only by geographic unit, age group and
+    # social quantile. Subgroups kept apart with the argument main_results_by of
+    # attribute_health() (e.g. one exposure-outcome pair each) would therefore
+    # be pooled into one single social gradient. They cannot be entered in the
+    # arguments of this function either (there is no info argument here), so
+    # one subgroup at a time is the only meaningful input
+    results_by_age_group <-
+      output_attribute$health_detailed$results_by_age_group
+
+    info_cols <-
+      base::names(results_by_age_group)[
+        base::grepl("^info", base::names(results_by_age_group))]
+
+    if (base::any(purrr::map_lgl(
+      info_cols,
+      ~ dplyr::n_distinct(results_by_age_group[[.x]]) > 1))) {
+
+      base::stop(
+        base::paste0(
+          "socialize() can only be applied to one subgroup at a time, but ",
+          "the results keep several of them apart (see the argument ",
+          "main_results_by of attribute_health()).\n",
+          "Please, call attribute_health() once per subgroup ",
+          "(e.g. once per exposure-outcome pair) and then ",
+          "socialize() on each of the results."),
+        call. = FALSE)
+    }
 
     ## Compile input data
     ## without social component
