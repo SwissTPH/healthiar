@@ -30,7 +30,12 @@ multiexpose(
 
   `String` specifying the multiple exposures approach to be used in the
   assessment. Options: "additive" (default), "multiplicative" or
-  "combined".
+  "combined". The `"multiplicative"` and `"combined"` approaches merge
+  the exposures within each row and therefore require one single
+  exposure value per exposure (e.g. the population-weighted mean); they
+  cannot be used with exposure distributions, because the exposure
+  categories of two exposures are not paired. Only `"additive"` accepts
+  exposure distributions.
 
 ## Value
 
