@@ -279,9 +279,13 @@ summarize_uncertainty <- function(
   ## Error if exposure distribution and uncertainty in exp_...####
   if(# If exposure distribution
     exp_type == "exposure_distribution" &&
-    # If uncertainty in exposure
-    (!base::is.null(input_args$value$exp_lower) |
-      !base::is.null(input_args$value$exp_upper))){
+    # If uncertainty in exposure.
+    # input_args_to_check and not input_args: in a comparison the latter is the
+    # input_args of compare() itself, which only contains the input_args of
+    # each scenario and has therefore no element "value". Both is.null() were
+    # then always TRUE and the error could never be shown
+    (!base::is.null(input_args_to_check$value$exp_lower) |
+      !base::is.null(input_args_to_check$value$exp_upper))){
     base::stop("Sorry, the summary of uncertainty for exp_... in exposure distributions is not currently supported.",
                call. = FALSE)
   }
