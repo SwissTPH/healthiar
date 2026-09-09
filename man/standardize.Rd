@@ -7,7 +7,7 @@
 standardize(output_attribute, age_group, ref_prop_pop = NULL)
 }
 \arguments{
-\item{output_attribute}{\code{List} containing the outputs of the \code{healthiar::attribute_health()} assessments for each age group (each list element should be an age group-specific assessment).}
+\item{output_attribute}{\code{List} containing the output of \strong{one single} \code{healthiar::attribute_...()} call in which the age groups of interest were entered in the argument \code{age_group}, i.e. one assessment stratified by age group and \strong{not} a list of age group-specific assessments.}
 
 \item{age_group}{\code{String vector} with the age groups included in the age standardization. The vector refers to age-dependent data in this function and to \code{output_attribute} (if provided).}
 
