@@ -181,7 +181,7 @@ standardize <- function(output_attribute,
     dplyr::mutate(
       # info_cols because otherwise the population of all subgroups would be
       # summed, i.e. counted as many times as subgroups there are
-      .by = dplyr::any_of(c(geo_id_cols, info_cols)),
+      .by = dplyr::any_of(c(geo_id_cols, uncertainty_cols, info_cols)),
       total_population = base::sum(population),
       total_impact = base::sum(impact)) |>
     # Calculate population weight and standardized impact
