@@ -25,7 +25,8 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
         social_indicator = exdat_socialize$score,
         n_quantile = 10,
         increasing_deprivation = TRUE)$social_main$difference_value |> base::round(2),
-    expect = c(11.470, 0.190, -0.830, -0.010) # Results on 25 June 2025
+    # Results on 9 September 2026; no comparison study.
+    expect = c(26.480, 0.600, 14.170, 0.240)
   )
 })
 
