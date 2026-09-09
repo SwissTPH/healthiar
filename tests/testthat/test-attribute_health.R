@@ -3727,7 +3727,7 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
 
   testthat::expect_equal(
     object =  output_attribute$health_detailed$results_raw |>
-      dplyr::group_by(info_column_1) |>
+      dplyr::group_by(info_education) |>
       dplyr::summarize(mean_impact = mean(impact))|>
       dplyr::pull(mean_impact),
     expected = c(38.77982591, 43.25633549, 34.30331632)) # Results on 21 Jan 2026
@@ -3758,7 +3758,7 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
 
   testthat::expect_equal(
     object =  output_attribute$health_detailed$results_raw |>
-      dplyr::group_by(info_column_1) |>
+      dplyr::group_by(info_education) |>
       dplyr::summarize(mean_impact = mean(impact))|>
       dplyr::pull(mean_impact),
     expected = c(43.720874558, 54.268438780, 34.303316320)) # Results on 21 Jan 2026
@@ -3788,7 +3788,7 @@ testthat::test_that("results the same |pathway_rr|erf_formula|exp_dist|iteration
 
   testthat::expect_equal(
     object =  output_attribute$health_detailed$results_raw |>
-      dplyr::group_by(info_column_1) |>
+      dplyr::group_by(info_education) |>
       dplyr::summarize(mean_impact = mean(impact))|>
       dplyr::pull(mean_impact),
     expected = c(52.8008961746572, 49.8382646174031)) # Results on 21 Jan 2026
