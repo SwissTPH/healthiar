@@ -36,15 +36,40 @@ get_output <-
     # Store set of columns ###################################
     # Variables to be used below
 
+    # Store column names of results_raw
+    # because it is to be used often below
+    colnames_results_raw <- base::names(results_raw)
+
+    # Columns added by add_info(), i.e. "info" if the user entered a vector and
+    # info_column_1, info_column_2... if the user entered a data frame.
+    # They are id columns like sex or age_group: they can define subgroups and
+    # they are summed over by default (see the exclusions below)
+    info_cols <- base::grep("^info", colnames_results_raw, value = TRUE)
+
+    # Dimensions whose impacts must never be added together,
+    # e.g. different exposure-outcome pairs.
+    # The user enters the column names of info, while add_info() renames them
+    # to info_column_1, info_column_2... so they are resolved here.
+    # NULL$value is NULL, so this also works when get_output() is called
+    # without input_args (e.g. from multiexpose())
+    main_results_by <- input_args$value$main_results_by
+    info_names <- base::names(input_args$value$info)
+
+    if (!base::is.null(main_results_by) && !base::is.null(info_names)) {
+      main_results_by <-
+        purrr::map_chr(
+          main_results_by,
+          ~ if (.x %in% info_names) {
+              base::paste0("info_column_", base::match(.x, info_names))
+            } else {.x})
+    }
+
     # ID columns
     id_cols <- c("geo_id_macro", "geo_id_micro",
                  "exp_name",
                  "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci",
-                 "year", "exp_category", "sex", "age_group")
-
-    # Store column names of results_raw
-    # because it is to be used often below
-    colnames_results_raw <- base::names(results_raw)
+                 "year", "exp_category", "sex", "age_group",
+                 info_cols)
 
     # Store those id_columns that are present in results_raw
     id_cols_available <-
@@ -117,7 +142,12 @@ get_output <-
       sex = c("exp_name", "year", "exp_category", "age_group"),
       age_group = c("exp_name", "year", "exp_category", "sex"),
       geo_id_micro = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_macro"),
-      geo_id_macro = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_micro"))
+      geo_id_macro = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_micro")) |>
+      # Info columns are summed over by default, exactly like sex and age_group.
+      # Adding them to every exclusion vector here (instead of by hand above)
+      # means that a new info column can never be forgotten.
+      # main_results_by removes them again further below
+      purrr::map(~ c(.x, info_cols))
 
     results_by_vars <- base::names(results_by_vars_and_excluded_cols)
 
@@ -141,11 +171,16 @@ get_output <-
     results_by_names <-
       base::paste0("results_by_", results_by_vars_to_be_used)
 
-    # Build list with the result_by_vars and the correponding grouping_cols
+    # Build list with the result_by_vars and the correponding grouping_cols.
+    # The columns listed in main_results_by are removed from the exclusions, so they
+    # stay in the grouping key of every results_by table and their impacts are
+    # never added up. If main_results_by is NULL, setdiff() returns the exclusions
+    # unchanged, i.e. the results are identical to those without the argument
     grouping_cols_for_results_by <-
       results_by_vars_and_excluded_cols[results_by_vars_to_be_used] |>
       purrr::map(
-        ~ base::setdiff(id_cols_available, .x)
+        ~ base::setdiff(id_cols_available,
+                        base::setdiff(.x, main_results_by))
       )
 
     # The _ci columns will never be collapsed
