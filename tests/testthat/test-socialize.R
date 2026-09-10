@@ -15,16 +15,21 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
       population = exdat_socialize$population,
       geo_id_micro = exdat_socialize$geo_unit)
 
+  # 194 geographic units of exdat_socialize have no score, because the raw
+  # deprivation index covers fewer sectors than the mortality data.
+  # socialize() warns about them, which is checked in the test
+  # "warning and no least deprived quantile if social_indicator is NA" below
   testthat::expect_equal(
     object =
-      healthiar::socialize(
-        output_attribute = att_age,
-        age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
-        ref_prop_pop = exdat_socialize$ref_prop_pop,
-        geo_id_micro = exdat_socialize$geo_unit,
-        social_indicator = exdat_socialize$score,
-        n_quantile = 10,
-        increasing_deprivation = TRUE)$social_main$difference_value |> round(2),
+      suppressWarnings(
+        healthiar::socialize(
+          output_attribute = att_age,
+          age_group = exdat_socialize$age_group, # They have to be the same in socialize() and in attribute_health()
+          ref_prop_pop = exdat_socialize$ref_prop_pop,
+          geo_id_micro = exdat_socialize$geo_unit,
+          social_indicator = exdat_socialize$score,
+          n_quantile = 10,
+          increasing_deprivation = TRUE))$social_main$difference_value |> round(2),
     # Results on 9 September 2026; no comparison study.
     expect = c(26.480, 0.600, 14.170, 0.240)
   )
