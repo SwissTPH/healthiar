@@ -4,12 +4,12 @@
 \alias{check_if_args_identical}
 \title{Check if arguments are identical before stop}
 \usage{
-check_if_args_identical(args_a, args_b, names_to_check)
+check_if_args_identical(args_1, args_2, names_to_check)
 }
 \arguments{
-\item{args_a}{\code{List} first list of arguments}
+\item{args_1}{\code{List} first list of arguments}
 
-\item{args_b}{\code{List} second list of arguments}
+\item{args_2}{\code{List} second list of arguments}
 
 \item{names_to_check}{\code{Vector} with the names of arguments to be checked}
 }

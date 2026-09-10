@@ -264,11 +264,11 @@ compare <-
 
     common_arguments_identical <-
       check_if_args_identical(
-        args_a = input_args_scen_1[["value"]],
-        args_b = input_args_scen_2[["value"]],
+        args_1 = input_args_scen_1[["value"]],
+        args_2 = input_args_scen_2[["value"]],
         names_to_check = common_arguments)
 
-    # Check that (relevant) input values from scenarios A & B are equal
+    # Check that (relevant) input values from scenarios 1 & 2 are equal
     # Works also if no input was provided (might be the case for e.g. ..._lower arguments)
     # Check if the common arguments in both scenarios are identical
 

@@ -154,8 +154,8 @@ daly <-
 
     identical_cols <-
       check_if_args_identical(
-        args_a = results_raw_yll,
-        args_b = results_raw_yld,
+        args_1 = results_raw_yll,
+        args_2 = results_raw_yld,
         names_to_check = common_cols)
 
     # [!identical_cols] and not [identical_cols]: the message has to name the
