@@ -2018,12 +2018,12 @@ pwm <- healthiar::prepare_exposure(
 
 ### Main results
 
-Within the function output, the list `main` contains 
+Within the function output, the list `exposure_main` contains 
 the population-weighted mean exposures for the (higher-level) geographic units 
 in the column `exposure_mean` and the total population in each unit in column `population_total`.
 
 ```{r echo=FALSE, eval=spatial_packages_available}
- knitr::kable(pwm$main)
+ knitr::kable(as.data.frame(pwm$exposure_main))
 ```
 
 ```{r eval=spatial_packages_available, include=FALSE, echo=FALSE}

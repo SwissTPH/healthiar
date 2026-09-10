@@ -21,14 +21,14 @@
 #' @return
 #' This function returns a \code{list} containing:
 #' @returns
-#' 1) \code{main} (\code{list}) containing the main results as vectors;
+#' 1) \code{exposure_main} (\code{list}) containing the main results as vectors;
 #' \itemize{
 #'  \item \code{geo_id_micro} of \code{geo_id_macro} (\code{string} column) containing the (higher-level) geographic IDs of the assessment
 #'  \item \code{exposure_mean} (\code{numeric} column) containing the (population-weighted) mean exposure
 #'  \item \code{population_total} (\code{integer} column) containing the total population in each geographic unit, if population data was provided
 #' }
 #' @returns
-#' 2) \code{detailed} (\code{list}) containing detailed (and interim) results.
+#' 2) \code{exposure_detailed} (\code{list}) containing detailed (and interim) results.
 
 # EXAMPLES #####################################################################
 #' @examples
