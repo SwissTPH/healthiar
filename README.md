@@ -1,6 +1,5 @@
 # healthiar <a href="https://swisstph.github.io/healthiar/"><img src="man/figures/logo.png" align="right" height="138" alt="healthiar website" /></a>
 
-<!-- badges: start -->
 [![GitHub version](https://img.shields.io/github/r-package/v/SwissTPH/healthiar?label=GitHub)](https://github.com/SwissTPH/healthiar)
 [![CRAN version](https://www.r-pkg.org/badges/version/healthiar)](https://CRAN.R-project.org/package=healthiar)
 [![CRAN release date](https://www.r-pkg.org/badges/last-release/healthiar)](https://CRAN.R-project.org/package=healthiar)
@@ -10,8 +9,7 @@
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 
 [![Watch (releases)](https://img.shields.io/badge/Watch-%28releases%29-2b7489?logo=github)](https://github.com/SwissTPH/healthiar/subscription)
-[![Star (bookmark)](https://img.shields.io/badge/Star-%28bookmark%29-yellow?logo=github)](https://github.com/SwissTPH/healthiar/stargazers)
-<!-- badges: end -->
+[![Star (bookmark)](https://img.shields.io/badge/Star-%28bookmark%29-yellow?logo=github)](https://github.com/SwissTPH/healthiar)
 
 Want to know as soon as a new *healthiar* version is released? See [Stay updated](#stay-updated) below.
 
