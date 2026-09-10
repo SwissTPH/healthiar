@@ -52,8 +52,14 @@ If no population data is provided, the function calculates the simple spatial av
 # Goal: determine population-weighted mean PM2.5 exposure for several
 # neighborhoods of Brussels (Belgium)
 
-path <- system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
-exdat_pwm_1 <- terra::rast(path)
+# terra, sf and exactextractr are only suggested by healthiar, so the
+# example is only run where they are installed
+if (requireNamespace("terra", quietly = TRUE) &&
+    requireNamespace("sf", quietly = TRUE) &&
+    requireNamespace("exactextractr", quietly = TRUE)) {
+
+  path <- system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
+  exdat_pwm_1 <- terra::rast(path)
 
 pwm <- prepare_exposure(
   poll_grid = exdat_pwm_1, # Formal class SpatRaster

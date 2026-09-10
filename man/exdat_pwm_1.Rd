@@ -27,8 +27,12 @@ of municipalities in the Brussels-Capital region (Belgium).
 Because it is a \code{.tif} file it is stored in the package's \code{inst/extdata} directory.
 }
 \examples{
-path <- system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
-exdat_pwm_1 <- terra::rast(path)
+# terra is only suggested by healthiar, so the example is only run
+# where it is installed
+if (requireNamespace("terra", quietly = TRUE)) {
+  path <- system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
+  exdat_pwm_1 <- terra::rast(path)
+}
 }
 \author{
 Arno Pauwels
