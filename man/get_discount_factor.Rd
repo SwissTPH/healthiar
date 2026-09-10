@@ -32,7 +32,7 @@ This function is called inside \code{monetize()}.
 
 One of the following three discount shapes can be selected:
 \itemize{
- \item Exponential \insertCite{Frederick2002_jel}{healthiar}
+ \item Exponential \insertCite{Frederick2002_jel,HMTreasury2026_report}{healthiar}
  \item Hyperbolic as \insertCite{Harvey1986_ms;textual}{healthiar}
  \item Hyperbolic as \insertCite{Mazur1987_book;textual}{healthiar}}
 
