@@ -651,6 +651,7 @@ monetize <- function(output_attribute = NULL,
       c("info", "geo_id_micro", "geo_id_macro",
         "impact",
         "discount_rate", "discount_shape", "inflation_rate", "n_years",
+        "real_growth_rate",
         "valuation",
         base::paste0("monetized_impact", c("", "_unadjusted", "_rounded")))
 
