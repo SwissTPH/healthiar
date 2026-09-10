@@ -1,5 +1,14 @@
 # healthiar
 
+[![GitHub
+version](https://img.shields.io/github/r-package/v/SwissTPH/healthiar?label=GitHub)](https://github.com/SwissTPH/healthiar)
+[![CRAN
+version](https://www.r-pkg.org/badges/version/healthiar)](https://CRAN.R-project.org/package=healthiar)
+[![CRAN release
+date](https://www.r-pkg.org/badges/last-release/healthiar)](https://CRAN.R-project.org/package=healthiar)
+[![CRAN
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/healthiar)](https://CRAN.R-project.org/package=healthiar)
+
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.10599/status.svg)](https://doi.org/10.21105/joss.10599)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
@@ -7,7 +16,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![Watch
 (releases)](https://img.shields.io/badge/Watch-%28releases%29-2b7489?logo=github)](https://github.com/SwissTPH/healthiar/subscription)
 [![Star
-(bookmark)](https://img.shields.io/badge/Star-%28bookmark%29-yellow?logo=github)](https://github.com/SwissTPH/healthiar/stargazers)
+(bookmark)](https://img.shields.io/badge/Star-%28bookmark%29-yellow?logo=github)](https://github.com/SwissTPH/healthiar)
 
 Want to know as soon as a new *healthiar* version is released? See [Stay
 updated](#stay-updated) below.
