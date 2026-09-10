@@ -158,11 +158,6 @@ daly <-
         args_b = results_raw_yld,
         names_to_check = common_cols)
 
-    # Remove those containing the word impact
-    column_names_results_raw_without_impact <-
-      column_names_results_raw[!base::grepl("impact|lifeyears|lifetable", column_names_results_raw)]
-
-
     # [!identical_cols] and not [identical_cols]: the message has to name the
     # columns that differ and not the ones that agree
     if(!base::all(identical_cols)){
