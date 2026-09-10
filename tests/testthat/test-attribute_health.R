@@ -370,7 +370,8 @@ testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_single|iterati
         erf_shape = "linear_log",
         bhd_central = 10)$health_main$impact,
     expected =
-      0.927071 # Results on 08 August 2024 (ChatGPT); no comparison study
+      0.927071 # Result on 08 August 2024; no comparison study (the linear-log
+             # curve is a healthiar adaptation, not a published one)
   )
 })
 
@@ -620,7 +621,51 @@ testthat::test_that("results the same |pathway_rr|threshold_equal_cutoff|exp_sin
 
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_log_log|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|cardaba_2014|", {
+
+  # Validation against the health impact assessment of air pollution in
+  # Valladolid, Spain (Cardaba Arranz et al., BMJ Open 2014;4:e005999,
+  # doi:10.1136/bmjopen-2014-005999). Its cardiopulmonary and lung cancer
+  # rows in table 4 use the log-linear (power) model of Ostro (2004),
+  # RR = ((X + 1) / (X0 + 1)) ^ beta, i.e. the log_log shape of healthiar,
+  # with the beta coefficient given directly:
+  #
+  #   PM2.5 25.85 ug/m3, natural background 3 ug/m3, population over 30 years
+  #   cardiopulmonary: beta = 0.15515, 729 baseline deaths -> 186 attributable
+  #   lung cancer:     beta = 0.23218, 142 baseline deaths ->  51 attributable
+  #
+  # healthiar takes the relative risk per increment instead of beta, so beta
+  # is converted with the definition of the shape,
+  # beta = log(rr) / (log(increment + cutoff + 1) - log(cutoff + 1))
+  background <- 3
+  rr_increment <- 10
+
+  attributable_deaths <- function(beta, bhd){
+    healthiar::attribute_health(
+      exp_central = 25.85,
+      cutoff_central = background,
+      bhd_central = bhd,
+      erf_shape = "log_log",
+      rr_central =
+        base::exp(beta * (base::log(rr_increment + background + 1) -
+                            base::log(background + 1))),
+      rr_increment = rr_increment)$health_main$impact_rounded
+  }
+
+  testthat::expect_equal(
+    object =
+      c(cardiopulmonary = attributable_deaths(beta = 0.15515, bhd = 729),
+        lung_cancer = attributable_deaths(beta = 0.23218, bhd = 142)),
+    expected = c(cardiopulmonary = 186, lung_cancer = 51))
+})
+
+testthat::test_that("results correct |pathway_rr|erf_log_log|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|pozzer_2023|", {
+
+  # The log-log curve of Pozzer et al. (2023), see rr_at_exp_pozzer() in
+  # helper.R. The whole population is exposed to one single level, so the
+  # attributable fraction is (RR - 1) / RR
+  rr_at_exp <-
+    rr_at_exp_pozzer(exp = 20, cutoff = 5, rr = 1.08, rr_increment = 10)
 
   testthat::expect_equal(
     object =
@@ -631,8 +676,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iterati
         rr_increment = 10,
         erf_shape = "log_log",
         bhd_central = 10)$health_main$impact,
-    expected =
-      0.936215963 # Results on 08 August 2024 (ChatGPT); no comparison study
+    expected = 10 * (rr_at_exp - 1) / rr_at_exp
   )
 })
 
@@ -1331,11 +1375,17 @@ testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_single|iterati
         erf_shape = "linear_log",
         bhd_central = c(10, 10))$health_detailed$results_raw$impact,
     expected =
-      c(0.927071, 0.927071) # Results on 08 August 2024 (ChatGPT); no comparison study
+      # The linear-log curve is a healthiar adaptation, not a published one
+      c(0.927071, 0.927071) # Result on 08 August 2024; no comparison study
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_log_log|exp_single|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|pozzer_2023|", {
+
+  # The log-log curve of Pozzer et al. (2023), see rr_at_exp_pozzer() in
+  # helper.R
+  rr_at_exp <-
+    rr_at_exp_pozzer(exp = 20, cutoff = 5, rr = 1.08, rr_increment = 10)
 
   testthat::expect_equal(
     object =
@@ -1347,8 +1397,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_single|iterati
         rr_increment = 10,
         erf_shape = "log_log",
         bhd_central = c(10, 10))$health_detailed$results_raw$impact,
-    expected =
-      c(0.936215963, 0.936215963) # Results on 06 August 2024 (ChatGPT); no comparison study
+    expected = base::rep(10 * (rr_at_exp - 1) / rr_at_exp, times = 2)
   )
 })
 
@@ -2214,11 +2263,18 @@ testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_dist|iteration
         erf_shape = "linear_log",
         bhd_central = c(10))$health_main$impact,
     expected =
-      0.927071 # Results on 08 August 2024 (ChatGPT); no comparison study
+      0.927071 # Result on 08 August 2024; no comparison study (the linear-log
+             # curve is a healthiar adaptation, not a published one)
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_log_log|exp_dist|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|pozzer_2023|", {
+
+  # The log-log curve of Pozzer et al. (2023), see rr_at_exp_pozzer() in
+  # helper.R. Both exposure categories have the same exposure level, so the
+  # attributable fraction is the one of a single exposure
+  rr_at_exp <-
+    rr_at_exp_pozzer(exp = 20, cutoff = 5, rr = 1.08, rr_increment = 10)
 
   testthat::expect_equal(
     object =
@@ -2230,8 +2286,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration
         rr_increment = 10,
         erf_shape = "log_log",
         bhd_central = 10)$health_main$impact,
-    expected =
-      0.936215963 # Results on 06 August 2024 (ChatGPT); no comparison study
+    expected = 10 * (rr_at_exp - 1) / rr_at_exp
   )
 })
 
@@ -2613,11 +2668,17 @@ testthat::test_that("results the same |pathway_rr|erf_lin_log|exp_dist|iteration
         erf_shape = "linear_log",
         bhd_central = c(10, 10, 10, 10))$health_main$impact,
     expected =
-      c(0.927071, 0.927071) # Results on 08 August 2024 (ChatGPT); no comparison study
+      # The linear-log curve is a healthiar adaptation, not a published one
+      c(0.927071, 0.927071) # Result on 08 August 2024; no comparison study
   )
 })
 
-testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
+testthat::test_that("results correct |pathway_rr|erf_log_log|exp_dist|iteration_TRUE|strat_FALSE|yld_FALSE|uncertainty_FALSE|pozzer_2023|", {
+
+  # The log-log curve of Pozzer et al. (2023), see rr_at_exp_pozzer() in
+  # helper.R
+  rr_at_exp <-
+    rr_at_exp_pozzer(exp = 20, cutoff = 5, rr = 1.08, rr_increment = 10)
 
   testthat::expect_equal(
     object =
@@ -2630,8 +2691,7 @@ testthat::test_that("results the same |pathway_rr|erf_log_log|exp_dist|iteration
         rr_increment = 10,
         erf_shape = "log_log",
         bhd_central = c(10, 10, 10, 10))$health_main$impact,
-    expected =
-      c(0.936215963, 0.936215963) # Results on 06 August 2024 (ChatGPT); no comparison study
+    expected = base::rep(10 * (rr_at_exp - 1) / rr_at_exp, times = 2)
   )
 })
 
@@ -4033,7 +4093,10 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
           erf_eq_central = exdat_noise$erf
       )$health_main$impact_rounded,
     expected =
-      c(174232 * 2) # Results on 2 October 2025; no comparison study
+      # 174232 highly annoyed persons is the figure published by the Norwegian
+      # Institute of Public Health (see the test below with noise_niph_ha.rds).
+      # Twice, because exdat_noise holds the exposure of two regions
+      c(174232 * 2)
   )
 
   ## ASSESSOR: Axel Luyten
@@ -4054,7 +4117,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         )$health_main$impact_rounded
       })(),
     expected =
-      c(174232 * 2) # Results on 2 October 2025; no comparison study
+      c(174232 * 2)
   )
 
 
@@ -4071,7 +4134,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         ))$health_main$impact_rounded
       })(),
     expected =
-      c(174232 * 2) # Results on 2 October 2025; no comparison study
+      c(174232 * 2)
   )
 
   ## With pipe %>% also works but a bit different code
@@ -4087,7 +4150,7 @@ testthat::test_that("results correct |pathway_ar|erf_formula|exp_dist|iteration_
         )$health_main$impact_rounded
       },
     expected =
-      c(174232 * 2) # Results on 2 October 2025; no comparison study
+      c(174232 * 2)
   )
 
   })

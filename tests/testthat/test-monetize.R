@@ -49,18 +49,21 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
 
 ##### NO INFLATION #############################################################
 
-testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|hm_treasury_2026|", {
 
+  # Validation against HM Treasury, "Discounting: Green Book supplementary
+  # guidance" (February 2026), Annex A, Table A.1: at the Social Time
+  # Preference Rate of 3.5% the discount factor of year 20 is 0.5026
   testthat::expect_equal(
     object =
       healthiar::discount(
-        impact = 2E4,
+        impact = 1E4,
         discount_shape = "exponential",
-        discount_rate = 0.03,
+        discount_rate = 0.035,
         n_years = 20
         )$monetization_main$monetized_impact_rounded,
     expect =
-      base::round(11074) # Results on 2025-04-15; no comparison study
+      base::round(1E4 * 0.5026)
   )
 })
 
@@ -129,18 +132,20 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
 })
 
 
-testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|hm_treasury_2026|", {
 
+  # Same Green Book factor as above (Table A.1, year 20 at 3.5%), but reached
+  # through monetize() with a valuation of 1 instead of through discount()
   testthat::expect_equal(
     object =
       healthiar::monetize(
-        impact = 2E4,
+        impact = 1E4,
         discount_shape = "exponential",
-        discount_rate = 0.03,
+        discount_rate = 0.035,
         n_years = 20,
         valuation = 1
       )$monetization_main$monetized_impact_rounded,
-    expect = c(11074) # Result on 2024-03-10; from ChatGPT
+    expect = base::round(1E4 * 0.5026)
   )
 })
 
@@ -156,20 +161,6 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = 20
       )$monetization_main$monetized_impact_rounded,
     expect = c(863) # Excel file from University of Porto "WP2_Examples.xlsx"
-  )
-})
-
-testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
-
-  testthat::expect_equal(
-    object =
-      healthiar::discount(
-        impact = 2E4,
-        discount_shape = "exponential",
-        discount_rate = 0.03,
-        n_years = 20
-      )$monetization_main$monetized_impact_rounded,
-    expect = 11074 # Result on 15 Jan 2025 ; no comparison study
   )
 })
 
@@ -228,20 +219,33 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
   )
 })
 
-testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_TRUE|", {
+testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_TRUE|hm_treasury_2026|", {
+
+  # HM Treasury, "Discounting: Green Book supplementary guidance"
+  # (February 2026), paragraph 2.19: discounting "is distinct from adjusting
+  # for inflation. The STPR must be applied only to values expressed in real
+  # terms, meaning that the effects of general inflation have already been
+  # removed". Here the valuation grows in real terms at exactly the rate of
+  # inflation, so the two cancel and only the discount factor of the Social
+  # Time Preference Rate is left, i.e. Table A.1 of the same document
+  discount_rate <- 0.035
+  n_years <- 20
+  rate <- 0.03
+  valuation <- 1E4
+
   testthat::expect_equal(
     object =
       healthiar::monetize(
         impact = 1,
         discount_shape = "exponential",
-        discount_rate = 0.04,
-        n_years = 5,
-        inflation_rate = 0.03,
-        real_growth_rate = 0.03,
-        valuation = 1E4
+        discount_rate = discount_rate,
+        n_years = n_years,
+        inflation_rate = rate,
+        real_growth_rate = rate,
+        valuation = valuation
       )$monetization_main$monetized_impact_rounded,
     expect =
-      8219 # Results on 2025-03-10; ChatGPT
+      base::round(valuation * 0.5026)
   )
 })
 

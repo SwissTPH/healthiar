@@ -1,308 +1,276 @@
 # QUANTITATIVE TEST ############################################################
-## ADDITIVE APPROACH ############################################################
 
-testthat::test_that("results the same |pathway_multiexposure|approach_multiexposure_additive|", {
+# The three approaches to add up the attributable impacts of two correlated
+# exposures are the ones identified by the BEST-COST methodological report
+# (Strak, Houthuijs & Staatsen, 2024, "D1.2 Report on the methodology for
+# assessing the burden of correlated exposures"), see the vignette chapter
+# "Two correlated exposures":
+#
+#   additive        PAF = PAF_1 + PAF_2                     (Steenland & Armstrong, 2006)
+#   multiplicative  PAF = (RR_1 * RR_2 - 1) / (RR_1 * RR_2) (Jerrett et al., 2013)
+#   combined        PAF = 1 - (1 - PAF_1) * (1 - PAF_2)     (Steenland & Armstrong, 2006)
+#
+# The case study is the one of the BEST-COST task 1.4 report (RIVM) on
+# natural-cause mortality attributable to PM2.5 and NO2: annual means of
+# 8.1 ug/m3 PM2.5 and 10.9 ug/m3 NO2 with log-linear exposure-response
+# functions of RR = 1.063 and RR = 1.031 per 10 ug/m3, each adjusted for the
+# other pollutant. The report gives an attributable fraction of 8.1% with the
+# additive and of 7.9% with the multiplicative approach.
+#
+# ATTENTION: neither report is publicly available. The D1.2 report is
+# confidential and will not be published; the task 1.4 report is not published
+# yet. The figures used here are therefore not verifiable from outside the
+# project, but they do come from a real assessment and not from a previous run
+# of healthiar.
+#
+# The baseline health data of 1,000 cases is a round number, so that the
+# attributable cases are the attributable fraction expressed in per mille.
+bhd <- 1000
 
-  bestcost_pm_mortality <-
+# The relative risk of one exposure at its own exposure level, i.e. the
+# log-linear rescaling from the increment of the epidemiological study
+rr_at_exp_log_linear <- function(rr, exp) rr ^ (exp / 10)
+
+# The equations of the D1.2 report, written out in base R so that the expected
+# values do not come from healthiar itself. The whole population is exposed to
+# one single level, so the attributable fraction of one exposure is (RR - 1) / RR
+paf_multiexposure <- function(approach, rr_pm, rr_no2, exp_pm, exp_no2){
+
+  rr <- c(rr_at_exp_log_linear(rr_pm, exp_pm), rr_at_exp_log_linear(rr_no2, exp_no2))
+  paf <- (rr - 1) / rr
+
+  base::switch(
+    approach,
+    additive = base::sum(paf),
+    multiplicative = (base::prod(rr) - 1) / base::prod(rr),
+    combined = 1 - base::prod(1 - paf))
+}
+
+# The central estimates of the case study, entered once here and reused by
+# every test below
+exp_pm <- c(central = 8.1)
+exp_no2 <- c(central = 10.9)
+rr_pm <- c(central = 1.063)
+rr_no2 <- c(central = 1.031)
+
+attribute_two_exposures <- function(exp_pm, exp_no2, rr_pm, rr_no2){
+
+  # NULL for a bound that is not entered, i.e. for an assessment without
+  # uncertainty around the exposure or the exposure-response function
+  bound <- function(x, ci) if(ci %in% base::names(x)) x[[ci]] else NULL
+
+  output_pm <-
     healthiar::attribute_health(
-      exp_central = 8.1,
-      cutoff_central =  0,
-      bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-      rr_central = 1.063,
-      rr_increment = 10,
-      erf_shape = "log_linear")
-
-  bestcost_no2_mortality <-
-    healthiar::attribute_mod(
-      output_attribute = bestcost_pm_mortality,
-      exp_central = 10.9,
-      rr_central = 1.031)
-
-  testthat::expect_equal(
-    object =
-      healthiar::multiexpose(
-        output_attribute_exp_1 = bestcost_pm_mortality,
-        output_attribute_exp_2 = bestcost_no2_mortality,
-        exp_name_1 = "pm2.5",
-        exp_name_2 = "no2",
-        approach_multiexposure = "additive"
-        )$health_main$impact_rounded,
-    expected =
-      c(0.081 * 1000) # Results on 2025-01-16; Results from BEST-COST T1.4 report (RIVM)
-  )
-})
-
-testthat::test_that("results the same |fake_multiexposure|approach_additive|", {
-
-  bestcost_pm_mortality <-
-    healthiar::attribute_health(
-      exp_central = 8.1,
-      exp_lower = 7, # Fake lower and upper bound in exp and rr
-      exp_upper = 9,
-      cutoff_central =  0,
-      bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-      rr_central = 1.063,
-      rr_lower = 1.05,
-      rr_upper = 1.07,
-      rr_increment = 10,
-      erf_shape = "log_linear")
-
-  bestcost_no2_mortality <-
-    healthiar::attribute_mod(
-      output_attribute = bestcost_pm_mortality,
-      exp_central = 10.9,
-      exp_lower = 9,
-      exp_upper = 12,
-      rr_lower = 1.02,
-      rr_upper = 1.04,
-      rr_central = 1.031)
-
-  testthat::expect_equal(
-    object =
-      healthiar::multiexpose(
-        output_attribute_exp_1 = bestcost_pm_mortality,
-        output_attribute_exp_2 = bestcost_no2_mortality,
-        exp_name_1 = "pm2.5",
-        exp_name_2 = "no2",
-        approach_multiexposure = "additive"
-        )$health_main$impact_rounded,
-    expected =
-      c(0.081, 0.06, 0.095) * 1000 # Results on 2025-01-16; Results from BEST-COST task 1.4 report (NIVM), but lower and upper bounds are fake
-  )
-})
-
-testthat::test_that("results the same |fake_multiexposure|approach_multiexposure_additive|", {
-
-  bestcost_pm_mortality <- healthiar::attribute_health(
-    exp_central = 8.1,
-    exp_lower = 8.1 - 1,
-    exp_upper = 8.1 + 1,
-    cutoff_central = 0,
-    bhd_central = 1000,
-    rr_central = 1.063,
-    rr_lower = 1.063 - 0.005,
-    rr_upper = 1.063 + 0.005,
-    rr_increment = 10,
-    erf_shape = "log_linear"
-  )
-
-  bestcost_no2_mortality <- healthiar::attribute_mod(
-    output_attribute = bestcost_pm_mortality,
-    exp_central = 10.9,
-    exp_lower = 10.9 - 1,
-    exp_upper = 10.9 + 1,
-    rr_central = 1.031,
-    rr_lower = 1.031 - 0.005,
-    rr_upper = 1.031 + 0.005
-  )
-
-  testthat::expect_equal(
-    object =
-      healthiar::multiexpose(
-        output_attribute_exp_1 = bestcost_pm_mortality,
-        output_attribute_exp_2 = bestcost_no2_mortality,
-        exp_name_1 = "pm2.5",
-        exp_name_2 = "no2",
-        approach_multiexposure = "additive"
-      )$health_detailed$results_raw$impact |> base::round(),
-    expected = # Results on 2025-01-20; Results from BEST-COST task 1.4 report (NIVM), but lower and upper bounds are fake
-      c(48, 45, 52, 42, 39, 46, 54, 50, 58, 33, 28, 38, 30, 25, 34, 36, 30, 41) # NEW order
-      # c(33, 30, 36, 28, 25, 30, 38, 34, 41, 48, 42, 54, 45, 39, 50, 52, 46, 58) # OLD order (from multiexposure with attribute_health call
-  )
-})
-
-## MULTIPLICATIVE APPROACH ######################################################
-
-testthat::test_that("results the same |pathway_multiexposure|approach_multiexposure_multiplicative|", {
-
-  bestcost_pm_mortality <-
-    healthiar::attribute_health(
-      exp_central = 8.1,
-      cutoff_central =  0,
-      bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-      rr_central = 1.063,
-      rr_increment = 10,
-      erf_shape = "log_linear")
-
-  bestcost_no2_mortality <-
-    healthiar::attribute_mod(
-      output_attribute = bestcost_pm_mortality,
-      exp_central = 10.9,
-      rr_central = 1.031,
-    )
-
-  testthat::expect_equal(
-    object =
-      healthiar::multiexpose(
-        output_attribute_exp_1 = bestcost_pm_mortality,
-        output_attribute_exp_2 = bestcost_no2_mortality,
-        exp_name_1 = "pm2.5",
-        exp_name_2 = "no2",
-        approach_multiexposure = "multiplicative"
-        )$health_main$impact_rounded,
-    expected =
-      c(0.079) * 1000 # Results on 2025-01-16; Results from BEST-COST task 1.4 report (NIVM), but lower and upper bounds are fake
-  )
-})
-
-testthat::test_that("results the same |fake_multiexposure|approach_multiexposure_multiplicative|", {
-
-  bestcost_pm_mortality <-
-    healthiar::attribute_health(
-      exp_central = 8.1,
-      exp_lower = 7, # Fake lower and upper bound in exp and rr
-      exp_upper = 9,
+      exp_central = exp_pm[["central"]],
+      exp_lower = bound(exp_pm, "lower"),
+      exp_upper = bound(exp_pm, "upper"),
       cutoff_central = 0,
-      bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-      rr_central = 1.063,
-      rr_lower = 1.05,
-      rr_upper = 1.07,
+      bhd_central = bhd,
+      rr_central = rr_pm[["central"]],
+      rr_lower = bound(rr_pm, "lower"),
+      rr_upper = bound(rr_pm, "upper"),
       rr_increment = 10,
       erf_shape = "log_linear")
 
-  bestcost_no2_mortality <-
-    healthiar::attribute_mod(
-      output_attribute = bestcost_pm_mortality,
-      exp_central = 10.9,
-      exp_lower = 9,
-      exp_upper = 12,
-      cutoff_central = 0,
-      rr_lower = 1.02,
-      rr_upper = 1.04,
-      rr_central = 1.031)
+  base::list(
+    pm = output_pm,
+    no2 =
+      healthiar::attribute_mod(
+        output_attribute = output_pm,
+        exp_central = exp_no2[["central"]],
+        exp_lower = bound(exp_no2, "lower"),
+        exp_upper = bound(exp_no2, "upper"),
+        rr_central = rr_no2[["central"]],
+        rr_lower = bound(rr_no2, "lower"),
+        rr_upper = bound(rr_no2, "upper")))
+}
+
+impact_multiexpose <- function(output, approach, results = "health_main"){
+
+  results_multiexpose <-
+    healthiar::multiexpose(
+      output_attribute_exp_1 = output$pm,
+      output_attribute_exp_2 = output$no2,
+      exp_name_1 = "pm2.5",
+      exp_name_2 = "no2",
+      approach_multiexposure = approach)
+
+  if(base::identical(results, "health_main")){
+    results_multiexpose$health_main$impact
+  } else {
+    results_multiexpose$health_detailed$results_raw$impact
+  }
+}
+
+
+## ADDITIVE APPROACH ###########################################################
+
+testthat::test_that("results correct |pathway_multiexposure|approach_multiexposure_additive|bestcost|", {
+
+  # 8.1%, i.e. the attributable fraction published in the BEST-COST task 1.4
+  # report for the additive approach
+  testthat::expect_equal(
+    object =
+      base::round(
+        paf_multiexposure("additive", rr_pm, rr_no2, exp_pm, exp_no2),
+        digits = 3),
+    expected = 0.081)
 
   testthat::expect_equal(
     object =
-      healthiar::multiexpose(
-        output_attribute_exp_1 = bestcost_pm_mortality,
-        output_attribute_exp_2 = bestcost_no2_mortality,
-        exp_name_1 = "pm2.5",
-        exp_name_2 = "no2",
-        approach_multiexposure = "multiplicative"
-        )$health_main |> dplyr::arrange(erf_ci) |> dplyr::select(impact_rounded) |> base::unlist() |> base::as.numeric(),
+      impact_multiexpose(
+        attribute_two_exposures(exp_pm, exp_no2, rr_pm, rr_no2),
+        approach = "additive"),
     expected =
-      c(0.079, 0.059, 0.093) * 1000 # Results on 2025-01-16; Results from BEST-COST task 1.4 report (NIVM), but lower and upper bounds are fake
-  )
+      paf_multiexposure("additive", rr_pm, rr_no2, exp_pm, exp_no2) * bhd)
 })
 
-## COMBINED APPROACH ############################################################
 
-testthat::test_that("results the same |pathway_multiexposure|approach_multiexposure_combined|", {
+## MULTIPLICATIVE APPROACH #####################################################
 
-  bestcost_pm_mortality <-
-    healthiar::attribute_health(
-      exp_central = 8.1,
-      exp_lower = 7, # Fake lower and upper bound in exp and rr
-      exp_upper = 9,
-      cutoff_central =  0,
-      bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-      rr_central = 1.063,
-      rr_lower = 1.05,
-      rr_upper = 1.07,
-      rr_increment = 10,
-      erf_shape = "log_linear")
+testthat::test_that("results correct |pathway_multiexposure|approach_multiexposure_multiplicative|bestcost|", {
 
-  bestcost_no2_mortality <-
-    healthiar::attribute_mod(
-      output_attribute = bestcost_pm_mortality,
-      exp_central = 10.9,
-      exp_lower = 9,
-      exp_upper = 12,
-      rr_lower = 1.02,
-      rr_upper = 1.04,
-      rr_central = 1.031)
+  # 7.9%, i.e. the attributable fraction published in the BEST-COST task 1.4
+  # report for the multiplicative approach
+  testthat::expect_equal(
+    object =
+      base::round(
+        paf_multiexposure("multiplicative", rr_pm, rr_no2, exp_pm, exp_no2),
+        digits = 3),
+    expected = 0.079)
 
   testthat::expect_equal(
     object =
-      healthiar::multiexpose(
-        output_attribute_exp_1 = bestcost_pm_mortality,
-        output_attribute_exp_2 = bestcost_no2_mortality,
-        exp_name_1 = "pm2.5",
-        exp_name_2 = "no2",
-        approach_multiexposure = "combined"
-        )$health_main |> dplyr::arrange(erf_ci) |> dplyr::select(impact_rounded) |> base::unlist() |> base::as.numeric(),
+      impact_multiexpose(
+        attribute_two_exposures(exp_pm, exp_no2, rr_pm, rr_no2),
+        approach = "multiplicative"),
     expected =
-      c(0.079, 0.059, 0.093) * 1000 # Results on 2025-01-16; Results from BEST-COST task 1.4 report (NIVM), but lower and upper bounds are fake
-  )
+      paf_multiexposure("multiplicative", rr_pm, rr_no2, exp_pm, exp_no2) * bhd)
 })
 
-testthat::test_that("results the same |fake_multiexposure|approach_multiexposure_combined|", {
 
-  bestcost_pm_mortality <-
-    healthiar::attribute_health(
-      exp_central = 8.1,
-      exp_lower = 7, # Fake lower and upper bound in exp and rr
-      exp_upper = 9,
-      cutoff_central = 0,
-      bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-      rr_central = 1.063,
-      rr_lower = 1.05,
-      rr_upper = 1.07,
-      rr_increment = 10,
-      erf_shape = "log_linear")
+## COMBINED APPROACH ###########################################################
 
-  bestcost_no2_mortality <-
-    healthiar::attribute_mod(
-      output_attribute = bestcost_pm_mortality,
-      exp_central = 10.9,
-      exp_lower = 9,
-      exp_upper = 12,
-      cutoff_central = 0,
-      rr_lower = 1.02,
-      rr_upper = 1.04,
-      rr_central = 1.031)
+testthat::test_that("results correct |pathway_multiexposure|approach_multiexposure_combined|bestcost|", {
+
+  # With one single exposure category the combined equation reduces to the
+  # multiplicative one, because 1 - (1 / RR_1) * (1 / RR_2) equals
+  # (RR_1 * RR_2 - 1) / (RR_1 * RR_2)
+  testthat::expect_equal(
+    object = paf_multiexposure("combined", rr_pm, rr_no2, exp_pm, exp_no2),
+    expected =
+      paf_multiexposure("multiplicative", rr_pm, rr_no2, exp_pm, exp_no2))
 
   testthat::expect_equal(
     object =
-      healthiar::multiexpose(
-        output_attribute_exp_1 = bestcost_pm_mortality,
-        output_attribute_exp_2 = bestcost_no2_mortality,
-        exp_name_1 = "pm2.5",
-        exp_name_2 = "no2",
-        approach_multiexposure = "combined"
-        )$health_main |> dplyr::arrange(erf_ci) |> dplyr::select(impact_rounded) |> base::unlist() |> base::as.numeric(),
+      impact_multiexpose(
+        attribute_two_exposures(exp_pm, exp_no2, rr_pm, rr_no2),
+        approach = "combined"),
     expected =
-      c(0.079, 0.059, 0.093) * 1000 # Results on 2025-01-16; Results from BEST-COST task 1.4 report (NIVM), but lower and upper bounds are fake
-  )
+      paf_multiexposure("combined", rr_pm, rr_no2, exp_pm, exp_no2) * bhd)
 })
 
-testthat::test_that("results the same |fake_multiexposure|approach_multiexposure_combined|", {
 
-  bestcost_pm_mortality <-
-    healthiar::attribute_health(
-      exp_central = 8.1,
-      exp_lower = 7, # Fake lower and upper bound in exp and rr
-      exp_upper = 9,
-      cutoff_central =  0,
-      bhd_central = 1000, # Fake data just to get a similar value (PAF) as in the T1.4 report
-      rr_central = 1.063,
-      rr_lower = 1.05,
-      rr_upper = 1.07,
-      rr_increment = 10,
-      erf_shape = "log_linear")
+## UNCERTAINTY #################################################################
 
-  bestcost_no2_mortality <-
-    healthiar::attribute_mod(
-      output_attribute = bestcost_pm_mortality,
-      exp_central = 10.9,
-      exp_lower = 9,
-      exp_upper = 12,
-      rr_lower = 1.02,
-      rr_upper = 1.04,
-      rr_central = 1.031)
+# The BEST-COST task 1.4 report does not give confidence intervals together
+# with the central estimates above, so the bounds below are only chosen wide
+# enough to keep the lower, central and upper combinations apart. What the
+# tests validate is not their value but that the equations of the D1.2 report
+# are applied to every combination of the bounds
+exp_pm_ci <- c(central = 8.1, lower = 7, upper = 9)
+exp_no2_ci <- c(central = 10.9, lower = 9, upper = 12)
+rr_pm_ci <- c(central = 1.063, lower = 1.05, upper = 1.07)
+rr_no2_ci <- c(central = 1.031, lower = 1.02, upper = 1.04)
+ci <- c("central", "lower", "upper")
+
+testthat::test_that("results correct |pathway_multiexposure|approach_multiexposure_additive|uncertainty|", {
+
+  output <-
+    attribute_two_exposures(exp_pm_ci, exp_no2_ci, rr_pm_ci, rr_no2_ci)
+
+  # health_main holds the three exposure-response function bounds at the
+  # central exposure
+  testthat::expect_equal(
+    object = impact_multiexpose(output, approach = "additive"),
+    expected =
+      purrr::map_dbl(
+        ci,
+        \(erf_ci)
+        paf_multiexposure(
+          approach = "additive",
+          rr_pm = rr_pm_ci[[erf_ci]],
+          rr_no2 = rr_no2_ci[[erf_ci]],
+          exp_pm = exp_pm_ci[["central"]],
+          exp_no2 = exp_no2_ci[["central"]]) * bhd))
+
+  # The additive approach adds the two assessments up only at the very end, so
+  # the raw results keep one row per exposure: first the nine combinations of
+  # exposure and exposure-response function bounds of PM2.5, then those of NO2
+  paf_one_exposure <- function(rr_ci, exp_ci){
+    purrr::map(
+      ci,
+      \(exp_bound)
+      purrr::map_dbl(
+        ci,
+        \(erf_bound){
+          rr <- rr_at_exp_log_linear(rr_ci[[erf_bound]], exp_ci[[exp_bound]])
+          (rr - 1) / rr * bhd})) |>
+      base::unlist()
+  }
+
+  testthat::expect_equal(
+    object = impact_multiexpose(output, "additive", results = "results_raw"),
+    expected =
+      c(paf_one_exposure(rr_pm_ci, exp_pm_ci),
+        paf_one_exposure(rr_no2_ci, exp_no2_ci)))
+})
+
+testthat::test_that("results correct |pathway_multiexposure|approach_multiexposure_multiplicative|uncertainty|", {
 
   testthat::expect_equal(
     object =
-      healthiar::multiexpose(
-        output_attribute_exp_1 = bestcost_pm_mortality,
-        output_attribute_exp_2 = bestcost_no2_mortality,
-        exp_name_1 = "pm2.5",
-        exp_name_2 = "no2",
-        approach_multiexposure = "combined")$health_detailed$results_raw$impact |> base::round(),
+      impact_multiexpose(
+        attribute_two_exposures(exp_pm_ci, exp_no2_ci, rr_pm_ci, rr_no2_ci),
+        approach = "multiplicative"),
     expected =
-      c(0.079, 0.059, 0.093, 0.068, 0.051, 0.079, 0.088, 0.065, 0.102) * 1000 # Results on 2025-01-16; Results from BEST-COST task 1.4 report (NIVM), but lower and upper bounds are fake
-  )
+      purrr::map_dbl(
+        ci,
+        \(erf_ci)
+        paf_multiexposure(
+          approach = "multiplicative",
+          rr_pm = rr_pm_ci[[erf_ci]],
+          rr_no2 = rr_no2_ci[[erf_ci]],
+          exp_pm = exp_pm_ci[["central"]],
+          exp_no2 = exp_no2_ci[["central"]]) * bhd))
 })
+
+testthat::test_that("results correct |pathway_multiexposure|approach_multiexposure_combined|uncertainty|", {
+
+  # The combined approach merges the two exposures, so its raw results hold
+  # the nine combinations of exposure and exposure-response function bounds
+  testthat::expect_equal(
+    object =
+      impact_multiexpose(
+        attribute_two_exposures(exp_pm_ci, exp_no2_ci, rr_pm_ci, rr_no2_ci),
+        approach = "combined",
+        results = "results_raw"),
+    expected =
+      purrr::map(
+        ci,
+        \(exp_ci)
+        purrr::map_dbl(
+          ci,
+          \(erf_ci)
+          paf_multiexposure(
+            approach = "combined",
+            rr_pm = rr_pm_ci[[erf_ci]],
+            rr_no2 = rr_no2_ci[[erf_ci]],
+            exp_pm = exp_pm_ci[[exp_ci]],
+            exp_no2 = exp_no2_ci[[exp_ci]]) * bhd)) |>
+      base::unlist())
+})
+
 
 # ERROR OR WARNING ########
 ## ERROR #########
