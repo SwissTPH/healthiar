@@ -67,8 +67,22 @@ More specifically, see chapters:
  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#standardization}{Standardization}}
 
 This function works after running \code{attribute_health()} or \code{attribute_lifetable()} functions.
-If you want to use it in combination with compare(),
-please standardize first the results of attribute functions and then compare.
+
+\strong{Combination with compare()}
+
+Age-standardized results cannot currently be compared with \code{compare()}.
+\code{compare()} reads the results by age group of each assessment, i.e.
+\code{health_detailed$results_raw}, which \code{standardize()} passes on
+unchanged: the standardization is in \code{health_main} and in
+\code{health_detailed$impact_std_by_age_group}, so applying
+\code{compare()} to the output of \code{standardize()} gives exactly the
+same result as applying it to the assessments themselves.
+The other way round does not work either, because a comparison has one
+exposure and one population per scenario and therefore none of the columns
+that \code{standardize()} needs.
+To compare two scenarios in terms of age-standardized rates, apply
+\code{standardize()} to each of them and compare the resulting
+\code{health_main$impact_per_100k_inhab} directly.
 }
 \examples{
 # Goal: age-standardize two age group-specific impacts
