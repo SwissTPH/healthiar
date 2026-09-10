@@ -88,8 +88,25 @@ This function works after running
 [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
 or
 [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
-functions. If you want to use it in combination with compare(), please
-standardize first the results of attribute functions and then compare.
+functions.
+
+**Combination with compare()**
+
+Age-standardized results cannot currently be compared with
+[`compare()`](https://swisstph.github.io/healthiar/reference/compare.md).
+[`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
+reads the results by age group of each assessment, i.e.
+`health_detailed$results_raw`, which `standardize()` passes on
+unchanged: the standardization is in `health_main` and in
+`health_detailed$impact_std_by_age_group`, so applying
+[`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
+to the output of `standardize()` gives exactly the same result as
+applying it to the assessments themselves. The other way round does not
+work either, because a comparison has one exposure and one population
+per scenario and therefore none of the columns that `standardize()`
+needs. To compare two scenarios in terms of age-standardized rates,
+apply `standardize()` to each of them and compare the resulting
+`health_main$impact_per_100k_inhab` directly.
 
 ## References
 

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1710</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1711</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -105,9 +105,21 @@ provide the relevant information on this topic.</p>
 <p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#standardization">Standardization</a></p></li>
-</ul><p>This function works after running <code><a href="attribute_health.html">attribute_health()</a></code> or <code><a href="attribute_lifetable.html">attribute_lifetable()</a></code> functions.
-If you want to use it in combination with compare(),
-please standardize first the results of attribute functions and then compare.</p>
+</ul><p>This function works after running <code><a href="attribute_health.html">attribute_health()</a></code> or <code><a href="attribute_lifetable.html">attribute_lifetable()</a></code> functions.</p>
+<p><strong>Combination with compare()</strong></p>
+<p>Age-standardized results cannot currently be compared with <code><a href="compare.html">compare()</a></code>.
+<code><a href="compare.html">compare()</a></code> reads the results by age group of each assessment, i.e.
+<code>health_detailed$results_raw</code>, which <code>standardize()</code> passes on
+unchanged: the standardization is in <code>health_main</code> and in
+<code>health_detailed$impact_std_by_age_group</code>, so applying
+<code><a href="compare.html">compare()</a></code> to the output of <code>standardize()</code> gives exactly the
+same result as applying it to the assessments themselves.
+The other way round does not work either, because a comparison has one
+exposure and one population per scenario and therefore none of the columns
+that <code>standardize()</code> needs.
+To compare two scenarios in terms of age-standardized rates, apply
+<code>standardize()</code> to each of them and compare the resulting
+<code>health_main$impact_per_100k_inhab</code> directly.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
