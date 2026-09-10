@@ -140,6 +140,34 @@ testthat::test_that("results correct|prepare_lifetable|single year input", {
 # ERROR OR WARNING ########
 ## ERROR #########
 
+testthat::test_that("error if age groups have different lengths|prepare_lifetable", {
+
+  # The calculation assumes one single interval length. Before, a non-constant
+  # one failed later with "Tibble columns must have compatible sizes."
+  testthat::expect_error(
+    object =
+      healthiar::prepare_lifetable(
+        age_group = c(0, 5, 10, 20), # the last interval is 10 and not 5
+        population = c(3387900, 3401300, 3212300, 3026100),
+        bhd = c(4727, 472, 557, 1323)),
+    regexp = "must have the same length"
+  )
+})
+
+testthat::test_that("error if age_group is not sorted|prepare_lifetable", {
+
+  # A descending age_group gives a negative interval length, which passed the
+  # check above and failed later with "invalid 'each' argument"
+  testthat::expect_error(
+    object =
+      healthiar::prepare_lifetable(
+        age_group = c(15, 10, 5, 0),
+        population = c(3387900, 3401300, 3212300, 3026100),
+        bhd = c(4727, 472, 557, 1323)),
+    regexp = "must be sorted from the youngest to the oldest age group"
+  )
+})
+
 testthat::test_that("error if lenght different|prepare_lifetable", {
 
   testthat::expect_error(
