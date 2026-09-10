@@ -69,6 +69,42 @@ prepare_exposure <-
     if (!requireNamespace("exactextractr", quietly = TRUE)) {
       stop("The 'exactextractr' package is required for this function. Please install it if you want to use this function.", call. = FALSE)}
 
+    ## Create helper function that defines the exposure bins.
+    ## It is used in both pathways below (gridded and tabular population) so
+    ## that the bins cannot drift apart between them.
+    ## floor() and ceiling() and not round(): rounding could place the lowest
+    ## break above the minimum and the highest break below the maximum of the
+    ## pollutant, and the cells outside the breaks were then assigned to no bin
+    ## at all (bin NA). Depending on the pathway they either ended up in the
+    ## results with an exposure of NA or were dropped together with their
+    ## population.
+    ## The breaks are returned as well, so that the same ones are used for the
+    ## master table of bins and for the binning of the values
+    get_exposure_bins <- function(poll_min, poll_max, bin_width) {
+
+      bin_min <- base::floor(poll_min / bin_width) * bin_width
+      bin_max <- base::ceiling(poll_max / bin_width) * bin_width
+
+      ## cut(right = FALSE) uses the intervals [a, b), so the maximum has to
+      ## lie strictly below the last break. This also guarantees at least one
+      ## bin when all cells have the same value
+      if (bin_max <= poll_max) {
+        bin_max <- bin_max + bin_width
+      }
+
+      breaks <- base::seq(bin_min, bin_max, by = bin_width)
+      ## The lower edge of each bin, i.e. all breaks but the last one
+      lower_edges <- breaks[-base::length(breaks)]
+
+      base::list(
+        breaks = breaks,
+        bins = base::data.frame(
+          bin = base::cut(lower_edges, breaks = breaks, right = FALSE),
+          mid = lower_edges + (bin_width / 2)
+        )
+      )
+    }
+
     ## calculate exposure as a simple average concentration
     if (base::is.null(population) & base::is.null(pop_grid)) {
 
@@ -177,17 +213,9 @@ prepare_exposure <-
       poll_max <- base::max(terra::values(poll_grid), na.rm = TRUE)
 
       ## define bins
-      decimals = base::round(-base::log10(bin_width))
-      bin_min <- base::round(poll_min, decimals)
-      bin_max <- base::round(poll_max, decimals)
-      bins <- base::data.frame(
-        bin = base::cut(
-          x = base::seq(bin_min, bin_max-bin_width, by = bin_width),
-          breaks = base::seq(bin_min, bin_max, by = bin_width),
-          right = FALSE
-        ),
-        mid = base::seq(bin_min, bin_max-bin_width, by = bin_width) + (bin_width/2)
-      )
+      exposure_bins <- get_exposure_bins(poll_min, poll_max, bin_width)
+      bin_breaks <- exposure_bins$breaks
+      bins <- exposure_bins$bins
 
       ## bind pollution and population grids
       grid <- base::c(poll_grid, pop_grid)
@@ -210,7 +238,7 @@ prepare_exposure <-
           # 2. Create bins for pollutant levels
           dplyr::mutate(bin = base::cut(
             poll,
-            base::seq(bin_min, bin_max, by = bin_width),
+            bin_breaks,
             right = FALSE
           )) |>
           # 3. Aggregate population by bin
@@ -219,8 +247,12 @@ prepare_exposure <-
             pop = base::sum(pop, na.rm = TRUE),
             .groups = "drop"
           ) |>
-          # 4. Join with master 'bins' table to ensure all bins are represented
-          dplyr::left_join(bins, by = "bin") |>
+          # 4. Join with master 'bins' table to ensure all bins are represented.
+          # right_join() and not left_join(): the left hand side is the table
+          # already summarised for this geo unit, so a left join could only add
+          # columns and never the bins without population. The bins missing
+          # there stayed absent instead of being filled with 0 below
+          dplyr::right_join(bins, by = "bin") |>
           # 5. Add back the geo_id and fill empty bins with 0
           dplyr::mutate(
             geo_id_micro = base::unique(df$geo_id_micro),
@@ -281,17 +313,9 @@ prepare_exposure <-
       poll_max <- base::max(terra::values(poll_grid), na.rm = TRUE)
 
       ## define bins
-      decimals = base::round(-base::log10(bin_width))
-      bin_min <- base::round(poll_min, decimals)
-      bin_max <- base::round(poll_max, decimals)
-      bins <- base::data.frame(
-        bin = base::cut(
-          x = base::seq(bin_min, bin_max-bin_width, by = bin_width),
-          breaks = base::seq(bin_min, bin_max, by = bin_width),
-          right = FALSE
-        ),
-        mid = base::seq(bin_min, bin_max-bin_width, by = bin_width) + (bin_width/2)
-      )
+      exposure_bins <- get_exposure_bins(poll_min, poll_max, bin_width)
+      bin_breaks <- exposure_bins$breaks
+      bins <- exposure_bins$bins
 
       ## extract pollution mean by geographical sub-unit
       exp_vals <- base::data.frame(
@@ -311,7 +335,7 @@ prepare_exposure <-
         dplyr::mutate(
           bin = base::cut(
             poll,
-            base::seq(bin_min, bin_max, by = bin_width),
+            bin_breaks,
             right = FALSE
           )
         ) |>
@@ -338,7 +362,10 @@ prepare_exposure <-
       exp_mean <- exp_vals |>
         dplyr::group_by(geo_id_macro) |>
         dplyr::summarise(
-          mean = stats::weighted.mean(poll, pop),
+          # na.rm = TRUE as in the gridded pathway above: without it a single
+          # sub-unit without raster coverage turned the mean of the whole
+          # geographical unit into NA
+          mean = stats::weighted.mean(poll, pop, na.rm = TRUE),
           pop = base::sum(pop)
         )
 
