@@ -55,7 +55,6 @@
 #' @export
 
 
-
 get_inflation_factor <-
   function(n_years,
            inflation_rate = NULL,
@@ -99,14 +98,22 @@ get_inflation_factor <-
 
       inflation_factor <- (1 + inflation_rate) ^ n_years
 
-    } else if (!base::is.null(inflation_rate) & is_deflation == TRUE){ # Deflation
-      # if discount_rate is NULL
+    } else if(is_year_specific){ # Year-specific inflation rates
+      # Each year has its own rate,
+      # so the factor is the product of the year-specific factors
 
-      inflation_factor <- 1/((1 + inflation_rate) ^ n_years)
+      # map_dbl to vectorialize the function
+      # and consequently to accept vectors in n_years
+      inflation_factor <-
+        purrr::map_dbl(
+          n_years,
+          \(i) base::prod(1 + inflation_rate[base::seq_len(i)]))
+    }
 
-    } else {
+    if(is_deflation){ # Deflation
+      # Deflation is the inverse of inflation
 
-      inflation_factor <- 1
+      inflation_factor <- 1 / inflation_factor
     }
 
     return(inflation_factor)
