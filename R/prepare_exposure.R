@@ -35,17 +35,27 @@
 #' # Goal: determine population-weighted mean PM2.5 exposure for several
 #' # neighborhoods of Brussels (Belgium)
 #'
-#' path <- system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
-#' exdat_pwm_1 <- terra::rast(path)
+#' # terra, sf and exactextractr are only suggested by healthiar, so the
+#' # example is only run where they are installed
+#' if (requireNamespace("terra", quietly = TRUE) &&
+#'     requireNamespace("sf", quietly = TRUE) &&
+#'     requireNamespace("exactextractr", quietly = TRUE)) {
 #'
-#' pwm <- prepare_exposure(
-#'   poll_grid = exdat_pwm_1, # Formal class SpatRaster
-#'   geo_units = exdat_pwm_2, # sf of the geographic sub-units
-#'   population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
-#'   geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate at
-#' )
+#'   path <- system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
+#'   exdat_pwm_1 <- terra::rast(path)
 #'
-#' pwm$exposure_main # population-weighted mean exposures for the (higher-level) geographic units
+#'   pwm <- prepare_exposure(
+#'     poll_grid = exdat_pwm_1, # Formal class SpatRaster
+#'     geo_units = exdat_pwm_2, # sf of the geographic sub-units
+#'     # population per geographic sub-unit
+#'     population = sf::st_drop_geometry(exdat_pwm_2$population),
+#'     # higher-level IDs to aggregate at
+#'     geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region)
+#'   )
+#'
+#'   # population-weighted mean exposures for the (higher-level) geo units
+#'   pwm$exposure_main
+#' }
 
 #' @export
 
