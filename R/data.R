@@ -191,7 +191,7 @@
 
 # exdat_pwm_1 ##################################################################
 
-#' Air pollution expsoure data of the Brussels-Capital region (Belgium)
+#' Air pollution exposure data of the Brussels-Capital region (Belgium)
 
 #' @description
 #' The data can be loaded using
