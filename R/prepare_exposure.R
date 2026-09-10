@@ -238,7 +238,7 @@ prepare_exposure <-
           # 2. Create bins for pollutant levels
           dplyr::mutate(bin = base::cut(
             poll,
-            base::seq(bin_min, bin_max, by = bin_width),
+            bin_breaks,
             right = FALSE
           )) |>
           # 3. Aggregate population by bin
@@ -335,7 +335,7 @@ prepare_exposure <-
         dplyr::mutate(
           bin = base::cut(
             poll,
-            base::seq(bin_min, bin_max, by = bin_width),
+            bin_breaks,
             right = FALSE
           )
         ) |>
