@@ -46,7 +46,7 @@ This function is called inside
 
 One of the following three discount shapes can be selected:
 
-- Exponential (Frederick et al. 2002)
+- Exponential (Frederick et al. 2002; HM Treasury 2026)
 
 - Hyperbolic as Harvey (1986)
 
@@ -68,6 +68,10 @@ Time Preference: A Critical Review.” *Journal of Economic Literature*,
 Harvey CM (1986). “Value Functions for Infinite-Period Planning.”
 *Management Science*, **32**(9), 1123–1139.
 [doi:10.1287/mnsc.32.9.1123](https://doi.org/10.1287/mnsc.32.9.1123) .  
+  
+HM Treasury (2026). “Discounting: Green Book supplementary guidance.” HM
+Treasury, London, UK.
+<https://www.gov.uk/government/publications/green-book-supplementary-guidance-discounting>.  
   
 Mazur JE (1987). “An adjusting procedure for studying delayed
 reinforcement.” In Commons ML, Mazur JE, Nevin JA, Rachlin H (eds.),
