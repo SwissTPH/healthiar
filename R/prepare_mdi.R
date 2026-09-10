@@ -219,7 +219,10 @@ prepare_mdi <- function(
   # ntile() gives the quantile 1 to the lowest MDI values
   data$MDI_index <- dplyr::ntile(data$MDI, n_quantile)
 
-  data |>
+  # Assigned back to data, because the result of the pipe was discarded before
+  # and the two columns stayed at the end of the table instead of right after
+  # geo_id_micro, as documented in the Value section
+  data <- data |>
     dplyr::relocate(MDI, .after = geo_id_micro) |>
     dplyr::relocate(MDI_index, .after = MDI)
 
