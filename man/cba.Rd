@@ -31,6 +31,10 @@ cba(
 
 \item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices).
 This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
+Alternatively, a \code{numeric vector} of year-specific rates can be entered
+(at least as many values as years to be considered,
+the first value referring to the first year after the present),
+assuming then that inflation varies over time instead of being constant.
 If this adjustment for inflation is not needed leave this argument empty
 (default value = NULL).}
 
@@ -38,7 +42,9 @@ If this adjustment for inflation is not needed leave this argument empty
 to the annual real-term appreciation in the societal value of health
 (e.g., income elasticity).
 This adjusts the valuation upward to reflect rising wealth,
-independent of general price inflation.}
+independent of general price inflation.
+As in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
+can be entered instead of one single value.}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.}
 
