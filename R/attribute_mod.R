@@ -102,21 +102,21 @@ attribute_mod <-
 
 
     # Capture all arguments and values
-    input_args_2_value <- base::as.list(base::environment())
+    input_args_2_value <- as.list(environment())
 
     # Removing output_attribute from args
     input_args_2_value$output_attribute <- NULL
 
     #Remove all arguments that are NULL in input_args_2_value to avoid that they overwrite
     #those in input_args_1_value
-    input_args_2_value <- purrr::discard(input_args_2_value, base::is.null)
+    input_args_2_value <- purrr::discard(input_args_2_value, is.null)
 
 
     # Extract input_args_1_value
     input_args_1 <- output_attribute[["health_detailed"]][["input_args"]]
 
     # New argument names
-    input_arg_2_names_with_new_values <- base::names(input_args_2_value)
+    input_arg_2_names_with_new_values <- names(input_args_2_value)
 
 
     # Add input_args
@@ -150,11 +150,11 @@ attribute_mod <-
     # which is not available in input_args
     # because it depends on the function call
     input_for_attribute[["is_lifetable"]] <-
-      base::unique(output_attribute$health_detailed$input_table$is_lifetable)
+      unique(output_attribute$health_detailed$input_table$is_lifetable)
 
     # Use the arguments attribute()
     output_attribute_2 <-
-      base::do.call(attribute_master,
+      do.call(attribute_master,
                     input_for_attribute)
 
     return(output_attribute_2)

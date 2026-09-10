@@ -708,7 +708,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
   #    HM Treasury, "Discounting: Green Book supplementary guidance"
   #    (February 2026), Annex A, Table A.1.
   # Valuation and cost are round numbers, since AirQ+ does not monetize
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
   valuation <- 20
   cost <- 100
   green_book_factor_year_5 <- 0.8420
@@ -728,7 +728,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
   # The attributable cases entering the cost-benefit analysis are the ones
   # published by AirQ+
   testthat::expect_equal(
-    object = base::round(bestcost_pm_copd$health_main$impact),
+    object = round(bestcost_pm_copd$health_main$impact),
     expected =
       c(data$estimated_number_of_attributable_cases_central,
         data$estimated_number_of_attributable_cases_lower,
@@ -741,7 +741,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
 
   testthat::expect_equal(
     object =
-      base::round(
+      round(
         healthiar::cba(
           output_attribute = bestcost_pm_copd,
           valuation = valuation,
@@ -752,7 +752,7 @@ testthat::test_that("results correct |pathway_cba|discount_shape_exponential|dis
           n_years_benefit = 5,
           n_years_cost = 5)$cba_main$net_benefit / net_benefit_undiscounted,
         digits = 4),
-    expected = base::rep(green_book_factor_year_5, times = 3))
+    expected = rep(green_book_factor_year_5, times = 3))
 })
 
 # ERROR OR WARNING ########

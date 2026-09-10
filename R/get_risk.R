@@ -117,13 +117,13 @@ get_risk <-
 
     # If the user does not separate the effect threshold from the cut-off,
     # the exposure-response function is anchored at the cut-off (default case)
-    if (base::is.null(threshold)) { threshold <- cutoff }
+    if (is.null(threshold)) { threshold <- cutoff }
 
     # The threshold can be NA for some cases only, e.g. in multiexpose()
     # if the threshold was entered for one exposure but not for the other one.
     # Also in that case the cut-off is taken as threshold
-    if (base::any(base::is.na(threshold))) {
-      threshold <- base::ifelse(base::is.na(threshold), cutoff, threshold)
+    if (any(is.na(threshold))) {
+      threshold <- ifelse(is.na(threshold), cutoff, threshold)
     }
 
     # Identify the exposures below the cut-off.
@@ -137,7 +137,7 @@ get_risk <-
     # Check if exposure is upper than the effect threshold
     # Otherwise the value of the exposure must be the threshold (minimum possible)
     exp <-
-      base::ifelse(exp > threshold,
+      ifelse(exp > threshold,
                    exp,
                    # if exp < threshold, then exp should be threshold
                    threshold)
@@ -146,18 +146,18 @@ get_risk <-
     # instead of for the increment
 
     # If erf_eq is passed as argument
-    if (! base::is.null(erf_eq)) {
+    if (! is.null(erf_eq)) {
 
       # If get_risk is used independently of attribute_health()
       # and only one function is entered by the user
-      if(base::is.function(erf_eq)){
+      if(is.function(erf_eq)){
         rr_at_exp <- erf_eq(exp - threshold)
         # when get_risk() is used inside attribute_health(),
         # erf_eq that are functions are encapsulated in lists to be included in tibbles
         # That is why we need is.list() and map()
-        } else if (base::is.list(erf_eq) && base::all(purrr::map_lgl(erf_eq, base::is.function))) {
+        } else if (is.list(erf_eq) && all(purrr::map_lgl(erf_eq, is.function))) {
 
-           rr_at_exp <- base::mapply(function(f, cval) f(cval), erf_eq, exp - threshold)
+           rr_at_exp <- mapply(function(f, cval) f(cval), erf_eq, exp - threshold)
            # A map() approach does not work here. Therefore, mapply
            # rr_at_exp <- erf_eq |>
            #   purrr::map_dbl(~ .x(exp - threshold))
@@ -165,12 +165,12 @@ get_risk <-
 
           # If the function is a string (vector)
 
-        } else if (base::is.character(erf_eq)) {
+        } else if (is.character(erf_eq)) {
         # The function must in this case created to be used below
         erf_fun <- 
           purrr::map(
             erf_eq, 
-            ~ base::eval(base::parse(text = paste0("function(c) { ", .x, " }"))))
+            ~ eval(parse(text = paste0("function(c) { ", .x, " }"))))
         
         rr_at_exp <- 
           #_dbl to convert list of functions into vector with numberic values
@@ -182,14 +182,14 @@ get_risk <-
         }
 
     # If erf_eq is not entered by the user
-    } else if (base::is.null(erf_eq)){
+    } else if (is.null(erf_eq)){
 
       # Calculate the rr_at_exp based on erf_shape.
       # case_when() because the shape can be one single value or one per
       # exposure, e.g. when several exposure-outcome pairs are assessed in one
       # call (PM2.5 log-linear and NO2 linear). It expects the conditions to
       # have the same length as the results, so one single shape is recycled
-      erf_shape <- base::rep_len(erf_shape, base::length(exp))
+      erf_shape <- rep_len(erf_shape, length(exp))
 
       rr_at_exp <-
         dplyr::case_when(
@@ -198,17 +198,17 @@ get_risk <-
             1 + ( (rr - 1) * (exp - threshold) / rr_increment ),
           # LOG-LINEAR ####
           erf_shape == "log_linear" ~
-            base::exp( base::log(rr) * (exp - threshold) / rr_increment ),
+            exp( log(rr) * (exp - threshold) / rr_increment ),
           ## This curve below follows the definition by Pozzer 2022 (http://doi.org/10.1029/2022GH000711)
           ## It is defined at all exposures and RR equals RR₁₀ when Ci=C0+10 exactly.
           ## rr_at_exp = ((exp + 1) / (threshold + 1)) ^ beta, where beta = log(rr) / ( log(rr_increment + threshold + 1) - log(threshold + 1) )
           erf_shape == "log_log" ~
-            ( ( exp + 1 ) / ( threshold + 1 ) )^( base::log(rr) / ( base::log(rr_increment + threshold + 1) - base::log(threshold + 1) ) ),
+            ( ( exp + 1 ) / ( threshold + 1 ) )^( log(rr) / ( log(rr_increment + threshold + 1) - log(threshold + 1) ) ),
           # LINEAR-LOG ####
           ## This curve below has been proposed by ChatGPT:
           # it's an adaption of the initially proposed curve with the structure of Pozzer 2022's log-log ERF
           erf_shape == "linear_log" ~
-            1 + ( ( rr - 1 ) / ( base::log(rr_increment + threshold + 1) - base::log(threshold + 1) ) ) * base::log( (exp + 1) / (threshold + 1) ),
+            1 + ( ( rr - 1 ) / ( log(rr_increment + threshold + 1) - log(threshold + 1) ) ) * log( (exp + 1) / (threshold + 1) ),
           # An unknown shape yields NA instead of silently leaving rr_at_exp
           # undefined (which was the behaviour of the if/else chain before)
           .default = NA_real_)
@@ -219,8 +219,8 @@ get_risk <-
     # if the cut-off is higher than the effect threshold (see above).
     # The if condition keeps the default case (cut-off = threshold) untouched,
     # which matters for user-defined erf_eq that are not anchored at 1
-    if (base::any(is_below_cutoff)) {
-      rr_at_exp <- base::ifelse(is_below_cutoff, 1, rr_at_exp)
+    if (any(is_below_cutoff)) {
+      rr_at_exp <- ifelse(is_below_cutoff, 1, rr_at_exp)
     }
 
     return(rr_at_exp)

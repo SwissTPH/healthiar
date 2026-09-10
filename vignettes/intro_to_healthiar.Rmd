@@ -926,15 +926,15 @@ output_attribute <- healthiar::attribute_health(
     rr_increment = 10,
     erf_shape = "log_linear",
     cutoff_central =  0,
-    age_group = base::rep(c("50_and_younger", "50_plus"), each = 4, times= 2),
-    sex = base::rep(c("female", "male"), each = 2, times = 4),
+    age_group = rep(c("50_and_younger", "50_plus"), each = 4, times= 2),
+    sex = rep(c("female", "male"), each = 2, times = 4),
     exp_central = c(6, 7, 8, 7, 8, 9, 8, 9,
                     10, 9, 10, 11, 10, 11, 12, 13),
     bhd_central = c(600, 700, 800, 700, 800, 900, 800, 900,
                     1000, 900, 1000, 1100, 1000, 1100, 1200, 1000),
-    geo_id_micro = base::rep(c("a", "b"), each = 8),
-    info = base::data.frame(
-      education = base::rep(c("without_master", "with_master"), times = 8)) # education level
+    geo_id_micro = rep(c("a", "b"), each = 8),
+    info = data.frame(
+      education = rep(c("without_master", "with_master"), times = 8)) # education level
   )
 ```
 

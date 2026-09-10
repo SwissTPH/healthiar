@@ -22,7 +22,7 @@ find_multi_value_col_names <- function(df,
                                        group_col_names = NULL){
 
   # Only the columns that are not grouping columns have to be scanned
-  col_names <- base::setdiff(base::names(df), group_col_names)
+  col_names <- setdiff(names(df), group_col_names)
 
   # Id of the group of each row
   # (1 for all rows if there are no grouping columns)

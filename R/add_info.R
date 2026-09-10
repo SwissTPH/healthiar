@@ -21,15 +21,15 @@
 
 add_info <- function(df, info){
 
-  if(base::is.null(info)){
+  if(is.null(info)){
     output <-
       dplyr::mutate(df, info = NULL)
 
-  } else if(base::is.vector(info)) {
+  } else if(is.vector(info)) {
     output <-
       dplyr::mutate(df, info = info)
 
-  } else if(base::is.data.frame(info)){
+  } else if(is.data.frame(info)){
 
     # The columns keep the names entered by the user, only adding the prefix
     # "info_". The prefix keeps them apart from the internal columns of the
@@ -40,7 +40,7 @@ add_info <- function(df, info){
     # so that the names stay unique (e.g. the columns "pollutant" and
     # "info_pollutant" do not end up with the same name)
     output <-
-      stats::setNames(info, base::paste0("info_", base::names(info)))
+      stats::setNames(info, paste0("info_", names(info)))
 
     output <- dplyr::bind_cols(df, output)
 

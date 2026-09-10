@@ -101,8 +101,8 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|curtin_klein
 
   both_communities <-
     healthiar::attribute_health(
-      geo_id_micro = base::rep(c("community_a", "community_b"), each = 3),
-      age_group = base::rep(age_group, times = 2),
+      geo_id_micro = rep(c("community_a", "community_b"), each = 3),
+      age_group = rep(age_group, times = 2),
       exp_central = 10,
       cutoff_central = 0,
       rr_central = 1.05,
@@ -135,8 +135,8 @@ testthat::test_that("results correct |pathway_standardize|multi_geo|curtin_klein
         output_attribute = both_communities,
         age_group = age_group)$health_main$bhd_per_100k_inhab / 100,
     expected =
-      c(base::sum(c(20, 40, 60) * internal_standard),
-        base::sum(c(30, 50, 70) * internal_standard)))
+      c(sum(c(20, 40, 60) * internal_standard),
+        sum(c(30, 50, 70) * internal_standard)))
 })
 
 
@@ -207,9 +207,9 @@ testthat::test_that("results the same |pathway_standardize|main_results_by|two_s
   # must be applied once per subgroup instead of pooling them
   in_one_call <-
     healthiar::attribute_health(
-      info = base::data.frame(pair = base::rep(c("copd", "asthma"), each = 2)),
+      info = data.frame(pair = rep(c("copd", "asthma"), each = 2)),
       main_results_by = "pair",
-      age_group = base::rep(c("below_40", "above_40"), times = 2),
+      age_group = rep(c("below_40", "above_40"), times = 2),
       exp_central = c(8.1, 10.9, 22.1, 24.5),
       cutoff_central = 0,
       bhd_central = c(1000, 4000, 800, 3000),
@@ -226,9 +226,9 @@ testthat::test_that("results the same |pathway_standardize|main_results_by|two_s
       .x = 1:2,
       .f = ~ healthiar::attribute_health(
         age_group = c("below_40", "above_40"),
-        exp_central = base::list(c(8.1, 10.9), c(22.1, 24.5))[[.x]],
+        exp_central = list(c(8.1, 10.9), c(22.1, 24.5))[[.x]],
         cutoff_central = 0,
-        bhd_central = base::list(c(1000, 4000), c(800, 3000))[[.x]],
+        bhd_central = list(c(1000, 4000), c(800, 3000))[[.x]],
         rr_central = c(1.063, 1.041)[.x],
         rr_increment = 10,
         erf_shape = "log_linear",
@@ -270,7 +270,7 @@ testthat::test_that("results the same |pathway_standardize|uncertainty|age_group
 
   # Expected values derived from the arguments above and not from the output,
   # so that the test does not confirm whatever the function happens to return
-  rr_at_exp <- base::exp(base::log(1.063) * c(8.1, 10.9) / 10)
+  rr_at_exp <- exp(log(1.063) * c(8.1, 10.9) / 10)
   pop_fraction_by_age_group <- (rr_at_exp - 1) / rr_at_exp
   bhd <- c(1000, 4000)
   population <- c(1E5, 5E5)
@@ -285,8 +285,8 @@ testthat::test_that("results the same |pathway_standardize|uncertainty|age_group
       c(exp = central$exp,
         pop_fraction = central$pop_fraction),
     expected =
-      c(exp = base::sum(c(8.1, 10.9) * population / base::sum(population)),
-        pop_fraction = base::sum(pop_fraction_by_age_group * bhd) / base::sum(bhd)))
+      c(exp = sum(c(8.1, 10.9) * population / sum(population)),
+        pop_fraction = sum(pop_fraction_by_age_group * bhd) / sum(bhd)))
 
   # The reference proportions must stay attached to their own age group, so the
   # order in which the age groups are entered cannot change the result

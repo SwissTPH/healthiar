@@ -39,11 +39,11 @@ paf_multiexposure <- function(approach, rr_pm, rr_no2, exp_pm, exp_no2){
   rr <- c(rr_at_exp_log_linear(rr_pm, exp_pm), rr_at_exp_log_linear(rr_no2, exp_no2))
   paf <- (rr - 1) / rr
 
-  base::switch(
+  switch(
     approach,
-    additive = base::sum(paf),
-    multiplicative = (base::prod(rr) - 1) / base::prod(rr),
-    combined = 1 - base::prod(1 - paf))
+    additive = sum(paf),
+    multiplicative = (prod(rr) - 1) / prod(rr),
+    combined = 1 - prod(1 - paf))
 }
 
 # The central estimates of the case study, entered once here and reused by
@@ -57,7 +57,7 @@ attribute_two_exposures <- function(exp_pm, exp_no2, rr_pm, rr_no2){
 
   # NULL for a bound that is not entered, i.e. for an assessment without
   # uncertainty around the exposure or the exposure-response function
-  bound <- function(x, ci) if(ci %in% base::names(x)) x[[ci]] else NULL
+  bound <- function(x, ci) if(ci %in% names(x)) x[[ci]] else NULL
 
   output_pm <-
     healthiar::attribute_health(
@@ -72,7 +72,7 @@ attribute_two_exposures <- function(exp_pm, exp_no2, rr_pm, rr_no2){
       rr_increment = 10,
       erf_shape = "log_linear")
 
-  base::list(
+  list(
     pm = output_pm,
     no2 =
       healthiar::attribute_mod(
@@ -95,7 +95,7 @@ impact_multiexpose <- function(output, approach, results = "health_main"){
       exp_name_2 = "no2",
       approach_multiexposure = approach)
 
-  if(base::identical(results, "health_main")){
+  if(identical(results, "health_main")){
     results_multiexpose$health_main$impact
   } else {
     results_multiexpose$health_detailed$results_raw$impact
@@ -111,7 +111,7 @@ testthat::test_that("results correct |pathway_multiexposure|approach_multiexposu
   # report for the additive approach
   testthat::expect_equal(
     object =
-      base::round(
+      round(
         paf_multiexposure("additive", rr_pm, rr_no2, exp_pm, exp_no2),
         digits = 3),
     expected = 0.081)
@@ -134,7 +134,7 @@ testthat::test_that("results correct |pathway_multiexposure|approach_multiexposu
   # report for the multiplicative approach
   testthat::expect_equal(
     object =
-      base::round(
+      round(
         paf_multiexposure("multiplicative", rr_pm, rr_no2, exp_pm, exp_no2),
         digits = 3),
     expected = 0.079)
@@ -216,7 +216,7 @@ testthat::test_that("results correct |pathway_multiexposure|approach_multiexposu
         \(erf_bound){
           rr <- rr_at_exp_log_linear(rr_ci[[erf_bound]], exp_ci[[exp_bound]])
           (rr - 1) / rr * bhd})) |>
-      base::unlist()
+      unlist()
   }
 
   testthat::expect_equal(
@@ -268,7 +268,7 @@ testthat::test_that("results correct |pathway_multiexposure|approach_multiexposu
             rr_no2 = rr_no2_ci[[erf_ci]],
             exp_pm = exp_pm_ci[[exp_ci]],
             exp_no2 = exp_no2_ci[[exp_ci]]) * bhd)) |>
-      base::unlist())
+      unlist())
 })
 
 
@@ -281,7 +281,7 @@ testthat::test_that("error if the two assessments assume a different life table 
   # approach_exposure. Two assessments with different values used to reach
   # get_impact_with_lifetable() and abort there with
   # "the condition has length > 1"
-  data <- base::readRDS(testthat::test_path("testdata", "lifetable_male_ekv_2010.rds"))
+  data <- readRDS(testthat::test_path("testdata", "lifetable_male_ekv_2010.rds"))
 
   attribute_with_approach_exposure <- function(approach_exposure){
     healthiar::attribute_lifetable(
@@ -292,9 +292,9 @@ testthat::test_that("error if the two assessments assume a different life table 
       rr_increment = 10,
       erf_shape = "log_linear",
       age_group = data$age,
-      sex = base::rep("male", 106),
+      sex = rep("male", 106),
       population = data$population_male,
-      bhd_central = base::as.numeric(data$deaths_natural_male),
+      bhd_central = as.numeric(data$deaths_natural_male),
       year_of_analysis = 2010,
       min_age = 20,
       approach_exposure = approach_exposure)
@@ -371,7 +371,7 @@ testthat::test_that("results the same |multiexpose|info_per_exposure|", {
       approach_multiexposure = "multiplicative")
 
   testthat::expect_equal(
-    object = base::unique(output_multiexpose$health_detailed$results_raw$rr_at_exp),
+    object = unique(output_multiexpose$health_detailed$results_raw$rr_at_exp),
     # 1.10 * 1.05^(20/10), i.e. the two relative risks multiplied
     expected = 1.10 * 1.05^2)
 })

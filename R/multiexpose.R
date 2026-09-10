@@ -88,7 +88,7 @@ multiexpose <-
 
     # Capture all arguments and values
     input_args <-
-      get_input_args(environment = base::environment(),
+      get_input_args(environment = environment(),
                      call = match.call())
 
     pop_fraction_type <- input_args$value$pop_fraction_type
@@ -114,16 +114,16 @@ multiexpose <-
       exp_names_with_distribution <-
         c(exp_name_1, exp_name_2)[
           purrr::map_lgl(
-            base::list(input_table_1, input_table_2),
-            ~ base::any(.x$exp_type == "exposure_distribution"))]
+            list(input_table_1, input_table_2),
+            ~ any(.x$exp_type == "exposure_distribution"))]
 
-      if (base::length(exp_names_with_distribution) > 0) {
-        base::stop(
-          base::paste0(
+      if (length(exp_names_with_distribution) > 0) {
+        stop(
+          paste0(
             "The ", approach_multiexposure, " approach cannot merge exposure ",
             "distributions (i.e. several exposure categories), ",
             "which were entered for: ",
-            base::toString(exp_names_with_distribution), ".\n",
+            toString(exp_names_with_distribution), ".\n",
             "The exposure categories of two exposures are not paired, ",
             "so the risks cannot be merged across them.\n",
             "Please enter one single exposure value per exposure ",
@@ -142,21 +142,21 @@ multiexpose <-
       c("health_outcome", "approach_exposure", "approach_newborns")
 
     for (characteristic in
-         base::intersect(lifetable_characteristics,
-                         base::intersect(base::names(input_table_1),
-                                         base::names(input_table_2)))) {
+         intersect(lifetable_characteristics,
+                         intersect(names(input_table_1),
+                                         names(input_table_2)))) {
 
       values <-
-        base::unique(c(input_table_1[[characteristic]],
+        unique(c(input_table_1[[characteristic]],
                        input_table_2[[characteristic]]))
 
-      if (base::length(values) > 1) {
-        base::stop(
-          base::paste0(
+      if (length(values) > 1) {
+        stop(
+          paste0(
             "The life table calculation needs one single value of ",
             characteristic,
             ", but the two assessments contain: ",
-            base::toString(values), "."),
+            toString(values), "."),
           call. = FALSE)
       }
     }

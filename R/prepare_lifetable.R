@@ -92,7 +92,7 @@ prepare_lifetable <-
     # DATA VALIDATION ######
 
 
-    input_args_value <- base::list(
+    input_args_value <- list(
       age_group = age_group,
       population = population,
       bhd = bhd,
@@ -113,12 +113,12 @@ prepare_lifetable <-
       lengths <- purrr::map_int(vars_with_same_length, length)
 
       # If not all lenghts are the same
-      if (! base::length( base::unique(lengths) ) == 1) {
+      if (! length( unique(lengths) ) == 1) {
 
         #Error
-        base::stop(
-          base::paste0("The following variables must all have the same length: ",
-                       base::paste0(base::names(vars_with_same_length),
+        stop(
+          paste0("The following variables must all have the same length: ",
+                       paste0(names(vars_with_same_length),
                                     collapse = ", "),
                        "."),
           call. = FALSE
@@ -157,7 +157,7 @@ prepare_lifetable <-
 
     # Get the interval_length base on the difference between values in age_group
     # It has to be constant across age_group values
-    age_interval_length <- base::unique(base::diff(age_group))
+    age_interval_length <- unique(diff(age_group))
 
     # unique() returns more than one value if the age groups do not all have
     # the same length, and no value at all if only one age group was entered.
@@ -165,18 +165,18 @@ prepare_lifetable <-
     # otherwise the calculation failed later with messages that do not mention
     # age_group ("Tibble columns must have compatible sizes" or
     # "invalid 'each' argument")
-    if (base::length(age_interval_length) != 1) {
-      base::stop(
-        base::paste0(
+    if (length(age_interval_length) != 1) {
+      stop(
+        paste0(
           "age_group must contain at least two age groups and all of them ",
           "must have the same length. The differences between consecutive ",
           "values are: ",
-          base::toString(base::diff(age_group)), "."),
+          toString(diff(age_group)), "."),
         call. = FALSE)
     }
 
     if (age_interval_length <= 0) {
-      base::stop(
+      stop(
         "age_group must be sorted from the youngest to the oldest age group.",
         call. = FALSE)
     }
@@ -209,8 +209,8 @@ prepare_lifetable <-
     one_vs_n_years <-
       tibble::tibble(
         age_group_1_year = age_group[1] : last_age,
-        age_group_n_years = base::rep(age_group, each = age_interval_length),
-        age_interval_index = base::rep(1:age_interval_length, times = base::length(age_group)),
+        age_group_n_years = rep(age_group, each = age_interval_length),
+        age_interval_index = rep(1:age_interval_length, times = length(age_group)),
         #age_interval_length = age_interval_length
       )
 
@@ -223,7 +223,7 @@ prepare_lifetable <-
                        by = c("age_group_n_years" = "age_group")) |>
       # Adding suffix to column names to differentiate between _n_years and 1_year columns
       dplyr::rename_with(.cols = - dplyr::contains("age_"),
-                         .fn = ~ base::paste0(., "_n_years"))
+                         .fn = ~ paste0(., "_n_years"))
 
     # Create function to obtain entry_population
     get_entry_population <- function(prob_surviving_1_year,
@@ -262,13 +262,13 @@ prepare_lifetable <-
       # Use map_dbl to vectorialize the function
       # and consequently to accept vectors
       entry_population <- purrr::map_dbl(
-        base::seq_along(prob_surviving_1_year),
+        seq_along(prob_surviving_1_year),
         \(i) {
 
           # Entry population of the first single year of age of the age group
           entry_population_first_age <-
             (population_n_years[i] + ((1 - fraction_lived[i]) * bhd_n_years[i])) /
-            base::sum(prob_surviving_1_year[i] ^ (0:(age_interval_length - 1)))
+            sum(prob_surviving_1_year[i] ^ (0:(age_interval_length - 1)))
 
           # The cohort of the age group shrinks by the probability of
           # surviving with each single year of age within the age group
@@ -321,7 +321,7 @@ prepare_lifetable <-
         # AirQ+ rule assigning exact residual to last index of the group
         bhd_1_year = dplyr::if_else(
           age_interval_index == age_interval_length,
-          bhd_n_years - base::sum(bhd_1_year[age_interval_index != age_interval_length]),
+          bhd_n_years - sum(bhd_1_year[age_interval_index != age_interval_length]),
           bhd_1_year
         ),
 

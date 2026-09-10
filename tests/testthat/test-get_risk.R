@@ -62,7 +62,7 @@ testthat::test_that("results the same | log-linear rescaling results the same", 
       rr = 1.08,
       rr_increment = 10,
       erf_shape = "log_linear"
-    ) |> base::round(x = _, digits = 4),
+    ) |> round(x = _, digits = 4),
     expected =
       1.1224
   )
@@ -75,7 +75,7 @@ testthat::test_that("results the same | log-linear rescaling results the same", 
       rr = 1.08,
       rr_increment = 10,
       erf_shape = "log_linear"
-    ) |> base::round(x = _, digits = 4),
+    ) |> round(x = _, digits = 4),
     expected =
       1.08
   )
@@ -88,7 +88,7 @@ testthat::test_that("results the same | log-linear rescaling results the same", 
       rr = 1.08,
       rr_increment = 10,
       erf_shape = "log_linear"
-    ) |> base::round(x = _, digits = 4),
+    ) |> round(x = _, digits = 4),
     expected =
       1
   )
@@ -101,7 +101,7 @@ testthat::test_that("results the same | log-linear rescaling results the same", 
       rr = 1.08,
       rr_increment = 10,
       erf_shape = "log_linear"
-    ) |> base::round(x = _, digits = 4),
+    ) |> round(x = _, digits = 4),
     expected =
       1
   )
@@ -114,7 +114,7 @@ testthat::test_that("results the same | log-linear rescaling results the same", 
       rr = 1.08,
       rr_increment = 10,
       erf_shape = "log_linear"
-    ) |> base::round(x = _, digits = 4),
+    ) |> round(x = _, digits = 4),
     expected =
       1
   )
@@ -131,7 +131,7 @@ testthat::test_that("results the same | log-linear rescaling results the same", 
 #       rr = 1.08,
 #       rr_increment = 10,
 #       erf_shape = "log_log"
-#       ) |> base::round(x = _, digits = 4),
+#       ) |> round(x = _, digits = 4),
 #     expected =
 #       1.0941 # Results on 06 August 2024 (ChatGPT); no comparison study
 #   )
@@ -261,7 +261,7 @@ testthat::test_that("results correct |log-log rescaling|pozzer_2023|", {
 #       rr = 1.08,
 #       rr_increment = 10,
 #       erf_shape = "log_log"
-#     ) |> base::round(x = _, digits = 4),
+#     ) |> round(x = _, digits = 4),
 #     expected =
 #       1.0947 # Results on 06 August 2024 (ChatGPT); no comparison study
 #   )

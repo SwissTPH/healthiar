@@ -28,7 +28,7 @@ pacman::p_load(dplyr, tibble, stringr, purrr,ggplot2,tidyr)
 # RR
 
 ```{r RR pathways}
-files <- base::list.files(
+files <- list.files(
   path = "tests/testthat",
   pattern = "\\.R$",      # only R scripts
   full.names = TRUE       
@@ -37,20 +37,20 @@ files <- base::list.files(
 # Function to extract test names from a file
 extract_test_names <- function(file_path) {
   
-  file_content <- base::readLines(file_path)
-  file_content <- file_content[!base::grepl("^\\s*#", file_content)]  # remove comments
+  file_content <- readLines(file_path)
+  file_content <- file_content[!grepl("^\\s*#", file_content)]  # remove comments
   
   # Extract test_that descriptions
-  test_names <- base::regmatches(
+  test_names <- regmatches(
     file_content,
-    base::gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', 
+    gregexpr('testthat::test_that\\("\\K[^"]+(?=", \\{)', 
              file_content, 
              perl = TRUE)
   )
   
   tibble::tibble(
-    file = base::basename(file_path),
-    test_name = base::unlist(test_names)
+    file = basename(file_path),
+    test_name = unlist(test_names)
   )
 }
 
@@ -80,9 +80,9 @@ results_summary
 results_transformed <- results_summary |>
   dplyr::group_by(file) |>
   dplyr::summarise(
-    n_total = base::sum(n),
-    n_res_correct = base::sum(n[category == "results correct"]),
-    percent_res_correct = base::round(n_res_correct / n_total * 100, 1),
+    n_total = sum(n),
+    n_res_correct = sum(n[category == "results correct"]),
+    percent_res_correct = round(n_res_correct / n_total * 100, 1),
     .groups = "drop"
   )
 
@@ -100,11 +100,11 @@ df_plot <- results_transformed |>
 ggplot2::ggplot(df_plot, ggplot2::aes(x = file, y = value, fill = type)) +
   ggplot2::geom_bar(stat = "identity") +
   ggplot2::scale_fill_manual(
-    values = base::c(
+    values = c(
       "n_res_correct" = "darkgreen",
       "n_incorrect" = "grey"
     ),
-    labels = base::c(
+    labels = c(
       "n_res_correct" = "results correct",
       "n_incorrect" = "results the same"
     ),
@@ -119,7 +119,7 @@ ggplot2::ggplot(df_plot, ggplot2::aes(x = file, y = value, fill = type)) +
   ggplot2::theme(
     axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)
   )
-base::print(results_transformed)
+print(results_transformed)
 
 ```
 
@@ -134,19 +134,19 @@ base::print(results_transformed)
 test_folder <- "tests/testthat/"
 
 # LOAD all files
-files <- base::list.files(test_folder, pattern = "\\.R$", full.names = TRUE)
+files <- list.files(test_folder, pattern = "\\.R$", full.names = TRUE)
 
 # For-loop along single files
 for(file in files) {
-  base::cat("Processing file:", file, "\n")
+  cat("Processing file:", file, "\n")
   
-  file_content <- base::readLines(file)
-  file_content <- file_content[!base::grepl("^\\s*#", file_content)]
+  file_content <- readLines(file)
+  file_content <- file_content[!grepl("^\\s*#", file_content)]
   
   # extract names
-  test_names <- base::regmatches(
+  test_names <- regmatches(
     file_content,
-    base::gregexpr(
+    gregexpr(
       'testthat::test_that\\("\\K[^"]+(?=", \\{)',
       file_content,
       perl = TRUE
@@ -165,17 +165,17 @@ for(file in files) {
       ),
       path_elements = stringr::str_extract_all(test_name, "(?<=\\|)[^\\|]+(?=\\|)")
     ) |>
-    dplyr::filter(!base::is.na(category))
+    dplyr::filter(!is.na(category))
   
   # cheg if et least two different paths
   valid_paths <- all_tests_parsed |>
     dplyr::filter(stringr::str_detect(test_name, "results correct|results the same")) |>
     dplyr::pull(path_elements) |>
-    purrr::map_chr(~ base::paste(.x, collapse = "|")) |>
+    purrr::map_chr(~ paste(.x, collapse = "|")) |>
     unique()
   
-  if(base::length(valid_paths) < 2) {#skip if only one path
-    base::cat("Skipping file (not enough valid paths):", file, "\n\n")
+  if(length(valid_paths) < 2) {#skip if only one path
+    cat("Skipping file (not enough valid paths):", file, "\n\n")
     next  
   }
   
@@ -188,7 +188,7 @@ for(file in files) {
       names_to = "level",
       values_to = "element"
     ) |>
-    filter(!base::is.na(element))
+    filter(!is.na(element))
   
   df_counts <- df_long |>
     dplyr::group_by(level, element, category) |>
@@ -202,11 +202,11 @@ for(file in files) {
     )
   
   # add col if necessary 
-if(!"results_correct" %in% base::unique(df_counts$category)) {
+if(!"results_correct" %in% unique(df_counts$category)) {
   df_counts_wide$results_correct <- 0
 }
 
-if(!"results_the_same" %in% base::unique(df_counts$category)) {
+if(!"results_the_same" %in% unique(df_counts$category)) {
   df_counts_wide$results_the_same <- 0
 }
   
@@ -217,7 +217,7 @@ if(!"results_the_same" %in% base::unique(df_counts$category)) {
       names_to = "type",
       values_to = "value"
     ) |>
-    dplyr::mutate(type = base::factor(type, levels = base::c("results_the_same", "results_correct")))
+    dplyr::mutate(type = factor(type, levels = c("results_the_same", "results_correct")))
 
   p <- ggplot2::ggplot(df_plot, ggplot2::aes(x = element, y = value, fill = type)) +
     ggplot2::geom_bar(stat = "identity") +
@@ -235,15 +235,15 @@ if(!"results_the_same" %in% base::unique(df_counts$category)) {
     ggplot2::labs(
       x = "Element",
       y = "Number of Tests",
-      title = base::basename(file)
+      title = basename(file)
     ) +
     ggplot2::theme_minimal() +
     ggplot2::theme(
       axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)
     )
   
-  base::print(p)  
-  base::Sys.sleep(0.5)  # short pause to enable plot generation
+  print(p)  
+  Sys.sleep(0.5)  # short pause to enable plot generation
   
 }
 

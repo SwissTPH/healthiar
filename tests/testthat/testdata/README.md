@@ -8,7 +8,7 @@ Always with the namespaced reader plus `testthat::test_path()`, two arguments,
 so that every call site looks the same:
 
 ```r
-data   <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+data   <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 expect <- utils::read.csv(testthat::test_path("testdata", "expected_exposure_pwm.csv"))
 pop    <- terra::rast(testthat::test_path("testdata", "population.tif"))
 ```

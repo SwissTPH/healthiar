@@ -134,25 +134,25 @@ monetize <- function(output_attribute = NULL,
 
   # Store input_args
   input_args <-
-    get_input_args(environment = base::environment(),
+    get_input_args(environment = environment(),
                    call = match.call())
 
   # Define variables ####
   # Store variables to increase readability of conditions
   #from healthiar
   using_impact_from_healthiar <-
-    !base::is.null(output_attribute) & base::is.null(impact)
+    !is.null(output_attribute) & is.null(impact)
 
 
 
   # Using compare() before monetize()
   is_compare <-
-    "input_args_scen_1" %in% base::names(output_attribute$health_detailed$input_args)
+    "input_args_scen_1" %in% names(output_attribute$health_detailed$input_args)
 
   if(is_compare){
 
     approach_comparison <-
-      base::unique(output_attribute$health_detailed$input_args$approach_comparison)
+      unique(output_attribute$health_detailed$input_args$approach_comparison)
 
   } else {
     approach_comparison <- "no_comparison"
@@ -162,24 +162,24 @@ monetize <- function(output_attribute = NULL,
   # is_lifetable only can exist if output_attribute is provided
   # and then it has to be checked of is_lifetable is TRUE or FALSE
 
-  if (!base::is.null(output_attribute)) {
+  if (!is.null(output_attribute)) {
 
     input_table <- output_attribute[["health_detailed"]][["input_table"]]
 
     # If after attribute_x(), then input table is a tibble
     if (!is_compare) {
-      is_lifetable <- base::unique(input_table$is_lifetable)
+      is_lifetable <- unique(input_table$is_lifetable)
 
     # If after compare(), input table is a list
     } else if (approach_comparison %in% c("delta", "pif")) {
 
         # When comparing, two input tables (one per scenario)
 
-        is_lifetable <- base::unique(input_table[["input_table_scen_1"]]$is_lifetable)
+        is_lifetable <- unique(input_table[["input_table_scen_1"]]$is_lifetable)
 
       } else { # If no_comparison
 
-        is_lifetable <- base::unique(input_table$is_lifetable)
+        is_lifetable <- unique(input_table$is_lifetable)
       }
 
   } else {
@@ -201,7 +201,7 @@ monetize <- function(output_attribute = NULL,
   # Impact from user input
   using_impact_from_user <- !using_impact_from_healthiar
   # Pay attention: one is vector (multiple values) and the other value (single value)
-  using_impact_vector_from_user <- using_impact_from_user & base::length(impact)>1
+  using_impact_vector_from_user <- using_impact_from_user & length(impact)>1
   using_impact_value_from_user <- using_impact_from_user & !using_impact_vector_from_user
 
 
@@ -219,7 +219,7 @@ monetize <- function(output_attribute = NULL,
   # The discount years are already defined by the length of the vector
   # Users do not need to enter it.
   if(using_impact_vector_from_user){
-    n_years <- base::length(impact)-1
+    n_years <- length(impact)-1
   }
 
   # Validate input data ####
@@ -228,7 +228,7 @@ monetize <- function(output_attribute = NULL,
   # The local values are used (and not input_args$value)
   # because n_years may have been overwritten above
   validate_args(
-    args = base::list(valuation = valuation,
+    args = list(valuation = valuation,
                       n_years = n_years),
     arg_names = c("valuation", "n_years"),
     is_valid = function(x){x >= 0},
@@ -236,7 +236,7 @@ monetize <- function(output_attribute = NULL,
 
   ## Error if value higher than 1 and lower than 0 ####
   validate_args(
-    args = base::list(discount_rate = discount_rate,
+    args = list(discount_rate = discount_rate,
                       inflation_rate = inflation_rate),
     arg_names = c("discount_rate", "inflation_rate"),
     is_valid = function(x){x >= 0 & x <= 1},
@@ -246,8 +246,8 @@ monetize <- function(output_attribute = NULL,
 
   ## Error if values for both impact and output_attribute are passed ####
 
-  if(!base::is.null(impact) && !base::is.null(output_attribute)){
-    stop(base::paste0("Enter a value for impact or for output_attribute but not both."),
+  if(!is.null(impact) && !is.null(output_attribute)){
+    stop(paste0("Enter a value for impact or for output_attribute but not both."),
          call. = FALSE)
   }
 
@@ -260,7 +260,7 @@ monetize <- function(output_attribute = NULL,
     is_valid = function(x){
       x %in% c("exponential", "hyperbolic_harvey_1986", "hyperbolic_mazur_1987")},
     message =
-      base::paste0("Please, check spelling. {arg} must have one of this values: ",
+      paste0("Please, check spelling. {arg} must have one of this values: ",
                    "exponential, hyperbolic_harvey_1986, hyperbolic_mazur_1987."))
 
   ## Error if different year of analysis in life table approach ####
@@ -279,13 +279,13 @@ monetize <- function(output_attribute = NULL,
       # If year of analysis are different
       # var and not v: the body read the loop variable of the calling loops
       # from the enclosing environment instead of its own argument
-      if(!base::identical(arg_values_scen_1[var], arg_values_scen_2[var])){
+      if(!identical(arg_values_scen_1[var], arg_values_scen_2[var])){
 
         # Error because monetize() aims to monetize health impacts from interventions
         # and health impacts from different years cannot be attributed to the intervention
 
         stop(
-          base::paste0("Please, enter the same ", var ,
+          paste0("Please, enter the same ", var ,
                        " in both scenarios of the healthiar function compare. ",
                        "Otherwise, the monetization cannot be attributed to an intervention."),
           call. = FALSE)
@@ -312,18 +312,18 @@ monetize <- function(output_attribute = NULL,
 
   #### error_if_info_with_incompatible_length ####
 
-  if(! base::is.null(info) &&
-     ! base::is.null(impact)){
+  if(! is.null(info) &&
+     ! is.null(impact)){
 
-    if(base::is.data.frame(info)){
-      length_info <- base::nrow(info)
-    } else if (base::is.vector(info)){
-      length_info <- base::length(info)
+    if(is.data.frame(info)){
+      length_info <- nrow(info)
+    } else if (is.vector(info)){
+      length_info <- length(info)
     }
 
-    if( !length_info == base::length(impact) && !length_info == 1){
-      base::stop(
-        base::paste0("The info vector or data frame columns must have a length of 1 or the same length as impact."),
+    if( !length_info == length(impact) && !length_info == 1){
+      stop(
+        paste0("The info vector or data frame columns must have a length of 1 or the same length as impact."),
         call. = FALSE
       )
     }
@@ -336,11 +336,11 @@ monetize <- function(output_attribute = NULL,
 
   # Then the value will be ignored and the length of impact will be used as n_years
 
-  if( ! base::is.null(input_args$value$n_years)  &&
-     base::length(impact) > 1 &&
-     !base::is.null(impact)){
+  if( ! is.null(input_args$value$n_years)  &&
+     length(impact) > 1 &&
+     !is.null(impact)){
     warning(
-      base::paste0("n_years is aimed for output_attribute (excluding life table)",
+      paste0("n_years is aimed for output_attribute (excluding life table)",
       " and for impact (excluding vector form).",
       " Therefore n_years is ignored here and the length of the vector impact is used instead."),
       call. = FALSE)
@@ -352,10 +352,10 @@ monetize <- function(output_attribute = NULL,
 
 
 
-  if( ! base::is.null(input_args$value$n_years) &&
+  if( ! is.null(input_args$value$n_years) &&
      is_lifetable){
     warning(
-      base::paste0("n_years is aimed for any output_attribute",
+      paste0("n_years is aimed for any output_attribute",
                    " and for impact with single value (no vector).",
                    " Therefore n_years is ignored here and the length life table is used instead."),
       call. = FALSE)
@@ -368,12 +368,12 @@ monetize <- function(output_attribute = NULL,
 
   # Then discount values are ignored because no discount is happening (by default `n_years = 0`)
   # discount_shape has a default value, so it is never NULL
-  if(base::is.null(n_years) &&
-     base::any(!base::is.null(discount_rate))&&
+  if(is.null(n_years) &&
+     any(!is.null(discount_rate))&&
      # Exclude life table because the n_years are calculated based on life table
      !is_lifetable){
     warning(
-      base::paste0("You entered some value in discount_rate,",
+      paste0("You entered some value in discount_rate,",
                    " but n_years is 0 (default value).",
                    " Therefore no discount is applied."),
       call. = FALSE)
@@ -400,7 +400,7 @@ monetize <- function(output_attribute = NULL,
              info = NULL) {
 
       # Define discount years
-      if(base::is.null(n_years)){
+      if(is.null(n_years)){
         n_years_vector <- 0
       } else {
         n_years_vector <- 0:n_years}
@@ -410,7 +410,7 @@ monetize <- function(output_attribute = NULL,
       # Therefore the year-specific rates are collapsed into one string
       collapse_if_year_specific <-
         function(rate){
-          if(base::length(rate) > 1) base::toString(rate) else rate
+          if(length(rate) > 1) toString(rate) else rate
         }
 
       df_with_input <-
@@ -436,7 +436,7 @@ monetize <- function(output_attribute = NULL,
 
         df_by_year <-  df_with_input
         df_by_year$year <-
-          base::rep(n_years_vector, len = base::nrow(df_with_input))
+          rep(n_years_vector, len = nrow(df_with_input))
 
       } else if(taking_last_discounted_year){
         df_by_year <-
@@ -472,7 +472,7 @@ monetize <- function(output_attribute = NULL,
         dplyr::mutate(
           # Discount: Apply time preference
           discount_factor = get_discount_factor(
-            discount_rate = if(base::is.null(discount_rate)) 0 else discount_rate,
+            discount_rate = if(is.null(discount_rate)) 0 else discount_rate,
             n_years = year,
             discount_shape = discount_shape
           ),
@@ -495,7 +495,7 @@ monetize <- function(output_attribute = NULL,
         df_relevant <-
           df_by_year|>
           # Keep only the last year
-          dplyr::filter(year == base::max(year)) |>
+          dplyr::filter(year == max(year)) |>
           # Remove the variable discount year because it is not anymore relevant
           # (not by-year results)
           dplyr::select(-year)
@@ -508,7 +508,7 @@ monetize <- function(output_attribute = NULL,
           dplyr::select(-dplyr::any_of(c("year")),
                         -dplyr::contains("_factor"),
                         -dplyr::contains("impact")) |>
-          base::names()
+          names()
 
         df_relevant <-
           df_by_year |>
@@ -522,14 +522,14 @@ monetize <- function(output_attribute = NULL,
         df_relevant |>
         # Round monetized impacts
         dplyr::mutate(
-          monetized_impact_rounded = base::round(monetized_impact),
+          monetized_impact_rounded = round(monetized_impact),
           .after = monetized_impact)
 
       ##### Output ####
       monetization <-
-        base::list(
+        list(
           monetization_main = monetization_main,
-          monetization_detailed = base::list(results_by_year = df_by_year)
+          monetization_detailed = list(results_by_year = df_by_year)
         )
 
       return(monetization)
@@ -559,7 +559,7 @@ monetize <- function(output_attribute = NULL,
       impact_detailed <- output_health[["health_detailed"]][["results_by_year"]] |>
         dplyr::mutate(
         # Convert year to numeric
-        year = base::as.numeric(year))
+        year = as.numeric(year))
 
       # Extract year of analysis
       # If monetizing after compare(), then take year_of_analysis_scen_1
@@ -568,15 +568,15 @@ monetize <- function(output_attribute = NULL,
 
       if(approach_comparison == "delta"){
 
-          year_of_analysis <- base::unique(impact_detailed$year_of_analysis_scen_1)
+          year_of_analysis <- unique(impact_detailed$year_of_analysis_scen_1)
 
         #If monetizing after attribute, then just take the value
       } else { #If pif or no_comparison
-        year_of_analysis <- base::unique(impact_detailed$year_of_analysis)
+        year_of_analysis <- unique(impact_detailed$year_of_analysis)
       }
 
 
-      n_years <- base::max(impact_detailed$year) - year_of_analysis
+      n_years <- max(impact_detailed$year) - year_of_analysis
 
 
       # Output will be adapted according to monetized impacts
@@ -605,13 +605,13 @@ monetize <- function(output_attribute = NULL,
         # Round results
         dplyr::mutate(
           # Round impacts and monetized impacts
-          impact_rounded = base::round(impact),
-          monetized_impact_rounded = base::round(monetized_impact))
+          impact_rounded = round(impact),
+          monetized_impact_rounded = round(monetized_impact))
 
 
       # Calculate impact per 100K inhab.
 
-      if("population" %in% base::colnames(impact_detailed)){
+      if("population" %in% colnames(impact_detailed)){
         impact_detailed <-
           impact_detailed |>
           dplyr::mutate(
@@ -673,7 +673,7 @@ monetize <- function(output_attribute = NULL,
         "discount_rate", "discount_shape", "inflation_rate", "n_years",
         "real_growth_rate",
         "valuation",
-        base::paste0("monetized_impact", c("", "_unadjusted", "_rounded")))
+        paste0("monetized_impact", c("", "_unadjusted", "_rounded")))
 
     # Keep only relevant columns for monetization
     output_monetization[["monetization_main"]] <-

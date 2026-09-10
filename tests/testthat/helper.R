@@ -20,8 +20,8 @@ rr_at_exp_pozzer <-
   function(exp, cutoff, rr, rr_increment){
 
     beta <-
-      base::log(rr) /
-      (base::log(rr_increment + cutoff + 1) - base::log(cutoff + 1))
+      log(rr) /
+      (log(rr_increment + cutoff + 1) - log(cutoff + 1))
 
     ((exp + 1) / (cutoff + 1)) ^ beta
   }

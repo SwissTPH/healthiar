@@ -23,7 +23,7 @@ testthat::test_that("results correct |direct discounting without valuation with 
           discount_shape = "exponential",
           discount_rate = 0.035,
           n_years = year)$monetization_main$monetized_impact / impact) |>
-      base::round(digits = 4),
+      round(digits = 4),
     expected = green_book_factor)
 })
 
@@ -53,14 +53,14 @@ testthat::test_that("results correct discount existing attribute_health() output
           discount_rate = 0.035,
           n_years = year)$monetization_main$monetized_impact /
           results$health_main$impact) |>
-      base::round(digits = 4),
+      round(digits = 4),
     expected = green_book_factor)
 })
 
 testthat::test_that("results the same discount existing attribute_health() output", {
 
   # EKV2010 data
-  data <- base::readRDS(testthat::test_path("testdata", "lifetable_male_ekv_2010.rds"))
+  data <- readRDS(testthat::test_path("testdata", "lifetable_male_ekv_2010.rds"))
 
 
   health_impact <- healthiar::attribute_lifetable(
@@ -71,7 +71,7 @@ testthat::test_that("results the same discount existing attribute_health() outpu
     rr_increment = 10,
     erf_shape = "log_linear",
     age_group = data$age,
-    sex = base::rep(c("male"), each = 106),
+    sex = rep(c("male"), each = 106),
     population = data$population_male,
     bhd_central = as.numeric(data$deaths_natural_male),
     year_of_analysis = 2010,
@@ -82,7 +82,7 @@ testthat::test_that("results the same discount existing attribute_health() outpu
       healthiar::discount(
         output_attribute = health_impact,
         discount_shape = "exponential",
-        discount_rate = 0.0099)$monetization_main$monetized_impact |> base::round(),
+        discount_rate = 0.0099)$monetization_main$monetized_impact |> round(),
     expect = 13453)
   # The result in the EKV2010 project was 12600.
   # Similar deviation as when calculating only health impacts (without discounting)

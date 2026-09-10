@@ -123,9 +123,9 @@ cba <-
       c("_benefit", "_cost")
 
     columns_monetization_with_suffix <-
-      base::paste0(
+      paste0(
         columns_monetization,
-        base::rep(suffix_monetization, each = base::length(columns_monetization))
+        rep(suffix_monetization, each = length(columns_monetization))
       )
 
     # Run include_monetization for benefit and cost separately
@@ -166,7 +166,7 @@ cba <-
 
     # Build the detailed output list
     cba_detailed <-
-      base::list(
+      list(
         benefit = cba_detailed_benefit,
         cost = cba_detailed_cost)
 
@@ -188,7 +188,7 @@ cba <-
     # info is included because its columns can identify subgroups or
     # exposure-outcome pairs, i.e. they define the rows just like _ci and geo_id
     columns_ci_geo_info <-
-      base::names(cba_main)[base::grepl("_ci|geo_id|info", base::names(cba_main))]
+      names(cba_main)[grepl("_ci|geo_id|info", names(cba_main))]
 
     relevant_columns <-
       c(columns_ci_geo_info,
@@ -207,7 +207,7 @@ cba <-
       # Calculate the difference between benefit and cost (net_benefit)
       # as well as cbr (cost-benefit ratio) and roi (return of investment)
       dplyr::mutate(net_benefit = benefit - cost,
-                    net_benefit_rounded = base::round(net_benefit),
+                    net_benefit_rounded = round(net_benefit),
                     cbr = benefit / cost,
                     roi = (benefit - cost) / cost * 100)
 
@@ -217,17 +217,17 @@ cba <-
     # Build the output list with main and detailed
 
     output_cba <-
-      base::list(cba_main = cba_main,
+      list(cba_main = cba_main,
            cba_detailed = cba_detailed)
 
 
 
-    if(base::is.null(impact_benefit) & !base::is.null(output_attribute)){
+    if(is.null(impact_benefit) & !is.null(output_attribute)){
       output <-
         c(output_attribute,
           output_cba)
 
-    }else if(!base::is.null(impact_benefit) & base::is.null(output_attribute)){
+    }else if(!is.null(impact_benefit) & is.null(output_attribute)){
      output <- output_cba
     }
 

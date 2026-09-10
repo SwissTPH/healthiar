@@ -237,7 +237,7 @@ attribute_health <-
     # Get input_args
     # i.e. a list with all argument values and characteristics
     input_args <-
-      get_input_args(environment = base::environment(),
+      get_input_args(environment = environment(),
                      call = match.call())
 
     # input_args$value already contains ALL arguments of this function
@@ -245,11 +245,11 @@ attribute_health <-
     # do.call() instead of one by one. In this way a new argument only has to be
     # added to the signature and not to the call below, too.
     output <-
-      base::do.call(
+      do.call(
         what = attribute_master,
         args =
           c(input_args$value,
-            base::list(
+            list(
               # NO LIFE TABLE in attribute_health()
               is_lifetable = FALSE,
               # INTERNAL ARGUMENTS

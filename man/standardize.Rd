@@ -41,8 +41,8 @@ distribution of the study population itself is taken as reference.
 group, including the interim columns of the standardization. The columns
 ending in \code{_std} are the contribution of each age group and add up to
 the corresponding column of \code{health_main}, i.e.
-\code{base::sum(impact_per_100k_inhab_std)}, \code{base::sum(exp_std)} and
-\code{base::sum(pop_fraction_std)}.
+\code{sum(impact_per_100k_inhab_std)}, \code{sum(exp_std)} and
+\code{sum(pop_fraction_std)}.
 }
 \description{
 This function obtains age-standardized health impacts based on multiple age-group specific assessments

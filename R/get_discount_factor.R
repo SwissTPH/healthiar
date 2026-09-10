@@ -80,13 +80,13 @@ get_discount_factor <-
     # then assume discount_factor = 1
     # This does not change the results
 
-    if(base::is.null(discount_rate)){
+    if(is.null(discount_rate)){
       # if discount_rate is NULL
 
       discount_factor <- 1
 
       # If only discount_rate provided ####
-    } else if(!base::is.null(discount_rate)) {
+    } else if(!is.null(discount_rate)) {
 
         # case_when() and not nested ifelse(): ifelse() returns a result of the
         # length of its condition, so one single discount_shape truncated the
@@ -95,7 +95,7 @@ get_discount_factor <-
         # (column added in monetize()), so it is recycled first: case_when()
         # expects the conditions to have the same length as the results.
         # Same approach as for erf_shape in get_risk()
-        discount_shape <- base::rep_len(discount_shape, base::length(n_years))
+        discount_shape <- rep_len(discount_shape, length(n_years))
 
         discount_factor <-
           dplyr::case_when(

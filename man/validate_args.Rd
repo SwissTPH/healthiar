@@ -60,7 +60,7 @@ in one go instead of one at a time.
 
 The order of the calls matters: a predicate is only safe once the previous
 calls have ruled out the value types it cannot handle. E.g. checking whether
-a value is a whole number (\code{x == base::floor(x)}) requires that the
+a value is a whole number (\code{x == floor(x)}) requires that the
 numeric check has already been passed.
 }
 \examples{
@@ -69,7 +69,7 @@ numeric check has already been passed.
 validate_args(
   args = input_args$value,
   arg_names = c("n_quantile", "population"),
-  is_valid = base::is.numeric,
+  is_valid = is.numeric,
   message = "{arg} must contain numeric value(s).")
 
 # Message listing all the arguments concerned
