@@ -126,6 +126,15 @@ attribute_mod <-
     input_for_attribute_input_args$value[input_arg_2_names_with_new_values] <-
       input_args_2_value
 
+    # The arguments entered here are entered by the user, so they have to be
+    # tagged accordingly. Otherwise the functions that read these tags, e.g.
+    # summarize_uncertainty() and validate_input_attribute(), do not see them
+    input_for_attribute_input_args$is_entered_by_user[input_arg_2_names_with_new_values] <-
+      TRUE
+
+    input_for_attribute_input_args$is_default[input_arg_2_names_with_new_values] <-
+      FALSE
+
     # Create input_for_attribute
     # Compilation of the data that to be re-entered in attribute_master() below
     # First all values (arguments in the function)
