@@ -17,7 +17,7 @@ so the callers do not have to filter them beforehand."><meta property="og:image"
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1724</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1730</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,7 +120,7 @@ in one go instead of one at a time.</p>
 <p><strong>Order of the calls</strong></p>
 <p>The order of the calls matters: a predicate is only safe once the previous
 calls have ruled out the value types it cannot handle. E.g. checking whether
-a value is a whole number (<code>x == base::floor(x)</code>) requires that the
+a value is a whole number (<code>x == floor(x)</code>) requires that the
 numeric check has already been passed.</p>
     </div>
     <div class="section level2">
@@ -135,7 +135,7 @@ numeric check has already been passed.</p>
 <span class="r-in"><span><span class="fu">validate_args</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  args <span class="op">=</span> <span class="va">input_args</span><span class="op">$</span><span class="va">value</span>,</span></span>
 <span class="r-in"><span>  arg_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"n_quantile"</span>, <span class="st">"population"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  is_valid <span class="op">=</span> <span class="fu">base</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">is.numeric</a></span>,</span></span>
+<span class="r-in"><span>  is_valid <span class="op">=</span> <span class="va">is.numeric</span>,</span></span>
 <span class="r-in"><span>  message <span class="op">=</span> <span class="st">"{arg} must contain numeric value(s)."</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Message listing all the arguments concerned</span></span></span>

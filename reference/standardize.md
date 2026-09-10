@@ -63,8 +63,8 @@ population itself is taken as reference.
 including the interim columns of the standardization. The columns ending
 in `_std` are the contribution of each age group and add up to the
 corresponding column of `health_main`, i.e.
-`base::sum(impact_per_100k_inhab_std)`, `base::sum(exp_std)` and
-`base::sum(pop_fraction_std)`.
+`sum(impact_per_100k_inhab_std)`, `sum(exp_std)` and
+`sum(pop_fraction_std)`.
 
 ## Details
 
