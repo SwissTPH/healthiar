@@ -271,13 +271,15 @@ monetize <- function(output_attribute = NULL,
 
     error_if_different_baseline <- function(var){
       # If year of analysis are different
-      if(!base::identical(arg_values_scen_1[v], arg_values_scen_2[v])){
+      # var and not v: the body read the loop variable of the calling loops
+      # from the enclosing environment instead of its own argument
+      if(!base::identical(arg_values_scen_1[var], arg_values_scen_2[var])){
 
         # Error because monetize() aims to monetize health impacts from interventions
         # and health impacts from different years cannot be attributed to the intervention
 
         stop(
-          base::paste0("Please, enter the same ", v ,
+          base::paste0("Please, enter the same ", var ,
                        " in both scenarios of the healthiar function compare. ",
                        "Otherwise, the monetization cannot be attributed to an intervention."),
           call. = FALSE)
