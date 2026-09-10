@@ -105,6 +105,11 @@ prepare_exposure <-
       )
     }
 
+    ## Three mutually exclusive pathways follow, chosen by the population data
+    ## that the user entered: none (simple average), a population grid, or a
+    ## population per sub-unit. Each one returns its own output, so the later
+    ## pathways are only reached if the earlier conditions did not apply.
+
     ## calculate exposure as a simple average concentration
     if (is.null(population) & is.null(pop_grid)) {
 
@@ -197,6 +202,9 @@ prepare_exposure <-
     if (!is.null(pop_grid)) {
 
       ## check for matching CRS
+      ## method = "near", i.e. nearest neighbour, so that the reprojected grid
+      ## keeps the pollutant values that were measured instead of interpolating
+      ## new ones between them
       if (terra::ext(pop_grid) != terra::ext(poll_grid)) {
         poll_grid <- terra::project(poll_grid, pop_grid, method = "near")
         warning("'poll_grid' was reprojected to match the extent and resolution of 'pop_grid'.")}
@@ -234,8 +242,14 @@ prepare_exposure <-
       exp_bins <- purrr::map_dfr(exp_vals, function(df) {
         df |>
           # 1. Calculate weighted population
+          # Cells on the border lie only partly inside the geographic unit.
+          # coverage_fraction is that share, so it scales the population of
+          # the cell down to the part that belongs to the unit
           dplyr::mutate(pop = coverage_fraction * pop) |>
           # 2. Create bins for pollutant levels
+          # right = FALSE, i.e. bins are closed on the left, so that a value
+          # falling exactly on a break belongs to the bin above it,
+          # as in the master table of bins created by get_exposure_bins()
           dplyr::mutate(bin = cut(
             poll,
             bin_breaks,

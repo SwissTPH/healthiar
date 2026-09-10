@@ -206,12 +206,17 @@ prepare_mdi <- function(
         .names = "norm_{.col}")
     )
 
+  # Unweighted mean of the five indicators, i.e. all of them count the same.
+  # This is why they are normalized first: they are entered in different units
+  # (e.g. a percentage and a population change), and without the min-max
+  # scaling above the indicator with the widest range would dominate the mean
   data$MDI <- with(
     data,
     (norm_edu + norm_unemployed + norm_single_parent + norm_pop_change + norm_no_heating) / 5
   )
 
   ## Create quantile ranks
+  # ntile() gives the quantile 1 to the lowest MDI values
   data$MDI_index <- dplyr::ntile(data$MDI, n_quantile)
 
   data |>

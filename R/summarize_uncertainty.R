@@ -492,6 +492,10 @@ summarize_uncertainty <- function(
   probs <- c(0.025, 0.975)
 
   ## Fit gamma distribution
+  # Distance to minimize: how far the 2.5% and 97.5% quantiles of a gamma with
+  # shape par fall from the confidence interval entered by the user.
+  # rate = par / central_estimate pins the mean of the gamma (shape / rate) to
+  # the central estimate, so the shape is the only parameter left to search
   f_gamma <-
     function(par, probs, lower_estimate, central_estimate, upper_estimate) {
 

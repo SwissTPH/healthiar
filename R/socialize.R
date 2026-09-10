@@ -392,6 +392,12 @@ socialize <- function(output_attribute = NULL,
         ## Remove rows with NA in social_indicator
         dplyr::filter( !is.na(social_indicator) )
 
+      # The ranking is reversed in one of the two cases so that rank 1 always
+      # goes to the most deprived geographic unit, whichever direction the
+      # social indicator runs in. Only then does the first quantile mean the
+      # same thing in both cases, which is what the comparison between the
+      # first and the last quantile below relies on
+
       # * * If increasing_deprivation #########
       if (increasing_deprivation) {
 
@@ -408,6 +414,9 @@ socialize <- function(output_attribute = NULL,
       }
 
       # Add quantile which is common for both case increasing and decreasing deprivation
+      # The cut is applied to the ranking and not to the social indicator
+      # itself, so that every quantile holds about the same number of
+      # geographic units even if the indicator is skewed
       social_component <- social_component|>
         dplyr::mutate(
           social_quantile = cut(
