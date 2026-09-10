@@ -362,7 +362,10 @@ prepare_exposure <-
       exp_mean <- exp_vals |>
         dplyr::group_by(geo_id_macro) |>
         dplyr::summarise(
-          mean = stats::weighted.mean(poll, pop),
+          # na.rm = TRUE as in the gridded pathway above: without it a single
+          # sub-unit without raster coverage turned the mean of the whole
+          # geographical unit into NA
+          mean = stats::weighted.mean(poll, pop, na.rm = TRUE),
           pop = base::sum(pop)
         )
 
