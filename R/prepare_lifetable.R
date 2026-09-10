@@ -158,6 +158,28 @@ prepare_lifetable <-
     # Get the interval_length base on the difference between values in age_group
     # It has to be constant across age_group values
     age_interval_length <- base::unique(base::diff(age_group))
+
+    # unique() returns more than one value if the age groups do not all have
+    # the same length, and no value at all if only one age group was entered.
+    # Everything below assumes one single positive interval length, so
+    # otherwise the calculation failed later with messages that do not mention
+    # age_group ("Tibble columns must have compatible sizes" or
+    # "invalid 'each' argument")
+    if (base::length(age_interval_length) != 1) {
+      base::stop(
+        base::paste0(
+          "age_group must contain at least two age groups and all of them ",
+          "must have the same length. The differences between consecutive ",
+          "values are: ",
+          base::toString(base::diff(age_group)), "."),
+        call. = FALSE)
+    }
+
+    if (age_interval_length <= 0) {
+      base::stop(
+        "age_group must be sorted from the youngest to the oldest age group.",
+        call. = FALSE)
+    }
     # Get the last_age
     # The last element of the age_group vector is the first year of the interval of n-years,
     # so sum age_interval_length
