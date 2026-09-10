@@ -405,6 +405,14 @@ monetize <- function(output_attribute = NULL,
       } else {
         n_years_vector <- 0:n_years}
 
+      # Year-specific rates are entered as vector,
+      # but the table stores one single value per row and assessment.
+      # Therefore the year-specific rates are collapsed into one string
+      collapse_if_year_specific <-
+        function(rate){
+          if(base::length(rate) > 1) base::toString(rate) else rate
+        }
+
       df_with_input <-
         df |>
         # Add columns for input data in the table
@@ -412,8 +420,10 @@ monetize <- function(output_attribute = NULL,
                       discount_rate = discount_rate,
                       n_years = n_years,
                       discount_shape = discount_shape,
-                      inflation_rate = inflation_rate,
-                      real_growth_rate = real_growth_rate) |>
+                      inflation_rate =
+                        collapse_if_year_specific(inflation_rate),
+                      real_growth_rate =
+                        collapse_if_year_specific(real_growth_rate)) |>
         # Add info
         add_info(info = info)
 
