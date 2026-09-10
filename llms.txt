@@ -1,14 +1,13 @@
 # healthiar
 
-[![CRAN
-downloads](https://cranlogs.r-pkg.org/badges/grand-total/healthiar)](https://cran.r-project.org/package=healthiar)
-
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.10599/status.svg)](https://doi.org/10.21105/joss.10599)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 
-[![GitHub Repo
-stars](https://img.shields.io/github/stars/SwissTPH/healthiar?style=social)](https://github.com/SwissTPH/healthiar/stargazers)
 [![Watch
-releases](https://img.shields.io/github/watchers/SwissTPH/healthiar?style=social&label=Watch)](https://github.com/SwissTPH/healthiar/subscription)
+(releases)](https://img.shields.io/badge/Watch-%28releases%29-2b7489?logo=github)](https://github.com/SwissTPH/healthiar/subscription)
+[![Star
+(bookmark)](https://img.shields.io/badge/Star-%28bookmark%29-yellow?logo=github)](https://github.com/SwissTPH/healthiar/stargazers)
 
 Want to know as soon as a new *healthiar* version is released? See [Stay
 updated](#stay-updated) below.
@@ -98,11 +97,6 @@ We regularly improve *healthiar* and publish a new [GitHub
 release](https://github.com/SwissTPH/healthiar/releases) every time a
 new version reaches CRAN. To make sure you don’t miss one:
 
-Each GitHub release is also archived on Zenodo (DOI:
-[10.5281/zenodo.18220360](https://doi.org/10.5281/zenodo.18220360)) if
-you need to reference a specific version snapshot rather than the
-package itself.
-
 - **Watch releases**: on the [GitHub
   repo](https://github.com/SwissTPH/healthiar), click *Watch* \>
   *Custom* \> tick *Releases only*, so you get notified without being
@@ -117,6 +111,11 @@ package itself.
 
 - **Check the changelog**: see what changed in each version on the
   [changelog](https://swisstph.github.io/healthiar/news/index.html).
+
+Each GitHub release is also archived on Zenodo (DOI:
+[10.5281/zenodo.18220360](https://doi.org/10.5281/zenodo.18220360)) if
+you need to reference a specific version snapshot rather than the
+package itself.
 
 ## Installation
 
