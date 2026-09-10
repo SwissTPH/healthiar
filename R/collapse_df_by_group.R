@@ -26,11 +26,11 @@ collapse_df_by_group <- function(df,
                                  sum_col_names = NULL,
                                  multi_value_col_names = NULL){
 
-  col_names <- base::names(df)
+  col_names <- names(df)
 
   # Columns with different values in df.
   # Only they can have multiple values within a group
-  if(base::is.null(multi_value_col_names)){
+  if(is.null(multi_value_col_names)){
     multi_value_col_names <-
       find_multi_value_col_names(df = df, group_col_names = NULL)
   }
@@ -40,7 +40,7 @@ collapse_df_by_group <- function(df,
   cols_to_collapse <- df |>
     dplyr::select(dplyr::all_of(c(group_col_names, multi_value_col_names))) |>
     find_multi_value_col_names(df = _, group_col_names = group_col_names) |>
-    base::setdiff(sum_col_names)
+    setdiff(sum_col_names)
 
   # Columns with the same value in the whole df do not have to be aggregated
   # group by group (much faster).
@@ -48,13 +48,13 @@ collapse_df_by_group <- function(df,
   # which bind_cols() recycles to all groups
   # (the value is the same in all rows, so the first row is representative)
   cols_constant <-
-    base::setdiff(col_names,
+    setdiff(col_names,
                   c(group_col_names, multi_value_col_names, sum_col_names))
 
   # The remaining columns have a unique value per group,
   # so the first value can be taken
   cols_to_keep <-
-    base::setdiff(col_names,
+    setdiff(col_names,
                   c(group_col_names, cols_to_collapse, cols_constant, sum_col_names))
 
   # Collapse, sum and keep columns in one single step
@@ -65,10 +65,10 @@ collapse_df_by_group <- function(df,
       # Paste the values of the columns with multiple values in the group
       dplyr::across(
         .cols = dplyr::all_of(cols_to_collapse),
-        .fns = base::toString),
+        .fns = toString),
       dplyr::across(
         .cols = dplyr::all_of(sum_col_names),
-        .fns = ~ base::sum(.x, na.rm = TRUE)),
+        .fns = ~ sum(.x, na.rm = TRUE)),
       dplyr::across(
         # [1] instead of dplyr::first() to also work with list columns
         .cols = dplyr::all_of(cols_to_keep),

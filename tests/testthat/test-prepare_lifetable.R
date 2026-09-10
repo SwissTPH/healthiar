@@ -8,7 +8,7 @@ testthat::test_that("results correct|prepare_lifetable", {
         age_group = c(0, 5, 10, 15),
         population = c(3387900, 3401300, 3212300, 3026100),
         bhd = c(4727, 472, 557, 1323))$bhd_for_attribute |>
-      base::round(),
+      round(),
     expected =
       # Example from AirQ+ Life Table Manual
       c(948, 947, 945, 944, 943,
@@ -45,7 +45,7 @@ testthat::test_that("results correct|prepare_lifetable|published life table", {
 
   prob_dying <-
     healthiar::prepare_lifetable(
-      age_group = base::seq(5, 80, 5),
+      age_group = seq(5, 80, 5),
       population = population,
       bhd = deaths,
       fraction_lived = ax / 5) |>
@@ -55,8 +55,8 @@ testthat::test_that("results correct|prepare_lifetable|published life table", {
   # Applying the probability of dying to the published survivors has to
   # reproduce the deaths of the published life table
   testthat::expect_equal(
-    object = base::round(prob_dying * lx_published),
-    expected = base::as.numeric(dx_published)
+    object = round(prob_dying * lx_published),
+    expected = as.numeric(dx_published)
   )
 })
 
@@ -78,7 +78,7 @@ testthat::test_that("results correct|prepare_lifetable|published entry populatio
         population = c(99192, 99192),
         bhd = c(867, 867),
         fraction_lived = c(0.068, 0.068))$entry_population_1_year[1] |>
-      base::round(),
+      round(),
     expected = 100000
   )
 })
@@ -105,8 +105,8 @@ testthat::test_that("results correct|prepare_lifetable|fraction_lived", {
     object =
       lifetable |>
       dplyr::summarize(.by = age_group_n_years,
-                       population = base::sum(population_for_attribute),
-                       bhd = base::sum(bhd_for_attribute)) |>
+                       population = sum(population_for_attribute),
+                       bhd = sum(bhd_for_attribute)) |>
       dplyr::select(population, bhd),
     expected = tibble::tibble(population = population, bhd = bhd)
   )
@@ -176,7 +176,7 @@ testthat::test_that("error if lenght different|prepare_lifetable", {
         age_group = c(0, 5, 10, 15, 20), # 20 should not be there
         population = c(3387900, 3401300, 3212300, 3026100),
         bhd = c(4727, 472, 557, 1323))$bhd_for_attribute |>
-      base::round(),
+      round(),
     regexp =
       "The following variables must all have the same length: age_group, population, bhd."
   )
@@ -190,7 +190,7 @@ testthat::test_that("error if lower than min for age_group|prepare_lifetable", {
         age_group = c(-1, 5, 10, 15),
         population = c(3387900, 3401300, 3212300, 3026100),# 0 should not be there
         bhd = c(4727, 472, 557, 1323))$bhd_for_attribute |>
-      base::round(),
+      round(),
     regexp =
       "The values of age_group must be greater than or equal to 0."
   )
@@ -205,7 +205,7 @@ testthat::test_that("error if lower than min for population|prepare_lifetable", 
         age_group = c(0, 5, 10, 15),
         population = c(0, 3401300, 3212300, 3026100),# 0 should not be there
         bhd = c(4727, 472, 557, 1323))$bhd_for_attribute |>
-      base::round(),
+      round(),
     regexp =
       "The values of population must be greater than 0."
   )
@@ -222,7 +222,7 @@ testthat::test_that("error if lenght different|prepare_lifetable", {
         bhd = c(4727, 472, 557, 1323),
         fraction_lived = 1.1 # This value should not be higher than 1
         )$bhd_for_attribute |>
-      base::round(),
+      round(),
     regexp =
       "The values of fraction_lived cannot be greater than 1."
   )

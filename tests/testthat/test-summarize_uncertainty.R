@@ -11,7 +11,7 @@
 
 testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd_with_summary_uncertainty <-
     healthiar::attribute_health(
@@ -48,7 +48,7 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_inc
 testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_function|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
+  data <- readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
 
   data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
 
@@ -126,7 +126,7 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_fun
 testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_formula|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
+  data <- readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
 
   data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
 
@@ -268,7 +268,7 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_inc
 testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_function|iteration_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
+  data <- readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
 
   data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
 
@@ -344,7 +344,7 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_fun
 testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_formula|iteration_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
+  data <- readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
 
   data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
 
@@ -421,15 +421,15 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
       rr_lower = 1.060,
       rr_upper = 1.179,
       rr_increment = 10,
-      exp_central = base::rep(8, 4),
-      exp_lower = base::rep(7, 4),
-      exp_upper = base::rep(9, 4),
+      exp_central = rep(8, 4),
+      exp_lower = rep(7, 4),
+      exp_upper = rep(9, 4),
       cutoff_central = 5,
-      bhd_central = base::rep(1E5, 4),
-      bhd_lower = base::rep(5E4, 4),
-      bhd_upper = base::rep(2E5, 4),
-      geo_id_micro = base::letters[1:4],
-      geo_id_macro = base::rep("CH", 4))
+      bhd_central = rep(1E5, 4),
+      bhd_lower = rep(5E4, 4),
+      bhd_upper = rep(2E5, 4),
+      geo_id_micro = letters[1:4],
+      geo_id_macro = rep("CH", 4))
 
   results_geo_summarised <-
     healthiar::summarize_uncertainty(
@@ -440,7 +440,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
   # Sum the impacts of all geo_id_micro within each simulation
   impact_by_sim <-
     results_geo_summarised$uncertainty_detailed$impact_by_sim |>
-    dplyr::summarise(impact = base::sum(impact),
+    dplyr::summarise(impact = sum(impact),
                      .by = "sim_id")
 
   testthat::expect_equal(
@@ -456,7 +456,7 @@ testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_incr
 
 testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_yld_singlebhd_with_summary_uncertainty  <-
     healthiar::attribute_health(
@@ -497,7 +497,7 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_inc
 
 testthat::test_that("results the same |pathway_uncertainty|exp_dist|erf_rr_increment|iteration_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
+  data_raw <- readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
@@ -533,7 +533,7 @@ testthat::test_that("results the same |pathway_uncertainty|exp_dist|erf_rr_incre
 
 testthat::test_that("results the same |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
+  data_raw <- readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
@@ -803,7 +803,7 @@ testthat::test_that("results correct |pathway_uncertainty_compare|exp_single|erf
 
 testthat::test_that("error_if_erf_eq |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
+  data_raw <- readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
@@ -829,7 +829,7 @@ testthat::test_that("error_if_erf_eq |pathway_uncertainty|exp_dist|erf_ar_formul
 
 testthat::test_that("error_if_erf_eq  |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_TRUE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
+  data_raw <- readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
@@ -862,7 +862,7 @@ testthat::test_that("error_if_erf_eq  |pathway_uncertainty|exp_dist|erf_ar_formu
 
 testthat::test_that("error_if_uncertainty_in_exposure_distribution |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
+  data_raw <- readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
@@ -960,7 +960,7 @@ testthat::test_that("error_if_uncertainty_in_exposure_distribution |pathway_unce
 
 testthat::test_that("error_if_no_uncertainty |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd_with_summary_uncertainty <-
     healthiar::attribute_health(
@@ -987,7 +987,7 @@ testthat::test_that("error_if_no_uncertainty |pathway_uncertainty|exp_single|erf
 testthat::test_that("error_if_erf_eq_rr_function |pathway_uncertainty|exp_dist|erf_rr_function|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("testdata", "ozone_copd_mort_2016.rds"))
+  data <- readRDS(testthat::test_path("testdata", "ozone_copd_mort_2016.rds"))
   erf<-splinefun(data$x, data$y, method="natural")
   erf_l<-splinefun(data$x, data$y_l, method="natural")
   erf_u<-splinefun(data$x, data$y_u, method="natural")
@@ -1037,7 +1037,7 @@ testthat::test_that("error if main_results_by and summarize_uncertainty", {
   # risk, so subgroups kept apart with main_results_by cannot be simulated together
   output_attribute <-
     healthiar::attribute_health(
-      info = base::data.frame(pair = c("copd", "asthma")),
+      info = data.frame(pair = c("copd", "asthma")),
       main_results_by = "pair",
       exp_central = c(8.85, 22.1),
       exp_lower = c(8, 20),

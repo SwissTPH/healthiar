@@ -24,17 +24,17 @@ validate_input_attribute <-
 
     arg_names_passed <-
       purrr::keep(input_args$is_entered_by_user, ~.x) |>
-      base::names()
+      names()
 
     # ci_suffix to avoid repetitions
     ci_suffix <- c("_central", "_lower", "_upper")
 
     # Arguments
-    args <- base::names(input_args_value )
+    args <- names(input_args_value )
 
-    ci_args <- args[base::grep("_central|_lower|_upper", args)]
+    ci_args <- args[grep("_central|_lower|_upper", args)]
 
-    ci_args_wo_eq <- ci_args[!base::grepl("erf_eq", ci_args)]
+    ci_args_wo_eq <- ci_args[!grepl("erf_eq", ci_args)]
 
     numeric_args <-
       c(ci_args_wo_eq,
@@ -51,14 +51,14 @@ validate_input_attribute <-
     boolean_args <- "is_lifetable"
 
     options_of_categorical_args <-
-      base::list(
+      list(
         approach_risk = c("relative_risk", "absolute_risk"),
         erf_shape = c("linear", "log_linear", "log_log", "linear_log"),
         approach_exposure = c("single_year", "constant"),
         approach_newborns = c("without_newborns", "with_newborns")
       )
 
-    categorical_args <- base::names(options_of_categorical_args)
+    categorical_args <- names(options_of_categorical_args)
 
     # health_outcome is not validated together with the other categorical
     # arguments above because these options only apply to the life table
@@ -76,8 +76,8 @@ validate_input_attribute <-
     # (validate_arg_pair). The validate_args() calls do NOT need it because
     # validate_args() skips the NULL arguments itself
     arg_names_available <-
-      purrr::keep(input_args_value, ~!base::is.null(.x)) |>
-      base::names()
+      purrr::keep(input_args_value, ~!is.null(.x)) |>
+      names()
 
 
     # Define approach_risk here because in the life table approach
@@ -110,10 +110,10 @@ validate_input_attribute <-
         is_present <- arg_names %in% present_arg_names
 
         is_valid <-
-          base::switch(
+          switch(
             relation,
             # The two arguments exclude each other
-            "not_both" = !base::all(is_present),
+            "not_both" = !all(is_present),
             # The first argument cannot be used without the second one
             "requires" = !is_present[1] || is_present[2],
             # Either both arguments or none of them
@@ -121,13 +121,13 @@ validate_input_attribute <-
 
         if(!is_valid){
 
-          text <- base::gsub("{arg_1}", arg_names[1], message, fixed = TRUE)
-          text <- base::gsub("{arg_2}", arg_names[2], text, fixed = TRUE)
+          text <- gsub("{arg_1}", arg_names[1], message, fixed = TRUE)
+          text <- gsub("{arg_2}", arg_names[2], text, fixed = TRUE)
 
           if(type == "error"){
-            base::stop(text, call. = FALSE)
+            stop(text, call. = FALSE)
           } else if (type == "warning"){
-            base::warning(text, call. = FALSE)
+            warning(text, call. = FALSE)
           }
         }
       }
@@ -152,7 +152,7 @@ validate_input_attribute <-
     validate_args(
       args = input_args_value,
       arg_names = numeric_args,
-      is_valid = function(x){base::is.numeric(x) & !base::is.na(x)},
+      is_valid = function(x){is.numeric(x) & !is.na(x)},
       message = "The following arguments should be numeric without NAs: {arg}.",
       report = "all")
 
@@ -174,9 +174,9 @@ validate_input_attribute <-
         # people enter this argument as column with repeated (or multiple) values
         is_valid = function(v){v %in% var_options},
         message =
-          base::paste0(
+          paste0(
             "For {arg}, please, type (between quotation marks) one of these options: ",
-            base::toString(var_options), "."))
+            toString(var_options), "."))
     }
 
 
@@ -188,9 +188,9 @@ validate_input_attribute <-
     # with "info_" and turns a vector into one column called "info",
     # so the names by which the user can refer to them differ
     info_id_names <-
-      if (base::is.data.frame(input_args_value$info)) {
-        base::names(input_args_value$info)
-      } else if (!base::is.null(input_args_value$info)) {
+      if (is.data.frame(input_args_value$info)) {
+        names(input_args_value$info)
+      } else if (!is.null(input_args_value$info)) {
         "info"
       }
 
@@ -201,7 +201,7 @@ validate_input_attribute <-
     # together. Only the arguments that identify rows in the results and the
     # columns of info can be used, so typos and non-id arguments are caught
     # here instead of being silently ignored in get_output()
-    if (!base::is.null(input_args_value$main_results_by)) {
+    if (!is.null(input_args_value$main_results_by)) {
 
       # exp_name is an id column in get_output() too, but it cannot be entered
       # here because it is created by multiexpose(), which builds its own
@@ -215,15 +215,15 @@ validate_input_attribute <-
           info_id_names)
 
       main_results_by_without_option <-
-        base::setdiff(input_args_value$main_results_by, options_of_main_results_by)
+        setdiff(input_args_value$main_results_by, options_of_main_results_by)
 
-      if (base::length(main_results_by_without_option) > 0) {
-        base::stop(
-          base::paste0(
+      if (length(main_results_by_without_option) > 0) {
+        stop(
+          paste0(
             "The following values of main_results_by are not id columns: ",
-            base::toString(main_results_by_without_option), ".\n",
+            toString(main_results_by_without_option), ".\n",
             "Please, type (between quotation marks) one of these options: ",
-            base::toString(options_of_main_results_by), "."),
+            toString(options_of_main_results_by), "."),
           call. = FALSE)
       }
     }
@@ -231,17 +231,17 @@ validate_input_attribute <-
     ### error_if_multiple_approach_risk #####
 
     # get_impact() branches once for the whole input table
-    # (base::unique(input_table$approach_risk) feeding an if statement),
+    # (unique(input_table$approach_risk) feeding an if statement),
     # so relative and absolute risk cannot be combined in one call.
     # Without this check the call fails deep inside get_impact() with
     # "the condition has length > 1", which does not tell users what to do
-    if (base::length(base::unique(input_args_value$approach_risk)) > 1) {
+    if (length(unique(input_args_value$approach_risk)) > 1) {
 
-      base::stop(
-        base::paste0(
+      stop(
+        paste0(
           "approach_risk must be the same for the whole assessment, ",
           "but these values were entered: ",
-          base::toString(base::unique(input_args_value$approach_risk)), ".\n",
+          toString(unique(input_args_value$approach_risk)), ".\n",
           "Please, call attribute_health() once for the relative risk ",
           "and once for the absolute risk."),
         call. = FALSE)
@@ -252,70 +252,70 @@ validate_input_attribute <-
     ### error_if_different_length #####
 
     # Obtain the length of all arguments
-    length_args <- purrr::map_vec(input_args_value, base::length)
+    length_args <- purrr::map_vec(input_args_value, length)
     # Remove erf_eq lengths because they are not vectors (not to be evaluated).
     # Remove main_results_by too: its length is the number of dimensions that
     # the results are to be reported by (e.g. c("pair", "geo_id_micro")) and
     # not a number of data rows. compile_input() discards it for the same
     # reason, so it must not be compared with the length of the data arguments
     length_args <-
-      length_args[! base::names(length_args) %in%
+      length_args[! names(length_args) %in%
                     c("erf_eq_central", "erf_eq_lower", "erf_eq_upper",
                       "main_results_by")]
 
     # If info is a data frame the length is actually the number of rows
-    if(base::is.data.frame(input_args_value$info)){
-      length_args["info"] <- base::nrow(input_args_value$info)
+    if(is.data.frame(input_args_value$info)){
+      length_args["info"] <- nrow(input_args_value$info)
     }
 
 
     # Get length that all arguments should have (apart from 0 or 1)
     relevant_length_args <-
-      length_args[base::names(length_args) %in%
+      length_args[names(length_args) %in%
                     c("geo_id_micro", "exp_central", "sex", "age_group")]
     # Get length that all arguments should have (apart from 0 or 1)
     # If all relevant lengths are 1, then 1
-    if(base::all(relevant_length_args == 1)){
+    if(all(relevant_length_args == 1)){
       required_length <- 1
       # Otherwise
     } else {
       # Otherwise, the unique length that is not 1
-      required_length <- base::unique(base::setdiff(relevant_length_args, 1))
+      required_length <- unique(setdiff(relevant_length_args, 1))
     }
 
     # Get the names
     # setdiff() cannot be used here because it drops the names of the vector
     # and they are important here
     names_required_length <-
-      base::names(relevant_length_args[relevant_length_args %in% required_length])
+      names(relevant_length_args[relevant_length_args %in% required_length])
 
     # Get the names of the outliers
     # i.e. args not complying with the required length
 
     names_not_complying_with_required_length <-
-      base::names(length_args[!length_args %in% c(0, 1, required_length)])
+      names(length_args[!length_args %in% c(0, 1, required_length)])
 
     # The length must be 0 (NULL), 1 or the same as required_length
     # If there are multiple different required_length --> error.
     # It must be clarified
-    if(base::length(required_length)> 1){
-      base::stop(
-        base::paste0(
+    if(length(required_length)> 1){
+      stop(
+        paste0(
           "Not clear what is the maximal length of your arguments: ",
-          base::toString(required_length),
+          toString(required_length),
           ". Check: ",
-          base::toString(names_required_length),
+          toString(names_required_length),
           "."))
-    } else if (base::length(names_not_complying_with_required_length) > 0) {
+    } else if (length(names_not_complying_with_required_length) > 0) {
       # If it clear the unique required_length but there are outliers
       # --> error
 
-      base::stop(
-        base::paste0(
+      stop(
+        paste0(
           "All function arguments must have the same length (here ",
           required_length,
           ") or length 1. Check: ",
-          base::toString(names_not_complying_with_required_length),
+          toString(names_not_complying_with_required_length),
           "."))
     }
 
@@ -334,46 +334,46 @@ validate_input_attribute <-
       # Add info columns as list element for the operation below
       input_args_value_flat <-
         c(input_args_value,
-          base::as.list(input_args_value$info))
+          as.list(input_args_value$info))
 
       # info_id_names (and not names(info)) because a vector-valued info also
       # identifies subgroups, in the column that add_info() calls "info".
       # Without it two exposure-outcome pairs entered through a vector info
       # would be reported as an ambiguous allocation
       arguments_for_combination <-
-        base::intersect(
-          base::names(input_args_value_flat),
+        intersect(
+          names(input_args_value_flat),
           c(id_arg_names, info_id_names))
 
       # Find all ids which were used
       valid_ids <-
         purrr::map_lgl(
           input_args_value_flat[arguments_for_combination],
-          ~ base::length(.x) == base::length(input_args_value_flat[[var_name]]))
+          ~ length(.x) == length(input_args_value_flat[[var_name]]))
 
       # Create data frame with used ids and var_name as cols
       df_id_structure <-
-        base::as.data.frame(
+        as.data.frame(
           input_args_value_flat[c(var_name,
                                   arguments_for_combination[valid_ids])])
 
-      if(base::nrow(df_id_structure) > 0){
+      if(nrow(df_id_structure) > 0){
 
         # Check if every id combination has only one assigned value
         id_ambiguity <- df_id_structure |>
           dplyr::group_by(dplyr::across(!dplyr::all_of(var_name))) |>
           dplyr::summarize(not_same = dplyr::n_distinct(.data[[var_name]]) != 1)
 
-        if(base::any(id_ambiguity$not_same)){
-          base::stop(
-            base::paste0(
+        if(any(id_ambiguity$not_same)){
+          stop(
+            paste0(
               "Allocation from ", var_name, " to ",
-              base::toString(arguments_for_combination[valid_ids]), " is ambiguous.\n",
+              toString(arguments_for_combination[valid_ids]), " is ambiguous.\n",
               "The following combinations have multiple ", var_name, " values: \n",
-              base::toString(
-                base::do.call(
-                  base::paste,
-                  c(id_ambiguity[id_ambiguity$not_same, 1:(base::ncol(id_ambiguity) - 1)],
+              toString(
+                do.call(
+                  paste,
+                  c(id_ambiguity[id_ambiguity$not_same, 1:(ncol(id_ambiguity) - 1)],
                     sep = "_"))),
               "\n",
               "Within every combination, the ", var_name, " values need to be the same."),
@@ -395,7 +395,7 @@ validate_input_attribute <-
     # info is in the condition because entering it is also a way of identifying
     # subgroups, but not in id_arg_names because there the COLUMNS of info count
     if(input_args$is_entered_by_user$bhd_central &&
-       base::any(base::unlist(
+       any(unlist(
          input_args$is_entered_by_user[c(bhd_id_arg_names, "info")]))){
 
       error_if_ambiguous_allocation(
@@ -406,7 +406,7 @@ validate_input_attribute <-
 
     ### error_if_multiple_rr_in_one_exp_category #####
     if(input_args$is_entered_by_user$rr_central &&
-       base::any(base::unlist(
+       any(unlist(
          input_args$is_entered_by_user[c(rr_id_arg_names, "info")]))){
 
       error_if_ambiguous_allocation(
@@ -416,9 +416,9 @@ validate_input_attribute <-
       # If the allocation cannot be checked (no id argument entered by the user)
       # then rr_central can only have one single value
     } else if (input_args$is_entered_by_user$rr_central &&
-               base::length(base::unique(input_args_value$rr_central)) > 1) {
+               length(unique(input_args_value$rr_central)) > 1) {
 
-      base::stop(
+      stop(
         "rr_central must be the same for all exposures.",
         call. = FALSE)
     }
@@ -433,13 +433,13 @@ validate_input_attribute <-
       # premature deaths are to be calculated.
       # A dedicated check (and not validate_args()) because
       # validate_args() skips the arguments that are NULL
-      if(base::is.null(input_args_value$health_outcome)){
+      if(is.null(input_args_value$health_outcome)){
 
-        base::stop(
-          base::paste0(
+        stop(
+          paste0(
             "Please, enter a value for health_outcome. ",
             "Type (between quotation marks) one of these options: ",
-            base::toString(options_of_health_outcome), "."),
+            toString(options_of_health_outcome), "."),
           call. = FALSE)
       }
 
@@ -452,9 +452,9 @@ validate_input_attribute <-
         # people enter this argument as column with repeated (or multiple) values
         is_valid = function(v){v %in% options_of_health_outcome},
         message =
-          base::paste0(
+          paste0(
             "For {arg}, please, type (between quotation marks) one of these options: ",
-            base::toString(options_of_health_outcome), "."))
+            toString(options_of_health_outcome), "."))
 
       ### error_if_time_horizon_lower_than_1 #####
 
@@ -464,7 +464,7 @@ validate_input_attribute <-
       validate_args(
         args = input_args_value,
         arg_names = "time_horizon",
-        is_valid = function(x){x >= 1 & x == base::floor(x)},
+        is_valid = function(x){x >= 1 & x == floor(x)},
         message = "{arg} must be an integer value equal to or higher than 1.")
 
       ### warning_if_newborns_and_single_year_exposure #####
@@ -473,11 +473,11 @@ validate_input_attribute <-
       # The newborns of the following years were therefore never exposed and
       # no impact can be attributed to them. approach_newborns is thus ignored
       # (see get_impact_with_lifetable())
-      if(base::any(input_args_value$approach_newborns %in% "with_newborns") &&
-         base::any(input_args_value$approach_exposure %in% "single_year")){
+      if(any(input_args_value$approach_newborns %in% "with_newborns") &&
+         any(input_args_value$approach_exposure %in% "single_year")){
 
-        base::warning(
-          base::paste0(
+        warning(
+          paste0(
             "approach_newborns = \"with_newborns\" has no effect ",
             "if approach_exposure = \"single_year\", because the newborns of ",
             "the years after the year of analysis were never exposed. ",
@@ -517,17 +517,17 @@ validate_input_attribute <-
         # Only the distinct values, because the age groups are repeated
         # for each sex, geo unit or exposure category
         # (e.g. 0:99 for males and 0:99 for females)
-        var_value <- base::sort(base::unique(input_args_value[[var_name]]))
+        var_value <- sort(unique(input_args_value[[var_name]]))
 
         if(# Check that values are integers
-          base::any(var_value != base::floor(var_value)) ||
+          any(var_value != floor(var_value)) ||
           # Check that the difference between consecutive elements is exactly 1.
           # Attention: all(diff(x)) (without == 1) only checks that consecutive
           # values are different, which does not detect e.g. 5-year age groups
-          !base::all(base::diff(var_value) == 1)) {
+          !all(diff(var_value) == 1)) {
 
-          base::stop(
-            base::paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements is 1."),
+          stop(
+            paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements is 1."),
             call. = FALSE
           )
         }
@@ -541,7 +541,7 @@ validate_input_attribute <-
       validate_args(
         args = input_args_value,
         arg_names =
-          base::intersect(arg_names_passed,
+          intersect(arg_names_passed,
                           c("bhd_central", "bhd_lower", "bhd_upper")),
         is_valid = function(x){x != 0},
         message =
@@ -557,8 +557,8 @@ validate_input_attribute <-
     # and it is not a character
     validate_args(
       args = input_args_value,
-      arg_names = base::paste0("erf_eq", ci_suffix),
-      is_valid = function(x){base::is.function(x) || base::is.character(x)},
+      arg_names = paste0("erf_eq", ci_suffix),
+      is_valid = function(x){is.function(x) || is.character(x)},
       message = "{arg} must be a function or a character string.")
 
 
@@ -579,7 +579,7 @@ validate_input_attribute <-
 
     validate_args(
       args = input_args_value,
-      arg_names = c("prop_pop_exp", "fraction_lived", base::paste0("dw", ci_suffix)),
+      arg_names = c("prop_pop_exp", "fraction_lived", paste0("dw", ci_suffix)),
       is_valid = function(x){x <= 1},
       message = "The values in the following arguments must not be higher than 1: {arg}.",
       report = "all")
@@ -589,7 +589,7 @@ validate_input_attribute <-
 
     # If not all values of prop_pop_exp are 1, then check below
     # Otherwise this step is not excecuted and speed increases
-    if(! base::all(input_args_value[["prop_pop_exp"]] == 1)){
+    if(! all(input_args_value[["prop_pop_exp"]] == 1)){
 
       error_if_sum_higher_than_1 <- function(var_name){
 
@@ -610,16 +610,16 @@ validate_input_attribute <-
           # were always NULL and silently dropped by tibble()
           add_info(info = input_args_value$info)
 
-        if(base::is.null(input_args_value [["pop_exp"]]) &&
+        if(is.null(input_args_value [["pop_exp"]]) &&
            var_table |>
            dplyr::summarize(
              .by = c(-var),
-             sum = base::sum(var, na.rm = TRUE) > 1) |>
+             sum = sum(var, na.rm = TRUE) > 1) |>
            dplyr::pull(sum) |>
-           base::any()){
+           any()){
 
           # Create error message
-          stop(base::paste0(
+          stop(paste0(
             "The sum of values in ",
             var_name,
             " cannot be higher than 1 for each geo unit."),
@@ -628,7 +628,7 @@ validate_input_attribute <-
         }
       }
 
-      # Call function checking if base::sum(prop_pop_exp) > 1
+      # Call function checking if sum(prop_pop_exp) > 1
       error_if_sum_higher_than_1(var_name = "prop_pop_exp")
     }
 
@@ -639,17 +639,17 @@ validate_input_attribute <-
 
     # Identify the argument names with all CI suffixes (_central, _lower_, _upper)
     arg_names_with_ci <- arg_names_available|>
-      base::grep("_central|_lower|_upper", x= _, value = TRUE) |>
+      grep("_central|_lower|_upper", x= _, value = TRUE) |>
       # Remove erf_eq because it is not numeric
-      base::setdiff(c("erf_eq_central", "erf_eq_lower", "erf_eq_upper"))
+      setdiff(c("erf_eq_central", "erf_eq_lower", "erf_eq_upper"))
 
     arg_names_with_ci_prefix <- arg_names_with_ci|>
-      base::gsub("_central|_lower|_upper", "", x = _)
+      gsub("_central|_lower|_upper", "", x = _)
 
     arg_names_with_all_ci_prefix <- arg_names_with_ci_prefix |>
-      base::table() |>
+      table() |>
       purrr::keep(~ . == 3) |>
-      base::names()
+      names()
 
 
 
@@ -660,12 +660,12 @@ validate_input_attribute <-
 
       validate_args(
         args = input_args_value,
-        arg_names = base::paste0(x, "_central"),
+        arg_names = paste0(x, "_central"),
         is_valid = function(v){
-          base::all(v >= input_args_value[[base::paste0(x, "_lower")]]) &&
-            base::all(v <= input_args_value[[base::paste0(x, "_upper")]])},
+          all(v >= input_args_value[[paste0(x, "_lower")]]) &&
+            all(v <= input_args_value[[paste0(x, "_upper")]])},
         message =
-          base::paste0("{arg} must not be lower than ", x, "_lower",
+          paste0("{arg} must not be lower than ", x, "_lower",
                        " and not higher than ", x, "_upper."))
     }
 
@@ -673,9 +673,9 @@ validate_input_attribute <-
 
     ### error_if_only_lower_or_upper #####
     arg_names_with_two_ci_prefix <- arg_names_with_ci_prefix |>
-      base::table() |>
+      table() |>
       purrr::keep(~ . == 2) |>
-      base::names()
+      names()
 
     # Check if lower but not upper (or vice versa).
     # arg_names_available (and not arg_names_passed) because here any
@@ -684,7 +684,7 @@ validate_input_attribute <-
 
       validate_arg_pair(
         present_arg_names = arg_names_available,
-        arg_names = base::paste0(x, c("_lower", "_upper")),
+        arg_names = paste0(x, c("_lower", "_upper")),
         relation = "both_or_none",
         message = "Either both, {arg_1} and {arg_2}, or none of them must entered, but not only one.")
     }
@@ -695,17 +695,17 @@ validate_input_attribute <-
       # Identify the alternative options
       all_approach_risks <- c("relative_risk", "absolute_risk")
       all_var_names <- c("prop_pop_exp", "pop_exp")
-      another_approach_risk <- base::setdiff(all_approach_risks, risk)
-      another_var_name <- base::setdiff(all_var_names, var_name)
+      another_approach_risk <- setdiff(all_approach_risks, risk)
+      another_var_name <- setdiff(all_var_names, var_name)
 
       if(var_name %in% arg_names_passed &&
          # Use all() for the case of approach_risk entered as vector
-         base::all(approach_risk == risk)){
-        stop(base::paste0("The argument ",
+         all(approach_risk == risk)){
+        stop(paste0("The argument ",
         var_name,
         " is aimed for ",
         # Remove the underscore
-        base::gsub("_", " ", another_approach_risk),
+        gsub("_", " ", another_approach_risk),
         ". Use ",
         another_var_name,
         " instead."),
@@ -727,7 +727,7 @@ validate_input_attribute <-
     # ){
     #
     #   if (
-    #     ( base::any( base::outer( cutoff_vector, exp_vector, `>=` ) ) ) &
+    #     ( any( outer( cutoff_vector, exp_vector, `>=` ) ) ) &
     #     ( input_args$value$erf_shape == "log_log" | input_args$value$erf_shape == "linear_log" )
     #     ) {
     #     stop(
@@ -740,8 +740,8 @@ validate_input_attribute <-
     # # Call function
     # ## only in rr cases with erf_shape specified (ar cases don't have a cutoff)
     # if ( input_args$value$approach_risk == "relative_risk" &
-    #      !base::is.null(input_args$value$erf_shape) &
-    #      !base::is.null(input_args$value$cutoff_central)
+    #      !is.null(input_args$value$erf_shape) &
+    #      !is.null(input_args$value$cutoff_central)
     #      ) {
     #   error_if_any_cutoff_value_is_greater_or_equal_than_any_exp_value(
     #     cutoff_vector = c(
@@ -775,10 +775,10 @@ validate_input_attribute <-
 
     # The exposure-response function must be defined in one of the two ways.
     # Otherwise the error comes later from get_risk() and is not understandable
-    if(!base::any(c("rr_central", "erf_eq_central") %in% arg_names_passed)){
+    if(!any(c("rr_central", "erf_eq_central") %in% arg_names_passed)){
 
-      base::stop(
-        base::paste0(
+      stop(
+        paste0(
           "Please define the exposure-response function ",
           "either with rr_central (together with erf_shape and rr_increment) ",
           "or with erf_eq_central."),
@@ -820,16 +820,16 @@ validate_input_attribute <-
 
       # Store var_value
       available_var_values <- input_args_value[var_names] |>
-        purrr::discard(base::is.null)
-      available_var_names <- base::names(available_var_values)
+        purrr::discard(is.null)
+      available_var_names <- names(available_var_values)
 
 
-      if(base::any(approach_risk == "absolute_risk") &
-         base::length(available_var_names) > 0 &
-         base::any(!base::unlist(available_var_values) == 0)){ # Only if available
+      if(any(approach_risk == "absolute_risk") &
+         length(available_var_names) > 0 &
+         any(!unlist(available_var_values) == 0)){ # Only if available
         # Create warning message
-        base::warning(
-          base::paste0(
+        warning(
+          paste0(
             "You entered a value for: ", paste(available_var_names, collapse = ", "), " alongside absolute risk.\n",
             "Be aware that healthiar shifts the exposure in 'erf_eq' as c = (exp - cutoff).\n"),
           call. = FALSE)
@@ -838,21 +838,21 @@ validate_input_attribute <-
 
     # Call function only if absolute risk
 
-    warning_if_ar_and_cutoff(var_names = c(base::paste0("cutoff", ci_suffix), "threshold"))
+    warning_if_ar_and_cutoff(var_names = c(paste0("cutoff", ci_suffix), "threshold"))
 
 
     ### warning_if_threshold_higher_than_cutoff #####
     # The cut-off is only effective if it is higher than the effect threshold.
     # Otherwise it has no impact on the results
     # (exposures below the effect threshold get the risk at the reference level)
-    if(!base::is.null(input_args_value[["threshold"]]) &&
-       !base::is.null(input_args_value[["cutoff_central"]]) &&
+    if(!is.null(input_args_value[["threshold"]]) &&
+       !is.null(input_args_value[["cutoff_central"]]) &&
        # A cutoff of 0 means that there is no cutoff, so it takes the threshold
        # value in compile_input() and there is nothing to warn about
-       !base::all(input_args_value[["cutoff_central"]] == 0) &&
-       base::all(input_args_value$threshold > input_args_value$cutoff_central)){
+       !all(input_args_value[["cutoff_central"]] == 0) &&
+       all(input_args_value$threshold > input_args_value$cutoff_central)){
 
-      base::warning(
+      warning(
         "The threshold is higher than the cut-off. Therefore, the cut-off has no effect on the results.",
         call. = FALSE)
     }
@@ -865,10 +865,10 @@ validate_input_attribute <-
     # For absolute risk no cutoff is used (not relevant)
     if(! var_name %in% arg_names_passed &&
        # Use all() for the case of approach_risk entered as vector
-       base::all(approach_risk == "relative_risk")){
+       all(approach_risk == "relative_risk")){
 
-      base::warning(
-        base::paste0("You entered no value for ",
+      warning(
+        paste0("You entered no value for ",
         var_name,
         ". Therefore, ",
         default,
@@ -880,7 +880,7 @@ validate_input_attribute <-
 
     # If threshold is entered, then cutoff takes the same value (see compile_input())
     # and therefore 0 is not assumed as default
-    if(base::is.null(input_args_value[["threshold"]])){
+    if(is.null(input_args_value[["threshold"]])){
       warning_if_rr_and_no_var_with_default(var_name = "cutoff_central", default = 0)
     }
 

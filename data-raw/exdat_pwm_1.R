@@ -7,8 +7,8 @@
 ## pm25.tif; renamed to exdat_pwm_1_pm25.tif
 
 # save data ####################################################################
-base::dir.create("inst/extdata", showWarnings = FALSE, recursive = TRUE)
-base::file.copy(
+dir.create("inst/extdata", showWarnings = FALSE, recursive = TRUE)
+file.copy(
   from = "data-raw/exdat_pwm_1_pm25.tif",
   to = "inst/extdata/exdat_pwm_1.tif",
   overwrite = TRUE

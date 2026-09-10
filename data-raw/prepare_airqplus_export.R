@@ -16,23 +16,23 @@
 prepare_airqplus_export <- function(path_to_export) {
 
   # Remove the semicolons that pad every line to the widest section
-  lines <- base::gsub(";+$", "", base::readLines(path_to_export))
+  lines <- gsub(";+$", "", readLines(path_to_export))
 
   # Split a line into its fields and drop the thousand separators
   split_line <- function(line) {
-    base::gsub(",", "", base::strsplit(line, ";", fixed = TRUE)[[1]])
+    gsub(",", "", strsplit(line, ";", fixed = TRUE)[[1]])
   }
 
   # Return the value of a "Key;value" line, given the key
   value_of <- function(key) {
-    split_line(lines[base::startsWith(lines, base::paste0(key, ";"))][1])[2]
+    split_line(lines[startsWith(lines, paste0(key, ";"))][1])[2]
   }
 
   # Return the rows of a table, from the line after its header
   # until the first empty line
   table_after <- function(header) {
-    first <- base::which(base::startsWith(lines, header))[1] + 1
-    last <- first + base::which(lines[first:base::length(lines)] == "")[1] - 2
+    first <- which(startsWith(lines, header))[1] + 1
+    last <- first + which(lines[first:length(lines)] == "")[1] - 2
     purrr::map(lines[first:last], split_line)
   }
 
@@ -41,19 +41,19 @@ prepare_airqplus_export <- function(path_to_export) {
   input <-
     tibble::tibble(
       pollutant = value_of("Pollutant:"),
-      mean_concentration = base::as.numeric(value_of("Mean Concentration")),
-      cut_off_value = base::as.numeric(value_of("Cut-off value")),
+      mean_concentration = as.numeric(value_of("Mean Concentration")),
+      cut_off_value = as.numeric(value_of("Cut-off value")),
       calculation_method = value_of("Calculation Method:"),
-      relative_risk = base::as.numeric(value_of("Relative Risk:")),
-      relative_risk_lower = base::as.numeric(value_of("Relative Risk Lower:")),
-      relative_risk_upper = base::as.numeric(value_of("Relative Risk Upper:")),
+      relative_risk = as.numeric(value_of("Relative Risk:")),
+      relative_risk_lower = as.numeric(value_of("Relative Risk Lower:")),
+      relative_risk_upper = as.numeric(value_of("Relative Risk Upper:")),
       # AirQ+ does not export the increment of the relative risk, which is
       # 10 ug/m3 for the health endpoint of these evaluations
       relative_risk_increment = 10,
-      start_year = base::as.numeric(value_of("Start Year")),
-      years_to_simulate = base::as.numeric(value_of("Years to simulate")),
-      apply_rr_from_age = base::as.numeric(value_of("Apply RR from age")),
-      apply_rr_to_age = base::as.numeric(value_of("Apply RR to age")))
+      start_year = as.numeric(value_of("Start Year")),
+      years_to_simulate = as.numeric(value_of("Years to simulate")),
+      apply_rr_from_age = as.numeric(value_of("Apply RR from age")),
+      apply_rr_to_age = as.numeric(value_of("Apply RR to age")))
 
   # POP ########################################################################
 
@@ -61,8 +61,8 @@ prepare_airqplus_export <- function(path_to_export) {
     table_after("Age from...;Age to end of...") |>
     purrr::map(
       ~ tibble::as_tibble_row(
-        base::as.numeric(.x),
-        .name_repair = ~ base::c("age_from", "age_to_end_of",
+        as.numeric(.x),
+        .name_repair = ~ c("age_from", "age_to_end_of",
                                  "midyear_population_male",
                                  "number_of_deaths_male",
                                  "midyear_population_female",
@@ -85,16 +85,16 @@ prepare_airqplus_export <- function(path_to_export) {
   # "Central - (All genders)" becomes "central_allgenders"
   estimate_and_gender <-
     yll_rows[[1]][-1] |>
-    base::tolower() |>
-    base::gsub(" - \\(", "_", x = _) |>
-    base::gsub("\\)| ", "", x = _)
+    tolower() |>
+    gsub(" - \\(", "_", x = _) |>
+    gsub("\\)| ", "", x = _)
 
   # Turns "YLL over 100 Years (all ages)" into "yll_over_100_years_all_ages"
   measure_name <- function(label) {
     label |>
-      base::tolower() |>
-      base::gsub("\\(|\\)", "", x = _) |>
-      base::gsub(" ", "_", x = _)
+      tolower() |>
+      gsub("\\(|\\)", "", x = _) |>
+      gsub(" ", "_", x = _)
   }
 
   output <-
@@ -104,12 +104,12 @@ prepare_airqplus_export <- function(path_to_export) {
     purrr::map(
       function(row) {
         names_of_row <-
-          base::paste0("value_", estimate_and_gender, "_", measure_name(row[1]))
-        tibble::as_tibble_row(base::as.numeric(row[-1]),
+          paste0("value_", estimate_and_gender, "_", measure_name(row[1]))
+        tibble::as_tibble_row(as.numeric(row[-1]),
                               .name_repair = ~ names_of_row)}) |>
     purrr::list_cbind()
 
-  base::list(input = input, pop = pop, output = output)
+  list(input = input, pop = pop, output = output)
 }
 
 # BUILD THE TEST DATA ##########################################################
@@ -125,7 +125,7 @@ prepare_airqplus_export <- function(path_to_export) {
 airqplus_pm_yll_single_year <-
   prepare_airqplus_export("data-raw/airqplus_pm_yll_single_year.csv")
 
-base::saveRDS(
+saveRDS(
   airqplus_pm_yll_single_year,
   "tests/testthat/testdata/airqplus_pm_yll_single_year.rds",
   compress = "xz")

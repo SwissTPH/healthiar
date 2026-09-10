@@ -67,13 +67,13 @@ testthat::test_that("results the same |prepare_exposure|bins_cover_the_whole_ran
   # A pollutant whose minimum and maximum are deliberately not on a bin edge
   poll_grid <- terra::rast(nrows = 4, ncols = 4, xmin = 0, xmax = 4,
                            ymin = 0, ymax = 4, crs = "EPSG:3035")
-  terra::values(poll_grid) <- base::seq(5.02, 9.94, length.out = 16)
+  terra::values(poll_grid) <- seq(5.02, 9.94, length.out = 16)
 
   pop_grid <- poll_grid
-  terra::values(pop_grid) <- base::rep(100, 16)
+  terra::values(pop_grid) <- rep(100, 16)
 
   polygon_of <- function(x, y, size){
-    sf::st_polygon(base::list(base::rbind(
+    sf::st_polygon(list(rbind(
       c(x, y), c(x + size, y), c(x + size, y + size), c(x, y + size), c(x, y))))
   }
 
@@ -91,7 +91,7 @@ testthat::test_that("results the same |prepare_exposure|bins_cover_the_whole_ran
 
   testthat::expect_equal(
     object =
-      base::sum(base::is.na(exposure_with_pop_grid$exposure_detailed$exposure_mid)),
+      sum(is.na(exposure_with_pop_grid$exposure_detailed$exposure_mid)),
     expected = 0)
 
   # * With a population vector: no population may be lost #####################
@@ -110,10 +110,10 @@ testthat::test_that("results the same |prepare_exposure|bins_cover_the_whole_ran
       poll_grid = poll_grid,
       geo_units = geo_sub_units,
       population = population,
-      geo_id_macro = base::rep("M", 3),
+      geo_id_macro = rep("M", 3),
       bin_width = 0.1)
 
   testthat::expect_equal(
-    object = base::sum(exposure_with_population$exposure_detailed$population),
-    expected = base::sum(population))
+    object = sum(exposure_with_population$exposure_detailed$population),
+    expected = sum(population))
 })

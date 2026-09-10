@@ -39,8 +39,8 @@ compile_input <-
     # a) no operations are expected
     # b) otherwise error somewhere else in the package when mixing character and numeric
     for (geo_id_ in c("geo_id_micro", "geo_id_macro")) {
-      if (!base::is.null(input_args_edited[[geo_id_]])){
-        input_args_edited[[geo_id_]] <- base::as.character(input_args_edited[[geo_id_]])
+      if (!is.null(input_args_edited[[geo_id_]])){
+        input_args_edited[[geo_id_]] <- as.character(input_args_edited[[geo_id_]])
       }
     }
 
@@ -53,9 +53,9 @@ compile_input <-
     # to make the code work below
 
     for (erf_eq_ in c("erf_eq_central", "erf_eq_lower", "erf_eq_upper")) {
-      if (!base::is.null(input_args_edited[[erf_eq_]]) &&
-          base::is.function(input_args_edited[[erf_eq_]])) {
-        input_args_edited[[erf_eq_]] <- base::list(input_args_edited[[erf_eq_]])
+      if (!is.null(input_args_edited[[erf_eq_]]) &&
+          is.function(input_args_edited[[erf_eq_]])) {
+        input_args_edited[[erf_eq_]] <- list(input_args_edited[[erf_eq_]])
       }
     }
 
@@ -80,9 +80,9 @@ compile_input <-
     # result (also not if the user entered the 0 explicitly). It only makes
     # the cutoff in the results tables show the counterfactual exposure
     # that was used instead of a 0 that had no effect
-    if (!base::is.null(input_args_edited[["threshold"]]) &&
-        (base::is.null(input_args_edited[["cutoff_central"]]) ||
-         base::all(input_args_edited[["cutoff_central"]] == 0))) {
+    if (!is.null(input_args_edited[["threshold"]]) &&
+        (is.null(input_args_edited[["cutoff_central"]]) ||
+         all(input_args_edited[["cutoff_central"]] == 0))) {
       input_args_edited[["cutoff_central"]] <- input_args_edited[["threshold"]]
     }
 
@@ -102,7 +102,7 @@ compile_input <-
       # because it can be a data frame.
       # main_results_by only tells get_output() how to aggregate the results,
       # so it must not become a column of the input table
-      purrr::discard(base::names(input_args_edited) %in% c("info", "main_results_by")) |>
+      purrr::discard(names(input_args_edited) %in% c("info", "main_results_by")) |>
       # Convert into a tibble
       tibble::as_tibble() |>
       # Add info
@@ -119,7 +119,7 @@ compile_input <-
         exp_length = dplyr::n(),
         exp_category = dplyr::row_number(),
         exp_type =
-          base::ifelse(exp_length == 1,
+          ifelse(exp_length == 1,
                        "population_weighted_mean",
                        "exposure_distribution"))
 
@@ -133,19 +133,19 @@ compile_input <-
 
     # Loop over the variables pivoting longer
     for (var in vars_to_pivot) {
-      if (base::paste0(var, "_central") %in% base::names(input_wo_lifetable)){
+      if (paste0(var, "_central") %in% names(input_wo_lifetable)){
 
         input_wo_lifetable <-
           tidyr::pivot_longer(
             data = input_wo_lifetable,
-            cols = dplyr::any_of(base::paste0(var, c("_central", "_lower", "_upper"))),
-            names_to = base::paste0(var, "_ci"),
-            names_prefix = base::paste0(var, "_"),
+            cols = dplyr::any_of(paste0(var, c("_central", "_lower", "_upper"))),
+            names_to = paste0(var, "_ci"),
+            names_prefix = paste0(var, "_"),
             values_to = var)
       }
     }
 
-    if ("rr_central" %in% base::names(input_wo_lifetable)) {
+    if ("rr_central" %in% names(input_wo_lifetable)) {
       # Out of the loop for exposure response function
       # because both rr_ and erf_eq_ ends with a variable erf_ci
 
@@ -155,7 +155,7 @@ compile_input <-
                             names_to = "erf_ci",
                             names_prefix = "rr_",
                             values_to = "rr")
-    } else if ("erf_eq_central" %in% base::names(input_wo_lifetable)) {
+    } else if ("erf_eq_central" %in% names(input_wo_lifetable)) {
 
       input_wo_lifetable <-
         tidyr::pivot_longer(data = input_wo_lifetable,
@@ -196,14 +196,14 @@ compile_input <-
           age_end = age_group + 1,
           # min() and max() (and not first() and last()) so that the default
           # does not depend on the order in which the user entered the age groups
-          min_age = if(base::is.null(input_args_edited$min_age)){
-            base::min(age_start)} else {min_age},
-          max_age = if(base::is.null(input_args_edited$max_age)){
-            base::max(age_start)} else {max_age},
+          min_age = if(is.null(input_args_edited$min_age)){
+            min(age_start)} else {min_age},
+          max_age = if(is.null(input_args_edited$max_age)){
+            max(age_start)} else {max_age},
           # Determine default time horizon for YLL/YLD if not specified
-          time_horizon = if(base::is.null(input_args_edited$time_horizon)){
-            base::length(base::unique(input_args_edited$age_group))
-            } else {base::unique(input_args_edited$time_horizon)})
+          time_horizon = if(is.null(input_args_edited$time_horizon)){
+            length(unique(input_args_edited$age_group))
+            } else {unique(input_args_edited$time_horizon)})
 
 
 

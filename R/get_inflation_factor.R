@@ -82,21 +82,21 @@ get_inflation_factor <-
     ## Create readable variables for if statements below
 
     ## No adjustment for inflation
-    has_no_inflation_rate <- base::is.null(inflation_rate)
+    has_no_inflation_rate <- is.null(inflation_rate)
 
     ## Inflation constant over time (one single rate) vs.
     ## varying over time (one rate per year)
-    is_constant <- base::length(inflation_rate) == 1
-    is_year_specific <- base::length(inflation_rate) > 1
+    is_constant <- length(inflation_rate) == 1
+    is_year_specific <- length(inflation_rate) > 1
 
 
     # Data validation ######################
     ## error_if_too_few_rates #####
     # One rate per year is needed
     # to obtain the product of the year-specific factors below
-    if(is_year_specific && base::length(inflation_rate) < base::max(n_years)){
-      base::stop(
-        base::paste0("inflation_rate must contain either one single value ",
+    if(is_year_specific && length(inflation_rate) < max(n_years)){
+      stop(
+        paste0("inflation_rate must contain either one single value ",
                      "(constant inflation) or at least as many values as ",
                      "years to be considered (n_years)."),
         call. = FALSE)
@@ -124,7 +124,7 @@ get_inflation_factor <-
       inflation_factor <-
         purrr::map_dbl(
           n_years,
-          \(i) base::prod(1 + inflation_rate[base::seq_len(i)]))
+          \(i) prod(1 + inflation_rate[seq_len(i)]))
     }
 
     if(is_deflation){ # Deflation

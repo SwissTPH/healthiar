@@ -133,10 +133,10 @@ summarize_uncertainty <- function(
   ## Decimals ######
 
   ## Set options
-  user_options <- base::options()
-  base::on.exit(base::options(user_options), add = TRUE) # restores the user's option at the end of script
+  user_options <- options()
+  on.exit(options(user_options), add = TRUE) # restores the user's option at the end of script
   # Make sure that no rounding occurs
-  base::options(digits = 15)
+  options(digits = 15)
 
 
   ## Relevant variables ##########
@@ -148,7 +148,7 @@ summarize_uncertainty <- function(
   input_args <- output_attribute$health_detailed$input_args
   input_table <- output_attribute$health_detailed$input_table
 
-  is_two_cases <- base::any(c("input_table_scen_1", "input_table_scen_2") %in% base::names(input_table))
+  is_two_cases <- any(c("input_table_scen_1", "input_table_scen_2") %in% names(input_table))
   is_one_case <- !is_two_cases
 
   if(is_one_case){
@@ -162,22 +162,22 @@ summarize_uncertainty <- function(
 
   input_arg_names_passed <- input_args_to_check$is_entered_by_user |>
     purrr::keep(~.x == TRUE) |>
-    base::names()
+    names()
 
   # No need to store is_lifetable here,
   # because get_impact() identifies the life table assessments itself
-  exp_type <- base::unique(input_table_to_check$exp_type)
+  exp_type <- unique(input_table_to_check$exp_type)
 
   # Determine number of geographic units (n_geo)
   if(is_one_case) {
     # Let's use here unique() and input_table instead of input_args
     # because in some cases the users do not enter the geo_id.
     # In that cases compile_input() provide a geo_id and it is shown in results_raw
-    n_geo <- base::length(base::unique(input_table$geo_id_micro))
+    n_geo <- length(unique(input_table$geo_id_micro))
 
     } else {
       # Same for scen_1 and scen_2 so just take one of them
-      n_geo <- base::length(base::unique(input_table$input_table_scen_1$geo_id_micro))
+      n_geo <- length(unique(input_table$input_table_scen_1$geo_id_micro))
     }
 
 
@@ -195,20 +195,20 @@ summarize_uncertainty <- function(
   # advanced by the draw. Thus, consecutive calls without seed return
   # different results (as before), while set.seed() before the call still makes
   # the whole sequence reproducible.
-  if (base::is.null(seed)) {
-    seed <- base::sample.int(n = .Machine$integer.max, size = 1)
+  if (is.null(seed)) {
+    seed <- sample.int(n = .Machine$integer.max, size = 1)
   }
 
   # Save user's global random number generator (RNG) state if it exists
-  old_seed_exists <- base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
+  old_seed_exists <- exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
   if (old_seed_exists) {
-    old_seed <- base::get(".Random.seed", envir = .GlobalEnv)
+    old_seed <- get(".Random.seed", envir = .GlobalEnv)
   } else {
     old_seed <- NULL
   }
 
   # Save the current RNG kind so we can restore it later
-  old_RNGkind <- base::RNGkind()
+  old_RNGkind <- RNGkind()
 
   # Prepare L'Ecuyer stream seeds
 
@@ -227,16 +227,16 @@ summarize_uncertainty <- function(
   # variance to the comparison that does not exist in reality,
   # because it is the very same variable in both scenarios.
 
-  base::RNGkind(kind = "L'Ecuyer-CMRG")
-  base::set.seed(seed)
+  RNGkind(kind = "L'Ecuyer-CMRG")
+  set.seed(seed)
 
   # Ensure RNG state and kind are restored on exit
-  base::on.exit({
-    base::do.call(base::RNGkind, as.list(old_RNGkind))
-    if (!base::is.null(old_seed)) {
-      base::assign(".Random.seed", old_seed, envir = .GlobalEnv)
-    } else if (base::exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
-      base::rm(".Random.seed", envir = .GlobalEnv)
+  on.exit({
+    do.call(RNGkind, as.list(old_RNGkind))
+    if (!is.null(old_seed)) {
+      assign(".Random.seed", old_seed, envir = .GlobalEnv)
+    } else if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
+      rm(".Random.seed", envir = .GlobalEnv)
     }
   }, add = TRUE)
 
@@ -251,12 +251,12 @@ summarize_uncertainty <- function(
   results_raw <- output_attribute$health_detailed$results_raw
 
   info_cols <-
-    base::names(results_raw)[base::grepl("^info", base::names(results_raw))]
+    names(results_raw)[grepl("^info", names(results_raw))]
 
-  if (base::any(purrr::map_lgl(info_cols,
+  if (any(purrr::map_lgl(info_cols,
                                ~ dplyr::n_distinct(results_raw[[.x]]) > 1))) {
-    base::stop(
-      base::paste0(
+    stop(
+      paste0(
         "summarize_uncertainty() can only be applied to one subgroup at a ",
         "time, but the results keep several of them apart (see the argument ",
         "main_results_by).\n",
@@ -270,9 +270,9 @@ summarize_uncertainty <- function(
   ## Error if uncertainty in erf_eq_... ####
   # Uncertainty in erf_eq is currently not supported
   # It would require a more complex modelling
-  if((!base::is.null(input_args_to_check$value$erf_eq_lower) |
-      !base::is.null(input_args_to_check$value$erf_eq_upper))){
-    base::stop("Sorry, the summary of uncertainty for erf_eq_... is not currently supported.",
+  if((!is.null(input_args_to_check$value$erf_eq_lower) |
+      !is.null(input_args_to_check$value$erf_eq_upper))){
+    stop("Sorry, the summary of uncertainty for erf_eq_... is not currently supported.",
                call. = FALSE)
   }
 
@@ -284,16 +284,16 @@ summarize_uncertainty <- function(
     # input_args of compare() itself, which only contains the input_args of
     # each scenario and has therefore no element "value". Both is.null() were
     # then always TRUE and the error could never be shown
-    (!base::is.null(input_args_to_check$value$exp_lower) |
-      !base::is.null(input_args_to_check$value$exp_upper))){
-    base::stop("Sorry, the summary of uncertainty for exp_... in exposure distributions is not currently supported.",
+    (!is.null(input_args_to_check$value$exp_lower) |
+      !is.null(input_args_to_check$value$exp_upper))){
+    stop("Sorry, the summary of uncertainty for exp_... in exposure distributions is not currently supported.",
                call. = FALSE)
   }
 
   ## Error if no argument with uncertainty ####
   if(# No argument used has _lower or _upper)
-    ! base::any(base::grepl("_upper|_lower", input_arg_names_passed))){
-    base::stop("Please enter an assessment with uncertainty (..._lower and ..._upper) in any argument.",
+    ! any(grepl("_upper|_lower", input_arg_names_passed))){
+    stop("Please enter an assessment with uncertainty (..._lower and ..._upper) in any argument.",
                call. = FALSE)
   }
 
@@ -306,7 +306,7 @@ summarize_uncertainty <- function(
   # Get uncertainty
   get_summary <- function(attribute){
 
-    summary <-
+    summary_table <-
       attribute |>
       dplyr::summarise(
         # The info columns identify subgroups (e.g. exposure-outcome pairs),
@@ -319,17 +319,17 @@ summarize_uncertainty <- function(
         upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE)) |>
       # Change to same format as other output from healthiar
       tidyr::pivot_longer(
-        # data = summary,
+        # data = summary_table,
         # Only the three estimates are pivoted. The info columns identify the
         # rows like the geo units, so they must not become values
         cols = dplyr::ends_with("_estimate"),
         names_to = "impact_ci", values_to = "impact"
       ) |>
       dplyr::mutate(
-        impact_rounded = base::round(impact, digits = 0)
+        impact_rounded = round(impact, digits = 0)
       )
 
-    return(summary)
+    return(summary_table)
   }
 
   # Get uncertainty of the aggregated (macro) geographic unit
@@ -344,7 +344,7 @@ summarize_uncertainty <- function(
       # correlated across the geographic units and would therefore
       # overestimate the width of the confidence interval
       dplyr::summarise(
-        impact = base::sum(impact),
+        impact = sum(impact),
         .by = dplyr::all_of(c("geo_id_macro", "sim_id"))) |>
       get_summary()
 
@@ -357,10 +357,10 @@ summarize_uncertainty <- function(
   # Otherwise, different seed for each scenario in two cases
   # and results always different  (no reproducibility)
   # Current seed vector (after set.seed(seed)) is a valid L'Ecuyer stream
-  current_stream <- base::get(".Random.seed", envir = .GlobalEnv)
+  current_stream <- get(".Random.seed", envir = .GlobalEnv)
 
   # Prepare structure to hold full .Random.seed vectors per var and geo
-  stream_map <- stats::setNames(base::vector("list", base::length(var_names)),
+  stream_map <- stats::setNames(vector("list", length(var_names)),
                                 var_names)
 
 
@@ -369,12 +369,12 @@ summarize_uncertainty <- function(
   for (v in var_names) {
     if (v %in% var_geo_identical) {
       # only one stream per variable
-      stream_map[[v]] <- base::list(current_stream)
+      stream_map[[v]] <- list(current_stream)
       current_stream <- parallel::nextRNGStream(current_stream)
     } else {
       # one stream per geo_id for this variable
-      stream_map[[v]] <- base::vector("list", n_geo)
-      for (g in base::seq_len(n_geo)) {
+      stream_map[[v]] <- vector("list", n_geo)
+      for (g in seq_len(n_geo)) {
         stream_map[[v]][[g]] <- current_stream
         current_stream <- parallel::nextRNGStream(current_stream)
       }
@@ -392,12 +392,12 @@ summarize_uncertainty <- function(
 
     # Is there a confidence interval? I.e. lower and upper estimate?
 
-    ci_in <- base::list()
+    ci_in <- list()
 
     for (v in var_names){
       ci_in[[v]] <-
-        !base::is.null(input_args$value[[base::paste0(v, "_lower")]]) &&
-        !base::is.null(input_args$value[[base::paste0(v, "_upper")]])
+        !is.null(input_args$value[[paste0(v, "_lower")]]) &&
+        !is.null(input_args$value[[paste0(v, "_upper")]])
     }
 
 
@@ -414,7 +414,7 @@ summarize_uncertainty <- function(
       f_mode <-
         function(x, mode, p, target){
           return(
-            base::sum(
+            sum(
               (stats::qbeta(p = p,
                      shape1 = x,
                      shape2 = (x * (1 - mode) + 2 * mode - 1) / mode) -
@@ -436,7 +436,7 @@ summarize_uncertainty <- function(
       f_mean <-
         function(x, mean, p, target){
           return(
-            base::sum(
+            sum(
               (stats::qbeta(p = p,
                      shape1 = x,
                      shape2 = (x * (1 - mean)) / mean) -
@@ -445,41 +445,41 @@ summarize_uncertainty <- function(
         }
 
       ## define 'target' and 'p'
-      if (!base::missing(lower) & base::missing(upper)){
+      if (!missing(lower) & missing(upper)){
         target <- lower
         p <- 1 - p
-      } else if (!base::missing(upper) & base::missing(lower)){
+      } else if (!missing(upper) & missing(lower)){
         target <- upper
-      } else if (!base::missing(upper) & !base::missing(lower)){
+      } else if (!missing(upper) & !missing(lower)){
         target <- c(lower, upper)
         p <- c(0, p) + (1 - p) / 2
       }
 
-      ## derive a and b (=shape1 and shape2)
+      ## derive alpha and beta (=shape1 and shape2)
       if (method == "mode"){
         if (best == 0){
-          a <- 1
-          b <- stats::optimize(f_mode_zero, c(0, 1000), p = p, target = target)$minimum
+          alpha <- 1
+          beta <- stats::optimize(f_mode_zero, c(0, 1000), p = p, target = target)$minimum
         } else if (best == 1) {
-          a <- stats::optimize(f_mode_one, c(0, 1000), p = p, target = target)$minimum
-          b <- 1
+          alpha <- stats::optimize(f_mode_one, c(0, 1000), p = p, target = target)$minimum
+          beta <- 1
         } else {
-          a <- stats::optimize(f_mode, c(0, 1000),
+          alpha <- stats::optimize(f_mode, c(0, 1000),
                         mode = best, p = p, target = target)$minimum
-          b <- (a * (1 - best) + 2 * best - 1) / best
+          beta <- (alpha * (1 - best) + 2 * best - 1) / best
         }
       } else if (method == "mean"){
-        a <- stats::optimize(f_mean, c(0, 1000),
+        alpha <- stats::optimize(f_mean, c(0, 1000),
                       mean = best, p = p, target = target)$minimum
-        b <- (a * (1 - best)) / best
+        beta <- (alpha * (1 - best)) / best
       }
 
-      ## create 'out' dataframe
-      out <- base::list(alpha = a, beta = b)
-      base::class(out) <- "betaExpert"
+      ## create 'output' dataframe
+      output <- list(alpha = alpha, beta = beta)
+      class(output) <- "betaExpert"
 
-      ## return 'out'
-      return(out)
+      ## return 'output'
+      return(output)
     }
 
   # Define helper functions for fitting a gamma distribution with optimization
@@ -492,13 +492,17 @@ summarize_uncertainty <- function(
   probs <- c(0.025, 0.975)
 
   ## Fit gamma distribution
+  # Distance to minimize: how far the 2.5% and 97.5% quantiles of a gamma with
+  # shape par fall from the confidence interval entered by the user.
+  # rate = par / central_estimate pins the mean of the gamma (shape / rate) to
+  # the central estimate, so the shape is the only parameter left to search
   f_gamma <-
     function(par, probs, lower_estimate, central_estimate, upper_estimate) {
 
       qfit <- stats::qgamma(p = probs,
                             shape = par,
                             rate = par / central_estimate)
-      return(base::sum((qfit - c(lower_estimate, upper_estimate))^2))
+      return(sum((qfit - c(lower_estimate, upper_estimate))^2))
     }
 
 
@@ -529,7 +533,7 @@ summarize_uncertainty <- function(
   # Simulate function #####################
   simulate <- function(central, lower, upper, distribution, n, seed = NULL){
     if (!is.null(seed)) {
-      base::set.seed(seed)}
+      set.seed(seed)}
 
     if(distribution == "gamma"){
 
@@ -570,11 +574,11 @@ summarize_uncertainty <- function(
 
       is_negative <- simulation < 0
 
-      while (base::any(is_negative)) {
+      while (any(is_negative)) {
 
         simulation[is_negative] <-
           stats::rnorm(
-            n = base::sum(is_negative),
+            n = sum(is_negative),
             mean = central,
             sd = sd)
 
@@ -595,8 +599,8 @@ summarize_uncertainty <- function(
       simulation <-
         stats::rbeta(
           n = n,
-          shape1 = base::as.numeric(base::unname(simulation_betaExpert["alpha"])),
-          shape2 = base::as.numeric(base::unname(simulation_betaExpert["beta"])))
+          shape1 = as.numeric(unname(simulation_betaExpert["alpha"])),
+          shape2 = as.numeric(unname(simulation_betaExpert["beta"])))
 
       return(simulation)
     }
@@ -605,26 +609,26 @@ summarize_uncertainty <- function(
 
   ##  Identify relevant var_names
   # Variable names with confidence interval #####
-  var_names_with_ci <- base::names(ci_in)[base::unlist(ci_in)]
-  var_names_with_ci_in_name <- base::gsub("rr", "erf", var_names_with_ci) |> base::paste0("_ci")
+  var_names_with_ci <- names(ci_in)[unlist(ci_in)]
+  var_names_with_ci_in_name <- gsub("rr", "erf", var_names_with_ci) |> paste0("_ci")
   # var_names_with_ci that have simulated values identical in all geo units
-  var_names_with_ci_geo_identical <- base::intersect(var_names_with_ci,  var_geo_identical)
+  var_names_with_ci_geo_identical <- intersect(var_names_with_ci,  var_geo_identical)
   # var_names_with_ci that have simulated values different in all geo units
-  var_names_with_ci_geo_different <- base::setdiff(var_names_with_ci, var_geo_identical)
+  var_names_with_ci_geo_different <- setdiff(var_names_with_ci, var_geo_identical)
 
 
 
   ## Template and simulations #####
   sim_template <- input_table |>
     dplyr::select(geo_id_micro) |>
-    base::unique()|>
+    unique()|>
     dplyr::mutate(geo_id_number = 1:n_geo) |>
-    dplyr::mutate(sim_id = base::list(1:n_sim))
+    dplyr::mutate(sim_id = list(1:n_sim))
 
 
 
   # Define the mapping between variable names and their distributions
-  sim_config <- base::list(
+  sim_config <- list(
     rr = "gamma",
     exp = "normal",
     cutoff = "normal",
@@ -634,7 +638,7 @@ summarize_uncertainty <- function(
   )
 
   # Prepare the list to store the data in the for loop
-  sim <- base::list()
+  sim <- list()
 
 
   # Apply simulation for variables that have confidence interval
@@ -644,9 +648,9 @@ summarize_uncertainty <- function(
     dist <- sim_config[[var]]
 
     # Store central, lower and upper estimate for the simulation below
-    central <- base::as.numeric(input_args$value[[base::paste0(var, "_central")]])
-    lower   <- base::as.numeric(input_args$value[[base::paste0(var, "_lower")]])
-    upper   <- base::as.numeric(input_args$value[[base::paste0(var, "_upper")]])
+    central <- as.numeric(input_args$value[[paste0(var, "_central")]])
+    lower   <- as.numeric(input_args$value[[paste0(var, "_lower")]])
+    upper   <- as.numeric(input_args$value[[paste0(var, "_upper")]])
 
 
     # Run simulate across all rows
@@ -656,12 +660,12 @@ summarize_uncertainty <- function(
     if(var %in% var_names_with_ci_geo_different){
 
       sim[[var]] <- purrr::pmap(
-        base::list(sim_template$geo_id_number),
+        list(sim_template$geo_id_number),
         function(geo_id_number) {
 
           # assign full .Random.seed stream if available for this var & geo
-          if (!base::is.null(stream_map)) {
-            base::assign(".Random.seed", stream_map[[var]][[geo_id_number]], envir = .GlobalEnv)
+          if (!is.null(stream_map)) {
+            assign(".Random.seed", stream_map[[var]][[geo_id_number]], envir = .GlobalEnv)
           }
 
           simulate(
@@ -686,11 +690,11 @@ summarize_uncertainty <- function(
       # If reproducible streams were requested and stream_map[[var]] contains one stream vector,
       # assign it once, then call simulate(...) to create a single vector of length n_sim.
       if (!is.null(stream_map)) {
-        base::assign(".Random.seed", stream_map[[var]][[1]], envir = .GlobalEnv)
+        assign(".Random.seed", stream_map[[var]][[1]], envir = .GlobalEnv)
       }
 
       sim[[var]] <-
-        base::list(
+        list(
           simulate(
             central = central,
             lower = lower,
@@ -705,21 +709,21 @@ summarize_uncertainty <- function(
   # Identify the variables that have to be deleted in input_args
   # (to be used below)
   args_to_be_replaced_by_sim <-
-    base::paste0(
-      base::rep(var_names_with_ci, each = 3),
+    paste0(
+      rep(var_names_with_ci, each = 3),
       c("_central", "_lower", "_upper"))
   # variable that were not passed by the user
   args_not_passed <-
-    base::names(input_args$is_entered_by_user)[!base::unlist(input_args$is_entered_by_user)]
+    names(input_args$is_entered_by_user)[!unlist(input_args$is_entered_by_user)]
   # All args to be removed
   args_to_be_removed_in_input_args <-
-    base::unique(c(args_to_be_replaced_by_sim, args_not_passed))
+    unique(c(args_to_be_replaced_by_sim, args_not_passed))
 
   # Prepare input_args to accommodate the new simulated values
   # (to be used below)
   input_args_prepared_for_replacement <-
     # Remove the arguments that will be replace with the simulation including upper and lower
-    input_args$value[! base::names(input_args$value) %in% args_to_be_removed_in_input_args]
+    input_args$value[! names(input_args$value) %in% args_to_be_removed_in_input_args]
 
 
   template_with_sim <-
@@ -743,7 +747,7 @@ summarize_uncertainty <- function(
     # Change the name of geo_id_micro adding the sim_id
     # Important: This is a trick to be able to get the output with impacts by simulation
     # To be removed below when impacts by geo_id_micro have to be obtained
-    dplyr::mutate(geo_id_micro = base::paste0(geo_id_micro, "_sim_", sim_id))
+    dplyr::mutate(geo_id_micro = paste0(geo_id_micro, "_sim_", sim_id))
 
   # Call get_impact taking benefit of the vectorized structure
   # impact by row no matter what you enter (e.g. multiple rr by geo_id_micro)
@@ -759,7 +763,7 @@ summarize_uncertainty <- function(
   impact_by_sim <- output_sim |>
     # Bring back the original geo_id_micro after using the trick of adding the sim_id
     # We need the original names to be able to sum impacts below
-    dplyr::mutate(geo_id_micro = base::gsub("_sim_.*", "", geo_id_micro))|>
+    dplyr::mutate(geo_id_micro = gsub("_sim_.*", "", geo_id_micro))|>
     # Put column sim_id closer to sim_id
     # get_output reorder columns but ignores sim_id
     dplyr::relocate(sim_id, .before = impact)
@@ -768,22 +772,22 @@ summarize_uncertainty <- function(
   summary_by_geo_id_micro <-
     get_summary(attribute = impact_by_sim)
 
-  summary <- summary_by_geo_id_micro
+  uncertainty_main <- summary_by_geo_id_micro
 
 
-  if("geo_id_macro" %in% base::names(output_attribute$health_main) ){
+  if("geo_id_macro" %in% names(output_attribute$health_main) ){
 
-    summary <- get_summary_by_geo_id_macro(impact_by_sim = impact_by_sim)
+    uncertainty_main <- get_summary_by_geo_id_macro(impact_by_sim = impact_by_sim)
 
   }
 
   # Store the results in a list keeping consistency in the structure with
   # other healthiar functions
   uncertainty <-
-    base::list(
-      uncertainty_main = summary,
+    list(
+      uncertainty_main = uncertainty_main,
       uncertainty_detailed =
-        base::list(impact_by_sim = impact_by_sim,
+        list(impact_by_sim = impact_by_sim,
                    uncertainty_by_geo_id_micro = summary_by_geo_id_micro))
 
   return(uncertainty)
@@ -843,8 +847,8 @@ summarize_uncertainty <- function(
     scen_joining_cols <-
       # We use output 1 but we could use output 2
       # (same structure because same type of assessment)
-      # base::names(output_scen_1) |>
-      # base::grep(pattern = "_id", x = _, value = TRUE)
+      # names(output_scen_1) |>
+      # grep(pattern = "_id", x = _, value = TRUE)
       find_joining_columns(
         df_1 = output_scen_1,
         df_2 = output_scen_2,
@@ -864,7 +868,7 @@ summarize_uncertainty <- function(
       impact_by_sim <- output_both_scen |>
         dplyr::mutate(
           impact = impact_scen_1 - impact_scen_2,
-          impact_rounded = base::round(impact),
+          impact_rounded = round(impact),
           .after = sim_id)
 
     } else if(input_args$approach_comparison == "pif"){
@@ -879,7 +883,7 @@ summarize_uncertainty <- function(
             # get_output() below aggregates by geo_id_micro and ignores
             # sim_id, so without this the simulations would be summed up
             dplyr::mutate(geo_id_micro =
-                            base::paste0(geo_id_micro, "_sim_", sim_id)),
+                            paste0(geo_id_micro, "_sim_", sim_id)),
           pop_fraction_type = "pif")
 
       output_sim_both_scen <-
@@ -887,7 +891,7 @@ summarize_uncertainty <- function(
 
       impact_by_sim <- output_sim_both_scen|>
         # Bring back the original geo_id_micro after using the trick above
-        dplyr::mutate(geo_id_micro = base::gsub("_sim_.*", "", geo_id_micro))|>
+        dplyr::mutate(geo_id_micro = gsub("_sim_.*", "", geo_id_micro))|>
         dplyr::relocate(impact, impact_rounded,
                         .after = sim_id)
 
@@ -897,12 +901,12 @@ summarize_uncertainty <- function(
   summary_by_geo_id_micro <-
     get_summary(attribute = impact_by_sim)
 
-  summary <- summary_by_geo_id_micro
+  uncertainty_main <- summary_by_geo_id_micro
 
 
-  if("geo_id_macro" %in% base::names(output_attribute$health_main) ){
+  if("geo_id_macro" %in% names(output_attribute$health_main) ){
 
-    summary <- get_summary_by_geo_id_macro(impact_by_sim = impact_by_sim)
+    uncertainty_main <- get_summary_by_geo_id_macro(impact_by_sim = impact_by_sim)
 
   }
 
@@ -912,10 +916,10 @@ summarize_uncertainty <- function(
 
     uncertainty <-
       c(output_attribute,
-        base::list(
-          uncertainty_main = summary,
+        list(
+          uncertainty_main = uncertainty_main,
           uncertainty_detailed =
-            base::list(impact_by_sim = impact_by_sim,
+            list(impact_by_sim = impact_by_sim,
                        uncertainty_by_geo_id_micro = summary_by_geo_id_micro)))
 
   }

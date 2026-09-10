@@ -2,7 +2,7 @@
 
 ## NOTE AL 2026-02-20: the original data set was called
 ## LMU_O3_COPD_mort_2016.rda; renamed to exdat_ozone_LMU_O3_COPD_mort_2016.rda
-exdat_ozone <- base::readRDS("data-raw/exdat_ozone_LMU_O3_COPD_mort_2016.rds")
+exdat_ozone <- readRDS("data-raw/exdat_ozone_LMU_O3_COPD_mort_2016.rds")
 
 exdat_ozone <- exdat_ozone |>
   dplyr::select(

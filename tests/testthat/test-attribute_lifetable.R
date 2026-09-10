@@ -13,7 +13,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
   # newborns. Both the input data and the results of AirQ+ are read from this
   # export, so that the two tools are compared on exactly the same data
   data <-
-    base::readRDS(
+    readRDS(
       testthat::test_path("testdata", "airqplus_pm_yll_single_year.rds"))
 
   # Only fraction_lived changes across the calls below,
@@ -30,9 +30,9 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
         rr_lower = data[["input"]]$relative_risk_lower,
         rr_upper = data[["input"]]$relative_risk_upper,
         rr_increment = data[["input"]]$relative_risk_increment,
-        erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-        age_group = base::rep(data[["pop"]]$age_from, times = 2),
-        sex = base::rep(c("male", "female"), each = 100),
+        erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
+        age_group = rep(data[["pop"]]$age_from, times = 2),
+        sex = rep(c("male", "female"), each = 100),
         population = c(data[["pop"]]$midyear_population_male,
                        data[["pop"]]$midyear_population_female),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -83,7 +83,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
     object = attribute_lifetable_airqplus()$health_main$impact_per_100k_inhab,
     expected =
       airqplus_yll /
-      base::sum(data[["pop"]]$midyear_population_male,
+      sum(data[["pop"]]$midyear_population_male,
                 data[["pop"]]$midyear_population_female) * 1E5,
     tolerance = 1E-6)
 
@@ -96,19 +96,19 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
       c(c(data[["output"]]$value_central_male_yll_over_100_years_all_ages,
           data[["output"]]$value_lower_male_yll_over_100_years_all_ages,
           data[["output"]]$value_upper_male_yll_over_100_years_all_ages) /
-          base::sum(data[["pop"]]$midyear_population_male),
+          sum(data[["pop"]]$midyear_population_male),
         c(data[["output"]]$value_central_female_yll_over_100_years_all_ages,
           data[["output"]]$value_lower_female_yll_over_100_years_all_ages,
           data[["output"]]$value_upper_female_yll_over_100_years_all_ages) /
-          base::sum(data[["pop"]]$midyear_population_female)) * 1E5,
+          sum(data[["pop"]]$midyear_population_female)) * 1E5,
     tolerance = 1E-6)
 })
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_TRUE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   # Check that decimals between 0 and 1 are allowed in bhd and population
   population <- 
@@ -137,7 +137,7 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
         erf_shape = "log_linear",
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
-        sex = base::rep(c("male", "female"), each = 100),
+        sex = rep(c("male", "female"), each = 100),
         population = population,
         bhd_central = bhd_central,
         year_of_analysis = 2019,
@@ -153,9 +153,9 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
 
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_TRUE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -172,7 +172,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
         erf_shape = "log_linear",
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
-        sex = base::rep(c("male", "female"), each = 100),
+        sex = rep(c("male", "female"), each = 100),
         population = c(data_lifetable[["male"]]$population_2019,
                        data_lifetable[["female"]]$population_2019),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -195,9 +195,9 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
 
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -213,7 +213,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
         erf_shape = "log_linear",
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
-        sex = base::rep(c("male", "female"), each = 100),
+        sex = rep(c("male", "female"), each = 100),
         population = c(data_lifetable[["male"]]$population_2019,
                        data_lifetable[["female"]]$population_2019),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -230,9 +230,9 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_TRUE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   # Only min_age and max_age change across the calls below,
   # so they are the only arguments of this function
@@ -249,7 +249,7 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
         erf_shape = "log_linear",
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
-        sex = base::rep(c("male", "female"), each = 100),
+        sex = rep(c("male", "female"), each = 100),
         population = c(data_lifetable[["male"]]$population_2019,
                        data_lifetable[["female"]]$population_2019),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -299,35 +299,35 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
 
 testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_lifetable(
         health_outcome = "yll",
-        exp_central = base::rep(c(8, 9, 10), each = 100*2), # Fake data just for testing purposes
-        prop_pop_exp = base::rep(c(0.2, 0.3, 0.5), each = 100*2), # Fake data just for testing purposes
+        exp_central = rep(c(8, 9, 10), each = 100*2), # Fake data just for testing purposes
+        prop_pop_exp = rep(c(0.2, 0.3, 0.5), each = 100*2), # Fake data just for testing purposes
         cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
         rr_central = data_mort[2,"rr_central"],
         rr_lower = data_mort[2,"rr_lower"],
         rr_upper = data_mort[2,"rr_upper"],
         rr_increment = 10,
         erf_shape = "log_linear",
-        age_group = base::rep(
+        age_group = rep(
           c(data_lifetable[["male"]]$age,
             data_lifetable[["female"]]$age),
           times = 3),
-        sex = base::rep(
+        sex = rep(
           c("male", "female"),
           each = 100,
           times = 3),
-        population = base::rep(
+        population = rep(
           c(data_lifetable[["male"]]$population_2019,
             data_lifetable[["female"]]$population_2019),
           times = 3),
-        bhd_central = base::rep(
+        bhd_central = rep(
           c(data[["pop"]]$number_of_deaths_male,
             data[["pop"]]$number_of_deaths_female),
           times = 3),
@@ -343,7 +343,7 @@ testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_y
 ##### ONE SEX ###########################
 testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
   # EKV2010 data
-  data <- base::readRDS(testthat::test_path("testdata", "lifetable_male_ekv_2010.rds"))
+  data <- readRDS(testthat::test_path("testdata", "lifetable_male_ekv_2010.rds"))
 
   testthat::expect_equal(
     object =
@@ -355,7 +355,7 @@ testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_y
         rr_increment = 10,
         erf_shape = "log_linear",
         age_group = data$age,
-        sex = base::rep(c("male"), each = 106),
+        sex = rep(c("male"), each = 106),
         population = data$population_male,
         bhd_central = as.numeric(data$deaths_natural_male),
         year_of_analysis = 2010,
@@ -371,8 +371,8 @@ testthat::test_that("results the same |fake_lifetable|exp_dist|exp_time_single_y
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_single_year|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -388,13 +388,13 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_sin
         erf_shape = "log_linear",
         approach_exposure = "single_year",
         approach_newborns = "without_newborns",
-        sex = base::rep(c("male", "female"), each = 100, times = 2),
-        age_group = base::rep(0:99, times = 2*2),
-        bhd_central = base::rep(
+        sex = rep(c("male", "female"), each = 100, times = 2),
+        age_group = rep(0:99, times = 2*2),
+        bhd_central = rep(
           c(data[["pop"]]$number_of_deaths_male,
             data[["pop"]]$number_of_deaths_female),
           times = 2),
-        population = base::rep(
+        population = rep(
           c(data_lifetable[["male"]]$population_2019,
             data_lifetable[["female"]]$population_2019),
           times = 2),
@@ -447,7 +447,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
 #### ONE GEO UNIT #####################################
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   testthat::expect_equal(
     object =
@@ -461,9 +461,9 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
         rr_lower = data[["input"]]$relative_risk_lower,
         rr_upper = data[["input"]]$relative_risk_upper,
         rr_increment = 10,
-        erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-        age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
-        sex = base::rep(c("male", "female"), each = 100),
+        erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
+        age_group = rep(data[["pop"]][["age_from..."]], times = 2),
+        sex = rep(c("male", "female"), each = 100),
         population = c(data[["pop"]]$midyear_population_male,
                        data[["pop"]]$midyear_population_female),
         bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -480,8 +480,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -497,13 +497,13 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
         rr_upper = 1.179,
         rr_increment = 10,
         erf_shape = "log_linear",
-        sex = base::rep(c("male", "female"), each = 100, times = 2),
-        age_group = base::rep(0:99, times = 2*2),
-        bhd_central = base::rep(
+        sex = rep(c("male", "female"), each = 100, times = 2),
+        age_group = rep(0:99, times = 2*2),
+        bhd_central = rep(
           c(data[["pop"]]$number_of_deaths_male,
             data[["pop"]]$number_of_deaths_female),
           times = 2),
-        population = base::rep(
+        population = rep(
           c(data_lifetable[["male"]]$population_2019,
             data_lifetable[["female"]]$population_2019),
           times = 2),
@@ -522,7 +522,7 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
 
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   cumulative_impact <-
     healthiar::attribute_lifetable(
@@ -533,9 +533,9 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
       cutoff_central = data[["input"]]$cut_off_value,
       rr_central = data[["input"]]$relative_risk,
       rr_increment = 10,
-      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
-      sex = base::rep(c("male", "female"), each = 100),
+      erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = rep(c("male", "female"), each = 100),
       population = c(data[["pop"]]$midyear_population_male,
                      data[["pop"]]$midyear_population_female),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -543,9 +543,9 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
       year_of_analysis = data[["input"]]$start_year,
       min_age = data[["input"]]$apply_rr_from_age
     )$health_detailed$results_raw |>
-    dplyr::summarize(impact = base::sum(impact), .by = c(sex, year)) |>
-    dplyr::arrange(sex, base::as.numeric(year)) |>
-    dplyr::mutate(impact = base::cumsum(impact), .by = sex) |>
+    dplyr::summarize(impact = sum(impact), .by = c(sex, year)) |>
+    dplyr::arrange(sex, as.numeric(year)) |>
+    dplyr::mutate(impact = cumsum(impact), .by = sex) |>
     dplyr::pull(impact)
 
   # AirQ+ accumulates the impacts of an exposure that is repeated every year,
@@ -572,7 +572,7 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_cons
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   testthat::expect_equal(
     object = healthiar::attribute_lifetable(
@@ -585,9 +585,9 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
       rr_lower = data[["input"]]$relative_risk_lower,
       rr_upper = data[["input"]]$relative_risk_upper,
       rr_increment = 10,
-      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
-      sex = base::rep(c("male", "female"), each = 100),
+      erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = rep(c("male", "female"), each = 100),
       population = c(data[["pop"]]$midyear_population_male,
                      data[["pop"]]$midyear_population_female),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -603,8 +603,8 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
 
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
@@ -620,13 +620,13 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
         rr_upper = 1.179,
         rr_increment = 10,
         erf_shape = "log_linear",
-        sex = base::rep(c("male", "female"), each = 100, times = 2),
-        age_group = base::rep(0:99, times = 2*2),
-        bhd_central = base::rep(
+        sex = rep(c("male", "female"), each = 100, times = 2),
+        age_group = rep(0:99, times = 2*2),
+        bhd_central = rep(
           c(data[["pop"]]$number_of_deaths_male,
             data[["pop"]]$number_of_deaths_female),
           times = 2),
-        population = base::rep(
+        population = rep(
           c(data_lifetable[["male"]]$population_2019,
             data_lifetable[["female"]]$population_2019),
           times = 2),
@@ -645,7 +645,7 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
 
 testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_single_year|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   # with_newborns has no effect with a single year exposure,
   # so healthiar warns about it
@@ -661,9 +661,9 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
       rr_lower = data[["input"]]$relative_risk_lower,
       rr_upper = data[["input"]]$relative_risk_upper,
       rr_increment = 10,
-      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
-      sex = base::rep(c("male", "female"), each = 100),
+      erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = rep(c("male", "female"), each = 100),
       population = c(data[["pop"]]$midyear_population_male,
                      data[["pop"]]$midyear_population_female),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -689,35 +689,35 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|exp_time_sing
 
 testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_constant|newborns_FALSE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_equal(
     object =
       healthiar::attribute_lifetable(
         health_outcome = "deaths",
-        exp_central = base::rep(c(8, 9, 10), each = 100*2), # Fake data just for testing purposes
-        prop_pop_exp = base::rep(c(0.2, 0.3, 0.5), each = 100*2), # Fake data just for testing purposes
+        exp_central = rep(c(8, 9, 10), each = 100*2), # Fake data just for testing purposes
+        prop_pop_exp = rep(c(0.2, 0.3, 0.5), each = 100*2), # Fake data just for testing purposes
         cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
         rr_central = data_mort[2,"rr_central"],
         rr_lower = data_mort[2,"rr_lower"],
         rr_upper = data_mort[2,"rr_upper"],
         rr_increment = 10,
         erf_shape = "log_linear",
-        age_group = base::rep(
+        age_group = rep(
           c(data_lifetable[["male"]]$age,
             data_lifetable[["female"]]$age),
           times = 3),
-        sex = base::rep(
+        sex = rep(
           c("male", "female"),
           each = 100,
           times = 3),
-        population = base::rep(
+        population = rep(
           c(data_lifetable[["male"]]$population_2019,
             data_lifetable[["female"]]$population_2019),
           times = 3),
-        bhd_central = base::rep(
+        bhd_central = rep(
           c(data[["pop"]]$number_of_deaths_male,
             data[["pop"]]$number_of_deaths_female),
           times = 3),
@@ -733,7 +733,7 @@ testthat::test_that("results the same |pathway_lifetable|exp_dist|exp_time_const
 ### CONSTANT EXPOSURE & WITH NEWBORNS ###########################################
 testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_constant|newborns_TRUE|min_age_TRUE|max_age_FALSE|time_horizon_FALSE|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   testthat::expect_equal(
     object = healthiar::attribute_lifetable(
@@ -746,9 +746,9 @@ testthat::test_that("results the same |pathway_lifetable|exp_single|exp_time_con
       rr_lower = data[["input"]]$relative_risk_lower,
       rr_upper = data[["input"]]$relative_risk_upper,
       rr_increment = 10,
-      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
-      sex = base::rep(c("male", "female"), each = 100),
+      erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = rep(c("male", "female"), each = 100),
       population = c(data[["pop"]]$midyear_population_male,
                      data[["pop"]]$midyear_population_female),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -771,7 +771,7 @@ testthat::test_that("results the same |pathway_lifetable|age_group entered in an
 
   data <- exdat_lifetable
   # Descending age groups within each sex
-  data_descending <- data[base::order(data$sex, -data$age_group), ]
+  data_descending <- data[order(data$sex, -data$age_group), ]
 
   testthat::expect_equal(
     object =
@@ -858,9 +858,9 @@ testthat::test_that("results correct |pathway_lifetable|impact_per_100k_inhab by
   # Inf (or NaN if the impact was 0 too) instead of NA
   testthat::expect_false(
     object =
-      base::any(
-        base::is.infinite(results_by_year$impact_per_100k_inhab) |
-          base::is.nan(results_by_year$impact_per_100k_inhab)))
+      any(
+        is.infinite(results_by_year$impact_per_100k_inhab) |
+          is.nan(results_by_year$impact_per_100k_inhab)))
 
 })
 
@@ -869,35 +869,35 @@ testthat::test_that("results correct |pathway_lifetable|impact_per_100k_inhab by
 ## ERROR #########
 testthat::test_that("error if length of age range higher than deaths", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_error(
     object =
       healthiar::attribute_lifetable(
         health_outcome = "deaths",
-        exp_central = base::rep(c(8, 9, 10), each = 100*2), # Fake data just for testing purposes
-        prop_pop_exp = base::rep(c(0.2, 0.3, 0.5), each = 100*2), # Fake data just for testing purposes
+        exp_central = rep(c(8, 9, 10), each = 100*2), # Fake data just for testing purposes
+        prop_pop_exp = rep(c(0.2, 0.3, 0.5), each = 100*2), # Fake data just for testing purposes
         cutoff_central = data_mort$cutoff[2], # WHO AQG 2021
         rr_central = data_mort[2,"rr_central"],
         rr_lower = data_mort[2,"rr_lower"],
         rr_upper = data_mort[2,"rr_upper"],
         rr_increment = 10,
         erf_shape = "log_linear",
-        age_group = base::rep(
+        age_group = rep(
           c(data_lifetable[["male"]]$age,
             data_lifetable[["female"]]$age),
           times = 3),
-        sex = base::rep(
+        sex = rep(
           c("male", "female"),
           each = 100,
           times = 20), # Should be 3
-        population = base::rep(
+        population = rep(
           c(data_lifetable[["male"]]$population_2019,
             data_lifetable[["female"]]$population_2019),
           times = 3),
-        bhd_central = base::rep(
+        bhd_central = rep(
           c(data[["pop"]]$number_of_deaths_male,
             data[["pop"]]$number_of_deaths_female),
           times = 3),
@@ -912,7 +912,7 @@ testthat::test_that("error if length of age range higher than deaths", {
 
 testthat::test_that("error if bhd argument contains 0", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   data[["pop"]]$number_of_deaths_male[47] <- -1 # 47 chosen randomly
 
@@ -928,9 +928,9 @@ testthat::test_that("error if bhd argument contains 0", {
       rr_lower = data[["input"]]$relative_risk_lower,
       rr_upper = data[["input"]]$relative_risk_upper,
       rr_increment = 10,
-      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
-      sex = base::rep(c("male", "female"), each = 100),
+      erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = rep(c("male", "female"), each = 100),
       population = c(data[["pop"]]$midyear_population_male,
                      data[["pop"]]$midyear_population_female),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -945,9 +945,9 @@ testthat::test_that("error if bhd argument contains 0", {
 
 testthat::test_that("error if population argument contains 0", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   data[["pop"]]$midyear_population_male[47] <- 0 # 47 chosen randomly
 
@@ -964,9 +964,9 @@ testthat::test_that("error if population argument contains 0", {
       rr_lower = data[["input"]]$relative_risk_lower,
       rr_upper = data[["input"]]$relative_risk_upper,
       rr_increment = 10,
-      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
-      sex = base::rep(c("male", "female"), each = 100),
+      erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = rep(c("male", "female"), each = 100),
       population = c(data[["pop"]]$midyear_population_male,
                      data[["pop"]]$midyear_population_female),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -980,9 +980,9 @@ testthat::test_that("error if population argument contains 0", {
 
 testthat::test_that("error if exposuer lower than 0 | lifetable", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   testthat::expect_error(
     object = healthiar::attribute_lifetable(
@@ -995,9 +995,9 @@ testthat::test_that("error if exposuer lower than 0 | lifetable", {
       rr_lower = data[["input"]]$relative_risk_lower,
       rr_upper = data[["input"]]$relative_risk_upper,
       rr_increment = 10,
-      erf_shape = base::gsub("-", "_", data[["input"]]$calculation_method),
-      age_group = base::rep(data[["pop"]][["age_from..."]], times = 2),
-      sex = base::rep(c("male", "female"), each = 100),
+      erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
+      age_group = rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = rep(c("male", "female"), each = 100),
       population = c(data[["pop"]]$midyear_population_male,
                      data[["pop"]]$midyear_population_female),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -1011,7 +1011,7 @@ testthat::test_that("error if exposuer lower than 0 | lifetable", {
 
 testthat::test_that("error if age_group is not a 1-year consecutive sequence", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
 
   attribute_lifetable_with_age_group <- function(age_group){
     healthiar::attribute_lifetable(
@@ -1023,10 +1023,10 @@ testthat::test_that("error if age_group is not a 1-year consecutive sequence", {
       rr_central = 1.118,
       rr_increment = 10,
       erf_shape = "log_linear",
-      age_group = base::rep(age_group, times = 2),
-      sex = base::rep(c("male", "female"), each = base::length(age_group)),
-      population = base::rep(10000, 2 * base::length(age_group)),
-      bhd_central = base::rep(50, 2 * base::length(age_group)),
+      age_group = rep(age_group, times = 2),
+      sex = rep(c("male", "female"), each = length(age_group)),
+      population = rep(10000, 2 * length(age_group)),
+      bhd_central = rep(50, 2 * length(age_group)),
       year_of_analysis = 2019,
       min_age = 20)
   }
@@ -1036,7 +1036,7 @@ testthat::test_that("error if age_group is not a 1-year consecutive sequence", {
 
   # 5-year age groups
   testthat::expect_error(
-    object = attribute_lifetable_with_age_group(base::seq(0, 95, 5)),
+    object = attribute_lifetable_with_age_group(seq(0, 95, 5)),
     regexp = regexp_age_group,
     fixed = TRUE)
 
@@ -1048,7 +1048,7 @@ testthat::test_that("error if age_group is not a 1-year consecutive sequence", {
 
   # Not integers
   testthat::expect_error(
-    object = attribute_lifetable_with_age_group(base::seq(0, 49.5, 0.5)),
+    object = attribute_lifetable_with_age_group(seq(0, 49.5, 0.5)),
     regexp = regexp_age_group,
     fixed = TRUE)
 
@@ -1128,9 +1128,9 @@ testthat::test_that("error if time_horizon lower than 1", {
 ## WARNING #########
 testthat::test_that("warning if any bhd = 0", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   # Check that 0 in bhd is allowed allowed with warning
   population <- 
@@ -1159,7 +1159,7 @@ testthat::test_that("warning if any bhd = 0", {
         erf_shape = "log_linear",
         age_group = c(data_lifetable[["male"]]$age,
                       data_lifetable[["female"]]$age),
-        sex = base::rep(c("male", "female"), each = 100),
+        sex = rep(c("male", "female"), each = 100),
         population = population,
         bhd_central = bhd_central,
         year_of_analysis = 2019,

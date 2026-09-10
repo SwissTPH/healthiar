@@ -40,7 +40,7 @@
 #'
 #' The order of the calls matters: a predicate is only safe once the previous
 #' calls have ruled out the value types it cannot handle. E.g. checking whether
-#' a value is a whole number (\code{x == base::floor(x)}) requires that the
+#' a value is a whole number (\code{x == floor(x)}) requires that the
 #' numeric check has already been passed.
 
 # VALUE ########################################################################
@@ -55,7 +55,7 @@
 #' validate_args(
 #'   args = input_args$value,
 #'   arg_names = c("n_quantile", "population"),
-#'   is_valid = base::is.numeric,
+#'   is_valid = is.numeric,
 #'   message = "{arg} must contain numeric value(s).")
 #'
 #' # Message listing all the arguments concerned
@@ -80,7 +80,7 @@ validate_args <-
            report = "first",
            type = "error"){
 
-    invalid_arg_names <- base::character(0)
+    invalid_arg_names <- character(0)
 
     # A loop (instead of e.g. purrr) to be able to stop as soon as possible
     # if report = "first" and to avoid building intermediate lists
@@ -90,9 +90,9 @@ validate_args <-
 
       # Skip the arguments that the user did not enter.
       # [[ ]] returns NULL (and no error) if the name is not in args at all
-      if(base::is.null(arg_value)){ next }
+      if(is.null(arg_value)){ next }
 
-      if(base::any(!is_valid(arg_value))){
+      if(any(!is_valid(arg_value))){
 
         invalid_arg_names <- c(invalid_arg_names, arg_name)
 
@@ -101,19 +101,19 @@ validate_args <-
       }
     }
 
-    if(base::length(invalid_arg_names) > 0){
+    if(length(invalid_arg_names) > 0){
 
       # toString() returns the name itself if there is only one
       text <-
-        base::gsub("{arg}",
-                   base::toString(invalid_arg_names),
+        gsub("{arg}",
+                   toString(invalid_arg_names),
                    message,
                    fixed = TRUE)
 
       if(type == "error"){
-        base::stop(text, call. = FALSE)
+        stop(text, call. = FALSE)
       } else if (type == "warning"){
-        base::warning(text, call. = FALSE)
+        warning(text, call. = FALSE)
       }
     }
   }

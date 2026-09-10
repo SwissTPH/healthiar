@@ -187,11 +187,11 @@ compare <-
 
     # Force the same environment in the functions of erf_eq.
     # Otherwise, not identified as identical and error joining below.
-    if(!base::is.null(input_args_scen_1[["value"]][["erf_eq_central"]])){
+    if(!is.null(input_args_scen_1[["value"]][["erf_eq_central"]])){
 
       # The arguments of the exposure-response function are only the three
       # confidence interval variants. 
-      erf_eq_vars <- base::paste0("erf_eq", c("_central", "_lower", "_upper"))
+      erf_eq_vars <- paste0("erf_eq", c("_central", "_lower", "_upper"))
 
       input_args_scen_1[["value"]][erf_eq_vars] <-
         input_args_scen_2[["value"]][erf_eq_vars]
@@ -220,9 +220,9 @@ compare <-
         "year_of_analysis")
 
     is_absolute_risk <-
-      base::unique(input_table_scen_1$approach_risk) == "absolute_risk"
+      unique(input_table_scen_1$approach_risk) == "absolute_risk"
 
-    is_lifetable <- base::unique(input_table_scen_1$is_lifetable)
+    is_lifetable <- unique(input_table_scen_1$is_lifetable)
 
 
 
@@ -232,15 +232,15 @@ compare <-
 
     # Argument used (user entered data)
     passed_arguments_scen_1 <-
-      base::names(purrr::keep(input_args_scen_1[["is_entered_by_user"]], ~ .x == TRUE))
+      names(purrr::keep(input_args_scen_1[["is_entered_by_user"]], ~ .x == TRUE))
 
     passed_arguments_scen_2 <-
-      base::names(purrr::keep(input_args_scen_2[["is_entered_by_user"]], ~ .x == TRUE))
+      names(purrr::keep(input_args_scen_2[["is_entered_by_user"]], ~ .x == TRUE))
 
 
    # Check that the two scenarios used the same arguments (calculation pathways)
 
-    if(!base::identical(passed_arguments_scen_1, passed_arguments_scen_2)){
+    if(!identical(passed_arguments_scen_1, passed_arguments_scen_2)){
       stop("The two scenarios must use the same arguments.",
            call. = FALSE)
     }
@@ -248,14 +248,14 @@ compare <-
 
     # Arguments that should be identical in both scenarios
     common_arguments_scen_1 <-
-      base::setdiff(passed_arguments_scen_1, scenario_specific_arguments)
+      setdiff(passed_arguments_scen_1, scenario_specific_arguments)
 
     common_arguments_scen_2 <-
-      base::setdiff(passed_arguments_scen_2, scenario_specific_arguments)
+      setdiff(passed_arguments_scen_2, scenario_specific_arguments)
 
 
 
-    if(base::identical(common_arguments_scen_1, common_arguments_scen_2)){
+    if(identical(common_arguments_scen_1, common_arguments_scen_2)){
       common_arguments <- common_arguments_scen_1
     }else{
       stop("The two scenarios must use the same common arguments.",
@@ -264,18 +264,18 @@ compare <-
 
     common_arguments_identical <-
       check_if_args_identical(
-        args_a = input_args_scen_1[["value"]],
-        args_b = input_args_scen_2[["value"]],
+        args_1 = input_args_scen_1[["value"]],
+        args_2 = input_args_scen_2[["value"]],
         names_to_check = common_arguments)
 
-    # Check that (relevant) input values from scenarios A & B are equal
+    # Check that (relevant) input values from scenarios 1 & 2 are equal
     # Works also if no input was provided (might be the case for e.g. ..._lower arguments)
     # Check if the common arguments in both scenarios are identical
 
-    if( ! base::all(common_arguments_identical) )
+    if( ! all(common_arguments_identical) )
     {stop(
-      base::paste0(
-        base::paste(base::names(common_arguments_identical)[!common_arguments_identical],
+      paste0(
+        paste(names(common_arguments_identical)[!common_arguments_identical],
                     collapse = ", "),
         " must be identical in both scenarios."),
       call. = FALSE)}
@@ -287,8 +287,8 @@ compare <-
     if(approach_comparison == "pif"){
 
       error_if_var_is_not_identical <- function(var){
-        if(var %in% c(base::names(input_table_scen_1),base::names(input_table_scen_2))  &&
-           ! base::identical(input_table_scen_1[[var]], input_table_scen_2[[var]])){
+        if(var %in% c(names(input_table_scen_1),names(input_table_scen_2))  &&
+           ! identical(input_table_scen_1[[var]], input_table_scen_2[[var]])){
 
           stop("For the PIF approach, ", var, " must be identical in both scenarios.",
                call. = FALSE)
@@ -328,8 +328,8 @@ compare <-
       # Otherwise too large table
 
       if( is_lifetable){
-        if(! base::unique(results_raw_scen_1$year_of_analysis) ==
-          base::unique(results_raw_scen_2$year_of_analysis)){
+        if(! unique(results_raw_scen_1$year_of_analysis) ==
+          unique(results_raw_scen_2$year_of_analysis)){
 
           joining_columns_output <- c(joining_columns_output, "year")
         }
@@ -346,14 +346,14 @@ compare <-
           suffix = c("_scen_1", "_scen_2")) |>
         # Calculate the delta (difference) between scenario 1 and 2
         dplyr::mutate(impact = impact_scen_1 - impact_scen_2,
-                      impact_rounded = base::round(impact, 0))
+                      impact_rounded = round(impact, 0))
 
       input_table <-
-        base::list(input_table_scen_1 = input_table_scen_1,
+        list(input_table_scen_1 = input_table_scen_1,
                    input_table_scen_2 = input_table_scen_2)
 
       intermediate_calculations <-
-        base::list(intermediate_calculations_scen_1 = intermediate_calculations_scen_1,
+        list(intermediate_calculations_scen_1 = intermediate_calculations_scen_1,
                    intermediate_calculations_scen_2 = intermediate_calculations_scen_2)
 
 
@@ -374,7 +374,7 @@ compare <-
             df_2 = input_table_scen_2,
             # except = scenario_specific_arguments)
             except = c(
-              base::setdiff(
+              setdiff(
                 scenario_specific_arguments,
                 # Keep year_of_analysis in the table
                 # so it can be accessed in the get_impact script
@@ -411,7 +411,7 @@ compare <-
         # downstream (e.g. summarize_uncertainty()) to identify a comparison
         # and to access the input data of each scenario in the same way
         input_table <-
-          base::list(input_table_scen_1 = input_table_scen_1,
+          list(input_table_scen_1 = input_table_scen_1,
                      input_table_scen_2 = input_table_scen_2)
 
       }
@@ -424,7 +424,7 @@ compare <-
 
     output <-
       get_output(
-        input_args = base::list(approach_comparison = approach_comparison,
+        input_args = list(approach_comparison = approach_comparison,
                                 input_args_scen_1 = input_args_scen_1,
                                 input_args_scen_2 = input_args_scen_2),
         input_table = input_table,

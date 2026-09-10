@@ -18,7 +18,7 @@ testthat::test_that("results correct |get_discount_factor|exponential|hm_treasur
 
   testthat::expect_equal(
     object =
-      base::round(
+      round(
         healthiar::get_discount_factor(
           discount_rate = 0.035,
           n_years = 0:30),
@@ -33,7 +33,7 @@ testthat::test_that("results correct |get_discount_factor|exponential|hm_treasur
 
   testthat::expect_equal(
     object =
-      base::round(
+      round(
         healthiar::get_discount_factor(
           discount_rate = 0.015,
           n_years = 0:30),

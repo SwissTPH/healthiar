@@ -63,7 +63,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         n_years = 20
         )$monetization_main$monetized_impact_rounded,
     expect =
-      base::round(1E4 * 0.5026)
+      round(1E4 * 0.5026)
   )
 })
 
@@ -76,8 +76,8 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_shape = "exponential",
         discount_rate = 0.05,
         valuation = 1,
-        info = base::data.frame(year = c(2020:2025))
-        )$monetization_detailed$results_by_year$monetized_impact |> base::round(digits = 2),
+        info = data.frame(year = c(2020:2025))
+        )$monetization_detailed$results_by_year$monetized_impact |> round(digits = 2),
     expect =
       c(800, 952.38,1088.44, 1295.76, 1480.86, 1567.05) # Results on 2025-03-04; Excel sheet of Uni Porto
   )
@@ -145,7 +145,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         n_years = 20,
         valuation = 1
       )$monetization_main$monetized_impact_rounded,
-    expect = base::round(1E4 * 0.5026)
+    expect = round(1E4 * 0.5026)
   )
 })
 
@@ -176,7 +176,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         n_years = 5,
         real_growth_rate = 0.08,
         valuation = 1E3
-      )$monetization_main$monetized_impact |> base::round(digits = 2),
+      )$monetization_main$monetized_impact |> round(digits = 2),
     expect =
       1469.33 # Results on 2026-03-02;  Excel sheet of Uni Porto
   )
@@ -194,7 +194,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         inflation_rate = 0.08,
         real_growth_rate = 0.08,
         valuation = 1E3
-      )$monetization_main$monetized_impact |> base::round(digits = 2),
+      )$monetization_main$monetized_impact |> round(digits = 2),
     expect =
       783.53 # Results on 2025-03-04;  Excel sheet of Uni Porto
   )
@@ -213,7 +213,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         n_years = 1,
         inflation_rate = 0.08,
         valuation = 1080
-      )$monetization_main$monetized_impact |> base::round(digits = 2),
+      )$monetization_main$monetized_impact |> round(digits = 2),
     expect =
       952.38 # Results on 2025-03-04;  Excel sheet of Uni Porto
   )
@@ -245,7 +245,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         valuation = valuation
       )$monetization_main$monetized_impact_rounded,
     expect =
-      base::round(valuation * 0.5026)
+      round(valuation * 0.5026)
   )
 })
 
@@ -309,7 +309,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_shape = "hyperbolic_harvey_1986",
         discount_rate = 0.05,
         valuation = 1
-        )$monetization_detailed$results_by_year$monetized_impact |> base::round(digits = 2),
+        )$monetization_detailed$results_by_year$monetized_impact |> round(digits = 2),
     expect =
       c(800, 965.94, 1135.86, 1399.55, 1660.83, 1828.62) # Results on 2025-04-15; Excel sheet of Uni Porto
   )
@@ -482,7 +482,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_TRUE|di
         discount_shape = "hyperbolic_mazur_1987",
         discount_rate = 0.05,
         valuation = 1
-        )$monetization_detailed$results_by_year$monetized_impact |> base::round(digits = 2),
+        )$monetization_detailed$results_by_year$monetized_impact |> round(digits = 2),
     expect =
       c(800, 952.38, 1090.91, 1304.35, 1500.00, 1600.00) # Results on 2025-04-15; Excel sheet of Uni Porto
   )
@@ -618,7 +618,7 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
 
 testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|discount_shape_exponential|inflation_rate_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <-
     healthiar::attribute_health(
@@ -639,16 +639,16 @@ testthat::test_that("results correct |pathway_monetization|discount_rate_FALSE|d
         valuation = 1000,
       )$monetization_main$monetized_impact_rounded,
     expect = # 1000 * airqplus_pm_copd
-      base::round(1000 * bestcost_pm_copd[["health_main"]]$impact)
+      round(1000 * bestcost_pm_copd[["health_main"]]$impact)
   )
 })
 
 #### DISCOUNTING #################################################################
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   bestcost_pm_yll_exp_single_year_lifetable_geluft <-
     healthiar::attribute_lifetable(
@@ -664,7 +664,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
       erf_shape = "log_linear",
       age_group = c(data_lifetable[["male"]]$age,
                     data_lifetable[["female"]]$age),
-      sex = base::rep(c("male", "female"), each = 100),
+      sex = rep(c("male", "female"), each = 100),
       population = c(data_lifetable[["male"]]$population,
                      data_lifetable[["female"]]$population),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -687,7 +687,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <-
     healthiar::attribute_health(
@@ -718,7 +718,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <- healthiar::attribute_health(
     exp_central = data$mean_concentration,
@@ -750,7 +750,7 @@ testthat::test_that("results the same |pathway_monetization|discount_rate_TRUE|d
 
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <-
     healthiar::attribute_health(
@@ -784,7 +784,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd_1 <-
     healthiar::attribute_health(
@@ -844,9 +844,9 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|discount_shape_exponential|inflation_rate_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   bestcost_pm_yll_exp_single_year_lifetable_1 <-
     healthiar::attribute_lifetable(
@@ -862,7 +862,7 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
       erf_shape = "log_linear",
       age_group = c(data_lifetable[["male"]]$age,
                     data_lifetable[["female"]]$age),
-      sex = base::rep(c("male", "female"), each = 100),
+      sex = rep(c("male", "female"), each = 100),
       population = c(data_lifetable[["male"]]$population,
                      data_lifetable[["female"]]$population),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -940,7 +940,7 @@ testthat::test_that("error if negative valuation", {
 
 testthat::test_that("error if negative n_years", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <- healthiar::attribute_health(
     exp_central = data$mean_concentration,
@@ -1002,7 +1002,7 @@ testthat::test_that("error if inflation higher than 1", {
 
 testthat::test_that("error if both impact and output_attribute are entered", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <- healthiar::attribute_health(
     exp_central = data$mean_concentration,
@@ -1064,9 +1064,9 @@ testthat::test_that("error if incompatible size of info", {
 
 testthat::test_that("errof if different year of analysis", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   bestcost_pm_yll_exp_single_year_lifetable_1 <-
     healthiar::attribute_lifetable(
@@ -1082,7 +1082,7 @@ testthat::test_that("errof if different year of analysis", {
       erf_shape = "log_linear",
       age_group = c(data_lifetable[["male"]]$age,
                     data_lifetable[["female"]]$age),
-      sex = base::rep(c("male", "female"), each = 100),
+      sex = rep(c("male", "female"), each = 100),
       population = c(data_lifetable[["male"]]$population,
                      data_lifetable[["female"]]$population),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -1158,7 +1158,7 @@ testthat::test_that("errof if different bhd", {
 
 testthat::test_that("warning if no discount_rate but other discount arguments", {
 
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd <- healthiar::attribute_health(
     exp_central = data$mean_concentration,
@@ -1182,7 +1182,7 @@ testthat::test_that("warning if no discount_rate but other discount arguments", 
         inflation_rate = 0.08,
         valuation = 1E3
       ),
-    regexp = base::paste0("You entered some value in discount_rate,",
+    regexp = paste0("You entered some value in discount_rate,",
                           " but n_years is 0 (default value).",
                           " Therefore no discount is applied."),
     # To match the messages fixed  = TRUE.
@@ -1203,7 +1203,7 @@ testthat::test_that("warning if user pass n_years with impact", {
         n_years = 5,
         valuation = 10
       ),
-    regexp = base::paste0(
+    regexp = paste0(
       "n_years is aimed for output_attribute (excluding life table)",
       " and for impact (excluding vector form).",
       " Therefore n_years is ignored here and the length of the vector impact is used instead."),
@@ -1214,9 +1214,9 @@ testthat::test_that("warning if user pass n_years with impact", {
 })
 
 testthat::test_that("warning if user pass n_years with life table", {
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
-  data_mort <- base::readRDS(testthat::test_path("testdata", "mortality_input.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_mort <- readRDS(testthat::test_path("testdata", "mortality_input.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   bestcost_pm_yll_exp_single_year_lifetable_geluft <-
     healthiar::attribute_lifetable(
@@ -1232,7 +1232,7 @@ testthat::test_that("warning if user pass n_years with life table", {
       erf_shape = "log_linear",
       age_group = c(data_lifetable[["male"]]$age,
                     data_lifetable[["female"]]$age),
-      sex = base::rep(c("male", "female"), each = 100),
+      sex = rep(c("male", "female"), each = 100),
       population = c(data_lifetable[["male"]]$population,
                      data_lifetable[["female"]]$population),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
@@ -1250,7 +1250,7 @@ testthat::test_that("warning if user pass n_years with life table", {
         n_years = 5,
         valuation = 1,
       ),
-    regexp = base::paste0(
+    regexp = paste0(
       "n_years is aimed for any output_attribute and for impact with single value (no vector).",
       " Therefore n_years is ignored here and the length life table is used instead."),
     # To match the messages fixed  = TRUE.

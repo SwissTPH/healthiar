@@ -78,8 +78,8 @@
 #' group, including the interim columns of the standardization. The columns
 #' ending in \code{_std} are the contribution of each age group and add up to
 #' the corresponding column of \code{health_main}, i.e.
-#' \code{base::sum(impact_per_100k_inhab_std)}, \code{base::sum(exp_std)} and
-#' \code{base::sum(pop_fraction_std)}.
+#' \code{sum(impact_per_100k_inhab_std)}, \code{sum(exp_std)} and
+#' \code{sum(pop_fraction_std)}.
 
 # EXAMPLES #####################################################################
 #' @examples
@@ -125,7 +125,7 @@ standardize <- function(output_attribute,
 
   impact_by_age_group <- output_attribute$health_detailed$results_by_age_group
 
-  if(base::is.null(ref_prop_pop)){
+  if(is.null(ref_prop_pop)){
 
     ## Compile input data
     ## without social component
@@ -155,25 +155,25 @@ standardize <- function(output_attribute,
 
   # Identify geo_id cols
   geo_id_cols <-
-    base::names(impact_by_age_group)[base::grepl("geo_id_", base::names(impact_by_age_group))]
+    names(impact_by_age_group)[grepl("geo_id_", names(impact_by_age_group))]
 
   # Identify columns with uncertainty
   uncertainty_cols <-
-    base::names(impact_by_age_group)[base::grepl("_ci", base::names(impact_by_age_group))]
+    names(impact_by_age_group)[grepl("_ci", names(impact_by_age_group))]
 
   # Identify the info columns. They can identify subgroups kept apart with the
   # argument main_results_by of attribute_health() (e.g. one exposure-outcome pair
   # each), whose impacts must never be summed. They are therefore added to the
   # groups below, just like the geo units
   info_cols <-
-    base::names(impact_by_age_group)[base::grepl("^info", base::names(impact_by_age_group))]
+    names(impact_by_age_group)[grepl("^info", names(impact_by_age_group))]
 
   # Identify invariant columns
   invariant_cols <- impact_by_age_group |>
     dplyr::summarize(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.x) == 1)) |>
-    base::unlist() |>
-    base::which() |>
-    base::names()
+    unlist() |>
+    which() |>
+    names()
 
   # Add geo_ids to the group_cols and uncertainty_cols because
   # below impacts are summed across age_group but not geo_ids
@@ -182,7 +182,7 @@ standardize <- function(output_attribute,
       uncertainty_cols,
       invariant_cols,
       info_cols)|>
-    base::unique()
+    unique()
 
   # Calculate age-standardize health impacts
   impact_std_by_age_group <-
@@ -199,8 +199,8 @@ standardize <- function(output_attribute,
       # uncertainty combination (central, lower, upper), so without them the
       # population and the baseline health data are counted once per _ci row
       .by = dplyr::any_of(c(geo_id_cols, uncertainty_cols, info_cols)),
-      total_population = base::sum(population),
-      total_impact = base::sum(impact)) |>
+      total_population = sum(population),
+      total_impact = sum(impact)) |>
     # Calculate population weight and standardized impact
     dplyr::mutate(
       # Calculate
@@ -231,31 +231,31 @@ standardize <- function(output_attribute,
     dplyr::mutate(
       .by = dplyr::any_of(c(geo_id_cols, uncertainty_cols, info_cols)),
       pop_fraction_std =
-        impact_per_100k_inhab_std / base::sum(bhd_per_100k_inhab_std))
+        impact_per_100k_inhab_std / sum(bhd_per_100k_inhab_std))
 
   # Remove the rows per age group category keeping only the sum
   impact_std_sum <-
     impact_std_by_age_group |>
     dplyr::summarize(
       .by = dplyr::any_of(group_cols),
-      bhd = base::sum(bhd),
-      impact = base::sum(impact),
-      impact_per_100k_inhab = base::sum(impact_per_100k_inhab_std),
-      bhd_per_100k_inhab = base::sum(bhd_per_100k_inhab_std),
+      bhd = sum(bhd),
+      impact = sum(impact),
+      impact_per_100k_inhab = sum(impact_per_100k_inhab_std),
+      bhd_per_100k_inhab = sum(bhd_per_100k_inhab_std),
       # sum() and not mean(): pop_weight already adds up to 1 across the age
       # groups, so the sum of exp * pop_weight is the population-weighted mean
       # exposure. mean() divided it once more by the number of age groups
-      exp = base::sum(exp_std),
+      exp = sum(exp_std),
       # The age-standardized attributable fraction, i.e. the sum of the
       # contributions of the age groups (identical to the ratio of the two
       # age-standardized rates above). Adding up the age group-specific
       # fractions instead (as before) gave a number that is not a fraction and
       # that can exceed 1
-      pop_fraction = base::sum(pop_fraction_std),
-      population = base::sum(population))
+      pop_fraction = sum(pop_fraction_std),
+      population = sum(population))
 
   output <-
-    base::list(health_main = impact_std_sum,
+    list(health_main = impact_std_sum,
                health_detailed = c(output_attribute$health_detailed,
                                    list(impact_std_by_age_group = impact_std_by_age_group)))
 

@@ -8,7 +8,7 @@ testthat::test_that("results correct |get_paf|exp_single|airqplus|", {
   # PM2.5 annual mean of 8.85 ug/m3, cut-off 5 ug/m3, log-linear
   # exposure-response function with RR = 1.369 (95% CI 1.12-1.66) per
   # 10 ug/m3, giving an attributable proportion of 11.39% (4.40%-17.80%)
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   paf_at_rr <- function(rr){
     healthiar::get_paf(
@@ -25,7 +25,7 @@ testthat::test_that("results correct |get_paf|exp_single|airqplus|", {
 
   testthat::expect_equal(
     object =
-      base::round(
+      round(
         purrr::map_dbl(
           c(central = data$relative_risk,
             lower = data$relative_risk_lower,
@@ -68,7 +68,7 @@ testthat::test_that("results correct |get_paf|exp_dist|etc_he_2023_11|", {
 
   # Formula 3 of the report, written out in base R so that the expected value
   # does not come from healthiar itself
-  excess <- base::sum(prop_pop * (rr_at_exp - 1))
+  excess <- sum(prop_pop * (rr_at_exp - 1))
 
   testthat::expect_equal(
     object =
