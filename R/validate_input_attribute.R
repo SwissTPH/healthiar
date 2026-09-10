@@ -487,7 +487,9 @@ validate_input_attribute <-
 
       ### error_if_not_positive #####
 
-      # No life table arguments currently require values > 0 at validation stage
+      # population must be > 0: the hazard rate of an age group is its baseline
+      # health data divided by its population, so a population of 0 is not
+      # defined. prepare_lifetable() rejects it in the same way
       validate_args(
         args = input_args_value,
         arg_names = lifetable_args_with_values_above_0,
@@ -497,8 +499,8 @@ validate_input_attribute <-
 
       ### error_if_negative #####
 
-      # Population and baseline health data may be 0 but not negative in life
-      # table calculations; structural zero-population cases are handled later
+      # The baseline health data and fraction_lived may be 0 but not negative.
+      # population is not among them: it is required to be higher than 0 above
       validate_args(
         args = input_args_value,
         arg_names = lifetable_args_with_values_0_or_above,
