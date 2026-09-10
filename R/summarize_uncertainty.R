@@ -306,7 +306,7 @@ summarize_uncertainty <- function(
   # Get uncertainty
   get_summary <- function(attribute){
 
-    summary <-
+    summary_table <-
       attribute |>
       dplyr::summarise(
         # The info columns identify subgroups (e.g. exposure-outcome pairs),
@@ -319,7 +319,7 @@ summarize_uncertainty <- function(
         upper_estimate = stats::quantile(x = impact, probs = c(0.975), na.rm = TRUE, names = FALSE)) |>
       # Change to same format as other output from healthiar
       tidyr::pivot_longer(
-        # data = summary,
+        # data = summary_table,
         # Only the three estimates are pivoted. The info columns identify the
         # rows like the geo units, so they must not become values
         cols = dplyr::ends_with("_estimate"),
@@ -329,7 +329,7 @@ summarize_uncertainty <- function(
         impact_rounded = round(impact, digits = 0)
       )
 
-    return(summary)
+    return(summary_table)
   }
 
   # Get uncertainty of the aggregated (macro) geographic unit
@@ -455,27 +455,27 @@ summarize_uncertainty <- function(
         p <- c(0, p) + (1 - p) / 2
       }
 
-      ## derive a and b (=shape1 and shape2)
+      ## derive alpha and beta (=shape1 and shape2)
       if (method == "mode"){
         if (best == 0){
-          a <- 1
-          b <- stats::optimize(f_mode_zero, c(0, 1000), p = p, target = target)$minimum
+          alpha <- 1
+          beta <- stats::optimize(f_mode_zero, c(0, 1000), p = p, target = target)$minimum
         } else if (best == 1) {
-          a <- stats::optimize(f_mode_one, c(0, 1000), p = p, target = target)$minimum
-          b <- 1
+          alpha <- stats::optimize(f_mode_one, c(0, 1000), p = p, target = target)$minimum
+          beta <- 1
         } else {
-          a <- stats::optimize(f_mode, c(0, 1000),
+          alpha <- stats::optimize(f_mode, c(0, 1000),
                         mode = best, p = p, target = target)$minimum
-          b <- (a * (1 - best) + 2 * best - 1) / best
+          beta <- (alpha * (1 - best) + 2 * best - 1) / best
         }
       } else if (method == "mean"){
-        a <- stats::optimize(f_mean, c(0, 1000),
+        alpha <- stats::optimize(f_mean, c(0, 1000),
                       mean = best, p = p, target = target)$minimum
-        b <- (a * (1 - best)) / best
+        beta <- (alpha * (1 - best)) / best
       }
 
       ## create 'output' dataframe
-      output <- list(alpha = a, beta = b)
+      output <- list(alpha = alpha, beta = beta)
       class(output) <- "betaExpert"
 
       ## return 'output'
@@ -772,12 +772,12 @@ summarize_uncertainty <- function(
   summary_by_geo_id_micro <-
     get_summary(attribute = impact_by_sim)
 
-  summary <- summary_by_geo_id_micro
+  uncertainty_main <- summary_by_geo_id_micro
 
 
   if("geo_id_macro" %in% names(output_attribute$health_main) ){
 
-    summary <- get_summary_by_geo_id_macro(impact_by_sim = impact_by_sim)
+    uncertainty_main <- get_summary_by_geo_id_macro(impact_by_sim = impact_by_sim)
 
   }
 
@@ -785,7 +785,7 @@ summarize_uncertainty <- function(
   # other healthiar functions
   uncertainty <-
     list(
-      uncertainty_main = summary,
+      uncertainty_main = uncertainty_main,
       uncertainty_detailed =
         list(impact_by_sim = impact_by_sim,
                    uncertainty_by_geo_id_micro = summary_by_geo_id_micro))
@@ -901,12 +901,12 @@ summarize_uncertainty <- function(
   summary_by_geo_id_micro <-
     get_summary(attribute = impact_by_sim)
 
-  summary <- summary_by_geo_id_micro
+  uncertainty_main <- summary_by_geo_id_micro
 
 
   if("geo_id_macro" %in% names(output_attribute$health_main) ){
 
-    summary <- get_summary_by_geo_id_macro(impact_by_sim = impact_by_sim)
+    uncertainty_main <- get_summary_by_geo_id_macro(impact_by_sim = impact_by_sim)
 
   }
 
@@ -917,7 +917,7 @@ summarize_uncertainty <- function(
     uncertainty <-
       c(output_attribute,
         list(
-          uncertainty_main = summary,
+          uncertainty_main = uncertainty_main,
           uncertainty_detailed =
             list(impact_by_sim = impact_by_sim,
                        uncertainty_by_geo_id_micro = summary_by_geo_id_micro)))
