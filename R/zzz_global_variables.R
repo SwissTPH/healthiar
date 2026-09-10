@@ -18,7 +18,7 @@ utils::globalVariables(unique(c(
 # compile_input: 
 "age_group", "age_start", "exp_length", "geo_id_micro", "max_age", "min_age", "sex", 
 # daly: 
-"impact", "impact_yld", "impact_yll", "population", 
+"impact", "impact_yld", "impact_yll", "population", "population_yld", "population_yll",
 # get_impact: 
 "absolute_risk_as_percent", "bhd", "cutoff", "duration", "dw", "erf_eq", "impact", "pop_exp", "pop_fraction", "population", 
 # get_impact_with_lifetable: 
@@ -46,7 +46,7 @@ utils::globalVariables(unique(c(
 # socialize : 
 "bhd_sum", "population_sum", 
 # standardize: 
-"bhd", "exp_std", "impact", "impact_per_100k_inhab", "impact_per_100k_inhab_std", "impact_weight", "pop_fraction", "pop_weight", "population", "total_impact", "total_population", 
+"bhd", "bhd_per_100k_inhab", "bhd_per_100k_inhab_std", "exp_std", "impact", "impact_per_100k_inhab", "impact_per_100k_inhab_std", "impact_weight", "pop_fraction", "pop_fraction_std", "pop_weight", "population", "total_impact", "total_population",  
 # summarize_uncertainty: 
 "impact", "impact_rounded", "impact_scen_1", "impact_scen_2", "output_sim_after_impact", "sim_id", 
 # summarize_uncertainty : 
