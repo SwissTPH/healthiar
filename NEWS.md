@@ -90,7 +90,7 @@ with DESCRIPTION.
 ## Testing
 - 26 fake examples in the tests have been replaced with real published 
 studies.
-- 71 additional internal tests. Now a total of 453 test.
+- 71 additional internal tests. Now a total of 453 tests.
 
 
 # healthiar v0.2.5
@@ -133,7 +133,7 @@ have been created to provide information on how to interact with the community.
 include instructions of new features.
 
 ## Testing
-- Additional internal tests were added. Now a total of 382 test.
+- Additional internal tests were added. Now a total of 382 tests.
 
 
 # healthiar v0.2.4
