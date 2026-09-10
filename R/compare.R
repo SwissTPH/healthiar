@@ -189,7 +189,9 @@ compare <-
     # Otherwise, not identified as identical and error joining below.
     if(!base::is.null(input_args_scen_1[["value"]][["erf_eq_central"]])){
 
-      erf_eq_vars <- base::paste0("erf_eq", c("erf_eq", "_central", "_lower", "_upper"))
+      # The arguments of the exposure-response function are only the three
+      # confidence interval variants. 
+      erf_eq_vars <- base::paste0("erf_eq", c("_central", "_lower", "_upper"))
 
       input_args_scen_1[["value"]][erf_eq_vars] <-
         input_args_scen_2[["value"]][erf_eq_vars]
