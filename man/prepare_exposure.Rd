@@ -61,14 +61,18 @@ if (requireNamespace("terra", quietly = TRUE) &&
   path <- system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
   exdat_pwm_1 <- terra::rast(path)
 
-pwm <- prepare_exposure(
-  poll_grid = exdat_pwm_1, # Formal class SpatRaster
-  geo_units = exdat_pwm_2, # sf of the geographic sub-units
-  population = sf::st_drop_geometry(exdat_pwm_2$population), # population per geographic sub-unit
-  geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region) # higher-level IDs to aggregate at
-)
+  pwm <- prepare_exposure(
+    poll_grid = exdat_pwm_1, # Formal class SpatRaster
+    geo_units = exdat_pwm_2, # sf of the geographic sub-units
+    # population per geographic sub-unit
+    population = sf::st_drop_geometry(exdat_pwm_2$population),
+    # higher-level IDs to aggregate at
+    geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region)
+  )
 
-pwm$exposure_main # population-weighted mean exposures for the (higher-level) geographic units
+  # population-weighted mean exposures for the (higher-level) geo units
+  pwm$exposure_main
+}
 }
 \author{
 Arno Pauwels & Liliana Vazquez Fernandez
