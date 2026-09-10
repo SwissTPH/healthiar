@@ -307,6 +307,42 @@ testthat::test_that("results the same |fake_multiexposure|approach_multiexposure
 # ERROR OR WARNING ########
 ## ERROR #########
 
+testthat::test_that("error if the two assessments assume a different life table approach", {
+
+  # The life table projects one cohort, so it needs one single value of
+  # approach_exposure. Two assessments with different values used to reach
+  # get_impact_with_lifetable() and abort there with
+  # "the condition has length > 1"
+  data <- base::readRDS(testthat::test_path("testdata", "lifetable_male_ekv_2010.rds"))
+
+  attribute_with_approach_exposure <- function(approach_exposure){
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
+      exp_central = 10,
+      cutoff_central = 0,
+      rr_central = 1.045,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      age_group = data$age,
+      sex = base::rep("male", 106),
+      population = data$population_male,
+      bhd_central = base::as.numeric(data$deaths_natural_male),
+      year_of_analysis = 2010,
+      min_age = 20,
+      approach_exposure = approach_exposure)
+  }
+
+  testthat::expect_error(
+    object =
+      healthiar::multiexpose(
+        output_attribute_exp_1 = attribute_with_approach_exposure("single_year"),
+        output_attribute_exp_2 = attribute_with_approach_exposure("constant"),
+        exp_name_1 = "pm2.5",
+        exp_name_2 = "no2",
+        approach_multiexposure = "additive"),
+    regexp = "needs one single value of approach_exposure")
+})
+
 testthat::test_that("error if exposure distribution and approach_multiexposure is not additive", {
 
   # The exposure categories of two exposures are not paired: category 1 of

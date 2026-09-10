@@ -133,6 +133,34 @@ multiexpose <-
       }
     }
 
+    # The life table projects one cohort, which can only be done under one
+    # single assumption for each of these characteristics. If the two
+    # assessments disagree, the bound table below has two values in the
+    # corresponding column and get_impact_with_lifetable() aborted with
+    # "the condition has length > 1"
+    lifetable_characteristics <-
+      c("health_outcome", "approach_exposure", "approach_newborns")
+
+    for (characteristic in
+         base::intersect(lifetable_characteristics,
+                         base::intersect(base::names(input_table_1),
+                                         base::names(input_table_2)))) {
+
+      values <-
+        base::unique(c(input_table_1[[characteristic]],
+                       input_table_2[[characteristic]]))
+
+      if (base::length(values) > 1) {
+        base::stop(
+          base::paste0(
+            "The life table calculation needs one single value of ",
+            characteristic,
+            ", but the two assessments contain: ",
+            base::toString(values), "."),
+          call. = FALSE)
+      }
+    }
+
 
     # Add the exposure names to the input_table
     input_table_1_for_binding <-
