@@ -247,8 +247,12 @@ prepare_exposure <-
             pop = base::sum(pop, na.rm = TRUE),
             .groups = "drop"
           ) |>
-          # 4. Join with master 'bins' table to ensure all bins are represented
-          dplyr::left_join(bins, by = "bin") |>
+          # 4. Join with master 'bins' table to ensure all bins are represented.
+          # right_join() and not left_join(): the left hand side is the table
+          # already summarised for this geo unit, so a left join could only add
+          # columns and never the bins without population. The bins missing
+          # there stayed absent instead of being filled with 0 below
+          dplyr::right_join(bins, by = "bin") |>
           # 5. Add back the geo_id and fill empty bins with 0
           dplyr::mutate(
             geo_id_micro = base::unique(df$geo_id_micro),
