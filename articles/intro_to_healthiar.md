@@ -2639,6 +2639,17 @@ is applied according to the following formulas
 deflator\_factor = \frac{1}{(1 + inflation\_rate)^{n\_years}}
 ```
 
+The formula above assumes that inflation is constant over time. Because
+inflation usually varies from year to year, `inflation_rate` also
+accepts a vector of year-specific rates (at least as many values as
+years to be considered, the first value referring to the first year
+after the present). In that case, the deflator factor is calculated as
+the product of the year-specific factors
+
+``` math
+deflator\_factor = \frac{1}{\prod_{t=1}^{n\_years}(1 + inflation\_rate_t)}
+```
+
 ##### Real valuation growth
 
 If a rising societal value of health over time is required in the
@@ -2657,8 +2668,10 @@ real\_growth\_factor =(1 + real\_growth\_rate)^{n\_years}
 ```
 
 Where $`real\_growth\_rate`$ represents the annual real growth rate in
-health valuation. This ensures that long-term environmental impacts are
-not undervalued.
+health valuation. As in `inflation_rate`, a vector of year-specific
+rates can be entered instead of one single value, in which case the
+factor is the product of the year-specific factors. This ensures that
+long-term environmental impacts are not undervalued.
 
 #### Function call
 

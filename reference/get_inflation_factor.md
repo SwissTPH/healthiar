@@ -23,8 +23,12 @@ get_inflation_factor(n_years, inflation_rate = NULL, is_deflation = FALSE)
   `Numeric value` between 0 and 1 referring to the annual inflation
   (increase of prices). This value is used to adjust monetization for
   inflation (converting nominal into real values by appyling a
-  deflator). If this adjustment for inflation is not needed leave this
-  argument empty (default value = NULL).
+  deflator). Alternatively, a `numeric vector` of year-specific rates
+  can be entered (at least as many values as years to be considered, the
+  first value referring to the first year after the present), assuming
+  then that inflation varies over time instead of being constant. If
+  this adjustment for inflation is not needed leave this argument empty
+  (default value = NULL).
 
 - is_deflation:
 
@@ -46,6 +50,15 @@ This function is called inside
 
 It calculates the inflation factor based on the inflation rate and the
 number of years into the future as described in Brealey et al. (2023) .
+
+If `inflation_rate` contains one single value, inflation is assumed to
+be constant over time and the inflation factor increases exponentially
+with the number of years. If `inflation_rate` contains a vector of
+year-specific rates, the inflation factor is the product of the
+year-specific factors, which better reflects that inflation varies over
+time. In that case, `inflation_rate` must contain at least as many
+values as years to be considered (`n_years`), the first value referring
+to the first year after the present.
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
@@ -70,10 +83,18 @@ Alberto Castro & Axel Luyten
 ## Examples
 
 ``` r
+# Constant inflation rate
 get_inflation_factor(
   inflation_rate = 0.02,
   n_years = 5
 )
 #> [1] 1.104081
+
+# Year-specific inflation rates
+get_inflation_factor(
+  inflation_rate = c(0.02, 0.03, 0.05, 0.04, 0.02),
+  n_years = 5
+)
+#> [1] 1.1702
 
 ```

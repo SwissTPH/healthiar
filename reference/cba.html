@@ -11,7 +11,7 @@ which generates some costs."><meta property="og:image" content="https://swisstph
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1716</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1718</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,6 +91,10 @@ which generates some costs.</p>
 <dt id="arg-inflation-rate">inflation_rate<a class="anchor" aria-label="anchor" href="#arg-inflation-rate"></a></dt>
 <dd><p><code>Numeric value</code> between 0 and 1 referring to the annual inflation (increase of prices).
 This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
+Alternatively, a <code>numeric vector</code> of year-specific rates can be entered
+(at least as many values as years to be considered,
+the first value referring to the first year after the present),
+assuming then that inflation varies over time instead of being constant.
 If this adjustment for inflation is not needed leave this argument empty
 (default value = NULL).</p></dd>
 
@@ -100,7 +104,9 @@ If this adjustment for inflation is not needed leave this argument empty
 to the annual real-term appreciation in the societal value of health
 (e.g., income elasticity).
 This adjusts the valuation upward to reflect rising wealth,
-independent of general price inflation.</p></dd>
+independent of general price inflation.
+As in <code>inflation_rate</code>, a <code>numeric vector</code> of year-specific rates
+can be entered instead of one single value.</p></dd>
 
 
 <dt id="arg-discount-shape">discount_shape<a class="anchor" aria-label="anchor" href="#arg-discount-shape"></a></dt>

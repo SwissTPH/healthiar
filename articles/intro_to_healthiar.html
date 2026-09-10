@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1716</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1718</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -3749,6 +3749,14 @@ a deflator factor <span class="citation">(HM Treasury 2022; Brealey et
 al. 2023; Samuelson 1937)</span> is applied according to the following
 formulas</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>e</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>o</mi><mi>r</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">deflator\_factor = \frac{1}{(1 + inflation\_rate)^{n\_years}}</annotation></semantics></math></p>
+<p>The formula above assumes that inflation is constant over time.
+Because inflation usually varies from year to year,
+<code>inflation_rate</code> also accepts a vector of year-specific rates
+(at least as many values as years to be considered, the first value
+referring to the first year after the present). In that case, the
+deflator factor is calculated as the product of the year-specific
+factors</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>e</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>o</mi><mi>r</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mfrac><mn>1</mn><mrow><munderover><mo>∏</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></munderover><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mi>n</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><msub><mi>e</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">deflator\_factor = \frac{1}{\prod_{t=1}^{n\_years}(1 + inflation\_rate_t)}</annotation></semantics></math></p>
 </div>
 <div class="section level5">
 <h5 id="real-valuation-growth">Real valuation growth<a class="anchor" aria-label="anchor" href="#real-valuation-growth"></a>
@@ -3764,8 +3772,11 @@ base-year unit values:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>g</mi><mi>r</mi><mi>o</mi><mi>w</mi><mi>t</mi><mi>h</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>r</mi><mi>e</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>g</mi><mi>r</mi><mi>o</mi><mi>w</mi><mi>t</mi><mi>h</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>n</mi><mi>_</mi><mi>y</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>s</mi></mrow></msup></mrow><annotation encoding="application/x-tex">real\_growth\_factor =(1 + real\_growth\_rate)^{n\_years}</annotation></semantics></math></p>
 <p>Where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>g</mi><mi>r</mi><mi>o</mi><mi>w</mi><mi>t</mi><mi>h</mi><mi>_</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">real\_growth\_rate</annotation></semantics></math>
-represents the annual real growth rate in health valuation. This ensures
-that long-term environmental impacts are not undervalued.</p>
+represents the annual real growth rate in health valuation. As in
+<code>inflation_rate</code>, a vector of year-specific rates can be
+entered instead of one single value, in which case the factor is the
+product of the year-specific factors. This ensures that long-term
+environmental impacts are not undervalued.</p>
 </div>
 </div>
 <div class="section level4">

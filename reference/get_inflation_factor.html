@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1716</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5.1718</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,6 +57,10 @@
 <dt id="arg-inflation-rate">inflation_rate<a class="anchor" aria-label="anchor" href="#arg-inflation-rate"></a></dt>
 <dd><p><code>Numeric value</code> between 0 and 1 referring to the annual inflation (increase of prices).
 This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
+Alternatively, a <code>numeric vector</code> of year-specific rates can be entered
+(at least as many values as years to be considered,
+the first value referring to the first year after the present),
+assuming then that inflation varies over time instead of being constant.
 If this adjustment for inflation is not needed leave this argument empty
 (default value = NULL).</p></dd>
 
@@ -79,6 +83,15 @@ while TRUE means deflate future nominal values to present real values</p></dd>
 and the number of years into the future as described
 in Brealey et al. (2023)
 .</p>
+<p>If <code>inflation_rate</code> contains one single value,
+inflation is assumed to be constant over time and
+the inflation factor increases exponentially with the number of years.
+If <code>inflation_rate</code> contains a vector of year-specific rates,
+the inflation factor is the product of the year-specific factors,
+which better reflects that inflation varies over time.
+In that case, <code>inflation_rate</code> must contain
+at least as many values as years to be considered (<code>n_years</code>),
+the first value referring to the first year after the present.</p>
 <p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization">Monetization</a></p></li>
@@ -103,11 +116,19 @@ ISBN 978-1264117464.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_inflation_factor</span><span class="op">(</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Constant inflation rate</span></span></span>
+<span class="r-in"><span><span class="fu">get_inflation_factor</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  inflation_rate <span class="op">=</span> <span class="fl">0.02</span>,</span></span>
 <span class="r-in"><span>  n_years <span class="op">=</span> <span class="fl">5</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.104081</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Year-specific inflation rates</span></span></span>
+<span class="r-in"><span><span class="fu">get_inflation_factor</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  inflation_rate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.02</span>, <span class="fl">0.03</span>, <span class="fl">0.05</span>, <span class="fl">0.04</span>, <span class="fl">0.02</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  n_years <span class="op">=</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.1702</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

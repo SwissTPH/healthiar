@@ -64,15 +64,21 @@ monetize(
   `Numeric value` between 0 and 1 referring to the annual inflation
   (increase of prices). This value is used to adjust monetization for
   inflation (converting nominal into real values by appyling a
-  deflator). If this adjustment for inflation is not needed leave this
-  argument empty (default value = NULL).
+  deflator). Alternatively, a `numeric vector` of year-specific rates
+  can be entered (at least as many values as years to be considered, the
+  first value referring to the first year after the present), assuming
+  then that inflation varies over time instead of being constant. If
+  this adjustment for inflation is not needed leave this argument empty
+  (default value = NULL).
 
 - real_growth_rate:
 
   `Numeric value` between 0 and 1 referring to the annual real-term
   appreciation in the societal value of health (e.g., income
   elasticity). This adjusts the valuation upward to reflect rising
-  wealth, independent of general price inflation.
+  wealth, independent of general price inflation. As in
+  `inflation_rate`, a `numeric vector` of year-specific rates can be
+  entered instead of one single value.
 
 - info:
 
