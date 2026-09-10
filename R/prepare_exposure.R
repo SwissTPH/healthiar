@@ -190,12 +190,12 @@ prepare_exposure <-
         exposure_stdev = exp_mean$stdev
       )
 
-      out <- list(
+      output <- list(
         exposure_main = exposure_main,
         exposure_detailed = exposure_detailed
       )
 
-      return(out)
+      return(output)
     }
 
     ## calculate exposure as a population-weighted average concentration based on gridded population
@@ -303,12 +303,12 @@ prepare_exposure <-
         population = exp_bins$pop
       )
 
-      out <- list(
+      output <- list(
         exposure_main = exposure_main,
         exposure_detailed = exposure_detailed
       )
 
-      return(out)
+      return(output)
     }
 
     ## calculate exposure as a population-weighted average concentration based on population in sub-units
@@ -397,11 +397,11 @@ prepare_exposure <-
         population = exp_bins$pop
       )
 
-      out <- list(
+      output <- list(
         exposure_main = exposure_main,
         exposure_detailed = exposure_detailed
       )
 
-      return(out)
+      return(output)
     }
 }

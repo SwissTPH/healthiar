@@ -474,12 +474,12 @@ summarize_uncertainty <- function(
         b <- (a * (1 - best)) / best
       }
 
-      ## create 'out' dataframe
-      out <- list(alpha = a, beta = b)
-      class(out) <- "betaExpert"
+      ## create 'output' dataframe
+      output <- list(alpha = a, beta = b)
+      class(output) <- "betaExpert"
 
-      ## return 'out'
-      return(out)
+      ## return 'output'
+      return(output)
     }
 
   # Define helper functions for fitting a gamma distribution with optimization

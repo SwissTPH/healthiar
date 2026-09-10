@@ -546,11 +546,11 @@ get_impact_with_lifetable <-
       # Remove age_end not needed anymore
       dplyr::select(-age_end)
 
-    out <- list(
+    output <- list(
       intermediate_calculations = lifetable_calculation,
       results_raw = results_raw
     )
 
-    return(out)
+    return(output)
 
   }

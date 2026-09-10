@@ -149,12 +149,12 @@ get_impact <-
         )
     }
 
-    out <- list(
+    output <- list(
       results_raw = results_raw,
       intermediate_calculations = intermediate_calculations
     )
 
 
-  return(out)
+  return(output)
 
   }
