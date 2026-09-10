@@ -1,7 +1,7 @@
 # QUANTITATIVE TEST ###########################################################
 ## YLL from lifetable #########################################################
 
-testthat::test_that("results correct |pathway_daly|yll_from_lifetable_TRUE|output_1_type_attribute|output_2_type_attribute|", {
+testthat::test_that("results the same |pathway_daly|yll_from_lifetable_TRUE|output_1_type_attribute|output_2_type_attribute|", {
 
   data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
@@ -159,7 +159,7 @@ testthat::test_that("results the same using 2 comparisons as inputs|pathway_daly
 })
 
 
-testthat::test_that("results correct using 2 pif comparisons as inputs |pathway_daly|yll_from_lifetable_TRUE|output_1_type_compare|output_2_type_compare|", {
+testthat::test_that("results the same using 2 pif comparisons as inputs |pathway_daly|yll_from_lifetable_TRUE|output_1_type_compare|output_2_type_compare|", {
 
   data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
@@ -243,7 +243,7 @@ testthat::test_that("results correct using 2 pif comparisons as inputs |pathway_
 
 ### ITERATION #################################################################
 
-testthat::test_that("results correct using 2 delta iteration comparisons as inputs |pathway_daly|yll_from_lifetable_TRUE|output_1_type_compare|output_2_type_compare|", {
+testthat::test_that("results the same using 2 delta iteration comparisons as inputs |pathway_daly|yll_from_lifetable_TRUE|output_1_type_compare|output_2_type_compare|", {
 
   data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
@@ -328,7 +328,7 @@ testthat::test_that("results correct using 2 delta iteration comparisons as inpu
 
 })
 
-testthat::test_that("results correct using 2 pif iteration comparisons as inputs |pathway_daly|yll_from_lifetable_TRUE|output_1_type_compare|output_2_type_compare|", {
+testthat::test_that("results the same using 2 pif iteration comparisons as inputs |pathway_daly|yll_from_lifetable_TRUE|output_1_type_compare|output_2_type_compare|", {
 
   data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- base::readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))

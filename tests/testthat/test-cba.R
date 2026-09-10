@@ -698,9 +698,20 @@ testthat::test_that("results the same |pathway_cba|discount_shape_exponential|di
 
 ## HEALTHIAR INPUT #############################################################
 
-testthat::test_that("results the same |fake_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
+testthat::test_that("results correct |pathway_cba|discount_shape_exponential|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|airqplus|hm_treasury_2026|", {
 
+  # Two published sources are chained here:
+  #  - the benefit comes from the COPD example of the Swiss GeLuft assessment
+  #    in WHO AirQ+, which reports 3,502 (1,353-5,474) attributable cases;
+  #  - discounting benefit and cost over five years at the Social Time
+  #    Preference Rate of 3.5% must apply the factor of 0.8420 published in
+  #    HM Treasury, "Discounting: Green Book supplementary guidance"
+  #    (February 2026), Annex A, Table A.1.
+  # Valuation and cost are round numbers, since AirQ+ does not monetize
   data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
+  valuation <- 20
+  cost <- 100
+  green_book_factor_year_5 <- 0.8420
 
   bestcost_pm_copd <-
     healthiar::attribute_health(
@@ -714,52 +725,34 @@ testthat::test_that("results the same |fake_cba|discount_shape_exponential|disco
       erf_shape = "log_linear",
       info = paste0(data$pollutant,"_", data$evaluation_name))
 
+  # The attributable cases entering the cost-benefit analysis are the ones
+  # published by AirQ+
   testthat::expect_equal(
-    object =
-      healthiar::cba(
-        output_attribute = bestcost_pm_copd,
-        valuation = 20,
-        cost = 100,
-        discount_shape = "exponential",
-        discount_rate_benefit = 0.03,
-        discount_rate_cost = 0.03,
-        n_years_benefit = 5,
-        n_years_cost = 5
-        )$cba_main$net_benefit_rounded,
-    expect = c(60330,23257,94350) # Results on 2025-03-06; no comparison study
-  )
-})
+    object = base::round(bestcost_pm_copd$health_main$impact),
+    expected =
+      c(data$estimated_number_of_attributable_cases_central,
+        data$estimated_number_of_attributable_cases_lower,
+        data$estimated_number_of_attributable_cases_upper))
 
-testthat::test_that("results the same |fake_cba|discount_shape_exp|discount_rate_benefit_TRUE|discount_rate_cost_TRUE|", {
-
-  data <- base::readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
-
-  bestcost_pm_copd <-
-    healthiar::attribute_health(
-      exp_central = data$mean_concentration,
-      cutoff_central = data$cut_off_value,
-      bhd_central = data$incidents_per_100_000_per_year/1E5*data$population_at_risk,
-      rr_central = data$relative_risk,
-      rr_lower = data$relative_risk_lower,
-      rr_upper = data$relative_risk_upper,
-      rr_increment = 10,
-      erf_shape = "log_linear",
-      info = paste0(data$pollutant,"_", data$evaluation_name))
+  # Benefit and cost are discounted at the same rate over the same number of
+  # years, so the undiscounted net benefit is reduced by exactly that factor
+  net_benefit_undiscounted <-
+    bestcost_pm_copd$health_main$impact * valuation - cost
 
   testthat::expect_equal(
     object =
-      healthiar::cba(
-        output_attribute = bestcost_pm_copd,
-        valuation = 20,
-        cost = 100,
-        discount_shape = "exponential",
-        discount_rate_benefit = 0.03,
-        discount_rate_cost = 0.03,
-        n_years_benefit = 5,
-        n_years_cost = 5
-        )$cba_main$net_benefit_rounded,
-    expect = c(60416, 23343, 94436) - 86 # Results on 2025-02-05 ; no comparison study
-  )
+      base::round(
+        healthiar::cba(
+          output_attribute = bestcost_pm_copd,
+          valuation = valuation,
+          cost = cost,
+          discount_shape = "exponential",
+          discount_rate_benefit = 0.035,
+          discount_rate_cost = 0.035,
+          n_years_benefit = 5,
+          n_years_cost = 5)$cba_main$net_benefit / net_benefit_undiscounted,
+        digits = 4),
+    expected = base::rep(green_book_factor_year_5, times = 3))
 })
 
 # ERROR OR WARNING ########
