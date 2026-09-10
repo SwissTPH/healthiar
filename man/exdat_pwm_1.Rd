@@ -3,7 +3,7 @@
 \docType{data}
 \name{exdat_pwm_1}
 \alias{exdat_pwm_1}
-\title{Air pollution expsoure data of the Brussels-Capital region (Belgium)}
+\title{Air pollution exposure data of the Brussels-Capital region (Belgium)}
 \format{
 GeoTIFF raster
 }
