@@ -446,36 +446,40 @@ monetize <- function(output_attribute = NULL,
       }
 
 
+      # Adjust for inflation (deflate): Convert nominal values back to real
+      # We only apply the deflator if the user wants a "Real" present value
+      # i.e. if the user entered a value in inflation_rate
+      # (get_inflation_factor() returns 1 if inflation_rate is NULL)
+      #
+      # Adjust for real_growth
+      # These two factors are calculated here and not in dplyr::mutate() below
+      # because the table contains columns with the same names as the arguments
+      # (inflation_rate and real_growth_rate) but with the collapsed values,
+      # which would mask the arguments inside dplyr::mutate()
+      deflator_factor <-
+        get_inflation_factor(n_years = df_by_year$year,
+                             inflation_rate = inflation_rate,
+                             is_deflation = TRUE)
+
+      real_growth_factor <-
+        get_inflation_factor(n_years = df_by_year$year,
+                             inflation_rate = real_growth_rate,
+                             is_deflation = FALSE)
+
+
       df_by_year <-
         df_by_year |>
         dplyr::mutate(
-          # 1. Discount: Apply time preference
+          # Discount: Apply time preference
           discount_factor = get_discount_factor(
             discount_rate = if(base::is.null(discount_rate)) 0 else discount_rate,
             n_years = year,
             discount_shape = discount_shape
           ),
 
+          deflator_factor = deflator_factor,
 
-          # 2. Adjust for inflation (deflate): Convert nominal values back to real
-          # We only apply the deflator if the user wants a "Real" present value
-          # i.e. if the user entered a value in inflation_rate
-          deflator_factor = if(!base::is.null(inflation_rate)) {
-            get_inflation_factor(n_years = year,
-                                 inflation_rate = inflation_rate,
-                                 is_deflation = TRUE)
-          } else {
-            1
-          },
-
-          # 3. Adjust for real_growth:
-          real_growth_factor = if(!base::is.null(real_growth_rate)) {
-            get_inflation_factor(n_years = year,
-                                 inflation_rate = real_growth_rate,
-                                 is_deflation = FALSE)
-          } else {
-            1
-          },
+          real_growth_factor = real_growth_factor,
 
           # 4. Final Calculation
           monetized_impact = impact * valuation * discount_factor * deflator_factor * real_growth_factor,
