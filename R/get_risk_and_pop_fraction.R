@@ -95,7 +95,7 @@ get_risk_and_pop_fraction <-
     if ( ! "threshold" %in% names_input_table ) {
       threshold <- NULL }
 
-    input_with_risk_and_pop_fraction <-
+    input_with_type <-
       input_table |>
       ## Add pop fraction type
       dplyr::mutate(pop_fraction_type = pop_fraction_type)
@@ -103,7 +103,7 @@ get_risk_and_pop_fraction <-
       ## If PAF
     if (pop_fraction_type == "paf" ) {
 
-      input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
+      input_with_risk <- input_with_type |>
         ## Obtain the relative risk for the relevant concentration
         dplyr::mutate(rr_at_exp =
                         get_risk(
@@ -117,7 +117,7 @@ get_risk_and_pop_fraction <-
 
       ## If PIF
     } else {
-      input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
+      input_with_risk <- input_with_type |>
         dplyr::mutate(rr_at_exp_scen_1 =
                         get_risk(
                           rr = rr,
@@ -146,8 +146,8 @@ get_risk_and_pop_fraction <-
       # if PAF
       if(pop_fraction_type == "paf"){
 
-        input_with_risk_and_pop_fraction <-
-          input_with_risk_and_pop_fraction |>
+        input_with_risk <-
+          input_with_risk |>
           # Group by every column that identifies a row, i.e. the same key that
           # collapses the exposures below. Only exp_name is left out, because
           # that is the dimension being merged: the relative risks of pm2.5 and
@@ -161,8 +161,8 @@ get_risk_and_pop_fraction <-
 
         # if PIF
         } else {
-        input_with_risk_and_pop_fraction <-
-          input_with_risk_and_pop_fraction |>
+        input_with_risk <-
+          input_with_risk |>
           # Group by every column that identifies a row (see the PAF branch above)
           # prod() multiplies all elements in a vector
           dplyr::mutate(
@@ -175,9 +175,9 @@ get_risk_and_pop_fraction <-
 
       # Data wrangling for multiple exposures
       # Collapse data frame pasting the columns with different values
-      input_with_risk_and_pop_fraction <-
+      input_with_risk <-
         collapse_df_by_group(
-          df = input_with_risk_and_pop_fraction,
+          df = input_with_risk,
           group_col_names = grouping_cols_available_multiexposure)
 
     }
@@ -188,7 +188,7 @@ get_risk_and_pop_fraction <-
 
     if ( pop_fraction_type == "paf" ) {
 
-      input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
+      input_with_risk_and_pop_fraction <- input_with_risk |>
         dplyr::mutate(
           .by = dplyr::all_of(grouping_cols_available),
           pop_fraction =
@@ -201,7 +201,7 @@ get_risk_and_pop_fraction <-
     # * PIF ####################################################################
 
       } else {
-        input_with_risk_and_pop_fraction <- input_with_risk_and_pop_fraction |>
+        input_with_risk_and_pop_fraction <- input_with_risk |>
         dplyr::mutate(
           .by = dplyr::all_of(grouping_cols_available),
           pop_fraction =
