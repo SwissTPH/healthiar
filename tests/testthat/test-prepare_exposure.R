@@ -1,5 +1,9 @@
 testthat::test_that("results correct", {
 
+  testthat::skip_if_not_installed("terra")
+  testthat::skip_if_not_installed("sf")
+  testthat::skip_if_not_installed("exactextractr")
+
   municip <- exdat_pwm_2
   pm25 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
   pop <- terra::rast(testthat::test_path("testdata", "population.tif"))
@@ -19,6 +23,10 @@ testthat::test_that("results correct", {
 
 testthat::test_that("results correct", {
 
+  testthat::skip_if_not_installed("terra")
+  testthat::skip_if_not_installed("sf")
+  testthat::skip_if_not_installed("exactextractr")
+
   municip <- exdat_pwm_2
   pm25 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
   results <- utils::read.csv(testthat::test_path("testdata", "expected_exposure_pwm.csv"))
@@ -36,6 +44,10 @@ testthat::test_that("results correct", {
 })
 
 testthat::test_that("results correct", {
+
+  testthat::skip_if_not_installed("terra")
+  testthat::skip_if_not_installed("sf")
+  testthat::skip_if_not_installed("exactextractr")
 
   municip <- exdat_pwm_2
   pm25 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))

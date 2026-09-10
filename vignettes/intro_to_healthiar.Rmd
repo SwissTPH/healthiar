@@ -31,8 +31,14 @@ library(dplyr)
 library(purrr)
 library(tidyr)
 library(knitr)
-library(terra)
-library(sf)
+
+## terra, sf and exactextractr are only suggested by healthiar. The chunks of
+## the section on prepare_exposure() are skipped when they are not installed,
+## for instance on the CRAN check machines that install no suggested package
+spatial_packages_available <-
+  requireNamespace("terra", quietly = TRUE) &&
+  requireNamespace("sf", quietly = TRUE) &&
+  requireNamespace("exactextractr", quietly = TRUE)
 ```
 
 Hi there!
@@ -1995,7 +2001,7 @@ such as `attribute_health()`.
 
 ### Function call
 
-```{r}
+```{r eval=spatial_packages_available}
 # exdat_pwm_1 = Pollution grid data
 exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
 
@@ -2012,15 +2018,15 @@ pwm <- healthiar::prepare_exposure(
 
 ### Main results
 
-Within the function output, the list `main` contains 
+Within the function output, the list `exposure_main` contains 
 the population-weighted mean exposures for the (higher-level) geographic units 
 in the column `exposure_mean` and the total population in each unit in column `population_total`.
 
-```{r echo=FALSE}
- knitr::kable(pwm$main)
+```{r echo=FALSE, eval=spatial_packages_available}
+ knitr::kable(as.data.frame(pwm$exposure_main))
 ```
 
-```{r eval=TRUE, include=FALSE, echo=FALSE}
+```{r eval=spatial_packages_available, include=FALSE, echo=FALSE}
 rm(exdat_pwm_1)
 rm(exdat_pwm_2)
 rm(pwm)
