@@ -2327,10 +2327,18 @@ pwm <- healthiar::prepare_exposure(
 
 #### Main results
 
-Within the function output, the list `main` contains the
+Within the function output, the list `exposure_main` contains the
 population-weighted mean exposures for the (higher-level) geographic
 units in the column `exposure_mean` and the total population in each
 unit in column `population_total`.
+
+| geo_id_macro | exposure_mean | population_total |
+|:-------------|--------------:|-----------------:|
+| Center       |      11.47271 |           203105 |
+| East         |      11.10716 |           187907 |
+| North        |      11.48670 |           257573 |
+| South        |      11.09940 |           308860 |
+| West         |      11.38849 |           298802 |
 
 ## Cut-off vs. threshold
 

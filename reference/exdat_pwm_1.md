@@ -1,4 +1,4 @@
-# Air pollution expsoure data of the Brussels-Capital region (Belgium)
+# Air pollution exposure data of the Brussels-Capital region (Belgium)
 
 The data can be loaded using
 
@@ -32,6 +32,10 @@ Arno Pauwels
 ## Examples
 
 ``` r
-path <- system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
-exdat_pwm_1 <- terra::rast(path)
+# terra is only suggested by healthiar, so the example is only run
+# where it is installed
+if (requireNamespace("terra", quietly = TRUE)) {
+  path <- system.file("extdata", "exdat_pwm_1.tif", package = "healthiar")
+  exdat_pwm_1 <- terra::rast(path)
+}
 ```
