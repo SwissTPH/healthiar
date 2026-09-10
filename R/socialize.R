@@ -519,9 +519,16 @@ socialize <- function(output_attribute = NULL,
   ## Put together input rates and other parameters
   parameters_by_quantile <-
     dplyr::left_join(impact_rates_by_quantile,
-                     other_parameters_by_quantile,
-                     # common columns
-                     by = c("social_quantile", "population_sum"))
+                     # population_sum is dropped and not used as a joining
+                     # column: it is a computed double and the two tables add
+                     # up the population in a different order (here the
+                     # subtotals by age group, there the population directly),
+                     # so the two values can differ in the last bits and the
+                     # join then silently returned NA in all the columns of
+                     # other_parameters. 
+                     other_parameters_by_quantile |>
+                       dplyr::select(-dplyr::any_of("population_sum")),
+                     by = "social_quantile")
 
   # * _overall ############
 
@@ -557,11 +564,13 @@ socialize <- function(output_attribute = NULL,
     get_other_parameters()
 
   ## All parameters together
+  ## Both tables have exactly one row (the overall level), so they are simply
+  ## put next to each other. Joining them by the computed population_sum was
+  ## not needed and had the same problem as the join by quantile above
   parameters_overall <-
-    dplyr::left_join(impact_rates_overall,
-                     other_parameters_overall,
-                     # common columns
-                     by = c("population_sum"))
+    dplyr::bind_cols(impact_rates_overall,
+                     other_parameters_overall |>
+                       dplyr::select(-dplyr::any_of("population_sum")))
 
   ## Prepared to be joined below
   parameters_overall_prepared <-
