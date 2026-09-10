@@ -37,7 +37,11 @@ Imports:
   tidyr,
   purrr, 
   tibble,
-  Rdpack
+  Rdpack,
+  graphics,
+  grDevices,
+  parallel,
+  stats
 RdMacros: Rdpack
 Depends: 
     R (>= 4.2.0)
