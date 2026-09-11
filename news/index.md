@@ -1,5 +1,111 @@
 # Changelog
 
+## healthiar v0.2.6
+
+- 11 September 2026
+
+### New features
+
+- attribute_health() and attribute_lifetable() have the new argument
+  main_results_by to quantify multiple exposure-outcome pairs at once.
+  The dimensions named here (e.g. the info columns) are kept as separate
+  rows in the main results instead of being summed.
+- attribute_health() and attribute_lifetable() have the new argument
+  threshold, now clearly distinguished from cutoff. The threshold is the
+  anchor of the exposure-response function (subtracted from the
+  exposure), while the cutoff truncates it.
+- monetize(), cba() and get_inflation_factor() now accept year-specific
+  inflation rates (a vector) and not only a constant rate.
+- get_discount_factor() now returns one discount factor per value of
+  n_years. Previously, only one value was returned for a vector of
+  years.
+- The info columns are now named after the names entered by the user
+  (info_yourname) instead of info_column_1, info_column_2, etc.
+- summarize_uncertainty() now shares the random draws across scenarios
+  if seed is NULL, uses truncated (instead of reflected) draws for
+  positive quantities, aggregates macro results from the totals of each
+  simulation and supports the comparison of population impact fractions.
+
+### Bug Fixes
+
+- The wrong results of attribute_lifetable() when time_horizon was
+  different to the number of age groups have been corrected. Moreover,
+  time_horizon = 1 produced a reversed sequence of years and max_age was
+  ignored.
+- The age groups are now sorted internally and validated (consecutive
+  and of equal length), so that the order of the rows entered by the
+  user does not change the results.
+- The wrong behaviour of approach_newborns, silently ignored for deaths
+  and single-year exposure, has been fixed with a warning.
+- The wrong use of fraction_lived in prepare_lifetable() has been
+  corrected.
+- The wrong behaviour of multiexpose(), multiplying risks across all
+  rows instead of within a row, has been fixed.
+- Values of prop_pop_exp that do not sum up to 1 were silently
+  renormalised. The equation in get_pop_fraction() has been corrected.
+- In socialize(), the geographic units with a missing social indicator
+  were assigned to the least deprived quantile. They are now dropped
+  with a warning.
+- Several defects in standardize() have been fixed (missing
+  bhd_per_100k_inhab_std, wrong standardized exposure, missing grouping
+  by uncertainty columns and wrong use of ref_prop_pop).
+- The error “object exp_scen_1 not found” in compare() has been fixed,
+  as well as the duplicated erf_eq in the labels.
+- In daly(), the mis-named rate column that was then summed as an impact
+  has been renamed to impact_per_100k_inhab.
+- impact_per_100k_inhab was Inf if the population was 0. Now it is NA.
+- The binning in prepare_exposure() dropped the extreme cells of the
+  grid.
+- prepare_mdi() aborted with a cryptic error if there was any missing
+  value. Now missing values are handled and a warning is shown.
+  Moreover, the results are now assigned and not lost.
+- discount() showed an error when using its own documented default of
+  discount_shape.
+- monetize() did not keep real_growth_rate among the relevant columns.
+- Entering two names in main_results_by was wrongly rejected.
+- attribute_mod() did not tag the arguments with new values as entered
+  by the user.
+- health_outcome is now validated (error if NULL or not one of the
+  options).
+- More comprehensive validation of the input data: no exposure-response
+  function data, increment equal to 0, missing erf_shape or
+  rr_increment, non-consecutive age groups and inconsistent life table
+  approaches in multiexpose().
+
+### Other improvements
+
+- get_output() and the projection in attribute_lifetable() are now
+  faster.
+- The code has been streamlined overall: new internal function
+  validate_args(), shorter and more consistent variable names, more code
+  comments and removal of dead code.
+- The data sets have been recompressed and the duplicated test data
+  removed.
+- Changes to prevent errors, warnings and notes in the CRAN checks,
+  e.g.  requireNamespace() for suggested packages and tests skipped if a
+  suggested package is not installed.
+
+### Documentation
+
+- New vignette chapters on cut-off vs. threshold and on multiple
+  exposure-outcome pairs.
+- More extensive explanation of the differences between healthiar and
+  AirQ+ in the life table approach.
+- The pkgdown website is now built from the gh-pages branch, so the
+  folder docs is not part of the master branch anymore.
+- The badges of the website have been reorganized, the JOSS badge added
+  and the Zenodo DOI moved to the new section “Stay updated”.
+- A new acknowledgements section has been added.
+- The presentation of healthiar at the ISEE conference is now available.
+- The minimum R version in the readme file (4.2.0) is now consistent
+  with DESCRIPTION.
+
+### Testing
+
+- 26 fake examples in the tests have been replaced with real published
+  studies.
+- 71 additional internal tests. Now a total of 453 tests.
+
 ## healthiar v0.2.5
 
 CRAN release: 2026-08-21
@@ -54,7 +160,7 @@ CRAN release: 2026-08-21
 
 ### Testing
 
-- Additional internal tests were added. Now a total of 382 test.
+- Additional internal tests were added. Now a total of 382 tests.
 
 ## healthiar v0.2.4
 
