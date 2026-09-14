@@ -195,7 +195,7 @@ exposure in a country.
 The comparative risk assessment approach (C. J. Murray et al. 2003) is
 applied obtaining the population attributable fraction (percent of cases
 that are attributable to the exposure) based on the relative risk. The
-exposure scenario is compared with a counter-factual scenario.
+exposure scenario is compared with a counterfactual scenario.
 
 This approach has been extensive documented and applied (e.g., WHO 2003;
 Steenland and Armstrong 2006; Soares et al. 2022; Pozzer et al. 2023;
@@ -2345,10 +2345,10 @@ unit in column `population_total`.
 #### Goal
 
 E.g., to quantify health impacts with an exposure-response function
-whose effect threshold differs from the counterfactual exposure of the
-assessment, such as noise assessments in which exposure data are only
-available above 55 dB although health effects already occur at lower
-exposures.
+whose effect threshold is lower than the lowest exposure level that the
+assessment quantifies, such as noise assessments in which exposure data
+are only available above 55 dB although health effects already occur at
+lower exposures.
 
 #### Methodology
 
@@ -2358,41 +2358,42 @@ exposures.
   which the exposure-response function starts to show an effect. It is
   the anchor of the curve and is therefore subtracted from the exposure.
   The term is used in this sense in health risk assessment guidance,
-  e.g., for environmental noise (Engelmann et al. 2025).
+  e.g., for environmental noise (Engelmann et al. 2025). Because the
+  risk is expressed relative to the threshold, the threshold is also the
+  **counterfactual exposure** of the assessment, i.e. the exposure of
+  the hypothetical scenario that the actual exposure is compared with
+  (C. J. Murray et al. 2003).
 - `cutoff_...` is the exposure level below which no health impacts are
-  quantified. As long as it is identical to the effect threshold, it is
-  also the **counterfactual exposure** of the assessment. If it is
-  higher, it only determines which exposures are assessed, while the
-  effect threshold remains the counterfactual exposure. The term is used
-  in this sense in health risk assessment guidance, e.g., for air
-  pollution (WHO 2025). Be aware that a cut-off recommended in guidance
-  documents may reflect the exposure range covered by the evidence
-  rather than a demonstrated no-effect level, i.e. it does not
-  necessarily indicate that there are no health effects below it.
+  quantified. It determines which exposures are assessed, not the level
+  that they are compared with. Usually, the cut-off is assumed to be the
+  effect threshold, and then it is the counterfactual exposure as well.
+  This is how the term is used in health risk assessment guidance, e.g.,
+  for air pollution (WHO 2025), where one single level plays both roles.
 
-Both levels are usually identical. Therefore it is enough to enter only
-one of them, and the other one takes the same value in the background.
 Accordingly, there are three possible combinations:
 
-**1. Cut-off equal to the effect threshold**
+**a) Cut-off equal to the effect threshold**
 
-This is the default situation. The exposure-response function is
-anchored at that level, which is therefore subtracted from the exposure,
-and the exposures below it get the risk at the reference level:
+This is the default situation. Since both theshold and cut-off are
+usually identical, `healthiar` assumes that the values are the same, if
+one of them is missing. Therefore, in that case, it is enough to enter
+only value. The exposure-response function is anchored at that level,
+which is therefore subtracted from the exposure, and the exposures below
+it get the risk at the reference level:
 
 ``` math
-rr_{at\_exp} = f(\max(exp, cutoff) - cutoff)
+rr_{at\_exp} = f(\max(exp, threshold) - threshold)
 ```
 
 The same result is obtained by entering only `cutoff_...`, only
 `threshold`, or both with the same value.
 
-**2. Cut-off higher than the effect threshold**
+**b) Cut-off higher than the effect threshold**
 
 The exposure-response function is truncated at the cut-off. The
 exposures above the cut-off are assessed with the risk referring to the
-effect threshold, while the exposures below the cut-off are treated as
-unexposed:
+effect threshold, while the exposures below the cut-off get the risk at
+the reference level:
 
 ``` math
 rr_{at\_exp} =
@@ -2414,7 +2415,7 @@ this results in a step in the exposure-response function at the cut-off
 and that the people exposed between the effect threshold and the cut-off
 get no attributable health impacts (i.e. a conservative estimate).
 
-**3. Cut-off lower than the effect threshold**
+**c) Cut-off lower than the effect threshold**
 
 The cut-off has no effect on the results and `healthiar` shows a
 warning. The reason is that the exposure-response function is anchored
@@ -2899,7 +2900,7 @@ Where:
 - $`last`$ = Average health impacts in *least* deprived quantile.
 
 If you assume that the least deprived areas are similar to
-counter-factual cases (no exposure to deprivation), the relative
+counterfactual cases (no exposure to deprivation), the relative
 difference regarding the overall average health impact could be
 interpreted as some kind of relative risk attributable to social
 inequalities.
