@@ -61,8 +61,9 @@ compile_input <-
 
     # PROCESS THRESHOLD ################################################################
     # The threshold is the exposure level from which the exposure-response function
-    # shows an effect, while the cutoff is the counterfactual exposure level
-    # below which no health impacts are quantified.
+    # shows an effect. It is the anchor of the curve and therefore the
+    # counterfactual exposure. The cutoff is the exposure level below which
+    # no health impacts are quantified.
     # Both are usually identical. Therefore, if the user enters only one of them,
     # the other one takes the same value.
     # Only if cutoff > threshold, the exposure-response function is truncated
