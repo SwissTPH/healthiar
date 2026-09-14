@@ -405,8 +405,8 @@ Therefore, `healthiar` issues an informative warning if both `erf_eq_`
 and a `cutoff_` are specified when using
 [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
 If your absolute risk function is parameterized on raw exposure levels
-rather than on the exposure above the cut-off, see chapter [Shifted
-vs. unshifted exposure-response functions](#shifted-vs-unshifted-erf).
+rather than on the exposure above the cut-off, see chapter [Shifting the
+ERF](#shifting-the-erf).
 
 #### Function call
 
@@ -2374,12 +2374,12 @@ Accordingly, there are three possible combinations:
 
 **a) Cut-off equal to the effect threshold**
 
-This is the default situation. Since both theshold and cut-off are
+This is the default situation. Since both threshold and cut-off are
 usually identical, `healthiar` assumes that the values are the same, if
 one of them is missing. Therefore, in that case, it is enough to enter
-only value. The exposure-response function is anchored at that level,
-which is therefore subtracted from the exposure, and the exposures below
-it get the risk at the reference level:
+only one value. The exposure-response function is anchored at that
+level, which is therefore subtracted from the exposure, and the
+exposures below it get the risk at the reference level:
 
 ``` math
 rr_{at\_exp} = f(\max(exp, threshold) - threshold)
@@ -2483,41 +2483,55 @@ cut-off is clearly visible.
 ![ERF
 curve](intro_to_healthiar_files/figure-html/unnamed-chunk-103-1.png)
 
-## Shifted vs. unshifted exposure-response functions
+## Shifting the ERF
 
 #### Goal
 
-E.g., to use an exposure-response function published in the literature
-which is parameterized on raw exposure levels instead of on the exposure
-above a cut-off.
+E.g., to know whether a cut-off must be entered when the
+exposure-response function is passed in `erf_eq_...`.
 
 #### Methodology
 
 `healthiar` evaluates the exposure-response function entered in
 `erf_eq_...` at $`c = exp - threshold`$, and the threshold takes the
 value of the cut-off if it is not entered (see chapter [Cut-off
-vs. threshold](#cutoff-vs-threshold)). Therefore, the cut-off moves the
-exposure-response function horizontally:
+vs. threshold](#cutoff-vs-threshold)). The cut-off therefore moves the
+exposure-response function horizontally. There are two situations:
 
-1.  Shifted exposure-response function. If a cut-off is entered, the
-    exposure-response function is moved by the cut-off,
-    i.e. $`c = exp - cutoff`$. The function must therefore be
-    parameterized on the exposure above the cut-off.
+**a) Unshifted exposure-response function**
 
-2.  Unshifted exposure-response function. If no cut-off is entered,
-    nothing is subtracted from the exposure, i.e. $`c = exp`$. The
-    function must therefore be parameterized on raw exposure levels.
+The function is parameterized on raw exposure levels, i.e. it already
+incorporates the cut-off in its definition. Do not enter a `cutoff_...`
+value, so that nothing is subtracted from the exposure,
+i.e. $`c = exp`$.
 
-Be aware that `healthiar` shows a warning if both `erf_eq_...` and
-`cutoff_...` are entered, because many exposure-response functions
-published in the literature already incorporate the cut-off in the
-function definition.
+**b) Shifted exposure-response function**
+
+The function is parameterized on the exposure above the cut-off, i.e. it
+does not incorporates the cut-off. Enter a value in the argument(s)
+`cutoff_...`, so that the function is moved horizontally by the cut-off,
+i.e. $`c = exp - cutoff`$.
+
+Be aware that, in case b), `healthiar` shows a warning when a
+`cutoff_...` is entered alongside `approach_risk = "absolute_risk"`,
+because many exposure-response functions published in the literature
+already incorporate the cut-off in the function definition. The warning
+can be ignored here.
 
 #### Function call
 
 ``` r
 
-# Case A: Shifted exposure-response function
+# Case A: Unshifted exposure-response function
+# The function is parameterized on raw exposure levels
+unshifted_erf <- healthiar::attribute_health(
+  approach_risk = "absolute_risk",
+  exp_central = c(50, 60, 70),
+  pop_exp = c(300000,200000,150000),
+  erf_eq_central = "78.9270 - 3.1162 * c + 0.0342 * c^2"
+)
+
+# Case B: Shifted exposure-response function
 # The function is parameterized on the exposure above the cut-off
 shifted_erf <- healthiar::attribute_health(
   approach_risk = "absolute_risk",
@@ -2528,15 +2542,6 @@ shifted_erf <- healthiar::attribute_health(
 )
 #> Warning: You entered a value for: cutoff_central alongside absolute risk.
 #> Be aware that healthiar shifts the exposure in 'erf_eq' as c = (exp - cutoff).
-
-# Case B: Unshifted exposure-response function
-# The function is parameterized on raw exposure levels
-unshifted_erf <- healthiar::attribute_health(
-  approach_risk = "absolute_risk",
-  exp_central = c(50, 60, 70),
-  pop_exp = c(300000,200000,150000),
-  erf_eq_central = "78.9270 - 3.1162 * c + 0.0342 * c^2"
-)
 ```
 
 If you want the exposure-response function to stay unshifted but the
