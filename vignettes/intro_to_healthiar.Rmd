@@ -2071,7 +2071,7 @@ Therefore it is enough to enter only one of them,
 and the other one takes the same value in the background.
 Accordingly, there are three possible combinations:
 
-**1. Cut-off equal to the effect threshold**
+**a) Cut-off equal to the effect threshold**
 
 This is the default situation.
 The exposure-response function is anchored at that level,
@@ -2085,7 +2085,7 @@ $$
 The same result is obtained by entering only `cutoff_...`,
 only `threshold`, or both with the same value.
 
-**2. Cut-off higher than the effect threshold**
+**b) Cut-off higher than the effect threshold**
 
 The exposure-response function is truncated at the cut-off.
 The exposures above the cut-off are assessed with the risk referring to
@@ -2112,7 +2112,7 @@ Be aware that this results in a step in the exposure-response function
 at the cut-off and that the people exposed between the effect threshold and
 the cut-off get no attributable health impacts (i.e. a conservative estimate).
 
-**3. Cut-off lower than the effect threshold**
+**c) Cut-off lower than the effect threshold**
 
 The cut-off has no effect on the results and `healthiar` shows a warning.
 The reason is that the exposure-response function is anchored at
