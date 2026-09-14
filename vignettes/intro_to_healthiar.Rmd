@@ -321,7 +321,7 @@ Therefore, `healthiar` issues an informative warning if
 both `erf_eq_` and a `cutoff_` are specified when using `attribute_health()`.
 If your absolute risk function is parameterized on raw exposure levels 
 rather than on the exposure above the cut-off, 
-see chapter [Shifted vs. unshifted exposure-response functions](#shifted-vs-unshifted-erf).
+see chapter [Shifting the ERF](#shifting-the-erf).
 
 
 ### Function call
@@ -2208,7 +2208,7 @@ legend("topleft",
 
 ```
 
-# Shifted vs. unshifted exposure-response functions {#shifted-vs-unshifted-erf}
+# Shifting the ERF {#shifting-the-erf}
 
 ### Goal
 
