@@ -2071,9 +2071,9 @@ Accordingly, there are three possible combinations:
 **a) Cut-off equal to the effect threshold**
 
 This is the default situation.
-Since both theshold and cut-off are usually identical, 
+Since both threshold and cut-off are usually identical, 
 `healthiar` assumes that the values are the same, if one of them is missing.
-Therefore, in that case, it is enough to enter only value.
+Therefore, in that case, it is enough to enter only one value.
 The exposure-response function is anchored at that level,
 which is therefore subtracted from the exposure,
 and the exposures below it get the risk at the reference level:
