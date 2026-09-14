@@ -178,7 +178,7 @@ E.g., to quantify the COPD cases attributable to PM2.5 (air pollution) exposure 
 ### Methodology
 The comparative risk assessment approach [@Murray2003_e] is applied obtaining the population attributable fraction 
 (percent of cases that are attributable to the exposure) based on the relative risk. 
-The exposure scenario is compared with a counter-factual scenario.
+The exposure scenario is compared with a counterfactual scenario.
 
 This approach has been extensive documented and applied [e.g., @WHO2003_report; 
 @Steenland2006-e; @Soares2020_report; @Pozzer2023_gh; @GBD2020_tl; @Lehtomaki_2025_eh]. 
@@ -2565,7 +2565,7 @@ Where:
 
 
 
-If you assume that the least deprived areas are similar to counter-factual cases (no exposure to deprivation), 
+If you assume that the least deprived areas are similar to counterfactual cases (no exposure to deprivation), 
 the relative difference regarding the overall average health impact 
 could be interpreted as some kind of relative risk attributable to social inequalities.
 
