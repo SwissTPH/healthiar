@@ -41,6 +41,14 @@
 #' essentially all remaining deaths occur.
 #' See more information in the vignette.
 #'
+#' Every age group is treated as a closed age interval of the same length,
+#' including the last one. An open-ended top age group such as
+#' "90 years old and over" therefore has to be entered as the closed age
+#' interval that follows the age groups below it, here [90, 95). Its hazard
+#' rate is then the one of the whole open-ended group, which is higher than
+#' the hazard rate of a closed age interval at that age, and the deaths of
+#' the ages above the interval are placed inside it.
+#'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
@@ -285,10 +293,27 @@ prepare_lifetable <-
     # Obtain entry_population, mid-year population and bhd (deaths)
     calculation <- data |>
       dplyr::mutate(
-        # Get the value in prob_dying and prob_surviving for 1_year
-        # prob_surviving_n_years = prob_surviving_1_year ^ age_interval_length
-        prob_surviving_1_year = prob_surviving_n_years^(1/age_interval_length),
-        prob_dying_1_year = 1 - prob_surviving_1_year,
+        # Get prob_dying and prob_surviving for 1_year.
+        # This is the same AirQ+ formula as above, only applied to an interval
+        # of one single year instead of the age interval entered by the user.
+        # The probability of dying at one single year of age has to be the one
+        # that the hazard rate implies for a single year, because that is the
+        # granularity at which the life table is built below: the cohort
+        # shrinks by prob_surviving_1_year with every single year of age.
+        # Taking the age_interval_length-th root of prob_surviving_n_years
+        # instead does not give that probability. That root is the survival of
+        # a cohort whose deaths are spread uniformly over the whole age
+        # interval, so using it year by year returns a single-year hazard rate
+        # higher than the one entered by the user (0.29 instead of 0.25).
+        # The two agree to first order, so the difference only becomes visible
+        # at a high hazard rate, where it makes the residual rule below turn
+        # the excess mortality into negative deaths.
+        # For the same reason prob_surviving_1_year ^ age_interval_length is
+        # not prob_surviving_n_years: the two assume a different distribution
+        # of the deaths over the age interval
+        prob_dying_1_year =
+          hazard_rate_n_years / (1 + ((1 - fraction_lived_n_years) * hazard_rate_n_years)),
+        prob_surviving_1_year = 1 - prob_dying_1_year,
         # Calculate entry population using the formula of AirQ+
         entry_population_1_year = get_entry_population(
           prob_surviving_1_year = prob_surviving_1_year,
