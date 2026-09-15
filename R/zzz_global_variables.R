@@ -38,7 +38,7 @@ utils::globalVariables(unique(c(
 # prepare_exposure : 
 "bin", "coverage_fraction", "poll", "pop", 
 # prepare_lifetable: 
-"age_group_n_years", "age_interval_index", "bhd_1_year", "bhd_1_year_base", "bhd_n_years", "entry_population_1_year", "fraction_lived_1_year", "fraction_lived_n_years", "hazard_rate", "population_1_year", "population_n_years", "prob_dying", "prob_surviving_1_year", "prob_surviving_n_years", 
+"age_group_n_years", "age_interval_index", "bhd_1_year", "bhd_1_year_base", "bhd_n_years", "entry_population_1_year", "fraction_lived_1_year", "fraction_lived_n_years", "hazard_rate", "hazard_rate_n_years", "population_1_year", "population_n_years", "prob_dying", "prob_dying_1_year", "prob_surviving_1_year", "prob_surviving_n_years", 
 # prepare_mdi: 
 "MDI", "MDI_index", "norm_edu", "norm_no_heating", "norm_pop_change", "norm_single_parent", "norm_unemployed", 
 # socialize: 
