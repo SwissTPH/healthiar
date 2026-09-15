@@ -137,6 +137,30 @@ testthat::test_that("results correct|prepare_lifetable|single year input", {
   )
 })
 
+
+# An open-ended top age group such as "90 years old and over" is entered here
+# as a closed age interval, which puts the hazard rate of that group far above
+# the one of the age groups below it. The probability of dying at one single
+# year of age has to stay the one that the entered hazard rate implies, so
+# that every single year of age of the converted table carries the mortality
+# of the age group it comes from. Previously the single-year probability was
+# obtained as the age_interval_length-th root of the survival of the whole age
+# interval, which inflated it (0.29 instead of 0.25 per year here) and left
+# the residual rule for the last single year of age with negative deaths
+testthat::test_that("results correct|prepare_lifetable|high hazard rate", {
+
+  lifetable <-
+    healthiar::prepare_lifetable(
+      age_group = c(80, 85, 90),
+      population = c(200000, 120000, 100000),
+      bhd = c(10000, 15000, 25000))
+
+  testthat::expect_equal(
+    object = lifetable$bhd_for_attribute / lifetable$population_for_attribute,
+    expected = lifetable$hazard_rate_n_years
+  )
+})
+
 # ERROR OR WARNING ########
 ## ERROR #########
 
