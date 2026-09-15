@@ -55,6 +55,14 @@ The age groups entered here should therefore reach an age in which
 essentially all remaining deaths occur.
 See more information in the vignette.
 
+Every age group is treated as a closed age interval of the same length,
+including the last one. An open-ended top age group such as
+"90 years old and over" therefore has to be entered as the closed age
+interval that follows the age groups below it, here [90, 95). Its hazard
+rate is then the one of the whole open-ended group, which is higher than
+the hazard rate of a closed age interval at that age, and the deaths of
+the ages above the interval are placed inside it.
+
 Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
