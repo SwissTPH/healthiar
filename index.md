@@ -206,4 +206,4 @@ suggested improvements, and provided valuable feedback to refine this
 package. Here some of them in alphabetical order: Federico Cussotto,
 Georgia Dyer, Brecht Devleesschauwer, Nicole Engelmann, Aletta Karsies,
 Sasha Kohmenkho, Heli Lehtomäki, Matthias Lochman, Enrico Pisoni, David
-Rojas Rueda & Maciek Strak.
+Rojas Rueda, Jörg Sintermann & Maciek Strak.
