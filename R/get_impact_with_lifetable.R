@@ -152,7 +152,13 @@ get_impact_with_lifetable <-
     lifetable_id_cols <-
       c(intersect(c("geo_id_macro", "geo_id_micro", "exp_name", "sex"),
                   names(lifetable_calculation)),
-        grep("_ci$|^info", names(lifetable_calculation), value = TRUE))
+        grep("_ci$", names(lifetable_calculation), value = TRUE))
+
+    # The same applies to info: it only identifies life tables
+    # if it has different values within the same age, e.g. exposure-outcome pairs.
+    # Info that only differs by age (e.g. age bands) must not split the life tables
+    info_id_cols <-
+      grep("^info", names(lifetable_calculation), value = TRUE))
 
     by_age_cols <-
       c("yoa", "age_group", "age_start", "age_end", "bhd", "deaths",
