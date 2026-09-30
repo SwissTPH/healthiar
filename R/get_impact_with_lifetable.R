@@ -149,7 +149,7 @@ get_impact_with_lifetable <-
     # by age group (exp, prop_pop_exp and therefore pop_fraction).
     # If they identified the life tables, they would split one life table
     # into pieces and the cohorts would not get older from one piece to the next
-    lifetable_id_cols <-
+    lifetable_id_cols_without_info <-
       c(intersect(c("geo_id_macro", "geo_id_micro", "exp_name", "sex"),
                   names(lifetable_calculation)),
         grep("_ci$", names(lifetable_calculation), value = TRUE))
@@ -158,7 +158,16 @@ get_impact_with_lifetable <-
     # if it has different values within the same age, e.g. exposure-outcome pairs.
     # Info that only differs by age (e.g. age bands) must not split the life tables
     info_id_cols <-
-      grep("^info", names(lifetable_calculation), value = TRUE))
+      grep("^info", names(lifetable_calculation), value = TRUE) |>
+      purrr::keep(
+        ~ lifetable_calculation |>
+          dplyr::summarise(
+            .by = dplyr::all_of(c(lifetable_id_cols_without_info, "age_group")),
+            n_info_values = dplyr::n_distinct(dplyr::pick(dplyr::all_of(.x)))) |>
+          dplyr::pull(n_info_values) |>
+          max() > 1)
+
+    lifetable_id_cols <- c(lifetable_id_cols_without_info, info_id_cols)
 
     by_age_cols <-
       c("yoa", "age_group", "age_start", "age_end", "bhd", "deaths",
