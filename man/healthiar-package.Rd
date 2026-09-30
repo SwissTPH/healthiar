@@ -25,6 +25,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Alberto Castro \email{alberto.castrofernandez@swisstph.ch} (\href{https://orcid.org/0000-0002-4665-3299}{ORCID})
   \item Axel Luyten (\href{https://orcid.org/0000-0002-7005-5889}{ORCID})
 }
 
