@@ -143,16 +143,30 @@ get_impact_with_lifetable <-
 
 
     # Nest life tables
+    # There is one life table per geo unit, sex, uncertainty combination (_ci)
+    # and info (e.g. exposure-outcome pairs). These columns are named explicitly
+    # because all other columns can differ by age, e.g. an exposure distribution
+    # by age group (exp, prop_pop_exp and therefore pop_fraction).
+    # If they identified the life tables, they would split one life table
+    # into pieces and the cohorts would not get older from one piece to the next
+    lifetable_id_cols <-
+      c(intersect(c("geo_id_macro", "geo_id_micro", "exp_name", "sex"),
+                  names(lifetable_calculation)),
+        grep("_ci$|^info", names(lifetable_calculation), value = TRUE))
+
+    by_age_cols <-
+      c("yoa", "age_group", "age_start", "age_end", "bhd", "deaths",
+        "population", "fraction_lived",
+        "modification_factor",
+        "prob_survival", "prob_survival_until_midyear", "hazard_rate",
+        "is_exposed_age", "prob_survival_mod", "prob_survival_until_midyear_mod", "hazard_rate_mod",
+        # These columns at the end to link with projections
+        "midyear_population_yoa", "entry_population_yoa")
+
     lifetable_calculation <- lifetable_calculation |>
-      tidyr::nest(
-        data_by_age =
-        c(yoa, age_group, age_start, age_end, bhd, deaths,
-          population, fraction_lived, 
-          modification_factor,
-          prob_survival, prob_survival_until_midyear, hazard_rate,
-          is_exposed_age, prob_survival_mod, prob_survival_until_midyear_mod, hazard_rate_mod,
-          # These columns at the end to link with projections
-          midyear_population_yoa, entry_population_yoa))
+      # The other columns (e.g. exp) are added back to the results by age below
+      dplyr::select(dplyr::all_of(c(lifetable_id_cols, by_age_cols))) |>
+      tidyr::nest(data_by_age = dplyr::all_of(by_age_cols))
 
 
     ## PROJECTION OF THE YEAR OF ANALYSIS (YOA) #####################################################
@@ -544,7 +558,14 @@ get_impact_with_lifetable <-
       # Rename age_start to age_group (consistent with input and other pathways)
       dplyr::rename("age_group" = "age_start") |>
       # Remove age_end not needed anymore
-      dplyr::select(-age_end)
+      dplyr::select(-age_end) |>
+      # Add back the input columns by age that were not nested (e.g. exp).
+      # The columns of the life table are not needed in the results
+      # (population is already in the impacts)
+      dplyr::left_join(
+        input_with_risk_and_pop_fraction |>
+          dplyr::select(-dplyr::any_of(setdiff(by_age_cols, "age_group"))),
+        by = c(lifetable_id_cols, "age_group"))
 
     output <- list(
       intermediate_calculations = lifetable_calculation,
