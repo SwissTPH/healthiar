@@ -243,6 +243,32 @@ get_output <-
       # If population is available, recompute with population and normalized metrics
       if ("population" %in% colnames_results_raw) {
 
+        # Sum the population of the group.
+        # The exposure categories are parts of the same population, so its
+        # value is repeated in all of them (e.g. in the absolute risk pathway,
+        # where the rows of the exposure categories are kept).
+        # Therefore, the population is taken only once per row without
+        # exposure category before summing it.
+        # In results_by_exp_category, each exposure category shows the
+        # population of the whole group, which is the population that
+        # its impacts refer to
+        grouping_cols_without_exp_category <-
+          setdiff(grouping_cols_for_results_by[[var]], "exp_category")
+
+        population_agg <- results_raw_to_aggregate |>
+          dplyr::distinct(
+            dplyr::across(
+              dplyr::all_of(c(setdiff(id_cols_available, "exp_category"),
+                              "population")))) |>
+          dplyr::summarise(
+            .by = dplyr::all_of(grouping_cols_without_exp_category),
+            population = sum(population, na.rm = TRUE))
+
+        impact_agg <- impact_agg |>
+          dplyr::select(-population) |>
+          dplyr::left_join(population_agg,
+                           by = grouping_cols_without_exp_category)
+
         # Relative impact dividing by population in the subgroup (100k)
         # i.e. x impacts in the subgroup / population in the subgroup
 
