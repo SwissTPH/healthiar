@@ -215,12 +215,13 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_inc
       )$uncertainty_main$impact_rounded,
 
     expected =
-      # Results on 2026-09-03; no comparison study.
-      # Only the estimates of geo unit "a" change compared to the previous
-      # expectation c(2853, 936, 6531, 2943, 875, 7232), because the bhd
-      # interval entered above puts 0.45% of the normal distribution below
-      # zero and those values are now truncated instead of mirrored
-      c(2908, 979, 6531, 2943, 875, 7232)
+      # Results on 2026-10-01; no comparison study.
+      # The previous expectation c(2908, 979, 6531, 2943, 875, 7232) was
+      # obtained when the simulations of each geo unit took the exposures of
+      # both geo units (8 and 7.5) by turns. Now each geo unit is simulated
+      # with its own exposure, so the central estimates are close to the
+      # deterministic impacts (3291 and 2750)
+      c(3259, 1224, 6750, 2548, 782, 6534)
   )
 })
 
@@ -254,13 +255,13 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_inc
       )$uncertainty_main$impact_rounded,
 
     expected =
-      # Results on 2026-09-03; no comparison study.
-      # The estimates change only marginally compared to the previous
-      # expectation c(15497, 8007, 24682, 16588, 8486, 25928), because the
-      # dominant uncertainty here is rr, which is identical in all geo units
-      # and therefore perfectly correlated in any case. Only exp differs
-      # across geo units and its interval is narrow (+-0.1)
-      c(15503, 8007, 24679, 16574, 8486, 25928)
+      # Results on 2026-10-01; no comparison study.
+      # The previous expectation c(15503, 8007, 24679, 16574, 8486, 25928) was
+      # obtained when the simulations of each geo unit took the exposures of
+      # all geo units by turns. Now each geo unit is simulated with its own
+      # exposure, so the central estimates are close to the deterministic
+      # impacts (15366 for CH and 17083 for DE)
+      c(15487, 8365, 23419, 17097, 9314, 25944)
   )
 })
 
@@ -320,7 +321,11 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_fun
   results_noise_ha_summarised <- healthiar::summarize_uncertainty(results_noise_ha, n_sim = 10, seed = 123)
 
   # Assuming SD of 47 and 70, and normal distribution
-  expected_impacts <-c(291.0, 228.0, 453.0, 357.0, 280.0, 479.0)
+  # Results on 2026-10-01. The previous expectation
+  # c(291, 228, 453, 357, 280, 479) was obtained when the simulations of each
+  # geo unit took the exposures of both geo units by turns. Now each geo unit
+  # is simulated with its own exposure (deterministic impacts: 319 and 351)
+  expected_impacts <-c(318, 261, 456, 336, 266, 414)
 
   ## COMPARE ONLY THE IMPACT_ROUNDED VECTOR
   testthat::expect_equal(
@@ -380,7 +385,11 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_for
   results_noise_ha_summarised <- healthiar::summarize_uncertainty(results_noise_ha, n_sim = 100,seed = 123)
 
   # Assuming SD of 47 and 70, and normal distribution
-  expected_impacts <-c(287.0, 201.0, 418.0, 378.0, 276.0, 536.0)
+  # Results on 2026-10-01. The previous expectation
+  # c(287, 201, 418, 378, 276, 536) was obtained when the simulations of each
+  # geo unit took the exposures of both geo units by turns. Now each geo unit
+  # is simulated with its own exposure (deterministic impacts: 319 and 351)
+  expected_impacts <-c(317, 223, 455, 354, 253, 473)
 
   ## COMPARE ONLY THE IMPACT_ROUNDED VECTOR
   testthat::expect_equal(
