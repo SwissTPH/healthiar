@@ -619,6 +619,7 @@ summarize_uncertainty <- function(
 
 
   ## Template and simulations #####
+  # Number of each geo unit to select its stream in stream_map
   sim_template <- input_table |>
     dplyr::select(geo_id_micro) |>
     unique()|>
