@@ -185,21 +185,6 @@ compare <-
 
 
 
-    # Force the same environment in the functions of erf_eq.
-    # Otherwise, not identified as identical and error joining below.
-    if(!is.null(input_args_scen_1[["value"]][["erf_eq_central"]])){
-
-      # The arguments of the exposure-response function are only the three
-      # confidence interval variants. 
-      erf_eq_vars <- paste0("erf_eq", c("_central", "_lower", "_upper"))
-
-      input_args_scen_1[["value"]][erf_eq_vars] <-
-        input_args_scen_2[["value"]][erf_eq_vars]
-
-      input_table_scen_1[["erf_eq"]] <- input_table_scen_2[["erf_eq"]]
-
-      }
-
     # Key variables #############################
     # Identify the arguments that have _scen_1 or _scen_2 in the name (scenario specific)
     # This is useful for joining data frames below
@@ -260,6 +245,57 @@ compare <-
     }else{
       stop("The two scenarios must use the same common arguments.",
            call. = FALSE)
+    }
+
+    # Error if the exposure-response functions (erf_eq) are different
+    # If erf_eq is a string (e.g. "exp(0.01 * c)"), it is compared in
+    # check_if_args_identical() below like any other common argument.
+    # If erf_eq is a function, it cannot be compared in this way:
+    # two functions that are created in the same way (e.g. two calls of
+    # approxfun() with the same data) are not identical() because they have
+    # different environments. Therefore, they are compared by the risks that
+    # they give at the exposures and cutoffs of both scenarios,
+    # i.e. where they are used
+    if(is.function(input_args_scen_1[["value"]][["erf_eq_central"]])){
+
+      # The arguments of the exposure-response function are only the three
+      # confidence interval variants (only those entered by the user,
+      # the others are NULL)
+      erf_eq_vars <-
+        paste0("erf_eq", c("_central", "_lower", "_upper")) |>
+        purrr::keep(~ is.function(input_args_scen_1[["value"]][[.x]]))
+
+      # [[ and not $ because the column threshold is only available
+      # if the user entered it (otherwise NULL)
+      get_risk_in_both_scenarios <- function(erf_eq){
+        get_risk(
+          erf_eq = erf_eq,
+          exp = c(input_table_scen_1[["exp"]], input_table_scen_2[["exp"]]),
+          cutoff = c(input_table_scen_1[["cutoff"]], input_table_scen_2[["cutoff"]]),
+          threshold = c(input_table_scen_1[["threshold"]], input_table_scen_2[["threshold"]]))
+      }
+
+      erf_eq_vars_different <-
+        erf_eq_vars |>
+        purrr::discard(
+          ~ isTRUE(all.equal(
+            get_risk_in_both_scenarios(input_args_scen_1[["value"]][[.x]]),
+            get_risk_in_both_scenarios(input_args_scen_2[["value"]][[.x]]))))
+
+      if(length(erf_eq_vars_different) > 0){
+        stop(
+          paste0(toString(erf_eq_vars_different),
+                 " must be identical in both scenarios."),
+          call. = FALSE)
+      }
+
+      # The functions give the same risks, so the ones of scenario 2 are used
+      # in both scenarios. Otherwise, they are not identified as identical
+      # (different environments) and there is an error joining below
+      input_args_scen_1[["value"]][erf_eq_vars] <-
+        input_args_scen_2[["value"]][erf_eq_vars]
+
+      input_table_scen_1[["erf_eq"]] <- input_table_scen_2[["erf_eq"]]
     }
 
     common_arguments_identical <-
