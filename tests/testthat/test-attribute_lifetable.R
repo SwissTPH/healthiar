@@ -1212,6 +1212,32 @@ testthat::test_that("error if age_group is not a 1-year consecutive sequence", {
     object = attribute_lifetable_with_age_group(0:99))
 })
 
+testthat::test_that("error if age_group is not a 1-year consecutive sequence in one life table", {
+
+  # Age 50 is missing only for males. The ages of all life tables together
+  # are consecutive (females have age 50), but the male cohort would jump
+  # from age 49 to 51
+  data <- exdat_lifetable[!(exdat_lifetable$sex == "male" & exdat_lifetable$age_group == 50), ]
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "single_year",
+        exp_central = 8.85,
+        cutoff_central = 5,
+        rr_central = 1.118,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = data$age_group,
+        sex = data$sex,
+        bhd_central = data$deaths,
+        population = data$midyear_population,
+        year_of_analysis = 2019),
+    regexp = "This is not the case in: geo_id_micro = a, sex = male.",
+    fixed = TRUE)
+})
+
 
 
 testthat::test_that("error if health_outcome is missing or not an option", {
