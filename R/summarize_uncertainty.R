@@ -663,24 +663,19 @@ summarize_uncertainty <- function(
     var_ci_col <- paste0(gsub("rr", "erf", var), "_ci")
     other_ci_cols <- setdiff(var_names_with_ci_in_name, var_ci_col)
 
-    input_table_lower <- input_table |>
+    # Rows in which only this variable has lower and upper estimates
+    input_table_var <- input_table |>
       dplyr::filter(dplyr::if_all(.cols = dplyr::all_of(other_ci_cols),
-                                  .fns = ~ .x == "central"),
-                    dplyr::if_all(.cols = dplyr::all_of(var_ci_col),
-                                  .fns = ~ .x == "lower"))
+                                  .fns = ~ .x == "central"))
 
-    input_table_upper <- input_table |>
-      dplyr::filter(dplyr::if_all(.cols = dplyr::all_of(other_ci_cols),
-                                  .fns = ~ .x == "central"),
-                    dplyr::if_all(.cols = dplyr::all_of(var_ci_col),
-                                  .fns = ~ .x == "upper"))
+    var_ci <- input_table_var[[var_ci_col]]
 
     estimates_by_row <-
       tibble::tibble(
         geo_id_micro = input_table_central$geo_id_micro,
         central = input_table_central[[var]],
-        lower = input_table_lower[[var]],
-        upper = input_table_upper[[var]])
+        lower = input_table_var[[var]][var_ci == "lower"],
+        upper = input_table_var[[var]][var_ci == "upper"])
 
     # Each different estimate is simulated once, i.e. it is one variable.
     # E.g. a bhd that differs by age group is simulated once per age group,
