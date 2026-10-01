@@ -125,6 +125,40 @@ testthat::test_that("results correct |pathway_multiexposure|approach_multiexposu
       paf_multiexposure("additive", rr_pm, rr_no2, exp_pm, exp_no2) * bhd)
 })
 
+testthat::test_that("results correct |pathway_multiexposure|approach_multiexposure_additive|bestcost|impact_per_100k_inhab", {
+
+  # Derived from the BEST-COST case study above (8.1% with the additive
+  # approach): a population of 100000 is added to both exposures. It does not
+  # change the attributable cases (8.1% of the bhd of 1000), and both exposures
+  # refer to the same people, so the impact per 100 000 inhabitants must be the
+  # attributable cases divided by 100000 (and not by 200000, as before the fix)
+  output_pm <-
+    healthiar::attribute_health(
+      exp_central = exp_pm[["central"]],
+      cutoff_central = 0,
+      bhd_central = bhd,
+      rr_central = rr_pm[["central"]],
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      population = 1E5)
+
+  testthat::expect_equal(
+    object =
+      healthiar::multiexpose(
+        output_attribute_exp_1 = output_pm,
+        output_attribute_exp_2 =
+          healthiar::attribute_mod(
+            output_attribute = output_pm,
+            exp_central = exp_no2[["central"]],
+            rr_central = rr_no2[["central"]]),
+        exp_name_1 = "pm2.5",
+        exp_name_2 = "no2",
+        approach_multiexposure = "additive")$health_main$impact_per_100k_inhab,
+    expected =
+      paf_multiexposure("additive", rr_pm, rr_no2, exp_pm, exp_no2) * bhd /
+      1E5 * 1E5)
+})
+
 
 ## MULTIPLICATIVE APPROACH #####################################################
 
