@@ -756,16 +756,13 @@ summarize_uncertainty <- function(
         assign(".Random.seed", stream_map[[var]][[1]], envir = .GlobalEnv)
       }
 
-      sim[[var]] <-
-        list(
-          simulate(
-            central = central,
-            lower = lower,
-            upper = upper,
-            distribution = dist,
-            n = n_sim,
-            seed = NULL))
+      simulations <- simulate_estimates(estimates)
     }
+
+    # Assign the simulated values to each row of input_table_central
+    sim[[var]] <- estimates_by_row |>
+      dplyr::left_join(simulations, by = estimate_cols) |>
+      dplyr::pull(simulated)
 
   }
 
