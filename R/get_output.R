@@ -219,6 +219,8 @@ get_output <-
       # sum the impacts, obtaining one row per group.
       # The rounded and relative impacts are not aggregated
       # because they are re-calculated below (after summing)
+      # The population is not summed here but below,
+      # because it must not be summed across exposure categories
       impact_agg <-
         collapse_df_by_group(
           df = results_raw_to_aggregate,
