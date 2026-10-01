@@ -50,7 +50,7 @@ utils::globalVariables(unique(c(
 # summarize_uncertainty: 
 "impact", "impact_rounded", "impact_scen_1", "impact_scen_2", "output_sim_after_impact", "sim_id", 
 # summarize_uncertainty : 
-"geo_id_micro", "impact", "sim_id", 
+"central", "geo_id_micro", "impact", "lower", "sim_id", "simulated", "upper",
 # validate_input_attribute: 
 "bhd_central", "rr_central", 
 # validate_input_attribute : 
