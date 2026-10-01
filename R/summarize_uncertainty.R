@@ -751,7 +751,7 @@ summarize_uncertainty <- function(
     } else if (var %in% var_names_with_ci_geo_identical ){
 
       # If reproducible streams were requested and stream_map[[var]] contains one stream vector,
-      # assign it once, then call simulate(...) to create a single vector of length n_sim.
+      # assign it once, then call simulate(...) to create a vector of length n_sim for each estimate.
       if (!is.null(stream_map)) {
         assign(".Random.seed", stream_map[[var]][[1]], envir = .GlobalEnv)
       }
@@ -786,24 +786,15 @@ summarize_uncertainty <- function(
     input_args$value[! names(input_args$value) %in% args_to_be_removed_in_input_args]
 
 
-  template_with_sim <-
-    # Bind the template with the simulated values
-    dplyr::bind_cols(sim_template, tibble::as_tibble(sim[var_names_with_ci])) |>
-    # Unnest to have table layout
-    tidyr::unnest(dplyr::any_of(c("sim_id", var_names_with_ci)))
-
-  input_table_with_sim <- input_table |>
-    # Remove lower and upper rows (keep only central)
-    # In the summary of uncertainties no lower or upper is used
-    dplyr::filter(dplyr::if_all(.cols = dplyr::all_of(var_names_with_ci_in_name),
-                                .fns = ~ .x == "central")) |>
+  input_table_with_sim <- input_table_central |>
     # Remove the variables with uncertainty because the new simulated values
     # are introduced in the step below
     dplyr::select(- dplyr::all_of(var_names_with_ci)) |>
-    # Add the simulated values
-    dplyr::inner_join(template_with_sim,
-                      by = "geo_id_micro",
-                      relationship = "many-to-many") |>
+    # Add the simulated values (one vector of length n_sim per row and variable)
+    dplyr::bind_cols(tibble::as_tibble(sim[var_names_with_ci])) |>
+    dplyr::mutate(sim_id = list(1:n_sim)) |>
+    # Unnest to have table layout, i.e. one row per row of input_table_central and simulation
+    tidyr::unnest(dplyr::all_of(c("sim_id", var_names_with_ci))) |>
     # Change the name of geo_id_micro adding the sim_id
     # Important: This is a trick to be able to get the output with impacts by simulation
     # To be removed below when impacts by geo_id_micro have to be obtained
