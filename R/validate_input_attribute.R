@@ -510,30 +510,66 @@ validate_input_attribute <-
 
 
       ### error_if_not_consecutive_sequence #####
-      error_if_not_consecutive_sequence <- function(var_name){
-        # Here a function because it expected to use it in one or two arguments
-        # (not like e.g. the check of is.numeric)
+      # The cohorts get one year older from one row to the next of each
+      # life table, so the age groups of each life table must be a consecutive
+      # sequence of single years. Checking the age groups of all life tables
+      # together does not detect an age missing in only one of them
+      # (e.g. age 50 only for males, because females have it)
+      age_table <-
+        tibble::tibble(
+          geo_id_micro = input_args_value$geo_id_micro,
+          sex = input_args_value$sex,
+          age_group = input_args_value$age_group) |>
+        add_info(info = input_args_value$info)
 
-        # Only the distinct values, because the age groups are repeated
-        # for each sex, geo unit or exposure category
-        # (e.g. 0:99 for males and 0:99 for females)
-        var_value <- sort(unique(input_args_value[[var_name]]))
+      # As in get_impact_with_lifetable(), info only identifies life tables
+      # if it has different values within the same age, e.g. exposure-outcome
+      # pairs, but not age bands
+      info_id_cols <-
+        grep("^info", names(age_table), value = TRUE) |>
+        purrr::keep(
+          ~ age_table |>
+            dplyr::summarise(
+              .by = c(geo_id_micro, sex, age_group),
+              n_info_values = dplyr::n_distinct(dplyr::pick(dplyr::all_of(.x)))) |>
+            dplyr::pull(n_info_values) |>
+            max() > 1)
 
-        if(# Check that values are integers
-          any(var_value != floor(var_value)) ||
-          # Check that the difference between consecutive elements is exactly 1.
-          # Attention: all(diff(x)) (without == 1) only checks that consecutive
-          # values are different, which does not detect e.g. 5-year age groups
-          !all(diff(var_value) == 1)) {
+      lifetables_not_consecutive <- age_table |>
+        dplyr::summarise(
+          .by = dplyr::all_of(c("geo_id_micro", "sex", info_id_cols)),
+          is_not_consecutive = {
+            # Only the distinct values, because the age groups are repeated
+            # for each exposure category
+            ages <- sort(unique(age_group))
+            # Check that values are integers
+            any(ages != floor(ages)) ||
+              # Check that the difference between consecutive elements is exactly 1.
+              # Attention: all(diff(x)) (without == 1) only checks that consecutive
+              # values are different, which does not detect e.g. 5-year age groups
+              !all(diff(ages) == 1)
+          }) |>
+        dplyr::filter(is_not_consecutive) |>
+        dplyr::select(-is_not_consecutive)
 
-          stop(
-            paste0(var_name, " must be a consecutive sequence of integer values where the difference between elements is 1."),
-            call. = FALSE
-          )
-        }
+      if (nrow(lifetables_not_consecutive) > 0) {
+
+        stop(
+          paste0(
+            "age_group must be a consecutive sequence of integer values ",
+            "where the difference between elements is 1. ",
+            "This is not the case in: ",
+            paste(
+              purrr::pmap_chr(
+                lifetables_not_consecutive,
+                function(...) {
+                  values <- list(...)
+                  paste0(names(values), " = ", values, collapse = ", ")
+                }),
+              collapse = "; "),
+            "."),
+          call. = FALSE)
       }
-
-      error_if_not_consecutive_sequence(var_name = "age_group")
 
       ### warning if bhd = 0 #####
       # arg_names_passed (and not arg_names_available) because only the bhd_
