@@ -32,6 +32,15 @@
 #' More information in the vignette. 
 #'
 #' \code{bhd_central,bhd_lower,bhd_upper}
+#' The life table approach is only applicable to \strong{all-cause mortality}:
+#' the deaths must be all-cause deaths and the exposure-response function must
+#' refer to all-cause mortality. The deaths are used to project how the
+#' population survives over the years, which requires the deaths of all causes.
+#' Cause-specific deaths (e.g. lung cancer) would lead to unrealistically high
+#' survival and therefore to overestimated impacts. For cause-specific mortality,
+#' use \code{attribute_health()} instead.
+#' See the vignette chapter \emph{YLL and deaths with life table}.
+#'
 #' Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year).
 #' There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities.
 #' If zeros show up in the last ages (e.g. age 98 = 0 deaths, 99 years old = 1),
