@@ -623,9 +623,14 @@ summarize_uncertainty <- function(
   sim_template <- input_table |>
     dplyr::select(geo_id_micro) |>
     unique()|>
-    dplyr::mutate(geo_id_number = 1:n_geo) |>
-    dplyr::mutate(sim_id = list(1:n_sim))
+    dplyr::mutate(geo_id_number = 1:n_geo)
 
+  # Rows of the input table with the central estimates only.
+  # The lower and upper estimates are not used in the summary of uncertainty
+  # but the simulated values (see below)
+  input_table_central <- input_table |>
+    dplyr::filter(dplyr::if_all(.cols = dplyr::all_of(var_names_with_ci_in_name),
+                                .fns = ~ .x == "central"))
 
 
   # Define the mapping between variable names and their distributions
