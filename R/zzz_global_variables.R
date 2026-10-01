@@ -52,7 +52,7 @@ utils::globalVariables(unique(c(
 # summarize_uncertainty : 
 "central", "geo_id_micro", "impact", "lower", "sim_id", "simulated", "upper",
 # validate_input_attribute: 
-"bhd_central", "rr_central", 
+"bhd_central", "is_not_consecutive", "rr_central",
 # validate_input_attribute : 
 "var"
 )))
