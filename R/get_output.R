@@ -225,7 +225,7 @@ get_output <-
         collapse_df_by_group(
           df = results_raw_to_aggregate,
           group_col_names = grouping_cols_for_results_by[[var]],
-          sum_col_names = cols_to_be_summed,
+          sum_col_names = setdiff(cols_to_be_summed, "population"),
           # This last argument could be obtained within the function,
           # but it is entered because it is the same for all results_by vars
           # and in this way the process is not repeated (faster)
