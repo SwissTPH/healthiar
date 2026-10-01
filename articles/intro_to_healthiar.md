@@ -1222,6 +1222,31 @@ when each pair has its own.
 
 ## YLL & deaths with life table
 
+### All-cause mortality only
+
+The life table approach of
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
+is only applicable to **all-cause mortality**. The baseline deaths
+(`bhd_central`) are used for two purposes at the same time: to project
+how the population survives over the years and to obtain the deaths that
+are attributable to the exposure. The projection of the population needs
+the deaths of all causes, so `bhd_central` must contain all-cause deaths
+and the exposure-response function must refer to all-cause mortality.
+
+Cause-specific mortality (e.g. lung cancer) cannot be assessed with
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md):
+
+- If only the cause-specific deaths are entered, the projected
+  population hardly dies of any other cause and reaches unrealistically
+  high ages. The YLL and the attributable deaths are then overestimated.
+- If all-cause deaths are entered with a cause-specific
+  exposure-response function, the relative risk is applied to all causes
+  of death, which overestimates the impacts as well.
+
+For cause-specific mortality, the attributable deaths can be obtained
+with
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
+
 ### Data preparation
 
 The life table approach to obtain YLL and deaths requires population and

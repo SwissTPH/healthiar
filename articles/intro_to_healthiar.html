@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6.1765</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6.1768</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1807,6 +1807,31 @@ everywhere, which is not the case when each pair has its own.</p>
 <div class="section level2">
 <h2 id="yll-deaths-with-life-table">YLL &amp; deaths with life table<a class="anchor" aria-label="anchor" href="#yll-deaths-with-life-table"></a>
 </h2>
+<div class="section level3">
+<h3 id="all-cause-mortality-only">All-cause mortality only<a class="anchor" aria-label="anchor" href="#all-cause-mortality-only"></a>
+</h3>
+<p>The life table approach of <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code> is only
+applicable to <strong>all-cause mortality</strong>. The baseline deaths
+(<code>bhd_central</code>) are used for two purposes at the same time:
+to project how the population survives over the years and to obtain the
+deaths that are attributable to the exposure. The projection of the
+population needs the deaths of all causes, so <code>bhd_central</code>
+must contain all-cause deaths and the exposure-response function must
+refer to all-cause mortality.</p>
+<p>Cause-specific mortality (e.g. lung cancer) cannot be assessed with
+<code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>:</p>
+<ul>
+<li>If only the cause-specific deaths are entered, the projected
+population hardly dies of any other cause and reaches unrealistically
+high ages. The YLL and the attributable deaths are then
+overestimated.</li>
+<li>If all-cause deaths are entered with a cause-specific
+exposure-response function, the relative risk is applied to all causes
+of death, which overestimates the impacts as well.</li>
+</ul>
+<p>For cause-specific mortality, the attributable deaths can be obtained
+with <code><a href="../reference/attribute_health.html">attribute_health()</a></code>.</p>
+</div>
 <div class="section level3">
 <h3 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
 </h3>

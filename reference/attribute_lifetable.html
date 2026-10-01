@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6.1765</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6.1768</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -206,7 +206,15 @@ If needed, condensate the last age group
 instead of adding age groups beyond the data.
 More information in the vignette.</p>
 <p><code>bhd_central,bhd_lower,bhd_upper</code>
-Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year).
+The life table approach is only applicable to <strong>all-cause mortality</strong>:
+the deaths must be all-cause deaths and the exposure-response function must
+refer to all-cause mortality. The deaths are used to project how the
+population survives over the years, which requires the deaths of all causes.
+Cause-specific deaths (e.g. lung cancer) would lead to unrealistically high
+survival and therefore to overestimated impacts. For cause-specific mortality,
+use <code><a href="attribute_health.html">attribute_health()</a></code> instead.
+See the vignette chapter <em>YLL and deaths with life table</em>.</p>
+<p>Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year).
 There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities.
 If zeros show up in the last ages (e.g. age 98 = 0 deaths, 99 years old = 1),
 please sum the values and condensate last category (e.g. age 98 = 1).</p>
