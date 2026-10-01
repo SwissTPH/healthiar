@@ -182,6 +182,42 @@ testthat::test_that("results correct |pathway_multiexposure|approach_multiexposu
       paf_multiexposure("multiplicative", rr_pm, rr_no2, exp_pm, exp_no2) * bhd)
 })
 
+testthat::test_that("results correct |pathway_multiexposure|approach_multiexposure_multiplicative|bestcost|info", {
+
+  # Derived from the BEST-COST case study above (7.9% with the multiplicative
+  # approach): the same assessment is entered for two regions, so the
+  # attributable cases must be twice those of the case study.
+  # info contains the pollutant, which differs between the two exposures and
+  # therefore only names them (like exp_name), and the region, which is the same
+  # in both exposures and therefore identifies subgroups. The relative risks
+  # must be multiplied within each region but never across regions.
+  # Before the fix the pollutant kept the two exposures apart, so the
+  # multiplicative approach silently returned the additive result
+  attribute_by_region <- function(pollutant, exp, rr){
+    healthiar::attribute_health(
+      exp_central = c(exp, exp),
+      cutoff_central = 0,
+      bhd_central = c(bhd, bhd),
+      rr_central = rr,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      info = data.frame(pollutant = pollutant, region = c("north", "south")))
+  }
+
+  testthat::expect_equal(
+    object =
+      healthiar::multiexpose(
+        output_attribute_exp_1 =
+          attribute_by_region("pm2.5", exp_pm[["central"]], rr_pm[["central"]]),
+        output_attribute_exp_2 =
+          attribute_by_region("no2", exp_no2[["central"]], rr_no2[["central"]]),
+        exp_name_1 = "pm2.5",
+        exp_name_2 = "no2",
+        approach_multiexposure = "multiplicative")$health_main$impact,
+    expected =
+      2 * paf_multiexposure("multiplicative", rr_pm, rr_no2, exp_pm, exp_no2) * bhd)
+})
+
 
 ## COMBINED APPROACH ###########################################################
 

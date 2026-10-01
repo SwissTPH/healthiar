@@ -28,7 +28,7 @@ utils::globalVariables(unique(c(
 # get_ref_prop_pop: 
 "age_group", "population", "ref_population", "ref_prop_pop", 
 # get_risk_and_pop_fraction: 
-"cutoff", "erf_shape", "exp_scen_1", "exp_scen_2", "pop_fraction", "prop_pop_exp", "prop_pop_exp_scen_1", "prop_pop_exp_scen_2", "rr", "rr_at_exp", "rr_at_exp_scen_1", "rr_at_exp_scen_2", "rr_increment", 
+"cutoff", "erf_shape", "exp_name", "exp_scen_1", "exp_scen_2", "info_values", "pop_fraction", "prop_pop_exp", "prop_pop_exp_scen_1", "prop_pop_exp_scen_2", "rr", "rr_at_exp", "rr_at_exp_scen_1", "rr_at_exp_scen_2", "rr_increment", 
 # monetize: 
 "monetized_impact", "population", "year", 
 # monetize : 
