@@ -146,6 +146,45 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
 
 })
 
+testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|uncertainty_TRUE|", {
+
+  # Derived from the Sciensano assessment of the test above: the same
+  # assessment with a confidence interval of the relative risk. The
+  # uncertainty does not change the central estimates, so the results must be
+  # those of the assessment. Before the fix the impacts and populations of the
+  # central, lower and upper estimates were summed up
+  data <- readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
+
+  attribute_result_age <-
+    healthiar::attribute_health(
+      approach_risk = 'relative_risk',
+      age_group = data$AGE,
+      exp_central = data$EXPOSURE,
+      rr_central = 1.045,
+      rr_lower = 1.02,
+      rr_upper = 1.07,
+      rr_increment = 10,
+      cutoff_central = 0,
+      erf_shape = 'log_linear',
+      bhd_central = data$MORT,
+      population = data$POP,
+      geo_id_micro = data$SECTOR
+    )
+
+  testthat::expect_equal(
+    object =
+      healthiar::socialize(
+        output_attribute = attribute_result_age,
+        age_group = unique(data$AGE),
+        geo_id_micro = unique(data$SECTOR),
+        social_indicator = unique(data$SCORE),
+        n_quantile = 10,
+        ref_prop_pop = subset(data, SECTOR == '21001A00-')$REF
+      )$social_main$difference_value,
+    expected = c(43.3985958, 0.7783631, 24.469600, 0.305009)
+  )
+})
+
 ## WITH USER IMPACT ###############################################
 
 #### WITH REF_PROP_POP #####################
