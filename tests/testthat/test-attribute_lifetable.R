@@ -900,6 +900,56 @@ testthat::test_that("results correct |pathway_lifetable|exp_single|info differin
 
 })
 
+## ERF AS FUNCTION ##############################################################
+# The exposure-response function entered as function must give the same results
+# as AirQ+ (see the test with rr_central and constant exposure above).
+# Before the fix the life table calculations failed because they placed
+# a column after the column rr, which does not exist if erf_eq is entered
+
+testthat::test_that("results correct |pathway_lifetable|erf_eq as function", {
+
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+
+  # Log-linear function equivalent to the relative risk of AirQ+.
+  # The function gets the exposure above the cutoff as argument
+  rr <- data[["input"]]$relative_risk
+
+  cumulative_impact <-
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
+      approach_exposure = "constant",
+      approach_newborns = "with_newborns",
+      exp_central = data[["input"]]$mean_concentration,
+      cutoff_central = data[["input"]]$cut_off_value,
+      erf_eq_central = function(c) { exp(log(rr) * c / 10) },
+      age_group = rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = rep(c("male", "female"), each = 100),
+      population = c(data[["pop"]]$midyear_population_male,
+                     data[["pop"]]$midyear_population_female),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      year_of_analysis = data[["input"]]$start_year,
+      min_age = data[["input"]]$apply_rr_from_age
+    )$health_detailed$results_raw |>
+    dplyr::summarize(impact = sum(impact), .by = c(sex, year)) |>
+    dplyr::arrange(sex, as.numeric(year)) |>
+    dplyr::mutate(impact = cumsum(impact), .by = sex) |>
+    dplyr::pull(impact)
+
+  testthat::expect_equal(
+    object =
+      # 10, 20 and 50 years of each sex (females first)
+      cumulative_impact[c(10, 20, 50, 110, 120, 150)],
+    expected =
+      c(data[["output"]]$value_central_female_yll_over_10_years_all_ages,
+        data[["output"]]$value_central_female_yll_over_20_years_all_ages,
+        data[["output"]]$value_central_female_yll_over_50_years_all_ages,
+        data[["output"]]$value_central_male_yll_over_10_years_all_ages,
+        data[["output"]]$value_central_male_yll_over_20_years_all_ages,
+        data[["output"]]$value_central_male_yll_over_50_years_all_ages),
+    tolerance = 1e-6)
+})
+
 ## TIME HORIZON ################################################################
 testthat::test_that("results correct |pathway_lifetable|time_horizon of 1 year", {
 
