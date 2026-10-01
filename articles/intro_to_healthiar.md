@@ -809,18 +809,18 @@ The columns `erf_ci`, `exp_ci`, `bhd_ci`, and `cutoff_ci` indicate the
 source of uncertainty component used for that simulation (in the first
 10 simulations, all use central estimates).
 
-| geo_id_micro | erf_ci | exp_ci | bhd_ci | cutoff_ci | exp_category | sex | age_group | sim_id | impact | impact_rounded | approach_risk | rr_increment | erf_shape | prop_pop_exp | exp_length | exp_type | cutoff | is_lifetable | geo_id_number | rr | exp | bhd | pop_fraction_type | rr_at_exp | pop_fraction |
-|:---|:---|:---|:---|:---|---:|:---|:---|---:|---:|---:|:---|---:|:---|---:|---:|:---|---:|:---|---:|---:|---:|---:|:---|---:|---:|
-| a | central | central | central | central | 1 | all | all | 1 | 1935.156 | 1935 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.251826 | 7.933793 | 30345.91 | paf | 1.068113 | 0.0637699 |
-| a | central | central | central | central | 1 | all | all | 2 | 4698.352 | 4698 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.430184 | 9.609612 | 30900.10 | paf | 1.179315 | 0.1520498 |
-| a | central | central | central | central | 1 | all | all | 3 | 3722.356 | 3722 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.414326 | 8.826146 | 29967.05 | paf | 1.141833 | 0.1242150 |
-| a | central | central | central | central | 1 | all | all | 4 | 6061.313 | 6061 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.570019 | 9.745453 | 31454.46 | paf | 1.238699 | 0.1927012 |
-| a | central | central | central | central | 1 | all | all | 5 | 4045.348 | 4045 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.479048 | 8.715480 | 29889.41 | paf | 1.156529 | 0.1353439 |
-| a | central | central | central | central | 1 | all | all | 6 | 1756.592 | 1757 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.143280 | 9.464298 | 30272.57 | paf | 1.061600 | 0.0580259 |
-| a | central | central | central | central | 1 | all | all | 7 | 5447.089 | 5447 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.728913 | 8.440255 | 31728.81 | paf | 1.207258 | 0.1716765 |
-| a | central | central | central | central | 1 | all | all | 8 | 2354.822 | 2355 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.202089 | 9.210268 | 31579.59 | paf | 1.080576 | 0.0745678 |
-| a | central | central | central | central | 1 | all | all | 9 | 1699.985 | 1700 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.169202 | 8.728108 | 30028.39 | paf | 1.060010 | 0.0566126 |
-| a | central | central | central | central | 1 | all | all | 10 | 3659.699 | 3660 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.345132 | 9.222098 | 31103.05 | paf | 1.133355 | 0.1176637 |
+| geo_id_micro | erf_ci | exp_ci | bhd_ci | cutoff_ci | exp_category | sex | age_group | sim_id | impact | impact_rounded | approach_risk | rr_increment | erf_shape | prop_pop_exp | exp_length | exp_type | cutoff | is_lifetable | rr | exp | bhd | pop_fraction_type | rr_at_exp | pop_fraction |
+|:---|:---|:---|:---|:---|---:|:---|:---|---:|---:|---:|:---|---:|:---|---:|---:|:---|---:|:---|---:|---:|---:|:---|---:|---:|
+| a | central | central | central | central | 1 | all | all | 1 | 1935.156 | 1935 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.251826 | 7.933793 | 30345.91 | paf | 1.068113 | 0.0637699 |
+| a | central | central | central | central | 1 | all | all | 2 | 4698.352 | 4698 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.430184 | 9.609612 | 30900.10 | paf | 1.179315 | 0.1520498 |
+| a | central | central | central | central | 1 | all | all | 3 | 3722.356 | 3722 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.414326 | 8.826146 | 29967.05 | paf | 1.141833 | 0.1242150 |
+| a | central | central | central | central | 1 | all | all | 4 | 6061.313 | 6061 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.570019 | 9.745453 | 31454.46 | paf | 1.238699 | 0.1927012 |
+| a | central | central | central | central | 1 | all | all | 5 | 4045.348 | 4045 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.479048 | 8.715480 | 29889.41 | paf | 1.156529 | 0.1353439 |
+| a | central | central | central | central | 1 | all | all | 6 | 1756.592 | 1757 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.143280 | 9.464298 | 30272.57 | paf | 1.061600 | 0.0580259 |
+| a | central | central | central | central | 1 | all | all | 7 | 5447.089 | 5447 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.728913 | 8.440255 | 31728.81 | paf | 1.207258 | 0.1716765 |
+| a | central | central | central | central | 1 | all | all | 8 | 2354.822 | 2355 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.202089 | 9.210268 | 31579.59 | paf | 1.080576 | 0.0745678 |
+| a | central | central | central | central | 1 | all | all | 9 | 1699.985 | 1700 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.169202 | 8.728108 | 30028.39 | paf | 1.060010 | 0.0566126 |
+| a | central | central | central | central | 1 | all | all | 10 | 3659.699 | 3660 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.345132 | 9.222098 | 31103.05 | paf | 1.133355 | 0.1176637 |
 
 ## User-defined ERF
 
