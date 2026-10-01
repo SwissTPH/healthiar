@@ -401,6 +401,42 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_for
 
 
 
+#### DIFFERENT ESTIMATES BY GEO UNIT AND AGE GROUP #############################
+
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_TRUE|age_groups", {
+
+  # Each geo unit and age group must be simulated with its own estimates.
+  # The lower and upper estimates are equal to the central ones, so the normal
+  # distribution has no width and every simulation must give the deterministic
+  # impact of each geo unit: bhd * (1 - 1 / rr_at_exp), with the bhd of both
+  # age groups (100 + 10000). Before the fix the simulations of each geo unit
+  # took the exposures of both geo units (5 and 50) and the bhd of both
+  # age groups by turns
+  testthat::expect_equal(
+    object =
+      healthiar::summarize_uncertainty(
+        output_attribute =
+          healthiar::attribute_health(
+            erf_shape = "log_linear",
+            rr_central = 1.1,
+            rr_increment = 10,
+            cutoff_central = 0,
+            geo_id_micro = rep(c("g1", "g2"), each = 2),
+            age_group = rep(c("young", "old"), times = 2),
+            exp_central = rep(c(5, 50), each = 2),
+            exp_lower = rep(c(5, 50), each = 2),
+            exp_upper = rep(c(5, 50), each = 2),
+            bhd_central = rep(c(100, 10000), times = 2),
+            bhd_lower = rep(c(100, 10000), times = 2),
+            bhd_upper = rep(c(100, 10000), times = 2)),
+        n_sim = 100,
+        seed = 123
+      )$uncertainty_main$impact,
+    expected =
+      rep(10100 * (1 - 1 / 1.1^(c(5, 50) / 10)), each = 3)) # c(470.03, 3828.70)
+
+})
+
 #### AGGREGATION BY GEO_ID_MACRO ###############################################
 
 testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_TRUE|", {
