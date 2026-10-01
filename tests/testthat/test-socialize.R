@@ -62,7 +62,11 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
         social_indicator = c(3.5, 7.0),
         n_quantile = 10,
         increasing_deprivation = TRUE)$social_main$difference_value |> round(2),
-    expect = c(37.240, 0.280, 19.470, 0.130) # Results on 25 June 2025
+    # Results on 2026-10-01; no comparison study.
+    # The new values were also checked by hand: impact rate per geo unit
+    # sum(absolute risk / 100 * pop_exp) / population * 1e5, with Bergen
+    # (social_indicator 7) as the first and Stavanger (3.5) as the last quantile
+    expect = c(2030.710, 0.380, 1025.830, 0.160)
   )
 })
 
