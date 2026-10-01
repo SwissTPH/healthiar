@@ -88,8 +88,7 @@ get_impact_with_lifetable <-
 
         # Get modification factor
         # it works with both single exposure and exposure distribution
-        modification_factor = 1 - pop_fraction,
-        .after = rr) |>     
+        modification_factor = 1 - pop_fraction) |>
 
       # CALCULATE PROBABILITY OF SURVIVAL FROM START YEAR TO END YEAR & START YEAR TO MID YEAR
       dplyr::mutate(
