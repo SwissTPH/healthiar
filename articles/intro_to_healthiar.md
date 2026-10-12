@@ -195,7 +195,7 @@ exposure in a country.
 The comparative risk assessment approach (C. J. Murray et al. 2003) is
 applied obtaining the population attributable fraction (percent of cases
 that are attributable to the exposure) based on the relative risk. The
-exposure scenario is compared with a counterfactual scenario.
+exposure scenario is compared with a counter-factual scenario.
 
 This approach has been extensive documented and applied (e.g., WHO 2003;
 Steenland and Armstrong 2006; Soares et al. 2022; Pozzer et al. 2023;
@@ -405,8 +405,8 @@ Therefore, `healthiar` issues an informative warning if both `erf_eq_`
 and a `cutoff_` are specified when using
 [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
 If your absolute risk function is parameterized on raw exposure levels
-rather than on the exposure above the cut-off, see chapter [Shifting the
-ERF](#shifting-the-erf).
+rather than on the exposure above the cut-off, see chapter [Shifted
+vs. unshifted exposure-response functions](#shifted-vs-unshifted-erf).
 
 #### Function call
 
@@ -809,18 +809,18 @@ The columns `erf_ci`, `exp_ci`, `bhd_ci`, and `cutoff_ci` indicate the
 source of uncertainty component used for that simulation (in the first
 10 simulations, all use central estimates).
 
-| geo_id_micro | erf_ci | exp_ci | bhd_ci | cutoff_ci | exp_category | sex | age_group | sim_id | impact | impact_rounded | approach_risk | rr_increment | erf_shape | prop_pop_exp | exp_length | exp_type | cutoff | is_lifetable | rr | exp | bhd | pop_fraction_type | rr_at_exp | pop_fraction |
-|:---|:---|:---|:---|:---|---:|:---|:---|---:|---:|---:|:---|---:|:---|---:|---:|:---|---:|:---|---:|---:|---:|:---|---:|---:|
-| a | central | central | central | central | 1 | all | all | 1 | 1935.156 | 1935 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.251826 | 7.933793 | 30345.91 | paf | 1.068113 | 0.0637699 |
-| a | central | central | central | central | 1 | all | all | 2 | 4698.352 | 4698 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.430184 | 9.609612 | 30900.10 | paf | 1.179315 | 0.1520498 |
-| a | central | central | central | central | 1 | all | all | 3 | 3722.356 | 3722 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.414326 | 8.826146 | 29967.05 | paf | 1.141833 | 0.1242150 |
-| a | central | central | central | central | 1 | all | all | 4 | 6061.313 | 6061 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.570019 | 9.745453 | 31454.46 | paf | 1.238699 | 0.1927012 |
-| a | central | central | central | central | 1 | all | all | 5 | 4045.348 | 4045 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.479048 | 8.715480 | 29889.41 | paf | 1.156529 | 0.1353439 |
-| a | central | central | central | central | 1 | all | all | 6 | 1756.592 | 1757 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.143280 | 9.464298 | 30272.57 | paf | 1.061600 | 0.0580259 |
-| a | central | central | central | central | 1 | all | all | 7 | 5447.089 | 5447 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.728913 | 8.440255 | 31728.81 | paf | 1.207258 | 0.1716765 |
-| a | central | central | central | central | 1 | all | all | 8 | 2354.822 | 2355 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.202089 | 9.210268 | 31579.59 | paf | 1.080576 | 0.0745678 |
-| a | central | central | central | central | 1 | all | all | 9 | 1699.985 | 1700 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.169202 | 8.728108 | 30028.39 | paf | 1.060010 | 0.0566126 |
-| a | central | central | central | central | 1 | all | all | 10 | 3659.699 | 3660 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.345132 | 9.222098 | 31103.05 | paf | 1.133355 | 0.1176637 |
+| geo_id_micro | erf_ci | exp_ci | bhd_ci | cutoff_ci | exp_category | sex | age_group | sim_id | impact | impact_rounded | approach_risk | rr_increment | erf_shape | prop_pop_exp | exp_length | exp_type | cutoff | is_lifetable | geo_id_number | rr | exp | bhd | pop_fraction_type | rr_at_exp | pop_fraction |
+|:---|:---|:---|:---|:---|---:|:---|:---|---:|---:|---:|:---|---:|:---|---:|---:|:---|---:|:---|---:|---:|---:|---:|:---|---:|---:|
+| a | central | central | central | central | 1 | all | all | 1 | 1935.156 | 1935 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.251826 | 7.933793 | 30345.91 | paf | 1.068113 | 0.0637699 |
+| a | central | central | central | central | 1 | all | all | 2 | 4698.352 | 4698 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.430184 | 9.609612 | 30900.10 | paf | 1.179315 | 0.1520498 |
+| a | central | central | central | central | 1 | all | all | 3 | 3722.356 | 3722 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.414326 | 8.826146 | 29967.05 | paf | 1.141833 | 0.1242150 |
+| a | central | central | central | central | 1 | all | all | 4 | 6061.313 | 6061 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.570019 | 9.745453 | 31454.46 | paf | 1.238699 | 0.1927012 |
+| a | central | central | central | central | 1 | all | all | 5 | 4045.348 | 4045 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.479048 | 8.715480 | 29889.41 | paf | 1.156529 | 0.1353439 |
+| a | central | central | central | central | 1 | all | all | 6 | 1756.592 | 1757 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.143280 | 9.464298 | 30272.57 | paf | 1.061600 | 0.0580259 |
+| a | central | central | central | central | 1 | all | all | 7 | 5447.089 | 5447 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.728913 | 8.440255 | 31728.81 | paf | 1.207258 | 0.1716765 |
+| a | central | central | central | central | 1 | all | all | 8 | 2354.822 | 2355 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.202089 | 9.210268 | 31579.59 | paf | 1.080576 | 0.0745678 |
+| a | central | central | central | central | 1 | all | all | 9 | 1699.985 | 1700 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.169202 | 8.728108 | 30028.39 | paf | 1.060010 | 0.0566126 |
+| a | central | central | central | central | 1 | all | all | 10 | 3659.699 | 3660 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1 | 1.345132 | 9.222098 | 31103.05 | paf | 1.133355 | 0.1176637 |
 
 ## User-defined ERF
 
@@ -1221,31 +1221,6 @@ e.g. the relative risk is the same everywhere, which is not the case
 when each pair has its own.
 
 ## YLL & deaths with life table
-
-### All-cause mortality only
-
-The life table approach of
-[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
-is only applicable to **all-cause mortality**. The baseline deaths
-(`bhd_central`) are used for two purposes at the same time: to project
-how the population survives over the years and to obtain the deaths that
-are attributable to the exposure. The projection of the population needs
-the deaths of all causes, so `bhd_central` must contain all-cause deaths
-and the exposure-response function must refer to all-cause mortality.
-
-Cause-specific mortality (e.g. lung cancer) cannot be assessed with
-[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md):
-
-- If only the cause-specific deaths are entered, the projected
-  population hardly dies of any other cause and reaches unrealistically
-  high ages. The YLL and the attributable deaths are then overestimated.
-- If all-cause deaths are entered with a cause-specific
-  exposure-response function, the relative risk is applied to all causes
-  of death, which overestimates the impacts as well.
-
-For cause-specific mortality, the attributable deaths can be obtained
-with
-[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
 
 ### Data preparation
 
@@ -2370,10 +2345,10 @@ unit in column `population_total`.
 #### Goal
 
 E.g., to quantify health impacts with an exposure-response function
-whose effect threshold is lower than the lowest exposure level that the
-assessment quantifies, such as noise assessments in which exposure data
-are only available above 55 dB although health effects already occur at
-lower exposures.
+whose effect threshold differs from the counterfactual exposure of the
+assessment, such as noise assessments in which exposure data are only
+available above 55 dB although health effects already occur at lower
+exposures.
 
 #### Methodology
 
@@ -2383,42 +2358,41 @@ lower exposures.
   which the exposure-response function starts to show an effect. It is
   the anchor of the curve and is therefore subtracted from the exposure.
   The term is used in this sense in health risk assessment guidance,
-  e.g., for environmental noise (Engelmann et al. 2025). Because the
-  risk is expressed relative to the threshold, the threshold is also the
-  **counterfactual exposure** of the assessment, i.e. the exposure of
-  the hypothetical scenario that the actual exposure is compared with
-  (C. J. Murray et al. 2003).
+  e.g., for environmental noise (Engelmann et al. 2025).
 - `cutoff_...` is the exposure level below which no health impacts are
-  quantified. It determines which exposures are assessed, not the level
-  that they are compared with. Usually, the cut-off is assumed to be the
-  effect threshold, and then it is the counterfactual exposure as well.
-  This is how the term is used in health risk assessment guidance, e.g.,
-  for air pollution (WHO 2025), where one single level plays both roles.
+  quantified. As long as it is identical to the effect threshold, it is
+  also the **counterfactual exposure** of the assessment. If it is
+  higher, it only determines which exposures are assessed, while the
+  effect threshold remains the counterfactual exposure. The term is used
+  in this sense in health risk assessment guidance, e.g., for air
+  pollution (WHO 2025). Be aware that a cut-off recommended in guidance
+  documents may reflect the exposure range covered by the evidence
+  rather than a demonstrated no-effect level, i.e. it does not
+  necessarily indicate that there are no health effects below it.
 
+Both levels are usually identical. Therefore it is enough to enter only
+one of them, and the other one takes the same value in the background.
 Accordingly, there are three possible combinations:
 
-**a) Cut-off equal to the effect threshold**
+**1. Cut-off equal to the effect threshold**
 
-This is the default situation. Since both threshold and cut-off are
-usually identical, `healthiar` assumes that the values are the same, if
-one of them is missing. Therefore, in that case, it is enough to enter
-only one value. The exposure-response function is anchored at that
-level, which is therefore subtracted from the exposure, and the
-exposures below it get the risk at the reference level:
+This is the default situation. The exposure-response function is
+anchored at that level, which is therefore subtracted from the exposure,
+and the exposures below it get the risk at the reference level:
 
 ``` math
-rr_{at\_exp} = f(\max(exp, threshold) - threshold)
+rr_{at\_exp} = f(\max(exp, cutoff) - cutoff)
 ```
 
 The same result is obtained by entering only `cutoff_...`, only
 `threshold`, or both with the same value.
 
-**b) Cut-off higher than the effect threshold**
+**2. Cut-off higher than the effect threshold**
 
 The exposure-response function is truncated at the cut-off. The
 exposures above the cut-off are assessed with the risk referring to the
-effect threshold, while the exposures below the cut-off get the risk at
-the reference level:
+effect threshold, while the exposures below the cut-off are treated as
+unexposed:
 
 ``` math
 rr_{at\_exp} =
@@ -2440,7 +2414,7 @@ this results in a step in the exposure-response function at the cut-off
 and that the people exposed between the effect threshold and the cut-off
 get no attributable health impacts (i.e. a conservative estimate).
 
-**c) Cut-off lower than the effect threshold**
+**3. Cut-off lower than the effect threshold**
 
 The cut-off has no effect on the results and `healthiar` shows a
 warning. The reason is that the exposure-response function is anchored
@@ -2508,55 +2482,41 @@ cut-off is clearly visible.
 ![ERF
 curve](intro_to_healthiar_files/figure-html/unnamed-chunk-103-1.png)
 
-## Shifting the ERF
+## Shifted vs. unshifted exposure-response functions
 
 #### Goal
 
-E.g., to know whether a cut-off must be entered when the
-exposure-response function is passed in `erf_eq_...`.
+E.g., to use an exposure-response function published in the literature
+which is parameterized on raw exposure levels instead of on the exposure
+above a cut-off.
 
 #### Methodology
 
 `healthiar` evaluates the exposure-response function entered in
 `erf_eq_...` at $`c = exp - threshold`$, and the threshold takes the
 value of the cut-off if it is not entered (see chapter [Cut-off
-vs. threshold](#cutoff-vs-threshold)). The cut-off therefore moves the
-exposure-response function horizontally. There are two situations:
+vs. threshold](#cutoff-vs-threshold)). Therefore, the cut-off moves the
+exposure-response function horizontally:
 
-**a) Unshifted exposure-response function**
+1.  Shifted exposure-response function. If a cut-off is entered, the
+    exposure-response function is moved by the cut-off,
+    i.e. $`c = exp - cutoff`$. The function must therefore be
+    parameterized on the exposure above the cut-off.
 
-The function is parameterized on raw exposure levels, i.e. it already
-incorporates the cut-off in its definition. Do not enter a `cutoff_...`
-value, so that nothing is subtracted from the exposure,
-i.e. $`c = exp`$.
+2.  Unshifted exposure-response function. If no cut-off is entered,
+    nothing is subtracted from the exposure, i.e. $`c = exp`$. The
+    function must therefore be parameterized on raw exposure levels.
 
-**b) Shifted exposure-response function**
-
-The function is parameterized on the exposure above the cut-off, i.e. it
-does not incorporates the cut-off. Enter a value in the argument(s)
-`cutoff_...`, so that the function is moved horizontally by the cut-off,
-i.e. $`c = exp - cutoff`$.
-
-Be aware that, in case b), `healthiar` shows a warning when a
-`cutoff_...` is entered alongside `approach_risk = "absolute_risk"`,
-because many exposure-response functions published in the literature
-already incorporate the cut-off in the function definition. The warning
-can be ignored here.
+Be aware that `healthiar` shows a warning if both `erf_eq_...` and
+`cutoff_...` are entered, because many exposure-response functions
+published in the literature already incorporate the cut-off in the
+function definition.
 
 #### Function call
 
 ``` r
 
-# Case A: Unshifted exposure-response function
-# The function is parameterized on raw exposure levels
-unshifted_erf <- healthiar::attribute_health(
-  approach_risk = "absolute_risk",
-  exp_central = c(50, 60, 70),
-  pop_exp = c(300000,200000,150000),
-  erf_eq_central = "78.9270 - 3.1162 * c + 0.0342 * c^2"
-)
-
-# Case B: Shifted exposure-response function
+# Case A: Shifted exposure-response function
 # The function is parameterized on the exposure above the cut-off
 shifted_erf <- healthiar::attribute_health(
   approach_risk = "absolute_risk",
@@ -2567,6 +2527,15 @@ shifted_erf <- healthiar::attribute_health(
 )
 #> Warning: You entered a value for: cutoff_central alongside absolute risk.
 #> Be aware that healthiar shifts the exposure in 'erf_eq' as c = (exp - cutoff).
+
+# Case B: Unshifted exposure-response function
+# The function is parameterized on raw exposure levels
+unshifted_erf <- healthiar::attribute_health(
+  approach_risk = "absolute_risk",
+  exp_central = c(50, 60, 70),
+  pop_exp = c(300000,200000,150000),
+  erf_eq_central = "78.9270 - 3.1162 * c + 0.0342 * c^2"
+)
 ```
 
 If you want the exposure-response function to stay unshifted but the
@@ -2930,7 +2899,7 @@ Where:
 - $`last`$ = Average health impacts in *least* deprived quantile.
 
 If you assume that the least deprived areas are similar to
-counterfactual cases (no exposure to deprivation), the relative
+counter-factual cases (no exposure to deprivation), the relative
 difference regarding the overall average health impact could be
 interpreted as some kind of relative risk attributable to social
 inequalities.

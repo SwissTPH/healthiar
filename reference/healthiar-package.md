@@ -38,9 +38,6 @@ Useful links:
 
 Authors:
 
-- Alberto Castro <alberto.castrofernandez@swisstph.ch>
-  ([ORCID](https://orcid.org/0000-0002-4665-3299))
-
 - Axel Luyten ([ORCID](https://orcid.org/0000-0002-7005-5889))
 
 Other contributors:

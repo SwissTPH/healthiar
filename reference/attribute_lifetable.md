@@ -204,11 +204,8 @@ attribute_lifetable(
   keeping the name(s) that you entered with the prefix `info_` (e.g. a
   column `education` becomes `info_education`) if a `data frame` is
   entered, or as one single column called `info` if a vector is entered.
-  Different values define **sub-groups** (e.g. education levels or
-  exposure-outcome pairs), which are assessed separately and summed in
-  the main results unless named in `main_results_by`. Values that only
-  differ by age or sex (e.g. age bands) do not define additional
-  sub-groups. *Optional argument.*
+  These additional columns can be used to further stratify the analysis
+  in a secondary step. *Optional argument.*
 
 - main_results_by:
 
@@ -281,23 +278,12 @@ impacts are underestimated. If needed, condensate the last age group
 instead of adding age groups beyond the data. More information in the
 vignette.
 
-`bhd_central,bhd_lower,bhd_upper` The life table approach is only
-applicable to **all-cause mortality**: the deaths must be all-cause
-deaths and the exposure-response function must refer to all-cause
-mortality. The deaths are used to project how the population survives
-over the years, which requires the deaths of all causes. Cause-specific
-deaths (e.g. lung cancer) would lead to unrealistically high survival
-and therefore to overestimated impacts. For cause-specific mortality,
-use
-[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
-instead. See the vignette chapter *YLL and deaths with life table*.
-
-Deaths per age must be inputted with 1 value per age (i.e. age group
-size = 1 year). There must be greater than or equal to 1 deaths per age
-to avoid issues during the calculation of survival probabilities. If
-zeros show up in the last ages (e.g. age 98 = 0 deaths, 99 years old =
-1), please sum the values and condensate last category (e.g. age 98 =
-1).
+`bhd_central,bhd_lower,bhd_upper` Deaths per age must be inputted with 1
+value per age (i.e. age group size = 1 year). There must be greater than
+or equal to 1 deaths per age to avoid issues during the calculation of
+survival probabilities. If zeros show up in the last ages (e.g. age 98 =
+0 deaths, 99 years old = 1), please sum the values and condensate last
+category (e.g. age 98 = 1).
 
 `population` The population data must be inputted with 1 value per age
 (i.e. age group size = 1 year). The values must be greater than or equal
