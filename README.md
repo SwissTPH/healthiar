@@ -137,7 +137,7 @@ you agree to abide by our [code of conduct](https://github.com/SwissTPH/healthia
 
 
 ## Presenting *healthiar*
-If you would like us to present *healthiar* at a conference, lecture or training, please, contact us: [alberto.castrofernandez@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch) and [axel.luyten@swisstph.ch](mailto:axel.luyten@swisstph.ch).
+If you would like us to present *healthiar* at a conference, lecture or training, please, contact us: [alberto.castrofernandez@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch).
 
 ## Acknowledgements
 *healthiar* was been developed under the framework of EU project BEST-COST. BEST-COST is funded by the European Union’s Horizon Europe programme under Grant Agreement No.101095408.
