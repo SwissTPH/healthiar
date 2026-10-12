@@ -1,4 +1,3 @@
-CITATION.cff 
 cff-version: "1.2.0"
 authors:
 - family-names: Castro
@@ -48,14 +47,14 @@ preferred-citation:
   - family-names: Rueda-López
     given-names: María José
     orcid: "https://orcid.org/0000-0002-2443-1038"
-  - family-names: Pham 
+  - family-names: Pham
     given-names: Minh Nhat
     orcid: "https://orcid.org/0000-0002-5972-1668"
   - family-names: Barbosa
     given-names: Ana
     orcid: "https://orcid.org/0000-0002-9623-9002"
   - family-names: Vasco Santos
-    given-names: João 
+    given-names: João
     orcid: "https://orcid.org/0000-0003-4696-1002"
   - family-names: Kocbach Bølling
     given-names: Anette
