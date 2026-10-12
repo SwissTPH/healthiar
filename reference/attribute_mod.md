@@ -184,8 +184,11 @@ attribute_mod(
   keeping the name(s) that you entered with the prefix `info_` (e.g. a
   column `education` becomes `info_education`) if a `data frame` is
   entered, or as one single column called `info` if a vector is entered.
-  These additional columns can be used to further stratify the analysis
-  in a secondary step. *Optional argument.*
+  Different values define **sub-groups** (e.g. education levels or
+  exposure-outcome pairs), which are assessed separately and summed in
+  the main results unless named in `main_results_by`. Values that only
+  differ by age or sex (e.g. age bands) do not define additional
+  sub-groups. *Optional argument.*
 
 - min_age, max_age:
 

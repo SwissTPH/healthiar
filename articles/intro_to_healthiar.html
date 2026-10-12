@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6.1771</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Vignette: Intro to healthiar</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/SwissTPH/healthiar/blob/v0.2.6/vignettes/intro_to_healthiar.Rmd" class="external-link"><code>vignettes/intro_to_healthiar.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/SwissTPH/healthiar/blob/master/vignettes/intro_to_healthiar.Rmd" class="external-link"><code>vignettes/intro_to_healthiar.Rmd</code></a></small>
       <div class="d-none name"><code>intro_to_healthiar.Rmd</code></div>
     </div>
 
@@ -250,7 +250,7 @@ pollution) exposure in a country.</p>
 J. Murray et al. 2003)</span> is applied obtaining the population
 attributable fraction (percent of cases that are attributable to the
 exposure) based on the relative risk. The exposure scenario is compared
-with a counter-factual scenario.</p>
+with a counterfactual scenario.</p>
 <p>This approach has been extensive documented and applied <span class="citation">(e.g., WHO 2003; Steenland and Armstrong 2006; Soares
 et al. 2022; Pozzer et al. 2023; GBD 2019 Risk Factors Collaborators
 2020; Lehtomäki et al. 2025)</span>.</p>
@@ -456,8 +456,8 @@ informative warning if both <code>erf_eq_</code> and a
 <code>cutoff_</code> are specified when using
 <code><a href="../reference/attribute_health.html">attribute_health()</a></code>. If your absolute risk function is
 parameterized on raw exposure levels rather than on the exposure above
-the cut-off, see chapter <a href="#shifted-vs-unshifted-erf">Shifted
-vs. unshifted exposure-response functions</a>.</p>
+the cut-off, see chapter <a href="#shifting-the-erf">Shifting the
+ERF</a>.</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-1">Function call<a class="anchor" aria-label="anchor" href="#function-call-1"></a>
@@ -1066,14 +1066,13 @@ simulations, all use central estimates).</p>
 <col width="2%">
 <col width="3%">
 <col width="5%">
-<col width="4%">
+<col width="5%">
 <col width="4%">
 <col width="3%">
 <col width="4%">
 <col width="3%">
 <col width="8%">
 <col width="2%">
-<col width="4%">
 <col width="4%">
 <col width="3%">
 <col width="3%">
@@ -1102,7 +1101,6 @@ simulations, all use central estimates).</p>
 <th align="left">exp_type</th>
 <th align="right">cutoff</th>
 <th align="left">is_lifetable</th>
-<th align="right">geo_id_number</th>
 <th align="right">rr</th>
 <th align="right">exp</th>
 <th align="right">bhd</th>
@@ -1131,7 +1129,6 @@ simulations, all use central estimates).</p>
 <td align="left">population_weighted_mean</td>
 <td align="right">5</td>
 <td align="left">FALSE</td>
-<td align="right">1</td>
 <td align="right">1.251826</td>
 <td align="right">7.933793</td>
 <td align="right">30345.91</td>
@@ -1159,7 +1156,6 @@ simulations, all use central estimates).</p>
 <td align="left">population_weighted_mean</td>
 <td align="right">5</td>
 <td align="left">FALSE</td>
-<td align="right">1</td>
 <td align="right">1.430184</td>
 <td align="right">9.609612</td>
 <td align="right">30900.10</td>
@@ -1187,7 +1183,6 @@ simulations, all use central estimates).</p>
 <td align="left">population_weighted_mean</td>
 <td align="right">5</td>
 <td align="left">FALSE</td>
-<td align="right">1</td>
 <td align="right">1.414326</td>
 <td align="right">8.826146</td>
 <td align="right">29967.05</td>
@@ -1215,7 +1210,6 @@ simulations, all use central estimates).</p>
 <td align="left">population_weighted_mean</td>
 <td align="right">5</td>
 <td align="left">FALSE</td>
-<td align="right">1</td>
 <td align="right">1.570019</td>
 <td align="right">9.745453</td>
 <td align="right">31454.46</td>
@@ -1243,7 +1237,6 @@ simulations, all use central estimates).</p>
 <td align="left">population_weighted_mean</td>
 <td align="right">5</td>
 <td align="left">FALSE</td>
-<td align="right">1</td>
 <td align="right">1.479048</td>
 <td align="right">8.715480</td>
 <td align="right">29889.41</td>
@@ -1271,7 +1264,6 @@ simulations, all use central estimates).</p>
 <td align="left">population_weighted_mean</td>
 <td align="right">5</td>
 <td align="left">FALSE</td>
-<td align="right">1</td>
 <td align="right">1.143280</td>
 <td align="right">9.464298</td>
 <td align="right">30272.57</td>
@@ -1299,7 +1291,6 @@ simulations, all use central estimates).</p>
 <td align="left">population_weighted_mean</td>
 <td align="right">5</td>
 <td align="left">FALSE</td>
-<td align="right">1</td>
 <td align="right">1.728913</td>
 <td align="right">8.440255</td>
 <td align="right">31728.81</td>
@@ -1327,7 +1318,6 @@ simulations, all use central estimates).</p>
 <td align="left">population_weighted_mean</td>
 <td align="right">5</td>
 <td align="left">FALSE</td>
-<td align="right">1</td>
 <td align="right">1.202089</td>
 <td align="right">9.210268</td>
 <td align="right">31579.59</td>
@@ -1355,7 +1345,6 @@ simulations, all use central estimates).</p>
 <td align="left">population_weighted_mean</td>
 <td align="right">5</td>
 <td align="left">FALSE</td>
-<td align="right">1</td>
 <td align="right">1.169202</td>
 <td align="right">8.728108</td>
 <td align="right">30028.39</td>
@@ -1383,7 +1372,6 @@ simulations, all use central estimates).</p>
 <td align="left">population_weighted_mean</td>
 <td align="right">5</td>
 <td align="left">FALSE</td>
-<td align="right">1</td>
 <td align="right">1.345132</td>
 <td align="right">9.222098</td>
 <td align="right">31103.05</td>
@@ -1819,6 +1807,31 @@ everywhere, which is not the case when each pair has its own.</p>
 <div class="section level2">
 <h2 id="yll-deaths-with-life-table">YLL &amp; deaths with life table<a class="anchor" aria-label="anchor" href="#yll-deaths-with-life-table"></a>
 </h2>
+<div class="section level3">
+<h3 id="all-cause-mortality-only">All-cause mortality only<a class="anchor" aria-label="anchor" href="#all-cause-mortality-only"></a>
+</h3>
+<p>The life table approach of <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code> is only
+applicable to <strong>all-cause mortality</strong>. The baseline deaths
+(<code>bhd_central</code>) are used for two purposes at the same time:
+to project how the population survives over the years and to obtain the
+deaths that are attributable to the exposure. The projection of the
+population needs the deaths of all causes, so <code>bhd_central</code>
+must contain all-cause deaths and the exposure-response function must
+refer to all-cause mortality.</p>
+<p>Cause-specific mortality (e.g. lung cancer) cannot be assessed with
+<code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>:</p>
+<ul>
+<li>If only the cause-specific deaths are entered, the projected
+population hardly dies of any other cause and reaches unrealistically
+high ages. The YLL and the attributable deaths are then
+overestimated.</li>
+<li>If all-cause deaths are entered with a cause-specific
+exposure-response function, the relative risk is applied to all causes
+of death, which overestimates the impacts as well.</li>
+</ul>
+<p>For cause-specific mortality, the attributable deaths can be obtained
+with <code><a href="../reference/attribute_health.html">attribute_health()</a></code>.</p>
+</div>
 <div class="section level3">
 <h3 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
 </h3>
@@ -3510,10 +3523,10 @@ population in each unit in column <code>population_total</code>.</p>
 <h4 id="goal-19">Goal<a class="anchor" aria-label="anchor" href="#goal-19"></a>
 </h4>
 <p>E.g., to quantify health impacts with an exposure-response function
-whose effect threshold differs from the counterfactual exposure of the
-assessment, such as noise assessments in which exposure data are only
-available above 55 dB although health effects already occur at lower
-exposures.</p>
+whose effect threshold is lower than the lowest exposure level that the
+assessment quantifies, such as noise assessments in which exposure data
+are only available above 55 dB although health effects already occur at
+lower exposures.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-10">Methodology<a class="anchor" aria-label="anchor" href="#methodology-10"></a>
@@ -3525,37 +3538,39 @@ exposures.</p>
 i.e. the exposure level from which the exposure-response function starts
 to show an effect. It is the anchor of the curve and is therefore
 subtracted from the exposure. The term is used in this sense in health
-risk assessment guidance, e.g., for environmental noise <span class="citation">(Engelmann et al. 2025)</span>.</li>
+risk assessment guidance, e.g., for environmental noise <span class="citation">(Engelmann et al. 2025)</span>. Because the risk is
+expressed relative to the threshold, the threshold is also the
+<strong>counterfactual exposure</strong> of the assessment, i.e. the
+exposure of the hypothetical scenario that the actual exposure is
+compared with <span class="citation">(C. J. Murray et al.
+2003)</span>.</li>
 <li>
 <code>cutoff_...</code> is the exposure level below which no health
-impacts are quantified. As long as it is identical to the effect
-threshold, it is also the <strong>counterfactual exposure</strong> of
-the assessment. If it is higher, it only determines which exposures are
-assessed, while the effect threshold remains the counterfactual
-exposure. The term is used in this sense in health risk assessment
+impacts are quantified. It determines which exposures are assessed, not
+the level that they are compared with. Usually, the cut-off is assumed
+to be the effect threshold, and then it is the counterfactual exposure
+as well. This is how the term is used in health risk assessment
 guidance, e.g., for air pollution <span class="citation">(WHO
-2025)</span>. Be aware that a cut-off recommended in guidance documents
-may reflect the exposure range covered by the evidence rather than a
-demonstrated no-effect level, i.e. it does not necessarily indicate that
-there are no health effects below it.</li>
+2025)</span>, where one single level plays both roles.</li>
 </ul>
-<p>Both levels are usually identical. Therefore it is enough to enter
-only one of them, and the other one takes the same value in the
-background. Accordingly, there are three possible combinations:</p>
-<p><strong>1. Cut-off equal to the effect threshold</strong></p>
-<p>This is the default situation. The exposure-response function is
+<p>Accordingly, there are three possible combinations:</p>
+<p><strong>a) Cut-off equal to the effect threshold</strong></p>
+<p>This is the default situation. Since both threshold and cut-off are
+usually identical, <code>healthiar</code> assumes that the values are
+the same, if one of them is missing. Therefore, in that case, it is
+enough to enter only one value. The exposure-response function is
 anchored at that level, which is therefore subtracted from the exposure,
 and the exposures below it get the risk at the reference level:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><msub><mi>r</mi><mrow><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi></mrow></msub><mo>=</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>,</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
-rr_{at\_exp} = f(\max(exp, cutoff) - cutoff)
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><msub><mi>r</mi><mrow><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi></mrow></msub><mo>=</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>,</mo><mi>t</mi><mi>h</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>h</mi><mi>o</mi><mi>l</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>t</mi><mi>h</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>h</mi><mi>o</mi><mi>l</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+rr_{at\_exp} = f(\max(exp, threshold) - threshold)
 </annotation></semantics></math></p>
 <p>The same result is obtained by entering only <code>cutoff_...</code>,
 only <code>threshold</code>, or both with the same value.</p>
-<p><strong>2. Cut-off higher than the effect threshold</strong></p>
+<p><strong>b) Cut-off higher than the effect threshold</strong></p>
 <p>The exposure-response function is truncated at the cut-off. The
 exposures above the cut-off are assessed with the risk referring to the
-effect threshold, while the exposures below the cut-off are treated as
-unexposed:</p>
+effect threshold, while the exposures below the cut-off get the risk at
+the reference level:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><msub><mi>r</mi><mrow><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi></mrow></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>1</mn><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>e</mi><mi>x</mi><mi>p</mi><mo>&lt;</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>t</mi><mi>h</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>h</mi><mi>o</mi><mi>l</mi><mi>d</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>e</mi><mi>x</mi><mi>p</mi><mo>≥</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
 rr_{at\_exp} =
 \begin{cases}
@@ -3573,7 +3588,7 @@ effects already at lower exposures (effect threshold). Be aware that
 this results in a step in the exposure-response function at the cut-off
 and that the people exposed between the effect threshold and the cut-off
 get no attributable health impacts (i.e. a conservative estimate).</p>
-<p><strong>3. Cut-off lower than the effect threshold</strong></p>
+<p><strong>c) Cut-off lower than the effect threshold</strong></p>
 <p>The cut-off has no effect on the results and <code>healthiar</code>
 shows a warning. The reason is that the exposure-response function is
 anchored at the effect threshold, so the exposures below the effect
@@ -3635,14 +3650,13 @@ cut-off is clearly visible.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="shifted-vs-unshifted-erf">Shifted vs. unshifted exposure-response functions<a class="anchor" aria-label="anchor" href="#shifted-vs-unshifted-erf"></a>
+<h2 id="shifting-the-erf">Shifting the ERF<a class="anchor" aria-label="anchor" href="#shifting-the-erf"></a>
 </h2>
 <div class="section level4">
 <h4 id="goal-20">Goal<a class="anchor" aria-label="anchor" href="#goal-20"></a>
 </h4>
-<p>E.g., to use an exposure-response function published in the
-literature which is parameterized on raw exposure levels instead of on
-the exposure above a cut-off.</p>
+<p>E.g., to know whether a cut-off must be entered when the
+exposure-response function is passed in <code>erf_eq_...</code>.</p>
 </div>
 <div class="section level4">
 <h4 id="methodology-11">Methodology<a class="anchor" aria-label="anchor" href="#methodology-11"></a>
@@ -3652,30 +3666,41 @@ entered in <code>erf_eq_...</code> at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>t</mi><mi>h</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>h</mi><mi>o</mi><mi>l</mi><mi>d</mi></mrow><annotation encoding="application/x-tex">c = exp - threshold</annotation></semantics></math>,
 and the threshold takes the value of the cut-off if it is not entered
 (see chapter <a href="#cutoff-vs-threshold">Cut-off vs. threshold</a>).
-Therefore, the cut-off moves the exposure-response function
-horizontally:</p>
-<ol style="list-style-type: decimal">
-<li><p>Shifted exposure-response function. If a cut-off is entered, the
-exposure-response function is moved by the cut-off,
-i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">c = exp - cutoff</annotation></semantics></math>.
-The function must therefore be parameterized on the exposure above the
-cut-off.</p></li>
-<li><p>Unshifted exposure-response function. If no cut-off is entered,
-nothing is subtracted from the exposure,
-i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi>e</mi><mi>x</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">c = exp</annotation></semantics></math>.
-The function must therefore be parameterized on raw exposure
-levels.</p></li>
-</ol>
-<p>Be aware that <code>healthiar</code> shows a warning if both
-<code>erf_eq_...</code> and <code>cutoff_...</code> are entered, because
-many exposure-response functions published in the literature already
-incorporate the cut-off in the function definition.</p>
+The cut-off therefore moves the exposure-response function horizontally.
+There are two situations:</p>
+<p><strong>a) Unshifted exposure-response function</strong></p>
+<p>The function is parameterized on raw exposure levels, i.e. it already
+incorporates the cut-off in its definition. Do not enter a
+<code>cutoff_...</code> value, so that nothing is subtracted from the
+exposure,
+i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi>e</mi><mi>x</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">c = exp</annotation></semantics></math>.</p>
+<p><strong>b) Shifted exposure-response function</strong></p>
+<p>The function is parameterized on the exposure above the cut-off,
+i.e. it does not incorporates the cut-off. Enter a value in the
+argument(s) <code>cutoff_...</code>, so that the function is moved
+horizontally by the cut-off,
+i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">c = exp - cutoff</annotation></semantics></math>.</p>
+<p>Be aware that, in case b), <code>healthiar</code> shows a warning
+when a <code>cutoff_...</code> is entered alongside
+<code>approach_risk = "absolute_risk"</code>, because many
+exposure-response functions published in the literature already
+incorporate the cut-off in the function definition. The warning can be
+ignored here.</p>
 </div>
 <div class="section level4">
 <h4 id="function-call-22">Function call<a class="anchor" aria-label="anchor" href="#function-call-22"></a>
 </h4>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Case A: Shifted exposure-response function</span></span>
+<code class="sourceCode R"><span><span class="co"># Case A: Unshifted exposure-response function</span></span>
+<span><span class="co"># The function is parameterized on raw exposure levels</span></span>
+<span><span class="va">unshifted_erf</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
+<span>  approach_risk <span class="op">=</span> <span class="st">"absolute_risk"</span>,</span>
+<span>  exp_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">60</span>, <span class="fl">70</span><span class="op">)</span>,</span>
+<span>  pop_exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300000</span>,<span class="fl">200000</span>,<span class="fl">150000</span><span class="op">)</span>,</span>
+<span>  erf_eq_central <span class="op">=</span> <span class="st">"78.9270 - 3.1162 * c + 0.0342 * c^2"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Case B: Shifted exposure-response function</span></span>
 <span><span class="co"># The function is parameterized on the exposure above the cut-off</span></span>
 <span><span class="va">shifted_erf</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>  approach_risk <span class="op">=</span> <span class="st">"absolute_risk"</span>,</span>
@@ -3685,16 +3710,7 @@ incorporate the cut-off in the function definition.</p>
 <span>  erf_eq_central <span class="op">=</span> <span class="st">"78.9270 - 3.1162 * (c + 53) + 0.0342 * (c + 53)^2"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: You entered a value for: cutoff_central alongside absolute risk.</span></span>
-<span><span class="co">#&gt; Be aware that healthiar shifts the exposure in 'erf_eq' as c = (exp - cutoff).</span></span>
-<span></span>
-<span><span class="co"># Case B: Unshifted exposure-response function</span></span>
-<span><span class="co"># The function is parameterized on raw exposure levels</span></span>
-<span><span class="va">unshifted_erf</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
-<span>  approach_risk <span class="op">=</span> <span class="st">"absolute_risk"</span>,</span>
-<span>  exp_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">60</span>, <span class="fl">70</span><span class="op">)</span>,</span>
-<span>  pop_exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300000</span>,<span class="fl">200000</span>,<span class="fl">150000</span><span class="op">)</span>,</span>
-<span>  erf_eq_central <span class="op">=</span> <span class="st">"78.9270 - 3.1162 * c + 0.0342 * c^2"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt; Be aware that healthiar shifts the exposure in 'erf_eq' as c = (exp - cutoff).</span></span></code></pre></div>
 <p>If you want the exposure-response function to stay unshifted but the
 exposures below a given level not to be quantified, enter a
 <code>cutoff_...</code> value higher than the <code>threshold</code>
@@ -4056,7 +4072,7 @@ Where:</p>
 = Average health impacts in <em>least</em> deprived quantile.</li>
 </ul>
 <p>If you assume that the least deprived areas are similar to
-counter-factual cases (no exposure to deprivation), the relative
+counterfactual cases (no exposure to deprivation), the relative
 difference regarding the overall average health impact could be
 interpreted as some kind of relative risk attributable to social
 inequalities.</p>

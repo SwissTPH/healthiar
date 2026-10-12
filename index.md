@@ -192,8 +192,7 @@ conduct](https://github.com/SwissTPH/healthiar?tab=coc-ov-file).
 ## Presenting *healthiar*
 
 If you would like us to present *healthiar* at a conference, lecture or
-training, please, contact us: <alberto.castrofernandez@swisstph.ch> and
-<axel.luyten@swisstph.ch>.
+training, please, contact us: <alberto.castrofernandez@swisstph.ch>.
 
 ## Acknowledgements
 
@@ -203,7 +202,8 @@ programme under Grant Agreement No.101095408.
 
 Special thanks to our community members who submitted bug reports,
 suggested improvements, and provided valuable feedback to refine this
-package. Here some of them in alphabetical order: Federico Cussotto,
-Georgia Dyer, Brecht Devleesschauwer, Nicole Engelmann, Aletta Karsies,
-Sasha Kohmenkho, Heli Lehtomäki, Matthias Lochman, Enrico Pisoni, David
-Rojas Rueda & Maciek Strak.
+package. Here some of them in alphabetical order: Adrian Aebi, Gaia
+Corbetta, Federico Cussotto, Georgia Dyer, Brecht Devleesschauwer,
+Nicole Engelmann, Aletta Karsies, Sasha Kohmenkho, Heli Lehtomäki,
+Matthias Lochman, Enrico Pisoni, David Rojas Rueda, Jörg Sintermann and
+Maciek Strak.
