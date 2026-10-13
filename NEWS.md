@@ -1,5 +1,46 @@
 Main changes but not complete list. For this propose see Github commits.
 
+# healthiar v0.2.7
+* 12 October 2026
+
+## Bug Fixes
+- summarize_uncertainty() simulated all rows with the mean of the whole 
+input vector. Now each row (e.g. each age group or geographic unit) is 
+simulated with its own central, lower and upper estimates.
+- attribute_lifetable() split one life table into pieces if the exposure or 
+the info differed by age (e.g. an exposure distribution by age group), 
+so that the cohorts did not get older from one piece to the next. 
+Now the life tables are only identified by geographic unit, sex, 
+uncertainty and info that differs within the same age.
+- attribute_lifetable() showed an error if erf_eq was entered as a function.
+- attribute_lifetable() did not detect an age missing in only one life table 
+(e.g. only for males). Now the error names the life table concerned.
+- prepare_lifetable() produced negative deaths at high hazard rates, 
+because the probability of dying in one single year was not consistent 
+with the hazard rate entered by the user.
+- In attribute_health() with absolute risk and an exposure distribution, 
+the population was summed across exposure categories and therefore 
+impact_per_100k_inhab was underestimated. The same happened in multiexpose(), 
+where the population was summed across exposures.
+- multiexpose() merged the exposures across sub-groups defined in info 
+(e.g. urban and rural). Now the exposures are merged within each sub-group.
+- compare() silently used the exposure-response function of scenario 2 in 
+both scenarios when erf_eq was entered as a function. Now an error is shown 
+if the functions differ.
+- socialize() summed the central, lower and upper estimates if the output 
+of attribute_health() had uncertainty. Now only the central estimates are used.
+
+## Documentation
+- attribute_lifetable() documents that the life table approach is only 
+applicable to all-cause mortality.
+- prepare_lifetable() documents how to enter an open-ended last age group.
+- The argument info documents how its values define sub-groups.
+- Edits in the vignette chapters on cut-off vs. threshold and on shifting 
+the exposure-response function.
+
+## Testing
+- 11 additional internal tests. Now a total of 464 tests.
+
 # healthiar v0.2.6
 * 11 September 2026
 
