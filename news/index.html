@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6.1771</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,33 @@
       <small>Source: <a href="https://github.com/SwissTPH/healthiar/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.7" id="healthiar-v027">healthiar v0.2.7<a class="anchor" aria-label="anchor" href="#healthiar-v027"></a></h2><p class="text-muted">CRAN release: 2026-10-12</p>
+<ul><li>12 October 2026</li>
+</ul><div class="section level3">
+<h3 id="bug-fixes-0-2-7">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-7"></a></h3>
+<ul><li>summarize_uncertainty() simulated all rows with the mean of the whole input vector. Now each row (e.g. each age group or geographic unit) is simulated with its own central, lower and upper estimates.</li>
+<li>attribute_lifetable() split one life table into pieces if the exposure or the info differed by age (e.g. an exposure distribution by age group), so that the cohorts did not get older from one piece to the next. Now the life tables are only identified by geographic unit, sex, uncertainty and info that differs within the same age.</li>
+<li>attribute_lifetable() showed an error if erf_eq was entered as a function.</li>
+<li>attribute_lifetable() did not detect an age missing in only one life table (e.g. only for males). Now the error names the life table concerned.</li>
+<li>prepare_lifetable() produced negative deaths at high hazard rates, because the probability of dying in one single year was not consistent with the hazard rate entered by the user.</li>
+<li>In attribute_health() with absolute risk and an exposure distribution, the population was summed across exposure categories and therefore impact_per_100k_inhab was underestimated. The same happened in multiexpose(), where the population was summed across exposures.</li>
+<li>multiexpose() merged the exposures across sub-groups defined in info (e.g. urban and rural). Now the exposures are merged within each sub-group.</li>
+<li>compare() silently used the exposure-response function of scenario 2 in both scenarios when erf_eq was entered as a function. Now an error is shown if the functions differ.</li>
+<li>socialize() summed the central, lower and upper estimates if the output of attribute_health() had uncertainty. Now only the central estimates are used.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-2-7">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-2-7"></a></h3>
+<ul><li>attribute_lifetable() documents that the life table approach is only applicable to all-cause mortality.</li>
+<li>prepare_lifetable() documents how to enter an open-ended last age group.</li>
+<li>The argument info documents how its values define sub-groups.</li>
+<li>Edits in the vignette chapters on cut-off vs. threshold and on shifting the exposure-response function.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="testing-0-2-7">Testing<a class="anchor" aria-label="anchor" href="#testing-0-2-7"></a></h3>
+<ul><li>11 additional internal tests. Now a total of 464 tests.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.6" id="healthiar-v026">healthiar v0.2.6<a class="anchor" aria-label="anchor" href="#healthiar-v026"></a></h2><p class="text-muted">CRAN release: 2026-09-11</p>
 <ul><li>11 September 2026</li>

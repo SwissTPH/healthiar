@@ -61,11 +61,10 @@ spaces.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may
 be reported  
-at <alberto.castrofernandez@swisstph.ch> or/and
-<axel.luyten@swisstph.ch>. All complaints will be reviewed and
-investigated **promptly and fairly**. *healthiar* maintainers are
-obligated to respect the privacy and security of the reporter of any
-incident.
+at <alberto.castrofernandez@swisstph.ch>. All complaints will be
+reviewed and investigated **promptly and fairly**. *healthiar*
+maintainers are obligated to respect the privacy and security of the
+reporter of any incident.
 
 ## Attribution
 
