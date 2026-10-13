@@ -52,7 +52,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/SwissTPH/healthiar/blob/master/inst/CITATION)
+[`inst/CITATION`](https://github.com/SwissTPH/healthiar/blob/v0.2.7/inst/CITATION)
 
 Castro A, Luyten A, Pauwels A, Fernández LV, Ardielli G, Pimenta I,
 Breitner S, Baravelli C, Gorasso V, Lepnurm M, Novais A, Rueda-López MJ,
