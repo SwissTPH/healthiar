@@ -139,6 +139,12 @@ you agree to abide by our [code of conduct](https://github.com/SwissTPH/healthia
 ## Presenting *healthiar*
 If you would like us to present *healthiar* at a conference, lecture or training, please, contact us: [alberto.castrofernandez@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch).
 
+## Use of AI
+Parts of the development of *healthiar* were assisted by the artificial 
+intelligence (AI) tool [Claude](https://claude.com/product/claude-code) (Anthropic).
+For this reason, Claude appears in the list of GitHub contributors.
+All AI-assisted changes were reviewed and approved by the *healthiar* developers.
+
 ## Acknowledgements
 *healthiar* was been developed under the framework of EU project BEST-COST. BEST-COST is funded by the European Union’s Horizon Europe programme under Grant Agreement No.101095408.
 
