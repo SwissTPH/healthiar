@@ -146,7 +146,7 @@ For this reason, Claude appears in the list of GitHub contributors.
 All AI-assisted changes were reviewed and approved by the *healthiar* developers.
 
 ## Acknowledgements
-*healthiar* was been developed under the framework of EU project BEST-COST. BEST-COST is funded by the European Union’s Horizon Europe programme under Grant Agreement No.101095408.
+*healthiar* was developed under the framework of EU project BEST-COST. BEST-COST was funded by the European Union’s Horizon Europe programme under Grant Agreement No.101095408.
 
 Special thanks to our community members who submitted bug reports, 
 suggested improvements, and provided valuable feedback to refine this package. 
@@ -155,3 +155,4 @@ Adrian Aebi, Gaia Corbetta, Federico Cussotto, Georgia Dyer, Brecht Devleesschau
 Nicole Engelmann, Aletta Karsies, Sasha Kohmenkho, Heli Lehtomäki, 
 Matthias Lochman, Enrico Pisoni, David Rojas Rueda, 
 Jörg Sintermann and Maciek Strak.
+
