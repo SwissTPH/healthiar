@@ -194,11 +194,19 @@ conduct](https://github.com/SwissTPH/healthiar?tab=coc-ov-file).
 If you would like us to present *healthiar* at a conference, lecture or
 training, please, contact us: <alberto.castrofernandez@swisstph.ch>.
 
+## Use of AI
+
+Parts of the development of *healthiar* were assisted by the artificial
+intelligence (AI) tool [Claude](https://claude.com/product/claude-code)
+(Anthropic). For this reason, Claude appears in the list of GitHub
+contributors. All AI-assisted changes were reviewed and approved by the
+*healthiar* developers.
+
 ## Acknowledgements
 
-*healthiar* was been developed under the framework of EU project
-BEST-COST. BEST-COST is funded by the European Union’s Horizon Europe
-programme under Grant Agreement No.101095408.
+*healthiar* was developed under the framework of EU project BEST-COST.
+BEST-COST was funded by the European Union’s Horizon Europe programme
+under Grant Agreement No.101095408.
 
 Special thanks to our community members who submitted bug reports,
 suggested improvements, and provided valuable feedback to refine this
