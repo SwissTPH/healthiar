@@ -1752,7 +1752,7 @@ Where:
 ##### Population weighted mean concentration form
 Finally, if the exposure is provided as the population weighted mean concentration, the equation for the PIF is reduced to:
 
-$$PIF = \frac{rr\_at\_exp - rr\_at\_exp_{alt}}{rr}$$
+$$PIF = \frac{rr\_at\_exp - rr\_at\_exp_{alt}}{rr\_at\_exp}$$
 
 Where:
 
