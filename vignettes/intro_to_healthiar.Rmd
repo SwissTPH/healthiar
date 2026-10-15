@@ -2145,7 +2145,7 @@ and the results are the same as if only `threshold` had been entered.
 
 ### Function call
 
-The example below refers to case 2 above:
+The example below refers to case b) above (cut-off higher than the effect threshold):
 health impacts in the exposure group 55 dB+ (cut-off)
 that are affected by an exposure above the effect threshold of 45 dB.
 
