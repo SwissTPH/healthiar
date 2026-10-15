@@ -41,7 +41,7 @@ spatial_packages_available <-
   requireNamespace("exactextractr", quietly = TRUE)
 ```
 
-This vignette introduces *healthiar* and shows how to use it with the help of examples.
+This vignette introduces *healthiar* and shows how to use it with the help of examples. In addition, the descriptions of the [*healthiar* functions](https://swisstph.github.io/healthiar/reference/index.html) include short examples for every function, also for helper functions that this vignette only mentions (e.g. `get_risk()`, `get_paf()` or `discount()`). You can execute them (with *healthiar* loaded) by running `example("function_name")`, e.g. `example("get_risk")`.
 
 Before using *healthiar*, please read the [README](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) or the [package website](https://swisstph.github.io/healthiar/). By using *healthiar*, you agree to its [disclaimer and license](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#disclaimer-and-license).
 
@@ -159,12 +159,7 @@ There exist different, equivalent ways of accessing the output:
 
 ---------------------------------------------------------------------------
 
-# Function examples
-
-The descriptions of the [*healthiar* functions](https://swisstph.github.io/healthiar/reference/index.html) provide examples that you can execute (with *healthiar* loaded) by running `example("function_name")`, e.g. `example("attribute_health")`. In the sections below in this vignette, you find additional examples and more detailed explanations.
-
-
-# Relative risk 
+# Relative risk
 
 ### Goal
 
