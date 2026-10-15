@@ -47,18 +47,16 @@ Read the vignette (~ package manual) *intro_to_healthiar*, which you can access:
 
 a) on the [package website](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html) (recommended)
 
-b) in RStudio: Click on the *Packages* tab, scroll down to the *healthiar* package and click on the hyperlinks *healthiar* > *User guides, package vignettes and other documentation* 
+b) in the R console: Run `vignette("intro_to_healthiar")`
 
 c) in the web browser: Run `browseVignettes("healthiar")` in the R console and the page will open up in your browser
 
 ### Function documentation
-See the function help pages for information about specific functions. In RStudio, you can access the function documentation of e.g. the function `attribute_health` by
+See the function help pages for information about specific functions. You can access the function documentation of e.g. the function `attribute_health` by
 
 a) going to the [reference page of the package website](https://swisstph.github.io/healthiar/reference/index.html)
 
-b) running `?attribute_health` in RStudio (with `healthiar` loaded)
-
-c) going to the `Packages tab` and then clicking on `healthiar`
+b) running `?attribute_health` in the R console (with `healthiar` loaded)
 
 ### Video
 Watch a 45-minute video from an online international workshop (30 September 2025), which can be found [here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ). 
@@ -82,18 +80,11 @@ We recommend frequently installing the newest *healthiar* version.
 Please note that **`healthiar` requires R version 4.2.0 or higher**. 
 There are two options to install *healthiar*:
 
-a) **From CRAN**: 
-
-1.- Click on the *Packages* tab in RStudio and on the *Install* button. 
-
-2.- Leave the *Install from:* option set to *Repository (CRAN)*.
-
-3.- Search and select *healthiar*.
-
-4.- Click on *Install* keeping *Install dependencies* activated.
+a) **From CRAN**: Run the following command in R:  
+`install.packages("healthiar")`
 
 b) **From GitHub (most recent version)**: Run the following commands 
-in RStudio:
+in R:
 
 1.- Install the package `remotes` (if not already installed):  
 `install.packages("remotes")`
