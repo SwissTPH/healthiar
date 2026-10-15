@@ -353,17 +353,6 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
   knitr::kable()
 ```
 
-**Important**: If the equation of the exposure-response function (`erf_eq_...`) 
-requires taking a maximum in a vectorised context, `pmax()` must be used instead of `max()`. `pmax()` 
-should be used whenever an element-wise maximum is required (the output will be a vector), 
-while `max()` returns a single global maximum for the entire vector. For example:
-
-```{r eval=FALSE, include=TRUE, echo=TRUE}
-erf_eq_central <- 
-  "exp(0.2969*log((pmax(0,c-2.4)/1.9+1))/(1+exp(-(pmax(0,c-2.4)-12)/40.2)))"  
-```
-
-
 ### Example 2: one exposure category
 
 Alternatively, it's also possible to only assess the absolute risk impacts
@@ -390,6 +379,18 @@ results_noise_ha[["health_main"]] |>
 
 ```{r eval=TRUE, include=FALSE, echo=FALSE}
 rm(results_noise_ha)
+```
+
+### Notes
+
+**Important**: If the equation of the exposure-response function (`erf_eq_...`)
+requires taking a maximum in a vectorised context, `pmax()` must be used instead of `max()`. `pmax()`
+should be used whenever an element-wise maximum is required (the output will be a vector),
+while `max()` returns a single global maximum for the entire vector. For example:
+
+```{r eval=FALSE, include=TRUE, echo=TRUE}
+erf_eq_central <-
+  "exp(0.2969*log((pmax(0,c-2.4)/1.9+1))/(1+exp(-(pmax(0,c-2.4)-12)/40.2)))"
 ```
 
 In the following chapters, only the code to access the results is shown.
@@ -994,7 +995,7 @@ rm(output_attribute, output_stratified)
 
 To quantify the health impacts of several exposure-outcome pairs, or of the same pair with different relative risks, in one single function call.
 
-### Parallel analyses, not sub-groups
+### Methods
 
 As explained in the chapter *Sub-group analysis*, the impacts of the sub-groups
 are summed by default, so only the total per geographic unit is shown in
@@ -1079,7 +1080,9 @@ output_sensitivity$health_main |>
   print()
 ```
 
-### Which dimensions can be entered
+### Notes
+
+#### Which dimensions can be entered
 
 `main_results_by` is available in both `attribute_health()` and
 `attribute_lifetable()`. It accepts:
@@ -1099,7 +1102,7 @@ total that you would get without the argument.
 A name that is not available in the assessment produces an error listing the
 options, so a typo in a column name of `info` cannot pass unnoticed.
 
-### Limitations
+#### Limitations
 
 All pairs in one call must use the same way of defining the exposure-response
 function, i.e. either `rr_...` or `erf_eq_...` for all of them, and the same
