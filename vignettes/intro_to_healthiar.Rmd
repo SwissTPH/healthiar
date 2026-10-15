@@ -405,7 +405,7 @@ rm(results_noise_ha)
 
 ### Goal 
 
-E.g., to quantify the disease cases attributable to PM2.5 exposure in multiple cities using one single command.
+E.g., to quantify the disease cases attributable to PM2.5 exposure in multiple geographic units (cities, regions, cantons...) using one single command.
 
 
 ### Function call
@@ -431,7 +431,7 @@ results_iteration <- attribute_health(
 )
 ```
 
-In this example we want to aggregate the lower-level geographic units (municipalities) by the higher-level language region (`"German", "French", "Italian"`).
+In this example we want to aggregate the lower-level geographic units (cantons) by the higher-level language region (`"German", "French", "Italian"`).
 
 ### Main results
 
@@ -447,7 +447,7 @@ results_iteration[["health_main"]] |>
   knitr::kable()
 ```
 
-In this case `health_main` contains the cumulative / summed number of stroke cases attributable to PM2.5 exposure in the 5 geo units, which is `r sum(results_iteration[["health_main"]]$impact_rounded)` (using a relative risk of 1.369).
+In this case `health_main` contains the number of disease cases attributable to PM2.5 exposure summed by language region. In total, the 5 cantons have `r sum(results_iteration[["health_main"]]$impact_rounded)` attributable cases (using a relative risk of 1.369).
 
 ### Detailed results
 
