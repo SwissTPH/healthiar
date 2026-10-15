@@ -7,7 +7,7 @@
 #' years of life lost (YLL) and years lived with disability (YLD).
 #'
 # ARGUMENTS ####################################################################
-#' @param output_attribute_yll,output_attribute_yld \code{variable} containing YLL or YLD results of a \code{attribute_...()} function call, respectively.
+#' @param output_attribute_yll,output_attribute_yld \code{variable} containing YLL or YLD results of a \code{attribute_...()} function call, respectively. Alternatively, the outputs of \code{compare()} with YLL and YLD, respectively, to obtain the difference in DALY between two scenarios.
 #'
 # DETAILS ######################################################################
 #' @details
@@ -21,7 +21,7 @@
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#dalys}{dalys}}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#daly}{DALY}}
 #'
 # VALUE ########################################################################
 #' @returns
