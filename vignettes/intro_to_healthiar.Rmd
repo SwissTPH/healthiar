@@ -188,37 +188,37 @@ This approach has been extensive documented and applied [e.g., @WHO2003_report;
 #### Population attributable fraction
 General integral form for the **population attributable fraction (PAF)**:
 
-$$PAF = \frac{\int rr\_at\_exp(x) \times PE(x)dx - 1}{\int rr\_at\_exp(x) \times pop\_exp(x)dx}$$
+$$PAF = \frac{\int rr\_at\_exp(x) \times prop\_pop\_exp(x)dx - 1}{\int rr\_at\_exp(x) \times prop\_pop\_exp(x)dx}$$
 
 Where:
 
 * $x$ = exposure level
 
-* $PE(x)$ = population distribution of exposure
+* $prop\_pop\_exp(x)$ = proportion of the population exposed at exposure level $x$
 
-* $rr\_at\exp(x)$ = relative risk at exposure level compared to reference
+* $rr\_at\_exp(x)$ = relative risk at exposure level compared to the reference level
 
 ##### Simplified for categorical exposure distribution
 If exposure is categorical, the integrals are converted to sums:
 
-$$PAF = \frac{\sum rr\_at\_exp_i \times PE_i - 1}{\sum rr\_at\_exp_i \times PE_i}$$
+$$PAF = \frac{\sum rr\_at\_exp_i \times prop\_pop\_exp_i - 1}{\sum rr\_at\_exp_i \times prop\_pop\_exp_i}$$
 
 Alternatively, an equivalent form is:
 
-$$PAF = \frac{\sum PE_i \times (rr\_at\_exp_i - 1)}{\sum PE_i\times (rr\_at\_exp_i - 1) + 1}$$
+$$PAF = \frac{\sum prop\_pop\_exp_i \times (rr\_at\_exp_i - 1)}{\sum prop\_pop\_exp_i\times (rr\_at\_exp_i - 1) + 1}$$
 
 `healthiar` uses this second form, which is the one published as Formula 3 in
 [ETC HE Report 2023/11](https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2023-11-environmental-noise-health-risk-assessment-methodology-for-assessing-health-risks-using-data-reported-under-the-environmental-noise-directive).
-Note that $PE_i$ is the proportion of the **total** population in the exposure
-category $i$, so the $PE_i$ do **not** have to add up to 1: the part of the
+Note that $prop\_pop\_exp_i$ is the proportion of the **total** population in the exposure
+category $i$, so the $prop\_pop\_exp_i$ do **not** have to add up to 1: the part of the
 population that they do not cover is treated as unexposed, i.e. it gets the
 relative risk of the reference level. In air pollution assessments everybody is
-usually exposed and the $PE_i$ add up to 1, whereas in noise assessments they
+usually exposed and the $prop\_pop\_exp_i$ add up to 1, whereas in noise assessments they
 typically add up to less than 1, because exposure is only reported above a
 given level. Accordingly, the baseline health data entered in `bhd_...` must
 always refer to the total population. The first form above divides by
-$\sum rr\_at\_exp_i \times PE_i$ instead and is therefore only equivalent when
-$\sum PE_i = 1$.
+$\sum rr\_at\_exp_i \times prop\_pop\_exp_i$ instead and is therefore only equivalent when
+$\sum prop\_pop\_exp_i = 1$.
 
 ##### Simplified for single exposure value 
 If there is one single single exposure value, corresponding to the population weighted mean concentration, the equation can be simplified as follows: 
