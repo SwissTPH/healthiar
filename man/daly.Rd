@@ -7,7 +7,7 @@
 daly(output_attribute_yll, output_attribute_yld)
 }
 \arguments{
-\item{output_attribute_yll, output_attribute_yld}{\code{variable} containing YLL or YLD results of a \code{attribute_...()} function call, respectively.}
+\item{output_attribute_yll, output_attribute_yld}{\code{variable} containing YLL or YLD results of a \code{attribute_...()} function call, respectively. Alternatively, the outputs of \code{compare()} with YLL and YLD, respectively, to obtain the difference in DALY between two scenarios.}
 }
 \value{
 This function returns a \code{list} containing:
@@ -43,7 +43,7 @@ Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
 \itemize{
- \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#dalys}{dalys}}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#daly}{DALY}}
 }
 \examples{
 # Goal: obtain DALY (disability-adjusted life years) from two existing \code{attribute_...} outputs
