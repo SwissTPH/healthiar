@@ -39,15 +39,15 @@ Want to know as soon as a new *healthiar* version is released? See [Stay updated
 You have different materials to learn about the R package `healthiar`.
 
 ### Cheat sheet
-Have a quick and visual look at the [cheat sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html)
+Have a quick and visual look at the [cheat sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html):
 [![Package Cheatsheet](man/figures/cheatsheet_healthiar_1st_page.png)](https://swisstph.github.io/healthiar/articles/cheatsheet.html)
 
 ### Vignette
-Read the vignette (~ package manual) *intro_to_healthiar*, which you can access
+Read the vignette (~ package manual) *intro_to_healthiar*, which you can access:
 
 a) on the [package website](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html) (recommended)
 
-b) in R Studio: Click on the *Packages* tab in RStudio, scroll down to the *healthiar* package and clicking on the hyperlinks *healthiar* > *User guides, package vignettes and other documentation* 
+b) in RStudio: Click on the *Packages* tab, scroll down to the *healthiar* package and click on the hyperlinks *healthiar* > *User guides, package vignettes and other documentation* 
 
 c) in the web browser: Run `browseVignettes("healthiar")` in the R console and the page will open up in your browser
 
@@ -61,7 +61,7 @@ b) running `?attribute_health` in RStudio (with `healthiar` loaded)
 c) going to the `Packages tab` and then clicking on `healthiar`
 
 ### Video
-Watch a 45 minutes video from an online international workshop (30 September 2025), which can be found [here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ). 
+Watch a 45-minute video from an online international workshop (30 September 2025), which can be found [here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ). 
 The slides of the presentation can be found [here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop).
 
 ### Stay updated
@@ -86,13 +86,13 @@ a) **From CRAN**:
 
 1.- Click on the *Packages* tab in RStudio and on the *Install* button. 
 
-2.- Leave the *Install from:* option set to *Reporsitory (CRAN)*.
+2.- Leave the *Install from:* option set to *Repository (CRAN)*.
 
 3.- Search and select *healthiar*.
 
 4.- Click on *Install* keeping *Install dependencies* activated.
 
-b) **From Github (most recent version)**: Run the following commands below 
+b) **From GitHub (most recent version)**: Run the following commands 
 in RStudio:
 
 1.- Install the package `remotes` (if not already installed):  
@@ -101,7 +101,7 @@ in RStudio:
 2.- Install `healthiar`: 
 `remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE, dependencies = TRUE)`
 
-Note that you may be prompted to install or update additional packages dependencies 
+Note that you may be prompted to install or update additional package dependencies 
 required by `healthiar`.
 
 **After installation**, do not forget to load the package by running the call 
@@ -125,14 +125,14 @@ b) License: Available [here](https://github.com/SwissTPH/healthiar?tab=GPL-3.0-1
 
 ## Contributions
 We welcome your contributions! 
-Do you want to report a bug, provide code or just make a question/comment? 
-Please, read and follow the guidelines of our [guide for contributions](https://github.com/SwissTPH/healthiar?tab=contributing-ov-file)
+Do you want to report a bug, provide code or just ask a question or leave a comment? 
+Please read and follow the guidelines of our [guide for contributions](https://github.com/SwissTPH/healthiar?tab=contributing-ov-file).
 By contributing to *healthiar*,
 you agree to abide by our [code of conduct](https://github.com/SwissTPH/healthiar?tab=coc-ov-file).
 
 
 ## Presenting *healthiar*
-If you would like us to present *healthiar* at a conference, lecture or training, please, contact us: [alberto.castrofernandez@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch).
+If you would like us to present *healthiar* at a conference, lecture or training, please contact us: [alberto.castrofernandez@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch).
 
 ## Use of AI
 Parts of the development of *healthiar* were assisted by the artificial 
@@ -141,11 +141,11 @@ For this reason, Claude appears in the list of GitHub contributors.
 All AI-assisted changes were reviewed and approved by the *healthiar* developers.
 
 ## Acknowledgements
-*healthiar* was developed under the framework of EU project BEST-COST. BEST-COST was funded by the European Union’s Horizon Europe programme under Grant Agreement No.101095408.
+*healthiar* was developed under the framework of the EU project BEST-COST. BEST-COST was funded by the European Union’s Horizon Europe programme under Grant Agreement No. 101095408.
 
 Special thanks to our community members who submitted bug reports, 
 suggested improvements, and provided valuable feedback to refine this package. 
-Here some of them in alphabetical order:
+Here are some of them in alphabetical order:
 Adrian Aebi, Gaia Corbetta, Federico Cussotto, Brecht Devleesschauwer, Georgia Dyer, 
 Nicole Engelmann, Aletta Karsies, Sasha Kohmenkho, Heli Lehtomäki, 
 Matthias Lochman, Enrico Pisoni, David Rojas Rueda, 
