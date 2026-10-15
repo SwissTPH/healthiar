@@ -36,7 +36,7 @@ Want to know as soon as a new *healthiar* version is released? See [Stay updated
 
 ## Installation
 We recommend frequently installing the newest *healthiar* version. 
-Please note that **_healthiar_ requires R version 4.2.0 or higher**. 
+**_healthiar_ requires R version 4.2.0 or higher**. 
 There are two options to install *healthiar*:
 
 a) **From CRAN**: Run the following command in R:
@@ -52,10 +52,10 @@ install.packages("remotes") # Only if not already installed
 remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE, dependencies = TRUE)
 ```
 
-Note that you may be prompted to install or update additional package dependencies 
+You may be prompted to install or update additional package dependencies 
 required by *healthiar*.
 
-**After installation**, do not forget to load the package:
+After installation, load the package:
 
 ```r
 library(healthiar)

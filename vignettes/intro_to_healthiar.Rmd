@@ -349,7 +349,7 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
   knitr::kable()
 ```
 
-Remember, that if the equation of the exposure-response function (`erf_eq_...`) 
+**Important**: If the equation of the exposure-response function (`erf_eq_...`) 
 requires taking a maximum in a vectorised context, `pmax()` must be used instead of `max()`. `pmax()` 
 should be used whenever an element-wise maximum is required (the output will be a vector), 
 while `max()` returns a single global maximum for the entire vector. For example:
@@ -485,7 +485,7 @@ results_iteration_ar <- attribute_health(
 )
 ```
 
-*Note*: the length of the input vectors fed to `geo_id_micro`, `exp_central`, `pop_exp` must match and must be
+**Important**: The length of the input vectors fed to `geo_id_micro`, `exp_central`, `pop_exp` must match and must be
 
 (number of geo units) x (number of exposure categories) = 2 x 5 = **10**,
 
@@ -573,9 +573,7 @@ Each row contains the estimated attributable cases (`impact_rounded`) obtained b
 
 -   ...
 
-*Note*: only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_raw$impact)` possible combinations are displayed due to space constraints.
-
-*Note*: only a selection of columns are shown.
+Only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_raw$impact)` possible combinations and a selection of columns are shown.
 
 
 ## Monte Carlo simulation
@@ -633,7 +631,7 @@ since for a normal distribution the 95% CI spans approximately two standard devi
 As these four variables cannot be negative, the distribution is truncated at zero,
 i.e. negative values are discarded and drawn again until they are positive.
 
-Please note that the normal distribution is symmetric.
+**Important**: The normal distribution is symmetric.
 Therefore, the simulated values reproduce the entered confidence interval only
 if the entered `_lower` and `_upper` values are symmetric around the `_central` value.
 Only the width of the entered confidence interval is used, not its shape.
@@ -872,7 +870,7 @@ A single vector (or a data frame / tibble with multiple columns) to group the re
 
 In a second step one can group the results based on one or more columns and so summarize the results by the preferred sub-groups. 
 
-Be aware that, if the argument `info` is a data frame or tibble, the columns in the `info` argument are renamed adding the prefix `info_`. If the argument `info` is a vector, the column in the results is called `info`. 
+*Note*: If the argument `info` is a data frame or tibble, the columns in the `info` argument are renamed adding the prefix `info_`. If the argument `info` is a vector, the column in the results is called `info`. 
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_attribute <- healthiar::attribute_health(
@@ -1399,11 +1397,11 @@ Attributable YLL results
 
 are available.
 
-*Note*: We will inspect the results for females; male results are also available.
+Below, the results for females are shown; the results for males are also available.
 
 ### Results per year
 
-*Note*: only a selection of years is shown.
+Only a selection of years is shown.
 
 ```{r eval=FALSE}
 results_pm_yll$health_detailed$results_raw |>
@@ -1541,7 +1539,7 @@ Attributable premature deaths results
 
 are available.
 
-*Note*: We inspect below the results for females; male results are also available.
+Below, the results for females are shown; the results for males are also available.
 
 *Note*: Because the function argument `approach_exposure` is not specified in this example, the default `approach_exposure = "single_year"` is used and the premature deaths refer to one year (the year of analysis). If you set `approach_exposure = "constant"`, results are projected and accumulated across the full time horizon.
 
@@ -1713,9 +1711,8 @@ for scenario 1 and 2 (e.g., comparison of two scenarios at the same time point),
 while the delta comparison approach, the difference between two scenarios is obtained by subtraction. 
 Therefore, the delta approach is suited for comparison of scenarios in different time points.
 
-*IMPORTANT* 
-If your aim is to quantify health impacts from a *policy intervention*, 
-be aware that you should use the *same year of analysis* 
+**Important**: If your aim is to quantify health impacts from a *policy intervention*, 
+you should use the *same year of analysis* 
 and therefore *same health baseline data* in both scenarios. 
 The only variable that should change in the second scenario is the exposure 
 (change as a result of the intervention).
@@ -1856,7 +1853,7 @@ $$rr\_at\_exp_{multiplicative} = rr\_at\_exp_{exposure1} * rr\_at\_exp_{exposure
 
 $$PAF_{combined} = 1-[(1-PAF_{exposure1}) \times (1-PAF_{exposure2})]$$
 
-*Attention*: To apply any of these approaches, the relative risks for one exposure must be adjusted for the second exposure and the way round.
+**Important**: To apply any of these approaches, the relative risks for one exposure must be adjusted for the second exposure and vice versa.
 
 
 ### Function call
@@ -2249,7 +2246,7 @@ Enter a value in the argument(s) `cutoff_...`,
 so that the function is moved horizontally by the cut-off,
 i.e. $c = exp - cutoff$.
 
-Be aware that, in case b), *healthiar* shows a warning when a `cutoff_...`
+*Note*: In case b), *healthiar* shows a warning when a `cutoff_...`
 is entered alongside `approach_risk = "absolute_risk"`, because many
 exposure-response functions published in the literature already incorporate
 the cut-off in the function definition. The warning can be ignored here.
