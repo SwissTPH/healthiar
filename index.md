@@ -49,8 +49,8 @@ exposures, such as air pollution or noise, in a study area. Using
 ## Installation
 
 We recommend frequently installing the newest *healthiar* version.
-***healthiar* requires R version 4.2.0 or higher**. There are two
-options to install *healthiar*:
+*healthiar* requires R version 4.2.0 or higher. There are two options to
+install *healthiar*:
 
 1.  **From CRAN**: Run the following command in R:
 

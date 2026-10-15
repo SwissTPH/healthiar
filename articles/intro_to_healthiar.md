@@ -203,8 +203,7 @@ Figure: Relative risk approach
 
 ##### Population attributable fraction
 
-General integral form for the **population attributable fraction
-(PAF)**:
+General integral form for the population attributable fraction (PAF):
 
 ``` math
 PAF = \frac{\int rr\_at\_exp(x) \times prop\_pop\_exp(x)dx - 1}{\int rr\_at\_exp(x) \times prop\_pop\_exp(x)dx}
@@ -237,9 +236,9 @@ PAF = \frac{\sum prop\_pop\_exp_i \times (rr\_at\_exp_i - 1)}{\sum prop\_pop\_ex
 *healthiar* uses this second form, which is the one published as Formula
 3 in [ETC HE Report
 2023/11](https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2023-11-environmental-noise-health-risk-assessment-methodology-for-assessing-health-risks-using-data-reported-under-the-environmental-noise-directive).
-Note that $`prop\_pop\_exp_i`$ is the proportion of the **total**
+Note that $`prop\_pop\_exp_i`$ is the proportion of the *total*
 population in the exposure category $`i`$, so the $`prop\_pop\_exp_i`$
-do **not** have to add up to 1: the part of the population that they do
+do *not* have to add up to 1: the part of the population that they do
 not cover is treated as unexposed, i.e. it gets the relative risk of the
 reference level. In air pollution assessments everybody is usually
 exposed and the $`prop\_pop\_exp_i`$ add up to 1, whereas in noise
@@ -642,8 +641,7 @@ results_iteration_ar <- attribute_health(
 **Important**: The length of the input vectors fed to `geo_id_micro`,
 `exp_central`, `pop_exp` must match and must be
 
-(number of geo units) x (number of exposure categories) = 2 x 5 =
-**10**,
+(number of geo units) x (number of exposure categories) = 2 x 5 = 10,
 
 because we have 2 geo units (`"rural"` and `"urban"`) and 5 exposure
 categories.
@@ -815,16 +813,6 @@ assumes the following shapes of the distributions in the simulations:
   i.e. negative values are discarded and drawn again until they are
   positive.
 
-**Important**: The normal distribution is symmetric. Therefore, the
-simulated values reproduce the entered confidence interval only if the
-entered `_lower` and `_upper` values are symmetric around the `_central`
-value. Only the width of the entered confidence interval is used, not
-its shape. The more asymmetric the entered confidence interval, the more
-the simulated values will depart from it. Moreover, if the entered
-confidence interval is so wide that a relevant share of the distribution
-falls below zero, the truncation at zero shifts the simulated central
-estimate above the entered `_central` value.
-
 - Disability weights: The values are simulated based on a *beta*
   distribution, as both the disability weights and the beta distribution
   are bounded by 0 and 1. The beta distribution best fitting the
@@ -912,6 +900,19 @@ results_pm_copd_summarized$uncertainty_detailed$impact_by_sim
 | a | central | central | central | central | 1 | all | all | 9 | 1699.985 | 1700 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.169202 | 8.728108 | 30028.39 | paf | 1.060010 | 0.0566126 |
 | a | central | central | central | central | 1 | all | all | 10 | 3659.699 | 3660 | relative_risk | 10 | log_linear | 1 | 1 | population_weighted_mean | 5 | FALSE | 1.345132 | 9.222098 | 31103.05 | paf | 1.133355 | 0.1176637 |
 
+#### Notes
+
+**Important**: The normal distribution used for exposure, cutoff,
+baseline health data and duration is symmetric. Therefore, the simulated
+values reproduce the entered confidence interval only if the entered
+`_lower` and `_upper` values are symmetric around the `_central` value.
+Only the width of the entered confidence interval is used, not its
+shape. The more asymmetric the entered confidence interval, the more the
+simulated values will depart from it. Moreover, if the entered
+confidence interval is so wide that a relevant share of the distribution
+falls below zero, the truncation at zero shifts the simulated central
+estimate above the entered `_central` value.
+
 ## User-defined ERF
 
 #### Goal
@@ -961,7 +962,7 @@ Every sub-group stratifies the assessment: by age group, by sex, or by
 anything entered in `info`, such as education level. What differs is
 what happens to that stratification in the main results.
 
-For the sub-groups in this chapter the impacts are **summed**, so the
+For the sub-groups in this chapter the impacts are *summed*, so the
 stratification disappears from `health_main` and only the total per
 geographic unit is shown. It is still available in the `results_by_...`
 tables of the detailed output, and that is usually what you want: the
@@ -975,9 +976,9 @@ exposure-outcome pairs do not: PM2.5 and mortality and NO2 and asthma
 cover the *same* whole population, so they are parallel analyses rather
 than parts of one. Adding them up counts the same people twice.
 
-Those dimensions therefore have to be **kept** in the main results,
-which is what the argument `main_results_by` does. See the chapter
-*Multiple exposure-outcome pairs*.
+Those dimensions therefore have to be *kept* in the main results, which
+is what the argument `main_results_by` does. See the chapter *Multiple
+exposure-outcome pairs*.
 
 ### by age group
 
@@ -1093,9 +1094,9 @@ group the results by can be entered to the `info` argument.
 In a second step one can group the results based on one or more columns
 and so summarize the results by the preferred sub-groups.
 
-*Note*: If the argument `info` is a data frame or tibble, the columns in
-the `info` argument are renamed adding the prefix `info_`. If the
-argument `info` is a vector, the column in the results is called `info`.
+If the argument `info` is a data frame or tibble, the columns in the
+`info` argument are renamed adding the prefix `info_`. If the argument
+`info` is a vector, the column in the results is called `info`.
 
 ``` r
 
@@ -1298,15 +1299,15 @@ and
 [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md).
 It accepts:
 
-- the **columns of `info`**, using the names that you gave them
+- the columns of `info`, using the names that you gave them
   (e.g. `"pair"`), or `"info"` itself if you entered a vector instead of
   a data frame;
-- the arguments **`sex`**, **`age_group`**, **`exp_category`**,
-  **`geo_id_micro`** and **`geo_id_macro`**;
+- the arguments `sex`, `age_group`, `exp_category`, `geo_id_micro` and
+  `geo_id_macro`;
 - in
   [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
-  also **`year`**, i.e. the years of the time horizon, which are
-  otherwise added up.
+  also `year`, i.e. the years of the time horizon, which are otherwise
+  added up.
 
 For example, `main_results_by = "sex"` shows one row per sex in
 `health_main` instead of the total across sexes. This changes nothing in
@@ -1348,7 +1349,7 @@ when each pair has its own.
 
 The life table approach of
 [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
-is only applicable to **all-cause mortality**. The baseline deaths
+is only applicable to *all-cause mortality*. The baseline deaths
 (`bhd_central`) are used for two purposes at the same time: to project
 how the population survives over the years and to obtain the deaths that
 are attributable to the exposure. The projection of the population needs
@@ -2007,12 +2008,11 @@ are available.
 Below, the results for females are shown; the results for males are also
 available.
 
-*Note*: Because the function argument `approach_exposure` is not
-specified in this example, the default
-`approach_exposure = "single_year"` is used and the premature deaths
-refer to one year (the year of analysis). If you set
-`approach_exposure = "constant"`, results are projected and accumulated
-across the full time horizon.
+Because the function argument `approach_exposure` is not specified in
+this example, the default `approach_exposure = "single_year"` is used
+and the premature deaths refer to one year (the year of analysis). If
+you set `approach_exposure = "constant"`, results are projected and
+accumulated across the full time horizon.
 
 ``` r
 
@@ -2234,12 +2234,6 @@ point), while the delta comparison approach, the difference between two
 scenarios is obtained by subtraction. Therefore, the delta approach is
 suited for comparison of scenarios in different time points.
 
-**Important**: If your aim is to quantify health impacts from a *policy
-intervention*, you should use the *same year of analysis* and therefore
-*same health baseline data* in both scenarios. The only variable that
-should change in the second scenario is the exposure (change as a result
-of the intervention).
-
 ##### Population Impact Fraction (PIF)
 
 The Population Impact Fraction (PIF) is defined as the proportional
@@ -2375,6 +2369,14 @@ already seen:
   - `scen_1` contains results of scenario 1 (scenario A in our case)
 
   - `scen_2` contains results of scenario 2 (scenario B in our case)
+
+#### Notes
+
+**Important**: If your aim is to quantify health impacts from a *policy
+intervention*, you should use the *same year of analysis* and therefore
+*same health baseline data* in both scenarios. The only variable that
+should change in the second scenario is the exposure (change as a result
+of the intervention).
 
 ## Two correlated exposures
 
@@ -2632,15 +2634,15 @@ exposure-response function.
 
 *healthiar* distinguishes two exposure levels:
 
-- `threshold` is the **effect threshold**, i.e. the exposure level from
+- `threshold` is the effect threshold, i.e. the exposure level from
   which the exposure-response function starts to show an effect. It is
   the anchor of the curve and is therefore subtracted from the exposure.
   The term is used in this sense in health risk assessment guidance,
   e.g., for environmental noise (Engelmann et al. 2025). Because the
   risk is expressed relative to the threshold, the threshold is also the
-  **counterfactual exposure** of the assessment, i.e. the exposure of
-  the hypothetical scenario that the actual exposure is compared with
-  (C. J. Murray et al. 2003).
+  counterfactual exposure of the assessment, i.e. the exposure of the
+  hypothetical scenario that the actual exposure is compared with (C. J.
+  Murray et al. 2003).
 - `cutoff_...` is the exposure level below which no health impacts are
   quantified. It determines which exposures are assessed, not the level
   that they are compared with. Usually, the cut-off is assumed to be the
@@ -2792,8 +2794,8 @@ does not incorporate the cut-off. Enter a value in the argument(s)
 `cutoff_...`, so that the function is moved horizontally by the cut-off,
 i.e. $`c = exp - cutoff`$.
 
-*Note*: In case b), *healthiar* shows a warning when a `cutoff_...` is
-entered alongside `approach_risk = "absolute_risk"`, because many
+In case b), *healthiar* shows a warning when a `cutoff_...` is entered
+alongside `approach_risk = "absolute_risk"`, because many
 exposure-response functions published in the literature already
 incorporate the cut-off in the function definition. The warning can be
 ignored here.
@@ -3358,7 +3360,7 @@ mdi <- prepare_mdi(
 )
 ```
 
-*Note*: `verbose = FALSE` suppresses any output to the console (default:
+`verbose = FALSE` suppresses any output to the console (default:
 `verbose = TRUE`, i.e. with printing turned on).
 
 ##### Main results

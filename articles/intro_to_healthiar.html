@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1780</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1782</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -250,8 +250,8 @@ et al. 2022; Pozzer et al. 2023; GBD 2019 Risk Factors Collaborators
 <div class="section level5">
 <h5 id="population-attributable-fraction">Population attributable fraction<a class="anchor" aria-label="anchor" href="#population-attributable-fraction"></a>
 </h5>
-<p>General integral form for the <strong>population attributable
-fraction (PAF)</strong>:</p>
+<p>General integral form for the population attributable fraction
+(PAF):</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>A</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mo>∫</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mi>d</mi><mi>x</mi><mo>−</mo><mn>1</mn></mrow><mrow><mo>∫</mo><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mi>d</mi><mi>x</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">PAF = \frac{\int rr\_at\_exp(x) \times prop\_pop\_exp(x)dx - 1}{\int rr\_at\_exp(x) \times prop\_pop\_exp(x)dx}</annotation></semantics></math></p>
 <p>Where:</p>
 <ul>
@@ -275,15 +275,15 @@ level</p></li>
 as Formula 3 in <a href="https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2023-11-environmental-noise-health-risk-assessment-methodology-for-assessing-health-risks-using-data-reported-under-the-environmental-noise-directive" class="external-link">ETC
 HE Report 2023/11</a>. Note that
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">prop\_pop\_exp_i</annotation></semantics></math>
-is the proportion of the <strong>total</strong> population in the
-exposure category
+is the proportion of the <em>total</em> population in the exposure
+category
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>,
 so the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">prop\_pop\_exp_i</annotation></semantics></math>
-do <strong>not</strong> have to add up to 1: the part of the population
-that they do not cover is treated as unexposed, i.e. it gets the
-relative risk of the reference level. In air pollution assessments
-everybody is usually exposed and the
+do <em>not</em> have to add up to 1: the part of the population that
+they do not cover is treated as unexposed, i.e. it gets the relative
+risk of the reference level. In air pollution assessments everybody is
+usually exposed and the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>p</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">prop\_pop\_exp_i</annotation></semantics></math>
 add up to 1, whereas in noise assessments they typically add up to less
 than 1, because exposure is only reported above a given level.
@@ -775,7 +775,7 @@ attributable to noise exposure in a rural and an urban area.</p>
 <code>geo_id_micro</code>, <code>exp_central</code>,
 <code>pop_exp</code> must match and must be</p>
 <p>(number of geo units) x (number of exposure categories) = 2 x 5 =
-<strong>10</strong>,</p>
+10,</p>
 <p>because we have 2 geo units (<code>"rural"</code> and
 <code>"urban"</code>) and 5 exposure categories.</p>
 </div>
@@ -1020,19 +1020,7 @@ since for a normal distribution the 95% CI spans approximately two
 standard deviations on either side of the mean. As these four variables
 cannot be negative, the distribution is truncated at zero, i.e. negative
 values are discarded and drawn again until they are positive.</p></li>
-</ul>
-<p><strong>Important</strong>: The normal distribution is symmetric.
-Therefore, the simulated values reproduce the entered confidence
-interval only if the entered <code>_lower</code> and <code>_upper</code>
-values are symmetric around the <code>_central</code> value. Only the
-width of the entered confidence interval is used, not its shape. The
-more asymmetric the entered confidence interval, the more the simulated
-values will depart from it. Moreover, if the entered confidence interval
-is so wide that a relevant share of the distribution falls below zero,
-the truncation at zero shifts the simulated central estimate above the
-entered <code>_central</code> value.</p>
-<ul>
-<li>Disability weights: The values are simulated based on a
+<li><p>Disability weights: The values are simulated based on a
 <em>beta</em> distribution, as both the disability weights and the beta
 distribution are bounded by 0 and 1. The beta distribution best fitting
 the inputted central disability weight estimate and corresponding lower
@@ -1043,7 +1031,7 @@ and upper 95% confidence interval values is fitted using
 R function <code>prevalence::beta_expert</code> with permission of one
 of the authors <span class="citation">(Devleesschauwer et al.
 2022)</span>. Finally, <code>n_sim</code> disability weight values are
-simulated using <code><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">stats::rbeta()</a></code>.</li>
+simulated using <code><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">stats::rbeta()</a></code>.</p></li>
 </ul>
 <p>For stability of the 95% confidence interval, a large number of
 simulations (e.g., 10,000) is recommended in practice. The example below
@@ -1451,6 +1439,21 @@ simulations, all use central estimates).</p>
 </table>
 </div>
 </div>
+<div class="section level4">
+<h4 id="notes-1">Notes<a class="anchor" aria-label="anchor" href="#notes-1"></a>
+</h4>
+<p><strong>Important</strong>: The normal distribution used for
+exposure, cutoff, baseline health data and duration is symmetric.
+Therefore, the simulated values reproduce the entered confidence
+interval only if the entered <code>_lower</code> and <code>_upper</code>
+values are symmetric around the <code>_central</code> value. Only the
+width of the entered confidence interval is used, not its shape. The
+more asymmetric the entered confidence interval, the more the simulated
+values will depart from it. Moreover, if the entered confidence interval
+is so wide that a relevant share of the distribution falls below zero,
+the truncation at zero shifts the simulated central estimate above the
+entered <code>_central</code> value.</p>
+</div>
 </div>
 </div>
 <div class="section level2">
@@ -1499,13 +1502,12 @@ used to create the ERF</p>
 <p>Every sub-group stratifies the assessment: by age group, by sex, or
 by anything entered in <code>info</code>, such as education level. What
 differs is what happens to that stratification in the main results.</p>
-<p>For the sub-groups in this chapter the impacts are
-<strong>summed</strong>, so the stratification disappears from
-<code>health_main</code> and only the total per geographic unit is
-shown. It is still available in the <code>results_by_...</code> tables
-of the detailed output, and that is usually what you want: the total
-across education levels, or across age groups, is a meaningful
-number.</p>
+<p>For the sub-groups in this chapter the impacts are <em>summed</em>,
+so the stratification disappears from <code>health_main</code> and only
+the total per geographic unit is shown. It is still available in the
+<code>results_by_...</code> tables of the detailed output, and that is
+usually what you want: the total across education levels, or across age
+groups, is a meaningful number.</p>
 <p>Not every dimension of an assessment is a sub-group in this sense,
 though. A stratification splits one population into parts that add up to
 the whole, which is exactly why summing them is meaningful. Different
@@ -1513,9 +1515,9 @@ exposure-outcome pairs do not: PM2.5 and mortality and NO2 and asthma
 cover the <em>same</em> whole population, so they are parallel analyses
 rather than parts of one. Adding them up counts the same people
 twice.</p>
-<p>Those dimensions therefore have to be <strong>kept</strong> in the
-main results, which is what the argument <code>main_results_by</code>
-does. See the chapter <em>Multiple exposure-outcome pairs</em>.</p>
+<p>Those dimensions therefore have to be <em>kept</em> in the main
+results, which is what the argument <code>main_results_by</code> does.
+See the chapter <em>Multiple exposure-outcome pairs</em>.</p>
 <div class="section level3">
 <h3 id="by-age-group">by age group<a class="anchor" aria-label="anchor" href="#by-age-group"></a>
 </h3>
@@ -1668,10 +1670,10 @@ group the results by can be entered to the <code>info</code>
 argument.</p>
 <p>In a second step one can group the results based on one or more
 columns and so summarize the results by the preferred sub-groups.</p>
-<p><em>Note</em>: If the argument <code>info</code> is a data frame or
-tibble, the columns in the <code>info</code> argument are renamed adding
-the prefix <code>info_</code>. If the argument <code>info</code> is a
-vector, the column in the results is called <code>info</code>.</p>
+<p>If the argument <code>info</code> is a data frame or tibble, the
+columns in the <code>info</code> argument are renamed adding the prefix
+<code>info_</code>. If the argument <code>info</code> is a vector, the
+column in the results is called <code>info</code>.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output_attribute</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>    rr_central <span class="op">=</span> <span class="fl">1.063</span>,</span>
@@ -1867,7 +1869,7 @@ the relative risks of two different studies.</p>
 </div>
 </div>
 <div class="section level4">
-<h4 id="notes-1">Notes<a class="anchor" aria-label="anchor" href="#notes-1"></a>
+<h4 id="notes-2">Notes<a class="anchor" aria-label="anchor" href="#notes-2"></a>
 </h4>
 <div class="section level5">
 <h5 id="which-dimensions-can-be-entered">Which dimensions can be entered<a class="anchor" aria-label="anchor" href="#which-dimensions-can-be-entered"></a>
@@ -1876,17 +1878,14 @@ the relative risks of two different studies.</p>
 <code><a href="../reference/attribute_health.html">attribute_health()</a></code> and <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>.
 It accepts:</p>
 <ul>
-<li>the <strong>columns of <code>info</code></strong>, using the names
-that you gave them (e.g. <code>"pair"</code>), or <code>"info"</code>
-itself if you entered a vector instead of a data frame;</li>
-<li>the arguments <strong><code>sex</code></strong>,
-<strong><code>age_group</code></strong>,
-<strong><code>exp_category</code></strong>,
-<strong><code>geo_id_micro</code></strong> and
-<strong><code>geo_id_macro</code></strong>;</li>
-<li>in <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code> also
-<strong><code>year</code></strong>, i.e. the years of the time horizon,
-which are otherwise added up.</li>
+<li>the columns of <code>info</code>, using the names that you gave them
+(e.g. <code>"pair"</code>), or <code>"info"</code> itself if you entered
+a vector instead of a data frame;</li>
+<li>the arguments <code>sex</code>, <code>age_group</code>,
+<code>exp_category</code>, <code>geo_id_micro</code> and
+<code>geo_id_macro</code>;</li>
+<li>in <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code> also <code>year</code>,
+i.e. the years of the time horizon, which are otherwise added up.</li>
 </ul>
 <p>For example, <code>main_results_by = "sex"</code> shows one row per
 sex in <code>health_main</code> instead of the total across sexes. This
@@ -1925,7 +1924,7 @@ everywhere, which is not the case when each pair has its own.</p>
 <h2 id="yll-deaths-with-life-table">YLL &amp; deaths with life table<a class="anchor" aria-label="anchor" href="#yll-deaths-with-life-table"></a>
 </h2>
 <p>The life table approach of <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code> is only
-applicable to <strong>all-cause mortality</strong>. The baseline deaths
+applicable to <em>all-cause mortality</em>. The baseline deaths
 (<code>bhd_central</code>) are used for two purposes at the same time:
 to project how the population survives over the years and to obtain the
 deaths that are attributable to the exposure. The projection of the
@@ -2794,10 +2793,10 @@ impacts).</p>
 <p>are available.</p>
 <p>Below, the results for females are shown; the results for males are
 also available.</p>
-<p><em>Note</em>: Because the function argument
-<code>approach_exposure</code> is not specified in this example, the
-default <code>approach_exposure = "single_year"</code> is used and the
-premature deaths refer to one year (the year of analysis). If you set
+<p>Because the function argument <code>approach_exposure</code> is not
+specified in this example, the default
+<code>approach_exposure = "single_year"</code> is used and the premature
+deaths refer to one year (the year of analysis). If you set
 <code>approach_exposure = "constant"</code>, results are projected and
 accumulated across the full time horizon.</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
@@ -3278,11 +3277,6 @@ data for scenario 1 and 2 (e.g., comparison of two scenarios at the same
 time point), while the delta comparison approach, the difference between
 two scenarios is obtained by subtraction. Therefore, the delta approach
 is suited for comparison of scenarios in different time points.</p>
-<p><strong>Important</strong>: If your aim is to quantify health impacts
-from a <em>policy intervention</em>, you should use the <em>same year of
-analysis</em> and therefore <em>same health baseline data</em> in both
-scenarios. The only variable that should change in the second scenario
-is the exposure (change as a result of the intervention).</p>
 <div class="section level5">
 <h5 id="population-impact-fraction-pif">Population Impact Fraction (PIF)<a class="anchor" aria-label="anchor" href="#population-impact-fraction-pif"></a>
 </h5>
@@ -3470,6 +3464,15 @@ our case)</p></li>
 </li>
 </ul>
 </div>
+</div>
+<div class="section level4">
+<h4 id="notes-3">Notes<a class="anchor" aria-label="anchor" href="#notes-3"></a>
+</h4>
+<p><strong>Important</strong>: If your aim is to quantify health impacts
+from a <em>policy intervention</em>, you should use the <em>same year of
+analysis</em> and therefore <em>same health baseline data</em> in both
+scenarios. The only variable that should change in the second scenario
+is the exposure (change as a result of the intervention).</p>
 </div>
 </div>
 <div class="section level2">
@@ -3768,16 +3771,14 @@ threshold of the exposure-response function.</p>
 <p><em>healthiar</em> distinguishes two exposure levels:</p>
 <ul>
 <li>
-<code>threshold</code> is the <strong>effect threshold</strong>,
-i.e. the exposure level from which the exposure-response function starts
-to show an effect. It is the anchor of the curve and is therefore
-subtracted from the exposure. The term is used in this sense in health
-risk assessment guidance, e.g., for environmental noise <span class="citation">(Engelmann et al. 2025)</span>. Because the risk is
+<code>threshold</code> is the effect threshold, i.e. the exposure
+level from which the exposure-response function starts to show an
+effect. It is the anchor of the curve and is therefore subtracted from
+the exposure. The term is used in this sense in health risk assessment
+guidance, e.g., for environmental noise <span class="citation">(Engelmann et al. 2025)</span>. Because the risk is
 expressed relative to the threshold, the threshold is also the
-<strong>counterfactual exposure</strong> of the assessment, i.e. the
-exposure of the hypothetical scenario that the actual exposure is
-compared with <span class="citation">(C. J. Murray et al.
-2003)</span>.</li>
+counterfactual exposure of the assessment, i.e. the exposure of the
+hypothetical scenario that the actual exposure is compared with <span class="citation">(C. J. Murray et al. 2003)</span>.</li>
 <li>
 <code>cutoff_...</code> is the exposure level below which no health
 impacts are quantified. It determines which exposures are assessed, not
@@ -3917,7 +3918,7 @@ i.e. it does not incorporate the cut-off. Enter a value in the
 argument(s) <code>cutoff_...</code>, so that the function is moved
 horizontally by the cut-off,
 i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mi>c</mi><mi>u</mi><mi>t</mi><mi>o</mi><mi>f</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">c = exp - cutoff</annotation></semantics></math>.</p>
-<p><em>Note</em>: In case b), <em>healthiar</em> shows a warning when a
+<p>In case b), <em>healthiar</em> shows a warning when a
 <code>cutoff_...</code> is entered alongside
 <code>approach_risk = "absolute_risk"</code>, because many
 exposure-response functions published in the literature already
@@ -4479,9 +4480,9 @@ heating) and split it into deciles.</p>
 <span>  n_quantile <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><em>Note</em>: <code>verbose = FALSE</code> suppresses any output to
-the console (default: <code>verbose = TRUE</code>, i.e. with printing
-turned on).</p>
+<p><code>verbose = FALSE</code> suppresses any output to the console
+(default: <code>verbose = TRUE</code>, i.e. with printing turned
+on).</p>
 </div>
 <div class="section level5">
 <h5 id="main-results-19">Main results<a class="anchor" aria-label="anchor" href="#main-results-19"></a>
