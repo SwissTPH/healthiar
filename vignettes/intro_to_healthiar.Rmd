@@ -647,16 +647,6 @@ since for a normal distribution the 95% CI spans approximately two standard devi
 As these four variables cannot be negative, the distribution is truncated at zero,
 i.e. negative values are discarded and drawn again until they are positive.
 
-**Important**: The normal distribution is symmetric.
-Therefore, the simulated values reproduce the entered confidence interval only
-if the entered `_lower` and `_upper` values are symmetric around the `_central` value.
-Only the width of the entered confidence interval is used, not its shape.
-The more asymmetric the entered confidence interval,
-the more the simulated values will depart from it.
-Moreover, if the entered confidence interval is so wide that a relevant share of
-the distribution falls below zero, the truncation at zero shifts
-the simulated central estimate above the entered `_central` value.
-
 - Disability weights: The values are simulated based on a *beta* distribution, 
 as both the disability weights and the beta distribution are bounded by 0 and 1. 
 The beta distribution best fitting the inputted central disability weight estimate and 
@@ -726,6 +716,19 @@ results_pm_copd_summarized$uncertainty_detailed$impact_by_sim |>
 ```{r, echo=FALSE, eval=TRUE, include=FALSE}
 rm(results_pm_copd_summarized)
 ```
+
+### Notes
+
+**Important**: The normal distribution used for exposure, cutoff,
+baseline health data and duration is symmetric.
+Therefore, the simulated values reproduce the entered confidence interval only
+if the entered `_lower` and `_upper` values are symmetric around the `_central` value.
+Only the width of the entered confidence interval is used, not its shape.
+The more asymmetric the entered confidence interval,
+the more the simulated values will depart from it.
+Moreover, if the entered confidence interval is so wide that a relevant share of
+the distribution falls below zero, the truncation at zero shifts
+the simulated central estimate above the entered `_central` value.
 
 
 
@@ -1806,12 +1809,6 @@ for scenario 1 and 2 (e.g., comparison of two scenarios at the same time point),
 while the delta comparison approach, the difference between two scenarios is obtained by subtraction. 
 Therefore, the delta approach is suited for comparison of scenarios in different time points.
 
-**Important**: If your aim is to quantify health impacts from a *policy intervention*, 
-you should use the *same year of analysis* 
-and therefore *same health baseline data* in both scenarios. 
-The only variable that should change in the second scenario is the exposure 
-(change as a result of the intervention).
-
 #### Population Impact Fraction (PIF)
 
 The Population Impact Fraction (PIF) is defined as the proportional change in disease or mortality 
@@ -1923,6 +1920,14 @@ The `compare()` results contain two additional outputs in addition to those we h
 ```{r, echo=FALSE, eval=TRUE, include=FALSE}
 rm(results_comparison, scenario_A, scenario_B)
 ```
+
+### Notes
+
+**Important**: If your aim is to quantify health impacts from a *policy intervention*,
+you should use the *same year of analysis*
+and therefore *same health baseline data* in both scenarios.
+The only variable that should change in the second scenario is the exposure
+(change as a result of the intervention).
 
 
 # Two correlated exposures 
