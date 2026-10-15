@@ -1261,7 +1261,7 @@ then grow with the number of added age groups instead of converging.
 
 `healthiar` aligns with AirQ+ in the equations of the life table. The survival
 probability of AirQ+, $S_i = (2 - h_i) / (2 + h_i)$, is identical to the one
-used here, and the modified survival probability is obtained in both tools by
+used here with the default `fraction_lived = 0.5`, and the modified survival probability is obtained in both tools by
 dividing the hazard rate by the relative risk (which is equivalent to
 multiplying it by $1 - PAF$) [@WHO2020_report].
 
@@ -1274,15 +1274,11 @@ expectancies with and without the exposure.
 The comparison has to be made by sex, though, because the "All genders" results
 of AirQ+ are not the sum of its male and female results as in `healthiar`: AirQ+ obtains them
 from a life table in which the populations and the deaths of both sexes are
-pooled. 
+pooled, which has to be entered and run separately [@WHO2020_report].
 With the data of the example below, the pooled life table for all genders in AirQ+ gives 1.6% more YLL
 than the sum of two sex-specific ones in `healthiar`. `healthiar` returns that pooled value too, when
 the populations and the deaths of both sexes are entered as one single life
 table, i.e. passing the same value in `sex` for every age group.
-
-Be aware when comparing with AirQ+ that its results accumulated over several
-years (e.g. "over 10 years") correspond to `approach_exposure = "constant"` and
-not to `approach_exposure = "single_year"`.
 
 
 #### Determination of populations in the (first) year of analysis
