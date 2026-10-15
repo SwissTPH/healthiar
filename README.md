@@ -119,7 +119,7 @@ b) See [CITATION.R](https://github.com/SwissTPH/healthiar/blob/master/inst/CITAT
 
 c) In your R console, enter *citation("healthiar")*.
 
-In options b) and c), you always see the updated citation. In option a), you see citation of the *healthiar* version that you have installed locally, which might be outdated.
+In options a) and b), you always see the updated citation. In option c), you see the citation of the *healthiar* version that you have installed locally, which might be outdated.
 
 ## Disclaimer and licence 
 By using *healthiar*, you confirm that you agree with the following disclaimer and terms of the licence:
