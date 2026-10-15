@@ -237,7 +237,7 @@ $$RRexp = e^{\frac{\log(rr)}{increment} \times (exp - cutoff)}$$
 $$RRexp = \left( \frac{exp + 1}{cutoff + 1} \right)^{\frac{\log(rr)}{\log(increment + cutoff + 1) - \log(cutoff + 1)}}$$
 
 - linear-log [@Pozzer2023_gh]
-$$RRexp = 1 + \frac{\log(rr - 1)}{\log(increment + cutoff + 1) - \log(cutoff + 1)} \times \frac{\log(exp + 1)}{\log(cutoff + 1)}$$
+$$RRexp = 1 + \frac{rr - 1}{\log(increment + cutoff + 1) - \log(cutoff + 1)} \times \log\left( \frac{exp + 1}{cutoff + 1} \right)$$
 
 
 The relative risk at exposure level (`rr_at_exp`) and is part of the output of `attribute_health()` and `attribute_lifetable()`. `rr_at_exp` can also be calculated using `get_risk()`.
