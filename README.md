@@ -12,7 +12,7 @@ Want to know as soon as a new *healthiar* version is released? See [Stay updated
 
 ## Introduction
 
-*healthiar* stands for *health* *i*mpact *a*ssessment in *R* and it is an R package to quantify and monetize health impacts attributable to exposure (e.g. air pollution, noise...) in a study area. Using *healthiar*, you can ...
+*healthiar* stands for *health* *i*mpact *a*ssessment in *R* and it is an R package to quantify and monetize health impacts attributable to exposure (e.g. air pollution, noise...) in a study area. Using *healthiar*, you can:
 
 - Quantify health impacts choosing among multiple input data formats and calculation pathways:
 
