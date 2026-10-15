@@ -1180,7 +1180,7 @@ Whichever `fraction_lived` is used in `prepare_lifetable()` has to be passed on 
 
 ### Goal
 
-E.g., to quantify the years of life lost (YLL) due to deaths from COPD attributable to PM2.5 exposure during one year.
+E.g., to quantify the years of life lost (YLL) due to (all-cause) deaths attributable to PM2.5 exposure during one year.
 
 ### Methodology
 
@@ -1491,7 +1491,7 @@ results_pm_yll$health_detailed$intermediate_calculations|>
 
 ### Goal (e.g.)
 
-E.g., to determine premature deaths from COPD attributable to PM2.5 exposure during one year.
+E.g., to determine (all-cause) premature deaths attributable to PM2.5 exposure during one year.
 
 
 ### Function call
