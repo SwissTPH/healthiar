@@ -119,7 +119,7 @@ JOSS paper.
 ## Disclaimer and licence 
 By using *healthiar*, you confirm that you agree with the following disclaimer and terms of the licence:
 
-a) Disclaimer: The R package *healthiar* is work in progress and the developers are not liable for the results. 
+a) Disclaimer: The R package *healthiar* is provided "as is", without warranty of any kind. The developers are not liable for the results obtained with it.
 
 b) License: Available [here](https://github.com/SwissTPH/healthiar?tab=GPL-3.0-1-ov-file).
 
