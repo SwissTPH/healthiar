@@ -299,15 +299,15 @@ as is the case in the relative risk pathway [@WHO2011_report].
 
 ![Figure: Absolute risk approach](../man/figures/bod_ar.png){width="700"}
 
-$$N = \sum AR_i \times pop\_exp_i$$
+$$impact = \sum \frac{absolute\_risk\_as\_percent_i}{100} \times pop\_exp_i$$
 
 Where:
 
-* $N$ = attributed cases
+* $impact$ = attributable cases
 
-* $AR_i$ = absolute risk at category $i$
+* $absolute\_risk\_as\_percent_i$ = absolute risk (in %) at exposure category $i$, obtained from the exposure-response function entered in `erf_eq_...`
 
-* $pop\_exp_i$ = absolute population exposed at category $i$
+* $pop\_exp_i$ = absolute population exposed at exposure category $i$
 
 
 `healthiar` consistently handles cut-off values across both relative and absolute risk approaches. 
