@@ -146,7 +146,7 @@ All AI-assisted changes were reviewed and approved by the *healthiar* developers
 Special thanks to our community members who submitted bug reports, 
 suggested improvements, and provided valuable feedback to refine this package. 
 Here some of them in alphabetical order:
-Adrian Aebi, Gaia Corbetta, Federico Cussotto, Georgia Dyer, Brecht Devleesschauwer, 
+Adrian Aebi, Gaia Corbetta, Federico Cussotto, Brecht Devleesschauwer, Georgia Dyer, 
 Nicole Engelmann, Aletta Karsies, Sasha Kohmenkho, Heli Lehtomäki, 
 Matthias Lochman, Enrico Pisoni, David Rojas Rueda, 
 Jörg Sintermann and Maciek Strak.
