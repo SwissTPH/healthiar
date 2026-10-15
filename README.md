@@ -34,46 +34,6 @@ Want to know as soon as a new *healthiar* version is released? See [Stay updated
 
 - Consider social inequalities in the assessment and stratify the results
 
-## Getting started 
-
-You have different materials to learn about the R package *healthiar*.
-
-### Cheat sheet
-Have a quick and visual look at the [cheat sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html):
-[![Package Cheatsheet](man/figures/cheatsheet_healthiar_1st_page.png)](https://swisstph.github.io/healthiar/articles/cheatsheet.html)
-
-### Vignette
-Read the vignette (~ package manual) *intro_to_healthiar*, which you can access:
-
-a) on the [package website](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html) (recommended)
-
-b) in the R console: Run `vignette("intro_to_healthiar")`
-
-c) in the web browser: Run `browseVignettes("healthiar")` in the R console and the page will open up in your browser
-
-### Function documentation
-See the function help pages for information about specific functions. You can access the function documentation of e.g. the function `attribute_health` by
-
-a) going to the [reference page of the package website](https://swisstph.github.io/healthiar/reference/index.html)
-
-b) running `?attribute_health` in the R console (with *healthiar* loaded)
-
-### Video
-Watch the [45-minute video](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ) from an online international workshop (30 September 2025) and see the [workshop slides](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop).
-
-### Stay updated
-We regularly improve *healthiar* and publish a new [GitHub release](https://github.com/SwissTPH/healthiar/releases) every time a new version reaches CRAN. To make sure you don't miss one:
-
-- **Watch releases**: on the [GitHub repo](https://github.com/SwissTPH/healthiar), click *Watch* > *Custom* > tick *Releases only*, so you get notified without being flooded by every issue or discussion.
-
-- **Star the repo**: click *Star* on the [GitHub repo](https://github.com/SwissTPH/healthiar) to bookmark it and help others discover *healthiar*.
-
-- **Subscribe via RSS/Atom**: if you prefer a feed reader, subscribe to [https://github.com/SwissTPH/healthiar/releases.atom](https://github.com/SwissTPH/healthiar/releases.atom).
-
-- **Check the changelog**: see what changed in each version on the [changelog](https://swisstph.github.io/healthiar/news/index.html).
-
-
-
 ## Installation
 We recommend frequently installing the newest *healthiar* version. 
 Please note that **_healthiar_ requires R version 4.2.0 or higher**. 
@@ -101,6 +61,43 @@ required by *healthiar*.
 library(healthiar)
 ```
 
+## Getting started 
+
+You have different materials to learn about the R package *healthiar*.
+
+### Cheat sheet
+Have a quick and visual look at the [cheat sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html):
+[![Package Cheatsheet](man/figures/cheatsheet_healthiar_1st_page.png)](https://swisstph.github.io/healthiar/articles/cheatsheet.html)
+
+### Vignette
+Read the vignette (~ package manual) *intro_to_healthiar*, which you can access:
+
+a) on the [package website](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html) (recommended)
+
+b) in the R console: Run `vignette("intro_to_healthiar")`
+
+c) in the web browser: Run `browseVignettes("healthiar")` in the R console and the page will open up in your browser
+
+### Function documentation
+See the function help pages for information about specific functions. You can access the function documentation of e.g. the function `attribute_health` by
+
+a) going to the [reference page of the package website](https://swisstph.github.io/healthiar/reference/index.html)
+
+b) running `?attribute_health` in the R console (with *healthiar* loaded)
+
+### Video
+Watch the [45-minute video](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ) from an online international workshop (30 September 2025) and see the [workshop slides](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop).
+
+## Stay updated
+We regularly improve *healthiar* and publish a new [GitHub release](https://github.com/SwissTPH/healthiar/releases) every time a new version reaches CRAN. To make sure you don't miss one:
+
+- **Watch releases**: on the [GitHub repo](https://github.com/SwissTPH/healthiar), click *Watch* > *Custom* > tick *Releases only*, so you get notified without being flooded by every issue or discussion.
+
+- **Star the repo**: click *Star* on the [GitHub repo](https://github.com/SwissTPH/healthiar) to bookmark it and help others discover *healthiar*.
+
+- **Subscribe via RSS/Atom**: if you prefer a feed reader, subscribe to [https://github.com/SwissTPH/healthiar/releases.atom](https://github.com/SwissTPH/healthiar/releases.atom).
+
+- **Check the changelog**: see what changed in each version on the [changelog](https://swisstph.github.io/healthiar/news/index.html).
 
 ## Citation
 If you use *healthiar* in your work, please cite our paper in the Journal of Open Source Software (JOSS): [healthiar: An R package to quantify and monetize health impacts attributable to (environmental) exposure](https://doi.org/10.21105/joss.10599).
