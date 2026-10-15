@@ -78,13 +78,11 @@ results <- attribute_health(
   bhd_central = c(4000, 2500, 3000, 1500) # Baseline health data per canton
 )
 
-# Attributable cases by language region
-results$health_main |>
-  dplyr::select(geo_id_macro, impact_rounded)
+# Attributable cases by language region (larger geo unit)
+results$health_main
 
-# Attributable cases by canton
-results$health_detailed$results_raw |>
-  dplyr::select(geo_id_micro, geo_id_macro, impact_rounded)
+# Attributable cases by canton (smaller geo unit)
+results$health_detailed$results_raw 
 ```
 
 ## Getting started 
