@@ -59,8 +59,7 @@ a) going to the [reference page of the package website](https://swisstph.github.
 b) running `?attribute_health` in the R console (with *healthiar* loaded)
 
 ### Video
-Watch a 45-minute video from an online international workshop (30 September 2025), which can be found [here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ). 
-The slides of the presentation can be found [here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop).
+Watch the [45-minute video](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ) from an online international workshop (30 September 2025) and see the [workshop slides](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop).
 
 ### Stay updated
 We regularly improve *healthiar* and publish a new [GitHub release](https://github.com/SwissTPH/healthiar/releases) every time a new version reaches CRAN. To make sure you don't miss one:
@@ -112,7 +111,7 @@ By using *healthiar*, you confirm that you agree with the following disclaimer a
 
 a) Disclaimer: The R package *healthiar* is provided "as is", without warranty of any kind. The developers are not liable for the results obtained with it.
 
-b) License: Available [here](https://github.com/SwissTPH/healthiar?tab=GPL-3.0-1-ov-file).
+b) License: *healthiar* is released under the [GPL license (version 3 or later)](https://github.com/SwissTPH/healthiar?tab=GPL-3.0-1-ov-file).
 
 ## Contributions
 We welcome your contributions! 
