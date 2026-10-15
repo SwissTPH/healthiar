@@ -134,7 +134,7 @@ JOSS paper.
 ## Disclaimer and license 
 By using *healthiar*, you confirm that you agree with the following disclaimer and terms of the license:
 
-a) Disclaimer: The R package *healthiar* is provided "as is", without warranty of any kind. The developers are not liable for the results obtained with it.
+a) Disclaimer: The R package *healthiar* is provided "as is", without warranty of any kind. The developers are not liable for the results obtained with it. Functions, arguments and results may change between versions; see the [changelog](https://swisstph.github.io/healthiar/news/index.html).
 
 b) License: *healthiar* is released under the [GPL license (version 3 or later)](https://github.com/SwissTPH/healthiar?tab=GPL-3.0-1-ov-file).
 

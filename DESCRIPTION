@@ -19,7 +19,7 @@ Authors@R: c(
     person(given = "João", family = "Vasco Santos", role = c("ctb"), comment = c(ORCID = "0000-0003-4696-1002")),
     person(given = "Anette", family = "Kocbach Bølling", role = c("ctb"), comment = c(ORCID = "0000-0003-4209-7448"))
     )
-Description: This R package has been developed with a focus on air pollution and noise but can be applied to other exposures. The initial development has been funded by the European Union project BEST-COST. Disclaimer: It is work in progress and the developers are not liable for any calculation errors or inaccuracies resulting from the use of this package.
+Description: This R package has been developed with a focus on air pollution and noise but can be applied to other exposures. The initial development has been funded by the European Union project BEST-COST. Disclaimer: This package is provided "as is", without warranty of any kind. The developers are not liable for any calculation errors, inaccuracies or results obtained with it. Functions, arguments and results may change between versions.
  Selection of relevant references (in chronological order): 
  WHO (2003) <https://www.who.int/publications/i/item/9241546204>, 
  Murray et al. (2003) <doi:10.1186/1478-7954-1-1>, 
