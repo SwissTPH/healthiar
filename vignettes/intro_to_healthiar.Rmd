@@ -2017,8 +2017,8 @@ aggregates it to higher-level geographic units.
 If no population data is entered, 
 the function calculates a simple spatial mean concentration as exposure value.
 
-The output of `prepare_exposure()` can be entered in the argument 
-`exp_mean`, `exp_lower` and/or `exp_upper` in `healthiar` functions 
+The output of `prepare_exposure()` can be entered in the arguments
+`exp_central`, `exp_lower` and/or `exp_upper` in `healthiar` functions
 such as `attribute_health()`.
 
 ### Function call
