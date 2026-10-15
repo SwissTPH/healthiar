@@ -61,6 +61,32 @@ required by *healthiar*.
 library(healthiar)
 ```
 
+## Example
+Attribute disease cases to PM2.5 exposure in four Swiss cantons and aggregate the results by language region:
+
+```r
+library(healthiar)
+
+results <- attribute_health(
+  geo_id_micro = c("Zurich", "Basel", "Geneva", "Ticino"), # Cantons
+  geo_id_macro = c("Ger", "Ger", "Fra", "Ita"), # Language regions
+  rr_central = 1.369, # Relative risk
+  rr_increment = 10, # per 10 µg/m³ increase in PM2.5 exposure
+  cutoff_central = 5, # Cutoff in µg/m³
+  erf_shape = "log_linear", # Shape of the exposure-response function
+  exp_central = c(11, 11, 10, 8), # Exposure in µg/m³ per canton
+  bhd_central = c(4000, 2500, 3000, 1500) # Baseline health data per canton
+)
+
+# Attributable cases by language region
+results$health_main |>
+  dplyr::select(geo_id_macro, impact_rounded)
+
+# Attributable cases by canton
+results$health_detailed$results_raw |>
+  dplyr::select(geo_id_micro, geo_id_macro, impact_rounded)
+```
+
 ## Getting started 
 
 You have different materials to learn about the R package *healthiar*.
