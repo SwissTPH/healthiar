@@ -168,7 +168,7 @@ The descriptions of the [*healthiar* functions](https://swisstph.github.io/healt
 
 ### Goal
 
-E.g., to quantify the COPD cases attributable to PM2.5 (air pollution) exposure in a country.
+To quantify the health impacts attributable to an exposure using a relative risk and baseline health data.
 
 ### Methodology
 The comparative risk assessment approach [@Murray2003_e] is applied obtaining the population attributable fraction 
@@ -243,6 +243,8 @@ For conversion of hazard ratios and/or odds ratios to relative risks refer to [@
 
 ### Function call
 
+In the example below, we quantify the COPD cases attributable to PM2.5 exposure in a country, using the example data `exdat_pm`.
+
 ```{r, eval=TRUE, include=TRUE, echo=TRUE}
 results_pm_copd <- attribute_health(
   approach_risk = "relative_risk", # If you do not call this argument, "relative_risk" will be assigned by default.
@@ -285,7 +287,8 @@ Some of the most relevant results columns include:
 # Absolute risk
 
 ### Goal
-E.g., to quantify the number of incidence cases of high annoyance attributable to (road traffic) noise exposure.
+
+To quantify the health impacts attributable to an exposure using an absolute risk, i.e. based on the exposed population instead of baseline health data.
 
 ### Methodology
 In the absolute risk calculation pathway, estimates are based on the size and distribution 
@@ -320,6 +323,8 @@ see chapter [Shifting the ERF](#shifting-the-erf).
 
 
 ### Function call
+
+In the example below, we quantify the cases of high annoyance attributable to road traffic noise in five noise exposure bands.
 
 ```{r}
 results_noise_ha <- attribute_health(
@@ -395,10 +400,11 @@ The tables are formatted as above, i.e. selecting some columns with
 
 ### Goal 
 
-E.g., to quantify the disease cases attributable to PM2.5 exposure in multiple geographic units (cities, regions, cantons...) using one single command.
-
+To quantify health impacts using a relative risk in several geographic units with one single function call and, optionally, aggregate them into larger units.
 
 ### Function call
+
+In the example below, we quantify the disease cases attributable to PM2.5 exposure in five Swiss cantons and aggregate them by language region.
 
 -   Enter unique ID's as a vector (`numeric` or `character`) to the `geo_id_micro` argument (e.g., municipality names or province abbreviations)
 
@@ -420,8 +426,6 @@ results_iteration <- attribute_health(
     bhd_central = c(4000, 2500, 3000, 1500, 500)
 )
 ```
-
-In this example we want to aggregate the lower-level geographic units (cantons) by the higher-level language region (`"German", "French", "Italian"`).
 
 ### Main results
 
@@ -463,9 +467,11 @@ rm(results_iteration)
 
 ### Goal 
 
-E.g., to quantify high annoyance cases attributable to noise exposure in rural and urban areas.
+To quantify health impacts using an absolute risk in several geographic units with one single function call.
 
 ### Function call
+
+In the example below, we quantify the cases of high annoyance attributable to noise exposure in a rural and an urban area.
 
 ```{r}
 data <- exdat_noise |> 
@@ -529,9 +535,11 @@ rm(results_iteration_ar, data)
 
 ### Goal 
 
-E.g., to quantify the COPD cases attributable to PM2.5 exposure taking into account uncertainty (lower and upper bound of confidence interval) in several input arguments: relative risk, exposure and baseline health data.
+To quantify health impacts taking into account the uncertainty (confidence intervals) of the input data.
 
 ### Function call
+
+In the example below, we quantify the COPD cases attributable to PM2.5 exposure with lower and upper bounds for the relative risk, the exposure and the baseline health data.
 
 ```{r}
 results_pm_copd <- attribute_health(
@@ -580,9 +588,7 @@ Only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_ra
 
 ### Goal
 
-E.g., to summarize uncertainty of attributable health impacts 
-(i.e. to get a single confidence interval instead of many combinations) 
-by using a Monte Carlo simulation.
+To summarize the uncertainty of several input data into one single confidence interval of the attributable health impacts.
 
 ### Methodology
 
@@ -657,6 +663,8 @@ The example below uses n_sim = 100 for brevity.
 
 ### Function call
 
+In the example below, we summarize the uncertainty of the COPD cases from the chapter *Confidence interval*.
+
 ```{r}
 results_pm_copd_summarized <- 
   summarize_uncertainty(
@@ -713,9 +721,12 @@ rm(results_pm_copd_summarized)
 
 ### Goal 
 
-E.g., to quantify COPD cases attributable to air pollution exposure by applying a user-defined exposure-response function (ERF), such as the MR-BRT curves from Global Burden of Disease study. 
+To quantify health impacts with an exposure-response function of any shape, defined by the user instead of one of the predefined shapes.
 
 ### Function call
+
+In the example below, we quantify the COPD cases attributable to PM2.5 exposure with an exposure-response function defined by points, such as the MR-BRT curves of the Global Burden of Disease study.
+
 In this case, the function arguments `erf_eq_...` require a function as input, so we use an auxiliary function (`splinefun()`) to transform the points on the ERF into type `function`.
 ```{r}
 results_pm_copd_mr_brt <- attribute_health(
@@ -788,10 +799,11 @@ what the argument `main_results_by` does. See the chapter
 
 ### Goal
 
-E.g., to quantify health impacts attributable to air pollution in a country *by age group*.
-
+To quantify health impacts by age group.
 
 ### Function call
+
+In the example below, we quantify the health impacts attributable to air pollution in two age groups (below 65 and 65+).
 
 To obtain age-group-specific results, the baseline health data (and possibly exposure) must be available by age group.
 
@@ -826,9 +838,11 @@ rm(results_age_group)
 
 ### Goal
 
-E.g., to quantify health impacts attributable to air pollution in a country *by sex*.
+To quantify health impacts by sex.
 
 ### Function call
+
+In the example below, we quantify the health impacts attributable to air pollution in females and males.
 
 The baseline health data (and possibly exposure) must be entered by sex. 
 
@@ -863,10 +877,13 @@ rm(results_sex)
 
 ### Goal 
 
-E.g., to quantify attributable health impacts *stratified by a sub-group different to age and sex, e.g., education level*.
+To quantify health impacts by any other sub-group, such as education level.
 
 ### Function call
-A single vector (or a data frame / tibble with multiple columns) to group the results by can be entered to the `info` argument. In this example, this will be information about the education level.
+
+In the example below, we quantify the health impacts attributable to air pollution by education level in four geographic units.
+
+A single vector (or a data frame / tibble with multiple columns) to group the results by can be entered to the `info` argument.
 
 In a second step one can group the results based on one or more columns and so summarize the results by the preferred sub-groups. 
 
@@ -910,9 +927,11 @@ rm(output_attribute, output_stratified)
 
 ### Goal 
 
-E.g., to quantify attributable health impacts *stratified by age, sex and additional sub-group e.g. education level*.
+To quantify health impacts by several sub-groups at the same time, such as age, sex and education level.
 
 ### Function call
+
+In the example below, we quantify the health impacts attributable to air pollution by age group, sex and education level in two geographic units.
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_attribute <- healthiar::attribute_health(
@@ -952,9 +971,7 @@ rm(output_attribute, output_stratified)
 
 ### Goal
 
-E.g., to quantify in *one single call* the impacts of *several exposure-outcome
-pairs*, such as PM2.5 and COPD together with NO2 and asthma, or to compare the
-*same pair quantified with the relative risks of two different studies*.
+To quantify the health impacts of several exposure-outcome pairs, or of the same pair with different relative risks, in one single function call.
 
 ### Parallel analyses, not sub-groups
 
@@ -976,6 +993,8 @@ tables, which are available in the detailed output in any case: it determines
 which dimensions survive in them and in the main results.
 
 ### Function call
+
+In the example below, we quantify the COPD cases attributable to PM2.5 and the asthma cases attributable to NO2 in two geographic units.
 
 The pairs are identified in a column of `info`, and that column is named in
 `main_results_by`. All other arguments are entered as parallel vectors, exactly as
@@ -1168,7 +1187,7 @@ Whichever `fraction_lived` is used in `prepare_lifetable()` has to be passed on 
 
 ### Goal
 
-E.g., to quantify the years of life lost (YLL) due to (all-cause) deaths attributable to PM2.5 exposure during one year.
+To quantify the years of life lost (YLL) attributable to an exposure using a life table.
 
 ### Methodology
 
@@ -1347,7 +1366,7 @@ $$midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_unt
 
 ### Function call
 
-We can use `attribute_lifetable()` combined with life table input data to determine YLL attributable to an environmental stressor.
+In the example below, we quantify the YLL from all-cause mortality attributable to PM2.5 exposure, using the example life table `exdat_lifetable`.
 
 ```{r}
 results_pm_yll <- attribute_lifetable(
@@ -1488,10 +1507,12 @@ results_pm_yll$health_detailed$intermediate_calculations|>
 
 ### Goal
 
-E.g., to determine (all-cause) premature deaths attributable to PM2.5 exposure during one year.
-
+To quantify the premature deaths attributable to an exposure using a life table.
 
 ### Function call
+
+In the example below, we quantify the all-cause premature deaths attributable to PM2.5 exposure, using the same life table as for YLL.
+
 See example on YLL for additional info on `attribute_lifetable()` calculations and its output.
 
 ```{r}
@@ -1569,7 +1590,7 @@ rm(results_pm_deaths)
 
 ### Goal 
 
-E.g., to quantify the years lived with disability (YLD) attributable to air pollution exposure using disability weights.
+To quantify the years lived with disability (YLD) attributable to an exposure.
 
 ### Methodology
 
@@ -1582,6 +1603,8 @@ To quantify the YLDs, you can use a prevalence-based or an incidence-based appro
 In both approaches, enter the disability weight (between 0 and 1) in `dw_...`.
 
 ### Function call
+
+In the example below, we quantify the YLD attributable to PM2.5 exposure for a disease with 1,000 incidence cases, a duration of 10 years and a disability weight of 0.2.
 
 ```{r}
 results_pm_copd_yld  <- attribute_health(
@@ -1612,7 +1635,7 @@ results_pm_copd_yld$health_main |>
 
 ### Goal
 
-E.g., to obtain the disability-adjusted life years (DALY) as the sum of YLLs and YLDs.
+To quantify the disability-adjusted life years (DALY) attributable to an exposure as the sum of YLL and YLD.
 
 ### Methodology
 
@@ -1622,7 +1645,7 @@ $$DALY = YLL + YLD$$
 
 ### Function call
 
-This is possible using the function `daly()`.
+In the example below, we add up the YLL and the YLD from the previous chapters, using the function `daly()`.
 
 ```{r}
 results_daly <- daly(
@@ -1669,9 +1692,12 @@ results_daly_comparison <- daly(
 
 ### Goal 
 
-E.g., to quantify health impacts using `attribute_health()` in a scenario B very similar to a previous scenario A.
+To create a new scenario that differs from an existing assessment only in some input data, without entering all input data again.
 
 ### Function call
+
+In the example below, we change the exposure of an existing assessment from 8.85 to 6 $\mu g/m^3$.
+
 ```{r}
 scenario_A <- attribute_health(
     exp_central = 8.85,   # EXPOSURE 1
@@ -1710,7 +1736,7 @@ scenario_B <- attribute_health(
 
 ### Goal 
 
-E.g., to compare the health impacts in the scenario "before intervention" vs. "after intervention".
+To quantify the difference in health impacts between two scenarios, e.g. before and after an intervention.
 
 ### Methodology
 
@@ -1773,6 +1799,8 @@ Where:
 * $rr\_at\_exp\_2$ = relative risk at the exposure level in scenario 2 (alternative scenario)
 
 ### Function call
+
+In the example below, we compare the health impacts of a PM2.5 exposure of 8.85 $\mu g/m^3$ with those of 6 $\mu g/m^3$.
 
 1.  Use `attribute_health()` to calculate burden of scenarios A & B.
 
@@ -1845,7 +1873,7 @@ rm(results_comparison, scenario_A, scenario_B)
 
 ### Goal 
 
-E.g., to quantify the total health impact attributable to PM2.5 and NO2.
+To quantify the total health impact attributable to two correlated exposures.
 
 ### Methodology
  
@@ -1873,7 +1901,7 @@ $$PAF_{combined} = 1-[(1-PAF_{exposure1}) \times (1-PAF_{exposure2})]$$
 
 ### Function call
 
-For this purpose, you can use the function `multiexpose()`.
+In the example below, we combine the impacts of PM2.5 and NO2 with the multiplicative approach, using the function `multiexpose()`.
 
 ```{r}
 results_pm <- attribute_health(
@@ -1924,7 +1952,7 @@ rm(results_multiplicative)
 
 ### Goal
 
-E.g., to obtain the age-standardized attributable health impacts of two age groups.
+To obtain age-standardized health impacts, which allow comparing populations with different age structures.
 
 ### Methodology
 
@@ -1948,6 +1976,8 @@ where:
  
 
 ### Function call
+
+In the example below, we standardize the health impacts of two age groups (below and above 40) with a reference population split equally between them.
 
 ```{r}
 output_attribute <- attribute_health(
@@ -1995,7 +2025,7 @@ rm(results)
 
 ### Goal
 
-E.g., to determine population-weighted mean PM2.5 exposure for several neighborhoods of Brussels (Belgium)
+To obtain the population-weighted mean exposure of geographic units from gridded concentration data and population data.
 
 ### Methodology
 The *healthiar* function `prepare_exposure()` helps users that do not have the 
@@ -2024,6 +2054,8 @@ The output of `prepare_exposure()` can be entered in the arguments
 such as `attribute_health()`.
 
 ### Function call
+
+In the example below, we obtain the population-weighted mean PM2.5 exposure of neighbourhoods in Brussels (Belgium), aggregated by region.
 
 ```{r eval=spatial_packages_available}
 # exdat_pwm_1 = Pollution grid data
@@ -2063,11 +2095,7 @@ rm(pwm)
 
 ### Goal
 
-E.g., to quantify health impacts with an exposure-response function
-whose effect threshold is lower than the lowest exposure level
-that the assessment quantifies,
-such as noise assessments in which exposure data are only available above 55 dB
-although health effects already occur at lower exposures.
+To quantify health impacts when the exposure data only cover exposures above a level (cut-off) that is higher than the effect threshold of the exposure-response function.
 
 ### Methodology
 
@@ -2147,9 +2175,7 @@ and the results are the same as if only `threshold` had been entered.
 
 ### Function call
 
-The example below refers to case b) above (cut-off higher than the effect threshold):
-health impacts in the exposure group 55 dB+ (cut-off)
-that are affected by an exposure above the effect threshold of 45 dB.
+In the example below (case b above), we quantify the health impacts in the noise exposure groups above 55 dB (cut-off) with an effect threshold of 45 dB.
 
 ```{r}
 results_cutoff_above_threshold <- healthiar::attribute_health(
@@ -2236,8 +2262,7 @@ legend("topleft",
 
 ### Goal
 
-E.g., to know whether a cut-off must be entered when the
-exposure-response function is passed in `erf_eq_...`.
+To enter an exposure-response function in `erf_eq_...` correctly, depending on whether it already incorporates the cut-off.
 
 ### Methodology
 
@@ -2267,6 +2292,8 @@ exposure-response functions published in the literature already incorporate
 the cut-off in the function definition. The warning can be ignored here.
 
 ### Function call
+
+In the example below, the same absolute risk function is entered once unshifted and once shifted by a cut-off of 53 dB.
 
 ```{r unshifted vs shifted erf}
 # Case A: Unshifted exposure-response function
@@ -2300,7 +2327,7 @@ enter a `cutoff_...` value higher than the `threshold`
 
 ### Goal
 
-E.g., to monetize the attributable health impact of a policy that will have health benefits five years from now.
+To express attributable health impacts in monetary terms, optionally with discounting, inflation and growth in valuation.
 
 ### Methodology
 In health economic evaluations and economic burden of disease assessments, 
@@ -2416,6 +2443,8 @@ This ensures that long-term environmental impacts are not undervalued.
 
 ### Function call
 
+In the example below, we monetize the COPD cases from the chapter *Confidence interval* with a value of 50,000 EUR per case, discounted at 3% over 5 years.
+
 ```{r}
 monetized_pm_copd <- monetize(
     output_attribute = results_pm_copd,
@@ -2462,8 +2491,7 @@ results <- monetize(
 
 ### Goal
 
-E.g., to perform an economic evaluation for an intervention 
-by comparing its benefits and costs via Cost-Benefit Analysis (CBA).
+To compare the monetized health benefits of an intervention with its costs.
 
 ### Methodology
 
@@ -2550,7 +2578,7 @@ We see that the central and upper 95% confidence interval estimates of avoided a
 
 ### Goal
 
-E.g., to estimate the health impact that is theoretically attributable to the difference in degree of deprivation of the population exposed.
+To quantify the differences in attributable health impacts between more and less deprived areas.
 
 ### Methodology
 
@@ -2600,6 +2628,8 @@ could be interpreted as some kind of relative risk attributable to social inequa
 
 
 ### Function call
+
+In the example below, we compare the mortality attributable to PM2.5 exposure across deciles of a deprivation score.
 
 First, quantify health impacts.
 
@@ -2661,7 +2691,7 @@ social$social_main |>
 
 ### Goal 
 
-E.g., to estimate the multiple deprivation index (MDI) to use it for the argument `social_indicator` in the function `socialize()`.
+To create a multiple deprivation index (MDI) from several socio-economic indicators, e.g. to enter it in the argument `social_indicator` of `socialize()`.
 
 ### Methodology
 
@@ -2687,6 +2717,8 @@ Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower 
 
 
 ### Function call
+
+In the example below, we create an MDI from five indicators (education, unemployment, single parents, population change and lack of heating) and split it into deciles.
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 mdi <- prepare_mdi(
