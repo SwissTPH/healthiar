@@ -2327,8 +2327,9 @@ to express it in present-value terms.
 
 If you need the discounted values of a cost or health outcome, 
 you can call the `healthiar` function `discount()`. 
-If you just need the discount factor, you can alternatively call `get_discount_factor()` (entering `is_deflation = TRUE`).
-If you just need the inflation factor, you can `get_inflation_factor()`. 
+If you just need the discount factor, you can alternatively call `get_discount_factor()`.
+If you just need the inflation factor, you can call `get_inflation_factor()`,
+or the deflation factor by entering `is_deflation = TRUE` in the same function.
 
 
 Different functional forms can be used to apply discounting. 
