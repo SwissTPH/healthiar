@@ -186,7 +186,7 @@ There exist different, equivalent ways of accessing the output:
 To quantify the health impacts attributable to an exposure using a
 relative risk and baseline health data.
 
-#### Methodology
+#### Methods
 
 The comparative risk assessment approach (C. J. Murray et al. 2003) is
 applied obtaining the population attributable fraction (percent of cases
@@ -299,10 +299,12 @@ the Teaching group in EBM in 2022 for hazard ratios
 (<https://ebm-helper.cn/en/Conv/HR_RR.html>) and/or odds ratios
 (<https://ebm-helper.cn/en/Conv/OR_RR.html>).
 
-#### Function call
+#### Example
 
 In the example below, we quantify the COPD cases attributable to PM2.5
 exposure in a country, using the example data `exdat_pm`.
+
+##### Function call
 
 ``` r
 
@@ -317,7 +319,7 @@ results_pm_copd <- attribute_health(
 )
 ```
 
-#### Main results
+##### Main results
 
 ``` r
 
@@ -372,7 +374,7 @@ To quantify the health impacts attributable to an exposure using an
 absolute risk, i.e. based on the exposed population instead of baseline
 health data.
 
-#### Methodology
+#### Methods
 
 In the absolute risk calculation pathway, estimates are based on the
 size and distribution of the exposed population, rather than on baseline
@@ -412,10 +414,12 @@ If your absolute risk function is parameterized on raw exposure levels
 rather than on the exposure above the cut-off, see chapter [Shifting the
 ERF](#shifting-the-erf).
 
-#### Function call
+#### Example 1: several exposure categories
 
 In the example below, we quantify the cases of high annoyance
 attributable to road traffic noise in five noise exposure bands.
+
+##### Function call
 
 ``` r
 
@@ -430,7 +434,7 @@ results_noise_ha <- attribute_health(
 The `erf_eq_central` argument can digest other types of functions (see
 section on user-defined ERF).
 
-#### Main results
+##### Main results
 
 ``` r
 
@@ -444,7 +448,7 @@ results_noise_ha |>
 |:----------------------------|:--------|---------------:|
 | 78.9270-3.1162*c+0.0342*c^2 | central |         174232 |
 
-#### Results per noise exposure band
+##### Results per noise exposure band
 
 ``` r
 
@@ -461,25 +465,12 @@ results_noise_ha[["health_detailed"]][["results_raw"]] |>
 |            4 | 72.5 |   72200 | 23657.232 |
 |            5 | 77.5 |    7700 |  3298.314 |
 
-**Important**: If the equation of the exposure-response function
-(`erf_eq_...`) requires taking a maximum in a vectorised context,
-[`pmax()`](https://rdrr.io/r/base/Extremes.html) must be used instead of
-[`max()`](https://rdrr.io/r/base/Extremes.html).
-[`pmax()`](https://rdrr.io/r/base/Extremes.html) should be used whenever
-an element-wise maximum is required (the output will be a vector), while
-[`max()`](https://rdrr.io/r/base/Extremes.html) returns a single global
-maximum for the entire vector. For example:
-
-``` r
-
-erf_eq_central <- 
-  "exp(0.2969*log((pmax(0,c-2.4)/1.9+1))/(1+exp(-(pmax(0,c-2.4)-12)/40.2)))"  
-```
-
-#### One exposure category
+#### Example 2: one exposure category
 
 Alternatively, it’s also possible to only assess the absolute risk
 impacts for one exposure category (e.g., a single noise exposure band).
+
+##### Function call
 
 ``` r
 
@@ -491,6 +482,8 @@ results_noise_ha <- attribute_health(
 )
 ```
 
+##### Main results
+
 ``` r
 
 results_noise_ha[["health_main"]] |>
@@ -501,6 +494,23 @@ results_noise_ha[["health_main"]] |>
 | exp_category |   impact |
 |-------------:|---------:|
 |            1 | 49674.59 |
+
+#### Notes
+
+**Important**: If the equation of the exposure-response function
+(`erf_eq_...`) requires taking a maximum in a vectorised context,
+[`pmax()`](https://rdrr.io/r/base/Extremes.html) must be used instead of
+[`max()`](https://rdrr.io/r/base/Extremes.html).
+[`pmax()`](https://rdrr.io/r/base/Extremes.html) should be used whenever
+an element-wise maximum is required (the output will be a vector), while
+[`max()`](https://rdrr.io/r/base/Extremes.html) returns a single global
+maximum for the entire vector. For example:
+
+``` r
+
+erf_eq_central <-
+  "exp(0.2969*log((pmax(0,c-2.4)/1.9+1))/(1+exp(-(pmax(0,c-2.4)-12)/40.2)))"
+```
 
 In the following chapters, only the code to access the results is shown.
 The tables are formatted as above, i.e. selecting some columns with
@@ -518,11 +528,13 @@ To quantify health impacts using a relative risk in several geographic
 units with one single function call and, optionally, aggregate them into
 larger units.
 
-#### Function call
+#### Example
 
 In the example below, we quantify the disease cases attributable to
 PM2.5 exposure in five Swiss cantons and aggregate them by language
 region.
+
+##### Function call
 
 - Enter unique ID’s as a vector (`numeric` or `character`) to the
   `geo_id_micro` argument (e.g., municipality names or province
@@ -552,7 +564,7 @@ results_iteration <- attribute_health(
 )
 ```
 
-#### Main results
+##### Main results
 
 The main output contains aggregated results
 
@@ -571,7 +583,7 @@ In this case `health_main` contains the number of disease cases
 attributable to PM2.5 exposure summed by language region. In total, the
 5 cantons have 1717 attributable cases (using a relative risk of 1.369).
 
-#### Detailed results
+##### Detailed results
 
 The geo unit-specific information and results are stored under
 `health_detailed`\>`results_raw` .
@@ -600,10 +612,12 @@ usual), besides the results per geo unit (not shown above).
 To quantify health impacts using an absolute risk in several geographic
 units with one single function call.
 
-#### Function call
+#### Example
 
 In the example below, we quantify the cases of high annoyance
 attributable to noise exposure in a rural and an urban area.
+
+##### Function call
 
 ``` r
 
@@ -634,7 +648,7 @@ results_iteration_ar <- attribute_health(
 because we have 2 geo units (`"rural"` and `"urban"`) and 5 exposure
 categories.
 
-#### Main results
+##### Main results
 
 `health_main` contains the aggregated results (i.e. sum of impacts in
 rural and urban areas).
@@ -648,7 +662,7 @@ results_iteration_ar$health_main
 |:-------------|---------------:|:--------|:--------|
 | total        |         174232 | central | central |
 
-#### Detailed results
+##### Detailed results
 
 Impact by geo unit, in this case impact in the rural and in the urban
 area.
@@ -672,11 +686,13 @@ results_iteration_ar$health_detailed$results_by_geo_id_micro
 To quantify health impacts taking into account the uncertainty
 (confidence intervals) of the input data.
 
-#### Function call
+#### Example
 
 In the example below, we quantify the COPD cases attributable to PM2.5
 exposure with lower and upper bounds for the relative risk, the exposure
 and the baseline health data.
+
+##### Function call
 
 ``` r
 
@@ -696,7 +712,7 @@ results_pm_copd <- attribute_health(
 ) 
 ```
 
-#### Detailed results
+##### Detailed results
 
 Let’s inspect the detailed results:
 
@@ -740,7 +756,7 @@ shown.
 To summarize the uncertainty of several input data into one single
 confidence interval of the attributable health impacts.
 
-#### Methodology
+#### Methods
 
 ##### General concepts
 
@@ -827,10 +843,12 @@ For stability of the 95% confidence interval, a large number of
 simulations (e.g., 10,000) is recommended in practice. The example below
 uses n_sim = 100 for brevity.
 
-#### Function call
+#### Example
 
 In the example below, we summarize the uncertainty of the COPD cases
 from the chapter *Confidence interval*.
+
+##### Function call
 
 ``` r
 
@@ -841,7 +859,7 @@ results_pm_copd_summarized <-
 )
 ```
 
-#### Main results
+##### Main results
 
 The outcome of the Monte Carlo analysis is added to the variable entered
 as the `output_attribute` argument, which is `results_pm_copd` in our
@@ -867,7 +885,7 @@ results_pm_copd_summarized$uncertainty_main
 | a            | lower_estimate   | 1394.460 |           1394 |
 | a            | upper_estimate   | 6027.056 |           6027 |
 
-#### Detailed results
+##### Detailed results
 
 The folder `uncertainty_detailed` contains all single simulations. Let’s
 look at the impact of the first 10 simulations.
@@ -901,11 +919,13 @@ results_pm_copd_summarized$uncertainty_detailed$impact_by_sim
 To quantify health impacts with an exposure-response function of any
 shape, defined by the user instead of one of the predefined shapes.
 
-#### Function call
+#### Example
 
 In the example below, we quantify the COPD cases attributable to PM2.5
 exposure with an exposure-response function defined by points, such as
 the MR-BRT curves of the Global Burden of Disease study.
+
+##### Function call
 
 In this case, the function arguments `erf_eq_...` require a function as
 input, so we use an auxiliary function
@@ -965,10 +985,12 @@ which is what the argument `main_results_by` does. See the chapter
 
 To quantify health impacts by age group.
 
-#### Function call
+#### Example
 
 In the example below, we quantify the health impacts attributable to air
 pollution in two age groups (below 65 and 65+).
+
+##### Function call
 
 To obtain age-group-specific results, the baseline health data (and
 possibly exposure) must be available by age group.
@@ -991,7 +1013,7 @@ results_age_group <- attribute_health(
       )
 ```
 
-#### Results by age group
+##### Results by age group
 
 ``` r
 
@@ -1011,10 +1033,12 @@ results_age_group$health_detailed$results_by_age_group |>
 
 To quantify health impacts by sex.
 
-#### Function call
+#### Example
 
 In the example below, we quantify the health impacts attributable to air
 pollution in females and males.
+
+##### Function call
 
 The baseline health data (and possibly exposure) must be entered by sex.
 
@@ -1032,7 +1056,7 @@ results_sex <- attribute_health(
       )
 ```
 
-#### Results by sex
+##### Results by sex
 
 If the `sex` argument was specified, sex-specific results are available
 under `health_detailed` in the sub-folder `results_by_sex`.
@@ -1056,10 +1080,12 @@ results_sex$health_detailed$results_by_sex |>
 To quantify health impacts by any other sub-group, such as education
 level.
 
-#### Function call
+#### Example
 
 In the example below, we quantify the health impacts attributable to air
 pollution by education level in four geographic units.
+
+##### Function call
 
 A single vector (or a data frame / tibble with multiple columns) to
 group the results by can be entered to the `info` argument.
@@ -1092,7 +1118,7 @@ output_attribute <- healthiar::attribute_health(
   )
 ```
 
-#### Results by other sub-group
+##### Results by other sub-group
 
 ``` r
 
@@ -1111,10 +1137,12 @@ output_stratified <- output_attribute$health_detailed$results_raw |>
 To quantify health impacts by several sub-groups at the same time, such
 as age, sex and education level.
 
-#### Function call
+#### Example
 
 In the example below, we quantify the health impacts attributable to air
 pollution by age group, sex and education level in two geographic units.
+
+##### Function call
 
 ``` r
 
@@ -1135,7 +1163,7 @@ output_attribute <- healthiar::attribute_health(
   )
 ```
 
-#### Results by all sub-groups
+##### Results by all sub-groups
 
 ``` r
 
@@ -1155,7 +1183,7 @@ To quantify the health impacts of several exposure-outcome pairs, or of
 the same pair with different relative risks, in one single function
 call.
 
-#### Parallel analyses, not sub-groups
+#### Methods
 
 As explained in the chapter *Sub-group analysis*, the impacts of the
 sub-groups are summed by default, so only the total per geographic unit
@@ -1176,10 +1204,12 @@ the main results have to be reported by. They stay as separate rows in
 the detailed output in any case: it determines which dimensions survive
 in them and in the main results.
 
-#### Function call
+#### Example 1: several exposure-outcome pairs
 
 In the example below, we quantify the COPD cases attributable to PM2.5
 and the asthma cases attributable to NO2 in two geographic units.
+
+##### Function call
 
 The pairs are identified in a column of `info`, and that column is named
 in `main_results_by`. All other arguments are entered as parallel
@@ -1203,7 +1233,7 @@ output_attribute <- healthiar::attribute_health(
   )
 ```
 
-#### Main results
+##### Main results
 
 One row per exposure-outcome pair and geographic unit. Without
 `main_results_by` the four impacts would have been added up into one
@@ -1223,10 +1253,12 @@ output_attribute$health_main |>
 #> 4 no2_asthma b            central            701
 ```
 
-#### Sensitivity analysis with several exposure-response functions
+#### Example 2: sensitivity analysis with several exposure-response functions
 
 The same mechanism compares one exposure-outcome pair quantified with
 the relative risks of two different studies.
+
+##### Function call
 
 ``` r
 
@@ -1240,6 +1272,11 @@ output_sensitivity <- healthiar::attribute_health(
     erf_shape = "log_linear",
     bhd_central = c(30747, 30747)
   )
+```
+
+##### Main results
+
+``` r
 
 output_sensitivity$health_main |>
   dplyr::select(info_rr_source, erf_ci, impact_rounded) |>
@@ -1251,7 +1288,9 @@ output_sensitivity$health_main |>
 #> 2 WHO 2021       central            898
 ```
 
-#### Which dimensions can be entered
+#### Notes
+
+##### Which dimensions can be entered
 
 `main_results_by` is available in both
 [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
@@ -1277,7 +1316,7 @@ rows still add up to the total that you would get without the argument.
 A name that is not available in the assessment produces an error listing
 the options, so a typo in a column name of `info` cannot pass unnoticed.
 
-#### Limitations
+##### Limitations
 
 All pairs in one call must use the same way of defining the
 exposure-response function, i.e. either `rr_...` or `erf_eq_...` for all
@@ -1307,8 +1346,6 @@ when each pair has its own.
 
 ## YLL & deaths with life table
 
-### All-cause mortality only
-
 The life table approach of
 [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
 is only applicable to **all-cause mortality**. The baseline deaths
@@ -1334,6 +1371,13 @@ with
 
 ### Data preparation
 
+#### Goal
+
+To convert population and death data by larger age groups into the
+one-year age groups required by the life table approach.
+
+#### Methods
+
 The life table approach to obtain YLL and deaths requires population and
 baseline mortality data to be stratified by *one year* age groups.
 However, in some cases these data are only available for larger age
@@ -1357,30 +1401,7 @@ groups (e.g., 5-year data: 0-4 years old, 5-9 years old, …). What to do?
   life table that mixes already available single-year data with
   converted larger age groups.
 
-``` r
-
-age_groups <- c(0, 5, 10, 15)
-pop <- c(438200, 445100, 439800, 421500)
-bhd_counts <- c(1420, 45, 50, 125)
-
-# Standard uniform disaggregation (fraction_lived = 0.5)
-prepared_data <- healthiar::prepare_lifetable(
-  age_group = age_groups,
-  population = pop,
-  bhd = bhd_counts
-  # fraction_lived = 0.5 (default)
-)
-
-# Age-group specific fraction of the age interval lived (first fraction_lived = 0.1)
-prepared_data_with_age_specific_fraction_lived <- healthiar::prepare_lifetable(
-  age_group = age_groups,
-  population = pop,
-  bhd = bhd_counts,
-  fraction_lived = c(0.1, 0.5, 0.5, 0.5)
-)
-```
-
-#### Fraction of the age interval lived
+##### Fraction of the age interval lived
 
 The argument `fraction_lived`, available in both
 [`prepare_lifetable()`](https://swisstph.github.io/healthiar/reference/prepare_lifetable.md)
@@ -1393,7 +1414,7 @@ groups means that deaths are evenly distributed over the age interval,
 which is the value that AirQ+ assumes (WHO 2020). It can be entered as a
 single value applying to all age groups or as one value per age group.
 
-##### What it determines
+###### What it determines
 
 With $`_nm_x`$ the death rate of an age interval of width $`n`$, the
 probability of dying in that interval is
@@ -1437,7 +1458,7 @@ table for every age group, and the entry population it determines from
 the published mid-year population and deaths at age 0 reproduces the
 published number of survivors.
 
-##### What it does not determine
+###### What it does not determine
 
 `fraction_lived` is *not* a way to control how the deaths of an age
 group are distributed over the single years of age it contains. That
@@ -1453,7 +1474,7 @@ observed in low-mortality settings. If the deaths at age 0 matter for
 your assessment, obtain single-year population and death data for the
 youngest ages instead of relying on the conversion.
 
-##### How to choose it
+###### How to choose it
 
 The sensitivity of the survival probability to `fraction_lived` is
 
@@ -1483,6 +1504,37 @@ which needs the same assumption to obtain the survival probabilities.
 The output column `fraction_lived_for_attribute` is provided for that
 purpose.
 
+#### Example
+
+In the example below, we convert the population and deaths of four
+5-year age groups into one-year age groups, once with the default and
+once with an age-specific fraction of the age interval lived.
+
+##### Function call
+
+``` r
+
+age_groups <- c(0, 5, 10, 15)
+pop <- c(438200, 445100, 439800, 421500)
+bhd_counts <- c(1420, 45, 50, 125)
+
+# Standard uniform disaggregation (fraction_lived = 0.5)
+prepared_data <- healthiar::prepare_lifetable(
+  age_group = age_groups,
+  population = pop,
+  bhd = bhd_counts
+  # fraction_lived = 0.5 (default)
+)
+
+# Age-group specific fraction of the age interval lived (first fraction_lived = 0.1)
+prepared_data_with_age_specific_fraction_lived <- healthiar::prepare_lifetable(
+  age_group = age_groups,
+  population = pop,
+  bhd = bhd_counts,
+  fraction_lived = c(0.1, 0.5, 0.5, 0.5)
+)
+```
+
 ### YLL
 
 #### Goal
@@ -1490,7 +1542,7 @@ purpose.
 To quantify the years of life lost (YLL) attributable to an exposure
 using a life table.
 
-#### Methodology
+#### Methods
 
 ##### General concept
 
@@ -1736,11 +1788,13 @@ Second, the mid-year population of year $`i+1`$ is calculated.
 midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear_{mod}
 ```
 
-#### Function call
+#### Example
 
 In the example below, we quantify the YLL from all-cause mortality
 attributable to PM2.5 exposure, using the example life table
 `exdat_lifetable`.
+
+##### Function call
 
 ``` r
 
@@ -1762,7 +1816,7 @@ results_pm_yll <- attribute_lifetable(
 ) 
 ```
 
-#### Main results
+##### Main results
 
 Total YLL attributable to exposure (sum of sex-specific impacts).
 
@@ -1775,7 +1829,7 @@ results_pm_yll$health_main
 |---------------:|:--------|:--------|:--------|
 |          28810 | central | central | central |
 
-#### Detailed results
+##### Detailed results
 
 Attributable YLL results
 
@@ -1787,10 +1841,10 @@ Attributable YLL results
 
 are available.
 
-Below, the results for females are shown; the results for males are also
-available.
+Below, the results per age and the population projections are shown for
+females; the results for males are also available.
 
-#### Results per year
+###### YLL per year
 
 Only a selection of years is shown.
 
@@ -1816,7 +1870,7 @@ results_pm_yll$health_detailed$results_raw |>
 | 2027 | 1284.054 |
 | 2028 | 1170.668 |
 
-##### YLL
+###### YLL per age
 
 ``` r
 
@@ -1838,7 +1892,7 @@ results_pm_yll$health_detailed$intermediate_calculations |>
 |        98 |      99 |    8.170093 |
 |        99 |     100 |   31.772534 |
 
-##### Population (exposed scenario)
+###### Population (exposed scenario)
 
 The exposed scenario is the scenario with the exposure specified in the
 assessment.
@@ -1863,7 +1917,7 @@ results_pm_yll$health_detailed$intermediate_calculations|>
 | 98 | 1520 | 1695.7730 | 1848.4164 | 2049.304 |
 | 99 | 2246 | 879.8714 | 988.6583 | 1077.651 |
 
-##### Population (unexposed scenario)
+###### Population (unexposed scenario)
 
 The unexposed scenario is the scenario without exposure.
 
@@ -1894,10 +1948,12 @@ results_pm_yll$health_detailed$intermediate_calculations|>
 To quantify the premature deaths attributable to an exposure using a
 life table.
 
-#### Function call
+#### Example
 
 In the example below, we quantify the all-cause premature deaths
 attributable to PM2.5 exposure, using the same life table as for YLL.
+
+##### Function call
 
 See example on YLL for additional info on
 [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
@@ -1922,7 +1978,7 @@ results_pm_deaths <- attribute_lifetable(
 )
 ```
 
-#### Main results
+##### Main results
 
 Total premature deaths attributable to exposure (sum of sex-specific
 impacts).
@@ -1936,7 +1992,7 @@ results_pm_deaths$health_main$impact
 |---------------:|:--------|:--------|:--------|
 |           2599 | central | central | central |
 
-#### Detailed results
+##### Detailed results
 
 Attributable premature deaths results
 
@@ -1985,7 +2041,7 @@ results_pm_deaths$health_detailed$intermediate_calculations|>
 To quantify the years lived with disability (YLD) attributable to an
 exposure.
 
-#### Methodology
+#### Methods
 
 To quantify the YLDs, you can use a prevalence-based or an
 incidence-based approach (Kim et al. 2022).
@@ -1999,11 +2055,13 @@ incidence-based approach (Kim et al. 2022).
 In both approaches, enter the disability weight (between 0 and 1) in
 `dw_...`.
 
-#### Function call
+#### Example
 
 In the example below, we quantify the YLD attributable to PM2.5 exposure
 for a disease with 1,000 incidence cases, a duration of 10 years and a
 disability weight of 0.2.
+
+##### Function call
 
 ``` r
 
@@ -2019,7 +2077,7 @@ results_pm_copd_yld  <- attribute_health(
 )
 ```
 
-#### Main results
+##### Main results
 
 ``` r
 
@@ -2037,7 +2095,7 @@ results_pm_copd_yld$health_main
 To quantify the disability-adjusted life years (DALY) attributable to an
 exposure as the sum of YLL and YLD.
 
-#### Methodology
+#### Methods
 
 To obtain the attributable DALY, its two components, i.e. years of life
 lost (YLL) and years lived with disability (YLD), must be summed (GBD
@@ -2047,11 +2105,13 @@ lost (YLL) and years lived with disability (YLD), must be summed (GBD
 DALY = YLL + YLD
 ```
 
-#### Function call
+#### Example 1: DALY of one scenario
 
 In the example below, we add up the YLL and the YLD from the previous
 chapters, using the function
 [`daly()`](https://swisstph.github.io/healthiar/reference/daly.md).
+
+##### Function call
 
 ``` r
 
@@ -2061,7 +2121,7 @@ results_daly <- daly(
 )
 ```
 
-#### Main results
+##### Main results
 
 YLL, YLD & DALY
 
@@ -2075,7 +2135,7 @@ results_daly$health_main |>
 |-------------------:|-------------------:|---------------:|
 |              28810 |                 72 |          28882 |
 
-#### DALY difference between two scenarios
+#### Example 2: DALY difference between two scenarios
 
 [`daly()`](https://swisstph.github.io/healthiar/reference/daly.md) also
 accepts the outputs of
@@ -2085,6 +2145,8 @@ YLL and the YLD of the two scenarios separately and then enter both
 comparisons in
 [`daly()`](https://swisstph.github.io/healthiar/reference/daly.md) to
 obtain the difference in DALY between the scenarios.
+
+##### Function call
 
 ``` r
 
@@ -2101,10 +2163,12 @@ results_daly_comparison <- daly(
 To create a new scenario that differs from an existing assessment only
 in some input data, without entering all input data again.
 
-#### Function call
+#### Example
 
 In the example below, we change the exposure of an existing assessment
 from 8.85 to 6 $`\mu g/m^3`$.
+
+##### Function call
 
 ``` r
 
@@ -2154,7 +2218,7 @@ scenario_B <- attribute_health(
 To quantify the difference in health impacts between two scenarios,
 e.g. before and after an intervention.
 
-#### Methodology
+#### Methods
 
 Two approaches can be used for the comparison of scenarios:
 
@@ -2237,10 +2301,12 @@ Where:
 - $`rr\_at\_exp\_2`$ = relative risk at the exposure level in scenario 2
   (alternative scenario)
 
-#### Function call
+#### Example
 
 In the example below, we compare the health impacts of a PM2.5 exposure
 of 8.85 $`\mu g/m^3`$ with those of 6 $`\mu g/m^3`$.
+
+##### Function call
 
 1.  Use
     [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
@@ -2286,7 +2352,7 @@ function documentation of
 [`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
 for more details.
 
-#### Main results
+##### Main results
 
 ``` r
 
@@ -2297,7 +2363,7 @@ results_comparison$health_main
 |---:|---:|---:|---:|---:|---:|---:|:---|---:|---:|
 | 773.5564 | 774 | 1050.86 | 277.304 | 25000 | 1 | 1 | population_weighted_mean | 8.85 | 6 |
 
-#### Detailed results
+##### Detailed results
 
 The
 [`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
@@ -2317,7 +2383,7 @@ already seen:
 To quantify the total health impact attributable to two correlated
 exposures.
 
-#### Methodology
+#### Methods
 
 A methodological report of the EU project BEST-COST (Strak et al. 2024)
 identified three approaches to add up attributable health impacts from
@@ -2348,11 +2414,13 @@ PAF_{combined} = 1-[(1-PAF_{exposure1}) \times (1-PAF_{exposure2})]
 **Important**: To apply any of these approaches, the relative risks for
 one exposure must be adjusted for the second exposure and vice versa.
 
-#### Function call
+#### Example
 
 In the example below, we combine the impacts of PM2.5 and NO2 with the
 multiplicative approach, using the function
 [`multiexpose()`](https://swisstph.github.io/healthiar/reference/multiexpose.md).
+
+##### Function call
 
 ``` r
 
@@ -2380,7 +2448,7 @@ results_multiplicative <- multiexpose(
 )
 ```
 
-#### Main results
+##### Main results
 
 ``` r
 
@@ -2398,7 +2466,7 @@ results_multiplicative$health_main
 To obtain age-standardized health impacts, which allow comparing
 populations with different age structures.
 
-#### Methodology
+#### Methods
 
 Age standardization involves adjusting the observed rates of a
 particular outcome to a standard population with a specific age
@@ -2425,11 +2493,13 @@ where:
   age group $`i`$ .
 - $`k`$ is the number of age groups.
 
-#### Function call
+#### Example
 
 In the example below, we standardize the health impacts of two age
 groups (below and above 40) with a reference population split equally
 between them.
+
+##### Function call
 
 ``` r
 
@@ -2451,7 +2521,7 @@ results <- standardize(
   )
 ```
 
-#### Main results
+##### Main results
 
 Age-standardized impact rate:
 
@@ -2476,7 +2546,7 @@ print(results$health_detailed$results_raw$impact_per_100k_inhab)
 To obtain the population-weighted mean exposure of geographic units from
 gridded concentration data and population data.
 
-#### Methodology
+#### Methods
 
 The *healthiar* function
 [`prepare_exposure()`](https://swisstph.github.io/healthiar/reference/prepare_exposure.md)
@@ -2508,10 +2578,12 @@ can be entered in the arguments `exp_central`, `exp_lower` and/or
 `exp_upper` in *healthiar* functions such as
 [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md).
 
-#### Function call
+#### Example
 
 In the example below, we obtain the population-weighted mean PM2.5
 exposure of neighbourhoods in Brussels (Belgium), aggregated by region.
+
+##### Function call
 
 ``` r
 
@@ -2528,7 +2600,7 @@ pwm <- healthiar::prepare_exposure(
   geo_id_macro = sf::st_drop_geometry(exdat_pwm_2$region)) # higher-level IDs to aggregate
 ```
 
-#### Main results
+##### Main results
 
 Within the function output, the list `exposure_main` contains the
 population-weighted mean exposures for the (higher-level) geographic
@@ -2556,7 +2628,7 @@ To quantify health impacts when the exposure data only cover exposures
 above a level (cut-off) that is higher than the effect threshold of the
 exposure-response function.
 
-#### Methodology
+#### Methods
 
 *healthiar* distinguishes two exposure levels:
 
@@ -2630,11 +2702,13 @@ already get the risk at the reference level. A cut-off below the effect
 threshold cannot remove any additional exposure and the results are the
 same as if only `threshold` had been entered.
 
-#### Function call
+#### Example
 
 In the example below (case b above), we quantify the health impacts in
 the noise exposure groups above 55 dB (cut-off) with an effect threshold
 of 45 dB.
+
+##### Function call
 
 ``` r
 
@@ -2687,7 +2761,7 @@ The categorical ERF curve created looks as follows. The step at the
 cut-off is clearly visible.
 
 ![ERF
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-102-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-103-1.png)
 
 ## Shifting the ERF
 
@@ -2696,7 +2770,7 @@ curve](intro_to_healthiar_files/figure-html/unnamed-chunk-102-1.png)
 To enter an exposure-response function in `erf_eq_...` correctly,
 depending on whether it already incorporates the cut-off.
 
-#### Methodology
+#### Methods
 
 *healthiar* evaluates the exposure-response function entered in
 `erf_eq_...` at $`c = exp - threshold`$, and the threshold takes the
@@ -2724,10 +2798,12 @@ exposure-response functions published in the literature already
 incorporate the cut-off in the function definition. The warning can be
 ignored here.
 
-#### Function call
+#### Example
 
 In the example below, the same absolute risk function is entered once
 unshifted and once shifted by a cut-off of 53 dB.
+
+##### Function call
 
 ``` r
 
@@ -2767,7 +2843,7 @@ vs. threshold](#cutoff-vs-threshold)).
 To express attributable health impacts in monetary terms, optionally
 with discounting, inflation and growth in valuation.
 
-#### Methodology
+#### Methods
 
 In health economic evaluations and economic burden of disease
 assessments, health impacts may need to be converted into monetary
@@ -2897,11 +2973,13 @@ rates can be entered instead of one single value, in which case the
 factor is the product of the year-specific factors. This ensures that
 long-term environmental impacts are not undervalued.
 
-#### Function call
+#### Example 1: output of `attribute_health()`
 
 In the example below, we monetize the COPD cases from the chapter
 *Confidence interval* with a value of 50,000 EUR per case, discounted at
 3% over 5 years.
+
+##### Function call
 
 ``` r
 
@@ -2914,7 +2992,7 @@ monetized_pm_copd <- monetize(
 )
 ```
 
-#### Main results
+##### Main results
 
 The outcome of the monetization is added to the variable entered to the
 `output_attribute` argument, which is `results_pm_copd` in our case.
@@ -2945,8 +3023,12 @@ monetized_pm_copd$monetization_main
 We see that the central estimate of the monetized impact (discounted) is
 about 151 million EURO.
 
+#### Example 2: impacts from other sources
+
 Alternatively, you can also monetize (attributable) health impacts from
 a non-*healthiar* source.
+
+##### Function call
 
 ``` r
 
@@ -2963,7 +3045,7 @@ results <- monetize(
 To compare the monetized health benefits of an intervention with its
 costs.
 
-#### Methodology
+#### Methods
 
 The CBA is a type of economic evaluation that compares the costs and the
 benefits of an intervention, considering both measures expressed in
@@ -3006,13 +3088,15 @@ cbr = \frac{benefit}{cost}
 roi = \frac{benefit - cost}{cost} \times 100
 ```
 
-#### Function call
+#### Example
 
 Let’s imagine we design a policy that would reduce air pollution to 5
 $`\mu g/m^3`$, which is the concentration specified in the
 `cutoff_central` argument in the initial
 [`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
 call. So we could avoid all COPD cases attributed to air pollution.
+
+##### Function call
 
 Considering the cost to implement the policy (estimated at 100 million
 EURO), what would be the monetary net benefit of such a policy? We can
@@ -3033,7 +3117,7 @@ cba <- cba(
 )
 ```
 
-#### Main results
+##### Main results
 
 The outcome of the CBA is contained in two folders, which are added to
 the existing assessment:
@@ -3076,7 +3160,7 @@ net cost!
 To quantify the differences in attributable health impacts between more
 and less deprived areas.
 
-#### Methodology
+#### Methods
 
 Taking into account socio-economic indicators, e.g. a multiple
 deprivation index (Mogin et al. 2025), the differences in attributable
@@ -3129,10 +3213,12 @@ difference regarding the overall average health impact could be
 interpreted as some kind of relative risk attributable to social
 inequalities.
 
-#### Function call
+#### Example
 
 In the example below, we compare the mortality attributable to PM2.5
 exposure across deciles of a deprivation score.
+
+##### Function call
 
 First, quantify health impacts.
 
@@ -3191,7 +3277,7 @@ social <- healthiar::socialize(
 #> quantiles (first and last), but they are still part of the overall values.
 ```
 
-#### Main results
+##### Main results
 
 ``` r
 
@@ -3218,7 +3304,7 @@ To create a multiple deprivation index (MDI) from several socio-economic
 indicators, e.g. to enter it in the argument `social_indicator` of
 [`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md).
 
-#### Methodology
+#### Methods
 
 Socio-economic indicators (e.g., education level, employment status and
 family structure) can be condensed into a multiple deprivation index
@@ -3250,11 +3336,13 @@ with others.
 Imputation models should have an R^2 greater than or equal to 0.7. If
 R^2 lower than 0.7, consider alternative data sources or methods.
 
-#### Function call
+#### Example
 
 In the example below, we create an MDI from five indicators (education,
 unemployment, single parents, population change and lack of heating) and
 split it into deciles.
+
+##### Function call
 
 ``` r
 
@@ -3273,7 +3361,7 @@ mdi <- prepare_mdi(
 *Note*: `verbose = FALSE` suppresses any output to the console (default:
 `verbose = TRUE`, i.e. with printing turned on).
 
-#### Main results
+##### Main results
 
 Function output includes:
 
@@ -3304,7 +3392,7 @@ between 0.8 (included) and 0.9: Good reliability - between 0.7
 (included) and 0.8: Acceptable reliability - between 0.6 (included) and
 0.7: Questionable reliability - lower than 0.6: Poor reliability
 
-#### Detailed results
+##### Detailed results
 
 - `mdi_detailed`
 
@@ -3327,7 +3415,7 @@ eval(mdi$mdi_detailed$boxplot)
 ```
 
 ![Boxplot of Normalized Indicators and
-MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-117-1.png)
+MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-118-1.png)
 Analogously, to reproduce the histogram run
 
 ``` r
@@ -3336,7 +3424,7 @@ eval(mdi$mdi_detailed$histogram)
 ```
 
 ![Histogram of MDI with normal
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-118-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-119-1.png)
 
 ------------------------------------------------------------------------
 
