@@ -36,7 +36,7 @@ Want to know as soon as a new *healthiar* version is released? See [Stay updated
 
 ## Getting started 
 
-You have different materials to learn about the R package `healthiar`.
+You have different materials to learn about the R package *healthiar*.
 
 ### Cheat sheet
 Have a quick and visual look at the [cheat sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html):
@@ -56,7 +56,7 @@ See the function help pages for information about specific functions. You can ac
 
 a) going to the [reference page of the package website](https://swisstph.github.io/healthiar/reference/index.html)
 
-b) running `?attribute_health` in the R console (with `healthiar` loaded)
+b) running `?attribute_health` in the R console (with *healthiar* loaded)
 
 ### Video
 Watch a 45-minute video from an online international workshop (30 September 2025), which can be found [here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ). 
@@ -77,7 +77,7 @@ We regularly improve *healthiar* and publish a new [GitHub release](https://gith
 
 ## Installation
 We recommend frequently installing the newest *healthiar* version. 
-Please note that **`healthiar` requires R version 4.2.0 or higher**. 
+Please note that **_healthiar_ requires R version 4.2.0 or higher**. 
 There are two options to install *healthiar*:
 
 a) **From CRAN**: Run the following command in R:  
@@ -89,11 +89,11 @@ in R:
 1.- Install the package `remotes` (if not already installed):  
 `install.packages("remotes")`
 
-2.- Install `healthiar`: 
+2.- Install *healthiar*: 
 `remotes::install_github(repo = "SwissTPH/healthiar", build_vignettes = TRUE, dependencies = TRUE)`
 
 Note that you may be prompted to install or update additional package dependencies 
-required by `healthiar`.
+required by *healthiar*.
 
 **After installation**, do not forget to load the package by running the call 
 `library(healthiar)`. 
@@ -107,8 +107,8 @@ To get the full reference and the BibTeX entry, run `citation("healthiar")` in R
 *healthiar* can alternatively be cited through its [GitHub repository](https://github.com/SwissTPH/healthiar/blob/master/CITATION.cff) or its [Zenodo archive](https://doi.org/10.5281/zenodo.18220360), but we encourage you to cite the above-mentioned
 JOSS paper.
 
-## Disclaimer and licence 
-By using *healthiar*, you confirm that you agree with the following disclaimer and terms of the licence:
+## Disclaimer and license 
+By using *healthiar*, you confirm that you agree with the following disclaimer and terms of the license:
 
 a) Disclaimer: The R package *healthiar* is provided "as is", without warranty of any kind. The developers are not liable for the results obtained with it.
 
