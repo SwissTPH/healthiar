@@ -427,7 +427,7 @@ Alberto Castro & Axel Luyten
 ## Examples
 
 ``` r
-# Goal: attribute lung cancer cases to population-weighted PM2.5 exposure
+# Goal: attribute COPD cases to population-weighted PM2.5 exposure
 # using relative risk
 
 results <- attribute_health(
@@ -436,7 +436,7 @@ results <- attribute_health(
   rr_increment = 10,             # per \mu g / m^3 increase in PM2.5 exposure
   exp_central = 8.85,            # Central exposure estimate in \mu g / m^3
   cutoff_central = 5,            # \mu g / m^3
-  bhd_central = 30747            # Baseline health data: lung cancer incidence
+  bhd_central = 30747            # Baseline health data: COPD incidence
  )
 
 results$health_main$impact_rounded # Attributable cases

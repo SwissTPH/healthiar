@@ -15,7 +15,10 @@ daly(output_attribute_yll, output_attribute_yld)
 - output_attribute_yll, output_attribute_yld:
 
   `variable` containing YLL or YLD results of a `attribute_...()`
-  function call, respectively.
+  function call, respectively. Alternatively, the outputs of
+  [`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
+  with YLL and YLD, respectively, to obtain the difference in DALY
+  between two scenarios.
 
 ## Value
 
@@ -58,7 +61,7 @@ disability (YLD) to obtain the disability-adjusted lost years (DALY)
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
 
-- [dalys](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#dalys)
+- [DALY](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#daly)
 
 ## References
 

@@ -1,10 +1,15 @@
 # healthiar: Quantifying and Monetizing Health Impacts Attributable to Exposure
 
-This R package has been developed with a focus on air pollution and
-noise but can be applied to other exposures. The initial development has
-been funded by the European Union project BEST-COST. Disclaimer: It is
-work in progress and the developers are not liable for any calculation
-errors or inaccuracies resulting from the use of this package. Selection
+Quantifies and monetizes the health impacts attributable to exposure in
+a study area. It has been developed with a focus on air pollution and
+noise but can be applied to other exposures. It includes relative and
+absolute risk approaches, life tables, multiple geographic units,
+summary of uncertainty, comparison of scenarios, cost-benefit analysis
+and social inequalities. The initial development has been funded by the
+European Union project BEST-COST. Disclaimer: This package is provided
+"as is", without warranty of any kind. The developers are not liable for
+any calculation errors, inaccuracies or results obtained with it.
+Functions, arguments and results may change between versions. Selection
 of relevant references (in chronological order): WHO (2003)
 <https://www.who.int/publications/i/item/9241546204>, Murray et al.
 (2003)
