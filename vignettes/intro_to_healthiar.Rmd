@@ -41,36 +41,31 @@ spatial_packages_available <-
   requireNamespace("exactextractr", quietly = TRUE)
 ```
 
-Hi there!
+This vignette introduces *healthiar* and shows how to use it with the help of examples.
 
-This vignette will tell you about `healthiar` and show you how to use `healthiar` with the help of examples.
-
-*Note*: Before using `healthiar`, please read carefully the information provided in the [readme file](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) or the [welcome webpage](https://swisstph.github.io/healthiar/). By using `healthiar`, you agree to the [terms of use and disclaimer](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme).
-
-*Tip*: Do you want to be notified when a new `healthiar` version is released? See the [Stay updated](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#stay-updated) section of the readme file.
-
+Before using *healthiar*, please read the [README](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) or the [package website](https://swisstph.github.io/healthiar/). By using *healthiar*, you agree to its [disclaimer and license](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#disclaimer-and-license).
 
 
 ------------------------------------------------------------------------
 
-# About `healthiar`
+# About *healthiar*
 
-The `healthiar` functions allow you to quantify and monetize the health impacts (or burden of disease) attributable to exposure. The main focus of the EU project that initiated the development of `healthiar` (BEST-COST) has been two environmental exposures:  air pollution and noise. However, `healthiar` could be used for other exposures such as green spaces, chemicals, physical activity...
+The *healthiar* functions allow you to quantify and monetize the health impacts (or burden of disease) attributable to exposure. The main focus of the EU project that initiated the development of *healthiar* (BEST-COST) has been two environmental exposures:  air pollution and noise. However, *healthiar* could be used for other exposures such as green spaces, chemicals, physical activity...
 
-See below an overview of `healthiar`, which is the first page of the [cheat sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html). The whole list of functions included in `healthiar` is linked there and available in the [reference](https://swisstph.github.io/healthiar/reference/index.html). 
+See below an overview of *healthiar*, which is the first page of the [cheat sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html). The whole list of functions included in *healthiar* is linked there and available in the [reference](https://swisstph.github.io/healthiar/reference/index.html). 
 
 
-![Figure: Overview of `healthiar`](../man/figures/cheatsheet_healthiar_1st_page.png)
+![Figure: Overview of *healthiar*](../man/figures/cheatsheet_healthiar_1st_page.png)
 
 # Input & output data
 
 ## Input
 
-You can enter data in `healthiar` functions using: 
+You can enter data in *healthiar* functions using: 
 - hard coded values or
 - columns inside pre-loaded data frames or tibbles.
 
-Let's see some examples calling the most important function in `healthiar`: `attribute_health()`.
+Let's see some examples calling the most important function in *healthiar*: `attribute_health()`.
 
 ### Hard coded vs. columns
 
@@ -91,9 +86,9 @@ results_pm_copd <- attribute_health(
 
 #### Columns
 
-`healthiar` comes with some example data that start with `exdat_` that allow you to test functions. Some of these example data will be used in some examples in this vignette.
+*healthiar* comes with some example data that start with `exdat_` that allow you to test functions. Some of these example data will be used in some examples in this vignette.
 
-Now let's `attribute_health()` with input data from the `healthiar` example data. Note that you can easily provide input data to the function argument using the `$` operator.
+Now let's call `attribute_health()` with input data from the *healthiar* example data. Note that you can easily provide input data to the function argument using the `$` operator.
 
 ```{r, eval=FALSE, include=TRUE}
 results_pm_copd <- attribute_health(
@@ -109,7 +104,7 @@ results_pm_copd <- attribute_health(
 
 ### Tidy data
 
-Be aware that `healthiar` functions are easier to use if your data is prepared in a tidy format, i.e.:
+Be aware that *healthiar* functions are easier to use if your data is prepared in a tidy format, i.e.:
 
 - Each variable is a column; each column is a variable.
 
@@ -136,24 +131,24 @@ For example, in `attribute_health()` the length of the input vectors to be enter
 
 #### Structure
 
-The output of the `healthiar` functions `attribute_health()` and `attribute_lifetable()` consists of two lists ("folders"):
+The output of the *healthiar* functions `attribute_health()` and `attribute_lifetable()` consists of two lists ("folders"):
 
 -   `health_main` contains the main results
 
 -   `health_detailed` contains detailed results and additional info about the assessment.
 
-In other `healthiar` functions you can find a similar output structure but using different prefixes. E.g., `social_` in `socialize()` and `monetization_` in `monetize()`.
+In other *healthiar* functions you can find a similar output structure but using different prefixes. E.g., `social_` in `socialize()` and `monetization_` in `monetize()`.
 
 
 #### Access
 
-A similar structure can be found in other large functions in `healthiar`, e.g., `attribute_lifetable()`, `compare()`, `socialize()` or `monetize()`. In some functions, different elements are available in the output. For instance,   `attribute_lifetable()` creates additional output that is specific to life table calculations.
+A similar structure can be found in other large functions in *healthiar*, e.g., `attribute_lifetable()`, `compare()`, `socialize()` or `monetize()`. In some functions, different elements are available in the output. For instance,   `attribute_lifetable()` creates additional output that is specific to life table calculations.
 
 There exist different, equivalent ways of accessing the output:
 
 -   With `$` operator: `results_pm_copd$health_main$impact_rounded` (as in the example above)
 
--   By mouse: go to the *Environment* tab in RStudio and click on the variable you want to inspect, and then open the `health_main` results table
+-   By mouse: in the pane of your editor that lists the variables (e.g. *Environment* in RStudio), click on the variable you want to inspect, and then open the `health_main` results table
 
 -   With `[[]]` operator `results_pm_copd[["health_main"]]`
 
@@ -166,7 +161,7 @@ There exist different, equivalent ways of accessing the output:
 
 # Function examples
 
-The descriptions of the [`healthiar` functions](https://swisstph.github.io/healthiar/reference/index.html) provide examples that you can execute (with `healthiar` loaded) by running `example("function_name")`, e.g. `example("attribute_health")`. In the sections below in this vignette, you find additional examples and more detailed explanations.
+The descriptions of the [*healthiar* functions](https://swisstph.github.io/healthiar/reference/index.html) provide examples that you can execute (with *healthiar* loaded) by running `example("function_name")`, e.g. `example("attribute_health")`. In the sections below in this vignette, you find additional examples and more detailed explanations.
 
 
 # Relative risk 
@@ -207,7 +202,7 @@ Alternatively, an equivalent form is:
 
 $$PAF = \frac{\sum prop\_pop\_exp_i \times (rr\_at\_exp_i - 1)}{\sum prop\_pop\_exp_i\times (rr\_at\_exp_i - 1) + 1}$$
 
-`healthiar` uses this second form, which is the one published as Formula 3 in
+*healthiar* uses this second form, which is the one published as Formula 3 in
 [ETC HE Report 2023/11](https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2023-11-environmental-noise-health-risk-assessment-methodology-for-assessing-health-risks-using-data-reported-under-the-environmental-noise-directive).
 Note that $prop\_pop\_exp_i$ is the proportion of the **total** population in the exposure
 category $i$, so the $prop\_pop\_exp_i$ do **not** have to add up to 1: the part of the
@@ -310,14 +305,14 @@ Where:
 * $pop\_exp_i$ = absolute population exposed at exposure category $i$
 
 
-`healthiar` consistently handles cut-off values across both relative and absolute risk approaches. 
+*healthiar* consistently handles cut-off values across both relative and absolute risk approaches. 
 When a `cutoff_` argument is specified alongside an exposure–response function (`erf_eq_`), 
 the function evaluates exposure as excess exposure relative to the cut-off 
 (`c` as $\text{exp} - \text{cutoff}$), 
 effectively shifting the function by the cut-off.
 However, many absolute risk curves published in the literature are parameterized 
 on raw exposure levels that already incorporate the cut-off directly into the function definition. 
-Therefore, `healthiar` issues an informative warning if 
+Therefore, *healthiar* issues an informative warning if 
 both `erf_eq_` and a `cutoff_` are specified when using `attribute_health()`.
 If your absolute risk function is parameterized on raw exposure levels 
 rather than on the exposure above the cut-off, 
@@ -596,7 +591,7 @@ by using a Monte Carlo simulation.
 #### General concepts
 A Monte Carlo simulation is a statistical method that 
 generates repeated random sampling [@Robert2004_book; @Rubinstein2016_book]. 
-In `healthiar`, you can use the function `summarize_uncertainty()` 
+In *healthiar*, you can use the function `summarize_uncertainty()` 
 to simulate values in the arguments with uncertainty and 
 estimate a single confidence interval in the results.
 
@@ -1103,7 +1098,7 @@ are only available for larger age groups (e.g., 5-year data: 0-4 years old, 5-9 
 
 - If your population and mortality data are *not* available by one-year age group, 
 data must be prepared by interpolating values. 
-The `healthiar` function `prepare_lifetable()` makes this conversion using the same approach as the WHO tool
+The *healthiar* function `prepare_lifetable()` makes this conversion using the same approach as the WHO tool
 AirQ+ [@WHO2020_report]. In standard AirQ+ life table disaggregations, deaths are assumed to be distributed uniformly across age intervals with a fraction of the age interval lived of 0.5. The argument `fraction_lived` allows other assumptions, see the section on the fraction of the age interval lived below.
 
 - If your population and death data are stratified by one-year age group, you are lucky, you can ignore this initial step. `prepare_lifetable()` passes single-year data on unchanged, so it can also be used for a life table that mixes already available single-year data with converted larger age groups.
@@ -1151,7 +1146,7 @@ $$entry\_population_{first} = \frac{population + (1 - fraction\_lived) \times bh
 
 For $fraction\_lived = 0.5$ this reproduces the values published in the AirQ+ manual, and unlike the formula given there it holds for any age interval width and any value of `fraction_lived`.
 
-Both relations are checked in internal tests in `healthiar` against a published life table, the abridged life table for Austrian males in 1992 [@Preston2001_book], in which the fraction of the age interval lived ranges from 0.48 to 0.63 in the 5-year age groups and is 0.068 at age 0. Applying the probability of dying obtained by `prepare_lifetable()` to the published survivors reproduces the published deaths of that life table for every age group, and the entry population it determines from the published mid-year population and deaths at age 0 reproduces the published number of survivors.
+Both relations are checked in internal tests in *healthiar* against a published life table, the abridged life table for Austrian males in 1992 [@Preston2001_book], in which the fraction of the age interval lived ranges from 0.48 to 0.63 in the 5-year age groups and is 0.068 at age 0. Applying the probability of dying obtained by `prepare_lifetable()` to the published survivors reproduces the published deaths of that life table for every age group, and the entry population it determines from the published mid-year population and deaths at age 0 reproduces the published number of survivors.
 
 #### What it does not determine
 
@@ -1254,24 +1249,24 @@ then grow with the number of added age groups instead of converging.
 
 #### Comparison with AirQ+
 
-`healthiar` aligns with AirQ+ in the equations of the life table. The survival
+*healthiar* aligns with AirQ+ in the equations of the life table. The survival
 probability of AirQ+, $S_i = (2 - h_i) / (2 + h_i)$, is identical to the one
 used here with the default `fraction_lived = 0.5`, and the modified survival probability is obtained in both tools by
 dividing the hazard rate by the relative risk (which is equivalent to
 multiplying it by $1 - PAF$) [@WHO2020_report].
 
-`healthiar` reproduces the results of AirQ+. For the same input data, the
+*healthiar* reproduces the results of AirQ+. For the same input data, the
 attributable YLL and premature deaths of both tools agree to the last decimal
 that AirQ+ prints, for an exposure of one single year as well as for a constant
 exposure, year by year and accumulated over several years, and so do the life
 expectancies with and without the exposure.
 
 The comparison has to be made by sex, though, because the "All genders" results
-of AirQ+ are not the sum of its male and female results as in `healthiar`: AirQ+ obtains them
+of AirQ+ are not the sum of its male and female results as in *healthiar*: AirQ+ obtains them
 from a life table in which the populations and the deaths of both sexes are
 pooled, which has to be entered and run separately [@WHO2020_report].
 With the data of the example below, the pooled life table for all genders in AirQ+ gives 1.6% more YLL
-than the sum of two sex-specific ones in `healthiar`. `healthiar` returns that pooled value too, when
+than the sum of two sex-specific ones in *healthiar*. *healthiar* returns that pooled value too, when
 the populations and the deaths of both sexes are entered as one single life
 table, i.e. passing the same value in `sex` for every age group.
 
@@ -1925,7 +1920,7 @@ Age standardization involves adjusting the observed rates of a particular
 outcome to a standard population with a specific age structure. 
 This is a technique used to allow the comparison of populations 
 with different age structures [@GBD2020_tldemo; @Ahmad2001_report]. 
-In `healthiar`, the function `standardize()` applies the direct method, 
+In *healthiar*, the function `standardize()` applies the direct method, 
 where the age-specific rates observed in a study population 
 are applied to a standard (reference) population distribution.
 
@@ -1991,8 +1986,8 @@ rm(results)
 E.g., to determine population-weighted mean PM2.5 exposure for several neighborhoods of Brussels (Belgium)
 
 ### Methodology
-The `healthiar` function `prepare_exposure()` helps users that do not have the 
-exposure data (needed for `healthiar` functions), but only spatial 
+The *healthiar* function `prepare_exposure()` helps users that do not have the 
+exposure data (needed for *healthiar* functions), but only spatial 
 concentration and population data. 
 The function calculates an average concentration value in each geographic unit, 
 weighted with population at each location. 
@@ -2013,7 +2008,7 @@ If no population data is entered,
 the function calculates a simple spatial mean concentration as exposure value.
 
 The output of `prepare_exposure()` can be entered in the arguments
-`exp_central`, `exp_lower` and/or `exp_upper` in `healthiar` functions
+`exp_central`, `exp_lower` and/or `exp_upper` in *healthiar* functions
 such as `attribute_health()`.
 
 ### Function call
@@ -2064,7 +2059,7 @@ although health effects already occur at lower exposures.
 
 ### Methodology
 
-`healthiar` distinguishes two exposure levels:
+*healthiar* distinguishes two exposure levels:
 
 * `threshold` is the **effect threshold**, i.e. the exposure level
 from which the exposure-response function starts to show an effect.
@@ -2089,7 +2084,7 @@ Accordingly, there are three possible combinations:
 
 This is the default situation.
 Since both threshold and cut-off are usually identical, 
-`healthiar` assumes that the values are the same, if one of them is missing.
+*healthiar* assumes that the values are the same, if one of them is missing.
 Therefore, in that case, it is enough to enter only one value.
 The exposure-response function is anchored at that level,
 which is therefore subtracted from the exposure,
@@ -2131,7 +2126,7 @@ the cut-off get no attributable health impacts (i.e. a conservative estimate).
 
 **c) Cut-off lower than the effect threshold**
 
-The cut-off has no effect on the results and `healthiar` shows a warning.
+The cut-off has no effect on the results and *healthiar* shows a warning.
 The reason is that the exposure-response function is anchored at
 the effect threshold, so the exposures below the effect threshold
 already get the risk at the reference level.
@@ -2234,7 +2229,7 @@ exposure-response function is passed in `erf_eq_...`.
 
 ### Methodology
 
-`healthiar` evaluates the exposure-response function entered in `erf_eq_...`
+*healthiar* evaluates the exposure-response function entered in `erf_eq_...`
 at $c = exp - threshold$, and the threshold takes the value of the cut-off
 if it is not entered (see chapter [Cut-off vs. threshold](#cutoff-vs-threshold)).
 The cut-off therefore moves the exposure-response function horizontally.
@@ -2254,7 +2249,7 @@ Enter a value in the argument(s) `cutoff_...`,
 so that the function is moved horizontally by the cut-off,
 i.e. $c = exp - cutoff$.
 
-Be aware that, in case b), `healthiar` shows a warning when a `cutoff_...`
+Be aware that, in case b), *healthiar* shows a warning when a `cutoff_...`
 is entered alongside `approach_risk = "absolute_risk"`, because many
 exposure-response functions published in the literature already incorporate
 the cut-off in the function definition. The warning can be ignored here.
@@ -2321,7 +2316,7 @@ This factor is then multiplied by the corresponding future cost (or effect)
 to express it in present-value terms. 
 
 If you need the discounted values of a cost or health outcome, 
-you can call the `healthiar` function `discount()`. 
+you can call the *healthiar* function `discount()`. 
 If you just need the discount factor, you can alternatively call `get_discount_factor()`.
 If you just need the inflation factor, you can call `get_inflation_factor()`,
 or the deflation factor by entering `is_deflation = TRUE` in the same function.
@@ -2442,7 +2437,7 @@ monetized_pm_copd$monetization_main |>
 
 We see that the central estimate of the monetized impact (discounted) is about `r round(monetized_pm_copd$monetization_main$monetized_impact[1] / 1e6)` million EURO.
 
-Alternatively, you can also monetize (attributable) health impacts from a non-`healthiar` source.
+Alternatively, you can also monetize (attributable) health impacts from a non-*healthiar* source.
 
 ```{r}
 results <- monetize(
@@ -2499,7 +2494,7 @@ $$roi = \frac{benefit - cost}{cost} \times 100$$
 
 Let's imagine we design a policy that would reduce air pollution to 5 $\mu g/m^3$, which is the concentration specified in the `cutoff_central` argument in the initial `attribute_health()` call. So we could avoid all COPD cases attributed to air pollution.
 
-Considering the cost to implement the policy (estimated at 100 million EURO), what would be the monetary net benefit of such a policy? We can find out using the `healthiar` function `cba()`.
+Considering the cost to implement the policy (estimated at 100 million EURO), what would be the monetary net benefit of such a policy? We can find out using the *healthiar* function `cba()`.
 
 ```{r}
 cba <- cba(
@@ -2757,7 +2752,7 @@ rm(mdi)
 
 ## Pipe |>
 
-`healthiar` can be used inside the _native_ pipes `|>`. See the example below.
+*healthiar* can be used inside the _native_ pipes `|>`. See the example below.
 
 ```{r eval=FALSE, include=TRUE, echo = TRUE}
 exdat_noise |>
@@ -2790,7 +2785,7 @@ exdat_noise |>
 
 ## Pipe %>%
 
-`healthiar` can also be used inside _magrittr_ pipes `%>%` as follows.
+*healthiar* can also be used inside _magrittr_ pipes `%>%` as follows.
 
 ```{r eval=FALSE, include=TRUE, echo = TRUE}
 exdat_noise %>%
@@ -2808,7 +2803,7 @@ exdat_noise %>%
 
 # Export and visualize
 
-Exporting and visualizing results is out of scope of `healthiar`. To export and visualize, you can make use of existing functions in other packages beyond `healthiar` as indicated below.
+Exporting and visualizing results is out of scope of *healthiar*. To export and visualize, you can make use of existing functions in other packages beyond *healthiar* as indicated below.
 
 ## Export results
 
@@ -2832,7 +2827,7 @@ openxlsx::write.xlsx(x = results_pm_copd$health_main, file = "exported_results/r
 
 ## Visualize results
 
-Visualization is out of scope of `healthiar`. You can visualize in:
+Visualization is out of scope of *healthiar*. You can visualize in:
 
 -   R using base programming or packages such as `ggplot2` [@Wickham2016_ggplot],
 -   Excel (export results first) or
