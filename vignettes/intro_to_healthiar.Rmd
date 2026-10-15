@@ -165,7 +165,7 @@ There exist different, equivalent ways of accessing the output:
 
 To quantify the health impacts attributable to an exposure using a relative risk and baseline health data.
 
-### Methodology
+### Methods
 The comparative risk assessment approach [@Murray2003_e] is applied obtaining the population attributable fraction 
 (percent of cases that are attributable to the exposure) based on the relative risk. 
 The exposure scenario is compared with a counterfactual scenario.
@@ -285,7 +285,7 @@ Some of the most relevant results columns include:
 
 To quantify the health impacts attributable to an exposure using an absolute risk, i.e. based on the exposed population instead of baseline health data.
 
-### Methodology
+### Methods
 In the absolute risk calculation pathway, estimates are based on the size and distribution 
 of the exposed population, rather than on baseline health data, 
 as is the case in the relative risk pathway [@WHO2011_report]. 
@@ -585,7 +585,7 @@ Only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_ra
 
 To summarize the uncertainty of several input data into one single confidence interval of the attributable health impacts.
 
-### Methodology
+### Methods
 
 #### General concepts
 A Monte Carlo simulation is a statistical method that 
@@ -1184,7 +1184,7 @@ Whichever `fraction_lived` is used in `prepare_lifetable()` has to be passed on 
 
 To quantify the years of life lost (YLL) attributable to an exposure using a life table.
 
-### Methodology
+### Methods
 
 #### General concept
 The life table methodology of `attribute_lifetable()` follows that of the WHO tool AirQ+ [@WHO2020_report], which is described in more detail by @Miller2003_jech. 
@@ -1587,7 +1587,7 @@ rm(results_pm_deaths)
 
 To quantify the years lived with disability (YLD) attributable to an exposure.
 
-### Methodology
+### Methods
 
 To quantify the YLDs, you can use a prevalence-based or an incidence-based approach [@Kim2022_kspm].
 
@@ -1632,7 +1632,7 @@ results_pm_copd_yld$health_main |>
 
 To quantify the disability-adjusted life years (DALY) attributable to an exposure as the sum of YLL and YLD.
 
-### Methodology
+### Methods
 
 To obtain the attributable DALY, its two components, i.e. years of life lost (YLL) and years lived with disability (YLD), must be summed [@GBD2020_tl].
 
@@ -1733,7 +1733,7 @@ scenario_B <- attribute_health(
 
 To quantify the difference in health impacts between two scenarios, e.g. before and after an intervention.
 
-### Methodology
+### Methods
 
 Two approaches can be used for the comparison of scenarios:
 
@@ -1870,7 +1870,7 @@ rm(results_comparison, scenario_A, scenario_B)
 
 To quantify the total health impact attributable to two correlated exposures.
 
-### Methodology
+### Methods
  
 A methodological report of the EU project BEST-COST [@Strak2024_report] identified
 three approaches to add up attributable health impacts from correlated exposures:
@@ -1949,7 +1949,7 @@ rm(results_multiplicative)
 
 To obtain age-standardized health impacts, which allow comparing populations with different age structures.
 
-### Methodology
+### Methods
 
 Age standardization involves adjusting the observed rates of a particular 
 outcome to a standard population with a specific age structure. 
@@ -2022,7 +2022,7 @@ rm(results)
 
 To obtain the population-weighted mean exposure of geographic units from gridded concentration data and population data.
 
-### Methodology
+### Methods
 The *healthiar* function `prepare_exposure()` helps users that do not have the 
 exposure data (needed for *healthiar* functions), but only spatial 
 concentration and population data. 
@@ -2092,7 +2092,7 @@ rm(pwm)
 
 To quantify health impacts when the exposure data only cover exposures above a level (cut-off) that is higher than the effect threshold of the exposure-response function.
 
-### Methodology
+### Methods
 
 *healthiar* distinguishes two exposure levels:
 
@@ -2259,7 +2259,7 @@ legend("topleft",
 
 To enter an exposure-response function in `erf_eq_...` correctly, depending on whether it already incorporates the cut-off.
 
-### Methodology
+### Methods
 
 *healthiar* evaluates the exposure-response function entered in `erf_eq_...`
 at $c = exp - threshold$, and the threshold takes the value of the cut-off
@@ -2324,7 +2324,7 @@ enter a `cutoff_...` value higher than the `threshold`
 
 To express attributable health impacts in monetary terms, optionally with discounting, inflation and growth in valuation.
 
-### Methodology
+### Methods
 In health economic evaluations and economic burden of disease assessments, 
 health impacts may need to be converted into monetary values. 
 For this purpose, you can use  `monetize()`. 
@@ -2488,7 +2488,7 @@ results <- monetize(
 
 To compare the monetized health benefits of an intervention with its costs.
 
-### Methodology
+### Methods
 
 The CBA is a type of economic evaluation that compares 
 the costs and the benefits of an intervention, 
@@ -2575,7 +2575,7 @@ We see that the central and upper 95% confidence interval estimates of avoided a
 
 To quantify the differences in attributable health impacts between more and less deprived areas.
 
-### Methodology
+### Methods
 
 Taking into account socio-economic indicators, e.g. a multiple deprivation index [@Mogin2025_ejph], the differences in attributable health impacts
 across the study areas 
@@ -2688,7 +2688,7 @@ social$social_main |>
 
 To create a multiple deprivation index (MDI) from several socio-economic indicators, e.g. to enter it in the argument `social_indicator` of `socialize()`.
 
-### Methodology
+### Methods
 
 Socio-economic indicators (e.g., education level, employment status and family structure) can be condensed into a multiple deprivation index (MDI) [@Mogin2025_ejph]. For this purpose, the indicators can be normalized using min-max scaling.
 
