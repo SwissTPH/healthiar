@@ -2444,7 +2444,7 @@ monetized_pm_copd$monetization_main |>
   knitr::kable()
 ```
 
-We see that the monetized impact (discounted) is more than 160 million EURO.
+We see that the central estimate of the monetized impact (discounted) is about `r round(monetized_pm_copd$monetization_main$monetized_impact[1] / 1e6)` million EURO.
 
 Alternatively, you can also monetize (attributable) health impacts from a non-`healthiar` source.
 
