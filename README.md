@@ -75,8 +75,6 @@ We regularly improve *healthiar* and publish a new [GitHub release](https://gith
 
 - **Check the changelog**: see what changed in each version on the [changelog](https://swisstph.github.io/healthiar/news/index.html).
 
-Each GitHub release is also archived on Zenodo (DOI: [10.5281/zenodo.18220360](https://doi.org/10.5281/zenodo.18220360)) if you need to reference a specific version snapshot rather than the package itself.
-
 
 
 ## Installation
@@ -111,15 +109,12 @@ required by `healthiar`.
 
 
 ## Citation
-We love that you use *healthiar*. In that case, please do not forget to cite *healthiar* in your work. Three options to get there: 
+If you use *healthiar* in your work, please cite our paper in the Journal of Open Source Software (JOSS): [healthiar: An R package to quantify and monetize health impacts attributable to (environmental) exposure](https://doi.org/10.21105/joss.10599).
 
-a) On the [healthiar package website](https://swisstph.github.io/healthiar/authors.html#citation)  
+To get the full reference and the BibTeX entry, run `citation("healthiar")` in R.
 
-b) See [CITATION.R](https://github.com/SwissTPH/healthiar/blob/master/inst/CITATION)
-
-c) In your R console, enter *citation("healthiar")*.
-
-In options a) and b), you always see the updated citation. In option c), you see the citation of the *healthiar* version that you have installed locally, which might be outdated.
+*healthiar* can alternatively be cited through its [GitHub repository](https://github.com/SwissTPH/healthiar/blob/master/CITATION.cff) or its [Zenodo archive](https://doi.org/10.5281/zenodo.18220360), but we encourage you to cite the above-mentioned
+JOSS paper.
 
 ## Disclaimer and licence 
 By using *healthiar*, you confirm that you agree with the following disclaimer and terms of the licence:
