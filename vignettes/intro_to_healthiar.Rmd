@@ -1650,6 +1650,21 @@ results_daly$health_main |>
 rm(results_daly, results_pm_yll, results_pm_copd_yld)
 ```
 
+### DALY difference between two scenarios
+
+`daly()` also accepts the outputs of `compare()`
+(see chapter *Comparison of two health scenarios*).
+Compare first the YLL and the YLD of the two scenarios separately
+and then enter both comparisons in `daly()`
+to obtain the difference in DALY between the scenarios.
+
+```{r eval=FALSE}
+results_daly_comparison <- daly(
+  output_attribute_yll = comparison_yll, # compare() output with YLL
+  output_attribute_yld = comparison_yld  # compare() output with YLD
+)
+```
+
 # Modification of scenarios
 
 ### Goal 
