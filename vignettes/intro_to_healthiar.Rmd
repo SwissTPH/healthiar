@@ -299,7 +299,7 @@ as is the case in the relative risk pathway [@WHO2011_report].
 
 ![Figure: Absolute risk approach](../man/figures/bod_ar.png){width="700"}
 
-$$N = \sum AR_i \times PE_i$$
+$$N = \sum AR_i \times pop\_exp_i$$
 
 Where:
 
@@ -307,7 +307,7 @@ Where:
 
 * $AR_i$ = absolute risk at category $i$
 
-* $PE_i$ = absolute population exposed at category $i$
+* $pop\_exp_i$ = absolute population exposed at category $i$
 
 
 `healthiar` consistently handles cut-off values across both relative and absolute risk approaches. 
@@ -1727,37 +1727,37 @@ when exposure to a risk factor is changed, for instance due to an intervention.
 ##### General Integral Form
 The most general equation describing this mathematically is an integral form [@WHO2003_report; @Murray2003_spbm]:
 
-$$PIF = \frac{\int rr\_at\_exp(x)PE(x)dx - \int rr\_at\_exp(x)PE'(x)dx}{\int rr\_at\_exp(x)PE(x)dx}$$
+$$PIF = \frac{\int rr\_at\_exp(x) \times prop\_pop\_exp\_1(x)dx - \int rr\_at\_exp(x) \times prop\_pop\_exp\_2(x)dx}{\int rr\_at\_exp(x) \times prop\_pop\_exp\_1(x)dx}$$
 
 Where:
 
 * $x$ = exposure level
-* $PE(x)$ = population distribution of exposure
-* $PE'(x)$ = alternative population distribution of exposure
+* $prop\_pop\_exp\_1(x)$ = proportion of the population exposed at exposure level $x$ in scenario 1
+* $prop\_pop\_exp\_2(x)$ = proportion of the population exposed at exposure level $x$ in scenario 2 (alternative scenario)
 * $rr\_at\_exp(x)$ = relative risk at exposure level compared to the reference level
 
 ##### Categorical Exposure Form
 If the population exposure is described as a categorical rather than continuous exposure, the integrals may be converted to sums [@WHO2003_report; @Murray2003_spbm]:
 
-$$PIF = \frac{\sum rr\_at\_exp_{i} \times PE_{i} - \sum rr\_at\_exp_{i}PE'_{i}}{\sum rr\_at\_exp_{i}PE_{i}}$$
+$$PIF = \frac{\sum rr\_at\_exp_{i} \times prop\_pop\_exp\_1_{i} - \sum rr\_at\_exp_{i} \times prop\_pop\_exp\_2_{i}}{\sum rr\_at\_exp_{i} \times prop\_pop\_exp\_1_{i}}$$
 
 Where:
 
 * $i$ = the exposure category (e.g., in bins of 1 $\mu g/m^3$ $PM_{2.5}$ or 5 dB noise exposure)
-* $PE_i$ = fraction of population in exposure category $i$
-* $PE'_i$ = fraction of population in category $i$ for alternative (ideal) exposure scenario
+* $prop\_pop\_exp\_1_i$ = proportion of the population in exposure category $i$ in scenario 1
+* $prop\_pop\_exp\_2_i$ = proportion of the population in exposure category $i$ in scenario 2 (alternative scenario)
 * $rr\_at\_exp_i$ = relative risk for exposure category level $i$ compared to the reference level
 
 
 ##### Population weighted mean concentration form
 Finally, if the exposure is provided as the population weighted mean concentration, the equation for the PIF is reduced to:
 
-$$PIF = \frac{rr\_at\_exp - rr\_at\_exp_{alt}}{rr\_at\_exp}$$
+$$PIF = \frac{rr\_at\_exp\_1 - rr\_at\_exp\_2}{rr\_at\_exp\_1}$$
 
 Where:
 
-* $rr\_at\_exp$ = relative risk at the exposure level
-* $rr\_at\_exp_{alt}$ = relative risk at the exposure level for the alternative exposure scenario
+* $rr\_at\_exp\_1$ = relative risk at the exposure level in scenario 1
+* $rr\_at\_exp\_2$ = relative risk at the exposure level in scenario 2 (alternative scenario)
 
 ### Function call
 
@@ -1846,7 +1846,7 @@ $$PAF_{additive} = PAF_{exposure1} + PAF_{exposure2}$$
 
 - Multiplicative approach [@Jerrett2013-oup]:
 
-$$PAF_{multiplicative} = \frac{\sum PE \times (rr\_at\_exp_{multiplicative} - 1)}{\sum PE \times (rr\_at\_exp_{multiplicative}-1) + 1}$$
+$$PAF_{multiplicative} = \frac{\sum prop\_pop\_exp \times (rr\_at\_exp_{multiplicative} - 1)}{\sum prop\_pop\_exp \times (rr\_at\_exp_{multiplicative}-1) + 1}$$
 
 
 $$rr\_at\_exp_{multiplicative} = rr\_at\_exp_{exposure1} * rr\_at\_exp_{exposure2}$$
