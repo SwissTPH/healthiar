@@ -339,8 +339,8 @@ The `erf_eq_central` argument can digest other types of functions (see section o
 
 ### Main results
 
-```{r echo=FALSE}
-results_noise_ha |> 
+```{r}
+results_noise_ha |>
   purrr::pluck("health_main") |>
   dplyr::select(erf_eq, erf_ci, impact_rounded) |> 
   knitr::kable() # Prints tibble in a minimal layout
@@ -348,13 +348,9 @@ results_noise_ha |>
 
 ### Results per noise exposure band
 
-```{r eval=FALSE, include=TRUE, echo=TRUE}
-results_noise_ha$health_detailed$results_raw
-```
-
-```{r echo=FALSE, include=TRUE, eval=TRUE}
-results_noise_ha[["health_detailed"]][["results_raw"]] |> 
-  select(exp_category, exp, pop_exp, impact) |> 
+```{r}
+results_noise_ha[["health_detailed"]][["results_raw"]] |>
+  dplyr::select(exp_category, exp, pop_exp, impact) |>
   knitr::kable()
 ```
 
@@ -383,12 +379,8 @@ results_noise_ha <- attribute_health(
 )
 ```
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
-results_noise_ha$health_main
-```
-
-```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_noise_ha[["health_main"]] |> 
+```{r}
+results_noise_ha[["health_main"]] |>
   dplyr::select(exp_category, impact) |> 
   knitr::kable()
 ```
@@ -397,6 +389,9 @@ results_noise_ha[["health_main"]] |>
 rm(results_noise_ha)
 ```
 
+In the following chapters, only the code to access the results is shown.
+The tables are formatted as above, i.e. selecting some columns with
+`dplyr::select()` and printing them with `knitr::kable()`.
 
 
 # Multiple geographic units
@@ -437,7 +432,7 @@ In this example we want to aggregate the lower-level geographic units (cantons) 
 
 The main output contains aggregated results
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_iteration$health_main
 ```
 
@@ -453,7 +448,7 @@ In this case `health_main` contains the number of disease cases attributable to 
 
 The geo unit-specific information and results are stored under `health_detailed`\>`results_raw` .
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_iteration$health_detailed$results_raw
 ```
 
@@ -505,7 +500,7 @@ because we have 2 geo units (`"rural"` and `"urban"`) and 5 exposure categories.
 
 `health_main` contains the aggregated results (i.e. sum of impacts in rural and urban areas).
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_iteration_ar$health_main
 ```
 
@@ -519,7 +514,7 @@ results_iteration_ar[["health_main"]] |>
 
 Impact by geo unit, in this case impact in the rural and in the urban area.
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_iteration_ar$health_detailed$results_by_geo_id_micro
 ```
 
@@ -564,7 +559,7 @@ results_pm_copd <- attribute_health(
 
 Let's inspect the detailed results:
 
-```{r eval=FALSE, echo=TRUE, include=FALSE}
+```{r eval=FALSE}
 results_pm_copd$health_detailed$results_raw
 ```
 
@@ -687,7 +682,7 @@ Two lists ("folders") are added:
 
 -   `uncertainty_detailed` contains all `n_sim` simulations of the Monte Carlo assessment.
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_pm_copd_summarized$uncertainty_main
 ```
 
@@ -706,7 +701,7 @@ The columns `erf_ci`, `exp_ci`, `bhd_ci`, and `cutoff_ci` indicate
 the source of uncertainty component used for that simulation 
 (in the first 10 simulations, all use central estimates).
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_pm_copd_summarized$uncertainty_detailed$impact_by_sim
 ```
 
@@ -1384,7 +1379,7 @@ results_pm_yll <- attribute_lifetable(
 
 Total YLL attributable to exposure (sum of sex-specific impacts).
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_pm_yll$health_main
 ```
 
@@ -1415,15 +1410,15 @@ are available.
 
 *Note*: only a selection of years is shown.
 
-```{r}
+```{r eval=FALSE}
 results_pm_yll$health_detailed$results_raw |>
   dplyr::summarize(
-    .by = year, 
+    .by = year,
     impact = sum(impact, na.rm = TRUE)
   )
 ```
 
-```{r}
+```{r echo=FALSE}
 results_pm_yll$health_detailed$results_raw |>
   dplyr::summarize(
     .by = year, 
@@ -1435,7 +1430,7 @@ results_pm_yll$health_detailed$results_raw |>
 
 #### YLL
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_pm_yll$health_detailed$intermediate_calculations |> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(impact_by_age_and_year) |>
@@ -1456,7 +1451,7 @@ results_pm_yll$health_detailed$intermediate_calculations |>
 
 The exposed scenario is the scenario with the exposure specified in the assessment.
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_pm_yll$health_detailed$intermediate_calculations|> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(projection_if_exposed_by_age_and_year) |>
@@ -1478,7 +1473,7 @@ results_pm_yll$health_detailed$intermediate_calculations|>
 
 The unexposed scenario is the scenario without exposure.
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_pm_yll$health_detailed$intermediate_calculations|> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(projection_if_unexposed_by_age_and_year) |>
@@ -1528,7 +1523,7 @@ results_pm_deaths <- attribute_lifetable(
 
 Total premature deaths attributable to exposure (sum of sex-specific impacts).
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_pm_deaths$health_main$impact
 ```
 
@@ -1555,7 +1550,7 @@ are available.
 
 *Note*: Because the function argument `approach_exposure` is not specified in this example, the default `approach_exposure = "single_year"` is used and the premature deaths refer to one year (the year of analysis). If you set `approach_exposure = "constant"`, results are projected and accumulated across the full time horizon.
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_pm_deaths$health_detailed$intermediate_calculations|> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(projection_if_unexposed_by_age_and_year) |>
@@ -1610,7 +1605,7 @@ results_pm_copd_yld  <- attribute_health(
 
 ### Main results
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_pm_copd_yld$health_main
 ```
 
@@ -1647,9 +1642,9 @@ results_daly <- daly(
 
 YLL, YLD & DALY
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_daly$health_main |> 
-  select(impact_yll_rounded, impact_yld_rounded, impact_rounded)
+  dplyr::select(impact_yll_rounded, impact_yld_rounded, impact_rounded)
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
@@ -1807,7 +1802,7 @@ The default value for the argument `approach_comparison` is `"delta"`. The alter
 
 ### Main results
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 results_comparison$health_main
 ```
 
@@ -2044,7 +2039,7 @@ Within the function output, the list `exposure_main` contains
 the population-weighted mean exposures for the (higher-level) geographic units 
 in the column `exposure_mean` and the total population in each unit in column `population_total`.
 
-```{r echo=FALSE, eval=spatial_packages_available}
+```{r eval=spatial_packages_available}
  knitr::kable(as.data.frame(pwm$exposure_main))
 ```
 
@@ -2435,13 +2430,13 @@ Two folders are added:
 
 -   `monetization_detailed` contains the monetized results for each unique combination of the input variable estimates that were provided to the initial `attribute_health()` call.
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 monetized_pm_copd$monetization_main
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
 monetized_pm_copd$monetization_main |> 
-  select(erf_ci, monetized_impact) |> 
+  dplyr::select(erf_ci, monetized_impact) |> 
   knitr::kable()
 ```
 
@@ -2645,7 +2640,7 @@ social <- healthiar::socialize(
 
 
 ### Main results
-```{r echo=FALSE}
+```{r}
 social$social_main |> 
   dplyr::select(c(parameter, difference_type, 
                   difference_compared_with, difference_value, 
@@ -2709,7 +2704,7 @@ Function output includes:
 
 ```{r eval=FALSE, include=TRUE, echo=TRUE}
 mdi$mdi_main |> 
-  select(geo_id_micro, MDI, MDI_index)
+  dplyr::select(geo_id_micro, MDI, MDI_index)
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
@@ -2819,19 +2814,19 @@ Exporting and visualizing results is out of scope of `healthiar`. To export and 
 
 Export as `.csv` file
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 write.csv(x = results_pm_copd$health_main, file = "exported_results/results_pm_copd.csv")
 ```
 
 Save as `.Rdata` file
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 save(results_pm_copd, file = "exported_results/results_pm_copd.Rdata")
 ```
 
 Export to Excel (as `.xlsx` file)
 
-```{r eval=FALSE, include=FALSE, echo=TRUE}
+```{r eval=FALSE}
 openxlsx::write.xlsx(x = results_pm_copd$health_main, file = "exported_results/results_pm_copd.xlsx")
 ```
 
