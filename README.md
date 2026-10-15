@@ -36,7 +36,7 @@ Want to know as soon as a new *healthiar* version is released? See [Stay updated
 
 ## Installation
 We recommend frequently installing the newest *healthiar* version. 
-**_healthiar_ requires R version 4.2.0 or higher**. 
+*healthiar* requires R version 4.2.0 or higher. 
 There are two options to install *healthiar*:
 
 a) **From CRAN**: Run the following command in R:
