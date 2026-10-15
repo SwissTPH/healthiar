@@ -1199,19 +1199,28 @@ Use the two arguments `approach_exposure` and `approach_newborns` to modify the 
 
 -   `approach_exposure`
 
-    -   `"single_year"` (default): Population is exposed for only one year 
+    -   `"single_year"` (default): Population is exposed for only one year
     (year of analysis).
     Applicable for both deaths and YLL.
     The attributable deaths refer to the year of analysis only,
     while the YLL caused by the exposure in that year are accumulated
     across the year of analysis and the following years (see argument `time_horizon`).
-    AirQ+ approach for deaths in 2025.
 
-    -   `"constant"` : Population is exposed every year, 
-    i.e. air pollution exposure is sustained across the full projection horizon 
-    and attributable health impacts are projected and cumulated 
-    across the full lifetime period. 
-    Applicable for both deaths and YLL. AirQ+ approach for YLL in 2025.
+    -   `"constant"`: Population is exposed every year,
+    i.e. air pollution exposure is sustained across the full projection horizon
+    and attributable health impacts are projected and cumulated
+    across the full lifetime period (see argument `time_horizon`).
+    Applicable for both deaths and YLL.
+
+    Both options give the same attributable deaths and YLL in the year of analysis,
+    because they only differ from the following year on.
+    By default, AirQ+ assumes that air pollution remains stable over time [@WHO2020_report]:
+    its results over several years (e.g. "YLL over 10 years") correspond to `"constant"`,
+    while the attributable deaths that it reports for the first year
+    are the same with both options.
+    A single-year exposure can only be obtained in AirQ+
+    with its advanced scenario "Change in pollution level" [@WHO2020_report],
+    set to reduce the pollution level by 100% in the years after the year of analysis.
 
 -   `approach_newborns`
 
