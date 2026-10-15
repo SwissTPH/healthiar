@@ -319,7 +319,7 @@ rather than on the exposure above the cut-off,
 see chapter [Shifting the ERF](#shifting-the-erf).
 
 
-### Example
+### Example 1: several exposure categories
 
 In the example below, we quantify the cases of high annoyance attributable to road traffic noise in five noise exposure bands.
 
@@ -364,10 +364,12 @@ erf_eq_central <-
 ```
 
 
-### One exposure category
+### Example 2: one exposure category
 
-Alternatively, it's also possible to only assess the absolute risk impacts 
+Alternatively, it's also possible to only assess the absolute risk impacts
 for one exposure category (e.g., a single noise exposure band).
+
+#### Function call
 
 ```{r}
 results_noise_ha <- attribute_health(
@@ -377,6 +379,8 @@ results_noise_ha <- attribute_health(
   erf_eq_central = "78.9270-3.1162*c+0.0342*c^2"
 )
 ```
+
+#### Main results
 
 ```{r}
 results_noise_ha[["health_main"]] |>
@@ -1009,7 +1013,7 @@ in all `results_by_...` tables. Note that `main_results_by` does not create thos
 tables, which are available in the detailed output in any case: it determines
 which dimensions survive in them and in the main results.
 
-### Example
+### Example 1: several exposure-outcome pairs
 
 In the example below, we quantify the COPD cases attributable to PM2.5 and the asthma cases attributable to NO2 in two geographic units.
 
@@ -1047,10 +1051,12 @@ output_attribute$health_main |>
   print()
 ```
 
-### Sensitivity analysis with several exposure-response functions
+### Example 2: sensitivity analysis with several exposure-response functions
 
 The same mechanism compares one exposure-outcome pair quantified with the
 relative risks of two different studies.
+
+#### Function call
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_sensitivity <- healthiar::attribute_health(
@@ -1063,7 +1069,11 @@ output_sensitivity <- healthiar::attribute_health(
     erf_shape = "log_linear",
     bhd_central = c(30747, 30747)
   )
+```
 
+#### Main results
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_sensitivity$health_main |>
   dplyr::select(info_rr_source, erf_ci, impact_rounded) |>
   print()
@@ -1668,7 +1678,7 @@ To obtain the attributable DALY, its two components, i.e. years of life lost (YL
 
 $$DALY = YLL + YLD$$
 
-### Example
+### Example 1: DALY of one scenario
 
 In the example below, we add up the YLL and the YLD from the previous chapters, using the function `daly()`.
 
@@ -1700,13 +1710,15 @@ results_daly$health_main |>
 rm(results_daly, results_pm_yll, results_pm_copd_yld)
 ```
 
-### DALY difference between two scenarios
+### Example 2: DALY difference between two scenarios
 
 `daly()` also accepts the outputs of `compare()`
 (see chapter *Comparison of two health scenarios*).
 Compare first the YLL and the YLD of the two scenarios separately
 and then enter both comparisons in `daly()`
 to obtain the difference in DALY between the scenarios.
+
+#### Function call
 
 ```{r eval=FALSE}
 results_daly_comparison <- daly(
@@ -2482,7 +2494,7 @@ This ensures that long-term environmental impacts are not undervalued.
 
 
 
-### Example
+### Example 1: output of `attribute_health()`
 
 In the example below, we monetize the COPD cases from the chapter *Confidence interval* with a value of 50,000 EUR per case, discounted at 3% over 5 years.
 
@@ -2521,7 +2533,11 @@ monetized_pm_copd$monetization_main |>
 
 We see that the central estimate of the monetized impact (discounted) is about `r round(monetized_pm_copd$monetization_main$monetized_impact[1] / 1e6)` million EURO.
 
+### Example 2: impacts from other sources
+
 Alternatively, you can also monetize (attributable) health impacts from a non-*healthiar* source.
+
+#### Function call
 
 ```{r}
 results <- monetize(
