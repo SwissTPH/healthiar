@@ -1544,7 +1544,7 @@ are available.
 
 *Note*: We inspect below the results for females; male results are also available.
 
-*Note*: Because we set the function argument `approach_exposure = "constant"` results are projected and accumulated across the full time_horizon. If you set approach_exposure = "single_year", results for premature deaths are available for one year (the year of analysis).
+*Note*: Because the function argument `approach_exposure` is not specified in this example, the default `approach_exposure = "single_year"` is used and the premature deaths refer to one year (the year of analysis). If you set `approach_exposure = "constant"`, results are projected and accumulated across the full time horizon.
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
 results_pm_deaths$health_detailed$intermediate_calculations|> 
