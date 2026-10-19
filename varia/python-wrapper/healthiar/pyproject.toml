@@ -29,8 +29,6 @@ dependencies = [
   "pandas",
   "numpy",
   "scipy",
-  "pytest",
-  "importlib",
   "geopandas",
   "xarray",
   "rioxarray",
