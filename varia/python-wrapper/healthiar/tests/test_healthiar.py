@@ -3,6 +3,7 @@ import os
 
 ## Add environment variable for R installation
 #os.environ["PATH"] = /path/to/R/R-4.6.0/bin/x64
+os.environ["PATH"] = r"C:\Users\ArPa3547\AppData\Local\Programs\R\R-4.6.0\bin\x64"
 
 ## Import healthiar modules
 import healthiar
@@ -14,9 +15,11 @@ import rpy2.rinterface as ri
 from rpy2.robjects.packages import importr
 
 ## Import other modules
+import pytest
 import pandas as pd
 import numpy as np
 from scipy import interpolate
+from datetime import datetime
 import geopandas as gpd
 import xarray as xr
 import rioxarray
@@ -29,7 +32,7 @@ terra = importr("terra")
 from importlib.resources import files
 path = files("healthiar.data")
 
-import pathlib
+# import pathlib
 
 ## Test different inputs
 def test_tuple_input():
@@ -175,8 +178,42 @@ def test_pandas_input():
 
     ## Verify actual result
     assert actual == expected, "Test failed."
-    
+
 def test_numpy_input():
+    ## Define expected result
+    expected = np.float64(0.927071)
+
+    # Get Python data
+    exp_central = [20, 20]
+    prop_pop_exp = [0.5, 0.5]
+    bhd_central = np.float64(10.0)
+
+    # Convert to R data
+    r_exp_central = py_to_r(exp_central)
+    r_prop_pop_exp = py_to_r(prop_pop_exp)
+    r_cutoff_central = py_to_r(5)
+    r_rr_central = py_to_r(1.08)
+    r_rr_increment = py_to_r(10)
+    r_erf_shape = py_to_r("linear_log")
+    r_bhd_central = py_to_r(bhd_central)
+
+    # Call healthiar function
+    result = healthiar.attribute_health(
+        exp_central = r_exp_central,
+        prop_pop_exp = r_prop_pop_exp,
+        cutoff_central = r_cutoff_central,
+        rr_central = r_rr_central,
+        rr_increment = r_rr_increment,
+        erf_shape = r_erf_shape,
+        bhd_central = r_bhd_central
+    )
+    py_result = r_to_py(result)['health_main']['impact'].iloc[0]
+    actual = round(py_result, 6)
+
+    ## Verify actual result
+    assert actual == expected, "Test failed."
+    
+def test_numpy_input2():
     ## Define expected result
     expected = np.float64(0.927071)
 
@@ -359,3 +396,17 @@ def test_output_reuse():
     
     ## Verify actual result
     assert all(actual == expected), "Test failed."
+
+def test_conversion_exception():
+    ## Define expected result
+
+    ## Get Python data
+    dt = datetime.now()
+
+    ## Convert to R data
+    with pytest.raises(Exception):
+        r_dt = py_to_r(dt)
+
+    ## Call healthiar function
+    
+    ## Verify actual result
