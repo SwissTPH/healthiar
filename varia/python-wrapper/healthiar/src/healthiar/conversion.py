@@ -37,7 +37,7 @@ def py_to_r(obj):
     R classes: ('integer',)
     [1, 2, 3]
     """
-    if isinstance(obj, (int, float, str)):
+    if isinstance(obj, (int, float, str)) and not isinstance(obj, np.generic):
         return obj
     elif isinstance(obj, (tuple, list, pd.Series)):
         if all(isinstance(item, int) for item in obj):
@@ -57,7 +57,7 @@ def py_to_r(obj):
         else:
             with (ro.default_converter + pandas2ri.converter).context():
                 return ro.conversion.get_conversion().py2rpy(obj)
-    elif isinstance(obj, np.ndarray):
+    elif isinstance(obj, (np.ndarray, np.generic)):
         with (ro.default_converter + numpy2ri.converter).context():
             return ro.conversion.get_conversion().py2rpy(obj)
     elif isinstance(obj, xr.core.dataset.Dataset):
@@ -66,7 +66,7 @@ def py_to_r(obj):
         obj = terra.rast(tmp_dir.joinpath(".temp_conv_raster.tiff").as_posix())
         return obj
     else:
-        raise ValueError("Conversion not possible for this object type.")
+        raise ValueError("Conversion not possible for object type: " + str(type(obj)))
 
 ## Function to convert rpy2 lists and data.frames to python lists and pandas dataframes
 def r_to_py(obj):
