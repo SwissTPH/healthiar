@@ -30,7 +30,7 @@ To use this Python package, you need [R](https://www.r-project.org/), with the [
     ```
     Be aware that this does **not** install the `healthiar` R package.
 
-2.  Add the path of your R installation as environment variable:
+2.  Add the path of your R installation as environment variable (**Required**):
 
     ```console
     import os

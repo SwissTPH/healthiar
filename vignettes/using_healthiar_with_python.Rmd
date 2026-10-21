@@ -35,7 +35,7 @@ To use the Python package, you need R, with the `healthiar` package installed. C
     ```
     Note that this does **not** install the `healthiar` R package.
  
-2.  Add the path of your R installation as environment variable. In Python, you can do this as follows:
+2.  Add the path of your R installation as environment variable (**Required**). In Python, you can do this as follows:
     ```{python}
     import os
     os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
