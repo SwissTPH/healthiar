@@ -14,7 +14,7 @@
 
 ## Requirements
 
-To use this Python package, you need [R](https://www.r-project.org/), with the [`healthiar`](https://cran.r-project.org/web/packages/healthiar/) package installed.
+To use this Python package, you need [R](https://www.r-project.org/), with the [`healthiar`](https://cran.r-project.org/web/packages/healthiar/) package installed. Click [here](https://swisstph.github.io/healthiar/index.html#installation) for instructions on installing the R package.
 
 | Software | Versions |
 |----------|----------|

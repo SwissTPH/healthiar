@@ -25,7 +25,7 @@ The Python wrapper for `healthiar` is an implementation of the [`rpy2` interface
  
 # Requirements
 
-To use the Python package, you need R, with the `healthiar` package installed.
+To use the Python package, you need R, with the `healthiar` package installed. Click [here](https://swisstph.github.io/healthiar/index.html#installation) for instructions on installing the R package.
  
 # Installation
  
