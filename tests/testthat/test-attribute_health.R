@@ -570,6 +570,30 @@ testthat::test_that("results correct |pathway_ar|erf_ar_formula|yld_TRUE|etc_he_
     expected = c(end_threshold = 7329, who_guideline = 7896))
 })
 
+testthat::test_that("results the same |pathway_ar|exp_dist|impact_per_100k_inhab", {
+
+  # The exposure categories are parts of the same population of 10000,
+  # so the impact per 100 000 inhabitants must refer to it.
+  # Before the fix the population was summed across the three exposure
+  # categories (30000) and the impact per 100 000 inhabitants was a third
+  exp <- c(57.5, 62.5, 67.5)
+  pop_exp <- c(1000, 2000, 3000)
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_health(
+        approach_risk = "absolute_risk",
+        exp_central = exp,
+        pop_exp = pop_exp,
+        erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+        population = 10000)$health_main$impact_per_100k_inhab,
+    # Absolute risk (in %) of each exposure category times its exposed population,
+    # summed and divided by the population
+    expected =
+      sum((78.9270 - 3.1162 * exp + 0.0342 * exp^2) / 100 * pop_exp) /
+      10000 * 1E5) # 12155.75
+})
+
 testthat::test_that("results the same |pathway_rr|threshold_equal_cutoff|exp_single|iteration_FALSE|strat_FALSE|yld_FALSE|uncertainty_FALSE|", {
 
   # If only one of cutoff and threshold is entered,

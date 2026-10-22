@@ -797,6 +797,159 @@ testthat::test_that("results the same |pathway_lifetable|age_group entered in an
 
 })
 
+# Exposure that differs by age must not split the life table into pieces.
+# The population exposed to the AirQ+ concentration is split into two exposure
+# categories with the same concentration but different proportions by age
+# (0.3 and 0.7 below the age of 50, 0.6 and 0.4 from 50). The population
+# attributable fraction is identical to the one of the single exposure, so the
+# results must be those of AirQ+. Before the fix the different proportions
+# split the life tables at age 50 and the YLL were lower
+
+testthat::test_that("results correct |pathway_lifetable|exp_dist|exposure differing by age", {
+
+  data <-
+    readRDS(
+      testthat::test_path("testdata", "airqplus_pm_yll_single_year.rds"))
+
+  is_under_50 <- rep(data[["pop"]]$age_from, times = 2) < 50
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "single_year",
+        exp_central = rep(data[["input"]]$mean_concentration, times = 2 * 200),
+        prop_pop_exp = c(ifelse(is_under_50, 0.3, 0.6), ifelse(is_under_50, 0.7, 0.4)),
+        cutoff_central = data[["input"]]$cut_off_value, # WHO AQG 2021
+        rr_central = data[["input"]]$relative_risk,
+        rr_lower = data[["input"]]$relative_risk_lower,
+        rr_upper = data[["input"]]$relative_risk_upper,
+        rr_increment = data[["input"]]$relative_risk_increment,
+        erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
+        age_group = rep(data[["pop"]]$age_from, times = 2 * 2),
+        sex = rep(rep(c("male", "female"), each = 100), times = 2),
+        population = rep(c(data[["pop"]]$midyear_population_male,
+                           data[["pop"]]$midyear_population_female), times = 2),
+        bhd_central = rep(c(data[["pop"]]$number_of_deaths_male,
+                            data[["pop"]]$number_of_deaths_female), times = 2),
+        year_of_analysis = data[["input"]]$start_year,
+        info = data[["input"]]$pollutant,
+        min_age = data[["input"]]$apply_rr_from_age
+      )$health_main$impact,
+    # The YLL of AirQ+ over 100 years, added up over both sexes
+    # (see the first test of this file)
+    expected =
+      c(data[["output"]]$value_central_male_yll_over_100_years_all_ages +
+          data[["output"]]$value_central_female_yll_over_100_years_all_ages,
+        data[["output"]]$value_lower_male_yll_over_100_years_all_ages +
+          data[["output"]]$value_lower_female_yll_over_100_years_all_ages,
+        data[["output"]]$value_upper_male_yll_over_100_years_all_ages +
+          data[["output"]]$value_upper_female_yll_over_100_years_all_ages),
+    tolerance = 1E-6) # tolerance because AirQ+ has results rounded to two decimals
+
+})
+
+# Info that only differs by age must not split the life table into pieces
+# either. Here info contains the pollutant and an age band (below 50 and from 50),
+# which does not change the assessment, so the results must be those of AirQ+.
+# Before the fix the age band split the life tables at age 50 and the YLL were lower
+
+testthat::test_that("results correct |pathway_lifetable|exp_single|info differing by age", {
+
+  data <-
+    readRDS(
+      testthat::test_path("testdata", "airqplus_pm_yll_single_year.rds"))
+
+  age_group <- rep(data[["pop"]]$age_from, times = 2)
+
+  testthat::expect_equal(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "single_year",
+        exp_central = data[["input"]]$mean_concentration,
+        prop_pop_exp = 1,
+        cutoff_central = data[["input"]]$cut_off_value, # WHO AQG 2021
+        rr_central = data[["input"]]$relative_risk,
+        rr_lower = data[["input"]]$relative_risk_lower,
+        rr_upper = data[["input"]]$relative_risk_upper,
+        rr_increment = data[["input"]]$relative_risk_increment,
+        erf_shape = gsub("-", "_", data[["input"]]$calculation_method),
+        age_group = age_group,
+        sex = rep(c("male", "female"), each = 100),
+        population = c(data[["pop"]]$midyear_population_male,
+                       data[["pop"]]$midyear_population_female),
+        bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                        data[["pop"]]$number_of_deaths_female),
+        year_of_analysis = data[["input"]]$start_year,
+        info = data.frame(
+          pollutant = data[["input"]]$pollutant,
+          age_band = ifelse(age_group < 50, "under_50", "50_plus")),
+        min_age = data[["input"]]$apply_rr_from_age
+      )$health_main$impact,
+    # The YLL of AirQ+ over 100 years, added up over both sexes
+    # (see the first test of this file)
+    expected =
+      c(data[["output"]]$value_central_male_yll_over_100_years_all_ages +
+          data[["output"]]$value_central_female_yll_over_100_years_all_ages,
+        data[["output"]]$value_lower_male_yll_over_100_years_all_ages +
+          data[["output"]]$value_lower_female_yll_over_100_years_all_ages,
+        data[["output"]]$value_upper_male_yll_over_100_years_all_ages +
+          data[["output"]]$value_upper_female_yll_over_100_years_all_ages),
+    tolerance = 1E-6) # tolerance because AirQ+ has results rounded to two decimals
+
+})
+
+## ERF AS FUNCTION ##############################################################
+# The exposure-response function entered as function must give the same results
+# as AirQ+ (see the test with rr_central and constant exposure above).
+# Before the fix the life table calculations failed because they placed
+# a column after the column rr, which does not exist if erf_eq is entered
+
+testthat::test_that("results correct |pathway_lifetable|erf_eq as function", {
+
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+
+  # Log-linear function equivalent to the relative risk of AirQ+.
+  # The function gets the exposure above the cutoff as argument
+  rr <- data[["input"]]$relative_risk
+
+  cumulative_impact <-
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
+      approach_exposure = "constant",
+      approach_newborns = "with_newborns",
+      exp_central = data[["input"]]$mean_concentration,
+      cutoff_central = data[["input"]]$cut_off_value,
+      erf_eq_central = function(c) { exp(log(rr) * c / 10) },
+      age_group = rep(data[["pop"]][["age_from..."]], times = 2),
+      sex = rep(c("male", "female"), each = 100),
+      population = c(data[["pop"]]$midyear_population_male,
+                     data[["pop"]]$midyear_population_female),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      year_of_analysis = data[["input"]]$start_year,
+      min_age = data[["input"]]$apply_rr_from_age
+    )$health_detailed$results_raw |>
+    dplyr::summarize(impact = sum(impact), .by = c(sex, year)) |>
+    dplyr::arrange(sex, as.numeric(year)) |>
+    dplyr::mutate(impact = cumsum(impact), .by = sex) |>
+    dplyr::pull(impact)
+
+  testthat::expect_equal(
+    object =
+      # 10, 20 and 50 years of each sex (females first)
+      cumulative_impact[c(10, 20, 50, 110, 120, 150)],
+    expected =
+      c(data[["output"]]$value_central_female_yll_over_10_years_all_ages,
+        data[["output"]]$value_central_female_yll_over_20_years_all_ages,
+        data[["output"]]$value_central_female_yll_over_50_years_all_ages,
+        data[["output"]]$value_central_male_yll_over_10_years_all_ages,
+        data[["output"]]$value_central_male_yll_over_20_years_all_ages,
+        data[["output"]]$value_central_male_yll_over_50_years_all_ages),
+    tolerance = 1e-6)
+})
+
 ## TIME HORIZON ################################################################
 testthat::test_that("results correct |pathway_lifetable|time_horizon of 1 year", {
 
@@ -1057,6 +1210,32 @@ testthat::test_that("error if age_group is not a 1-year consecutive sequence", {
   # on the distinct values and not on the vector as entered)
   testthat::expect_no_error(
     object = attribute_lifetable_with_age_group(0:99))
+})
+
+testthat::test_that("error if age_group is not a 1-year consecutive sequence in one life table", {
+
+  # Age 50 is missing only for males. The ages of all life tables together
+  # are consecutive (females have age 50), but the male cohort would jump
+  # from age 49 to 51
+  data <- exdat_lifetable[!(exdat_lifetable$sex == "male" & exdat_lifetable$age_group == 50), ]
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_lifetable(
+        health_outcome = "yll",
+        approach_exposure = "single_year",
+        exp_central = 8.85,
+        cutoff_central = 5,
+        rr_central = 1.118,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        age_group = data$age_group,
+        sex = data$sex,
+        bhd_central = data$deaths,
+        population = data$midyear_population,
+        year_of_analysis = 2019),
+    regexp = "This is not the case in: geo_id_micro = a, sex = male.",
+    fixed = TRUE)
 })
 
 

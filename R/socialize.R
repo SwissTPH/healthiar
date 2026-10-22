@@ -266,6 +266,12 @@ socialize <- function(output_attribute = NULL,
     ## without social component
     input_data <-
       output_attribute$health_detailed$results_by_age_group |>
+      # Keep only the central estimates (as in health_main).
+      # Otherwise, if the assessment has uncertainty (e.g. rr_lower and
+      # rr_upper), the impacts and populations of the central, lower and
+      # upper estimates would be summed up below
+      dplyr::filter(dplyr::if_all(.cols = dplyr::ends_with("_ci"),
+                                  .fns = ~ .x == "central")) |>
       dplyr::select(
         dplyr::any_of(c("geo_id_micro", "age_group", "population",
                         "impact", "exp", "bhd", "pop_fraction")))

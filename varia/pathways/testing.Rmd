@@ -50,7 +50,6 @@ to improve the testing process, please let us know:
     green button that says *New issue* or
 
 -   write us at
-    [axel.luyten\@swisstph.ch](mailto:axel.luyten@swisstph.ch){.email} or
     [alberto.castrofernandez\@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch){.email}
 
 Thank you in advance for your efforts! Together we can make healthiar more error

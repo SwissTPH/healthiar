@@ -22,13 +22,13 @@ utils::globalVariables(unique(c(
 # get_impact: 
 "absolute_risk_as_percent", "bhd", "cutoff", "duration", "dw", "erf_eq", "impact", "pop_exp", "pop_fraction", "population", 
 # get_impact_with_lifetable: 
-"age_end", "age_end_over_min_age", "age_group", "age_start", "bhd", "data_by_age", "deaths", "entry_population_yoa", "hazard_rate", "hazard_rate_mod", "impact_by_age_and_year", "impact_by_age_and_year_long", "midyear_population_yoa", "min_age", "modification_factor", "pop_fraction", "population", "prob_survival", "prob_survival_mod", "prob_survival_until_midyear", "prob_survival_until_midyear_mod", "projection_if_exposed_by_age_and_year", "projection_if_unexposed_by_age_and_year", "rr", "year_of_analysis", 
+"age_end", "age_end_over_min_age", "age_group", "age_start", "bhd", "data_by_age", "deaths", "entry_population_yoa", "hazard_rate", "hazard_rate_mod", "impact_by_age_and_year", "impact_by_age_and_year_long", "midyear_population_yoa", "min_age", "modification_factor", "n_info_values", "pop_fraction", "population", "prob_survival", "prob_survival_mod", "prob_survival_until_midyear", "prob_survival_until_midyear_mod", "projection_if_exposed_by_age_and_year", "projection_if_unexposed_by_age_and_year", "rr", "year_of_analysis", 
 # get_impact_with_lifetable : 
 "age_end", "age_start", "end_population_yoa", "entry_population_yoa", "fraction_lived", "is_exposed_age", "population", "prob_survival", "prob_survival_mod", "prob_survival_until_midyear_mod", "year", 
 # get_ref_prop_pop: 
 "age_group", "population", "ref_population", "ref_prop_pop", 
 # get_risk_and_pop_fraction: 
-"cutoff", "erf_shape", "exp_scen_1", "exp_scen_2", "pop_fraction", "prop_pop_exp", "prop_pop_exp_scen_1", "prop_pop_exp_scen_2", "rr", "rr_at_exp", "rr_at_exp_scen_1", "rr_at_exp_scen_2", "rr_increment", 
+"cutoff", "erf_shape", "exp_name", "exp_scen_1", "exp_scen_2", "info_values", "pop_fraction", "prop_pop_exp", "prop_pop_exp_scen_1", "prop_pop_exp_scen_2", "rr", "rr_at_exp", "rr_at_exp_scen_1", "rr_at_exp_scen_2", "rr_increment", 
 # monetize: 
 "monetized_impact", "population", "year", 
 # monetize : 
@@ -50,9 +50,9 @@ utils::globalVariables(unique(c(
 # summarize_uncertainty: 
 "impact", "impact_rounded", "impact_scen_1", "impact_scen_2", "output_sim_after_impact", "sim_id", 
 # summarize_uncertainty : 
-"geo_id_micro", "impact", "sim_id", 
+"central", "geo_id_micro", "impact", "lower", "sim_id", "simulated", "upper",
 # validate_input_attribute: 
-"bhd_central", "rr_central", 
+"bhd_central", "is_not_consecutive", "rr_central",
 # validate_input_attribute : 
 "var"
 )))

@@ -219,11 +219,13 @@ get_output <-
       # sum the impacts, obtaining one row per group.
       # The rounded and relative impacts are not aggregated
       # because they are re-calculated below (after summing)
+      # The population is not summed here but below,
+      # because it must not be summed across exposure categories
       impact_agg <-
         collapse_df_by_group(
           df = results_raw_to_aggregate,
           group_col_names = grouping_cols_for_results_by[[var]],
-          sum_col_names = cols_to_be_summed,
+          sum_col_names = setdiff(cols_to_be_summed, "population"),
           # This last argument could be obtained within the function,
           # but it is entered because it is the same for all results_by vars
           # and in this way the process is not repeated (faster)
@@ -240,6 +242,36 @@ get_output <-
 
       # If population is available, recompute with population and normalized metrics
       if ("population" %in% colnames_results_raw) {
+
+        # Sum the population of the group.
+        # The exposure categories are parts of the same population, so its
+        # value is repeated in all of them (e.g. in the absolute risk pathway,
+        # where the rows of the exposure categories are kept).
+        # The same applies to the exposures of multiexpose() (exp_name),
+        # e.g. pm2.5 and no2, which refer to the same people.
+        # Therefore, the population is taken only once per row without
+        # exposure category and exposure name before summing it.
+        # In results_by_exp_category and results_by_exp_name, each exposure
+        # category and exposure shows the population of the whole group,
+        # which is the population that its impacts refer to
+        population_shared_by <- c("exp_category", "exp_name")
+
+        grouping_cols_for_population <-
+          setdiff(grouping_cols_for_results_by[[var]], population_shared_by)
+
+        population_agg <- results_raw_to_aggregate |>
+          dplyr::distinct(
+            dplyr::across(
+              dplyr::all_of(c(setdiff(id_cols_available, population_shared_by),
+                              "population")))) |>
+          dplyr::summarise(
+            .by = dplyr::all_of(grouping_cols_for_population),
+            population = sum(population, na.rm = TRUE))
+
+        impact_agg <- impact_agg |>
+          dplyr::select(-population) |>
+          dplyr::left_join(population_agg,
+                           by = grouping_cols_for_population)
 
         # Relative impact dividing by population in the subgroup (100k)
         # i.e. x impacts in the subgroup / population in the subgroup

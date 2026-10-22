@@ -57,9 +57,7 @@ in public spaces.
 ## Enforcement
 Instances of abusive, harassing, or otherwise unacceptable behavior 
 may be reported  
-at [alberto.castrofernandez@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch) 
-or/and 
-[axel.luyten@swisstph.ch](mailto:axel.luyten@swisstph.ch). 
+at [alberto.castrofernandez@swisstph.ch](mailto:alberto.castrofernandez@swisstph.ch). 
 All complaints will be reviewed and investigated **promptly and fairly**.
 _healthiar_ maintainers are obligated to respect the privacy and 
 security of the reporter of any incident.

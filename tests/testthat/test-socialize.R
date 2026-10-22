@@ -62,7 +62,11 @@ testthat::test_that("results the same |fake_socialize|input_is_attribute_output_
         social_indicator = c(3.5, 7.0),
         n_quantile = 10,
         increasing_deprivation = TRUE)$social_main$difference_value |> round(2),
-    expect = c(37.240, 0.280, 19.470, 0.130) # Results on 25 June 2025
+    # Results on 2026-10-01; no comparison study.
+    # The new values were also checked by hand: impact rate per geo unit
+    # sum(absolute risk / 100 * pop_exp) / population * 1e5, with Bergen
+    # (social_indicator 7) as the first and Stavanger (3.5) as the last quantile
+    expect = c(2030.710, 0.380, 1025.830, 0.160)
   )
 })
 
@@ -140,6 +144,45 @@ testthat::test_that("results correct |pathway_socialize|input_is_attribute_outpu
   ## ASSESSMENT DETAILS: All-cause mortality attributable to NO2, by census tract (iteration)
   ## INPUT DATA DETAILS: Modelled exposure, real mortality data from Belgium, 2022 + BIMD2011
 
+})
+
+testthat::test_that("results correct |pathway_socialize|input_is_attribute_output_TRUE|social_indicator_TRUE|ref_pop_TRUE|uncertainty_TRUE|", {
+
+  # Derived from the Sciensano assessment of the test above: the same
+  # assessment with a confidence interval of the relative risk. The
+  # uncertainty does not change the central estimates, so the results must be
+  # those of the assessment. Before the fix the impacts and populations of the
+  # central, lower and upper estimates were summed up
+  data <- readRDS(testthat::test_path("testdata", "no2_bimd_age.rds"))
+
+  attribute_result_age <-
+    healthiar::attribute_health(
+      approach_risk = 'relative_risk',
+      age_group = data$AGE,
+      exp_central = data$EXPOSURE,
+      rr_central = 1.045,
+      rr_lower = 1.02,
+      rr_upper = 1.07,
+      rr_increment = 10,
+      cutoff_central = 0,
+      erf_shape = 'log_linear',
+      bhd_central = data$MORT,
+      population = data$POP,
+      geo_id_micro = data$SECTOR
+    )
+
+  testthat::expect_equal(
+    object =
+      healthiar::socialize(
+        output_attribute = attribute_result_age,
+        age_group = unique(data$AGE),
+        geo_id_micro = unique(data$SECTOR),
+        social_indicator = unique(data$SCORE),
+        n_quantile = 10,
+        ref_prop_pop = subset(data, SECTOR == '21001A00-')$REF
+      )$social_main$difference_value,
+    expected = c(43.3985958, 0.7783631, 24.469600, 0.305009)
+  )
 })
 
 ## WITH USER IMPACT ###############################################

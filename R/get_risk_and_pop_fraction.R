@@ -56,16 +56,27 @@ get_risk_and_pop_fraction <-
     # is included here so that a vector-valued info identifies the subgroups in
     # the population attributable fraction below, as it already does in
     # compile_input().
-    # Not in multiexposure though: there each exposure comes from its own
-    # attribute_health() call and can carry its own info (e.g. "pm2.5" and
-    # "no2"). That info identifies the exposures that are being merged, just
-    # like exp_name does, so it must not keep them apart
-    info_cols <-
-      if (is_multiexposure) {
-        grep("^info_", names_input_table, value = TRUE)
-      } else {
-        grep("^info", names_input_table, value = TRUE)
-      }
+    info_cols <- grep("^info", names_input_table, value = TRUE)
+
+    # In multiexposure each exposure comes from its own attribute_health() call
+    # and can carry its own info (e.g. "pm2.5" and "no2"). That info identifies
+    # the exposures that are being merged, just like exp_name does, so it must
+    # not keep them apart. Info with the same values in all exposures
+    # (e.g. "urban" and "rural" in both) identifies subgroups instead, whose
+    # exposures must be merged within each subgroup but never across them
+    if (is_multiexposure) {
+      info_cols <-
+        info_cols |>
+        purrr::keep(
+          ~ input_table |>
+            dplyr::summarise(
+              .by = exp_name,
+              # All values of this info column in the exposure as one string,
+              # e.g. "rural, urban"
+              info_values = toString(sort(unique(.data[[.x]])))) |>
+            dplyr::pull(info_values) |>
+            dplyr::n_distinct() == 1)
+    }
 
     grouping_cols <-
       c(ci_cols,

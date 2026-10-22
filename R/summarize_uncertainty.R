@@ -619,12 +619,18 @@ summarize_uncertainty <- function(
 
 
   ## Template and simulations #####
+  # Number of each geo unit to select its stream in stream_map
   sim_template <- input_table |>
     dplyr::select(geo_id_micro) |>
     unique()|>
-    dplyr::mutate(geo_id_number = 1:n_geo) |>
-    dplyr::mutate(sim_id = list(1:n_sim))
+    dplyr::mutate(geo_id_number = 1:n_geo)
 
+  # Rows of the input table with the central estimates only.
+  # The lower and upper estimates are not used in the summary of uncertainty
+  # but the simulated values (see below)
+  input_table_central <- input_table |>
+    dplyr::filter(dplyr::if_all(.cols = dplyr::all_of(var_names_with_ci_in_name),
+                                .fns = ~ .x == "central"))
 
 
   # Define the mapping between variable names and their distributions
@@ -647,40 +653,92 @@ summarize_uncertainty <- function(
     # Store distribution
     dist <- sim_config[[var]]
 
-    # Store central, lower and upper estimate for the simulation below
-    central <- as.numeric(input_args$value[[paste0(var, "_central")]])
-    lower   <- as.numeric(input_args$value[[paste0(var, "_lower")]])
-    upper   <- as.numeric(input_args$value[[paste0(var, "_upper")]])
+    # Store central, lower and upper estimate of each row of input_table_central
+    # for the simulation below.
+    # Each row has its own estimates, e.g. bhd by age group or geo unit,
+    # so the estimates have to be taken from input_table and not from input_args.
+    # The rows with the lower and upper estimates are in the same order
+    # as the rows with the central estimates, because compile_input() creates
+    # them together with tidyr::pivot_longer()
+    var_ci_col <- paste0(gsub("rr", "erf", var), "_ci")
+    other_ci_cols <- setdiff(var_names_with_ci_in_name, var_ci_col)
 
+    # Rows in which only this variable has lower and upper estimates
+    input_table_var <- input_table |>
+      dplyr::filter(dplyr::if_all(.cols = dplyr::all_of(other_ci_cols),
+                                  .fns = ~ .x == "central"))
 
-    # Run simulate across all rows
+    var_ci <- input_table_var[[var_ci_col]]
+
+    estimates_by_row <-
+      tibble::tibble(
+        geo_id_micro = input_table_central$geo_id_micro,
+        central = input_table_central[[var]],
+        lower = input_table_var[[var]][var_ci == "lower"],
+        upper = input_table_var[[var]][var_ci == "upper"])
+
+    # Each different estimate is simulated once, i.e. it is one variable.
+    # E.g. a bhd that differs by age group is simulated once per age group,
+    # while one single exp entered for all age groups is simulated only once,
+    # so that all age groups take the same simulated value
+    # The variables that are different for all geo units (exp and bhd)
+    # are simulated once per geo unit.
+    # The variables that are common for all geo units (rr, cutoff, dw and duration)
+    # are simulated once for all geo units, so that the simulated value is
+    # IDENTICAL in all of them
+    estimate_cols <-
+      if (var %in% var_names_with_ci_geo_different) {
+        c("geo_id_micro", "central", "lower", "upper")
+      } else {
+        c("central", "lower", "upper")
+      }
+
+    estimates <- estimates_by_row |>
+      dplyr::distinct(dplyr::across(dplyr::all_of(estimate_cols)))
+
+    # Simulate the values of each estimate,
+    # one after the other using the stream assigned before
+    simulate_estimates <- function(estimates){
+      estimates |>
+        dplyr::mutate(
+          simulated =
+            purrr::pmap(
+              list(central, lower, upper),
+              function(central, lower, upper) {
+                simulate(
+                  central = central,
+                  lower = lower,
+                  upper = upper,
+                  distribution = dist,
+                  n = n_sim,
+                  # Keep the seed argument for now although it should be NULL.
+                  # It’s useful for backward compatibility, unit tests, and standalone calls,
+                  # but the function should ignore it
+                  # when you drive reproducibility by assigning full L'Ecuyer .Random.seed streams externally.
+                  seed = NULL)
+              }))
+    }
 
     # First those variable that are different for all geo units (exp and bhd)
     # Simulations must be DIFFERENT  in all geo units
     if(var %in% var_names_with_ci_geo_different){
 
-      sim[[var]] <- purrr::pmap(
-        list(sim_template$geo_id_number),
-        function(geo_id_number) {
+      simulations <-
+        purrr::map2(
+          sim_template$geo_id_micro,
+          sim_template$geo_id_number,
+          function(geo_id, geo_id_number) {
 
-          # assign full .Random.seed stream if available for this var & geo
-          if (!is.null(stream_map)) {
-            assign(".Random.seed", stream_map[[var]][[geo_id_number]], envir = .GlobalEnv)
-          }
+            # assign full .Random.seed stream if available for this var & geo
+            if (!is.null(stream_map)) {
+              assign(".Random.seed", stream_map[[var]][[geo_id_number]], envir = .GlobalEnv)
+            }
 
-          simulate(
-            central = central,
-            lower = lower,
-            upper = upper,
-            distribution = dist,
-            n = n_sim,
-            # Keep the seed argument for now although it should be NULL.
-            # It’s useful for backward compatibility, unit tests, and standalone calls,
-            # but the function should ignore it
-            # when you drive reproducibility by assigning full L'Ecuyer .Random.seed streams externally.
-            seed = NULL)
-          }
-      )
+            estimates |>
+              dplyr::filter(geo_id_micro == geo_id) |>
+              simulate_estimates()
+          }) |>
+        dplyr::bind_rows()
 
       # Second for those variable that are common for all geo units (rr, cutoff, dw and duration)
       # The simulated value must be IDENTICAL in all geo units
@@ -688,21 +746,18 @@ summarize_uncertainty <- function(
     } else if (var %in% var_names_with_ci_geo_identical ){
 
       # If reproducible streams were requested and stream_map[[var]] contains one stream vector,
-      # assign it once, then call simulate(...) to create a single vector of length n_sim.
+      # assign it once, then call simulate(...) to create a vector of length n_sim for each estimate.
       if (!is.null(stream_map)) {
         assign(".Random.seed", stream_map[[var]][[1]], envir = .GlobalEnv)
       }
 
-      sim[[var]] <-
-        list(
-          simulate(
-            central = central,
-            lower = lower,
-            upper = upper,
-            distribution = dist,
-            n = n_sim,
-            seed = NULL))
+      simulations <- simulate_estimates(estimates)
     }
+
+    # Assign the simulated values to each row of input_table_central
+    sim[[var]] <- estimates_by_row |>
+      dplyr::left_join(simulations, by = estimate_cols) |>
+      dplyr::pull(simulated)
 
   }
 
@@ -726,24 +781,15 @@ summarize_uncertainty <- function(
     input_args$value[! names(input_args$value) %in% args_to_be_removed_in_input_args]
 
 
-  template_with_sim <-
-    # Bind the template with the simulated values
-    dplyr::bind_cols(sim_template, tibble::as_tibble(sim[var_names_with_ci])) |>
-    # Unnest to have table layout
-    tidyr::unnest(dplyr::any_of(c("sim_id", var_names_with_ci)))
-
-  input_table_with_sim <- input_table |>
-    # Remove lower and upper rows (keep only central)
-    # In the summary of uncertainties no lower or upper is used
-    dplyr::filter(dplyr::if_all(.cols = dplyr::all_of(var_names_with_ci_in_name),
-                                .fns = ~ .x == "central")) |>
+  input_table_with_sim <- input_table_central |>
     # Remove the variables with uncertainty because the new simulated values
     # are introduced in the step below
     dplyr::select(- dplyr::all_of(var_names_with_ci)) |>
-    # Add the simulated values
-    dplyr::inner_join(template_with_sim,
-                      by = "geo_id_micro",
-                      relationship = "many-to-many") |>
+    # Add the simulated values (one vector of length n_sim per row and variable)
+    dplyr::bind_cols(tibble::as_tibble(sim[var_names_with_ci])) |>
+    dplyr::mutate(sim_id = list(1:n_sim)) |>
+    # Unnest to have table layout, i.e. one row per row of input_table_central and simulation
+    tidyr::unnest(dplyr::all_of(c("sim_id", var_names_with_ci))) |>
     # Change the name of geo_id_micro adding the sim_id
     # Important: This is a trick to be able to get the output with impacts by simulation
     # To be removed below when impacts by geo_id_micro have to be obtained

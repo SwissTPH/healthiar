@@ -1344,6 +1344,30 @@ testthat::test_that("error if common arguments with different value", {
     regexp = "rr_central must be identical in both scenarios.")
 })
 
+testthat::test_that("error if erf_eq with different value", {
+
+  # The same check as for rr_central above, but for exposure-response
+  # functions entered with erf_eq_central. Before the fix, the function of
+  # scenario 2 was silently used in both scenarios
+  testthat::expect_error(
+    object =
+      healthiar::compare(
+        output_attribute_scen_1 =
+          healthiar::attribute_health(
+            exp_central = 20,
+            cutoff_central = 0,
+            bhd_central = 1000,
+            erf_eq_central = "exp(log(1.1) * c / 10)"),
+        output_attribute_scen_2 =
+          healthiar::attribute_health(
+            exp_central = 10,
+            cutoff_central = 0,
+            bhd_central = 1000,
+            erf_eq_central = "exp(log(1.5) * c / 10)"),
+        approach_comparison = "pif"),
+    regexp = "erf_eq_central must be identical in both scenarios.")
+})
+
 
 testthat::test_that("error pif and different bhd", {
 
