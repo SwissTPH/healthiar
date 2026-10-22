@@ -7,7 +7,7 @@
 # ARGUMENTS ####################################################################
 #' @param output_attribute_exp_1,output_attribute_exp_2  Output of attribute() for exposure 1 and 2, respectively. Baseline health data and population must be identical in outputs 1 and 2.
 #' @param exp_name_1,exp_name_2 \code{String} referring to the name of the environmental exposures 1 and 2
-#' @param approach_multiexposure \code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined".
+#' @param approach_multiexposure \code{String} specifying the multiple exposures approach to be used in the assessment. Options: "additive" (default), "multiplicative" or "combined". The \code{"multiplicative"} and \code{"combined"} approaches merge the exposures within each row and therefore require one single exposure value per exposure (e.g. the population-weighted mean); they cannot be used with exposure distributions, because the exposure categories of two exposures are not paired. Only \code{"additive"} accepts exposure distributions.
 
 # DETAILS ######################################################################
 #' @details
@@ -88,13 +88,78 @@ multiexpose <-
 
     # Capture all arguments and values
     input_args <-
-      get_input_args(environment = base::environment(),
+      get_input_args(environment = environment(),
                      call = match.call())
 
     pop_fraction_type <- input_args$value$pop_fraction_type
 
     input_table_1 <- output_attribute_exp_1[["health_detailed"]][["input_table"]]
     input_table_2 <- output_attribute_exp_2[["health_detailed"]][["input_table"]]
+
+    # Data validation ##########################################################
+
+    # Exposure distributions cannot be merged across exposures.
+    # In the additive approach each exposure keeps its own population
+    # attributable fraction, which is correctly aggregated over its own exposure
+    # categories, so distributions are fine there.
+    # In the multiplicative and combined approaches, however, the risks (or the
+    # fractions) of the exposures have to be merged within each row. The
+    # exposure categories of two exposures are not paired: category 1 of pm2.5
+    # has nothing to do with category 1 of no2 and the two exposures can even
+    # have a different number of categories. There is therefore no defined way
+    # to merge them, so this case is rejected instead of returning a number
+    # that cannot be interpreted
+    if (approach_multiexposure %in% c("multiplicative", "combined")) {
+
+      exp_names_with_distribution <-
+        c(exp_name_1, exp_name_2)[
+          purrr::map_lgl(
+            list(input_table_1, input_table_2),
+            ~ any(.x$exp_type == "exposure_distribution"))]
+
+      if (length(exp_names_with_distribution) > 0) {
+        stop(
+          paste0(
+            "The ", approach_multiexposure, " approach cannot merge exposure ",
+            "distributions (i.e. several exposure categories), ",
+            "which were entered for: ",
+            toString(exp_names_with_distribution), ".\n",
+            "The exposure categories of two exposures are not paired, ",
+            "so the risks cannot be merged across them.\n",
+            "Please enter one single exposure value per exposure ",
+            "(e.g. the population-weighted mean) ",
+            "or use approach_multiexposure = \"additive\"."),
+          call. = FALSE)
+      }
+    }
+
+    # The life table projects one cohort, which can only be done under one
+    # single assumption for each of these characteristics. If the two
+    # assessments disagree, the bound table below has two values in the
+    # corresponding column and get_impact_with_lifetable() aborted with
+    # "the condition has length > 1"
+    lifetable_characteristics <-
+      c("health_outcome", "approach_exposure", "approach_newborns")
+
+    for (characteristic in
+         intersect(lifetable_characteristics,
+                         intersect(names(input_table_1),
+                                         names(input_table_2)))) {
+
+      values <-
+        unique(c(input_table_1[[characteristic]],
+                       input_table_2[[characteristic]]))
+
+      if (length(values) > 1) {
+        stop(
+          paste0(
+            "The life table calculation needs one single value of ",
+            characteristic,
+            ", but the two assessments contain: ",
+            toString(values), "."),
+          call. = FALSE)
+      }
+    }
 
 
     # Add the exposure names to the input_table

@@ -18,12 +18,14 @@ attribute_lifetable(
   approach_newborns = "without_newborns",
   year_of_analysis,
   time_horizon = NULL,
+  fraction_lived = 0.5,
   exp_central = NULL,
   exp_lower = NULL,
   exp_upper = NULL,
   cutoff_central = 0,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
+  threshold = NULL,
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
   erf_eq_upper = NULL,
@@ -35,7 +37,8 @@ attribute_lifetable(
   prop_pop_exp = 1,
   geo_id_micro = "a",
   geo_id_macro = NULL,
-  info = NULL
+  info = NULL,
+  main_results_by = NULL
 )
 }
 \arguments{
@@ -50,7 +53,7 @@ attribute_lifetable(
 
 \item{health_outcome}{\code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).}
 
-\item{min_age, max_age}{\code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.}
+\item{min_age, max_age}{\code{Numeric value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. See Details for more info.}
 
 \item{approach_exposure}{\code{String} specifying whether exposure is constant or only in one year. Options: \code{"single_year"} (default), \code{"constant"}.}
 
@@ -60,9 +63,14 @@ attribute_lifetable(
 
 \item{time_horizon}{\code{Numeric value} specifying the time horizon (number of years) for which the attributable YLL or premature deaths are to be considered. See Details for more info. \emph{Optional argument.}}
 
+\item{fraction_lived}{\code{Numeric vector} Numeric vector or \code{single numeric scalar} referring to the average 
+fraction of the age interval lived by individuals who die within that interval. Default is 0.5.}
+
 \item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
 
-\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.}
+\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value}, i.e. the exposure level below which no health impacts are quantified, and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0, or same value as \code{threshold}, if it is entered. If \code{cutoff} is higher than \code{threshold}, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
+
+\item{threshold}{\code{Numeric value} specifying the \strong{effect threshold}, i.e. the exposure level from which the exposure-response function starts to show an effect. It is the anchor of the curve and is therefore subtracted from the exposure. Default: same value as the cut-off. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
 
 \item{erf_eq_central, erf_eq_lower, erf_eq_upper}{\code{String} or \code{function} specifying the \strong{exposure-response function} and (optionally) the corresponding lower and upper 95\% confidence interval functions. See Details for more info. \emph{Required in AR pathways; in RR pathways required only if \code{rr_...} argument(s) not specified.}}
 
@@ -70,13 +78,15 @@ attribute_lifetable(
 
 \item{rr_increment}{\code{Numeric value} specifying the \strong{exposure increment} for which the provided relative risk is valid. See Details for more info. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
-\item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
+\item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. Input exposure values must be expressed in same unit as the increment of the relative risk. The re-scale of the relative risk is unbounded above and users are responsible for the plausible range. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
-\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}}
+\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category), i.e. the proportion of the \strong{total} population that falls in each exposure category. Default: 1. The fractions do not have to add up to 1: the part of the population that they do not cover is treated as unexposed, i.e. it gets the relative risk of the reference level. E.g, in air pollution assessments everybody is usually exposed and the fractions add up to 1, whereas in noise assessments they typically add up to less than 1, because exposure is only reported above a given level. Accordingly, \code{bhd_...} must always refer to the total population. See Details for more info. \emph{Only applicable in RR pathways.}}
 
 \item{geo_id_micro, geo_id_macro}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_micro}) and (optionally) providing higher-level IDs (\code{geo_id_macro}) to aggregate the geographic areas at. See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
-\item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
+\item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. This will be added to the results table as column(s) keeping the name(s) that you entered with the prefix \code{info_} (e.g. a column \code{education} becomes \code{info_education}) if a \code{data frame} is entered, or as one single column called \code{info} if a vector is entered. These additional columns can be used to further stratify the analysis in a secondary step. \emph{Optional argument.}}
+
+\item{main_results_by}{\code{Character vector} naming the \strong{dimensions that the main results are reported by}, i.e. the dimensions whose impacts must never be added together, e.g. different exposure-outcome pairs. By default all dimensions except the geographic units and the uncertainty (\code{_ci}) columns are summed in the main results. Names entered here are kept as separate rows instead. Options: the columns of \code{info} (named as you named them, or \code{"info"} if you entered a vector instead of a data frame), \code{"sex"}, \code{"age_group"}, \code{"exp_category"}, \code{"geo_id_micro"}, \code{"geo_id_macro"} and, in \code{attribute_lifetable()}, \code{"year"}. Note that this argument does not create the \code{results_by_...} tables of the detailed output, which are available anyway: it determines which dimensions survive in \code{health_main} and in all of them. See the vignette chapter \emph{Multiple exposure-outcome pairs}. \emph{Optional argument.}}
 }
 \value{
 This function returns a \code{list} containing:
@@ -109,6 +119,20 @@ The numeric values must refer to 1 year age groups, e.g. \code{c(0:99)}.
 To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()}
 (see its function documentation for more info).
 
+\code{main_results_by}
+\emph{Optional argument.} By default the impacts of all subgroups, and of all the years of the time horizon, are added up in the main results. That is not meaningful for subgroups that quantify overlapping people in different ways, e.g. different exposure-outcome pairs. Enter their names here to keep them as separate rows. Entering \code{"year"} shows the impacts per year of the time horizon. See the vignette chapter \emph{Multiple exposure-outcome pairs}.
+
+\strong{Last age group}
+The life table is closed at the last age group,
+i.e. its survivors are not projected into a further age.
+Therefore, the last age group must be one in which
+essentially all remaining deaths occur, as in most national life tables.
+Otherwise the attributable health impacts are underestimated.
+If needed, condensate the last age group
+(i.e. sum the populations and the deaths of the highest ages into it)
+instead of adding age groups beyond the data.
+More information in the vignette. 
+
 \code{bhd_central,bhd_lower,bhd_upper}
 Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year).
 There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities.
@@ -127,6 +151,15 @@ to avoid issues during the calculation of survival probabilities.
 If \code{"with_newborns"} is selected, it is assumed that
 for each year after the year of analysis n babies (population aged 0) are born.
 
+\code{approach_exposure}
+Strategy for modeling exposure over time:
+  \itemize{
+    \item \code{"single_year"}: Air pollution exposure is evaluated for a single year (year of analysis).
+      Attributable premature deaths are calculated for this year only.
+    \item \code{"constant"}: Air pollution exposure is sustained across the full projection horizon.
+      Attributable premature deaths and YLLs are accumulated across all years within \code{time_horizon}.
+  }
+
 \code{time_horizon}
 Applicable for the following cases:
 \itemize{
@@ -135,13 +168,25 @@ Applicable for the following cases:
 }
 For example, if 10 is entered one is interested in the impacts of exposure
 during the year of analysis and the next 9 years (= 10 years in total).
-Default value: length of the numeric vector specified in the \code{age_group} argument.
+Default value: the number of age groups entered in the \code{age_group} argument.
 
 \code{min_age}, \code{max_age}
-The \code{min_age} default value 30 implies that all adults aged 30 or older
-will be affected by the exposure;
-\code{max_age} analogeously specifies the age above
-which no health effects of the exposure are considered.
+Both bounds are inclusive, e.g. \code{min_age = 30} implies that all adults
+aged 30 or older will be affected by the exposure and \code{max_age = 69}
+that no health effects are considered above the age of 69.
+By default the exposure affects all age groups, i.e. \code{min_age} is the
+youngest and \code{max_age} the oldest age group entered in \code{age_group}.
+
+\code{fraction_lived} is by default 0.5 for all age groups, i.e. the value
+that AirQ+ assumes. It determines the survival probabilities and matters
+most in the age groups with the highest mortality, i.e. the last ones.
+See the vignette for how to choose it.
+
+If the single-year age groups were obtained with \code{prepare_lifetable()},
+enter here the same \code{fraction_lived} that was used there, which is
+available in the output column \code{fraction_lived_for_attribute}.
+Otherwise the life table would be built with an assumption that differs
+from the one used for the conversion.
 
 \strong{Methodology}
 
@@ -155,7 +200,9 @@ Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
 \itemize{
- \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#fraction-of-the-age-interval-lived}{Fraction of the age interval lived}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 
 
 \strong{Conversion of multi-year to single year age groups}

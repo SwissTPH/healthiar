@@ -10,54 +10,70 @@ tags:
   - Air pollution
   - Noise
 authors:
-  - name: Alberto Castro
+  - given-names: Alberto
+    surname: Castro
     orcid: 0000-0002-4665-3299
     equal-contrib: true
-    affiliation: "1, 2" 
-  - name: Axel Luyten
+    affiliation: "1, 2"
+  - given-names: Axel
+    surname: Luyten
     orcid: 0000-0002-7005-5889
     equal-contrib: true
     affiliation: "1, 2" 
-  - name: Arno Pauwels 
+  - given-names: Arno
+    surname: Pauwels
     orcid: 0000-0001-7519-8080
     affiliation: 3
-  - name: Liliana Vázquez Fernández 
+  - given-names: Liliana
+    surname: Vázquez Fernández
     orcid: 0000-0003-3778-9415
     affiliation: 4 
-  - name: Gianni Ardielli
+  - given-names: Gianni
+    surname: Ardielli
     orcid: 0009-0000-3408-2217
     affiliation: "1, 2" 
-  - name: Iracy Pimenta 
+  - given-names: Iracy
+    surname: Pimenta
     orcid: 0000-0003-0032-1536
     affiliation: 5
-  - name: Susanne Breitner
+  - given-names: Susanne
+    surname: Breitner
     orcid: 0000-0002-0956-6911
     affiliation: 6
-  - name: Carl Baravelli
+  - given-names: Carl
+    surname: Baravelli
     orcid: 0000-0001-7772-5315
     affiliation: 4
-  - name: Vanessa Gorasso
+  - given-names: Vanessa
+    surname: Gorasso
     orcid: 0000-0001-6884-9316
     affiliation: 3
-  - name: Maria Lepnurm
+  - given-names: Maria
+    surname: Lepnurm
     orcid: 0009-0009-4372-6227
     affiliation: 7
-  - name: Andreia Novais 
+  - given-names: Andreia
+    surname: Novais
     orcid: 0009-0007-7775-108X
     affiliation: 5
-  - name: María José Rueda-López 
+  - given-names: María José
+    surname: Rueda-López
     orcid: 0000-0002-2443-1038
     affiliation: 8
-  - name: Pham Minh Nhat 
+  - given-names: Minh Nhat
+    surname: Pham 
     orcid: 0000-0002-5972-1668 
     affiliation: 4
-  - name: Ana Barbosa 
+  - given-names: Ana
+    surname: Barbosa
     orcid: 0000-0002-9623-9002
     affiliation: 5
-  - name: João Vasco Santos
+  - given-names: João
+    surname: Vasco Santos
     orcid: 0000-0003-4696-1002
     affiliation: 5
-  - name: Anette Kocbach Bølling
+  - given-names: Anette
+    surname: Kocbach Bølling
     orcid: 0000-0003-4209-7448
     affiliation: 4
     
@@ -142,12 +158,12 @@ do not fully meet the needs of
 - The World Health Organization (WHO) tool AirQ+ [@Amini2024] 
 focuses on ambient air pollution, but is offline and not an R package, 
 limiting integration with programming workflows. While it partly overlaps 
-with `healthiar` (and used to validate some `healthiar` results),
-it lacks the applicability for other exposures. 
+with `healthiar` (and was used to validate some `healthiar` results),
+it lacks applicability for other exposures. 
 
 - The R package `rhap` [@Sampedro2025] targets household air pollution 
 using predefined scenarios from the Global Change Analysis Model, 
-lacking the applicability for ambient exposures and custom scenarios offered 
+lacking applicability for ambient exposures and custom scenarios offered 
 by `healthiar`.  
 
 - The R package `ithimr` [@Abbas2023], based on ITHIM 
@@ -157,7 +173,7 @@ for walking and cycling) [@Gotschi2020] use
 walking and cycling data to quantify health impacts (from 
 physical activity, air pollution, and traffic crashes). Instead, 
 `healthiar` derives health impacts directly from environmental exposures, 
-enabling broader applications beyond transport. 
+enabling broader applications beyond transportation. 
 Additionally, HEAT (like AirQ+) lacks an R package counterpart, limiting
 integration in programming workflows.
 
@@ -202,9 +218,10 @@ more than 350 internal tests check the correct behavior of `healthiar`, includin
 the correctness of its results.
 
 # Research Impact Statement
-Still as a non-public prototype, `healthiar` was firstly presented at
-the scientific conference Urban Transitions in November 2024 [@Castro2024]. 
-In September-October 2025, shortly after the public release on GitHub, 
+Still as a non-public prototype, `healthiar` was firstly presented in 2024 at
+the scientific conferences European Public Health Conference [@Luyten2024] and
+Urban Transitions [@Castro2024]. 
+In September and October 2025, shortly after the public release on GitHub, 
 two international online workshops introduced `healthiar` to around 110 participants. 
 `healthiar` was published in [CRAN](https://cran.r-project.org/web/packages/healthiar/) 
 on 11 November 2025 and, eight months later, had been downloaded over 
@@ -245,6 +262,9 @@ The rest of the JOSS manuscript authors are contributors to `healthiar`
 (methodological advice and systematic testing) and 
 provided feedback on the manuscript. 
 AP, CB and VG are also co-authors of helper functions.
+
+
+# References
 
 
 

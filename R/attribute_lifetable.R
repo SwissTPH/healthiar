@@ -17,6 +17,20 @@
 #' To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()}
 #' (see its function documentation for more info).
 #'
+#' \code{main_results_by}
+#' \emph{Optional argument.} By default the impacts of all subgroups, and of all the years of the time horizon, are added up in the main results. That is not meaningful for subgroups that quantify overlapping people in different ways, e.g. different exposure-outcome pairs. Enter their names here to keep them as separate rows. Entering \code{"year"} shows the impacts per year of the time horizon. See the vignette chapter \emph{Multiple exposure-outcome pairs}.
+#'
+#' \strong{Last age group}
+#' The life table is closed at the last age group,
+#' i.e. its survivors are not projected into a further age.
+#' Therefore, the last age group must be one in which
+#' essentially all remaining deaths occur, as in most national life tables.
+#' Otherwise the attributable health impacts are underestimated.
+#' If needed, condensate the last age group
+#' (i.e. sum the populations and the deaths of the highest ages into it)
+#' instead of adding age groups beyond the data.
+#' More information in the vignette. 
+#'
 #' \code{bhd_central,bhd_lower,bhd_upper}
 #' Deaths per age must be inputted with 1 value per age (i.e. age group size = 1 year).
 #' There must be greater than or equal to 1 deaths per age to avoid issues during the calculation of survival probabilities.
@@ -34,6 +48,15 @@
 #' \code{approach_newborns}
 #' If \code{"with_newborns"} is selected, it is assumed that
 #' for each year after the year of analysis n babies (population aged 0) are born.
+#' 
+#' \code{approach_exposure}
+#' Strategy for modeling exposure over time:
+#'   \itemize{
+#'     \item \code{"single_year"}: Air pollution exposure is evaluated for a single year (year of analysis).
+#'       Attributable premature deaths are calculated for this year only.
+#'     \item \code{"constant"}: Air pollution exposure is sustained across the full projection horizon.
+#'       Attributable premature deaths and YLLs are accumulated across all years within \code{time_horizon}.
+#'   }
 #'
 #' \code{time_horizon}
 #' Applicable for the following cases:
@@ -43,13 +66,25 @@
 #' }
 #' For example, if 10 is entered one is interested in the impacts of exposure
 #' during the year of analysis and the next 9 years (= 10 years in total).
-#' Default value: length of the numeric vector specified in the \code{age_group} argument.
+#' Default value: the number of age groups entered in the \code{age_group} argument.
 #'
 #' \code{min_age}, \code{max_age}
-#' The \code{min_age} default value 30 implies that all adults aged 30 or older
-#' will be affected by the exposure;
-#' \code{max_age} analogeously specifies the age above
-#' which no health effects of the exposure are considered.
+#' Both bounds are inclusive, e.g. \code{min_age = 30} implies that all adults
+#' aged 30 or older will be affected by the exposure and \code{max_age = 69}
+#' that no health effects are considered above the age of 69.
+#' By default the exposure affects all age groups, i.e. \code{min_age} is the
+#' youngest and \code{max_age} the oldest age group entered in \code{age_group}.
+#'
+#' \code{fraction_lived} is by default 0.5 for all age groups, i.e. the value
+#' that AirQ+ assumes. It determines the survival probabilities and matters
+#' most in the age groups with the highest mortality, i.e. the last ones.
+#' See the vignette for how to choose it.
+#'
+#' If the single-year age groups were obtained with \code{prepare_lifetable()},
+#' enter here the same \code{fraction_lived} that was used there, which is
+#' available in the output column \code{fraction_lived_for_attribute}.
+#' Otherwise the life table would be built with an assumption that differs
+#' from the one used for the conversion.
 #'
 #' \strong{Methodology}
 #'
@@ -63,7 +98,9 @@
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#fraction-of-the-age-interval-lived}{Fraction of the age interval lived}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 #'
 #'
 #' \strong{Conversion of multi-year to single year age groups}
@@ -187,9 +224,11 @@ attribute_lifetable <-
     approach_newborns = "without_newborns",
     year_of_analysis,
     time_horizon = NULL,
+    fraction_lived = 0.5,
     # AR & RR
     exp_central = NULL, exp_lower = NULL, exp_upper = NULL,
     cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
+    threshold = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
     # RR ONLY
     rr_central = NULL, rr_lower = NULL, rr_upper = NULL,
@@ -199,47 +238,40 @@ attribute_lifetable <-
     # ITERATION (OPTIONAL)
     geo_id_micro = "a", geo_id_macro = NULL,
     # META (OPTIONAL)
-    info = NULL
+    info = NULL,
+    main_results_by = NULL
   ) {
 
     # Get input_args
     # i.e. a list with all argument values and characteristics
     input_args <-
-      get_input_args(environment = base::environment(),
+      get_input_args(environment = environment(),
                      call = match.call())
 
+    # input_args$value already contains ALL arguments of this function
+    # (with the same names as in attribute_master), so they are forwarded with
+    # do.call() instead of one by one. In this way a new argument only has to be
+    # added to the signature and not to the call below, too.
     output <-
-      attribute_master(
-        # RR & AR
-        approach_risk = "relative_risk",
-        exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
-        cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
-        # pop_exp can only be used with absolute risk
-        # and this is not compatible with life table method
-        pop_exp = NULL,
-        erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
-        # RR ONLY
-        rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
-        rr_increment = rr_increment,
-        erf_shape = erf_shape,
-        bhd_central = bhd_central, bhd_lower = bhd_lower, bhd_upper = bhd_upper,
-        prop_pop_exp = prop_pop_exp,
-        # Life table
-        health_outcome = health_outcome,
-        is_lifetable = TRUE,
-        population = population,
-        sex = sex,
-        min_age = min_age, max_age = max_age,
-        approach_exposure = approach_exposure,
-        approach_newborns = approach_newborns,
-        year_of_analysis = year_of_analysis,
-        time_horizon = time_horizon,
-        # ITERATION (OPTIONAL)
-        geo_id_micro = geo_id_micro, geo_id_macro = geo_id_macro,
-        # META (OPTIONAL)
-        info = info,
-        # INTERNAL ARGUMENTS
-        input_args = input_args)
+      do.call(
+        what = attribute_master,
+        args =
+          c(input_args$value,
+            list(
+              # Life table
+              is_lifetable = TRUE,
+              # approach_risk cannot be entered by the user 
+              # in the life table approach, 
+              # so it is set here
+              approach_risk = "relative_risk",
+              # pop_exp can only be used with absolute risk
+              # and this is not compatible with life table method
+              pop_exp = NULL,
+              # INTERNAL ARGUMENTS
+              input_args = input_args)),
+        # quote = TRUE so that the argument values (e.g. a function in
+        # erf_eq_central) are not evaluated a second time
+        quote = TRUE)
 
     return(output)
 

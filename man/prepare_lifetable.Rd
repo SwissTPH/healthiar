@@ -4,7 +4,7 @@
 \alias{prepare_lifetable}
 \title{Convert multi-year life table to single year life table}
 \usage{
-prepare_lifetable(age_group, population, bhd)
+prepare_lifetable(age_group, population, bhd, fraction_lived = 0.5)
 }
 \arguments{
 \item{age_group}{\code{Numeric vector} referring to the first years of the age groups. E.g. c(0, 20, 40, 60) means [0, 20), [20, 40), [40, 60), [60, )}
@@ -12,12 +12,16 @@ prepare_lifetable(age_group, population, bhd)
 \item{population}{\code{Numeric vector} referring to mid-year populations by age group.}
 
 \item{bhd}{\code{Numeric vector} referring to the baseline health data (deaths) by age group.}
+
+\item{fraction_lived}{\code{Numeric vector} Numeric vector or \code{single numeric scalar} referring to the average 
+fraction of the age interval lived by individuals who die within that interval. Default is 0.5.}
 }
 \value{
 This function returns a \code{tibble} containing the columns:
 \itemize{
  \item \code{population_for_attribute} (\code{numeric}) containing  population values for each age
  \item \code{bhd_for_attribute} (\code{numeric}) containing baseline health data values for each age
+ \item \code{fraction_lived_for_attribute} (\code{numeric}) containing the fraction of the year lived for each age
  \item and more columns containing input data or results
 }
 }
@@ -33,11 +37,38 @@ See the AirQ+ manual
 for guidance on how to convert larger age groups to 1 year age groups,
 section "Estimation of yearly values" \insertCite{WHO2020_report}{healthiar}.
 
+\code{fraction_lived} is by default 0.5 for all age groups, i.e. the value
+that AirQ+ assumes. It determines the probability of dying in the age
+interval and how the mid-year population of the age group is split over the
+single years of age it contains. It is \strong{not} a way to control how
+the deaths of the age group are distributed over those single years of age.
+
+The same value of \code{fraction_lived} has to be used when the resulting
+single-year life table is passed on to \code{attribute_lifetable()}.
+The output column \code{fraction_lived_for_attribute} is provided for
+that purpose.
+
+\strong{Last age group}
+
+\code{attribute_lifetable()} closes the life table at the last age group.
+The age groups entered here should therefore reach an age in which
+essentially all remaining deaths occur.
+See more information in the vignette.
+
+Every age group is treated as a closed age interval of the same length,
+including the last one. An open-ended top age group such as
+"90 years old and over" therefore has to be entered as the closed age
+interval that follows the age groups below it, here [90, 95). Its hazard
+rate is then the one of the whole open-ended group, which is higher than
+the hazard rate of a closed age interval at that age, and the deaths of
+the ages above the interval are placed inside it.
+
 Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
 \itemize{
- \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#fraction-of-the-age-interval-lived}{Fraction of the age interval lived}}
 }
 \examples{
 # Goal: Convert 5-year population and death data into single year life table

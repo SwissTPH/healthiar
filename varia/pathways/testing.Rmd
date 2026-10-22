@@ -1352,8 +1352,8 @@ testthat::test_that("results correct [pathway_id]", {
         difference_type == "absolute" & 
           difference_compared_with == "overall")  |>
       dplyr::select(difference_value) |> 
-      base::unlist() |>
-      base::as.numeric(),
+      unlist() |>
+      as.numeric(),
     
     ## RESULT(S) FROM THE COMPARISON ASSESSMENT YOU SELECTED
     expected =

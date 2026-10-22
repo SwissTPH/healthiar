@@ -34,14 +34,24 @@ library(dplyr)
 library(purrr)
 library(tidyr)
 library(knitr)
-library(terra)
-library(sf)
+
+## terra, sf and exactextractr are only suggested by healthiar. The chunks of
+## the section on prepare_exposure() are skipped when they are not installed,
+## for instance on the CRAN check machines that install no suggested package
+spatial_packages_available <-
+  requireNamespace("terra", quietly = TRUE) &&
+  requireNamespace("sf", quietly = TRUE) &&
+  requireNamespace("exactextractr", quietly = TRUE)
 ```
 
 Hi there!
 
-This vignette will tell you about `healthiar` and show you how to use
-`healthiar` with the help of examples.
+This vignette will tell you about `healthiar` and show you how to use `healthiar` with the help of examples.
+
+*Note*: Before using `healthiar`, please read carefully the information provided in the [readme file](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme) or the [welcome webpage](https://swisstph.github.io/healthiar/). By using `healthiar`, you agree to the [terms of use and disclaimer](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme).
+
+*Tip*: Do you want to be notified when a new `healthiar` version is released? See the [Stay updated](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#stay-updated) section of the readme file.
+
 
 *NOTE*: Before using `healthiar`, please read carefully the information
 provided in the [readme
@@ -207,6 +217,9 @@ E.g., to quantify the COPD cases attributable to PM2.5 (air pollution)
 exposure in a country.
 
 ### Methodology
+The comparative risk assessment approach [@Murray2003_e] is applied obtaining the population attributable fraction 
+(percent of cases that are attributable to the exposure) based on the relative risk. 
+The exposure scenario is compared with a counterfactual scenario.
 
 The comparative risk assessment approach [@Murray2003_e] is applied
 obtaining the population attributable fraction (percent of cases that
@@ -246,7 +259,21 @@ Alternatively, an equivalent form is:
 
 $$PAF = \frac{\sum PE_i \times (rr\_at\_exp_i - 1)}{\sum PE_i\times (rr\_at\_exp_i - 1) + 1}$$
 
-##### Simplified for single exposure value
+`healthiar` uses this second form, which is the one published as Formula 3 in
+[ETC HE Report 2023/11](https://www.eionet.europa.eu/etcs/etc-he/products/etc-he-products/etc-he-reports/etc-he-report-2023-11-environmental-noise-health-risk-assessment-methodology-for-assessing-health-risks-using-data-reported-under-the-environmental-noise-directive).
+Note that $PE_i$ is the proportion of the **total** population in the exposure
+category $i$, so the $PE_i$ do **not** have to add up to 1: the part of the
+population that they do not cover is treated as unexposed, i.e. it gets the
+relative risk of the reference level. In air pollution assessments everybody is
+usually exposed and the $PE_i$ add up to 1, whereas in noise assessments they
+typically add up to less than 1, because exposure is only reported above a
+given level. Accordingly, the baseline health data entered in `bhd_...` must
+always refer to the total population. The first form above divides by
+$\sum rr\_at\_exp_i \times PE_i$ instead and is therefore only equivalent when
+$\sum PE_i = 1$.
+
+##### Simplified for single exposure value 
+If there is one single single exposure value, corresponding to the population weighted mean concentration, the equation can be simplified as follows: 
 
 If there is one single single exposure value, corresponding to the
 population weighted mean concentration, the equation can be simplified
@@ -260,8 +287,8 @@ epidemiological literature (`rr`) together with the (concentration/dose)
 for scaling relative risk depend on the chosen exposure-response
 function shapes:
 
-- linear [Lehtomaki_2025_eh]
-  $$RRexp = 1 + \frac{rr - 1}{increment} \times (exp - cutoff)$$
+- linear [@Lehtomaki_2025_eh]
+$$RRexp = 1 + \frac{rr - 1}{increment} \times (exp - cutoff)$$
 
 - log-linear [@Lehtomaki_2025_eh]
   $$RRexp = e^{\frac{\log(rr)}{increment} \times (exp - cutoff)}$$
@@ -353,6 +380,20 @@ Where:
 - $AR_i$ = absolute risk at category $i$
 
 - $PE_i$ = absolute population exposed at category $i$
+
+`healthiar` consistently handles cut-off values across both relative and absolute risk approaches. 
+When a `cutoff_` argument is specified alongside an exposure–response function (`erf_eq_`), 
+the function evaluates exposure as excess exposure relative to the cut-off 
+(`c` as $\text{exp} - \text{cutoff}$), 
+effectively shifting the function by the cut-off.
+However, many absolute risk curves published in the literature are parameterized 
+on raw exposure levels that already incorporate the cut-off directly into the function definition. 
+Therefore, `healthiar` issues an informative warning if 
+both `erf_eq_` and a `cutoff_` are specified when using `attribute_health()`.
+If your absolute risk function is parameterized on raw exposure levels 
+rather than on the exposure above the cut-off, 
+see chapter [Shifting the ERF](#shifting-the-erf).
+
 
 ### Function call
 
@@ -540,8 +581,7 @@ results_iteration_ar <- attribute_health(
 )
 ```
 
-*NOTE*: the length of the input vectors fed to `geo_id_micro`,
-`exp_central`, `pop_exp` must match and must be
+*Note*: the length of the input vectors fed to `geo_id_micro`, `exp_central`, `pop_exp` must match and must be
 
 (number of geo units) x (number of exposure categories) = 2 x 5 =
 **10**,
@@ -641,11 +681,9 @@ the other calculation pathway specifications in that row (not shown).
 
 - ...
 
-*NOTE*: only `r length(1:9)` of the
-`r length(results_pm_copd$health_detailed$results_raw$impact)` possible
-combinations are displayed due to space constraints.
+*Note*: only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_raw$impact)` possible combinations are displayed due to space constraints.
 
-*NOTE*: only a selection of columns are shown.
+*Note*: only a selection of columns are shown.
 
 ## Monte Carlo simulation
 
@@ -658,12 +696,25 @@ a Monte Carlo simulation.
 ### Methodology
 
 #### General concepts
+A Monte Carlo simulation is a statistical method that 
+generates repeated random sampling [@Robert2004_book; @Rubinstein2016_book]. 
+In `healthiar`, you can use the function `summarize_uncertainty()` 
+to simulate values in the arguments with uncertainty and 
+estimate a single confidence interval in the results.
 
-A Monte Carlo simulation is a statistical method that generates repeated
-random sampling [@Robert2004_book; @Rubinstein2016_book. In `healthiar`,
-you can use the function `summarize_uncertainty()` to simulate values in
-the arguments with uncertainty and estimate a single confidence interval
-in the results.
+For each entered input argument that includes a (95%) confidence interval 
+(i.e. `_lower` and `_upper` bound value) 
+a distribution is fitted (see distributions below).
+The median of the simulated attributable impacts is reported as the central estimate. 
+The 2.5th and 97.5th percentiles of these simulated impacts define 
+the lower and upper bounds of the 95% summary uncertainty interval.
+Aggregated estimates (e.g. for a `geo_id_macro` covering several `geo_id_micro`)
+are obtained by first summing the impacts of all lower level units
+within each simulation and only then taking the median and the
+2.5th and 97.5th percentiles of these sums.
+Summing instead the central, lower and upper estimates of each lower level unit
+would assume that the uncertainty is perfectly correlated across the units
+and would therefore overestimate the width of the confidence interval.
 
 For each entered input argument that includes a (95%) confidence
 interval (i.e. `_lower` and `_upper` bound value) a distribution is
@@ -689,14 +740,25 @@ distributions in the simulations:
   candidate distributions. Finally, `n_sim` relative risk values are
   simulated using `stats::rgamma()`.
 
-- Exposure, cutoff, baseline health data and duration: The values are
-  simulated based on a *normal* distribution using `stats::rnorm()` with
-  `mean = exp_central`, `mean = cutoff_central`, `mean = bhd_central` or
-  `mean = duration_central` and a standard deviation based on
-  corresponding lower and upper 95% exposure confidence interval values.
-  The standard deviation is calculated as $$(upper-lower)/(2*1.96)$$,
-  since for a normal distribution the 95% CI spans approximately two
-  standard deviations on either side of the mean.
+- Exposure, cutoff, baseline health data and duration:
+The values are simulated based on a *normal* distribution
+using `stats::rnorm()` with
+`mean = exp_central`, `mean = cutoff_central`, `mean = bhd_central` or `mean = duration_central`
+and a standard deviation based on corresponding lower and upper 95% exposure
+confidence interval values. The standard deviation is calculated as $$(upper-lower)/(2*1.96)$$,
+since for a normal distribution the 95% CI spans approximately two standard deviations on either side of the mean.
+As these four variables cannot be negative, the distribution is truncated at zero,
+i.e. negative values are discarded and drawn again until they are positive.
+
+Please note that the normal distribution is symmetric.
+Therefore, the simulated values reproduce the entered confidence interval only
+if the entered `_lower` and `_upper` values are symmetric around the `_central` value.
+Only the width of the entered confidence interval is used, not its shape.
+The more asymmetric the entered confidence interval,
+the more the simulated values will depart from it.
+Moreover, if the entered confidence interval is so wide that a relevant share of
+the distribution falls below zero, the truncation at zero shifts
+the simulated central estimate above the entered `_central` value.
 
 - Disability weights: The values are simulated based on a *beta*
   distribution, as both the disability weights and the beta distribution
@@ -830,6 +892,29 @@ create the ERF
 
 # Sub-group analysis
 
+# Sub-group analysis
+
+Every sub-group stratifies the assessment: by age group, by sex, or by anything
+entered in `info`, such as education level. What differs is what happens to
+that stratification in the main results.
+
+For the sub-groups in this chapter the impacts are **summed**, so the
+stratification disappears from `health_main` and only the total per geographic
+unit is shown. It is still available in the `results_by_...` tables of the
+detailed output, and that is usually what you want: the total across education
+levels, or across age groups, is a meaningful number.
+
+Not every dimension of an assessment is a sub-group in this sense, though. A
+stratification splits one population into parts that add up to the whole, which
+is exactly why summing them is meaningful. Different exposure-outcome pairs do
+not: PM2.5 and mortality and NO2 and asthma cover the *same* whole population,
+so they are parallel analyses rather than parts of one. Adding them up counts
+the same people twice.
+
+Those dimensions therefore have to be **kept** in the main results, which is
+what the argument `main_results_by` does. See the chapter
+*Multiple exposure-outcome pairs*.
+
 ## by age group
 
 ### Goal
@@ -919,12 +1004,9 @@ different to age and sex, e.g., education level*.
 
 ### Function call
 
-A single vector (or a data frame / tibble with multiple columns) to
-group the results by can be entered to the `info` argument. In this
-example, this will be information about the education level.
+In a second step one can group the results based on one or more columns and so summarize the results by the preferred sub-groups. 
 
-In a second step one can group the results based on one or more columns
-and so summarize the results by the preferred sub-groups.
+Be aware that, if the argument `info`is a data frame or tibble, the columns in the `info` argument are renamed adding the prefix `info_`. If the argument `info` is a vector, the column in the results is called `info`. 
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_attribute <- healthiar::attribute_health(
@@ -950,7 +1032,7 @@ output_attribute <- healthiar::attribute_health(
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_stratified <- output_attribute$health_detailed$results_raw |>
-      dplyr::group_by(info_column_1) |>
+      dplyr::group_by(info_education) |>
       dplyr::summarize(mean_impact = mean(impact))|>
       dplyr::pull(mean_impact) |>
       print()
@@ -975,15 +1057,15 @@ output_attribute <- healthiar::attribute_health(
     rr_increment = 10,
     erf_shape = "log_linear",
     cutoff_central =  0,
-    age_group = base::rep(c("50_and_younger", "50_plus"), each = 4, times= 2),
-    sex = base::rep(c("female", "male"), each = 2, times = 4),
+    age_group = rep(c("50_and_younger", "50_plus"), each = 4, times= 2),
+    sex = rep(c("female", "male"), each = 2, times = 4),
     exp_central = c(6, 7, 8, 7, 8, 9, 8, 9,
                     10, 9, 10, 11, 10, 11, 12, 13),
     bhd_central = c(600, 700, 800, 700, 800, 900, 800, 900,
                     1000, 900, 1000, 1100, 1000, 1100, 1200, 1000),
-    geo_id_micro = base::rep(c("a", "b"), each = 8),
-    info = base::data.frame(
-      education = base::rep(c("without_master", "with_master"), times = 8)) # education level
+    geo_id_micro = rep(c("a", "b"), each = 8),
+    info = data.frame(
+      education = rep(c("without_master", "with_master"), times = 8)) # education level
   )
 ```
 
@@ -991,7 +1073,7 @@ output_attribute <- healthiar::attribute_health(
 
 ```{r eval=TRUE, include=TRUE, echo=TRUE}
 output_stratified <- output_attribute$health_detailed$results_raw |>
-      dplyr::group_by(info_column_1) |>
+      dplyr::group_by(info_education) |>
       dplyr::summarize(mean_impact = mean(impact))|>
       dplyr::pull(mean_impact) |>
       print()
@@ -1001,7 +1083,211 @@ output_stratified <- output_attribute$health_detailed$results_raw |>
 rm(output_attribute, output_stratified)
 ```
 
+
+# Multiple exposure-outcome pairs
+
+### Goal
+
+E.g., to quantify in *one single call* the impacts of *several exposure-outcome
+pairs*, such as PM2.5 and COPD together with NO2 and asthma, or to compare the
+*same pair quantified with the relative risks of two different studies*.
+
+### Parallel analyses, not sub-groups
+
+As explained in the chapter *Sub-group analysis*, the impacts of the sub-groups
+are summed by default, so only the total per geographic unit is shown in
+`health_main`.
+
+That is not what you want here. Premature deaths attributable to PM2.5 and
+asthma cases attributable to NO2 are not two parts of one population: they are
+two analyses of the *same* population, so adding them up counts the same people
+twice. The same applies to a sensitivity analysis in which one pair is
+quantified with the relative risks of two different studies: the two results
+are alternatives to each other, not summands.
+
+Enter therefore in `main_results_by` the names of the dimensions that the main
+results have to be reported by. They stay as separate rows in `health_main` and
+in all `results_by_...` tables. Note that `main_results_by` does not create those
+tables, which are available in the detailed output in any case: it determines
+which dimensions survive in them and in the main results.
+
+### Function call
+
+The pairs are identified in a column of `info`, and that column is named in
+`main_results_by`. All other arguments are entered as parallel vectors, exactly as
+for multiple geographic units. Note that the pairs can have different
+exposure-response functions, here log-linear for PM2.5 and linear for NO2.
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
+output_attribute <- healthiar::attribute_health(
+    info = data.frame(
+      pair = rep(c("pm2.5_copd", "no2_asthma"), each = 2)),
+    main_results_by = "pair",
+    exp_central    = c(8.85, 9.20, 22.1, 24.5),
+    cutoff_central = c(5, 5, 10, 10),
+    rr_central     = c(1.369, 1.369, 1.041, 1.041),
+    rr_increment   = 10,
+    erf_shape      = c("log_linear", "log_linear", "linear", "linear"),
+    bhd_central    = c(30747, 31500, 12000, 12500),
+    geo_id_micro   = rep(c("a", "b"), times = 2)
+  )
+```
+
+### Main results
+
+One row per exposure-outcome pair and geographic unit. Without `main_results_by` the
+four impacts would have been added up into one single number per geographic
+unit.
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
+output_attribute$health_main |>
+  dplyr::select(info_pair, geo_id_micro, erf_ci, impact_rounded) |>
+  print()
+```
+
+### Sensitivity analysis with several exposure-response functions
+
+The same mechanism compares one exposure-outcome pair quantified with the
+relative risks of two different studies.
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
+output_sensitivity <- healthiar::attribute_health(
+    info = data.frame(rr_source = c("Liu 2020", "WHO 2021")),
+    main_results_by = "rr_source",
+    exp_central = c(8.85, 8.85),
+    cutoff_central = 5,
+    rr_central = c(1.369, 1.080),
+    rr_increment = 10,
+    erf_shape = "log_linear",
+    bhd_central = c(30747, 30747)
+  )
+
+output_sensitivity$health_main |>
+  dplyr::select(info_rr_source, erf_ci, impact_rounded) |>
+  print()
+```
+
+### Which dimensions can be entered
+
+`main_results_by` is available in both `attribute_health()` and
+`attribute_lifetable()`. It accepts:
+
+* the **columns of `info`**, using the names that you gave them (e.g. `"pair"`),
+  or `"info"` itself if you entered a vector instead of a data frame;
+* the arguments **`sex`**, **`age_group`**, **`exp_category`**,
+  **`geo_id_micro`** and **`geo_id_macro`**;
+* in `attribute_lifetable()` also **`year`**, i.e. the years of the time
+  horizon, which are otherwise added up.
+
+For example, `main_results_by = "sex"` shows one row per sex in `health_main`
+instead of the total across sexes. This changes nothing in the calculation,
+only which rows are kept apart in the results, and the rows still add up to the
+total that you would get without the argument.
+
+A name that is not available in the assessment produces an error listing the
+options, so a typo in a column name of `info` cannot pass unnoticed.
+
+### Limitations
+
+All pairs in one call must use the same way of defining the exposure-response
+function, i.e. either `rr_...` or `erf_eq_...` for all of them, and the same
+`approach_risk`.
+
+`standardize()` keeps the pairs apart as well, so each pair gets its own
+age-standardized impacts. Nothing has to be done for that: its results simply
+carry the columns of `main_results_by`.
+
+`socialize()` and `summarize_uncertainty()` analyse one pair at a time and stop
+with an error otherwise, so for them `attribute_health()` has to be called once
+per pair. The reason is different in each case. `socialize()` groups the
+impacts only by geographic unit, age group and social quantile, and its
+arguments have no way of identifying the pairs when the input is entered
+directly instead of as an `attribute_health()` output. `summarize_uncertainty()`
+simulates one value per variable and geographic unit, assuming that e.g. the
+relative risk is the same everywhere, which is not the case when each pair has
+its own.
+
+```{r eval=TRUE, include=FALSE, echo=FALSE}
+rm(output_attribute, output_sensitivity)
+```
+
+
 # YLL & deaths with life table
+
+## Data preparation
+The life table approach to obtain YLL and deaths requires population and baseline mortality data to be 
+stratified by *one year* age groups. However, in some cases these data 
+are only available for larger age groups (e.g., 5-year data: 0-4 years old, 5-9 years old, ...). What to do?
+
+- If your population and mortality data are *not* available by one-year age group, 
+data must be prepared by interpolating values. 
+The `healthiar` function `prepare_lifetable()` makes this conversion using the same approach as the WHO tool
+AirQ+ [@WHO2020_report]. In standard AirQ+ life table disaggregations, deaths are assumed to be distributed uniformly across age intervals with a fraction of the age interval lived of 0.5. The argument `fraction_lived` allows other assumptions, see the section on the fraction of the age interval lived below.
+
+- If your population and death data are stratified by one-year age group, you are lucky, you can ignore this initial step. `prepare_lifetable()` passes single-year data on unchanged, so it can also be used for a life table that mixes already available single-year data with converted larger age groups.
+
+
+```{r Examples using prepare_lifetable()}
+age_groups <- c(0, 5, 10, 15)
+pop <- c(438200, 445100, 439800, 421500)
+bhd_counts <- c(1420, 45, 50, 125)
+
+# Standard uniform disaggregation (fraction_lived = 0.5)
+prepared_data <- healthiar::prepare_lifetable(
+  age_group = age_groups,
+  population = pop,
+  bhd = bhd_counts
+  # fraction_lived = 0.5 (default)
+)
+
+# Age-group specific fraction of the age interval lived (first fraction_lived = 0.1)
+prepared_data_with_age_specific_fraction_lived <- healthiar::prepare_lifetable(
+  age_group = age_groups,
+  population = pop,
+  bhd = bhd_counts,
+  fraction_lived = c(0.1, 0.5, 0.5, 0.5)
+)
+```
+
+### Fraction of the age interval lived
+
+The argument `fraction_lived`, available in both `prepare_lifetable()` and `attribute_lifetable()`, is the average fraction of an age interval that is lived by those who die in it. It corresponds to $_na_x$ in the life table literature [@Chiang1984_book; @Preston2001_book]. The default of 0.5 for all age groups means that deaths are evenly distributed over the age interval, which is the value that AirQ+ assumes [@WHO2020_report]. It can be entered as a single value applying to all age groups or as one value per age group.
+
+#### What it determines
+
+With $_nm_x$ the death rate of an age interval of width $n$, the probability of dying in that interval is
+
+$$_nq_x = \frac{n \times {}_nm_x}{1 + n \times (1 - {}_na_x) \times {}_nm_x}$$
+
+and the person-years lived at a single year of age, i.e. its mid-year population, is one year for each person reaching the next birthday plus $fraction\_lived$ years for each person dying at that age:
+
+$$midyear\_population = entry\_population - (1 - fraction\_lived) \times deaths$$
+
+In `prepare_lifetable()` these two relations fix the conversion. The entry population of the first single year of age of an age group follows from the condition that the conversion may neither create nor lose population, i.e. that the single-year mid-year populations have to add up to the mid-year population of the age group that was entered:
+
+$$entry\_population_{first} = \frac{population + (1 - fraction\_lived) \times bhd}{\sum_{k = 0}^{n - 1} prob\_survival^{\,k}}$$
+
+For $fraction\_lived = 0.5$ this reproduces the values published in the AirQ+ manual, and unlike the formula given there it holds for any age interval width and any value of `fraction_lived`.
+
+Both relations are checked in internal tests in `healthiar`against a published life table, the abridged life table for Austrian males in 1992 [@Preston2001_book], in which the fraction of the age interval lived ranges from 0.48 to 0.63 in the 5-year age groups and is 0.068 at age 0. Applying the probability of dying obtained by `prepare_lifetable()` to the published survivors reproduces the published deaths of that life table for every age group, and the entry population it determines from the published mid-year population and deaths at age 0 reproduces the published number of survivors.
+
+#### What it does not determine
+
+`fraction_lived` is *not* a way to control how the deaths of an age group are distributed over the single years of age it contains. That distribution follows from the survival probabilities, as in AirQ+, so `fraction_lived` influences it only indirectly and far too weakly to be used for it. Both quantities are distinct in the life table literature and the distribution of the deaths cannot be derived from $_na_x$ [@Preston2001_book].
+
+`prepare_lifetable()` can therefore not reproduce the concentration of deaths at age 0 that is observed in low-mortality settings. If the deaths at age 0 matter for your assessment, obtain single-year population and death data for the youngest ages instead of relying on the conversion.
+
+#### How to choose it
+
+The sensitivity of the survival probability to `fraction_lived` is
+
+$$\frac{\partial \; prob\_survival}{\partial \; fraction\_lived} = - \frac{hazard\_rate^2}{(1 + (1 - fraction\_lived) \times hazard\_rate)^2}$$
+
+i.e. it grows with the square of the hazard rate. `fraction_lived` therefore matters little in the age groups with a low mortality and most in those with the highest mortality, which are the last ones. With the example data of this vignette, entering 0.1 for age 0 changes the YLL by 0.01%, whereas adapting the last age group changes them by 0.25%.
+
+Values of $_na_x$ other than 0.5 are usually derived from the mortality level itself. For age 0 and for the ages 1 to 4, @Preston2001_book report rules of thumb going back to Coale and Demeny, e.g. $_1a_0 = 0.045 + 2.684 \times {}_1m_0$ for males with $_1m_0 < 0.107$. For an open-ended last age group, $_na_x$ is the remaining life expectancy $1 / {}_nm_x$, which can exceed the width of the age interval.
+
+Whichever `fraction_lived` is used in `prepare_lifetable()` has to be passed on to `attribute_lifetable()`, which needs the same assumption to obtain the survival probabilities. The output column `fraction_lived_for_attribute` is provided for that purpose.
 
 ## YLL
 
@@ -1012,42 +1298,93 @@ attributable to PM2.5 exposure during one year.
 
 ### Methodology
 
-#### Data preparation
-
-The life table approach to obtain YLL and deaths requires population and
-baseline mortality data to be stratified by *one year* age groups.
-However, in some cases these data are only available for larger age
-groups (e.g., 5-year data: 0-4 years old, 5-9 years old, ...). What to
-do?
-
-- If your population and mortality data are *not* available by one-year
-  age group, your data must be prepared by interpolating values. The
-  `healthiar` function `prepare_lifetable()` makes this conversion using
-  the same approach as the WHO tool AirQ+ [@WHO2020_report].
-
-- If your population and death data are stratified by one-year age
-  group, you are lucky, you can ignore this initial step.
-
 #### General concept
-
-The life table methodology of `attribute_lifetable()` follows that of
-the WHO tool AirQ+ [@WHO2020_report], which is described in more detail
-by @Miller2003_jech.
+The life table methodology of `attribute_lifetable()` follows that of the WHO tool AirQ+ [@WHO2020_report], which is described in more detail by @Miller2003_jech. 
+The generalized formulas, which do not assume a fixed fraction of life lived (fraction_lived = 0.5), are based on the foundational work by @Chiang1984_book.
+In short, two scenarios are compared: 
 
 In short, two scenarios are compared:
 
 a)  a scenario with the exposure level specified in the function
     ("exposed scenario") and
 
-b)  a scenario with no exposure ("unexposed scenario").
+First, the entry and mid-year populations of the (first) year of analysis in the unexposed scenario are determined using modified survival probabilities. Second, age-specific population projections using scenario-specific survival probabilities are done for both scenarios. Third, by subtracting the populations in the unexposed scenario from the populations in the exposed scenario the premature deaths/years of life lost attributable to the exposure are determined. An expansive life table case study for is available in a report by @Miller2010_report.
 
-First, the entry and mid-year populations of the (first) year of
-analysis in the unexposed scenario is determined using modified survival
-probabilities. Second, age-specific population projections using
-scenario-specific survival probabilities are done for both scenarios.
-Third, by subtracting the populations in the unexposed scenario from the
-populations in the exposed scenario the premature deaths/years of life
-lost attributable to the exposure are determined.
+Use the two arguments `approach_exposure` and `approach_newborns` to modify the life table calculation:
+
+-   `approach_exposure`
+
+    -   `"single_year"` (default): Population is exposed for only one year 
+    (year of analysis) and attributable health impacts reflect the single-year snapshot. 
+    Applicable only for deaths. AirQ+ approach for deaths in 2025.
+
+    -   `"constant"` : Population is exposed every year, 
+    i.e. air pollution exposure is sustained across the full projection horizon 
+    and attributable health impacts are projected and cumulated 
+    across the full lifetime period. 
+    Applicable for both deaths and YLL. AirQ+ approach for YLL in 2025.
+
+-   `approach_newborns`
+
+    -   `"without_newborns"` (default): Population in the year of analysis 
+    is followed over time, without considering newborns being born.
+
+    -   `"with_newborns"`: For each year after the year of analysis n babies are born, 
+    with n being equal to the (male and female) population aged 0 
+    that is provided in the argument population.
+
+#### Last age group
+
+The life table is closed at the last age group, i.e. the survivors of the last
+age group are not projected into a further age. This follows the usual practice
+in the life table method, which extends the life table up to an age past which
+the probability of survival is negligible and then sets the survival above it to
+zero [@Miller2003_jech].
+
+The data must therefore reach an age at which survival is negligible, i.e. the
+last age group should be one in which essentially all remaining deaths occur.
+National life tables usually already close in this way, with a probability of
+dying of 1 in the last age group. If the last age group still has an appreciable
+number of survivors, those survivors are dropped from the projection:
+neither the life years they would still live, nor the difference in those life
+years between the exposed and the unexposed scenario, are counted. The
+attributable health impacts are then underestimated. With the example data used
+in this vignette, which end at age 99 and still have a survival probability of
+about 0.34 there, the underestimation is around 0.7%.
+
+If that is the case, condensate the last age group, i.e. sum the populations and
+the deaths of the highest ages into it, so that all remaining deaths fall within
+it. Do *not* add extra age groups beyond the data instead: the added ages would
+need a population greater than 0, that population would be considered exposed
+and would generate attributable health impacts of its own, and the results would
+then grow with the number of added age groups instead of converging.
+
+#### Comparison with AirQ+
+
+`healthiar` aligns with AirQ+ in the equations of the life table. The survival
+probability of AirQ+, $S_i = (2 - h_i) / (2 + h_i)$, is identical to the one
+used here, and the modified survival probability is obtained in both tools by
+dividing the hazard rate by the relative risk (which is equivalent to
+multiplying it by $1 - PAF$) [@WHO2020_report].
+
+`healthiar` reproduces the results of AirQ+. For the same input data, the
+attributable YLL and premature deaths of both tools agree to the last decimal
+that AirQ+ prints, for an exposure of one single year as well as for a constant
+exposure, year by year and accumulated over several years, and so do the life
+expectancies with and without the exposure.
+
+The comparison has to be made by sex, though, because the "All genders" results
+of AirQ+ are not the sum of its male and female results as in `healthiar`: AirQ+ obtains them
+from a life table in which the populations and the deaths of both sexes are
+pooled. 
+With the data of the example below, the pooled life table for all genders in AirQ+ gives 1.6% more YLL
+than the sum of two sex-specific ones in `healthiar`. `healthiar` returns that pooled value too, when
+the populations and the deaths of both sexes are entered as one single life
+table, i.e. passing the same value in `sex` for every age group.
+
+Be aware when comparing with AirQ+ that its results accumulated over several
+years (e.g. "over 10 years") correspond to `approach_exposure = "constant"` and
+not to `approach_exposure = "single_year"`.
 
 An expansive life table case study for is available in a report of
 @Miller2010_report.
@@ -1059,7 +1396,7 @@ An expansive life table case study for is available in a report of
 The entry (i.e. start of year) populations in both scenarios (exposed
 and unexposed) is determined as follows:
 
-$$entry\_population_{year_1} = midyear\_population_{year_1} + \frac{deaths_{year_1}}{2}$$
+$$entry\_population_{year_1} = midyear\_population_{year_1} + (1 - fraction\_lived) \times deaths_{year_1}$$
 
 ##### Survival probabilities
 
@@ -1068,12 +1405,12 @@ $$entry\_population_{year_1} = midyear\_population_{year_1} + \frac{deaths_{year
 The survival probabilities in the exposed scenario from start of year
 $i$ to start of year $i+1$ are calculated as follows:
 
-$$prob\_survival = \frac{midyear\_population_i - \frac{deaths_i}{2}}{midyear\_population_i + \frac{deaths_i}{2}}$$
+$$prob\_survival = \frac{midyear\_population_i - fraction\_lived \times deaths_i}{midyear\_population_i + (1 - fraction\_lived) \times deaths_i}$$
 
 Analogously, the probability of survival from start of year $i$ to
 mid-year $i$:
 
-$$prob\_survival\_until\_midyear = 1 - \frac{1 - prob\_survival}{2}$$
+$$prob\_survival\_until\_midyear = 1 - (1 - fraction\_lived) \times (1 - prob\_survival)$$
 
 ###### Unexposed scenario
 
@@ -1086,19 +1423,16 @@ deaths.
 
 $$hazard\_rate = \frac{deaths}{mid\_year\_population}$$
 
-Second, the hazard rate is multiplied with the modification factor
-($= 1 - PAF$) to obtain the age-specific hazard rate in the unexposed
-scenario.
+Second, the hazard rate is multiplied by the modification factor ($= 1 - PAF$) to obtain the age-specific hazard rate in the unexposed scenario.
 
 $$hazard\_rate\_mod = hazard\_rate \times modification\_factor$$
 
-Third, the the age-specific survival probabilities (from the start until
-the end in a given age group) in the unexposed scenario are calculated
-as follows (cf. Miller & Hurley 2003):
+Third, the age-specific survival probabilities (from the start until the end in a given age group) in the unexposed scenario are calculated as follows:
 
-$$prob\_survival\_mod = \frac{2-hazard\_rate\_mod}{2+hazard\_rate\_mod}$$
+$$prob\_survival\_mod = \frac{1 - fraction\_lived \times hazard\_rate\_mod}{1 + (1 - fraction\_lived) \times hazard\_rate\_mod}$$
 
 ##### Mid-year population
+The mid-year population of the (first) year of analysis (year_1) in the unexposed scenario are determined as follows:
 
 The mid-year populatios of the (first) year of analysis (year_1) in the
 unexposed scenario are determined as follows:
@@ -1106,7 +1440,7 @@ unexposed scenario are determined as follows:
 First, the survival probabilities from start of year $i$ to mid-year $i$
 in the unexposed scenario is calculated as:
 
-$$prob\_survival\_until\_midyear_{mod} = 1 - \frac{1 - prob\_survival\_mod}{2}$$
+$$prob\_survival\_until\_midyear_{mod} = 1 - (1 - fraction\_lived) \times (1 - prob\_survival\_mod)$$
 
 Second, the mid-year populations of the (first) year of analysis
 (year_1) in the unexposed scenario is calculated:
@@ -1142,8 +1476,7 @@ $$midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_unt
 
 ###### Unexposed scenario
 
-The entry and mid-year population projections of in the exposed scenario
-is done as follows:
+The entry and mid-year population projections in the unexposed scenario are done as follows:
 
 First, the entry population of year $i+1$ is calculated (which is the
 same as the end of year population of year $i$) by multiplying the entry
@@ -1153,7 +1486,7 @@ $$entry\_population_{i+1} = entry\_population_i \times prob\_survival\_mod$$
 
 Second, the mid-year population of year $i+1$ is calculated.
 
-$$midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear$$
+$$midyear\_population_{i+1} = entry\_population_{i+1} \times prob\_survival\_until\_midyear_{mod}$$
 
 ### Function call
 
@@ -1194,26 +1527,6 @@ results_pm_yll$health_main |>
   knitr::kable()
 ```
 
-Use the two arguments `approach_exposure` and `approach_newborns` to
-modify the life table calculation:
-
-- `approach_exposure`
-
-  - `"single_year"` (default) population is exposed for a single year
-    and the impacts of that exposure are calculated
-
-  - `"constant"` population is exposed every year
-
-- `approach_newborns`
-
-  - `"without_newborns"` (default) assumes that the population in the
-    year of analysis is followed over time, without considering newborns
-    being born
-
-  - `"with_newborns"` assumes that for each year after the year of
-    analysis n babies are born, with n being equal to the (male and
-    female) population aged 0 that is provided in the argument
-    population
 
 ### Detailed results
 
@@ -1232,7 +1545,7 @@ available.
 
 ### Results per year
 
-*NOTE*: only a selection of years is shown.
+*Note*: only a selection of years is shown.
 
 ```{r}
 results_pm_yll$health_detailed$results_raw |>
@@ -1372,12 +1685,9 @@ Attributable premature deaths results
 
 are available.
 
-*Note*: we will inspect the results for females; male results are also
-available.
+*Note*: We inspect below the results for females; male results are also available.
 
-*Note*: because we set the function argument
-`approach_exposure = "constant"` in the function call results are
-available for one year (the year of analysis).
+*Note*: Because we set the function argument `approach_exposure = "constant"` results are projected and accumulated across the full time_horizon. If you set approach_exposure = "single_year", results for premature deaths are available for one year (the year of analysis).
 
 ```{r eval=FALSE, include=FALSE, echo=TRUE}
 results_pm_deaths$health_detailed$intermediate_calculations|> 
@@ -1387,7 +1697,7 @@ results_pm_deaths$health_detailed$intermediate_calculations|>
 ```
 
 ```{r eval=TRUE, include=TRUE, echo=FALSE}
-results_pm_yll$health_detailed$intermediate_calculations|> 
+results_pm_deaths$health_detailed$intermediate_calculations|> 
   dplyr::filter(sex == "female") |>
   dplyr::pull(projection_if_unexposed_by_age_and_year) |>
   purrr::pluck(1) |>
@@ -1585,10 +1895,7 @@ Where:
   reference level
 
 ##### Categorical Exposure Form
-
-If the population exposure is described as a categorical rather than
-continuous exposure, the integrals may be converted to sums
-[@WHO2003_report; Murray2003-spbm]:
+If the population exposure is described as a categorical rather than continuous exposure, the integrals may be converted to sums [@WHO2003_report; @Murray2003_spbm]:
 
 $$PIF = \frac{\sum rr\_at\_exp_{i} \times PE_{i} - \sum rr\_at\_exp_{i}PE'_{i}}{\sum rr\_at\_exp_{i}PE_{i}}$$
 
@@ -1872,7 +2179,7 @@ as `attribute_health()`.
 
 ### Function call
 
-```{r}
+```{r eval=spatial_packages_available}
 # exdat_pwm_1 = Pollution grid data
 exdat_pwm_1 <- terra::rast(system.file("extdata", "exdat_pwm_1.tif", package = "healthiar"))
 
@@ -1888,49 +2195,153 @@ pwm <- healthiar::prepare_exposure(
 
 ### Main results
 
-Within the function output, the list `main` contains the
-population-weighted mean exposures for the (higher-level) geographic
-units in the column `exposure_mean` and the total population in each
-unit in column `population_total`.
+Within the function output, the list `exposure_main` contains 
+the population-weighted mean exposures for the (higher-level) geographic units 
+in the column `exposure_mean` and the total population in each unit in column `population_total`.
 
-```{r echo=FALSE}
- knitr::kable(pwm$main)
+```{r echo=FALSE, eval=spatial_packages_available}
+ knitr::kable(as.data.frame(pwm$exposure_main))
 ```
 
-```{r eval=TRUE, include=FALSE, echo=FALSE}
+```{r eval=spatial_packages_available, include=FALSE, echo=FALSE}
 rm(exdat_pwm_1)
 rm(exdat_pwm_2)
 rm(pwm)
 ```
 
-# Threshold additional to cut-off
+
+
+
+# Cut-off vs. threshold {#cutoff-vs-threshold}
 
 ### Goal
 
-E.g., to quantify health impacts in the exposure group 55dB+
-(calculation threshold) that are affected by a exposure above the effect
-threshold of 45 dB (cut-off).
+E.g., to quantify health impacts with an exposure-response function
+whose effect threshold is lower than the lowest exposure level
+that the assessment quantifies,
+such as noise assessments in which exposure data are only available above 55 dB
+although health effects already occur at lower exposures.
+
+### Methodology
+
+`healthiar` distinguishes two exposure levels:
+
+* `threshold` is the **effect threshold**, i.e. the exposure level
+from which the exposure-response function starts to show an effect.
+It is the anchor of the curve and is therefore subtracted from the exposure.
+The term is used in this sense in health risk assessment guidance, e.g.,
+for environmental noise [@Engelmann2025_report].
+Because the risk is expressed relative to the threshold,
+the threshold is also the **counterfactual exposure** of the assessment,
+i.e. the exposure of the hypothetical scenario
+that the actual exposure is compared with [@Murray2003_e].
+* `cutoff_...` is the exposure level below which no health impacts are quantified.
+It determines which exposures are assessed,
+not the level that they are compared with.
+Usually, the cut-off is assumed to be the effect threshold,
+and then it is the counterfactual exposure as well.
+This is how the term is used in health risk assessment guidance, e.g.,
+for air pollution [@WHO2025_report], where one single level plays both roles.
+
+Accordingly, there are three possible combinations:
+
+**a) Cut-off equal to the effect threshold**
+
+This is the default situation.
+Since both threshold and cut-off are usually identical, 
+`healthiar` assumes that the values are the same, if one of them is missing.
+Therefore, in that case, it is enough to enter only one value.
+The exposure-response function is anchored at that level,
+which is therefore subtracted from the exposure,
+and the exposures below it get the risk at the reference level:
+
+$$
+rr_{at\_exp} = f(\max(exp, threshold) - threshold)
+$$
+
+The same result is obtained by entering only `cutoff_...`,
+only `threshold`, or both with the same value.
+
+**b) Cut-off higher than the effect threshold**
+
+The exposure-response function is truncated at the cut-off.
+The exposures above the cut-off are assessed with the risk referring to
+the effect threshold, while the exposures below the cut-off
+get the risk at the reference level:
+
+$$
+rr_{at\_exp} =
+\begin{cases}
+1, & exp < cutoff \\
+f(exp - threshold), & exp \ge cutoff
+\end{cases}
+$$
+
+In the absolute risk approach, the exposures below the cut-off
+get an absolute risk of 0 instead of a relative risk of 1,
+i.e. in both approaches no health impacts are attributed to them.
+
+This is the case, e.g., in noise assessments under the Environmental Noise Directive,
+in which exposure data are only reported above a given exposure level (cut-off)
+although the exposure-response functions show effects
+already at lower exposures (effect threshold).
+Be aware that this results in a step in the exposure-response function
+at the cut-off and that the people exposed between the effect threshold and
+the cut-off get no attributable health impacts (i.e. a conservative estimate).
+
+**c) Cut-off lower than the effect threshold**
+
+The cut-off has no effect on the results and `healthiar` shows a warning.
+The reason is that the exposure-response function is anchored at
+the effect threshold, so the exposures below the effect threshold
+already get the risk at the reference level.
+A cut-off below the effect threshold cannot remove any additional exposure
+and the results are the same as if only `threshold` had been entered.
 
 ### Function call
 
-The function arguments `erf_eq_...` require a function as input. Instead
-of using a `splinefun()` this can also be fulfilled by using a
-'function(c)' which is of type 'function'.
+The example below refers to case 2 above:
+health impacts in the exposure group 55 dB+ (cut-off)
+that are affected by an exposure above the effect threshold of 45 dB.
+
+```{r}
+results_cutoff_above_threshold <- healthiar::attribute_health(
+  approach_risk = "relative_risk",
+  erf_shape = "log_linear",
+  rr_central = 1.055,
+  rr_increment = 10,
+  prop_pop_exp = c(300000,200000,150000,120000,100000,70000,60000)/10000000,
+  exp_central = c(47,52,57,62,67,72,77),
+  # Effect threshold, i.e. the anchor of the exposure-response function
+  threshold = 45,
+  # Cut-off, i.e. the exposures below it are not quantified
+  cutoff_central = 55,
+  bhd_central = 50000)$health_main$impact_rounded
+```
+
+Alternatively, the same result can be obtained by entering
+a user-defined exposure-response function in `erf_eq_...`
+which already includes the case distinction.
+This is only needed if the shape of the curve above the cut-off
+is not covered by the `erf_shape` options.
+The function arguments `erf_eq_...` require a function as input.
+Instead of using a `splinefun()` this can also be fulfilled
+by using a 'function(c)' which is of type 'function'.
 
 ```{r}
 #setting up function parameters
-threshold_effect <- 45
+threshold <- 45
 RR <- 1.055
-threshold_calculation <- 55
+cutoff <- 55
 rr_increment <- 10
 
 # define categorical function, the ifelse condition enables the case distinction
 erf_function <- function(c){
-  output <- ifelse(c<threshold_calculation, 1, exp((log(RR)/rr_increment)*(c-threshold_effect)))
+  output <- ifelse(c<cutoff, 1, exp((log(RR)/rr_increment)*(c-threshold)))
   return(output)
 }
 # attribute_health
-results_catERF_different_calc_thesh <- healthiar::attribute_health(
+results_catERF_different_cutoff <- healthiar::attribute_health(
   approach_risk = "relative_risk",
   erf_eq_central = erf_function,
   prop_pop_exp = c(300000,200000,150000,120000,100000,70000,60000)/10000000,
@@ -1939,13 +2350,8 @@ results_catERF_different_calc_thesh <- healthiar::attribute_health(
   bhd_central=50000)$health_main$impact_rounded
 ```
 
-The used function is equal to $$f(c) =
-\begin{cases}
-1, & c < \text{threshold} \\
-\exp\left( \frac{\log(RR)}{rr_{increment}} (c - threshold_{effect}) \right), & c \ge \text{threshold}
-\end{cases}$$
-
 The categorical ERF curve created looks as follows.
+The step at the cut-off is clearly visible.
 
 ```{r fig.alt="ERF curve", eval=TRUE, include=TRUE, echo=FALSE}
 
@@ -1978,6 +2384,68 @@ legend("topleft",
        lwd = c(NA, 2))
 
 ```
+
+# Shifting the ERF {#shifting-the-erf}
+
+### Goal
+
+E.g., to know whether a cut-off must be entered when the
+exposure-response function is passed in `erf_eq_...`.
+
+### Methodology
+
+`healthiar` evaluates the exposure-response function entered in `erf_eq_...`
+at $c = exp - threshold$, and the threshold takes the value of the cut-off
+if it is not entered (see chapter [Cut-off vs. threshold](#cutoff-vs-threshold)).
+The cut-off therefore moves the exposure-response function horizontally.
+There are two situations:
+
+**a) Unshifted exposure-response function**
+
+The function is parameterized on raw exposure levels,
+i.e. it already incorporates the cut-off in its definition.
+Do not enter a `cutoff_...` value,
+so that nothing is subtracted from the exposure, i.e. $c = exp$.
+
+**b) Shifted exposure-response function**
+
+The function is parameterized on the exposure above the cut-off, i.e. it does not incorporates the cut-off.
+Enter a value in the argument(s) `cutoff_...`,
+so that the function is moved horizontally by the cut-off,
+i.e. $c = exp - cutoff$.
+
+Be aware that, in case b), `healthiar` shows a warning when a `cutoff_...`
+is entered alongside `approach_risk = "absolute_risk"`, because many
+exposure-response functions published in the literature already incorporate
+the cut-off in the function definition. The warning can be ignored here.
+
+### Function call
+
+```{r unshifted vs shifted erf}
+# Case A: Unshifted exposure-response function
+# The function is parameterized on raw exposure levels
+unshifted_erf <- healthiar::attribute_health(
+  approach_risk = "absolute_risk",
+  exp_central = c(50, 60, 70),
+  pop_exp = c(300000,200000,150000),
+  erf_eq_central = "78.9270 - 3.1162 * c + 0.0342 * c^2"
+)
+
+# Case B: Shifted exposure-response function
+# The function is parameterized on the exposure above the cut-off
+shifted_erf <- healthiar::attribute_health(
+  approach_risk = "absolute_risk",
+  exp_central = c(50, 60, 70),
+  pop_exp = c(300000,200000,150000),
+  cutoff_central = 53,
+  erf_eq_central = "78.9270 - 3.1162 * (c + 53) + 0.0342 * (c + 53)^2"
+)
+```
+
+If you want the exposure-response function to stay unshifted
+but the exposures below a given level not to be quantified,
+enter a `cutoff_...` value higher than the `threshold`
+(see chapter [Cut-off vs. threshold](#cutoff-vs-threshold)).
 
 # Economic dimension
 
@@ -2068,6 +2536,18 @@ applied according to the following formulas
 
 $$deflator\_factor = \frac{1}{(1 + inflation\_rate)^{n\_years}}$$
 
+The formula above assumes that inflation is constant over time.
+Because inflation usually varies from year to year,
+`inflation_rate` also accepts a vector of year-specific rates
+(at least as many values as years to be considered,
+the first value referring to the first year after the present).
+In that case, the deflator factor is calculated
+as the product of the year-specific factors
+
+$$deflator\_factor = \frac{1}{\prod_{t=1}^{n\_years}(1 + inflation\_rate_t)}$$
+
+
+
 #### Real valuation growth
 
 If a rising societal value of health over time is required in the
@@ -2081,9 +2561,14 @@ growth by applying a valuation growth factor to base-year unit values:
 
 $$real\_growth\_factor =(1 + real\_growth\_rate)^{n\_years}$$
 
-Where $real\_growth\_rate$ represents the annual real growth rate in
-health valuation. This ensures that long-term environmental impacts are
-not undervalued.
+Where $real\_growth\_rate$ represents the annual real growth rate in health valuation.
+As in `inflation_rate`, a vector of year-specific rates can be entered instead of
+one single value, in which case the factor is the product of the year-specific factors.
+This ensures that long-term environmental impacts are not undervalued. 
+
+
+
+
 
 ### Function call
 
@@ -2273,10 +2758,15 @@ $$ relative\_quantile = \frac{absolute\_quantile}{last} $$
 
 $$ absolute\_overall = overall - last $$ Where:
 
-- $absolute\_overall$ = Absolute difference regarding the overall
-  average.
-- $overall$ = *Overall* average health impacts in the study area.
-- $last$ = Average health impacts in *least* deprived quantile.
+* $absolute\_overall$ = Absolute difference regarding the overall average.
+* $overall$ = _Overall_ average health impacts in the study area.
+* $last$ = Average health impacts in _least_ deprived quantile.
+
+
+
+If you assume that the least deprived areas are similar to counterfactual cases (no exposure to deprivation), 
+the relative difference regarding the overall average health impact 
+could be interpreted as some kind of relative risk attributable to social inequalities.
 
 If you assume that the least deprived areas are similar to
 counter-factual cases (no exposure to deprivation), the relative

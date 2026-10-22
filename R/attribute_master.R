@@ -13,7 +13,10 @@
 #' \code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.
 
 #' @param cutoff_central,cutoff_lower,cutoff_upper
-#' \code{Numeric value} specifying the \strong{exposure cut-off value} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.
+#' \code{Numeric value} specifying the \strong{exposure cut-off value}, i.e. the exposure level below which no health impacts are quantified, and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0, or same value as \code{threshold}, if it is entered. If \code{cutoff} is higher than \code{threshold}, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.
+
+#' @param threshold
+#' \code{Numeric value} specifying the \strong{effect threshold}, i.e. the exposure level from which the exposure-response function starts to show an effect. It is the anchor of the curve and is therefore subtracted from the exposure. Default: same value as the cut-off. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.
 
 #' @param pop_exp
 #' \code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. See Details for more info. \emph{Only applicable in AR pathways; always required.}
@@ -29,13 +32,13 @@
 #' \code{Numeric value} specifying the \strong{exposure increment} for which the provided relative risk is valid. See Details for more info. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}
 
 #' @param erf_shape
-#' \code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}
+#' \code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. Input exposure values must be expressed in same unit as the increment of the relative risk. The re-scale of the relative risk is unbounded above and users are responsible for the plausible range. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}
 
 #' @param bhd_central,bhd_lower,bhd_upper
 #' \code{Numeric value} or \code{numeric vector} providing the \strong{baseline health data} of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}
 
 #' @param prop_pop_exp
-#' \code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}
+#' \code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category), i.e. the proportion of the \strong{total} population that falls in each exposure category. Default: 1. The fractions do not have to add up to 1: the part of the population that they do not cover is treated as unexposed, i.e. it gets the relative risk of the reference level. E.g, in air pollution assessments everybody is usually exposed and the fractions add up to 1, whereas in noise assessments they typically add up to less than 1, because exposure is only reported above a given level. Accordingly, \code{bhd_...} must always refer to the total population. See Details for more info. \emph{Only applicable in RR pathways.}
 
 # ITERATION (OPTIONAL)
 #' @param geo_id_micro,geo_id_macro
@@ -49,7 +52,10 @@
 
 # META (OPTIONAL)
 #' @param info
-#' \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}
+#' \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. This will be added to the results table as column(s) keeping the name(s) that you entered with the prefix \code{info_} (e.g. a column \code{education} becomes \code{info_education}) if a \code{data frame} is entered, or as one single column called \code{info} if a vector is entered. These additional columns can be used to further stratify the analysis in a secondary step. \emph{Optional argument.}
+
+#' @param main_results_by
+#' \code{Character vector} naming the \strong{dimensions that the main results are reported by}, i.e. the dimensions whose impacts must never be added together, e.g. different exposure-outcome pairs. By default all dimensions except the geographic units and the uncertainty (\code{_ci}) columns are summed in the main results. Names entered here are kept as separate rows instead. Options: the columns of \code{info} (named as you named them, or \code{"info"} if you entered a vector instead of a data frame), \code{"sex"}, \code{"age_group"}, \code{"exp_category"}, \code{"geo_id_micro"}, \code{"geo_id_macro"} and, in \code{attribute_lifetable()}, \code{"year"}. Note that this argument does not create the \code{results_by_...} tables of the detailed output, which are available anyway: it determines which dimensions survive in \code{health_main} and in all of them. See the vignette chapter \emph{Multiple exposure-outcome pairs}. \emph{Optional argument.}
 
 #' @param population
 #' \code{Numeric vector} \strong{\code{For attribute_lifetable()}}, it is an \emph{obligatory argument} specifying the \strong{mid-year populations} per age (i.e. age group size = 1 year) for the (first) year of analysis.
@@ -67,7 +73,7 @@
 #' \code{String} specifying the desired result of the life table assessment. Options: \code{"deaths"} (premature deaths), \code{"yll"} (years of life lost).
 
 #' @param min_age,max_age
-#' \code{Numberic value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. Default \code{min_age}: 30. Default \code{max_age}: none. See Details for more info.
+#' \code{Numeric value} specifying the minimum and maximum age for which the exposure will affect the exposed population, respectively. See Details for more info.
 
 #' @param approach_exposure
 #' \code{String} specifying whether exposure is constant or only in one year. Options: \code{"single_year"} (default), \code{"constant"}.
@@ -83,6 +89,9 @@
 
 #' @param is_lifetable
 #' \code{Boolean} INTERNAL argument specifying if the life table approach is applied (TRUE) or not (FALSE)
+#' 
+#' @param fraction_lived \code{Numeric vector} Numeric vector or \code{single numeric scalar} referring to the average 
+#' fraction of the age interval lived by individuals who die within that interval. Default is 0.5.
 
 # VALUE ########################################################################
 #' @returns
@@ -117,6 +126,7 @@ attribute_master <-
     approach_risk = NULL,
     exp_central, exp_lower = NULL, exp_upper = NULL,
     cutoff_central = NULL, cutoff_lower = NULL, cutoff_upper = NULL,
+    threshold = NULL,
     pop_exp = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
     # RR ONLY
@@ -132,6 +142,7 @@ attribute_master <-
     # META (OPTIONAL)
     population = NULL,
     info = NULL,
+    main_results_by = NULL,
     # YLD
     dw_central = NULL, dw_lower = NULL, dw_upper = NULL,
     duration_central = NULL, duration_lower = NULL, duration_upper = NULL,
@@ -143,6 +154,7 @@ attribute_master <-
     approach_exposure = NULL,
     year_of_analysis = NULL,
     time_horizon = NULL,
+    fraction_lived = NULL,
     # INTERNAL ARGUMENTS
     input_args = NULL){
 

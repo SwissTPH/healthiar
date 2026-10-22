@@ -128,18 +128,28 @@ prepare_mdi <- function(
   ## Create helper function that normalizes indicators using min-max scaling
   normalize <- function(x) {
     return(
-      (x - base::min(x, na.rm = TRUE)) / (base::max(x, na.rm = TRUE) - base::min(x, na.rm = TRUE))
+      (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
       )
   }
 
   ## Create helper function that calculates total MDI Cronbach's
   cronbach_alpha <- function(x) {
-    N <- base::ncol(x)  # Number of items
-    item_variances <- base::apply(x, 2, stats::var)  # Variance of each item
-    total_variance <- stats::var(base::rowSums(x))   # Variance of the total score
+    # Listwise deletion of the geo units with missing values. The variances of
+    # the items and the variance of the total score have to refer to the same
+    # geo units, so na.rm in each of them separately would mix different
+    # subsets and give an alpha that cannot be interpreted. Without this, one
+    # single missing value made the whole alpha NA
+    x <- x[stats::complete.cases(x), , drop = FALSE]
+    # At least two geo units are needed to calculate a variance
+    if (nrow(x) < 2) {
+      return(NA_real_)
+    }
+    N <- ncol(x)  # Number of items
+    item_variances <- purrr::map_dbl(x, stats::var)  # Variance of each item
+    total_variance <- stats::var(rowSums(x))   # Variance of the total score
 
     ## Cronbach's alpha formula
-    alpha <- (N / (N - 1)) * (1 - base::sum(item_variances) / total_variance)
+    alpha <- (N / (N - 1)) * (1 - sum(item_variances) / total_variance)
     return(alpha)
   }
 
@@ -153,6 +163,41 @@ prepare_mdi <- function(
     no_heating
   )
 
+  # Warn about missing values in the indicators.
+  # The index of a geo unit with a missing indicator cannot be calculated, so
+  # it stays NA, and that geo unit is left out of Cronbach's alpha and of the
+  # descriptive statistics. Without this warning one single missing value made
+  # the function abort with "missing value where TRUE/FALSE needed" when
+  # printing the reliability (verbose = TRUE) or return an alpha of NA and
+  # descriptive statistics of NA without saying anything (verbose = FALSE)
+  indicator_names <-
+    c("edu", "unemployed", "single_parent", "pop_change", "no_heating")
+
+  n_missing_by_indicator <-
+    data |>
+    dplyr::summarise(
+      dplyr::across(dplyr::all_of(indicator_names),
+                    ~ sum(is.na(.x)))) |>
+    unlist()
+
+  if (any(n_missing_by_indicator > 0)) {
+
+    indicators_with_missing <- n_missing_by_indicator[n_missing_by_indicator > 0]
+
+    warning(
+      paste0(
+        "Missing values in ",
+        toString(paste0(names(indicators_with_missing),
+                                    " (", indicators_with_missing, ")")),
+        ".\n",
+        sum(!stats::complete.cases(data[, indicator_names])),
+        " of ", nrow(data),
+        " geographic unit(s) therefore get no MDI value, and they are not ",
+        "included in Cronbach's alpha and in the descriptive statistics. ",
+        "Consider imputing the missing data (see the Details section)."),
+      call. = FALSE)
+  }
+
   data <- data |>
     dplyr::mutate(
       dplyr::across(
@@ -161,15 +206,23 @@ prepare_mdi <- function(
         .names = "norm_{.col}")
     )
 
-  data$MDI <- base::with(
+  # Unweighted mean of the five indicators, i.e. all of them count the same.
+  # This is why they are normalized first: they are entered in different units
+  # (e.g. a percentage and a population change), and without the min-max
+  # scaling above the indicator with the widest range would dominate the mean
+  data$MDI <- with(
     data,
     (norm_edu + norm_unemployed + norm_single_parent + norm_pop_change + norm_no_heating) / 5
   )
 
   ## Create quantile ranks
+  # ntile() gives the quantile 1 to the lowest MDI values
   data$MDI_index <- dplyr::ntile(data$MDI, n_quantile)
 
-  data |>
+  # Assigned back to data, because the result of the pipe was discarded before
+  # and the two columns stayed at the end of the table instead of right after
+  # geo_id_micro, as documented in the Value section
+  data <- data |>
     dplyr::relocate(MDI, .after = geo_id_micro) |>
     dplyr::relocate(MDI_index, .after = MDI)
 
@@ -192,12 +245,18 @@ prepare_mdi <- function(
 
   # * Descriptive analysis ####################################################
 
-  descriptive_statistics <- base::sapply(data[c(indicators, "MDI")], function(x)
+  # na.rm = TRUE so that the statistics describe the geo units that do have a
+  # value. Without it, one single missing value turned every statistic of the
+  # affected indicator (and of the MDI) into NA
+  descriptive_statistics <- sapply(data[c(indicators, "MDI")], function(x)
     tibble::tibble(
-      MEAN = base::round(base::mean(x), 3),
-      SD = base::round(stats::sd(x), 3),
-      MIN = base::min(x),
-      MAX = base::max(x)
+      MEAN = round(mean(x, na.rm = TRUE), 3),
+      SD = round(stats::sd(x, na.rm = TRUE), 3),
+      # If an indicator has no value at all, min() and max() with na.rm return
+      # -Inf and Inf with a warning. NA says the same thing without pretending
+      # to be a number
+      MIN = if (all(is.na(x))) NA_real_ else min(x, na.rm = TRUE),
+      MAX = if (all(is.na(x))) NA_real_ else max(x, na.rm = TRUE)
       )
     )
 
@@ -213,7 +272,7 @@ prepare_mdi <- function(
 
   cols <- c(indicators, "MDI")
 
-  boxplot_code <- base::substitute({ # save code and data in a variable to plot it later)
+  boxplot_code <- substitute({ # save code and data in a variable to plot it later)
     graphics::boxplot(
       data[ , cols],
       main = "Boxplot of Normalized Indicators and MDI",
@@ -226,13 +285,13 @@ prepare_mdi <- function(
     )
     graphics::box(bty = "l")  # remove top and right box borders (like theme_minimal from ggplot2)
     graphics::axis(2) # add y-axis
-    at_pos <- base::seq_along(cols)
+    at_pos <- seq_along(cols)
     graphics::axis(1, at = at_pos, labels = FALSE)  # Add custom x-axis tick marks
     ## Add rotated labels
     graphics::text(
       x = at_pos,
       ## position slightly below axis
-      y = graphics::par("usr")[3] - 0.02 * base::diff(graphics::par("usr")[3:4]),
+      y = graphics::par("usr")[3] - 0.02 * diff(graphics::par("usr")[3:4]),
       labels = cols,
       srt = 20,           # rotate 45 degrees
       adj = 1,            # right-aligned
@@ -249,7 +308,7 @@ prepare_mdi <- function(
 
   # * Histogram ###############################################################
 
-  histogram_code <- base::substitute({
+  histogram_code <- substitute({
     graphics::hist(
       data$MDI,
       breaks = 30,
@@ -285,69 +344,87 @@ prepare_mdi <- function(
     higher_or_equal <- "\u2265"
     lower_or_equal <- "\u2264"
 
-    base::print(base::paste("CRONBACH'S", alpha, ":", base::round(cronbachs_alpha_value, 3)))
+    print(paste("CRONBACH'S", alpha, ":", round(cronbachs_alpha_value, 3)))
 
-    if ( cronbachs_alpha_value >= 0.9 ) {
-      base::print(base::paste("Excellent reliability:", alpha, higher_or_equal, "0.9"))
-    }
-    if ( cronbachs_alpha_value >= 0.8 & cronbachs_alpha_value < 0.9 ) {
-      base::print(base::paste("Good reliability: 0.8", lower_or_equal, alpha, "< 0.9"))
+    # is.na() because the alpha is NA if fewer than two geographic units have
+    # values in all indicators. Without this guard the comparisons below
+    # aborted with "missing value where TRUE/FALSE needed"
+    if ( is.na(cronbachs_alpha_value) ) {
+      print(paste(
+        "Reliability cannot be assessed:", alpha,
+        "needs at least two geographic units without missing values"))
+    } else {
+      if ( cronbachs_alpha_value >= 0.9 ) {
+        print(paste("Excellent reliability:", alpha, higher_or_equal, "0.9"))
       }
-    if ( cronbachs_alpha_value >= 0.7 & cronbachs_alpha_value < 0.8 ) {
-      base::print(base::paste("Acceptable reliability: 0.7", lower_or_equal, alpha, "< 0.8"))
+      if ( cronbachs_alpha_value >= 0.8 & cronbachs_alpha_value < 0.9 ) {
+        print(paste("Good reliability: 0.8", lower_or_equal, alpha, "< 0.9"))
+      }
+      if ( cronbachs_alpha_value >= 0.7 & cronbachs_alpha_value < 0.8 ) {
+        print(paste("Acceptable reliability: 0.7", lower_or_equal, alpha, "< 0.8"))
+      }
+      if ( cronbachs_alpha_value >= 0.6 & cronbachs_alpha_value < 0.7 ) {
+        print(paste("Questionable reliability: 0.6", lower_or_equal, alpha, "< 0.7"))
+      }
+      if ( cronbachs_alpha_value < 0.6 ) {
+        print(paste("Poor reliability:", alpha, "< 0.6"))
+      }
     }
-    if ( cronbachs_alpha_value >= 0.6 & cronbachs_alpha_value < 0.7 ) {
-      base::print(base::paste("Questionable reliability: 0.6", lower_or_equal, alpha, "< 0.7"))
-    }
-    if ( cronbachs_alpha_value < 0.6 ) {
-      base::print(base::paste("Poor reliability:", alpha, "< 0.6"))
-    }
-
     ## with just strings
-    # base::print(base::paste("CRONBACH'S alpha:", base::round(cronbachs_alpha_value, 3)))
+    # print(paste("CRONBACH'S alpha:", round(cronbachs_alpha_value, 3)))
     #
     # if ( cronbachs_alpha_value >= 0.9 ) {
-    #   base::print(base::paste("Excellent reliability: alpha >= 0.9"))
+    #   print(paste("Excellent reliability: alpha >= 0.9"))
     # }
     # if ( cronbachs_alpha_value >= 0.8 & cronbachs_alpha_value < 0.9 ) {
-    #   base::print(base::paste("Good reliability: 0.8 <= alpha < 0.9"))
+    #   print(paste("Good reliability: 0.8 <= alpha < 0.9"))
     # }
     # if ( cronbachs_alpha_value >= 0.7 & cronbachs_alpha_value < 0.8 ) {
-    #   base::print(base::paste("Acceptable reliability: 0.7 <= alpha < 0.8"))
+    #   print(paste("Acceptable reliability: 0.7 <= alpha < 0.8"))
     # }
     # if ( cronbachs_alpha_value >= 0.6 & cronbachs_alpha_value < 0.7 ) {
-    #   base::print(base::paste("Questionable reliability: 0.6 <= alpha < 0.7"))
+    #   print(paste("Questionable reliability: 0.6 <= alpha < 0.7"))
     # }
     # if ( cronbachs_alpha_value < 0.6 ) {
-    #   base::print(base::paste("Poor reliability: alpha < 0.6"))
+    #   print(paste("Poor reliability: alpha < 0.6"))
     # }
 
     # * Descriptive analysis ##################################################
 
-    base::print("DESCRIPTIVE STATISTICS")
-    base::print(descriptive_statistics)
+    print("DESCRIPTIVE STATISTICS")
+    print(descriptive_statistics)
 
     # * Pearson’s correlation coefficients for each indicator #################
 
-    base::print("PEARSON'S CORRELATION COEFFICIENTS")
-    base::print(pearsons_corr_coeff)
+    print("PEARSON'S CORRELATION COEFFICIENTS")
+    print(pearsons_corr_coeff)
 
-    # * Boxplot #################################################################
+    # * Boxplot and histogram ###################################################
 
-    base::eval(boxplot_code)
+    # The plots need at least one geo unit with an MDI value. Without this
+    # guard, graphics::hist() aborted with the message "character(0)" when
+    # every MDI was missing, i.e. when no geo unit had a value in all
+    # indicators. The code of both plots is returned in mdi_detailed anyway
+    if ( any(!is.na(data$MDI)) ) {
 
-    # * Histogram ###############################################################
+      eval(boxplot_code)
 
-    base::eval(histogram_code)
+      eval(histogram_code)
+
+    } else {
+      print(paste(
+        "No plots: no geographic unit has a value in all indicators,",
+        "so the MDI could not be calculated for any of them"))
+    }
 
   }
 
     mdi_main <- data
 
   output <-
-    base::list(
+    list(
       mdi_main = mdi_main,
-      mdi_detailed = base::list(
+      mdi_detailed = list(
         boxplot = boxplot,
         histogram = histogram,
         descriptive_statistics = descriptive_statistics,

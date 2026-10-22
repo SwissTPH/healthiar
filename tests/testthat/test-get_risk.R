@@ -1,5 +1,5 @@
 # QUANTITATIVE TEST ############################################################
-testthat::test_that("linear rescaling results correct", {
+testthat::test_that("results the same |linear rescaling results correct", {
 
   ## exp = 10, cutoff = 5
   testthat::expect_equal(
@@ -52,7 +52,7 @@ testthat::test_that("linear rescaling results correct", {
 }
 )
 
-testthat::test_that("log-linear rescaling results the same", {
+testthat::test_that("results the same | log-linear rescaling results the same", {
 
   ## exp = 20, cutoff = 5
   testthat::expect_equal(
@@ -62,7 +62,7 @@ testthat::test_that("log-linear rescaling results the same", {
       rr = 1.08,
       rr_increment = 10,
       erf_shape = "log_linear"
-    ) |> base::round(x = _, digits = 4),
+    ) |> round(x = _, digits = 4),
     expected =
       1.1224
   )
@@ -75,7 +75,7 @@ testthat::test_that("log-linear rescaling results the same", {
       rr = 1.08,
       rr_increment = 10,
       erf_shape = "log_linear"
-    ) |> base::round(x = _, digits = 4),
+    ) |> round(x = _, digits = 4),
     expected =
       1.08
   )
@@ -88,7 +88,7 @@ testthat::test_that("log-linear rescaling results the same", {
       rr = 1.08,
       rr_increment = 10,
       erf_shape = "log_linear"
-    ) |> base::round(x = _, digits = 4),
+    ) |> round(x = _, digits = 4),
     expected =
       1
   )
@@ -101,7 +101,7 @@ testthat::test_that("log-linear rescaling results the same", {
       rr = 1.08,
       rr_increment = 10,
       erf_shape = "log_linear"
-    ) |> base::round(x = _, digits = 4),
+    ) |> round(x = _, digits = 4),
     expected =
       1
   )
@@ -114,7 +114,7 @@ testthat::test_that("log-linear rescaling results the same", {
       rr = 1.08,
       rr_increment = 10,
       erf_shape = "log_linear"
-    ) |> base::round(x = _, digits = 4),
+    ) |> round(x = _, digits = 4),
     expected =
       1
   )
@@ -131,7 +131,7 @@ testthat::test_that("log-linear rescaling results the same", {
 #       rr = 1.08,
 #       rr_increment = 10,
 #       erf_shape = "log_log"
-#       ) |> base::round(x = _, digits = 4),
+#       ) |> round(x = _, digits = 4),
 #     expected =
 #       1.0941 # Results on 06 August 2024 (ChatGPT); no comparison study
 #   )
@@ -139,7 +139,12 @@ testthat::test_that("log-linear rescaling results the same", {
 # )
 
 ## This example uses the adapted lin-log curve (adapted based on the on the Pozzer 2022 (http://doi.org/10.1029/2022GH000711) log-log ERF)
-testthat::test_that("linear-log rescaling results the same", {
+## The curve itself is not published anywhere: it is an adaptation of the
+## Pozzer log-log curve made for healthiar (see get_risk()), so there is no
+## study whose figures it could be validated against. Only the anchors of the
+## curve are known to be correct, i.e. no excess risk at the cut-off and
+## exactly the relative risk of the study one increment above it
+testthat::test_that("results the same |linear-log rescaling results the same", {
 
   ## exp = 20, cutoff = 5
   testthat::expect_equal(
@@ -151,7 +156,7 @@ testthat::test_that("linear-log rescaling results the same", {
       erf_shape = "linear_log"
       ),
     expected =
-      1.102179903 # Results on 08 August 2024 (ChatGPT); no comparison study
+      1.102179903 # Result on 08 August 2024; no comparison study
   )
 
   ## exp = 15, cutoff = 5
@@ -210,89 +215,42 @@ testthat::test_that("linear-log rescaling results the same", {
 )
 
 
-## This example uses the log-log curve based on Pozzer 2022 (http://doi.org/10.1029/2022GH000711)
-testthat::test_that("log-log rescaling results the same", {
+testthat::test_that("results correct |log-log rescaling|pozzer_2023|", {
 
-  ## exp = 15
-  ### because exp - cutoff = 15 - 5 = 10, the result matches exactly the rr value from the literature
-  testthat::expect_equal(
-    object = healthiar::get_risk(
-      exp = 15,
-      cutoff = 5,
-      rr = 1.08,
-      rr_increment = 10,
-      erf_shape = "log_log"
-    ),
-    expected =
-      1.08 # Results on 08 August 2024 (ChatGPT); no comparison study
-  )
+  # Validation against the log-log exposure-response function published by
+  # Pozzer et al. (2023), see rr_at_exp_pozzer() in helper.R
+  rr <- 1.08
+  rr_increment <- 10
+  cutoff <- 5
+  exp <- c(5, 10, 15, 20, 30)
 
-  ## exp = cutoff = 5
   testthat::expect_equal(
-    object = healthiar::get_risk(
-      exp = 5,
-      cutoff = 5,
-      rr = 1.08,
-      rr_increment = 10,
-      erf_shape = "log_log"
-    ),
+    object =
+      healthiar::get_risk(
+        exp = exp,
+        cutoff = cutoff,
+        rr = rr,
+        rr_increment = rr_increment,
+        erf_shape = "log_log"),
     expected =
-      1 # Results on 08 August 2024 (ChatGPT); no comparison study
-  )
+      rr_at_exp_pozzer(
+        exp = exp,
+        cutoff = cutoff,
+        rr = rr,
+        rr_increment = rr_increment))
 
-  ## exp = 0, cutoff = 5
+  # The curve is anchored at the values of the epidemiological study: no
+  # excess risk at the cut-off and exactly the published relative risk one
+  # increment above it
   testthat::expect_equal(
-    object = healthiar::get_risk(
-      exp = 5,
-      cutoff = 5,
-      rr = 1.08,
-      rr_increment = 10,
-      erf_shape = "log_log"
-    ),
-    expected =
-      1 # Results on 08 August 2024 (ChatGPT); no comparison study
-  )
-
-  ## exp = 20
-  testthat::expect_equal(
-    object = healthiar::get_risk(
-      exp = 20,
-      cutoff = 5,
-      rr = 1.08,
-      rr_increment = 10,
-      erf_shape = "log_log"
-    ),
-    expected =
-      1.103291954 # Results on 08 August 2024 (ChatGPT); no comparison study
-  )
-
-  ## exp = 10
-  testthat::expect_equal(
-    object = healthiar::get_risk(
-      exp = 10,
-      cutoff = 5,
-      rr = 1.08,
-      rr_increment = 10,
-      erf_shape = "log_log"
-    ),
-    expected =
-      1.048709767 # Results on 08 August 2024 (ChatGPT); no comparison study
-  )
-
-  ## exp = 30
-  testthat::expect_equal(
-    object = healthiar::get_risk(
-      exp = 30,
-      cutoff = 5,
-      rr = 1.08,
-      rr_increment = 10,
-      erf_shape = "log_log"
-    ),
-    expected =
-      1.13752842 # Results on 08 August 2024 (ChatGPT); no comparison study
-  )
-}
-)
+    object =
+      rr_at_exp_pozzer(
+        exp = c(cutoff, cutoff + rr_increment),
+        cutoff = cutoff,
+        rr = rr,
+        rr_increment = rr_increment),
+    expected = c(1, rr))
+})
 
 ## NOTE 2025-08-08: This example uses the log-log curve initially proposed by ChatGPT, which is not defined for exp = 0 or exp <= cutoff (that's why it's commented out); once we've settled on these new ERFs remove these error messages
 # testthat::test_that("log-log rescaling the same", {
@@ -303,17 +261,18 @@ testthat::test_that("log-log rescaling results the same", {
 #       rr = 1.08,
 #       rr_increment = 10,
 #       erf_shape = "log_log"
-#     ) |> base::round(x = _, digits = 4),
+#     ) |> round(x = _, digits = 4),
 #     expected =
 #       1.0947 # Results on 06 August 2024 (ChatGPT); no comparison study
 #   )
 # }
 # )
 
-testthat::test_that("log-log rescaling results the same based on Lehtomäki et al.", {
+testthat::test_that("results correct |log-log rescaling based on Lehtomäki et al.", {
 
-
-data <- read.csv(testthat::test_path("data","HeliLog-logcurve.csv")) #Lehtomäki et al. 2024
+#Lehtomäki et al. 2024
+data <-
+  utils::read.csv(testthat::test_path("testdata", "erf_helilog_logcurve.csv"))
 
 testthat::expect_equal(
   signif(healthiar::get_risk(

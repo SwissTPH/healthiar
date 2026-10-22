@@ -1,9 +1,8 @@
+.RData
 .Rhistory
-inst/doc
-/doc/
-/Meta/
 .Rproj.user
+/Meta/
+/doc/
 healthiar_0.0.4.1155.tar.gz
-.Rhistory
-*.pyc
-docs
+inst/doc
+/docs/

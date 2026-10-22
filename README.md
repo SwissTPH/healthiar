@@ -1,8 +1,14 @@
 # healthiar <a href="https://swisstph.github.io/healthiar/"><img src="man/figures/logo.png" align="right" height="138" alt="healthiar website" /></a>
 
-[![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/healthiar)](https://cran.r-project.org/package=healthiar)  
+[![GitHub version](https://img.shields.io/github/r-package/v/SwissTPH/healthiar?label=GitHub)](https://github.com/SwissTPH/healthiar)
+[![CRAN version](https://www.r-pkg.org/badges/version/healthiar)](https://CRAN.R-project.org/package=healthiar)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.10599/status.svg)](https://doi.org/10.21105/joss.10599)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18220360.svg)](https://doi.org/10.5281/zenodo.18220360)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/healthiar)](https://CRAN.R-project.org/package=healthiar)
+[![Watch (releases)](https://img.shields.io/badge/Watch-%28releases%29-2b7489?logo=github)](https://github.com/SwissTPH/healthiar/subscription)
+[![Star (bookmark)](https://img.shields.io/badge/Star-%28bookmark%29-yellow?logo=github)](https://github.com/SwissTPH/healthiar)
+
+Want to know as soon as a new *healthiar* version is released? See [Stay updated](#stay-updated) below.
 
 ## Introduction
 
@@ -58,11 +64,24 @@ c) going to the `Packages tab` and then clicking on `healthiar`
 Watch a 45 minutes video from an online international workshop (30 September 2025), which can be found [here](https://team.swisstph.ch/s/aN_wN5MUTAS3bwEkWvtvaQ). 
 The slides of the presentation can be found [here](https://github.com/SwissTPH/healthiar/tree/master/varia/Workshops_and_demos/workshop).
 
+### Stay updated
+We regularly improve *healthiar* and publish a new [GitHub release](https://github.com/SwissTPH/healthiar/releases) every time a new version reaches CRAN. To make sure you don't miss one:
+
+- **Watch releases**: on the [GitHub repo](https://github.com/SwissTPH/healthiar), click *Watch* > *Custom* > tick *Releases only*, so you get notified without being flooded by every issue or discussion.
+
+- **Star the repo**: click *Star* on the [GitHub repo](https://github.com/SwissTPH/healthiar) to bookmark it and help others discover *healthiar*.
+
+- **Subscribe via RSS/Atom**: if you prefer a feed reader, subscribe to [https://github.com/SwissTPH/healthiar/releases.atom](https://github.com/SwissTPH/healthiar/releases.atom).
+
+- **Check the changelog**: see what changed in each version on the [changelog](https://swisstph.github.io/healthiar/news/index.html).
+
+Each GitHub release is also archived on Zenodo (DOI: [10.5281/zenodo.18220360](https://doi.org/10.5281/zenodo.18220360)) if you need to reference a specific version snapshot rather than the package itself.
+
 
 
 ## Installation
 We recommend frequently installing the newest *healthiar* version. 
-Please note that **`healthiar` requires R version 4.3.0 or higher**. 
+Please note that **`healthiar` requires R version 4.2.0 or higher**. 
 There are two options to install *healthiar*:
 
 a) **From CRAN**: 
@@ -102,19 +121,19 @@ c) In your R console, enter *citation("healthiar")*.
 
 In options b) and c), you always see the updated citation. In option a), you see citation of the *healthiar* version that you have installed locally, which might be outdated.
 
-## Disclamer and licence 
+## Disclaimer and licence 
 By using *healthiar*, you confirm that you agree with the following disclaimer and terms of the licence:
 
 a) Disclaimer: The R package *healthiar* is work in progress and the developers are not liable for the results. 
 
-b) License: Available [here](LICENSE.md).
+b) License: Available [here](https://github.com/SwissTPH/healthiar?tab=GPL-3.0-1-ov-file).
 
 ## Contributions
 We welcome your contributions! 
 Do you want to report a bug, provide code or just make a question/comment? 
-Please, read and follow the guidelines of our [guide for contributions](CONTRIBUTING.md)
+Please, read and follow the guidelines of our [guide for contributions](https://github.com/SwissTPH/healthiar?tab=contributing-ov-file)
 By contributing to *healthiar*,
-you agree to abide by our [code of conduct](CODE_OF_CONDUCT.md).
+you agree to abide by our [code of conduct](https://github.com/SwissTPH/healthiar?tab=coc-ov-file).
 
 
 ## Presenting *healthiar*
@@ -122,3 +141,10 @@ If you would like us to present *healthiar* at a conference, lecture or training
 
 ## Acknowledgements
 *healthiar* was been developed under the framework of EU project BEST-COST. BEST-COST is funded by the European Union’s Horizon Europe programme under Grant Agreement No.101095408.
+
+Special thanks to our community members who submitted bug reports, 
+suggested improvements, and provided valuable feedback to refine this package. 
+Here some of them in alphabetical order:
+Federico Cussotto, Georgia Dyer, Brecht Devleesschauwer, Nicole Engelmann, 
+Aletta Karsies, Sasha Kohmenkho, Heli Lehtomäki, Matthias Lochman, 
+Enrico Pisoni, David Rojas Rueda, Jörg Sintermann & Maciek Strak.

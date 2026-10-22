@@ -32,12 +32,6 @@ compile_input <-
 
 
 
-    args_for_lifetable <-
-      c("approach_exposure", "approach_newborns",
-        "year_of_analysis",
-        "min_age", "max_age")
-
-
     input_args_edited <- input_args$value
 
     # PROCESS GEO ID ###################################################################
@@ -45,8 +39,8 @@ compile_input <-
     # a) no operations are expected
     # b) otherwise error somewhere else in the package when mixing character and numeric
     for (geo_id_ in c("geo_id_micro", "geo_id_macro")) {
-      if (!base::is.null(input_args_edited[[geo_id_]])){
-        input_args_edited[[geo_id_]] <- base::as.character(input_args_edited[[geo_id_]])
+      if (!is.null(input_args_edited[[geo_id_]])){
+        input_args_edited[[geo_id_]] <- as.character(input_args_edited[[geo_id_]])
       }
     }
 
@@ -59,10 +53,38 @@ compile_input <-
     # to make the code work below
 
     for (erf_eq_ in c("erf_eq_central", "erf_eq_lower", "erf_eq_upper")) {
-      if (!base::is.null(input_args_edited[[erf_eq_]]) &&
-          base::is.function(input_args_edited[[erf_eq_]])) {
-        input_args_edited[[erf_eq_]] <- base::list(input_args_edited[[erf_eq_]])
+      if (!is.null(input_args_edited[[erf_eq_]]) &&
+          is.function(input_args_edited[[erf_eq_]])) {
+        input_args_edited[[erf_eq_]] <- list(input_args_edited[[erf_eq_]])
       }
+    }
+
+    # PROCESS THRESHOLD ################################################################
+    # The threshold is the exposure level from which the exposure-response function
+    # shows an effect. It is the anchor of the curve and therefore the
+    # counterfactual exposure. The cutoff is the exposure level below which
+    # no health impacts are quantified.
+    # Both are usually identical. Therefore, if the user enters only one of them,
+    # the other one takes the same value.
+    # Only if cutoff > threshold, the exposure-response function is truncated
+    # at the cutoff (see get_risk()).
+    # If only cutoff is entered, no threshold column is added to the input table.
+    # In that way the threshold always follows the cutoff,
+    # also if the cutoff is re-calculated afterwards, e.g. in
+    # summarize_uncertainty(), and no uncertainty dimension is added
+
+    # If only threshold is entered, then cutoff takes the same value.
+    # A cutoff of 0 means that there is no cutoff, because exposures are never
+    # below 0 and therefore no exposure is excluded. It is thus equivalent to
+    # a cutoff equal to the threshold, which is the value actually used to
+    # quantify the impacts. In other words, this step does not change any
+    # result (also not if the user entered the 0 explicitly). It only makes
+    # the cutoff in the results tables show the counterfactual exposure
+    # that was used instead of a 0 that had no effect
+    if (!is.null(input_args_edited[["threshold"]]) &&
+        (is.null(input_args_edited[["cutoff_central"]]) ||
+         all(input_args_edited[["cutoff_central"]] == 0))) {
+      input_args_edited[["cutoff_central"]] <- input_args_edited[["threshold"]]
     }
 
     # Remove list elements that are null,
@@ -79,7 +101,9 @@ compile_input <-
       # Remove arguments for life table and info.
       # Info is to added later with a function add_info()
       # because it can be a data frame.
-      purrr::discard(base::names(input_args_edited) %in% c("info")) |>
+      # main_results_by only tells get_output() how to aggregate the results,
+      # so it must not become a column of the input table
+      purrr::discard(names(input_args_edited) %in% c("info", "main_results_by")) |>
       # Convert into a tibble
       tibble::as_tibble() |>
       # Add info
@@ -96,7 +120,7 @@ compile_input <-
         exp_length = dplyr::n(),
         exp_category = dplyr::row_number(),
         exp_type =
-          base::ifelse(exp_length == 1,
+          ifelse(exp_length == 1,
                        "population_weighted_mean",
                        "exposure_distribution"))
 
@@ -110,19 +134,19 @@ compile_input <-
 
     # Loop over the variables pivoting longer
     for (var in vars_to_pivot) {
-      if (base::paste0(var, "_central") %in% base::names(input_wo_lifetable)){
+      if (paste0(var, "_central") %in% names(input_wo_lifetable)){
 
         input_wo_lifetable <-
           tidyr::pivot_longer(
             data = input_wo_lifetable,
-            cols = dplyr::any_of(base::paste0(var, c("_central", "_lower", "_upper"))),
-            names_to = base::paste0(var, "_ci"),
-            names_prefix = base::paste0(var, "_"),
+            cols = dplyr::any_of(paste0(var, c("_central", "_lower", "_upper"))),
+            names_to = paste0(var, "_ci"),
+            names_prefix = paste0(var, "_"),
             values_to = var)
       }
     }
 
-    if ("rr_central" %in% base::names(input_wo_lifetable)) {
+    if ("rr_central" %in% names(input_wo_lifetable)) {
       # Out of the loop for exposure response function
       # because both rr_ and erf_eq_ ends with a variable erf_ci
 
@@ -132,7 +156,7 @@ compile_input <-
                             names_to = "erf_ci",
                             names_prefix = "rr_",
                             values_to = "rr")
-    } else if ("erf_eq_central" %in% base::names(input_wo_lifetable)) {
+    } else if ("erf_eq_central" %in% names(input_wo_lifetable)) {
 
       input_wo_lifetable <-
         tidyr::pivot_longer(data = input_wo_lifetable,
@@ -150,6 +174,16 @@ compile_input <-
 
 
       input_table <- input_wo_lifetable |>
+        # The life table calculations assume that the rows of each life table are
+        # ordered by ascending age, e.g. dplyr::lag() is used to let the cohort
+        # get one year older. Users can enter the age groups in any order
+        # (e.g. sorted descending or grouped by sex), so they are sorted here.
+        # arrange() is stable, i.e. rows with the same age keep their relative
+        # order, so the life tables nested in get_impact_with_lifetable()
+        # (one per sex, geo unit and uncertainty combination)
+        # each keep ascending ages without having to know here
+        # which columns define them
+        dplyr::arrange(age_group) |>
         dplyr::mutate(
           # Add approach risk which cannot be entered by the user
           # TODO: To be removed if attribute_health() and attribute_lifetable() are merged
@@ -161,14 +195,16 @@ compile_input <-
           # Obtain the end age summing one because the function only works with
           # single-year age
           age_end = age_group + 1,
-          min_age = if(base::is.null(input_args_edited$min_age)){
-            dplyr::first(base::unique(age_start))} else {min_age},
-          max_age = if(base::is.null(input_args_edited$max_age)){
-            dplyr::last(base::unique(age_start))} else {max_age},
+          # min() and max() (and not first() and last()) so that the default
+          # does not depend on the order in which the user entered the age groups
+          min_age = if(is.null(input_args_edited$min_age)){
+            min(age_start)} else {min_age},
+          max_age = if(is.null(input_args_edited$max_age)){
+            max(age_start)} else {max_age},
           # Determine default time horizon for YLL/YLD if not specified
-          time_horizon = if(base::is.null(input_args_edited$time_horizon)){
-            base::length(base::unique(input_args_edited$age_group))
-            } else {base::unique(input_args_edited$time_horizon)})
+          time_horizon = if(is.null(input_args_edited$time_horizon)){
+            length(unique(input_args_edited$age_group))
+            } else {unique(input_args_edited$time_horizon)})
 
 
 

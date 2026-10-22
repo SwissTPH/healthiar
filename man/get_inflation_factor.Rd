@@ -11,6 +11,10 @@ get_inflation_factor(n_years, inflation_rate = NULL, is_deflation = FALSE)
 
 \item{inflation_rate}{\code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices).
 This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
+Alternatively, a \code{numeric vector} of year-specific rates can be entered
+(at least as many values as years to be considered,
+the first value referring to the first year after the present),
+assuming then that inflation varies over time instead of being constant.
 If this adjustment for inflation is not needed leave this argument empty
 (default value = NULL).}
 
@@ -33,6 +37,16 @@ It calculates the inflation factor based on the inflation rate
 and the number of years into the future as described
 in \insertCite{Brealey2023_book;textual}{healthiar}.
 
+If \code{inflation_rate} contains one single value,
+inflation is assumed to be constant over time and
+the inflation factor increases exponentially with the number of years.
+If \code{inflation_rate} contains a vector of year-specific rates,
+the inflation factor is the product of the year-specific factors,
+which better reflects that inflation varies over time.
+In that case, \code{inflation_rate} must contain
+at least as many values as years to be considered (\code{n_years}),
+the first value referring to the first year after the present.
+
 Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:
@@ -40,8 +54,15 @@ More specifically, see chapters:
  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization}{Monetization}}
 }
 \examples{
+# Constant inflation rate
 get_inflation_factor(
   inflation_rate = 0.02,
+  n_years = 5
+)
+
+# Year-specific inflation rates
+get_inflation_factor(
+  inflation_rate = c(0.02, 0.03, 0.05, 0.04, 0.02),
   n_years = 5
 )
 

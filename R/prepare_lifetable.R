@@ -8,6 +8,9 @@
 #' @param age_group \code{Numeric vector} referring to the first years of the age groups. E.g. c(0, 20, 40, 60) means [0, 20), [20, 40), [40, 60), [60, )
 #' @param population \code{Numeric vector} referring to mid-year populations by age group.
 #' @param bhd \code{Numeric vector} referring to the baseline health data (deaths) by age group.
+#' @param fraction_lived \code{Numeric vector} Numeric vector or \code{single numeric scalar} referring to the average 
+#' fraction of the age interval lived by individuals who die within that interval. Default is 0.5.
+
 
 # DETAILS ######################################################################
 #' @details
@@ -20,17 +23,45 @@
 #' for guidance on how to convert larger age groups to 1 year age groups,
 #' section "Estimation of yearly values" \insertCite{WHO2020_report}{healthiar}.
 #'
+#' \code{fraction_lived} is by default 0.5 for all age groups, i.e. the value
+#' that AirQ+ assumes. It determines the probability of dying in the age
+#' interval and how the mid-year population of the age group is split over the
+#' single years of age it contains. It is \strong{not} a way to control how
+#' the deaths of the age group are distributed over those single years of age.
+#'
+#' The same value of \code{fraction_lived} has to be used when the resulting
+#' single-year life table is passed on to \code{attribute_lifetable()}.
+#' The output column \code{fraction_lived_for_attribute} is provided for
+#' that purpose.
+#'
+#' \strong{Last age group}
+#'
+#' \code{attribute_lifetable()} closes the life table at the last age group.
+#' The age groups entered here should therefore reach an age in which
+#' essentially all remaining deaths occur.
+#' See more information in the vignette.
+#'
+#' Every age group is treated as a closed age interval of the same length,
+#' including the last one. An open-ended top age group such as
+#' "90 years old and over" therefore has to be entered as the closed age
+#' interval that follows the age groups below it, here [90, 95). Its hazard
+#' rate is then the one of the whole open-ended group, which is higher than
+#' the hazard rate of a closed age interval at that age, and the deaths of
+#' the ages above the interval are placed inside it.
+#'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
 #' \itemize{
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#yll-deaths-with-life-table}{YLL and deaths with life table}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#fraction-of-the-age-interval-lived}{Fraction of the age interval lived}}
 #'
 # VALUE ########################################################################
 #' @returns This function returns a \code{tibble} containing the columns:
 #' \itemize{
 #'  \item \code{population_for_attribute} (\code{numeric}) containing  population values for each age
 #'  \item \code{bhd_for_attribute} (\code{numeric}) containing baseline health data values for each age
+#'  \item \code{fraction_lived_for_attribute} (\code{numeric}) containing the fraction of the year lived for each age
 #'  \item and more columns containing input data or results
 #' }
 
@@ -63,13 +94,13 @@
 prepare_lifetable <-
   function(age_group,
            population,
-           bhd) {
+           bhd,
+           fraction_lived = 0.5) {
 
     # DATA VALIDATION ######
 
-    fraction_lived <- 0.5
 
-    input_args_value <- base::list(
+    input_args_value <- list(
       age_group = age_group,
       population = population,
       bhd = bhd,
@@ -79,6 +110,10 @@ prepare_lifetable <-
     ## Error if different length
     error_if_different_length  <- function(var_names){
 
+      if(dplyr::n_distinct(input_args_value[["fraction_lived"]]) == 1){
+        var_names <- var_names[!var_names %in% "fraction_lived"]
+      }
+
       # Store variables in a list
       vars_with_same_length <- input_args_value[var_names]
 
@@ -86,12 +121,12 @@ prepare_lifetable <-
       lengths <- purrr::map_int(vars_with_same_length, length)
 
       # If not all lenghts are the same
-      if (! base::length( base::unique(lengths) ) == 1) {
+      if (! length( unique(lengths) ) == 1) {
 
         #Error
-        base::stop(
-          base::paste0("The following variables must all have the same length: ",
-                       base::paste0(base::names(vars_with_same_length),
+        stop(
+          paste0("The following variables must all have the same length: ",
+                       paste0(names(vars_with_same_length),
                                     collapse = ", "),
                        "."),
           call. = FALSE
@@ -99,49 +134,60 @@ prepare_lifetable <-
       }
     }
 
-    error_if_different_length(c("age_group", "population", "bhd"))
+    error_if_different_length(var_names = c("age_group", "population", "bhd", "fraction_lived"))
 
-    ## Error if_lower_than_min
-    error_if_lower_than_min <- function(var_name, min){
-      # Store var_value
-      var_value <- input_args_value[[var_name]]
+    ## error_if_not_greater_than_or_equal_to_min
+    # Variables that must be 0 or greater
+    validate_args(
+      args = input_args_value,
+      arg_names = c("age_group", "fraction_lived", "bhd"),
+      is_valid = function(x){x >= 0},
+      message = "The values of {arg} must be greater than or equal to 0.")
 
-      if(base::any(var_value < min)){
-        base::stop(
-          base::paste0("The values of ", var_name, " cannot be lower than ", min, "."),
-          call. = FALSE
-        )
-      }
-    }
+    ## error_if_not_greater_than_min
+    # population must be > 0 (zero is not accepted)
+    validate_args(
+      args = input_args_value,
+      arg_names = "population",
+      is_valid = function(x){x > 0},
+      message = "The values of {arg} must be greater than 0.")
 
-    # age_group 0 exists
-    error_if_lower_than_min("age_group", min = 0)
-    error_if_lower_than_min("fraction_lived", min = 0)
-    # population and bhd cannot be 0 (or decimals close to)
-    error_if_lower_than_min("population", min = 1)
-    error_if_lower_than_min("bhd", min = 1)
+    ## error_if_greater_than_max
+    validate_args(
+      args = input_args_value,
+      arg_names = "fraction_lived",
+      is_valid = function(x){x <= 1},
+      message = "The values of {arg} cannot be greater than 1.")
 
-    ## Error if_higher_than_max
-    error_if_higher_than_max <- function(var_name, max){
-      # Store var_value
-      var_value <- input_args_value[[var_name]]
-
-      if(base::any(var_value > max)){
-        base::stop(
-          base::paste0("The values of ", var_name, " cannot be higher than ", max, "."),
-          call. = FALSE
-        )
-      }
-    }
-
-    error_if_higher_than_max("fraction_lived", max = 1)
 
 
     # STORE AND CALCULATE RELEVANT DATA FOR N-YEARS LEVEL ####
 
     # Get the interval_length base on the difference between values in age_group
     # It has to be constant across age_group values
-    age_interval_length <- base::unique(base::diff(age_group))
+    age_interval_length <- unique(diff(age_group))
+
+    # unique() returns more than one value if the age groups do not all have
+    # the same length, and no value at all if only one age group was entered.
+    # Everything below assumes one single positive interval length, so
+    # otherwise the calculation failed later with messages that do not mention
+    # age_group ("Tibble columns must have compatible sizes" or
+    # "invalid 'each' argument")
+    if (length(age_interval_length) != 1) {
+      stop(
+        paste0(
+          "age_group must contain at least two age groups and all of them ",
+          "must have the same length. The differences between consecutive ",
+          "values are: ",
+          toString(diff(age_group)), "."),
+        call. = FALSE)
+    }
+
+    if (age_interval_length <= 0) {
+      stop(
+        "age_group must be sorted from the youngest to the oldest age group.",
+        call. = FALSE)
+    }
     # Get the last_age
     # The last element of the age_group vector is the first year of the interval of n-years,
     # so sum age_interval_length
@@ -171,8 +217,8 @@ prepare_lifetable <-
     one_vs_n_years <-
       tibble::tibble(
         age_group_1_year = age_group[1] : last_age,
-        age_group_n_years = base::rep(age_group, each = age_interval_length),
-        age_interval_index = base::rep(1:age_interval_length, times = base::length(age_group)),
+        age_group_n_years = rep(age_group, each = age_interval_length),
+        age_interval_index = rep(1:age_interval_length, times = length(age_group)),
         #age_interval_length = age_interval_length
       )
 
@@ -185,41 +231,57 @@ prepare_lifetable <-
                        by = c("age_group_n_years" = "age_group")) |>
       # Adding suffix to column names to differentiate between _n_years and 1_year columns
       dplyr::rename_with(.cols = - dplyr::contains("age_"),
-                         .fn = ~ base::paste0(., "_n_years"))
+                         .fn = ~ paste0(., "_n_years"))
 
     # Create function to obtain entry_population
     get_entry_population <- function(prob_surviving_1_year,
                                      population_n_years,
+                                     bhd_n_years,
                                      age_interval_index,
-                                     age_interval_length) {
+                                     age_interval_length,
+                                     fraction_lived) {
 
       # Using the formula of AirQ+ would be
       # entry_population_1_year = prob_surviving_1_year^(age_interval_index-1) * population_n_years/(0.5+prob_surviving_1_year+prob_surviving_1_year^2+prob_surviving_1_year^3+prob_surviving_1_year^4+0.5*prob_surviving_1_year^5),
-      # but this is only for 5-years interval.
-      # A solution for all lengths of interval is needed.
+      # but this is only for 5-years interval and it assumes that
+      # fraction_lived is 0.5.
+      # A solution for all lengths of interval and all values of
+      # fraction_lived is needed.
+      #
+      # The entry population of the first single year of the age group (E_0)
+      # follows from the condition that the conversion may neither create nor
+      # lose population, i.e. that the single-year mid-year populations add up
+      # to the mid-year population of the age group entered by the user.
+      # The mid-year population of a single year of age is the person-years
+      # lived at that age, i.e. one year for each person reaching the next
+      # birthday plus fraction_lived years for each person dying
+      # (see Chiang 1984 and Preston et al. 2001):
+      #   L_k = (E_k - D_k) + fraction_lived * D_k
+      #       = E_k - (1 - fraction_lived) * D_k
+      # The deaths add up to the deaths of the age group entered by the user
+      # (this is enforced by the residual rule below), so with E_k = E_0 * p^k
+      #   sum(L_k) = E_0 * sum(p^0 ... p^(n-1)) - (1 - fraction_lived) * bhd
+      # and setting that equal to the mid-year population of the age group
+      #   E_0 = (population + (1 - fraction_lived) * bhd) / sum(p^0 ... p^(n-1))
+      # For fraction_lived = 0.5 this reproduces the values published in the
+      # AirQ+ manual, and unlike the formula above it holds for any age
+      # interval length and any value of fraction_lived
 
-      # Get weights of the formula
-      if (age_interval_length == 1) {
-        weights <- 1
-      } else {
-        weights <- c(0.5, base::rep(1, age_interval_length - 1), 0.5)
-      }
-
-      # Get powers of the formula
-
-      powers <- 0:age_interval_length
-
-      # Use pmap_dbl to vectorialize the function
+      # Use map_dbl to vectorialize the function
       # and consequently to accept vectors
       entry_population <- purrr::map_dbl(
-        base::seq_along(prob_surviving_1_year),
+        seq_along(prob_surviving_1_year),
         \(i) {
-          numerator <- prob_surviving_1_year[i]^(age_interval_index[i] - 1) * population_n_years[i]
-          denominator <- base::sum(weights * prob_surviving_1_year[i] ^ powers)
 
-          # Divide numerator by denominator
+          # Entry population of the first single year of age of the age group
+          entry_population_first_age <-
+            (population_n_years[i] + ((1 - fraction_lived[i]) * bhd_n_years[i])) /
+            sum(prob_surviving_1_year[i] ^ (0:(age_interval_length - 1)))
 
-          return(numerator / denominator)
+          # The cohort of the age group shrinks by the probability of
+          # surviving with each single year of age within the age group
+          return(entry_population_first_age *
+                   prob_surviving_1_year[i] ^ (age_interval_index[i] - 1))
         }
       )
 
@@ -231,28 +293,47 @@ prepare_lifetable <-
     # Obtain entry_population, mid-year population and bhd (deaths)
     calculation <- data |>
       dplyr::mutate(
-        # Get the value in prob_dying and prob_surviving for 1_year
-        # prob_surviving_n_years = prob_surviving_1_year ^ age_interval_length
-        prob_surviving_1_year = prob_surviving_n_years^(1/age_interval_length),
-        prob_dying_1_year = 1 - prob_surviving_1_year,
+        # Get prob_dying and prob_surviving for 1_year.
+        # This is the same AirQ+ formula as above, only applied to an interval
+        # of one single year instead of the age interval entered by the user.
+        # The probability of dying at one single year of age has to be the one
+        # that the hazard rate implies for a single year, because that is the
+        # granularity at which the life table is built below: the cohort
+        # shrinks by prob_surviving_1_year with every single year of age.
+        # Taking the age_interval_length-th root of prob_surviving_n_years
+        # instead does not give that probability. That root is the survival of
+        # a cohort whose deaths are spread uniformly over the whole age
+        # interval, so using it year by year returns a single-year hazard rate
+        # higher than the one entered by the user (0.29 instead of 0.25).
+        # The two agree to first order, so the difference only becomes visible
+        # at a high hazard rate, where it makes the residual rule below turn
+        # the excess mortality into negative deaths.
+        # For the same reason prob_surviving_1_year ^ age_interval_length is
+        # not prob_surviving_n_years: the two assume a different distribution
+        # of the deaths over the age interval
+        prob_dying_1_year =
+          hazard_rate_n_years / (1 + ((1 - fraction_lived_n_years) * hazard_rate_n_years)),
+        prob_surviving_1_year = 1 - prob_dying_1_year,
         # Calculate entry population using the formula of AirQ+
         entry_population_1_year = get_entry_population(
           prob_surviving_1_year = prob_surviving_1_year,
           population_n_years = population_n_years,
+          bhd_n_years = bhd_n_years,
           age_interval_index = age_interval_index,
           # For age_interval_length enter the value of the varible
           # And not the column which is a vector repeating the value (not needed)
-          age_interval_length = {{age_interval_length}}
-          ),
-        # Calculate mid-year population for 1-year interval
-        # This is the average between the entry-population in year y and y+1
-        # lead() gives the value for y+1
-        # colesce(x, 0) replaces the NA with 0
-        # There is a NA at the end because the last row has not y+1
-        # The assumption is that everybody is death in the row after the last one
-        # *0.5 because it is the average
-        population_1_year =  0.5 * (entry_population_1_year + dplyr::coalesce(dplyr::lead(entry_population_1_year), 0)),
-        bhd_1_year = 2 * (entry_population_1_year - population_1_year)
+          age_interval_length = {{age_interval_length}},
+          fraction_lived = fraction_lived_n_years),
+        # Calculate deaths for 1-year interval
+        # The deaths at one single year of age are the difference between
+        # the entry population of that age and the entry population of the
+        # next age, i.e. those who did not make it to the next birthday.
+        # lead() gives the entry population one year older.
+        # coalesce(x, 0) replaces the NA with 0.
+        # There is a NA at the end because the last row has no next age.
+        # The assumption is that nobody survives the last age group
+        bhd_1_year = 
+          entry_population_1_year - dplyr::coalesce(dplyr::lead(entry_population_1_year), 0)
       )
 
     # Fix the last element of each interval
@@ -261,11 +342,21 @@ prepare_lifetable <-
     calculation_fixed <- calculation |>
       dplyr::mutate(
         .by = age_group_n_years,
+
+        # AirQ+ rule assigning exact residual to last index of the group
         bhd_1_year = dplyr::if_else(
           age_interval_index == age_interval_length,
-          bhd_n_years - base::sum(bhd_1_year[age_interval_index != age_interval_length]),
+          bhd_n_years - sum(bhd_1_year[age_interval_index != age_interval_length]),
           bhd_1_year
-        )
+        ),
+
+        # Calculate mid-year population for 1-year interval, i.e. the
+        # person-years lived at that single year of age: one year for each
+        # person reaching the next birthday plus fraction_lived years for
+        # each person dying at that age.
+        # With fraction_lived = 0.5 this is the average of the entry
+        # populations of this and the next age, i.e. the formula of AirQ+
+        population_1_year = entry_population_1_year - ((1 - fraction_lived_n_years) * bhd_1_year)
       )
 
 
@@ -274,7 +365,12 @@ prepare_lifetable <-
       dplyr::mutate(
 
         population_for_attribute = population_1_year,
-        bhd_for_attribute = bhd_1_year
+        bhd_for_attribute = bhd_1_year,
+        # fraction_lived is also passed on because attribute_lifetable()
+        # needs the same assumption to obtain the survival probabilities.
+        # Otherwise the life table would be built with a fraction_lived
+        # that differs from the one used for this conversion
+        fraction_lived_for_attribute = fraction_lived_n_years
       )
 
     return(output)

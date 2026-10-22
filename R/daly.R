@@ -110,8 +110,8 @@ daly <-
     # Capture all arguments and values
     input_args <-
       get_input_args(
-        environment = base::environment(),
-        call = base::match.call())
+        environment = environment(),
+        call = match.call())
 
     # Store results_raw of yll and yld
     # Shorter and handy to code
@@ -121,7 +121,7 @@ daly <-
     # Capture all column names
     # They should be the same for yll and yld but just in case
     column_names_results_raw <-
-      base::unique(c(names(results_raw_yll), names(results_raw_yld)))
+      unique(c(names(results_raw_yll), names(results_raw_yld)))
 
     results_raw_yll[, c("sex", "age_group")] <- "total"
     results_raw_yld[, c("sex", "age_group")] <- "total"
@@ -129,28 +129,45 @@ daly <-
 
     # Identify the columns names using keywords
     common_cols <-
-      column_names_results_raw[base::grepl("exp|exposure|cutoff|geo|approach_risk|sex|age_group|bhd_ci",
+      column_names_results_raw[grepl("exp|exposure|cutoff|geo|approach_risk|sex|age_group|bhd_ci",
                                      column_names_results_raw)]
     # Remove exceptions (columns with any of the keywords that should not be selected)
-    common_cols <- common_cols[!base::grepl("approach_exposure|rr_at_exp", common_cols)]
-    cols_for_join <- c(common_cols, "erf_ci")
+    common_cols <- common_cols[!grepl("approach_exposure|rr_at_exp", common_cols)]
 
+    # The info columns can identify subgroups or exposure-outcome pairs, so the
+    # years of life lost have to be joined to the years lived with disability
+    # within the same subgroup. Otherwise every pair would be joined to every
+    # other pair. intersect() because column_names_results_raw is the union of
+    # both outputs, while a join column must be present in both of them
+    info_cols_for_join <-
+      intersect(
+        grep("^info", names(results_raw_yll), value = TRUE),
+        grep("^info", names(results_raw_yld), value = TRUE))
+
+    cols_for_join <- c(common_cols, info_cols_for_join, "erf_ci")
+
+
+    # Check that the two assessments refer to the same population and exposure.
+    # The columns compared here are the ones used as joining columns below, so
+    # a difference in any of them would silently drop rows in the join (or make
+    # it fail if the column is missing on one side).
 
     identical_cols <-
       check_if_args_identical(
-        args_a = input_args$value$output_attribute_yld,
-        args_b = input_args$value$output_attribute_yld,
+        args_1 = results_raw_yll,
+        args_2 = results_raw_yld,
         names_to_check = common_cols)
 
-    # Remove those containing the word impact
-    column_names_results_raw_without_impact <-
-      column_names_results_raw[!base::grepl("impact|lifeyears|lifetable", column_names_results_raw)]
-
-
-    if(!all(identical_cols))
-    {stop("The arguments ",
-          base::toString(base::names(identical_cols)[identical_cols]),
-          " must be identical in both scenarios")}
+    # [!identical_cols] and not [identical_cols]: the message has to name the
+    # columns that differ and not the ones that agree
+    if(!all(identical_cols)){
+      stop(
+        paste0(
+          "The following must be identical in the assessment of years of life ",
+          "lost and in the assessment of years lived with disability: ",
+          toString(names(identical_cols)[!identical_cols]), "."),
+        call. = FALSE)
+    }
 
 
     # Obtain the new results_raw for DALY
@@ -169,14 +186,32 @@ daly <-
         outcome_metric = "daly",
         # Add impact as sum of yll and yld (including rounded impact)
         impact = impact_yll + impact_yld,
-        impact_rounded = base::round(impact))
+        impact_rounded = round(impact))
 
-    # Add impact per 100k inhabitants if population is available
+    # population is not one of the joining columns, so it carries the suffixes
+    # _yll and _yld whenever both assessments provide it. It is the same
+    # population in both (the years of life lost and the years lived with
+    # disability of the same people), so it is restored here under its own name.
+    # Without this, neither the rate below nor the one in get_output() is
+    # calculated and the results tables have no impact rate at all
+    if (all(c("population_yll", "population_yld") %in% names(results_raw))) {
+      results_raw <- results_raw |>
+        dplyr::mutate(population = dplyr::coalesce(population_yll, population_yld))
+    }
+
+    # Add impact per 100k inhabitants if population is available.
+    # The name must be impact_per_100k_inhab as everywhere else in the package
+    # (get_impact(), monetize(), standardize()): get_output() recognises the
+    # rates by that suffix to keep them out of the sums and to re-calculate
+    # them after aggregating. Named impact_per_100k, the column was added up
+    # like an impact, i.e. the rates of different geo units were summed.
+    # The assignment also overwrites the column of the same name that the join
+    # carries over from the YLL branch, which holds the YLL and not the DALY rate
     if("population" %in% names(results_raw)){
       results_raw <-
         results_raw |>
         dplyr::mutate(
-          impact_per_100k = (impact / population) * 1E5)
+          impact_per_100k_inhab = (impact / population) * 1E5)
     }
 
     # Use args and impact to produce impact

@@ -3,7 +3,46 @@
 
 ### DELTA #######################################################################
 
-testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
+testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|uba_ozone|", {
+
+  # The German Environment Agency (Umweltbundesamt) assessment of the disease
+  # burden caused by ozone quantifies the COPD deaths attributable to ozone in
+  # Germany year by year, with the exposure distribution and the COPD
+  # mortality of each year (see the test of the same assessment in
+  # test-attribute_health.R, assessor Susanne Breitner-Busch, LMU Munich):
+  #
+  #   2015: 350 attributable deaths (95% CI 267-424)
+  #   2016: 313 attributable deaths (95% CI 238-379)
+  #
+  # The delta approach compares two such assessments, so the change from one
+  # year to the next has to be the difference of the two published figures.
+  # Only the central estimate is compared: the published bounds are rounded,
+  # so their difference is not the difference of the unrounded ones
+  data <- readRDS(testthat::test_path("testdata", "ozone_copd_mort_2015_2016.rds"))
+  data <- data |> dplyr::slice(-1)
+
+  attribute_one_year <- function(year){
+    data_year <- data |> dplyr::filter(X == year)
+
+    healthiar::attribute_health(
+      erf_eq_central =
+        stats::splinefun(data$x[1:21], data$y[1:21], method = "natural"),
+      prop_pop_exp = data_year$Population.affected,
+      exp_central = data_year$Mean.O3,
+      cutoff_central = 0,
+      bhd_central = data_year$bhd)
+  }
+
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_scen_1 = attribute_one_year(2015),
+        output_attribute_scen_2 = attribute_one_year(2016),
+        approach_comparison = "delta")$health_main$impact_rounded,
+    expected = 350 - 313)
+})
+
+testthat::test_that("results the same |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   output_attribute_scen_1 =
     healthiar::attribute_health(
@@ -39,7 +78,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
   )
 })
 
-testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   output_attribute_scen_1 <-
     healthiar::attribute_health(
@@ -106,9 +145,47 @@ testthat::test_that("zero difference when scenarios are identical |meta_compare|
   )
 })
 
+testthat::test_that("the same |meta_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
+
+  output_attribute_scen_1 =
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2010")
+
+  output_attribute_scen_2 =
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 25000,
+      approach_risk = "relative_risk",
+      erf_shape = "log_linear",
+      rr_central = 1.118, rr_lower = 1.060, rr_upper = 1.179,
+      rr_increment = 10,
+      info = "PM2.5_mortality_2020")
+
+  # Identical exposures in both scenarios must not turn exp into a joining
+  # column, otherwise exp_scen_1 and exp_scen_2 are missing downstream
+  testthat::expect_equal(
+    object =
+      healthiar::compare(
+        output_attribute_scen_1 = output_attribute_scen_1,
+        output_attribute_scen_2 = output_attribute_scen_2,
+        approach_comparison = "pif"
+      )$health_main$impact_rounded,
+    expected =
+      c(0, 0, 0) # Results on 4 Sep 2026; no comparison study
+  )
+})
+
 #### ITERATION ##################################################################
 
-testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
   scen_1_singlebhd_rr_geo <-
     healthiar::attribute_health(
@@ -140,7 +217,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
   )
 })
 
-testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   scen_1_singlebhd_rr_geo_large <-
     healthiar::attribute_health(
@@ -181,7 +258,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
 
 #### YLD ########################################################################
 
-testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same yld |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   scen_1_singlebhd_yld <-
     healthiar::attribute_health(
@@ -212,7 +289,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
   )
 })
 
-testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same yld |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
   scen_1_singlebhd_yld_geo <-
     healthiar::attribute_health(
@@ -249,7 +326,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
 
 ##### ITERATION #################################################################
 
-testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same yld |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
   scen_1_singlebhd_yld_geo <-
     healthiar::attribute_health(
@@ -285,6 +362,65 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_si
 })
 
 ### PIF #########################################################################
+
+testthat::test_that("results correct |pathway_compare|comp_appr_pif|exp_single|cardaba_2014|", {
+
+  # Validation against the health impact assessment of air pollution in
+  # Valladolid, Spain (Cardaba Arranz et al., BMJ Open 2014;4:e005999,
+  # doi:10.1136/bmjopen-2014-005999), which follows the WHO environmental
+  # burden of disease methodology.
+  #
+  # Table 4, PM2.5 and all-cause mortality of the population over 30 years:
+  #  - annual mean 25.85 ug/m3
+  #  - RR = 1.062 (95% CI 1.040-1.083) per 10 ug/m3, log-linear
+  #  - 2,535 baseline deaths
+  #  - natural background concentration 3 ug/m3
+  #
+  # The report gives the attributable deaths against the background and the
+  # "theoretically avoidable deaths" (TAD) if the concentration went down to
+  # a target value, which is exactly a potential impact fraction:
+  #
+  #   attributable deaths (against the background of 3):  326 (217-422)
+  #   TAD if the WHO air quality guideline of 10 was met: 231 (153-301)
+  #   TAD if the EU limit value of 25 was met:             13 (  8- 17)
+  #
+  # Note that the delta approach gives a different (and smaller) result,
+  # 221 instead of 231, because the difference of two attributable fractions
+  # is not the attributable fraction of the difference
+  assess_valladolid <- function(exp){
+    healthiar::attribute_health(
+      exp_central = exp,
+      # The counterfactual is the natural background in both scenarios
+      cutoff_central = 3,
+      bhd_central = 2535,
+      erf_shape = "log_linear",
+      rr_central = 1.062,
+      rr_lower = 1.040,
+      rr_upper = 1.083,
+      rr_increment = 10)
+  }
+
+  observed <- assess_valladolid(25.85)
+
+  avoidable_deaths <- function(target){
+    healthiar::compare(
+      output_attribute_scen_1 = observed,
+      output_attribute_scen_2 = assess_valladolid(target),
+      approach_comparison = "pif")$health_main$impact_rounded
+  }
+
+  testthat::expect_equal(
+    object =
+      list(
+        attributable = observed$health_main$impact_rounded,
+        who_guideline = avoidable_deaths(10),
+        eu_limit_value = avoidable_deaths(25)),
+    expected =
+      list(
+        attributable = c(326, 217, 422),
+        who_guideline = c(231, 153, 301),
+        eu_limit_value = c(13, 8, 17)))
+})
 
 testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
@@ -503,9 +639,9 @@ testthat::test_that("results the same yld |pathway_compare|comp_appr_pif|exp_sin
 
 ### DELTA #######################################################################
 
-testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_compare|comp_appr_delta|exp_dist|iteration_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
@@ -536,7 +672,7 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|i
 
 #### YLD ########################################################################
 
-testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_dist|iteration_FALSE|", {
+testthat::test_that("results the same yld |pathway_compare|comp_appr_delta|exp_dist|iteration_FALSE|", {
 
   scen_1_singlebhd_yld  <-
     healthiar::attribute_health(
@@ -570,7 +706,7 @@ testthat::test_that("results correct yld |pathway_compare|comp_appr_delta|exp_di
 
 #### ITERATION ##################################################################
 
-testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|iteration_TRUE|", {
+testthat::test_that("results the same |pathway_compare|comp_appr_delta|exp_dist|iteration_TRUE|", {
 
   scen_1_singlebhd_ar_geo <-
     healthiar::attribute_health(
@@ -614,10 +750,10 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_dist|i
 
 #### DELTA ######################################################################
 
-testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same yll |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_yll_lifetable_test <-
     healthiar::attribute_lifetable(
@@ -632,8 +768,8 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
       erf_shape = "log_linear",
       approach_exposure = "single_year",
       approach_newborns = "without_newborns",
-      sex = base::rep(c("male", "female"), each = 100),
-      age_group = base::rep(0:99, times = 2),
+      sex = rep(c("male", "female"), each = 100),
+      age_group = rep(0:99, times = 2),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
               data[["pop"]]$number_of_deaths_female),
       population = c(data_lifetable[["male"]]$population,
@@ -659,10 +795,10 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
 
 ##### ITERATION #################################################################
 
-testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same yll |pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_yll_lifetable_geo <-
     healthiar::attribute_lifetable(
@@ -677,13 +813,13 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
       erf_shape = "log_linear",
       approach_exposure = "single_year",
       approach_newborns = "without_newborns",
-      sex = base::rep(c("male", "female"), each = 100, times = 2),
-      age_group = base::rep(0:99, times = 2*2),
-      bhd_central = base::rep(
+      sex = rep(c("male", "female"), each = 100, times = 2),
+      age_group = rep(0:99, times = 2*2),
+      bhd_central = rep(
         c(data[["pop"]]$number_of_deaths_male,
           data[["pop"]]$number_of_deaths_female),
         times = 2),
-      population = base::rep(
+      population = rep(
         c(data_lifetable[["male"]]$population,
           data_lifetable[["female"]]$population),
         times = 2),
@@ -712,8 +848,8 @@ testthat::test_that("results correct yll |pathway_compare|comp_appr_delta|exp_si
 
 testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_yll_lifetable <-
     healthiar::attribute_lifetable(
@@ -728,8 +864,8 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
       erf_shape = "log_linear",
       approach_exposure = "single_year",
       approach_newborns = "without_newborns",
-      sex = base::rep(c("male", "female"), each = 100),
-      age_group = base::rep(0:99, times = 2),
+      sex = rep(c("male", "female"), each = 100),
+      age_group = rep(0:99, times = 2),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
                       data[["pop"]]$number_of_deaths_female),
       population = c(data_lifetable[["male"]]$population,
@@ -758,8 +894,8 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
 
 testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_yll_lifetable_geo <-
     healthiar::attribute_lifetable(
@@ -774,13 +910,13 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
       erf_shape = "log_linear",
       approach_exposure = "single_year",
       approach_newborns = "without_newborns",
-      sex = base::rep(c("male", "female"), each = 100, times = 2),
-      age_group = base::rep(0:99, times = 2*2),
-      bhd_central = base::rep(
+      sex = rep(c("male", "female"), each = 100, times = 2),
+      age_group = rep(0:99, times = 2*2),
+      bhd_central = rep(
         c(data[["pop"]]$number_of_deaths_male,
           data[["pop"]]$number_of_deaths_female),
         times = 2),
-      population = base::rep(
+      population = rep(
         c(data_lifetable[["male"]]$population,
           data_lifetable[["female"]]$population),
         times = 2),
@@ -810,10 +946,10 @@ testthat::test_that("results the same yll |pathway_compare|comp_appr_pif|exp_sin
 
 #### DELTA ######################################################################
 
-testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_compare|comp_appr_delta|exp_single|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_deaths_lifetable <-
     healthiar::attribute_lifetable(
@@ -828,8 +964,8 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
       erf_shape = "log_linear",
       approach_exposure = "single_year",
       approach_newborns = "without_newborns",
-      sex = base::rep(c("male", "female"), each = 100),
-      age_group = base::rep(0:99, times = 2),
+      sex = rep(c("male", "female"), each = 100),
+      age_group = rep(0:99, times = 2),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
                       data[["pop"]]$number_of_deaths_female),
       population = c(data_lifetable[["male"]]$population,
@@ -855,10 +991,10 @@ testthat::test_that("results correct |pathway_compare|comp_appr_delta|exp_single
 
 ##### ITERATION #################################################################
 
-testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
+testthat::test_that("results the same d|pathway_compare|comp_appr_delta|exp_single|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_deaths_lifetable_geo <-
     healthiar::attribute_lifetable(
@@ -873,13 +1009,13 @@ testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_singl
       erf_shape = "log_linear",
       approach_exposure = "single_year",
       approach_newborns = "without_newborns",
-      sex = base::rep(c("male", "female"), each = 100, times = 2),
-      age_group = base::rep(0:99, times = 2*2),
-      bhd_central = base::rep(
+      sex = rep(c("male", "female"), each = 100, times = 2),
+      age_group = rep(0:99, times = 2*2),
+      bhd_central = rep(
         c(data[["pop"]]$number_of_deaths_male,
           data[["pop"]]$number_of_deaths_female),
         times = 2),
-      population = base::rep(
+      population = rep(
         c(data_lifetable[["male"]]$population,
           data_lifetable[["female"]]$population),
         times = 2),
@@ -908,8 +1044,8 @@ testthat::test_that("results correct d|pathway_compare|comp_appr_delta|exp_singl
 
 testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_deaths_lifetable <-
     healthiar::attribute_lifetable(
@@ -924,8 +1060,8 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
       erf_shape = "log_linear",
       approach_exposure = "single_year",
       approach_newborns = "without_newborns",
-      sex = base::rep(c("male", "female"), each = 100),
-      age_group = base::rep(0:99, times = 2),
+      sex = rep(c("male", "female"), each = 100),
+      age_group = rep(0:99, times = 2),
       bhd_central = c(data[["pop"]]$number_of_deaths_male,
                       data[["pop"]]$number_of_deaths_female),
       population = c(data_lifetable[["male"]]$population,
@@ -954,8 +1090,8 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
 
 testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_deaths_yll.rds"))
-  data_lifetable <- base::readRDS(testthat::test_path("data", "lifetable_withPopulation.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
   scen_1_deaths_lifetable_geo <-
     healthiar::attribute_lifetable(
@@ -970,13 +1106,13 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
       erf_shape = "log_linear",
       approach_exposure = "single_year",
       approach_newborns = "without_newborns",
-      sex = base::rep(c("male", "female"), each = 100, times = 2),
-      age_group = base::rep(0:99, times = 2*2),
-      bhd_central = base::rep(
+      sex = rep(c("male", "female"), each = 100, times = 2),
+      age_group = rep(0:99, times = 2*2),
+      bhd_central = rep(
         c(data[["pop"]]$number_of_deaths_male,
           data[["pop"]]$number_of_deaths_female),
         times = 2),
-      population = base::rep(
+      population = rep(
         c(data_lifetable[["male"]]$population,
           data_lifetable[["female"]]$population),
         times = 2),
@@ -1004,7 +1140,7 @@ testthat::test_that("results the same |pathway_compare|comp_appr_pif|exp_single|
 
 testthat::test_that("results the same Sciensano tobacco example |pathway_compare|comp_appr_pif|exp_single|iteration_FALSE|", {
 
-  data <- readRDS(testthat::test_path("data/rr_data.RDS"))
+  data <- readRDS(testthat::test_path("testdata", "rr_pathways.rds"))
   data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
 
   output_attribute_scen_1 =
@@ -1036,7 +1172,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
 
 testthat::test_that("results the same Sciensano tobacco example |pathway_compare|comp_appr_pif|exp_dist|iteration_FALSE|", {
 
-  data <- readRDS(testthat::test_path("data/rr_data.RDS"))
+  data <- readRDS(testthat::test_path("testdata", "rr_pathways.rds"))
   data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
 
   output_attribute_scen_1 =
@@ -1070,7 +1206,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
 
 testthat::test_that("results the same Sciensano tobacco example |pathway_compare|comp_appr_pif|exp_single|iteration_TRUE|", {
 
-  data <- readRDS(testthat::test_path("data/rr_data.RDS"))
+  data <- readRDS(testthat::test_path("testdata", "rr_pathways.rds"))
   data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
 
   output_attribute_scen_1 =
@@ -1104,7 +1240,7 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
 
 testthat::test_that("results the same Sciensano tobacco example |pathway_compare|comp_appr_pif|exp_dist|iteration_TRUE|", {
 
-  data <- readRDS(testthat::test_path("data/rr_data.RDS"))
+  data <- readRDS(testthat::test_path("testdata", "rr_pathways.rds"))
   data <- subset(data, CAUSE == "Chronic obstructive pulmonary disease" & EXPOSURE == 'PACK_YEAR')
 
   output_attribute_scen_1 =
@@ -1244,7 +1380,7 @@ testthat::test_that("error pif and different bhd", {
 
 testthat::test_that("error pif and absolute risk", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 

@@ -9,7 +9,7 @@
 
 # ARGUMENTS ####################################################################
 #' @param output_attribute
-#' \code{List} containing the outputs of the \code{healthiar::attribute_health()} assessments for each age group (each list element should be an age group-specific assessment).
+#' \code{List} containing the output of \strong{one single} \code{healthiar::attribute_...()} call in which the age groups of interest were entered in the argument \code{age_group}, i.e. one assessment stratified by age group and \strong{not} a list of age group-specific assessments.
 #' @param age_group
 #' \code{String vector} with the age groups included in the age standardization. The vector refers to age-dependent data in this function and to \code{output_attribute} (if provided).
 #' @param social_indicator
@@ -138,190 +138,129 @@ socialize <- function(output_attribute = NULL,
                       pop_fraction = NULL
                       ) {
 
-  # Data validation ######################
+  # Input data and useful variables ######################
 
   input_args_value <-
-    get_input_args(environment = base::environment(),
+    get_input_args(environment = environment(),
                    call = match.call())$value
 
-  # Identify available_vars
-  # i.e. variables/arguments that have been entered by the user
-  available_vars <- input_args_value |>
-    purrr::discard(~ base::is.null(.x)) |>
-    base::names()
-
   # All variables by type
+  # The validate_args() calls below skip the variables that are NULL
+  # (i.e. not entered by the user), so no filtering is needed here
   numeric_vars <- c("social_indicator", "pop_fraction", "ref_prop_pop", "exp", "impact")
   integer_vars <- c("social_quantile", "n_quantile")
   boolean_vars <- c("increasing_deprivation")
   fraction_vars <- c("ref_prop_pop", "pop_fraction")
-
-  # Available variables by type
-  available_numeric_vars <- base::intersect(numeric_vars, available_vars)
-  available_integer_vars <- base::intersect(integer_vars, available_vars)
-  available_numeric_and_integer_vars <- c(available_numeric_vars, available_integer_vars)
   ## social_indicator and impact might be lower than 0, therefore excluded here
-  available_positive_vars <-
-    base::setdiff(available_numeric_and_integer_vars, c("social_indicator", "impact"))
-  available_boolean_vars <- base::intersect(boolean_vars, available_vars)
-  available_fraction_vars <- base::intersect(fraction_vars, available_vars)
-
-  ## error_if_not_numeric #####
-  error_if_not_numeric <- function(var_name){
-
-    var_value <- input_args_value [[var_name]]
-
-    if(base::any(!base::is.numeric(var_value))){
-
-      base::stop(
-        base::paste0(
-          var_name,
-          " must contain numeric value(s)."),
-        call. = FALSE)
-    }
-  }
-
-  if(base::length(available_numeric_and_integer_vars) > 0){
-    for (x in available_numeric_and_integer_vars) {
-      error_if_not_numeric(var_name = x)
-    }
-  }
-
-  ## error_if_not_whole number #####
-  error_if_not_whole_number <- function(var_name){
-    var_value <- input_args_value [[var_name]]
-
-    if(base::any(base::is.numeric(var_value)) &
-       base::any(var_value != base::floor(var_value))){
-
-      base::stop(
-        base::paste0(
-          var_name,
-          " must contain whole numeric value(s)."),
-        call. = FALSE)
-    }
-  }
-
-  if(base::length(available_integer_vars) > 0){
-    for (x in available_integer_vars) {
-      error_if_not_whole_number(var_name = x)
-    }
-  }
-
-  ## error_if_not_fraction #####
-  error_if_not_fraction <- function(var_name){
-
-    var_value <- input_args_value [[var_name]]
-
-    if(base::any(var_value < 0 | var_value > 1)){
-
-      base::stop(
-        base::paste0(
-          var_name,
-          " must have values between 0 and 1."),
-        call. = FALSE)
-    }
-  }
-
-  if(base::length(available_fraction_vars) > 0){
-    for (x in available_fraction_vars) {
-      error_if_not_fraction(var_name = x)
-    }
-  }
-
-  ## error_if_lower_than_0 #####
-  error_if_lower_than_0 <- function(var_name){
-    var_value <- input_args_value [[var_name]]
-
-    if(base::any(var_value < 0)){
-
-      base::stop(
-        base::paste0(
-          "The value(s) of ",
-          var_name,
-          " cannot be lower than 0."),
-        call. = FALSE)
-    }
-  }
-
-  if(base::length(available_positive_vars) > 0){
-    for (x in available_positive_vars) {
-      error_if_lower_than_0(var_name = x)
-    }
-  }
-
-  ## error_if_not_boolean #####
-  error_if_not_boolean <- function(var_name){
-    var_value <- input_args_value [[var_name]]
-
-    if(base::any(!base::is.logical(var_value))){
-
-      base::stop(
-        base::paste0(
-          var_name,
-          " must be TRUE or FALSE."),
-        call. = FALSE)
-    }
-  }
-
-  if(base::length(available_boolean_vars) > 0){
-    for (x in available_boolean_vars) {
-      error_if_not_boolean(var_name = x)
-    }
-  }
-
-  ## error_if_no_match #####
-  error_if_no_match <- function(var_name){
-    var_value_user <- base::unique(input_args_value[[var_name]])
-    var_value_attribute <-
-      base::unique(output_attribute$health_detailed$results_raw$age_group)
-
-    if(! base::identical(var_value_user, var_value_attribute)){
-
-      base::stop(
-        base::paste0(
-          var_name,
-          " must be identical to the values in the column ",
-          var_name,
-          " in output_attribute."),
-        call. = FALSE)
-
-    }
-  }
-
-  if(! base::is.null(output_attribute)){
-    for (x in c("age_group")) {
-      error_if_no_match(var_name = x)
-    }
-  }
-
-
+  positive_vars <-
+    setdiff(c(numeric_vars, integer_vars), c("social_indicator", "impact"))
 
   # Variables for ifs #####################
 
   ## Create readable variables for if statements below
 
   ## output from healthiar or impact directly entered by user (without healthiar)
-  has_output_attribute <- base::is.null(impact) & !base::is.null(output_attribute)
-  has_impact <- !base::is.null(impact) & base::is.null(output_attribute)
+  has_output_attribute <- is.null(impact) & !is.null(output_attribute)
+  has_impact <- !is.null(impact) & is.null(output_attribute)
 
   ## already social quantile (e.g. 1-10) or
   ## social indicator (e.g. 1-986) which has to be transformed into quantile
   has_social_quantile <-
-    base::is.null(social_indicator) && base::is.null(n_quantile) && !base::is.null(social_quantile)
+    is.null(social_indicator) && is.null(n_quantile) && !is.null(social_quantile)
   has_social_indicator <-
-    !base::is.null(social_indicator) && !base::is.null(n_quantile) && base::is.null(social_quantile)
+    !is.null(social_indicator) && !is.null(n_quantile) && is.null(social_quantile)
 
   ## Available ref_prop_pop
-  has_ref_prop_pop <- !base::is.null(ref_prop_pop)
+  has_ref_prop_pop <- !is.null(ref_prop_pop)
 
   ## Decreasing order in social_indicator or quantile
   decreasing_deprivation <- !increasing_deprivation
 
-  # Compile data (except social) ##########
+
+
+  # Data validation ######################
+  ## error_if_not_numeric #####
+  # Must come first: the checks below assume numeric values
+  validate_args(
+    args = input_args_value,
+    arg_names = c(numeric_vars, integer_vars),
+    is_valid = is.numeric,
+    message = "{arg} must contain numeric value(s).")
+
+  ## error_if_not_whole_number #####
+  validate_args(
+    args = input_args_value,
+    arg_names = integer_vars,
+    is_valid = function(x){x == floor(x)},
+    message = "{arg} must contain whole numeric value(s).")
+
+  ## error_if_not_fraction #####
+  validate_args(
+    args = input_args_value,
+    arg_names = fraction_vars,
+    is_valid = function(x){x >= 0 & x <= 1},
+    message = "{arg} must have values between 0 and 1.")
+
+  ## error_if_lower_than_0 #####
+  validate_args(
+    args = input_args_value,
+    arg_names = positive_vars,
+    is_valid = function(x){x >= 0},
+    message = "The value(s) of {arg} cannot be lower than 0.")
+
+  ## error_if_not_boolean #####
+  validate_args(
+    args = input_args_value,
+    arg_names = boolean_vars,
+    is_valid = is.logical,
+    message = "{arg} must be TRUE or FALSE.")
+
+  ## error_if_no_match #####
+  if(! is.null(output_attribute)){
+    validate_args(
+      args = input_args_value,
+      arg_names = "age_group",
+      is_valid = function(x){
+        identical(
+          unique(x),
+          unique(output_attribute$health_detailed$results_raw$age_group))},
+      message = "{arg} must be identical to the values in the column {arg} in output_attribute.")
+  }
+
+
+
+  
 
   # * If available output_attribute ########
   if ( has_output_attribute ) {
+
+    # The impacts are grouped below only by geographic unit, age group and
+    # social quantile. Subgroups kept apart with the argument main_results_by of
+    # attribute_health() (e.g. one exposure-outcome pair each) would therefore
+    # be pooled into one single social gradient. They cannot be entered in the
+    # arguments of this function either (there is no info argument here), so
+    # one subgroup at a time is the only meaningful input
+    results_by_age_group <-
+      output_attribute$health_detailed$results_by_age_group
+
+    info_cols <-
+      names(results_by_age_group)[
+        grepl("^info", names(results_by_age_group))]
+
+    if (any(purrr::map_lgl(
+      info_cols,
+      ~ dplyr::n_distinct(results_by_age_group[[.x]]) > 1))) {
+
+      stop(
+        paste0(
+          "socialize() can only be applied to one subgroup at a time, but ",
+          "the results keep several of them apart (see the argument ",
+          "main_results_by of attribute_health()).\n",
+          "Please, call attribute_health() once per subgroup ",
+          "(e.g. once per exposure-outcome pair) and then ",
+          "socialize() on each of the results."),
+        call. = FALSE)
+    }
 
     ## Compile input data
     ## without social component
@@ -350,11 +289,11 @@ socialize <- function(output_attribute = NULL,
         tibble::tibble(
           age_group = age_group,
           ref_prop_pop = ref_prop_pop) |>
-        base::unique()
+        unique()
 
       # * * If NOT available ref_prop_pop ################
       ## Calculate it using populations
-      } else if (base::is.null(ref_prop_pop)){
+      } else if (is.null(ref_prop_pop)){
 
         ref_prop_pop_table <-
           get_ref_prop_pop(df = input_data)
@@ -389,7 +328,7 @@ socialize <- function(output_attribute = NULL,
         ## the users read their data.
         ## Doing unique(social_indicator) has the risk that several geo_ids have
         ## the same value for the social_indicator
-        base::unique()
+        unique()
 
         # * *  If available ref_prop_pop ################
 
@@ -401,10 +340,10 @@ socialize <- function(output_attribute = NULL,
             tibble::tibble(
               age_group = input_data$age_group,
               ref_prop_pop = ref_prop_pop) |>
-            base::unique()
+            unique()
 
           # * * If NOT available ref_prop_pop ################
-        } else if(base::is.null(ref_prop_pop)) {
+        } else if(is.null(ref_prop_pop)) {
           ref_prop_pop_table <-
             get_ref_prop_pop(df = input_data)
           }
@@ -420,37 +359,72 @@ socialize <- function(output_attribute = NULL,
     social_component <-
       tibble::tibble(geo_id_micro = geo_id_micro,
                      social_quantile = social_quantile) |>
-      base::unique()
+      unique()
 
 
     # * If NOT available social_decile, then social_indicator and n_quantile #########
     } else if (has_social_indicator){
+
+      ## Warn about the geographic units without social indicator.
+      ## They cannot be assigned to a quantile of deprivation, so they are
+      ## excluded from the comparison between quantiles below. Silently
+      ## dropping them made it hard to notice that they were reported as the
+      ## least deprived group
+      n_geo_id_micro_without_social_indicator <-
+        social_component_before_quantile |>
+        dplyr::filter( is.na(social_indicator) ) |>
+        dplyr::pull(geo_id_micro) |>
+        dplyr::n_distinct()
+
+      if ( n_geo_id_micro_without_social_indicator > 0 ) {
+        warning(
+          paste0(
+            n_geo_id_micro_without_social_indicator,
+            " geographic unit(s) have no value in social_indicator. ",
+            "They get no social_quantile and are therefore not included in ",
+            "the comparison between the quantiles (first and last), ",
+            "but they are still part of the overall values."),
+          call. = FALSE)
+      }
+
       social_component_before_quantile <-
         social_component_before_quantile |>
         ## Remove rows with NA in social_indicator
-        dplyr::filter( !base::is.na(social_indicator) )
+        dplyr::filter( !is.na(social_indicator) )
+
+      # The ranking is reversed in one of the two cases so that rank 1 always
+      # goes to the most deprived geographic unit, whichever direction the
+      # social indicator runs in. Only then does the first quantile mean the
+      # same thing in both cases, which is what the comparison between the
+      # first and the last quantile below relies on
 
       # * * If increasing_deprivation #########
       if (increasing_deprivation) {
 
         social_component <- social_component_before_quantile |>
           dplyr::mutate(
-            social_ranking = base::rank(-social_indicator, na.last = "keep", ties.method = "random"))
+            social_ranking = rank(-social_indicator, na.last = "keep", ties.method = "min"))
 
 
       } else if(decreasing_deprivation) {
         # * * If NOT increasing_deprivation, i.e. decreasing #########
         social_component <- social_component_before_quantile |>
           dplyr::mutate(
-            social_ranking = base::rank(social_indicator, na.last = "keep", ties.method = "random"))
+            social_ranking = rank(social_indicator, na.last = "keep", ties.method = "min"))
       }
 
       # Add quantile which is common for both case increasing and decreasing deprivation
+      # The cut is applied to the ranking and not to the social indicator
+      # itself, so that every quantile holds about the same number of
+      # geographic units even if the indicator is skewed
       social_component <- social_component|>
         dplyr::mutate(
-          social_quantile = base::cut(
+          social_quantile = cut(
             social_ranking,
-            breaks = stats::quantile(social_ranking, probs = seq(0, 1, by = 0.1)),
+            breaks = 
+              stats::quantile(
+                social_ranking, 
+                probs = seq(0, 1, length.out = n_quantile + 1)),
             labels = FALSE, include.lowest = TRUE
           ))
 
@@ -461,13 +435,13 @@ socialize <- function(output_attribute = NULL,
     ## Add social_quantile (removing the other columns in social_component)
     dplyr::left_join(
       input_data,
-      base::unique(social_component[, c("geo_id_micro", "social_quantile")]),
+      unique(social_component[, c("geo_id_micro", "social_quantile")]),
       by = "geo_id_micro") |>
     ## Add age_order
     dplyr::left_join(
       tibble::tibble(
-        age_group = base::unique(input_data$age_group),
-        age_order = 1 : base::length(age_group)),
+        age_group = unique(input_data$age_group),
+        age_order = 1 : length(age_group)),
       by = "age_group") |>
     ## Add ref_prop_pop
     dplyr::left_join(
@@ -487,8 +461,8 @@ socialize <- function(output_attribute = NULL,
     ## Group by geo_id and age group to obtain impact rates at that level
     dplyr::summarize(
       .by = c(social_quantile, age_group, age_order, ref_prop_pop),
-      population_sum = base::sum(population, na.rm = TRUE),
-      impact_sum = base::sum(impact, na.rm = TRUE)) |>
+      population_sum = sum(population, na.rm = TRUE),
+      impact_sum = sum(impact, na.rm = TRUE)) |>
     dplyr::mutate(
       impact_rate = impact_sum / population_sum * 1e5,
       impact_rate_std = impact_rate * ref_prop_pop)
@@ -500,9 +474,9 @@ socialize <- function(output_attribute = NULL,
     # and impact_rate_std (but not impact_rate)
     dplyr::summarize(
       .by = social_quantile,
-      population_sum = base::sum(population_sum, na.rm = TRUE),
-      impact_sum = base::sum(impact_sum, na.rm = TRUE),
-      impact_rate_std = base::sum(impact_rate_std, na.rm = TRUE))|>
+      population_sum = sum(population_sum, na.rm = TRUE),
+      impact_sum = sum(impact_sum, na.rm = TRUE),
+      impact_rate_std = sum(impact_rate_std, na.rm = TRUE))|>
     # Order rows by social quantile
     dplyr::arrange(social_quantile)|>
     # Calculate impact rate based on population and impact
@@ -517,10 +491,10 @@ socialize <- function(output_attribute = NULL,
   ## Only one step by quantile
 
   ## Define first the variables for if statements
-  has_bhd <- "bhd" %in% base::names(input_data_with_quantile)
-  has_population <- "population" %in% base::names(input_data_with_quantile)
-  has_exp <- "exp" %in% base::names(input_data_with_quantile)
-  has_pop_fraction <- "pop_fraction" %in% base::names(input_data_with_quantile)
+  has_bhd <- "bhd" %in% names(input_data_with_quantile)
+  has_population <- "population" %in% names(input_data_with_quantile)
+  has_exp <- "exp" %in% names(input_data_with_quantile)
+  has_pop_fraction <- "pop_fraction" %in% names(input_data_with_quantile)
 
 
   ## Define function to get_other_parameters()
@@ -529,13 +503,13 @@ socialize <- function(output_attribute = NULL,
     other_parameters <- df |>
 
       dplyr::summarize(
-        impact_mean = base::mean(impact, na.rm = TRUE),
-        bhd_sum = if (has_bhd) base::sum(bhd, na.rm = TRUE) else NULL,
-        population_sum = if (has_population) base::sum(population, na.rm = TRUE) else NULL,
-        bhd_mean = if (has_bhd) base::mean(bhd, na.rm = TRUE) else NULL,
-        exp_mean = if (has_exp & is.numeric(exp)) base::mean(exp, na.rm = TRUE) else NULL, # In absolute risk exp is string (pasted)
+        impact_mean = mean(impact, na.rm = TRUE),
+        bhd_sum = if (has_bhd) sum(bhd, na.rm = TRUE) else NULL,
+        population_sum = if (has_population) sum(population, na.rm = TRUE) else NULL,
+        bhd_mean = if (has_bhd) mean(bhd, na.rm = TRUE) else NULL,
+        exp_mean = if (has_exp & is.numeric(exp)) mean(exp, na.rm = TRUE) else NULL, # In absolute risk exp is string (pasted)
         exp_sd = if (has_exp & is.numeric(exp)) stats::sd(exp, na.rm = TRUE) else NULL, # In absolute risk exp is string (pasted)
-        pop_fraction_mean = if (has_pop_fraction) base::mean(pop_fraction, na.rm = TRUE) else NULL,
+        pop_fraction_mean = if (has_pop_fraction) mean(pop_fraction, na.rm = TRUE) else NULL,
         .groups = "drop") |>
         dplyr::mutate(
           bhd_rate = if (has_bhd && has_population) bhd_sum * 1e5 / population_sum else NULL
@@ -554,9 +528,16 @@ socialize <- function(output_attribute = NULL,
   ## Put together input rates and other parameters
   parameters_by_quantile <-
     dplyr::left_join(impact_rates_by_quantile,
-                     other_parameters_by_quantile,
-                     # common columns
-                     by = c("social_quantile", "population_sum"))
+                     # population_sum is dropped and not used as a joining
+                     # column: it is a computed double and the two tables add
+                     # up the population in a different order (here the
+                     # subtotals by age group, there the population directly),
+                     # so the two values can differ in the last bits and the
+                     # join then silently returned NA in all the columns of
+                     # other_parameters. 
+                     other_parameters_by_quantile |>
+                       dplyr::select(-dplyr::any_of("population_sum")),
+                     by = "social_quantile")
 
   # * _overall ############
 
@@ -569,17 +550,17 @@ socialize <- function(output_attribute = NULL,
     dplyr::group_by(age_group, age_order, ref_prop_pop) |>
     ## Without grouping because it is overall
     dplyr::summarize(
-      impact_sum = base::sum(impact_sum, na.rm = TRUE),
-      population_sum = base::sum(population_sum, na.rm = TRUE)) |>
+      impact_sum = sum(impact_sum, na.rm = TRUE),
+      population_sum = sum(population_sum, na.rm = TRUE)) |>
     dplyr::mutate(
       impact_rate = impact_sum / population_sum * 1E5,
       impact_rate_std = impact_rate * ref_prop_pop) |>
     dplyr::ungroup() |>
     # Now total
     dplyr::summarize(
-      impact_sum = base::sum(impact_sum, na.rm = TRUE),
-      population_sum = base::sum(population_sum, na.rm = TRUE),
-      impact_rate_std = base::sum(impact_rate_std, na.rm = TRUE)) |>
+      impact_sum = sum(impact_sum, na.rm = TRUE),
+      population_sum = sum(population_sum, na.rm = TRUE),
+      impact_rate_std = sum(impact_rate_std, na.rm = TRUE)) |>
     dplyr::mutate(
       impact_rate = impact_sum / population_sum * 1E5)
 
@@ -592,11 +573,13 @@ socialize <- function(output_attribute = NULL,
     get_other_parameters()
 
   ## All parameters together
+  ## Both tables have exactly one row (the overall level), so they are simply
+  ## put next to each other. Joining them by the computed population_sum was
+  ## not needed and had the same problem as the join by quantile above
   parameters_overall <-
-    dplyr::left_join(impact_rates_overall,
-                     other_parameters_overall,
-                     # common columns
-                     by = c("population_sum"))
+    dplyr::bind_cols(impact_rates_overall,
+                     other_parameters_overall |>
+                       dplyr::select(-dplyr::any_of("population_sum")))
 
   ## Prepared to be joined below
   parameters_overall_prepared <-
@@ -611,6 +594,16 @@ socialize <- function(output_attribute = NULL,
 
   social_calculation <-
     parameters_by_quantile |>
+    ## The geographic units without social_indicator get no social_quantile
+    ## (see above). They are part of the population, so they are kept in the
+    ## results by quantile and in the overall values, but they must not be
+    ## taken as the most or the least deprived group: arrange() puts NA last,
+    ## so last() reported them as the least deprived quantile
+    dplyr::filter(!is.na(social_quantile)) |>
+    ## Order by quantile so that first() and last() below really refer to the
+    ## most and the least deprived quantile and do not depend on the order in
+    ## which the rows happen to arrive
+    dplyr::arrange(social_quantile) |>
     ## Pivot longer to prepare the data and have a column for parameter
     tidyr::pivot_longer(cols = -social_quantile,
                         names_to = "parameter",
@@ -657,13 +650,13 @@ socialize <- function(output_attribute = NULL,
       ## Write the readable names fo the parameters
       parameter_string =
         dplyr::case_when(
-          base::grepl("exp_", parameter) ~ "exposure",
-          base::grepl("bhd_", parameter) ~ "baseline health data",
-          base::grepl("pop_fraction_", parameter) ~ "population attributable fraction",
-          base::grepl("impact_", parameter) ~ "impact"),
+          grepl("exp_", parameter) ~ "exposure",
+          grepl("bhd_", parameter) ~ "baseline health data",
+          grepl("pop_fraction_", parameter) ~ "population attributable fraction",
+          grepl("impact_", parameter) ~ "impact"),
       ## Replace "quantile" with "last_quantile"
       difference_compared_with =
-        base::gsub("quantile", "last_quantile", difference_compared_with),
+        gsub("quantile", "last_quantile", difference_compared_with),
       ## Flag attributable fraction
       is_paf_from_deprivation =
         difference_type == "relative" & difference_compared_with == "overall",
@@ -673,9 +666,9 @@ socialize <- function(output_attribute = NULL,
       comment =
         dplyr::case_when(
           is_paf_from_deprivation ~
-            base::paste0("It can be interpreted as fraction attributable to deprivation"),
+            paste0("It can be interpreted as fraction attributable to deprivation"),
           is_attributable_from_deprivation ~
-            base::paste0("It can be interpreted as ", parameter_string, " attributable to deprivation"))) |>
+            paste0("It can be interpreted as ", parameter_string, " attributable to deprivation"))) |>
     ## Remove columns that are not needed anymore
     dplyr::select(-is_paf_from_deprivation,
                   -is_attributable_from_deprivation,
@@ -688,7 +681,7 @@ socialize <- function(output_attribute = NULL,
   ## * If available output_attribute ######
   if ( has_output_attribute ) {
     output_social <-
-      base::list(health_main = output_attribute[["health_main"]],
+      list(health_main = output_attribute[["health_main"]],
                  health_detailed = output_attribute[["health_detailed"]])
 
     ## * If NOT available output_attribute, i.e. if argument impact #######
@@ -696,7 +689,7 @@ socialize <- function(output_attribute = NULL,
   } else if (has_impact ){
 
     output_social <-
-      base::list()
+      list()
   }
 
   output_social[["social_main"]] <-

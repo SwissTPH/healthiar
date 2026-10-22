@@ -102,7 +102,7 @@ exdat_socialize <- dplyr::bind_rows(
   # Be sure that there is no negative numbers
   dplyr::mutate(
     dplyr::across(c(MORTALITY_TOTAL, POPULATION, PM25_MEAN),
-                  ~ base::pmax(.x, 0))) |>
+                  ~ pmax(.x, 0))) |>
   # Keep only relevant columns
   dplyr::select(
     NUTS1,

@@ -7,9 +7,8 @@
 collapse_df_by_group(
   df,
   group_col_names,
-  multi_value_col_names = NULL,
-  ci_col_names = NULL,
-  only_unique_rows = TRUE
+  sum_col_names = NULL,
+  multi_value_col_names = NULL
 )
 }
 \arguments{
@@ -17,17 +16,16 @@ collapse_df_by_group(
 
 \item{group_col_names}{\code{String vector} containing the column names in \code{df} that serve as grouping columns.}
 
+\item{sum_col_names}{\code{String vector} containing the column names in \code{df} that have to be summed within each group (e.g. impacts). Optional.}
+
 \item{multi_value_col_names}{\code{String vector} containing the columns names in \code{df} that do not have a unique value (but different values).}
-
-\item{ci_col_names}{\code{String vector} containing the column names in \code{df} that refer to confidence interval bounds (suffix _ci).}
-
-\item{only_unique_rows}{\code{Boolean} that determines if the final data frame or tibble must only keep unique rows}
 }
 \value{
-This function returns a \code{data frame} or \code{tibble} with lower number rows after collapsing
+This function returns a \code{data frame} or \code{tibble} with one row per group,
+keeping the columns and the column order of \code{df}
 }
 \description{
-This function paste rows with different values and keep only unique rows following grouping columns
+This function aggregates a data frame into one row per group, pasting the values of the columns that have different values within a group and (optionally) summing the columns specified in \code{sum_col_names}
 }
 \author{
 Alberto Castro & Axel Luyten

@@ -31,6 +31,7 @@
 #' \itemize{
 #'  \item \code{geo_id_micro}, \code{geo_id_macro},
 #'  \item \code{age_group}, \code{sex}, \code{info}, \code{population}
+#'  \item \code{threshold}
 #'  \item \code{dw_central}, \code{dw_lower}, \code{dw_upper}
 #'  \item \code{duration_central}, \code{duration_lower}, \code{duration_upper}
 #'  }
@@ -51,9 +52,6 @@
 #'
 #' \code{exp_central}, \code{exp_lower}, \code{exp_upper}
 #' In case of exposure bands enter only one exposure value per band (e.g. the means of the lower and upper bounds of the exposure bands).
-#'
-#' \code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper}
-#' The cutoff level refers to the exposure level below which no health effects occur in the same unit as the exposure. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
 #'
 #' \code{pop_exp}
 #' \emph{Only applicable in AR pathways; always required.} In AR pathways the population exposed per exposure category is multiplied with the corresonding category-specific risk to obtain the absolute number of people affected by the health outcome.
@@ -77,8 +75,9 @@
 #' \code{age_group}
 #' Can be either \code{numeric} or \code{character}. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}.
 #'
-#' \code{info}
-#' \emph{Optional argument.} Information entered to this argument will be added as column(s) names \code{info_1}, \code{info_2}, \code{info_...} to the results table. These additional columns can be used to further stratify the analysis in a secondary step (see example below).
+
+#' \code{main_results_by}
+#' \emph{Optional argument.} By default the impacts of all subgroups are added up in the main results. That is meaningful for subgroups such as education level, but not for subgroups that quantify overlapping people in different ways, e.g. different exposure-outcome pairs (e.g. PM2.5 and mortality vs. NO2 and asthma) or the same pair with different relative risks for sensitivity analysis. Adding those up would count the same people twice. Enter their names here to keep them as separate rows. See the vignette chapter \emph{Multiple exposure-outcome pairs}.
 #'
 #' \code{population}
 #' \emph{Optional argument.} The population entered here is used to determine impact rate per 100 000 population. Note the requirement for the vector length in the paragraph \emph{Assessment of multiple geographic units} below.
@@ -106,7 +105,8 @@
 #' More specifically, see chapters:
 #' \itemize{
 #'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{Relative risk}
-#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{Absolute risk}}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{Absolute risk}
+#'  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 #'
 #'
 # VALUE ########################################################################
@@ -211,6 +211,7 @@ attribute_health <-
     approach_risk = "relative_risk",
     exp_central, exp_lower = NULL, exp_upper = NULL,
     cutoff_central = 0, cutoff_lower = NULL, cutoff_upper = NULL,
+    threshold = NULL,
     pop_exp = NULL,
     erf_eq_central = NULL, erf_eq_lower = NULL, erf_eq_upper = NULL,
     # RR ONLY
@@ -228,6 +229,7 @@ attribute_health <-
     duration_central = NULL, duration_lower = NULL, duration_upper = NULL,
     # META (OPTIONAL)
     info = NULL,
+    main_results_by = NULL,
     population = NULL){
 
 
@@ -235,41 +237,26 @@ attribute_health <-
     # Get input_args
     # i.e. a list with all argument values and characteristics
     input_args <-
-      get_input_args(environment = base::environment(),
+      get_input_args(environment = environment(),
                      call = match.call())
 
+    # input_args$value already contains ALL arguments of this function
+    # (with the same names as in attribute_master), so they are forwarded with
+    # do.call() instead of one by one. In this way a new argument only has to be
+    # added to the signature and not to the call below, too.
     output <-
-      attribute_master(
-        # RR & AR
-        approach_risk = approach_risk,
-        exp_central = exp_central, exp_lower = exp_lower, exp_upper = exp_upper,
-        cutoff_central = cutoff_central, cutoff_lower = cutoff_lower, cutoff_upper = cutoff_upper,
-        pop_exp = pop_exp,
-        erf_eq_central = erf_eq_central, erf_eq_lower = erf_eq_lower, erf_eq_upper = erf_eq_upper,
-        # RR ONLY
-        rr_central = rr_central, rr_lower = rr_lower, rr_upper = rr_upper,
-        rr_increment = rr_increment,
-        erf_shape = erf_shape,
-        bhd_central = bhd_central, bhd_lower = bhd_lower, bhd_upper = bhd_upper,
-        prop_pop_exp = prop_pop_exp,
-        # ITERATION (OPTIONAL)
-        geo_id_micro = geo_id_micro , geo_id_macro = geo_id_macro,
-        age_group = age_group, # Obligatory for life table approach
-        sex = sex,
-        # META (OPTIONAL)
-        info = info,
-        population = population, # Obligatory for life table approach
-        # YLD (OPTIONAL)
-        dw_central = dw_central, dw_lower = dw_lower, dw_upper = dw_upper,
-        duration_central = duration_central, duration_lower =  duration_lower, duration_upper = duration_upper,
-        # LIFE TABLE (OPTIONAL)
-        is_lifetable = FALSE,
-        min_age = NULL, max_age = NULL,
-        approach_exposure = NULL,
-        approach_newborns = NULL,
-        year_of_analysis = NULL,
-        # INTERNAL ARGUMENTS
-        input_args = input_args)
+      do.call(
+        what = attribute_master,
+        args =
+          c(input_args$value,
+            list(
+              # NO LIFE TABLE in attribute_health()
+              is_lifetable = FALSE,
+              # INTERNAL ARGUMENTS
+              input_args = input_args)),
+        # quote = TRUE so that the argument values (e.g. a function in
+        # erf_eq_central) are not evaluated a second time
+        quote = TRUE)
 
     return(output)
 

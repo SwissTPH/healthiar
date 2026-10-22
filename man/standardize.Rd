@@ -7,7 +7,7 @@
 standardize(output_attribute, age_group, ref_prop_pop = NULL)
 }
 \arguments{
-\item{output_attribute}{\code{List} containing the outputs of the \code{healthiar::attribute_health()} assessments for each age group (each list element should be an age group-specific assessment).}
+\item{output_attribute}{\code{List} containing the output of \strong{one single} \code{healthiar::attribute_...()} call in which the age groups of interest were entered in the argument \code{age_group}, i.e. one assessment stratified by age group and \strong{not} a list of age group-specific assessments.}
 
 \item{age_group}{\code{String vector} with the age groups included in the age standardization. The vector refers to age-dependent data in this function and to \code{output_attribute} (if provided).}
 
@@ -16,9 +16,33 @@ standardize(output_attribute, age_group, ref_prop_pop = NULL)
 \value{
 This function returns a \code{list} containing:
 
-1) \code{health_main} (\code{tibble}) containing the age-standardized main results;
+1) \code{health_main} (\code{tibble}) containing the main results.
+The direct method of standardization applies the age group-specific rates
+observed in the study population to a reference population distribution.
+It therefore standardizes \strong{rates} and not counts:
+\itemize{
+ \item \code{impact_per_100k_inhab} and \code{bhd_per_100k_inhab}
+ (\code{numeric} columns) are age-standardized, i.e. the age group-specific
+ rates weighted with \code{ref_prop_pop};
+ \item \code{pop_fraction} (\code{numeric} column) is the ratio of these two
+ age-standardized rates, i.e. the age-standardized attributable fraction;
+ \item \code{impact}, \code{bhd} and \code{population} (\code{numeric}
+ columns) are the crude totals across the age groups, and \code{exp}
+ (\code{numeric} column) the population-weighted mean exposure.
+ They are \strong{not} standardized: a standardized count would require the
+ absolute size of the reference population, while \code{ref_prop_pop}
+ provides only its age distribution.
+ }
+Note that all results are identical to the crude ones if
+\code{ref_prop_pop} is not entered, because in that case the age
+distribution of the study population itself is taken as reference.
 
-2) \code{health_detailed} (\code{tibble}) containing the results per age group.
+2) \code{health_detailed} (\code{tibble}) containing the results per age
+group, including the interim columns of the standardization. The columns
+ending in \code{_std} are the contribution of each age group and add up to
+the corresponding column of \code{health_main}, i.e.
+\code{sum(impact_per_100k_inhab_std)}, \code{sum(exp_std)} and
+\code{sum(pop_fraction_std)}.
 }
 \description{
 This function obtains age-standardized health impacts based on multiple age-group specific assessments
@@ -43,8 +67,22 @@ More specifically, see chapters:
  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#standardization}{Standardization}}
 
 This function works after running \code{attribute_health()} or \code{attribute_lifetable()} functions.
-If you want to use it in combination with compare(),
-please standardize first the results of attribute functions and then compare.
+
+\strong{Combination with compare()}
+
+Age-standardized results cannot currently be compared with \code{compare()}.
+\code{compare()} reads the results by age group of each assessment, i.e.
+\code{health_detailed$results_raw}, which \code{standardize()} passes on
+unchanged: the standardization is in \code{health_main} and in
+\code{health_detailed$impact_std_by_age_group}, so applying
+\code{compare()} to the output of \code{standardize()} gives exactly the
+same result as applying it to the assessments themselves.
+The other way round does not work either, because a comparison has one
+exposure and one population per scenario and therefore none of the columns
+that \code{standardize()} needs.
+To compare two scenarios in terms of age-standardized rates, apply
+\code{standardize()} to each of them and compare the resulting
+\code{health_main$impact_per_100k_inhab} directly.
 }
 \examples{
 # Goal: age-standardize two age group-specific impacts

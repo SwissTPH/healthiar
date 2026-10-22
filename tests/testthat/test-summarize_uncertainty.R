@@ -11,7 +11,7 @@
 
 testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd_with_summary_uncertainty <-
     healthiar::attribute_health(
@@ -48,7 +48,7 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_inc
 testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_function|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+  data <- readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
 
   data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
 
@@ -126,7 +126,7 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_fun
 testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_formula|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+  data <- readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
 
   data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
 
@@ -214,8 +214,13 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_inc
         seed = 123
       )$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2025-10-29; no comparison study
-      c(2853, 936, 6531, 2943, 875, 7232)
+    expected =
+      # Results on 2026-09-03; no comparison study.
+      # Only the estimates of geo unit "a" change compared to the previous
+      # expectation c(2853, 936, 6531, 2943, 875, 7232), because the bhd
+      # interval entered above puts 0.45% of the normal distribution below
+      # zero and those values are now truncated instead of mirrored
+      c(2908, 979, 6531, 2943, 875, 7232)
   )
 })
 
@@ -241,11 +246,21 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_inc
     object =
       healthiar::summarize_uncertainty(
         output_attribute = bestcost_pm_copd_geo_short,
-        n_sim = 100
+        n_sim = 100,
+        # Seed entered explicitly. Without it the expectation below only held
+        # because the runif_with_seed() calls above happened to leave the RNG
+        # in a fixed state
+        seed = 123
       )$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2025-10-29; no comparison study
-      c(16001, 7422, 22292, 16989, 7855, 23587)
+    expected =
+      # Results on 2026-09-03; no comparison study.
+      # The estimates change only marginally compared to the previous
+      # expectation c(15497, 8007, 24682, 16588, 8486, 25928), because the
+      # dominant uncertainty here is rr, which is identical in all geo units
+      # and therefore perfectly correlated in any case. Only exp differs
+      # across geo units and its interval is narrow (+-0.1)
+      c(15503, 8007, 24679, 16574, 8486, 25928)
   )
 })
 
@@ -253,7 +268,7 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_inc
 testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_function|iteration_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+  data <- readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
 
   data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
 
@@ -329,7 +344,7 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_fun
 testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_formula|iteration_TRUE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "roadnoise_HA_Lden_Stavanger_Bergen_.rds"))
+  data <- readRDS(testthat::test_path("testdata", "noise_road_lden_stavanger_bergen.rds"))
 
   data$GEO_ID <- factor(data$GEO_ID, levels = unique(data$GEO_ID))
 
@@ -386,11 +401,62 @@ testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_ar_for
 
 
 
+#### AGGREGATION BY GEO_ID_MACRO ###############################################
+
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_rr_increment|iteration_TRUE|", {
+
+  # The uncertainty of the aggregated geographic unit (geo_id_macro) must be
+  # obtained by summing the impacts of all geo_id_micro within each simulation
+  # and only then taking the quantiles.
+  # Summing instead the central, lower and upper estimates of each geo_id_micro
+  # (as done before) assumes that the uncertainty is perfectly correlated
+  # across the geographic units and overestimates the width of the interval.
+  # Here exp and bhd are simulated separately for each geo_id_micro,
+  # so the two ways of aggregating give clearly different results.
+
+  results_geo <-
+    healthiar::attribute_health(
+      erf_shape = "log_linear",
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      exp_central = rep(8, 4),
+      exp_lower = rep(7, 4),
+      exp_upper = rep(9, 4),
+      cutoff_central = 5,
+      bhd_central = rep(1E5, 4),
+      bhd_lower = rep(5E4, 4),
+      bhd_upper = rep(2E5, 4),
+      geo_id_micro = letters[1:4],
+      geo_id_macro = rep("CH", 4))
+
+  results_geo_summarised <-
+    healthiar::summarize_uncertainty(
+      output_attribute = results_geo,
+      n_sim = 200,
+      seed = 123)
+
+  # Sum the impacts of all geo_id_micro within each simulation
+  impact_by_sim <-
+    results_geo_summarised$uncertainty_detailed$impact_by_sim |>
+    dplyr::summarise(impact = sum(impact),
+                     .by = "sim_id")
+
+  testthat::expect_equal(
+    object = results_geo_summarised$uncertainty_main$impact,
+    # Order of uncertainty_main: central, lower and upper estimate
+    expected =
+      stats::quantile(x = impact_by_sim$impact,
+                      probs = c(0.5, 0.025, 0.975),
+                      names = FALSE))
+})
+
 #### YLD ########################################################################
 
-testthat::test_that("results the same yld |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_yld_singlebhd_with_summary_uncertainty  <-
     healthiar::attribute_health(
@@ -431,7 +497,7 @@ testthat::test_that("results the same yld |pathway_uncertainty|exp_single|erf_rr
 
 testthat::test_that("results the same |pathway_uncertainty|exp_dist|erf_rr_increment|iteration_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ihd_excel.rds"))
+  data_raw <- readRDS(testthat::test_path("testdata", "noise_niph_ihd.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
@@ -465,9 +531,9 @@ testthat::test_that("results the same |pathway_uncertainty|exp_dist|erf_rr_incre
 
 ### YLD #########################################################################
 
-testthat::test_that("results the same yld |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
+testthat::test_that("results the same |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
@@ -488,9 +554,56 @@ testthat::test_that("results the same yld |pathway_uncertainty|exp_dist|erf_ar_f
         n_sim = 100,
         seed = 122)$uncertainty_main$impact_rounded,
 
-    expected = # Results on 2025-10-29; no comparison study
-      c(171674, 2430, 614420)
+    expected =
+      # Results on 2026-09-03; no comparison study.
+      # The duration interval entered above (0.1, 1, 10) is strongly
+      # asymmetric, so 35% of the normal distribution falls below zero.
+      # The lower estimate changes a lot compared to the previous expectation
+      # c(171674, 2430, 614420), because those values are now truncated
+      # instead of being mirrored onto the positive side
+      c(175252, 7412, 670185)
   )
+})
+
+### TRUNCATION AT ZERO #########################################################
+
+testthat::test_that("results correct |pathway_uncertainty|exp_single|erf_ar_formula|iteration_FALSE|", {
+
+  # The duration confidence interval entered below is so wide and asymmetric
+  # that about 35% of the corresponding normal distribution falls below zero.
+  # As duration cannot be negative, the distribution is truncated at zero.
+  # The simulated values must therefore follow the normal distribution
+  # truncated at zero and not the mirrored one obtained with abs() before,
+  # which returns a median of about 1.84 instead of 2.13.
+
+  results_duration <-
+    healthiar::attribute_health(
+      approach_risk = "absolute_risk",
+      exp_central = 65,
+      pop_exp = 1E5,
+      erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+      dw_central = 0.02,
+      duration_central = 1,
+      duration_lower = 0.1,
+      duration_upper = 10)
+
+  simulated_duration <-
+    healthiar::summarize_uncertainty(
+      output_attribute = results_duration,
+      n_sim = 1E4,
+      seed = 123)$uncertainty_detailed$impact_by_sim$duration
+
+  # Median of the normal distribution truncated at zero
+  sd_duration <- (10 - 0.1) / (2 * stats::qnorm(0.975))
+  prob_at_zero <- stats::pnorm(q = 0, mean = 1, sd = sd_duration)
+
+  testthat::expect_equal(
+    object = stats::median(simulated_duration),
+    expected =
+      stats::qnorm(p = prob_at_zero + 0.5 * (1 - prob_at_zero),
+                   mean = 1,
+                   sd = sd_duration),
+    tolerance = 0.02)
 })
 
 # COMPARE ########
@@ -539,6 +652,60 @@ testthat::test_that("results the same |pathway_uncertainty_compare|exp_dist|erf_
   )
 })
 
+## PIF #######
+
+testthat::test_that("results the same |pathway_uncertainty_compare_pif|exp_single|erf_rr_increment|iteration_FALSE|", {
+
+  # Before, this call stopped with the error message of the data validation
+  # saying that no uncertainty was entered, because compare() stored the input
+  # table of the pif approach in a different way than the one of the delta
+  # approach and the comparison was therefore not identified as such
+
+  rr_scenario_1 <-
+    healthiar::attribute_health(
+      exp_central = 8,
+      exp_lower = 7,
+      exp_upper = 9,
+      cutoff_central = 5,
+      cutoff_lower = 4,
+      cutoff_upper = 6,
+      bhd_central = 1E5,
+      bhd_lower = 5E4,
+      bhd_upper = 2E5,
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      erf_shape = "log_linear")
+
+  rr_scenario_2 <-
+    healthiar::attribute_mod(
+      output_attribute = rr_scenario_1,
+      exp_central = 7.5,
+      exp_lower = 6.2,
+      exp_upper = 8.1)
+
+  rr_comparison_pif <-
+    healthiar::compare(
+      output_attribute_scen_1 = rr_scenario_1,
+      output_attribute_scen_2 = rr_scenario_2,
+      approach_comparison = "pif")
+
+  testthat::expect_equal(
+    object =
+      healthiar::summarize_uncertainty(
+        output_attribute = rr_comparison_pif,
+        n_sim = 100,
+        seed = 122)$uncertainty_main$impact_rounded,
+
+    expected =
+      # Results on 2026-09-03; no comparison study.
+      # The central estimate is close to the one obtained without
+      # Monte Carlo simulation, i.e. c(556, 291, 820)
+      c(561, 175, 1156)
+  )
+})
+
 ## ITERATION #######
 
 testthat::test_that("summary uncertainty comparison iteration", {
@@ -572,9 +739,62 @@ testthat::test_that("summary uncertainty comparison iteration", {
     object =
       healthiar::summarize_uncertainty(
         output_attribute = comparison_iteration,
-        n_sim = 100)$uncertainty_main$impact_rounded,
-    expected = # Results on 2025-10-29; no comparison study
-      c(1113, 418, 1729)
+        n_sim = 100,
+        # Seed entered explicitly. Without it this test inherited the RNG state
+        # left by the preceding tests, so it was not reproducible standalone
+        seed = 123)$uncertainty_main$impact_rounded,
+    expected = # Results on 2026-09-03; no comparison study
+      c(1111, 737, 1584)
+  )
+})
+
+## SHARED SIMULATED VALUES ACROSS SCENARIOS #######
+
+testthat::test_that("results correct |pathway_uncertainty_compare|exp_single|erf_rr_increment|iteration_FALSE|", {
+
+  # The variables that are common to both scenarios (here rr and bhd) must take
+  # the same simulated value in both scenarios of each simulation.
+  # Therefore, comparing a scenario with an identical one must result in a
+  # delta of exactly zero, also when the user enters no seed.
+  # Otherwise the comparison would show a variability that does not exist,
+  # because it is the very same variable in both scenarios.
+
+  scen_1 <-
+    healthiar::attribute_health(
+      erf_shape = "log_linear",
+      rr_central = 1.118,
+      rr_lower = 1.060,
+      rr_upper = 1.179,
+      rr_increment = 10,
+      exp_central = 8,
+      exp_lower = 7,
+      exp_upper = 9,
+      cutoff_central = 5,
+      bhd_central = 1E5,
+      bhd_lower = 5E4,
+      bhd_upper = 2E5)
+
+  scen_2_identical <-
+    healthiar::attribute_mod(
+      output_attribute = scen_1,
+      # Same values as in scenario 1
+      exp_central = 8,
+      exp_lower = 7,
+      exp_upper = 9)
+
+  comparison_of_identical_scenarios <-
+    healthiar::compare(
+      output_attribute_scen_1 = scen_1,
+      output_attribute_scen_2 = scen_2_identical,
+      approach_comparison = "delta")
+
+  testthat::expect_equal(
+    object =
+      healthiar::summarize_uncertainty(
+        output_attribute = comparison_of_identical_scenarios,
+        # No seed on purpose (see comment above)
+        n_sim = 100)$uncertainty_main$impact,
+    expected = c(0, 0, 0)
   )
 })
 
@@ -583,7 +803,7 @@ testthat::test_that("summary uncertainty comparison iteration", {
 
 testthat::test_that("error_if_erf_eq |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
@@ -609,7 +829,7 @@ testthat::test_that("error_if_erf_eq |pathway_uncertainty|exp_dist|erf_ar_formul
 
 testthat::test_that("error_if_erf_eq  |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_TRUE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
@@ -642,7 +862,7 @@ testthat::test_that("error_if_erf_eq  |pathway_uncertainty|exp_dist|erf_ar_formu
 
 testthat::test_that("error_if_uncertainty_in_exposure_distribution |pathway_uncertainty|exp_dist|erf_ar_formula|iteration_FALSE|", {
 
-  data_raw <- base::readRDS(testthat::test_path("data", "niph_noise_ha_excel.rds"))
+  data_raw <- readRDS(testthat::test_path("testdata", "noise_niph_ha.rds"))
   data  <- data_raw |>
     dplyr::filter(!is.na(data_raw$exposure_mean))
 
@@ -667,9 +887,80 @@ testthat::test_that("error_if_uncertainty_in_exposure_distribution |pathway_unce
     )
 })
 
+testthat::test_that("error_if_erf_eq_only_upper |pathway_uncertainty|exp_single|erf_ar_formula|iteration_FALSE|", {
+
+  # erf_eq is excluded from the validation that requires both the lower and the
+  # upper bound (see validate_input_attribute()), so an assessment with
+  # erf_eq_upper and without erf_eq_lower is a legal input. The guard tested
+  # erf_eq_lower twice and therefore did not catch it: the rows of both
+  # exposure-response functions reached the simulation and the reported
+  # estimates were quantiles of the two of them pooled together
+  bestcost_noise_ha_ar_with_erf_eq_upper <-
+    healthiar::attribute_health(
+      approach_risk = "absolute_risk",
+      exp_central = 65,
+      pop_exp = 1E5,
+      erf_eq_central = "78.9270-3.1162*c+0.0342*c^2",
+      erf_eq_upper = "78.9270-3.1162*c+0.06*c^2",
+      dw_central = 0.02,
+      duration_central = 1,
+      duration_lower = 0.5,
+      duration_upper = 1.5)
+
+  testthat::expect_error(
+    object =
+      summarize_uncertainty(
+        output_attribute = bestcost_noise_ha_ar_with_erf_eq_upper,
+        n_sim = 10,
+        seed = 1),
+    regexp = "Sorry, the summary of uncertainty for erf_eq_... is not currently supported."
+  )
+})
+
+testthat::test_that("error_if_uncertainty_in_exposure_distribution |pathway_uncertainty_compare|exp_dist|erf_rr_increment|iteration_FALSE|", {
+
+  # In a comparison, input_args is the input_args of compare() itself, which
+  # has no element "value". The guard read NULL and could never fire, so the
+  # exposures were recycled over the simulations, i.e. each simulation took the
+  # exposure of one single exposure category instead of the whole distribution
+  scenario_1 <-
+    healthiar::attribute_health(
+      exp_central = c(60, 65, 70),
+      exp_lower = c(59, 64, 69),
+      exp_upper = c(61, 66, 71),
+      prop_pop_exp = c(0.2, 0.3, 0.5),
+      cutoff_central = 50,
+      bhd_central = 1000,
+      rr_central = 1.08,
+      rr_increment = 10,
+      erf_shape = "log_linear")
+
+  scenario_2 <-
+    healthiar::attribute_mod(
+      output_attribute = scenario_1,
+      exp_central = c(55, 60, 65),
+      exp_lower = c(54, 59, 64),
+      exp_upper = c(56, 61, 66))
+
+  comparison <-
+    healthiar::compare(
+      output_attribute_scen_1 = scenario_1,
+      output_attribute_scen_2 = scenario_2,
+      approach_comparison = "delta")
+
+  testthat::expect_error(
+    object =
+      summarize_uncertainty(
+        output_attribute = comparison,
+        n_sim = 5,
+        seed = 1),
+    regexp = "Sorry, the summary of uncertainty for exp_... in exposure distributions is not currently supported."
+  )
+})
+
 testthat::test_that("error_if_no_uncertainty |pathway_uncertainty|exp_single|erf_rr_increment|iteration_FALSE|", {
 
-  data <- base::readRDS(testthat::test_path("data", "airqplus_pm_copd.rds"))
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_copd.rds"))
 
   bestcost_pm_copd_with_summary_uncertainty <-
     healthiar::attribute_health(
@@ -696,7 +987,7 @@ testthat::test_that("error_if_no_uncertainty |pathway_uncertainty|exp_single|erf
 testthat::test_that("error_if_erf_eq_rr_function |pathway_uncertainty|exp_dist|erf_rr_function|iteration_FALSE|", {
 
   ## IF APPLICABLE: LOAD INPUT DATA BEFORE RUNNING THE FUNCTION
-  data <- base::readRDS(testthat::test_path("data", "LMU_O3_COPD_mort_2016.rds"))
+  data <- readRDS(testthat::test_path("testdata", "ozone_copd_mort_2016.rds"))
   erf<-splinefun(data$x, data$y, method="natural")
   erf_l<-splinefun(data$x, data$y_l, method="natural")
   erf_u<-splinefun(data$x, data$y_u, method="natural")
@@ -736,3 +1027,30 @@ testthat::test_that("error_if_erf_eq_rr_function |pathway_uncertainty|exp_dist|e
 
 ## WARNING #########
 
+
+
+## NOT SUMMED #################################################################
+
+testthat::test_that("error if main_results_by and summarize_uncertainty", {
+
+  # The values are simulated per geographic unit assuming one single relative
+  # risk, so subgroups kept apart with main_results_by cannot be simulated together
+  output_attribute <-
+    healthiar::attribute_health(
+      info = data.frame(pair = c("copd", "asthma")),
+      main_results_by = "pair",
+      exp_central = c(8.85, 22.1),
+      exp_lower = c(8, 20),
+      exp_upper = c(10, 24),
+      cutoff_central = c(5, 10),
+      bhd_central = c(30747, 12000),
+      rr_central = c(1.118, 1.041),
+      rr_lower = c(1.060, 1.020),
+      rr_upper = c(1.179, 1.060),
+      rr_increment = 10,
+      erf_shape = "log_linear")
+
+  testthat::expect_error(
+    object = healthiar::summarize_uncertainty(output_attribute, n_sim = 20),
+    regexp = "only be applied to one subgroup")
+})

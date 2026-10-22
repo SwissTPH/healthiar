@@ -32,14 +32,14 @@ get_impact <-
 
     # Useful Variables ######
     # To be used in the if statements below
-    is_relative_risk <- base::unique(input_table$approach_risk) == "relative_risk"
-    is_absolute_risk <- base::unique(input_table$approach_risk) == "absolute_risk"
+    is_relative_risk <- unique(input_table$approach_risk) == "relative_risk"
+    is_absolute_risk <- unique(input_table$approach_risk) == "absolute_risk"
 
-    is_lifetable <- base::unique(input_table$is_lifetable)
+    is_lifetable <- unique(input_table$is_lifetable)
     is_not_lifetable <- !is_lifetable
 
-    population_is_available <- "population" %in% base::names(input_table)
-    dw_is_available <- "dw" %in% base::names(input_table)
+    population_is_available <- "population" %in% names(input_table)
+    dw_is_available <- "dw" %in% names(input_table)
 
     # Default value of interim results
     # If there are interim results from the calculation (e.g. life table method)
@@ -67,7 +67,7 @@ get_impact <-
 
         } else if (is_lifetable) {
           ## ** If is_lifetable ##########################################################
-
+          
           # Calculate impact
           # using get_impact_with_lifetable().
           # The function is not used somewhere else
@@ -89,12 +89,34 @@ get_impact <-
 
         # Calculate absolute risk for each exposure category
         # Absolute risk is only possible without life table method
+
+        # threshold is only a column in input_table
+        # if the user entered a value for it.
+        # If NULL, get_risk() anchors the exposure-response function at the cutoff
+        # and no exposure category is below the cutoff
+        if ( ! "threshold" %in% names(input_table) ) {
+          threshold <- NULL
+          is_below_cutoff <- rep(FALSE, nrow(input_table))
+        } else {
+          is_below_cutoff <-
+            !is.na(input_table$threshold) &
+            input_table$cutoff > input_table$threshold &
+            input_table$exp < input_table$cutoff
+        }
+
         results_raw <- input_table |>
           # To calculate health impacts with absolute risk
           # no pop_fraction is used,
           # therefore it is based on input_table instead of input_with_risk_and_pop_fraction
           dplyr::mutate(
-            absolute_risk_as_percent = get_risk(exp = exp, erf_eq = erf_eq),
+            absolute_risk_as_percent =
+              # If the cut-off is higher than the effect threshold,
+              # then the exposures below the cut-off are not quantified
+              ifelse(
+                is_below_cutoff,
+                0,
+                get_risk(exp = exp, erf_eq = erf_eq,
+                         cutoff = cutoff, threshold = threshold)),
             impact = absolute_risk_as_percent/100 * pop_exp)
       }
 
@@ -116,7 +138,7 @@ get_impact <-
 
     # Rounded impact ##############
     results_raw <- results_raw |>
-      dplyr::mutate(impact_rounded = base::round(impact, 0))
+      dplyr::mutate(impact_rounded = round(impact, 0))
 
     # Impact per 100K inhabitants ##################################
 
@@ -127,12 +149,12 @@ get_impact <-
         )
     }
 
-    out <- base::list(
+    output <- list(
       results_raw = results_raw,
       intermediate_calculations = intermediate_calculations
     )
 
 
-  return(out)
+  return(output)
 
   }

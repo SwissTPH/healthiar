@@ -12,6 +12,7 @@ attribute_health(
   cutoff_central = 0,
   cutoff_lower = NULL,
   cutoff_upper = NULL,
+  threshold = NULL,
   pop_exp = NULL,
   erf_eq_central = NULL,
   erf_eq_lower = NULL,
@@ -36,6 +37,7 @@ attribute_health(
   duration_lower = NULL,
   duration_upper = NULL,
   info = NULL,
+  main_results_by = NULL,
   population = NULL
 )
 }
@@ -44,7 +46,9 @@ attribute_health(
 
 \item{exp_central, exp_lower, exp_upper}{\code{Numeric value} or \code{numeric vector} specifying the \strong{exposure level(s)} to the environmental stressor and (optionally) the corresponding lower and upper bound of the 95\% confidence interval. See Details for more info.}
 
-\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value} and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0. See Details for more info.}
+\item{cutoff_central, cutoff_lower, cutoff_upper}{\code{Numeric value} specifying the \strong{exposure cut-off value}, i.e. the exposure level below which no health impacts are quantified, and (optionally) the corresponding lower and upper 95\% confidence interval bounds. Default: 0, or same value as \code{threshold}, if it is entered. If \code{cutoff} is higher than \code{threshold}, the exposure-response function is truncated at the cut-off value. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
+
+\item{threshold}{\code{Numeric value} specifying the \strong{effect threshold}, i.e. the exposure level from which the exposure-response function starts to show an effect. It is the anchor of the curve and is therefore subtracted from the exposure. Default: same value as the cut-off. Expressed in the same unit as the exposure. See the vignette chapter \emph{Cut-off vs. threshold}.}
 
 \item{pop_exp}{\code{Numeric vector} specifying the absolute size of the \strong{population(s) exposed} to each exposure category. See Details for more info. \emph{Only applicable in AR pathways; always required.}}
 
@@ -54,11 +58,11 @@ attribute_health(
 
 \item{rr_increment}{\code{Numeric value} specifying the \strong{exposure increment} for which the provided relative risk is valid. See Details for more info. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
-\item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
+\item{erf_shape}{\code{String value} specifying the \strong{exposure-response function shape} to be assumed. Options (no default): \code{"linear"}, \code{log_linear}", \code{"linear_log"}, \code{"log_log"}. Input exposure values must be expressed in same unit as the increment of the relative risk. The re-scale of the relative risk is unbounded above and users are responsible for the plausible range. \emph{Only applicable in RR pathways; not required if \code{erf_eq_...} argument(s) already specified.}}
 
 \item{bhd_central, bhd_lower, bhd_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{baseline health data} of the health outcome of interest in the study population and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. See Details for more info. \emph{Only applicable in RR pathways; always required.}}
 
-\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category). Default: 1. See Details for more info. \emph{Only applicable in RR pathways.}}
+\item{prop_pop_exp}{\code{Numeric value} or \code{numeric vector} specifying the \strong{population fraction(s) exposed} for each exposure (category), i.e. the proportion of the \strong{total} population that falls in each exposure category. Default: 1. The fractions do not have to add up to 1: the part of the population that they do not cover is treated as unexposed, i.e. it gets the relative risk of the reference level. E.g, in air pollution assessments everybody is usually exposed and the fractions add up to 1, whereas in noise assessments they typically add up to less than 1, because exposure is only reported above a given level. Accordingly, \code{bhd_...} must always refer to the total population. See Details for more info. \emph{Only applicable in RR pathways.}}
 
 \item{geo_id_micro, geo_id_macro}{\code{Numeric vector} or \code{string vector} providing \strong{unique IDs of the geographic area} considered in the assessment (\code{geo_id_micro}) and (optionally) providing higher-level IDs (\code{geo_id_macro}) to aggregate the geographic areas at. See Details for more info. \emph{Only applicable in assessments with multiple geographic units.}}
 
@@ -70,7 +74,9 @@ attribute_health(
 
 \item{duration_central, duration_lower, duration_upper}{\code{Numeric value} or \code{numeric vector} providing the \strong{duration} associated with the morbidity health outcome of interest in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval. Default: 1. See Details for more info. \emph{Only applicable in assessments of YLD (years lived with disability).}}
 
-\item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. See Details for more info. \emph{Optional argument.}}
+\item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. This will be added to the results table as column(s) keeping the name(s) that you entered with the prefix \code{info_} (e.g. a column \code{education} becomes \code{info_education}) if a \code{data frame} is entered, or as one single column called \code{info} if a vector is entered. These additional columns can be used to further stratify the analysis in a secondary step. \emph{Optional argument.}}
+
+\item{main_results_by}{\code{Character vector} naming the \strong{dimensions that the main results are reported by}, i.e. the dimensions whose impacts must never be added together, e.g. different exposure-outcome pairs. By default all dimensions except the geographic units and the uncertainty (\code{_ci}) columns are summed in the main results. Names entered here are kept as separate rows instead. Options: the columns of \code{info} (named as you named them, or \code{"info"} if you entered a vector instead of a data frame), \code{"sex"}, \code{"age_group"}, \code{"exp_category"}, \code{"geo_id_micro"}, \code{"geo_id_macro"} and, in \code{attribute_lifetable()}, \code{"year"}. Note that this argument does not create the \code{results_by_...} tables of the detailed output, which are available anyway: it determines which dimensions survive in \code{health_main} and in all of them. See the vignette chapter \emph{Multiple exposure-outcome pairs}. \emph{Optional argument.}}
 
 \item{population}{\code{Numeric vector} \strong{\code{For attribute_lifetable()}}, it is an \emph{obligatory argument} specifying the \strong{mid-year populations} per age (i.e. age group size = 1 year) for the (first) year of analysis.
 \strong{\code{For attribute_health()}} it is an \emph{optional argument} which specifies the \strong{population used to calculate attributable impacts rate} per 100 000 population. See Details for more info.}
@@ -125,6 +131,7 @@ Arguments only for \strong{RR} pathways
 \itemize{
  \item \code{geo_id_micro}, \code{geo_id_macro},
  \item \code{age_group}, \code{sex}, \code{info}, \code{population}
+ \item \code{threshold}
  \item \code{dw_central}, \code{dw_lower}, \code{dw_upper}
  \item \code{duration_central}, \code{duration_lower}, \code{duration_upper}
  }
@@ -141,9 +148,6 @@ The health metric you put in (e.g. absolute disease cases, deaths per 100 000 po
 
 \code{exp_central}, \code{exp_lower}, \code{exp_upper}
 In case of exposure bands enter only one exposure value per band (e.g. the means of the lower and upper bounds of the exposure bands).
-
-\code{cutoff_central}, \code{cutoff_lower}, \code{cutoff_upper}
-The cutoff level refers to the exposure level below which no health effects occur in the same unit as the exposure. If exposure categories are used, the length of this input must be the same as in the \code{exp_...} argument(s).
 
 \code{pop_exp}
 \emph{Only applicable in AR pathways; always required.} In AR pathways the population exposed per exposure category is multiplied with the corresonding category-specific risk to obtain the absolute number of people affected by the health outcome.
@@ -167,8 +171,8 @@ Consequently, the vectors fed to \code{geo_id_micro} and \code{geo_id_macro} mus
 \code{age_group}
 Can be either \code{numeric} or \code{character}. If it is numeric, it refers to the first age of the age group. E.g. \code{c(0, 40, 80)} means age groups \code{[0, 40), [40, 80), >=80]}.
 
-\code{info}
-\emph{Optional argument.} Information entered to this argument will be added as column(s) names \code{info_1}, \code{info_2}, \code{info_...} to the results table. These additional columns can be used to further stratify the analysis in a secondary step (see example below).
+\code{main_results_by}
+\emph{Optional argument.} By default the impacts of all subgroups are added up in the main results. That is meaningful for subgroups such as education level, but not for subgroups that quantify overlapping people in different ways, e.g. different exposure-outcome pairs (e.g. PM2.5 and mortality vs. NO2 and asthma) or the same pair with different relative risks for sensitivity analysis. Adding those up would count the same people twice. Enter their names here to keep them as separate rows. See the vignette chapter \emph{Multiple exposure-outcome pairs}.
 
 \code{population}
 \emph{Optional argument.} The population entered here is used to determine impact rate per 100 000 population. Note the requirement for the vector length in the paragraph \emph{Assessment of multiple geographic units} below.
@@ -196,7 +200,8 @@ is available in the package vignette.
 More specifically, see chapters:
 \itemize{
  \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#relative-risk}{Relative risk}
- \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{Absolute risk}}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#absolute-risk}{Absolute risk}
+ \item \href{https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#cutoff-vs-threshold}{Cut-off vs. threshold}}
 }
 \examples{
 # Goal: attribute lung cancer cases to population-weighted PM2.5 exposure

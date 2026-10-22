@@ -15,3 +15,5 @@
 ^\.github$
 ^paper$
 ^\.zenodo\.json$
+^CITATION\.cff$
+^\.claude$

@@ -36,34 +36,56 @@ get_output <-
     # Store set of columns ###################################
     # Variables to be used below
 
+    # Store column names of results_raw
+    # because it is to be used often below
+    colnames_results_raw <- names(results_raw)
+
+    # Columns added by add_info(), i.e. "info" if the user entered a vector and
+    # info_<name of the column entered by the user> if the user entered a
+    # data frame.
+    # They are id columns like sex or age_group: they can define subgroups and
+    # they are summed over by default (see the exclusions below)
+    info_cols <- grep("^info", colnames_results_raw, value = TRUE)
+
+    # Dimensions whose impacts must never be added together,
+    # e.g. different exposure-outcome pairs.
+    # The user enters the column names of info without prefix, while
+    # add_info() adds it, so they are resolved here.
+    # NULL$value is NULL, so this also works when get_output() is called
+    # without input_args (e.g. from multiexpose())
+    main_results_by <- input_args$value$main_results_by
+    info_names <- names(input_args$value$info)
+
+    if (!is.null(main_results_by) && !is.null(info_names)) {
+      main_results_by <-
+        purrr::map_chr(
+          main_results_by,
+          ~ if (.x %in% info_names) {paste0("info_", .x)} else {.x})
+    }
+
     # ID columns
     id_cols <- c("geo_id_macro", "geo_id_micro",
                  "exp_name",
                  "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci",
-                 "year", "exp_category", "sex", "age_group")
-
-    # Store column names of results_raw
-    # because it is to be used often below
-    colnames_results_raw <- base::names(results_raw)
+                 "year", "exp_category", "sex", "age_group",
+                 info_cols)
 
     # Store those id_columns that are present in results_raw
     id_cols_available <-
-      base::intersect(id_cols, colnames_results_raw)
+      intersect(id_cols, colnames_results_raw)
 
-    # Define all the ci columns have that have to be filtered to keep only central
-    ci_cols <- base::grep("_ci", id_cols, value = TRUE)
+    # Identify the ci columns that are present in the assessment
+    # (they have to be filtered below to keep only the central estimates)
+    ci_cols_available <- grep("_ci", id_cols_available, value = TRUE)
 
-    # Identify which of the ci_cols are present in the assessment
-    ci_cols_available <- base::grep("_ci", id_cols_available, value = TRUE)
-
-    ci_cols_available_except_erf <- base::setdiff(ci_cols_available, "erf_ci")
+    ci_cols_available_except_erf <- setdiff(ci_cols_available, "erf_ci")
 
 
     # Keep the larger geo_id available
     # Since intersect() keep the order, taking the first element [1] ensures
     # that it is geo_id_macro if available and otherwise geo_id_micro
     geo_id_available <-
-      base::intersect(c("geo_id_macro", "geo_id_micro"),
+      intersect(c("geo_id_macro", "geo_id_micro"),
                       id_cols_available)
 
     larger_geo_id_available <- geo_id_available[1]
@@ -71,28 +93,28 @@ get_output <-
 
     ## Columns to be summed
     impact_cols <-
-      base::grep("impact", colnames_results_raw, value = TRUE)
+      grep("impact", colnames_results_raw, value = TRUE)
 
     nest_cols <-
-      base::grep("_by_", colnames_results_raw, value = TRUE)
+      grep("_by_", colnames_results_raw, value = TRUE)
 
     cols_to_be_summed <-
-      base::setdiff(
+      setdiff(
         # Columns including these strings
-        base::grep("impact|absolute_risk_as_percent|population", colnames_results_raw, value = TRUE),
+        grep("impact|absolute_risk_as_percent|population", colnames_results_raw, value = TRUE),
         # but not including these
-        c(base::grep("_by_|_rounded|_per_100k_inhab", colnames_results_raw, value = TRUE)))
+        c(grep("_by_|_rounded|_per_100k_inhab", colnames_results_raw, value = TRUE)))
 
     # Only columns to be summed that include the string "impact"
     # This is used for per_100k_inhab
     # Use grep() because there are many possible column names, no only impact
     # e.g. "monetized_impact"
     impact_cols_to_be_summed <-
-      base::grep("impact", cols_to_be_summed, value = TRUE)
+      grep("impact", cols_to_be_summed, value = TRUE)
 
     # Pre-identify columns to be collapsed
     # First remove columns that are not to be collapsed
-    cols_without_results_and_nest  <- base::setdiff(
+    cols_without_results_and_nest  <- setdiff(
       colnames_results_raw,
       # Columns to be excluded of the collapse
       # because they are results
@@ -112,61 +134,70 @@ get_output <-
 
     ## Define variable for results_by_ and
     # the columns that have to be excluded in the group columns
-    results_by_vars_and_excluded_cols <- base::list(
+    results_by_vars_and_excluded_cols <- list(
       exp_name = c("year", "exp_category", "sex", "age_group"),
       year = c("exp_name", "exp_category", "age_group", "sex"),
       exp_category = c("exp_name", "year", "age_group", "sex"),
       sex = c("exp_name", "year", "exp_category", "age_group"),
       age_group = c("exp_name", "year", "exp_category", "sex"),
       geo_id_micro = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_macro"),
-      geo_id_macro = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_micro"))
+      geo_id_macro = c("exp_name", "year", "exp_category", "sex", "age_group", "geo_id_micro")) |>
+      # Info columns are summed over by default, exactly like sex and age_group.
+      # Adding them to every exclusion vector here (instead of by hand above)
+      # means that a new info column can never be forgotten.
+      # main_results_by removes them again further below
+      purrr::map(~ c(.x, info_cols))
 
-    results_by_vars <- base::names(results_by_vars_and_excluded_cols)
+    results_by_vars <- names(results_by_vars_and_excluded_cols)
 
     # Identify the vars to be used for results_by
     results_by_vars_to_be_used <-
       # Only take the vars that present in results_raw
       # This avoid the steps below for not relevant vars (because not available)
-      base::intersect(results_by_vars, colnames_results_raw) |>
+      intersect(results_by_vars, colnames_results_raw) |>
       # Only take vars that have more than one unique value
       # Summing impacts across one category does not bring anything and
       # and makes the code slower
-      base::intersect(cols_with_multiple_values) |>
+      intersect(cols_with_multiple_values) |>
       # Add all available geo_ids
       # They are needed in any case
       # because at leaset results_by_geo_id_micro must be available
       # for other healthiar functions
-      base::union(geo_id_available)
+      union(geo_id_available)
+    
+    # Name of the results in the detailed output
+    # e.g. results_by_geo_id_micro
+    results_by_names <-
+      paste0("results_by_", results_by_vars_to_be_used)
 
-    # Build list with the result_by_vars and the correponding grouping_cols
+    # Build list with the result_by_vars and the correponding grouping_cols.
+    # The columns listed in main_results_by are removed from the exclusions, so they
+    # stay in the grouping key of every results_by table and their impacts are
+    # never added up. If main_results_by is NULL, setdiff() returns the exclusions
+    # unchanged, i.e. the results are identical to those without the argument
     grouping_cols_for_results_by <-
       results_by_vars_and_excluded_cols[results_by_vars_to_be_used] |>
       purrr::map(
-        ~ base::setdiff(id_cols_available, .x)
+        ~ setdiff(id_cols_available,
+                        setdiff(.x, main_results_by))
       )
-
-    # Other columns: e.g. info, scen_, pop_fraction...
-    # grepl() because no fix number and names
-    # scen columns only for the case of compare()
-    other_cols_with_multiple_values <-
-      base::intersect(cols_with_multiple_values,
-                      colnames_results_raw[base::grepl("info_|scen_|pop_fraction", colnames_results_raw)])
-
-
-    results_by_vars_to_be_used_except_geo_id_macro <-
-      base::setdiff(results_by_vars_to_be_used, c("geo_id_macro"))
 
     # The _ci columns will never be collapsed
     # This step avoid unneded data processing below
     cols_eligible_for_collapse <-
-      base::setdiff(cols_with_multiple_values,
+      setdiff(cols_with_multiple_values,
                     ci_cols_available)
+
+    # The rounded and the relative impacts are re-calculated after summing,
+    # so they are removed before aggregating
+    results_raw_to_aggregate <- results_raw |>
+      dplyr::select(-dplyr::matches("_rounded|_per_100k_inhab"))
 
 
     # Get main results from detailed results ###################################
     # Put all health detailed tables together in a list
     health_detailed  <-
-      base::list(input_args = input_args,
+      list(input_args = input_args,
                  input_table = input_table,
                  intermediate_calculations = intermediate_calculations,
                  results_raw = results_raw) |>
@@ -175,60 +206,40 @@ get_output <-
       purrr::compact()
 
     output <-
-      base::list(health_main = results_raw,
+      list(health_main = results_raw,
                  health_detailed = health_detailed)
 
 
     # Create function to aggregate impacts
     # To be used multiple times below
 
-    sum_round_and_relative_impact <- function(df, var){
+    sum_round_and_relative_impact <- function(var){
 
-      grouping_cols <- grouping_cols_for_results_by[[var]]
-
-      # Collapse df using the intern healthiar function
-      df_collapsed <-
+      # Collapse the columns with multiple values within a group and
+      # sum the impacts, obtaining one row per group.
+      # The rounded and relative impacts are not aggregated
+      # because they are re-calculated below (after summing)
+      impact_agg <-
         collapse_df_by_group(
-          df = df,
-          group_col_names = grouping_cols,
-          # If these two last arguments are empty the function can obtain them internally
-          # but we enter them because they are the same for all results_by_vars
-          # and we increase speed in this way (instead of repeating the process)
-          multi_value_col_names = cols_eligible_for_collapse,
-          ci_col_names = ci_cols_available,
-          only_unique_rows = FALSE)
-
-      # Sum impact columns (keep original names)
-      impact_agg <- df_collapsed |>
-        # Deselect columns to be summed
-        # Otherwise conflict with left_join behind
-        dplyr::select(- dplyr::matches("_rounded|_per_100k_inhab")) |>
-        dplyr::mutate(
-          .by = dplyr::all_of(grouping_cols),
-          dplyr::across(
-            # Important: across() because this is to be done in all impact columns
-            # In attribute_health() only one impact column
-            # but get_output is also used by monetize()
-            # this function also have other columns with impact discounted and monetized
-            # and even comparison scenarios
-            # which also have to be included in this aggregation
-            .cols = dplyr::all_of(cols_to_be_summed),
-            .fns = ~ base::sum(.x, na.rm = TRUE),
-            .names = "{.col}"))|>
-        # Keep only distinct rows because above mutate() not summarize()
-        dplyr::distinct() |>
+          df = results_raw_to_aggregate,
+          group_col_names = grouping_cols_for_results_by[[var]],
+          sum_col_names = cols_to_be_summed,
+          # This last argument could be obtained within the function,
+          # but it is entered because it is the same for all results_by vars
+          # and in this way the process is not repeated (faster)
+          multi_value_col_names = cols_eligible_for_collapse) |>
         # Calculate rounded impacts
         dplyr::mutate(
           dplyr::across(
             .cols = dplyr::all_of(impact_cols_to_be_summed),
-            .fns = ~ base::round(.x),
+            .fns = ~ round(.x),
             .names = "{.col}_rounded"
           )
         )
 
 
       # If population is available, recompute with population and normalized metrics
-      if ("population" %in% base::names(df)) {
+      if ("population" %in% colnames_results_raw) {
 
         # Relative impact dividing by population in the subgroup (100k)
         # i.e. x impacts in the subgroup / population in the subgroup
@@ -237,7 +248,15 @@ get_output <-
           dplyr::mutate(
             dplyr::across(
               .cols = dplyr::all_of(impact_cols_to_be_summed),
-              .fns = base::list(per_100k_inhab = ~ (.x / population) * 1e5),
+              # If the population of the group is not available, the relative
+              # impact cannot be calculated. This is the case for the
+              # projection years of the life table, where the population is
+              # only kept in the year of analysis to avoid summing it up
+              # across years (see get_impact_with_lifetable())
+              .fns = list(
+                per_100k_inhab = ~ dplyr::if_else(population > 0,
+                                                  (.x / population) * 1e5,
+                                                  NA_real_)),
               .names = "{.col}_{.fn}"))
 
       }
@@ -247,23 +266,19 @@ get_output <-
 
     }
 
+
+
     # At least result_by_geo_id_micro is to be calculated
     # so no if statement here
-
-    for(var in results_by_vars_to_be_used){
-
-      output$health_detailed[[base::paste0("results_by_", var)]] <-
-        sum_round_and_relative_impact(
-          df = results_raw,
-          var = var)
-
-    }
+    output$health_detailed[results_by_names] <-
+      purrr::map(.x = results_by_vars_to_be_used,
+                 .f = sum_round_and_relative_impact)
 
 
     # Keep only the ci central in main output ###########
 
     results_by_larger_geo_id_available <-
-      base::paste0("results_by_", larger_geo_id_available)
+      paste0("results_by_", larger_geo_id_available)
 
 
     # Store the last output in health main before starting the loop
@@ -276,7 +291,7 @@ get_output <-
       # summarize_uncertainty
       dplyr::filter(
         dplyr::if_all(.cols = dplyr::all_of(ci_cols_available_except_erf),
-                      .fns = ~ base::grepl("central", .x)))
+                      .fns = ~ grepl("central", .x)))
 
 
     # Order columns ############################################################
@@ -298,11 +313,11 @@ get_output <-
       function(x, cols){
 
         # If x is a data.frame
-        if(base::is.data.frame(x)){
+        if(is.data.frame(x)){
           put_first_cols(x, cols)
 
         # If x is list and all list elements are data frames (and not lists)
-        }else if (base::is.list(x) & base::all(purrr::map_lgl(x, base::is.data.frame))){
+        }else if (is.list(x) & all(purrr::map_lgl(x, is.data.frame))){
           purrr::map(
             .x = x,
             .f = ~ put_first_cols(.x, cols))
