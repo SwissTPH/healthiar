@@ -73,10 +73,13 @@ get_output <-
           ~ if (.x %in% info_names) {paste0("info_", .x)} else {.x})
     }
 
+    # Columns with the uncertainty (central, lower and upper)
+    ci_cols <- c("erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci")
+
     # ID columns
     id_cols <- c("geo_id_macro", "geo_id_micro",
                  "exp_name",
-                 "erf_ci","exp_ci", "bhd_ci", "cutoff_ci", "dw_ci", "duration_ci",
+                 ci_cols,
                  "year", "exp_category", "sex", "age_group",
                  info_cols)
 
@@ -85,8 +88,11 @@ get_output <-
       intersect(id_cols, colnames_results_raw)
 
     # Identify the ci columns that are present in the assessment
-    # (they have to be filtered below to keep only the central estimates)
-    ci_cols_available <- grep("_ci", id_cols_available, value = TRUE)
+    # (they have to be filtered below to keep only the central estimates).
+    # intersect() and not grep("_ci") because the info columns can also
+    # contain "_ci" (e.g. info_city_name), and then health_main only kept
+    # the rows whose info value contains "central", i.e. usually none
+    ci_cols_available <- intersect(ci_cols, id_cols_available)
 
     ci_cols_available_except_erf <- setdiff(ci_cols_available, "erf_ci")
 
