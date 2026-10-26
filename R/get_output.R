@@ -52,9 +52,19 @@ get_output <-
     # The user enters the column names of info without prefix, while
     # add_info() adds it, so they are resolved here.
     # NULL$value is NULL, so this also works when get_output() is called
-    # without input_args (e.g. from multiexpose())
-    main_results_by <- input_args$value$main_results_by
-    info_names <- names(input_args$value$info)
+    # without input_args (e.g. from multiexpose()).
+    # compare() passes the input_args of both scenarios instead. Without
+    # taking main_results_by from them, the comparison summed up the
+    # dimensions kept apart in the scenarios (e.g. exposure-outcome pairs).
+    # main_results_by is identical in both scenarios (checked in compare())
+    if (!is.null(input_args$input_args_scen_1)) {
+      input_args_value <- input_args$input_args_scen_1$value
+    } else {
+      input_args_value <- input_args$value
+    }
+
+    main_results_by <- input_args_value$main_results_by
+    info_names <- names(input_args_value$info)
 
     if (!is.null(main_results_by) && !is.null(info_names)) {
       main_results_by <-
