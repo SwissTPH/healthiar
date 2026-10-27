@@ -40,7 +40,12 @@ cba(
 
 - valuation:
 
-  `Numeric value` referring to unit value of a health impact.
+  `Numeric value` referring to unit value of a health impact. If
+  `output_attribute` is entered, a `numeric vector` parallel to the
+  arguments of the attribute function can be entered instead (e.g. one
+  valuation per exposure-outcome pair) to monetize all of them in one
+  single call. The values must be the same within each geographic unit
+  and dimension entered in `main_results_by`.
 
 - cost:
 
@@ -80,7 +85,10 @@ cba(
 
   `String` referring to the assumed equation for the discount factor. By
   default: `"exponential"`. Otherwise: `"hyperbolic_harvey_1986"` or
-  `"hyperbolic_mazur_1987"`.
+  `"hyperbolic_mazur_1987"`. If `output_attribute` is entered, a
+  `character vector` parallel to the arguments of the attribute function
+  can be entered instead (e.g. one discount shape per exposure-outcome
+  pair).
 
 - n_years_benefit, n_years_cost:
 

@@ -11,7 +11,7 @@ which generates some costs."><meta property="og:image" content="https://swisstph
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1787</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1792</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,7 +77,10 @@ which generates some costs.</p>
 
 
 <dt id="arg-valuation">valuation<a class="anchor" aria-label="anchor" href="#arg-valuation"></a></dt>
-<dd><p><code>Numeric value</code> referring to unit value of a health impact.</p></dd>
+<dd><p><code>Numeric value</code> referring to unit value of a health impact.
+If <code>output_attribute</code> is entered, a <code>numeric vector</code> parallel to the arguments of the attribute function can be entered instead
+(e.g. one valuation per exposure-outcome pair) to monetize all of them in one single call.
+The values must be the same within each geographic unit and dimension entered in <code>main_results_by</code>.</p></dd>
 
 
 <dt id="arg-cost">cost<a class="anchor" aria-label="anchor" href="#arg-cost"></a></dt>
@@ -110,7 +113,9 @@ can be entered instead of one single value.</p></dd>
 
 
 <dt id="arg-discount-shape">discount_shape<a class="anchor" aria-label="anchor" href="#arg-discount-shape"></a></dt>
-<dd><p><code>String</code> referring to the assumed equation for the discount factor. By default: <code>"exponential"</code>. Otherwise: <code>"hyperbolic_harvey_1986"</code> or <code>"hyperbolic_mazur_1987"</code>.</p></dd>
+<dd><p><code>String</code> referring to the assumed equation for the discount factor. By default: <code>"exponential"</code>. Otherwise: <code>"hyperbolic_harvey_1986"</code> or <code>"hyperbolic_mazur_1987"</code>.
+If <code>output_attribute</code> is entered, a <code>character vector</code> parallel to the arguments of the attribute function can be entered instead
+(e.g. one discount shape per exposure-outcome pair).</p></dd>
 
 
 <dt id="arg-n-years-benefit-n-years-cost">n_years_benefit, n_years_cost<a class="anchor" aria-label="anchor" href="#arg-n-years-benefit-n-years-cost"></a></dt>

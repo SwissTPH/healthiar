@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1787</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1792</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,9 @@
 
 
 <dt id="arg-discount-rate">discount_rate<a class="anchor" aria-label="anchor" href="#arg-discount-rate"></a></dt>
-<dd><p><code>Numeric value</code> showing the discount rate for future years.</p></dd>
+<dd><p><code>Numeric value</code> showing the discount rate for future years.
+If <code>output_attribute</code> is entered, a <code>numeric vector</code> parallel to the arguments of the attribute function can be entered instead
+(e.g. one discount rate per exposure-outcome pair).</p></dd>
 
 
 <dt id="arg-n-years">n_years<a class="anchor" aria-label="anchor" href="#arg-n-years"></a></dt>
@@ -73,7 +75,9 @@
 
 
 <dt id="arg-discount-shape">discount_shape<a class="anchor" aria-label="anchor" href="#arg-discount-shape"></a></dt>
-<dd><p><code>String</code> referring to the assumed equation for the discount factor. By default: <code>"exponential"</code>. Otherwise: <code>"hyperbolic_harvey_1986"</code> or <code>"hyperbolic_mazur_1987"</code>.</p></dd>
+<dd><p><code>String</code> referring to the assumed equation for the discount factor. By default: <code>"exponential"</code>. Otherwise: <code>"hyperbolic_harvey_1986"</code> or <code>"hyperbolic_mazur_1987"</code>.
+If <code>output_attribute</code> is entered, a <code>character vector</code> parallel to the arguments of the attribute function can be entered instead
+(e.g. one discount shape per exposure-outcome pair).</p></dd>
 
 </dl></div>
     <div class="section level2">

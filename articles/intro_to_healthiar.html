@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1787</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1792</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -4147,6 +4147,113 @@ from a non-<em>healthiar</em> source.</p>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
+<div class="section level4">
+<h4 id="example-3-multiple-exposure-outcome-pairs">Example 3: multiple exposure-outcome pairs<a class="anchor" aria-label="anchor" href="#example-3-multiple-exposure-outcome-pairs"></a>
+</h4>
+<p>In the example below, we monetize the COPD cases attributable to
+PM2.5 and the asthma cases attributable to NO2 from the chapter
+<em>Multiple exposure-outcome pairs</em> in one single call, with a
+different value and discounting per pair.</p>
+<p>The arguments describing the value of the health impact
+(<code>valuation</code>, <code>discount_rate</code> and
+<code>discount_shape</code>) are entered as vectors parallel to the
+arguments of <code><a href="../reference/attribute_health.html">attribute_health()</a></code>, exactly as
+<code>exp_central</code> or <code>bhd_central</code>. They must have one
+single value per geographic unit and dimension entered in
+<code>main_results_by</code>, here per pair.</p>
+<p>In contrast, the arguments describing prices over time
+(<code>inflation_rate</code> and <code>real_growth_rate</code>) are the
+same for all pairs: a vector entered there refers to year-specific
+rates.</p>
+<div class="section level5">
+<h5 id="function-call-29">Function call<a class="anchor" aria-label="anchor" href="#function-call-29"></a>
+</h5>
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results_pairs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
+<span>    info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>      pair <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pm2.5_copd"</span>, <span class="st">"no2_asthma"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    main_results_by <span class="op">=</span> <span class="st">"pair"</span>,</span>
+<span>    exp_central    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8.85</span>, <span class="fl">9.20</span>, <span class="fl">22.1</span>, <span class="fl">24.5</span><span class="op">)</span>,</span>
+<span>    cutoff_central <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span>,</span>
+<span>    rr_central     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.369</span>, <span class="fl">1.369</span>, <span class="fl">1.041</span>, <span class="fl">1.041</span><span class="op">)</span>,</span>
+<span>    rr_increment   <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    erf_shape      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"log_linear"</span>, <span class="st">"log_linear"</span>, <span class="st">"linear"</span>, <span class="st">"linear"</span><span class="op">)</span>,</span>
+<span>    bhd_central    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30747</span>, <span class="fl">31500</span>, <span class="fl">12000</span>, <span class="fl">12500</span><span class="op">)</span>,</span>
+<span>    geo_id_micro   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">monetized_pairs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/monetize.html">monetize</a></span><span class="op">(</span></span>
+<span>    output_attribute <span class="op">=</span> <span class="va">results_pairs</span>,</span>
+<span>    valuation      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50000</span>, <span class="fl">50000</span>, <span class="fl">3000</span>, <span class="fl">3000</span><span class="op">)</span>, <span class="co"># E.g. EURO per case</span></span>
+<span>    discount_rate  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.03</span>, <span class="fl">0.03</span>, <span class="fl">0.01</span>, <span class="fl">0.01</span><span class="op">)</span>,</span>
+<span>    discount_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"exponential"</span>, <span class="st">"hyperbolic_mazur_1987"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>    n_years <span class="op">=</span> <span class="fl">5</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="main-results-17">Main results<a class="anchor" aria-label="anchor" href="#main-results-17"></a>
+</h5>
+<p>One row per exposure-outcome pair and geographic unit, each monetized
+with its own value and discounting.</p>
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">monetized_pairs</span><span class="op">$</span><span class="va">monetization_main</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">info_pair</span>, <span class="va">geo_id_micro</span>, <span class="va">valuation</span>, <span class="va">discount_rate</span>,</span>
+<span>                <span class="va">discount_shape</span>, <span class="va">monetized_impact_rounded</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="11%">
+<col width="13%">
+<col width="10%">
+<col width="14%">
+<col width="23%">
+<col width="26%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">info_pair</th>
+<th align="left">geo_id_micro</th>
+<th align="right">valuation</th>
+<th align="right">discount_rate</th>
+<th align="left">discount_shape</th>
+<th align="right">monetized_impact_rounded</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">pm2.5_copd</td>
+<td align="left">a</td>
+<td align="right">50000</td>
+<td align="right">0.03</td>
+<td align="left">exponential</td>
+<td align="right">151041153</td>
+</tr>
+<tr class="even">
+<td align="left">pm2.5_copd</td>
+<td align="left">b</td>
+<td align="right">50000</td>
+<td align="right">0.03</td>
+<td align="left">exponential</td>
+<td align="right">167901617</td>
+</tr>
+<tr class="odd">
+<td align="left">no2_asthma</td>
+<td align="left">a</td>
+<td align="right">3000</td>
+<td align="right">0.01</td>
+<td align="left">hyperbolic_mazur_1987</td>
+<td align="right">1620520</td>
+</tr>
+<tr class="even">
+<td align="left">no2_asthma</td>
+<td align="left">b</td>
+<td align="right">3000</td>
+<td align="right">0.01</td>
+<td align="left">hyperbolic_mazur_1987</td>
+<td align="right">2004072</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="cost-benefit-analysis">Cost-benefit analysis<a class="anchor" aria-label="anchor" href="#cost-benefit-analysis"></a>
@@ -4197,13 +4304,13 @@ which is the concentration specified in the <code>cutoff_central</code>
 argument in the initial <code><a href="../reference/attribute_health.html">attribute_health()</a></code> call. So we
 could avoid all COPD cases attributed to air pollution.</p>
 <div class="section level5">
-<h5 id="function-call-29">Function call<a class="anchor" aria-label="anchor" href="#function-call-29"></a>
+<h5 id="function-call-30">Function call<a class="anchor" aria-label="anchor" href="#function-call-30"></a>
 </h5>
 <p>Considering the cost to implement the policy (estimated at 100
 million EURO), what would be the monetary net benefit of such a policy?
 We can find out using the <em>healthiar</em> function
 <code><a href="../reference/cba.html">cba()</a></code>.</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cba</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cba.html">cba</a></span><span class="op">(</span></span>
 <span>    output_attribute <span class="op">=</span> <span class="va">results_pm_copd</span>,</span>
 <span>    valuation <span class="op">=</span> <span class="fl">50000</span>,</span>
@@ -4216,7 +4323,7 @@ We can find out using the <em>healthiar</em> function
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="main-results-17">Main results<a class="anchor" aria-label="anchor" href="#main-results-17"></a>
+<h5 id="main-results-18">Main results<a class="anchor" aria-label="anchor" href="#main-results-18"></a>
 </h5>
 <p>The outcome of the CBA is contained in two folders, which are added
 to the existing assessment:</p>
@@ -4234,7 +4341,7 @@ the period specified in the <code>n_years_cost</code> argument</p></li>
 </ul>
 </li>
 </ul>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cba</span><span class="op">$</span><span class="va">cba_main</span> <span class="op">|&gt;</span>  </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">benefit</span>, <span class="va">cost</span>, <span class="va">net_benefit</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -4348,10 +4455,10 @@ inequalities.</p>
 <p>In the example below, we compare the mortality attributable to PM2.5
 exposure across deciles of a deprivation score.</p>
 <div class="section level5">
-<h5 id="function-call-30">Function call<a class="anchor" aria-label="anchor" href="#function-call-30"></a>
+<h5 id="function-call-31">Function call<a class="anchor" aria-label="anchor" href="#function-call-31"></a>
 </h5>
 <p>First, quantify health impacts.</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="va">health_impact</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
 <span>   age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>,</span>
 <span>   exp_central <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">pm25_mean</span>,</span>
@@ -4365,7 +4472,7 @@ exposure across deciles of a deprivation score.</p>
 <p>Second, use the function <code><a href="../reference/socialize.html">socialize()</a></code> entering the whole
 output of <code><a href="../reference/attribute_health.html">attribute_health()</a></code> in the argument
 <code>output_attribute</code>.</p>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">social_t</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/socialize.html">socialize</a></span><span class="op">(</span></span>
 <span>  output_attribute <span class="op">=</span> <span class="va">health_impact</span>,</span>
 <span>  age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>, <span class="co"># They have to be the same in socialize() and in attribute_health()</span></span>
@@ -4379,7 +4486,7 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <span><span class="co">#&gt; quantiles (first and last), but they are still part of the overall values.</span></span></code></pre></div>
 <p>Alternatively, you can directly enter the health impact in the
 <code><a href="../reference/socialize.html">socialize()</a></code> argument <code>impact</code>.</p>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">social</span> <span class="op">&lt;-</span> <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/socialize.html">socialize</a></span><span class="op">(</span></span>
 <span>  impact <span class="op">=</span> <span class="va">health_impact</span><span class="op">$</span><span class="va">health_detailed</span><span class="op">$</span><span class="va">results_by_age_group</span><span class="op">$</span><span class="va">impact</span>,</span>
 <span>  age_group <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">age_group</span>, <span class="co"># They have to be the same in socialize() and in attribute_health()</span></span>
@@ -4394,9 +4501,9 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <span><span class="co">#&gt; quantiles (first and last), but they are still part of the overall values.</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="main-results-18">Main results<a class="anchor" aria-label="anchor" href="#main-results-18"></a>
+<h5 id="main-results-19">Main results<a class="anchor" aria-label="anchor" href="#main-results-19"></a>
 </h5>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">social</span><span class="op">$</span><span class="va">social_main</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">parameter</span>, <span class="va">difference_type</span>, </span>
 <span>                  <span class="va">difference_compared_with</span>, <span class="va">difference_value</span>, </span>
@@ -4467,9 +4574,9 @@ R^2 lower than 0.7, consider alternative data sources or methods.</p>
 (education, unemployment, single parents, population change and lack of
 heating) and split it into deciles.</p>
 <div class="section level5">
-<h5 id="function-call-31">Function call<a class="anchor" aria-label="anchor" href="#function-call-31"></a>
+<h5 id="function-call-32">Function call<a class="anchor" aria-label="anchor" href="#function-call-32"></a>
 </h5>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mdi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_mdi.html">prepare_mdi</a></span><span class="op">(</span></span>
 <span>  geo_id_micro <span class="op">=</span> <span class="va">exdat_prepare_mdi</span><span class="op">$</span><span class="va">id</span>,</span>
 <span>  edu <span class="op">=</span> <span class="va">exdat_prepare_mdi</span><span class="op">$</span><span class="va">edu</span>,</span>
@@ -4485,14 +4592,14 @@ heating) and split it into deciles.</p>
 on).</p>
 </div>
 <div class="section level5">
-<h5 id="main-results-19">Main results<a class="anchor" aria-label="anchor" href="#main-results-19"></a>
+<h5 id="main-results-20">Main results<a class="anchor" aria-label="anchor" href="#main-results-20"></a>
 </h5>
 <p>Function output includes:</p>
 <ul>
 <li>
 <code>mdi_main</code>, a tibble containing the BEST-COST MDI</li>
 </ul>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_main</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">geo_id_micro</span>, <span class="va">MDI</span>, <span class="va">MDI_index</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -4578,13 +4685,13 @@ distribution curve</p></li>
 </li>
 </ul>
 <p>To reproduce the boxplots run</p>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">boxplot</span><span class="op">)</span></span></code></pre></div>
-<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-118-1.png" class="r-plt" alt="Boxplot of Normalized Indicators and MDI" width="700">
+<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-120-1.png" class="r-plt" alt="Boxplot of Normalized Indicators and MDI" width="700">
 Analogously, to reproduce the histogram run</p>
-<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">mdi</span><span class="op">$</span><span class="va">mdi_detailed</span><span class="op">$</span><span class="va">histogram</span><span class="op">)</span></span></code></pre></div>
-<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-119-1.png" class="r-plt" alt="Histogram of MDI with normal curve" width="700"></p>
+<p><img src="intro_to_healthiar_files/figure-html/unnamed-chunk-121-1.png" class="r-plt" alt="Histogram of MDI with normal curve" width="700"></p>
 <hr>
 </div>
 </div>
@@ -4598,7 +4705,7 @@ Analogously, to reproduce the histogram run</p>
 </h3>
 <p><em>healthiar</em> can be used inside the <em>native</em> pipes
 <code>|&gt;</code>. See the example below.</p>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">|&gt;</span></span>
 <span>  <span class="op">(</span>\<span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -4609,7 +4716,7 @@ Analogously, to reproduce the histogram run</p>
 <span>      <span class="op">)</span><span class="op">$</span><span class="va">health_main</span><span class="op">$</span><span class="va">impact_rounded</span></span>
 <span>    <span class="op">}</span><span class="op">)</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Shorter, making use of the base R function <code><a href="https://rdrr.io/r/base/with.html" class="external-link">with()</a></code>.</p>
-<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">|&gt;</span></span>
 <span>      <span class="op">(</span>\<span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -4626,7 +4733,7 @@ Analogously, to reproduce the histogram run</p>
 </h3>
 <p><em>healthiar</em> can also be used inside <em>magrittr</em> pipes
 <code>%&gt;%</code> as follows.</p>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exdat_noise</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="op">{</span></span>
 <span>    <span class="fu">healthiar</span><span class="fu">::</span><span class="fu"><a href="../reference/attribute_health.html">attribute_health</a></span><span class="op">(</span></span>
@@ -4650,13 +4757,13 @@ indicated below.</p>
 <h3 id="export-results">Export results<a class="anchor" aria-label="anchor" href="#export-results"></a>
 </h3>
 <p>Export as <code>.csv</code> file</p>
-<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">results_pm_copd</span><span class="op">$</span><span class="va">health_main</span>, file <span class="op">=</span> <span class="st">"exported_results/results_pm_copd.csv"</span><span class="op">)</span></span></code></pre></div>
 <p>Save as <code>.Rdata</code> file</p>
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">results_pm_copd</span>, file <span class="op">=</span> <span class="st">"exported_results/results_pm_copd.Rdata"</span><span class="op">)</span></span></code></pre></div>
 <p>Export to Excel (as <code>.xlsx</code> file)</p>
-<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">openxlsx</span><span class="fu">::</span><span class="fu">write.xlsx</span><span class="op">(</span>x <span class="op">=</span> <span class="va">results_pm_copd</span><span class="op">$</span><span class="va">health_main</span>, file <span class="op">=</span> <span class="st">"exported_results/results_pm_copd.xlsx"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">

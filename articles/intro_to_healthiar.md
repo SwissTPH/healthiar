@@ -3040,6 +3040,71 @@ results <- monetize(
 )
 ```
 
+#### Example 3: multiple exposure-outcome pairs
+
+In the example below, we monetize the COPD cases attributable to PM2.5
+and the asthma cases attributable to NO2 from the chapter *Multiple
+exposure-outcome pairs* in one single call, with a different value and
+discounting per pair.
+
+The arguments describing the value of the health impact (`valuation`,
+`discount_rate` and `discount_shape`) are entered as vectors parallel to
+the arguments of
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+exactly as `exp_central` or `bhd_central`. They must have one single
+value per geographic unit and dimension entered in `main_results_by`,
+here per pair.
+
+In contrast, the arguments describing prices over time (`inflation_rate`
+and `real_growth_rate`) are the same for all pairs: a vector entered
+there refers to year-specific rates.
+
+##### Function call
+
+``` r
+
+results_pairs <- attribute_health(
+    info = data.frame(
+      pair = rep(c("pm2.5_copd", "no2_asthma"), each = 2)),
+    main_results_by = "pair",
+    exp_central    = c(8.85, 9.20, 22.1, 24.5),
+    cutoff_central = c(5, 5, 10, 10),
+    rr_central     = c(1.369, 1.369, 1.041, 1.041),
+    rr_increment   = 10,
+    erf_shape      = c("log_linear", "log_linear", "linear", "linear"),
+    bhd_central    = c(30747, 31500, 12000, 12500),
+    geo_id_micro   = rep(c("a", "b"), times = 2)
+  )
+
+monetized_pairs <- monetize(
+    output_attribute = results_pairs,
+    valuation      = c(50000, 50000, 3000, 3000), # E.g. EURO per case
+    discount_rate  = c(0.03, 0.03, 0.01, 0.01),
+    discount_shape = rep(c("exponential", "hyperbolic_mazur_1987"), each = 2),
+    n_years = 5
+)
+```
+
+##### Main results
+
+One row per exposure-outcome pair and geographic unit, each monetized
+with its own value and discounting.
+
+``` r
+
+monetized_pairs$monetization_main |>
+  dplyr::select(info_pair, geo_id_micro, valuation, discount_rate,
+                discount_shape, monetized_impact_rounded) |>
+  knitr::kable()
+```
+
+| info_pair | geo_id_micro | valuation | discount_rate | discount_shape | monetized_impact_rounded |
+|:---|:---|---:|---:|:---|---:|
+| pm2.5_copd | a | 50000 | 0.03 | exponential | 151041153 |
+| pm2.5_copd | b | 50000 | 0.03 | exponential | 167901617 |
+| no2_asthma | a | 3000 | 0.01 | hyperbolic_mazur_1987 | 1620520 |
+| no2_asthma | b | 3000 | 0.01 | hyperbolic_mazur_1987 | 2004072 |
+
 ### Cost-benefit analysis
 
 #### Goal
@@ -3417,7 +3482,7 @@ eval(mdi$mdi_detailed$boxplot)
 ```
 
 ![Boxplot of Normalized Indicators and
-MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-118-1.png)
+MDI](intro_to_healthiar_files/figure-html/unnamed-chunk-120-1.png)
 Analogously, to reproduce the histogram run
 
 ``` r
@@ -3426,7 +3491,7 @@ eval(mdi$mdi_detailed$histogram)
 ```
 
 ![Histogram of MDI with normal
-curve](intro_to_healthiar_files/figure-html/unnamed-chunk-119-1.png)
+curve](intro_to_healthiar_files/figure-html/unnamed-chunk-121-1.png)
 
 ------------------------------------------------------------------------
 

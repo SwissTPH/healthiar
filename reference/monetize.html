@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1787</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1792</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,15 +69,22 @@
 
 
 <dt id="arg-valuation">valuation<a class="anchor" aria-label="anchor" href="#arg-valuation"></a></dt>
-<dd><p><code>Numeric value</code> referring to unit value of a health impact.</p></dd>
+<dd><p><code>Numeric value</code> referring to unit value of a health impact.
+If <code>output_attribute</code> is entered, a <code>numeric vector</code> parallel to the arguments of the attribute function can be entered instead
+(e.g. one valuation per exposure-outcome pair) to monetize all of them in one single call.
+The values must be the same within each geographic unit and dimension entered in <code>main_results_by</code>.</p></dd>
 
 
 <dt id="arg-discount-rate">discount_rate<a class="anchor" aria-label="anchor" href="#arg-discount-rate"></a></dt>
-<dd><p><code>Numeric value</code> showing the discount rate for future years.</p></dd>
+<dd><p><code>Numeric value</code> showing the discount rate for future years.
+If <code>output_attribute</code> is entered, a <code>numeric vector</code> parallel to the arguments of the attribute function can be entered instead
+(e.g. one discount rate per exposure-outcome pair).</p></dd>
 
 
 <dt id="arg-discount-shape">discount_shape<a class="anchor" aria-label="anchor" href="#arg-discount-shape"></a></dt>
-<dd><p><code>String</code> referring to the assumed equation for the discount factor. By default: <code>"exponential"</code>. Otherwise: <code>"hyperbolic_harvey_1986"</code> or <code>"hyperbolic_mazur_1987"</code>.</p></dd>
+<dd><p><code>String</code> referring to the assumed equation for the discount factor. By default: <code>"exponential"</code>. Otherwise: <code>"hyperbolic_harvey_1986"</code> or <code>"hyperbolic_mazur_1987"</code>.
+If <code>output_attribute</code> is entered, a <code>character vector</code> parallel to the arguments of the attribute function can be entered instead
+(e.g. one discount shape per exposure-outcome pair).</p></dd>
 
 
 <dt id="arg-n-years">n_years<a class="anchor" aria-label="anchor" href="#arg-n-years"></a></dt>
@@ -138,7 +145,16 @@ a factor based <code>valuation growth</code> can be applied
 <p>One of the following three discount shapes can be selected:</p><ul><li><p>Exponential (Frederick et al. 2002)</p></li>
 <li><p>Hyperbolic as Harvey (1986)</p></li>
 <li><p>Hyperbolic as Mazur (1987)</p></li>
-</ul><p>Detailed information about the methodology (including equations)
+</ul><p><strong>Single values and vectors</strong></p>
+<p>Arguments describing the value of the health impact
+(<code>valuation</code>, <code>discount_rate</code>, <code>discount_shape</code>)
+accept one value or, if <code>output_attribute</code> is entered,
+a vector parallel to the arguments of the attribute function
+(e.g. one value per exposure-outcome pair).
+Arguments describing prices over time
+(<code>inflation_rate</code>, <code>real_growth_rate</code>)
+accept one value or a vector with one value per year.</p>
+<p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization">Monetization</a></p></li>
 </ul></div>

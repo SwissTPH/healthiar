@@ -35,7 +35,10 @@ discount(
 
 - discount_rate:
 
-  `Numeric value` showing the discount rate for future years.
+  `Numeric value` showing the discount rate for future years. If
+  `output_attribute` is entered, a `numeric vector` parallel to the
+  arguments of the attribute function can be entered instead (e.g. one
+  discount rate per exposure-outcome pair).
 
 - n_years:
 
@@ -49,7 +52,10 @@ discount(
 
   `String` referring to the assumed equation for the discount factor. By
   default: `"exponential"`. Otherwise: `"hyperbolic_harvey_1986"` or
-  `"hyperbolic_mazur_1987"`.
+  `"hyperbolic_mazur_1987"`. If `output_attribute` is entered, a
+  `character vector` parallel to the arguments of the attribute function
+  can be entered instead (e.g. one discount shape per exposure-outcome
+  pair).
 
 ## Value
 

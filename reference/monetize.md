@@ -39,17 +39,28 @@ monetize(
 
 - valuation:
 
-  `Numeric value` referring to unit value of a health impact.
+  `Numeric value` referring to unit value of a health impact. If
+  `output_attribute` is entered, a `numeric vector` parallel to the
+  arguments of the attribute function can be entered instead (e.g. one
+  valuation per exposure-outcome pair) to monetize all of them in one
+  single call. The values must be the same within each geographic unit
+  and dimension entered in `main_results_by`.
 
 - discount_rate:
 
-  `Numeric value` showing the discount rate for future years.
+  `Numeric value` showing the discount rate for future years. If
+  `output_attribute` is entered, a `numeric vector` parallel to the
+  arguments of the attribute function can be entered instead (e.g. one
+  discount rate per exposure-outcome pair).
 
 - discount_shape:
 
   `String` referring to the assumed equation for the discount factor. By
   default: `"exponential"`. Otherwise: `"hyperbolic_harvey_1986"` or
-  `"hyperbolic_mazur_1987"`.
+  `"hyperbolic_mazur_1987"`. If `output_attribute` is entered, a
+  `character vector` parallel to the arguments of the attribute function
+  can be entered instead (e.g. one discount shape per exposure-outcome
+  pair).
 
 - n_years:
 
@@ -136,6 +147,15 @@ One of the following three discount shapes can be selected:
 - Hyperbolic as Harvey (1986)
 
 - Hyperbolic as Mazur (1987)
+
+**Single values and vectors**
+
+Arguments describing the value of the health impact (`valuation`,
+`discount_rate`, `discount_shape`) accept one value or, if
+`output_attribute` is entered, a vector parallel to the arguments of the
+attribute function (e.g. one value per exposure-outcome pair). Arguments
+describing prices over time (`inflation_rate`, `real_growth_rate`)
+accept one value or a vector with one value per year.
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
