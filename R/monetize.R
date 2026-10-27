@@ -8,8 +8,15 @@
 #' @param output_attribute \code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()} or \code{healthiar::compare()} as results.
 #' @param impact \code{Numeric value} referring to the health impacts to be monetized (without attribute function). If a \code{Numeric vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.
 #' @param valuation \code{Numeric value} referring to unit value of a health impact.
+#' If \code{output_attribute} is entered, a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+#' (e.g. one valuation per exposure-outcome pair) to monetize all of them in one single call.
+#' The values must be the same within each geographic unit and dimension entered in \code{main_results_by}.
 #' @param discount_rate \code{Numeric value} showing the discount rate for future years.
+#' If \code{output_attribute} is entered, a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+#' (e.g. one discount rate per exposure-outcome pair).
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.
+#' If \code{output_attribute} is entered, a \code{character vector} parallel to the arguments of the attribute function can be entered instead
+#' (e.g. one discount shape per exposure-outcome pair).
 #' @param n_years \code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).
 #' @param inflation_rate \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices).
 #' This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
