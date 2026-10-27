@@ -978,6 +978,61 @@ testthat::test_that("results the same |pathway_monetization|real_growth_rate_by_
   )
 })
 
+testthat::test_that("results the same |pathway_monetization|output_attribute_from_daly|", {
+
+  # The output of daly() has no input table and its YLL part comes from the
+  # life table. Expected: impact * valuation / (1 + discount_rate)^n_years
+  data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
+  data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
+
+  output_yld <-
+    healthiar::attribute_health(
+      exp_central = 8.85,
+      cutoff_central = 5,
+      bhd_central = 1E3,
+      rr_central = 1.1,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      duration_central = 100,
+      dw_central = 1)
+
+  output_yll <-
+    healthiar::attribute_lifetable(
+      health_outcome = "yll",
+      exp_central = 8.85,
+      cutoff_central = 5,
+      rr_central = 1.118,
+      rr_increment = 10,
+      erf_shape = "log_linear",
+      approach_exposure = "single_year",
+      approach_newborns = "without_newborns",
+      sex = rep(c("male", "female"), each = 100),
+      age_group = rep(0:99, times = 2),
+      bhd_central = c(data[["pop"]]$number_of_deaths_male,
+                      data[["pop"]]$number_of_deaths_female),
+      population = c(data_lifetable[["male"]]$population,
+                     data_lifetable[["female"]]$population),
+      year_of_analysis = 2019,
+      min_age = 20)
+
+  output_daly <-
+    healthiar::daly(
+      output_attribute_yll = output_yll,
+      output_attribute_yld = output_yld)
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        output_attribute = output_daly,
+        valuation = 1000,
+        discount_rate = 0.03,
+        n_years = 5
+      )$monetization_main$monetized_impact,
+    expect =
+      output_daly$health_main$impact * 1000 / 1.03^5
+  )
+})
+
 
 
 # ERROR OR WARNING ########
