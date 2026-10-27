@@ -58,6 +58,17 @@
 #'  \item Hyperbolic as \insertCite{Harvey1986_ms;textual}{healthiar}
 #'  \item Hyperbolic as \insertCite{Mazur1987_book;textual}{healthiar}}
 #'
+#' \strong{Single values and vectors}
+#'
+#' Arguments describing the value of the health impact
+#' (\code{valuation}, \code{discount_rate}, \code{discount_shape})
+#' accept one value or, if \code{output_attribute} is entered,
+#' a vector parallel to the arguments of the attribute function
+#' (e.g. one value per exposure-outcome pair).
+#' Arguments describing prices over time
+#' (\code{inflation_rate}, \code{real_growth_rate})
+#' accept one value or a vector with one value per year.
+#'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
