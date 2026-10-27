@@ -523,7 +523,11 @@ monetize <- function(output_attribute = NULL,
       dplyr::select(dplyr::all_of(value_by_row_keys),
                     dplyr::any_of(c("valuation", "discount_rate", "discount_shape"))) |>
       # The ids are character in the results (e.g. geo_id_micro = 1 becomes "1")
-      dplyr::mutate(dplyr::across(dplyr::all_of(value_by_row_keys), as.character)) |>
+      # while the info columns keep the type entered by the user (e.g. integer year)
+      dplyr::mutate(
+        dplyr::across(
+          dplyr::any_of(c("geo_id_micro", "geo_id_macro", "sex", "age_group")),
+          as.character)) |>
       dplyr::distinct()
 
     ## Error if more than one value per row of the main results ####
