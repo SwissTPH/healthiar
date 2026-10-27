@@ -685,17 +685,6 @@ monetize <- function(output_attribute = NULL,
       n_years <- max(impact_detailed$year) - year_of_analysis
 
 
-      # Output will be adapted according to monetized impacts
-      impact_detailed <-
-        impact_detailed |>
-        ## Calculate total, discounted life years (single value) per sex & ci
-        dplyr::mutate(
-          n_years = n_years,
-          discount_rate = discount_rate,
-          discount_shape = discount_shape,
-          inflation_rate = inflation_rate,
-          real_growth_rate = real_growth_rate)
-
       impact_detailed  <-
         add_monetized_impact(
           df = impact_detailed,
