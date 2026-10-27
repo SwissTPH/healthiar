@@ -5,7 +5,8 @@
 #' This function monetizes health impacts
 
 # ARGUMENTS ####################################################################
-#' @param output_attribute \code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()} or \code{healthiar::compare()} as results.
+#' @param output_attribute \code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()}, \code{healthiar::compare()} or \code{healthiar::daly()} as results.
+#' The YLL and YLD in the output of \code{healthiar::daly()} are monetized separately and then summed. Thus, YLL from the life table are discounted year by year, while \code{n_years} is used for the YLD.
 #' @param impact \code{Numeric value} referring to the health impacts to be monetized (without attribute function). If a \code{Numeric vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.
 #' @param valuation \code{Numeric value} referring to unit value of a health impact.
 #' If \code{output_attribute} is entered, a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
@@ -101,6 +102,8 @@
 #' }
 #'
 #' If the argument \code{output_attribute} was specified, then the two results elements are added to the existing output.
+#' If \code{output_attribute} comes from \code{healthiar::daly()}, \code{monetization_main} contains the monetized YLL and YLD (suffixes \code{_yll} and \code{_yld}) and their sum,
+#' while \code{monetization_detailed} contains the monetization of YLL and YLD (\code{monetization_yll} and \code{monetization_yld}).
 #'
 # EXAMPLES #####################################################################
 #' @examples
@@ -130,7 +133,7 @@
 #'
 #' @seealso
 #' \itemize{
-#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}, \code{\link{compare}}
+#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}, \code{\link{compare}}, \code{\link{daly}}
 #'   \item Alternative: \code{\link{get_inflation_factor}},
 #'     \code{\link{get_discount_factor}}, \code{\link{cba}}
 #' }
@@ -162,6 +165,89 @@ monetize <- function(output_attribute = NULL,
   input_args <-
     get_input_args(environment = environment(),
                    call = match.call())
+
+  # If output of daly() ####
+  # The DALY cannot be monetized as one impact because the YLL from the
+  # life table have to be discounted year by year.
+  # daly() stores the outputs of YLL and YLD in its input_args,
+  # so they are monetized separately and then summed
+  output_attribute_yll <-
+    output_attribute$health_detailed$input_args$value$output_attribute_yll
+  output_attribute_yld <-
+    output_attribute$health_detailed$input_args$value$output_attribute_yld
+
+  is_daly <-
+    !is.null(output_attribute_yll) && !is.null(output_attribute_yld) && is.null(impact)
+
+  if(is_daly){
+
+    # n_years is not entered for YLL if life table
+    # because then the years are taken from the life table
+    # (and monetize() would warn that n_years is ignored)
+    is_lifetable_yll <-
+      !is.null(output_attribute_yll$health_detailed$results_by_year)
+
+    output_monetization_yll <-
+      monetize(output_attribute = output_attribute_yll,
+               valuation = valuation,
+               discount_rate = discount_rate,
+               discount_shape = discount_shape,
+               n_years = if(is_lifetable_yll) NULL else n_years,
+               inflation_rate = inflation_rate,
+               real_growth_rate = real_growth_rate)
+
+    output_monetization_yld <-
+      monetize(output_attribute = output_attribute_yld,
+               valuation = valuation,
+               discount_rate = discount_rate,
+               discount_shape = discount_shape,
+               n_years = n_years,
+               inflation_rate = inflation_rate,
+               real_growth_rate = real_growth_rate)
+
+    monetization_main_yll <- output_monetization_yll[["monetization_main"]]
+    monetization_main_yld <- output_monetization_yld[["monetization_main"]]
+
+    # Join by the columns that identify the rows (as in daly())
+    # and by the input values that are the same in YLL and YLD.
+    # Not n_years because it differs (life table vs. entered)
+    cols_for_join <-
+      intersect(names(monetization_main_yll), names(monetization_main_yld))
+    cols_for_join <-
+      cols_for_join[!grepl("impact|n_years", cols_for_join)]
+
+    monetization_main <-
+      dplyr::full_join(
+        monetization_main_yll,
+        monetization_main_yld,
+        by = cols_for_join,
+        suffix = c("_yll", "_yld")) |>
+      dplyr::mutate(
+        impact = impact_yll + impact_yld,
+        monetized_impact = monetized_impact_yll + monetized_impact_yld,
+        monetized_impact_unadjusted =
+          monetized_impact_unadjusted_yll + monetized_impact_unadjusted_yld,
+        monetized_impact_rounded = round(monetized_impact)) |>
+      # The rounded values of YLL and YLD are not needed anymore
+      dplyr::select(-dplyr::any_of(c("monetized_impact_rounded_yll",
+                                     "monetized_impact_rounded_yld"))) |>
+      # The columns that identify the rows first (also the ones only in YLD)
+      dplyr::relocate(dplyr::contains("_ci"), dplyr::contains("info"))
+
+    # Add the monetization to the DALY output
+    # The monetization of YLL and YLD is kept in the detailed results
+    output_monetization <-
+      c(output_attribute,
+        list(
+          monetization_main = monetization_main,
+          monetization_detailed = list(
+            monetization_yll = output_monetization_yll[c("monetization_main",
+                                                         "monetization_detailed")],
+            monetization_yld = output_monetization_yld[c("monetization_main",
+                                                         "monetization_detailed")])))
+
+    return(output_monetization)
+  }
 
   # Define variables ####
   # Store variables to increase readability of conditions
@@ -211,7 +297,6 @@ monetize <- function(output_attribute = NULL,
   } else {
     is_lifetable <- FALSE
     }
-
 
 
   is_not_lifetable <- ! is_lifetable
