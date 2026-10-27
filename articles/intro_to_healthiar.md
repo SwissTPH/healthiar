@@ -3055,9 +3055,14 @@ exactly as `exp_central` or `bhd_central`. They must have one single
 value per geographic unit and dimension entered in `main_results_by`,
 here per pair.
 
-In contrast, the arguments describing prices over time (`inflation_rate`
-and `real_growth_rate`) are the same for all pairs: a vector entered
-there refers to year-specific rates.
+`real_growth_rate` can be entered in the same way (e.g. one rate per
+country, since it reflects income growth), constant over the years. A
+vector refers to year-specific rates only if `output_attribute` contains
+one single assessment.
+
+In contrast, `inflation_rate` is the same for all pairs, so that all
+valuations share one price base: a vector entered there refers to
+year-specific rates.
 
 ##### Function call
 

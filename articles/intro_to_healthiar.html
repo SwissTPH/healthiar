@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1797</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1798</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -4161,10 +4161,13 @@ arguments of <code><a href="../reference/attribute_health.html">attribute_health
 <code>exp_central</code> or <code>bhd_central</code>. They must have one
 single value per geographic unit and dimension entered in
 <code>main_results_by</code>, here per pair.</p>
-<p>In contrast, the arguments describing prices over time
-(<code>inflation_rate</code> and <code>real_growth_rate</code>) are the
-same for all pairs: a vector entered there refers to year-specific
-rates.</p>
+<p><code>real_growth_rate</code> can be entered in the same way
+(e.g. one rate per country, since it reflects income growth), constant
+over the years. A vector refers to year-specific rates only if
+<code>output_attribute</code> contains one single assessment.</p>
+<p>In contrast, <code>inflation_rate</code> is the same for all pairs,
+so that all valuations share one price base: a vector entered there
+refers to year-specific rates.</p>
 <div class="section level5">
 <h5 id="function-call-29">Function call<a class="anchor" aria-label="anchor" href="#function-call-29"></a>
 </h5>
