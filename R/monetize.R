@@ -500,7 +500,7 @@ monetize <- function(output_attribute = NULL,
     if(has_incompatible_length){
       stop(
         paste0("valuation, discount_rate and discount_shape must have a length of 1 ",
-               "or the same length as the arguments of the attribute function.),
+               "or the same length as the arguments of the attribute function."),
         call. = FALSE)
     }
 
