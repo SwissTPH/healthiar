@@ -916,6 +916,41 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 })
 
+testthat::test_that("results the same |pathway_monetization|valuation_by_pair|discount_rate_by_pair|discount_shape_by_pair|", {
+
+  # Two exposure-outcome pairs in two geographic units monetized in one call
+  # with one valuation, discount rate and discount shape per pair.
+  # Expected: impact * valuation * discount factor, i.e. the same as
+  # monetizing each pair separately:
+  # exponential 1 / (1 + discount_rate)^n_years for pm2.5_copd and
+  # hyperbolic Mazur 1 / (1 + discount_rate * n_years) for no2_asthma
+  output_attribute <- healthiar::attribute_health(
+    info = data.frame(pair = rep(c("pm2.5_copd", "no2_asthma"), each = 2)),
+    main_results_by = "pair",
+    exp_central = c(8.85, 9.20, 22.1, 24.5),
+    cutoff_central = c(5, 5, 10, 10),
+    rr_central = c(1.369, 1.369, 1.041, 1.041),
+    rr_increment = 10,
+    erf_shape = c("log_linear", "log_linear", "linear", "linear"),
+    bhd_central = c(30747, 31500, 12000, 12500),
+    geo_id_micro = rep(c("a", "b"), times = 2))
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        output_attribute = output_attribute,
+        valuation = c(50000, 50000, 3000, 3000),
+        discount_rate = c(0.03, 0.03, 0.01, 0.01),
+        discount_shape = rep(c("exponential", "hyperbolic_mazur_1987"), each = 2),
+        n_years = 5
+      )$monetization_main$monetized_impact,
+    expect =
+      output_attribute$health_main$impact *
+      c(50000, 50000, 3000, 3000) /
+      c(1.03^5, 1.03^5, 1 + 0.01 * 5, 1 + 0.01 * 5)
+  )
+})
+
 
 
 # ERROR OR WARNING ########
