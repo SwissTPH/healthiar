@@ -402,6 +402,81 @@ monetize <- function(output_attribute = NULL,
 
 
 
+  # Values by row ####
+  # valuation, discount_rate and discount_shape can be entered as vectors
+  # parallel to the arguments of the attribute function (e.g. one valuation per
+  # exposure-outcome pair). Then all pairs and geographic units are
+  # monetized in one single call.
+  # They are attached to the results by the dimensions that identify the rows
+  # of the main results, i.e. the larger geographic unit and main_results_by.
+  # Since monetization is linear in the impact, this gives the same as
+  # monetizing each row separately.
+  is_value_by_row <-
+    !is.null(output_attribute) &&
+    (length(valuation) > 1 ||
+       length(discount_rate) > 1 ||
+       length(discount_shape) > 1)
+
+  if(is_value_by_row){
+
+    if(is_compare){
+      input_args_attribute <- arg_values_scen_1
+    } else {
+      input_args_attribute <- output_attribute$health_detailed$input_args$value
+    }
+
+    # The user enters the column names of info without prefix,
+    # while add_info() adds it (same as in get_output())
+    main_results_by <- input_args_attribute$main_results_by
+    info_names <- names(input_args_attribute$info)
+
+    if(!is.null(main_results_by) && !is.null(info_names)){
+      main_results_by <-
+        purrr::map_chr(
+          main_results_by,
+          ~ if (.x %in% info_names) {paste0("info_", .x)} else {.x})
+    }
+
+    if(!is.null(input_args_attribute$geo_id_macro)){
+      larger_geo_id <- "geo_id_macro"
+    } else {
+      larger_geo_id <- "geo_id_micro"
+    }
+
+    value_by_row_keys <- unique(c(larger_geo_id, main_results_by))
+
+    value_by_row <-
+      tibble::tibble(
+        geo_id_micro = input_args_attribute$geo_id_micro,
+        geo_id_macro = input_args_attribute$geo_id_macro,
+        sex = input_args_attribute$sex,
+        age_group = input_args_attribute$age_group,
+        valuation = valuation,
+        discount_rate = discount_rate,
+        discount_shape = discount_shape) |>
+      add_info(info = input_args_attribute$info)
+
+    # Columns that are not entered (e.g. exp_category) cannot be keys
+    value_by_row_keys <- intersect(value_by_row_keys, names(value_by_row))
+
+    value_by_row <-
+      value_by_row |>
+      dplyr::select(dplyr::all_of(value_by_row_keys),
+                    dplyr::any_of(c("valuation", "discount_rate", "discount_shape"))) |>
+      # The ids are character in the results (e.g. geo_id_micro = 1 becomes "1")
+      dplyr::mutate(dplyr::across(dplyr::all_of(value_by_row_keys), as.character)) |>
+      dplyr::distinct()
+
+    ## Error if more than one value per row of the main results ####
+    if(anyDuplicated(value_by_row[value_by_row_keys]) > 0){
+      stop(
+        paste0("valuation, discount_rate and discount_shape must have one single value ",
+               "per geographic unit and dimension entered in main_results_by."),
+        call. = FALSE)
+    }
+  }
+
+
   # Monetize ####
 
   ## Create function add_monetized_impact() ###############
