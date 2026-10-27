@@ -2506,9 +2506,11 @@ $$real\_growth\_factor =(1 + real\_growth\_rate)^{n\_years}$$
 Where $real\_growth\_rate$ represents the annual real growth rate in health valuation.
 As in `inflation_rate`, a vector of year-specific rates can be entered instead of
 one single value, in which case the factor is the product of the year-specific factors.
-This ensures that long-term environmental impacts are not undervalued. 
+This ensures that long-term environmental impacts are not undervalued.
 
-
+The argument `output_attribute` accepts the output of `attribute_health()`, `attribute_lifetable()`, `compare()` or `daly()`.
+With the output of `attribute_lifetable()`, the impacts are monetized year by year and the number of years is taken from the life table.
+With the output of `daly()`, the YLL and the YLD are monetized separately and then summed, i.e. the YLL from the life table are discounted year by year, while `n_years` is used for the YLD.
 
 
 
