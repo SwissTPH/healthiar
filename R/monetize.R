@@ -212,6 +212,11 @@ monetize <- function(output_attribute = NULL,
     is_lifetable <- FALSE
     }
 
+  # Outputs of daly() have no input table (they combine the YLL and YLD outputs),
+  # so is_lifetable is NULL. The DALY are monetized as one impact (no life table)
+  if (is.null(is_lifetable)) {
+    is_lifetable <- FALSE
+  }
 
 
   is_not_lifetable <- ! is_lifetable
