@@ -5,7 +5,8 @@
 #' This function monetizes health impacts
 
 # ARGUMENTS ####################################################################
-#' @param output_attribute \code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()} or \code{healthiar::compare()} as results.
+#' @param output_attribute \code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()}, \code{healthiar::compare()} or \code{healthiar::daly()} as results.
+#' The YLL and YLD in the output of \code{healthiar::daly()} are monetized separately and then summed. Thus, YLL from the life table are discounted year by year, while \code{n_years} is used for the YLD.
 #' @param impact \code{Numeric value} referring to the health impacts to be monetized (without attribute function). If a \code{Numeric vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.
 #' @param valuation \code{Numeric value} referring to unit value of a health impact.
 #' If \code{output_attribute} is entered, a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
@@ -101,6 +102,8 @@
 #' }
 #'
 #' If the argument \code{output_attribute} was specified, then the two results elements are added to the existing output.
+#' If \code{output_attribute} comes from \code{healthiar::daly()}, \code{monetization_main} contains the monetized YLL and YLD (suffixes \code{_yll} and \code{_yld}) and their sum,
+#' while \code{monetization_detailed} contains the monetization of YLL and YLD (\code{monetization_yll} and \code{monetization_yld}).
 #'
 # EXAMPLES #####################################################################
 #' @examples
@@ -130,7 +133,7 @@
 #'
 #' @seealso
 #' \itemize{
-#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}, \code{\link{compare}}
+#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}, \code{\link{compare}}, \code{\link{daly}}
 #'   \item Alternative: \code{\link{get_inflation_factor}},
 #'     \code{\link{get_discount_factor}}, \code{\link{cba}}
 #' }
