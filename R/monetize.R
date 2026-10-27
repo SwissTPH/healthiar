@@ -800,8 +800,11 @@ monetize <- function(output_attribute = NULL,
       }
 
       # Get the main and detailed output by aggregating and/or filtering cases (rows)
+      # input_args are passed so that get_output() keeps main_results_by
+      # (e.g. exposure-outcome pairs) apart instead of adding them up
       output_monetization <-
-        get_output(results_raw = impact_detailed) |>
+        get_output(input_args = output_health[["health_detailed"]][["input_args"]],
+                   results_raw = impact_detailed) |>
         # Rename the list elements (not anymore health but health including monetization)
         stats::setNames(c("monetization_main", "monetization_detailed"))
 
