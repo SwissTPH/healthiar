@@ -1096,6 +1096,32 @@ testthat::test_that("error if incompatible size of info", {
   )
 })
 
+testthat::test_that("error if values by row cannot be assigned to the results", {
+
+  output_attribute <- healthiar::attribute_health(
+    info = data.frame(pair = rep(c("pm2.5_copd", "no2_asthma"), each = 2)),
+    main_results_by = "pair",
+    exp_central = c(8.85, 9.20, 22.1, 24.5),
+    cutoff_central = c(5, 5, 10, 10),
+    rr_central = c(1.369, 1.369, 1.041, 1.041),
+    rr_increment = 10,
+    erf_shape = c("log_linear", "log_linear", "linear", "linear"),
+    bhd_central = c(30747, 31500, 12000, 12500),
+    geo_id_micro = rep(c("a", "b"), times = 2))
+
+  # Results modified after attribute_health(): geographic unit "c" is unknown
+  output_attribute$health_main$geo_id_micro[1] <- "c"
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        output_attribute = output_attribute,
+        valuation = c(50000, 50000, 3000, 3000)
+      ),
+    regexp = "could not be assigned to these rows of the results"
+  )
+})
+
 
 testthat::test_that("errof if different year of analysis", {
 

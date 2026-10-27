@@ -511,9 +511,31 @@ monetize <- function(output_attribute = NULL,
       if(is_value_by_row){
         df_with_input <- 
           dplyr::left_join(
-            df, 
-            value_by_row, 
+            df,
+            value_by_row,
             by = value_by_row_keys)
+
+        ## Error if rows without value ####
+        # A row of the results without match in value_by_row would get NA
+        # in valuation and therefore in monetized_impact without any warning
+        # (e.g. if the results were modified after the attribute function).
+        # valuation and not discount_rate or discount_shape
+        # because valuation is always entered
+        rows_without_value <-
+          df_with_input |>
+          dplyr::filter(is.na(valuation)) |>
+          dplyr::distinct(dplyr::across(dplyr::all_of(value_by_row_keys)))
+
+        if(nrow(rows_without_value) > 0){
+          stop(
+            paste0("valuation, discount_rate and discount_shape could not be ",
+                   "assigned to these rows of the results (",
+                   toString(value_by_row_keys), "): ",
+                   toString(purrr::pmap_chr(rows_without_value, paste)), ". ",
+                   "Please enter output_attribute as obtained from ",
+                   "the attribute function."),
+            call. = FALSE)
+        }
       } else {
         df_with_input <- 
           dplyr::mutate(df,
