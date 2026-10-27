@@ -453,6 +453,10 @@ monetize <- function(output_attribute = NULL,
     !is.null(output_attribute) &&
     !is.null(input_args_attribute$geo_id_micro)
 
+  # NULL if there are no arguments of the attribute function
+  # (main_results_by is also used to select the columns of monetization_main)
+  main_results_by <- NULL
+
   if(has_args_attribute){
 
     # The user enters the column names of info without prefix,
@@ -914,6 +918,9 @@ monetize <- function(output_attribute = NULL,
     # Identify the relevant columns for monetization that are in the output
     relevant_columns <-
       c("info", "geo_id_micro", "geo_id_macro",
+        # The dimensions entered in main_results_by (e.g. sex or age_group)
+        # define the rows too
+        main_results_by,
         "impact",
         "discount_rate", "discount_shape", "inflation_rate", "n_years",
         "real_growth_rate",
