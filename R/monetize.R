@@ -438,6 +438,20 @@ monetize <- function(output_attribute = NULL,
       input_args_attribute <- output_attribute$health_detailed$input_args$value
     }
 
+    ## Error if no arguments of the attribute function ####
+    # Outputs of e.g. multiexpose() or daly() store the outputs they combine
+    # and not the arguments of the attribute function.
+    # Without them, the values cannot be attached to the right rows
+    # (geo_id_micro is always available after the attribute functions)
+    if(is.null(input_args_attribute$geo_id_micro)){
+      stop(
+        paste0("valuation, discount_rate and discount_shape can only be entered ",
+               "as vectors if output_attribute comes from attribute_health(), ",
+               "attribute_lifetable() or compare(). ",
+               "Otherwise, enter one single value."),
+        call. = FALSE)
+    }
+
     # The user enters the column names of info without prefix,
     # while add_info() adds it (same as in get_output())
     main_results_by <- input_args_attribute$main_results_by
