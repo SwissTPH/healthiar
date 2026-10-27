@@ -298,12 +298,6 @@ monetize <- function(output_attribute = NULL,
     is_lifetable <- FALSE
     }
 
-  # Outputs of daly() have no input table (they combine the YLL and YLD outputs),
-  # so is_lifetable is NULL. The DALY are monetized as one impact (no life table)
-  if (is.null(is_lifetable)) {
-    is_lifetable <- FALSE
-  }
-
 
   is_not_lifetable <- ! is_lifetable
 
@@ -781,11 +775,8 @@ monetize <- function(output_attribute = NULL,
       } else if(taking_last_discounted_year){
         df_by_year <-
           # Split by year
-          # The column year is removed if available (e.g. after daly() with the
-          # life table years collapsed in one string), otherwise there is a
-          # name clash (year.x and year.y)
           dplyr::cross_join(x = tibble::tibble(year = n_years_vector),
-                            y = dplyr::select(df_with_input, -dplyr::any_of("year")))
+                            y = df_with_input)
       }
 
 
