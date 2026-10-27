@@ -918,6 +918,9 @@ monetize <- function(output_attribute = NULL,
     # Identify the relevant columns for monetization that are in the output
     relevant_columns <-
       c("info", "geo_id_micro", "geo_id_macro",
+        # The dimensions entered in main_results_by (e.g. sex or age_group)
+        # define the rows too
+        main_results_by,
         "impact",
         "discount_rate", "discount_shape", "inflation_rate", "n_years",
         "real_growth_rate",
