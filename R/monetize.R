@@ -446,19 +446,14 @@ monetize <- function(output_attribute = NULL,
     }
   }
 
-    ## Error if no arguments of the attribute function ####
-    # Outputs of e.g. multiexpose() or daly() store the outputs they combine
-    # and not the arguments of the attribute function.
-    # Without them, the values cannot be attached to the right rows
-    # (geo_id_micro is always available after the attribute functions)
-    if(is.null(input_args_attribute$geo_id_micro)){
-      stop(
-        paste0("valuation, discount_rate and discount_shape can only be entered ",
-               "as vectors if output_attribute comes from attribute_health(), ",
-               "attribute_lifetable() or compare(). ",
-               "Otherwise, enter one single value."),
-        call. = FALSE)
-    }
+  # Outputs of e.g. multiexpose() or daly() store the outputs they combine
+  # and not the arguments of the attribute function
+  # (geo_id_micro is always available after the attribute functions)
+  has_args_attribute <-
+    !is.null(output_attribute) &&
+    !is.null(input_args_attribute$geo_id_micro)
+
+  if(has_args_attribute){
 
     # The user enters the column names of info without prefix,
     # while add_info() adds it (same as in get_output())
@@ -479,6 +474,53 @@ monetize <- function(output_attribute = NULL,
     }
 
     value_by_row_keys <- unique(c(larger_geo_id, main_results_by))
+
+    # Rows of the attribute function (without values) to count the assessments
+    rows_attribute <-
+      tibble::tibble(
+        geo_id_micro = input_args_attribute$geo_id_micro,
+        geo_id_macro = input_args_attribute$geo_id_macro,
+        sex = input_args_attribute$sex,
+        age_group = input_args_attribute$age_group) |>
+      add_info(info = input_args_attribute$info)
+
+    # Columns that are not entered (e.g. exp_category) cannot be keys
+    value_by_row_keys <- intersect(value_by_row_keys, names(rows_attribute))
+
+    n_assessments <-
+      rows_attribute |>
+      dplyr::distinct(dplyr::across(dplyr::all_of(value_by_row_keys))) |>
+      nrow()
+  }
+
+  is_real_growth_rate_by_row <-
+    has_args_attribute &&
+    length(real_growth_rate) > 1 &&
+    n_assessments > 1
+
+  is_value_by_row <-
+    !is.null(output_attribute) &&
+    (length(valuation) > 1 ||
+       length(discount_rate) > 1 ||
+       length(discount_shape) > 1 ||
+       is_real_growth_rate_by_row)
+
+  if(is_value_by_row){
+
+    ## Error if no arguments of the attribute function ####
+    # Without them, the values cannot be attached to the right rows
+    if(!has_args_attribute){
+      stop(
+        paste0("valuation, discount_rate and discount_shape can only be entered ",
+               "as vectors if output_attribute comes from attribute_health(), ",
+               "attribute_lifetable() or compare(). ",
+               "Otherwise, enter one single value."),
+        call. = FALSE)
+    }
+
+    # Year-specific rates are not by row (see above)
+    real_growth_rate_by_row <-
+      if(is_real_growth_rate_by_row) real_growth_rate else NULL
 
     ## Error if incompatible length ####
     # The values must be parallel to the arguments of the attribute function,
