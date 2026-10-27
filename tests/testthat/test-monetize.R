@@ -980,8 +980,9 @@ testthat::test_that("results the same |pathway_monetization|real_growth_rate_by_
 
 testthat::test_that("results the same |pathway_monetization|output_attribute_from_daly|", {
 
-  # The output of daly() has no input table and its YLL part comes from the
-  # life table. Expected: impact * valuation / (1 + discount_rate)^n_years
+  # The YLL (life table, discounted year by year) and the YLD are monetized
+  # separately and summed.
+  # Expected: the same as monetizing the YLL and the YLD separately
   data <- readRDS(testthat::test_path("testdata", "airqplus_pm_deaths_yll.rds"))
   data_lifetable <- readRDS(testthat::test_path("testdata", "lifetable_with_population.rds"))
 
@@ -1029,7 +1030,17 @@ testthat::test_that("results the same |pathway_monetization|output_attribute_fro
         n_years = 5
       )$monetization_main$monetized_impact,
     expect =
-      output_daly$health_main$impact * 1000 / 1.03^5
+      healthiar::monetize(
+        output_attribute = output_yll,
+        valuation = 1000,
+        discount_rate = 0.03
+      )$monetization_main$monetized_impact +
+      healthiar::monetize(
+        output_attribute = output_yld,
+        valuation = 1000,
+        discount_rate = 0.03,
+        n_years = 5
+      )$monetization_main$monetized_impact
   )
 })
 
