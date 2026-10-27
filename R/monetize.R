@@ -453,6 +453,10 @@ monetize <- function(output_attribute = NULL,
     !is.null(output_attribute) &&
     !is.null(input_args_attribute$geo_id_micro)
 
+  # NULL if there are no arguments of the attribute function
+  # (main_results_by is also used to select the columns of monetization_main)
+  main_results_by <- NULL
+
   if(has_args_attribute){
 
     # The user enters the column names of info without prefix,
