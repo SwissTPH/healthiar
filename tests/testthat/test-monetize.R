@@ -1122,6 +1122,43 @@ testthat::test_that("error if values by row cannot be assigned to the results", 
   )
 })
 
+testthat::test_that("error if vector in valuation with impact", {
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        impact = c(800, 1000),
+        valuation = c(10, 20)
+      ),
+    regexp = "valuation must be one single value if impact is entered"
+  )
+})
+
+testthat::test_that("error if vector in valuation after multiexpose", {
+
+  output_pm <- healthiar::attribute_health(
+    exp_central = 8, cutoff_central = 5, rr_central = 1.369, rr_increment = 10,
+    erf_shape = "log_linear", bhd_central = c(15000, 16000),
+    geo_id_micro = c("a", "b"))
+
+  output_multiexpose <- healthiar::multiexpose(
+    output_attribute_exp_1 = output_pm,
+    output_attribute_exp_2 =
+      healthiar::attribute_mod(output_pm, exp_central = 20, rr_central = 1.041),
+    exp_name_1 = "pm2.5",
+    exp_name_2 = "no2",
+    approach_multiexposure = "additive")
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        output_attribute = output_multiexpose,
+        valuation = c(10, 1)
+      ),
+    regexp = "can only be entered as vectors if output_attribute comes from"
+  )
+})
+
 testthat::test_that("error if values by row have incompatible length", {
 
   output_attribute <- healthiar::attribute_health(
