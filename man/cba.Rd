@@ -19,7 +19,8 @@ cba(
 )
 }
 \arguments{
-\item{output_attribute}{\code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()} or \code{healthiar::compare()} as results.}
+\item{output_attribute}{\code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()}, \code{healthiar::compare()} or \code{healthiar::daly()} as results.
+The YLL and YLD in the output of \code{healthiar::daly()} are monetized separately and then summed. Thus, YLL from the life table are discounted year by year, while \code{n_years} is used for the YLD.}
 
 \item{impact_benefit}{\code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure.}
 
@@ -46,7 +47,11 @@ to the annual real-term appreciation in the societal value of health
 (e.g., income elasticity).
 This adjusts the valuation upward to reflect rising wealth,
 independent of general price inflation.
-As in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
+If \code{output_attribute} contains more than one assessment
+(several geographic units or dimensions entered in \code{main_results_by}),
+a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+(e.g. one rate per country), constant over the years.
+Otherwise, as in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
 can be entered instead of one single value.}
 
 \item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.

@@ -17,7 +17,8 @@ monetize(
 )
 }
 \arguments{
-\item{output_attribute}{\code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()} or \code{healthiar::compare()} as results.}
+\item{output_attribute}{\code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()}, \code{healthiar::compare()} or \code{healthiar::daly()} as results.
+The YLL and YLD in the output of \code{healthiar::daly()} are monetized separately and then summed. Thus, YLL from the life table are discounted year by year, while \code{n_years} is used for the YLD.}
 
 \item{impact}{\code{Numeric value} referring to the health impacts to be monetized (without attribute function). If a \code{Numeric vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.}
 
@@ -50,7 +51,11 @@ to the annual real-term appreciation in the societal value of health
 (e.g., income elasticity).
 This adjusts the valuation upward to reflect rising wealth,
 independent of general price inflation.
-As in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
+If \code{output_attribute} contains more than one assessment
+(several geographic units or dimensions entered in \code{main_results_by}),
+a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+(e.g. one rate per country), constant over the years.
+Otherwise, as in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
 can be entered instead of one single value.}
 
 \item{info}{\code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}}
@@ -72,6 +77,8 @@ This function returns a \code{list} containing:
 }
 
 If the argument \code{output_attribute} was specified, then the two results elements are added to the existing output.
+If \code{output_attribute} comes from \code{healthiar::daly()}, \code{monetization_main} contains the monetized YLL and YLD (suffixes \code{_yll} and \code{_yld}) and their sum,
+while \code{monetization_detailed} contains the monetization of YLL and YLD (\code{monetization_yll} and \code{monetization_yld}).
 }
 \description{
 This function monetizes health impacts
@@ -104,9 +111,13 @@ Arguments describing the value of the health impact
 accept one value or, if \code{output_attribute} is entered,
 a vector parallel to the arguments of the attribute function
 (e.g. one value per exposure-outcome pair).
-Arguments describing prices over time
-(\code{inflation_rate}, \code{real_growth_rate})
-accept one value or a vector with one value per year.
+\code{inflation_rate} accepts one value or a vector with one value per year,
+so that all valuations share one price base.
+\code{real_growth_rate} reflects income growth, which differs by country and region.
+Therefore, if \code{output_attribute} contains more than one assessment,
+it accepts one value or a vector parallel to the arguments of the attribute function
+(one rate per row, constant over the years).
+For one single assessment, it accepts one value or a vector with one value per year.
 
 Detailed information about the methodology (including equations)
 is available in the package vignette.
@@ -145,7 +156,7 @@ results$monetization_main |>
 }
 \seealso{
 \itemize{
-  \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}, \code{\link{compare}}
+  \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}, \code{\link{compare}}, \code{\link{daly}}
   \item Alternative: \code{\link{get_inflation_factor}},
     \code{\link{get_discount_factor}}, \code{\link{cba}}
 }
