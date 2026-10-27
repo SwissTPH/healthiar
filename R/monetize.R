@@ -269,6 +269,19 @@ monetize <- function(output_attribute = NULL,
          call. = FALSE)
   }
 
+  ## Error if vector in valuation, discount_rate or discount_shape with impact ####
+  # Vectors are parallel to the arguments of the attribute function,
+  # so they need output_attribute.
+  # With impact, a vector would be silently applied per year instead
+  validate_args(
+    args = list(valuation = valuation,
+                discount_rate = discount_rate,
+                discount_shape = discount_shape),
+    arg_names = c("valuation", "discount_rate", "discount_shape"),
+    is_valid = function(x){is.null(impact) || length(x) == 1},
+    message = paste0("{arg} must be one single value if impact is entered. ",
+                     "Vectors are only possible with output_attribute."))
+
   ## Error if no right category is passed passed ####
   # Here input_args$value (and not the local value) is enough
   # because discount_shape is not overwritten above
