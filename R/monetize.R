@@ -532,7 +532,8 @@ monetize <- function(output_attribute = NULL,
     value_lengths <-
       lengths(list(valuation = valuation,
                    discount_rate = discount_rate,
-                   discount_shape = discount_shape))
+                   discount_shape = discount_shape,
+                   real_growth_rate = real_growth_rate_by_row))
 
     id_lengths <-
       c(lengths(list(input_args_attribute$geo_id_micro,
@@ -549,7 +550,8 @@ monetize <- function(output_attribute = NULL,
 
     if(has_incompatible_length){
       stop(
-        paste0("valuation, discount_rate and discount_shape must have a length of 1 ",
+        paste0("valuation, discount_rate, discount_shape and real_growth_rate ",
+               "must have a length of 1 ",
                "or the same length as the arguments of the attribute function."),
         call. = FALSE)
     }
@@ -562,16 +564,12 @@ monetize <- function(output_attribute = NULL,
         age_group = input_args_attribute$age_group,
         valuation = valuation,
         discount_rate = discount_rate,
-        discount_shape = discount_shape) |>
-      add_info(info = input_args_attribute$info)
-
-    # Columns that are not entered (e.g. exp_category) cannot be keys
-    value_by_row_keys <- intersect(value_by_row_keys, names(value_by_row))
-
-    value_by_row <-
-      value_by_row |>
+        discount_shape = discount_shape,
+        real_growth_rate = real_growth_rate_by_row) |>
+      add_info(info = input_args_attribute$info) |>
       dplyr::select(dplyr::all_of(value_by_row_keys),
-                    dplyr::any_of(c("valuation", "discount_rate", "discount_shape"))) |>
+                    dplyr::any_of(c("valuation", "discount_rate",
+                                    "discount_shape", "real_growth_rate"))) |>
       # The ids are character in the results (e.g. geo_id_micro = 1 becomes "1")
       # while the info columns keep the type entered by the user (e.g. integer year)
       dplyr::mutate(
@@ -583,7 +581,8 @@ monetize <- function(output_attribute = NULL,
     ## Error if more than one value per row of the main results ####
     if(anyDuplicated(value_by_row[value_by_row_keys]) > 0){
       stop(
-        paste0("valuation, discount_rate and discount_shape must have one single value ",
+        paste0("valuation, discount_rate, discount_shape and real_growth_rate ",
+               "must have one single value ",
                "per geographic unit and dimension entered in main_results_by."),
         call. = FALSE)
     }
@@ -641,7 +640,7 @@ monetize <- function(output_attribute = NULL,
 
         if(nrow(rows_without_value) > 0){
           stop(
-            paste0("valuation, discount_rate and discount_shape could not be ",
+            paste0("valuation, discount_rate, discount_shape and real_growth_rate could not be ",
                    "assigned to these rows of the results (",
                    toString(value_by_row_keys), "): ",
                    toString(purrr::pmap_chr(rows_without_value, paste)), ". ",
@@ -662,11 +661,16 @@ monetize <- function(output_attribute = NULL,
         # Add columns for input data in the table
         dplyr::mutate(n_years = n_years,
                       inflation_rate =
-                        collapse_if_year_specific(inflation_rate),
-                      real_growth_rate =
-                        collapse_if_year_specific(real_growth_rate)) |>
+                        collapse_if_year_specific(inflation_rate)) |>
         # Add info
         add_info(info = info)
+
+      # real_growth_rate by row is already joined above
+      if(!is_real_growth_rate_by_row){
+        df_with_input <-
+          dplyr::mutate(df_with_input,
+            real_growth_rate = collapse_if_year_specific(real_growth_rate))
+      }
 
 
       # Add year
@@ -702,10 +706,18 @@ monetize <- function(output_attribute = NULL,
                              inflation_rate = inflation_rate,
                              is_deflation = TRUE)
 
-      real_growth_factor <-
-        get_inflation_factor(n_years = df_by_year$year,
-                             inflation_rate = real_growth_rate,
-                             is_deflation = FALSE)
+      if(is_real_growth_rate_by_row){
+        # One rate per row (constant over the years), as for discount_rate.
+        # Not get_inflation_factor() because it would read the column
+        # as year-specific rates
+        real_growth_factor <-
+          (1 + df_by_year$real_growth_rate) ^ df_by_year$year
+      } else {
+        real_growth_factor <-
+          get_inflation_factor(n_years = df_by_year$year,
+                               inflation_rate = real_growth_rate,
+                               is_deflation = FALSE)
+      }
 
 
       df_by_year <-
