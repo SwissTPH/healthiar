@@ -506,13 +506,26 @@ monetize <- function(output_attribute = NULL,
           if(length(rate) > 1) toString(rate) else rate
         }
 
+      # Values by row are joined to the rows they belong to
+      # Otherwise one single value for all rows
+      if(is_value_by_row){
+        df_with_input <- 
+          dplyr::left_join(
+            df, 
+            value_by_row, 
+            by = value_by_row_keys)
+      } else {
+        df_with_input <- 
+          dplyr::mutate(df,
+            valuation = valuation,
+            discount_rate = discount_rate,
+            discount_shape = discount_shape)
+      }
+
       df_with_input <-
-        df |>
+        df_with_input |>
         # Add columns for input data in the table
-        dplyr::mutate(valuation = valuation,
-                      discount_rate = discount_rate,
-                      n_years = n_years,
-                      discount_shape = discount_shape,
+        dplyr::mutate(n_years = n_years,
                       inflation_rate =
                         collapse_if_year_specific(inflation_rate),
                       real_growth_rate =
