@@ -445,6 +445,38 @@ monetize <- function(output_attribute = NULL,
 
     value_by_row_keys <- unique(c(larger_geo_id, main_results_by))
 
+    ## Error if incompatible length ####
+    # The values must be parallel to the arguments of the attribute function,
+    # i.e. all lengths must be 1 or one common length.
+    # Otherwise tibble() below stops with a message that does not refer to
+    # the arguments of monetize().
+    # A common mistake is to enter one value per pair instead of
+    # one value per row of the attribute function
+    value_lengths <-
+      lengths(list(valuation = valuation,
+                   discount_rate = discount_rate,
+                   discount_shape = discount_shape))
+
+    id_lengths <-
+      c(lengths(list(input_args_attribute$geo_id_micro,
+                     input_args_attribute$geo_id_macro,
+                     input_args_attribute$sex,
+                     input_args_attribute$age_group)),
+        # NROW() because info can be a vector or a data frame
+        NROW(input_args_attribute$info))
+
+    all_lengths <- c(value_lengths, id_lengths)
+
+    has_incompatible_length <-
+      length(unique(all_lengths[all_lengths > 1])) > 1
+
+    if(has_incompatible_length){
+      stop(
+        paste0("valuation, discount_rate and discount_shape must have a length of 1 ",
+               "or the same length as the arguments of the attribute function.),
+        call. = FALSE)
+    }
+
     value_by_row <-
       tibble::tibble(
         geo_id_micro = input_args_attribute$geo_id_micro,
