@@ -695,8 +695,11 @@ monetize <- function(output_attribute = NULL,
       } else if(taking_last_discounted_year){
         df_by_year <-
           # Split by year
+          # The column year is removed if available (e.g. after daly() with the
+          # life table years collapsed in one string), otherwise there is a
+          # name clash (year.x and year.y)
           dplyr::cross_join(x = tibble::tibble(year = n_years_vector),
-                            y = df_with_input)
+                            y = dplyr::select(df_with_input, -dplyr::any_of("year")))
       }
 
 
