@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1799</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1801</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -4071,6 +4071,15 @@ represents the annual real growth rate in health valuation. As in
 entered instead of one single value, in which case the factor is the
 product of the year-specific factors. This ensures that long-term
 environmental impacts are not undervalued.</p>
+<p>The argument <code>output_attribute</code> accepts the output of
+<code><a href="../reference/attribute_health.html">attribute_health()</a></code>, <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>,
+<code><a href="../reference/compare.html">compare()</a></code> or <code><a href="../reference/daly.html">daly()</a></code>. With the output of
+<code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>, the impacts are monetized year by
+year and the number of years is taken from the life table. With the
+output of <code><a href="../reference/daly.html">daly()</a></code>, the YLL and the YLD are monetized
+separately and then summed, i.e. the YLL from the life table are
+discounted year by year, while <code>n_years</code> is used for the
+YLD.</p>
 </div>
 </div>
 <div class="section level4">

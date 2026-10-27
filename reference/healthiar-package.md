@@ -9,8 +9,10 @@ and social inequalities. The initial development has been funded by the
 European Union project BEST-COST. Disclaimer: This package is provided
 "as is", without warranty of any kind. The developers are not liable for
 any calculation errors, inaccuracies or results obtained with it.
-Functions, arguments and results may change between versions. Selection
-of relevant references (in chronological order): WHO (2003)
+Functions, arguments and results may change between versions. If you use
+healthiar, please cite it:
+[doi:10.21105/joss.10599](https://doi.org/10.21105/joss.10599) .
+Selection of relevant references (in chronological order): WHO (2003)
 <https://www.who.int/publications/i/item/9241546204>, Murray et al.
 (2003)
 [doi:10.1186/1478-7954-1-1](https://doi.org/10.1186/1478-7954-1-1) ,

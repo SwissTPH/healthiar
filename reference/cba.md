@@ -28,10 +28,15 @@ cba(
 
   `List` produced by
   [`healthiar::attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
-  [`healthiar::attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
-  or
+  [`healthiar::attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
   [`healthiar::compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
-  as results.
+  or
+  [`healthiar::daly()`](https://swisstph.github.io/healthiar/reference/daly.md)
+  as results. The YLL and YLD in the output of
+  [`healthiar::daly()`](https://swisstph.github.io/healthiar/reference/daly.md)
+  are monetized separately and then summed. Thus, YLL from the life
+  table are discounted year by year, while `n_years` is used for the
+  YLD.
 
 - impact_benefit:
 
@@ -77,7 +82,11 @@ cba(
   `Numeric value` between 0 and 1 referring to the annual real-term
   appreciation in the societal value of health (e.g., income
   elasticity). This adjusts the valuation upward to reflect rising
-  wealth, independent of general price inflation. As in
+  wealth, independent of general price inflation. If `output_attribute`
+  contains more than one assessment (several geographic units or
+  dimensions entered in `main_results_by`), a `numeric vector` parallel
+  to the arguments of the attribute function can be entered instead
+  (e.g. one rate per country), constant over the years. Otherwise, as in
   `inflation_rate`, a `numeric vector` of year-specific rates can be
   entered instead of one single value.
 

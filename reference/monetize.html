@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1799</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1801</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,8 @@
 
 
 <dl><dt id="arg-output-attribute">output_attribute<a class="anchor" aria-label="anchor" href="#arg-output-attribute"></a></dt>
-<dd><p><code>List</code> produced by <code><a href="attribute_health.html">healthiar::attribute_health()</a></code>, <code><a href="attribute_lifetable.html">healthiar::attribute_lifetable()</a></code> or <code><a href="compare.html">healthiar::compare()</a></code> as results.</p></dd>
+<dd><p><code>List</code> produced by <code><a href="attribute_health.html">healthiar::attribute_health()</a></code>, <code><a href="attribute_lifetable.html">healthiar::attribute_lifetable()</a></code>, <code><a href="compare.html">healthiar::compare()</a></code> or <code><a href="daly.html">healthiar::daly()</a></code> as results.
+The YLL and YLD in the output of <code><a href="daly.html">healthiar::daly()</a></code> are monetized separately and then summed. Thus, YLL from the life table are discounted year by year, while <code>n_years</code> is used for the YLD.</p></dd>
 
 
 <dt id="arg-impact">impact<a class="anchor" aria-label="anchor" href="#arg-impact"></a></dt>
@@ -108,7 +109,11 @@ to the annual real-term appreciation in the societal value of health
 (e.g., income elasticity).
 This adjusts the valuation upward to reflect rising wealth,
 independent of general price inflation.
-As in <code>inflation_rate</code>, a <code>numeric vector</code> of year-specific rates
+If <code>output_attribute</code> contains more than one assessment
+(several geographic units or dimensions entered in <code>main_results_by</code>),
+a <code>numeric vector</code> parallel to the arguments of the attribute function can be entered instead
+(e.g. one rate per country), constant over the years.
+Otherwise, as in <code>inflation_rate</code>, a <code>numeric vector</code> of year-specific rates
 can be entered instead of one single value.</p></dd>
 
 
@@ -124,7 +129,9 @@ can be entered instead of one single value.</p></dd>
 <li><p>And many more</p></li>
 </ul><p>2) <code>monetization_detailed</code> (<code>list</code>) containing detailed (and interim) results.</p><ul><li><p><code>results_by_year</code> (<code>tibble</code>)</p></li>
 <li><p><code>health_raw</code> (<code>tibble</code>) containing the monetized results for each for each combination of input uncertainty that were provided to the initial <code><a href="attribute_health.html">attribute_health()</a></code> call</p></li>
-</ul><p>If the argument <code>output_attribute</code> was specified, then the two results elements are added to the existing output.</p>
+</ul><p>If the argument <code>output_attribute</code> was specified, then the two results elements are added to the existing output.
+If <code>output_attribute</code> comes from <code><a href="daly.html">healthiar::daly()</a></code>, <code>monetization_main</code> contains the monetized YLL and YLD (suffixes <code>_yll</code> and <code>_yld</code>) and their sum,
+while <code>monetization_detailed</code> contains the monetization of YLL and YLD (<code>monetization_yll</code> and <code>monetization_yld</code>).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -151,9 +158,13 @@ a factor based <code>valuation growth</code> can be applied
 accept one value or, if <code>output_attribute</code> is entered,
 a vector parallel to the arguments of the attribute function
 (e.g. one value per exposure-outcome pair).
-Arguments describing prices over time
-(<code>inflation_rate</code>, <code>real_growth_rate</code>)
-accept one value or a vector with one value per year.</p>
+<code>inflation_rate</code> accepts one value or a vector with one value per year,
+so that all valuations share one price base.
+<code>real_growth_rate</code> reflects income growth, which differs by country and region.
+Therefore, if <code>output_attribute</code> contains more than one assessment,
+it accepts one value or a vector parallel to the arguments of the attribute function
+(one rate per row, constant over the years).
+For one single assessment, it accepts one value or a vector with one value per year.</p>
 <p>Detailed information about the methodology (including equations)
 is available in the package vignette.
 More specifically, see chapters:</p><ul><li><p><a href="https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html#monetization">Monetization</a></p></li>
@@ -187,7 +198,7 @@ OECD Publishing, Paris.
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
-<ul><li><p>Upstream: <code><a href="attribute_health.html">attribute_health</a></code>, <code><a href="attribute_lifetable.html">attribute_lifetable</a></code>, <code><a href="compare.html">compare</a></code></p></li>
+<ul><li><p>Upstream: <code><a href="attribute_health.html">attribute_health</a></code>, <code><a href="attribute_lifetable.html">attribute_lifetable</a></code>, <code><a href="compare.html">compare</a></code>, <code><a href="daly.html">daly</a></code></p></li>
 <li><p>Alternative: <code><a href="get_inflation_factor.html">get_inflation_factor</a></code>,
     <code><a href="get_discount_factor.html">get_discount_factor</a></code>, <code><a href="cba.html">cba</a></code></p></li>
 </ul></div>

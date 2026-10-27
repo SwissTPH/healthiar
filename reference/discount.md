@@ -20,10 +20,15 @@ discount(
 
   `List` produced by
   [`healthiar::attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
-  [`healthiar::attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
-  or
+  [`healthiar::attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
   [`healthiar::compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
-  as results.
+  or
+  [`healthiar::daly()`](https://swisstph.github.io/healthiar/reference/daly.md)
+  as results. The YLL and YLD in the output of
+  [`healthiar::daly()`](https://swisstph.github.io/healthiar/reference/daly.md)
+  are monetized separately and then summed. Thus, YLL from the life
+  table are discounted year by year, while `n_years` is used for the
+  YLD.
 
 - impact:
 
@@ -83,7 +88,12 @@ results.
   call
 
 If the argument `output_attribute` was specified, then the two results
-elements are added to the existing output.
+elements are added to the existing output. If `output_attribute` comes
+from
+[`healthiar::daly()`](https://swisstph.github.io/healthiar/reference/daly.md),
+`monetization_main` contains the monetized YLL and YLD (suffixes `_yll`
+and `_yld`) and their sum, while `monetization_detailed` contains the
+monetization of YLL and YLD (`monetization_yll` and `monetization_yld`).
 
 ## Details
 

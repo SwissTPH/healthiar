@@ -11,7 +11,7 @@ which generates some costs."><meta property="og:image" content="https://swisstph
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1799</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1801</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,8 @@ which generates some costs.</p>
 
 
 <dl><dt id="arg-output-attribute">output_attribute<a class="anchor" aria-label="anchor" href="#arg-output-attribute"></a></dt>
-<dd><p><code>List</code> produced by <code><a href="attribute_health.html">healthiar::attribute_health()</a></code>, <code><a href="attribute_lifetable.html">healthiar::attribute_lifetable()</a></code> or <code><a href="compare.html">healthiar::compare()</a></code> as results.</p></dd>
+<dd><p><code>List</code> produced by <code><a href="attribute_health.html">healthiar::attribute_health()</a></code>, <code><a href="attribute_lifetable.html">healthiar::attribute_lifetable()</a></code>, <code><a href="compare.html">healthiar::compare()</a></code> or <code><a href="daly.html">healthiar::daly()</a></code> as results.
+The YLL and YLD in the output of <code><a href="daly.html">healthiar::daly()</a></code> are monetized separately and then summed. Thus, YLL from the life table are discounted year by year, while <code>n_years</code> is used for the YLD.</p></dd>
 
 
 <dt id="arg-impact-benefit">impact_benefit<a class="anchor" aria-label="anchor" href="#arg-impact-benefit"></a></dt>
@@ -108,7 +109,11 @@ to the annual real-term appreciation in the societal value of health
 (e.g., income elasticity).
 This adjusts the valuation upward to reflect rising wealth,
 independent of general price inflation.
-As in <code>inflation_rate</code>, a <code>numeric vector</code> of year-specific rates
+If <code>output_attribute</code> contains more than one assessment
+(several geographic units or dimensions entered in <code>main_results_by</code>),
+a <code>numeric vector</code> parallel to the arguments of the attribute function can be entered instead
+(e.g. one rate per country), constant over the years.
+Otherwise, as in <code>inflation_rate</code>, a <code>numeric vector</code> of year-specific rates
 can be entered instead of one single value.</p></dd>
 
 

@@ -2975,6 +2975,20 @@ rates can be entered instead of one single value, in which case the
 factor is the product of the year-specific factors. This ensures that
 long-term environmental impacts are not undervalued.
 
+The argument `output_attribute` accepts the output of
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
+[`compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
+or [`daly()`](https://swisstph.github.io/healthiar/reference/daly.md).
+With the output of
+[`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
+the impacts are monetized year by year and the number of years is taken
+from the life table. With the output of
+[`daly()`](https://swisstph.github.io/healthiar/reference/daly.md), the
+YLL and the YLD are monetized separately and then summed, i.e. the YLL
+from the life table are discounted year by year, while `n_years` is used
+for the YLD.
+
 #### Example 1: output of `attribute_health()`
 
 In the example below, we monetize the COPD cases from the chapter

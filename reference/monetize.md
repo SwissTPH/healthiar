@@ -24,10 +24,15 @@ monetize(
 
   `List` produced by
   [`healthiar::attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
-  [`healthiar::attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md)
-  or
+  [`healthiar::attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
   [`healthiar::compare()`](https://swisstph.github.io/healthiar/reference/compare.md)
-  as results.
+  or
+  [`healthiar::daly()`](https://swisstph.github.io/healthiar/reference/daly.md)
+  as results. The YLL and YLD in the output of
+  [`healthiar::daly()`](https://swisstph.github.io/healthiar/reference/daly.md)
+  are monetized separately and then summed. Thus, YLL from the life
+  table are discounted year by year, while `n_years` is used for the
+  YLD.
 
 - impact:
 
@@ -87,7 +92,11 @@ monetize(
   `Numeric value` between 0 and 1 referring to the annual real-term
   appreciation in the societal value of health (e.g., income
   elasticity). This adjusts the valuation upward to reflect rising
-  wealth, independent of general price inflation. As in
+  wealth, independent of general price inflation. If `output_attribute`
+  contains more than one assessment (several geographic units or
+  dimensions entered in `main_results_by`), a `numeric vector` parallel
+  to the arguments of the attribute function can be entered instead
+  (e.g. one rate per country), constant over the years. Otherwise, as in
   `inflation_rate`, a `numeric vector` of year-specific rates can be
   entered instead of one single value.
 
@@ -124,7 +133,12 @@ results.
   call
 
 If the argument `output_attribute` was specified, then the two results
-elements are added to the existing output.
+elements are added to the existing output. If `output_attribute` comes
+from
+[`healthiar::daly()`](https://swisstph.github.io/healthiar/reference/daly.md),
+`monetization_main` contains the monetized YLL and YLD (suffixes `_yll`
+and `_yld`) and their sum, while `monetization_detailed` contains the
+monetization of YLL and YLD (`monetization_yll` and `monetization_yld`).
 
 ## Details
 
@@ -153,9 +167,14 @@ One of the following three discount shapes can be selected:
 Arguments describing the value of the health impact (`valuation`,
 `discount_rate`, `discount_shape`) accept one value or, if
 `output_attribute` is entered, a vector parallel to the arguments of the
-attribute function (e.g. one value per exposure-outcome pair). Arguments
-describing prices over time (`inflation_rate`, `real_growth_rate`)
-accept one value or a vector with one value per year.
+attribute function (e.g. one value per exposure-outcome pair).
+`inflation_rate` accepts one value or a vector with one value per year,
+so that all valuations share one price base. `real_growth_rate` reflects
+income growth, which differs by country and region. Therefore, if
+`output_attribute` contains more than one assessment, it accepts one
+value or a vector parallel to the arguments of the attribute function
+(one rate per row, constant over the years). For one single assessment,
+it accepts one value or a vector with one value per year.
 
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
@@ -198,7 +217,8 @@ Transport Policies*. OECD Publishing, Paris.
 - Upstream:
   [`attribute_health`](https://swisstph.github.io/healthiar/reference/attribute_health.md),
   [`attribute_lifetable`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md),
-  [`compare`](https://swisstph.github.io/healthiar/reference/compare.md)
+  [`compare`](https://swisstph.github.io/healthiar/reference/compare.md),
+  [`daly`](https://swisstph.github.io/healthiar/reference/daly.md)
 
 - Alternative:
   [`get_inflation_factor`](https://swisstph.github.io/healthiar/reference/get_inflation_factor.md),
