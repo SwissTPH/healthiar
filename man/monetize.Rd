@@ -21,11 +21,18 @@ monetize(
 
 \item{impact}{\code{Numeric value} referring to the health impacts to be monetized (without attribute function). If a \code{Numeric vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.}
 
-\item{valuation}{\code{Numeric value} referring to unit value of a health impact.}
+\item{valuation}{\code{Numeric value} referring to unit value of a health impact.
+If \code{output_attribute} is entered, a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+(e.g. one valuation per exposure-outcome pair) to monetize all of them in one single call.
+The values must be the same within each geographic unit and dimension entered in \code{main_results_by}.}
 
-\item{discount_rate}{\code{Numeric value} showing the discount rate for future years.}
+\item{discount_rate}{\code{Numeric value} showing the discount rate for future years.
+If \code{output_attribute} is entered, a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+(e.g. one discount rate per exposure-outcome pair).}
 
-\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.}
+\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.
+If \code{output_attribute} is entered, a \code{character vector} parallel to the arguments of the attribute function can be entered instead
+(e.g. one discount shape per exposure-outcome pair).}
 
 \item{n_years}{\code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).}
 
@@ -89,6 +96,17 @@ One of the following three discount shapes can be selected:
  \item Exponential \insertCite{Frederick2002_jel}{healthiar}
  \item Hyperbolic as \insertCite{Harvey1986_ms;textual}{healthiar}
  \item Hyperbolic as \insertCite{Mazur1987_book;textual}{healthiar}}
+
+\strong{Single values and vectors}
+
+Arguments describing the value of the health impact
+(\code{valuation}, \code{discount_rate}, \code{discount_shape})
+accept one value or, if \code{output_attribute} is entered,
+a vector parallel to the arguments of the attribute function
+(e.g. one value per exposure-outcome pair).
+Arguments describing prices over time
+(\code{inflation_rate}, \code{real_growth_rate})
+accept one value or a vector with one value per year.
 
 Detailed information about the methodology (including equations)
 is available in the package vignette.

@@ -17,11 +17,15 @@ discount(
 
 \item{impact}{\code{Numeric value} referring to the health impacts to be monetized (without attribute function). If a \code{Numeric vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.}
 
-\item{discount_rate}{\code{Numeric value} showing the discount rate for future years.}
+\item{discount_rate}{\code{Numeric value} showing the discount rate for future years.
+If \code{output_attribute} is entered, a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+(e.g. one discount rate per exposure-outcome pair).}
 
 \item{n_years}{\code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).}
 
-\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.}
+\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.
+If \code{output_attribute} is entered, a \code{character vector} parallel to the arguments of the attribute function can be entered instead
+(e.g. one discount shape per exposure-outcome pair).}
 }
 \value{
 This function returns a \code{list} containing:
