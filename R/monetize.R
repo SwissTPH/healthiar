@@ -31,7 +31,11 @@
 #' (e.g., income elasticity).
 #' This adjusts the valuation upward to reflect rising wealth,
 #' independent of general price inflation.
-#' As in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
+#' If \code{output_attribute} contains more than one assessment
+#' (several geographic units or dimensions entered in \code{main_results_by}),
+#' a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+#' (e.g. one rate per country), constant over the years.
+#' Otherwise, as in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
 #' can be entered instead of one single value.
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
 
@@ -65,9 +69,13 @@
 #' accept one value or, if \code{output_attribute} is entered,
 #' a vector parallel to the arguments of the attribute function
 #' (e.g. one value per exposure-outcome pair).
-#' Arguments describing prices over time
-#' (\code{inflation_rate}, \code{real_growth_rate})
-#' accept one value or a vector with one value per year.
+#' \code{inflation_rate} accepts one value or a vector with one value per year,
+#' so that all valuations share one price base.
+#' \code{real_growth_rate} reflects income growth, which differs by country and region.
+#' Therefore, if \code{output_attribute} contains more than one assessment,
+#' it accepts one value or a vector parallel to the arguments of the attribute function
+#' (one rate per row, constant over the years).
+#' For one single assessment, it accepts one value or a vector with one value per year.
 #'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
