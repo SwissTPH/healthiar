@@ -31,7 +31,11 @@
 #' (e.g., income elasticity).
 #' This adjusts the valuation upward to reflect rising wealth,
 #' independent of general price inflation.
-#' As in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
+#' If \code{output_attribute} contains more than one assessment
+#' (several geographic units or dimensions entered in \code{main_results_by}),
+#' a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+#' (e.g. one rate per country), constant over the years.
+#' Otherwise, as in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
 #' can be entered instead of one single value.
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
 
@@ -65,9 +69,13 @@
 #' accept one value or, if \code{output_attribute} is entered,
 #' a vector parallel to the arguments of the attribute function
 #' (e.g. one value per exposure-outcome pair).
-#' Arguments describing prices over time
-#' (\code{inflation_rate}, \code{real_growth_rate})
-#' accept one value or a vector with one value per year.
+#' \code{inflation_rate} accepts one value or a vector with one value per year,
+#' so that all valuations share one price base.
+#' \code{real_growth_rate} reflects income growth, which differs by country and region.
+#' Therefore, if \code{output_attribute} contains more than one assessment,
+#' it accepts one value or a vector parallel to the arguments of the attribute function
+#' (one rate per row, constant over the years).
+#' For one single assessment, it accepts one value or a vector with one value per year.
 #'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
@@ -424,33 +432,28 @@ monetize <- function(output_attribute = NULL,
   # of the main results, i.e. the larger geographic unit and main_results_by.
   # Since monetization is linear in the impact, this gives the same as
   # monetizing each row separately.
-  is_value_by_row <-
-    !is.null(output_attribute) &&
-    (length(valuation) > 1 ||
-       length(discount_rate) > 1 ||
-       length(discount_shape) > 1)
-
-  if(is_value_by_row){
-
+  # real_growth_rate can also be entered as a vector by row
+  # (growth comes from income growth, which differs by country and region),
+  # but a vector in real_growth_rate can also contain year-specific rates.
+  # The vector refers to rows if the attribute function contains
+  # more than one assessment (geographic unit or dimension entered in main_results_by)
+  # and to years if it contains one single assessment
+  if(!is.null(output_attribute)){
     if(is_compare){
       input_args_attribute <- arg_values_scen_1
     } else {
       input_args_attribute <- output_attribute$health_detailed$input_args$value
     }
+  }
 
-    ## Error if no arguments of the attribute function ####
-    # Outputs of e.g. multiexpose() or daly() store the outputs they combine
-    # and not the arguments of the attribute function.
-    # Without them, the values cannot be attached to the right rows
-    # (geo_id_micro is always available after the attribute functions)
-    if(is.null(input_args_attribute$geo_id_micro)){
-      stop(
-        paste0("valuation, discount_rate and discount_shape can only be entered ",
-               "as vectors if output_attribute comes from attribute_health(), ",
-               "attribute_lifetable() or compare(). ",
-               "Otherwise, enter one single value."),
-        call. = FALSE)
-    }
+  # Outputs of e.g. multiexpose() or daly() store the outputs they combine
+  # and not the arguments of the attribute function
+  # (geo_id_micro is always available after the attribute functions)
+  has_args_attribute <-
+    !is.null(output_attribute) &&
+    !is.null(input_args_attribute$geo_id_micro)
+
+  if(has_args_attribute){
 
     # The user enters the column names of info without prefix,
     # while add_info() adds it (same as in get_output())
@@ -472,6 +475,53 @@ monetize <- function(output_attribute = NULL,
 
     value_by_row_keys <- unique(c(larger_geo_id, main_results_by))
 
+    # Rows of the attribute function (without values) to count the assessments
+    rows_attribute <-
+      tibble::tibble(
+        geo_id_micro = input_args_attribute$geo_id_micro,
+        geo_id_macro = input_args_attribute$geo_id_macro,
+        sex = input_args_attribute$sex,
+        age_group = input_args_attribute$age_group) |>
+      add_info(info = input_args_attribute$info)
+
+    # Columns that are not entered (e.g. exp_category) cannot be keys
+    value_by_row_keys <- intersect(value_by_row_keys, names(rows_attribute))
+
+    n_assessments <-
+      rows_attribute |>
+      dplyr::distinct(dplyr::across(dplyr::all_of(value_by_row_keys))) |>
+      nrow()
+  }
+
+  is_real_growth_rate_by_row <-
+    has_args_attribute &&
+    length(real_growth_rate) > 1 &&
+    n_assessments > 1
+
+  is_value_by_row <-
+    !is.null(output_attribute) &&
+    (length(valuation) > 1 ||
+       length(discount_rate) > 1 ||
+       length(discount_shape) > 1 ||
+       is_real_growth_rate_by_row)
+
+  if(is_value_by_row){
+
+    ## Error if no arguments of the attribute function ####
+    # Without them, the values cannot be attached to the right rows
+    if(!has_args_attribute){
+      stop(
+        paste0("valuation, discount_rate and discount_shape can only be entered ",
+               "as vectors if output_attribute comes from attribute_health(), ",
+               "attribute_lifetable() or compare(). ",
+               "Otherwise, enter one single value."),
+        call. = FALSE)
+    }
+
+    # Year-specific rates are not by row (see above)
+    real_growth_rate_by_row <-
+      if(is_real_growth_rate_by_row) real_growth_rate else NULL
+
     ## Error if incompatible length ####
     # The values must be parallel to the arguments of the attribute function,
     # i.e. all lengths must be 1 or one common length.
@@ -482,7 +532,8 @@ monetize <- function(output_attribute = NULL,
     value_lengths <-
       lengths(list(valuation = valuation,
                    discount_rate = discount_rate,
-                   discount_shape = discount_shape))
+                   discount_shape = discount_shape,
+                   real_growth_rate = real_growth_rate_by_row))
 
     id_lengths <-
       c(lengths(list(input_args_attribute$geo_id_micro,
@@ -499,7 +550,8 @@ monetize <- function(output_attribute = NULL,
 
     if(has_incompatible_length){
       stop(
-        paste0("valuation, discount_rate and discount_shape must have a length of 1 ",
+        paste0("valuation, discount_rate, discount_shape and real_growth_rate ",
+               "must have a length of 1 ",
                "or the same length as the arguments of the attribute function."),
         call. = FALSE)
     }
@@ -512,16 +564,12 @@ monetize <- function(output_attribute = NULL,
         age_group = input_args_attribute$age_group,
         valuation = valuation,
         discount_rate = discount_rate,
-        discount_shape = discount_shape) |>
-      add_info(info = input_args_attribute$info)
-
-    # Columns that are not entered (e.g. exp_category) cannot be keys
-    value_by_row_keys <- intersect(value_by_row_keys, names(value_by_row))
-
-    value_by_row <-
-      value_by_row |>
+        discount_shape = discount_shape,
+        real_growth_rate = real_growth_rate_by_row) |>
+      add_info(info = input_args_attribute$info) |>
       dplyr::select(dplyr::all_of(value_by_row_keys),
-                    dplyr::any_of(c("valuation", "discount_rate", "discount_shape"))) |>
+                    dplyr::any_of(c("valuation", "discount_rate",
+                                    "discount_shape", "real_growth_rate"))) |>
       # The ids are character in the results (e.g. geo_id_micro = 1 becomes "1")
       # while the info columns keep the type entered by the user (e.g. integer year)
       dplyr::mutate(
@@ -533,7 +581,8 @@ monetize <- function(output_attribute = NULL,
     ## Error if more than one value per row of the main results ####
     if(anyDuplicated(value_by_row[value_by_row_keys]) > 0){
       stop(
-        paste0("valuation, discount_rate and discount_shape must have one single value ",
+        paste0("valuation, discount_rate, discount_shape and real_growth_rate ",
+               "must have one single value ",
                "per geographic unit and dimension entered in main_results_by."),
         call. = FALSE)
     }
@@ -591,7 +640,7 @@ monetize <- function(output_attribute = NULL,
 
         if(nrow(rows_without_value) > 0){
           stop(
-            paste0("valuation, discount_rate and discount_shape could not be ",
+            paste0("valuation, discount_rate, discount_shape and real_growth_rate could not be ",
                    "assigned to these rows of the results (",
                    toString(value_by_row_keys), "): ",
                    toString(purrr::pmap_chr(rows_without_value, paste)), ". ",
@@ -612,11 +661,16 @@ monetize <- function(output_attribute = NULL,
         # Add columns for input data in the table
         dplyr::mutate(n_years = n_years,
                       inflation_rate =
-                        collapse_if_year_specific(inflation_rate),
-                      real_growth_rate =
-                        collapse_if_year_specific(real_growth_rate)) |>
+                        collapse_if_year_specific(inflation_rate)) |>
         # Add info
         add_info(info = info)
+
+      # real_growth_rate by row is already joined above
+      if(!is_real_growth_rate_by_row){
+        df_with_input <-
+          dplyr::mutate(df_with_input,
+            real_growth_rate = collapse_if_year_specific(real_growth_rate))
+      }
 
 
       # Add year
@@ -652,10 +706,18 @@ monetize <- function(output_attribute = NULL,
                              inflation_rate = inflation_rate,
                              is_deflation = TRUE)
 
-      real_growth_factor <-
-        get_inflation_factor(n_years = df_by_year$year,
-                             inflation_rate = real_growth_rate,
-                             is_deflation = FALSE)
+      if(is_real_growth_rate_by_row){
+        # One rate per row (constant over the years), as for discount_rate.
+        # Not get_inflation_factor() because it would read the column
+        # as year-specific rates
+        real_growth_factor <-
+          (1 + df_by_year$real_growth_rate) ^ df_by_year$year
+      } else {
+        real_growth_factor <-
+          get_inflation_factor(n_years = df_by_year$year,
+                               inflation_rate = real_growth_rate,
+                               is_deflation = FALSE)
+      }
 
 
       df_by_year <-

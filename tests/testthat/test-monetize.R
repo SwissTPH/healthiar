@@ -951,6 +951,33 @@ testthat::test_that("results the same |pathway_monetization|valuation_by_pair|di
   )
 })
 
+testthat::test_that("results the same |pathway_monetization|real_growth_rate_by_row|", {
+
+  # Two countries monetized in one call with one real growth rate per country.
+  # Expected: impact * valuation * (1 + real_growth_rate)^n_years,
+  # i.e. the same as monetizing each country separately
+  output_attribute <- healthiar::attribute_health(
+    exp_central = c(8.85, 9.20),
+    cutoff_central = 5,
+    rr_central = 1.369,
+    rr_increment = 10,
+    erf_shape = "log_linear",
+    bhd_central = c(30747, 31500),
+    geo_id_micro = c("a", "b"))
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        output_attribute = output_attribute,
+        valuation = 50000,
+        real_growth_rate = c(0.01, 0.03),
+        n_years = 5
+      )$monetization_main$monetized_impact,
+    expect =
+      output_attribute$health_main$impact * 50000 * c(1.01^5, 1.03^5)
+  )
+})
+
 
 
 # ERROR OR WARNING ########
