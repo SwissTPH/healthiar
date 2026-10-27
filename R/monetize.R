@@ -432,19 +432,19 @@ monetize <- function(output_attribute = NULL,
   # of the main results, i.e. the larger geographic unit and main_results_by.
   # Since monetization is linear in the impact, this gives the same as
   # monetizing each row separately.
-  is_value_by_row <-
-    !is.null(output_attribute) &&
-    (length(valuation) > 1 ||
-       length(discount_rate) > 1 ||
-       length(discount_shape) > 1)
-
-  if(is_value_by_row){
-
+  # real_growth_rate can also be entered as a vector by row
+  # (growth comes from income growth, which differs by country and region),
+  # but a vector in real_growth_rate can also contain year-specific rates.
+  # The vector refers to rows if the attribute function contains
+  # more than one assessment (geographic unit or dimension entered in main_results_by)
+  # and to years if it contains one single assessment
+  if(!is.null(output_attribute)){
     if(is_compare){
       input_args_attribute <- arg_values_scen_1
     } else {
       input_args_attribute <- output_attribute$health_detailed$input_args$value
     }
+  }
 
     ## Error if no arguments of the attribute function ####
     # Outputs of e.g. multiexpose() or daly() store the outputs they combine
