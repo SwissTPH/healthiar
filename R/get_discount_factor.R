@@ -6,6 +6,8 @@
 
 # ARGUMENTS ####################################################################
 #' @inheritParams monetize
+#' @param discount_rate \code{Numeric value} showing the discount rate for future years.
+#' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.
 #' @param n_years
 #' \code{Numeric value} or \code{numeric vector} specifying the number of years
 #' elapsed for which the discount factor is to be calculated. One factor is

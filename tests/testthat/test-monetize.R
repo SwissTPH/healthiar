@@ -916,6 +916,41 @@ testthat::test_that("results the same |fake_monetization|discount_rate_TRUE|disc
 
 })
 
+testthat::test_that("results the same |pathway_monetization|valuation_by_pair|discount_rate_by_pair|discount_shape_by_pair|", {
+
+  # Two exposure-outcome pairs in two geographic units monetized in one call
+  # with one valuation, discount rate and discount shape per pair.
+  # Expected: impact * valuation * discount factor, i.e. the same as
+  # monetizing each pair separately:
+  # exponential 1 / (1 + discount_rate)^n_years for pm2.5_copd and
+  # hyperbolic Mazur 1 / (1 + discount_rate * n_years) for no2_asthma
+  output_attribute <- healthiar::attribute_health(
+    info = data.frame(pair = rep(c("pm2.5_copd", "no2_asthma"), each = 2)),
+    main_results_by = "pair",
+    exp_central = c(8.85, 9.20, 22.1, 24.5),
+    cutoff_central = c(5, 5, 10, 10),
+    rr_central = c(1.369, 1.369, 1.041, 1.041),
+    rr_increment = 10,
+    erf_shape = c("log_linear", "log_linear", "linear", "linear"),
+    bhd_central = c(30747, 31500, 12000, 12500),
+    geo_id_micro = rep(c("a", "b"), times = 2))
+
+  testthat::expect_equal(
+    object =
+      healthiar::monetize(
+        output_attribute = output_attribute,
+        valuation = c(50000, 50000, 3000, 3000),
+        discount_rate = c(0.03, 0.03, 0.01, 0.01),
+        discount_shape = rep(c("exponential", "hyperbolic_mazur_1987"), each = 2),
+        n_years = 5
+      )$monetization_main$monetized_impact,
+    expect =
+      output_attribute$health_main$impact *
+      c(50000, 50000, 3000, 3000) /
+      c(1.03^5, 1.03^5, 1 + 0.01 * 5, 1 + 0.01 * 5)
+  )
+})
+
 
 
 # ERROR OR WARNING ########
@@ -1058,6 +1093,93 @@ testthat::test_that("error if incompatible size of info", {
         info = data.frame(id = 1:20)
       ),
     regexp = "The info vector or data frame columns must have a length of 1 or the same length as impact."
+  )
+})
+
+testthat::test_that("error if values by row cannot be assigned to the results", {
+
+  output_attribute <- healthiar::attribute_health(
+    info = data.frame(pair = rep(c("pm2.5_copd", "no2_asthma"), each = 2)),
+    main_results_by = "pair",
+    exp_central = c(8.85, 9.20, 22.1, 24.5),
+    cutoff_central = c(5, 5, 10, 10),
+    rr_central = c(1.369, 1.369, 1.041, 1.041),
+    rr_increment = 10,
+    erf_shape = c("log_linear", "log_linear", "linear", "linear"),
+    bhd_central = c(30747, 31500, 12000, 12500),
+    geo_id_micro = rep(c("a", "b"), times = 2))
+
+  # Results modified after attribute_health(): geographic unit "c" is unknown
+  output_attribute$health_main$geo_id_micro[1] <- "c"
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        output_attribute = output_attribute,
+        valuation = c(50000, 50000, 3000, 3000)
+      ),
+    regexp = "could not be assigned to these rows of the results"
+  )
+})
+
+testthat::test_that("error if vector in valuation with impact", {
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        impact = c(800, 1000),
+        valuation = c(10, 20)
+      ),
+    regexp = "valuation must be one single value if impact is entered"
+  )
+})
+
+testthat::test_that("error if vector in valuation after multiexpose", {
+
+  output_pm <- healthiar::attribute_health(
+    exp_central = 8, cutoff_central = 5, rr_central = 1.369, rr_increment = 10,
+    erf_shape = "log_linear", bhd_central = c(15000, 16000),
+    geo_id_micro = c("a", "b"))
+
+  output_multiexpose <- healthiar::multiexpose(
+    output_attribute_exp_1 = output_pm,
+    output_attribute_exp_2 =
+      healthiar::attribute_mod(output_pm, exp_central = 20, rr_central = 1.041),
+    exp_name_1 = "pm2.5",
+    exp_name_2 = "no2",
+    approach_multiexposure = "additive")
+
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        output_attribute = output_multiexpose,
+        valuation = c(10, 1)
+      ),
+    regexp = "can only be entered as vectors if output_attribute comes from"
+  )
+})
+
+testthat::test_that("error if values by row have incompatible length", {
+
+  output_attribute <- healthiar::attribute_health(
+    info = data.frame(pair = rep(c("pm2.5_copd", "no2_asthma"), each = 2)),
+    main_results_by = "pair",
+    exp_central = c(8.85, 9.20, 22.1, 24.5),
+    cutoff_central = c(5, 5, 10, 10),
+    rr_central = c(1.369, 1.369, 1.041, 1.041),
+    rr_increment = 10,
+    erf_shape = c("log_linear", "log_linear", "linear", "linear"),
+    bhd_central = c(30747, 31500, 12000, 12500),
+    geo_id_micro = rep(c("a", "b"), times = 2))
+
+  # One value per pair instead of one value per row of attribute_health()
+  testthat::expect_error(
+    object =
+      healthiar::monetize(
+        output_attribute = output_attribute,
+        valuation = c(50000, 3000)
+      ),
+    regexp = "must have a length of 1 or the same length as the arguments of the attribute function"
   )
 })
 

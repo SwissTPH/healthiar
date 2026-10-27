@@ -8,8 +8,15 @@
 #' @param output_attribute \code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()} or \code{healthiar::compare()} as results.
 #' @param impact \code{Numeric value} referring to the health impacts to be monetized (without attribute function). If a \code{Numeric vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.
 #' @param valuation \code{Numeric value} referring to unit value of a health impact.
+#' If \code{output_attribute} is entered, a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+#' (e.g. one valuation per exposure-outcome pair) to monetize all of them in one single call.
+#' The values must be the same within each geographic unit and dimension entered in \code{main_results_by}.
 #' @param discount_rate \code{Numeric value} showing the discount rate for future years.
+#' If \code{output_attribute} is entered, a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+#' (e.g. one discount rate per exposure-outcome pair).
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.
+#' If \code{output_attribute} is entered, a \code{character vector} parallel to the arguments of the attribute function can be entered instead
+#' (e.g. one discount shape per exposure-outcome pair).
 #' @param n_years \code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).
 #' @param inflation_rate \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices).
 #' This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
@@ -50,6 +57,17 @@
 #'  \item Exponential \insertCite{Frederick2002_jel}{healthiar}
 #'  \item Hyperbolic as \insertCite{Harvey1986_ms;textual}{healthiar}
 #'  \item Hyperbolic as \insertCite{Mazur1987_book;textual}{healthiar}}
+#'
+#' \strong{Single values and vectors}
+#'
+#' Arguments describing the value of the health impact
+#' (\code{valuation}, \code{discount_rate}, \code{discount_shape})
+#' accept one value or, if \code{output_attribute} is entered,
+#' a vector parallel to the arguments of the attribute function
+#' (e.g. one value per exposure-outcome pair).
+#' Arguments describing prices over time
+#' (\code{inflation_rate}, \code{real_growth_rate})
+#' accept one value or a vector with one value per year.
 #'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
@@ -251,6 +269,19 @@ monetize <- function(output_attribute = NULL,
          call. = FALSE)
   }
 
+  ## Error if vector in valuation, discount_rate or discount_shape with impact ####
+  # Vectors are parallel to the arguments of the attribute function,
+  # so they need output_attribute.
+  # With impact, a vector would be silently applied per year instead
+  validate_args(
+    args = list(valuation = valuation,
+                discount_rate = discount_rate,
+                discount_shape = discount_shape),
+    arg_names = c("valuation", "discount_rate", "discount_shape"),
+    is_valid = function(x){is.null(impact) || length(x) == 1},
+    message = paste0("{arg} must be one single value if impact is entered. ",
+                     "Vectors are only possible with output_attribute."))
+
   ## Error if no right category is passed passed ####
   # Here input_args$value (and not the local value) is enough
   # because discount_shape is not overwritten above
@@ -384,6 +415,127 @@ monetize <- function(output_attribute = NULL,
 
 
 
+  # Values by row ####
+  # valuation, discount_rate and discount_shape can be entered as vectors
+  # parallel to the arguments of the attribute function (e.g. one valuation per
+  # exposure-outcome pair). Then all pairs and geographic units are
+  # monetized in one single call.
+  # They are attached to the results by the dimensions that identify the rows
+  # of the main results, i.e. the larger geographic unit and main_results_by.
+  # Since monetization is linear in the impact, this gives the same as
+  # monetizing each row separately.
+  is_value_by_row <-
+    !is.null(output_attribute) &&
+    (length(valuation) > 1 ||
+       length(discount_rate) > 1 ||
+       length(discount_shape) > 1)
+
+  if(is_value_by_row){
+
+    if(is_compare){
+      input_args_attribute <- arg_values_scen_1
+    } else {
+      input_args_attribute <- output_attribute$health_detailed$input_args$value
+    }
+
+    ## Error if no arguments of the attribute function ####
+    # Outputs of e.g. multiexpose() or daly() store the outputs they combine
+    # and not the arguments of the attribute function.
+    # Without them, the values cannot be attached to the right rows
+    # (geo_id_micro is always available after the attribute functions)
+    if(is.null(input_args_attribute$geo_id_micro)){
+      stop(
+        paste0("valuation, discount_rate and discount_shape can only be entered ",
+               "as vectors if output_attribute comes from attribute_health(), ",
+               "attribute_lifetable() or compare(). ",
+               "Otherwise, enter one single value."),
+        call. = FALSE)
+    }
+
+    # The user enters the column names of info without prefix,
+    # while add_info() adds it (same as in get_output())
+    main_results_by <- input_args_attribute$main_results_by
+    info_names <- names(input_args_attribute$info)
+
+    if(!is.null(main_results_by) && !is.null(info_names)){
+      main_results_by <-
+        purrr::map_chr(
+          main_results_by,
+          ~ if (.x %in% info_names) {paste0("info_", .x)} else {.x})
+    }
+
+    if(!is.null(input_args_attribute$geo_id_macro)){
+      larger_geo_id <- "geo_id_macro"
+    } else {
+      larger_geo_id <- "geo_id_micro"
+    }
+
+    value_by_row_keys <- unique(c(larger_geo_id, main_results_by))
+
+    ## Error if incompatible length ####
+    # The values must be parallel to the arguments of the attribute function,
+    # i.e. all lengths must be 1 or one common length.
+    # Otherwise tibble() below stops with a message that does not refer to
+    # the arguments of monetize().
+    # A common mistake is to enter one value per pair instead of
+    # one value per row of the attribute function
+    value_lengths <-
+      lengths(list(valuation = valuation,
+                   discount_rate = discount_rate,
+                   discount_shape = discount_shape))
+
+    id_lengths <-
+      c(lengths(list(input_args_attribute$geo_id_micro,
+                     input_args_attribute$geo_id_macro,
+                     input_args_attribute$sex,
+                     input_args_attribute$age_group)),
+        # NROW() because info can be a vector or a data frame
+        NROW(input_args_attribute$info))
+
+    all_lengths <- c(value_lengths, id_lengths)
+
+    has_incompatible_length <-
+      length(unique(all_lengths[all_lengths > 1])) > 1
+
+    if(has_incompatible_length){
+      stop(
+        paste0("valuation, discount_rate and discount_shape must have a length of 1 ",
+               "or the same length as the arguments of the attribute function."),
+        call. = FALSE)
+    }
+
+    value_by_row <-
+      tibble::tibble(
+        geo_id_micro = input_args_attribute$geo_id_micro,
+        geo_id_macro = input_args_attribute$geo_id_macro,
+        sex = input_args_attribute$sex,
+        age_group = input_args_attribute$age_group,
+        valuation = valuation,
+        discount_rate = discount_rate,
+        discount_shape = discount_shape) |>
+      add_info(info = input_args_attribute$info)
+
+    # Columns that are not entered (e.g. exp_category) cannot be keys
+    value_by_row_keys <- intersect(value_by_row_keys, names(value_by_row))
+
+    value_by_row <-
+      value_by_row |>
+      dplyr::select(dplyr::all_of(value_by_row_keys),
+                    dplyr::any_of(c("valuation", "discount_rate", "discount_shape"))) |>
+      # The ids are character in the results (e.g. geo_id_micro = 1 becomes "1")
+      dplyr::mutate(dplyr::across(dplyr::all_of(value_by_row_keys), as.character)) |>
+      dplyr::distinct()
+
+    ## Error if more than one value per row of the main results ####
+    if(anyDuplicated(value_by_row[value_by_row_keys]) > 0){
+      stop(
+        paste0("valuation, discount_rate and discount_shape must have one single value ",
+               "per geographic unit and dimension entered in main_results_by."),
+        call. = FALSE)
+    }
+  }
+
+
   # Monetize ####
 
   ## Create function add_monetized_impact() ###############
@@ -413,13 +565,48 @@ monetize <- function(output_attribute = NULL,
           if(length(rate) > 1) toString(rate) else rate
         }
 
+      # Values by row are joined to the rows they belong to
+      # Otherwise one single value for all rows
+      if(is_value_by_row){
+        df_with_input <- 
+          dplyr::left_join(
+            df,
+            value_by_row,
+            by = value_by_row_keys)
+
+        ## Error if rows without value ####
+        # A row of the results without match in value_by_row would get NA
+        # in valuation and therefore in monetized_impact without any warning
+        # (e.g. if the results were modified after the attribute function).
+        # valuation and not discount_rate or discount_shape
+        # because valuation is always entered
+        rows_without_value <-
+          df_with_input |>
+          dplyr::filter(is.na(valuation)) |>
+          dplyr::distinct(dplyr::across(dplyr::all_of(value_by_row_keys)))
+
+        if(nrow(rows_without_value) > 0){
+          stop(
+            paste0("valuation, discount_rate and discount_shape could not be ",
+                   "assigned to these rows of the results (",
+                   toString(value_by_row_keys), "): ",
+                   toString(purrr::pmap_chr(rows_without_value, paste)), ". ",
+                   "Please enter output_attribute as obtained from ",
+                   "the attribute function."),
+            call. = FALSE)
+        }
+      } else {
+        df_with_input <- 
+          dplyr::mutate(df,
+            valuation = valuation,
+            discount_rate = discount_rate,
+            discount_shape = discount_shape)
+      }
+
       df_with_input <-
-        df |>
+        df_with_input |>
         # Add columns for input data in the table
-        dplyr::mutate(valuation = valuation,
-                      discount_rate = discount_rate,
-                      n_years = n_years,
-                      discount_shape = discount_shape,
+        dplyr::mutate(n_years = n_years,
                       inflation_rate =
                         collapse_if_year_specific(inflation_rate),
                       real_growth_rate =
@@ -578,17 +765,6 @@ monetize <- function(output_attribute = NULL,
 
       n_years <- max(impact_detailed$year) - year_of_analysis
 
-
-      # Output will be adapted according to monetized impacts
-      impact_detailed <-
-        impact_detailed |>
-        ## Calculate total, discounted life years (single value) per sex & ci
-        dplyr::mutate(
-          n_years = n_years,
-          discount_rate = discount_rate,
-          discount_shape = discount_shape,
-          inflation_rate = inflation_rate,
-          real_growth_rate = real_growth_rate)
 
       impact_detailed  <-
         add_monetized_impact(
