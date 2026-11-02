@@ -62,7 +62,9 @@ See below an overview of *healthiar*, which is the first page of the [cheat shee
 ## Input
 
 You can enter data in *healthiar* functions using: 
+
 - hard coded values or
+
 - columns inside pre-loaded data frames or tibbles.
 
 Let's see some examples calling the most important function in *healthiar*: `attribute_health()`.
@@ -2632,10 +2634,13 @@ Depending on the reference guidelines,
 the discount rate can be specified as the same for costs and benefits or different across them.
 The outputs of a Cost-Benefit Analysis can be expressed 
 as three main indicators [@Boardman2018_book]: 
+
   - intervention’s net benefit: the difference between monetized benefits and costs
+
   - Cost-Benefit Ratio (CBR): monetized benefits divided by costs and 
+
   - Return on Investment (ROI): return generated per unit of expenditure by relating net benefits to the intervention’s costs.
-  
+    
 An intervention is recommended from a Cost-Benefit Analysis perspective, 
 if it yields a positive net benefit or a positive ROI, or equivalently, 
 a CBR greater than one, meaning that the intervention’s monetized benefits exceed its costs.
@@ -2839,7 +2844,9 @@ where:
 
 To apply this approach, you should ensure that the data set is as complete as possible.
 Otherwise, you can try to impute missing data using:
+
 - Time-Based Imputation: Linear regression based on historical trends if prior years' data is complete.
+
 - Indicator-Based Imputation: Multiple linear regression if the missing indicator correlates strongly with others.
 
 Imputation models should have an R^2 greater than or equal to 0.7. If R^2 lower than 0.7, consider alternative data sources or methods.
@@ -2885,10 +2892,15 @@ mdi$mdi_main |>
 
 
 The function assesses the reliability of the MDI based on the Cronbach's alpha value as follows:
+
 - 0.9 and higher: Excellent reliability
+
 - between 0.8 (included) and 0.9: Good reliability
+
 - between 0.7 (included) and 0.8: Acceptable reliability
+
 - between 0.6 (included) and 0.7: Questionable reliability
+
 - lower than 0.6: Poor reliability
 
 
